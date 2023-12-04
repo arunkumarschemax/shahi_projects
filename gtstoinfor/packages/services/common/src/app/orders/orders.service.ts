@@ -48,6 +48,7 @@ import { TrimDetailsRequest } from './models/trim-details.req';
 import { promises } from 'dns';
 const { Builder, Browser, By, Capabilities, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome')
+import { Cron } from '@nestjs/schedule';
 
 
 @Injectable()
@@ -1108,18 +1109,18 @@ export class OrdersService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
-    
-    async seasonWiseReport(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
-              const monthsList = ["january","february","march","april","may","june","july","august","september","october","november","december"];
-              const qtyQuery = [];
-              const format = '%'
-              let total =``
-              monthsList.forEach((rec,index)=>{
-              qtyQuery.push(`SUM(CASE WHEN MONTH(STR_TO_DATE(${req.qtyLocation}, '${format}m/${format}d')) = ${index+1} OR MONTH(STR_TO_DATE(${req.qtyLocation}, '%m-%d')) = ${index+1} OR MONTH(${req.qtyLocation})= 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS ${rec}`)
-              total += `SUM(${rec}) AS ${rec},`
 
-            })
-              let query = `SELECT file_id,planning_ssn as plannedSeason,year,planning_sum as itemName ,${total}
+    async seasonWiseReport(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
+        const monthsList = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+        const qtyQuery = [];
+        const format = '%'
+        let total = ``
+        monthsList.forEach((rec, index) => {
+            qtyQuery.push(`SUM(CASE WHEN MONTH(STR_TO_DATE(${req.qtyLocation}, '${format}m/${format}d')) = ${index + 1} OR MONTH(STR_TO_DATE(${req.qtyLocation}, '%m-%d')) = ${index + 1} OR MONTH(${req.qtyLocation})= 1 THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS ${rec}`)
+            total += `SUM(${rec}) AS ${rec},`
+
+        })
+        let query = `SELECT file_id,planning_ssn as plannedSeason,year,planning_sum as itemName ,${total}
               SUM(january + february + march + april + may + june + july + august + september + october + november + december) AS total
             FROM (
               SELECT planning_ssn, year, planning_sum,version,file_id,created_at,${qtyQuery}
@@ -1128,52 +1129,52 @@ export class OrdersService {
               GROUP BY planning_ssn, planning_sum
             ) AS subquery
             WHERE 1 = 1 AND file_id = (SELECT MAX(file_id) FROM orders) and year = ${req.year} and planning_ssn = '${req.season}'`
-              // if (req.itemCode) {
-              //     query = query + ` AND item_cd = "${req.itemCode}"`
-              //     }
-              if (req.itemName) {
-                  query = query + ` AND planning_sum = "${req.itemName}"`;
-              }
-              query = query + ` GROUP BY planning_ssn, planning_sum HAVING total != 0 ORDER BY created_at DESC`;
-              const reportData = await this.dataSource.query(query);
-      
-          // const years = [...new Set(reportData.map(data => data.year))];
-      
-          // const seasons = years.map(year => {
-          //     const seasons = [...new Set(reportData.filter(data => data.year === year).map(data => data.plannedSeason))];
-              
-          //     const seasonData = seasons.map(season => {
-          //         const seasonData = reportData.filter(data => data.year === year && data.plannedSeason === season);
-          //         return { season, data: seasonData };
-          //     })
-      
-          //     return { year, seasons: seasonData };
-          // })
+        // if (req.itemCode) {
+        //     query = query + ` AND item_cd = "${req.itemCode}"`
+        //     }
+        if (req.itemName) {
+            query = query + ` AND planning_sum = "${req.itemName}"`;
+        }
+        query = query + ` GROUP BY planning_ssn, planning_sum HAVING total != 0 ORDER BY created_at DESC`;
+        const reportData = await this.dataSource.query(query);
 
-      if (reportData.length > 0) {
-        return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', reportData);
-    } else {
-        return new CommonResponseModel(false, 0, 'No Data Found', []);
-    }
-}
+        // const years = [...new Set(reportData.map(data => data.year))];
 
-    async seasonWiseTabs(): Promise<CommonResponseModel>{
+        // const seasons = years.map(year => {
+        //     const seasons = [...new Set(reportData.filter(data => data.year === year).map(data => data.plannedSeason))];
+
+        //     const seasonData = seasons.map(season => {
+        //         const seasonData = reportData.filter(data => data.year === year && data.plannedSeason === season);
+        //         return { season, data: seasonData };
+        //     })
+
+        //     return { year, seasons: seasonData };
+        // })
+
+        if (reportData.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', reportData);
+        } else {
+            return new CommonResponseModel(false, 0, 'No Data Found', []);
+        }
+    }
+
+    async seasonWiseTabs(): Promise<CommonResponseModel> {
         const query2 = `SELECT year, planning_ssn as plannedSeason FROM orders
             WHERE 1 = 1 AND file_id = (SELECT MAX(file_id) FROM orders ) group by planning_ssn,year`
         const seasonTabs = await this.dataSource.query(query2)
         // console.log(seasonTabs,'----')
-        const data =[]
-        seasonTabs.forEach((rec)=>{
-        data.push(
-            rec.year.slice(-2) + rec.plannedSeason+"-WH" + "," + Number(rec.year) + ","+ rec.plannedSeason,
-            rec.year.slice(-2) + rec.plannedSeason+'-EXF'+ "," + Number(rec.year) + ","+ rec.plannedSeason,
-        )
-    })
-    if (seasonTabs.length > 0) {
-        return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', data);
-    } else {
-        return new CommonResponseModel(false, 0, 'No Data Found', []);
-    }
+        const data = []
+        seasonTabs.forEach((rec) => {
+            data.push(
+                rec.year.slice(-2) + rec.plannedSeason + "-WH" + "," + Number(rec.year) + "," + rec.plannedSeason,
+                rec.year.slice(-2) + rec.plannedSeason + '-EXF' + "," + Number(rec.year) + "," + rec.plannedSeason,
+            )
+        })
+        if (seasonTabs.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', data);
+        } else {
+            return new CommonResponseModel(false, 0, 'No Data Found', []);
+        }
     }
 
 
@@ -1374,9 +1375,9 @@ export class OrdersService {
             if (itemCode.status) {
                 // console.log(itemCode,'---------')
                 const empty = [];
-                itemCode.data.forEach((ele)=>{
+                itemCode.data.forEach((ele) => {
                     empty.push({
-                        itemName: ele.itemName   
+                        itemName: ele.itemName
                     })
                 })
                 return new CommonResponseModel(true, 1, 'Data Retrieved Succesfully', empty)
@@ -1395,17 +1396,17 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'data not found');
         }
 
-    return new CommonResponseModel(true, 1, 'data retrieved', data);
-}
-async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel> {
-    // console.log(req,'-------')
-    const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
-    
-    if (data.length === 0) {
-        return new CommonResponseModel(false, 0, 'data not found');
+        return new CommonResponseModel(true, 1, 'data retrieved', data);
     }
-    return new CommonResponseModel(true, 1, 'data retrieved', data);
-}
+    async getExfactoryComparisionExcelData(req: YearReq): Promise<CommonResponseModel> {
+        // console.log(req,'-------')
+        const data = await this.ordersChildRepo.getMonthlyComparisionData(req);
+
+        if (data.length === 0) {
+            return new CommonResponseModel(false, 0, 'data not found');
+        }
+        return new CommonResponseModel(true, 1, 'data retrieved', data);
+    }
 
     async getQtyDifChangeItemCode(): Promise<CommonResponseModel> {
         const files = await this.fileUploadRepo.getFilesData()
@@ -2740,7 +2741,7 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
         try {
             let filesArray = []
             const fs = require('fs');
-            const files = fs.readdirSync('F:/trim-orders');
+            const files = fs.readdirSync('D:/Trim-Orders');
             const uplodedFiles = await this.getUplodedFilesInfo()
             const difference = files.filter((element) => !uplodedFiles.data.includes(element))
             if (difference.length == 0) {
@@ -2749,7 +2750,7 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
             } else {
                 for (const filerec of difference) {
                     const filename = filerec
-                    const filepath = 'F:/trim-orders/' + filerec
+                    const filepath = 'D:/Trim-Orders/' + filerec
                     const promiseA = () => new Promise((resolve, reject) => {
                         xlsxFile(filepath, { getSheets: true }).then((sheets: any[]) => {
                             resolve(sheets)
@@ -2776,29 +2777,27 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
                                         // data.slice(0,3)
                                         return data
                                     }
-                                })
-
-                                    .then((rows) => {
-                                        let columnNames
-                                        const dataArray = []
-                                        while (rows.length) {
-                                            columnNames = rows.shift(); // Separate first row with column names
-                                            if (columnNames[0] != null && columnNames[0] == 'Order No.') {
-                                                break;
-                                            }
+                                }).then((rows) => {
+                                    let columnNames
+                                    const dataArray = []
+                                    while (rows.length) {
+                                        columnNames = rows.shift(); // Separate first row with column names
+                                        if (columnNames[0] != null && columnNames[0] == 'Order No.') {
+                                            break;
                                         }
-                                        rows.map((row) => { // Map the rest of the rows into objects
-                                            const obj = {}; // Create object literal for current row
-                                            row.forEach((cell, i) => {
-                                                obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
-                                            });
-                                            //   console.log(obj)
-                                            dataArray.push(Object(obj));
-                                            resolve(dataArray)
-                                            //   console.log(objs); // Display the array of objects on the console
-                                            //   return obj;
+                                    }
+                                    rows.map((row) => { // Map the rest of the rows into objects
+                                        const obj = {}; // Create object literal for current row
+                                        row.forEach((cell, i) => {
+                                            obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
                                         });
+                                        //   console.log(obj)
+                                        dataArray.push(Object(obj));
+                                        resolve(dataArray)
+                                        //   console.log(objs); // Display the array of objects on the console
+                                        //   return obj;
                                     });
+                                });
                             } else {
                                 const saveFilePath = this.updatePath(filepath, filename, null, FileTypesEnum.TRIM_ORDERS, 'Email', 'Sheet Name Does Not Match')
                                 filesArray.push(new ordersMailFileStatusArrayReq(filename, 'Failed', `Sheet name doesn't match`, '-'))
@@ -2855,16 +2854,21 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
         } catch (err) {
             throw err
         }
-
-
     }
 
-    async uniqloTrimOrdersBot(): Promise<any>{
+    // @Cron('0 8 * * *')
+    async uniqloTrimOrdersBot(): Promise<any> {
         const chromeOptions = new chrome.Options();
         chromeOptions.addArguments('--auto-select-certificate-for-urls=https://spl.fastretailing.com');
-      
+        const today = new Date();
+
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+        const day = today.getDate().toString().padStart(2, '0');
+
+        const formattedDate = `${year}/${month}/${day}`
         const driver = await new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
-            
+
         try {
             await driver.get('https://spl.fastretailing.com/app/spl/login');
             // Switch to the alert and accept it (click "OK")
@@ -2885,21 +2889,22 @@ async getExfactoryComparisionExcelData(req:YearReq): Promise<CommonResponseModel
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[2]/div/m-selectbox[1]')).click();
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[2]/div/m-selectbox[2]')).click();
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[2]/div/m-selectbox[3]')).click();
-            await driver.findElement(By.xpath('//*[@id="a-textfield-12"]')).sendKeys('2023/11/1');
-            await driver.findElement(By.xpath('//*[@id="a-textfield-13"]')).sendKeys('2023/11/22');
+            await driver.findElement(By.xpath('//*[@id="a-textfield-12"]')).sendKeys('2023/12/1');
+            await driver.findElement(By.xpath('//*[@id="a-textfield-13"]')).sendKeys(formattedDate);
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/m-buttongroup/button[2]')).click();
             await driver.sleep(10000)
             await driver.findElement(By.xpath('//*[@id="borderLayout_eGridPanel"]/div[1]/div/div[1]/div[1]/div[2]/div[1]/span/span[2]')).click();
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/m-floatingarea/div[2]/div[1]/button[2]')).click();
             await driver.wait(until.elementLocated(By.xpath('/html/body/o-component-host/o-dialog/div[2]/button[2]')));
             await driver.findElement(By.xpath('/html/body/o-component-host/o-dialog/div[2]/button[2]')).click();
-            await driver.sleep(10000)
+            await driver.sleep(5000)
             await driver.wait(until.elementLocated(By.xpath('/html/body/o-component-host/o-dialog/div[3]/button')));
             await driver.findElement(By.xpath('/html/body/o-component-host/o-dialog/div[3]/button')).click();
+            await driver.sleep(5000)
             await driver.quit();
-
-        } catch(err){
-            return new CommonResponseModel(false,0, err)
+            return new CommonResponseModel(true, 1, 'Trim Orders Downloaded Successfully')
+        } catch (err) {
+            return new CommonResponseModel(false, 0, err)
         }
     }
 
