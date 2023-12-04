@@ -185,6 +185,10 @@ import { MaterialAllocationDetailView } from "./sample-development/material-allo
 import WarehouseDashboard from "./common/dashboards/warehouse-dashboard"
 import { ReclassificationApprovalGrid } from "./sourcing-requisition/reclassification-approval-grid"
 import AllocatedStockApproval from "./sample-development/allocated-stock-approval"
+import FinishForm from "./trim-masters/finish/finish"
+import FinishGrid from "./trim-masters/finish/finish-view"
+import HoleForm from "./trim-masters/hole/hole"
+import HoleGrid from "./trim-masters/hole/hole-view"
 
 
 
@@ -577,6 +581,18 @@ export const AppRoutes = () => {
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} columnData={undefined} />} />
                     <Route path='column/column-view' element={<ColumnView />} />
+                    <Route path='hole/hole-form' element={<HoleForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateHole={(undefined) => {}}
+                        data={undefined} />} />
+                    <Route path='hole/hole-view' element={<HoleGrid />} />
+                    <Route path='finish/finish-form' element={<FinishForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateFinish={(undefined) => { }} 
+                        data={undefined} />} />
+                    <Route path='finish/finish-view' element={<FinishGrid />} />
 
                 </Route>
                 <Route path='/global'>
