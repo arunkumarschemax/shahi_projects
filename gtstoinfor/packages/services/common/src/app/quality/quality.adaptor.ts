@@ -9,6 +9,7 @@ import { QualityEntity } from "./quality.entity";
 export class QualityAdapter {
 
     convertDtoToEntity(dto: QualityDTO): QualityEntity {
+
         const entity = new QualityEntity();
         entity.quality = dto.quality;
         entity.createdUser = dto.createdUser

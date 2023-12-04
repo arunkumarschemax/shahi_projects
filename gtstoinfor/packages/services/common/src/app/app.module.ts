@@ -88,6 +88,7 @@ import { CategoryModule } from './Trim Masters/category/category-module';
 import { ContentModule } from './Trim Masters/content-master/content-module';
 import { varietyModule } from './Trim Masters/variety/variety-module';
 import { trimModule } from './Trim Masters/trim/trim-module';
+import { QualitysModule } from './qualitys/qualitys.module';
 import { ThicknessModule } from './thickness/thickness.module';
 import { TypeModule } from './type/type.module';
 import { QualitysModule } from './qualitys/qualitys.module';
@@ -158,6 +159,8 @@ import { QualitysModule } from './qualitys/qualitys.module';
     TypeModule,
     CategoryModule,
     ContentModule,
+    QualitysModule,
+    CategoryModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule,MaterialIssueModule,IndentModule,RackPositionModule,StocksModule,GrnModule,LocationMappingModule,M3TrimsModule,ReclassificationModule,varietyModule,trimModule,FinishModule,HoleModule],
   controllers: [AppController],
   providers: [AppService],

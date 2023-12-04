@@ -103,7 +103,7 @@ export const QualityGrid = (props: QualityGridProps) => {
   };
 
   const onAddOperation = (rowData) => {
-    navigate('/masters/qualitys/qualitys-form',{state:{id:rowData.qualityId}})
+    navigate('/trim-master/qualitys/qualitys-form',{state:{id:rowData.qualityId}})
   }
 
   const columnsSkelton: any = [
@@ -173,8 +173,8 @@ export const QualityGrid = (props: QualityGridProps) => {
           <Popconfirm onConfirm={e => { deleteVariant(rowData); }}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate this Level ?'
-                : 'Are you sure to Activate this Level ?'
+                ? 'Are you sure to Deactivate this Quality ?'
+                : 'Are you sure to Activate this Quality ?'
             }
           >
             <Switch size="default"
@@ -261,8 +261,8 @@ const deleteVariant = (Data:QualitysDTO) => {
     Data.isActive=Data.isActive?false:true;
     service.activateDeActivateQualitys(Data).then(res => { console.log(res);
       if (res.status) {
-        // getAllPaymentmethod();
-        AlertMessages.getSuccessMessage('Success'); 
+        getAllquality();
+        AlertMessages.getSuccessMessage(res.internalMessage); 
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -277,7 +277,7 @@ const deleteVariant = (Data:QualitysDTO) => {
 
   return (
 
-    <Card title='Quality' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/masters/quality/quality-form')} type={'primary'}>New</Button></span>}>
+    <Card title='Quality' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/trim-master/qualitys/qualitys-form')} type={'primary'}>New</Button></span>}>
         {/* <br/> */}
       {/* <Row gutter={40}>
         <Col>
@@ -294,7 +294,7 @@ const deleteVariant = (Data:QualitysDTO) => {
       <Col span={4}></Col>
      <Col span={5}>
 
-           <Alert type='success' message={'Total Levels: ' + variantData.length} style={{fontSize:'15px'}} />
+           <Alert type='success' message={'Total Quality: ' + variantData.length} style={{fontSize:'15px'}} />
         </Col>
         <Col span={5}>
           <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
