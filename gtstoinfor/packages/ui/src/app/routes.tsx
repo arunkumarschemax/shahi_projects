@@ -200,6 +200,8 @@ import { VarietyForm } from "./trim-master/variety/variety-form"
 import VarietyGrid from "./trim-master/variety/variety-view"
 import { TrimForm } from "./trim-master/trim/trim-form"
 import TrimGrid from "./trim-master/trim/trim-view"
+import CategoryForm from "./common/category/category-form"
+import CategoryView from "./common/category/category-view"
 import path from "path"
 import { ContentForm } from "./trim-master/content/content-form"
 import ContentGrid from "./trim-master/content/content-view"
@@ -389,11 +391,7 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={() => { }}
                         updateData={(undefined) => { }} />} />
-                        <Route path="qualitys/qualitys-view" element={<QualityGrid />} />
-                    <Route path='qualitys/qualitys-form' element={<QualitysForm qualitysData={undefined}
-                        isUpdate={false}
-                        closeForm={() => { }}
-                        updateDetails={(undefined) => { }} />} />
+                      
                     <Route path='currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
                         isUpdate={false}
                         closeForm={() => { }}
@@ -729,7 +727,16 @@ export const AppRoutes = () => {
                     <Route path='content/content-view' element={<ContentGrid />} />
 
 
-
+                    <Route path="qualitys/qualitys-view" element={<QualityGrid />} />
+                    <Route path='qualitys/qualitys-form' element={<QualitysForm qualitysData={undefined}
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} />} />
+                   <Route path="category/category-view" element={<CategoryView />} />
+                    <Route path='category/category-form' element={<CategoryForm columnData={undefined}
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} />} />
 
                 </Route>
 

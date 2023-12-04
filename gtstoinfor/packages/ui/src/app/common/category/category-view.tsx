@@ -5,21 +5,18 @@ import { useEffect, useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Highlighter from "react-highlight-words"
 import AlertMessages from "../../common/common-functions/alert-messages"
+import { CategoryService, ColumnService } from "@project-management-system/shared-services"
+import { CategoryActivateReq, CategoryReq, ColumnActivateReq, ColumnReq } from "@project-management-system/shared-models"
+import CategoryForm from "./category-form"
 
-import { ColumnActivateReq, ColumnReq, TypeActivateReq, TypeReq } from "@project-management-system/shared-models"
-import { TypeService } from "@project-management-system/shared-services"
-import TypeForm from "./type-form"
-
-
-
-export const TypeView = () => {
+export const CategoryView = () => {
     const navigate = useNavigate()
     const [data,setData] = useState<any[]>([])
     const [page, setPage] = useState<number>(1);
-    const service = new TypeService()
+    const service = new CategoryService()
     const searchInput = useRef(null);
     const [searchText, setSearchText] = useState(''); 
-    const [searchedType, setSearchedType] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
     const [drawerVisible, setDrawerVisible] = useState(false);
     const [selectedData, setSelectedData] = useState<any>(undefined);
     const [pageSize, setPageSize] = useState<number>(1);
@@ -31,19 +28,17 @@ export const TypeView = () => {
     },[])
 
     const getAllData = () => {
-        service.getAllTypeInfo().then(res => {
+        service.getAllCategory().then(res => {
             if(res.status){
                 setData(res.data)
             }
         })
     }
 
-    const deleteType = (rowData) => {
-      
+    const deletecolumn = (rowData) => {
         rowData.isActive = rowData.isActive ?  false : true
-
-        const req = new TypeActivateReq(rowData.typeId,'admin',rowData.versionFlag,rowData.isActive)
-        service.activateOrDeactivateType(req).then(res => {
+        const req = new CategoryActivateReq(rowData.categoryId,'admin',rowData.versionFlag,rowData.isActive)
+        service.activeteOrDeactivateCategory(req).then(res => {
             if(res.status){
                 getAllData()
                 AlertMessages.getSuccessMessage(res.internalMessage)
@@ -56,9 +51,8 @@ export const TypeView = () => {
 
     } 
 
-    const updateType = (data) => {
-        const req = new TypeReq(data.type,'admin',data.typeId)
-        service.updateType(req).then(res => {
+    const updatecolumn = (data:CategoryReq) => {
+        service.updateCategory(data).then(res => {
             if(res.status){
               setDrawerVisible(false)
               getAllData()
@@ -68,10 +62,13 @@ export const TypeView = () => {
             }
         })
     }
+
     const openFormWithData = (rowData) => {
         setDrawerVisible(true)
         setSelectedData(rowData)
+
     }
+
     const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
           <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -96,7 +93,7 @@ export const TypeView = () => {
               <Button
                 onClick={() =>{
                   handleReset(clearFilters)
-                  setSearchedType(dataIndex)
+                  setSearchedColumn(dataIndex)
                   confirm({closeDropdown:true})
                 }
                    }
@@ -123,7 +120,7 @@ export const TypeView = () => {
           }
         },
         render: (text) =>
-          searchedType === dataIndex ? (
+          searchedColumn === dataIndex ? (
             <Highlighter
               highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
               searchWords={[searchText]}
@@ -138,7 +135,7 @@ export const TypeView = () => {
       function handleSearch(selectedKeys, confirm, dataIndex) {
         confirm();
         setSearchText(selectedKeys[0]);
-        setSearchedType(dataIndex);
+        setSearchedColumn(dataIndex);
       };
     
       function handleReset(clearFilters) {
@@ -157,11 +154,18 @@ export const TypeView = () => {
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
-            dataIndex:'type',
-            title:<div style={{textAlign:'center'}}>Type</div>,
-            sorter: (a, b) => a.type?.localeCompare(b.type),
+            dataIndex:'category',
+            title:<div style={{textAlign:'center'}}>Category</div>,
+            sorter: (a, b) => a.category?.localeCompare(b.category),
             sortDirections: ['descend', 'ascend'],
-            ...getColumnSearchProps('type')
+            // ...getcategorySearchProps('category')
+        },
+        {
+            dataIndex:'categoryCode',
+            title:<div style={{textAlign:'center'}}>CategoryCode</div>,
+            sorter: (a, b) => a.categoryCode?.localeCompare(b.categoryCode),
+            sortDirections: ['descend', 'ascend'],
+            // ...getcategorySearchProps('category')
         },
         {
             title:<div style={{textAlign:'center'}}>Status</div>,
@@ -224,18 +228,18 @@ export const TypeView = () => {
                       if (rowData.isActive) {
                         openFormWithData(rowData);
                       } else {
-                        AlertMessages.getErrorMessage('You Cannot Edit Deactivated Type');
+                        AlertMessages.getErrorMessage('You Cannot Edit Deactivated column');
                       }
                     }}
                     style={{ color: '#1890ff', fontSize: '14px' }}
                   />
     
                 <Divider type="vertical" />
-                  <Popconfirm onConfirm={e =>{deleteType(rowData);}}
+                  <Popconfirm onConfirm={e =>{deletecolumn(rowData);}}
                   title={
                     rowData.isActive
-                      ? 'Are you sure to Deactivate Type ?'
-                      :  'Are you sure to Activate Type ?'
+                      ? 'Are you sure to Deactivate category ?'
+                      :  'Are you sure to Activate category ?'
                   }
                 >
                   <Switch  size="default"
@@ -258,11 +262,11 @@ export const TypeView = () => {
     return (
       
       <Card
-      title={<span>Type</span>}
+      title={<span>Category</span>}
       // style={{ textAlign: "center" }}
       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       extra={
-        <Link to="/masters/Type/Type-form">
+        <Link to="/trim-master/category/category-form">
           <span 
           // style={{ color: "white" }}
           >
@@ -316,7 +320,7 @@ export const TypeView = () => {
       <Col span={4}></Col>
      <Col span={5}>
 
-           <Alert type='success' message={'Total Columns: ' + data.length} style={{fontSize:'15px'}} />
+           <Alert type='success' message={'Total Category: ' + data.length} style={{fontSize:'15px'}} />
         </Col>
         <Col span={5}>
           <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
@@ -345,11 +349,11 @@ export const TypeView = () => {
             <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         {/* <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'> */}
-        <TypeForm
+        <CategoryForm
             key={Date.now()}
-            updateDetails={updateType}
+            updateDetails={updatecolumn}
             isUpdate={true}
-            closeForm={closeDrawer} TypeData={selectedData}        />
+            closeForm={closeDrawer} columnData={selectedData}        />
         {/* </Card> */}
       </Drawer>
         </Card>
@@ -357,4 +361,4 @@ export const TypeView = () => {
 
 }
 
-export default TypeView
+export default CategoryView

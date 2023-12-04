@@ -19,4 +19,7 @@ export class CategoryDto {
 
   @ApiProperty()
   updatedUser: string | null;
+
+  @ApiProperty()
+  isActive: boolean;
 }

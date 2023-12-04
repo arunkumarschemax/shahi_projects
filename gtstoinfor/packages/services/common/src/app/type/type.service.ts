@@ -58,81 +58,83 @@ export class TypeService {
         }
    }
 
-//    async activateOrDeactivateType(req: TypeActivateReq): Promise<TypeResponseModel> {
-//     try {
-//         const TypeExists = await this.repo.findOne({where:{TypeId:req.typeId}});
-//         if (TypeExists) {
-//             console.log(req,'pppp');
-            
-//             if (req.versionFlag !== TypeExists.versionFlag) {
-//                 return new TypeResponseModel(false,10113, 'Someone updated the current Type information.Refresh and try again');
-//             } else {
-
-//                 const TypeStatus = await this.repo.update(
-//                     { TypeId: req.typeId },
-//                     { isActive: req.isActive, updatedUser: req.updatedUser });
-
-//                 if (TypeExists.isActive) {
-//                     if (TypeStatus.affected) {
-//                         const busAreaResponse: TypeResponseModel = new TypeResponseModel(true, 10115, 'Type is Deactivated successfully');
-//                         return busAreaResponse;
-//                     } else {
-//                         return new TypeResponseModel(false,10111, 'Type is already Deactivated');
-//                     }
-//                 } else {
-//                     if (TypeStatus.affected) {
-//                         const busAreaResponse: TypeResponseModel = new TypeResponseModel(true, 10114, 'Type is Activated successfully');
-//                         return busAreaResponse;
-//                     } else {
-//                         return new TypeResponseModel(false,10112, 'Type is already Activated');
-//                     }
-//                 }
-//                 // }
-//                 }
-//         } else {
-//             return new TypeResponseModel(false,99998, 'No Records Found');
-//         }
-//         } catch (err) {
-//             return err;
-//         }
-//     }
-
-async activateOrDeactivateType(req: TypeActivateReq): Promise<TypeResponseModel> {
+   async activateOrDeactivateType(req: TypeActivateReq): Promise<TypeResponseModel> {
     try {
-        const typeExists = await this.getTypeById(req.typeId)
-        if (typeExists) {
-            if (req.versionFlag !== typeExists.versionFlag) {
-                throw new TypeResponseModel(false,10113, 'Someone updated the current typeMethod information.Refresh and try again');
+        const TypeExists = await this.repo.findOne({where:{TypeId:req.typeId}});
+        if (TypeExists) {
+
+            
+            if (req.versionFlag !== TypeExists.versionFlag) {
+                return new TypeResponseModel(false,10113, 'Someone updated the current Type information.Refresh and try again');
             } else {
-                
-                    const typeStatus =  await this.repo.update(
-                        { TypeId: req.typeId },
-                        { isActive: req.isActive,updatedUser: req.updatedUser });
-                   
-                    if (typeExists.isActive) {
-                        if (typeStatus.affected) {
-                            const typeResponse: TypeResponseModel = new TypeResponseModel(true, 10115, 'typeMethod is de-activated successfully');
-                            return typeResponse;
-                        } else {
-                            throw new TypeResponseModel(false,10111, 'typeMethod is already deactivated');
-                        }
+
+                const TypeStatus = await this.repo.update(
+                    { TypeId: req.typeId },
+                    { isActive: req.isActive, updatedUser: req.updatedUser });
+
+                if (TypeExists.isActive) {
+                    if (TypeStatus.affected) {
+                        const busAreaResponse: TypeResponseModel = new TypeResponseModel(true, 10115, 'Type is Deactivated successfully');
+                        return busAreaResponse;
                     } else {
-                        if (typeStatus.affected) {
-                            const typeResponse: TypeResponseModel = new TypeResponseModel(true, 10114, 'typeMethod is activated successfully');
-                            return typeResponse;
-                        } else {
-                            throw new TypeResponseModel(false,10112, 'typeMethod is already  activated');
-                        }
+                        return new TypeResponseModel(false,10111, 'Type is already Deactivated');
                     }
+                } else {
+                    if (TypeStatus.affected) {
+                        const busAreaResponse: TypeResponseModel = new TypeResponseModel(true, 10114, 'Type is Activated successfully');
+                        return busAreaResponse;
+                    } else {
+                        return new TypeResponseModel(false,10112, 'Type is already Activated');
+                    }
+                }
                 // }
-            }
+                }
         } else {
-            throw new TypeResponseModel(false,99998, 'No Records Found');
+            return new TypeResponseModel(false,99998, 'No Records Found');
         }
-    } catch (err) {
-        return err;
+        } catch (err) {
+            return err;
+        }
     }
-}
+
+// async activateOrDeactivateType(req: TypeActivateReq): Promise<TypeResponseModel> {
+//     try {
+//         console.log(req,'oooooooooo');
+        
+//         const typeExists = await this.getTypeById(req.typeId)
+//         if (typeExists) {
+//             if (req.versionFlag !== typeExists.versionFlag) {
+//                 throw new TypeResponseModel(false,10113, 'Someone updated the current typeMethod information.Refresh and try again');
+//             } else {
+                
+//                     const typeStatus =  await this.repo.update(
+//                         { TypeId: req.typeId },
+//                         { isActive: req.isActive,updatedUser: req.updatedUser });
+                   
+//                     if (typeExists.isActive) {
+//                         if (typeStatus.affected) {
+//                             const typeResponse: TypeResponseModel = new TypeResponseModel(true, 10115, 'typeMethod is de-activated successfully');
+//                             return typeResponse;
+//                         } else {
+//                             throw new TypeResponseModel(false,10111, 'typeMethod is already deactivated');
+//                         }
+//                     } else {
+//                         if (typeStatus.affected) {
+//                             const typeResponse: TypeResponseModel = new TypeResponseModel(true, 10114, 'typeMethod is activated successfully');
+//                             return typeResponse;
+//                         } else {
+//                             throw new TypeResponseModel(false,10112, 'typeMethod is already  activated');
+//                         }
+//                     }
+//                 // }
+//             }
+//         } else {
+//             throw new TypeResponseModel(false,99998, 'No Records Found');
+//         }
+//     } catch (err) {
+//         return err;
+//     }
+// }
 async getTypeById(typeId: number): Promise<Type> {
     //  console.log(employeeId);
         const Response = await this.repo.findOne({
