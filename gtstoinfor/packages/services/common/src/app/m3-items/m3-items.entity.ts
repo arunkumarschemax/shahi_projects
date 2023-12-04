@@ -1,4 +1,4 @@
-import { RackEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { LogoEnum, PartEnum, RackEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { Buyers } from "../buyers/buyers.entity";
 
@@ -7,11 +7,6 @@ export class M3ItemsEntity {
 
   @PrimaryGeneratedColumn("increment", { name: 'm3_items_Id' })
   m3ItemsId: number;
-
-  // @Column("varchar", { 
-  //   name: 'item_code'
-  //  })
-  // itemCode: string;
 
   @Column('varchar', {
     name: 'item_code',
@@ -30,49 +25,49 @@ export class M3ItemsEntity {
 
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 30,
     name: 'content',
   })
   content: m3ItemsContentEnum;
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 30,
     name: 'fabric_type',
   })
   fabricType: number;
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 30,
     name: 'weave',
   })
   weave: number;
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 11,
     name: 'weight',
   })
   weight: number;
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 30,
     name: 'weight_unit',
   })
   weightUnit: string;
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 30,
     name: 'construction',
   })
   construction: string;
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 30,
     name: 'yarn_count',
   })
@@ -80,35 +75,35 @@ export class M3ItemsEntity {
 
   
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 30,
     name: 'yarn_unit',
   })
   yarnUnit: string;
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 11,
     name: 'width',
   })
   width: number;
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 30,
     name: 'width_unit',
   })
   widthUnit: string;
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 30,
     name: 'finish',
   })
   finish: string;
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 30,
     name: 'shrinkage',
   })
@@ -119,6 +114,101 @@ export class M3ItemsEntity {
     name: "buyer_id"
   })
   buyerId: number;
+
+  // Trim columns 
+
+  @Column("int", {
+    nullable: true,
+    name: "category_id"
+  })
+  categoryId: number;
+
+  @Column("int", {
+    nullable: true,
+    name: "color_id"
+  })
+  colorId: number;
+
+  @Column("int", {
+    nullable: true,
+    name: "content_id"
+  })
+  contentId: number;
+
+  @Column("int", {
+    nullable: true,
+    name: "finish_id"
+  })
+  finishId: number;
+
+  @Column("int", {
+    nullable: true,
+    name: "hole_id"
+  })
+  holeId: number;
+
+  @Column('enum',{
+    name:'logo',
+    nullable: true,
+    enum:LogoEnum,
+    // default:LogoEnum.PLAIN
+  })
+  logo: LogoEnum;
+
+  @Column('enum',{
+    name:'part',
+    nullable: true,
+    enum:PartEnum,
+    // default:PartEnum["2_part"]
+  })
+  part: PartEnum;
+
+  @Column("int", {
+    nullable: true,
+    name: "quality_id"
+  })
+  qualityId: number;
+
+  @Column("int", {
+    nullable: true,
+    name: "structure_id"
+  })
+  structureId: number;
+
+  @Column("int", {
+    nullable: true,
+    name: "thickness_id"
+  })
+  thicknessId: number;
+  @Column("int", {
+    nullable: true,
+    name: "type_id"
+  })
+  typeId: number;
+
+  @Column("int", {
+    nullable: true,
+    name: "uom_id"
+  })
+  uomId: number;
+  @Column("int", {
+    nullable: true,
+    name: "variety_id"
+  })
+  varietyId: number;
+
+  @Column("int", {
+    nullable: true,
+    name: "trim_category_id"
+  })
+  trimCategoryId: number;
+
+  @Column("int", {
+    nullable: true,
+    name: "trim_mapping_id"
+  })
+  trimMappingId: number;
+  // common columns 
   @Column("boolean", {
     nullable: false,
     default: true,

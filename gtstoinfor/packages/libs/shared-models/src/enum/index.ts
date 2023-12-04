@@ -19,4 +19,5 @@ export * from './stock-type.enum'
 export * from './reclassification-status.enum'
 export * from './reclassification-status.enum'
 export * from './bom-status.enum'
-
+export * from './logo.enum'
+export * from './part.enum'
