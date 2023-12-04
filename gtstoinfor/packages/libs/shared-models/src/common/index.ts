@@ -91,4 +91,6 @@ export * from './levels'
 export * from './Column'
 export* from './variety'
 export * from './trim'
-export * from './quality2'
+export * from './category'
+export * from './qualitys'
+ 

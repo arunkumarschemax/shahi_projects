@@ -36,6 +36,15 @@ export class categoryController{
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }
     }
+
+    @Post('/activeteOrDeactivateCategory')
+    async activeteOrDeactivateCategory(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+        return await this.CategService.activeteOrDeactivateCategory(req);
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
     @Post('/getAllCategory')
     async getAllCategory(): Promise<CommonResponseModel> {
     try {

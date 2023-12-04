@@ -16,8 +16,6 @@ export class qualitysController {
 
     @Post('/createqualitys')
     async createqualitys(@Body() QualityDTO:QualitysDTO,isUpdate:boolean=false): Promise<qualitysResponseModel> {
-      console.log();
-      
         try {
             return await this.columnService.createQualitys(QualityDTO,false);
         } catch (error) {
@@ -53,12 +51,12 @@ export class qualitysController {
         }
     }
 
-    // @Post('/getAllActiveColumnInfo')
-    // async getAllActivecolumnInfo(): Promise<ColumnResponseModel> {
+    // @Post('/getQualitysById')
+    // async getQualitysById(@Body() qualityId: number): Promise<qualitysResponseModel> {
     //     try {
-    //         return await this.columnService.getAllActiveColumnInfo();
+    //         return await this.columnService.getQualitysById(qualityId);
     //     } catch (error) {
-    //         return this.applicationExceptionhandler.returnException(ColumnResponseModel, error)
+    //         return this.applicationExceptionhandler.returnException(qualitysResponseModel, error)
     //     }
     // }
 
