@@ -48,6 +48,7 @@ import { TrimDetailsRequest } from './models/trim-details.req';
 import { promises } from 'dns';
 const { Builder, Browser, By, Capabilities, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome')
+import { Cron } from '@nestjs/schedule';
 
 
 @Injectable()
@@ -3105,7 +3106,7 @@ export class OrdersService {
         try {
             let filesArray = []
             const fs = require('fs');
-            const files = fs.readdirSync('F:/trim-orders');
+            const files = fs.readdirSync('D:/Trim-Orders');
             const uplodedFiles = await this.getUplodedFilesInfo()
             const difference = files.filter((element) => !uplodedFiles.data.includes(element))
             if (difference.length == 0) {
@@ -3114,7 +3115,7 @@ export class OrdersService {
             } else {
                 for (const filerec of difference) {
                     const filename = filerec
-                    const filepath = 'F:/trim-orders/' + filerec
+                    const filepath = 'D:/Trim-Orders/' + filerec
                     const promiseA = () => new Promise((resolve, reject) => {
                         xlsxFile(filepath, { getSheets: true }).then((sheets: any[]) => {
                             resolve(sheets)
@@ -3141,29 +3142,27 @@ export class OrdersService {
                                         // data.slice(0,3)
                                         return data
                                     }
-                                })
-
-                                    .then((rows) => {
-                                        let columnNames
-                                        const dataArray = []
-                                        while (rows.length) {
-                                            columnNames = rows.shift(); // Separate first row with column names
-                                            if (columnNames[0] != null && columnNames[0] == 'Order No.') {
-                                                break;
-                                            }
+                                }).then((rows) => {
+                                    let columnNames
+                                    const dataArray = []
+                                    while (rows.length) {
+                                        columnNames = rows.shift(); // Separate first row with column names
+                                        if (columnNames[0] != null && columnNames[0] == 'Order No.') {
+                                            break;
                                         }
-                                        rows.map((row) => { // Map the rest of the rows into objects
-                                            const obj = {}; // Create object literal for current row
-                                            row.forEach((cell, i) => {
-                                                obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
-                                            });
-                                            //   console.log(obj)
-                                            dataArray.push(Object(obj));
-                                            resolve(dataArray)
-                                            //   console.log(objs); // Display the array of objects on the console
-                                            //   return obj;
+                                    }
+                                    rows.map((row) => { // Map the rest of the rows into objects
+                                        const obj = {}; // Create object literal for current row
+                                        row.forEach((cell, i) => {
+                                            obj[columnNames[i]] = cell; // Use index from current cell to get column name, add current cell to new object
                                         });
+                                        //   console.log(obj)
+                                        dataArray.push(Object(obj));
+                                        resolve(dataArray)
+                                        //   console.log(objs); // Display the array of objects on the console
+                                        //   return obj;
                                     });
+                                });
                             } else {
                                 const saveFilePath = this.updatePath(filepath, filename, null, FileTypesEnum.TRIM_ORDERS, 'Email', 'Sheet Name Does Not Match')
                                 filesArray.push(new ordersMailFileStatusArrayReq(filename, 'Failed', `Sheet name doesn't match`, '-'))
@@ -3220,14 +3219,19 @@ export class OrdersService {
         } catch (err) {
             throw err
         }
-
-
     }
 
+    // @Cron('0 8 * * *')
     async uniqloTrimOrdersBot(): Promise<any> {
         const chromeOptions = new chrome.Options();
         chromeOptions.addArguments('--auto-select-certificate-for-urls=https://spl.fastretailing.com');
+        const today = new Date();
 
+        const year = today.getFullYear();
+        const month = (today.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
+        const day = today.getDate().toString().padStart(2, '0');
+
+        const formattedDate = `${year}/${month}/${day}`
         const driver = await new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
 
         try {
@@ -3250,19 +3254,20 @@ export class OrdersService {
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[2]/div/m-selectbox[1]')).click();
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[2]/div/m-selectbox[2]')).click();
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[2]/div/m-selectbox[3]')).click();
-            await driver.findElement(By.xpath('//*[@id="a-textfield-12"]')).sendKeys('2023/11/1');
-            await driver.findElement(By.xpath('//*[@id="a-textfield-13"]')).sendKeys('2023/11/22');
+            await driver.findElement(By.xpath('//*[@id="a-textfield-12"]')).sendKeys('2023/12/1');
+            await driver.findElement(By.xpath('//*[@id="a-textfield-13"]')).sendKeys(formattedDate);
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/m-buttongroup/button[2]')).click();
             await driver.sleep(10000)
             await driver.findElement(By.xpath('//*[@id="borderLayout_eGridPanel"]/div[1]/div/div[1]/div[1]/div[2]/div[1]/span/span[2]')).click();
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/m-floatingarea/div[2]/div[1]/button[2]')).click();
             await driver.wait(until.elementLocated(By.xpath('/html/body/o-component-host/o-dialog/div[2]/button[2]')));
             await driver.findElement(By.xpath('/html/body/o-component-host/o-dialog/div[2]/button[2]')).click();
-            await driver.sleep(10000)
+            await driver.sleep(5000)
             await driver.wait(until.elementLocated(By.xpath('/html/body/o-component-host/o-dialog/div[3]/button')));
             await driver.findElement(By.xpath('/html/body/o-component-host/o-dialog/div[3]/button')).click();
+            await driver.sleep(5000)
             await driver.quit();
-
+            return new CommonResponseModel(true, 1, 'Trim Orders Downloaded Successfully')
         } catch (err) {
             return new CommonResponseModel(false, 0, err)
         }
