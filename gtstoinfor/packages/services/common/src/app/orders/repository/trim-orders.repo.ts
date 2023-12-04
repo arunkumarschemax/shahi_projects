@@ -23,7 +23,8 @@ export class TrimOrdersRepository extends Repository<TrimOrdersEntity> {
     }
     async getUnacceptedTrimOrders(req: TrimOrdersReq): Promise<any[]> {
         const query = this.createQueryBuilder('to')
-            .select('*,group_concat(size) as sizes,group_concat(color) as colors,group_concat(order_qty_pcs) as qty')
+            .select('*,group_concat(size) as sizes,group_concat(color) as colors,group_concat(order_qty_pcs) as qty,sum(order_qty_pcs) as totalqty')
+            .where(`(DATE(to.contracted_etd) - INTERVAL 7 DAY ) >= CURRENT_DATE AND answered_status = 'Not Answered'`)
         if (req.OrderNumber) {
             query.andWhere(`to.order_no = '${req.OrderNumber}'`)
         }

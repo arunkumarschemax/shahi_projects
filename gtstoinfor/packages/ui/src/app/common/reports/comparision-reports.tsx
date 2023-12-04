@@ -829,7 +829,7 @@ export const MonthWiseComparisionReport = () => {
       },
     },
     {
-      dataIndex: "totalPcs",
+      dataIndex: "totalCoeff",
       align: "right",
       width: colWidth.totalPre,
       render: (text: any, record: any) => {
@@ -1837,6 +1837,10 @@ export const MonthWiseComparisionReport = () => {
         const sheetName = res.year.toString(); // Convert res to a string
         excel
           .addSheet(sheetName)
+          .setTBodyStyle({
+            fontName: "calibri",
+            fontSize: 10
+          })
           .addColumns(exportingColumns)
           .addDataSource(data2, { str2num: true });
           excel.addRow();
@@ -2017,10 +2021,10 @@ export const MonthWiseComparisionReport = () => {
                     return <th className="ant-table-cell" scope="col" style={{ width: `${(index % 2) ? colWidth.pre : colWidth.latest}px`, textAlign:'right' }}>{val}</th>
                   })}
                   <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalLatest}px`, textAlign:'right' }}>
-  {totalPre}
+  {totalLat}
 </th>
 <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPre}px`, textAlign:'right' }}>
-  {totalLat}
+  {totalPre}
 </th>
 
 

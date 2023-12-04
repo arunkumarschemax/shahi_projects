@@ -124,12 +124,11 @@ const TrimOrderAcceptance = () => {
     const req = new OrderAcceptanceRequest()
     req.itemNo = record.itemNumber
     req.purchaseOrderNumber = record.order_no
-    req.poLineItemNumber = null
-    req.buyer = 'uniqlo-unit12'
+    req.poLineItemNumber = record.order_plan_number
+    req.buyer = 'Uniqlo-U12'
     service.saveItemDetailsOfTrimOrder(req).then(res => {
       if (res.status) {
         console.log(res)
-
         // setItem(res.data)
       } else {
         // setFilteredData([])
@@ -371,7 +370,7 @@ const TrimOrderAcceptance = () => {
             <Button type="link" onClick={() => DetailedView(record.order_no)}>
               {record.order_no}
             </Button>
-            <Modal title={`Order No : ${record.order_no}`} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+            <Modal title={`Order No : ${orderNumberDetails[0]?.order_no}`} open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
               <Table columns={modalcolumns} dataSource={orderNumberDetails} className="custom-table-wrapper"
                 bordered
                 pagination={false}
@@ -462,10 +461,25 @@ const TrimOrderAcceptance = () => {
       // sortDirections: ["descend", "ascend"],
     },
     {
+      title: 'Total Quantity',
+      dataIndex: 'totalqty',
+      width: 60,
+      align: 'right',
+      // ...getColumnSearchProps("size"),
+      // sorter: (a, b) => a.size.localeCompare(b.size),
+      // sortDirections: ["descend", "ascend"],
+      render: (text, record) => {
+        return (
+          <>
+            {record.totalqty ? record.totalqty.toLocaleString('en-IN') : '-'}
+          </>
+        )
+      }
+    },
+    {
       title: 'Trim Item No',
       dataIndex: 'trim_item_no',
       align: 'right',
-
       ...getColumnSearchProps("trim_item_no"),
       // sorter: (a, b) => a.trim_item_no.localeCompare(b.trim_item_no),
       // sortDirections: ["descend", "ascend"],

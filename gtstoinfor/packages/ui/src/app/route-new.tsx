@@ -31,6 +31,8 @@ import TrimOrderDetailView from "./excel-import/trim-orders-detail-view"
 import PriceListHistory from "./masters/pricelist/price-list-history"
 import TrimOrderAcceptance from "./excel-import/trim-order-acceptance"
 import ColineView from "./excel-import/co-line-info"
+import AddressUpload from "./masters/address/address-excel-upload"
+import AddressView from "./masters/address/address-view"
 // import ExcelImport from "./excel-import/excel-import"
 
 
@@ -57,6 +59,8 @@ export const AppRoutesNew = () => {
                     }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
                     }} />} />
+                    <Route path='address-upload' element={<AddressUpload />} />
+                    <Route path='address-view' element={<AddressView />} />
                     <Route path='pricelist/price-list-history' key='/pricelist/price-list-view' element={<PriceListHistory />} />
                 </Route>
                 <Route path='/excel-import' key='/excel-import'>

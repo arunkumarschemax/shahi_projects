@@ -10,6 +10,7 @@ import { appConfig } from '../../config';
 import { OrdersModule } from './orders/orders.module';
 import { PriceListModule } from './price-list/pricelist.module';
 import { ScheduleModule } from '@nestjs/schedule';
+import { AddressModule } from './address/address.module';
 
 
 @Module({
@@ -33,7 +34,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     FactoriesModule,
     UsersModule,
     OrdersModule,
-    AuthModule, JwtModule,PriceListModule],
+    AuthModule, JwtModule,PriceListModule,AddressModule],
   controllers: [AppController],
   providers: [AppService],
 })

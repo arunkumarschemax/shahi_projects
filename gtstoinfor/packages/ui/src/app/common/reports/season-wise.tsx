@@ -6,6 +6,7 @@ import {
 import { SeasonWiseRequest } from "@project-management-system/shared-models";
 import { OrdersService } from "@project-management-system/shared-services";
 import {
+  Alert,
   Button,
   Card,
   Col,
@@ -1087,6 +1088,7 @@ const SeasonWiseReport = () => {
           {tabsData.map((e: string, index) => {
             return (
               <Tabs.TabPane key={e} tab={<b>{e.split(",")[0]}</b>}>
+                {data.length > 0 ?(
                 <div className="specific-screen">
                   <Table
                     bordered
@@ -1104,6 +1106,9 @@ const SeasonWiseReport = () => {
                     }}
                   />
                 </div>
+                ):(
+                <Alert message="No data" type="warning" showIcon style={{ width: "150px", margin: "auto" }} />
+                )}
               </Tabs.TabPane>
             );
           })}
