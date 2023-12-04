@@ -1,16 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ItemsRepository } from './dto/item-repository';
-import { AllItemsResponseModel, ItemsDto } from '@project-management-system/shared-models';
+import { AllItemsResponseModel, CommonResponseModel, ItemsDto } from '@project-management-system/shared-models';
 import { Item } from './item-entity';
 import { ItemIdReq } from './dto/item-id-req';
 import { ItemCategory } from '../item-categories/item-categories.entity';
 import { ItemSubCategory } from '../item-sub-categories/item-sub-category.entity';
+import { ItemView } from './item.view.entity';
+import { DataSource } from "typeorm";
 
 @Injectable()
 
 export class ItemsService{
     constructor(
-        private itemsRepo:ItemsRepository
+        private itemsRepo:ItemsRepository,
+        private dataSource: DataSource,
     ){}
 
     async creteItems(req: ItemsDto, isUpdate: boolean):Promise<AllItemsResponseModel>{
@@ -78,15 +81,19 @@ export class ItemsService{
 
     }
 
-    async getAllItems():Promise<AllItemsResponseModel>{
+    async getAllItems():Promise<CommonResponseModel>{
         let items:ItemsDto[]=[]
         const data = await this.itemsRepo.getItem();
-        for( const res of data){
-            console.log(res.itemId,'itemId')
-            items.push(new ItemsDto(res.itemId,res.itemName,res.itemCode,res.itemCategoryId,res.itemSubCategoryId,res.brandId,res.minQuantity,res.uomId,res.remarks,res.isActive,res.itemCategory,res.itemSubCategory,'brand','uom'))
-        }
+        const manager = this.dataSource;
+        // const dataSource = new DataSource()
+       
+        // const result = await manager.query(query)
+        // const res = await this.dataSource.manager.find(ItemView,{where:{brandId:1,itemCode:'UQ-FAB-01'}})
+        const res = await this.dataSource.manager.find(ItemView)
+        
         if(data.length >0){
-            return new AllItemsResponseModel(true,1,'Items Retrived Sucessfully..',data)
+
+            return new CommonResponseModel(true,1,'Items Retrived Sucessfully..',res)
         }else{
             return new AllItemsResponseModel(false,0,'No Items Found..',[])
 
