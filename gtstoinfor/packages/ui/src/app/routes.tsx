@@ -186,6 +186,10 @@ import WarehouseDashboard from "./common/dashboards/warehouse-dashboard"
 import { ReclassificationApprovalGrid } from "./sourcing-requisition/reclassification-approval-grid"
 import AllocatedStockApproval from "./sample-development/allocated-stock-approval"
 import StoreIssues from "./sample-development/store-issues"
+import ThicknessForm from "./masters/thickness/thickness-form"
+import ThicknessView from "./masters/thickness/thickness-view"
+import TypeView from "./masters/type/type-view"
+import { TypeForm } from "./masters/type/type-form"
 
 
 
@@ -578,6 +582,16 @@ export const AppRoutes = () => {
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} columnData={undefined} />} />
                     <Route path='column/column-view' element={<ColumnView />} />
+                    <Route path='thickness/thickness-form' element={<ThicknessForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} ThicknessData={undefined} />} />
+                    <Route path='thickness/thickness-view' element={<ThicknessView />} />
+                    <Route path='Type/Type-form' element={<TypeForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} TypeData={undefined} />} />
+                    <Route path='Type/Type-view' element={<TypeView />} />
 
                 </Route>
                 <Route path='/global'>
