@@ -201,6 +201,7 @@ import CategoryView from "./common/category/category-view"
 import path from "path"
 import { ContentForm } from "./trim-master/content/content-form"
 import ContentGrid from "./trim-master/content/content-view"
+import StructureForm, { StructureView } from "./common/structure/structure.view"
 import FinishForm from "./trim-master/finish/finish"
 import FinishGrid from "./trim-master/finish/finish-view"
 import HoleForm from "./trim-master/hole/hole"
@@ -598,16 +599,7 @@ export const AppRoutes = () => {
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} columnData={undefined} />} />
                     <Route path='column/column-view' element={<ColumnView />} />
-                    <Route path='thickness/thickness-form' element={<ThicknessForm
-                        isUpdate={false}
-                        closeForm={() => { }}
-                        updateDetails={(undefined) => { }} ThicknessData={undefined} />} />
-                    <Route path='thickness/thickness-view' element={<ThicknessView />} />
-                    <Route path='Type/Type-form' element={<TypeForm
-                        isUpdate={false}
-                        closeForm={() => { }}
-                        updateDetails={(undefined) => { }} TypeData={undefined} />} />
-                    <Route path='Type/Type-view' element={<TypeView />} />
+                 
                 </Route>
                 <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
@@ -738,6 +730,21 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} />} />
+                        <Route path="structure/structure-view" element={<StructureView />} />
+                    <Route path='structure/structure-form' element={<StructureForm structureData={undefined}
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} />} />
+   <Route path='thickness/thickness-form' element={<ThicknessForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} ThicknessData={undefined} />} />
+                    <Route path='thickness/thickness-view' element={<ThicknessView />} />
+                    <Route path='Type/Type-form' element={<TypeForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} TypeData={undefined} />} />
+                    <Route path='Type/Type-view' element={<TypeView />} />                    
                     <Route path='m3-trim-items/m3-trim-items-form' element={<M3TrimItemsForm />} />
                     
                 </Route>

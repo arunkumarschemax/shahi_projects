@@ -5,19 +5,18 @@ import { useEffect, useRef, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import Highlighter from "react-highlight-words"
 import AlertMessages from "../../common/common-functions/alert-messages"
-import { ColumnService, ThicknessService } from "@project-management-system/shared-services"
-import { ColumnActivateReq, ColumnReq, ThicknessActivateReq, ThicknessReq } from "@project-management-system/shared-models"
-import ColumnForm, { ThicknessForm } from "./thickness-form"
+import { StructureService } from "@project-management-system/shared-services"
+import { StructureActivateReq, StructureReq } from "@project-management-system/shared-models"
+import StructureForm from "./structure.form"
 
-
-export const ThicknessView = () => {
+export const StructureView = () => {
     const navigate = useNavigate()
     const [data,setData] = useState<any[]>([])
     const [page, setPage] = useState<number>(1);
-    const service = new ThicknessService()
+    const service = new StructureService()
     const searchInput = useRef(null);
     const [searchText, setSearchText] = useState(''); 
-    const [searchedThickness, setSearchedThickness] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
     const [drawerVisible, setDrawerVisible] = useState(false);
     const [selectedData, setSelectedData] = useState<any>(undefined);
     const [pageSize, setPageSize] = useState<number>(1);
@@ -29,18 +28,17 @@ export const ThicknessView = () => {
     },[])
 
     const getAllData = () => {
-        service.getAllThicknessInfo().then(res => {
+        service.getAllStructureInfo().then(res => {
             if(res.status){
                 setData(res.data)
             }
         })
     }
 
-    const deleteThickness = (rowData) => {
-
+    const deletecolumn = (rowData) => {
         rowData.isActive = rowData.isActive ?  false : true
-        const req = new ThicknessActivateReq(rowData.thicknessId,'admin',rowData.versionFlag,rowData.isActive)     
-        service.activateOrDeactivateThickness(req).then(res => {
+        const req = new StructureActivateReq(rowData.structureId,'admin',rowData.versionFlag,rowData.isActive)
+        service.activateOrDeactivateStructure(req).then(res => {
             if(res.status){
                 getAllData()
                 AlertMessages.getSuccessMessage(res.internalMessage)
@@ -53,9 +51,9 @@ export const ThicknessView = () => {
 
     } 
 
-    const updateThickness = (data) => {
-        const req = new ThicknessReq(data.thickness,'admin',data.thicknessId)
-        service.updateThickness(req).then(res => {
+    const updateStructure = (data) => {
+        const req = new StructureReq(data.structure,'admin',data.structureId)
+        service.createStructure(req).then(res => {
             if(res.status){
               setDrawerVisible(false)
               getAllData()
@@ -96,7 +94,7 @@ export const ThicknessView = () => {
               <Button
                 onClick={() =>{
                   handleReset(clearFilters)
-                  setSearchedThickness(dataIndex)
+                  setSearchedColumn(dataIndex)
                   confirm({closeDropdown:true})
                 }
                    }
@@ -123,7 +121,7 @@ export const ThicknessView = () => {
           }
         },
         render: (text) =>
-          searchedThickness === dataIndex ? (
+          searchedColumn === dataIndex ? (
             <Highlighter
               highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
               searchWords={[searchText]}
@@ -138,7 +136,7 @@ export const ThicknessView = () => {
       function handleSearch(selectedKeys, confirm, dataIndex) {
         confirm();
         setSearchText(selectedKeys[0]);
-        setSearchedThickness(dataIndex);
+        setSearchedColumn(dataIndex);
       };
     
       function handleReset(clearFilters) {
@@ -157,11 +155,11 @@ export const ThicknessView = () => {
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
-            dataIndex:'thickness',
-            title:<div style={{textAlign:'center'}}>Thickness</div>,
-            sorter: (a, b) => a.thickness?.localeCompare(b.thickness),
+            dataIndex:'structure',
+            title:<div style={{textAlign:'center'}}>Column</div>,
+            sorter: (a, b) => a.column?.localeCompare(b.column),
             sortDirections: ['descend', 'ascend'],
-            ...getColumnSearchProps('thickness')
+            ...getColumnSearchProps('structure')
         },
         {
             title:<div style={{textAlign:'center'}}>Status</div>,
@@ -224,18 +222,18 @@ export const ThicknessView = () => {
                       if (rowData.isActive) {
                         openFormWithData(rowData);
                       } else {
-                        AlertMessages.getErrorMessage('You Cannot Edit Deactivated Thickness');
+                        AlertMessages.getErrorMessage('You Cannot Edit Deactivated column');
                       }
                     }}
                     style={{ color: '#1890ff', fontSize: '14px' }}
                   />
     
                 <Divider type="vertical" />
-                  <Popconfirm onConfirm={e =>{deleteThickness(rowData);}}
+                  <Popconfirm onConfirm={e =>{deletecolumn(rowData);}}
                   title={
                     rowData.isActive
-                      ? 'Are you sure to Deactivate Thickness ?'
-                      :  'Are you sure to Activate Thickness ?'
+                      ? 'Are you sure to Deactivate structure ?'
+                      :  'Are you sure to Activate structure ?'
                   }
                 >
                   <Switch  size="default"
@@ -258,11 +256,11 @@ export const ThicknessView = () => {
     return (
       
       <Card
-      title={<span>Thickness</span>}
+      title={<span>Structure</span>}
       // style={{ textAlign: "center" }}
       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       extra={
-        <Link to="/trim-master/thickness/thickness-form">
+        <Link to="/trim-master/structure/structure-form">
           <span 
           // style={{ color: "white" }}
           >
@@ -316,7 +314,7 @@ export const ThicknessView = () => {
       <Col span={4}></Col>
      <Col span={5}>
 
-           <Alert type='success' message={'Total Columns: ' + data.length} style={{fontSize:'15px'}} />
+           <Alert type='success' message={'Total structure: ' + data.length} style={{fontSize:'15px'}} />
         </Col>
         <Col span={5}>
           <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
@@ -332,6 +330,7 @@ export const ThicknessView = () => {
   
             {/* <div style={{overflowX :'auto' }}> */}
             <Card>
+
             <Table columns={columns} pagination={{
             pageSize: 50,
             onChange(current, pageSize) {
@@ -345,11 +344,11 @@ export const ThicknessView = () => {
             <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '80%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         {/* <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'> */}
-        <ThicknessForm
+        <StructureForm
             key={Date.now()}
-            updateDetails={updateThickness}
+            updateDetails={updateStructure}
             isUpdate={true}
-            closeForm={closeDrawer} ThicknessData={selectedData}        />
+            closeForm={closeDrawer} structureData={selectedData}        />
         {/* </Card> */}
       </Drawer>
         </Card>
@@ -357,4 +356,4 @@ export const ThicknessView = () => {
 
 }
 
-export default ThicknessView
+export default StructureForm

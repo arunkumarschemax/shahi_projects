@@ -2,22 +2,23 @@ import { Button, Card, Form, Row, Col, Input } from "antd";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import AlertMessages from "../../common/common-functions/alert-messages";
-import { ThicknessReq } from "@project-management-system/shared-models";
-import { ThicknessService } from "@project-management-system/shared-services";
+import { StructureReq } from "@project-management-system/shared-models";
+import { ColumnService } from "@project-management-system/shared-services";
+import { StructureService } from "@project-management-system/shared-services";
 
 
-export interface ThicknessProps {
-    ThicknessData: ThicknessReq;
-    updateDetails: (Thickness: ThicknessReq) => void;
+export interface structureProps {
+    structureData: StructureReq;
+    updateDetails: (column: StructureReq) => void;
     isUpdate: boolean;
     closeForm: () => void;
   }
 
-export const ThicknessForm = (props:ThicknessProps) => {
+export const StructureForm = (props:structureProps) => {
     const navigate = useNavigate()
     const [form] = Form.useForm()
     const [disable, setDisable] = useState<boolean>(false)
-    const service = new ThicknessService()
+    const service = new StructureService()
 
 
     const onReset = () => {
@@ -30,18 +31,18 @@ export const ThicknessForm = (props:ThicknessProps) => {
       props.updateDetails(val);
     } else {
       setDisable(false)
-      saveThickness(val);
+      savecolumn(val);
     }
     }
 
-    const saveThickness = (val) => {
+    const savecolumn = (val) => {
         setDisable(true)
-        const req = new ThicknessReq(val.thickness,'admin',val.thicknessId)
-        service.createThickness(req).then(res => {
+        // const req = new StructureReq(val.structure,'admin')
+        service.createStructure(val).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 onReset();
-                navigate('/trim-master/thickness/thickness-view')
+                navigate('/trim-master/structure/structure-view')
             } else{
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
@@ -54,27 +55,26 @@ export const ThicknessForm = (props:ThicknessProps) => {
     
     return(
         <>
-            
-            <Card title={<span >Thickness</span>}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
-            extra={props.isUpdate==true?"":<Link to='/trim-master/thickness/thickness-view' ><span style={{color:'white'}}>
+                    <Card title={<span >Structure</span>}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
+            extra={props.isUpdate==true?"":<Link to='/trim-master/structure/structure-view' ><span style={{color:'white'}}>
                 <Button  type={'primary'} >View </Button> </span></Link>}
 >
         {/* <Card
         //    title={<span>Commission</span>}
            style={{ textAlign: "center" }}
            headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
-           title={props.isUpdate ? 'Update Thickness' : 'Add Thickness'}
+           title={props.isUpdate ? 'Update column' : 'Add column'}
             extra={(props.isUpdate === false) && <span><Button 
-            onClick={() => navigate('/masters/Thickness/Thickness-view')} 
+            onClick={() => navigate('/masters/column/column-view')} 
             type={'primary'}>View</Button></span>}> */}
-            <Form form={form} layout="vertical" onFinish={onFinish} initialValues={props.ThicknessData}>
-            <Form.Item name='thicknessId' style={{display:'none'}}>
+            <Form form={form} layout="vertical" onFinish={onFinish} initialValues={props.structureData}>
+            <Form.Item name='structureId' style={{display:'none'}}>
                         <Input disabled/>
                     </Form.Item>
                 <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-                    <Form.Item label='Thickness' name='thickness' rules={[{required:true}]}>
-                        <Input placeholder="Enter Thickness"/>
+                    <Form.Item label='Structure' name='structure' rules={[{required:true}]}>
+                        <Input placeholder="Enter Structure"/>
                     </Form.Item>
                 </Col>
                 </Row>
@@ -94,4 +94,4 @@ export const ThicknessForm = (props:ThicknessProps) => {
 
 }
 
-export default ThicknessForm
+export default StructureForm
