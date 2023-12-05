@@ -894,6 +894,13 @@ export class SampleRequestService {
     }
 
     async getAllocatedBomInfo(req?:RequestNoReq):Promise<CommonResponseModel>{
+      let checkStatus
+      if(req.action == 'Issued'){
+        checkStatus = LifeCycleStatusEnum.READY_FOR_PRODUCTION
+      }
+      if(req.action == 'Approval'){
+        checkStatus = LifeCycleStatusEnum.MATERIAL_ALLOCATED
+      }
       let fabricInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,c.colour,mi.item_code as itemCode,sf.consumption
       ,sf.total_requirement as BOM ,sf.sample_request_id as sampleRequestFabricId , sf.fabric_info_id as sampleFabricId,'Fabric' as type
        FROM sample_request sr 
@@ -903,7 +910,7 @@ export class SampleRequestService {
             LEFT JOIN brands br ON br.brand_id = sr.brand_id
             LEFT JOIN m3_items mi ON mi.m3_items_Id = sf.fabric_code
             LEFT JOIN colour c ON c.colour_id = sf.colour_id
-            WHERE sr.life_cycle_status = '${LifeCycleStatusEnum.MATERIAL_ALLOCATED}'`;
+            WHERE sr.life_cycle_status = '${checkStatus}'`;
             if(req.requestNo){
               fabricInfoQry += ' AND sr.sample_request_id = ' + req.requestNo ;
             }
@@ -912,14 +919,14 @@ export class SampleRequestService {
       if(req.requestNo) {
 
       }
-      let trimInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,mi.trim_code as trimCode,st.consumption , st.trim_info_id as sampleTrimInfoId , st.sample_request_id as sampleReqTrimId ,'Trim' as type
+      let trimInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,mi.trim_code as itemCode,st.consumption , st.trim_info_id as sampleTrimInfoId , st.sample_request_id as sampleReqTrimId ,'Trim' as type
       FROM sample_request sr 
 LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_request_id
       LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
             LEFT JOIN style s ON s.style_id = sr.style_id
             LEFT JOIN brands br ON br.brand_id = sr.brand_id
             LEFT JOIN m3_trims mi ON mi.m3_trim_Id = st.trim_code
-      WHERE sr.life_cycle_status = '${LifeCycleStatusEnum.MATERIAL_ALLOCATED}'`;
+      WHERE sr.life_cycle_status = '${checkStatus}'`;
       if(req.requestNo){
         fabricInfoQry += ' AND sr.request_no = ' + req.requestNo ;
       }
@@ -944,11 +951,18 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
     }
 
     async allocatedLocationInfo(req:AllocatedLocationRequest){
+      let checkStatus
+      if(req.action == 'Issued'){
+        checkStatus = MaterialStatusEnum.READY_FOR_PRODUCTION
+      }
+      if(req.action == 'Approval'){
+        checkStatus = MaterialStatusEnum.MATERIAL_ALLOCATED
+      }
       const data = `SELECT ma.sample_item_id AS sampleItemId,rp.rack_position_name AS location,position_Id AS id,item_type AS itemType,mai.quantity
       ,mai.allocate_quantity AS allocatedQty,mai.material_allocation_items_id as materialAllocationId  FROM material_allocation ma
       LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
       LEFT JOIN rack_position rp ON rp.position_Id = mai.location_id
-       WHERE sample_item_id = ${req.sampleRequestItemId} and ma.status = '${MaterialStatusEnum.MATERIAL_ALLOCATED}'`
+       WHERE sample_item_id = ${req.sampleRequestItemId} and ma.status = '${checkStatus}'`
        const res = await this.dataSource.query(data)
        if(res.length > 0){
          return new CommonResponseModel(true,1,'data',res)
@@ -962,14 +976,24 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
       console.log(req)
       const manager = new GenericTransactionManager(this.dataSource)
       try{
+        let sampleUpdateStatus
+        let sampleMaterialStatus
         await manager.startTransaction()
-        const updateSamleReq = await manager.getRepository(SampleRequest).update({SampleRequestId:req.sampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})
+        if(req.action == 'Issued'){
+          sampleUpdateStatus = LifeCycleStatusEnum.MATERIAL_ISSUED
+          sampleMaterialStatus = MaterialStatusEnum.MATERIAL_ISSUED
+        }
+        if(req.action == 'Approval'){
+          sampleUpdateStatus = LifeCycleStatusEnum.READY_FOR_PRODUCTION
+          sampleMaterialStatus = MaterialStatusEnum.READY_FOR_PRODUCTION
+        }
+        const updateSamleReq = await manager.getRepository(SampleRequest).update({SampleRequestId:req.sampleRequestId},{lifeCycleStatus:sampleUpdateStatus})
         if(updateSamleReq.affected){
-        const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({sampleOrderId:req.sampleRequestId},{status:MaterialStatusEnum.READY_FOR_PRODUCTION})
+        const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({sampleOrderId:req.sampleRequestId},{status:sampleMaterialStatus})
           if(updateAllocations.affected){
             console.log('yess')
             await manager.completeTransaction()
-            return new CommonResponseModel(true,1,'Successfully Approved')
+            return new CommonResponseModel(true,1,req.action == 'Issued'?'Succefully Issued':'Successfully Approved')
           }else{
             await manager.releaseTransaction()
             return new CommonResponseModel(false,0,'something went wrong')

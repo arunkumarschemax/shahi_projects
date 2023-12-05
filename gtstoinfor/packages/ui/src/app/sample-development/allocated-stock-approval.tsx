@@ -35,6 +35,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
   const [requestNo, setRequestNo] = useState<any>([]);
   const [childData, setChildData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [showTabe, setShowTabe] = useState(false);
 
 
 
@@ -67,24 +68,29 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
   };
 
   const getAllocatedBomData = () => {
-    const req = new RequestNoReq();
-    req.requestNo = form.getFieldValue("requestNo");
-    if(props?.screen === 'Issued'){
-      req.action = 'Issued'
-    }else{
-      req.action = 'Approval'
-    }
-    service.getAllocatedBomInfo(req).then((res) => {
-      if (res.data) {
-        setFabricStockData(res.data);
-        // setTrimStockData(res.data.trimInfo);
-        AlertMessages.getSuccessMessage(res.internalMessage);
-      } else {
-        setFabricStockData([]);
-        // setTrimStockData([]);
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    });
+    form.validateFields().then(()=>{
+        const req = new RequestNoReq();
+        req.requestNo = form.getFieldValue("requestNo");
+        if(props?.screen === 'Issued'){
+          req.action = 'Issued'
+        }else{
+          req.action = 'Approval'
+        }
+        service.getAllocatedBomInfo(req).then((res) => {
+          if (res.data) {
+            setFabricStockData(res.data);
+            setShowTabe(true)
+            // setTrimStockData(res.data.trimInfo);
+            AlertMessages.getSuccessMessage(res.internalMessage);
+          } else {
+            setFabricStockData([]);
+            setShowTabe(false)
+            // setTrimStockData([]);
+            AlertMessages.getErrorMessage(res.internalMessage);
+          }
+        });
+
+    })
   };
 
   const getAllRequestNo = () => {
@@ -119,6 +125,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
       .then((res) => {
         if (res.status) {
           notification.success({ message: res.internalMessage });
+          window.location.reload()
         } else {
           notification.error({ message: res.internalMessage });
         }
@@ -186,6 +193,9 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
     {
       title: "Colour",
       dataIndex: "colour",
+      render:(value,record) => {
+        return(<>{value ? value : 'NA'}</>)
+      }
     },
     {
       title: "Item Code",
@@ -196,8 +206,11 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
       dataIndex: "consumption",
     },
     {
-      title: "BOM",
+      title: "Qunatity",
       dataIndex: "BOM",
+      render:(value,record) => {
+        return(<>{value > 0 ? value : record.consumption}</>)
+      }
     },
     // {
     //   title: "Action",
@@ -330,7 +343,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
                   optionFilterProp="children"
                   placeholder="Select Request Number"
                 >
-                  {requestNo.map((e) => {
+                  {requestNo?.map((e) => {
                     return (
                       <Option key={e.SampleRequestId} value={e.SampleRequestId}>
                         {e.requestNo}
@@ -373,7 +386,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
                     ) : (
                       <>
                         {props?.screen === "Issued" ? (
-                          <>Issued </>
+                          <>Issue Material </>
                         ) : (
                           <> Approve</>
                         )}
@@ -390,7 +403,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
         <br></br>
         {/* <Tabs defaultActiveKey="1">
           <TabPane tab="Fabric Details" key="1"> */}
-        <Table
+        {showTabe ? <><Table
           rowKey={(record) => record.sampleFabricId}
           columns={fabColumns}
           dataSource={fabricStockData}
@@ -402,7 +415,8 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
             rowExpandable: (record) => record.name !== "Not Expandable",
           }}
           //   className="custom-table-wrapper"
-        />
+        /></>:<></>
+        }
         {/* </TabPane> */}
         {/* <TabPane tab="Trim Details" key="2">
             <Table
