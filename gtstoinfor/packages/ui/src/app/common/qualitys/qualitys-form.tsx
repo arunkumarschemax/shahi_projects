@@ -1,4 +1,4 @@
-import { LevelsDto, QualitysDTO } from "@project-management-system/shared-models";
+import { QualitysDTO } from "@project-management-system/shared-models";
 
 import { LevelService, ProfitControlHeadService, QualitysService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Select } from "antd";
@@ -53,7 +53,7 @@ export const QualitysForm = (props:QualitysFormProps) => {
               service.createQualitys(qualit).then((res) => {
             if (res.status) {
               AlertMessages.getSuccessMessage('qualitys Created Successfully');
-              navigate('/masters/qualitys/qualitys-view')
+              navigate('/trim-master/qualitys/qualitys-view')
               onReset();
             } else {
                 AlertMessages.getErrorMessage(res.internalMessage);
@@ -68,6 +68,8 @@ export const QualitysForm = (props:QualitysFormProps) => {
       setSelectedAccount (value);
     }
     const saveData = (values: QualitysDTO) => {
+        console.log(values,"lllllllllll");
+        
           if (props.isUpdate) {
             props.updateDetails(values);
           } else {
@@ -86,63 +88,29 @@ export const QualitysForm = (props:QualitysFormProps) => {
         'Update Quality' : 'Quality'}
         headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
          extra={(props.isUpdate === false) && <span><Button 
-          onClick={() => navigate('/masters/qualitys/qualitys-view')} 
+          onClick={() => navigate('/trim-master/qualitys/qualitys-view')} 
       type={'primary'}>View</Button></span>}>
-       <Form.Item name="qualityId" style={{ display: 'none' }}>
-            <Input hidden />
-          </Form.Item>
-        <Form
-          layout={'vertical'}
-          form={form}
-          initialValues={props.qualitysData}
-          name="control-hooks"
-          onFinish={saveData}
-        >
-          <Form.Item style={{ display: 'none' }} name="createdUser" initialValue={createdUser}>
-            <Input hidden />
+   
+   <Form form={form} layout="vertical" onFinish={saveData} initialValues={props.qualitysData}>
+            <Form.Item name='qualityId' style={{display:'none'}}>
+                        <Input disabled/>
+                    </Form.Item>
+                <Row gutter={24}>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+                    <Form.Item label='Quality Name' name='qualityName' rules={[{required:true}]}>
+                        <Input placeholder="Enter Quality"/>
+                    </Form.Item>
+                </Col>
+                </Row>
+                <Row  gutter={24} justify={'end'}>
+                <Col xs={{ span: 6 }} sm={{ span: 6 }} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span:2  }}><Button type='primary' htmlType='submit'>Submit</Button></Col>
+
+            { props.isUpdate === false && 
             
-
-          </Form.Item>
-          <Form.Item name="qualityId" style={{display:'none'}}>
-    <Input hidden/>
-</Form.Item>
-<Row gutter={24}>
-
-{/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-
-          </Col> */}
-
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-            <Form.Item
-              name="qualityName"
-              label="Quality Name"
-              rules={[
-                {
-                  required: true, message: 'Quality Name is required'
-
-                },
-                {
-                //   pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-                  message: `Should contain only alphabets.`
-                }
-              ]}>
-              <Input placeholder='Enter Quality Name'/>
-            </Form.Item>
-          </Col>
-</Row>
-          <Row>
-            <Col span={24} style={{ textAlign: 'right' }}>
-              <Button type="primary" disabled={disable} htmlType="submit">
-                Submit
-              </Button>
-              {(props.isUpdate===false) &&
-           <Button htmlType="button" style={{ margin: '0 14px' }} onClick={onReset}>
-              Reset
-            </Button>
-             } 
-            </Col>
-          </Row>
-        </Form>
+              <Col xs={{ span: 6 }} sm={{ span: 6}} md={{ span: 4 }} lg={{ span: 2 }} xl={{ span: 2 }}><Button onClick={onReset}>Reset</Button></Col>
+            }
+            </Row>
+            </Form>
       </Card>
 
     )

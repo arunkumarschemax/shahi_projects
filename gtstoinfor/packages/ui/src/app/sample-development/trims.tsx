@@ -153,6 +153,7 @@ const TrimsForm = ({props, buyerId}) => {
         showSearch
         optionFilterProp="children"
         placeholder="Select UOM" 
+        defaultValue={uom.find((e) => e.uom === "PCS")?.uom}
         onChange={(e) => handleInputChange(e, record.key, 'uomId')}
         >
             {uom.map(e => {

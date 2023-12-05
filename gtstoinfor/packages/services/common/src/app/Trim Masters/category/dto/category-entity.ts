@@ -19,6 +19,8 @@ export class CategoryEntity {
   categoryCode:string
   @CreateDateColumn({
     name: "created_at",
+    nullable: false,
+
   })
   createdAt: string;
 
@@ -31,6 +33,8 @@ export class CategoryEntity {
 
   @UpdateDateColumn({
     name: "updated_at",
+    nullable: false,
+
   })
   updatedAt: string;
 

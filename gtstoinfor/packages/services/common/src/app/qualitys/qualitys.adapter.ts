@@ -16,6 +16,8 @@ export class QualitysAdapter {
      */
 
     public convertDtoToEntity(dto: QualitysDTO,isUpdate: boolean=false): QualitysEntity {
+
+        
         const entity = new QualitysEntity();
         entity.qualityId=dto.qualityId;
         entity.qualityName = dto.qualityName;
@@ -30,8 +32,9 @@ export class QualitysAdapter {
     }
 
     convertEntityToDto(entity: QualitysEntity): QualitysDTO {
+        
         const dto = new QualitysDTO();
-       entity.qualityId = dto.qualityId;
+
         dto.qualityName = entity.qualityName
          dto.qualityId=entity.qualityId
          dto.isActive=entity.isActive

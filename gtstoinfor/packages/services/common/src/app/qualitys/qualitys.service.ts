@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Response } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Not, Raw } from "typeorm";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
-import { AllQualitysResponseModel, CommonResponseModel, QualityCreateRequest, QualitysCreateRequest, RacActiveDeactive, RackCreateRequest, qualitysResponseModel } from "@project-management-system/shared-models";
+import { AllQualitysResponseModel, CommonResponseModel, QualityCreateRequest, QualitysCreateRequest, RacActiveDeactive, RackCreateRequest, qualitysResponseModel, } from "@project-management-system/shared-models";
 import { QualitysAdapter } from "./qualitys.adapter";
 import { QualitysEntity } from "./qualitys.entity";
 import { QualitysDTO } from "./qualitys.dto";
@@ -37,6 +37,8 @@ export class QualitysService {
   }
   async createQualitys(qualityDTO:QualitysDTO , isUpdate: boolean): Promise<qualitysResponseModel>{
     // const response = new PaymentMethodResponseModel();
+    console.log(qualityDTO,'create');
+    
     try{
       let previousValue
     const qualiDtos: QualitysDTO[] = [];
@@ -63,7 +65,7 @@ export class QualitysService {
     const savedqualityEntity: QualitysEntity = await this.repository.save(convertedqualityEntity);
     const savedPaymentMethodDto: QualitysDTO = this.adapter.convertEntityToDto(savedqualityEntity);
     qualiDtos.push(savedPaymentMethodDto)
-      console.log(savedPaymentMethodDto);
+
     if (savedPaymentMethodDto) {
       const presentValue = qualityDTO.qualityName;
       //generating resposnse
@@ -125,9 +127,10 @@ async getAllQualitys(): Promise<AllQualitysResponseModel> {
 
 async activateOrDeactivateQualitys(paymentreq: QualitysDTO): Promise<qualitysResponseModel> {
   try {
-      const paymentExists = await this.getQualitysById(paymentreq.qualityId);
+      const paymentExists = await this.repository.findOne({where:{qualityId:paymentreq.qualityId}});
       if (paymentExists) {
-          if (paymentreq.versionFlag!== paymentExists.versionFlag) {
+        if (!paymentExists) {
+          
               throw new qualitysResponseModel (false,10113, 'Someone updated the current qualitys information.Refresh and try again');
           } else {
               
@@ -159,17 +162,18 @@ async activateOrDeactivateQualitys(paymentreq: QualitysDTO): Promise<qualitysRes
       return err;
   }
 }
-async getQualitysById(qualityId: number): Promise<QualitysEntity> {
-  //  console.log(employeeId);
-      const Response = await this.repository.findOne({
-      where: {qualityId: qualityId},
-      });
-      // console.log(employeeResponse);
-      if (Response) {
-      return Response;
-      } else {
-      return null;
-      }
-  }
+// async getQualitysById(qualityId: number): Promise<> {
+//    console.log(qualityId);
+//       const Response = await this.repository.findOne({
+//       where: {qualityId: qualityId},
+//       });
+//       // console.log(employeeResponse);
+//       if (Response) {
+//  const Response :qualitysResponseModel = new qualitysResponseModel(true, 10114, 'qualitys  successfully');
+//       return Response;
+//       } else {
+//       return null;
+//       }
+//   }
 
 }

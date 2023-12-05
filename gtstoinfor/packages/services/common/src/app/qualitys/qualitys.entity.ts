@@ -47,6 +47,7 @@ export class QualitysEntity {
   updatedAt: Date;
 
   @VersionColumn({
+    
     default: 1,
     name: 'version_flag'
   })

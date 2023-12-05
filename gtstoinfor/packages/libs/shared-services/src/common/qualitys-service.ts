@@ -1,5 +1,6 @@
+import {  qualitysResponseModel } from "@project-management-system/shared-models";
+import { QualitysDTO } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "packages/libs/shared-services/src/common-axios-service-prs";
-import { AllQualitysResponseModel,QualitysDTO,qualitysResponseModel } from "@project-management-system/shared-models";
 export class QualitysService extends CommonAxiosService{
     URL ="/qualitys";
 

@@ -88,6 +88,9 @@ import { CategoryModule } from './Trim Masters/category/category-module';
 import { ContentModule } from './Trim Masters/content-master/content-module';
 import { varietyModule } from './Trim Masters/variety/variety-module';
 import { trimModule } from './Trim Masters/trim/trim-module';
+import { QualitysModule } from './qualitys/qualitys.module';
+import { ThicknessModule } from './thickness/thickness.module';
+import { TypeModule } from './type/type.module';
 
 
 @Module({
@@ -100,7 +103,7 @@ import { trimModule } from './Trim Masters/trim/trim-module';
       username: appConfig.database.username,
       password: appConfig.database.password,
       database: appConfig.database.dbName,
-      autoLoadEntities: true,
+            autoLoadEntities: true,
       synchronize: false,
       logging: true,
       extra: {
@@ -108,7 +111,7 @@ import { trimModule } from './Trim Masters/trim/trim-module';
       }
     }),
     FactoriesModule,
-    
+    QualitysModule,
     CurrenciesModule,
     PaymentTermsModule,
     PackageTermsModule,
@@ -151,8 +154,12 @@ import { trimModule } from './Trim Masters/trim/trim-module';
     M3ItemsModule,
     ColumnModule,
     LevelModule,
+    ThicknessModule,
+    TypeModule,
     CategoryModule,
     ContentModule,
+    QualitysModule,
+    CategoryModule,
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule,MaterialIssueModule,IndentModule,RackPositionModule,StocksModule,GrnModule,LocationMappingModule,M3TrimsModule,ReclassificationModule,varietyModule,trimModule,FinishModule,HoleModule],
   controllers: [AppController],
   providers: [AppService],

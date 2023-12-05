@@ -17,7 +17,7 @@ import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
 import CompanyForm from "./masters/company/company-form"
 import CompanyGrid from "./masters/company/company-grid"
-import { ColourDto, CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, PurchaseViewDto, TrimDtos, VarietyDtos } from "@project-management-system/shared-models"
+import { ColourDto, ContentDtos, CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, PurchaseViewDto, TrimDtos, VarietyDtos } from "@project-management-system/shared-models"
 import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
@@ -192,11 +192,19 @@ import HoleGrid from "./trim-masters/hole/hole-view"
 import QualityGrid from "./common/qualitys/qualitys-view"
 import QualitysForm from "./common/qualitys/qualitys-form"
 import StoreIssues from "./sample-development/store-issues"
+import ThicknessForm from "./masters/thickness/thickness-form"
+import ThicknessView from "./masters/thickness/thickness-view"
+import TypeView from "./masters/type/type-view"
+import { TypeForm } from "./masters/type/type-form"
 import { VarietyForm } from "./trim-master/variety/variety-form"
 import VarietyGrid from "./trim-master/variety/variety-view"
 import { TrimForm } from "./trim-master/trim/trim-form"
 import TrimGrid from "./trim-master/trim/trim-view"
+import CategoryForm from "./common/category/category-form"
+import CategoryView from "./common/category/category-view"
 import path from "path"
+import { ContentForm } from "./trim-master/content/content-form"
+import ContentGrid from "./trim-master/content/content-view"
 
 
 
@@ -383,11 +391,7 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={() => { }}
                         updateData={(undefined) => { }} />} />
-                        <Route path="qualitys/qualitys-view" element={<QualityGrid />} />
-                    <Route path='qualitys/qualitys-form' element={<QualitysForm qualitysData={undefined}
-                        isUpdate={false}
-                        closeForm={() => { }}
-                        updateDetails={(undefined) => { }} />} />
+                      
                     <Route path='currencies/currency-form' element={<CurrenciesForm currencyData={undefined}
                         isUpdate={false}
                         closeForm={() => { }}
@@ -593,6 +597,16 @@ export const AppRoutes = () => {
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} columnData={undefined} />} />
                     <Route path='column/column-view' element={<ColumnView />} />
+                    <Route path='thickness/thickness-form' element={<ThicknessForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} ThicknessData={undefined} />} />
+                    <Route path='thickness/thickness-view' element={<ThicknessView />} />
+                    <Route path='Type/Type-form' element={<TypeForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} TypeData={undefined} />} />
+                    <Route path='Type/Type-view' element={<TypeView />} />
                 </Route>
                 <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
@@ -705,8 +719,24 @@ export const AppRoutes = () => {
                         updateFinish={(undefined) => { }} 
                         data={undefined} />} />
                     <Route path='finish/finish-view' element={<FinishGrid />} />
+                    <Route path='content/content-form' element={<ContentForm Data={new ContentDtos} updateItem={function (Dto: ContentDtos): void {
+                        throw new Error("Function not implemented.")
+                    } } isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    } } /> } />
+                    <Route path='content/content-view' element={<ContentGrid />} />
 
 
+                    <Route path="qualitys/qualitys-view" element={<QualityGrid />} />
+                    <Route path='qualitys/qualitys-form' element={<QualitysForm qualitysData={undefined}
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} />} />
+                   <Route path="category/category-view" element={<CategoryView />} />
+                    <Route path='category/category-form' element={<CategoryForm columnData={undefined}
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} />} />
 
                 </Route>
 

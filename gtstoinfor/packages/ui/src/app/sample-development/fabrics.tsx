@@ -275,6 +275,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         showSearch
         optionFilterProp="children"
         placeholder="Select UOM"
+        defaultValue={uom.find((e) => e.uom === "m")?.uom}
         onChange={(e) => handleInputChange(e, record.key, 'uomId',0)}
         >
             {uom.map(e => {

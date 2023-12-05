@@ -42,8 +42,10 @@ import {
 //   import BarcodePrint from "./barcode-print";
   import {
     Allocatematerial,
+    BomStatusEnum,
     CustomerOrderStatusEnum,
     IndentRequestFilter,
+    buyerandM3ItemIdReq,
   } from "@project-management-system/shared-models";
   import Highlighter from "react-highlight-words";
 import { faL } from "@fortawesome/free-solid-svg-icons";
@@ -264,6 +266,17 @@ import AlertMessages from "../common/common-functions/alert-messages";
           );
         },
       },
+      {
+        title: "Status",
+        dataIndex: "status",
+        render: (text, record) => {
+          return (
+            <>
+              {record.status != BomStatusEnum.ALLOCATED ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:<Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Allocated</b></Tag>}
+            </>
+          );
+        },
+      },
     ];
   
     const columnsSkelton: any = [
@@ -307,6 +320,17 @@ import AlertMessages from "../common/common-functions/alert-messages";
               </>
             );
           },
+      },
+      {
+        title: "Status",
+        dataIndex: "status",
+        render: (text, record) => {
+          return (
+            <>
+              {record.status != BomStatusEnum.ALLOCATED ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:<Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Allocated</b></Tag>}
+            </>
+          );
+        },
       },
     ];
 
@@ -598,14 +622,21 @@ import AlertMessages from "../common/common-functions/alert-messages";
       };
 
 
-      const handleExpand = (expanded, record) => {
-       getAllAvailbaleQuantity(record)
+      const handleExpandFabric = (expanded, record) => {
+        let req = new  buyerandM3ItemIdReq(record.buyerId,record.m3ItemFabricId,record.itemType)
+        console.log(record);
+       getAllAvailbaleQuantity(req,record)
+      };
+      const handleExpandTrim = (expanded, record) => {
+        let req = new buyerandM3ItemIdReq(record.buyerId,record.trimCode,record.itemType)
+        console.log(record);
+       getAllAvailbaleQuantity(req,record)
       };
 
-      const getAllAvailbaleQuantity =(rowData) =>{
-        service.getAvailbelQuantityAginstBuyerAnditem({buyerId:rowData.buyerId,m3ItemId:rowData.m3ItemFabricId,itemType:rowData.itemType}).then(res =>{
+      const getAllAvailbaleQuantity =(req,rowData) =>{
+        service.getAvailbelQuantityAginstBuyerAnditem(req).then(res =>{
           if(res.status){
-            const dataWithRow = { rowData: rowData, responseData: res.data };
+            // const dataWithRow = { rowData: rowData, responseData: res.data };
             const updatedData = res.data.map(item => ({
               ...item,
               sampleRequestid:rowData.sampleRequestid,
@@ -821,11 +852,11 @@ import AlertMessages from "../common/common-functions/alert-messages";
                     dataSource={item.fabric}
                     expandedRowRender={renderItems}
                     expandable = {{
-                      defaultExpandAllRows : false
+                      defaultExpandAllRows : false, rowExpandable:(record)=>{console.log(record) ; return record.status != BomStatusEnum.ALLOCATED}
                       }}
                     // expandedRowRender={renderItems}
                     // expandedRowKeys={expandedIndex}
-                    onExpand={handleExpand}
+                    onExpand={handleExpandFabric}
                     // expandIconColumnIndex={7}
                     // bordered
                     pagination={false}
@@ -857,8 +888,17 @@ import AlertMessages from "../common/common-functions/alert-messages";
                   {tabName === "Trim" ? (
                     <>
                       <Table
+                        rowKey={record => record.trim_info_id}
                         columns={columnsSkelton}
                         dataSource={item.trimData}
+                        expandedRowRender={renderItems}
+                        expandable = {{
+                          defaultExpandAllRows : false, rowExpandable:(record)=>{console.log(record) ; return record.status != BomStatusEnum.ALLOCATED}
+                          }}
+                        // expandable = {{
+                        //   defaultExpandAllRows : false
+                        //   }}
+                        onExpand={handleExpandTrim}
                         pagination={false}
                         scroll={{ x: "max-content" }}
                         className="custom-table-wrapper"
@@ -887,4 +927,5 @@ import AlertMessages from "../common/common-functions/alert-messages";
   };
   
   export default SampleDevNewView;
+
   
