@@ -29,6 +29,9 @@ export class FinishDTO {
   @ApiProperty()
   versionFlag : number;
 
+  @ApiProperty()
+  username : string;
+
 
 }
 

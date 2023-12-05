@@ -185,10 +185,6 @@ import { MaterialAllocationDetailView } from "./sample-development/material-allo
 import WarehouseDashboard from "./common/dashboards/warehouse-dashboard"
 import { ReclassificationApprovalGrid } from "./sourcing-requisition/reclassification-approval-grid"
 import AllocatedStockApproval from "./sample-development/allocated-stock-approval"
-import FinishForm from "./trim-masters/finish/finish"
-import FinishGrid from "./trim-masters/finish/finish-view"
-import HoleForm from "./trim-masters/hole/hole"
-import HoleGrid from "./trim-masters/hole/hole-view"
 import QualityGrid from "./common/qualitys/qualitys-view"
 import QualitysForm from "./common/qualitys/qualitys-form"
 import StoreIssues from "./sample-development/store-issues"
@@ -206,6 +202,10 @@ import path from "path"
 import { ContentForm } from "./trim-master/content/content-form"
 import ContentGrid from "./trim-master/content/content-view"
 import StructureForm, { StructureView } from "./common/structure/structure.view"
+import FinishForm from "./trim-master/finish/finish"
+import FinishGrid from "./trim-master/finish/finish-view"
+import HoleForm from "./trim-master/hole/hole"
+import HoleGrid from "./trim-master/hole/hole-view"
 
 
 

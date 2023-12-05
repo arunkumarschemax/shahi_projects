@@ -51,9 +51,8 @@ export const CategoryView = () => {
 
     } 
 
-    const updatecolumn = (data) => {
-        const req = new CategoryReq(data.category,'admin',data.categoryId)
-        service.updateCategory(req).then(res => {
+    const updatecolumn = (data:CategoryReq) => {
+        service.updateCategory(data).then(res => {
             if(res.status){
               setDrawerVisible(false)
               getAllData()
@@ -156,14 +155,14 @@ export const CategoryView = () => {
         },
         {
             dataIndex:'category',
-            title:<div style={{textAlign:'center'}}>category</div>,
+            title:<div style={{textAlign:'center'}}>Category</div>,
             sorter: (a, b) => a.category?.localeCompare(b.category),
             sortDirections: ['descend', 'ascend'],
             // ...getcategorySearchProps('category')
         },
         {
             dataIndex:'categoryCode',
-            title:<div style={{textAlign:'center'}}>categorycode</div>,
+            title:<div style={{textAlign:'center'}}>CategoryCode</div>,
             sorter: (a, b) => a.categoryCode?.localeCompare(b.categoryCode),
             sortDirections: ['descend', 'ascend'],
             // ...getcategorySearchProps('category')

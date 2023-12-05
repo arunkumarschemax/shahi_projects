@@ -17,6 +17,7 @@ export class CategoryService{
 
     async createCategory(req:CategoryDto,isUpdate: boolean):Promise<CommonResponseModel>{
         try{
+            console.log(req,"req,ser")
             const entity = new CategoryEntity()
                 entity.category=req.category
                 entity.categoryCode=req.categoryCode
@@ -28,7 +29,7 @@ export class CategoryService{
                 }
                 const save = await this.categoryRepo.save(entity)
                 if(save){
-                    return new CommonResponseModel(true,1,'category created sucessfully')
+                    return new CommonResponseModel(true,1,isUpdate ? 'Category Updated Successfully' : 'Category Created Successfully')
                 }else{
                     return new CommonResponseModel(false,0,'Something Went wrong')
                 }
@@ -41,7 +42,6 @@ export class CategoryService{
 
     async getAllCategory():Promise<CommonResponseModel>{
         const style = await this.categoryRepo.find({
-            where:{isActive:true},
             order:{category:'ASC'}
         })
         console.log(style);

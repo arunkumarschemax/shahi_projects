@@ -1,12 +1,24 @@
-export class CategoryReq{
-    category: string;
-    createdUser : string;
+
+export class CategoryReq {
     categoryId?: number;
-    categorycode:string;
-    constructor(category: string,categorycode:string,createdUser : string,categoryId?: number){
-        this.category = category
-        this.createdUser = createdUser
-        this.categoryId = categoryId
-        this.categorycode=categorycode
-    }
+    category: string;
+    categoryCode:string;
+    isActive: boolean;
+    createdAt : Date | any;
+    createdUser : string;
+    updatedAt : Date | any;
+    updatedUser : string;
+    versionFlag : number;
 }
+
+export const CategoryDtoDefault : CategoryReq = {
+    categoryId: 0,
+    category: "",
+    categoryCode:"",
+    isActive: true,
+    createdAt : new Date() ,
+    createdUser : '0',
+    updatedAt : new Date() ,
+    updatedUser : '0',
+    versionFlag : 1
+};

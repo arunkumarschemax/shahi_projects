@@ -93,7 +93,7 @@ export function FinishForm(props: FinishFormProps) {
                         message: "Should contain only alphabets and numbers.",
                     },
                   ]}>
-                  <Input placeholder='Enter Finish Code'/>
+                  <Input placeholder='Enter Finish Code' disabled={props.isUpdate}/>
                 </Form.Item>
         </Col>
       </Row>

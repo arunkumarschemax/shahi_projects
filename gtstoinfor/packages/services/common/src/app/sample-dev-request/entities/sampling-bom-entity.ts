@@ -1,3 +1,4 @@
+import { StatusEnum } from "packages/libs/shared-models/src/enum";
 import { CommonColumns } from "packages/services/common/common-columns.entity";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
@@ -47,6 +48,16 @@ export class SamplingbomEntity {
         nullable:false
     })
     assignedQuantity:number
+
+    @Column({
+      type:"enum",
+      enum: StatusEnum,
+      default:StatusEnum.OPEN,
+      nullable: true,
+      name: "status"
+    })
+    status: string;
+
 
     @CreateDateColumn({
         name: "created_at",

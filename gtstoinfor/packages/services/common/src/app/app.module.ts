@@ -113,7 +113,7 @@ import { StructureModule } from './structure/structure.module';
       }
     }),
     FactoriesModule,
-
+    QualitysModule,
     CurrenciesModule,
     PaymentTermsModule,
     PackageTermsModule,

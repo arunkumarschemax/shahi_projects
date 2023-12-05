@@ -24,7 +24,7 @@ export function HoleForm(props: HoleFormProps) {
     dto.createdUser = 'admin'
     Service.createHole(dto).then(res => {
       if (res.status) {
-        message.success('Finish Created Successfully',2);
+        message.success(res.internalMessage,2);
         navigate("/trim-master/hole/hole-view");
         onReset();
       } else {

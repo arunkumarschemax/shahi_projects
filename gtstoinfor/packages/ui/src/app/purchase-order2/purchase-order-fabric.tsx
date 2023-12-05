@@ -175,6 +175,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
             fabricForm.setFieldsValue({ taxAmount: rowData.taxAmount })
             fabricForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
+            fabricForm.setFieldsValue({ quantityUomId: rowData.uom_id })
+            fabricForm.setFieldsValue({ quantityUom: rowData.uom })
         }
         if (rowData.samplereFabId != undefined) {
             fabricForm.setFieldsValue({ poQuantity: rowData.sampleQuantity })
@@ -185,6 +187,10 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
             fabricForm.setFieldsValue({ taxAmount: rowData.taxAmount })
             fabricForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
+            fabricForm.setFieldsValue({ quantityUomId: rowData.uom_id })
+            fabricForm.setFieldsValue({ quantityUom: rowData.uom })
+
+
         }
         setFabricIndexVal(index)
     }
@@ -205,7 +211,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                  colorName: defaultFabricFormData.colorName,
                 shahiFabricCode: defaultFabricFormData.shahiFabricCode,
                 itemCode:defaultFabricFormData.itemCode,
-                quantityUomId: defaultFabricFormData.quantityUomId,
+                quantityUomId: defaultFabricFormData.uom_id,
                 quantityUom: defaultFabricFormData.quantityUom,
                 })
             }
@@ -216,7 +222,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                     colourId: defaultFabricFormData.colourId,
                     colorName: defaultFabricFormData.colorName,
                     shahiFabricCode: defaultFabricFormData.shahiFabricCode,
-                    quantityUomId: defaultFabricFormData.quantityUomId,
+                    quantityUomId: defaultFabricFormData.uom_id,
                     indentQuantity: defaultFabricFormData.indentQuantity,
                     indentFabricId: defaultFabricFormData.indentFabricId,
                     itemCode: defaultFabricFormData.itemCode,
@@ -351,7 +357,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         },
         {
             title: 'UOM',
-            dataIndex: 'quantityUom',
+            dataIndex: 'uom',
         },
         {
             title: 'Unit Price',

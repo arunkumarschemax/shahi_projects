@@ -42,7 +42,7 @@ export const TypeView = () => {
       
         rowData.isActive = rowData.isActive ?  false : true
 
-        const req = new TypeActivateReq(rowData.TypeId,'admin',rowData.versionFlag,rowData.isActive)
+        const req = new TypeActivateReq(rowData.typeId,'admin',rowData.versionFlag,rowData.isActive)
         service.activateOrDeactivateType(req).then(res => {
             if(res.status){
                 getAllData()

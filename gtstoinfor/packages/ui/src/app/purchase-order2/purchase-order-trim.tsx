@@ -1,6 +1,6 @@
 import { EditOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { faDisplay } from "@fortawesome/free-solid-svg-icons";
-import { M3MastersCategoryReq } from "@project-management-system/shared-models";
+import { M3MastersCategoryReq, UomCategoryEnum } from "@project-management-system/shared-models";
 import { ColourService, IndentService, M3MastersService, M3TrimsService, SampleDevelopmentService, TaxesService, UomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Divider, Form, Input, InputNumber, Popconfirm, Row, Select, Table, Tag, Tooltip } from "antd";
 import { ColumnProps } from "antd/lib/table";
@@ -143,7 +143,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
     }
 
     const setEditForm = (rowData: any, index: any) => {
-        // console.log(rowData)
+        console.log(rowData)
         setUpdate(true)
         setDefaultTrimFormData(rowData)
         setTrimIndexVal(index)
@@ -156,7 +156,9 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         trimForm.setFieldsValue({indentQuantity:rowData.indentQuantity})    
         trimForm.setFieldsValue({indentCode:rowData.indentCode})
         trimForm.setFieldsValue({indentTrmId:rowData.indentTrmId})
-        trimForm.setFieldsValue({indentId:rowData.indentId})
+        trimForm.setFieldsValue({quantityUomName:defaultTrimFormData.uom})
+        trimForm.setFieldsValue({quantityUomId:defaultTrimFormData.uomId,})
+
         }
         if(rowData.sampleTrimInfoId != undefined){
             trimForm.setFieldsValue({poQuantity:rowData.sampleOrderQuantity})
@@ -167,6 +169,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
             trimForm.setFieldsValue({ taxAmount: rowData.taxAmount })
             trimForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
             trimForm.setFieldsValue({ transportation: rowData.transportation })
+            trimForm.setFieldsValue({quantityUomName:rowData?.uom})
+            trimForm.setFieldsValue({quantityUomId:rowData?.uomId,})
         setInputDisable(true)
         }
    
@@ -301,7 +305,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         },
         {
             title:'Quantity UOM',
-            dataIndex:'quantityUomName',
+            dataIndex:'uom',
             
         },
         {
@@ -396,7 +400,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                 consumption : defaultTrimFormData.consumption,
                 m3TrimCode: defaultTrimFormData.m3TrimCode,
                 trimCodeName: defaultTrimFormData.trimCodeName,
-                quantityUomName:defaultTrimFormData.quantityUomName,
+                quantityUomName:defaultTrimFormData.uom,
                 quantityUomId:defaultTrimFormData.quantityUomId,
                 m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
 
@@ -417,7 +421,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                     poQuantity:defaultTrimFormData.indentQuantity,
                     m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
                     indentCode:defaultTrimFormData.indentCode,
-                    quantityUomName:defaultTrimFormData.quantityUomName,
+                    quantityUomName:defaultTrimFormData.uom,
                     indentId:defaultTrimFormData.indentId
                 })
             }
@@ -472,7 +476,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
     return(
         <Card title={<span style={{color:'blue', fontSize:'17px'}} >Trim Details</span>}>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd} style={{width:'100%'}}>
-                <Row gutter={24}>
+                <Row gutter={12}>
                    <Form.Item name='sampleReqId' hidden ><Input/></Form.Item>
                     <Form.Item name='indentId' hidden ><Input/></Form.Item>
                     <Form.Item name={'colourName'} hidden><Input></Input></Form.Item>
@@ -486,6 +490,9 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                     <Form.Item name={'sampleOrderQuantity'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'quantityUomName'} hidden><Input></Input></Form.Item>
                     <Form.Item name='taxPercentage' hidden ><Input/></Form.Item>
+                    <Form.Item name={'indentQuantity'} label={'Indent Quantity'} style={{display:'none'}}>
+                            <Input disabled={inputDisable}></Input>
+                        </Form.Item>
                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='m3TrimCode' label='M3 Trim Code' rules={[{required:true,message:'M3 code is required'}]}>
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
@@ -523,19 +530,15 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                             </Select>
                         </Form.Item>
                     </Col> */}
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                        <Form.Item name={'poQuantity'} label={'PO Quantity'}
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                        <Form.Item name={'poQuantity'} label={'PO Quantity'} 
                          rules={[
                             {
                               required: true,
                               message: "poQuantity Is Required",
                             }
                         ]}>
-                            <Input></Input>
-                        </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{marginTop:'2%'}}>
-                    <Form.Item name='quantityUomId'  rules={[{required:true,message:'Quantity unit is required'}]}>
+                            <Input type="number" addonAfter={<Form.Item name='quantityUomId' style={{width:'90px', height:"10px"}} rules={[{required:true,message:'Quantity unit is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'
                         onChange={quantityUomOnchange}
                         >
@@ -545,35 +548,32 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                                 )
                             })}
                         </Select>
-                    </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{display:'none'}}>
-                        <Form.Item name={'indentQuantity'} label={'Indent Quantity'}>
-                            <Input disabled={inputDisable}></Input>
+                    </Form.Item>}/>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+                        
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='unitPrice' label='Unit Price'
                             rules={[{ required: true, message: 'unit price of Fabric is required' }]}
                         >
-                            <InputNumber style={{ width: '90px' }} placeholder="unit price" onChange={(e) => unitPriceOnchange(e)} />
+                            <Input type="number" placeholder="unit price" onChange={(e) => unitPriceOnchange(e)} />
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Col span={4}>
                         <Form.Item name='discount' label='Discount'
                             rules={[{ required: false, message: 'Discount of Fabric is required' }]}
                         >
-                            <InputNumber style={{ width: '90px' }} placeholder="discount" onChange={(e) => discountOnChange(e)} />
+                            <Input type="number" placeholder="discount" onChange={(e) => discountOnChange(e)} />
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Col span={4}>
                         <Form.Item name='discountAmount' label='Discount Amount'
                             rules={[{ required: false, message: 'Discount of Fabric is required' }]}
                         >
-                            <Input disabled placeholder="discount amount" />
+                            <Input type = "number" disabled placeholder="discount amount" />
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                    <Col span={4}>
                         <Form.Item name='tax' label='Tax Percentage(%)'
                             rules={[{ required: true, message: 'tax of Fabric is required' }]}
                         >
