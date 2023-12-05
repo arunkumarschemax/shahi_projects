@@ -28,40 +28,32 @@ export class FinishService {
           return err;
         }
       }
-  
+
       async createFinish(req: FinishDTO, isUpdate: boolean): Promise<CommonResponseModel> {
         try {
-          if (!isUpdate) {
-            const updateData = await this.finishRepo.findOne({ where: { finish: req.finish } });
-            if (updateData) {
-              throw new CommonResponseModel(false, 11104, 'Finish already exists');
-            }
-            const finishCode = await this.finishRepo.findOne({ where: { finishCode: req.finishCode } });
-            if (finishCode) {
-              throw new CommonResponseModel(false, 11104, 'Finish Code already exists');
-            }
-          } 
-          else {
-            const existingFinish = await this.finishRepo.findOne({ select: ['finishId'], where: { finish: req.finish } });
-            if (existingFinish) {
-              throw new ErrorResponse(0, 'Finish already exists!!!');
-            }
-      
-            // const existingFinishCode = await this.finishRepo.findOne({ select: ['finishId'], where: { finishCode: req.finishCode } });
-            // if (existingFinishCode) {
-            //   throw new ErrorResponse(0, 'Finish Code already exists!!!');
-            // }
+          if(!isUpdate){
+            const finishDetails = await this.finishRepo.findOne({ where: { finish: req.finish } })
+            if (finishDetails) {
+              return new CommonResponseModel(false, 1, 'Finish already exists')
+            } 
+            const details = await this.finishRepo.findOne({ where: { finishCode: req.finishCode } })
+            if (details) {
+              return new CommonResponseModel(false, 1, 'Finish Code already exists')
+            } 
           }
-      
-          const finishEntity = new FinishEntity();
-          finishEntity.finish = req.finish;
-          finishEntity.finishCode = req.finishCode;
-      
-          const data = await this.finishRepo.save(finishEntity);
-      
-          return new CommonResponseModel(false, 0, isUpdate ? 'Finish updated successfully' : 'Finish created successfully', data);
+          const entity = new FinishEntity();
+          entity.finish = req.finish;
+          entity.finishCode = req.finishCode;
+          if (isUpdate) {
+            entity.finishId = req.finishId;
+            entity.updatedUser = req.username;
+          } else {
+            entity.createdUser = req.username;
+          }
+          const savedResult = await this.finishRepo.save(entity)
+          return new CommonResponseModel(true, 0, isUpdate ? 'Finish updated successfully' : 'Finish created successfully', [savedResult])
         } catch (err) {
-          return err;
+          throw err;
         }
       }
 
@@ -79,10 +71,10 @@ export class FinishService {
                        
                         if (finishExists.isActive) {
                             if (finishStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Finish is Deactivated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Finish is deactivated successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10111, 'Finish is already Deactivated');
+                                throw new CommonResponseModel(false,10111, 'Finish is already deactivated');
                             }
                         } else {
                             if (finishStatus.affected) {

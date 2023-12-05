@@ -27,9 +27,7 @@ export function HoleGrid(props: HoleProps) {
     getAllHoles();
   }, []);
 
-  /**
-   * 
-   */
+
   const getAllHoles= () => {
     Service.getAllHoles().then(res => {
       if (res.status) {
@@ -47,10 +45,7 @@ export function HoleGrid(props: HoleProps) {
       message.error(err.message,2);
     })
   }
-  /**
-   * 
-   * @param deliveryMethodData 
-   */
+
   const saveHole = (data:HoleDTO) => {
     data.isActive = data.isActive?false:true;
     Service.activateOrDeactivateHole(data).then(res => {
@@ -64,10 +59,7 @@ export function HoleGrid(props: HoleProps) {
     })
   }
    
-    /**
-     * 
-     * @param deliveryMethodData 
-     */
+
     const updateData = (data: HoleDTO) => {
       data.updatedUser = JSON.parse(localStorage.getItem('username'))
       Service.updateHole(data).then(res => {
@@ -82,10 +74,7 @@ export function HoleGrid(props: HoleProps) {
         message.error(err.message,2);
       })
     }
-   /**
-   * used for column filter
-   * @param dataIndex column data index
-   */
+    
    const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
         <div style={{ padding: 8 }}>

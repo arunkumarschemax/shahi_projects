@@ -31,26 +31,27 @@ export class HoleService {
 
       async createHole(req: HoleDTO, isUpdate: boolean): Promise<CommonResponseModel> {
         try {
-          if (!isUpdate) {
-            const updateData = await this.holeRepo.findOne({ where: { hole: req.hole } });
-            if (updateData) {
-              throw new CommonResponseModel(false, 11104, 'Hole already exists');
-            }
-          } else {
-            const existingFinish = await this.holeRepo.findOne({ select: ['holeId'], where: { hole: req.hole } });
-            if (existingFinish) {
-              throw new ErrorResponse(0, 'Hole already exists!!!');
-            }
+          const holeData = await this.holeRepo.findOne({ where: { hole: req.hole } });
+
+          if (isUpdate && holeData && holeData.holeId !== req.holeId) {
+            return new CommonResponseModel(false, 1, 'Another hole already exists');
           }
-      
-          const finishEntity = new HoleEntity();
-          finishEntity.hole = req.hole;
-      
-          const data = await this.holeRepo.save(finishEntity);
-      
-          return new CommonResponseModel(false, 0, isUpdate ? 'Hole updated successfully' : 'Hole created successfully', data);
+
+          if (!isUpdate && holeData) {
+            return new CommonResponseModel(false, 1, 'Hole already exists');
+          }
+          const entity = new HoleEntity();
+          entity.hole = req.hole;
+          if (isUpdate) {
+            entity.holeId = req.holeId;
+            entity.updatedUser = req.username;
+          } else {
+            entity.createdUser = req.username;
+          }
+          const savedResult = await this.holeRepo.save(entity)
+          return new CommonResponseModel(true, 0, isUpdate ? 'Hole updated successfully' : 'Hole created successfully', [savedResult])
         } catch (err) {
-          return err;
+          throw err;
         }
       }
 
@@ -68,10 +69,10 @@ export class HoleService {
                        
                         if (holeExists.isActive) {
                             if (holeStatus.affected) {
-                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Hole is Deactivated successfully');
+                                const response: CommonResponseModel = new CommonResponseModel(true, 10115, 'Hole is deactivated successfully');
                                 return response;
                             } else {
-                                throw new CommonResponseModel(false,10111, 'Hole is already Deactivated');
+                                throw new CommonResponseModel(false,10111, 'Hole is already deactivated');
                             }
                         } else {
                             if (holeStatus.affected) {

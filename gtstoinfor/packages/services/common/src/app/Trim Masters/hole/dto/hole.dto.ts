@@ -26,6 +26,9 @@ export class HoleDTO {
   @ApiProperty()
   versionFlag : number;
 
+  @ApiProperty()
+  username : string;
+
 
 }
 
