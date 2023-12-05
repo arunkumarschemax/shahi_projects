@@ -225,6 +225,14 @@ import Barcode from "react-barcode";
         }
       }, 
       {
+        title: <div style={{textAlign:"center"}}>Invoice Date</div>,
+        align:'center',
+        dataIndex: "invoiceDate",
+        render: (val,data) => {
+          return data.invoiceDate ?moment( data.invoiceDate).format('YYYY-MM-DD') : "-";
+        }
+      },
+      {
         title: <div style={{textAlign:"center"}}>Item Type</div>,
         dataIndex: 'itemType',
         // ...getColumnSearchProps("itemType"),

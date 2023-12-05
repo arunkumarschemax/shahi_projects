@@ -1,5 +1,5 @@
 import { Injectable, Query } from '@nestjs/common';
-import { CommonResponseModel, CustomerOrderStatusEnum, GrnReq, PoItemEnum, PurchaseOrderStatus } from '@project-management-system/shared-models';
+import { CommonResponseModel, CustomerOrderStatusEnum, GRNTypeEnum, GrnReq, PoItemEnum, PurchaseOrderStatus } from '@project-management-system/shared-models';
 import { GrnRepository } from './dto/grn-repository';
 import { GrnAdapter } from './dto/grn-adapter';
 import { GrnDto, PurchaseOrderReq } from './dto/grn-dto';
@@ -126,6 +126,7 @@ export class GrnService {
     }
 
     async createGrn(req: GrnDto): Promise<CommonResponseModel> {
+        
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try {
 
@@ -155,12 +156,14 @@ export class GrnService {
             // grnEntity.styleId=req.styleId
             grnEntity.poId = req.poId
             grnEntity.grnDate = req.grnDate
+            grnEntity.invoiceNoDate = req.invoiceDate
             grnEntity.createdUser = req.createdUser
             grnEntity.updatedUser = req.updatedUser
             grnEntity.itemType = req.itemType
             grnEntity.invoiceNo = req.invoiceNo
             grnEntity.grnAmount = req.grnAmount
             grnEntity.grnQuantity = req.grnQuantity
+            grnEntity.grnType  = Object.keys(GRNTypeEnum).find(key => GRNTypeEnum[key] === req.grnType) as any;
             // console.log(req,'===========')
             for (const item of req.grnItemInfo) {
                 const itemEntity = new GrnItemsEntity()
@@ -189,13 +192,12 @@ export class GrnService {
             if (save) {
                 for (const item of req.grnItemInfo) {
                     if (item.m3ItemCode != null) {
-
                         const poQuantity = await this.poItemRepo.find({ where: { purchaseOrderItemId: item.poItemId } })
                         if (poQuantity[0].poQuantity == item.conversionQuantity) {
-                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { grnQuantity: item.acceptedQuantity, poitemStatus: PoItemEnum.RECEIVED })
+                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, {grnQuantity: () => `grn_quantity + ${item.acceptedQuantity}`, poitemStatus: PoItemEnum.RECEIVED })
                         }
                         else {
-                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { poitemStatus: PoItemEnum.PARTAILLY_RECEIVED, grnQuantity: item.acceptedQuantity })
+                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { poitemStatus: PoItemEnum.PARTAILLY_RECEIVED, grnQuantity: () => `grn_quantity + ${item.acceptedQuantity}` })
                         }
                         const indentId = await this.getIndentid(req.materialtype, item.indentItemId)
                         const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype, indentId.data[0].indentId)
@@ -229,7 +231,7 @@ export class GrnService {
     async getAllGrn(req?: GrnReq): Promise<CommonResponseModel> {
         try {
             const manager = this.dataSource;
-            let query = `SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
+            let query = `SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,DATE(g.invoice_date) AS invoiceDate,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
             g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber
             FROM grn g
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id

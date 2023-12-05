@@ -112,7 +112,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
   }
 
   const approvaAllocatedStock = (val) => {
-    // setLoading(true);
+    setLoading(true);
     const req = new AllocationApprovalReq();
     req.sampleRequestId = val;
     if(props?.screen === 'Issued'){
@@ -368,7 +368,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
               </Button>
             </Col>
           </Row>
-          {fabricStockData.length > 0 ? (
+          {fabricStockData?.length > 0 ? (
             <>
               <Row gutter={24} justify={"end"}>
                 <Col>

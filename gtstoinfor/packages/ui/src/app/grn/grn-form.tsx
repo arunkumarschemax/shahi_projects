@@ -64,7 +64,8 @@ const GRNForm = () => {
   const createGrn = async () => {
     await form.validateFields()
     const values = form.getFieldsValue()
-    const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '', values.grnType, values.invoiceNo, poData?.poMaterialType, values.grnAmount);
+    console.log(values,'rrrr')
+    const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '',values.grnType, values.invoiceNo, poData?.poMaterialType, values.grnAmount,form.getFieldValue('invoiceDate').format('YYYY-MM-DD'));
     grnService.createGrn(req).then((res) => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage);
@@ -105,7 +106,7 @@ const GRNForm = () => {
       if (res.status) {
         setPoData(res.data[0]);
         setPoItemData(res.data[0].grnItems)
-        form.setFieldsValue({ grnType: res.data[0].poAgainst });
+        form.setFieldsValue({ grnType: res.data[0].poAgainst == "Sample Order" ? GRNTypeEnum.SAMPLE_ORDER : GRNTypeEnum.INDENT});
       }
     });
   };
@@ -378,7 +379,7 @@ const GRNForm = () => {
   }
 
 
-
+console.log(form.getFieldsValue())
 
   return (
     <>
@@ -413,9 +414,9 @@ const GRNForm = () => {
                 </Select>
               </Form.Item>
             </Col>
-            {selectedPoType !== null && (
+           
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
-                <Form.Item name='grnType' label='GRN Type' dependencies={['purchaseOrderId']}>
+                <Form.Item name='grnType' label='GRN Type' dependencies={['purchaseOrderId']} >
                   <Select showSearch allowClear optionFilterProp="children" disabled>
                     {Object.values(GRNTypeEnum).map((value) => (
                       <Option key={value} value={value}>
@@ -425,7 +426,7 @@ const GRNForm = () => {
                   </Select>
                 </Form.Item>
               </Col>
-            )}
+          
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
               <Form.Item name='grnDate' label='GRN Date' rules={[{ required: true, message: 'Date is required' }]}>
                 <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday />
@@ -466,6 +467,14 @@ const GRNForm = () => {
                 ]}
               >
                 <Input style={{ width: '93%', marginLeft: 5 }} placeholder='Enter Invoice No' />
+              </Form.Item>
+            </Col>
+            
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
+              <Form.Item name='invoiceDate' label='Invoice Date'
+              // s rules={[{ required: true, message: 'Date is required' }]}
+               >
+                <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday />
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>

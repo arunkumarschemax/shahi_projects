@@ -1,17 +1,19 @@
 import { Injectable } from "@nestjs/common";
 import { AppDataSource } from "../app-datasource";
-import { CommonResponseModel, LocationMappedEnum, LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq, StockTypeEnum } from "@project-management-system/shared-models";
+import { BomStatusEnum, CommonResponseModel, LifeCycleStatusEnum, LocationMappedEnum, LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq, StockTypeEnum } from "@project-management-system/shared-models";
 import { StocksEntity } from "../stocks/stocks.entity";
 import { StocksRepository } from "../stocks/repository/stocks.repository";
 import { StockLogEntity } from "../stocks/stock-log-entity";
 import { StockLogRepository } from "../stocks/repository/stock-log.repository";
-import { DataSource, Repository } from "typeorm";
+import { DataSource, Not, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { GrnItemsEntity } from "../grn/entities/grn-items-entity";
 import { SampleRequestService } from "../sample-dev-request/sample-dev-request.service";
 import { MaterialAllocationDTO } from "../sample-dev-request/dto/material-allocation-dto";
 import { MaterialAllocationEntity } from "../sample-dev-request/entities/material-allocation.entity";
 import { MaterialAllocationItemsEntity } from "../sample-dev-request/entities/material-allocation-items";
+import { SamplingbomEntity } from "../sample-dev-request/entities/sampling-bom-entity";
+import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
 
 @Injectable()
 export class LocationMappingService {
@@ -246,7 +248,7 @@ export class LocationMappingService {
                             let materialAllocationEntity = new MaterialAllocationEntity();
                             materialAllocationEntity.buyerId = req.buyer_id
                             materialAllocationEntity.itemType = req.item_type;
-                            materialAllocationEntity.m3ItemId = req.m3_item
+                            materialAllocationEntity.m3ItemId = req.m3_item;
                             materialAllocationEntity.totalIssueQty = 0
                             materialAllocationEntity.sampleOrderId = grnDetails[0].sampleOrderId
                             materialAllocationEntity.sampleItemId = grnDetails[0].sampleItemId
@@ -254,7 +256,22 @@ export class LocationMappingService {
                             let allocateStock = await manager.getRepository(MaterialAllocationEntity).save(materialAllocationEntity);
                             console.log(allocateStock)
                             if(allocateStock.materialAllocationId > 0){
-                                return new CommonResponseModel(true, 1111, "Data posted Succesufully");
+                                let updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item},{status: `${BomStatusEnum.ALLOCATED}`});
+                                if(updateBomStatus.affected > 0){
+                                    let getBomStatus = await manager.getRepository(SamplingbomEntity).findBy({status: Not(BomStatusEnum.ALLOCATED)});
+                                    if(getBomStatus.length < 1){
+                                        let updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:grnDetails[0].sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ALLOCATED});
+                                        if(updateBomStatus.affected > 0){
+                                            return new CommonResponseModel(true, 1111, "Data posted Succesufully");
+                                        }
+                                        else {
+                                            return new CommonResponseModel(false, 10005, "Data not posted");
+                                        }
+                                    }
+                                }
+                                else {
+                                    return new CommonResponseModel(false, 10005, "Data not posted");
+                                }
                             }
                             else {
                                 return new CommonResponseModel(false, 10005, "Data not posted");

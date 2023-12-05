@@ -12,7 +12,9 @@ export enum LifeCycleStatusEnum{
     FINISHING = "FINISHING",
     QUALITY_CONTROL = "QUALITY_CONTROL",
     PACKING = "PACKING",
-    SHIPMENT = "SHIPMENT"
+    SHIPMENT = "SHIPMENT",
+    DISPATCH = "DISPATCH",
+    CLOSED = "CLOSED",
  }
  
  export const LifeCycleStatusDisplay = [
@@ -30,4 +32,7 @@ export enum LifeCycleStatusEnum{
      { name:'QUALITY_CONTROL', displayVal:'QUALITY_CONTROL'},
      { name:'PACKING', displayVal:'PACKING'},
      { name:'SHIPMENT', displayVal:'SHIPMENT'},
+     { name:'DISPATCH', displayVal:'DISPATCH'},
+     { name:'CLOSED', displayVal:'CLOSED'},
+
  ]
