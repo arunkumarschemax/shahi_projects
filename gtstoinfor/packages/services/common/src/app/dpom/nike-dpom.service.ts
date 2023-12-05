@@ -574,7 +574,8 @@ export class DpomService {
                         const currentDateFormatted = `${day}-${month}-${year}`;
                         if (coNo) {
                             const update = await this.coLineRepository.update({ buyerPo: po.buyer_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
-
+                            const req = { orderNumber: po.buyer_po, itemNumber: po.item_no }
+                            const response = await axios.post(`https://uniqlov2-backend.xpparel.com/api/orders/updateOrderApprovalStatus`, req);
                             // await driver.navigate().refresh();
                             await driver.sleep(10000)
                         } else {
