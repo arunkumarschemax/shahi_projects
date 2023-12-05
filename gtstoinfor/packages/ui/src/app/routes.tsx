@@ -205,6 +205,7 @@ import CategoryView from "./common/category/category-view"
 import path from "path"
 import { ContentForm } from "./trim-master/content/content-form"
 import ContentGrid from "./trim-master/content/content-view"
+import StructureForm, { StructureView } from "./common/structure/structure.view"
 
 
 
@@ -734,6 +735,11 @@ export const AppRoutes = () => {
                         updateDetails={(undefined) => { }} />} />
                    <Route path="category/category-view" element={<CategoryView />} />
                     <Route path='category/category-form' element={<CategoryForm columnData={undefined}
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} />} />
+                        <Route path="structure/structure-view" element={<StructureView />} />
+                    <Route path='structure/structure-form' element={<StructureForm structureData={undefined}
                         isUpdate={false}
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} />} />
