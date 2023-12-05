@@ -2,7 +2,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Structure } from "./structure.entity";
 import { StructureRepository } from "./structure.repo";
 import { Injectable } from "@nestjs/common";
-import { StructureReq, StructureResponseModel, StructureModel, StructureActivateReq } from "@project-management-system/shared-models";
+import { StructureReq, StructureResponseModel, StructureModel, StructureActivateReq, CommonResponseModel } from "@project-management-system/shared-models";
 
 
 
@@ -38,7 +38,7 @@ export class StructureService {
             throw err
         }
     }
-
+     
     async getAllStrucutreInfo():Promise<StructureResponseModel>{
         try{
             const data = await this.repo.find()
