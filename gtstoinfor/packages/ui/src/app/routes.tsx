@@ -205,6 +205,7 @@ import FinishForm from "./trim-master/finish/finish"
 import FinishGrid from "./trim-master/finish/finish-view"
 import HoleForm from "./trim-master/hole/hole"
 import HoleGrid from "./trim-master/hole/hole-view"
+import M3TrimItemsForm from "./trim-master/m3-trim-items/m3-trim-items"
 
 
 
@@ -737,7 +738,8 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} />} />
-
+                    <Route path='m3-trim-items/m3-trim-items-form' element={<M3TrimItemsForm />} />
+                    
                 </Route>
 
                 <Route path="style-management">
