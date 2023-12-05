@@ -37,7 +37,6 @@ export const ThicknessView = () => {
     }
 
     const deleteThickness = (rowData) => {
-      console.log(rowData,'pppppppppp');
 
         rowData.isActive = rowData.isActive ?  false : true
         const req = new ThicknessActivateReq(rowData.thicknessId,'admin',rowData.versionFlag,rowData.isActive)     
@@ -263,7 +262,7 @@ export const ThicknessView = () => {
       // style={{ textAlign: "center" }}
       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       extra={
-        <Link to="/masters/thickness/thickness-form">
+        <Link to="/trim-master/thickness/thickness-form">
           <span 
           // style={{ color: "white" }}
           >

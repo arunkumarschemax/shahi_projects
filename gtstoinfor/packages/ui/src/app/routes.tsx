@@ -598,16 +598,7 @@ export const AppRoutes = () => {
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} columnData={undefined} />} />
                     <Route path='column/column-view' element={<ColumnView />} />
-                    <Route path='thickness/thickness-form' element={<ThicknessForm
-                        isUpdate={false}
-                        closeForm={() => { }}
-                        updateDetails={(undefined) => { }} ThicknessData={undefined} />} />
-                    <Route path='thickness/thickness-view' element={<ThicknessView />} />
-                    <Route path='Type/Type-form' element={<TypeForm
-                        isUpdate={false}
-                        closeForm={() => { }}
-                        updateDetails={(undefined) => { }} TypeData={undefined} />} />
-                    <Route path='Type/Type-view' element={<TypeView />} />
+                 
                 </Route>
                 <Route path='/global'>
                     <Route path='buyers-destination/buyers-destination-form' element={<BuyersDestinationForm />} />
@@ -743,7 +734,16 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} />} />
-
+   <Route path='thickness/thickness-form' element={<ThicknessForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} ThicknessData={undefined} />} />
+                    <Route path='thickness/thickness-view' element={<ThicknessView />} />
+                    <Route path='Type/Type-form' element={<TypeForm
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} TypeData={undefined} />} />
+                    <Route path='Type/Type-view' element={<TypeView />} />
                 </Route>
 
                 <Route path="style-management">

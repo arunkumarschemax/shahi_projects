@@ -48,7 +48,8 @@ export class GrnDto{
   grnQuantity:number
   @ApiProperty()
   grnType:GRNTypeEnum
-  
+  @ApiProperty()
+  invoiceDate:Date
 
 }
 
