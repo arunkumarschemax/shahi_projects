@@ -379,7 +379,6 @@ export class DpomService {
                     coLine.deliveryDate = moment(coData.deliveryDate).format('DD/MM/YYYY')
                     coLine.exFactoryDate = exFactoryDate
                     coLine.destinations = coData.destinations
-                    console.log(coData.destinations[0]?.name)
                     const request = { country: coData.destinations[0]?.name }
                     const address = await axios.post(`https://uniqlov2-backend.xpparel.com/api/address/getAddressInfoByCountry`, request);
                     const addressData = address.data.data[0];
@@ -472,6 +471,8 @@ export class DpomService {
                                             tabIndex = 2
                                         } else if (dest.name == 'UQIN') {
                                             tabIndex = 6
+                                        } else if (dest.name == 'UQMY') {
+                                            tabIndex = 3
                                         } else {
                                             tabIndex = 1
                                         }
@@ -573,6 +574,7 @@ export class DpomService {
                         const currentDateFormatted = `${day}-${month}-${year}`;
                         if (coNo) {
                             const update = await this.coLineRepository.update({ buyerPo: po.buyer_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+
                             // await driver.navigate().refresh();
                             await driver.sleep(10000)
                         } else {
@@ -600,7 +602,7 @@ export class DpomService {
             }
             return new CommonResponseModel(true, 1, `COline created successfully`)
         } catch (err) {
-            console.log(err);
+            console.log(err, 'error');
             return new CommonResponseModel(false, 0, err)
         }
     }
