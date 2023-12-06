@@ -148,7 +148,7 @@ export class StocksService {
 
     async getAllStockReportData(request?: StockFilterRequest): Promise<CommonResponseModel> {
         try {
-            const data = `select b.buyer_name AS buyerName,IF(stocks.item_type='fabric',it.description,tr.trim_code) AS m3ItemCode,item_type AS itemType,
+            let data = `select b.buyer_name AS buyerName,IF(stocks.item_type='fabric',it.description,tr.trim_code) AS m3ItemCode,item_type AS itemType,
             r.rack_position_name AS location,stocks.quantity FROM stocks stocks
             LEFT JOIN buyers b ON b.buyer_id = stocks.buyer_id
             LEFT JOIN m3_items it ON it.buyer_id = stocks.buyer_id AND stocks.item_type='fabric'
@@ -157,7 +157,10 @@ export class StocksService {
             const details = await this.stocksRepository.query(data)
             if (details.length > 0) {
                 return new CommonResponseModel(true, 0, 'All stocks Requests retrieved successfully', details)
-            } else {
+            } 
+            if(request?.extRefNo){
+                data = data+` where b.external_ref_number = '${request.extRefNo}'`
+            }else {
                 return new CommonResponseModel(false, 1, 'No data found', [])
             }
         } catch (err) {

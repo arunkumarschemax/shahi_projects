@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { SampleFilterRequest, SourceIssuesRequest } from '@project-management-system/shared-models';
+import { BuyerIdReq, ExternalRefReq, SampleFilterRequest, SourceIssuesRequest, buyerReq } from '@project-management-system/shared-models';
 
 
 export class SourceIssuesService extends CommonAxiosService {
 
     materialIssueController = "/material-issue"
 
-    async getAllMaterialIssues() {
-        return this.axiosPostCall(this.materialIssueController + "/getAllMaterialIssues")
+    async getAllMaterialIssues(req?:buyerReq) {
+        return this.axiosPostCall(this.materialIssueController + "/getAllMaterialIssues",req)
     }
 
     async getAllSourceIssues( req? :SampleFilterRequest ): Promise<any>{
