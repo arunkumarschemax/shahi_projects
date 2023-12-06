@@ -67,6 +67,7 @@ export const StockView = () => {
     buyerService.getAllActiveBuyers(req).then((res) => {
       if (res.status) {
         setBuyer(res.data);
+        form.setFieldsValue({buyerId: res.data[0]?.buyerId})
       }
     });
   };
@@ -437,13 +438,14 @@ export const StockView = () => {
     <Card title="RM Inventory" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
       <Form layout="vertical" form={form} onFinish={onFinish}>
        <Row gutter={24}>
-       {!isBuyer ? 
-        <>
+       {/* {!isBuyer ? 
+        <> */}
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="buyerId"
               label="Buyer"
               rules={[{ required: true, message: "Buyer is required" }]}
+              // dependencies={['buyerId']}
             >
               <Select
                 allowClear
@@ -465,7 +467,7 @@ export const StockView = () => {
               </Select>
             </Form.Item>
           </Col>
-          </>:<></>}
+          {/* </>:<></>} */}
           <Col style={{display:"none"}}>
           <Form.Item
               name="buyerCode"
