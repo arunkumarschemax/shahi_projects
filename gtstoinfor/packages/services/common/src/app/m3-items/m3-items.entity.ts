@@ -1,12 +1,29 @@
-import { LogoEnum, PartEnum, RackEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { ItemTypeEnum, LogoEnum, PartEnum, RackEnum, TypeEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { Buyers } from "../buyers/buyers.entity";
+import { trimEntity } from "../Trim Masters/trim/trim-entity";
+import { CategoryEntity } from "../Trim Masters/category/dto/category-entity";
 
 @Entity('m3_items')
 export class M3ItemsEntity {
 
   @PrimaryGeneratedColumn("increment", { name: 'm3_items_Id' })
   m3ItemsId: number;
+
+  @Column('enum',{
+    name:'item_type',
+    nullable: true,
+    enum:ItemTypeEnum,
+  })
+  itemType: ItemTypeEnum;
+
+  @Column('enum',{
+    name:'type',
+    nullable: true,
+    default:TypeEnum.Local,
+    enum:TypeEnum,
+  })
+  type: TypeEnum;
 
   @Column('varchar', {
     name: 'item_code',
@@ -117,11 +134,11 @@ export class M3ItemsEntity {
 
   // Trim columns 
 
-  @Column("int", {
-    nullable: true,
-    name: "category_id"
-  })
-  categoryId: number;
+  // @Column("int", {
+  //   nullable: true,
+  //   name: "category_id"
+  // })
+  // categoryId: number;
 
   @Column("int", {
     nullable: true,
@@ -247,5 +264,14 @@ export class M3ItemsEntity {
   @ManyToOne(type=>Buyers, m3Items=>m3Items.M3ItemCodes,{  nullable:false, })
   @JoinColumn({ name:"buyer_id"})
   buyerInfo: Buyers;
+
+  @ManyToOne(type=>trimEntity,  m3Items=>m3Items.trimInfo,{  nullable:false, })
+  @JoinColumn({ name:"trim_id"})
+  trimId: trimEntity;
+
+
+  @ManyToOne(type=>CategoryEntity,  m3Items=>m3Items.categoryInfo,{  nullable:false, })
+  @JoinColumn({ name:"category_id"})
+  categoryId: CategoryEntity;
 
 }

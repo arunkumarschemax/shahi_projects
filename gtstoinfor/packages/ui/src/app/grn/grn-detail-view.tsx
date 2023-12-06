@@ -160,6 +160,7 @@ import Barcode from "react-barcode";
           {/* <Descriptions.Item label='PO Number' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.poNumber?stateData?.data?.[0]?.poNumber:'-'}</Descriptions.Item> */}
           {/* <Descriptions.Item label='Contact Person' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.contactPerson?stateData?.data?.[0]?.contactPerson:'-'}</Descriptions.Item> */}
           <Descriptions.Item label='Invoice No' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.invoiceNo?stateData?.data?.[0]?.invoiceNo:'-'}</Descriptions.Item>
+          <Descriptions.Item label='Invoice Date' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.invoiceDate? moment(stateData?.data?.[0]?.invoiceDate).format('DD-MM-YYYY'):'-'}</Descriptions.Item>
           <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.itemType?stateData?.data?.[0]?.itemType:'-'}</Descriptions.Item>
           <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnType?stateData?.data?.[0]?.grnType:'-'}</Descriptions.Item>
           <Descriptions.Item label='Status' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.status?stateData?.data?.[0]?.status:'-'}</Descriptions.Item>

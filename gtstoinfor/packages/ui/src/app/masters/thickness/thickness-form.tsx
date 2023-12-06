@@ -41,7 +41,7 @@ export const ThicknessForm = (props:ThicknessProps) => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 onReset();
-                navigate('/masters/thickness/thickness-view')
+                navigate('/trim-master/thickness/thickness-view')
             } else{
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
@@ -56,7 +56,7 @@ export const ThicknessForm = (props:ThicknessProps) => {
         <>
             
             <Card title={<span >Thickness</span>}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
-            extra={props.isUpdate==true?"":<Link to='/masters/thickness/thickness-view' ><span style={{color:'white'}}>
+            extra={props.isUpdate==true?"":<Link to='/trim-master/thickness/thickness-view' ><span style={{color:'white'}}>
                 <Button  type={'primary'} >View </Button> </span></Link>}
 >
         {/* <Card

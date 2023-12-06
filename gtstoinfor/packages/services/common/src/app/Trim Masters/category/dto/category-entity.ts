@@ -1,6 +1,6 @@
 import { TaxCategoriesEnum } from '@project-management-system/shared-models';
 import { CommonColumns } from 'packages/services/common/common-columns.entity';
-import {Column,Entity,Index,PrimaryGeneratedColumn,VersionColumn,UpdateDateColumn,CreateDateColumn} from 'typeorm';
+import {Column,Entity,Index,PrimaryGeneratedColumn,VersionColumn,UpdateDateColumn,CreateDateColumn, OneToMany} from 'typeorm';
 
 @Entity('category')
 export class CategoryEntity {
@@ -57,4 +57,8 @@ export class CategoryEntity {
     default:1
   })
   isActive: boolean;
+
+  @OneToMany(type => CategoryEntity, attribute => attribute.categoryId,{cascade: true})
+    categoryInfo : CategoryEntity
 }
+  

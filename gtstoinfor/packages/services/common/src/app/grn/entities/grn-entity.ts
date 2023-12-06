@@ -119,6 +119,12 @@ export class GrnEntity {
   })
   grnQuantity: number
 
+  @Column('date', {
+    name: 'invoice_date',
+    nullable: false
+  })
+  invoiceNoDate: Date
+
   // @OneToMany(type => GrnFabricEntity, grnFab => grnFab.grnEntity, { cascade: true })
   // grnFabricInfo: GrnFabricEntity[]
 

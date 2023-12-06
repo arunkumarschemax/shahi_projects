@@ -5,4 +5,6 @@ import { ApiProperty } from "@nestjs/swagger";
 export class AllocatedLocationRequest {
      @ApiProperty()
      sampleRequestItemId: number;
+     @ApiProperty()
+     action: string;
 }

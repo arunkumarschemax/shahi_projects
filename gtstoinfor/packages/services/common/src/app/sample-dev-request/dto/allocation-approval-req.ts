@@ -5,4 +5,6 @@ import { ApiProperty } from "@nestjs/swagger";
 export class AllocationApprovalRequest {
      @ApiProperty()
      sampleRequestId: number;
+     @ApiProperty()
+     action: string;
 }
