@@ -89,5 +89,13 @@ async update(@Body() req: any): Promise<CommonResponseModel> {
     return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
   }
 }
-
+@Post('/getAllTrimStocks')
+async getAllTrimStocks(@Body() req: any): Promise<CommonResponseModel> {
+  console.log(req,"stock-controll")
+  try {
+    return await this.stocksService.getAllTrimStocks();
+  } catch (error) {
+    return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+  }
+}
 }
