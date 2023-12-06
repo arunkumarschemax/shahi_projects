@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DeliveryMethodDto, DeliveryMethodRequest } from 'packages/libs/shared-models/src/common/delivery-method';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, MaterialAllocationitemsIdreq, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq,SampleIdRequest, AllocatedLocationReq, RequestNoReq, AllocationApprovalReq, BuyerRefNoRequest } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, MaterialAllocationitemsIdreq, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq,SampleIdRequest, AllocatedLocationReq, RequestNoReq, AllocationApprovalReq, lifeCycleStatusReq, BuyerRefNoRequest } from '@project-management-system/shared-models';
 import { create } from 'domain';
 
 
@@ -210,5 +210,7 @@ export class SampleDevelopmentService extends CommonAxiosService {
   async getAllApprovedRequestNo(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllApprovedRequestNo",req )
   }
-
+  async updatedispatch(req?:lifeCycleStatusReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/updatedispatch" ,req)
+  }
 }

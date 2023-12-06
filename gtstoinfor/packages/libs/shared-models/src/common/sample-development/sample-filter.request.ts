@@ -1,5 +1,5 @@
 import { sample } from "rxjs";
-import { MaterialStatusEnum, SampleDevelopmentStatusEnum } from "../../enum";
+import { LifeCycleStatusEnum, MaterialStatusEnum, SampleDevelopmentStatusEnum } from "../../enum";
 
 export class SampleFilterRequest{
     reqNo?:string;
@@ -85,5 +85,22 @@ export class sampleReqIdReq{
     }
 }
 
+export class lifeCycleStatusReq{
+
+status?:LifeCycleStatusEnum
+id?:number
+dipatchedDate?:Date
+constructor(
+    status?:LifeCycleStatusEnum,
+    id?:number,
+dispatchedDate?:Date
+
+){
+    this.status=status
+    this.id= id
+    this.dipatchedDate=dispatchedDate
+}
+
+}
 
 
