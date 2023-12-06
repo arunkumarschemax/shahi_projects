@@ -17,8 +17,10 @@ import { Tabs } from "antd";
 import {
   AllocatedLocationReq,
   AllocationApprovalReq,
+  BuyerRefNoRequest,
   RequestNoReq,
 } from "@project-management-system/shared-models";
+import { useIAMClientState } from "../common/iam-client-react";
 
 export interface AllocatedStockApprovalProps {
   screen: any;
@@ -35,6 +37,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
   const [requestNo, setRequestNo] = useState<any>([]);
   const [childData, setChildData] = useState({});
   const [loading, setLoading] = useState(false);
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [showTabe, setShowTabe] = useState(false);
 
 
@@ -95,7 +98,9 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
 
   const getAllRequestNo = () => {
     setRequestNo([])
-    service.getAllAllocatedRequestNo().then((res) => {
+    const req = new BuyerRefNoRequest()
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    service.getAllAllocatedRequestNo(req).then((res) => {
       if (res.status) {
         setRequestNo(res.data);
       }
@@ -104,7 +109,9 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
 
   const getAllApprovedRequestNo = () =>{
     setRequestNo([])
-    service.getAllApprovedRequestNo().then((res)=>{
+    const req = new BuyerRefNoRequest()
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    service.getAllApprovedRequestNo(req).then((res)=>{
       if (res.status) {
         setRequestNo(res.data);
       }

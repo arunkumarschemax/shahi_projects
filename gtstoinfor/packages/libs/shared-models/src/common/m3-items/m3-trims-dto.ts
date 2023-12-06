@@ -1,3 +1,4 @@
+import { execFile } from "child_process";
 import { LogoEnum, PartEnum, m3ItemsContentEnum } from "../../enum";
 
 export class M3trimsDTO {
@@ -19,6 +20,7 @@ export class M3trimsDTO {
     varietyId:number;
     trimCategoryId:number;
     trimMappingId:number;
+    extRefNumber?: string
     
 
     constructor(m3ItemsId:number,buyerId:number,
@@ -38,6 +40,7 @@ export class M3trimsDTO {
         varietyId:number,
         trimCategoryId:number,
         trimMappingId:number,
+        extRefNumber?: string
     ) {
         this.m3ItemsId=m3ItemsId;
         this.buyerId=buyerId;
@@ -57,7 +60,7 @@ export class M3trimsDTO {
         this.varietyId=varietyId;
         this.trimCategoryId=trimCategoryId;
         this.trimMappingId=trimMappingId;
-
+        this.extRefNumber = extRefNumber
        
        
     }
