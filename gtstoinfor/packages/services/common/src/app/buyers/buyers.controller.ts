@@ -62,9 +62,9 @@ export class BuyersController {
         }
     }
     @Post('/getAllActiveBuyers')
-    async getAllActiveBuyers(@Req() request: Request): Promise<AllBuyersResponseModel> {
+    async getAllActiveBuyers(@Body() req?:any): Promise<AllBuyersResponseModel> {
         try {
-            return await this.buyersService.getAllActiveBuyersInfo();
+            return await this.buyersService.getAllActiveBuyersInfo(req);
         } catch (error) {
             return this.applicationExceptionhandler.returnException(AllBuyersResponseModel, error)
         }
