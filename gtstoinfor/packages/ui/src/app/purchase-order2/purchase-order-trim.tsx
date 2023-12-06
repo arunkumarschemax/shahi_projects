@@ -156,8 +156,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         trimForm.setFieldsValue({indentQuantity:rowData.indentQuantity})    
         trimForm.setFieldsValue({indentCode:rowData.indentCode})
         trimForm.setFieldsValue({indentTrmId:rowData.indentTrmId})
-        trimForm.setFieldsValue({quantityUomName:defaultTrimFormData.uom})
-        trimForm.setFieldsValue({quantityUomId:defaultTrimFormData.uomId,})
+        trimForm.setFieldsValue({quantityUomName:rowData?.quantityUnit})
+        trimForm.setFieldsValue({quantityUomId:rowData?.quantityUnitId,})
 
         }
         if(rowData.sampleTrimInfoId != undefined){
