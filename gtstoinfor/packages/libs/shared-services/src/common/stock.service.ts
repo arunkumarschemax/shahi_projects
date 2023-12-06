@@ -37,5 +37,7 @@ async update(req?:statusReq  ): Promise<CommonResponseModel> {
   return this.axiosPostCall(this.stocksController + "/update",req )
 
 }
-
+async getAllTrimStocks(): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.stocksController + "/getAllTrimStocks")
+}
 }
