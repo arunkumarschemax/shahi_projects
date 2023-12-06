@@ -191,7 +191,7 @@ export class StocksService {
             // CONCAT(it.item_code,'-',it.description) AS m3Item,
             console.log(req);
             let query = ` SELECT s.location_id AS locationId,s.m3_item AS m3itemId, s.uom_id AS uomId, s.grn_item_id AS grnItemId,  s.id AS stockId,
-            it.item_code AS m3Item,
+            it.trim_code AS m3Item,
             s.item_type AS itemType, (s.quantity-s.allocatd_quantity-transfered_quantity) AS qty,
              u.uom AS uom, b.buyer_name AS buyer,r.rack_position_name AS location,
              it.thickness_id, it.type_id,it.trim_category_id,it.variety_id,
@@ -213,43 +213,43 @@ export class StocksService {
                 query = query +"and it.trim_category_id = " + `"${req.trimCategoryId}"`
             }
             if(req.categoryId != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.categoryId}"`
+                query = query +"and it.category_id = " + `"${req.categoryId}"`
             }
             if(req.colorId != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.colorId}"`
+                query = query +"and it.color_id = " + `"${req.colorId}"`
             }
             if(req.contentId != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.contentId}"`
+                query = query +"and it.content_id = " + `"${req.contentId}"`
             }
             if(req.finishId != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.finishId}"`
+                query = query +"and it.finish_id = " + `"${req.finishId}"`
             }
             if(req.holeId != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.holeId}"`
+                query = query +"and it.hole_id = " + `"${req.holeId}"`
             }
             if(req.part != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.part}"`
+                query = query +"and it.part = " + `"${req.part}"`
             }
             if(req.logo != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.logo}"`
+                query = query +"and it.logo = " + `"${req.logo}"`
             }
             if(req.qualityId != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.qualityId}"`
+                query = query +"and it.quality_id = " + `"${req.qualityId}"`
             }
             if(req.structureId != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.structureId}"`
+                query = query +"and it.structure_id = " + `"${req.structureId}"`
             }
             if(req.varietyId != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.varietyId}"`
+                query = query +"and it.variety_id = " + `"${req.varietyId}"`
             }
             if(req.uomId != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.uomId}"`
+                query = query +"and it.uom_id = " + `"${req.uomId}"`
             }
             if(req.typeId != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.typeId}"`
+                query = query +"and it.type_id = " + `"${req.typeId}"`
             }
             if(req.thicknessId != undefined){
-                query = query +"and it.trim_category_id = " + `"${req.thicknessId}"`
+                query = query +"and it.thickness_id = " + `"${req.thicknessId}"`
             }
 
             query = query + " order by b.buyer_name ASC ";
