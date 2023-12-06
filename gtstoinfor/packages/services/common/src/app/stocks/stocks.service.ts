@@ -73,8 +73,8 @@ export class StocksService {
             if(req.weightUnit != undefined){
                 query = query + " and it.weight_unit = "+req.weightUnit;
             }
-            if(req.extRefNumber != undefined){
-                query = query +"and b.external_ref_number" + req.extRefNumber
+            if (req.extRefNumber != undefined) {
+                query = query + " and b.external_ref_number = " + `"${req.extRefNumber}"`;
             }
             query = query + " order by b.buyer_name ASC ";
 
@@ -201,6 +201,9 @@ export class StocksService {
              WHERE s.id > 0 AND g.grn_type = 'INDENT' AND (quantity-s.allocatd_quantity-transfered_quantity) > 0 AND s.item_type != 'fabric'`
             if(req.buyerId != undefined){
                 query = query + " and s.buyer_id = "+req.buyerId;
+            }
+            if(req.extRefNumber != undefined){
+                query = query +"and b.external_ref_number = " + `"${req.extRefNumber}"`
             }
             // if(req.construction != undefined){
             //     query = query + " and it.construction = "+req.construction;
