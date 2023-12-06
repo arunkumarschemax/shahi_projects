@@ -7,7 +7,7 @@ import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { LogoEnum, LogoEnumDisplay, M3ItemsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
 const { TextArea } = Input;
 const { Option } = Select;
@@ -465,7 +465,26 @@ export const RmTrimsView = () => {
   //     setButtonEnable(false)
   //    }
   // }
+
   const onFinish = () => {
+
+    let req = new M3trimsDTO(0,form.getFieldValue("buyer"),undefined,form.getFieldValue("category"),form.getFieldValue("color"),form.getFieldValue("content"),form.getFieldValue("finish"),form.getFieldValue("hole"),form.getFieldValue("logo"),form.getFieldValue("part"),form.getFieldValue("quality"),form.getFieldValue("structure"),form.getFieldValue("thickness"),form.getFieldValue("type"),form.getFieldValue("uom"),form.getFieldValue("variety"),form.getFieldValue("trimCategory"),0)
+    console.log(req);
+    stockService.getAllTrimStocks(req).then((res) => {
+      if (res.status) {
+        setData(res.data);
+        AlertMessages.getSuccessMessage(res.internalMessage);
+        // window.location.reload();
+      }
+      else{
+        setData([]);
+        AlertMessages.getWarningMessage(res.internalMessage);
+      }
+    })
+    .catch((err) => {
+      setData([]);
+      AlertMessages.getErrorMessage(err.message);
+    });
     // if(form.getFieldValue("content")) {
     //   setButtonEnable(false)
     //  }
@@ -522,7 +541,7 @@ export const RmTrimsView = () => {
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="trimCategory" label="Trim Category" rules={[{ required: true, message: "Trim Category is required" }]}>
+                <Form.Item name="trimCategory" label="Trim Category" rules={[{ required: false, message: "Trim Category is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
@@ -546,7 +565,7 @@ export const RmTrimsView = () => {
                   <Form.Item
                     name="structure"
                     label="Structure"
-                    rules={[{ required: true, message: "Structure is required" }]}
+                    rules={[{ required: false, message: "Structure is required" }]}
                   >
                     <Select
                       showSearch
@@ -567,7 +586,7 @@ export const RmTrimsView = () => {
             {mapData[0]?.category == true ? (
             <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="category" label="Category" rules={[{ required: true, message: "Category is required" }]}>
+                <Form.Item name="category" label="Category" rules={[{ required: false, message: "Category is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
@@ -589,7 +608,7 @@ export const RmTrimsView = () => {
             {mapData[0]?.content === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="content" label="Content" rules={[{ required: true, message: "Content is required" }]}>
+                <Form.Item name="content" label="Content" rules={[{ required: false, message: "Content is required" }]}>
                     <Select
                     showSearch
                     allowClear
@@ -611,7 +630,7 @@ export const RmTrimsView = () => {
             {mapData[0]?.type === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="type" label="Type" rules={[{ required: true, message: "Type is required" }]}>
+                <Form.Item name="type" label="Type" rules={[{ required: false, message: "Type is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
@@ -633,7 +652,7 @@ export const RmTrimsView = () => {
             {mapData[0]?.finish === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="finish" label="Finish" rules={[{ required: true, message: "Finish is required" }]}>
+                <Form.Item name="finish" label="Finish" rules={[{ required: false, message: "Finish is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
@@ -655,7 +674,7 @@ export const RmTrimsView = () => {
             {mapData[0]?.hole === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="hole" label="Hole" rules={[{ required: true, message: "Hole is required" }]}>
+                <Form.Item name="hole" label="Hole" rules={[{ required: false, message: "Hole is required" }]}>
                     <Select
                     showSearch
                     allowClear
@@ -677,7 +696,7 @@ export const RmTrimsView = () => {
             {mapData[0]?.quality === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="qualityName" label="Quality" rules={[{ required: true, message: "Quality is required" }]}>
+                <Form.Item name="qualityName" label="Quality" rules={[{ required: false, message: "Quality is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
@@ -699,7 +718,7 @@ export const RmTrimsView = () => {
             {mapData[0]?.thickness === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="warehouse" label="Thickness" rules={[{ required: true, message: "Warehouse is required" }]}>
+                <Form.Item name="warehouse" label="Thickness" rules={[{ required: false, message: "Warehouse is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
@@ -721,7 +740,7 @@ export const RmTrimsView = () => {
             {mapData[0]?.variety === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="variety" label="Variety" rules={[{ required: true, message: "Variety is required" }]}>
+                <Form.Item name="variety" label="Variety" rules={[{ required: false, message: "Variety is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
@@ -743,7 +762,7 @@ export const RmTrimsView = () => {
             {mapData[0]?.uom === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="uom" label="UOM" rules={[{ required: true, message: "UOM is required" }]}>
+                <Form.Item name="uom" label="UOM" rules={[{ required: false, message: "UOM is required" }]}>
                     <Select
                     showSearch
                     allowClear
@@ -765,7 +784,7 @@ export const RmTrimsView = () => {
             {mapData[0]?.color === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="color" label="Color" rules={[{ required: true, message: "Color is required" }]}>
+                <Form.Item name="color" label="Color" rules={[{ required: false, message: "Color is required" }]}>
                     <Select
                     showSearch
                     allowClear
@@ -787,7 +806,7 @@ export const RmTrimsView = () => {
             {mapData[0]?.logo === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="logo" label="Logo" rules={[{ required: true, message: "Logo is required" }]}>
+                <Form.Item name="logo" label="Logo" rules={[{ required: false, message: "Logo is required" }]}>
                     <Select
                     showSearch
                     allowClear
@@ -805,7 +824,7 @@ export const RmTrimsView = () => {
             {mapData[0]?.part === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="part" label="Part" rules={[{ required: true, message: "Part is required" }]}>
+                <Form.Item name="part" label="Part" rules={[{ required: false, message: "Part is required" }]}>
                     <Select
                     showSearch
                     allowClear
