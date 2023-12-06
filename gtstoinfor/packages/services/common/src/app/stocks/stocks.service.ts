@@ -188,15 +188,16 @@ export class StocksService {
 
       async getAllTrimStocks(req:M3trimsDTO): Promise<CommonResponseModel> {
         try {
+            // CONCAT(it.item_code,'-',it.description) AS m3Item,
             console.log(req);
             let query = ` SELECT s.location_id AS locationId,s.m3_item AS m3itemId, s.uom_id AS uomId, s.grn_item_id AS grnItemId,  s.id AS stockId,
-            CONCAT(it.item_code,'-',it.description) AS m3Item,
+            it.item_code AS m3Item,
             s.item_type AS itemType, (s.quantity-s.allocatd_quantity-transfered_quantity) AS qty,
              u.uom AS uom, b.buyer_name AS buyer,r.rack_position_name AS location,
              it.thickness_id, it.type_id,it.trim_category_id,it.variety_id,
              s.buyer_id  FROM stocks s
              LEFT JOIN buyers b ON b.buyer_id = s.buyer_id
-             LEFT JOIN m3_items it ON it.m3_items_Id = s.m3_item
+             LEFT JOIN m3_trims it ON it.m3_trim_Id = s.m3_item
              LEFT JOIN rack_position r ON r.position_Id = s.location_id
              LEFT JOIN uom u ON u.id = s.uom_id
              LEFT JOIN grn_items gi ON gi.grn_item_id = s.grn_item_id
@@ -208,41 +209,50 @@ export class StocksService {
             if(req.extRefNumber != undefined){
                 query = query +"and b.external_ref_number = " + `"${req.extRefNumber}"`
             }
-            // if(req.construction != undefined){
-            //     query = query + " and it.construction = "+req.construction;
-            // }if(req.content != undefined){
-            //     query = query + " and it.content = '"+req.content+"'";
-            // }if(req.fabricType != undefined){
-            //     query = query + " and it.fabric_type = "+req.fabricType;
-            // }if(req.finish != undefined){
-            //     query = query + " and it.finish = '"+req.finish+"'";
-            // }
-            // if(req.shrinkage != undefined){
-            //     query = query + " and it.shrinkage = '"+req.shrinkage+"'";
-            // }
-            // if(req.weave != undefined){
-            //     query = query + " and it.weave = "+req.weave;
-            // }
-            // if(req.weight != undefined){
-            //     query = query + " and it.weight = '"+req.weight+"'";
-            // }
-            // if(req.width != undefined){
-            //     query = query + " and it.width = '"+req.width+"'";
-            // }
-            // if(req.yarnCount != undefined){
-            //     query = query + " and it.yarn_count = '"+req.yarnCount+"'";
-            // }
+            if(req.trimCategoryId != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.trimCategoryId}"`
+            }
+            if(req.categoryId != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.categoryId}"`
+            }
+            if(req.colorId != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.colorId}"`
+            }
+            if(req.contentId != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.contentId}"`
+            }
+            if(req.finishId != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.finishId}"`
+            }
+            if(req.holeId != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.holeId}"`
+            }
+            if(req.part != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.part}"`
+            }
+            if(req.logo != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.logo}"`
+            }
+            if(req.qualityId != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.qualityId}"`
+            }
+            if(req.structureId != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.structureId}"`
+            }
+            if(req.varietyId != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.varietyId}"`
+            }
+            if(req.uomId != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.uomId}"`
+            }
+            if(req.typeId != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.typeId}"`
+            }
+            if(req.thicknessId != undefined){
+                query = query +"and it.trim_category_id = " + `"${req.thicknessId}"`
+            }
 
-            // if(req.yarnUnit != undefined){
-            //     query = query + " and it.yarn_unit = "+req.yarnUnit;
-            // }
-            // if(req.widthUnit != undefined){
-            //     query = query + " and it.width_unit = "+req.widthUnit;
-            // }
-            // if(req.weightUnit != undefined){
-            //     query = query + " and it.weight_unit = "+req.weightUnit;
-            // }
-            // query = query + " order by b.buyer_name ASC ";
+            query = query + " order by b.buyer_name ASC ";
 
             const res = await AppDataSource.query(query);
             if (res.length  > 0) {
