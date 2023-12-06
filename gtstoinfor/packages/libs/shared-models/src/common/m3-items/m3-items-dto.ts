@@ -21,6 +21,7 @@ export class M3ItemsDTO {
     buyerCode:string;
     isActive?:boolean;
     versionFlag?:number;
+    extRefNumber?: string
     
 
     constructor(m3ItemsId:number,itemCode:string,content: m3ItemsContentEnum,
@@ -33,7 +34,8 @@ export class M3ItemsDTO {
         buyerCode:string,
         isActive?:boolean,
         versionFlag?:number,
-       
+        extRefNumber?: string
+
         
         
     ) {
@@ -54,7 +56,7 @@ export class M3ItemsDTO {
         this.isActive = isActive;
         this.versionFlag = versionFlag;
         this.buyerCode = buyerCode;
-
+        this.extRefNumber = extRefNumber
        
        
     }

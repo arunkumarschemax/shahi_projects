@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from "@nestjs/common";
 import { StocksService } from "./stocks.service";
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
-import { AllStocksResponseModel, CommonResponseModel, StockFilterRequest, StocksDto } from "@project-management-system/shared-models";
+import { AllStocksResponseModel, CommonResponseModel, M3trimsDTO, StockFilterRequest, StocksDto } from "@project-management-system/shared-models";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("Stocks")
@@ -89,5 +89,13 @@ async update(@Body() req: any): Promise<CommonResponseModel> {
     return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
   }
 }
-
+@Post('/getAllTrimStocks')
+async getAllTrimStocks(@Body() req: any): Promise<CommonResponseModel> {
+  console.log(req,"stock-controll")
+  try {
+    return await this.stocksService.getAllTrimStocks(req);
+  } catch (error) {
+    return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+  }
+}
 }

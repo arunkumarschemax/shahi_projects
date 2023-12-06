@@ -1,4 +1,4 @@
-import { AllStocksResponseModel, CommonResponseModel, M3ItemsDTO, SampleFilterRequest, StockFilterRequest, StocksDto, StockupdateRequest, statusReq } from "@project-management-system/shared-models";
+import { AllStocksResponseModel, CommonResponseModel, M3ItemsDTO, M3trimsDTO, SampleFilterRequest, StockFilterRequest, StocksDto, StockupdateRequest, statusReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class StockService extends CommonAxiosService {
@@ -37,5 +37,7 @@ async update(req?:statusReq  ): Promise<CommonResponseModel> {
   return this.axiosPostCall(this.stocksController + "/update",req )
 
 }
-
+async getAllTrimStocks(req:M3trimsDTO): Promise<CommonResponseModel> {
+  return this.axiosPostCall(this.stocksController + "/getAllTrimStocks",req)
+}
 }

@@ -31,4 +31,7 @@ export class GRNService extends CommonAxiosService {
   async getPONoData(): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getPONoData")
   }
+  async getAllTrimStocks(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllTrimStocks")
+  }
 }
