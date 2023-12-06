@@ -6,6 +6,7 @@ import { IndentTrimsEntity } from "../indent-trims-entity";
 import { IndentFabricDto } from "./indent-fabric-dto";
 import { IndentTrimDto } from "./indent-trim-dto";
 import { SampleRequest } from "../../sample-dev-request/entities/sample-dev-request.entity";
+import { IndentItemsEntity } from "../indent-items.entity";
 
 @Injectable()
 
@@ -39,25 +40,26 @@ export class IndentAdapter
             indententity.isActive = true;
             indententity.createdUser = indentDto.createdUser;
           }
-          const fabricDetails: IndentFabricEntity[]  = []; 
+          const fabricDetails: IndentItemsEntity[]  = []; 
           for (const indentitems of indentDto.indentFabricDetails) {
-              const fabEntity: IndentFabricEntity = new IndentFabricEntity();
+              const fabEntity: IndentItemsEntity = new IndentItemsEntity();
               if(!isUpdate){
                 indententity.createdUser = indentDto.createdUser;
               }else{
-                  fabEntity.ifabricId =indentitems.ifabricId;
+                  fabEntity.indentItemId =indentitems.ifabricId;
                   indententity.updatedUser = indentDto.updatedUser; 
               }
               // fabEntity.buyerId =indentitems.buyerId;
-              fabEntity.color =indentitems.color;
+              // fabEntity.color =indentitems.color;
               // fabEntity.construction =indentitems.construction;
               // fabEntity.content=indentitems.content;
               // fabEntity.fabricType=indentitems.fabricType;
-              fabEntity.file_path=indentitems.file_path;
+              // fabEntity.file_path=indentitems.file_path;
               // fabEntity.finish=indentitems.finish;
               // fabEntity.grnDate=indentitems.grnDate;
-              fabEntity.isUploaded=indentitems.isUploaded;
-              fabEntity.m3FabricCode=indentitems.m3FabricCode;
+              // fabEntity.isUploaded=indentitems.isUploaded;
+              fabEntity.rmItemId=indentitems.m3FabricCode;
+              // fabEntity.rmItemCode=indentitems.m3FabricCode;
               // fabEntity.moq=indentitems.moq;
               // fabEntity.moqPrice=indentitems.moqPrice;
               // fabEntity.moqPriceUnit=indentitems.moqPriceUnit;
@@ -78,55 +80,57 @@ export class IndentAdapter
               // fabEntity.weightUnit = indentitems.weightUnit;
               fabricDetails.push(fabEntity);
           }
-          indententity.iFabricInfo = fabricDetails;
-          const trimDetails: IndentTrimsEntity[]  = []; 
+          // indententity.iFabricInfo = fabricDetails;
+          const trimDetails: IndentItemsEntity[]  = []; 
           for (const indentitems of indentDto.indentTrimDetails) {
-              const trimEntity: IndentTrimsEntity = new IndentTrimsEntity();
+              const trimEntity: IndentItemsEntity = new IndentItemsEntity();
               if(!isUpdate){
                 indententity.createdUser = indentDto.createdUser;
               }else{
-                  trimEntity.itrimsId =indentitems.itrimsId;
+                  trimEntity.indentItemId =indentitems.itrimsId;
                   indententity.updatedUser = indentDto.updatedUser; 
               }
               // trimEntity.color =indentitems.color;
               // trimEntity.description =indentitems.description;
-              trimEntity.filePath =indentitems.filePath;
-              trimEntity.isUploaded=indentitems.isUploaded;
+              // trimEntity.filePath =indentitems.filePath;
+              // trimEntity.isUploaded=indentitems.isUploaded;
               // trimEntity.m3TrimCode=indentitems.m3TrimCode;
               trimEntity.quantity=indentitems.quantity;
-              trimEntity.trimType=indentitems.trimType;
+              // trimEntity.trimType=indentitems.trimType;
               // trimEntity.size=indentitems.size;
-              trimEntity.trimCode=indentitems.trimCode;
-              // trimEntity.quantityUnit=indentitems.quantityUnit;
+              trimEntity.rmItemId=indentitems.trimCode;
+              trimEntity.quantityUnit=indentitems.quantityUnit;
               trimEntity.versionFlag=indentitems.versionFlag;
               trimEntity.createdUser=indentitems.createdUser;
               trimEntity.isActive=indentitems.isActive;
               trimDetails.push(trimEntity);
           }
-          indententity.iTrimsInfo = trimDetails;
+          const itemsInfo = [...fabricDetails,...trimDetails]
+          // indententity.iTrimsInfo = trimDetails;
+          indententity.indentItemInfo = itemsInfo;
           console.log("*******************************")
           console.log(indententity)
          return indententity;
     }
-    public convertEntityToDto(indentObject: Indent): IndentDto {
+    // public convertEntityToDto(indentObject: Indent): IndentDto {
 
-        const fabDto:IndentFabricDto[] = [];
-        for (const fabItem of indentObject.iFabricInfo) {
-            const fabricdata= new IndentFabricDto(fabItem.ifabricId
-              // fabItem.content,fabItem.fabricType,fabItem.weaveId,fabItem.weight,fabItem.width,fabItem.yarnCount,fabItem.yarnCount,fabItem.weightUnit,fabItem.construction,fabItem.finish,fabItem.shrinkage
-              ,fabItem.m3FabricCode,fabItem.color,"",0,0,new Date(),"",
-              // fabItem.pch,fabItem.moq,fabItem.moqUnit,fabItem.moqPrice,fabItem.moqPriceUnit,
-              fabItem.quantity,fabItem.quantityUnit,fabItem.file_path,fabItem.isUploaded,fabItem.remarks,fabItem.isActive,fabItem.createdAt,fabItem.createdUser,fabItem.updatedAt,fabItem.updatedUser);
-            fabDto.push(fabricdata);
-        }
+    //     const fabDto:IndentFabricDto[] = [];
+    //     for (const fabItem of indentObject.iFabricInfo) {
+    //         const fabricdata= new IndentFabricDto(fabItem.ifabricId
+    //           // fabItem.content,fabItem.fabricType,fabItem.weaveId,fabItem.weight,fabItem.width,fabItem.yarnCount,fabItem.yarnCount,fabItem.weightUnit,fabItem.construction,fabItem.finish,fabItem.shrinkage
+    //           ,fabItem.m3FabricCode,fabItem.color,"",0,0,new Date(),"",
+    //           // fabItem.pch,fabItem.moq,fabItem.moqUnit,fabItem.moqPrice,fabItem.moqPriceUnit,
+    //           fabItem.quantity,fabItem.quantityUnit,fabItem.file_path,fabItem.isUploaded,fabItem.remarks,fabItem.isActive,fabItem.createdAt,fabItem.createdUser,fabItem.updatedAt,fabItem.updatedUser);
+    //         fabDto.push(fabricdata);
+    //     }
 
-        const trimDto:IndentTrimDto[] = [];
-        for (const trimItem of indentObject.iTrimsInfo) {
-            const trimData= new IndentTrimDto(trimItem.itrimsId,trimItem.trimType,trimItem.trimCode,trimItem.quantity,trimItem.remarks,trimItem.filePath,trimItem.isUploaded,trimItem.isActive,trimItem.createdAt,trimItem.createdUser,trimItem.updatedAt,trimItem.updatedUser,trimItem.versionFlag);
-            trimDto.push(trimData);
-        }
+    //     const trimDto:IndentTrimDto[] = [];
+    //     for (const trimItem of indentObject.iTrimsInfo) {
+    //         const trimData= new IndentTrimDto(trimItem.itrimsId,trimItem.trimType,trimItem.trimCode,trimItem.quantity,trimItem.remarks,trimItem.filePath,trimItem.isUploaded,trimItem.isActive,trimItem.createdAt,trimItem.createdUser,trimItem.updatedAt,trimItem.updatedUser,trimItem.versionFlag);
+    //         trimDto.push(trimData);
+    //     }
 
-        const indentDto= new IndentDto(indentObject.indentId,indentObject.requestNo,indentObject.indentDate,indentObject.expectedDate,indentObject.indentCloseDate,indentObject.status,fabDto,trimDto,0,indentObject.remarks,indentObject.isActive,indentObject.createdAt,indentObject.createdUser,indentObject.updatedAt,indentObject.updatedUser,indentObject.versionFlag);
-        return indentDto;
-      }
+    //     const indentDto= new IndentDto(indentObject.indentId,indentObject.requestNo,indentObject.indentDate,indentObject.expectedDate,indentObject.indentCloseDate,indentObject.status,fabDto,trimDto,0,indentObject.remarks,indentObject.isActive,indentObject.createdAt,indentObject.createdUser,indentObject.updatedAt,indentObject.updatedUser,indentObject.versionFlag);
+    //     return indentDto;
+    //   }
 }

@@ -13,8 +13,8 @@ export class IndentTrimDto{
     // color: number;
     @ApiProperty()
     quantity: number;
-    // @ApiProperty()
-    // quantityUnit: number;
+    @ApiProperty()
+    quantityUnit: number;
     // @ApiProperty()
     // m3TrimCode: string;
     // @ApiProperty()
@@ -44,7 +44,7 @@ export class IndentTrimDto{
     // size: number,
     // color: number,
     quantity: number,
-    // quantityUnit: number,
+    quantityUnit: number,
     // m3TrimCode: string,
     // description: string,
     remarks: string,
@@ -60,6 +60,7 @@ export class IndentTrimDto{
     this.itrimsId = itrimsId;
     this.trimType = trimType;
     this.trimCode = trimCode;
+    this.quantityUnit = quantityUnit;
     // this.size = size;
     // this.color = color;
     this.quantity = quantity;

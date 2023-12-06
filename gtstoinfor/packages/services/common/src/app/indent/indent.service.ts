@@ -9,6 +9,7 @@ import { DataSource } from 'typeorm';
 import { FabricIndentRepository } from './dto/fabric-indent-repository';
 import { TrimIndentRepository } from './dto/trim-indent-repository';
 import { UomService } from '@project-management-system/shared-services';
+import { IndentItemsRepository } from './dto/indent-items-repo';
 
 
 @Injectable()
@@ -16,8 +17,9 @@ import { UomService } from '@project-management-system/shared-services';
 export class IndentService {
     constructor(
         private indentRepo: IndentRepository,
-        private indentFabricRepo: FabricIndentRepository,
-        private indentTrimRepo: TrimIndentRepository,
+        private indentItemsRepo: IndentItemsRepository,
+        // private indentFabricRepo: FabricIndentRepository,
+        // private indentTrimRepo: TrimIndentRepository,
         private uomService: UomService,
         private indentAdapter: IndentAdapter,
         private readonly dataSource: DataSource,
@@ -34,10 +36,10 @@ export class IndentService {
             const convertedindentEntity: Indent = this.indentAdapter.convertDtoToEntity(req, isUpdate);
             console.log(convertedindentEntity)
             const savedindentEntity: Indent = await this.indentRepo.save(convertedindentEntity);
-            const savedindentDto: IndentDto = this.indentAdapter.convertEntityToDto(savedindentEntity);
-            if (savedindentDto) {
+            // const savedindentDto: IndentDto = this.indentAdapter.convertEntityToDto(savedindentEntity);
+            if (savedindentEntity) {
                 // generating resposnse
-                const response = new CommonResponseModel(true, 1, isUpdate ? 'indent Updated Successfully' : 'indent Created Successfully', savedindentDto);
+                const response = new CommonResponseModel(true, 1, isUpdate ? 'indent Updated Successfully' : 'indent Created Successfully');
                 return response;
             } else {
                 throw new ErrorResponse(11106, 'indent saved but issue while transforming into DTO');
@@ -64,26 +66,26 @@ export class IndentService {
         // const uomInfo = await this.uomService.getAllActiveUoms();
         //   const uomNameMap = new Map<number, string>();
         //   uomInfo.data.forEach(uom => uomNameMap.set(uom.uomId, uom.uom));
-        for (const data of indentData) {
-            const fabricModel = [];
-            const trimModel = [];
-            const fabricIndentData = await this.indentFabricRepo.getFabricIndentData(data.indent_id);
+        // for (const data of indentData) {
+        //     const fabricModel = [];
+        //     const trimModel = [];
+        //     const fabricIndentData = await this.indentFabricRepo.getFabricIndentData(data.indent_id);
          
 
-            for (const fabric of fabricIndentData) {
-                fabricModel.push(new IndentFabricModel(fabric.ifabric_id, fabric.content,
-                    fabric.fabric_type_name, fabric.fabric_weave_name, fabric.weight, fabric.width, fabric.yarn_count, fabric.unit, fabric.construction, fabric.finish, fabric.shrinkage, fabric.item_code,fabric.colour,
-                    fabric.pch, fabric.moq, fabric.moqUnit, fabric.moq_price, fabric.moqPriceUnit, fabric.season, fabric.vendor_name,
-                    fabric.buyer, fabric.grn_date, fabric.xl_no, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId))
-            }
-            const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id);
-            for (const trim of trimIndentData) {
-                trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
-                    trim.quantity, trim.m3TrimCode, trim.description,
-                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId))
-            }
-            indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName ))
-        }
+        //     for (const fabric of fabricIndentData) {
+        //         fabricModel.push(new IndentFabricModel(fabric.ifabric_id, fabric.content,
+        //             fabric.fabric_type_name, fabric.fabric_weave_name, fabric.weight, fabric.width, fabric.yarn_count, fabric.unit, fabric.construction, fabric.finish, fabric.shrinkage, fabric.item_code,fabric.colour,
+        //             fabric.pch, fabric.moq, fabric.moqUnit, fabric.moq_price, fabric.moqPriceUnit, fabric.season, fabric.vendor_name,
+        //             fabric.buyer, fabric.grn_date, fabric.xl_no, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId))
+        //     }
+        //     const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id);
+        //     for (const trim of trimIndentData) {
+        //         trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
+        //             trim.quantity, trim.m3TrimCode, trim.description,
+        //             trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId))
+        //     }
+        //     indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName ))
+        // }
         
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully', indentModel);
     }

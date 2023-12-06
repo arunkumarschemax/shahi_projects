@@ -8,6 +8,7 @@ import { CustomerOrderStatusEnum } from "@project-management-system/shared-model
 import { IndentFabricEntity } from "./indent-fabric-entity";
 import { IndentTrimsEntity } from "./indent-trims-entity";
 import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
+import { IndentItemsEntity } from "./indent-items.entity";
 
 @Entity('indent')
 export class Indent {
@@ -108,11 +109,14 @@ export class Indent {
   })
   versionFlag: number;
 
-  @OneToMany(type => IndentFabricEntity, fabric => fabric.indentInfo, { cascade: true })
-  iFabricInfo: IndentFabricEntity[];
+  @OneToMany(type => IndentItemsEntity, indentItem => indentItem.indentInfo, { cascade: true })
+  indentItemInfo: IndentItemsEntity[];
 
-  @OneToMany(type => IndentTrimsEntity, trim => trim.indentInfo, { cascade: true })
-  iTrimsInfo: IndentTrimsEntity[];
+  // @OneToMany(type => IndentFabricEntity, fabric => fabric.indentInfo, { cascade: true })
+  // iFabricInfo: IndentFabricEntity[];
+
+  // @OneToMany(type => IndentTrimsEntity, trim => trim.indentInfo, { cascade: true })
+  // iTrimsInfo: IndentTrimsEntity[];
 
   // @ManyToOne(type =>SampleRequest,sampleReq =>sampleReq.indentInfo)
   // @JoinColumn({name:'sample_request_id'})

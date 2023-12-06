@@ -117,8 +117,8 @@ export class IndentTrimsEntity {
   })
   recivedQuantity:number
 
-  @ManyToOne(type => Indent, i => i.iTrimsInfo, { nullable: false, })
-  @JoinColumn({ name: "indent_id" })
-  indentInfo: Indent;
+  // @ManyToOne(type => Indent, i => i.iTrimsInfo, { nullable: false, })
+  // @JoinColumn({ name: "indent_id" })
+  // indentInfo: Indent;
 
 }

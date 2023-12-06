@@ -217,8 +217,8 @@ export class IndentFabricEntity {
   })
   recivedQuantity:number
 
-  @ManyToOne(type => Indent, i => i.iFabricInfo, { nullable: false, })
-  @JoinColumn({ name: "indent_id" })
-  indentInfo: Indent;
+  // @ManyToOne(type => Indent, i => i.iFabricInfo, { nullable: false, })
+  // @JoinColumn({ name: "indent_id" })
+  // indentInfo: Indent;
 
 }
