@@ -1,14 +1,16 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { BuyersService, FabricTypeService, FabricWeaveService, M3ItemsService, ReclassificationService, StockService, UomService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag } from "antd";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag, Tabs } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { M3ItemsDTO, ReclassificationApproveRequestDto, ReclassificationStatusEnum, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, M3ItemsDTO, ReclassificationApproveRequestDto, ReclassificationStatusEnum, UomCategoryEnum, buyerReq, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
+import TabPane from "antd/es/tabs/TabPane";
+import { useIAMClientState } from "../common/iam-client-react";
 const { TextArea } = Input;
 
 export const ReclassificationApprovalGrid = () => {
@@ -18,16 +20,39 @@ export const ReclassificationApprovalGrid = () => {
   const searchInput = useRef(null);
   const navigate = useNavigate();
   const [reclassificationData, setReclassificationData] = useState<any[]>([]);
+  const [requested, setRequest] = useState<any[]>([]);
+  const [accepted, setAccepted] = useState<any[]>([]);
   const reclassificationService = new ReclassificationService();
-
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+  const [isBuyer, setIsBuyer] = useState(false);
+const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+  // useEffect(() => {
+  //   getReclassificationData()
+  // }, []);
   useEffect(() => {
-    getReclassificationData()
+    getReclassificationData();
+
   }, []);
 
+  // const getBuyersData = () => {
+  //   const req = new BuyerRefNoRequest()
+  //   req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+  //   buyerService.getAllActiveBuyers(req).then((res) => {
+  //     if (res.status) {
+  //       setBuyersData(res.data);
+  //     }
+  //   });
+  // };
+
   const getReclassificationData = () => {
-    reclassificationService.getAllReclassificationData().then((res) => {
+    const req = new buyerReq();
+    req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+        reclassificationService.getAllReclassificationData().then((res) => {
         if(res.status){
             setReclassificationData(res.data);
+            console.log(res.data,'ressssss');
+            setRequest(res.data.filter(e =>e.fromExtRef ===  refNo))
+            setAccepted(res.data.filter(e =>e.toExtRef ===  refNo))
         }
         else{
             setReclassificationData([]);
@@ -196,6 +221,80 @@ export const ReclassificationApprovalGrid = () => {
       ),
       ...getColumnSearchProps("quantity"),
     },
+    // {
+    //   title: 'Action',
+    //   dataIndex: 'action',
+    //   render: (text, rowData) => {
+    //     return (
+    //       <span>
+    //         {
+    //           rowData.status === ReclassificationStatusEnum.APPROVAL_PENDING ? 
+    //         <Button
+    //           style={{ backgroundColor: '#69c0ff' }}
+    //           onClick={(e) => assignStock(rowData)}
+    //         >
+    //           <b>Assign Stock</b>
+    //         </Button>: "Approved" }
+    //       </span>
+    //     );
+    //   }
+    // }
+  ];
+  const columns1: ColumnProps<any>[] = [
+    {
+      title: "S No",
+      key: "sno",
+      responsive: ["sm"],
+      render: (text, object, index) => (page - 1) * 10 + (index + 1),
+    },
+    {
+      title: "From Buyer",
+      dataIndex: "fromBuyerName",
+      ...getColumnSearchProps("fromBuyerName"),
+      sorter: (a, b) => a.fromBuyerName.localeCompare(b.fromBuyerName),
+      sortDirections: ["descend", "ascend"],
+      
+    },
+    {
+      title: "To Buyer",
+      dataIndex: "toBuyerName",
+      ...getColumnSearchProps("toBuyerName"),
+      sorter: (a, b) => a.toBuyerName.localeCompare(b.toBuyerName),
+      sortDirections: ["descend", "ascend"],
+      
+    },
+    {
+      title: "Material Type",
+      dataIndex: "itemType",
+      ...getColumnSearchProps("itemType"),
+      sorter: (a, b) => a.itemType.localeCompare(b.itemType),
+      sortDirections: ["descend", "ascend"],
+    },
+    {
+      title: "M3 Item",
+      dataIndex: "m3ItemCode",
+      ...getColumnSearchProps("m3ItemCode"),
+      sorter: (a, b) => a.m3ItemCode.localeCompare(b.m3ItemCode),
+      sortDirections: ["descend", "ascend"],
+    },
+   
+    {
+      title: "Location",
+      dataIndex: "location",
+      ...getColumnSearchProps("location"),
+
+    },
+
+    {
+      title: "Quantity",
+      dataIndex: "quantity",
+      render: (record) => (
+        <span>
+          {record.quantity} + " " + {record.uom} 
+        </span>
+      ),
+      ...getColumnSearchProps("quantity"),
+    },
     {
       title: 'Action',
       dataIndex: 'action',
@@ -215,15 +314,27 @@ export const ReclassificationApprovalGrid = () => {
       }
     }
   ];
-
   return (
     <Card title="Reclassification Approval" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
-      <Table
+<Tabs type={'card'} tabPosition={'top'}>
+        <TabPane key="1" tab={<span style={{ fontSize: '15px' }}><b>{`Requested Reclassification`}</b></span>}>
+        <Table
         className="custom-table-wrapper"
-        dataSource={reclassificationData.length > 0 ? reclassificationData : []}
+        dataSource={requested.length > 0 ? requested : []}
         columns={columns}
         size="small"
       />
+      
+        </TabPane>
+        <TabPane key="2" tab={<span style={{ fontSize: '15px' }}><b>{`To be Accepected`}</b></span>}>
+        <Table
+        className="custom-table-wrapper"
+        dataSource={accepted.length > 0 ? accepted : []}
+        columns={columns1}
+        size="small"
+      />
+        </TabPane>
+      </Tabs>     
       
     </Card>
   );
