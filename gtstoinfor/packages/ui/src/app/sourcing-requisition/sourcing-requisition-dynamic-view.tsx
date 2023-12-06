@@ -38,10 +38,12 @@ import { useNavigate } from "react-router-dom";
 import Barcode from "react-barcode";
 import BarcodePrint from "./barcode-print";
 import {
+  BuyerRefNoRequest,
   CustomerOrderStatusEnum,
   IndentRequestFilter,
 } from "@project-management-system/shared-models";
 import Highlighter from "react-highlight-words";
+import { useIAMClientState } from "../common/iam-client-react";
 
 const { Option } = Select;
 
@@ -65,9 +67,12 @@ export const SourcingRequisitionDynamicView = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
 
   useEffect(() => {
     // getStyle();
+    console.log(IAMClientAuthContext.user)
     getAll();
   }, []);
 
@@ -98,6 +103,7 @@ export const SourcingRequisitionDynamicView = () => {
     if (form.getFieldValue("status") !== undefined) {
       req.status = form.getFieldValue("status");
     }
+    req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     service.getAllIndentData(req).then((res) => {
       if (res.status) {
         setData(res.data);
@@ -440,6 +446,8 @@ export const SourcingRequisitionDynamicView = () => {
 
   const onSearch = () => {
     let filterData = [];
+    console.log(data)
+    // filterData = data.filter
     if (sourcingForm.getFieldValue("style") !== undefined) {
       const style = sourcingForm.getFieldValue("style");
       filterData = data.filter((e) => e.style === style);

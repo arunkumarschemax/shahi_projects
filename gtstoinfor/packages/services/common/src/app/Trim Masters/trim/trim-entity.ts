@@ -55,3 +55,4 @@ versionFlag: number;
 @OneToMany(type => trimEntity, attribute => attribute.trimId,{cascade: true})
     trimInfo : trimEntity
 }
+

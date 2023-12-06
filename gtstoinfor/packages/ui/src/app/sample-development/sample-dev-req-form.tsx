@@ -249,6 +249,7 @@ export const SampleDevForm = () => {
 
 
   const onFinish = (val) =>{
+    console.log(data);
     if(data != undefined){
       console.log('hoii')
       // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
@@ -321,6 +322,7 @@ export const SampleDevForm = () => {
   };
 
   const handleTrimsDataUpdate = (updatedData) => {
+    console.log(updatedData)
       setData((prevData) => ({ ...prevData, trimsData: updatedData }));
       setTrimsData(updatedData);
   };

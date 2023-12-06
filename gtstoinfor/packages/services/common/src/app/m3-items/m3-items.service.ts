@@ -7,6 +7,7 @@ import { M3ItemsEntity } from "./m3-items.entity";
 import { BuyerIdReq, CommonResponseModel, M3Itemsfilter } from "@project-management-system/shared-models";
 import { M3ItemsDTO } from "./m3-items.dto";
 import { M3ItemsRepo } from "./m3-items.repository";
+import { M3TrimItemsDTO } from "./m3-trim-items.dto";
 
 
 @Injectable()
@@ -115,6 +116,30 @@ export class M3ItemsService {
   }
   async checkDuplicate(createDto: M3ItemsDTO): Promise<CommonResponseModel> {
     let query = `Select * from m3_items m3 where content = "` + createDto.content + `" and fabric_type = ` + createDto.fabricType + ` and weave = ` + createDto.weave + ` and weight = "` + createDto.weight + `" and weight_unit = ` + createDto.weightUnit + ` and construction = "` + createDto.construction + `" and yarn_count = "` + createDto.yarnCount + `" and yarn_unit = ` + createDto.yarnUnit + ` and finish = "` + createDto.finish + `" and shrinkage = "` + createDto.shrinkage+`"`;
+    const data = await this.datasource.query(query)
+    if (data.length > 0){
+      return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)
+    }
+    else{
+      return new CommonResponseModel(false, 1001, "", )
+    }
+  }
+
+
+  async createM3TrimItems(req: M3TrimItemsDTO): Promise<CommonResponseModel>{
+    try{
+      let checkData = await this.checkTrimDuplicate(req)
+      if(checkData.status){
+        return new CommonResponseModel(false, 0, "Item already exist. ")
+      }
+      return
+    }catch(err){
+      throw(err)
+    }
+  }
+
+  async checkTrimDuplicate(req: M3TrimItemsDTO): Promise<CommonResponseModel> {
+    let query = `Select * from m3_items m3 where content_id = "` + req.contentId + `" and categoryId = ` + req.categoryId + ` and color_id = ` + req.colorId + ` and hole_id = "` + req.holeId + `" and logo = ` + req.logo + ` and part = "` + req.part + `" and quality_id = "` + req.qualityId + `" and structure_id = ` + req.structureId + ` and finish_id = "` + req.finishId + `" and thickness_id = "` + req.thicknessId+` and type_id = "` + req.typeId + ` and uom_id = "` + req.uomId + ` and variety_id = "` + req.varietyId + ` and trim_category_id = "` + req.trimCategoryId + ` and trim_mapping_id = "` + req.trimMappingId + `"`;
     const data = await this.datasource.query(query)
     if (data.length > 0){
       return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)
