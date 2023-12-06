@@ -52,6 +52,8 @@ import {
 import { faL } from "@fortawesome/free-solid-svg-icons";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useIAMClientState } from "../common/iam-client-react";
+// const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
   
   const { Option } = Select;
   
@@ -82,7 +84,9 @@ import { useIAMClientState } from "../common/iam-client-react";
     const [avilableQuantity, setAvailableQuantity] = useState<any[]>([])
     const [checked, setChecked] = useState<boolean>(false)
     const [keyUpdate, setKeyUpdate] = useState<number>(1);
-  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+   const { IAMClientAuthContext } = useIAMClientState();
+
+ 
 
   
     useEffect(() => {
