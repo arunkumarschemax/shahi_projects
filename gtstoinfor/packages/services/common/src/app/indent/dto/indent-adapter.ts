@@ -97,7 +97,7 @@ export class IndentAdapter
               trimEntity.trimType=indentitems.trimType;
               // trimEntity.size=indentitems.size;
               trimEntity.trimCode=indentitems.trimCode;
-              // trimEntity.quantityUnit=indentitems.quantityUnit;
+              trimEntity.quantityUnit=indentitems.quantityUnit;
               trimEntity.versionFlag=indentitems.versionFlag;
               trimEntity.createdUser=indentitems.createdUser;
               trimEntity.isActive=indentitems.isActive;

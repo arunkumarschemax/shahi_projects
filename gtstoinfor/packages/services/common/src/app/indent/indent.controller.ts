@@ -1,10 +1,11 @@
 import { Body, Controller, Post, Req } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { IndentService } from "./indent.service";
-import { AllItemsResponseModel, CommonResponseModel, IndentRequestDto } from "@project-management-system/shared-models";
+import { AllItemsResponseModel, BuyerRefNoRequest, CommonResponseModel, IndentRequestDto } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
 import { IndentDto } from "./dto/indent-dto";
 import { IndentRepository } from "./dto/indent-repository";
+import { AnyARecord } from "dns";
 
 @ApiTags('indent')
 @Controller('Indent')
@@ -52,9 +53,9 @@ export class IndentController {
     }
   }
   @Post('/getIndentnumbers')
-  async getIndentnumbers(): Promise<CommonResponseModel> {
+  async getIndentnumbers(@Body() req?:any): Promise<CommonResponseModel> {
     try {
-      return await this.indentService.getIndentnumbers();
+      return await this.indentService.getIndentnumbers(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
