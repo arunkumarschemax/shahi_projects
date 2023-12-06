@@ -118,7 +118,13 @@ export class PurchaseOrderService {
 
     async getAllPONumbers(req: VendorIdReq): Promise<CommonResponseModel> {
         try {
+            const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
+            const res = await this.dataSource.query(buyerdata)
+            const buyerId = res[0].buyer_id
             let query = `SELECT purchase_order_id as purchaseOrderId,po_number AS poNumber,vendor_id as vendorId,po_material_type as materialType,po_against as poAgainst FROM purchase_order WHERE status NOT IN ('cancelled', 'closed')`
+            if(req.buyerRefNo){
+                query = query + ` AND buyer_id = '${buyerId}'`;
+            }
             if (req.vendorId) {
                 query = query + ` AND vendor_id = '${req.vendorId}'`;
             }
