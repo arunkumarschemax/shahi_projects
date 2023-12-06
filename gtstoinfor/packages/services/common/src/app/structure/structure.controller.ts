@@ -14,7 +14,10 @@ export class StructureController {
     ) { }
 
     @Post('/createStructure')
+    @ApiBody({type:StructureReq})
     async createStructure(@Body() req:any): Promise<StructureResponseModel> {
+        console.log(req,'ttttttt');
+        
         try {
             return await this.structureService.createStructure(req,false);
         } catch (error) {

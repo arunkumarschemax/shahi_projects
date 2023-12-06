@@ -13,12 +13,13 @@ export class StructureService {
     ) { }
 
     async createStructure(req: StructureReq,isUpdate:boolean) : Promise<StructureResponseModel>{
+        
         try{
             const entity = new Structure()
             if(!isUpdate){
-                const StructureCheck = await this.repo.find({where:{structureId:req.structureId}})
-                if(StructureCheck.length >0){
-                    return new StructureResponseModel(false,0,'Structure already exists')
+                const ColumnCheck = await this.repo.find({where:{structure:req.structure}})
+                if(ColumnCheck.length >0){
+                    return new StructureResponseModel(false,0,'structure already exists')
                 }
             }
             entity.structure = req.structure;
@@ -30,14 +31,40 @@ export class StructureService {
             }
             const save = await this.repo.save(entity)
             const convertedData = new StructureModel(save.structureId,save.structure,save.isActive,save.versionFlag)
-            console.log(convertedData,'oooooooooo');
-            
-            return new StructureResponseModel(true,1,isUpdate ? 'Structure Updated successfully' : 'Structure Saved successfully',[convertedData])
+            return new StructureResponseModel(true,1,isUpdate ? 'structure Updated successfully' : 'structure Saved successfully',[convertedData])
 
         } catch(err){
             throw err
         }
     }
+    // async createStructure1(req: StructureReq,isUpdate:boolean) : Promise<StructureResponseModel>{
+    //     console.log(req,'ppppppppp');
+        
+    //     try{
+    //         const entity = new Structure()
+    //         if(!isUpdate){
+    //             const StructureCheck = await this.repo.find({where:{structureId:req.structureId}})
+    //             if(StructureCheck.length >0){
+    //                 return new StructureResponseModel(false,0,'Structure already exists')
+    //             }
+    //         }
+    //         entity.structure = req.structure;
+    //         if(isUpdate){
+    //             entity.structureId = req.structureId;
+    //             entity.updatedUser = req.createdUser
+    //         } else{
+    //             entity.createdUser = req.createdUser
+    //         }
+    //         const save = await this.repo.save(entity)
+    //         const convertedData = new StructureModel(save.structureId,save.structure,save.isActive,save.versionFlag)
+    //         console.log(convertedData,'oooooooooo');
+            
+    //         return new StructureResponseModel(true,1,isUpdate ? 'Structure Updated successfully' : 'Structure Saved successfully',[convertedData])
+
+    //     } catch(err){
+    //         throw err
+    //     }
+    // }
      
     async getAllStrucutreInfo():Promise<StructureResponseModel>{
         try{

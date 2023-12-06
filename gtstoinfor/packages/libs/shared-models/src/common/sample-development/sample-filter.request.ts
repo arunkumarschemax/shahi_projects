@@ -41,10 +41,11 @@ export class buyerandM3ItemIdReq{
 
 export class buyerReq{
     buyerId?:number
+    extRefNo?:string
     constructor(    
-        buyerId?:number){
+        buyerId?:number,extRefNo?:string){
             this.buyerId=buyerId
-        
+            this.extRefNo=extRefNo
     }
 
     

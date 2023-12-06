@@ -38,6 +38,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import MaterialAllocationPrint from "./material-allocation.print";
+import { useIAMClientState } from "../common/iam-client-react";
 
 export const MaterialAllocationGrid = () => {
   const locationService = new LocationMappingService();
@@ -62,6 +63,8 @@ export const MaterialAllocationGrid = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [row, setRow] = useState({});
   const Stockservice = new StockService()
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
 
 
 
@@ -72,7 +75,7 @@ export const MaterialAllocationGrid = () => {
 
   const getData = () => {
     const req = new buyerReq();
-
+    req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     if (form.getFieldValue("buyerId") !== undefined) {
       req.buyerId = form.getFieldValue("buyerId");
     }

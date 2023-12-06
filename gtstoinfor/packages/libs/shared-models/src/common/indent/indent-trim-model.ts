@@ -17,6 +17,8 @@ export class IndentTrimsModel{
     materialType?:string
     buyer?: string
     buyerId?: number
+    quantityUnitId?:number;
+
 
 
   constructor(
@@ -35,7 +37,8 @@ export class IndentTrimsModel{
     indentId?:number,
     materialType?:string,
     buyer?: string,
-    buyerId?: number  
+    buyerId?: number,
+    quantityUnitId?:number  
     
   ){
     this.itrimsId = itrimsId;
@@ -54,7 +57,7 @@ export class IndentTrimsModel{
     this.materialType=materialType
     this.buyer = buyer
     this.buyerId = buyerId
-
+    this.quantityUnitId = quantityUnitId
   }
 
 
