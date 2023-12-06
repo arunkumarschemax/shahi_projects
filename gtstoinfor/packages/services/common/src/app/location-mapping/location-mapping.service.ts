@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { AppDataSource } from "../app-datasource";
-import { BomStatusEnum, CommonResponseModel, LifeCycleStatusEnum, LocationMappedEnum, LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq, StockTypeEnum } from "@project-management-system/shared-models";
+import { BomStatusEnum, CommonResponseModel, ExternalRefReq, LifeCycleStatusEnum, LocationMappedEnum, LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq, StockTypeEnum } from "@project-management-system/shared-models";
 import { StocksEntity } from "../stocks/stocks.entity";
 import { StocksRepository } from "../stocks/repository/stocks.repository";
 import { StockLogEntity } from "../stocks/stock-log-entity";
@@ -40,7 +40,8 @@ export class LocationMappingService {
         }
     }
 
-    async getAllFabrics(): Promise<CommonResponseModel> {
+    async getAllFabrics(req?:ExternalRefReq): Promise<CommonResponseModel> {
+        console.log(req,"ser")
         try {
 
             // let dataquery = `SELECT 
@@ -126,10 +127,17 @@ export class LocationMappingService {
             LEFT JOIN stock_log st ON st.grn_item_id = gi.grn_item_id
             LEFT JOIN  buyers idfb ON idfb.buyer_id = gi.buyer_id
            LEFT JOIN  uom u ON u.id = gi.uom_id
-           where gi.location_mapped_status!='COMPLETED'
-            GROUP BY gi.grn_item_id`
+           where gi.location_mapped_status!='COMPLETED'`
+            let param :any={}
+    if(req){
+      if (req.externalRefNo!== undefined){
+        query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
+      }
+     
 
-            const res = await AppDataSource.query(query);
+    }
+    // const data = await this.datasource.query(query,param)
+            const res = await AppDataSource.query(query,param);
             if (res) {
                 return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
             }

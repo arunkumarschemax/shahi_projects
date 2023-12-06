@@ -8,8 +8,9 @@ export class LocationMappingService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/getAllActiveRackPositions");
     }
 
-    async getAllFabrics():Promise<any> {
-        return this.axiosPostCall(this.URL + "/getAllFabrics")
+    async getAllFabrics(req?:any):Promise<any> {
+        console.log(req,"sh req")
+        return this.axiosPostCall(this.URL + "/getAllFabrics",req)
     }
 
     async getOneItemAllocateDetails(req:MaterialIssueIdreq): Promise<any> {
