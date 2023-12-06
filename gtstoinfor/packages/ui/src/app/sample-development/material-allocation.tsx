@@ -18,6 +18,7 @@ import {
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import {
+  BuyerRefNoRequest,
   BuyersDto,
   GRNLocationPropsRequest,
   MaterialIssueLogrequest,
@@ -60,6 +61,7 @@ export const MaterialAllocationGrid = () => {
   const searchInput = useRef(null);
   const materialservice = new MaterialIssueService();
   const [isButtonDisabled, setButtonDisabled] = useState(false);
+  const [isBuyer, setIsBuyer] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [row, setRow] = useState({});
   const Stockservice = new StockService()
@@ -69,6 +71,11 @@ export const MaterialAllocationGrid = () => {
 
 
   useEffect(() => {
+  const userrefNo = IAMClientAuthContext.user?.externalRefNo
+  if(userrefNo){
+    setIsBuyer(true)
+    // form.setFieldsValue()
+  }
     getData();
     getBuyersData();
   }, []);
@@ -487,7 +494,9 @@ export const MaterialAllocationGrid = () => {
   };
 
   const getBuyersData = () => {
-    buyerService.getAllActiveBuyers().then((res) => {
+    const req = new BuyerRefNoRequest()
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    buyerService.getAllActiveBuyers(req).then((res) => {
       if (res.status) {
         setBuyersData(res.data);
       }
@@ -519,6 +528,8 @@ export const MaterialAllocationGrid = () => {
         }
      
       >
+        {!isBuyer ? 
+        <>
         <Form form={form} onFinish={getData}>
           <Row gutter={8}>
             <Col
@@ -579,6 +590,8 @@ export const MaterialAllocationGrid = () => {
             </Col>
           </Row>
         </Form>
+        </>:<></>}
+        
 
         
         <Modal className='print-docket-modal'

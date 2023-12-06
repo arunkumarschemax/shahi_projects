@@ -52,6 +52,9 @@ import {
   import Highlighter from "react-highlight-words";
 import { faL } from "@fortawesome/free-solid-svg-icons";
 import AlertMessages from "../common/common-functions/alert-messages";
+import { useIAMClientState } from "../common/iam-client-react";
+// const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
   
   const { Option } = Select;
   
@@ -82,6 +85,10 @@ import AlertMessages from "../common/common-functions/alert-messages";
     const [avilableQuantity, setAvailableQuantity] = useState<any[]>([])
     const [checked, setChecked] = useState<boolean>(false)
     const [keyUpdate, setKeyUpdate] = useState<number>(1);
+   const { IAMClientAuthContext } = useIAMClientState();
+
+ 
+
   
     useEffect(() => {
       getAll();
@@ -106,9 +113,12 @@ import AlertMessages from "../common/common-functions/alert-messages";
       if (form.getFieldValue("status") !== undefined) {
         req.status = form.getFieldValue("status");
       }
-      service.getAllSampleDevData().then((res) => {
+    req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+
+      service.getAllSampleDevData(req).then((res) => {
         if (res.status) {
           setData(res.data);
+          console.log(res.data,"rrrrr")
           setFilterData(res.data);
         }
       });

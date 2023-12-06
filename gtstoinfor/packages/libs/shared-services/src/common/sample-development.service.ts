@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DeliveryMethodDto, DeliveryMethodRequest } from 'packages/libs/shared-models/src/common/delivery-method';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, MaterialAllocationitemsIdreq, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq,SampleIdRequest, AllocatedLocationReq, RequestNoReq, AllocationApprovalReq, lifeCycleStatusReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, MaterialAllocationitemsIdreq, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq,SampleIdRequest, AllocatedLocationReq, RequestNoReq, AllocationApprovalReq, lifeCycleStatusReq, BuyerRefNoRequest } from '@project-management-system/shared-models';
 import { create } from 'domain';
 
 
@@ -12,7 +12,7 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + '/createSampleDevelopmentRequest', req)
   }
 
-  async getAllSampleDevData(req?: SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
+  async getAllSampleDevData(req?: any): Promise<AllSampleDevReqResponseModel> {
     console.log(req, 'shared service')
     return this.axiosPostCall(this.URL + "/getAllSampleDevData", req)
   }
@@ -50,8 +50,8 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/getAllSampleReqDropDown")
   }
 
-  async getIssuedSampleRequests(): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getIssuedSampleRequests")
+  async getIssuedSampleRequests(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getIssuedSampleRequests",req)
   }
 
   async getSampleOrderDetails(req:SampleIdRequest): Promise<CommonResponseModel> {
@@ -203,12 +203,12 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/approvaAllocatedStock" ,req)
   }
 
-  async getAllAllocatedRequestNo(): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getAllAllocatedRequestNo" )
+  async getAllAllocatedRequestNo(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllAllocatedRequestNo",req )
   }
 
-  async getAllApprovedRequestNo(): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getAllApprovedRequestNo" )
+  async getAllApprovedRequestNo(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllApprovedRequestNo",req )
   }
   async updatedispatch(req?:lifeCycleStatusReq): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/updatedispatch" ,req)

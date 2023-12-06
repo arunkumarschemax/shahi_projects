@@ -30,9 +30,16 @@ const SampleRequestReport = () => {
   const [type, setType] = useState({});
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [samplingPO] = Form.useForm()
+  const [isBuyer, setIsBuyer] = useState(false);
+
 
   const {Option} = Select
   useEffect(() => {
+    const userrefNo = IAMClientAuthContext.user?.externalRefNo
+  if(userrefNo){
+    setIsBuyer(true)
+    // form.setFieldsValue()
+  }
     getData();
     getAllRequestNo()
     getAllBuyers()
@@ -376,7 +383,8 @@ const SampleRequestReport = () => {
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+            {!isBuyer?<>
+              <Col xs={24} sm={12} md={8} lg={6} xl={6}>
               <Form.Item name="buyerId" label="Buyers">
                 <Select
                   showSearch
@@ -392,6 +400,8 @@ const SampleRequestReport = () => {
                 </Select>
               </Form.Item>
             </Col>
+            </>:<></>}
+            
             <Col xs={24} sm={12} md={8} lg={6} xl={6}>
               <Form.Item name="style" label="Style">
                 <Select

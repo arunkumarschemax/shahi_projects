@@ -348,7 +348,9 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
         if (req.status !== undefined) {
             query.andWhere(`sr.status ='${req.status}'`)
         }
-        // query.groupBy(`sr.sample_request_id`)
+        if(req.extRefNumber){
+            query.where(` b.external_ref_number = '${req.extRefNumber}'`)
+        }
         query.groupBy(`sr.sample_request_id`)
         console.log('query-----------------')
         console.log(query)
@@ -372,10 +374,10 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
         return query.getRawMany()
     }
 
-    async getIssuedSampleRequests(): Promise<any> {
+    async getIssuedSampleRequests(buyerId?:number): Promise<any> {
         const query = await this.createQueryBuilder()
             .select(`sample_request_id AS sampleRequestId, request_no AS reqNo,style_id as styleId`)
-            .where(`request_no is not null and life_cycle_status = '${LifeCycleStatusEnum.MATERIAL_ISSUED}'`)
+            .where(`request_no is not null and life_cycle_status = '${LifeCycleStatusEnum.MATERIAL_ISSUED}' and buyer_id = ${buyerId}`)
             .orderBy(`request_no`)
         return query.getRawMany()
     }

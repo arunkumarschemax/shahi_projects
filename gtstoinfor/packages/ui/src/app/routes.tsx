@@ -207,6 +207,7 @@ import FinishGrid from "./trim-master/finish/finish-view"
 import HoleForm from "./trim-master/hole/hole"
 import HoleGrid from "./trim-master/hole/hole-view"
 import M3TrimItemsForm from "./trim-master/m3-trim-items/m3-trim-items"
+import { RmTrimsView } from "./sourcing-requisition/rm-trims-view"
 
 
 
@@ -822,6 +823,8 @@ export const AppRoutes = () => {
 
                 {/* </Route> */}
                 <Route path='/stock-view' element={<StockView />} />
+                <Route path='/rm-trims-view' element={<RmTrimsView />} />
+
                 <Route path="/grn-pending-info-grid" element={<GrnPendingInfoGrid />} />
                 <Route path="/location-mapping" element={<LocationMapping />} />
 
