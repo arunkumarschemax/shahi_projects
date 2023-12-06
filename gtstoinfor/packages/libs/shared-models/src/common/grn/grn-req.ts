@@ -7,6 +7,8 @@ export class GrnReq{
     status?: string
     fromDate?: Date
     toDate?: Date
+    extRefNumber?: string
+
     constructor(
         grnId?:number,
         itemType?:string,
@@ -14,7 +16,9 @@ export class GrnReq{
         poNumber?: string,
         status?: string,
         fromDate?: Date,
-        toDate?: Date
+        toDate?: Date,
+        extRefNumber?: string
+
     ){
         this.grnId = grnId;
         this.itemType = itemType
@@ -23,5 +27,6 @@ export class GrnReq{
         this.status = status
         this.fromDate = fromDate
         this.toDate = toDate
+        this.extRefNumber = extRefNumber
     }
 }
