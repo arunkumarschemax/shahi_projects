@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository, Not, Raw, DataSource } from "typeorm";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
-import { CommonResponseModel, RacActiveDeactive, RackCreateRequest, ReclassificationStatusEnum, StockTypeEnum } from "@project-management-system/shared-models";
+import { CommonResponseModel, RacActiveDeactive, RackCreateRequest, ReclassificationStatusEnum, StockTypeEnum, buyerReq } from "@project-management-system/shared-models";
 import { ReclassificationAdapter } from "./reclassification.adaptor";
 import { ReclassificationEntity } from "./reclassification.entity";
 import { ReclassificationDTO } from "./reclassification.dto";
@@ -70,10 +70,13 @@ export class ReclassificationService {
       return new CommonResponseModel(false, 0, error)
     }
   }
-  async getAllReclassificationData(): Promise<CommonResponseModel> {
+  async getAllReclassificationData(req?:buyerReq): Promise<CommonResponseModel> {
     const manager=this.dataSource
     try {
-      let query = "select if(s.item_type = 'fabric', CONCAT(mi.item_code,'-',mi.description), mt.trim_code) AS m3ItemCode, r.status AS status,s.uom_id AS uomId,r.location AS locationId,r.item_id AS m3Item,r.reclassification_id AS reclassificationId,b.buyer_id AS toBuyerId, fb.buyer_id AS fromBuyerId,r.stock_id AS stockId,s.grn_item_id AS grnItemId,u.uom AS uom,b.buyer_name AS toBuyerName, fb.buyer_name AS fromBuyerName, r.quantity, rp.rack_position_name AS location,s.item_type AS itemType  from reclassification r left join buyers b on b.buyer_id = r.buyer left join buyers fb on fb.buyer_id = r.from_buyer left join rack_position rp on rp.position_Id = r.location left join stocks s on s.id = r.stock_id left join uom u on u.id = s.uom_id left join m3_items mi on mi.m3_items_id = r.item_id and s.item_type = 'fabric' left join m3_trims mt on mt.m3_trim_id = r.item_id and s.item_type != 'fabric'"
+      let query = "select if(s.item_type = 'fabric', CONCAT(mi.item_code,'-',mi.description), mt.trim_code) AS m3ItemCode, r.status AS status,s.uom_id AS uomId,r.location AS locationId,r.item_id AS m3Item,b.external_ref_number AS toExtRef,fb.external_ref_number AS fromExtRef,r.reclassification_id AS reclassificationId,b.buyer_id AS toBuyerId, fb.buyer_id AS fromBuyerId,r.stock_id AS stockId,s.grn_item_id AS grnItemId,u.uom AS uom,b.buyer_name AS toBuyerName, fb.buyer_name AS fromBuyerName, r.quantity, rp.rack_position_name AS location,s.item_type AS itemType  from reclassification r left join buyers b on b.buyer_id = r.buyer left join buyers fb on fb.buyer_id = r.from_buyer left join rack_position rp on rp.position_Id = r.location left join stocks s on s.id = r.stock_id left join uom u on u.id = s.uom_id left join m3_items mi on mi.m3_items_id = r.item_id and s.item_type = 'fabric' left join m3_trims mt on mt.m3_trim_id = r.item_id and s.item_type != 'fabric' where 1=1"
+    //   if(req?.extRefNo){
+    //     query = query+` AND b.external_ref_number = '${req.extRefNo}'`
+    // }
       const data = await manager.query(query)
       if(data){
         return new CommonResponseModel(true, 1, 'Data saved successfully', data);
