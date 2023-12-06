@@ -96,6 +96,7 @@ export const RmTrimsView = () => {
     }
     getTrims();
     getBuyers();
+    getBuyerByRefNo()
   }, [mapData]);
 
   const getStructures = () => {
@@ -197,9 +198,18 @@ export const RmTrimsView = () => {
   const getBuyers = () => {
     const req = new BuyerRefNoRequest()
     req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
-    buyerService.getAllActiveBuyers(req).then((res) => {
+    buyerService.getAllActiveBuyers().then((res) => {
       if (res.status) {
         setBuyerData(res.data);
+      }
+    });
+  };
+
+  const getBuyerByRefNo = () => {
+    const req = new BuyerRefNoRequest()
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    buyerService.getAllActiveBuyers(req).then((res) => {
+      if (res.status) {
         form.setFieldsValue({buyerId: res.data[0]?.buyerId})
         onFinish()
       }
