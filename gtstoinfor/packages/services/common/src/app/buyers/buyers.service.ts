@@ -284,9 +284,10 @@ export class BuyersService {
     //     }
     // }
 
-    async getAllActiveBuyersInfo(): Promise<CommonResponseModel>{
+    async getAllActiveBuyersInfo(req?:any): Promise<CommonResponseModel>{
         try{
-            const buyerInfo = await this.buyersRepository.getBuyerInfo()
+            console.log(req,'ooooo')
+            const buyerInfo = await this.buyersRepository.getBuyerInfo(req.buyerRefNo)
             const buyerMap = new Map<number,BuyersDto>()
             if(buyerInfo.length == 0){
                 return new CommonResponseModel(false,1,'No buyers found',[])

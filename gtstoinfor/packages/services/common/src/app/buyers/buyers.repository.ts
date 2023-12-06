@@ -21,7 +21,7 @@ export class BuyerRepository extends Repository<Buyers> {
         super(buyer.target, buyer.manager, buyer.queryRunner);
     }
 
-    async getBuyerInfo():Promise<any[]>{
+    async getBuyerInfo(refNo?:string):Promise<any[]>{
        const data =  await this.createQueryBuilder('b')
        .select(`b.short_code AS shortCode,b.buyer_id,b.buyer_code,b.buyer_name,short_code,b.gst_number,b.phone_no,b.contact_person,b.email,b.currency,b.public_note,b.private_note,b.payment_terms_id,b.payment_method_id,b.is_active,b.version_flag,cu.currency_name,paym.payment_method,payter.payment_terms_name,add.address_id,add.country_id,add.state,add.district,add.city,add.landmark,add.lane1,add.lane2,add.pincode,cou.country_name`)
        .leftJoin(Currencies,'cu','cu.currency_id = b.currency')
@@ -29,7 +29,10 @@ export class BuyerRepository extends Repository<Buyers> {
        .leftJoin(PaymentMethod,'paym','paym.payment_method_id = b.payment_method_id')
        .leftJoin(Address,'add','add.buyer_id = b.buyer_id')
        .leftJoin(Countries,'cou','cou.country_id = add.country_id')
-       .orderBy(`b.buyer_name `,'ASC')
+       if(refNo){
+        data.where(`b.external_ref_number = '${refNo}'`)
+       }
+       data.orderBy(`b.buyer_name `,'ASC')
        return data.getRawMany()
     }
 
