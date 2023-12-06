@@ -22,3 +22,5 @@ export * from './bom-status.enum'
 export * from './logo.enum'
 export * from './part.enum'
 export * from './item-type.enum'
+export * from './type-enum'
+

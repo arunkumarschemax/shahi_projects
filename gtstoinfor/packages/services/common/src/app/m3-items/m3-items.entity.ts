@@ -1,4 +1,4 @@
-import { ItemTypeEnum, LogoEnum, PartEnum, RackEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { ItemTypeEnum, LogoEnum, PartEnum, RackEnum, TypeEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { Buyers } from "../buyers/buyers.entity";
 import { trimEntity } from "../Trim Masters/trim/trim-entity";
@@ -16,6 +16,14 @@ export class M3ItemsEntity {
     enum:ItemTypeEnum,
   })
   itemType: ItemTypeEnum;
+
+  @Column('enum',{
+    name:'type',
+    nullable: true,
+    default:TypeEnum.Local,
+    enum:TypeEnum,
+  })
+  type: TypeEnum;
 
   @Column('varchar', {
     name: 'item_code',
