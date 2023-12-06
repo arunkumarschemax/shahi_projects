@@ -227,7 +227,7 @@ export const QualityGrid = (props: QualityGridProps) => {
   }
 
   //TO open the form for updation
-  const openFormWithData = (leveldata: LevelsDto) => {
+  const openFormWithData = (leveldata: QualitysDTO) => {
     setDrawerVisible(true);
     setSelectedVariant(leveldata);
   }
@@ -240,6 +240,8 @@ export const QualityGrid = (props: QualityGridProps) => {
   const updateAccountControl = (Qulaitydata: QualitysDTO) => {
     Qulaitydata.updatedUser= JSON.parse(localStorage.getItem('username'))
     service.createQualitys(Qulaitydata).then(res => {
+      console.log(Qulaitydata,"huhhhhhhhhh");
+      
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage);
         setDrawerVisible(false);
@@ -326,7 +328,7 @@ const deleteVariant = (Data:QualitysDTO) => {
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
           <QualitysForm key={Date.now()}
-            updateDetails={updateAccountControl}
+            updateItem={updateAccountControl}
             isUpdate={true}
             // saveItem={saveVariant}
             qualitysData={selectedVariant}

@@ -724,7 +724,7 @@ export const AppRoutes = () => {
                     <Route path='qualitys/qualitys-form' element={<QualitysForm qualitysData={undefined}
                         isUpdate={false}
                         closeForm={() => { }}
-                        updateDetails={(undefined) => { }} />} />
+                    updateItem={(undefined) => { }} />} />
                    <Route path="category/category-view" element={<CategoryView />} />
                     <Route path='category/category-form' element={<CategoryForm columnData={undefined}
                         isUpdate={false}
