@@ -6,6 +6,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import AlertMessages from "../common/common-functions/alert-messages";
+import { useIAMClientState } from "../common/iam-client-react";
 
 const SampleRequestReport = () => {
   const service = new SampleDevelopmentService();
@@ -27,6 +28,7 @@ const SampleRequestReport = () => {
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const [selectedItems, setSelectedItems] = useState({});
   const [type, setType] = useState({});
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [samplingPO] = Form.useForm()
 
   const {Option} = Select
@@ -48,6 +50,7 @@ const SampleRequestReport = () => {
     if (form.getFieldValue("style") !== undefined) {
       req.styleId = form.getFieldValue("style");
     }
+    req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     
     service.getSampleRequestReport(req).then((res) => {
       if (res.status) {
