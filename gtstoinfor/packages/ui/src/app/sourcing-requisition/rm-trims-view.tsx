@@ -1,6 +1,6 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { BuyersService, CategoryService, ColourService, ContentService, FabricTypeService, FabricWeaveService, FinishService, GRNService, HoleService, M3ItemsService, QualitysService, StockService, StructureService, ThicknessService, TrimParamsMappingService, TrimService, TypeService, UomService, VarietyService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal } from "antd";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
@@ -839,11 +839,11 @@ export const RmTrimsView = () => {
             </Col>
             </>
             ) : (<></>)}
-        </Row>
-        <Row>
-            <Col span={24} style={{ textAlign: "right" }}>
+        {/* </Row>
+        <Row> */}
+            <Col span={4} style={{paddingTop:'23px'}}>
                 <Button type="primary" htmlType="submit">Get Stock</Button>
-                <Button htmlType="button" style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
+                <Button htmlType="button" onClick={onReset}>Reset</Button>
             </Col>
         </Row>
       </Form>
