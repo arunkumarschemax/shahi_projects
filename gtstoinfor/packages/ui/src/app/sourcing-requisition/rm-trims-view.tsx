@@ -823,7 +823,7 @@ export const RmTrimsView = () => {
         </Row>
         <Row>
             <Col span={24} style={{ textAlign: "right" }}>
-                <Button type="primary" htmlType="submit">Submit</Button>
+                <Button type="primary" htmlType="submit">Get Stock</Button>
                 <Button htmlType="button" style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
             </Col>
         </Row>
