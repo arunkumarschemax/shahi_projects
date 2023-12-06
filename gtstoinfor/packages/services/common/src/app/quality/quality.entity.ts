@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
-@Entity('qualities')
+@Entity('quality')
 export class QualityEntity {
   @PrimaryGeneratedColumn("increment", { name: 'quality_Id' })
   qualityId: number;
