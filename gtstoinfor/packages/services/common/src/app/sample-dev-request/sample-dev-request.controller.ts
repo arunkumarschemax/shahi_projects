@@ -348,9 +348,9 @@ export class SampleDevReqController {
   }
 
   @Post('/getAllAllocatedRequestNo')
-  async getAllAllocatedRequestNo(): Promise<CommonResponseModel> {
+  async getAllAllocatedRequestNo(@Body() req?:any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.getAllAllocatedRequestNo()
+      return await this.sampleService.getAllAllocatedRequestNo(req)
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
@@ -358,9 +358,9 @@ export class SampleDevReqController {
   }
 
   @Post('/getAllApprovedRequestNo')
-  async getAllApprovedRequestNo(): Promise<CommonResponseModel> {
+  async getAllApprovedRequestNo(@Body() req?:any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.getAllApprovedRequestNo()
+      return await this.sampleService.getAllApprovedRequestNo(req)
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);

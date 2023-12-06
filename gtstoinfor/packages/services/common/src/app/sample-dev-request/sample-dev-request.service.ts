@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Not, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum} from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, BuyerRefNoRequest} from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -441,16 +441,23 @@ export class SampleRequestService {
       return new CommonResponseModel(false, 0, 'No data found')
   }
 
-  async getAllAllocatedRequestNo(): Promise<CommonResponseModel> {
-    const records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ALLOCATED}});
+  async getAllAllocatedRequestNo(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
+    const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
+    const res = await this.dataSource.query(buyerdata)
+    const buyerId = res[0].buyer_id
+    console.log(buyerId,'buyerIdbuyerId')
+    const records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ALLOCATED,buyer:{buyerId:buyerId}}});
     if (records.length)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
     else
       return new CommonResponseModel(false, 0, 'No data found')
   }
 
-  async getAllApprovedRequestNo(): Promise<CommonResponseModel> {
-    const records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION}});
+  async getAllApprovedRequestNo(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
+    const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
+    const res = await this.dataSource.query(buyerdata)
+    const buyerId = res[0].buyer_id
+    const records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION,buyer:{buyerId:buyerId}}});
     if (records.length)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
     else
