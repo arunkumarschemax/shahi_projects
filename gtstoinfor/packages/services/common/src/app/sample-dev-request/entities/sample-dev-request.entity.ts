@@ -16,6 +16,7 @@ import { SampleReqFabricinfoEntity } from './sample-request-fabric-info-entity';
 import { SampleRequestTriminfoEntity } from './sample-request-trim-info-entity';
 import { SampleRequestProcessInfoEntity } from './sample-request-process-info-entity';
 import { Indent } from '../../indent/indent-entity';
+import { SampleRequestItemsEntity } from './sample-request-items.entity';
 
 @Entity('sample_request')
 export class SampleRequest {
@@ -203,6 +204,10 @@ export class SampleRequest {
 
   @OneToMany(type => SampleRequestProcessInfoEntity, sampleReqTrim => sampleReqTrim.sampleReq, { cascade: true })
   sampleProcessInfo: SampleRequestProcessInfoEntity[]
+
+  @OneToMany(type => SampleRequestItemsEntity, sampleReqItems => sampleReqItems.sampleRequestInfo, { cascade: true })
+  sampleReqItemsInfo: SampleRequestItemsEntity[]
+
   // @OneToMany(type => Indent, indent => indent.sampleReq, { cascade: true })
   // indentInfo: Indent[]
 }

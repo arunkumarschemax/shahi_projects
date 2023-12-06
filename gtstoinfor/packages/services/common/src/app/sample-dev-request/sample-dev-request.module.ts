@@ -23,6 +23,7 @@ import { MaterialAllocationItemsEntity } from './entities/material-allocation-it
 import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-repo';
 import { StocksRepository } from '../stocks/repository/stocks.repository';
 import { StocksEntity } from '../stocks/stocks.entity';
+import { SampleRequestItemsEntity } from './entities/sample-request-items.entity';
 // import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 
 @Module({
@@ -37,7 +38,7 @@ import { StocksEntity } from '../stocks/stocks.entity';
     SampleInventoryLogEntity,
     MaterialAllocationEntity,
     MaterialAllocationItemsEntity,
-    StocksEntity
+    StocksEntity,SampleRequestItemsEntity
 
   ]),
   ],

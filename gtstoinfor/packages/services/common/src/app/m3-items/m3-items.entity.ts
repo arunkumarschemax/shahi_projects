@@ -1,8 +1,9 @@
 import { ItemTypeEnum, LogoEnum, PartEnum, RackEnum, TypeEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { Buyers } from "../buyers/buyers.entity";
 import { trimEntity } from "../Trim Masters/trim/trim-entity";
 import { CategoryEntity } from "../Trim Masters/category/dto/category-entity";
+import { SampleRequestItemsEntity } from "../sample-dev-request/entities/sample-request-items.entity";
 
 @Entity('m3_items')
 export class M3ItemsEntity {
@@ -273,5 +274,8 @@ export class M3ItemsEntity {
   @ManyToOne(type=>CategoryEntity,  m3Items=>m3Items.categoryInfo,{  nullable:false, })
   @JoinColumn({ name:"category_id"})
   categoryId: CategoryEntity;
+
+  @OneToMany(type => SampleRequestItemsEntity, sampleReqItems => sampleReqItems.sampleRequestInfo, { cascade: true })
+  m3ItemsInfo: SampleRequestItemsEntity[]
 
 }
