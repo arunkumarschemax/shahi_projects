@@ -23,6 +23,8 @@ export const PurchaseOrderView = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const options = [{ value: 'OPEN' }, { value: 'INPROGRESS' }, { value: 'CLOSED' }, { value: 'CANCELED' }];
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+  console.log(externalRefNo,"req")
 
   // let Location = useLocation()
   // const stateData = Location.state.data
@@ -118,7 +120,7 @@ export const PurchaseOrderView = () => {
     // }
     console.log(status, 'ttttttttttttttttttttttt');
 
-    // const req = new PurchaseViewDto()
+     const req = new PurchaseViewDto(null,null,null,null,null,null,null,externalRefNo)
     // if (form.getFieldValue('deliveryDate') !== undefined) {
     //   req.confirmStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
     // }
@@ -146,7 +148,7 @@ export const PurchaseOrderView = () => {
     //   }
     // })
 
-    Service.getAllPurchaseOrderData().then((res)=>{
+    Service.getAllPurchaseOrderData(req).then((res)=>{
       if(res.status){
         setData(res.data)
       }else{

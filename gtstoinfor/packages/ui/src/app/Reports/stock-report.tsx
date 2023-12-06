@@ -4,6 +4,7 @@ import { StockService } from '@project-management-system/shared-services';
 import { Button, Card, Col, Form, Row, Select, Statistic, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { Excel } from 'antd-table-saveas-excel';
+import { useIAMClientState } from "../common/iam-client-react";
 
 
 const StockReport = () => {
@@ -18,6 +19,8 @@ const StockReport = () => {
     const [stockData, setStockData] = useState<any[]>([]);
     const [filterData, setFilterData] = useState<any[]>([]);
     const [key, setKey] = useState();
+    const { IAMClientAuthContext } = useIAMClientState();
+    const [isBuyer, setIsBuyer] = useState(false);
 
 
 
@@ -30,6 +33,11 @@ const StockReport = () => {
         getAllLocation();
         getAllPlant();
         getAllStockReportData();
+        const userrefNo = IAMClientAuthContext.user?.externalRefNo
+        if(userrefNo){
+          setIsBuyer(true)
+          // form.setFieldsValue()
+        }
       }, []);
 
     const getData = () => {
@@ -75,6 +83,7 @@ const StockReport = () => {
 
       const getAllStockReportData = () => {
         const req = new StockFilterRequest()
+        req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
         if (form.getFieldValue('m3ItemCode') !== undefined) {
           req.m3ItemCode = form.getFieldValue('m3ItemCode')
         }
