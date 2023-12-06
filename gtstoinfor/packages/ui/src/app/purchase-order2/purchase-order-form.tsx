@@ -4,12 +4,13 @@ import TabPane from "antd/es/tabs/TabPane";
 import { useState, useEffect } from "react";
 import PurchaseOrderfabricForm from "./purchase-order-fabric";
 import PurchaseOrderTrim from "./purchase-order-trim";
-import { GlobalVariables, PoItemDetailsDto, PoItemEnum, PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrderTrimDto } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, GlobalVariables, PoItemDetailsDto, PoItemEnum, PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrderTrimDto } from "@project-management-system/shared-models";
 import moment from "moment";
 import dayjs, { Dayjs } from "dayjs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { faB } from "@fortawesome/free-solid-svg-icons";
 import AlertMessages from "../common/common-functions/alert-messages";
+import { useIAMClientState } from "../common/iam-client-react";
 
 export const PurchaseOrderForm = () => {
     const { Option } = Select
@@ -52,6 +53,8 @@ export const PurchaseOrderForm = () => {
     const service = new SampleDevelopmentService();
     const currencyServices = new CurrencyService();
     const factoryServices = new FactoryService();
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
 
 
     useEffect(() => {
@@ -192,7 +195,9 @@ export const PurchaseOrderForm = () => {
     }
 
     const getIndnetNo = () => {
-        indentService.getIndentnumbers().then(res => {
+        const req = new BuyerRefNoRequest()
+        req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+        indentService.getIndentnumbers(req).then(res => {
             if (res.status) {
                 setIndentData(res.data)
             } else {

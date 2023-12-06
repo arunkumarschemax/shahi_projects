@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IndentRepository } from './dto/indent-repository';
-import { CommonResponseModel, IndentReq, IndentFabricModel, IndentModel, IndentTrimsModel, IndentRequestDto, indentIdReq } from '@project-management-system/shared-models';
+import { CommonResponseModel, IndentReq, IndentFabricModel, IndentModel, IndentTrimsModel, IndentRequestDto, indentIdReq, BuyerRefNoRequest } from '@project-management-system/shared-models';
 import { Indent } from './indent-entity';
 import { IndentDto } from './dto/indent-dto';
 import { IndentAdapter } from './dto/indent-adapter';
@@ -89,8 +89,14 @@ export class IndentService {
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully', indentModel);
     }
 
-    async getIndentnumbers(): Promise<CommonResponseModel> {
-        const data = 'select indent_id as indentId ,request_no as indentCode from indent'
+    async getIndentnumbers(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
+        const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
+        const res = await this.dataSource.query(buyerdata)
+        const buyerId = res[0].buyer_id
+        let data = `select indent_id as indentId ,request_no as indentCode from indent`
+        if(req.buyerRefNo){
+            data = data+` where buyer_id = ${buyerId}`
+        }
         const result = await this.indentRepo.query(data)
         if (result) {
             return new CommonResponseModel(true, 1, 'data retived sucessfully', result)
