@@ -50,9 +50,9 @@ export class SampleDevReqController {
   }
 
   @Post('/getIssuedSampleRequests')
-  async getIssuedSampleRequests(): Promise<CommonResponseModel> {
+  async getIssuedSampleRequests(@Body() req?:any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.getIssuedSampleRequests();
+      return await this.sampleService.getIssuedSampleRequests(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
     }
