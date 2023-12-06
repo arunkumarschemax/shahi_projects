@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { LocationMappingService } from "./location-mapping.service";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
-import { LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq } from "@project-management-system/shared-models";
+import { ExternalRefReq, LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq } from "@project-management-system/shared-models";
 
 @ApiTags("locationMapping")
 @Controller("/locationMapping")
@@ -12,9 +12,11 @@ export class LocationMappingController {
     ) { }
 
     @Post("/getAllFabrics")
-    async getAllFabrics(): Promise<any> {
+    @ApiBody({ type: ExternalRefReq })
+    async getAllFabrics(@Body() req:any): Promise<any> {
+        console.log(req,"con")
         try {
-            return this.service.getAllFabrics();
+            return this.service.getAllFabrics(req);
         } catch (error) {
             return error;
         }
