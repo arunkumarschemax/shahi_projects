@@ -1,5 +1,5 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { BuyersService, FabricTypeService, FabricWeaveService, GRNService, M3ItemsService, StockService, UomService } from "@project-management-system/shared-services";
+import { BuyersService, CategoryService, ColourService, ContentService, FabricTypeService, FabricWeaveService, FinishService, GRNService, HoleService, M3ItemsService, QualitysService, StockService, StructureService, ThicknessService, TrimParamsMappingService, TrimService, TypeService, UomService, VarietyService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
@@ -7,9 +7,10 @@ import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { M3ItemsDTO, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { LogoEnum, LogoEnumDisplay, M3ItemsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
 const { TextArea } = Input;
+const { Option } = Select;
 
 export const RmTrimsView = () => {
   const stockService = new StockService();
@@ -18,127 +19,199 @@ export const RmTrimsView = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-  const service = new M3ItemsService();
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [uom, setUom] = useState<any[]>([]);
-  const [weightData, setWeightData] = useState<any[]>([]);
-  const [rowData, setRowData] = useState<any>(undefined);
-  const [visibleModel, setVisibleModel] = useState<boolean>(false);
-  const [yarnData, setYarnData] = useState<any[]>([]);
-  const [widthData, setWidthData] = useState<any[]>([]);
-  const [buyer, setBuyer] = useState<any[]>([]);
+  const structureService = new StructureService();
+  const categoryService = new CategoryService();
+  const contentService = new ContentService();
+  const typeService = new TypeService();
+  const finishService = new FinishService();
+  const holeService = new HoleService();
+  const qtyService = new QualitysService();
+  const thickService = new ThicknessService();
+  const varietyService = new VarietyService();
+  const trimService = new TrimService();
   const uomService = new UomService();
-  const fabricService = new FabricTypeService();
-  const weaveService = new FabricWeaveService();
-  const [weave, setWeave] = useState<any[]>([]);
+  const colorService = new ColourService();
   const buyerService = new BuyersService();
-  const [fabricType, setFabricType] = useState<any[]>([]);
-  const [weightValue, setWeightValue] = useState<any>();
-  const [weightUnitValue, setWeightUnitValue] = useState<any>();
-  const [widthValue, setWidthValue] = useState<any>();
-  const [widthUnitValue, setWidthUnitValue] = useState<any>();
-  const [countValue, setCountValue] = useState<any>();
-  const [countUnitValue, setCountUnitValue] = useState<any>();
-  const [buttonEnable,setButtonEnable] = useState<boolean>(true)
-  const [buyervalue,setBuyervalue] = useState<any>()
+  const paramsService = new TrimParamsMappingService()
+  const service = new M3ItemsService()
 
-  
-
+  const [structureData, setStructureData] = useState<any[]>([]);
+  const [categoryData, setCategoryData] = useState<any[]>([]);
+  const [contentData, setContentData] = useState<any[]>([]);
+  const [typeData, setTypeData] = useState<any[]>([]);
+  const [finishData, setFinishData] = useState<any[]>([]);
+  const [holeData, setHoleData] = useState<any[]>([]);
+  const [qtyData, setQtyData] = useState<any[]>([]);
+  const [thickData, setThickData] = useState<any[]>([]);
+  const [varietyData, setVarietyData] = useState<any[]>([]);
+  const [trimData, setTrimData] = useState<any[]>([]);
+  const [uomData, setUomData] = useState<any[]>([]);
+  const [colorData, setColorData] = useState<any[]>([]);
+  const [buyerData, setBuyerData] = useState<any[]>([]);
+  const [mapData, setMapData] = useState<any[]>([])
 
   useEffect(() => {
-    getUom();
-    getFabricTypedata();
-    getWeaveData();
+    if (mapData[0]?.structure === true) {
+      getStructures();
+    }
+    if (mapData[0]?.category === true) {
+      getCategories();
+    }
+    if (mapData[0]?.content === true) {
+      getContents();
+    }
+    if (mapData[0]?.type === true) {
+      getTypes();
+    }
+    if (mapData[0]?.finish === true) {
+      getFinishes();
+    }
+    if (mapData[0]?.hole === true) {
+      getHoles();
+    }
+    if (mapData[0]?.quality === true) {
+      getQuality();
+    }
+    if (mapData[0]?.thickness === true) {
+      getThicks();
+    }
+    if (mapData[0]?.variety === true) {
+      getVarieties();
+    }
+    if (mapData[0]?.uom === true) {
+      getUom();
+    }
+    if (mapData[0]?.color === true) {
+      getColors();
+    }
+    getTrims();
     getBuyers();
-    getData()
-  }, []);
+  }, [mapData]);
 
-  const getBuyers = () => {
-    buyerService.getAllActiveBuyers().then((res) => {
+  const getStructures = () => {
+    structureService.getAllStructureInfo().then((res) => {
       if (res.status) {
-        setBuyer(res.data);
+        setStructureData(res.data);
       }
     });
   };
 
-  const getFabricTypedata = () => {
-    fabricService
-      .getAllFabricType()
-      .then((res) => {
-        if (res.status) {
-          setFabricType(res.data);
-        } else {
-          setFabricType([]);
-        }
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+  const getCategories = () => {
+    categoryService.getAllCategory().then((res) => {
+      if (res.status) {
+        setCategoryData(res.data);
+      }
+    });
   };
 
-  const getWeaveData = () => {
-    weaveService
-      .getAllFabricWeave()
-      .then((res) => {
-        if (res.status) {
-          setWeave(res.data);
-        } else {
-          setWeave([]);
-        }
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+  const getContents = () => {
+    contentService.getAllContent().then((res) => {
+      if (res.status) {
+        setContentData(res.data);
+      }
+    });
   };
+
+  const getTypes = () => {
+    typeService.getAllTypeInfo().then((res) => {
+      if (res.status) {
+        setTypeData(res.data);
+      }
+    });
+  };
+
+  const getFinishes = () => {
+    finishService.getAllFinish().then((res) => {
+      if (res.status) {
+        setFinishData(res.data);
+      }
+    });
+  };
+
+  const getHoles = () => {
+    holeService.getAllHoles().then((res) => {
+      if (res.status) {
+        setHoleData(res.data);
+      }
+    });
+  };
+
+  const getQuality = () => {
+    qtyService.getAllQualitys().then((res) => {
+      if (res.status) {
+        setQtyData(res.data);
+      }
+    });
+  };
+
+  const getThicks = () => {
+    thickService.getAllThicknessInfo().then((res) => {
+      if (res.status) {
+        setThickData(res.data);
+      }
+    });
+  };
+
+  const getVarieties = () => {
+    varietyService.getAllVariety().then((res) => {
+      if (res.status) {
+        setVarietyData(res.data);
+      }
+    });
+  };
+
+  const getTrims = () => {
+    trimService.getAllTrim().then((res) => {
+      if (res.status) {
+        setTrimData(res.data);
+      }
+    });
+  };
+
   const getUom = () => {
     uomService.getAllUoms().then((res) => {
       if (res.status) {
-        const yarn = res.data.filter(
-          (rec) => rec.uomCategory == UomCategoryEnum.LENGTH
-        );
-        const weight = res.data.filter(
-          (rec) => rec.uomCategory == UomCategoryEnum.MASS
-        );
-        const width = res.data.filter(
-          (rec) => rec.uomCategory == UomCategoryEnum.AREA
-        );
-        setYarnData(yarn);
-        setWeightData(weight);
-        setWidthData(width);
-        setUom(res.data);
+        setUomData(res.data);
       }
     });
   };
 
-  const getData = async () => {
-    stockService.getAllTrimStocks().then(res => {
-
-        if (res) {
-        setData(res);
-        console.log(res,'pppppp');
-        
-        AlertMessages.getSuccessMessage("Stock retrived successfully")
-      } else {
-        setData([]);
-        AlertMessages.getErrorMessage("Something went wrong. ")
+  const getColors = () => {
+    colorService.getAllColour().then((res) => {
+      if (res.status) {
+        setColorData(res.data);
       }
-    }).catch(err => {
-      console.log(err);
-      setData([]);
-      AlertMessages.getInfoMessage("Something went wrong. ")
-    })
+    });
+  };
+
+  const getBuyers = () => {
+    buyerService.getAllBuyer().then((res) => {
+      if (res.status) {
+        setBuyerData(res.data);
+      }
+    });
+  };
+
+  const getMappedTrims = (value) => {
+    const req = new TrimIdRequestDto(value)
+    paramsService.getMappedParamsByTrim(req).then((res) => {
+      if (res.status) {
+        setMapData(res.data)
+      }
+    });
   }
 
-  const getRowData = async (m3StyleDto: any) => {
-    setRowData(m3StyleDto);
-    console.log(m3StyleDto,"kk")
-    setVisibleModel(true);
-  }
+  const onReset = () => {
+    form.resetFields();
+  };
 
+
+  
   const setModel = (val) => {
     console.log(val);
-    setVisibleModel(val);
+    // setVisibleModel(val);
   }
 
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
@@ -345,18 +418,18 @@ export const RmTrimsView = () => {
       title: 'Action',
       dataIndex: 'action',
       render: (text, rowData) => {
-        if (rowData.buyer_id === buyervalue) {
-          return "-";
-        }
+        // if (rowData.buyer_id === buyervalue) {
+        //   return "-";
+        // }
     
         return (
           <span>
-            <Button
+            {/* <Button
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}
             >
               <b>Request Reclassification</b>
-            </Button>
+            </Button> */}
           </span>
         );
       }
@@ -369,36 +442,36 @@ export const RmTrimsView = () => {
   };
 
   const handleCancel = () => {
-    setVisibleModel(false);
+    // setVisibleModel(false);
   };
 
-  const getItemsForOtherBuyers = () => {
-    console.log(form.getFieldsValue())
-    // console.log()
-    const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
+  // const getItemsForOtherBuyers = () => {
+  //   console.log(form.getFieldsValue())
+  //   // console.log()
+  //   const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
 
-    let formData: M3ItemsDTO = data;
-    console.log(formData)
-    console.log(formData.buyerId)
-    formData.buyerId = undefined;
-    console.log(formData)
-    // getData(formData);
-  }
+  //   let formData: M3ItemsDTO = data;
+  //   console.log(formData)
+  //   console.log(formData.buyerId)
+  //   formData.buyerId = undefined;
+  //   console.log(formData)
+  //   // getData(formData);
+  // }
 
-  const onChange =(value) =>{
-    if(value === null || undefined) {
-      setButtonEnable(true)
-     }else {
-      setButtonEnable(false)
-     }
-  }
+  // const onChange =(value) =>{
+  //   if(value === null || undefined) {
+  //     setButtonEnable(true)
+  //    }else {
+  //     setButtonEnable(false)
+  //    }
+  // }
   const onFinish = () => {
-    if(form.getFieldValue("content")) {
-      setButtonEnable(false)
-     }
-    console.log(form.getFieldsValue())
-    const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
-    console.log(data)
+    // if(form.getFieldValue("content")) {
+    //   setButtonEnable(false)
+    //  }
+    // console.log(form.getFieldsValue())
+    // const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
+    // console.log(data)
     // getData(data);
     // service
     //   .createM3Items(m3StyleDto)f
@@ -420,263 +493,341 @@ export const RmTrimsView = () => {
   };
    const onBuyerChange = (value) =>{
     console.log(value)
-    setBuyervalue(value)
+    // setBuyervalue(value)
    }
 
  
 
   return (
     <Card title="RM Trims Inventory" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
-      {/* <Form layout="vertical" form={form} onFinish={onFinish}>
-       <Row gutter={24}>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-            <Form.Item
-              name="buyerId"
-              label="Buyer"
-              rules={[{ required: true, message: "Buyer is required" }]}
-            >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select Buyer"
-                onChange={onBuyerChange}
-              >
-                {buyer.map((e) => {
-                  return (
-                    <option
-                      key={e.buyerId}
-                      value={e.buyerId}
+      <Form form={form} layout={"vertical"} name="control-hooks" onFinish={onFinish}
+      >
+        <Row gutter={24}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="buyer" label="Buyer" rules={[{ required: true, message: "Buyer is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Buyer"
                     >
-                      {`${e.buyerCode} - ${e.buyerName}`}
-                    </option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col style={{display:"none"}}>
-          <Form.Item
-              name="buyerCode"
-              rules={[{ required: false, message: "BuyerCode is required" }]}
-            >
-                <Input />
-            </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-              <Form.Item
-                label="Content"
-                name="content"
-                rules={[{ required: false, message: "Field is required" }]}
-              >
-                <Select
-                  optionFilterProp="children"
-                  placeholder=" Select Content"
-                  allowClear
-                  onChange={onChange}
-                >
-                  {Object.keys(m3ItemsContentEnum)
-                    .sort()
-                    .map((content) => (
-                      <Select.Option
-                        key={m3ItemsContentEnum[content]}
-                        value={m3ItemsContentEnum[content]}
-                      >
-                        {m3ItemsContentEnum[content]}
-                      </Select.Option>
-                    ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-
-              <Form.Item
-                label=" Fabric Type"
-                name="fabricType"
-                rules={[{ required: false, message: "Field is required" }]}
-              >
-                <Select placeholder=" Select Fabric Type" >
-                  {fabricType.map((option) => (
-                    <option
-                      key={option.fabricTypeId}
-                      value={option.fabricTypeId}
-                    >
-                      {option.fabricTypeName}
-                    </option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-
-              <Form.Item
-                label=" Weave"
-                name="weave"
-                rules={[{ required: false, message: "Field is required" }]}
-                
-              >
-                <Select placeholder=" Select Weave"  allowClear
-                >
-                  {weave.map((option) => (
-                    <option
-                      key={option.fabricWeaveId}
-                      value={option.fabricWeaveId}
-                    >
-                      {option.fabricWeaveName}
-                    </option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-
-               <Form.Item
-                label="Weight"
-                rules={[{ required: false, message: "Field is required" }]}
-
-                >
-                <Space.Compact>
-             <Input placeholder="Enter Weight" allowClear onChange={(e) => setWeightValue(e.target.value)}/>
-
-              <Select style={{width:80}} allowClear placeholder="Unit" onChange={(value) => setWeightUnitValue(value)}>
-              {weightData.map((e) => {
-                          return (
-                            <option key={e.uomId} value={e.uomId}>
-                              {e.uom}
-                            </option>
-                          );
+                        {buyerData.map((e) => {
+                            return (
+                            <Option key={e.buyerId} value={e.itemCode}>
+                                {e.buyerName}-{e.buyerCode}
+                            </Option>
+                            );
                         })}
-         </Select>
-          </Space.Compact>
-               </Form.Item> 
-
-         
+                    </Select>
+                </Form.Item>
             </Col>
-           
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-
-              <Form.Item
-                label="Width"
-                rules={[{ required: false, message: "Field is required" }]}
-              >
-              <Space.Compact>
-             <Input placeholder="Enter Width" allowClear onChange={(e) => setWidthValue(e.target.value)}/>
-
-              <Select style={{width:80}} allowClear placeholder="Unit" onChange={(value) => setWidthUnitValue(value)}>
-              {widthData.map((e) => {
-                    return (
-                      <option key={e.uomId} value={e.uomId}>
-                        {e.uom}
-                      </option>
-                    );
-                  })}
-         </Select>
-          </Space.Compact>
-
-              </Form.Item>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="trimCategory" label="Trim Category" rules={[{ required: true, message: "Trim Category is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children"
+                    placeholder="Select Trim Category"
+                    onChange={getMappedTrims}
+                    >
+                        {trimData.map((e) => {
+                            return (
+                            <Option key={e.trimId} value={e.trimId}>
+                                {e.trimCategory}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-
-              <Form.Item
-                label=" Construction"
-                name="construction"
-                 rules={[
-                  { required: false, message: 'Field is required' },
-                ]}
-              >
-                <Input placeholder=" Enter  Construction" allowClear/>
-              </Form.Item>
+            {mapData[0]?.structure === true ? (
+              <>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                  <Form.Item
+                    name="structure"
+                    label="Structure"
+                    rules={[{ required: true, message: "Structure is required" }]}
+                  >
+                    <Select
+                      showSearch
+                      allowClear
+                      optionFilterProp="children"
+                      placeholder="Select Structure"
+                    >
+                      {structureData.map((e) => (
+                        <Option key={e.structureId} value={e.structureId}>
+                          {e.structure}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </>
+            ) : (<></>)}
+            {mapData[0]?.category == true ? (
+            <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="category" label="Category" rules={[{ required: true, message: "Category is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children" 
+                    placeholder="Select Category"
+                    >
+                        {categoryData.map((e) => {
+                            return (
+                            <Option key={e.categoryId} value={e.categoryId}>
+                                {e.category}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
             </Col>
-            <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 4 }}
-            >
-              <Form.Item
-                label=" Yarn Count"
-                name="yarnCount"
-                 rules={[
-                  { required: false, message: 'Field is required' },
-                ]}
-              >
-                <Space.Compact>
-             <Input placeholder="EnterYarn Count" allowClear onChange={(e) => setCountValue(e.target.value)}/>
-
-              <Select style={{width:80}} allowClear placeholder="Unit" onChange={(value) => setCountUnitValue(value)}>
-              {yarnData.map((e) => {
-                    return (
-                      <option key={e.uomId} value={e.uomId}>
-                        {e.uom}
-                      </option>
-                    );
-                  })}
-         </Select>
-          </Space.Compact>
-              </Form.Item>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.content === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="content" label="Content" rules={[{ required: true, message: "Content is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Content"
+                    >
+                        {contentData.map((e) => {
+                            return (
+                            <Option key={e.contentId} value={e.contentId}>
+                                {e.content}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
             </Col>
-
-            <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 4 }}
-            >
-              <Form.Item
-                label=" Finish"
-                name="finish"
-                 rules={[
-                  { required: false, message: 'Field is required' },
-                ]}
-              >
-                <Input placeholder=" Enter  Finish"  allowClear/>
-              </Form.Item>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.type === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="type" label="Type" rules={[{ required: true, message: "Type is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children" 
+                    placeholder="Select Type"
+                    >
+                        {typeData.map((e) => {
+                            return (
+                            <Option key={e.typeId} value={e.typeId}>
+                                {e.type}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
             </Col>
-            <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 4 }}
-            >
-              <Form.Item
-                label=" Shrinkage"
-                name="shrinkage"
-                 rules={[
-                  { required: false, message: 'Field is required' },
-                ]}
-              >
-                <Input placeholder=" Enter  Shrinkage" allowClear />
-              </Form.Item>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.finish === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="finish" label="Finish" rules={[{ required: true, message: "Finish is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children" 
+                    placeholder="Select Finish"
+                    >
+                        {finishData.map((e) => {
+                            return (
+                            <Option key={e.finishId} value={e.finishId}>
+                                {e.finish}-{e.finishCode}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
             </Col>
-            <Row gutter={8}>
-            <Col span={24} >
-              <Button type="primary" htmlType="submit"
-              style={{marginTop:20,marginLeft:40}}
-              >
-                Get Items
-              </Button>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <Button
-                htmlType="button"
-                onClick={clearData}
-                
-              >
-                Reset
-              </Button>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <Button type="primary" onClick={(e) => getItemsForOtherBuyers()} disabled={buttonEnable}
-            //  style={{marginRight:300}}
-
-              >Check Other Buyers
-              </Button>
-              </Col>
-              </Row>
-             
-          </Row>
-    </Form> */}
+            </>
+            ) : (<></>)}
+            {mapData[0]?.hole === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="hole" label="Hole" rules={[{ required: true, message: "Hole is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Hole"
+                    >
+                        {holeData.map((e) => {
+                            return (
+                            <Option key={e.holeId} value={e.holeId}>
+                                {e.hole}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.quality === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="qualityName" label="Quality" rules={[{ required: true, message: "Quality is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children" 
+                    placeholder="Select Quality"
+                    >
+                        {qtyData.map((e) => {
+                            return (
+                            <Option key={e.qualityId} value={e.qualityId}>
+                                {e.qualityName}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.thickness === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="warehouse" label="Thickness" rules={[{ required: true, message: "Warehouse is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children" 
+                    placeholder="Select Warehouse"
+                    >
+                        {thickData.map((e) => {
+                            return (
+                            <Option key={e.warehouseId} value={e.warehouseId}>
+                                {e.warehouseName}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.variety === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="variety" label="Variety" rules={[{ required: true, message: "Variety is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children" 
+                    placeholder="Select Variety"
+                    >
+                        {varietyData.map((e) => {
+                            return (
+                            <Option key={e.varietyId} value={e.varietyId}>
+                                {e.variety}-{e.varietyCode}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.uom === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="uom" label="UOM" rules={[{ required: true, message: "UOM is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select UOM"
+                    >
+                        {uomData.map((e) => {
+                            return (
+                            <Option key={e.uomId} value={e.uomId}>
+                                {e.uom}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.color === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="color" label="Color" rules={[{ required: true, message: "Color is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Color"
+                    >
+                        {colorData.map((e) => {
+                            return (
+                            <Option key={e.colourId} value={e.colourId}>
+                                {e.colour}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.logo === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="logo" label="Logo" rules={[{ required: true, message: "Logo is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Logo"
+                    >
+                        {Object.values(LogoEnum).map((val) => {
+                            return <Option key={val} value={val}>{LogoEnumDisplay.find((e)=>e.name == val)?.displayVal}</Option>
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.part === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="part" label="Part" rules={[{ required: true, message: "Part is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Part"
+                    >
+                        {Object.values(PartEnum).map((val) => {
+                            return <Option key={val} value={val}>{PartEnumDisplay.find((e)=>e.name == val)?.displayVal}</Option>
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+        </Row>
+        <Row>
+            <Col span={24} style={{ textAlign: "right" }}>
+                <Button type="primary" htmlType="submit">Submit</Button>
+                <Button htmlType="button" style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
+            </Col>
+        </Row>
+      </Form>
         
       <Table
         className="custom-table-wrapper"
