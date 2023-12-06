@@ -1,4 +1,4 @@
-import { StyleRequest, OperationReportingRequest, TabNameReq, MaterialIssueRequest, OperationTrackingDto, SampleIdRequest } from "@project-management-system/shared-models";
+import { StyleRequest, OperationReportingRequest, TabNameReq, MaterialIssueRequest, OperationTrackingDto, SampleIdRequest, BuyerRefNoRequest } from "@project-management-system/shared-models";
 import { ItemsService, MaterialIssueService, OperationGroupsService, OperationReportingService, OperationSequenceService, OperationsService, SampleDevelopmentService, StyleService, UomService } from "@project-management-system/shared-services";
 import { Alert, Button, Card, Col, Form, Input, Row, Segmented, Select, Space, Table, message } from "antd"
 import { ColumnProps } from "antd/es/table"
@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import Operation from "antd/es/transfer/operation";
 import { useNavigate } from "react-router-dom";
+import { useIAMClientState } from "../common/iam-client-react";
 
 const {Option}  =Select
 export const SampleOperationReporting = () => {
@@ -46,6 +47,8 @@ export const SampleOperationReporting = () => {
     const trackingService = new OperationReportingService()
     const [trackData, setTrackData] = useState<any[]>([])
     const [selectedUomValues, setSelectedUomValues] = useState([]);
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
 
 
 
@@ -76,7 +79,9 @@ export const SampleOperationReporting = () => {
     // }
 
     const getSampleReq = () => {
-        sampleDevelopmentService.getIssuedSampleRequests().then(res => {
+        const req = new BuyerRefNoRequest()
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+        sampleDevelopmentService.getIssuedSampleRequests(req).then(res => {
             setReqNo(res.data)
         })
     }

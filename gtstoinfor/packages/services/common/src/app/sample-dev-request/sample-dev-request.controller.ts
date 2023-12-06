@@ -2,7 +2,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Any } from 'typeorm';
 import { SampleRequestService } from './sample-dev-request.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, ROSLGroupsResponseModel, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, SampleRequestFilter, UploadResponse } from '@project-management-system/shared-models';
+import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, ROSLGroupsResponseModel, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, SampleRequestFilter, UploadResponse, lifeCycleStatusReq } from '@project-management-system/shared-models';
 import { SampleRequestDto } from './dto/samle-dev-req';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
@@ -50,9 +50,9 @@ export class SampleDevReqController {
   }
 
   @Post('/getIssuedSampleRequests')
-  async getIssuedSampleRequests(): Promise<CommonResponseModel> {
+  async getIssuedSampleRequests(@Body() req?:any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.getIssuedSampleRequests();
+      return await this.sampleService.getIssuedSampleRequests(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
     }
@@ -348,9 +348,9 @@ export class SampleDevReqController {
   }
 
   @Post('/getAllAllocatedRequestNo')
-  async getAllAllocatedRequestNo(): Promise<CommonResponseModel> {
+  async getAllAllocatedRequestNo(@Body() req?:any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.getAllAllocatedRequestNo()
+      return await this.sampleService.getAllAllocatedRequestNo(req)
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
@@ -358,15 +358,25 @@ export class SampleDevReqController {
   }
 
   @Post('/getAllApprovedRequestNo')
-  async getAllApprovedRequestNo(): Promise<CommonResponseModel> {
+  async getAllApprovedRequestNo(@Body() req?:any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.getAllApprovedRequestNo()
+      return await this.sampleService.getAllApprovedRequestNo(req)
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
   
+  @Post('/updatedispatch')
+  @ApiBody({type:lifeCycleStatusReq})
+  async updatedispatch(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.updatedispatch(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
 
   
 }

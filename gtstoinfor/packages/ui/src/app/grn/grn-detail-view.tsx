@@ -75,6 +75,14 @@ import Barcode from "react-barcode";
   
     const Columns: any = [
       {
+        title: <div style={{textAlign:"center"}}>Buyer</div>,
+        dataIndex: "buyerName",
+        align:"center",
+        render: (val,data) => {
+          return data.buyerName ? data.buyerName : "-";
+        }
+      },
+      {
         title: <div style={{textAlign:"center"}}>Item Code</div>,
         dataIndex: "itemCode",
         align:"center",

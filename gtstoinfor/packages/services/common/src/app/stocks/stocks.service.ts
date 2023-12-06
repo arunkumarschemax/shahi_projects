@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { AllStocksResponseModel, CommonResponseModel, M3ItemsDTO, StockFilterRequest, StocksDto, statusReq } from "@project-management-system/shared-models";
+import { AllStocksResponseModel, CommonResponseModel, M3ItemsDTO, M3trimsDTO, StockFilterRequest, StocksDto, statusReq } from "@project-management-system/shared-models";
 import { StocksRepository } from "./repository/stocks.repository";
 import { StocksAdapter } from "./adapters/stocks.adatpters";
 import { AppDataSource } from "../app-datasource";
@@ -72,6 +72,9 @@ export class StocksService {
             }
             if(req.weightUnit != undefined){
                 query = query + " and it.weight_unit = "+req.weightUnit;
+            }
+            if (req.extRefNumber != undefined) {
+                query = query + " and b.external_ref_number = " + `"${req.extRefNumber}"`;
             }
             query = query + " order by b.buyer_name ASC ";
 
@@ -180,26 +183,28 @@ export class StocksService {
         }
       }
 
-      async getAllTrimStocks(): Promise<CommonResponseModel> {
-       
-        
+      async getAllTrimStocks(req:M3trimsDTO): Promise<CommonResponseModel> {
         try {
+            console.log(req);
             let query = ` SELECT s.location_id AS locationId,s.m3_item AS m3itemId, s.uom_id AS uomId, s.grn_item_id AS grnItemId,  s.id AS stockId,
-            IF(s.item_type != 'fabric' ,it.item_code,CONCAT(it.item_code,'-',it.description)) AS m3Item,
+            CONCAT(it.item_code,'-',it.description) AS m3Item,
             s.item_type AS itemType, (s.quantity-s.allocatd_quantity-transfered_quantity) AS qty,
              u.uom AS uom, b.buyer_name AS buyer,r.rack_position_name AS location,
              it.thickness_id, it.type_id,it.trim_category_id,it.variety_id,
              s.buyer_id  FROM stocks s
              LEFT JOIN buyers b ON b.buyer_id = s.buyer_id
-             LEFT JOIN m3_items it ON it.m3_items_Id = s.m3_item AND s.item_type != 'fabric'
+             LEFT JOIN m3_items it ON it.m3_items_Id = s.m3_item
              LEFT JOIN rack_position r ON r.position_Id = s.location_id
              LEFT JOIN uom u ON u.id = s.uom_id
              LEFT JOIN grn_items gi ON gi.grn_item_id = s.grn_item_id
              LEFT JOIN grn g ON g.grn_id = gi.grn_id
              WHERE s.id > 0 AND g.grn_type = 'INDENT' AND (quantity-s.allocatd_quantity-transfered_quantity) > 0 AND s.item_type != 'fabric'`
-            // if(req.buyerId != undefined){
-            //     query = query + " and b.buyer_id = "+req.buyerId;
-            // }
+            if(req.buyerId != undefined){
+                query = query + " and s.buyer_id = "+req.buyerId;
+            }
+            if(req.extRefNumber != undefined){
+                query = query +"and b.external_ref_number = " + `"${req.extRefNumber}"`
+            }
             // if(req.construction != undefined){
             //     query = query + " and it.construction = "+req.construction;
             // }if(req.content != undefined){
@@ -237,10 +242,10 @@ export class StocksService {
             // query = query + " order by b.buyer_name ASC ";
 
             const res = await AppDataSource.query(query);
-            if (res) {
-                return res;
+            if (res.length  > 0) {
+                return new CommonResponseModel(true,1,"Stock retrived successfully" , res);
             } else {
-                console.log("NO data");
+                return new CommonResponseModel(false,0,"No data found" ,);
             }
         }
 

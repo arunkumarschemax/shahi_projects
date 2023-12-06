@@ -119,9 +119,11 @@ export const PurchaseOrderForm = () => {
         if (stateData != undefined) {
 
             if (stateData.type == 'Indent') {
+                console.log(stateData)
                 setIndentDropDownVisible(true)
                 poForm.setFieldsValue({ indentId: stateData.data.indentId })
                 poForm.setFieldsValue({ indentAgainst: 'Indent' })
+                poForm.setFieldsValue({ buyerId:stateData.data.buyerId })
                 setIndentId(stateData.data.indentId)
                 if (stateData.data.materialType == "Fabric") {
                     poForm.setFieldsValue({ poMaterialType: "Fabric" })
@@ -219,6 +221,7 @@ export const PurchaseOrderForm = () => {
         }
         console.log(poItemDetails)
         const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('styleId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'), poForm.getFieldValue('indentId'), poForm.getFieldValue('buyerId'), poItemDetails,poForm.getFieldValue('currencyId'),poForm.getFieldValue('exchangeRate'),poForm.getFieldValue('totalAmount'),poForm.getFieldValue('deliveryAddress'), poForm.getFieldValue('indentAgainst'))
+        console.log(poDto)
         if (poDto.poItemInfo.length > 0) {
             purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
                 if (res.status) {
@@ -257,6 +260,9 @@ export const PurchaseOrderForm = () => {
                 <Form form={poForm} layout="vertical">
                     <Row gutter={8}>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+                            <Form.Item name="buyerId" style={{ display: "none" }} >
+                                <Input hidden />
+                            </Form.Item>
                             <Form.Item name='indentAgainst' label='PO Against' rules={[{ required: true, message: 'PO Type is required' }]}>
                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select PoType'
                                     onChange={IndentAginstOnchange}

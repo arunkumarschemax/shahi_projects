@@ -10,6 +10,7 @@ import {Button,Card,Col,Collapse,DatePicker,Divider,Form,Input,Modal,Row,Segment
 import { GRNTypeEnum, GRNTypeEnumDisplay, GrnReq, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { GRNService } from "@project-management-system/shared-services";
 import Barcode from "react-barcode";
+import { useIAMClientState } from "../common/iam-client-react";
   
   const { Option } = Select;
   const { RangePicker } = DatePicker;
@@ -31,9 +32,12 @@ import Barcode from "react-barcode";
     const searchInput = useRef(null);
     const [grnNoFilter, setGrnNoFilter] = useState<any[]>([])
     const [poNoFilter, setPONoFilter] = useState<any[]>([])
+    const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
   
     useEffect(() => {
       // getStyle();
+      console.log(IAMClientAuthContext.user)
       getAll();
       grnNoData()
       poNoData()
@@ -64,7 +68,7 @@ import Barcode from "react-barcode";
       if (form.getFieldValue('grnDate') !== undefined) {
       req.toDate = (form.getFieldValue('grnDate')[1]).format('YYYY-MM-DD')
       }
-      // console.log(req,'------------')
+      req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
       grnService.getAllGrn(req).then((res) => {
         if (res.status) {
           setData(res.data);

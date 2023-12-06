@@ -13,6 +13,7 @@ import AlertMessages from '../common/common-functions/alert-messages'
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from 'react-router-dom'
 import { EditOutlined, MinusCircleOutlined } from '@ant-design/icons'
+import { useIAMClientState } from '../common/iam-client-react'
 
 // const data : GrnItemsFormDto[] = []
 // const obj1 : GrnItemsFormDto = new GrnItemsFormDto(1,1,'YY/FAB00001','Activewear Fabrics',17,PoItemEnum.OPEN,3,'Inch',3000,5,2,5000,0,0,1200,18,'red',1,null,1,'')
@@ -45,7 +46,7 @@ const GRNForm = () => {
   const [poItemData, setPoItemData] = useState<GrnItemsFormDto[]>()
   const [selectedItem, setSelectedItem] = useState<any>()
   const [itemsForm] = Form.useForm()
-
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
 
   useEffect(() => {
@@ -89,7 +90,8 @@ const GRNForm = () => {
     form.resetFields(['purchaseOrderId'])
     itemsForm.resetFields()
     setPoItemData([])
-    const req = new VendorIdReq(value)
+    const buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    const req = new VendorIdReq(value,null,null,null,buyerRefNo)
     poService.getAllPONumbers(req).then((res) => {
       if (res.status) {
         setPoNoData(res.data)
