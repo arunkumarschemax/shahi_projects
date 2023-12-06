@@ -73,6 +73,9 @@ export class StocksService {
             if(req.weightUnit != undefined){
                 query = query + " and it.weight_unit = "+req.weightUnit;
             }
+            if(req.extRefNumber != undefined){
+                query = query +"and b.external_ref_number" + req.extRefNumber
+            }
             query = query + " order by b.buyer_name ASC ";
 
             const res = await AppDataSource.query(query);

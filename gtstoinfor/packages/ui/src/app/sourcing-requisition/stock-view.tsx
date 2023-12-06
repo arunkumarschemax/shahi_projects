@@ -7,8 +7,9 @@ import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { M3ItemsDTO, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, M3ItemsDTO, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
+import { useIAMClientState } from "../common/iam-client-react";
 const { TextArea } = Input;
 
 export const StockView = () => {
@@ -42,11 +43,18 @@ export const StockView = () => {
   const [countUnitValue, setCountUnitValue] = useState<any>();
   const [buttonEnable,setButtonEnable] = useState<boolean>(true)
   const [buyervalue,setBuyervalue] = useState<any>()
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+  const [isBuyer, setIsBuyer] = useState(false);
+
 
 
 
 
   useEffect(() => {
+    const userrefNo = IAMClientAuthContext.user?.externalRefNo
+  if(userrefNo){
+    setIsBuyer(true)
+  }
     getUom();
     getFabricTypedata();
     getWeaveData();
@@ -54,7 +62,9 @@ export const StockView = () => {
   }, []);
 
   const getBuyers = () => {
-    buyerService.getAllActiveBuyers().then((res) => {
+    const req = new BuyerRefNoRequest()
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    buyerService.getAllActiveBuyers(req).then((res) => {
       if (res.status) {
         setBuyer(res.data);
       }
@@ -111,6 +121,7 @@ export const StockView = () => {
   };
 
   const getData = async (m3StyleDto: M3ItemsDTO) => {
+    m3StyleDto.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     stockService.getAllStocks(m3StyleDto).then(res => {
       // console.log(res, "???????????????????????????????????");
       if (res) {
@@ -426,6 +437,8 @@ export const StockView = () => {
     <Card title="RM Inventory" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
       <Form layout="vertical" form={form} onFinish={onFinish}>
        <Row gutter={24}>
+       {!isBuyer ? 
+        <>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="buyerId"
@@ -452,6 +465,7 @@ export const StockView = () => {
               </Select>
             </Form.Item>
           </Col>
+          </>:<></>}
           <Col style={{display:"none"}}>
           <Form.Item
               name="buyerCode"
