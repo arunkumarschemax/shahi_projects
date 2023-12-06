@@ -295,18 +295,28 @@ export class PurchaseOrderService {
 
     async GetPurchaseData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
         try {
+            console.log(req,"req,ser")
             let query = `SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,
-            expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername
+            expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId
              FROM purchase_order  po 
             LEFT JOIN style s ON s.style_id=po.style_id
             LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id
             LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id
             `
-            if (req?.id) {
-                query += ` where po.purchase_order_id = ${req?.id}`
+
+            let param :any={}
+            if(req){
+            //   if (req.id!== undefined){
+            //     query += ` where po.purchase_order_id = ${req?.id}`
+            //   }
+              if (req.ExternalRefNo!== undefined){
+                query += `WHERE b.external_ref_number = '${req.ExternalRefNo}'`
+              }
+              
             }
-            query+=` order by po.expected_delivery_date`
-            const data = await this.dataSource.query(query)
+            
+             query+= ` ORDER BY po.expected_delivery_date`
+            const data = await this.dataSource.query(query,param)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
             } else {
@@ -319,7 +329,7 @@ export class PurchaseOrderService {
 
     async GetPurchaseFabricData(purchaseOrderId: number): Promise<CommonResponseModel> {
         try {
-            console.log(purchaseOrderId)
+            // console.log(purchaseOrderId)
             let query = `SELECT u.uom AS quantityUom,item_code AS itemCode,c.colour AS colourName,po_fabric_id AS pofabricId,pf.colour_id AS colourId,
             m3_fabric_code AS m3fabricCode,shahi_fabric_code AS shahiFabricCode,purchase_order_id AS purchaseOrderId,
             indent_fabric_id AS indentFabricId,po_quantity AS poQuantity,
@@ -363,6 +373,7 @@ export class PurchaseOrderService {
         try {
             const data = []
             const podata = await this.GetPurchaseData(req)
+            console.log(podata,"po")
             for (const po of podata.data) {
                 console.log(po, '^^^^^^^^^^^^^^^^^^^')
                 const fabData = await this.GetPurchaseFabricData(po.purchaseOrderId)
