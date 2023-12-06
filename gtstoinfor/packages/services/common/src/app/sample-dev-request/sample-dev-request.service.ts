@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Not, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum} from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq} from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -858,6 +858,25 @@ export class SampleRequestService {
         throw err;
       }
     }
+
+    async updatedispatch(req?:lifeCycleStatusReq):Promise<CommonResponseModel>{
+      try{
+        const update=await this. sampleRepo.update(
+           {lifeCycleStatus:LifeCycleStatusEnum.CLOSED},
+           {DispatchedDate:req.dipatchedDate},
+        );
+      
+      if(update.affected && update.affected >0 ){
+        return new CommonResponseModel(true, 1, 'Lifecyclestatus updated Sucessfully');
+
+      }else{
+        return new CommonResponseModel(false, 1, 'some went wrong');
+
+      }
+        } catch (err) {
+          throw err;
+        }
+    }
     async getSampleOrderDetails(req:SampleIdRequest):Promise<CommonResponseModel>{
       const sizeDta = `SELECT  GROUP_CONCAT(DISTINCT  CONCAT('sum(IF(s.size_id = ''',size_id,''', s.quantity, 0)) AS ',sizes)) AS size_name FROM size s WHERE sizes != '' 
       AND size_id IN(SELECT DISTINCT size_id FROM sample_request_size_info WHERE sample_request_id=1) ORDER BY  sizes`;
@@ -1030,7 +1049,6 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
 
 
     }
-
 
 
 }

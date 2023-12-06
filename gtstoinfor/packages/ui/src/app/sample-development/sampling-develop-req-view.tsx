@@ -47,6 +47,7 @@ import {
     IndentRequestFilter,
     LifeCycleStatusEnum,
     buyerandM3ItemIdReq,
+    lifeCycleStatusReq,
   } from "@project-management-system/shared-models";
   import Highlighter from "react-highlight-words";
 import { faL } from "@fortawesome/free-solid-svg-icons";
@@ -450,9 +451,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 
     
     const setAllocatedQty = (index, rowData, value) => {
-      console.log(index);
-      console.log(rowData);
-      console.log(value);
+     
 
       rowData.issuedQty = value
       const newData = [...avilableQuantity];
@@ -469,24 +468,36 @@ import AlertMessages from "../common/common-functions/alert-messages";
       }
     }
 
-    const handleDispatchClick=()=>{
-      console.log('dispatchhh');
+    const handleDispatchClick=(data)=>{
+      const req = new lifeCycleStatusReq(LifeCycleStatusEnum.CLOSED,data)
+      service.updatedispatch(req).then(res =>{
+        if(res.status){
+        AlertMessages.getSuccessMessage('Status Updated Successfully')
+        getAll()
+        }
+        else{
+          AlertMessages.getErrorMessage(res.internalMessage)
+        }
+      })
+    
+
       setStatus('Closed');
+
       setLifeCycleStatus(LifeCycleStatusEnum.CLOSED);
     }
     const onCheck = (rowData, index, isChecked) => {
 
-      console.log(rowData);
-      console.log(index);
-      console.log(isChecked);
 
+
+
+      
       if(isChecked){
         if(Number(rowData.issuedQty) > 0){
 
           rowData.issuedQty = rowData.issuedQty
           rowData.checkedStatus = 1;
           const newData = [...avilableQuantity];
-          console.log(newData)
+
           setAvailableQuantity(newData);
 
           // const updatedAllocatedQuantities = [...allocatedQuantities];
@@ -572,7 +583,9 @@ import AlertMessages from "../common/common-functions/alert-messages";
     };
   
     const HeaderRow = (props: any) => {
-      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location, brandName,pch,dispatch } =
+
+      
+      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location, brandName,pch,dispatch ,index} =
         props;
       const formattedIndentDate = moment(indentDate).format("YYYY-MM-DD");
       const formattedExpectedDate = moment(expectedDate).format("YYYY-MM-DD");
@@ -607,7 +620,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
           <span style={{ marginLeft: 'auto' }}>
 
           <span><b>{dispatch}</b></span>
-            <Button type="primary" onClick={handleDispatchClick}>
+            <Button type="primary" onClick={()=>handleDispatchClick(index)}>
               Dispatch 
             </Button>
           </span>
@@ -828,6 +841,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
             <Collapse.Panel
               header={
                 <HeaderRow
+                  index={item.sample_request_id}
                   requestNo={item.requestNo}
                   style={item.style}
                   buyerName={item.buyerName}

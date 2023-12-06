@@ -78,7 +78,6 @@ export class SampleRequest {
   @ManyToOne(() => Brands, brands => brands.sampleReq, { nullable: false })
   @JoinColumn({ name: 'brand_id' })
   brand: Brands;
-
   @Column("varchar", {
     nullable: true,
     name: "cost_ref"
@@ -191,6 +190,12 @@ export class SampleRequest {
     nullable: true
   })
   filepath: string;
+
+  @Column('date',{
+    name:'dispatched_date',
+    nullable:true
+  })
+  DispatchedDate:Date
 
   @OneToMany(type => SampleReqSizeEntity, sampleReqSize => sampleReqSize.samplerReqEntity, { cascade: true })
   sampleReqSizeInfo: SampleReqSizeEntity[]
