@@ -1,14 +1,15 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { BuyersService, CategoryService, ColourService, ContentService, FabricTypeService, FabricWeaveService, FinishService, GRNService, HoleService, M3ItemsService, QualitysService, StockService, StructureService, ThicknessService, TrimParamsMappingService, TrimService, TypeService, UomService, VarietyService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal } from "antd";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
+import { useIAMClientState } from "../common/iam-client-react";
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -51,8 +52,15 @@ export const RmTrimsView = () => {
   const [colorData, setColorData] = useState<any[]>([]);
   const [buyerData, setBuyerData] = useState<any[]>([]);
   const [mapData, setMapData] = useState<any[]>([])
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+  const [isBuyer, setIsBuyer] = useState(false);
+
 
   useEffect(() => {
+    const userrefNo = IAMClientAuthContext.user?.externalRefNo
+    if(userrefNo){
+      setIsBuyer(true)
+    }
     if (mapData[0]?.structure === true) {
       getStructures();
     }
@@ -187,9 +195,13 @@ export const RmTrimsView = () => {
   };
 
   const getBuyers = () => {
-    buyerService.getAllBuyer().then((res) => {
+    const req = new BuyerRefNoRequest()
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    buyerService.getAllActiveBuyers(req).then((res) => {
       if (res.status) {
         setBuyerData(res.data);
+        form.setFieldsValue({buyerId: res.data[0]?.buyerId})
+        onFinish()
       }
     });
   };
@@ -470,6 +482,7 @@ export const RmTrimsView = () => {
 
     let req = new M3trimsDTO(0,form.getFieldValue("buyer"),undefined,form.getFieldValue("category"),form.getFieldValue("color"),form.getFieldValue("content"),form.getFieldValue("finish"),form.getFieldValue("hole"),form.getFieldValue("logo"),form.getFieldValue("part"),form.getFieldValue("quality"),form.getFieldValue("structure"),form.getFieldValue("thickness"),form.getFieldValue("type"),form.getFieldValue("uom"),form.getFieldValue("variety"),form.getFieldValue("trimCategory"),0)
     console.log(req);
+    req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     stockService.getAllTrimStocks(req).then((res) => {
       if (res.status) {
         setData(res.data);
@@ -523,7 +536,7 @@ export const RmTrimsView = () => {
       >
         <Row gutter={24}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="buyer" label="Buyer" rules={[{ required: true, message: "Buyer is required" }]}>
+                <Form.Item name="buyerId" label="Buyer" rules={[{ required: true, message: "Buyer is required" }]}>
                     <Select
                     showSearch
                     allowClear
@@ -532,7 +545,7 @@ export const RmTrimsView = () => {
                     >
                         {buyerData.map((e) => {
                             return (
-                            <Option key={e.buyerId} value={e.itemCode}>
+                            <Option key={e.buyerId} value={e.buyerId}>
                                 {e.buyerName}-{e.buyerCode}
                             </Option>
                             );
@@ -839,11 +852,11 @@ export const RmTrimsView = () => {
             </Col>
             </>
             ) : (<></>)}
-        </Row>
-        <Row>
-            <Col span={24} style={{ textAlign: "right" }}>
+        {/* </Row>
+        <Row> */}
+            <Col span={4} style={{paddingTop:'23px'}}>
                 <Button type="primary" htmlType="submit">Get Stock</Button>
-                <Button htmlType="button" style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
+                <Button htmlType="button" onClick={onReset}>Reset</Button>
             </Col>
         </Row>
       </Form>

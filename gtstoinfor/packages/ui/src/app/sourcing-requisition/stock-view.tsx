@@ -68,6 +68,7 @@ export const StockView = () => {
       if (res.status) {
         setBuyer(res.data);
         form.setFieldsValue({buyerId: res.data[0]?.buyerId})
+        onFinish()
       }
     });
   };
@@ -445,7 +446,6 @@ export const StockView = () => {
               name="buyerId"
               label="Buyer"
               rules={[{ required: true, message: "Buyer is required" }]}
-              // dependencies={['buyerId']}
             >
               <Select
                 allowClear
