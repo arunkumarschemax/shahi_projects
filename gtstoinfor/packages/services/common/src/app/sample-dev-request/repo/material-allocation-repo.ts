@@ -34,7 +34,9 @@ export class MaterialAllocationRepo extends Repository<MaterialAllocationEntity>
             .groupBy(`ma.material_allocation_id`)
 
 
-
+        if(req.extRefNo){
+            query.andWhere(`b.external_ref_number = '${req.extRefNo}'`)
+        }
             
         if (req.buyerId !== undefined) {
             query.andWhere(`ma.buyer_id = '${req.buyerId}'`)
