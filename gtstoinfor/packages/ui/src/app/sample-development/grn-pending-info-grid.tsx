@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
 import { Button, Card, Table } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { GRNLocationPropsRequest } from '@project-management-system/shared-models';
+import { ExternalRefReq, GRNLocationPropsRequest } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
 
 export const GrnPendingInfoGrid = () => {
@@ -14,6 +14,9 @@ export const GrnPendingInfoGrid = () => {
     const [grndata, setGrndata] = React.useState<any[]>([]);
     const [locationData, setLocationData] = React.useState<GRNLocationPropsRequest>();
 
+    const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+    console.log(externalRefNo,"req")
+
 
     const navigate = useNavigate();
 
@@ -21,10 +24,14 @@ export const GrnPendingInfoGrid = () => {
         getAllData()
     }, [])
 
+
+
     const getAllData = () => {
-        locationService.getAllFabrics().then((res) => {
+        const  req = new ExternalRefReq(externalRefNo)     
+        // console.log(req,"req")
+        locationService.getAllFabrics(req).then((res) => {
             setFabData(res.data);
-            console.log(res.data, "?????????????????????????????");
+            // console.log(res.data, "?????????????????????????????");
         })
     }
 
@@ -124,11 +131,11 @@ export const GrnPendingInfoGrid = () => {
     ];
 
     const onChange = (pagination, filters, sorter, extra) => {
-        console.log('params', pagination, filters, sorter, extra);
+        // console.log('params', pagination, filters, sorter, extra);
     }
 
     const setData = (rowdata) => {
-        console.log(rowdata)
+        // console.log(rowdata)
 
         if (rowdata) {
             navigate("/location-mapping", { state: { data: rowdata } });
