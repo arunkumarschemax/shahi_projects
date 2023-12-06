@@ -37,7 +37,7 @@ export const SampleRequests = (props: BuyingHouseProps) => {
     if (form.getFieldValue('reqNo') !== undefined) {
       req.reqNo = form.getFieldValue('reqNo')
     }
-    Service.getAllSampleDevData().then((res) => {
+    Service.getAllSampleDevData(req).then((res) => {
       if (res.status) {
         console.table(res)
         setBuyingHouseData(res.data);
