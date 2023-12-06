@@ -348,7 +348,9 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
         if (req.status !== undefined) {
             query.andWhere(`sr.status ='${req.status}'`)
         }
-        // query.groupBy(`sr.sample_request_id`)
+        if(req.extRefNumber){
+            query.where(` b.external_ref_number = '${req.extRefNumber}'`)
+        }
         query.groupBy(`sr.sample_request_id`)
         console.log('query-----------------')
         console.log(query)

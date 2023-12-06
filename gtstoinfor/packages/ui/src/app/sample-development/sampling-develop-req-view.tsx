@@ -45,15 +45,22 @@ import {
     BomStatusEnum,
     CustomerOrderStatusEnum,
     IndentRequestFilter,
+    LifeCycleStatusEnum,
     buyerandM3ItemIdReq,
   } from "@project-management-system/shared-models";
   import Highlighter from "react-highlight-words";
 import { faL } from "@fortawesome/free-solid-svg-icons";
 import AlertMessages from "../common/common-functions/alert-messages";
+import { useIAMClientState } from "../common/iam-client-react";
+// const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
   
   const { Option } = Select;
   
   export const SampleDevNewView = () => {
+    const [lifeCycleStatus, setLifeCycleStatus] = useState(LifeCycleStatusEnum.DISPATCH);
+    const [status, setStatus] = useState('Dispatch');
+    const [dispatch, setDispatch] = useState('');
     const [tabName, setTabName] = useState<string>("Fabric");
     const [page, setPage] = React.useState(1);
     const [sourcingForm] = Form.useForm();
@@ -77,6 +84,10 @@ import AlertMessages from "../common/common-functions/alert-messages";
     const [avilableQuantity, setAvailableQuantity] = useState<any[]>([])
     const [checked, setChecked] = useState<boolean>(false)
     const [keyUpdate, setKeyUpdate] = useState<number>(1);
+   const { IAMClientAuthContext } = useIAMClientState();
+
+ 
+
   
     useEffect(() => {
       getAll();
@@ -101,9 +112,12 @@ import AlertMessages from "../common/common-functions/alert-messages";
       if (form.getFieldValue("status") !== undefined) {
         req.status = form.getFieldValue("status");
       }
-      service.getAllSampleDevData().then((res) => {
+    req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+
+      service.getAllSampleDevData(req).then((res) => {
         if (res.status) {
           setData(res.data);
+          console.log(res.data,"rrrrr")
           setFilterData(res.data);
         }
       });
@@ -465,6 +479,11 @@ import AlertMessages from "../common/common-functions/alert-messages";
       }
     }
 
+    const handleDispatchClick=()=>{
+      console.log('dispatchhh');
+      setStatus('Closed');
+      setLifeCycleStatus(LifeCycleStatusEnum.CLOSED);
+    }
     const onCheck = (rowData, index, isChecked) => {
 
       console.log(rowData);
@@ -563,7 +582,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
     };
   
     const HeaderRow = (props: any) => {
-      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location, brandName,pch } =
+      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location, brandName,pch,dispatch } =
         props;
       const formattedIndentDate = moment(indentDate).format("YYYY-MM-DD");
       const formattedExpectedDate = moment(expectedDate).format("YYYY-MM-DD");
@@ -591,9 +610,24 @@ import AlertMessages from "../common/common-functions/alert-messages";
                 <span>{<Tag onClick={() => generateBarcode(requestNo)} style={{cursor:'pointer'}}>
                            <BarcodeOutlined />
                        </Tag>}</span> */}
+               {lifeCycleStatus === LifeCycleStatusEnum.DISPATCH ? (
+        <>
+          <span style={{ width: "10px" }}></span>
+          {/* <span>Dispatch Status: <b>{dispatch}</b></span> */}
+          <span style={{ marginLeft: 'auto' }}>
+
+          <span><b>{dispatch}</b></span>
+            <Button type="primary" onClick={handleDispatchClick}>
+              Dispatch 
+            </Button>
+          </span>
+        </>
+      ):(<></>)}
         </div>
       );
     };
+
+    
   
     const onReset = () => {
       sourcingForm.resetFields();
