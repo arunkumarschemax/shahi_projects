@@ -11,10 +11,21 @@ export class M3TrimItemsDTO {
     buyerId: number;
 
     @ApiProperty()
+    itemCode: string;
+
+
+    @ApiProperty()
+    description: string;
+
+    @ApiProperty()
     itemType: ItemTypeEnum;
 
     @ApiProperty()
     colorId: number;
+
+
+    @ApiProperty()
+    trimId: number;
 
     @ApiProperty()
     categoryId: number;
@@ -69,6 +80,9 @@ export class M3TrimItemsDTO {
 
     @ApiProperty()
     versionFlag: number;
+
+    @ApiProperty()
+    buyerCode?: string;
 
 
 }
