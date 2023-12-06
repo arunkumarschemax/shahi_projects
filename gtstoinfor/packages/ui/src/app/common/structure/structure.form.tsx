@@ -36,9 +36,10 @@ export const StructureForm = (props:structureProps) => {
     }
 
     const savecolumn = (val) => {
+        
         setDisable(true)
-        // const req = new StructureReq(val.structure,'admin')
-        service.createStructure(val).then(res => {
+        const req = new StructureReq(val.structure,'admin')
+        service.createStructure(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
                 onReset();
