@@ -4,10 +4,11 @@ import { Repository, Not, DataSource } from "typeorm";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 import { M3ItemsAdapter } from "./m3-items.adaptor";
 import { M3ItemsEntity } from "./m3-items.entity";
-import { BuyerIdReq, CommonResponseModel, M3Itemsfilter } from "@project-management-system/shared-models";
+import { BuyerIdReq, CommonResponseModel, ItemTypeEnum, M3Itemsfilter } from "@project-management-system/shared-models";
 import { M3ItemsDTO } from "./m3-items.dto";
 import { M3ItemsRepo } from "./m3-items.repository";
 import { M3TrimItemsDTO } from "./m3-trim-items.dto";
+import { M3TrimsAdapter } from "./m3-trims.adaptor";
 
 
 @Injectable()
@@ -15,6 +16,7 @@ export class M3ItemsService {
 
   constructor(
     private adapter: M3ItemsAdapter,
+    private trimAdapter:M3TrimsAdapter,
     @InjectRepository(M3ItemsEntity)
     private repository: M3ItemsRepo,
     @InjectDataSource()
@@ -149,5 +151,25 @@ export class M3ItemsService {
     }
   }
 
+  async createM3Trim(createDto: M3TrimItemsDTO): Promise<CommonResponseModel> {
+    try {
+      // let checkData = await this.checkDuplicate(createDto);
+      // if(checkData.status){
+      //   return new CommonResponseModel(false, 0, "Item already exist. ")
+      // }
+      // else{
+        const existingItemCount = await this.repository.findAndCountBy({itemType : Not (ItemTypeEnum.FABRIC)});
+        console.log(existingItemCount)
+        const nextItemCode: string = createDto.buyerCode + "/" + `TRIM${(existingItemCount.length + 1).toString().padStart(5, '0')}`;
+        const entity: M3ItemsEntity = this.trimAdapter.convertDtoToEntity(createDto);
+        entity.itemCode = nextItemCode;
+        const count: M3ItemsEntity = await this.repository.save(entity);
+        const saveDto: M3TrimItemsDTO = this.trimAdapter.convertEntityToDto(count);
+        return new CommonResponseModel(true, 1, 'Data saved successfully', saveDto);
+      // }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, error)
+    }
+  }
 
 }

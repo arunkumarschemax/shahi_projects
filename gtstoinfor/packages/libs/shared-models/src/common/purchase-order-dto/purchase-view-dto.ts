@@ -19,6 +19,7 @@ export class PurchaseViewDto {
         this.poconfirmEndDate = poconfirmEndDate
         this.status = status
         this.poFor = poFor
+        this.ExternalRefNo = ExternalRefNo
     }
 
 }

@@ -7,11 +7,12 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { EditOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
-import { BuyerIdReq, M3MastersCategoryReq, SourcingRequisitionReq, UomCategoryEnum } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyerRefNoRequest, M3MastersCategoryReq, SourcingRequisitionReq, StyleIdReq, UomCategoryEnum, buyerReq } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import AlertMessages from "../common/common-functions/alert-messages";
 import M3Items from "../masters/m3-items/m3-items-form";
+import { useIAMClientState } from "../common/iam-client-react";
 
 
 const {Option} = Select;
@@ -79,6 +80,9 @@ export const SourcingRequisitionDynamicForm = () => {
     const sampleDevelopmentService =  new SampleDevelopmentService()
     const m3Service = new M3TrimsService()
     const [m3Trims, setM3Trims] = useState<any[]>([])
+    const { IAMClientAuthContext, dispatch } = useIAMClientState();
+    const [isBuyer, setIsBuyer] = useState(false);
+
 
 
     let tableData: any[] = []
@@ -86,6 +90,7 @@ export const SourcingRequisitionDynamicForm = () => {
 
 
     useEffect(()=>{
+        console.log(IAMClientAuthContext.user)
         sourcingForm.setFieldsValue({"expectedDate":dayjs(dayjs(sourcingForm.getFieldValue('indentDate')).add(10, 'days'))})
         getColor()
         getPCH()
@@ -170,9 +175,13 @@ export const SourcingRequisitionDynamicForm = () => {
     }
 
     const getBuyer = () => {
-        buyerService.getAllActiveBuyers().then(res =>{
+        const req = new BuyerRefNoRequest()
+        req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null    
+        buyerService.getAllActiveBuyers(req).then(res =>{
             if(res.status) {
                 setBuyer(res.data)
+                sourcingForm.setFieldsValue({buyer: res.data[0]?.buyerId})
+                onBuyerChange(res.data[0]?.buyerId,res.data[0]?.buyerName)
             }
         })
     }
@@ -194,7 +203,8 @@ export const SourcingRequisitionDynamicForm = () => {
     }
  
     const getStyle = (buyer) => {
-        styleService.getAllStyle({buyerId:buyer}).then(res =>{
+        const req = new buyerReq(buyer,null)
+        styleService.getAllStyle(req).then(res =>{
             if(res.status){
                 setStyle(res.data)
             }
@@ -655,8 +665,8 @@ export const SourcingRequisitionDynamicForm = () => {
     }
 
     const onBuyerChange = (val,option) => {
-        setFabricBuyer(option?.name)
-        fabricForm.setFieldsValue({buyerName:option?.name})
+        setFabricBuyer(option)
+        fabricForm.setFieldsValue({buyerName:option})
         getStyle(val);
         getM3TrimsTypes(val);
         getM3FabricStyleCodes(val)
@@ -828,6 +838,8 @@ const onTrimChange = (val, option) => {
         <><Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
             <Form form={sourcingForm} layout="vertical">
                 <Row gutter={8}>
+                {/* {!isBuyer ? 
+                <> */}
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='buyer' label='Buyer' rules={[{ required: true, message: 'Buyer is required' }]}>
                             <Select showSearch allowClear optionFilterProp="children" placeholder='Select Buyer' onChange={onBuyerChange}>
@@ -839,6 +851,7 @@ const onTrimChange = (val, option) => {
                             </Select>
                         </Form.Item>
                     </Col>
+                    {/* </>:<></>} */}
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                         <Form.Item name='style' label='Style' rules={[{ required: true, message: 'Style is required' }]}>
                             <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style' >
