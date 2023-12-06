@@ -17,7 +17,7 @@ export class IndentRepository extends Repository<Indent> {
     ) {
         super(indent.target, indent.manager, indent.queryRunner);
     }
-    async getIndentData(req: IndentRequestDto) {
+    async getIndentData(req?: IndentRequestDto) {
         console.log(req,"req" ,"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
 
         let query = this.createQueryBuilder(`i`)
@@ -26,15 +26,20 @@ export class IndentRepository extends Repository<Indent> {
             .leftJoin(IndentTrimsEntity, 'it', 'it.indent_id = i.indent_id')
             .leftJoin(Colour, 'c', 'c.colour_id = it.color')
             .leftJoin(Style, 's', ' s.style_id =  .style')
-        if (req) {
+          .leftJoin (Buyers, 'b' , 'b.buyer_id = i.buyer_id')
+
+
             if (req.requestNo) {
                 query.where(`i.request_no = '${req.requestNo}'`)
+            }
+            if(req?.extRefNo){
+                  query.andWhere(` b.external_ref_number = '${req.extRefNo}'`)
             }
             
             if (req.confirmStartDate) {
                 query.andWhere(`Date(indent_date) BETWEEN '${req.confirmStartDate}' AND '${req.confirmEndDate}'`)
             }
-        }
+        
        
         // if (req.confirmStartDate !== undefined) {
         //     query.andWhere('i.indent_date BETWEEN :startDate AND :endDate', {

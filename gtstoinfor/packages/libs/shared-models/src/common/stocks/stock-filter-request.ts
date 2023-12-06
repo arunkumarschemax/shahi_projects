@@ -5,12 +5,13 @@ export class StockFilterRequest{
     itemType?: number
     location?: number
     plant?: number
-    
+    extRefNo?:string;
     constructor( m3ItemCode?:string, itemType?: number, location?: number, plant?: number){
         this.m3ItemCode = m3ItemCode;
         this.itemType = itemType
         this.location = location
         this.plant = plant
+        this.extRefNo=this.extRefNo
     }
 }
 
