@@ -206,6 +206,7 @@ import FinishForm from "./trim-master/finish/finish"
 import FinishGrid from "./trim-master/finish/finish-view"
 import HoleForm from "./trim-master/hole/hole"
 import HoleGrid from "./trim-master/hole/hole-view"
+import M3TrimItemsForm from "./trim-master/m3-trim-items/m3-trim-items"
 
 
 
@@ -723,7 +724,7 @@ export const AppRoutes = () => {
                     <Route path='qualitys/qualitys-form' element={<QualitysForm qualitysData={undefined}
                         isUpdate={false}
                         closeForm={() => { }}
-                        updateDetails={(undefined) => { }} />} />
+                    updateItem={(undefined) => { }} />} />
                    <Route path="category/category-view" element={<CategoryView />} />
                     <Route path='category/category-form' element={<CategoryForm columnData={undefined}
                         isUpdate={false}
@@ -743,7 +744,9 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} TypeData={undefined} />} />
-                    <Route path='Type/Type-view' element={<TypeView />} />
+                    <Route path='Type/Type-view' element={<TypeView />} />                    
+                    <Route path='m3-trim-items/m3-trim-items-form' element={<M3TrimItemsForm />} />
+                    
                 </Route>
 
                 <Route path="style-management">

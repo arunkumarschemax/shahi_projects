@@ -45,6 +45,7 @@ import {
     BomStatusEnum,
     CustomerOrderStatusEnum,
     IndentRequestFilter,
+    LifeCycleStatusEnum,
     buyerandM3ItemIdReq,
   } from "@project-management-system/shared-models";
   import Highlighter from "react-highlight-words";
@@ -54,6 +55,9 @@ import AlertMessages from "../common/common-functions/alert-messages";
   const { Option } = Select;
   
   export const SampleDevNewView = () => {
+    const [lifeCycleStatus, setLifeCycleStatus] = useState(LifeCycleStatusEnum.DISPATCH);
+    const [status, setStatus] = useState('Dispatch');
+    const [dispatch, setDispatch] = useState('');
     const [tabName, setTabName] = useState<string>("Fabric");
     const [page, setPage] = React.useState(1);
     const [sourcingForm] = Form.useForm();
@@ -465,6 +469,11 @@ import AlertMessages from "../common/common-functions/alert-messages";
       }
     }
 
+    const handleDispatchClick=()=>{
+      console.log('dispatchhh');
+      setStatus('Closed');
+      setLifeCycleStatus(LifeCycleStatusEnum.CLOSED);
+    }
     const onCheck = (rowData, index, isChecked) => {
 
       console.log(rowData);
@@ -563,7 +572,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
     };
   
     const HeaderRow = (props: any) => {
-      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location, brandName,pch } =
+      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location, brandName,pch,dispatch } =
         props;
       const formattedIndentDate = moment(indentDate).format("YYYY-MM-DD");
       const formattedExpectedDate = moment(expectedDate).format("YYYY-MM-DD");
@@ -591,9 +600,24 @@ import AlertMessages from "../common/common-functions/alert-messages";
                 <span>{<Tag onClick={() => generateBarcode(requestNo)} style={{cursor:'pointer'}}>
                            <BarcodeOutlined />
                        </Tag>}</span> */}
+               {lifeCycleStatus === LifeCycleStatusEnum.DISPATCH ? (
+        <>
+          <span style={{ width: "10px" }}></span>
+          {/* <span>Dispatch Status: <b>{dispatch}</b></span> */}
+          <span style={{ marginLeft: 'auto' }}>
+
+          <span><b>{dispatch}</b></span>
+            <Button type="primary" onClick={handleDispatchClick}>
+              Dispatch 
+            </Button>
+          </span>
+        </>
+      ):(<></>)}
         </div>
       );
     };
+
+    
   
     const onReset = () => {
       sourcingForm.resetFields();

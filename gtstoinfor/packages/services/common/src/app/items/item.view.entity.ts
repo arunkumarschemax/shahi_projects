@@ -1,4 +1,4 @@
-import { ViewEntity, ViewColumn,DataSource  } from "typeorm"
+import { ViewEntity, ViewColumn  } from "typeorm"
 import { Item } from "./item-entity"
 @ViewEntity({
     expression: `

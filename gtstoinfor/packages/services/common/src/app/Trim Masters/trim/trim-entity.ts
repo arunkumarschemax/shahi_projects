@@ -1,5 +1,5 @@
 
-import {Column,Entity,PrimaryGeneratedColumn, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import {Column,Entity,PrimaryGeneratedColumn, VersionColumn, UpdateDateColumn, CreateDateColumn, OneToMany} from "typeorm";
 
 
 @Entity('trim')
@@ -52,4 +52,7 @@ updatedUser: string | null;
 })
 versionFlag: number;
 
+@OneToMany(type => trimEntity, attribute => attribute.trimId,{cascade: true})
+    trimInfo : trimEntity
 }
+

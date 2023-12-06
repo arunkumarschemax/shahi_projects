@@ -44,9 +44,9 @@ export class IndentController {
   // }
 
   @Post('/getAllIndentData')
-  async getAllIndentData(): Promise<CommonResponseModel> {
+  async getAllIndentData(@Body() req?:any): Promise<CommonResponseModel> {
     try {
-      return await this.indentService.getAllIndentData();
+      return await this.indentService.getAllIndentData(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
