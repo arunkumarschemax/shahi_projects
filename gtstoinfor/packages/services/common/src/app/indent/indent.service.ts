@@ -48,7 +48,8 @@ export class IndentService {
     }
 
     async getAllIndentData(req?: any): Promise<CommonResponseModel> {
-        const indentData = await this.indentRepo.getAllIndentData();
+        console.log(req,'ooooo')
+        const indentData = await this.indentRepo.getAllIndentData(req.extRefNumber);
         // if (req.requestNo) {
         //     indentData = indentData + ' and ,it.request_no = "' + req.requestNo + '"'
         //   }
@@ -82,7 +83,7 @@ export class IndentService {
                     trim.quantity, trim.m3TrimCode, trim.description,
                     trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId))
             }
-            indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName ))
+            indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName,data.extRefNo ))
         }
         
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully', indentModel);

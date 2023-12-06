@@ -18,6 +18,7 @@ export class IndentModel{
 
   createdAt?: Date;
   buyerName?: string;
+  buyerRefNo?:string
 
 
   constructor(
@@ -33,7 +34,8 @@ export class IndentModel{
     description?:string,
 
     createdAt?: Date,
-    buyerName?: string
+    buyerName?: string,
+    buyerRefNo?:string
 
   ){
     this.indentId = indentId;
@@ -48,6 +50,7 @@ export class IndentModel{
     this.description = description;
     this.createdAt = createdAt;
     this.buyerName = buyerName;
+    this.buyerRefNo = buyerRefNo;
 
 
   }
