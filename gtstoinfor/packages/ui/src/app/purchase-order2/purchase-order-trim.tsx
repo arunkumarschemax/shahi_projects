@@ -35,7 +35,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
     const uomService =  new UomService()
     const m3TrimService = new M3TrimsService()
     const taxService = new TaxesService();
-
+    const [taxPer, setTaxPer] = useState(0);
 
     useEffect(() =>{
         getColor()
@@ -463,6 +463,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         trimForm.setFieldsValue({subjectiveAmount:Number(totalAmount).toFixed(2)})
         trimForm.setFieldsValue({ tax: value })
         trimForm.setFieldsValue({ taxPercentage: option?.name ? option?.type + '- ' + option?.name : '' })
+        console.log('tax %')
+        console.log(value);
         setSubAmount(Number(totalAmount))
     }
 
@@ -472,7 +474,52 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         const subjecAmout = Number(amount) + Number(value)
         trimForm.setFieldsValue({subjectiveAmount:subjecAmout})
     }
-
+    const finalCalculation=()=>{
+        let taxAmount=0;
+        let discAmnt=0;
+        const unitPrice=trimForm.getFieldValue('unitPrice');
+        const quantity=trimForm.getFieldValue('poQuantity')
+        let transportation=trimForm.getFieldValue('transportation')
+        if(transportation==undefined ||transportation==0){
+            transportation=0;
+        }
+        console.log('Transportation')
+        console.log(transportation)
+        let baseValue=Number(unitPrice)*Number(quantity);
+        const disc_per=trimForm.getFieldValue('discount')
+        if(disc_per!==''&&disc_per>0){
+            discAmnt=Math.round(baseValue*disc_per/100);
+            baseValue=Number(baseValue)-Number(discAmnt);
+        }
+        console.log('Tax Percentage')
+        console.log(taxPer)
+        console.log(baseValue)
+        if(taxPer!=0){
+            taxAmount=(baseValue*taxPer/100)
+        }else{
+            taxAmount=0
+        }
+        
+        console.log('TaxAmount + base+transport');
+        console.log(taxAmount+' B '+baseValue+' T '+transportation)
+       
+        const totalAmount=Number(taxAmount)+Number(baseValue)+Number(transportation)
+        trimForm.setFieldsValue({taxAmount:Number(taxAmount).toFixed(2)})
+        trimForm.setFieldsValue({discountAmount:Number(discAmnt).toFixed(2)})
+        trimForm.setFieldsValue({subjectiveAmount:Number(totalAmount).toFixed(2)})
+        trimForm.setFieldsValue({ taxAmount: taxAmount })
+       
+        // setTaxAmountVisible(false)        
+    }
+    const priceCalculation = async (value, option) => {        
+        console.log(option.name)
+        const percent=Number(option.name)
+        
+        let status= await setTaxPer(Number(option.name));
+        trimForm.setFieldsValue({ taxPercentage: option?.name ? option.type + '- ' + option?.name : '' })
+        // console.log(taxPer)
+        
+    }
     return(
         <Card title={<span style={{color:'blue', fontSize:'17px'}} >Trim Details</span>}>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd} style={{width:'100%'}}>
@@ -540,7 +587,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                         ]}>
                             <Input type="number" addonAfter={<Form.Item name='quantityUomId' style={{width:'90px', height:"10px"}} rules={[{required:true,message:'Quantity unit is required'}]}>
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'
-                        onChange={quantityUomOnchange}
+                        onChange={finalCalculation}
                         >
                             {uom.map(e => {
                                 return(
@@ -556,14 +603,14 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                         <Form.Item name='unitPrice' label='Unit Price'
                             rules={[{ required: true, message: 'unit price of Fabric is required' }]}
                         >
-                            <Input type="number" placeholder="unit price" onChange={(e) => unitPriceOnchange(e)} />
+                            <Input type="number" placeholder="unit price" onChange={(e) => finalCalculation()} />
                         </Form.Item>
                     </Col>
                     <Col span={4}>
                         <Form.Item name='discount' label='Discount'
                             rules={[{ required: false, message: 'Discount of Fabric is required' }]}
                         >
-                            <Input type="number" placeholder="discount" onChange={(e) => discountOnChange(e)} />
+                            <Input type="number" placeholder="discount" onChange={(e) => finalCalculation()} />
                         </Form.Item>
                     </Col>
                     <Col span={4}>
@@ -579,7 +626,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                         >
                             <Select
                                 placeholder="Select Tax"
-                                onChange={handleTaxChange}
+                                onChange={priceCalculation}
                                 allowClear
                             >
                                 {tax.map((e) => {
@@ -603,7 +650,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                         <Form.Item name='transportation' label='Transportation'
                             rules={[{ required: false, message: 'Transportation of Fabric is required' }]}
                         >
-                            <Input onChange={e=>transportationOnChange(e.target.value)} placeholder="Transportation" />
+                            <Input onChange={e=>finalCalculation()} placeholder="Transportation" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
