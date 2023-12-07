@@ -297,7 +297,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .leftJoin(GrnItemsEntity,'gi','gi.grn_item_id=st.grn_item_id')
             .leftJoin(GrnEntity,'g','g.grn_id=gi.grn_id and g.grn_type = "INDENT"')
             .where(`stri.sample_request_id = "${sampleId}"`)
-            .groupBy(`st.buyer_id,st.m3_item`)
+            .groupBy(`st.buyer_id,stri.trim_info_id`)
             .getRawMany()
         return query.map((rec) => {
             return {

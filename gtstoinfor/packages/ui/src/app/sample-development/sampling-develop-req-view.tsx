@@ -287,7 +287,7 @@ import { useIAMClientState } from "../common/iam-client-react";
         render: (text, record) => {
           return (
             <>
-              {record.status != BomStatusEnum.ALLOCATED ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:<Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Allocated</b></Tag>}
+              {(Number(record.resltantavaliblequantity) <= 0) ? <Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Need to Procure</b></Tag>:Number(record.resltantavaliblequantity) > 0 && record.status != BomStatusEnum.ALLOCATED ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag>:""}
             </>
           );
         },
@@ -342,7 +342,7 @@ import { useIAMClientState } from "../common/iam-client-react";
         render: (text, record) => {
           return (
             <>
-              {record.status != BomStatusEnum.ALLOCATED ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:<Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Allocated</b></Tag>}
+              {(Number(record.resltantavaliblequantity) <= 0) ? <Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Need to Procure</b></Tag>:Number(record.resltantavaliblequantity) > 0 && record.status != BomStatusEnum.ALLOCATED ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag>:""}
             </>
           );
         },
@@ -900,7 +900,7 @@ import { useIAMClientState } from "../common/iam-client-react";
                     dataSource={item.fabric}
                     expandedRowRender={renderItems}
                     expandable = {{
-                      defaultExpandAllRows : false, rowExpandable:(record)=>{console.log(record) ; return record.status != BomStatusEnum.ALLOCATED}
+                      defaultExpandAllRows : false, rowExpandable:(record)=>{console.log(record) ; return (record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 && IAMClientAuthContext.user?.roles === "sourcingUser")}
                       }}
                     // expandedRowRender={renderItems}
                     // expandedRowKeys={expandedIndex}
@@ -941,7 +941,7 @@ import { useIAMClientState } from "../common/iam-client-react";
                         dataSource={item.trimData}
                         expandedRowRender={renderItems}
                         expandable = {{
-                          defaultExpandAllRows : false, rowExpandable:(record)=>{console.log(record) ; return record.status != BomStatusEnum.ALLOCATED}
+                          defaultExpandAllRows : false, rowExpandable:(record)=>{console.log(record) ; return (record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 && IAMClientAuthContext.user?.roles === "sourcingUser")}
                           }}
                         // expandable = {{
                         //   defaultExpandAllRows : false
