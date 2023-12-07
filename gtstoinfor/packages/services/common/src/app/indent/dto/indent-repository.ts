@@ -18,7 +18,6 @@ export class IndentRepository extends Repository<Indent> {
         super(indent.target, indent.manager, indent.queryRunner);
     }
     async getIndentData(req?: IndentRequestDto) {
-        console.log(req,"req" ,"PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP")
 
         let query = this.createQueryBuilder(`i`)
             .select(`i.indent_id AS indentId,i.request_no As requestNo ,s.style AS style, i.indent_date AS indentDate, i.expected_date AS expectedDate ,i.status AS status,it.trim_type AS trimType,it.trim_code AS trimCode,it.quantity AS quantity,it.m3_trim_code AS m3TrimCode,ifa.ifabric_id AS fabricId, ifa.m3_fabric_code AS m3FabricCode,ifa.quantity AS fbquantity,c.colour AS color`)

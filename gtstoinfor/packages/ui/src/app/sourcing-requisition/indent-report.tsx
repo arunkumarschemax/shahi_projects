@@ -26,8 +26,11 @@ export const IndentReport = () => {
     }
   }, []);
 
-  const getIndentData = (req?: IndentRequestDto) => {
-    req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+  const getIndentData = () => {
+    const req =  new IndentRequestDto()
+
+    //  const req =  new IndentRequestDto(form.getFieldValue('requestNo'),form.getFieldValue('indentDate'),form.getFieldValue('indentDate'),IAMClientAuthContext.user?.externalRefNo)
+     req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     if (form.getFieldValue('requestNo') !== undefined) {
       req.requestNo = form.getFieldValue('requestNo')
     } if (form.getFieldValue('indentDate') !== undefined) {
@@ -37,16 +40,18 @@ export const IndentReport = () => {
       req.confirmEndDate = (form.getFieldValue('indentDate')[1]).format('YYYY-MM-DD');
     }
     
-    // if (form.getFieldValue('indentDate') !== undefined) {
-    //   const indentDate = form.getFieldValue('indentDate')
-    //   // filterData = data.filter((e) => e.requestNo === indentDate)
-    // }
+    
+    if (form.getFieldValue('indentDate') !== undefined) {
+      const indentDate = form.getFieldValue('indentDate')
+      // filterData = data.filter((e) => e.requestNo === indentDate)
+    }
     service.getIndentData(req).then((res) => {
       if (res.status) {
         setData(res.data);
       }
     });
   }
+  console.log(IAMClientAuthContext.user?.externalRefNo,"jjj")
   // const getAllDate = (req?: IndentRequestDto) => {
   //   service.getIndentDate().then(res => {
   //     if (form.getFieldValue('indentDate') !== undefined) {
@@ -76,11 +81,11 @@ export const IndentReport = () => {
     return data ? data : "-";
   }
 
-  const onSearch = () => {
-    form.validateFields().then((values) => {
-      getIndentData(values);
-    });
-  }
+  // const onSearch = () => {
+  //   form.validateFields().then((values) => {
+  //     getIndentData(values);
+  //   });
+  // }
 
   const columns: any = [
     {
@@ -278,7 +283,7 @@ export const IndentReport = () => {
                   type="primary"
                   style={{ width: '80px', marginRight: "10px" }}
 
-                  onClick={onSearch}
+                  onClick={getIndentData}
                 >Submit</Button>
                 <Button htmlType='reset' danger style={{ width: '80px' }} onClick={resetHandler}>Reset</Button>
               </Form.Item>
