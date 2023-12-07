@@ -423,18 +423,25 @@ export class PurchaseOrderService {
     }
 
     async getPodetailsById(req:PurchaseViewDto):Promise<CommonResponseModel>{
-        // const PoType = `select po_material_type from purchase_order where purchase_order_id = ${req.id}`
-        // const poTypeRes = await this.dataSource.query(PoType)
-        // console.log(poTypeRes,'poTypeRes')
+        const PoType = `select po_material_type from purchase_order where purchase_order_id = ${req.id}`
+        const poTypeRes = await this.dataSource.query(PoType)
+        console.log(poTypeRes,'poTypeResdd')
+        let concatString
+        let columnName
         // let poData = `select * from purchase_order po `
-        // if(poTypeRes == 'Fabric'){
+        if(poTypeRes[0].po_material_type == 'Fabric'){
+            concatString = ` left join m3_items mi on mi.m3_items_Id = poi.m3_item_id`
+            columnName = 'mi.item_code'
         //     poData = poData+` left join purchase_order_fabric pof on pof.purchase_order_id = po.purchase_order_id `
-        // }else{
+        }else{
+            concatString = ` left join m3_trims mi on mi.m3_trim_Id = poi.m3_item_id`
+            columnName = 'mi.trim_code as item_code'
         //     poData = poData+` left join purchase_order_trim pot on pot.purchase_order_id = po.purchase_order_id`
-        // }
+        }
         // poData = poData+` where po.purchase_order_id = ${req.id}`
         // const podatares = await this.dataSource.query(poData)
-        const poTrimData = `select po.*,poi.*,mi.item_code,v.vendor_name,f.address from purchase_order po left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id left join m3_items mi on mi.m3_items_Id = poi.m3_item_id left join factory f on f.id = po.delivery_address left join vendors v on v.vendor_id = po.vendor_id where po.purchase_order_id = ${req.id}`
+        const poTrimData = `select po.*,poi.*,${columnName},v.vendor_name,f.address from purchase_order po left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id ${concatString} left join factory f on f.id = po.delivery_address left join vendors v on v.vendor_id = po.vendor_id where po.purchase_order_id = ${req.id}`
+        console.log(poTrimData,'ppppppphhh')
         const poTrimdatares = await this.dataSource.query(poTrimData)
         // console.log(podatares)
         // const PoDetails = {

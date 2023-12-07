@@ -8,6 +8,8 @@ import form from "antd/es/form";
 import { CaretRightOutlined, EyeOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { SourceIssuesService } from "@project-management-system/shared-services";
 import SourceIssuesDetailView from "./source-issues-detail-view";
+import { BuyerIdReq, ExternalRefReq, buyerReq } from "@project-management-system/shared-models";
+import { useIAMClientState } from "../common/iam-client-react";
 
 
 export const MaterialIssueView = () => {
@@ -21,7 +23,8 @@ export const MaterialIssueView = () => {
   const [tableData, setTableData] = useState<any[]>([])
   const [data, setData] = useState<any[]>([])
   const [form] = Form.useForm()
-
+  const { IAMClientAuthContext } = useIAMClientState();
+  const [isBuyer, setIsBuyer] = useState(false);
 
   let navigate = useNavigate();
 
@@ -29,6 +32,11 @@ export const MaterialIssueView = () => {
 
   useEffect(() => {
     getAllStoreIssues()
+    const userrefNo = IAMClientAuthContext.user?.externalRefNo
+        if(userrefNo){
+          setIsBuyer(true)
+          // form.setFieldsValue()
+        }
   }, [])
 
   useEffect(() => {
@@ -39,7 +47,10 @@ export const MaterialIssueView = () => {
 
 
   const getAllStoreIssues = () => {
-    service.getAllMaterialIssues().then((res) => {
+    const req = new buyerReq()
+    req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? 
+    IAMClientAuthContext.user?.externalRefNo :null
+    service.getAllMaterialIssues(req).then((res) => {
       if (res) {
         setData(res);
       }

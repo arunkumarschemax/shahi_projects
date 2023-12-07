@@ -221,6 +221,9 @@ export class OperationTrackingService {
               sampleReqStatus = LifeCycleStatusEnum.SHIPMENT
 
             }
+            if(dto.nextOperation == 'NA'){
+              sampleReqStatus = LifeCycleStatusEnum.READY_TO_DISPATCH
+            }
 
               const SampleReqStatusUpdate = await this.sampleReqRepo.update({SampleRequestId:dto.sampleRequestId},{lifeCycleStatus:sampleReqStatus})
               // `update sample_request set life_cycle_status = '${dto.operation}' where sample_request_id = ${dto.styleId}`

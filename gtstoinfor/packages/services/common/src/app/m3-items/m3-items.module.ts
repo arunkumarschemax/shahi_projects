@@ -9,12 +9,13 @@ import { M3ItemsRepo } from "./m3-items.repository";
 import { ProductGroup } from "./product-group-entity";
 import { RmCreationEntity } from "./rm-items.entity";
 import { M3ItemView } from "./m3-items-view.entity";
+import { M3TrimsAdapter } from "./m3-trims.adaptor";
 
 
 @Module({
     imports: [TypeOrmModule.forFeature([M3ItemsEntity,ProductGroup,RmCreationEntity,M3ItemView])],
     controllers: [M3ItemsController],
-    providers: [M3ItemsService, ApplicationExceptionHandler, M3ItemsAdapter,M3ItemsRepo],
+    providers: [M3ItemsService, ApplicationExceptionHandler, M3ItemsAdapter,M3TrimsAdapter,M3ItemsRepo],
     exports: [TypeOrmModule, M3ItemsService]
 })
 

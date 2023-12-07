@@ -35,11 +35,11 @@ export class IndentTrimsEntity {
           name: 'quantity',
         })
         quantity: number
-    // @Column('int',{
-    //     name:'quantity_unit',
-    //     nullable: false,
-    //     })
-    //     quantityUnit: number;
+    @Column('int',{
+        name:'quantity_unit',
+        nullable: false,
+        })
+        quantityUnit: number;
    
 // @Column("varchar", {
 //     nullable: false,

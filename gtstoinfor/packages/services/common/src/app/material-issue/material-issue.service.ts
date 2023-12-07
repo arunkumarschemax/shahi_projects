@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel, OperationTrackingDto, OperationInventoryDto, OperationInventoryResponseModel, TrackingEnum, MaterialIssueResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialFabricEnum, ResponesNoDropDownRes, RequestNoDto, MaterialIssueReportsDto, MaterialReportsResponse } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel, OperationTrackingDto, OperationInventoryDto, OperationInventoryResponseModel, TrackingEnum, MaterialIssueResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialFabricEnum, ResponesNoDropDownRes, RequestNoDto, MaterialIssueReportsDto, MaterialReportsResponse, BuyerIdReq, ExternalRefReq, buyerReq } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
@@ -149,7 +149,7 @@ export class MaterialIssueService {
     }
 
 
-    async getAllMaterialIssues() {
+    async getAllMaterialIssues(req?:buyerReq) {
 
         try {
             let dataquery = `SELECT 
@@ -166,6 +166,8 @@ export class MaterialIssueService {
             const res = await AppDataSource.query(dataquery);
             if (res) {
                 return res;
+            } if(req?.extRefNo){
+                dataquery = dataquery+` where buy.external_ref_number = '${req.extRefNo}'`
             } else {
                 console.log("NO data");
             }

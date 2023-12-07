@@ -895,9 +895,11 @@ export class SampleRequestService {
       console.log(sizesStr,'kkkkk')
 
       console.log(req,'rehhhh')
-      const sampleDataQry = `SELECT cl.colour,${sizesStr} FROM sample_request_size_info s 
+      const sampleDataQry = `SELECT sty.style,cl.colour,${sizesStr} FROM sample_request_size_info s 
+      left join sample_request sr on sr.sample_request_id = s.sample_request_id
       left join colour cl on cl.colour_id = s.colour_id
-      WHERE s.sample_request_id=1 GROUP BY s.colour_id`
+      left join style sty on sty.style_id = sr.style_id
+      WHERE s.sample_request_id=${req.sampleRequestId} GROUP BY s.colour_id`
       const finalres = await this.dataSource.query(sampleDataQry)
       if(finalres.length > 0){
         return new CommonResponseModel(true,1,'data retrived',finalres)

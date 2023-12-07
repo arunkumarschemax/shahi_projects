@@ -208,6 +208,7 @@ import HoleForm from "./trim-master/hole/hole"
 import HoleGrid from "./trim-master/hole/hole-view"
 import M3TrimItemsForm from "./trim-master/m3-trim-items/m3-trim-items"
 import { RmTrimsView } from "./sourcing-requisition/rm-trims-view"
+import { M3TrimsView } from "./trim-master/m3-trim-items/m3-trims-view"
 
 
 
@@ -747,6 +748,8 @@ export const AppRoutes = () => {
                         updateDetails={(undefined) => { }} TypeData={undefined} />} />
                     <Route path='Type/Type-view' element={<TypeView />} />                    
                     <Route path='m3-trim-items/m3-trim-items-form' element={<M3TrimItemsForm />} />
+                    <Route path='m3-trim-items/m3-trim-items-view' element={<M3TrimsView />} />
+
                     
                 </Route>
 

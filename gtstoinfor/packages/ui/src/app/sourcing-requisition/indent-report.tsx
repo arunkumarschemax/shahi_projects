@@ -3,6 +3,7 @@ import { IndentService } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Row, Select, Table } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+import { useIAMClientState } from '../common/iam-client-react';
 const { Option } = Select;
 
 export const IndentReport = () => {
@@ -13,12 +14,20 @@ export const IndentReport = () => {
   const { RangePicker } = DatePicker;
   const [form] = Form.useForm();
   const page = 1;
+  const { IAMClientAuthContext } = useIAMClientState();
+  const [isBuyer, setIsBuyer] = useState(false);
   useEffect(() => {
     getIndentData();
     getAll();
+    const userrefNo = IAMClientAuthContext.user?.externalRefNo
+    if(userrefNo){
+      setIsBuyer(true)
+      // form.setFieldsValue()
+    }
   }, []);
 
   const getIndentData = (req?: IndentRequestDto) => {
+    req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     if (form.getFieldValue('requestNo') !== undefined) {
       req.requestNo = form.getFieldValue('requestNo')
     } if (form.getFieldValue('indentDate') !== undefined) {
