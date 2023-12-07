@@ -273,14 +273,8 @@ export class DpomService {
     }
 
     async coLineCreationReq(req: any): Promise<CommonResponseModel> {
-        let buyer;
         const entity = new COLineEntity()
-        if (req.buyer) {
-            buyer = req.buyer
-        } else {
-            buyer = 'Nike-U12'
-        }
-        entity.buyer = buyer
+        entity.buyer = req.buyer ? req.buyer : 'Nike-U12'
         entity.buyerPo = req.purchaseOrderNumber;
         entity.lineItemNo = req.poLineItemNumber;
         entity.itemNo = req.itemNo
@@ -605,6 +599,8 @@ export class DpomService {
         } catch (err) {
             console.log(err, 'error');
             return new CommonResponseModel(false, 0, err)
+        } finally {
+            driver.quit()
         }
     }
 
