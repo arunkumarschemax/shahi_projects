@@ -4,6 +4,7 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { CommonResponseModel, M3Itemsfilter } from "@project-management-system/shared-models";
 import { M3ItemsService } from "./m3-items.service";
 import { M3ItemsDTO } from "./m3-items.dto";
+import { M3TrimItemsDTO } from "./m3-trim-items.dto";
 
 
 
@@ -40,4 +41,14 @@ export class M3ItemsController {
     const data=await this.Service.getM3FabricsByBuyer(req)
     return  data
 }
+
+@Post('createM3Trim')
+  @ApiBody({type:M3TrimItemsDTO})
+  async createM3Trim(@Body() createDto: any): Promise<CommonResponseModel> {
+    try {
+      return await this.Service.createM3Trim(createDto);
+    } catch (error) {
+      return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+    }
+  }
 }

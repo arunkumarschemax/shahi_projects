@@ -120,7 +120,7 @@ export const PurchaseOrderView = () => {
     // }
     console.log(status, 'ttttttttttttttttttttttt');
 
-     const req = new PurchaseViewDto(externalRefNo)
+     const req = new PurchaseViewDto(null,null,null,null,null,null,null,externalRefNo)
     // if (form.getFieldValue('deliveryDate') !== undefined) {
     //   req.confirmStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
     // }

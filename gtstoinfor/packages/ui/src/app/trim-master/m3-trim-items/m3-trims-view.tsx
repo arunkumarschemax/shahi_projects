@@ -1,15 +1,25 @@
-import {BuyersService,CategoryService,ColourService,ContentService,FabricStructuresService,FinishService,HoleService,M3ItemsService,QualitysService,StructureService,ThicknessService,TrimParamsMappingService,TrimService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Select, message } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { SearchOutlined } from "@ant-design/icons";
+import { BuyersService, CategoryService, ColourService, ContentService, FabricTypeService, FabricWeaveService, FinishService, GRNService, HoleService, M3ItemsService, QualitysService, StockService, StructureService, ThicknessService, TrimParamsMappingService, TrimService, TypeService, UomService, VarietyService } from "@project-management-system/shared-services";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag } from "antd";
+import { ColumnType, ColumnProps } from "antd/es/table";
+import React, { useEffect, useRef } from "react";
+import { useState } from "react";
+import Highlighter from "react-highlight-words";
+import { useNavigate } from "react-router-dom";
+import { BuyerRefNoRequest, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import AlertMessages from "../../common/common-functions/alert-messages";
-import { useEffect, useState } from "react";
-import { ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto } from "@project-management-system/shared-models";
-
+import { useIAMClientState } from "../../common/iam-client-react";
 const { TextArea } = Input;
 const { Option } = Select;
+import { Link } from 'react-router-dom';
 
-
-export function M3TrimItemsForm() {
+export const M3TrimsView = () => {
+  const stockService = new StockService();
+  const [data, setData] = useState<any>([]);
+  const [page, setPage] = React.useState(1);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const structureService = new StructureService();
@@ -42,10 +52,15 @@ export function M3TrimItemsForm() {
   const [colorData, setColorData] = useState<any[]>([]);
   const [buyerData, setBuyerData] = useState<any[]>([]);
   const [mapData, setMapData] = useState<any[]>([])
-  const [mapDataId, setMapDataId] = useState<any[]>([])
-  const [buyerCode, setBuyerCode] = useState<any[]>([])
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+  const [isBuyer, setIsBuyer] = useState(false);
+
 
   useEffect(() => {
+    const userrefNo = IAMClientAuthContext.user?.externalRefNo
+    if(userrefNo){
+      setIsBuyer(true)
+    }
     if (mapData[0]?.structure === true) {
       getStructures();
     }
@@ -180,9 +195,13 @@ export function M3TrimItemsForm() {
   };
 
   const getBuyers = () => {
-    buyerService.getAllActiveBuyers().then((res) => {
+    const req = new BuyerRefNoRequest()
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    buyerService.getAllActiveBuyers(req).then((res) => {
       if (res.status) {
         setBuyerData(res.data);
+        form.setFieldsValue({buyerId: res.data[0]?.buyerId})
+        onFinish()
       }
     });
   };
@@ -192,154 +211,329 @@ export function M3TrimItemsForm() {
     paramsService.getMappedParamsByTrim(req).then((res) => {
       if (res.status) {
         setMapData(res.data)
-        setMapDataId(res.data[0]?.trimMappingId)
-        console.log(res.data[0]?.trimMappingId,'============')
       }
     });
   }
-
-  const onFinish = (value) => {
-    console.log(form.getFieldValue('trimType'),'8888888888')
-    const req = new M3trimsDTO(0,value.buyerId,'',value.categoryId,value.colorId,value.contentId,value.finishId,value.holeId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.typeId,value.uomId,value.varietyId,value.trimCategoryId,mapDataId,buyerCode,value.trimType,value.description,"")
-    console.log(req,'---------------------')
-    service.createM3Trim(req).then((res) => {
-      if (res.status) {
-        AlertMessages.getSuccessMessage(res.internalMessage);
-        // navigate('/grn-view')
-      } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    })
-  };
 
   const onReset = () => {
     form.resetFields();
   };
 
-  const getVarCodeDefaultValue = (defaultCode: string) => {
-    console.log(defaultCode);
-    form.setFieldsValue({ description: defaultCode });
-  }
 
-  const generateItemCode = () => {
-    console.log(form.getFieldsValue())
-    let structureDal = ""
-    let categoryDal = ""
-    let contentDal = ""
-    let typeDal = ""
-    let finishDal = ""
-    let holeDal = ""
-    let qualityDal = ""
-    let thickDal = ""
-    let varietyDal = ""
-    let uomDal = ""
-    let colorDal = ""
-    let logo = "";
-    let part = "";
-
-    let buyerDetails = buyerData.find((e) => e.buyerId === form.getFieldValue("buyerId"))?.shortCode;
-    const buyersData = buyerDetails != undefined? buyerDetails + '/' : "";
-    form.setFieldsValue({buyerCode:buyerDetails != undefined ? buyerDetails : ""});
   
-    const trimType = form.getFieldValue("trimType") != undefined ? form.getFieldValue("trimType")+'/' : "";
+  const setModel = (val) => {
+    console.log(val);
+    // setVisibleModel(val);
+  }
+
+  const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }: any) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() =>
+              handleSearch(selectedKeys as string[], confirm, dataIndex)
+            }
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => {
+              handleReset(clearFilters);
+              setSearchedColumn(dataIndex);
+              confirm({ closeDropdown: true });
+            }}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes((value as string).toLowerCase())
+        : false,
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
+  function handleSearch(selectedKeys, confirm, dataIndex) {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  }
+
+  function handleReset(clearFilters) {
+    clearFilters();
+    setSearchText("");
+  }
+  const customFilter = (value, record) => {
+    if (value === null) return true; // If filter is not active, show all rows
+    return record.itemType === value;
+  };
+  const columns: ColumnProps<any>[] = [
+    {
+      title: "S No",
+      key: "sno",
+      responsive: ["sm"],
+      render: (text, object, index) => (page - 1) * 10 + (index + 1),
+    },
+    // {
+    //   title: "M3 Style",
+    //   dataIndex: "m3_style_code",
+    //   ...getColumnSearchProps("m3_style_code"),
+    //   // sorter: (a, b) => a.plant - b.plant,
+    //   // sortDirections: ['descend', 'ascend'],
+    // },
     
-    let trimCategoryDetails = trimData.find((e) => e.trimId === form.getFieldValue("trimCategoryId"))?.trimCategory;
-    const trimCategoryDal = trimCategoryDetails != undefined ? trimCategoryDetails + '/' : ""  ;
-    console.log(trimCategoryDetails);
 
-    if (mapData[0]?.structure === true) {
-      let structureDetails = structureData.find((e) => e.structureId === form.getFieldValue("structureId"))?.structure;
-    structureDal = structureDetails != undefined ? structureDetails + '/' : ""  ;
+    {
+      title: "Buyer",
+      dataIndex: "buyer",
+      ...getColumnSearchProps("buyer"),
+      sorter: (a, b) => a.buyer.localeCompare(b.buyer),
+      sortDirections: ["descend", "ascend"],
+      
+    },
+    // {
+    //   title: "Stock Type",
+    //   dataIndex: "stockType",
+    //   ...getColumnSearchProps("stockType"),
+    //   sorter: (a, b) => a.stockType.localeCompare(b.stockType),
+    //   sortDirections: ["descend", "ascend"],
+    // },
+    // {
+    //   title: "Sample Order",
+    //   dataIndex: "sampleOrder",
+    //   ...getColumnSearchProps("sampleOrder"),
+    //   sorter: (a, b) => a.sampleOrder.localeCompare(b.sampleOrder),
+    //   sortDirections: ["descend", "ascend"],
+    // },
+    // {
+    //   title: "Indent",
+    //   dataIndex: "Indent",
+    //   ...getColumnSearchProps("Indent"),
+    //   sorter: (a, b) => a.Indent.localeCompare(b.Indent),
+    //   sortDirections: ["descend", "ascend"],
+    // },
+    // {
+    //   title: "Style",
+    //   dataIndex: "style",
+    //   ...getColumnSearchProps("style"),
+    //   sorter: (a, b) => a.style.localeCompare(b.style),
+    //   sortDirections: ["descend", "ascend"],
+    // },
+    {
+      title: "Material Type",
+      dataIndex: "itemType",
+      ...getColumnSearchProps("itemType"),
+      sorter: (a, b) => a.itemType.localeCompare(b.itemType),
+      sortDirections: ["descend", "ascend"],
+    },
+    // {
+    //   title: "Item Code",
+    //   dataIndex: "code",
+    //   render: (text) => (
+    //     <span>
+    //       {text ? text : "Fab001"} {/* Display data if available, otherwise show "No Data" */}
+    //     </span>
+    //   ),
+    //   ...getColumnSearchProps("item_code"),
+    // },
+    {
+      title: "M3 Item",
+      dataIndex: "m3Item",
+      ...getColumnSearchProps("m3Item"),
+      sorter: (a, b) => a.m3Item.localeCompare(b.m3Item),
+      sortDirections: ["descend", "ascend"],
+    },
+    // {
+    //   title: "Style",
+    //   dataIndex: "style",
+    //   ...getColumnSearchProps("style"),
+    // },
+    {
+      title: "Location",
+      dataIndex: "location",
+      ...getColumnSearchProps("location"),
+
+    },
+
+    {
+      title: "Quantity",
+      dataIndex: "qty",
+      render: (record) => (
+        <span>
+          {record.qty} + " " + {record.uom} 
+        </span>
+      ),
+      ...getColumnSearchProps("qty"),
+      // sorter: (a, b) => a.itemQuantity - b.itemQuantity,
+      // sortDirections: ['descend', 'ascend'],
+    },
+    // {
+    //   title:`Action`,
+    //   dataIndex: 'action',
+    //   render: (text, rowData) => (
+        
+    //     <span>  
+    //      <Button style={{backgroundColor:'#69c0ff'}} onClick={ (e) => getRowData(rowData) }
+    //       disabled={rowData.buyer_id === buyervalue ? true : false}
+    //       ><b>Assign Reclassification</b></Button>
+    //     </span>
+    //   )
+    // }
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      render: (text, rowData) => {
+        // if (rowData.buyer_id === buyervalue) {
+        //   return "-";
+        // }
+    
+        return (
+          <span>
+            {/* <Button
+              style={{ backgroundColor: '#69c0ff' }}
+              onClick={(e) => getRowData(rowData)}
+            >
+              <b>Request Reclassification</b>
+            </Button> */}
+          </span>
+        );
+      }
     }
+  ];
+  const clearData = () => {
+    form.resetFields();
+    
 
-    if (mapData[0]?.category === true) {
-      let categoryDetails = categoryData.find((e) => e.categoryId === form.getFieldValue("categoryId"))?.category;
-    categoryDal = categoryDetails != undefined ? categoryDetails + '/' : ""  ;
-    }
+  };
 
-    if (mapData[0]?.content === true) {
-    let contentDetails = contentData.find((e) => e.contentId === form.getFieldValue("contentId"))?.content;
-    contentDal = contentDetails != undefined ? contentDetails + '/' : ""  ;
-    }
+  const handleCancel = () => {
+    // setVisibleModel(false);
+  };
 
-    if (mapData[0]?.type === true) {
-    let typeDetails = typeData.find((e) => e.typeId === form.getFieldValue("typeId"))?.type;
-    typeDal = typeDetails != undefined ? typeDetails + '/' : ""  ;
-    }
+  // const getItemsForOtherBuyers = () => {
+  //   console.log(form.getFieldsValue())
+  //   // console.log()
+  //   const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
 
-    if (mapData[0]?.finish === true) {
-    let finishDetails = finishData.find((e) => e.finishId === form.getFieldValue("finishId"))?.finish;
-    finishDal = finishDetails != undefined ? finishDetails + '/' : ""  ;
-    }
+  //   let formData: M3ItemsDTO = data;
+  //   console.log(formData)
+  //   console.log(formData.buyerId)
+  //   formData.buyerId = undefined;
+  //   console.log(formData)
+  //   // getData(formData);
+  // }
 
-    if (mapData[0]?.hole === true) {
-    let holeDetails = holeData.find((e) => e.holeId === form.getFieldValue("holeId"))?.hole;
-    holeDal = holeDetails != undefined ? holeDetails + '/' : ""  ;
-    }
+  // const onChange =(value) =>{
+  //   if(value === null || undefined) {
+  //     setButtonEnable(true)
+  //    }else {
+  //     setButtonEnable(false)
+  //    }
+  // }
 
-    if (mapData[0]?.quality === true) {
-      let qualityDetails = qtyData.find((e) => e.qualityId === form.getFieldValue("qualityId"))?.qualityName;
-      qualityDal = qualityDetails !== undefined ? qualityDetails + '/' : "";
-    }
+  const onFinish = () => {
 
-    if (mapData[0]?.thickness === true) {
-    let thicknessDetails = thickData.find((e) => e.thicknessId === form.getFieldValue("thicknessId"))?.thickness;
-    thickDal = thicknessDetails != undefined ?  thicknessDetails + '/' : ""  ;
-    }
+    let req = new M3trimsDTO(0,form.getFieldValue("buyer"),undefined,form.getFieldValue("category"),form.getFieldValue("color"),form.getFieldValue("content"),form.getFieldValue("finish"),form.getFieldValue("hole"),form.getFieldValue("logo"),form.getFieldValue("part"),form.getFieldValue("quality"),form.getFieldValue("structure"),form.getFieldValue("thickness"),form.getFieldValue("type"),form.getFieldValue("uom"),form.getFieldValue("variety"),form.getFieldValue("trimCategory"),0)
+    console.log(req);
+    req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    stockService.getAllTrimStocks(req).then((res) => {
+      if (res.status) {
+        setData(res.data);
+        AlertMessages.getSuccessMessage(res.internalMessage);
+        // window.location.reload();
+      }
+      else{
+        setData([]);
+        AlertMessages.getWarningMessage(res.internalMessage);
+      }
+    })
+    .catch((err) => {
+      setData([]);
+      AlertMessages.getErrorMessage(err.message);
+    });
+    // if(form.getFieldValue("content")) {
+    //   setButtonEnable(false)
+    //  }
+    // console.log(form.getFieldsValue())
+    // const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
+    // console.log(data)
+    // getData(data);
+    // service
+    //   .createM3Items(m3StyleDto)f
+    //   .then((res) => {
+    //     if (res.status) {
+    //       AlertMessages.getSuccessMessage(res.internalMessage);
+    //       setTimeout(() => {
+    //         message.success("Submitted successfully");
+    //         window.location.reload();
+    //       }, 500);
+    //     }
+    //     else{
+    //       AlertMessages.getWarningMessage(res.internalMessage);
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     AlertMessages.getErrorMessage(err.message);
+    //   });
+  };
+   const onBuyerChange = (value) =>{
+    console.log(value)
+    // setBuyervalue(value)
+   }
 
-    if (mapData[0]?.variety === true) {
-    let varietyDetails = varietyData.find((e) => e.varietyId === form.getFieldValue("varietyId"))?.variety;
-    varietyDal = varietyDetails != undefined ? varietyDetails + '/' : ""  ;
-    }
-
-    if (mapData[0]?.uom === true) {
-    let uom = uomData.find((e) => e.uomId === form.getFieldValue("uomId"))?.uom;
-    uomDal =  uom != undefined ? uom + '/' : "" ;
-    }
-
-    if (mapData[0]?.color === true) {
-    let colorDetails = colorData.find((e) => e.colourId === form.getFieldValue("colorId"))?.colour;
-    colorDal = colorDetails != undefined ? colorDetails + '/' : ""  ;
-    }
-
-    if(mapData[0]?.logo === true){
-    logo = form.getFieldValue("logo") != undefined ? form.getFieldValue("logo") : "";
-    }
-
-    if(mapData[0]?.part === true){
-    part = form.getFieldValue("part") != undefined ? form.getFieldValue("part") : "";
-    }
-
-    let mainDal = `${buyersData}${trimType}${trimCategoryDal}${structureDal}${categoryDal}${contentDal}${typeDal}${finishDal}${holeDal}${qualityDal}${thickDal}${varietyDal}${uomDal}${colorDal}${logo}${part}`;
-
-    mainDal = mainDal.replace(/\/$/, '');
-
-    getVarCodeDefaultValue(mainDal);
-  }
-
-  const buyerOnChange = (val,Option) =>{
-    generateItemCode()
-    setBuyerCode(Option?.name)
-  }
-  const trimOnChange = (val) =>{
-    generateItemCode()
-    getMappedTrims(val)
-  }
-
-  const trimTypeOnChange = (val,Option) =>{
-    generateItemCode()
-    console.log(Option?.name)
-  }
+ 
 
   return (
-    <Card 
-    title={<span>M3 Items</span>}
-      style={{ textAlign: "left" }}
-      headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
-      extra={<Link to='/trim-master/m3-trim-items/m3-trim-items-view' >
-      <span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span>
-      </Link>}
-    >
+    <Card title="M3 Trims" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/trim-master/m3-trim-items/m3-trim-items-form' >
+    <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
+    </Link>}>
       <Form form={form} layout={"vertical"} name="control-hooks" onFinish={onFinish}
       >
         <Row gutter={24}>
@@ -350,11 +544,10 @@ export function M3TrimItemsForm() {
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Buyer"
-                    onChange={buyerOnChange}
                     >
                         {buyerData.map((e) => {
                             return (
-                            <Option key={e.buyerId} value={e.buyerId} name={e.buyerCode}>
+                            <Option key={e.buyerId} value={e.buyerId}>
                                 {e.buyerName}-{e.buyerCode}
                             </Option>
                             );
@@ -363,30 +556,13 @@ export function M3TrimItemsForm() {
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="trimType" label="Trim Type" rules={[{ required: true, message: "Trim Type is required" }]}>
-                    <Select 
-                    showSearch 
-                    allowClear 
-                    optionFilterProp="children"
-                    placeholder="Select Trim Type"
-                    onChange={trimTypeOnChange}
-                    >
-                        {Object.values(ItemTypeEnum).filter((val) => val !== ItemTypeEnum.FABRIC).map((val) => (
-                            <Option key={val} value={val}>
-                                {ItemTypeEnumDisplay?.find((e) => e.name === val)?.displayVal}
-                            </Option>
-                        ))}
-                    </Select>
-                </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="trimCategoryId" label="Trim Category" rules={[{ required: true, message: "Trim Category is required" }]}>
+                <Form.Item name="trimCategory" label="Trim Category" rules={[{ required: false, message: "Trim Category is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
                     optionFilterProp="children"
                     placeholder="Select Trim Category"
-                    onChange={trimOnChange}
+                    onChange={getMappedTrims}
                     >
                         {trimData.map((e) => {
                             return (
@@ -402,16 +578,15 @@ export function M3TrimItemsForm() {
               <>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                   <Form.Item
-                    name="structureId"
+                    name="structure"
                     label="Structure"
-                    rules={[{ required: true, message: "Structure is required" }]}
+                    rules={[{ required: false, message: "Structure is required" }]}
                   >
                     <Select
                       showSearch
                       allowClear
                       optionFilterProp="children"
                       placeholder="Select Structure"
-                      onChange={generateItemCode}
                     >
                       {structureData.map((e) => (
                         <Option key={e.structureId} value={e.structureId}>
@@ -426,13 +601,12 @@ export function M3TrimItemsForm() {
             {mapData[0]?.category == true ? (
             <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="categoryId" label="Category" rules={[{ required: true, message: "Category is required" }]}>
+                <Form.Item name="category" label="Category" rules={[{ required: false, message: "Category is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Category"
-                    onChange={generateItemCode}
                     >
                         {categoryData.map((e) => {
                             return (
@@ -449,13 +623,12 @@ export function M3TrimItemsForm() {
             {mapData[0]?.content === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="contentId" label="Content" rules={[{ required: true, message: "Content is required" }]}>
+                <Form.Item name="content" label="Content" rules={[{ required: false, message: "Content is required" }]}>
                     <Select
                     showSearch
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Content"
-                    onChange={generateItemCode}
                     >
                         {contentData.map((e) => {
                             return (
@@ -472,13 +645,12 @@ export function M3TrimItemsForm() {
             {mapData[0]?.type === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="typeId" label="Type" rules={[{ required: true, message: "Type is required" }]}>
+                <Form.Item name="type" label="Type" rules={[{ required: false, message: "Type is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Type"
-                    onChange={generateItemCode}
                     >
                         {typeData.map((e) => {
                             return (
@@ -495,13 +667,12 @@ export function M3TrimItemsForm() {
             {mapData[0]?.finish === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="finishId" label="Finish" rules={[{ required: true, message: "Finish is required" }]}>
+                <Form.Item name="finish" label="Finish" rules={[{ required: false, message: "Finish is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Finish"
-                    onChange={generateItemCode}
                     >
                         {finishData.map((e) => {
                             return (
@@ -518,13 +689,12 @@ export function M3TrimItemsForm() {
             {mapData[0]?.hole === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="holeId" label="Hole" rules={[{ required: true, message: "Hole is required" }]}>
+                <Form.Item name="hole" label="Hole" rules={[{ required: false, message: "Hole is required" }]}>
                     <Select
                     showSearch
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Hole"
-                    onChange={generateItemCode}
                     >
                         {holeData.map((e) => {
                             return (
@@ -541,13 +711,12 @@ export function M3TrimItemsForm() {
             {mapData[0]?.quality === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="qualityId" label="Quality" rules={[{ required: true, message: "Quality is required" }]}>
+                <Form.Item name="qualityName" label="Quality" rules={[{ required: false, message: "Quality is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Quality"
-                    onChange={generateItemCode}
                     >
                         {qtyData.map((e) => {
                             return (
@@ -564,18 +733,17 @@ export function M3TrimItemsForm() {
             {mapData[0]?.thickness === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="thicknessId" label="Thickness" rules={[{ required: true, message: "Thickness is required" }]}>
+                <Form.Item name="warehouse" label="Thickness" rules={[{ required: false, message: "Warehouse is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
                     optionFilterProp="children" 
-                    placeholder="Select Thickness"
-                    onChange={generateItemCode}
+                    placeholder="Select Warehouse"
                     >
                         {thickData.map((e) => {
                             return (
-                            <Option key={e.thicknessId} value={e.thicknessId}>
-                                {e.thickness}
+                            <Option key={e.warehouseId} value={e.warehouseId}>
+                                {e.warehouseName}
                             </Option>
                             );
                         })}
@@ -587,13 +755,12 @@ export function M3TrimItemsForm() {
             {mapData[0]?.variety === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="varietyId" label="Variety" rules={[{ required: true, message: "Variety is required" }]}>
+                <Form.Item name="variety" label="Variety" rules={[{ required: false, message: "Variety is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Variety"
-                    onChange={generateItemCode}
                     >
                         {varietyData.map((e) => {
                             return (
@@ -610,13 +777,12 @@ export function M3TrimItemsForm() {
             {mapData[0]?.uom === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="uomId" label="UOM" rules={[{ required: true, message: "UOM is required" }]}>
+                <Form.Item name="uom" label="UOM" rules={[{ required: false, message: "UOM is required" }]}>
                     <Select
                     showSearch
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select UOM"
-                    onChange={generateItemCode}
                     >
                         {uomData.map((e) => {
                             return (
@@ -633,13 +799,12 @@ export function M3TrimItemsForm() {
             {mapData[0]?.color === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="colorId" label="Color" rules={[{ required: true, message: "Color is required" }]}>
+                <Form.Item name="color" label="Color" rules={[{ required: false, message: "Color is required" }]}>
                     <Select
                     showSearch
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Color"
-                    onChange={generateItemCode}
                     >
                         {colorData.map((e) => {
                             return (
@@ -656,13 +821,12 @@ export function M3TrimItemsForm() {
             {mapData[0]?.logo === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="logo" label="Logo" rules={[{ required: true, message: "Logo is required" }]}>
+                <Form.Item name="logo" label="Logo" rules={[{ required: false, message: "Logo is required" }]}>
                     <Select
                     showSearch
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Logo"
-                    onChange={generateItemCode}
                     >
                         {Object.values(LogoEnum).map((val) => {
                             return <Option key={val} value={val}>{LogoEnumDisplay.find((e)=>e.name == val)?.displayVal}</Option>
@@ -675,13 +839,12 @@ export function M3TrimItemsForm() {
             {mapData[0]?.part === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="part" label="Part" rules={[{ required: true, message: "Part is required" }]}>
+                <Form.Item name="part" label="Part" rules={[{ required: false, message: "Part is required" }]}>
                     <Select
                     showSearch
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Part"
-                    onChange={generateItemCode}
                     >
                         {Object.values(PartEnum).map((val) => {
                             return <Option key={val} value={val}>{PartEnumDisplay.find((e)=>e.name == val)?.displayVal}</Option>
@@ -691,21 +854,35 @@ export function M3TrimItemsForm() {
             </Col>
             </>
             ) : (<></>)}
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="description" label="Description" rules={[{ required: true, message: "Description is required" }]}>
-                    <TextArea rows={3} disabled={true} />
-                </Form.Item>
-            </Col>
-        </Row>
-        <Row>
-            <Col span={24} style={{ textAlign: "right" }}>
-                <Button type="primary" htmlType="submit">Submit</Button>
-                <Button htmlType="button" style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
+        {/* </Row>
+        <Row> */}
+            <Col span={4} style={{paddingTop:'23px'}}>
+                <Button type="primary" htmlType="submit">Get Item</Button>
+                <Button htmlType="button" onClick={onReset}>Reset</Button>
             </Col>
         </Row>
       </Form>
+        
+      <Table
+        className="custom-table-wrapper"
+        dataSource={data.length > 0 ? data : []}
+        columns={columns}
+        size="small"
+      />
+      {/* <Modal
+            className='rm-'
+            key={'modal' + Date.now()}
+            width={'80%'}
+            style={{ top: 30, alignContent: 'right' }}
+            visible={visibleModel}
+            title={<React.Fragment>
+            </React.Fragment>}
+            onCancel={handleCancel}
+            footer={[]}
+        >
+            <Reclassification data = {rowData} buyer= {form.getFieldValue("buyerId")} type="stock" status={setModel}/>
+
+            </Modal> */}
     </Card>
   );
-}
-
-export default M3TrimItemsForm;
+};

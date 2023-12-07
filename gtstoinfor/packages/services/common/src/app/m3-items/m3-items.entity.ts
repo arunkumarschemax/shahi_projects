@@ -215,11 +215,11 @@ export class M3ItemsEntity {
   })
   varietyId: number;
 
-  @Column("int", {
-    nullable: true,
-    name: "trim_category_id"
-  })
-  trimCategoryId: number;
+  // @Column("int", {
+  //   nullable: true,
+  //   name: "trim_category_id"
+  // })
+  // trimCategoryId: number;
 
   @Column("int", {
     nullable: true,
@@ -267,13 +267,12 @@ export class M3ItemsEntity {
   buyerInfo: Buyers;
 
   @ManyToOne(type=>trimEntity,  m3Items=>m3Items.trimInfo,{  nullable:false, })
-  @JoinColumn({ name:"trim_id"})
-  trimId: trimEntity;
-
+  @JoinColumn({ name:"trim_category_id"})
+  trimCategoryInfo: trimEntity;
 
   @ManyToOne(type=>CategoryEntity,  m3Items=>m3Items.categoryInfo,{  nullable:false, })
   @JoinColumn({ name:"category_id"})
-  categoryId: CategoryEntity;
+  categoryInfo: CategoryEntity;
 
   @OneToMany(type => SampleRequestItemsEntity, sampleReqItems => sampleReqItems.sampleRequestInfo, { cascade: true })
   m3ItemsInfo: SampleRequestItemsEntity[]

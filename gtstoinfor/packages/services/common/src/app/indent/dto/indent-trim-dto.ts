@@ -13,8 +13,8 @@ export class IndentTrimDto{
     // color: number;
     @ApiProperty()
     quantity: number;
-    // @ApiProperty()
-    // quantityUnit: number;
+    @ApiProperty()
+    quantityUnit: number;
     // @ApiProperty()
     // m3TrimCode: string;
     // @ApiProperty()
