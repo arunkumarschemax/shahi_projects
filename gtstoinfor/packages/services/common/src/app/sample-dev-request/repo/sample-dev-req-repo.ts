@@ -310,8 +310,8 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
 
 
-    async getAllSampleDevData(req?: SampleFilterRequest): Promise<any[]> {
-        console.log(req,"req")
+    async getAllSampleDevData(req: SampleFilterRequest): Promise<any[]> {
+        console.log(req,"hhhhhhhhhhhh")
         const query = this.createQueryBuilder('sr')
             .select(`sr.location_id as location,life_cycle_status as lifeCycleStatus,st.quantity,sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.type,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name,sr.life_cycle_status AS lifeCycleStatus,clr.colour`)
             .addSelect(`l.location_name AS locationName,s.style,pch.profit_control_head AS pch,b.buyer_name AS buyerName,b.buyer_code AS buyerCode,br.brand_name AS brandName,ed1.first_name AS dmmName,ed2.first_name AS techName`)
@@ -334,26 +334,35 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .leftJoin(StocksEntity,'st','st.buyer_id=sr.buyer_id')
             // .leftJoin(SampleReqFabricinfoEntity,'sf','sf.fabric_code=st.item_id')
             // .leftJoin(SampleRequestTriminfoEntity,'srt','srt.trim_code=st.item_id')
-            // .where('st.quantity is not null')
+             .where('1 =1')
 
-        if (req.reqNo !== undefined) {
-            query.andWhere(`sr.request_no ='${req.reqNo}'`)
-        }
-        if (req.pch !== undefined) {
-            query.andWhere(`pch.profit_control_head ='${req.pch}'`)
-        }
-        // if (req.styleNo !== undefined) {
-        //     query.andWhere(`sr.style_no ='${req.styleNo}'`)
-        // }
-        if (req.status !== undefined) {
-            query.andWhere(`sr.status ='${req.status}'`)
-        }
-        if(req.extRefNumber){
-            query.where(` b.external_ref_number = '${req.extRefNumber}'`)
-        }
+if(req){
+    console.log(req.reqNo,"req.reqqqqqqqqqqqqqqqqqqqqqq");
+    
+    if (req.reqNo !== undefined) {
+        query.andWhere(`sr.sample_request_id =${req.reqNo}`);
+    }
+    if (req.pch !== undefined) {
+        query.andWhere(`pch.profit_control_head_id
+        =${req.pch}`);
+    }
+    if (req.styleNo !== undefined) {
+        query.andWhere(`sr.style_id ='${req.styleNo}'`)
+    }
+    if (req.pch !== undefined) {
+        query.andWhere(`sr.profit_control_head_id ='${req.pch}'`)
+    }
+    if (req.status !== undefined) {
+        query.andWhere(`sr.life_cycle_status ='${req.status}'`);
+    }
+    if(req.extRefNumber !== undefined){
+        query.andWhere(` b.external_ref_number = '${req.extRefNumber}'`)
+    }
+}
+        
         query.groupBy(`sr.sample_request_id`)
-        console.log('query-----------------')
-        console.log(query)
+        // console.log('query-----------------')
+        // console.log(query)
         return await query.getRawMany();
 
     }

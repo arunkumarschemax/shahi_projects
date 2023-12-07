@@ -24,6 +24,7 @@ export class SampleDevReqController {
   @Post('/getAllSampleDevData')
   @ApiBody({ type: SampleFilterRequest })
   async getAllSampleDevData(@Body() req?: any): Promise<AllSampleDevReqResponseModel> {
+    console.log(req,"cont")
     try {
       return await this.sampleService.getAllSampleDevData(req);
     } catch (error) {
