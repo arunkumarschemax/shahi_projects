@@ -16,6 +16,7 @@ export class AllScanDto {
     createdUser: string;
     Hsninfo: HsnDto[]
     updatedUser?: string;
+    createdAt:Date;
 
 
     constructor(
@@ -34,6 +35,7 @@ export class AllScanDto {
         createdUser: string,
         Hsninfo: HsnDto[],
         updatedUser?: string,
+        createdAt?:Date,
 
 
     ) {
@@ -53,6 +55,8 @@ export class AllScanDto {
         this.createdUser = createdUser;
         this.Hsninfo = Hsninfo;
         this.updatedUser = updatedUser
+        this.createdAt=createdAt;
+
 
     }
 }

@@ -8,7 +8,7 @@ import { ColumnType } from "antd/es/table";
 import { ServiceFilterDto, StatusEnumDisplay } from "@xpparel/shared-models";
 import { PricesService } from "@xpparel/shared-services";
 
-function ScanDetailView() {
+export const ScanDetailView = () => {
 
   const navigate = useNavigate();
   const rowData = useLocation();
@@ -293,6 +293,7 @@ function ScanDetailView() {
       title: "Tax Type",
       dataIndex: "taxType",
       key: "taxType",
+      align: "center",
       ...getColumnSearchProps("taxType"),
       sorter: (a, b) => a.taxType.localeCompare(b.taxType),
       render: (_, record) => record?.taxType || "-",
@@ -302,6 +303,7 @@ function ScanDetailView() {
       title: "Tax Percentage",
       dataIndex: "taxPercentage",
       key: "taxPercentage",
+      align: "right",
       ...getColumnSearchProps("taxPercentage"),
       sorter: (a, b) => a.taxPercentage.localeCompare(b.taxPercentage),
       // render: (_, record) => (record?.taxPercentage || "-"),
@@ -314,6 +316,7 @@ function ScanDetailView() {
       title: "Unit Price",
       dataIndex: "unitPrice",
       key: "unitPrice",
+      align: "right",
       ...getColumnSearchProps("unitPrice"),
       sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
       render: (text, record) => {
@@ -325,6 +328,7 @@ function ScanDetailView() {
       title: "Unit Quantity",
       dataIndex: "unitQuantity",
       key: "unitQuantity",
+      align: "right",
       ...getColumnSearchProps("unitQuantity"),
       sorter: (a, b) => a.unitQuantity.localeCompare(b.unitQuantity),
       // render: (_, record) =>
@@ -337,6 +341,7 @@ function ScanDetailView() {
       title: "Subject Amount",
       dataIndex: "unitPrice",
       key: "unitPrice",
+      align: "right",
       // ...getColumnSearchProps("SubjectAmount"),
       // sorter: (a, b) => a.SubjectAmount.localeCompare(b.SubjectAmount),
       render: (text, record) => {
@@ -353,6 +358,7 @@ function ScanDetailView() {
       title: "Tax Amount",
       dataIndex: "taxAmount",
       key: "taxAmount",
+      align: "right",
       ...getColumnSearchProps("taxAmount"),
       sorter: (a, b) => a.taxAmount.localeCompare(b.taxAmount),
       // render: (_, record) =>
@@ -370,6 +376,7 @@ function ScanDetailView() {
       title: "Total Amount",
       dataIndex: "unitPrice",
       key: "unitQuantity",
+      align: "right",
       // ...getColumnSearchProps("unitquantity"),
       sorter: (a, b) => a.unitQuantity.localeCompare(b.unitQuantity),
       render: (text, record, index) => {
@@ -476,14 +483,30 @@ function ScanDetailView() {
           {rowData.state.rowData.sgst ? rowData.state.rowData.sgst : "--"}
         </Descriptions.Item>
 
-        <Descriptions.Item
+        {/* <Descriptions.Item
           label="Invoice Amount"
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           {rowData.state.rowData.invoiceAmount
             ? parseFloat(rowData.state.rowData.invoiceAmount).toFixed(2)
             : "--"}
+        </Descriptions.Item> */}
+
+        <Descriptions.Item
+          label="Invoice Amount"
+          labelStyle={{ color: "black", fontWeight: "bold" }}
+        >
+          {rowData.state.rowData.invoiceAmount ? (
+            <>
+              <span>{rowData.state.rowData.invoiceAmount}</span>
+              <span style={{ color: "black", fontWeight: "bold" }}>&nbsp;INR</span>
+            </>
+          ) : (
+            "--"
+          )}
         </Descriptions.Item>
+
+
 
         <Descriptions.Item
           label="Invoice Currency"
@@ -507,14 +530,14 @@ function ScanDetailView() {
           labelStyle={{ color: "black", fontWeight: "bold" }}
         >
           <Tag
-           color={rowData.state.rowData.status === "No Variance" ? "green"
-                  : rowData.state.rowData.status === "Fully Variance"  ? "red"
-                  : rowData.state.rowData.status === "Partially Variance"  ? "blue"
-                  : "default" }>
+            color={rowData.state.rowData.status === "No Variance" ? "green"
+              : rowData.state.rowData.status === "Fully Variance" ? "red"
+                : rowData.state.rowData.status === "Partially Variance" ? "blue"
+                  : "default"}>
             {rowData.state.rowData.status ? rowData.state.rowData.status : "--"}
           </Tag>
         </Descriptions.Item>
-        
+
       </Descriptions>
 
       <Card>
@@ -542,6 +565,11 @@ function ScanDetailView() {
                 ) {
                   Subjectamount +=
                     Number(record.unitPrice * record.unitQuantity)
+
+                }
+                {
+                  taxAmount +=
+                    Number(record.taxAmount)
 
                 }
               });

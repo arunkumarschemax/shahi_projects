@@ -1,4 +1,6 @@
-import { BuyersView, SchemaxAIDocx, DocView, LandingPageDashBoard, PriceView, VendorBranchInfoGrid, VendorGrid } from "../../components";
+import { BuyersView, SchemaxAIDocx, DocView, LandingPageDashBoard, PriceView, VendorBranchInfoGrid, VendorGrid, InvoiceReport, ScanDetailView } from "../../components";
+
+
 
 export const components = {
     vendors: <VendorGrid />,
@@ -8,4 +10,6 @@ export const components = {
     DocView: <DocView />,
     VendorBranchInfoGrid: <VendorBranchInfoGrid />,
     LandingPageDashBoard: <LandingPageDashBoard />,
+    ScanDetailView: <ScanDetailView />,
+    InvoiceReport: <InvoiceReport/>
 }

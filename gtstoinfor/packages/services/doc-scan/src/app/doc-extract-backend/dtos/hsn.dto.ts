@@ -38,8 +38,8 @@ export class HsnDto {
   // @ApiProperty()
   // status: string;
 
-  @ApiProperty()
-  VarianceStatus: StatusEnum;
+  // @ApiProperty()
+  // VarianceStatus: StatusEnum;
 
   @ApiProperty()
   HsnId?: number;

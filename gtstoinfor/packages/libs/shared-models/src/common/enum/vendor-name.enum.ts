@@ -1,10 +1,11 @@
 export enum VendorNameEnum {
-    extractedDhl = "DHL",
+    extractedDhl = "DHL FREIGHT",
+    extractedDhlCourierfrieght = "DHL COURIER FRIEGHT",
     extractedDart = "DART",
     extractedExpeditors = "EXPEDITORS",
     extractedEfl = "EFL",
     extractedOocl = "OOCL",
-    extractedNagel = "NAGEL",
+    extractedNagel = "KUEHNE NAGEL",
     extractedApl = "APL",
     extractedMaersk = "MAERSK",
     extractedSrivaru = "SRIVARU",
@@ -17,8 +18,63 @@ export enum VendorNameEnum {
     extractedWaymark = "WAYMARK",
     extractedLigi="LIGI",
     extractedNikkou="NIKKOU",
-    extractedRingoCarago="Ringo Carago",
+    extractedTriway="TRIWAY",
+    extractedRingoCarago="RINGO CARGO",
+    extractedMsn="MSN",
+    extractedFredexFrieght="FREDEX FRIEGHT",
+    extractedFredexCourier="FREDEX  COURIER",
+    extractedDhlairduty="DHL AIR DUTY",
+    extractedTotalTransport="TOTAL TRANSPORT",
+    extractedSanjayForwarder="SANJAY FORWARDER",
+    extractedOneTime="ONE TIME",
+    extractedTiger="TIGER",
+    extractedOia="OIA",
+    extractedTextiles="TEXTILES COMMITEE",
+    extractedToll="TOLL",
+    extractedDelmar="DELMAR",
+    extractedMgh="MGH",
+    extractedLxpantos="LX PANTOS",
+    extractedSavinoDell="SAVINO DELL",
+    extractedNewblobe="NEW BLOBE",
+    extracteddachser="DACHSER",
+    extractedscanWell="SCANWELL",
+    extractedMatrix="MATRIX",
+    extractedRahat="RAHAT",
+    extractedSolitaire="SOLITAIRE",
+
+
+
+    extractedcogoPort="COGO PORT",
+    extractedUnicorn="UNICORN",
+    extractedUnique="UNIQUE",
+    extractedTvs="TVS",
+    extractedVelogicIndia="VELOGIC INDIA",
+    extracteWiderlogistics="WIDER LOGISTICS",
+    extractedWorldLine="WORLD LINE",
+    extractedKwe="KWE",
+    extractedUps = "UPS",
+    extractedCube="20 CUBE",
+    extractedAps="APS",
+    extractChRowbin="CH ROWBIN",
+    extractDBSCHENKAR="DB SCHENKAR",
+    extractCeva="CEVA",
+    extractedunitedLiner="UNITED LINER",
+    extractedwenParker="WEN PARKER",
+    
     
 
+    
 
+    
+
+    extractedJeena="JEENA & COMPANY",
+    extractedKerryIndev="KERRY INDEV",
+    extractedGateway='GATEWAY',
+    extractedFederationofIndian='FEDERATION OF INDIA',
+    extractedLogWin='LOGWIN',
+    extractedHellmann="HELLMANN",
+    extractedGeodis="GEODIS",
+    extractedJas="JAS",
+    extractedGLOBELINK="GLOBELINK",
+    
 }

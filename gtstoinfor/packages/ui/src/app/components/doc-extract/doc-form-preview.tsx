@@ -65,6 +65,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
     const [sgst, setSgst] = useState("");
     const [invoiceCurrency, setInvoiceCurrency] = useState("");
     const [financialYear, setFinancialyear] = useState("");
+    const [hsnData, setHsnData] = useState<any[]>([]);
 
     const [extractionCompleted, setExtractionCompleted] = useState(false);
 
@@ -76,9 +77,6 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
     const [vendorCod, setVendorCod] = useState<any[]>([]);
 
     useEffect(() => {
-        console.log(props?.formData)
-        console.log(props?.form)
-
         if (props?.formData != undefined) {
             props?.form.setFieldsValue({
                 venName: props.formData.venName, gstNumber: props.formData.gstNumber,
@@ -95,8 +93,6 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
 
 
     useEffect(() => {
-        console.log(props?.hsnData)
-        console.log(props?.form)
         if (props?.hsnData != undefined) {
             props?.form.setFieldsValue({
                 HSN: props.hsnData.HSN, description: props.hsnData.description,
@@ -108,7 +104,30 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
 
             getVendorPrice(props.hsnData.venName)
 
-        }
+        };
+        const vendor = props.form.getFieldValue('venName');
+        const filteredPriceData = price.filter(rec => rec.vendor === vendor);
+        const modifiedHsnData = props.hsnData.map(rec => {
+            const matchingPriceRec = filteredPriceData.find(priceRec => {
+                const value = priceRec.hsnCode === rec.HSN && priceRec.serviceDescription === rec.description
+                if (value === true) {
+                    return priceRec;
+                }
+            });
+            if (matchingPriceRec) {
+                return {
+                    ...rec,
+                    quotation: matchingPriceRec.unitPrice
+                };
+            }
+            else {
+                return {
+                    ...rec,
+                    quotation: 0
+                };
+            }
+        });
+        setHsnData(modifiedHsnData);
     }, [props?.hsnData]);
 
 
@@ -162,6 +181,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                 setPrice(res.data);
                 console.log(res.data?.unitPrice)
                 props.form.setFieldsValue({ quotation: res.data?.unitPrice })
+                console.log(res.data, "***********************")
             } else {
                 setPrice([]);
             }
@@ -190,122 +210,88 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
 
 
     const handleAddToTable = () => {
-        if (
-            !HSN &&
-            !taxType &&
-            !taxAmount &&
-            !taxPercentage &&
-            !charge &&
-            !variance &&
-            !unitQuantity &&
-            !unitPrice &&
-            // !status &&
-            !amount
-        ) {
-            return;
+        const indexValue = props.form.getFieldValue('index');
+        const formKeys = ['HSN', 'taxType', 'description', 'charge', 'taxPercentage', 'taxAmount', 'variance', 'quotation', 'unitQuantity']
+        if (indexValue >= 0) {
+            for (const rec of formKeys) {
+                hsnData[indexValue][rec] = props.form.getFieldValue(rec);
+                props.form.resetFields([rec]);
+            }
+            setHsnData([...hsnData]);
+        } else if (indexValue === undefined) {
+            const initial = [...hsnData];
+            const singleObject = {};
+            for (const rec of formKeys) {
+                singleObject[rec] = props.form.getFieldValue(rec)
+                props.form.resetFields([rec]);
+            };
+            initial.push(singleObject);
+            console.log(initial, "initial")
+            setHsnData(initial);
         }
 
-        const newItem = {
-            HSN,
-            description,
-            taxType,
-            taxAmount,
-            charge,
-            amount,
-            quotation: isEditing ? originalQuotation : quotation,
-            taxPercentage: taxPercentage,
-            unitQuantity,
-            unitPrice,
-            variance,
-        };
-        if (isEditing) {
-            const updatedTableData = props.hsnData.map((item) =>
-                item === editingItem ? { ...newItem } : item
-            );
-            setExtractedData(updatedTableData);
-            setIsEditing(false);
-            setEditingItem(null);
-            setButtonText('Add');
-        } else {
-            setExtractedData([...props.hsnData, newItem]);
-        }
+        // setExtractedData(updatedTableData);
+        setIsEditing(false);
+        setEditingItem(null);
+        setButtonText('Add');
+    }
 
-        setHSN("");
-        setDescription("");
-        setTaxType("");
-        setTaxAmount("");
-        setCharge("");
-        setTaxPercentage("");
-        setAmount("");
-        setVariance("");
-        setUnitQuantity("");
-        setUnitPrice("");
-        // setStatus("");
-    };
 
-    const handleEdit = (item) => {
-        setHSN(item.HSN || "0");
-        setDescription(item.description || "");
-        setTaxType(item.taxType || "0");
-        setTaxAmount(item.taxAmount || "0");
 
-        let editedCharge = "";
-        if (item.taxAmount !== null && item.taxPercentage !== null) {
-            const taxPercentage = item.taxPercentage;
-            const taxAmount = item.taxAmount;
-            const equivalentFor100Percent = (taxAmount * 100) / taxPercentage;
-            editedCharge = `${equivalentFor100Percent.toFixed(2)}`;
-        } else if (item.taxAmount !== null) {
-            editedCharge = `${item.taxAmount}`;
-        }
-        setCharge(editedCharge || "0");
-        setTaxPercentage(item.taxPercentage || "0");
-        const unitPrice = parseFloat(item.unitPrice) || 0;
-        const quotation = parseFloat(item.quotation) || 0;
-        setVariance((unitPrice - quotation).toFixed(2));
-        setAmount(item.amount || "0");
 
-        setUnitQuantity(item.unitQuantity || "0");
-        setOriginalUnitPrice(item.unitPrice || "0");
-        setOriginalQuotation(item.quotation || "0");
+
+    const handleEdit = (item, index) => {
         setIsEditing(true);
         setEditingItem(item);
         setButtonText("Update");
+        props?.form.setFieldValue('index', index);
+        props.form.setFieldValue('taxType', item.taxType);
+        props.form.setFieldValue('HSN', item.HSN);
+        props.form.setFieldValue('description', item.description);
+        props.form.setFieldValue('charge', item.charge);
+        props.form.setFieldValue('taxPercentage', item.taxPercentage);
+        props.form.setFieldValue('taxAmount', item.taxAmount);
+        props.form.setFieldValue('variance', item.Variance);
+        props.form.setFieldValue('quotation', item.quotation);
+        props.form.setFieldValue('unitQuantity', item.unitQuantity);
     };
 
-    const handleDelete = (item) => {
-        const updatedTableData = props.hsnData.filter((data) => data !== item);
-        setExtractedData(updatedTableData);
+    const handleDelete = (index: number) => {
+        hsnData?.splice(index, 1)
+        setHsnData([...hsnData])
     };
+
+    console.log(extractedData, "hsnData:s", hsnData)
 
     const handleReset = () => {
-        setHSN('');
-        setTaxType('');
-        setTaxPercentage('');
-        setTaxAmount('');
-        setUnitQuantity('');
-        setQuotation('');
-        setDescription('');
-        setVariance('');
-        setStatus('');
+        props.form.resetFields(['index', 'HSN', 'taxType', 'description', 'charge', 'taxPercentage', 'taxAmount', 'variance', 'quotation', 'unitQuantity']);
+        setIsEditing(false);
     };
 
     const columns = [
+        // {
+        //     title: "Service Description",
+        //     dataIndex: "description",
+        //     width: "30",
+        //     key: "description",
+        //     render: (description) => {
+        //         if (description !== undefined && description !== null) {
+        //             const descriptionString = description.toString().replace(/[^\w\s]/g, '');
+        //             const trimmedDescription = descriptionString.split(/[^a-zA-Z\s]+/)[0];
+        //             return trimmedDescription;
+        //         } else {
+        //             return "_";
+        //         }
+        //     }
+        // },
         {
             title: "Service Description",
             dataIndex: "description",
             width: "30",
             key: "description",
-            render: (description) => {
-                if (description !== undefined && description !== null) {
-                    const descriptionString = description.toString().replace(/[^\w\s]/g, '');
-                    const trimmedDescription = descriptionString.split(/[^a-zA-Z\s]+/)[0];
-                    return trimmedDescription;
-                } else {
-                    return "_";
-                }
-            }
+            render: (HSN) => (HSN !== undefined && HSN !== null ? HSN : "0"),
         },
+
         {
             title: "HSN code",
             dataIndex: "HSN",
@@ -329,6 +315,13 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             title: "Unit Price",
             dataIndex: "unitPrice",
             key: "unitPrice",
+            render: (unitPrice) => (
+                <div style={{ textAlign: "right" }}>
+                    {typeof unitPrice === 'undefined' || unitPrice === null || unitPrice === ''
+                        ? "-"
+                        : unitPrice}
+                </div>
+            ),
         },
         {
             title: "Tax Type",
@@ -342,15 +335,15 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             title: "Charge",
             dataIndex: "charge",
             key: "charge",
-            render: (charge, record, index) => (
-                <div style={{ textAlign: "right" }}>
-                    {record.taxAmount !== null && record.taxPercentage !== null
-                        ? `${(record.taxAmount * 100 / record.taxPercentage).toFixed(2)}`
-                        : record.taxAmount !== null
-                            ? `${record.taxAmount}`
-                            : `${charge || "0"}`}
-                </div>
-            ),
+            // render: (charge, record, index) => (
+            //     <div style={{ textAlign: "right" }}>
+            //         {record.taxAmount !== null && record.taxPercentage !== null
+            //             ? `${(record.taxAmount * 100 / record.taxPercentage).toFixed(2)}`
+            //             : record.taxAmount !== null
+            //                 ? `${record.taxAmount}`
+            //                 : `${charge || "0"}`}
+            //     </div>
+            // ),
         },
         {
             title: "Tax Percentage",
@@ -366,17 +359,52 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                 </div>
             ),
         },
+
         {
-            title: "Tax Amount",
+            title: "IGST",
             dataIndex: "taxAmount",
             key: "taxAmount",
-            render: (taxAmount) => (
-                <div style={{ textAlign: "right" }}>
-                    {taxAmount !== undefined && taxAmount !== null
-                        ? parseFloat(taxAmount).toFixed(2)
-                        : "0"}
-                </div>
-            ),
+            render: (taxAmount, record) => {
+                return record.taxType === 'IGST' ?
+                    (
+
+                        <div style={{ textAlign: "right" }}>
+                            {taxAmount !== undefined && taxAmount !== null
+                                ? parseFloat(taxAmount).toFixed(2)
+                                : "0"}
+                        </div>
+                    ) : '-'
+            },
+        },
+        {
+            title: "CGST",
+            dataIndex: "cgst",
+            key: "cgst",
+            render: (cgst, record) => {
+                return record.taxType === 'CGST & SGST' ?
+                    (
+                        <div style={{ textAlign: "right" }}>
+                            {cgst !== undefined && cgst !== null
+                                ? parseFloat(cgst).toFixed(2)
+                                : "0"}
+                        </div>
+                    ) : '-'
+            },
+        },
+        {
+            title: "SGST",
+            dataIndex: "sgst",
+            key: "sgst",
+            render: (sgst, record) => {
+                return record.taxType === 'CGST & SGST' ?
+                    (
+                        <div style={{ textAlign: "right" }}>
+                            {sgst !== undefined && sgst !== null
+                                ? parseFloat(sgst).toFixed(2)
+                                : "0"}
+                        </div>
+                    ) : '-'
+            },
         },
         // {
         //     title: "Amount",
@@ -420,17 +448,17 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             title: "Action",
             dataIndex: "action",
             key: "action",
-            render: (_, item) => (
+            render: (_, item, index) => (
                 <span>
                     <Button
-                        onClick={() => handleEdit(item)}
+                        onClick={() => handleEdit(item, index)}
                         icon={<EditOutlined />}
                         style={{ color: "blue" }}
                     />
                     <Divider type="vertical" />
                     <Popconfirm
                         title="Are You Sure to Delete ?"
-                        onConfirm={() => handleDelete(item)}
+                        onConfirm={() => handleDelete(index)}
                         okText="Yes"
                         cancelText="No"
                     >
@@ -476,33 +504,38 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
         calculateCharge();
     };
 
-  
-    const onSumbit = () => {
-        const req1 = new HsnDto(HSN,taxType,taxAmount,taxPercentage,charge,unitQuantity,description,quotation,unitPrice,variance)
-        const req = new AllScanDto(gstNumber,venName, venCod,invoiceDate,invoiceNumber,invoiceAmount,igst,cgst,sgst,invoiceCurrency,
-            financialYear, status,"",[req1])
-        //   JSON.parse(localStorage.getItem("currentUser")).user.userName, extractedData,"");
-        console.log(req, req1,"submit");
+
+    const onSubmit = () => {
+        const dto1 = []
+        for (const data of hsnData) {
+            const dto = new HsnDto(data.HSN, data.taxType, data.taxAmount, data.description, data.taxPercentage, data.charge, data.unitQuantity, data.quotation, data.unitPrice, data.variance)
+            dto1.push(dto)
+        }
+
+        const req = new AllScanDto(props.formData.gstNumber, props.formData.venName, props.form.getFieldValue("venCod"), props.formData.invoiceDate, props.formData.invoiceNumber, props.formData.invoiceAmount, props.formData.igst, props.formData.cgst, props.formData.sgst, props.formData.invoiceCurrency, props.formData.financialYear, status, "", dto1, JSON.parse(localStorage.getItem("currentUser")).user.userName,);
+        console.log(req, dto1, "submit");
         service
-          .postdata(req)
-          .then((res) => {
-            if (res.status) {
-              message.success("Success");
-              navigate("/scan-document");
-            } else {
-              message.error("Fill All Fields");
-            }
-          })
-          .catch((err: { message: any }) => {
-            console.log(err.message, "err message");
-          });
-      };
+            .postdata(req)
+            .then((res) => {
+                if (res.status) {
+                    message.success("Success");
+                    navigate("/scan-document");
+                } else {
+                    message.error("Fill All Fields");
+                }
+            })
+            .catch((err: { message: any }) => {
+                console.log(err.message, "err message");
+            });
+
+
+    }
 
 
     return (
         <>
-            <Card >
-                <Form layout='vertical' form={props.form} initialValues={props?.formData} name="control-hooks">
+            <Card>
+                <Form layout="vertical" form={props.form} initialValues={props?.formData} name="control-hooks">
                     <Row gutter={16}>
                         <Col xs={8} sm={8} md={8} lg={8} xl={8}>
                             <Form.Item
@@ -513,10 +546,10 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 <Input
                                     placeholder="Vendor Name"
                                     onChange={(e) => setVenName(e.target.value)}
+                                    style={{ borderColor: props.formData?.venName ? 'green' : 'red' }}
                                 />
                             </Form.Item>
                         </Col>
-
 
                         <Col
                             xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
@@ -526,7 +559,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Vendor Code"
-                                    onChange={(e) => setVenCode(e.target.value)} />
+                                    onChange={(e) => setVenCode(e.target.value)}
+                                    style={{ borderColor: props.formData?.venCod ? 'green' : 'blue' }} />
                             </Form.Item>
                         </Col>
 
@@ -535,7 +569,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 <Input
                                     placeholder="GST NUMBER"
                                     onChange={(e) => setGstNumber(e.target.value)}
-                                />
+                                    style={{ borderColor: props.formData?.gstNumber ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -548,7 +582,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Date"
-                                    onChange={(e) => setInvoiceDate(e.target.value)} />
+                                    onChange={(e) => setInvoiceDate(e.target.value)}
+                                    style={{ borderColor: props.formData?.invoiceDate ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
 
@@ -559,7 +594,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Number"
-                                    onChange={(e) => setInvoiceNumber(e.target.value)} />
+                                    onChange={(e) => setInvoiceNumber(e.target.value)}
+                                    style={{ borderColor: props.formData?.invoiceNumber ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
 
@@ -572,7 +608,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Amount"
-                                    onChange={(e) => setInvoiceAmount(e.target.value)} />
+                                    onChange={(e) => setInvoiceAmount(e.target.value)}
+                                    style={{ borderColor: props.formData?.invoiceAmount ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -585,7 +622,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="IGST"
-                                    onChange={(e) => setIgst(e.target.value)} />
+                                    onChange={(e) => setIgst(e.target.value)}
+                                    style={{ borderColor: props.formData?.igst ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
 
@@ -596,7 +634,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="CGST"
-                                    onChange={(e) => setCgst(e.target.value)} />
+                                    onChange={(e) => setCgst(e.target.value)}
+                                    style={{ borderColor: props.formData?.cgst ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
 
@@ -613,7 +652,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="SGST"
-                                    onChange={(e) => setSgst(e.target.value)} />
+                                    onChange={(e) => setSgst(e.target.value)}
+                                    style={{ borderColor: props.formData?.sgst ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -626,7 +666,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Currency"
-                                    onChange={(e) => setInvoiceCurrency(e.target.value)} />
+                                    onChange={(e) => setInvoiceCurrency(e.target.value)}
+                                    style={{ borderColor: props.formData?.invoiceCurrency ? 'green' : 'red' }} />
                             </Form.Item>
                         </Col>
 
@@ -636,7 +677,8 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             rules={[{ required: true, message: "Field Is Required" }]}
                         >
                             <Input placeholder="Financial Year"
-                                onChange={(e) => setFinancialyear(e.target.value)} />
+                                onChange={(e) => setFinancialyear(e.target.value)}
+                                style={{ borderColor: props.formData?.financialYear ? 'green' : 'red' }} />
                         </Form.Item>
                         </Col>
 
@@ -668,20 +710,29 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             </Card >
 
             <Card>
-                <Form layout="vertical">
+                <Form layout="vertical" form={props.form}>
                     <Row gutter={12}>
                         <Col
                             xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-                            <Form.Item label="HSN Code">
+                            <Form.Item
+                                name="index"
+                                hidden={true}
+                            >
+                                <Input placeholder="HSN Code"
+
+                                />
+                            </Form.Item>
+                            <Form.Item label="HSN Code" name={'HSN'}>
                                 <Input placeholder="HSN Code"
                                     name="HSN"
                                     value={HSN}
-                                    onChange={(e) => setHSN(e.target.value)} />
+                                    onChange={(e) => setHSN(e.target.value)}
+                                />
                             </Form.Item>
                         </Col>
 
                         <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-                            <Form.Item label="Tax Type">
+                            <Form.Item label="Tax Type" name={'taxType'}>
                                 <Select
                                     style={{ width: '100%' }}
                                     value={taxType}
@@ -689,14 +740,14 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                                 >
                                     <Option value="IGST">IGST</Option>
                                     <Option value="CGST & SGST">CGST & SGST</Option>
-                                    <Option value="No Taxtype">No Taxtype</Option>
+                                    <Option value="No Tax">No Tax</Option>
                                 </Select>
                             </Form.Item>
                         </Col>
 
                         <Col
                             xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
-                            <Form.Item label="Tax Percentage">
+                            <Form.Item label="Tax Percentage" name={"taxPercentage"}>
                                 <Input placeholder="Tax Percentage"
                                     name="taxPercentage"
                                     value={taxPercentage}
@@ -705,7 +756,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
 
                         </Col>
                         <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
-                            <Form.Item label="Tax Amount">
+                            <Form.Item label="Tax Amount" name={"taxAmount"}>
                                 <Input placeholder="Tax Amount"
                                     name="taxAmount"
                                     value={taxAmount}
@@ -714,20 +765,22 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                         </Col>
 
                         <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-                            <Form.Item label="Unit Quantity">
+                            <Form.Item label="Unit Quantity" name={"unitQuantity"}>
                                 <Input placeholder="Unit Quantity"
                                     name="unitQuantity"
                                     value={unitQuantity}
                                     onChange={(e) => setUnitQuantity(e.target.value)} />
+
                             </Form.Item>
                         </Col>
 
                         <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-                            <Form.Item label="Description">
+                            <Form.Item label="Description" name={"description"}>
                                 <Input placeholder="Description"
                                     name="description"
                                     value={description}
-                                    onChange={(e) => setDescription(e.target.value)} />
+                                    onChange={(e) => setDescription(e.target.value)}
+                                />
                             </Form.Item>
                         </Col>
                     </Row>
@@ -796,7 +849,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                     type="primary"
                     htmlType="submit"
                     style={{ position: "relative", left: "10pX" }}
-                    onClick={onSumbit}
+                    onClick={onSubmit}
                 >
                     Submit
                 </Button>
@@ -804,8 +857,9 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
 
             <Row gutter={16}>
                 <div style={{ overflowX: 'auto' }}>
-                    <Table dataSource={props.hsnData} columns={columns} size="small" pagination={false} />
+                    <Table dataSource={hsnData} columns={columns} size="small" pagination={false} />
                 </div>
+
             </Row>
         </>
     )

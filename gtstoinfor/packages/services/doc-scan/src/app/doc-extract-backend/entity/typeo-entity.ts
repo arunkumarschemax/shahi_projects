@@ -92,11 +92,11 @@ export class ScanEntity extends BaseEntity {
   })
   status: string;
   
-  @Column("enum", {
-    name: "variance_status",
-    enum: StatusEnum,
-  })
-  VarianceStatus: StatusEnum;
+  // @Column("enum", {
+  //   name: "variance_status",
+  //   enum: StatusEnum,
+  // })
+  // VarianceStatus: StatusEnum;
 
   @CreateDateColumn({
     name: "created_at",

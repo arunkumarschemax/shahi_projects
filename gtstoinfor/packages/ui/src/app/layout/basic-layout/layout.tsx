@@ -5,12 +5,14 @@ import { Link, Route, Routes } from 'react-router-dom';
 import { logout, useIAMClientState } from '../../common';
 import { ExceptionComponent } from '../../common/exception-handling';
 import { IconType } from '../../common/iam-client-react/constants/icon-type';
-import { SchemaxAIDocx, PriceForm, VendorBranchInfoGrid } from '../../components';
+import { SchemaxAIDocx, PriceForm, VendorBranchInfoGrid, BuyersView } from '../../components';
 import { OnlineStatus } from '../header';
 import { components } from './all-components';
 import { svgIcons } from './all-svg-icons';
 import './common.css';
 import logoLight from './xpparel-logo.jpeg';
+import InvoiceReport from '../../components/reports/innvoice-reports';
+import ScanDetailView from '../../components/doc-extract/details-views';
 
 const { Header, Content } = Layout;
 
@@ -165,6 +167,9 @@ export const BasicLayout: React.FC = () => {
                             {getAllRoutes().map(rec => rec)}
                             <Route path="/VendorBranchInfoGrid" element={<VendorBranchInfoGrid />} />
                             <Route path="/doc-extract-form" element={<SchemaxAIDocx />} />
+                            <Route path="/BuyersView" element={<BuyersView />} />
+                            <Route path="/invoice-report" element={<InvoiceReport/>} />
+                            <Route path="/ScanDetailView" element={<ScanDetailView/>} />
                             <Route path="/priceform" element={<PriceForm />} />
                             <Route path='/*' element={<ExceptionComponent statusCode={404} statusMessage='Sorry, the page you visited does not exist.' />} />
                             <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

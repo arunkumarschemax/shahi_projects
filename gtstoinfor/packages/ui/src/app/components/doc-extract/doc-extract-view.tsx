@@ -28,15 +28,17 @@ import Highlighter from "react-highlight-words";
 import { Link, useNavigate } from "react-router-dom";
 
 interface Item {
-  GST: string;
-  Vendor: string;
+  gstNumber: string;
+  venName: string;
+  venCod: string;
   invoiceDate: string;
-  Cgst: string;
-  IGST: string;
-  Sgst: string;
-  InnvoiceNumber: string;
-  InnvoiceAmount: string;
-  InnvoiceCurrency: string;
+  cgst: string;
+  igst: string;
+  sgst: string;
+  invoiceNumber: string;
+  invoiceAmount: string;
+  invoiceCurrency: string;
+  financialYear: string;
 }
 
 // export interface DocViewProps { }
@@ -226,7 +228,7 @@ export const DocView = () => {
       dataIndex: "venName",
       key: "venName",
       // ...getColumnSearchProps("Vendor"),
-      align: "center",
+      align: "left",
       sorter: (a, b) => a.venName.localeCompare(b.venName),
       render: (text: any, record: { venName: any }) => {
         return <> {record.venName ? record.venName : "-"} </>;
@@ -261,12 +263,14 @@ export const DocView = () => {
       key: "invoiceAmount",
       ...getColumnSearchProps("invoiceAmount"),
       sorter: (a, b) => a.invoiceAmount.localeCompare(b.invoiceAmount),
-      align: "center",
+      align: "right",
       render: (text, record) => {
-        const formattedAmount = record.invoiceAmount ? parseFloat(record.invoiceAmount).toFixed(2) : "-";
+        const invoiceAmountWithoutCommas = record.invoiceAmount ? record.invoiceAmount.replace(/,/g, '') : "-";
+        const formattedAmount = parseFloat(invoiceAmountWithoutCommas).toFixed(2);
         return <>{formattedAmount}</>;
       },
     },
+
     {
       title: "Invoice Currency",
       dataIndex: "invoiceCurrency",
@@ -363,13 +367,14 @@ export const DocView = () => {
                 optionFilterProp="children"
                 allowClear
               >
-                {VendorData.map((option) => (
-                  <option value={option.businessName}>
+                {VendorData.sort((a, b) => a.businessName.localeCompare(b.businessName)).map((option) => (
+                  <Select.Option key={option.businessName} value={option.businessName}>
                     {option.businessName}
-                  </option>
+                  </Select.Option>
                 ))}
               </Select>
             </Form.Item>
+
           </Col>
           <Row justify="end">
             <Form.Item>
@@ -395,7 +400,7 @@ export const DocView = () => {
           </Row>
         </Row>
       </Form>
-      <Table size="small" dataSource={formdata} columns={columns} pagination={false} />
+      <Table size="small" dataSource={formdata} columns={columns} pagination={false} className="custom-table"/>
     </Card>
   );
 }
