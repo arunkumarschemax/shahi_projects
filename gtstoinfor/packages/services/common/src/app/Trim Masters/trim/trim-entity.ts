@@ -1,5 +1,7 @@
 
 import {Column,Entity,PrimaryGeneratedColumn, VersionColumn, UpdateDateColumn, CreateDateColumn, OneToMany} from "typeorm";
+import { M3TrimsEntity } from "../../m3-trims/m3-trims.entity";
+import { M3ItemsEntity } from "../../m3-items/m3-items.entity";
 
 
 @Entity('trim')
@@ -52,7 +54,7 @@ updatedUser: string | null;
 })
 versionFlag: number;
 
-@OneToMany(type => trimEntity, attribute => attribute.trimId,{cascade: true})
-    trimInfo : trimEntity
+@OneToMany(type => M3ItemsEntity, attribute => attribute.trimCategoryInfo,{cascade: true})
+    trimInfo : M3ItemsEntity
 }
 

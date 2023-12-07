@@ -1,6 +1,9 @@
 import { IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate, IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ItemTypeEnum, LogoEnum, PartEnum, m3ItemsContentEnum } from 'packages/libs/shared-models/src/enum';
+import { BuyersDTO } from '../buyers/dto/buyers.dto';
+import { TrimDTO } from '../Trim Masters/trim/dto/trim-dto';
+import { CategoryDto } from '../Trim Masters/category/dto/category-dto';
 
 export class M3TrimItemsDTO {
 
@@ -13,22 +16,11 @@ export class M3TrimItemsDTO {
     @ApiProperty()
     itemCode: string;
 
-
     @ApiProperty()
-    description: string;
-
-    @ApiProperty()
-    itemType: ItemTypeEnum;
+    categoryId: number;
 
     @ApiProperty()
     colorId: number;
-
-
-    @ApiProperty()
-    trimId: number;
-
-    @ApiProperty()
-    categoryId: number;
 
     @ApiProperty()
     contentId: number;
@@ -44,7 +36,7 @@ export class M3TrimItemsDTO {
 
     @ApiProperty()
     part: PartEnum;
-
+    
     @ApiProperty()
     qualityId: number;
 
@@ -62,12 +54,25 @@ export class M3TrimItemsDTO {
 
     @ApiProperty()
     varietyId: number;
-    
+            
     @ApiProperty()
-    trimCategoryId: number;
+    trimCategoryId:number;
 
     @ApiProperty()
     trimMappingId: number;
+
+
+    @ApiProperty()
+    buyerCode?: string;
+
+    @ApiProperty()
+    itemType: ItemTypeEnum;
+
+    @ApiProperty()
+    description: string;
+
+    // @ApiProperty()
+    // trimId: number;
 
     @ApiProperty()
     isActive: boolean;
@@ -81,8 +86,9 @@ export class M3TrimItemsDTO {
     @ApiProperty()
     versionFlag: number;
 
-    @ApiProperty()
-    buyerCode?: string;
+
+
+
 
 
 }
