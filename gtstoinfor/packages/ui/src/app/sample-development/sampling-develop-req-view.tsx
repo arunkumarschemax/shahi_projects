@@ -59,7 +59,7 @@ import { useIAMClientState } from "../common/iam-client-react";
   const { Option } = Select;
   
   export const SampleDevNewView = () => {
-    const [lifeCycleStatus, setLifeCycleStatus] = useState(LifeCycleStatusEnum.DISPATCH);
+    const [lifeCycleStatus, setLifeCycleStatus] = useState(LifeCycleStatusEnum.READY_TO_DISPATCH);
     const [status, setStatus] = useState('Dispatch');
     const [dispatch, setDispatch] = useState('');
     const [tabName, setTabName] = useState<string>("Fabric");
@@ -623,7 +623,7 @@ import { useIAMClientState } from "../common/iam-client-react";
                 <span>{<Tag onClick={() => generateBarcode(requestNo)} style={{cursor:'pointer'}}>
                            <BarcodeOutlined />
                        </Tag>}</span> */}
-               {lifeCycleStatus === LifeCycleStatusEnum.DISPATCH ? (
+               {lifeCycleStatus === LifeCycleStatusEnum.READY_TO_DISPATCH ? (
         <>
           <span style={{ width: "10px" }}></span>
           {/* <span>Dispatch Status: <b>{dispatch}</b></span> */}
