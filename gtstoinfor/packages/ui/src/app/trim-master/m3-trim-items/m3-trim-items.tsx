@@ -1,9 +1,10 @@
-import {BuyersService,CategoryService,ColourService,ContentService,FabricStructuresService,FinishService,HoleService,M3ItemsService,QualitysService,StructureService,ThicknessService,TrimParamsMappingService,TrimService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
+import {BuyersService,CategoryService,ColourService,ContentService,FabricStructuresService,FinishService,HoleService,M3ItemsService,M3TrimsService,QualitysService,StructureService,ThicknessService,TrimParamsMappingService,TrimService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Select, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import AlertMessages from "../../common/common-functions/alert-messages";
 import { useEffect, useState } from "react";
 import { ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto } from "@project-management-system/shared-models";
+import FormItem from "antd/es/form/FormItem";
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -27,6 +28,7 @@ export function M3TrimItemsForm() {
   const buyerService = new BuyersService();
   const paramsService = new TrimParamsMappingService()
   const service = new M3ItemsService()
+  const m3TrimService = new M3TrimsService()
 
   const [structureData, setStructureData] = useState<any[]>([]);
   const [categoryData, setCategoryData] = useState<any[]>([]);
@@ -200,9 +202,9 @@ export function M3TrimItemsForm() {
 
   const onFinish = (value) => {
     console.log(form.getFieldValue('trimType'),'8888888888')
-    const req = new M3trimsDTO(0,value.buyerId,'',value.categoryId,value.colorId,value.contentId,value.finishId,value.holeId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.typeId,value.uomId,value.varietyId,value.trimCategoryId,mapDataId,buyerCode,value.trimType,value.description,"")
+    const req = new M3trimsDTO(0,value.buyerId,"",value.categoryId,value.colorId,value.contentId,value.finishId,value.holeId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.typeId,value.uomId,value.varietyId,value.trimCategoryId,mapDataId,form.getFieldValue("buyerCode"),value.trimType,value.description,"")
     console.log(req,'---------------------')
-    service.createM3Trim(req).then((res) => {
+    m3TrimService.createM3Trims(req).then((res) => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage);
         // navigate('/grn-view')
@@ -320,6 +322,7 @@ export function M3TrimItemsForm() {
   const buyerOnChange = (val,Option) =>{
     generateItemCode()
     setBuyerCode(Option?.name)
+    form.setFieldsValue({buyerCode : buyerData.find((e) => e.buyerId === val)?.shortCode})
   }
   const trimOnChange = (val) =>{
     generateItemCode()
@@ -371,9 +374,9 @@ export function M3TrimItemsForm() {
                     placeholder="Select Trim Type"
                     onChange={trimTypeOnChange}
                     >
-                        {Object.values(ItemTypeEnum).filter((val) => val !== ItemTypeEnum.FABRIC).map((val) => (
-                            <Option key={val} value={val}>
-                                {ItemTypeEnumDisplay?.find((e) => e.name === val)?.displayVal}
+                        {Object.values(ItemTypeEnumDisplay).filter((val) => val.displayVal !== ItemTypeEnum.FABRIC).map((val) => (
+                            <Option key={val.name} value={val.name}>
+                                {val.displayVal}
                             </Option>
                         ))}
                     </Select>
@@ -489,9 +492,14 @@ export function M3TrimItemsForm() {
                         })}
                     </Select>
                 </Form.Item>
+               
             </Col>
+           
             </>
             ) : (<></>)}
+             <Form.Item name="buyerCode" style={{display:'none'}} >
+                  <Input hidden/>
+                </Form.Item>
             {mapData[0]?.finish === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>

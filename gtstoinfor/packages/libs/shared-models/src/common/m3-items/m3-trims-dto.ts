@@ -21,7 +21,7 @@ export class M3trimsDTO {
     trimCategoryId:number;
     trimMappingId:any;
     buyerCode?:any
-    itemType?: ItemTypeEnum
+    trimType?: ItemTypeEnum
     description?: string
     extRefNumber?: string
     
@@ -44,7 +44,7 @@ export class M3trimsDTO {
         trimCategoryId:number,
         trimMappingId:any,
         buyerCode?: any,
-        itemType?:ItemTypeEnum,
+        trimType?:ItemTypeEnum,
         description?: string,
         extRefNumber?: string,
     ) {
@@ -67,7 +67,7 @@ export class M3trimsDTO {
         this.trimCategoryId=trimCategoryId;
         this.trimMappingId=trimMappingId;
         this.buyerCode = buyerCode
-        this.itemType = itemType
+        this.trimType = trimType
         this.description = description
         this.extRefNumber = extRefNumber
        
