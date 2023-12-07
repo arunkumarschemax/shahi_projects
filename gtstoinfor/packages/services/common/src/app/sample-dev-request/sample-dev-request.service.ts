@@ -586,6 +586,7 @@ export class SampleRequestService {
     return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
   }
   async creatematerialAlloction(req:MaterialAllocationDTO[]):Promise<CommonResponseModel>{
+    console.log(req)
     const manager=this.dataSource
     try{
       let save
@@ -629,7 +630,7 @@ export class SampleRequestService {
       
         return acc;
       }, []);
-
+      console.log(transformedData);
       let materialitemdata =[];
       for(const mainData of transformedData ){
          const entity = new MaterialAllocationEntity()
@@ -638,7 +639,7 @@ export class SampleRequestService {
          entity.sampleOrderId=mainData.sampleOrderId
          entity.sampleItemId=mainData.sampleItemId
          entity.m3ItemId=mainData.m3ItemId
-         entity.totalIssueQty=100
+         entity.totalIssueQty=0
          entity.status=MaterialStatusEnum.MATERIAL_ALLOCATED
          for(const itemData of mainData.itemData){
           const itemEntity = new MaterialAllocationItemsEntity()
@@ -649,6 +650,7 @@ export class SampleRequestService {
               materialitemdata.push(itemEntity)
          }
          entity.materialAllocationinfo=materialitemdata
+         console.log(entity)
         save = await this.matAllRepo.save(entity)
       }
       console.log(save)
@@ -665,21 +667,31 @@ export class SampleRequestService {
         let flag;
         for(const mainData of transformedData ){
           let updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:mainData.sampleOrderId,m3ItemId:mainData.m3ItemId},{status: `${BomStatusEnum.ALLOCATED}`});
-          if(!updateBomStatus.affected){
-            flag = false
+          console.log("updateBomStatus");
+          console.log(updateBomStatus);
+
+          if(updateBomStatus.affected <1){
+            flag = false;
           }
         }
         let updateSampleOrderStatus
-        let getBomStatus = await manager.getRepository(SamplingbomEntity).findBy({status: Not(BomStatusEnum.ALLOCATED)});
+        let getBomStatus = await manager.getRepository(SamplingbomEntity).findBy({status: Not(BomStatusEnum.ALLOCATED), sampleRequestId: transformedData[0].sampleOrderId});
+        console.log("getBomStatus")
+        console.log(getBomStatus)
+
         if(getBomStatus.length < 1){
           updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:req[0].sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ALLOCATED});
-        }
-        if(!updateSampleOrderStatus || !flag || !updateStockFlag){
-          return new CommonResponseModel(false,1,'Something Went Wrong',[])
+          if(!updateSampleOrderStatus || !flag || !updateStockFlag){
+            return new CommonResponseModel(false,1,'Something Went Wrong',[])
+          }
+          else{
+            return new CommonResponseModel(true,1,'Material Allocation Request Raise')
+          }
         }
         else{
           return new CommonResponseModel(true,1,'Material Allocation Request Raise')
         }
+       
       }else{
         return new CommonResponseModel(false,1,'Something Went Wrong',[])
 
@@ -777,7 +789,7 @@ export class SampleRequestService {
         const manager = this.dataSource;
         //  const query='SELECT st.quantity-IF(st.issued_quantity IS NOT NULL,st.issued_quantity,0) AS totalAvailablequntity, mai.allocate_quantity AS materialAlloctedquantity,st.allocatd_quantity AS stockAllocatedQty,st.quantity AS stockQuantity,(st.quantity-st.allocatd_quantity) AS resultAvailableQuantity,st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId, st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, FALSE AS checkedStatus,date(g.grn_date) as grnDate FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id LEFT JOIN material_allocation_items mai ON mai.stock_id=st.id WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+'  AND st.item_type="'+req.itemType+'" AND (st.quantity-IF(st.issued_quantity IS NOT NULL,st.issued_quantity,0)) >0 order by g.grn_date'
 
-         const rawQuery = 'Select st.location_id AS locationId,st.m3_item AS m3ItemId,st.item_type AS itemType,st.grn_item_id AS grnItemId, st.id AS stockId,(quantity-allocatd_quantity-transfered_quantity) AS quantity, g.grn_number AS grnNumber, date(g.grn_date) as grnDate, rp.rack_position_name AS location, FALSE AS checkedStatus, stock_bar_code AS stockBarCode from stocks st left join grn_items gi on gi.grn_item_id = st.grn_item_id left join rack_position rp on rp.position_id = st.location_id left join grn g on g.grn_id = gi.grn_id where id>0 and g.grn_type = "INDENT" and st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' AND st.item_type="'+req.itemType+'" and (quantity-allocatd_quantity-transfered_quantity) > 0';
+         const rawQuery = 'Select st.buyer_id AS buyerId,st.location_id AS locationId,st.m3_item AS m3ItemId,st.item_type AS itemType,st.grn_item_id AS grnItemId, st.id AS stockId,(quantity-allocatd_quantity-transfered_quantity) AS quantity, g.grn_number AS grnNumber, date(g.grn_date) as grnDate, rp.rack_position_name AS location, FALSE AS checkedStatus, stock_bar_code AS stockBarCode from stocks st left join grn_items gi on gi.grn_item_id = st.grn_item_id left join rack_position rp on rp.position_id = st.location_id left join grn g on g.grn_id = gi.grn_id where id>0 and g.grn_type = "INDENT" and st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' AND st.item_type="'+req.itemType+'" and (quantity-allocatd_quantity-transfered_quantity) > 0';
         // const queryy ='SELECT mai.allocate_quantity AS materialAlloctedquantity,st.allocatd_quantity AS stockAllocatedQty,st.quantity AS stockQuantity,(st.quantity-st.allocatd_quantity) AS resultAvailableQuantity,st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS checkedStatus FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  LEFT JOIN material_allocation_items mai ON mai.stock_id=st.id WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'" AND (st.quantity-st.allocatd_quantity)>0'
         
         const rmData = await manager.query(rawQuery);
