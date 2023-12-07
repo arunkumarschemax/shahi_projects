@@ -869,24 +869,51 @@ export class SampleRequestService {
       }
     }
 
-    async updatedispatch(req?:lifeCycleStatusReq):Promise<CommonResponseModel>{
-      try{
-        const update=await this. sampleRepo.update(
-           {lifeCycleStatus:LifeCycleStatusEnum.CLOSED},
-           {DispatchedDate:req.dipatchedDate},
-        );
+    // async updatedispatch(req?:lifeCycleStatusReq):Promise<CommonResponseModel>{
+    //   console.log(req,"service");
       
-      if(update.affected && update.affected >0 ){
-        return new CommonResponseModel(true, 1, 'Lifecyclestatus updated Sucessfully');
+    //   try{
+    //     const update=await this. sampleRepo.update(
+         
+    //         { SampleRequestId:req.sampleReqId},
+    //        {lifeCycleStatus:req.status},
+    //        {DispatchedDate:req.dipatchedDate}
+    //     );
+      
+    //   if(update.affected && update.affected >0 ){
+    //     return new CommonResponseModel(true, 1, 'Lifecyclestatus updated Sucessfully');
 
-      }else{
-        return new CommonResponseModel(false, 1, 'some went wrong');
+    //   }else{
+    //     return new CommonResponseModel(false, 1, 'some went wrong');
 
-      }
-        } catch (err) {
-          throw err;
+    //   }
+    //     } catch (err) {
+    //       throw err;
+    //     }
+    // }
+    async updatedispatch(req?: lifeCycleStatusReq): Promise<CommonResponseModel> {    
+      try {
+        const update = await this.sampleRepo.update(
+          
+          { SampleRequestId: req.sampleReqId},
+            {lifeCycleStatus: req.status,
+             DispatchedDate: req.dipatchedDate 
+          },
+       
+        );
+    
+        if (update.affected && update.affected >0 ) {
+          return new CommonResponseModel(true, 1, 'Lifecycle status updated successfully');
+        } else {
+          return new CommonResponseModel(false, 1, 'Something went wrong');
         }
+      } catch (err) {
+        throw err;
+      }
     }
+    
+
+
     async getSampleOrderDetails(req:SampleIdRequest):Promise<CommonResponseModel>{
       const sizeDta = `SELECT  GROUP_CONCAT(DISTINCT  CONCAT('sum(IF(s.size_id = ''',size_id,''', s.quantity, 0)) AS ',sizes)) AS size_name FROM size s WHERE sizes != '' 
       AND size_id IN(SELECT DISTINCT size_id FROM sample_request_size_info WHERE sample_request_id=1) ORDER BY  sizes`;

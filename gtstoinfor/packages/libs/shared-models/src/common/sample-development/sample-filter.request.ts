@@ -86,18 +86,16 @@ export class sampleReqIdReq{
 }
 
 export class lifeCycleStatusReq{
-
+sampleReqId? :number
 status?:LifeCycleStatusEnum
-id?:number
-dipatchedDate?:Date
+dipatchedDate?:string
 constructor(
+    sampleReqId?:number,
     status?:LifeCycleStatusEnum,
-    id?:number,
-dispatchedDate?:Date
+dispatchedDate?:string
 
-){
+){  this.sampleReqId = sampleReqId
     this.status=status
-    this.id= id
     this.dipatchedDate=dispatchedDate
 }
 
