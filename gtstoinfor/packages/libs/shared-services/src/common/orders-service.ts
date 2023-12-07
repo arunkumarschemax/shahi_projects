@@ -8,7 +8,7 @@ import { AxiosInstance } from "../axios-instance";
 export class OrdersService extends CommonAxiosService {
     private ordersController = "/orders"
 
-    async saveOrder(data: any, id: number, month: any,uploadType:string): Promise<CommonResponseModel> {
+    async saveOrder(data: any, id: number, month: any, uploadType: string): Promise<CommonResponseModel> {
         // console.log(month)
         const idn = id;
         const montId = month
@@ -222,7 +222,6 @@ export class OrdersService extends CommonAxiosService {
     }
     async getversion(req: ordersPlanNo): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getversion", req)
-
     }
 
     async getItemsMonthly(): Promise<CommonResponseModel> {
@@ -249,8 +248,6 @@ export class OrdersService extends CommonAxiosService {
     }
     async saveItemDetailsOfTrimOrder(req: OrderAcceptanceRequest): Promise<CommonResponseModel> {
         return await AxiosInstance.post('https://nike-backend.shahiapps.in/api/nike-dpom/coLineCreationReq', req)
-        // console.log()
-        // return this.axiosPostCall(this.ordersController + "/saveItemDetailsOfTrimOrder")
     }
 
     async getCoLine(req: any): Promise<CommonResponseModel> {
