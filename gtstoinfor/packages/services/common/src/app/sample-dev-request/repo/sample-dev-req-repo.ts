@@ -377,7 +377,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
     async getIssuedSampleRequests(buyerId?:number): Promise<any> {
         const query = await this.createQueryBuilder()
             .select(`sample_request_id AS sampleRequestId, request_no AS reqNo,style_id as styleId`)
-            .where(`request_no is not null and life_cycle_status = '${LifeCycleStatusEnum.MATERIAL_ISSUED}' and buyer_id = ${buyerId}`)
+            .where(`request_no is not null and life_cycle_status in('${LifeCycleStatusEnum.MATERIAL_ISSUED}','${LifeCycleStatusEnum.CUTTING}','${LifeCycleStatusEnum.SEWING}','${LifeCycleStatusEnum.FINISHING}') and buyer_id = ${buyerId}`)
             .orderBy(`request_no`)
         return query.getRawMany()
     }
