@@ -33,6 +33,7 @@ export enum LifeCycleStatusEnum{
      { name:'PACKING', displayVal:'PACKING'},
      { name:'SHIPMENT', displayVal:'SHIPMENT'},
      { name:'DISPATCH', displayVal:'DISPATCH'},
+     { name:'READY_TO_DISPATCH', displayVal:'READY TO DISPATCH'},
      { name:'CLOSED', displayVal:'CLOSED'},
 
  ]
