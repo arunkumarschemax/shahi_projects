@@ -480,11 +480,12 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         const unitPrice=trimForm.getFieldValue('unitPrice');
         const quantity=trimForm.getFieldValue('poQuantity')
         let transportation=trimForm.getFieldValue('transportation')
+       
         if(transportation==undefined ||transportation==0){
             transportation=0;
         }
-        console.log('Transportation')
-        console.log(transportation)
+        // console.log('tax')
+        // console.log(taxPercentageNew)
         let baseValue=Number(unitPrice)*Number(quantity);
         const disc_per=trimForm.getFieldValue('discount')
         if(disc_per!==''&&disc_per>0){
@@ -518,8 +519,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         let status= await setTaxPer(Number(option.name));
         trimForm.setFieldsValue({ taxPercentage: option?.name ? option.type + '- ' + option?.name : '' })
         // console.log(taxPer)
-        
+       
     }
+    useEffect(() =>{
+        finalCalculation();
+    },[taxPer])
     return(
         <Card title={<span style={{color:'blue', fontSize:'17px'}} >Trim Details</span>}>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd} style={{width:'100%'}}>
