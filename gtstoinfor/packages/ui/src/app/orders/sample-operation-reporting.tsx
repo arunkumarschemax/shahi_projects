@@ -259,7 +259,7 @@ export const SampleOperationReporting = () => {
             const test = Object.keys(record).filter(item => item === param)[0]
             // console.log(test)
             // console.log(record[test])
-                return (<>{param != 'colour'?Number(record[test]):record[test]}</>)
+                return (<>{(param != 'colour' && param != 'style')?Number(record[test]):record[test]}</>)
             // console.log(record.keys.filter(item => item == param))
         }
 
@@ -358,12 +358,7 @@ export const SampleOperationReporting = () => {
 
     
     return(
-        <Card title={data?.length > 0 ? (
-            <>
-            <span>{'Consumption Code : ' +(data[0].consumptionCode)}</span>
-            <span style={{marginLeft: "60px"}}>{'Request No : ' +(data[0].requestNo)}</span>
-            </>
-        ):"Sample Operation Reporting"}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+        <Card title={"Sample Operation Reporting"}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
             <Form form={form} layout="vertical">
                 <Row>
                 {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7}} xl={{ span: 6 }}>

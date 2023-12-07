@@ -19,6 +19,7 @@ import {
     Checkbox,
     Col,
     Collapse,
+    DatePicker,
     Divider,
     Form,
     Input,
@@ -59,7 +60,7 @@ import { useIAMClientState } from "../common/iam-client-react";
   const { Option } = Select;
   
   export const SampleDevNewView = () => {
-    const [lifeCycleStatus, setLifeCycleStatus] = useState(LifeCycleStatusEnum.DISPATCH);
+    const [lifeCycleStatus, setLifeCycleStatus] = useState(LifeCycleStatusEnum.READY_TO_DISPATCH);
     const [status, setStatus] = useState('Dispatch');
     const [dispatch, setDispatch] = useState('');
     const [tabName, setTabName] = useState<string>("Fabric");
@@ -478,8 +479,14 @@ import { useIAMClientState } from "../common/iam-client-react";
       }
     }
 
-    const handleDispatchClick=(data)=>{
-      const req = new lifeCycleStatusReq(LifeCycleStatusEnum.CLOSED,data)
+    const handleDispatchClick=(index)=>{
+      // console.log(index,"rrr")
+      const date = new Date()
+      console.log(date,'oooooooooooo');
+      const record = moment(date).format('YYYY-MM-DD') 
+      console.log(moment(date).format('YYYY-MM-DD'),'hello');
+
+      const req = new lifeCycleStatusReq(index,LifeCycleStatusEnum.CLOSED,record)
       service.updatedispatch(req).then(res =>{
         if(res.status){
         AlertMessages.getSuccessMessage('Status Updated Successfully')
@@ -623,7 +630,7 @@ import { useIAMClientState } from "../common/iam-client-react";
                 <span>{<Tag onClick={() => generateBarcode(requestNo)} style={{cursor:'pointer'}}>
                            <BarcodeOutlined />
                        </Tag>}</span> */}
-               {lifeCycleStatus === LifeCycleStatusEnum.DISPATCH ? (
+               {lifeCycleStatus === LifeCycleStatusEnum.READY_TO_DISPATCH ? (
         <>
           <span style={{ width: "10px" }}></span>
           {/* <span>Dispatch Status: <b>{dispatch}</b></span> */}
@@ -710,6 +717,9 @@ import { useIAMClientState } from "../common/iam-client-react";
       >
         <Form form={sourcingForm}>
           <Row gutter={8}>
+          {/* <Form.Item name="dispatched date" style={{display:'none'}}>
+    <DatePicker value={moment}/>
+    </Form.Item> */}
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}

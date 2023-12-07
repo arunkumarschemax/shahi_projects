@@ -12,7 +12,7 @@ export class Colour {
     
     @Column("varchar", {
         nullable: true,
-        length: 15,
+        length: 255,
         name: "colour"
     })
     colour: string;

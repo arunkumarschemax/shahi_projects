@@ -191,11 +191,11 @@ export class SampleRequest {
   })
   filepath: string;
 
-  @Column('date',{
+  @Column('varchar',{
     name:'dispatched_date',
     nullable:true
   })
-  DispatchedDate:Date
+  DispatchedDate:string
 
   @OneToMany(type => SampleReqSizeEntity, sampleReqSize => sampleReqSize.samplerReqEntity, { cascade: true })
   sampleReqSizeInfo: SampleReqSizeEntity[]
