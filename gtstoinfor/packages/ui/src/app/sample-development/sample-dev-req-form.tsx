@@ -1,6 +1,6 @@
 import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import { DepartmentReq,SampleDevelopmentRequest } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, DepartmentReq,SampleDevelopmentRequest } from "@project-management-system/shared-models";
 import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Tabs, message } from "antd";
 import { useEffect, useState } from "react";
@@ -15,6 +15,7 @@ import TrimsForm from "./trims";
 import ProcessForm from "./process";
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
+import { useIAMClientState } from "../common/iam-client-react";
 
 
 const { Option } = Select;
@@ -67,6 +68,8 @@ export const SampleDevForm = () => {
   const m3ItemsService = new M3ItemsService()
   const qualityService = new QualityService()
   const navigate = useNavigate();
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
@@ -164,9 +167,15 @@ export const SampleDevForm = () => {
   };
 
   const getBuyers = () => {
-    buyerService.getAllActiveBuyers().then((res) => {
+    const req = new BuyerRefNoRequest()
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null 
+    buyerService.getAllActiveBuyers(req).then((res) => {
       if (res.status) {
         setBuyer(res.data);
+        form.setFieldsValue({buyerId: res.data[0]?.buyerId})
+         buyerOnchange(res.data[0]?.buyerId,res.data[0]?.buyerName)
+
+
       }
     });
   };
@@ -299,7 +308,9 @@ export const SampleDevForm = () => {
   const handleSubmit = (data) => {
     setTabsData(data)
   }
-  const buyerOnchange =(value) =>{
+  const buyerOnchange =(value,option) =>{
+     form.setFieldsValue({buyerName:option})
+
     setSelectedBuyerId(value)
     getStyles(value);
   }
@@ -431,7 +442,7 @@ export const SampleDevForm = () => {
               >
                 {buyer.map((e) => {
                   return (
-                    <Option key={e.buyerId} value={e.buyerId}>
+                    <Option key={e.buyerId} value={e.buyerId} name={e.buyerName}>
                       {`${e.buyerCode} - ${e.buyerName}`}
                     </Option>
                   );

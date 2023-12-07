@@ -127,49 +127,68 @@ export class M3ItemsService {
     }
   }
 
-
-  async createM3TrimItems(req: M3TrimItemsDTO): Promise<CommonResponseModel>{
-    try{
-      let checkData = await this.checkTrimDuplicate(req)
+  async createM3Trim(createDto: M3TrimItemsDTO): Promise<CommonResponseModel> {
+    try {
+      let checkData = await this.checkTrimDuplicate(createDto);
       if(checkData.status){
         return new CommonResponseModel(false, 0, "Item already exist. ")
       }
-      return
-    }catch(err){
-      throw(err)
-    }
-  }
-
-  async checkTrimDuplicate(req: M3TrimItemsDTO): Promise<CommonResponseModel> {
-    let query = `Select * from m3_items m3 where content_id = "` + req.contentId + `" and categoryId = ` + req.categoryId + ` and color_id = ` + req.colorId + ` and hole_id = "` + req.holeId + `" and logo = ` + req.logo + ` and part = "` + req.part + `" and quality_id = "` + req.qualityId + `" and structure_id = ` + req.structureId + ` and finish_id = "` + req.finishId + `" and thickness_id = "` + req.thicknessId+` and type_id = "` + req.typeId + ` and uom_id = "` + req.uomId + ` and variety_id = "` + req.varietyId + ` and trim_category_id = "` + req.trimCategoryId + ` and trim_mapping_id = "` + req.trimMappingId + `"`;
-    const data = await this.datasource.query(query)
-    if (data.length > 0){
-      return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)
-    }
-    else{
-      return new CommonResponseModel(false, 1001, "", )
-    }
-  }
-
-  async createM3Trim(createDto: M3TrimItemsDTO): Promise<CommonResponseModel> {
-    try {
-      // let checkData = await this.checkDuplicate(createDto);
-      // if(checkData.status){
-      //   return new CommonResponseModel(false, 0, "Item already exist. ")
-      // }
-      // else{
+      else{
         const existingItemCount = await this.repository.findAndCountBy({itemType : Not (ItemTypeEnum.FABRIC)});
-        console.log(existingItemCount)
         const nextItemCode: string = createDto.buyerCode + "/" + `TRIM${(existingItemCount.length + 1).toString().padStart(5, '0')}`;
         const entity: M3ItemsEntity = this.trimAdapter.convertDtoToEntity(createDto);
         entity.itemCode = nextItemCode;
         const count: M3ItemsEntity = await this.repository.save(entity);
         const saveDto: M3TrimItemsDTO = this.trimAdapter.convertEntityToDto(count);
         return new CommonResponseModel(true, 1, 'Data saved successfully', saveDto);
-      // }
+      }
     } catch (error) {
       return new CommonResponseModel(false, 0, error)
     }
   }
+
+  async checkTrimDuplicate(req: M3TrimItemsDTO): Promise<CommonResponseModel> {
+    const conditions = [];
+
+    const columnName = {
+        buyerId: 'buyer_id',
+        trimType: 'item_type',
+        trimCategoryId: 'trim_category_id',
+        structureId: 'structure_id',
+        categoryId: 'category_id',
+        contentId: 'content_id',
+        typeId: 'type_id',
+        finishId: 'finish_id',
+        holeId: 'hole_id',
+        qualityId: 'quality_id',
+        thicknessId: 'thickness_id',
+        varietyId: 'variety_id',
+        uomId: 'uom_id',
+        colorId: 'color_id',
+    };
+
+    for (const [key, value] of Object.entries(req)) {
+        if (value !== undefined && value !== null && columnName[key]) {
+            const formattedValue = typeof value === 'string' ? `"${value}"` : value;
+            
+            if (!conditions.includes(`${columnName[key]} = ${formattedValue}`)) {
+                conditions.push(`${columnName[key]} = ${formattedValue}`);
+            }
+        }
+    }
+
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    const query = `SELECT * FROM m3_items m3 ${whereClause}`;
+    
+    const data = await this.datasource.query(query);
+
+    if (data.length > 0) {
+        return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data);
+    } else {
+        return new CommonResponseModel(false, 1001, "");
+    }
+}
+
+
 
 }
