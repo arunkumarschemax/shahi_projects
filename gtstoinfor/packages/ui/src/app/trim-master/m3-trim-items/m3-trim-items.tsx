@@ -193,7 +193,9 @@ export function M3TrimItemsForm() {
     const req = new TrimIdRequestDto(value)
     paramsService.getMappedParamsByTrim(req).then((res) => {
       if (res.status) {
+        console.log(res.data[0])
         setMapData(res.data)
+        form.setFieldsValue({trimMappingId:res.data[0].trimMappingId})
         setMapDataId(res.data[0]?.trimMappingId)
         console.log(res.data[0]?.trimMappingId,'============')
       }
@@ -202,7 +204,7 @@ export function M3TrimItemsForm() {
 
   const onFinish = (value) => {
     console.log(form.getFieldValue('trimType'),'8888888888')
-    const req = new M3trimsDTO(0,value.buyerId,"",value.categoryId,value.colorId,value.contentId,value.finishId,value.holeId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.typeId,value.uomId,value.varietyId,value.trimCategoryId,mapDataId,form.getFieldValue("buyerCode"),value.trimType,value.description,"")
+    const req = new M3trimsDTO(0,value.buyerId,"",value.categoryId,value.colorId,value.contentId,value.finishId,value.holeId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.typeId,value.uomId,value.varietyId,value.trimCategoryId,form.getFieldValue("trimMappingId"),form.getFieldValue("buyerCode"),value.trimType,value.description,"")
     console.log(req,'---------------------')
     m3TrimService.createM3Trims(req).then((res) => {
       if (res.status) {
@@ -498,6 +500,10 @@ export function M3TrimItemsForm() {
             </>
             ) : (<></>)}
              <Form.Item name="buyerCode" style={{display:'none'}} >
+                  <Input hidden/>
+                </Form.Item>
+
+                <Form.Item name="trimMappingId" style={{display:'none'}} >
                   <Input hidden/>
                 </Form.Item>
             {mapData[0]?.finish === true ? (

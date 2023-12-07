@@ -16,6 +16,8 @@ export class M3TrimsAdapter {
         entity.trimCode = dto.description;
         entity.trimType = dto.trimType;
         entity.itemCode = dto.itemCode;
+        entity.part = dto.part;
+        entity.trimMappingId = dto.trimMappingId;
         entity.description = dto.description;
         entity.categoryId = dto.categoryId;
         entity.colorId = dto.colorId;

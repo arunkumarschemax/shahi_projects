@@ -19,8 +19,8 @@ export class M3trimsDTO {
     uomId:number;
     varietyId:number;
     trimCategoryId:number;
-    trimMappingId:any;
-    buyerCode?:any
+    trimMappingId:number;
+    buyerCode?:string
     trimType?: ItemTypeEnum
     description?: string
     extRefNumber?: string
@@ -42,8 +42,8 @@ export class M3trimsDTO {
         uomId:number,
         varietyId:number,
         trimCategoryId:number,
-        trimMappingId:any,
-        buyerCode?: any,
+        trimMappingId:number,
+        buyerCode?: string,
         trimType?:ItemTypeEnum,
         description?: string,
         extRefNumber?: string,
