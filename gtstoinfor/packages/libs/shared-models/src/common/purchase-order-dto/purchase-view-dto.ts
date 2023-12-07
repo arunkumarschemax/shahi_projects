@@ -10,7 +10,6 @@ export class PurchaseViewDto {
     status?:PurchaseStatusEnum
     poFor?:string
     ExternalRefNo?:string
-
     constructor(id?: number, confirmStartDate?: string, confirmEndDate?: string, poconfirmStartDate?: string, poconfirmEndDate?: string,status?:PurchaseStatusEnum,poFor?:string,ExternalRefNo?:string) {
         this.ExternalRefNo = ExternalRefNo
         this.id = id;
