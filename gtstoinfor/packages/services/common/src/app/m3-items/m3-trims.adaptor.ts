@@ -2,6 +2,9 @@ import { Injectable } from "@nestjs/common";
 import { M3ItemsDTO } from "./m3-items.dto";
 import { M3ItemsEntity } from "./m3-items.entity";
 import { M3TrimItemsDTO } from "./m3-trim-items.dto";
+import { trimEntity } from "../Trim Masters/trim/trim-entity";
+import { CategoryEntity } from "../Trim Masters/category/dto/category-entity";
+import { Buyers } from "../buyers/buyers.entity";
 
 @Injectable()
 export class M3TrimsAdapter {
@@ -24,8 +27,12 @@ export class M3TrimsAdapter {
         entity.uomId = dto.uomId;
         entity.typeId = dto.typeId;
         entity.trimMappingId = dto.trimMappingId;
-        entity.trimCategoryId = dto.trimId;
-        entity.trimCategoryId = dto.trimCategoryId;
+        const trimData = new trimEntity()
+        trimData.trimId = dto.trimCategoryId;
+        const categoryData = new CategoryEntity()
+        categoryData.categoryId = dto.categoryId
+        entity.buyerId = dto.buyerId
+        // entity.trimCategoryId = dto.trimCategoryId;
         if (dto.m3ItemsId) {
             entity.m3ItemsId = dto.m3ItemsId;
             entity.updatedUser = dto.updatedUser
@@ -53,8 +60,9 @@ export class M3TrimsAdapter {
         dto.uomId = entity.uomId;
         dto.typeId = entity.typeId;
         dto.trimMappingId = entity.trimMappingId;
-        dto.trimId = entity.trimCategoryId;
-        dto.trimCategoryId = entity.trimCategoryId;
+        dto.trimCategoryId = entity.trimCategoryInfo.trimId;
+        dto.categoryId = entity.categoryInfo.categoryId;
+        dto.buyerId = entity.buyerInfo.buyerId
 
  
         return dto;
