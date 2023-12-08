@@ -69,7 +69,7 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
 
   const assignStock = (rowData, status) => {
     console.log(rowData)
-    let req = new ReclassificationApproveRequestDto(rowData.reclassificationId,rowData.stockId,rowData.quantity,rowData.m3Item,rowData.locationId,1,rowData.toBuyerId,rowData.fromBuyerId,rowData.itemType,status=== "accept"?ReclassificationStatusEnum.APPROVED:ReclassificationStatusEnum.REJECTED,rowData.grnItemId,rowData.uomId)
+    let req = new ReclassificationApproveRequestDto(rowData.reclassificationId,rowData.stockId,rowData.quantity,rowData.m3Item,rowData.locationId,1,rowData.toBuyerId,rowData.fromBuyerId,rowData.itemType,status=== "yes"?ReclassificationStatusEnum.APPROVED:ReclassificationStatusEnum.REJECTED,rowData.grnItemId,rowData.uomId)
     reclassificationService.getApproveStockReclassification(req).then((res) => {
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage)
@@ -305,12 +305,12 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
               rowData.status === ReclassificationStatusEnum.APPROVAL_PENDING && roles==="sourcingUser" ? 
             <><Button
                   style={{ backgroundColor: '#69c0ff' }}
-                  onClick={(e) => assignStock(rowData, "accept")}
+                  onClick={(e) => assignStock(rowData, "yes")}
                 >
                   <b>Assign Stock</b>
                 </Button><Button 
                   style={{ backgroundColor: '#fd3d56' }}
-                  onClick={(e) => assignStock(rowData, "reject")}
+                  onClick={(e) => assignStock(rowData, "no")}
                 >
                     <b>Reject</b>
                   </Button></>: <Tag style={{backgroundColor:'#9ccc65', color:'black'}}><b>Approved</b></Tag> }
