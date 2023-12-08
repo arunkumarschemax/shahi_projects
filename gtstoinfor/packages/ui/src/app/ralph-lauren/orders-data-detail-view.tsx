@@ -77,13 +77,28 @@ let location = useLocation();
         extra ={<Link to='/ralph-lauren/order-data-info-grid' ><Button className='panel_button' >View </Button></Link>}
         >
         <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }} >
+        <Descriptions.Item label='Material Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.materialNo}</Descriptions.Item>
         <Descriptions.Item label='PO Number' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.poNumber}</Descriptions.Item>
         <Descriptions.Item label='PO Item' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.poItem}</Descriptions.Item>
         <Descriptions.Item label='Purchase Group' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.purchaseGroup}</Descriptions.Item>
         <Descriptions.Item label='Supplier' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.supplier}</Descriptions.Item>
         <Descriptions.Item label='Revision Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.revisionNo}</Descriptions.Item>
         <Descriptions.Item label='Season Code'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.seasonCode}</Descriptions.Item>
-        <Descriptions.Item label='Material Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.materialNo}</Descriptions.Item>
+        <Descriptions.Item label='Board Code'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.boardCode}</Descriptions.Item>
+        <Descriptions.Item label='Color'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.color}</Descriptions.Item>
+        <Descriptions.Item label='Division'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.division}</Descriptions.Item>
+        <Descriptions.Item label='Ship Mode'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipMode}</Descriptions.Item>
+        <Descriptions.Item label='Ship Date'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipDate}</Descriptions.Item>
+        <Descriptions.Item label='Ship To Address'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipToAddress}</Descriptions.Item>
+        <Descriptions.Item label='Agent'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.agent}</Descriptions.Item>
+
+
+
+
+
+
+
+
        
 
         </Descriptions>
