@@ -1,6 +1,6 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { BuyersService, FabricTypeService, FabricWeaveService, M3ItemsService, ReclassificationService, StockService, UomService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag, Tabs } from "antd";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag, Tabs, Radio } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
@@ -29,8 +29,10 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
   // useEffect(() => {
   //   getReclassificationData()
   // }, []);
+  const roles = IAMClientAuthContext.user?.roles;
+
   useEffect(() => {
-    getReclassificationData();
+    getReclassificationData(undefined);
 
   }, []);
 
@@ -44,16 +46,15 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
   //   });
   // };
 
-  const getReclassificationData = () => {
+  const getReclassificationData = (itemType) => {
     const req = new buyerReq();
     req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
         reclassificationService.getAllReclassificationData().then((res) => {
         if(res.status){
             setReclassificationData(res.data);
             console.log(res.data,'ressssss');
-            setAccepted(res.data.filter(e =>e.fromExtRef ===  refNo))
-
-            setRequest(res.data.filter(e =>e.toExtRef ===  refNo))
+            setAccepted(res.data.filter(e =>e.fromExtRef ===  refNo && (itemType === "fabric" ? e.itemType === "Fabric": itemType === undefined ? e.itemType === "Fabric" : e.itemType != "Fabric")))
+            setRequest(res.data.filter(e =>e.toExtRef ===  refNo && (itemType === "fabric" ? e.itemType === "Fabric": itemType === undefined ? e.itemType === "Fabric" : e.itemType != "Fabric")))
         }
         else{
             setReclassificationData([]);
@@ -73,7 +74,7 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage)
         navigate('/reclassification-approval-grid')
-        getReclassificationData();
+        getReclassificationData(undefined);
       }
       else{
           AlertMessages.getInfoMessage(res.internalMessage)
@@ -301,7 +302,7 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
         return (
           <span>
             {
-              rowData.status === ReclassificationStatusEnum.APPROVAL_PENDING ? 
+              rowData.status === ReclassificationStatusEnum.APPROVAL_PENDING && roles==="sourcingUser" ? 
             <><Button
                   style={{ backgroundColor: '#69c0ff' }}
                   onClick={(e) => assignStock(rowData, "accept")}
@@ -320,26 +321,34 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
   ];
   return (
     <Card title="Reclassification Approval" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
-<Tabs type={'card'} tabPosition={'top'}>
-        <TabPane key="1" tab={<span style={{ fontSize: '15px' }}><b>{`Requested Reclassification`}</b></span>}>
-        <Table
-        className="custom-table-wrapper"
-        dataSource={requested.length > 0 ? requested : []}
-        columns={columns}
-        size="small"
-      />
-      
+      <Row gutter={24}>
+        <Col span={8}></Col>
+        <Col span={8} style={{alignContent:'center'}}>
+          <Radio.Group defaultValue="fabric" buttonStyle="solid" onChange={(e) =>  {console.log(e.target.value);getReclassificationData(e.target.value)}}>
+            <Radio.Button value="fabric">FABRICS</Radio.Button>
+            <Radio.Button value="trim">TRIMS</Radio.Button>
+          </Radio.Group>
+        </Col>
+        <Col span={8}></Col>
+      </Row>
+    <br/>
+    <Tabs type={'card'} tabPosition={'top'}>
+        <TabPane key="1" tab={<span style={{ fontSize: '15px' }}><b>{`Requested`}</b></span>}>
+          <Table
+            className="custom-table-wrapper"
+            dataSource={requested.length > 0 ? requested : []}
+            columns={columns}
+            size="small" />
+
         </TabPane>
         <TabPane key="2" tab={<span style={{ fontSize: '15px' }}><b>{`To be Accepected`}</b></span>}>
-        <Table
-        className="custom-table-wrapper"
-        dataSource={accepted.length > 0 ? accepted : []}
-        columns={columns1}
-        size="small"
-      />
+          <Table
+            className="custom-table-wrapper"
+            dataSource={accepted.length > 0 ? accepted : []}
+            columns={columns1}
+            size="small" />
         </TabPane>
-      </Tabs>     
-      
+      </Tabs>    
     </Card>
   );
 };

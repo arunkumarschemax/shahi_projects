@@ -58,6 +58,8 @@ export const RmTrimsView = () => {
   const [visibleModel, setVisibleModel] = useState<boolean>(false);
 
   const userrefNo = IAMClientAuthContext.user?.externalRefNo;
+  const roles = IAMClientAuthContext.user?.roles;
+
 
   useEffect(() => {
     if(userrefNo){
@@ -477,13 +479,13 @@ export const RmTrimsView = () => {
         return (
           <span>
             {
-              rowData.refNo === userrefNo ? "-" :
+              rowData.refNo === userrefNo ? "-" : roles === "sourcingUser" ?
             <Button
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}
             >
               <b>Request Reclassification</b>
-            </Button>
+            </Button>:"-"
           }
           </span>
         );
