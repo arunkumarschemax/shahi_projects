@@ -79,6 +79,8 @@ const FabricsForm = (props:FabricsFormProps) => {
 
   const handleInputChange = (e, key, field, additionalValue) => {
     console.log(data);
+    console.log(key);
+
     let updatedData;
   
     if (field === 'fabricCode') {
@@ -100,8 +102,8 @@ const FabricsForm = (props:FabricsFormProps) => {
           let withPer = (Number(consumptionCal) * Number(2))/ 100;
           console.log(consumptionCal);
           console.log(withPer);
-
-          return { ...record, [field]: e, ["totalRequirement"]:Number(consumptionCal) + Number(withPer) };
+          form.setFieldValue(`totalRequirement${key}`,Number(consumptionCal) + Number(withPer));
+          return { ...record, [field]: e, [`totalRequirement`]:Number(consumptionCal) + Number(withPer) };
         }
         return record;
       });
@@ -167,8 +169,8 @@ const FabricsForm = (props:FabricsFormProps) => {
       title: 'Fabric Code',
       dataIndex: 'fabricCode',
       width:"45%",
-      render: (_, record) => (
-        <><Form.Item name="fabricId">
+      render: (_, record, index) => (
+        <><Form.Item name={`fabricId${record.key}`}>
           <Select
             // onChange={(e) => handleInputChange(e, record.key, 'fabricCode',getSelectedProductGroupId(e))}
             style={{ width: "100%" }}
@@ -179,7 +181,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             onChange={(e) => handleInputChange(e, record.key, 'fabricCode',0)}
           >
             {fabricCodeData?.map(item => {
-              return <Option key={item.m3ItemsId} valu={item.m3ItemsId}>{item.itemCode+ "-"+ item.description}</Option>;
+              return <Option name={`fabricId${record.key}`} key={item.m3ItemsId} valu={item.m3ItemsId}>{item.itemCode+ "-"+ item.description}</Option>;
             })}
           </Select>
 
@@ -206,27 +208,27 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'color',
       width:"15%",
       render: (_, record) => (
-        // <Input
-        // value={record.color}
-        // onChange={(e) => handleInputChange(e, record.key, 'color')}
-        // />
-        <Select
-        value={record.colourId}
-        onChange={(e) => handleInputChange(e, record.key, 'colourId',0)}
-        style={{width:"100%"}}
-        allowClear
-        showSearch
-        optionFilterProp="children"
-        placeholder="Select Fabric Code"
-       >
+        <><Form.Item name={`colorId${record.key}`}>
+          <Select
+            value={record.colourId}
+            onChange={(e) => handleInputChange(e, record.key, 'colourId', 0)}
+            style={{ width: "100%" }}
+            allowClear
+            showSearch
+            optionFilterProp="children"
+            placeholder="Select Fabric Code"
+          >
             {color.map((e) => {
-                  return (
-                    <Option name={`colorId${record.key}`} key={e.colourId} value={e.colourId}>
-                      {e.colour}
-                    </Option>
-                  );
-                })}
-        </Select>
+              return (
+                <Option name={`colorId${record.key}`} key={e.colourId} value={e.colourId}>
+                  {e.colour}
+                </Option>
+              );
+            })}
+          </Select>
+        </Form.Item>
+        </>
+      
       ),
     },
     {
@@ -234,10 +236,12 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'consumption',
       width:"10%",
       render: (_, record) => (
+        <Form.Item name={`consumption${record.key}`}>
         <InputNumber
         value={record.consumption}
         onChange={(e) => handleInputChange(e, record.key, 'consumption',0)}
         />
+        </Form.Item>
       ),
     },
     // {
@@ -268,6 +272,8 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'UomId',
       width:"10%",
       render: (_, record) => (
+        <Form.Item name={`uomId${record.key}`}>
+
         <Select
         value={record.uomId}
         style={{width:"100%"}}
@@ -285,6 +291,7 @@ const FabricsForm = (props:FabricsFormProps) => {
               )
           })}
         </Select>
+        </Form.Item>
       ),
     },
     {
@@ -292,10 +299,12 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'wastage',
       width:"10%",
       render: (_, record) => (
+      <Form.Item name={`wastage${record.key}`}>
         <InputNumber
         defaultValue={2}
         onChange={(e) => handleInputChange(e, record.key, 'wastage',0)}
         />
+      </Form.Item>
       ),
     },
     {
@@ -303,21 +312,25 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'totalRequirement',
       width:"10%",
       render: (_, record) => (
+      <Form.Item name={`totalRequirement${record.key}`}>
         <Input disabled
         value={record.totalRequirement}
         onChange={(e) => handleInputChange(e.target.value, record.key, 'totalRequirement',0)}
         />
+      </Form.Item>
       ),
     },
     {
       title: 'Remarks',
       dataIndex: 'remarks',
       render: (_, record) => (
+      <Form.Item name={`remarks${record.key}`}>
         <TextArea
         value={record.remarks}
         onChange={(e) => handleInputChange(e.target.value, record.key, 'remarks',0)}
         rows={1}
         />
+      </Form.Item>
       ),
     },
     {

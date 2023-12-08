@@ -209,7 +209,8 @@ export function M3TrimItemsForm() {
     m3TrimService.createM3Trims(req).then((res) => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage);
-        // navigate('/grn-view')
+        navigate('/trim-master/m3-trim-items/m3-trim-items-view')
+        onReset()
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
       }
