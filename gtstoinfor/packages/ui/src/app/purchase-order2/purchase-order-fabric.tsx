@@ -522,7 +522,9 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         // console.log(taxPer)
         // finalCalculation();
     }
-    
+    useEffect(() =>{
+        finalCalculation();
+    },[taxPer])
     return (
         <Card title={<span style={{ color: 'blue', fontSize: '17px' }} >Fabric Details</span>}>
             <Form form={fabricForm} layout="vertical" onFinish={onFabricAdd}>

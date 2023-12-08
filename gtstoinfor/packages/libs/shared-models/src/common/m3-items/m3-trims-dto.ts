@@ -2,49 +2,49 @@ import { execFile } from "child_process";
 import { ItemTypeEnum, LogoEnum, PartEnum, m3ItemsContentEnum } from "../../enum";
 
 export class M3trimsDTO {
-    m3ItemsId?:number;
-    buyerId?:number;
-    itemCode?:string;
-    categoryId?:number;
-    colorId?:number;
-    contentId?:number;
-    finishId?:number;
-    holeId?:number;
-    logo?:LogoEnum;
-    part?:PartEnum;
-    qualityId?:number;
-    structureId?:number;
-    thicknessId?:number;
-    typeId?:number;
-    uomId?:number;
-    varietyId?:number;
-    trimCategoryId?:number;
-    trimMappingId?:any;
-    buyerCode?:any
-    itemType?: ItemTypeEnum
+    m3ItemsId:number;
+    buyerId:number;
+    itemCode:string;
+    categoryId:number;
+    colorId:number;
+    contentId:number;
+    finishId:number;
+    holeId:number;
+    logo:LogoEnum;
+    part:PartEnum;
+    qualityId:number;
+    structureId:number;
+    thicknessId:number;
+    typeId:number;
+    uomId:number;
+    varietyId:number;
+    trimCategoryId:number;
+    trimMappingId:number;
+    buyerCode?:string
+    trimType?: ItemTypeEnum
     description?: string
     extRefNumber?: string
     
 
-    constructor(m3ItemsId?:number,buyerId?:number,
-        itemCode?:string,
-        categoryId?:number,
-        colorId?:number,
-        contentId?:number,
-        finishId?:number,
-        holeId?:number,
-        logo?:LogoEnum,
-        part?:PartEnum,
-        qualityId?:number,
-        structureId?:number,
-        thicknessId?:number,
-        typeId?:number,
-        uomId?:number,
-        varietyId?:number,
-        trimCategoryId?:number,
-        trimMappingId?:any,
-        buyerCode?: any,
-        itemType?:ItemTypeEnum,
+    constructor(m3ItemsId:number,buyerId:number,
+        itemCode:string,
+        categoryId:number,
+        colorId:number,
+        contentId:number,
+        finishId:number,
+        holeId:number,
+        logo:LogoEnum,
+        part:PartEnum,
+        qualityId:number,
+        structureId:number,
+        thicknessId:number,
+        typeId:number,
+        uomId:number,
+        varietyId:number,
+        trimCategoryId:number,
+        trimMappingId:number,
+        buyerCode?: string,
+        trimType?:ItemTypeEnum,
         description?: string,
         extRefNumber?: string,
     ) {
@@ -67,7 +67,7 @@ export class M3trimsDTO {
         this.trimCategoryId=trimCategoryId;
         this.trimMappingId=trimMappingId;
         this.buyerCode = buyerCode
-        this.itemType = itemType
+        this.trimType = trimType
         this.description = description
         this.extRefNumber = extRefNumber
        

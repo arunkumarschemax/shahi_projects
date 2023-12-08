@@ -4,7 +4,7 @@ import { Repository, Not, DataSource } from "typeorm";
 import { M3TrimsEntity } from "./m3-trims.entity";
 import { M3TrimsAdapter } from "./m3-trims.adaptor";
 import { M3TrimsRepo } from "./m3-trims.repository";
-import { BuyerIdReq, CommonResponseModel, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
+import { BuyerIdReq, CommonResponseModel, ItemTypeEnum, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
 import { M3TrimsDTO } from "./m3-trims.dto";
 
 @Injectable()
@@ -20,6 +20,9 @@ export class M3TrimsService {
 
   async createM3Trims(createDto: M3TrimsDTO): Promise<CommonResponseModel> {
     try {
+      const existingItemCount = await this.repository.findAndCountBy({trimType : Not (ItemTypeEnum.FABRIC)});
+        const nextItemCode: string = createDto.buyerCode + "/" + `TRIM${(existingItemCount.length + 1).toString().padStart(5, '0')}`;
+        createDto.itemCode = nextItemCode;
       const entity: M3TrimsEntity = this.adapter.convertDtoToEntity(createDto);
       const count: M3TrimsEntity = await this.repository.save(entity);
       const saveDto: M3TrimsDTO = this.adapter.convertEntityToDto(count);

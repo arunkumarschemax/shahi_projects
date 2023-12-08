@@ -238,10 +238,8 @@ export const QualityGrid = (props: QualityGridProps) => {
    * @param variantData 
    */
   const updateAccountControl = (Qulaitydata: QualitysDTO) => {
-    Qulaitydata.updatedUser= JSON.parse(localStorage.getItem('username'))
-    service.createQualitys(Qulaitydata).then(res => {
-      console.log(Qulaitydata,"huhhhhhhhhh");
-      
+    // Qulaitydata.updatedUser= JSON.parse(localStorage.getItem('username'))
+    service.updateQUalitys(Qulaitydata).then(res => {      
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage);
         setDrawerVisible(false);
