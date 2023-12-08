@@ -69,6 +69,7 @@ export class M3TrimsService {
 
   async getAllM3Data(req:M3trimsDTO):Promise<CommonResponseModel>{
     try{
+      console.log(req)
       let query = 
       `select m3t.trim_code AS trimCode,m3t.item_code as itemCode,m3t.trim_type as trimType,m3t.logo,m3t.part,
       m3t.buyer_id as buyerId,concat(b.buyer_code,'-',b.buyer_name) as buyerName,
@@ -101,6 +102,9 @@ export class M3TrimsService {
       left join trim tr on tr.trim_id = m3t.trim_category_id
       left join trim_params_mapping tpm on tpm.trim_mapping_id = m3t.trim_mapping_id
       WHERE 1=1`
+      if (req?.buyerId) {
+        query = query + ` AND m3t.buyer_id=${req.buyerId}`
+      }
       if (req?.trimMappingId) {
         query = query + ` AND m3t.trim_mapping_id=${req.trimMappingId}`
       }
