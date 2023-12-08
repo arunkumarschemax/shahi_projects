@@ -928,7 +928,7 @@ export class SampleRequestService {
 
     async getSampleOrderDetails(req:SampleIdRequest):Promise<CommonResponseModel>{
       const sizeDta = `SELECT  GROUP_CONCAT(DISTINCT  CONCAT('sum(IF(s.size_id = ''',size_id,''', s.quantity, 0)) AS ',sizes)) AS size_name FROM size s WHERE sizes != '' 
-      AND size_id IN(SELECT DISTINCT size_id FROM sample_request_size_info WHERE sample_request_id=1) ORDER BY  sizes`;
+      AND size_id IN(SELECT DISTINCT size_id FROM sample_request_size_info WHERE sample_request_id=${req.sampleRequestId}) ORDER BY  sizes`;
       const res = await this.dataSource.query(sizeDta)
       const sizesStr = res[0].size_name
       console.log(sizesStr,'kkkkk')

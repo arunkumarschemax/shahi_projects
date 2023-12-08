@@ -47,6 +47,8 @@ import {
     CustomerOrderStatusEnum,
     IndentRequestFilter,
     LifeCycleStatusEnum,
+    SampleDevelopmentStatusEnum,
+    SampleFilterRequest,
     buyerandM3ItemIdReq,
     lifeCycleStatusReq,
   } from "@project-management-system/shared-models";
@@ -104,15 +106,18 @@ import { useIAMClientState } from "../common/iam-client-react";
   
   
     const getAll = () => {
-      const req = new IndentRequestFilter();
-      if (form.getFieldValue("requestNo") !== undefined) {
-        req.requestNo = form.getFieldValue("requestNo");
+      const req = new SampleFilterRequest();
+      if (sourcingForm.getFieldValue("requestNo") !== undefined) {
+        req.reqNo = sourcingForm.getFieldValue("requestNo");
       }
-      if (form.getFieldValue("style") !== undefined) {
-        req.style = form.getFieldValue("style");
+      if (sourcingForm.getFieldValue("style") !== undefined) {
+        req.styleNo = sourcingForm.getFieldValue("style");
       }
-      if (form.getFieldValue("status") !== undefined) {
-        req.status = form.getFieldValue("status");
+      if (sourcingForm.getFieldValue("status") !== undefined) {
+        req.status = sourcingForm.getFieldValue("status");
+      }
+      if (sourcingForm.getFieldValue("pch") !== undefined) {
+        req.pch = sourcingForm.getFieldValue("pch");
       }
     req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
 
@@ -121,10 +126,15 @@ import { useIAMClientState } from "../common/iam-client-react";
           setData(res.data);
           console.log(res.data,"rrrrr")
           setFilterData(res.data);
+        } else {
+            AlertMessages.getErrorMessage(res.internalMessage);
         }
-      });
-    };
-   
+      }).catch(err => {
+        AlertMessages.getErrorMessage(err.message);
+        setData([]);
+      })
+    }
+  
   
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -652,6 +662,7 @@ import { useIAMClientState } from "../common/iam-client-react";
     const onReset = () => {
       sourcingForm.resetFields();
       setTableData(data);
+      getAll()
     };
   
     const onBarcodeModalCancel = () => {
@@ -715,7 +726,7 @@ import { useIAMClientState } from "../common/iam-client-react";
         //   </Link>
         // }
       >
-        <Form form={sourcingForm}>
+        <Form form={sourcingForm} onFinish={getAll}>
           <Row gutter={8}>
           {/* <Form.Item name="dispatched date" style={{display:'none'}}>
     <DatePicker value={moment}/>
@@ -725,7 +736,7 @@ import { useIAMClientState } from "../common/iam-client-react";
               sm={{ span: 24 }}
               md={{ span: 4 }}
               lg={{ span: 4 }}
-              xl={{ span: 6 }}
+              xl={{ span: 5 }}
             >
               <Form.Item name="requestNo" label="Request Number">
                 <Select
@@ -737,8 +748,8 @@ import { useIAMClientState } from "../common/iam-client-react";
                   {data.map((e) => {
                     return (
                       <Option
-                        key={e.requestNo}
-                        value={e.requestNo}
+                        key={e.sample_request_id}
+                        value={e.sample_request_id}
                         name={e.requestNo}
                       >
                         {" "}
@@ -754,7 +765,7 @@ import { useIAMClientState } from "../common/iam-client-react";
               sm={{ span: 24 }}
               md={{ span: 4 }}
               lg={{ span: 4 }}
-              xl={{ span: 6 }}
+              xl={{ span: 5 }}
             >
               <Form.Item name="style" label="Style">
                 <Select
@@ -765,7 +776,7 @@ import { useIAMClientState } from "../common/iam-client-react";
                 >
                   {data.map((e) => {
                     return (
-                      <Option key={e.style} value={e.style} name={e.style}>
+                      <Option key={e.style_id} value={e.style_id} name={e.style}>
                         {" "}
                         {e.style}
                       </Option>
@@ -779,27 +790,28 @@ import { useIAMClientState } from "../common/iam-client-react";
               sm={{ span: 24 }}
               md={{ span: 4 }}
               lg={{ span: 4 }}
-              xl={{ span: 6 }}
+              xl={{ span: 5 }}
             >
               <Form.Item name="status" label="Status">
                 <Select
                   optionFilterProp="children"
                   placeholder="Select Status"
+                  allowClear
                 >
-                  {Object.keys(CustomerOrderStatusEnum)
+                  {Object.keys(SampleDevelopmentStatusEnum)
                     .sort()
                     .map((status) => (
                       <Select.Option
-                        key={CustomerOrderStatusEnum[status]}
-                        value={CustomerOrderStatusEnum[status]}
+                        key={SampleDevelopmentStatusEnum[status]}
+                        value={SampleDevelopmentStatusEnum[status]}
                       >
-                        {CustomerOrderStatusEnum[status]}
+                        {SampleDevelopmentStatusEnum[status]}
                       </Select.Option>
                     ))}
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+            <Col xs={24} sm={12} md={8} lg={6} xl={5}>
             <Form.Item name="pch" label="PCH">
               <Select
                 showSearch
@@ -807,11 +819,12 @@ import { useIAMClientState } from "../common/iam-client-react";
                 optionFilterProp="children"
                 allowClear
               >
-                {/* {pch.map((qc: any) => (
-                  <Select.Option key={qc.pch} value={qc.pch}>
+                {data.map((qc: any) => (
+                  <Select.Option key={qc.profit_control_head_id} value={qc.profit_control_head_id
+                  }>
                     {qc.pch}
                   </Select.Option>
-                ))} */}
+                ))}
               </Select>
             </Form.Item>
           </Col>
@@ -848,6 +861,7 @@ import { useIAMClientState } from "../common/iam-client-react";
             </Col>
           </Row>
         </Form>
+        <br></br>
   
         <Collapse
           collapsible="icon"
