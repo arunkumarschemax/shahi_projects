@@ -10,4 +10,11 @@ export class RLOrdersRepository extends Repository<RLOrdersEntity> {
     ) {
         super(rlOrdersRepository.target, rlOrdersRepository.manager, rlOrdersRepository.queryRunner);
     }
+
+    async getPdfFileInfo(): Promise<any[]> {
+        const query = this.createQueryBuilder('')
+            .select(`*`)
+        return await query.getRawMany()
+    }
+
 }

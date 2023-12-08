@@ -1,16 +1,15 @@
-
-
 import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { NikeService } from "@project-management-system/shared-services";
+import { NikeService, RLOrdersService } from "@project-management-system/shared-services";
 import React from "react";
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
+import moment from "moment";
 
 
-export function RLOrdersGrid() {
-    const service = new NikeService();
+export function PdFInfoGrid() {
+    const service = new RLOrdersService();
     const navigate = useNavigate();
     const searchInput = useRef(null);
     const [pdfData, setPdfData] = useState<any>([]);
@@ -25,10 +24,9 @@ export function RLOrdersGrid() {
     const [isModalOpen1, setIsModalOpen1] = useState(false);
 
 
-    // useEffect(() => {
-    //     getPdfFileInfo()
-    //     // getPoLine()
-    // }, [])
+    useEffect(() => {
+        getPdfFileInfo()
+    }, [])
 
     const getPdfFileInfo = () => {
         service.getPdfFileInfo().then(res => {
@@ -40,11 +38,6 @@ export function RLOrdersGrid() {
         getPdfFileInfo()
     }
 
-    // const getPoLine = () => {
-    //     service.getPpmPoLineForOrderCreation().then(res => {
-    //         setPoLine(res.data)
-    //     })
-    // }
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -123,13 +116,6 @@ export function RLOrdersGrid() {
                 : null
     })
 
-    const setMoreData = (record) => {
-        navigate('/ralph-lauren/order-data-detail-view'
-        // ,
-        // { state: { data: record.file_data } }
-        )
-
-    }
 
     const columns: any = [
         {
@@ -141,91 +127,48 @@ export function RLOrdersGrid() {
         },
         {
             title: 'PO Number',
-            dataIndex: 'po_number',
+            dataIndex: 'poNumber',
             width: 90,
-            sorter: (a, b) => a.po_number.localeCompare(b.po_number),
+            sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
             sortDirections: ["ascend", "descend"],
             ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
-            title: 'PO Item',
-            dataIndex: 'po_item',
+            title: 'File Name',
+            dataIndex: 'pdfFileName',
             width: 90,
-            sorter: (a, b) => a.po_item.localeCompare(b.po_item),
+            sorter: (a, b) => a.pdfFileName.localeCompare(b.pdfFileName),
             sortDirections: ["ascend", "descend"],
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
-            title: 'Address',
-            dataIndex: 'ship_to_address',
+            title: 'File Type',
+            dataIndex: 'fileType',
             width: 90,
-            sorter: (a, b) => a.ship_to_address.localeCompare(b.ship_to_address),
+            sorter: (a, b) => a.fileType.localeCompare(b.fileType),
             sortDirections: ["ascend", "descend"],
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
-            title: 'Agent',
-            dataIndex: 'agent',
+            title: 'Uploaded Date',
+            dataIndex: 'createdAt',
             align: 'center',
             width: 90,
-            sorter: (a, b) => a.agent.localeCompare(b.agent),
+            sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
             sortDirections: ["ascend", "descend"],
-         
+            render: (text, record) => {
+                return record.createdAt ? moment(record.createdAt).format('MM/DD/YYYY') : '-'
+            }
+            
+            
         },
-        {
-            title: 'Purchase Group',
-            dataIndex: 'purchase_group',
-            align: 'center',
-            width: 90,
-            sorter: (a, b) => a.purchase_group.localeCompare(b.purchase_group),
-            sortDirections: ["ascend", "descend"],
-           
-        },
-        {
-            title: 'Supplier',
-            dataIndex: 'supplier',
-            align: 'center',
-            width: 90,
-            sorter: (a, b) => a.supplier.localeCompare(b.supplier),
-            sortDirections: ["ascend", "descend"],
-           
-        },
-        {
-            title: 'Revision No',
-            dataIndex: 'revision_no',
-            align: 'center',
-            width: 90,
-            sorter: (a, b) => a.revision_no.localeCompare(b.revision_no),
-            sortDirections: ["ascend", "descend"],
-           
-        },
-        {
-            title: 'Status',
-            dataIndex: 'status',
-            align: 'center',
-            width: 90,
-            sorter: (a, b) => a.status.localeCompare(b.status),
-            sortDirections: ["ascend", "descend"],
-           
-        },
-        {
-            title: 'Action',
-            dataIndex: 'action',
-            align: 'center',
-            width: 120,
-            render: (value, record) => (
-                <>
-                     <Button onClick={() => setMoreData(record)}>More Info</Button> 
-                    {/* <Button onClick={() => showModal1(record.po_number)} style={{ margin: 5 }}>Changes Comparision</Button>  */}
-                </>
-            ),
-        }
+
 
     ]
 
     return (
         <>
-            <Card title="Order" headStyle={{ fontWeight: 'bold' }}>
+            <Card title="PDF Info" headStyle={{ fontWeight: 'bold' }}>
                 {/* <Form
             // onFinish={getOrderAcceptanceData}
             form={form}
@@ -275,4 +218,4 @@ export function RLOrdersGrid() {
         </>
     )
 }
-export default RLOrdersGrid;
+export default PdFInfoGrid;
