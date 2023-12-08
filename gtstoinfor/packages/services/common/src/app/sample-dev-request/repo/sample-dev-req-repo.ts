@@ -355,7 +355,7 @@ if(req){
     if (req.status !== undefined) {
         query.andWhere(`sr.life_cycle_status ='${req.status}'`);
     }
-    if(req.extRefNumber !== undefined){
+    if(req.extRefNumber){
         query.andWhere(` b.external_ref_number = '${req.extRefNumber}'`)
     }
 }

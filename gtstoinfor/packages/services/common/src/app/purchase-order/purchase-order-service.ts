@@ -309,7 +309,7 @@ export class PurchaseOrderService {
             //   if (req.id!== undefined){
             //     query += ` where po.purchase_order_id = ${req?.id}`
             //   }
-              if (req.ExternalRefNo!== undefined){
+              if (req.ExternalRefNo && req.ExternalRefNo!=null){
                 query += `WHERE b.external_ref_number = '${req.ExternalRefNo}'`
               }
               
