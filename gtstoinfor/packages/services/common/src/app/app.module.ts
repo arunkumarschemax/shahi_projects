@@ -1,20 +1,16 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { FactoriesModule } from './factories/factories.module';
 import { UsersModule } from './users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { JwtModule } from '@nestjs/jwt';
 import { appConfig } from '../../config';
 import { ScheduleModule } from '@nestjs/schedule';
-import { DpomModule } from './dpom/nike-dpom.module';
-import { SupplierModule } from './supplier/supplier.module';
 import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.module';
 import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
-import { FobModule } from './fob-price-list/fob.module';
-import { FabricContentModule } from './fabric-content/fabric-content.module';
+import { RLOrdersModule } from './ralph-lauren/rl-orders.module';
 
 
 @Module({
@@ -35,10 +31,8 @@ import { FabricContentModule } from './fabric-content/fabric-content.module';
         connectionLimit: 20
       }
     }),
-    FactoriesModule,
-    SupplierModule,
     UsersModule,
-    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule, FabricContentModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule, RLOrdersModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,

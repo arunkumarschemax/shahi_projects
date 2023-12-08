@@ -1,4 +1,3 @@
-import * as env from 'dotenv';
 const https = require('https');
 
 export const appConfig = {
@@ -11,7 +10,7 @@ export const appConfig = {
         port: parseInt(process.env[`APP_DB_PORT`]) || 3306,
         username: process.env[`APP_DB_USER`] || 'ramakrishna',
         password: process.env[`APP_DB_PASS`] || 'Schemax@23',
-        dbName: process.env[`APP_DB_DBNAME`] || 'shahi_nike',
+        dbName: process.env[`APP_DB_DBNAME`] || 'shahi_rl',
         poolLimit: parseInt(process.env[`APP_DB_POOL_LIMIT`]) || 50
     },
     adobeAcrobatApiCred: {
