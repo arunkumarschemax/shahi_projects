@@ -1,12 +1,12 @@
-import { SearchOutlined } from "@ant-design/icons";
-import { BuyersService, CategoryService, ColourService, ContentService, FabricTypeService, FabricWeaveService, FinishService, GRNService, HoleService, M3ItemsService, QualitysService, StockService, StructureService, ThicknessService, TrimParamsMappingService, TrimService, TypeService, UomService, VarietyService } from "@project-management-system/shared-services";
+import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import { BuyersService, CategoryService, ColourService, ContentService, FabricTypeService, FabricWeaveService, FinishService, GRNService, HoleService, M3ItemsService, M3TrimsService, QualitysService, StockService, StructureService, ThicknessService, TrimParamsMappingService, TrimService, TypeService, UomService, VarietyService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
-import { BuyerRefNoRequest, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import AlertMessages from "../../common/common-functions/alert-messages";
 import { useIAMClientState } from "../../common/iam-client-react";
 const { TextArea } = Input;
@@ -36,7 +36,7 @@ export const M3TrimsView = () => {
   const colorService = new ColourService();
   const buyerService = new BuyersService();
   const paramsService = new TrimParamsMappingService()
-  const service = new M3ItemsService()
+  const service = new M3TrimsService()
 
   const [structureData, setStructureData] = useState<any[]>([]);
   const [categoryData, setCategoryData] = useState<any[]>([]);
@@ -54,6 +54,7 @@ export const M3TrimsView = () => {
   const [mapData, setMapData] = useState<any[]>([])
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [isBuyer, setIsBuyer] = useState(false);
+  const [mapDataId, setMapDataId] = useState<any[]>([])
 
 
   useEffect(() => {
@@ -197,11 +198,11 @@ export const M3TrimsView = () => {
   const getBuyers = () => {
     const req = new BuyerRefNoRequest()
     req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
-    buyerService.getAllActiveBuyers(req).then((res) => {
+    buyerService.getAllActiveBuyers().then((res) => {
       if (res.status) {
         setBuyerData(res.data);
-        form.setFieldsValue({buyerId: res.data[0]?.buyerId})
-        onFinish()
+        // form.setFieldsValue({buyerId: res.data[0]?.buyerId})
+        // onFinish()
       }
     });
   };
@@ -211,6 +212,9 @@ export const M3TrimsView = () => {
     paramsService.getMappedParamsByTrim(req).then((res) => {
       if (res.status) {
         setMapData(res.data)
+        // setMapDataId(res.data[0]?.trimMappingId)
+        form.setFieldsValue({trimMappingId: res.data[0]?.trimMappingId})
+        // onFinish()
       }
     });
   }
@@ -314,6 +318,7 @@ export const M3TrimsView = () => {
     if (value === null) return true; // If filter is not active, show all rows
     return record.itemType === value;
   };
+
   const columns: ColumnProps<any>[] = [
     {
       title: "S No",
@@ -322,207 +327,202 @@ export const M3TrimsView = () => {
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
     // {
-    //   title: "M3 Style",
-    //   dataIndex: "m3_style_code",
-    //   ...getColumnSearchProps("m3_style_code"),
-    //   // sorter: (a, b) => a.plant - b.plant,
-    //   // sortDirections: ['descend', 'ascend'],
+    //   title: <div style={{textAlign:"center"}}>Buyer</div>,
+    //   dataIndex: "buyerName",
+    //   ...getColumnSearchProps("buyerName"),
+    //   sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
+    //   sortDirections: ["descend", "ascend"],
     // },
+    {
+      title: <div style={{textAlign:"center"}}>Description</div>,
+      dataIndex: "trimCode",
+      ...getColumnSearchProps("description"),
+      sorter: (a, b) => a.description.localeCompare(b.description),
+      sortDirections: ["descend", "ascend"],
+    },
     
+    // {
+    //   title: <div style={{textAlign:"center"}}>Trim Type</div>,
+    //   dataIndex: "trimType",
+    //   ...getColumnSearchProps("trimType"),
+    //   sorter: (a, b) => a.trimType.localeCompare(b.trimType),
+    //   sortDirections: ["descend", "ascend"],
+    //   render: (text) => {
+    //     const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+    //     return EnumObj ? EnumObj.displayVal : text;
+    //   },
+    // },
+    // {
+    //   title: <div style={{textAlign:"center"}}>Trim Category</div>,
+    //   dataIndex: "trimCategory",
+    //   ...getColumnSearchProps("trimCategory"),
+    //   sorter: (a, b) => a.trimCategory.localeCompare(b.trimCategory),
+    //   sortDirections: ["descend", "ascend"],
+    // },
+    // mapData[0]?.structure === true?{
+    //   title: <div style={{textAlign:"center"}}>Structure</div>,
+    //   dataIndex: "structure",
+    //   ...getColumnSearchProps("structure"),
+    //   sorter: (a, b) => a.structure.localeCompare(b.structure),
+    //   sortDirections: ["descend", "ascend"],
+    // }: {},
+    // mapData[0]?.category === true?{
+    //   title: <div style={{textAlign:"center"}}>Category</div>,
+    //   dataIndex: "category",
+    //   ...getColumnSearchProps("category"),
+    //   sorter: (a, b) => a.category.localeCompare(b.category),
+    //   sortDirections: ["descend", "ascend"],
+    // }:{},
+    // mapData[0]?.content === true?{
+    //   title: <div style={{textAlign:"center"}}>Content</div>,
+    //   dataIndex: "content",
+    //   ...getColumnSearchProps("content"),
+    //   sorter: (a, b) => a.content.localeCompare(b.content),
+    //   sortDirections: ["descend", "ascend"],
+    // }:{},
+    // mapData[0]?.type === true?{
+    //   title: <div style={{textAlign:"center"}}>Type</div>,
+    //   dataIndex: "type",
+    //   ...getColumnSearchProps("type"),
+    //   sorter: (a, b) => a.type.localeCompare(b.type),
+    //   sortDirections: ["descend", "ascend"],
+    // }: {},
+    // mapData[0]?.finish === true?{
+    //   title: <div style={{textAlign:"center"}}>Finish</div>,
+    //   dataIndex: "finish",
+    //   ...getColumnSearchProps("finish"),
+    //   sorter: (a, b) => a.finish.localeCompare(b.finish),
+    //   sortDirections: ["descend", "ascend"],
+    // }: {},
+    // mapData[0]?.hole === true?{
+    //   title: <div style={{textAlign:"center"}}>Hole</div>,
+    //   dataIndex: "hole",
+    //   ...getColumnSearchProps("hole"),
+    //   sorter: (a, b) => a.hole.localeCompare(b.hole),
+    //   sortDirections: ["descend", "ascend"],
+    // }: {},
+    // mapData[0]?.quality === true?{
+    //   title: <div style={{textAlign:"center"}}>Quality</div>,
+    //   dataIndex: "qualityName",
+    //   ...getColumnSearchProps("qualityName"),
+    //   sorter: (a, b) => a.qualityName.localeCompare(b.qualityName),
+    //   sortDirections: ["descend", "ascend"],
+    // }: {},
+    // mapData[0]?.thickness === true?{
+    //   title: <div style={{textAlign:"center"}}>Thickness</div>,
+    //   dataIndex: "thickness",
+    //   ...getColumnSearchProps("thickness"),
+    //   sorter: (a, b) => a.thickness.localeCompare(b.thickness),
+    //   sortDirections: ["descend", "ascend"],
+    // }: {},
+    // mapData[0]?.variety === true?{
+    //   title: <div style={{textAlign:"center"}}>Variety</div>,
+    //   dataIndex: "variety",
+    //   ...getColumnSearchProps("variety"),
+    //   sorter: (a, b) => a.variety.localeCompare(b.variety),
+    //   sortDirections: ["descend", "ascend"],
+    // }: {},
+    // mapData[0]?.uom === true?{
+    //   title: <div style={{textAlign:"center"}}>UOM</div>,
+    //   dataIndex: "uom",
+    //   ...getColumnSearchProps("uom"),
+    //   sorter: (a, b) => a.uom.localeCompare(b.uom),
+    //   sortDirections: ["descend", "ascend"],
+    // }: {},
+    // mapData[0]?.color === true?{
+    //   title: <div style={{textAlign:"center"}}>Color</div>,
+    //   dataIndex: "color",
+    //   ...getColumnSearchProps("color"),
+    //   sorter: (a, b) => a.color.localeCompare(b.color),
+    //   sortDirections: ["descend", "ascend"],
+    // }: {},
+    // mapData[0]?.logo === true?{
+    //   title: <div style={{textAlign:"center"}}>Logo</div>,
+    //   dataIndex: "logo",
+    //   ...getColumnSearchProps("logo"),
+    //   sorter: (a, b) => a.logo.localeCompare(b.logo),
+    //   sortDirections: ["descend", "ascend"],
+    // }: {},
+    // mapData[0]?.part === true?{
+    //   title: <div style={{textAlign:"center"}}>Part</div>,
+    //   dataIndex: "part",
+    //   ...getColumnSearchProps("part"),
+    //   sorter: (a, b) => a.part.localeCompare(b.part),
+    //   sortDirections: ["descend", "ascend"],
+    // }:{}
+  ]
 
-    {
-      title: "Buyer",
-      dataIndex: "buyer",
-      ...getColumnSearchProps("buyer"),
-      sorter: (a, b) => a.buyer.localeCompare(b.buyer),
-      sortDirections: ["descend", "ascend"],
-      
-    },
-    // {
-    //   title: "Stock Type",
-    //   dataIndex: "stockType",
-    //   ...getColumnSearchProps("stockType"),
-    //   sorter: (a, b) => a.stockType.localeCompare(b.stockType),
-    //   sortDirections: ["descend", "ascend"],
-    // },
-    // {
-    //   title: "Sample Order",
-    //   dataIndex: "sampleOrder",
-    //   ...getColumnSearchProps("sampleOrder"),
-    //   sorter: (a, b) => a.sampleOrder.localeCompare(b.sampleOrder),
-    //   sortDirections: ["descend", "ascend"],
-    // },
-    // {
-    //   title: "Indent",
-    //   dataIndex: "Indent",
-    //   ...getColumnSearchProps("Indent"),
-    //   sorter: (a, b) => a.Indent.localeCompare(b.Indent),
-    //   sortDirections: ["descend", "ascend"],
-    // },
-    // {
-    //   title: "Style",
-    //   dataIndex: "style",
-    //   ...getColumnSearchProps("style"),
-    //   sorter: (a, b) => a.style.localeCompare(b.style),
-    //   sortDirections: ["descend", "ascend"],
-    // },
-    {
-      title: "Material Type",
-      dataIndex: "itemType",
-      ...getColumnSearchProps("itemType"),
-      sorter: (a, b) => a.itemType.localeCompare(b.itemType),
-      sortDirections: ["descend", "ascend"],
-    },
-    // {
-    //   title: "Item Code",
-    //   dataIndex: "code",
-    //   render: (text) => (
-    //     <span>
-    //       {text ? text : "Fab001"} {/* Display data if available, otherwise show "No Data" */}
-    //     </span>
-    //   ),
-    //   ...getColumnSearchProps("item_code"),
-    // },
-    {
-      title: "M3 Item",
-      dataIndex: "m3Item",
-      ...getColumnSearchProps("m3Item"),
-      sorter: (a, b) => a.m3Item.localeCompare(b.m3Item),
-      sortDirections: ["descend", "ascend"],
-    },
-    // {
-    //   title: "Style",
-    //   dataIndex: "style",
-    //   ...getColumnSearchProps("style"),
-    // },
-    {
-      title: "Location",
-      dataIndex: "location",
-      ...getColumnSearchProps("location"),
+  const filteredColumns = columns.filter((column) => Object.keys(column).length > 0);
 
-    },
 
-    {
-      title: "Quantity",
-      dataIndex: "qty",
-      render: (record) => (
-        <span>
-          {record.qty} + " " + {record.uom} 
-        </span>
-      ),
-      ...getColumnSearchProps("qty"),
-      // sorter: (a, b) => a.itemQuantity - b.itemQuantity,
-      // sortDirections: ['descend', 'ascend'],
-    },
-    // {
-    //   title:`Action`,
-    //   dataIndex: 'action',
-    //   render: (text, rowData) => (
-        
-    //     <span>  
-    //      <Button style={{backgroundColor:'#69c0ff'}} onClick={ (e) => getRowData(rowData) }
-    //       disabled={rowData.buyer_id === buyervalue ? true : false}
-    //       ><b>Assign Reclassification</b></Button>
-    //     </span>
-    //   )
-    // }
-    {
-      title: 'Action',
-      dataIndex: 'action',
-      render: (text, rowData) => {
-        // if (rowData.buyer_id === buyervalue) {
-        //   return "-";
-        // }
-    
-        return (
-          <span>
-            {/* <Button
-              style={{ backgroundColor: '#69c0ff' }}
-              onClick={(e) => getRowData(rowData)}
-            >
-              <b>Request Reclassification</b>
-            </Button> */}
-          </span>
-        );
-      }
-    }
-  ];
   const clearData = () => {
     form.resetFields();
-    
-
   };
 
-  const handleCancel = () => {
-    // setVisibleModel(false);
-  };
 
-  // const getItemsForOtherBuyers = () => {
-  //   console.log(form.getFieldsValue())
-  //   // console.log()
-  //   const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
-
-  //   let formData: M3ItemsDTO = data;
-  //   console.log(formData)
-  //   console.log(formData.buyerId)
-  //   formData.buyerId = undefined;
-  //   console.log(formData)
-  //   // getData(formData);
-  // }
-
-  // const onChange =(value) =>{
-  //   if(value === null || undefined) {
-  //     setButtonEnable(true)
-  //    }else {
-  //     setButtonEnable(false)
-  //    }
-  // }
-
-  const onFinish = () => {
-
-    let req = new M3trimsDTO(0,form.getFieldValue("buyer"),undefined,form.getFieldValue("category"),form.getFieldValue("color"),form.getFieldValue("content"),form.getFieldValue("finish"),form.getFieldValue("hole"),form.getFieldValue("logo"),form.getFieldValue("part"),form.getFieldValue("quality"),form.getFieldValue("structure"),form.getFieldValue("thickness"),form.getFieldValue("type"),form.getFieldValue("uom"),form.getFieldValue("variety"),form.getFieldValue("trimCategory"),0)
-    console.log(req);
-    req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
-    stockService.getAllTrimStocks(req).then((res) => {
+  const onFinish = (req?: M3trimsDTO) => {
+    // console.log(req.trimMappingId,'------------')
+    if (form.getFieldValue('buyerId') !== undefined) {
+      req.buyerId = form.getFieldValue('buyerId')
+    }
+    if (form.getFieldValue('categoryId') !== undefined) {
+      req.categoryId = form.getFieldValue('categoryId')
+    }
+    if (form.getFieldValue('colorId') !== undefined) {
+      req.colorId = form.getFieldValue('colorId')
+    }
+    if (form.getFieldValue('contentId') !== undefined) {
+      req.contentId = form.getFieldValue('contentId')
+    }
+    if (form.getFieldValue('finishId') !== undefined) {
+      req.finishId = form.getFieldValue('finishId')
+    }
+    if (form.getFieldValue('holeId') !== undefined) {
+      req.holeId = form.getFieldValue('holeId')
+    }
+    if (form.getFieldValue('logo') !== undefined) {
+      req.logo = form.getFieldValue('logo')
+    }
+    if (form.getFieldValue('part') !== undefined) {
+      req.part = form.getFieldValue('part')
+    }
+    if (form.getFieldValue('qualityId') !== undefined) {
+      req.qualityId = form.getFieldValue('qualityId')
+    }
+    if (form.getFieldValue('structureId') !== undefined) {
+      req.structureId = form.getFieldValue('structureId')
+    }
+    if (form.getFieldValue('thicknessId') !== undefined) {
+      req.thicknessId = form.getFieldValue('thicknessId')
+    }
+    if (form.getFieldValue('typeId') !== undefined) {
+      req.typeId = form.getFieldValue('typeId')
+    }
+    if (form.getFieldValue('uomId') !== undefined) {
+      req.uomId = form.getFieldValue('uomId')
+    }
+    if (form.getFieldValue('varietyId') !== undefined) {
+      req.varietyId = form.getFieldValue('varietyId')
+    }
+    // if (form.getFieldValue('trimMappingId') !== undefined) {
+    //   req.trimMappingId = form.getFieldValue('trimMappingId')
+    // }
+    // req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    service.getAllM3Data(req).then((res) => {
       if (res.status) {
         setData(res.data);
-        AlertMessages.getSuccessMessage(res.internalMessage);
-        // window.location.reload();
-      }
-      else{
+        message.success(res.internalMessage,2);
+      }else{
         setData([]);
-        AlertMessages.getWarningMessage(res.internalMessage);
+        message.success(res.internalMessage,2);
       }
-    })
-    .catch((err) => {
+    }).catch((err) => {
       setData([]);
       AlertMessages.getErrorMessage(err.message);
     });
-    // if(form.getFieldValue("content")) {
-    //   setButtonEnable(false)
-    //  }
-    // console.log(form.getFieldsValue())
-    // const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
-    // console.log(data)
-    // getData(data);
-    // service
-    //   .createM3Items(m3StyleDto)f
-    //   .then((res) => {
-    //     if (res.status) {
-    //       AlertMessages.getSuccessMessage(res.internalMessage);
-    //       setTimeout(() => {
-    //         message.success("Submitted successfully");
-    //         window.location.reload();
-    //       }, 500);
-    //     }
-    //     else{
-    //       AlertMessages.getWarningMessage(res.internalMessage);
-    //     }
-    //   })
-    //   .catch((err) => {
-    //     AlertMessages.getErrorMessage(err.message);
-    //   });
   };
+
+
    const onBuyerChange = (value) =>{
     console.log(value)
     // setBuyervalue(value)
@@ -538,7 +538,7 @@ export const M3TrimsView = () => {
       >
         <Row gutter={24}>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="buyerId" label="Buyer" rules={[{ required: true, message: "Buyer is required" }]}>
+                <Form.Item name="buyerId" label="Buyer" rules={[{ required: false, message: "Buyer is required" }]}>
                     <Select
                     showSearch
                     allowClear
@@ -556,7 +556,23 @@ export const M3TrimsView = () => {
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="trimCategory" label="Trim Category" rules={[{ required: false, message: "Trim Category is required" }]}>
+                <Form.Item name="trimType" label="Trim Type" rules={[{ required: false, message: "Trim Type is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children"
+                    placeholder="Select Trim Type"
+                    >
+                        {Object.values(ItemTypeEnum).filter((val) => val !== ItemTypeEnum.FABRIC).map((val) => (
+                            <Option key={val} value={val}>
+                                {ItemTypeEnumDisplay?.find((e) => e.name === val)?.displayVal}
+                            </Option>
+                        ))}
+                    </Select>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="trimCategoryId" label="Trim Category" rules={[{ required: false, message: "Trim Category is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
@@ -854,35 +870,33 @@ export const M3TrimsView = () => {
             </Col>
             </>
             ) : (<></>)}
-        {/* </Row>
-        <Row> */}
-            <Col span={4} style={{paddingTop:'23px'}}>
-                <Button type="primary" htmlType="submit">Get Item</Button>
-                <Button htmlType="button" onClick={onReset}>Reset</Button>
+            <Col>
+                <Form.Item name="trimMappingId" label="Trim Mapping" rules={[{ required: false, message: "Trim Mapping is required" }]} style={{display:'none'}}>
+                    <Input hidden/>
+                </Form.Item>
+            </Col>
+        </Row>
+        <Row gutter={24} justify={'end'}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }} style={{ marginTop: "18px", textAlign: "right" }}>
+              <Form.Item>
+                <Button icon={<SearchOutlined />} htmlType="submit" type="primary" style={{ marginLeft: 50, marginTop: 5 }}>
+                  Submit
+                </Button>
+                <Button danger icon={<UndoOutlined />} onClick={onReset} style={{ marginLeft: 30 }}>
+                  Reset
+                </Button>
+              </Form.Item>
             </Col>
         </Row>
       </Form>
-        
-      <Table
-        className="custom-table-wrapper"
-        dataSource={data.length > 0 ? data : []}
-        columns={columns}
-        size="small"
-      />
-      {/* <Modal
-            className='rm-'
-            key={'modal' + Date.now()}
-            width={'80%'}
-            style={{ top: 30, alignContent: 'right' }}
-            visible={visibleModel}
-            title={<React.Fragment>
-            </React.Fragment>}
-            onCancel={handleCancel}
-            footer={[]}
-        >
-            <Reclassification data = {rowData} buyer= {form.getFieldValue("buyerId")} type="stock" status={setModel}/>
-
-            </Modal> */}
+      {/* {mapData.length > 0 && ( */}
+        <Table
+          className="custom-table-wrapper"
+          dataSource={data.length > 0 ? data : []}
+          columns={filteredColumns}
+          size="small"
+        />
+      {/* )} */}
     </Card>
   );
 };

@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { BuyerIdReq, CommonResponseModel, M3TrimTypeRequest } from "@project-management-system/shared-models";
+import { BuyerIdReq, CommonResponseModel, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
 import { M3TrimsDTO } from "./m3-trims.dto";
 import { M3TrimsService } from "./m3-trims.service";
 
@@ -43,6 +43,16 @@ async getM3TrimsByBuyer(@Body() req: any): Promise<CommonResponseModel> {
 async getM3TrimsByTrimCode(@Body() req: any): Promise<CommonResponseModel> {
   try {
     return await this.Service.getM3TrimsByTrimCode(req);
+  } catch (error) {
+    return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+  }
+}
+
+@Post('/getAllM3Data')
+@ApiBody({type:M3trimsDTO})
+async getAllM3Data(@Body() req: any): Promise<CommonResponseModel> {
+  try {
+    return await this.Service.getAllM3Data(req);
   } catch (error) {
     return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
   }
