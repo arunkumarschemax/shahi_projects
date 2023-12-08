@@ -49,9 +49,9 @@ export const StockView = () => {
 
 
 
+  const userrefNo = IAMClientAuthContext.user?.externalRefNo
 
   useEffect(() => {
-    const userrefNo = IAMClientAuthContext.user?.externalRefNo
   if(userrefNo){
     setIsBuyer(true)
   }
@@ -371,12 +371,15 @@ export const StockView = () => {
     
         return (
           <span>
+            {
+              rowData.refNo === userrefNo ? "-" :
             <Button
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}
             >
               <b>Request Reclassification</b>
             </Button>
+          }
           </span>
         );
       }
@@ -710,7 +713,7 @@ export const StockView = () => {
                 Reset
               </Button>
               &nbsp;&nbsp;&nbsp;&nbsp;
-              <Button type="primary" onClick={(e) => getItemsForOtherBuyers()} disabled={buttonEnable}
+              <Button type="primary" onClick={(e) => getItemsForOtherBuyers()} 
             //  style={{marginRight:300}}
 
               >Check Other Buyers

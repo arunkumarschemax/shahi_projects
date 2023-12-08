@@ -51,8 +51,9 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
         if(res.status){
             setReclassificationData(res.data);
             console.log(res.data,'ressssss');
-            setRequest(res.data.filter(e =>e.fromExtRef ===  refNo))
-            setAccepted(res.data.filter(e =>e.toExtRef ===  refNo))
+            setAccepted(res.data.filter(e =>e.fromExtRef ===  refNo))
+
+            setRequest(res.data.filter(e =>e.toExtRef ===  refNo))
         }
         else{
             setReclassificationData([]);
@@ -175,17 +176,17 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
     },
     {
       title: "From Buyer",
-      dataIndex: "fromBuyerName",
-      ...getColumnSearchProps("fromBuyerName"),
-      sorter: (a, b) => a.fromBuyerName.localeCompare(b.fromBuyerName),
+      dataIndex: "toBuyerName",
+      ...getColumnSearchProps("toBuyerName"),
+      sorter: (a, b) => a.toBuyerName.localeCompare(b.toBuyerName),
       sortDirections: ["descend", "ascend"],
       
     },
     {
       title: "To Buyer",
-      dataIndex: "toBuyerName",
-      ...getColumnSearchProps("toBuyerName"),
-      sorter: (a, b) => a.toBuyerName.localeCompare(b.toBuyerName),
+      dataIndex: "fromBuyerName",
+      ...getColumnSearchProps("fromBuyerName"),
+      sorter: (a, b) => a.fromBuyerName.localeCompare(b.fromBuyerName),
       sortDirections: ["descend", "ascend"],
       
     },
@@ -249,17 +250,18 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
     },
     {
       title: "From Buyer",
-      dataIndex: "fromBuyerName",
-      ...getColumnSearchProps("fromBuyerName"),
-      sorter: (a, b) => a.fromBuyerName.localeCompare(b.fromBuyerName),
-      sortDirections: ["descend", "ascend"],
-      
-    },
-    {
-      title: "To Buyer",
       dataIndex: "toBuyerName",
       ...getColumnSearchProps("toBuyerName"),
       sorter: (a, b) => a.toBuyerName.localeCompare(b.toBuyerName),
+      sortDirections: ["descend", "ascend"],
+      
+    },
+    
+    {
+      title: "To Buyer",
+      dataIndex: "fromBuyerName",
+      ...getColumnSearchProps("fromBuyerName"),
+      sorter: (a, b) => a.fromBuyerName.localeCompare(b.fromBuyerName),
       sortDirections: ["descend", "ascend"],
       
     },
