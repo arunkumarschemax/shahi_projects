@@ -50,6 +50,8 @@ export const StockView = () => {
 
 
   const userrefNo = IAMClientAuthContext.user?.externalRefNo
+  const role = IAMClientAuthContext.user?.roles
+
 
   useEffect(() => {
   if(userrefNo){
@@ -372,13 +374,13 @@ export const StockView = () => {
         return (
           <span>
             {
-              rowData.refNo === userrefNo ? "-" :
+              rowData.refNo === userrefNo ? "-" : role === "sourcingUser" ?
             <Button
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}
             >
               <b>Request Reclassification</b>
-            </Button>
+            </Button>:"-"
           }
           </span>
         );

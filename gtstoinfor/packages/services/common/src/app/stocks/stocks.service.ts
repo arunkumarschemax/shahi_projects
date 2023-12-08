@@ -190,7 +190,7 @@ export class StocksService {
         try {
             // CONCAT(it.item_code,'-',it.description) AS m3Item,
             console.log(req);
-            let query = ` SELECT s.location_id AS locationId,s.m3_item AS m3itemId, s.uom_id AS uomId, s.grn_item_id AS grnItemId,  s.id AS stockId,
+            let query = ` SELECT b.external_ref_number AS refNo,s.location_id AS locationId,s.m3_item AS m3itemId, s.uom_id AS uomId, s.grn_item_id AS grnItemId,  s.id AS stockId,
             it.trim_code AS m3Item,
             s.item_type AS itemType, (s.quantity-s.allocatd_quantity-transfered_quantity) AS qty,
              u.uom AS uom, b.buyer_name AS buyer,r.rack_position_name AS location,
@@ -206,9 +206,9 @@ export class StocksService {
             if(req.buyerId != undefined){
                 query = query + " and s.buyer_id = "+req.buyerId;
             }
-            if(req.extRefNumber != undefined){
-                query = query +"and b.external_ref_number = " + `"${req.extRefNumber}"`
-            }
+            // if(req.extRefNumber != undefined){
+            //     query = query +"and b.external_ref_number = " + `"${req.extRefNumber}"`
+            // }
             if(req.trimCategoryId != undefined){
                 query = query +"and it.trim_category_id = " + `"${req.trimCategoryId}"`
             }
