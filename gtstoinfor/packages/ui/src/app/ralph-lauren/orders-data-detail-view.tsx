@@ -1,15 +1,16 @@
 import { Button, Card, Descriptions, Table } from "antd"
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 
 const RLOrdersDetailView = () => {
 const [page, setPage] = React.useState(1);
 const [pageSize, setPageSize] = useState(1);
 const [data, setData] = useState<any[]>([]);
+let location = useLocation();
 
 
-
+ console.log(location.state.data,"yyyyyyyyyyyyy")
 
     const columns: any = [
         {
@@ -76,13 +77,13 @@ const [data, setData] = useState<any[]>([]);
         extra ={<Link to='/ralph-lauren/order-data-info-grid' ><Button className='panel_button' >View </Button></Link>}
         >
         <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }} >
-        <Descriptions.Item label='PO Number' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{}</Descriptions.Item>
-        <Descriptions.Item label='PO Item' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{}</Descriptions.Item>
-        <Descriptions.Item label='Purchase Group' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{}</Descriptions.Item>
-        <Descriptions.Item label='Supplier' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{}</Descriptions.Item>
-        <Descriptions.Item label='Revision Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{}</Descriptions.Item>
-        <Descriptions.Item label='Season Code'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{}</Descriptions.Item>
-        <Descriptions.Item label='Material Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{}</Descriptions.Item>
+        <Descriptions.Item label='PO Number' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.poNumber}</Descriptions.Item>
+        <Descriptions.Item label='PO Item' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.poItem}</Descriptions.Item>
+        <Descriptions.Item label='Purchase Group' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.purchaseGroup}</Descriptions.Item>
+        <Descriptions.Item label='Supplier' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.supplier}</Descriptions.Item>
+        <Descriptions.Item label='Revision Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.revisionNo}</Descriptions.Item>
+        <Descriptions.Item label='Season Code'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.seasonCode}</Descriptions.Item>
+        <Descriptions.Item label='Material Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.materialNo}</Descriptions.Item>
        
 
         </Descriptions>

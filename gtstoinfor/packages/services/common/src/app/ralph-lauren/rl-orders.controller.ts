@@ -2,7 +2,8 @@
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { RLOrdersService } from "./rl-orders.service";
 import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req } from '@nestjs/common';
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, PoOrderFilter } from "@project-management-system/shared-models";
+import { ApiBody } from "@nestjs/swagger";
 
 
 @Controller("/rl-orders")
@@ -22,9 +23,11 @@ export class RLOrdersController {
     }
 
     @Post('/getorderData')
-    async getorderData(): Promise<CommonResponseModel> {
+    @ApiBody({ type: PoOrderFilter })   
+    async getorderData(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            return await this.rlOrdersService.getorderData();
+            console.log(req,"con")
+            return await this.rlOrdersService.getorderData(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
