@@ -66,13 +66,14 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
   }
   
 
-  const assignStock = (rowData) => {
+  const assignStock = (rowData, status) => {
     console.log(rowData)
-    let req = new ReclassificationApproveRequestDto(rowData.reclassificationId,rowData.stockId,rowData.quantity,rowData.m3Item,rowData.locationId,1,rowData.toBuyerId,rowData.fromBuyerId,rowData.itemType,rowData.grnItemId,rowData.uomId)
+    let req = new ReclassificationApproveRequestDto(rowData.reclassificationId,rowData.stockId,rowData.quantity,rowData.m3Item,rowData.locationId,1,rowData.toBuyerId,rowData.fromBuyerId,rowData.itemType,status=== "yes"?ReclassificationStatusEnum.APPROVED:ReclassificationStatusEnum.REJECTED,rowData.grnItemId,rowData.uomId)
     reclassificationService.getApproveStockReclassification(req).then((res) => {
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage)
         navigate('/reclassification-approval-grid')
+        getReclassificationData();
       }
       else{
           AlertMessages.getInfoMessage(res.internalMessage)
@@ -222,24 +223,20 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
       ),
       ...getColumnSearchProps("quantity"),
     },
-    // {
-    //   title: 'Action',
-    //   dataIndex: 'action',
-    //   render: (text, rowData) => {
-    //     return (
-    //       <span>
-    //         {
-    //           rowData.status === ReclassificationStatusEnum.APPROVAL_PENDING ? 
-    //         <Button
-    //           style={{ backgroundColor: '#69c0ff' }}
-    //           onClick={(e) => assignStock(rowData)}
-    //         >
-    //           <b>Assign Stock</b>
-    //         </Button>: "Approved" }
-    //       </span>
-    //     );
-    //   }
-    // }
+    {
+      title: 'Action',
+      dataIndex: 'action',
+      render: (text, rowData) => {
+        return (
+          <span>
+            {
+              rowData.status === ReclassificationStatusEnum.APPROVED ?  <Tag style={{backgroundColor:'#9ccc65', color:'black'}}><b>{rowData.status}</b></Tag>: <Tag style={{backgroundColor:'#fd3d56', color:'black'}}><b>{rowData.status}</b></Tag>
+            }
+            
+          </span>
+        );
+      }
+    }
   ];
   const columns1: ColumnProps<any>[] = [
     {
@@ -305,12 +302,17 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
           <span>
             {
               rowData.status === ReclassificationStatusEnum.APPROVAL_PENDING ? 
-            <Button
-              style={{ backgroundColor: '#69c0ff' }}
-              onClick={(e) => assignStock(rowData)}
-            >
-              <b>Assign Stock</b>
-            </Button>: "Approved" }
+            <><Button
+                  style={{ backgroundColor: '#69c0ff' }}
+                  onClick={(e) => assignStock(rowData, "accept")}
+                >
+                  <b>Assign Stock</b>
+                </Button><Button 
+                  style={{ backgroundColor: '#fd3d56' }}
+                  onClick={(e) => assignStock(rowData, "reject")}
+                >
+                    <b>Reject</b>
+                  </Button></>: <Tag style={{backgroundColor:'#9ccc65', color:'black'}}><b>Approved</b></Tag> }
           </span>
         );
       }

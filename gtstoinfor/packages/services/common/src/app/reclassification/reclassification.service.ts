@@ -114,10 +114,10 @@ async getApproveStockReclassification(req:ReclassificationApproveRequestDTO): Pr
 
   const manager=this.dataSource
     try {
-      let query = "update reclassification set status='"+ReclassificationStatusEnum.APPROVED+"' where reclassification_id = "+req.reclassificationId;
+      let query = "update reclassification set status='"+req.status+"' where reclassification_id = "+req.reclassificationId;
       const updateStatus = await manager.query(query)
       console.log(updateStatus)
-      if(updateStatus.affectedRows > 0){
+      if(updateStatus.affectedRows > 0 && req.status === ReclassificationStatusEnum.APPROVED){
         const stocksEntity = new StocksEntity()
           stocksEntity.buyerId = req.buyer;
           stocksEntity.grnItemId = req.grnItemId;
@@ -144,6 +144,12 @@ async getApproveStockReclassification(req:ReclassificationApproveRequestDTO): Pr
             // await manager.releaseTransaction();
             return new CommonResponseModel(false, 0, "Something went wrong",);
           }
+      }
+      else if(updateStatus.affectedRows > 0){
+        return new CommonResponseModel(true, 1, 'Data saved successfully', );
+      }
+      else{
+        return new CommonResponseModel(false, 0, "Something went wrong",);
       }
     } catch (error) {
       return new CommonResponseModel(false, 0, error)
