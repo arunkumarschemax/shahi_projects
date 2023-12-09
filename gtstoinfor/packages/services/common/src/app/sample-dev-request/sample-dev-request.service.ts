@@ -588,6 +588,7 @@ export class SampleRequestService {
   async creatematerialAlloction(req:MaterialAllocationDTO[]):Promise<CommonResponseModel>{
     // console.log(req)
     const manager = new GenericTransactionManager(this.dataSource)
+    const queryManager = this.dataSource;
     try{
       let save
       const filteredData = req.filter(item => item.checkedStatus === 1);
@@ -686,11 +687,13 @@ export class SampleRequestService {
           }
         }
         let updateSampleOrderStatus
+        let getBomStatusquery = "Select * from sampling_bom where status!= 'Allocated' and sample_request_id = "+transformedData[0].sampleOrderId;
+        let getBomStatus = await queryManager.query(getBomStatusquery);
         // let getBomStatus = await manager.getRepository(SamplingbomEntity).find({where:{status: Not(BomStatusEnum.ALLOCATED),sampleRequestId: transformedData[0].sampleOrderId}});
-        // console.log("getBomStatus")
-        // console.log(getBomStatus)
+        console.log("getBomStatus")
+        console.log(getBomStatus)
 
-        // if(getBomStatus.length < 1){
+        if(getBomStatus.length-1 < 1){
           updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:req[0].sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ALLOCATED});
           console.log(updateSampleOrderStatus);
           console.log(flag);
@@ -704,11 +707,11 @@ export class SampleRequestService {
             await manager.completeTransaction();
             return new CommonResponseModel(true,1,'Material Allocation Request Raise')
           }
-        // }
-        // else{
-        //   await manager.completeTransaction();
-        //   return new CommonResponseModel(true,1,'Material Allocation Request Raise')
-        // }
+        }
+        else{
+          await manager.completeTransaction();
+          return new CommonResponseModel(true,1,'Material Allocation Request Raise')
+        }
        
       }else{
         await manager.releaseTransaction();
@@ -1005,6 +1008,7 @@ export class SampleRequestService {
     }
 
     async getAllocatedBomInfo(req?:RequestNoReq):Promise<CommonResponseModel>{
+      console.log(req)
       let checkStatus
       if(req.action == 'Issued'){
         checkStatus = LifeCycleStatusEnum.READY_FOR_PRODUCTION
@@ -1027,9 +1031,9 @@ export class SampleRequestService {
             }
             const fabricInfo = await this.dataSource.query(fabricInfoQry)
             console.log()
-      if(req.requestNo) {
+      // if(req.requestNo) {
 
-      }
+      // }
       let trimInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,mi.trim_code as itemCode,st.consumption , st.trim_info_id as sampleTrimInfoId , st.sample_request_id as sampleReqTrimId ,'Trim' as type
       FROM sample_request sr 
 LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_request_id
@@ -1038,8 +1042,8 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
             LEFT JOIN brands br ON br.brand_id = sr.brand_id
             LEFT JOIN m3_trims mi ON mi.m3_trim_Id = st.trim_code
       WHERE sr.life_cycle_status = '${checkStatus}'`;
-      if(req.requestNo){
-        fabricInfoQry += ' AND sr.request_no = ' + req.requestNo ;
+      if(req.requestNo > 0){
+        trimInfoQry += ' AND sr.sample_request_id = ' + req.requestNo ;
       }
       const trimInfo = await this.dataSource.query(trimInfoQry)
       
