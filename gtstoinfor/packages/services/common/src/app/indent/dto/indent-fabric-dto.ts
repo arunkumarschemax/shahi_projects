@@ -32,6 +32,7 @@ export class IndentFabricDto{
     m3FabricCode: number;
     @ApiProperty()
     color: number;
+   
     // @ApiProperty()
     // pch: number;
     // @ApiProperty()
@@ -74,6 +75,8 @@ export class IndentFabricDto{
     updatedUser?: string | null;
     @ApiProperty()
     versionFlag?: number;
+    @ApiProperty()
+    newColor?: string;
   constructor(
     ifabricId: number,
     // content: string,
@@ -110,6 +113,7 @@ export class IndentFabricDto{
     updatedAt?: Date,
     updatedUser?: string | null,
     versionFlag?: number,
+    newColor?: string
   ){
     this.ifabricId=ifabricId;
     // this.content=content;
@@ -146,6 +150,7 @@ export class IndentFabricDto{
     this.updatedAt=updatedAt;
     this.updatedUser=updatedUser;
     this.versionFlag=versionFlag;
+    this.newColor=newColor;
   }
 
 
