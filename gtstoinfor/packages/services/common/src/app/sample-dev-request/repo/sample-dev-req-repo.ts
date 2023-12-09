@@ -289,7 +289,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
     async sampleTrimData(sampleId: string) {
         const query = await this.dataSource.createQueryBuilder(SampleRequestTriminfoEntity, 'stri')
-            .addSelect(`(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,stri.sample_request_id,mt.trim_type as trimType,sum(st.quantity) as availabeQuantity,stri.trim_info_id,stri.consumption AS trim_consumption,stri.sample_request_id AS trim_sample_request_id,stri.remarks AS tri_remarks,mt.trim_code AS trim_item_code,mt.trim_code AS m3trimcode, sr.buyer_id as buyerId, stri.trim_code as trimCode, sb.status AS status,stri.trim_info_id AS trimInfoId`)
+            .addSelect(`(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,stri.sample_request_id,mt.trim_type as trimType,sum(st.quantity) as availabeQuantity,stri.trim_info_id,stri.consumption AS trim_consumption,stri.total_requirement ,stri.sample_request_id AS trim_sample_request_id,stri.remarks AS tri_remarks,mt.trim_code AS trim_item_code,mt.trim_code AS m3trimcode, sr.buyer_id as buyerId, stri.trim_code as trimCode, sb.status AS status,stri.trim_info_id AS trimInfoId`)
             .leftJoin(SampleRequest, 'sr', 'sr.sample_request_id= stri.sample_request_id ')
             .leftJoin(SamplingbomEntity, 'sb', 'sb.m3_item_id= stri.trim_code and sb.sample_request_id = stri.sample_request_id')
             .leftJoin(M3TrimsEntity, 'mt', 'mt.m3_trim_id=stri.trim_code ')
@@ -301,7 +301,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .getRawMany()
         return query.map((rec) => {
             return {
-                trim_info_id: rec.trim_info_id,trim_item_code:rec.trim_item_code, trim_description: rec.trim_description, trim_consumption: rec.trim_consumption, tri_remarks: rec.tri_remarks, trim_sample_request_id: rec.trim_sample_request_id,trim_code:rec.m3trimcode,availabeQuantity:rec.availabeQuantity,trimType:rec.trimType,sample_request_idmt:rec.sample_request_id,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,buyerId:rec.buyerId,trimCode:rec.trimCode,status:rec.status,itemType:rec.trimType,sampleRequestid:rec.trim_sample_request_id,sampleItemId:rec.trimInfoId
+                trim_info_id: rec.trim_info_id,trim_item_code:rec.trim_item_code, trim_description: rec.trim_description, trim_consumption: rec.trim_consumption, tri_remarks: rec.tri_remarks, trim_sample_request_id: rec.trim_sample_request_id,trim_code:rec.m3trimcode,availabeQuantity:rec.availabeQuantity,trimType:rec.trimType,sample_request_idmt:rec.sample_request_id,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,buyerId:rec.buyerId,trimCode:rec.trimCode,status:rec.status,itemType:rec.trimType,sampleRequestid:rec.trim_sample_request_id,sampleItemId:rec.trimInfoIdm,totalRequirement:rec.total_requirement
             }
         })
 

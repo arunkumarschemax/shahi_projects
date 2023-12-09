@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message } from 'antd';
+import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { M3TrimsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
 
-const TrimsForm = ({props, buyerId}) => {
+export interface TrimsFormProps {
+  data: any;
+  buyerId: number;
+  sizeDetails: any[]
+}
+
+const TrimsForm = (props:TrimsFormProps) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [trimCode, setTrimCode]=useState<any[]>([])
@@ -12,22 +18,36 @@ const TrimsForm = ({props, buyerId}) => {
   const [uom, setUom] = useState([]);
   const service = new M3TrimsService()
   const uomService =  new UomService()
+  const [form] = Form.useForm();
 
  const {Option}=Select
 
   const handleAddRow = () => {
-    const newRow = {
-      key: count
-    };
-    setData([...data, newRow]);
-    setCount(count + 1);
+    if(props.sizeDetails.length > 0){
+      props.sizeDetails?.forEach(element => {
+        let qtyy = 0;
+        element.sizeInfo?.forEach(qty => {
+          console.log(qty.quantity);
+          qtyy = Number(qtyy)+Number(qty.quantity);
+        })
+        console.log(qtyy)
+        const newRow = {
+          key: count,
+          colourId:element.colour,
+          totalCount: qtyy
+        };
+        console.log(newRow)
+        setData([...data, newRow]);
+        setCount(count + 1);
+      });
+    }
   };
 
   useEffect(() =>{
-    if(buyerId != null){
-      getTrimTypes(buyerId)
+    if(props.buyerId != null){
+      getTrimTypes(props.buyerId)
     }
-  },[buyerId])
+  },[props.buyerId])
 
   useEffect(() =>{
     getUom()
@@ -63,15 +83,56 @@ const TrimsForm = ({props, buyerId}) => {
 
   const handleInputChange = (e, key, field) => {
     console.log(data)
-    const updatedData = data.map((record) => {
-      if (record.key === key) {
-        return { ...record, [field]: e };
-      }
-      return record;
-    });
+    console.log(e)
+    console.log(key)
+    console.log(field)
+
+
+    let updatedData
+    if(field === 'consumption'){
+      let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          console.log(e);
+      console.log(record.totalCount);
+          let consumptionCal = Number(record.totalCount) * Number(e);
+          let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
+          console.log(consumptionCal);
+          console.log(withPer);
+          form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+          return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
+        }
+        return record;
+      });
+    }
+    else if(field === 'wastage'){
+      let cons = form.getFieldValue(`consumption${key}`) != undefined ? form.getFieldValue(`consumption${key}`) : 0
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          console.log(e);
+      console.log(record.totalCount);
+          let consumptionCal = Number(record.totalCount) * Number(cons);
+          let withPer = (Number(consumptionCal) * Number(e))/ 100;
+          console.log(consumptionCal);
+          console.log(withPer);
+          form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+          return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
+        }
+        return record;
+      });
+    }
+    else{
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          return { ...record, [field]: e };
+        }
+        return record;
+      });
+    }
+    
     setData(updatedData);
     console.log(updatedData)
-    props(updatedData)
+    props.data(updatedData)
   };
 
   const handleDelete = (key) => {
@@ -94,6 +155,7 @@ const TrimsForm = ({props, buyerId}) => {
       dataIndex: 'trimType',
       width:"20%",
       render: (_, record) => (
+        <Form.Item name={`trimType${record.key}`}>
         <Select
           value={record.trimType}
           onChange={(e) => handleInputChange(e, record.key, 'trimType')}
@@ -108,6 +170,7 @@ const TrimsForm = ({props, buyerId}) => {
             return <Option key={item.trimType} valu={item.trimType}>{item.trimType}</Option>
           })}
           </Select>
+      </Form.Item>
       ),
     },
     {
@@ -115,6 +178,7 @@ const TrimsForm = ({props, buyerId}) => {
       dataIndex: 'trimId',
       width:"20%",
       render: (_, record) => (
+        <Form.Item name={`trimId${record.key}`}>
         <Select
           value={record.trimId}
           onChange={(e) => handleInputChange(e, record.key, 'trimCode')}
@@ -128,6 +192,7 @@ const TrimsForm = ({props, buyerId}) => {
             return <Option key={item.m3TrimsId} value={item.m3TrimsId}>{item.trimCode}</Option>
           })}
           </Select>
+          </Form.Item>
       ),
     },
    
@@ -135,10 +200,12 @@ const TrimsForm = ({props, buyerId}) => {
       title: 'Consumption',
       dataIndex: 'consumption',
       render: (_, record) => (
-        <Input
+        <Form.Item name={`consumption${record.key}`}>
+        <InputNumber
         value={record.consumption}
-        onChange={(e) => handleInputChange(e.target.value, record.key, 'consumption')}
+        onChange={(e) => handleInputChange(e, record.key, 'consumption')}
         />
+        </Form.Item>
       ),
     },
     {
@@ -146,6 +213,7 @@ const TrimsForm = ({props, buyerId}) => {
       dataIndex: 'Uom',
 
       render: (_, record) => (
+        <Form.Item name={`uomId${record.key}`}>
         <Select
         value={record.uomId}
         style={{width:"100%"}}
@@ -163,17 +231,46 @@ const TrimsForm = ({props, buyerId}) => {
               )
           })}
         </Select>
+        </Form.Item>
+      ),
+    },
+    {
+      title: 'Wastage %',
+      dataIndex: 'wastage',
+      width:"10%",
+      render: (_, record) => (
+      <Form.Item name={`wastage${record.key}`}>
+        <InputNumber
+        defaultValue={2}
+        onChange={(e) => handleInputChange(e, record.key, 'wastage')}
+        />
+      </Form.Item>
+      ),
+    },
+    {
+      title: 'Total Requirement',
+      dataIndex: 'totalRequirement',
+      width:"10%",
+      render: (_, record) => (
+      <Form.Item name={`totalRequirement${record.key}`}>
+        <Input disabled style={{fontWeight:'bold', color:"black"}}
+        value={record.totalRequirement}
+        onChange={(e) => handleInputChange(e.target.value, record.key, 'totalRequirement')}
+        />
+      </Form.Item>
       ),
     },
     {
       title: 'Remarks',
       dataIndex: 'remarks',
       render: (_, record) => (
+        <Form.Item name={`remarks${record.key}`}>
         <TextArea
         value={record.remarks}
         onChange={(e) => handleInputChange(e.target.value, record.key, 'remarks')}
         rows={1}
         />
+        </Form.Item>
       ),
     },
     {
@@ -187,12 +284,15 @@ const TrimsForm = ({props, buyerId}) => {
 
   return (
     <div>
+      <Form form={form}>
+
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
       dataSource={data} 
       columns={columns} 
       bordered={true}
       />
+      </Form>
     </div>
   );
 };
