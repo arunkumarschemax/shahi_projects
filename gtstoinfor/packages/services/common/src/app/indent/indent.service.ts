@@ -52,7 +52,23 @@ export class IndentService {
             }
             const slNo = await this.indentRepo.count()
             // console.log(slNo);
-            const indentnum = "IND" + "/" + "22-23" + "/" + "00" + Number(Number(slNo) + 1)
+            const today = new Date();
+            const CurrentYear = today.getFullYear();
+            const CurrentMonth = today.getMonth();
+            let fromDate = 0;
+            let toDate = 0;
+            let totalIndents
+            if (CurrentMonth < 4) {
+                fromDate = (CurrentYear-1);
+                toDate = (CurrentYear);
+            } else {
+                fromDate = (CurrentYear);
+                toDate = (CurrentYear + 1);
+            }
+            totalIndents = slNo + 1;
+            let refNo = totalIndents + "";
+            while (refNo.length < 4) refNo = "0" + refNo;
+            const indentnum = "IND" + "/"+(fromDate.toString().substr(-2)) + "-" + (toDate.toString().substr(-2))+ "/" + refNo
             req.requestNo = indentnum;
             //  console.log(req);
             const convertedindentEntity: Indent = this.indentAdapter.convertDtoToEntity(req, isUpdate);
