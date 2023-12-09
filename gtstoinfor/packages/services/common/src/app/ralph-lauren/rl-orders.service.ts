@@ -32,7 +32,7 @@ export class RLOrdersService {
 
       async getorderData(req?:PoOrderFilter): Promise<CommonResponseModel> {
         try {
-          console.log(req,"sev")
+          // console.log(req,"sev")
             const details = await this.repo.getorderData(req);
             // console.log(details,"88888888")
 

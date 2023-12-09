@@ -26,7 +26,7 @@ export class RLOrdersController {
     @ApiBody({ type: PoOrderFilter })   
     async getorderData(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            console.log(req,"con")
+            // console.log(req,"con")
             return await this.rlOrdersService.getorderData(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
@@ -37,7 +37,7 @@ export class RLOrdersController {
     @ApiBody({ type: PoOrderFilter })   
     async getorderDataByPoNumber(@Body() req:any): Promise<CommonResponseModel> {
         try {
-            console.log(req,"con")
+            // console.log(req,"con")
             return await this.rlOrdersService.getorderDataByPoNumber(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
