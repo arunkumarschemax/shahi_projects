@@ -161,9 +161,10 @@ const M3Items = () => {
     });
   };
 
-  const onFinish = (m3StyleDto: M3ItemsDTO) => {
+  const onFinish = (val) => {
+    const req = new M3ItemsDTO(0,val.itemCode,val.content,val.fabricType,val.weave,val.weight,val.weightUnit,val.construction,val.yarnCount,val.yarnUnit,val.width,val.widthUnit,val.finish,val.shrinkage,val.buyerId,val.description,val.buyerCode)
     service
-      .createM3Items(m3StyleDto)
+      .createM3Items(req)
       .then((res) => {
         if (res.status) {
           AlertMessages.getSuccessMessage(res.internalMessage);
@@ -423,7 +424,11 @@ const M3Items = () => {
                 </Select>
               </Form.Item>
             </Col>
-
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="m3Code" label="M3 Code" >
+                    <Input placeholder="Enter M3 Code"/>
+                </Form.Item>
+            </Col>
             <Col
               xs={{ span: 12 }}
               sm={{ span: 12 }}

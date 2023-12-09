@@ -269,6 +269,15 @@ const stockService = new StockService();
 
         },
         {
+          title: "M3 Code",
+          dataIndex: "m3Code",
+          ...getColumnSearchProps('m3Code'),
+          sorter: (a, b) => a.m3Code.length - b.m3Code.length,
+         sortDirections: ['descend', 'ascend'],
+          
+
+      },
+        {
             title: "Content",
             dataIndex: "content",
             ...getColumnSearchProps('content'),

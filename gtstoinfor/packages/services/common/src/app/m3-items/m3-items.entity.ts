@@ -262,6 +262,13 @@ export class M3ItemsEntity {
   })
   versionFlag: number;
 
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'm3_code',
+  })
+  m3Code: string;
+
   @ManyToOne(type=>Buyers, m3Items=>m3Items.M3ItemCodes,{  nullable:false, })
   @JoinColumn({ name:"buyer_id"})
   buyerInfo: Buyers;

@@ -176,12 +176,15 @@ export const SourcingRequisitionDynamicForm = () => {
 
     const getBuyer = () => {
         const req = new BuyerRefNoRequest()
-        req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null    
+        const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null   
+        req.buyerRefNo = refNo 
         buyerService.getAllActiveBuyers(req).then(res =>{
             if(res.status) {
                 setBuyer(res.data)
-                sourcingForm.setFieldsValue({buyer: res.data[0]?.buyerId})
-                onBuyerChange(res.data[0]?.buyerId,res.data[0]?.buyerName)
+                if(refNo){
+                    sourcingForm.setFieldsValue({buyer: res.data[0]?.buyerId})
+                    onBuyerChange(res.data[0]?.buyerId,res.data[0]?.buyerName)
+                }
             }
         })
     }
@@ -297,6 +300,7 @@ export const SourcingRequisitionDynamicForm = () => {
                 m3FabricCode: defaultFabricFormData.m3FabricCode,
                 color : defaultFabricFormData.color,
                 colorName : defaultFabricFormData.colorName,
+                newColor : defaultFabricFormData.newColor,
                 pch  : defaultFabricFormData.pch,
                 moq  : defaultFabricFormData.moq,
                 moqUnit  : defaultFabricFormData.moqUnit,
@@ -406,7 +410,7 @@ export const SourcingRequisitionDynamicForm = () => {
             render: (text,record) => {
                 return(
                     <>
-                    {record.color ? record.colorName : '-'}
+                    {record.color ? record.colorName : record.newColor}
                     </>
                 )
             }
@@ -605,27 +609,32 @@ export const SourcingRequisitionDynamicForm = () => {
 
     const onFabricAdd = (values) => {
         fabricForm.validateFields().then(() => {
-            console.log(fabricIndexVal) 
-            console.log(values)
-            if(fabricIndexVal !== undefined){
-                console.log(fabricIndexVal)
-                console.log(fabricM3Code)
-                console.log(fabricM3Code.find((e) => e.m3ItemsId === values.m3FabricCode)?.itemCode)
-                let m3item = fabricM3Code.find((e) => e.m3ItemsId === values.m3FabricCode)?.itemCode + " - " + fabricM3Code.find((e) => e.m3ItemsId === values.m3FabricCode)?.description
-                values.m3FabricName = m3item;
-                // let colorName = color.find((e) => e.colourId === values.color)?.colorName;
-                // values.colorName = colorName;
-                fabricTableData[fabricIndexVal] = values;
+            if(values.color || values.newColor){
 
-                tableData = [...fabricTableData]
-                setFabricIndexVal(fabricIndexVal+1)
-            } else{
-                tableData = [...fabricTableData,values]
+                console.log(fabricIndexVal) 
+                console.log(values)
+                if(fabricIndexVal !== undefined){
+                    console.log(fabricIndexVal)
+                    console.log(fabricM3Code)
+                    console.log(fabricM3Code.find((e) => e.m3ItemsId === values.m3FabricCode)?.itemCode)
+                    let m3item = fabricM3Code.find((e) => e.m3ItemsId === values.m3FabricCode)?.itemCode + " - " + fabricM3Code.find((e) => e.m3ItemsId === values.m3FabricCode)?.description
+                    values.m3FabricName = m3item;
+                    // let colorName = color.find((e) => e.colourId === values.color)?.colorName;
+                    // values.colorName = colorName;
+                    fabricTableData[fabricIndexVal] = values;
+    
+                    tableData = [...fabricTableData]
+                    setFabricIndexVal(fabricIndexVal+1)
+                } else{
+                    tableData = [...fabricTableData,values]
+                }
+                setFabricTableData(tableData)
+                fabricForm.resetFields()
+                setFabricTableVisible(true)
+                setBtnType("Add")
+            }else{
+                message.error('Please Give the color')
             }
-            setFabricTableData(tableData)
-            fabricForm.resetFields()
-            setFabricTableVisible(true)
-            setBtnType("Add")
         }).catch(() => {
             message.error('Please fill all required fields')
         })
@@ -1029,7 +1038,7 @@ const onTrimChange = (val, option) => {
                                     {/* <h1 style={{ color: '#6b54bf', fontSize: '15px', textAlign: 'left' }}>ITEM DETAILS</h1>
                                     <Row gutter={8}> */}
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                                            <Form.Item name='color' label='Color' rules={[{ required: true, message: 'Color is required' }]}>
+                                            <Form.Item name='color' label='Color' rules={[{ required: false, message: 'Color is required' }]}>
                                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select Color' onChange={onFabricColorChange}>
                                                     {color.map(e => {
                                                         return (
@@ -1038,6 +1047,11 @@ const onTrimChange = (val, option) => {
                                                     })}
                                                 </Select>
                                                 {/* <Input placeholder="Enter Color"/> */}
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                            <Form.Item name='newColor' label='New Color(If not in the list)' rules={[{ required: false, message: 'XL No is required' }]}>
+                                                <Input placeholder="Enter Color" />
                                             </Form.Item>
                                         </Col>
                                         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
