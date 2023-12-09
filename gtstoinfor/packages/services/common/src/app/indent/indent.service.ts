@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { IndentRepository } from './dto/indent-repository';
-import { CommonResponseModel, IndentReq, IndentFabricModel, IndentModel, IndentTrimsModel, IndentRequestDto, indentIdReq, BuyerRefNoRequest } from '@project-management-system/shared-models';
+import { CommonResponseModel, IndentReq, IndentFabricModel, IndentModel, IndentTrimsModel, IndentRequestDto, indentIdReq, BuyerRefNoRequest, ColourDto } from '@project-management-system/shared-models';
 import { Indent } from './indent-entity';
 import { IndentDto } from './dto/indent-dto';
 import { IndentAdapter } from './dto/indent-adapter';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { DataSource } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { FabricIndentRepository } from './dto/fabric-indent-repository';
 import { TrimIndentRepository } from './dto/trim-indent-repository';
 import { UomService } from '@project-management-system/shared-services';
+import { Colour } from '../colours/colour.entity';
+import { ColourService } from '../colours/colour.service';
+import { ColourDTO } from '../colours/dto/colour-dto';
 
 
 @Injectable()
@@ -18,6 +21,8 @@ export class IndentService {
         private indentRepo: IndentRepository,
         private indentFabricRepo: FabricIndentRepository,
         private indentTrimRepo: TrimIndentRepository,
+        private colorService:ColourService,
+        // private ColourRepository: Repository<Colour>,
         private uomService: UomService,
         private indentAdapter: IndentAdapter,
         private readonly dataSource: DataSource,
@@ -26,9 +31,44 @@ export class IndentService {
 
     async creteIndent(req: IndentDto, isUpdate: boolean): Promise<CommonResponseModel> {
         try {
+            for(const rec of req.indentFabricDetails){
+                if(rec.newColor){
+                    const colorobj = new Colour()
+                    const req = new ColourDTO()
+                    req.colourId = null
+                    req.colour = rec.newColor
+                    req.createdUser = 'Admin';
+                    const saveColor = await this.colorService.createColour(req,false)
+                    if(saveColor.status){
+                        rec.color = saveColor.data[0].colourId
+                    }else{
+                        let msg = 'Something went wrong in adding new colour';
+                        if(saveColor.errorCode == 11104){
+                            msg = 'Added new Color already existed in the list';
+                        }
+                        return new CommonResponseModel(false,0,msg)
+                    }
+                  }
+            }
             const slNo = await this.indentRepo.count()
             // console.log(slNo);
-            const indentnum = "IND" + "/" + "22-23" + "/" + "00" + Number(Number(slNo) + 1)
+            const today = new Date();
+            const CurrentYear = today.getFullYear();
+            const CurrentMonth = today.getMonth();
+            let fromDate = 0;
+            let toDate = 0;
+            let totalIndents
+            if (CurrentMonth < 4) {
+                fromDate = (CurrentYear-1);
+                toDate = (CurrentYear);
+            } else {
+                fromDate = (CurrentYear);
+                toDate = (CurrentYear + 1);
+            }
+            totalIndents = slNo + 1;
+            let refNo = totalIndents + "";
+            while (refNo.length < 4) refNo = "0" + refNo;
+            const indentnum = "IND" + "/"+(fromDate.toString().substr(-2)) + "-" + (toDate.toString().substr(-2))+ "/" + refNo
             req.requestNo = indentnum;
             //  console.log(req);
             const convertedindentEntity: Indent = this.indentAdapter.convertDtoToEntity(req, isUpdate);

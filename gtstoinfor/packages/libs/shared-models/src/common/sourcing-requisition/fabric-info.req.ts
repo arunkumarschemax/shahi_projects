@@ -1,6 +1,7 @@
 export class FabricInfoReq{
     m3FabricCode:number;
     color:number;
+    newColor?:string;
     // content:string;
     // fabricType:string;
     // weaveId: number;
@@ -31,7 +32,7 @@ export class FabricInfoReq{
     constructor(
         // content:string,fabricType:string,weaveId: number,weight: number,weightUnit : number,width : number,construction : string,yarnCount : number,yarnUnit : number,finish : string,shrinkage : string,m3FabricCode:string,color : number,pch : number,moq : string,moqUnit : number,season : string,moqPrice : number,moqPriceUnit : number,supplier : number,grnDate : Date,buyer : number,xlNo : string,
         m3FabricCode:number,color:number,
-        quantity : number,quantityUnit: number,remarks:string)
+        quantity : number,quantityUnit: number,remarks:string,newColor?:string)
     {
         // this.content = content;
         // this.fabricType = fabricType;
@@ -61,6 +62,7 @@ export class FabricInfoReq{
         this.m3FabricCode = m3FabricCode;
         this.color = color;
         this.remarks = remarks
+        this.newColor = newColor
 
     }
 }

@@ -11,13 +11,16 @@ import { IndentAdapter } from './dto/indent-adapter';
 import { FabricIndentRepository } from './dto/fabric-indent-repository';
 import { TrimIndentRepository } from './dto/trim-indent-repository';
 import { UomService } from '@project-management-system/shared-services';
+import { ColourService } from '../colours/colour.service';
+import { Colour } from '../colours/colour.entity';
+import { ColourAdapter } from '../colours/dto/colour-adapter';
 
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Indent,IndentFabricEntity,IndentTrimsEntity]),
+        TypeOrmModule.forFeature([Indent,IndentFabricEntity,IndentTrimsEntity,Colour]),
       ],
-providers: [ApplicationExceptionHandler,IndentRepository,FabricIndentRepository,TrimIndentRepository,IndentService,UomService,IndentAdapter],
+providers: [ApplicationExceptionHandler,IndentRepository,FabricIndentRepository,TrimIndentRepository,IndentService,UomService,IndentAdapter,ColourService,ColourAdapter],
       controllers: [IndentController],
       exports: []
 })
