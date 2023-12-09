@@ -45,7 +45,10 @@ export class M3TrimsService {
   async getM3TrimsByBuyer(req: BuyerIdReq): Promise<CommonResponseModel> {
     try{
       console.log(req)
-      const query = "Select m3.m3_trim_Id as m3TrimsId,m3.trim_code AS trimCode,m3.trim_type AS trimType from m3_trims m3 where buyer_id ="+req.buyerId+ " group by m3.trim_type";
+      const query = `Select m3.m3_trim_Id as m3TrimsId,m3.trim_code AS trimCode,m3.trim_type AS trimType, m3.trim_category_id as trimCategoryId,t.trim_category as trimCategory,m3.trim_mapping_id
+      from m3_trims m3 
+      left join trim t on t.trim_id = m3.trim_category_id
+      where buyer_id = ${req.buyerId} group by m3.trim_type`;
       const data = await this.datasource.query(query)
       if(data.length > 0){
         return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)

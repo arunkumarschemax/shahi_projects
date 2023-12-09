@@ -2,7 +2,7 @@ import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, S
 import { ColumnProps } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react"
-import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, M3TrimsService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, UomService, VendorsService } from "@project-management-system/shared-services";
+import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, M3TrimsService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, TrimService, UomService, VendorsService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { EditOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
@@ -82,7 +82,8 @@ export const SourcingRequisitionDynamicForm = () => {
     const [m3Trims, setM3Trims] = useState<any[]>([])
     const { IAMClientAuthContext, dispatch } = useIAMClientState();
     const [isBuyer, setIsBuyer] = useState(false);
-
+    const m3TrimService = new M3TrimsService()
+    const [trimCatData, setTrimCatData] = useState<any[]>([])
 
 
     let tableData: any[] = []
@@ -105,6 +106,7 @@ export const SourcingRequisitionDynamicForm = () => {
         getCurrencies()
         getFabricType()
         getFabricTypes()
+        getAllTrimCategories()
         // getM3TrimsTypes()
     },[])
 
@@ -112,6 +114,14 @@ export const SourcingRequisitionDynamicForm = () => {
         fabricTypeService.getTrimTypes().then(res => {
             if(res.status) {
                 setTrimTypes(res.data)
+            }
+        })
+    }
+
+    const getAllTrimCategories = () =>{
+        m3TrimService.getAllTrimCategories().then((res)=>{
+            if(res.status){
+                setTrimCatData(res.data)
             }
         })
     }
@@ -1017,6 +1027,17 @@ const onTrimChange = (val, option) => {
             <Input placeholder="Enter Shrinkage"/>
         </Form.Item>
         </Col> */}
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 12 }}>
+                                            <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
+                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
+                                                    {fabricM3Code.map(e => {
+                                                        return (
+                                                            <Option key={e.m3ItemsId} value={e.m3ItemsId}>{e.trimCategory} - {e.description}</Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col> */}
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 12 }}>
                                             <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
                                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
@@ -1198,6 +1219,37 @@ const onTrimChange = (val, option) => {
                                         <Input disabled />
                                     </Form.Item>
                                     <Row gutter={8}>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+                                            <Form.Item
+                                                name="trimType"
+                                                label="Trim Category"
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                        message: "Trim Type Is Required",
+                                                    },
+                                                    {
+                                                        pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
+                                                        message: `Should contain only alphabets.`,
+                                                    },
+                                                ]}>
+                                                <Select
+                                                    allowClear
+                                                    showSearch
+                                                    optionFilterProp="children"
+                                                    placeholder="Select Trim Type"
+                                                    onChange={getTrimCodes}
+                                                >
+                                                    {m3Trims?.map((e) => {
+                                                        return (
+                                                            <Option key={e.trimCategoryId} value={e.trimCategoryId} >
+                                                                {e.trimCategory}
+                                                            </Option>
+                                                        );
+                                                    })}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
                                             <Form.Item
                                                 name="trimType"
