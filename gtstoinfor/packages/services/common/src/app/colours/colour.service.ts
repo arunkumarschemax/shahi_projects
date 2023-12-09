@@ -71,7 +71,7 @@ export class ColourService{
         if (savedColourEntity) {
           const presentValue = colourDto.colour;
           //generating resposnse
-          const response =new ColourResponseModel(true,1,isUpdate? 'Colour Updated Successfully':'Colour created Successfully')
+          const response =new ColourResponseModel(true,1,isUpdate? 'Colour Updated Successfully':'Colour created Successfully',[savedHeadDto])
           const name=isUpdate?'updated':'created'
           const displayValue = isUpdate? 'Colour Updated Successfully': 'Colour Created Successfully'
           const userName = isUpdate? savedHeadDto.updatedUser :savedHeadDto.createdUser;
