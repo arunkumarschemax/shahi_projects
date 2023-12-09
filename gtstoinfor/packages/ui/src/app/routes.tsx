@@ -39,6 +39,7 @@ import FabricContentForm from "./masters/fabric-content/fabric-content-form"
 import PdFInfoGrid from "./ralph-lauren/pdf-file-info-grid"
 import RLOrdersGrid from "./ralph-lauren/orders-data-grid-view"
 import RLOrdersDetailView from "./ralph-lauren/orders-data-detail-view"
+import OrderAcceptanceGrid from "./ralph-lauren/order-acceptance-view"
 
 
 export const AppRoutes = () => {
@@ -173,6 +174,8 @@ export const AppRoutes = () => {
                     <Route path='pdf-info' element={<PdFInfoGrid />} />
                     <Route path='order-data-info-grid' element={<RLOrdersGrid />} />
                     <Route path='order-data-detail-view' element={<RLOrdersDetailView />} />
+                    <Route path='order-acceptance-view' element={<OrderAcceptanceGrid />} />
+
 
 
                    
