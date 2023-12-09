@@ -59,6 +59,21 @@ export class RLOrdersService {
             return new CommonResponseModel(false, 0, 'failed', e);
         }
     }
+
+
+    async getorderDataByPoNumber(req:PoOrderFilter) : Promise<CommonResponseModel> {
+      try{
+        const data = await this.repo.getorderDataByPoNumber(req)
+       
+        if(data){
+          return new CommonResponseModel(true, 1,'data retrived Successfully',data)
+        } else {
+          return new CommonResponseModel(false,0 ,'No Data Found',[])
+        }
+      } catch(err){
+        throw err
+      }
+    }
  }
         
 

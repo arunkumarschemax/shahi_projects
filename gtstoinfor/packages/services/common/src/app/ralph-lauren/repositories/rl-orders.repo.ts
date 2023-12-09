@@ -21,4 +21,13 @@ export class RLOrdersRepository extends Repository<RLOrdersEntity> {
         return await query.getRawMany()
     }
 
+    async getorderDataByPoNumber(req?:PoOrderFilter): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`o.size,o.upc_ean,o.currency,o.price,o.amount,o.c_s_price,o.c_s_currency,o.msrp_price,o.msrp_currency,o.quantity`)
+            .andWhere(`o.po_number ='${req.poNumber}'`)
+    
+        return await query.getRawMany()
+    }
+
+
 }

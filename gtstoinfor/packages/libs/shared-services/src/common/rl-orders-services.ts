@@ -13,5 +13,9 @@ export class RLOrdersService extends CommonAxiosService {
     async getorderData(req?:PoOrderFilter): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.rlordersController + "/getorderData",req)
     }
+
+    async getorderDataByPoNumber(req:PoOrderFilter): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.rlordersController + "/getorderDataByPoNumber",req)
+    }
     
 }
