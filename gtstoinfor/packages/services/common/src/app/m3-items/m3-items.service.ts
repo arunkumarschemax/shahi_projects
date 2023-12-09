@@ -31,7 +31,7 @@ export class M3ItemsService {
       }
       else{
         const existingItemCount: number = await this.repository.count();
-        console.log(existingItemCount)
+
         const nextItemCode: string = createDto.buyerCode + "/" + `FAB${(existingItemCount + 1).toString().padStart(5, '0')}`;
         const entity: M3ItemsEntity = this.adapter.convertDtoToEntity(createDto);
         entity.itemCode = nextItemCode;
@@ -48,7 +48,7 @@ export class M3ItemsService {
     console.log(req,"req");
     
     let query = `SELECT m3.description,m3.m3_items_Id AS m3ItemsId,m3.item_code AS itemCode,m3.content,m3.fabric_type,m3.weave,m3.weight,m3.construction,
-    m3.yarn_count,m3.finish,m3.shrinkage,ft.fabric_type_name,fw.fabric_weave_name, uom1.uom AS weightUnit,
+    m3.yarn_count,m3.finish,m3.shrinkage,ft.fabric_type_name,fw.fabric_weave_name, uom1.uom AS weightUnit,m3.m3_code as m3Code,
      uom2.uom AS yarnUnit, b.buyer_name AS buyer, m3.width ,uom3.uom AS widthUnit,m3.buyer_id FROM m3_items m3
      
      LEFT JOIN fabric_type ft ON ft.fabric_type_id=m3.fabric_type 

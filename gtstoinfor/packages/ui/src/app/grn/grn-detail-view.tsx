@@ -1,4 +1,4 @@
-import {BarcodeOutlined,CaretDownOutlined,CaretRightOutlined,EyeOutlined,InfoCircleOutlined,PrinterOutlined,SearchOutlined,UndoOutlined,} from "@ant-design/icons";
+import {BarcodeOutlined,CaretDownOutlined,CaretRightOutlined,EyeOutlined,InfoCircleOutlined,PrinterOutlined,QrcodeOutlined,SearchOutlined,UndoOutlined,} from "@ant-design/icons";
 import {Button,Card,Col,Collapse,Descriptions,Divider,Form,Input,Modal,Row,Segmented,Select,Space,Table,Tag,} from "antd";
   import style from "antd/es/alert/style";
   import { ColumnProps } from "antd/es/table";
@@ -9,6 +9,8 @@ import {Button,Card,Col,Collapse,Descriptions,Divider,Form,Input,Modal,Row,Segme
 import { GrnReq, LocationMappedEnumDisplay } from "@project-management-system/shared-models";
 import { GRNService } from "@project-management-system/shared-services";
 import Barcode from "react-barcode";
+import QRCode from "react-qr-code";
+
   
   const { Option } = Select;
   
@@ -132,14 +134,14 @@ import Barcode from "react-barcode";
         },
       },
       {
-        title: <div style={{textAlign:"center"}}>Barcode</div>,
+        title: <div style={{textAlign:"center"}}>QRCode</div>,
         dataIndex: "action",
         align:"center",
         render: (text, record) => {
           const value = `${record.grnNumber}/${record.itemCode}/${record.receivedQty}${record.uom}`;
           return (
             <Tag onClick={() => generateBarcode(value, "GRN")} style={{ cursor: "pointer" }}>
-              <BarcodeOutlined />
+              <QrcodeOutlined />
             </Tag>
           );
         },
@@ -192,7 +194,7 @@ import Barcode from "react-barcode";
         style={{ maxWidth: "100%" }}
       >
         <div style={{ textAlign: "center" }}>
-          <Barcode value={barcode} height={30} width={0.8}/>
+          <QRCode value={barcode} height={30} width={0.8}/>
           {/* <PrinterOutlined onClick={handlePrint}/> */}
         </div>
       </Modal>
