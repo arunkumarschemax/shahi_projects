@@ -340,7 +340,14 @@ export const M3TrimsView = () => {
       sorter: (a, b) => a.description.localeCompare(b.description),
       sortDirections: ["descend", "ascend"],
     },
-    
+   
+    {
+      title: <div style={{textAlign:"center"}}>M3 Code</div>,
+      dataIndex: "m3Code",
+      ...getColumnSearchProps("m3Code"),
+      // sorter: (a, b) => a.m3Code.localeCompare(b.m3Code),
+      // sortDirections: ["descend", "ascend"],
+    },
     // {
     //   title: <div style={{textAlign:"center"}}>Trim Type</div>,
     //   dataIndex: "trimType",
