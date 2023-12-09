@@ -380,23 +380,23 @@ useEffect(() => {
             title: "S.No",
             key: "sno",
             align:"center",
-            width: 25,
+            // width: 25,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-            fixed: 'left'
+            // fixed: 'left'
         },
         {
-            title: 'Size',
+            title: <div style={{textAlign:"center"}}>Size</div>,
             dataIndex: 'size',
-            align:"center",
-            width: 60,
+            // align:"center",
+            // width: 60,
             sorter: (a, b) => a.size.localeCompare(b.size),
             sortDirections: ["ascend", "descend"],
         },
         {
             title: 'UPC/EAN',
             dataIndex: 'upc_ean',
-            align:"center",
-            width: 60,
+            // align:"center",
+            // width: 60,
             sorter: (a, b) => a.upc_ean.localeCompare(b.upc_ean),
             sortDirections: ["ascend", "descend"],
             // ...getColumnSearchProps('purchaseOrderNumber')
@@ -404,8 +404,8 @@ useEffect(() => {
         {
             title: 'MSRP',
             dataIndex: 'msrp_price',
-            width: 60,
-            align:"center",
+            // width: 60,
+            // align:"center",
             sorter: (a, b) => a.msrp_price.localeCompare(b.msrp_price),
             sortDirections: ["ascend", "descend"],
             // ...getColumnSearchProps('purchaseOrderNumber')
@@ -413,8 +413,8 @@ useEffect(() => {
         {
             title: 'Price',
             dataIndex: 'price',
-            width: 60,
-            align:"center",
+            // width: 60,
+            // align:"center",
             sorter: (a, b) => a.price.localeCompare(b.price),
             sortDirections: ["ascend", "descend"],
             render: (text, record) => {
@@ -440,8 +440,8 @@ useEffect(() => {
         {
             title: 'Quantity',
             dataIndex: 'quantity',
-            width: 60,
-            align:"center",
+            // width: 60,
+            // align:"center",
             sorter: (a, b) => a.quantity.localeCompare(b.quantity),
             sortDirections: ["ascend", "descend"],
             // ...getColumnSearchProps('purchaseOrderNumber')
@@ -449,8 +449,8 @@ useEffect(() => {
         {
             title: 'Amount',
             dataIndex: 'amount',
-            width: 60,
-            align:"center",
+            // width: 60,
+            // align:"center",
             sorter: (a, b) => a.amount.localeCompare(b.amount),
             sortDirections: ["ascend", "descend"],
             // ...getColumnSearchProps('purchaseOrderNumber')
@@ -459,10 +459,23 @@ useEffect(() => {
     ]
    
 
-
+    const getTotalAmountAndQuantity = () => {
+        const total = orderData.reduce(
+          (accumulator, item) => {
+            accumulator.amount += parseFloat(item.amount) || 0;
+            accumulator.quantity += parseInt(item.quantity, 10) || 0;
+            return accumulator;
+          },
+          { amount: 0, quantity: 0 }
+        );
+    
+        return {
+          totalAmount: total.amount.toFixed(2),
+          totalQuantity: total.quantity,
+        };
+      };
      
-     
-        
+      const { totalAmount, totalQuantity } = getTotalAmountAndQuantity() 
 
     
 
@@ -490,23 +503,75 @@ useEffect(() => {
 
         </Descriptions>
           <br></br>
-          <Table 
-                    size="small"
-                    columns={columns}
-                    dataSource={orderData}
-                    bordered
-                    className="custom-table-wrapper"
-                    pagination={{
+       
+                     <Table
+                        size="small"
+                        columns={columns}
+                        dataSource={orderData}
+                        className="custom-table-wrapper"
+                        pagination={{
                         pageSize: 50,
                         onChange(current, pageSize) {
                             setPage(current);
                             setPageSize(pageSize);
                         },
-                    }}
-                    scroll={{ y: 450 }}
-                    
-                >
-                </Table>
+                        }}
+                        // scroll={{ y: 450 }}
+                        summary={() => (
+                        <>
+                            <Table.Summary.Row className="tableFooter">
+                                
+                                    <Table.Summary.Cell index={1} colSpan={5}>
+                                    <span style={{ marginLeft:600 }}>
+                                        <b>PO Line Total</b>
+                                    </span>
+                                
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    <span>
+                                        <b>{Number(totalQuantity)}</b>
+                                    </span>
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    <span>
+                                        <b>{Number(totalAmount)} {location?.state?.data?.currency} </b>
+                                    </span>
+                                    </Table.Summary.Cell>
+                                    
+
+                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    <span style={{ textAlign: "end" }}>
+                                    </span>
+                                    </Table.Summary.Cell>
+                                </Table.Summary.Row>
+                                <Table.Summary.Row className="tableFooter">
+                                
+                                    <Table.Summary.Cell index={1} colSpan={5}>
+                                    <span style={{ marginLeft:600 }}>
+                                        <b>Purchase Order Total</b>
+                                    </span>
+                                
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    <span>
+                                        <b>{Number(totalQuantity)}</b>
+                                    </span>
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    <span>
+                                        <b>{Number(totalAmount)} {location?.state?.data?.currency} </b>
+                                    </span>
+                                    </Table.Summary.Cell>
+                                    
+
+                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    <span style={{ textAlign: "end" }}>
+                                    </span>
+                                    </Table.Summary.Cell>
+                                </Table.Summary.Row>
+                        </>
+                        )}
+                    ></Table>
 
         
         </Card>
