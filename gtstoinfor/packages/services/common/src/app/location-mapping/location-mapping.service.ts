@@ -130,7 +130,7 @@ export class LocationMappingService {
            where gi.location_mapped_status!='COMPLETED'`
             let param :any={}
     if(req){
-      if (req.externalRefNo!== undefined){
+      if (req.externalRefNo){
         query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
       }
      

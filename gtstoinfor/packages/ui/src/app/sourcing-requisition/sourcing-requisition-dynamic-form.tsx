@@ -176,12 +176,15 @@ export const SourcingRequisitionDynamicForm = () => {
 
     const getBuyer = () => {
         const req = new BuyerRefNoRequest()
-        req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null    
+        const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null   
+        req.buyerRefNo = refNo 
         buyerService.getAllActiveBuyers(req).then(res =>{
             if(res.status) {
                 setBuyer(res.data)
-                sourcingForm.setFieldsValue({buyer: res.data[0]?.buyerId})
-                onBuyerChange(res.data[0]?.buyerId,res.data[0]?.buyerName)
+                if(refNo){
+                    sourcingForm.setFieldsValue({buyer: res.data[0]?.buyerId})
+                    onBuyerChange(res.data[0]?.buyerId,res.data[0]?.buyerName)
+                }
             }
         })
     }
