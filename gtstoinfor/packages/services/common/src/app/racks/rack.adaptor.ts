@@ -13,6 +13,10 @@ export class RacksAdapter {
         entity.rackCode = dto.rackCode;
         entity.unit = dto.unit;
         entity.rackType = dto.rackType;
+        entity.barcodeId = dto.barcodeId;
+        entity.columns = dto.columns;
+        entity.levels = dto.levels;
+        entity.priority = dto.priority;
         entity.createdUser = dto.createdUser
         if (dto.rackId) {
             entity.rackId = dto.rackId;
@@ -28,7 +32,10 @@ export class RacksAdapter {
         dto.rackCode = entity.rackCode
         dto.unit = entity.unit
         dto.rackType = entity.rackType
-
+        dto.barcodeId = entity.barcodeId;
+        dto.columns = entity.columns;
+        dto.levels = entity.levels;
+        dto.priority = entity.priority;
         return dto;
     }
 

@@ -1,15 +1,13 @@
 
-// import { CurrentPalletLocationEnum, InspectionPalletRollsModel, PalletBinStatusEnum, PalletDetailsModel, PalletIdRequest, PalletRollsUIModel, RollInfoUIModel, WarehousePalletRollsModel } from '@warehouse-management-system/shared-models';
-// import { LocationAllocationService } from '@warehouse-management-system/shared-services';
 import { Button, Descriptions, Empty, Popover, Space, Tooltip } from 'antd';
-// import { useAppSelector } from 'packages/ui/src/common';
 import { useEffect, useState } from 'react';
 
 import './pallet-box.css'
 import AlertMessages from '../common-functions/alert-messages';
+import { CurrentPalletLocationEnum, InspectionPalletRollsModel, PalletBinStatusEnum, PalletIdRequest, PalletRollsUIModel, RollInfoUIModel, WarehousePalletRollsModel } from '@project-management-system/shared-models';
 interface Props {
-    palletObj: any;
-    selectPallet: (palletInfo: any) => void;
+    palletObj: WarehousePalletRollsModel;
+    selectPallet: (palletInfo: PalletRollsUIModel) => void;
     filterVal: string;
 }
 export const PalletBox = (props: Props) => {
@@ -18,166 +16,167 @@ export const PalletBox = (props: Props) => {
     // const user = useAppSelector((state) => state.user.user.user);
     // const locationService = new LocationAllocationService();
     useEffect(() => {
+        console.log(palletObj)
         if (props.palletObj) {
             loadData(props.palletObj);
         }
     }, []);
-    const [palletInfo, setPalletInfo] = useState<any>();
-    const loadData = (palletPar: any) => {
-        if (props.palletObj.palletCurrentLoc == 'INSPECTION') {
-            // getInspectionPalletMappingInfoWithRolls(props.palletObj);
+    const [palletInfo, setPalletInfo] = useState<PalletRollsUIModel>();
+    const loadData = (palletPar: WarehousePalletRollsModel) => {
+        if (props.palletObj.palletCurrentLoc == CurrentPalletLocationEnum.INSPECTION) {
+            getInspectionPalletMappingInfoWithRolls(props.palletObj);
         }
         else {
-            // getWarehousePalletMappingInfoWithRolls(props.palletObj)
+            getWarehousePalletMappingInfoWithRolls(props.palletObj)
         }
     }
-    // const getInspectionPalletMappingInfoWithRolls = (palletObj: WarehousePalletRollsModel) => {
-    //     const phIdReq = new PalletIdRequest(user?.userName, user?.orgData?.unitCode, user?.orgData?.companyCode, user?.userId, palletObj.palletId, palletObj.palletCode);
-    //     locationService.getInspectionPalletMappingInfoWithRolls(phIdReq).then((res => {
-    //         if (res.status) {
-    //             constructInspectionsRolls(res.data)
-    //         } else {
-    //             AlertMessages.getErrorMessage(res.internalMessage);
-    //         }
-    //     })).catch(error => {
+    const getInspectionPalletMappingInfoWithRolls = (palletObj: WarehousePalletRollsModel) => {
+        const phIdReq = new PalletIdRequest(palletObj.palletId, palletObj.palletCode);
+        // locationService.getInspectionPalletMappingInfoWithRolls(phIdReq).then((res => {
+        //     if (res.status) {
+        //         constructInspectionsRolls(res.data)
+        //     } else {
+        //         AlertMessages.getErrorMessage(res.internalMessage);
+        //     }
+        // })).catch(error => {
 
-    //         AlertMessages.getErrorMessage(error.message)
-    //     })
-    // }
-    // const getWarehousePalletMappingInfoWithRolls = (palletObj: WarehousePalletRollsModel) => {
-    //     const phIdReq = new PalletIdRequest(user?.userName, user?.orgData?.unitCode, user?.orgData?.companyCode, user?.userId, palletObj.palletId, palletObj.palletCode);
-    //     locationService.getWarehousePalletMappingInfoWithRolls(phIdReq).then((res => {
-    //         if (res.status) {
-    //             constructWarehouseRolls(res.data)
-    //         } else {
-    //             AlertMessages.getErrorMessage(res.internalMessage);
-    //         }
-    //     })).catch(error => {
+        //     AlertMessages.getErrorMessage(error.message)
+        // })
+    }
+    const getWarehousePalletMappingInfoWithRolls = (palletObj: WarehousePalletRollsModel) => {
+        const phIdReq = new PalletIdRequest(palletObj.palletId, palletObj.palletCode);
+        // locationService.getWarehousePalletMappingInfoWithRolls(phIdReq).then((res => {
+        //     if (res.status) {
+        //         constructWarehouseRolls(res.data)
+        //     } else {
+        //         AlertMessages.getErrorMessage(res.internalMessage);
+        //     }
+        // })).catch(error => {
 
-    //         AlertMessages.getErrorMessage(error.message)
-    //     })
-    // }
-    // const constructInspectionsRolls = (palletInfo: any[]) => {
-    //     const pallets: any[] = [];
+        //     AlertMessages.getErrorMessage(error.message)
+        // })
+    }
+    const constructInspectionsRolls = (palletInfo: InspectionPalletRollsModel[]) => {
+        const pallets: PalletRollsUIModel[] = [];
 
-    //     palletInfo.forEach((eachPallet, index) => {
-    //         const palletObj = new PalletRollsUIModel();
-    //         palletObj.palletCode = eachPallet.palletCode;
-    //         palletObj.palletId = eachPallet.palletId;
-    //         palletObj.phId = eachPallet.phId;
-    //         palletObj.palletCapacity = 0;
-    //         let noOfRolls = 0;
-    //         const rollsInfo: RollInfoUIModel[] = [];
-    //         eachPallet.groupedRolls.forEach(groupedRoll => {
-    //             groupedRoll.rollsInfo.forEach(rollInfo => {
-    //                 noOfRolls++;
-    //                 const rollObj = new RollInfoUIModel();
-    //                 rollObj.batchNo = rollInfo.batchNumber;
-    //                 rollObj.barcode = rollInfo.barcode;
-    //                 rollObj.externalRollNumber = rollInfo.externalRollNumber;
-    //                 rollObj.groupedBy = groupedRoll.groupedBy;
-    //                 rollObj.groupedObjDesc = groupedRoll.groupedObjDesc;
-    //                 rollObj.groupedObjNumber = groupedRoll.groupedObjNumber;
-    //                 rollObj.gsm = rollInfo.gsm;
-    //                 rollObj.id = rollInfo.id;
-    //                 rollObj.isOverRideSysAllocation = rollInfo.isOverRideSysAllocation;
-    //                 rollObj.inputLength = rollInfo.inputLength;
-    //                 rollObj.lotNo = rollInfo.lotNumber;
-    //                 rollObj.objectType = rollInfo.objectType;
-    //                 rollObj.pickForInspection = rollInfo.pickForInspection;
-    //                 rollObj.inputLengthUom = rollInfo.inputLengthUom;
-    //                 rollObj.inputWidthUom = rollInfo.inputWidthUom;
-    //                 rollObj.inputQuantityUom = rollInfo.inputQuantityUom;
-    //                 rollObj.printReleased = rollInfo.printReleased;
-    //                 rollObj.printStatus = rollInfo.printStatus;
-    //                 rollObj.qrCodeInfo = rollInfo.qrCodeInfo;
-    //                 rollObj.inputQuantity = rollInfo.inputQuantity;
-    //                 rollObj.supplierQuantity = rollInfo.supplierQuantity;
-    //                 rollObj.remarks = rollInfo.remarks;
-    //                 rollObj.rollNumber = rollInfo.rollNumber;
-    //                 rollObj.shade = rollInfo.shade;
-    //                 rollObj.skGroup = rollInfo.skGroup;
-    //                 rollObj.skLength = rollInfo.skLength;
-    //                 rollObj.skWidth = rollInfo.skWidth;
-    //                 rollObj.netWeight = rollInfo.netWeight;
-    //                 rollObj.inputWidth = rollInfo.inputWidth;
-    //                 rollObj.supplierWidth = rollInfo.supplierWidth;
-    //                 rollObj.supplierLength = rollInfo.supplierLength;
-    //                 rollObj.status = rollInfo.status;
-    //                 rollObj.phId = rollInfo.packListId;
-    //                 rollObj.batchNumber = rollInfo.batchNumber;
-    //                 rollObj.packListCode = rollInfo.packListCode;
-    //                 rollsInfo.push(rollObj);
-    //             });
-    //         });
-    //         palletObj.noOfRolls = noOfRolls;
-    //         palletObj.rollsInfo = rollsInfo;
-    //         pallets.push(palletObj);
-    //     });
-    //     setPalletInfo(pallets[0]);
+        palletInfo.forEach((eachPallet, index) => {
+            const palletObj = new PalletRollsUIModel();
+            palletObj.palletCode = eachPallet.palletCode;
+            palletObj.palletId = eachPallet.palletId;
+            palletObj.phId = eachPallet.phId;
+            palletObj.palletCapacity = 0;
+            let noOfRolls = 0;
+            const rollsInfo: RollInfoUIModel[] = [];
+            eachPallet.groupedRolls.forEach(groupedRoll => {
+                groupedRoll.rollsInfo.forEach(rollInfo => {
+                    noOfRolls++;
+                    const rollObj = new RollInfoUIModel();
+                    rollObj.batchNo = rollInfo.batchNumber;
+                    rollObj.barcode = rollInfo.barcode;
+                    rollObj.externalRollNumber = rollInfo.externalRollNumber;
+                    // rollObj.groupedBy = groupedRoll.groupedBy;
+                    rollObj.groupedObjDesc = groupedRoll.groupedObjDesc;
+                    rollObj.groupedObjNumber = groupedRoll.groupedObjNumber;
+                    rollObj.gsm = rollInfo.gsm;
+                    rollObj.id = rollInfo.id;
+                    rollObj.isOverRideSysAllocation = rollInfo.isOverRideSysAllocation;
+                    rollObj.inputLength = rollInfo.inputLength;
+                    rollObj.lotNo = rollInfo.lotNumber;
+                    // rollObj.objectType = rollInfo.objectType;
+                    rollObj.pickForInspection = rollInfo.pickForInspection;
+                    rollObj.inputLengthUom = rollInfo.inputLengthUom;
+                    rollObj.inputWidthUom = rollInfo.inputWidthUom;
+                    rollObj.inputQuantityUom = rollInfo.inputQuantityUom;
+                    rollObj.printReleased = rollInfo.printReleased;
+                    rollObj.printStatus = rollInfo.printStatus;
+                    rollObj.qrCodeInfo = rollInfo.qrCodeInfo;
+                    rollObj.inputQuantity = rollInfo.inputQuantity;
+                    rollObj.supplierQuantity = rollInfo.supplierQuantity;
+                    rollObj.remarks = rollInfo.remarks;
+                    rollObj.rollNumber = rollInfo.rollNumber;
+                    rollObj.shade = rollInfo.shade;
+                    rollObj.skGroup = rollInfo.skGroup;
+                    rollObj.skLength = rollInfo.skLength;
+                    rollObj.skWidth = rollInfo.skWidth;
+                    rollObj.netWeight = rollInfo.netWeight;
+                    rollObj.inputWidth = rollInfo.inputWidth;
+                    rollObj.supplierWidth = rollInfo.supplierWidth;
+                    rollObj.supplierLength = rollInfo.supplierLength;
+                    rollObj.status = rollInfo.status;
+                    rollObj.phId = rollInfo.packListId;
+                    rollObj.batchNumber = rollInfo.batchNumber;
+                    rollObj.packListCode = rollInfo.packListCode;
+                    rollsInfo.push(rollObj);
+                });
+            });
+            palletObj.noOfRolls = noOfRolls;
+            palletObj.rollsInfo = rollsInfo;
+            pallets.push(palletObj);
+        });
+        setPalletInfo(pallets[0]);
 
-    // }
-    // const constructWarehouseRolls = (palletInfo: WarehousePalletRollsModel[]) => {
-    //     const pallets: PalletRollsUIModel[] = [];
+    }
+    const constructWarehouseRolls = (palletInfo: WarehousePalletRollsModel[]) => {
+        const pallets: PalletRollsUIModel[] = [];
 
-    //     palletInfo.forEach((eachPallet, index) => {
-    //         const palletObj = new PalletRollsUIModel();
-    //         palletObj.palletCode = eachPallet.palletCode;
-    //         palletObj.palletId = eachPallet.palletId;
-    //         palletObj.phId = eachPallet.phId;
-    //         palletObj.palletCapacity = eachPallet.palletCapacity;
-    //         let noOfRolls = 0;
-    //         const rollsInfo: RollInfoUIModel[] = [];
+        palletInfo.forEach((eachPallet, index) => {
+            const palletObj = new PalletRollsUIModel();
+            palletObj.palletCode = eachPallet.palletCode;
+            palletObj.palletId = eachPallet.palletId;
+            palletObj.phId = eachPallet.phId;
+            palletObj.palletCapacity = eachPallet.palletCapacity;
+            let noOfRolls = 0;
+            const rollsInfo: RollInfoUIModel[] = [];
 
-    //         eachPallet.rollsInfo.forEach(rollInfo => {
-    //             noOfRolls++;
-    //             const rollObj = new RollInfoUIModel();
-    //             rollObj.batchNo = rollInfo.batchNumber;
-    //             rollObj.barcode = rollInfo.barcode;
-    //             rollObj.externalRollNumber = rollInfo.externalRollNumber;
-    //             rollObj.gsm = rollInfo.gsm;
-    //             rollObj.id = rollInfo.id;
-    //             rollObj.isOverRideSysAllocation = rollInfo.isOverRideSysAllocation;
-    //             rollObj.inputLength = rollInfo.inputLength;
-    //             rollObj.lotNo = rollInfo.lotNumber;
-    //             rollObj.objectType = rollInfo.objectType;
+            eachPallet.rollsInfo.forEach(rollInfo => {
+                noOfRolls++;
+                const rollObj = new RollInfoUIModel();
+                rollObj.batchNo = rollInfo.batchNumber;
+                rollObj.barcode = rollInfo.barcode;
+                rollObj.externalRollNumber = rollInfo.externalRollNumber;
+                rollObj.gsm = rollInfo.gsm;
+                rollObj.id = rollInfo.id;
+                rollObj.isOverRideSysAllocation = rollInfo.isOverRideSysAllocation;
+                rollObj.inputLength = rollInfo.inputLength;
+                rollObj.lotNo = rollInfo.lotNumber;
+                // rollObj.objectType = rollInfo.objectType;
 
-    //             rollObj.pickForInspection = rollInfo.pickForInspection;
-    //             rollObj.inputLengthUom = rollInfo.inputLengthUom;
-    //             rollObj.inputWidthUom = rollInfo.inputWidthUom;
-    //             rollObj.inputQuantityUom = rollInfo.inputQuantityUom;
-    //             rollObj.printReleased = rollInfo.printReleased;
-    //             rollObj.printStatus = rollInfo.printStatus;
-    //             rollObj.qrCodeInfo = rollInfo.qrCodeInfo;
-    //             rollObj.inputQuantity = rollInfo.inputQuantity;
-    //             rollObj.supplierQuantity = rollInfo.supplierQuantity;
-    //             rollObj.remarks = rollInfo.remarks;
-    //             rollObj.rollNumber = rollInfo.rollNumber;
-    //             rollObj.shade = rollInfo.shade;
-    //             rollObj.skGroup = rollInfo.skGroup;
-    //             rollObj.skLength = rollInfo.skLength;
-    //             rollObj.skWidth = rollInfo.skWidth;
-    //             rollObj.netWeight = rollInfo.netWeight;
-    //             rollObj.inputWidth = rollInfo.inputWidth;
-    //             rollObj.supplierWidth = rollInfo.supplierWidth;
-    //             rollObj.supplierLength = rollInfo.supplierLength;
-    //             rollObj.status = rollInfo.status;
-    //             rollObj.phId = rollInfo.packListId;
-    //             rollObj.batchNumber = rollInfo.batchNumber;
-    //             rollObj.packListCode = rollInfo.packListCode;
-    //             rollsInfo.push(rollObj);
-    //         });
+                rollObj.pickForInspection = rollInfo.pickForInspection;
+                rollObj.inputLengthUom = rollInfo.inputLengthUom;
+                rollObj.inputWidthUom = rollInfo.inputWidthUom;
+                rollObj.inputQuantityUom = rollInfo.inputQuantityUom;
+                rollObj.printReleased = rollInfo.printReleased;
+                rollObj.printStatus = rollInfo.printStatus;
+                rollObj.qrCodeInfo = rollInfo.qrCodeInfo;
+                rollObj.inputQuantity = rollInfo.inputQuantity;
+                rollObj.supplierQuantity = rollInfo.supplierQuantity;
+                rollObj.remarks = rollInfo.remarks;
+                rollObj.rollNumber = rollInfo.rollNumber;
+                rollObj.shade = rollInfo.shade;
+                rollObj.skGroup = rollInfo.skGroup;
+                rollObj.skLength = rollInfo.skLength;
+                rollObj.skWidth = rollInfo.skWidth;
+                rollObj.netWeight = rollInfo.netWeight;
+                rollObj.inputWidth = rollInfo.inputWidth;
+                rollObj.supplierWidth = rollInfo.supplierWidth;
+                rollObj.supplierLength = rollInfo.supplierLength;
+                rollObj.status = rollInfo.status;
+                rollObj.phId = rollInfo.packListId;
+                rollObj.batchNumber = rollInfo.batchNumber;
+                rollObj.packListCode = rollInfo.packListCode;
+                rollsInfo.push(rollObj);
+            });
 
-    //         palletObj.noOfRolls = noOfRolls;
-    //         palletObj.rollsInfo = rollsInfo;
-    //         pallets.push(palletObj);
-    //     });
-    //     setPalletInfo(pallets[0]);
+            palletObj.noOfRolls = noOfRolls;
+            palletObj.rollsInfo = rollsInfo;
+            pallets.push(palletObj);
+        });
+        setPalletInfo(pallets[0]);
 
-    // }
+    }
 
 
-    const toolTip = (rollInfo: any) => {
+    const toolTip = (rollInfo: RollInfoUIModel) => {
         return <div>
             <Descriptions
                 // title={rollInfo.rollNumber}
@@ -203,14 +202,14 @@ export const PalletBox = (props: Props) => {
             </Descriptions>
         </div>
     }
-    const getClassName = (rollPhId: number, phId: number) => {
+    const getClassName = (rollPhId: number, phId: number, rollStatus: PalletBinStatusEnum) => {
         if (rollPhId == phId) {
-            return 'green-b';
+            return rollStatus == PalletBinStatusEnum.OPEN ? 'red-b' : 'green-b';
         } else {
             return 'black-b'
         }
     }
-    const blinkClassName = (rollObjP: any, filteringVal: string) => {
+    const blinkClassName = (rollObjP: RollInfoUIModel, filteringVal: string) => {
         const { packListCode, batchNumber, barcode } = rollObjP;
         const values = [packListCode, batchNumber, barcode];
         return values.includes(filteringVal) ? 'roll-blink' : '';
@@ -221,10 +220,13 @@ export const PalletBox = (props: Props) => {
             <div className='pallet-container' >
                 <div className='rolls-container'>
                     {palletInfo ? palletInfo.rollsInfo.map(rollObj => {
-                        return <Popover key={'p' + rollObj.rollNumber} content={toolTip(rollObj)}
-                            title={<Space><>Roll Barode: {rollObj.barcode} </><>Status: {rollObj.status == 'OPEN' ? 'Not Yet Scanned' : 'Scanned'}</></Space>}
+                        return <Popover key={'p' + rollObj.rollNumber} 
+                        content={toolTip(rollObj)}
+                            title={<Space><>Roll Barode: {rollObj.barcode} </><>Status: {rollObj.status == PalletBinStatusEnum.OPEN ? 'Not Yet Scanned' : 'Scanned'}</></Space>}
                         >
-                            <div key={rollObj.rollNumber} id={rollObj.barcode} roll-barcode={rollObj.barcode} batch-no={rollObj.batchNumber} pack-no={rollObj.packListCode} className={`roll ${getClassName(rollObj.phId, 0)} ${blinkClassName(rollObj, filterVal)}`}></div>
+                            <div key={rollObj.rollNumber} id={rollObj.barcode} roll-barcode={rollObj.barcode} batch-no={rollObj.batchNumber} pack-no={rollObj.packListCode} 
+                            className={`roll ${getClassName(rollObj.phId, 0, rollObj.status)} ${blinkClassName(rollObj, filterVal)}`}
+                            ></div>
                         </Popover>
 
                     }) : <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />}

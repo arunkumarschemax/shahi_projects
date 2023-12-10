@@ -813,7 +813,7 @@ export const SampleDevForm = () => {
              <FabricsForm data = {handleFabricsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData}/>
              </TabPane>
              <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
-             <TrimsForm props = {handleTrimsDataUpdate} buyerId={selectedBuyerId}/>
+             <TrimsForm data = {handleTrimsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData}/>
              </TabPane>
              {/* <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
              <ProcessForm props={handleProcessDataUpdate}/>

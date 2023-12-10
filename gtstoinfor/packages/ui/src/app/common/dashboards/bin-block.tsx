@@ -7,6 +7,8 @@ import PalletBox from "./pallet-box";
 import { ColumnsType } from "antd/es/table";
 // import { getCssFromComponent } from "../../print-barcodes";
 import AlertMessages from "../common-functions/alert-messages";
+import { StockService } from "@project-management-system/shared-services";
+import { RackPositionIdRequestDto } from "@project-management-system/shared-models";
 interface RackBlockProps {
     rackId: number;
     rackLevel: number;
@@ -18,28 +20,35 @@ const BinBlock = (props: RackBlockProps) => {
     // const user = useAppSelector((state) => state.user.user.user);
     const { rackId, rackLevel, column, binInfo, filterVal } = props;
     useEffect(() => {
-        // if (binInfo) {
-        //     getBinPalletsWithoutRolls(binInfo);
-        // }
+        console.log(props.rackId);
+        console.log(props.rackLevel);
+        console.log(props.column);
+        console.log(props.binInfo);
+        console.log(props.filterVal);
+        if (binInfo) {
+            getBinPalletsWithoutRolls(binInfo);
+        }
     }, []);
 
-    // const locationService = new LocationAllocationService();
+    const stockService = new StockService();
     const [binPalletInfo, setBinPalletInfo] = useState<any>();
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedPalletInfo, setSelectedPalletInfo] = useState<any>();
-    // const getBinPalletsWithoutRolls = (binObj: BinModel) => {
-    //     const binReq = new BinIdRequest(user?.userName, user?.orgData?.unitCode, user?.orgData?.companyCode, user?.userId, binObj.binId, binObj.binCode);
-    //     locationService.getBinPalletsWithoutRolls(binReq).then((res => {
-    //         if (res.status) {
-    //             setBinPalletInfo(res.data[0]);
-    //         } else {
-    //             AlertMessages.getErrorMessage(res.internalMessage);
+    const getBinPalletsWithoutRolls = (binObj: any) => {
+        console.log(binObj);
+        const binReq = new RackPositionIdRequestDto(binObj.positionId, binObj.positionCode);
+        stockService.getBinPalletsWithoutRolls(binReq).then((res => {
+            if (res.status) {
+                console.log(res.data)
+                setBinPalletInfo(res.data[0]);
+            } else {
+                AlertMessages.getErrorMessage(res.internalMessage);
 
-    //         }
-    //     })).catch(error => {
-    //         AlertMessages.getErrorMessage(error.message)
-    //     })
-    // }
+            }
+        })).catch(error => {
+            AlertMessages.getErrorMessage(error.message)
+        })
+    }
 
     const closeModel = () => {
         setModalOpen(false);
@@ -112,12 +121,13 @@ const BinBlock = (props: RackBlockProps) => {
     }
     return (
         <>
-            <Card size="small" bordered={false} title={`${binInfo?.binCode}`} style={{ boxShadow: 'none' }} headStyle={{ minHeight: 0, background: 'cadetblue', textAlign: 'center', color: '#f2f2f2' }} bodyStyle={{ padding: 0, width: '134px' }}  >
+            <Card size="small" bordered={false} title={`${binInfo?.positionCode}`} style={{ boxShadow: 'none' }} headStyle={{ minHeight: 0, background: 'cadetblue', textAlign: 'center', color: '#f2f2f2' }} bodyStyle={{ padding: 0, width: '134px' }}  >
                 {binPalletInfo ?
                     <>
                         {binPalletInfo.binInfo.map((bin) => {
                             return bin.palletsInfo.map((palletObj, index) => {
-                                return <PalletBox key={`ware-${'ref' + bin.binCode + '-' + index}`} selectPallet={selectPallet} palletObj={palletObj} filterVal={filterVal} />
+                                console.log(palletObj)
+                                return <PalletBox key={`ware-${'ref' + bin.positionCode + '-' + index}`} selectPallet={selectPallet} palletObj={palletObj} filterVal={filterVal} />
                             })
                         })}
                     </> : ''}

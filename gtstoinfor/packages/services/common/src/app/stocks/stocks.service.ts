@@ -1,8 +1,13 @@
 import { Injectable } from "@nestjs/common";
-import { AllStocksResponseModel, CommonResponseModel, M3ItemsDTO, M3trimsDTO, StockFilterRequest, StocksDto, statusReq } from "@project-management-system/shared-models";
+import { AllStocksResponseModel, BinPalletModel, CommonResponseModel, M3ItemsDTO, M3trimsDTO, RackBinPalletsModel, RackBinPalletsResponse, RollBasicInfoModel, StockFilterRequest, StocksDto, WarehousePalletRollsModel, statusReq } from "@project-management-system/shared-models";
 import { StocksRepository } from "./repository/stocks.repository";
 import { StocksAdapter } from "./adapters/stocks.adatpters";
 import { AppDataSource } from "../app-datasource";
+import { RackPositionIdRequest } from "./dto/rack-position-id.request";
+import { DataSource, Raw } from "typeorm";
+import { RacksRepo } from "../racks/rack.repository";
+import { format } from "url";
+import { RollInfoModel } from "packages/libs/shared-models/src/common/stocks/roll-info.model";
 
 
 @Injectable()
@@ -10,6 +15,7 @@ export class StocksService {
 
     constructor(
         private stocksRepository: StocksRepository,
+        private readonly dataSource: DataSource,
         private adapter: StocksAdapter,
     ) { }
 
@@ -267,6 +273,47 @@ export class StocksService {
             return new CommonResponseModel(false, 1011, "No data found");
         }
 
+    }
+
+    async getBinPalletsWithoutRolls(req: RackPositionIdRequest): Promise<RackBinPalletsResponse> {
+        let response:RackBinPalletsModel[] = []
+        try{
+            const rackDetails = `select r.rack_id AS rackId,r.rack_code AS rackCode, r.rack_name AS rackDesc,count(rp.position_id) AS totalBins from rack_position rp left join racks r on r.rack_id = rp.rack_id where rp.position_id = '${req.rackPositionId}'`;
+            const rackInfo = await this.dataSource.query(rackDetails)
+
+            const rackPositionDetails = `select rp.position_id AS binId,rp.position_code AS binCode, rp.rack_position_name AS binDesc, rp.supported_pallets_count AS totalSupportedPallets from rack_position rp left join racks r on r.rack_id = rp.rack_id where rp.position_id = '${req.rackPositionId}'`;
+            const rackPositionInfo = await this.dataSource.query(rackPositionDetails)
+
+            let palletModel:BinPalletModel[] = []
+            let warehousePalletRollsModel:WarehousePalletRollsModel[] = []
+            let getpalletsIds = "Select group_concat(pallet_id) AS palletIds from stocks where location_id = "+req.rackPositionId+" and (quantity -allocatd_quantity-transfered_quantity) > 0 ";
+            const palletsIds = await this.dataSource.query(getpalletsIds)
+
+            let palletsdata = "select id AS palletId,pallet_name AS palletCode, max_items AS maxItems, current_pallet_state AS currentPalletState, current_pallet_location AS currentPalletLocation from pallets where id in ("+palletsIds[0].palletIds+")";
+            const palletInfo = await this.dataSource.query(palletsdata)
+
+            const data = await this.stocksRepository.find({where:{locationId:req.rackPositionId, quantity: Raw(alias => `quantity -allocatd_quantity-transfered_quantity > 0 `)}});
+            for(const ress of palletInfo){
+                let rollBasicInfoModel:RollBasicInfoModel[] = [];
+                let rollInfoModel:RollInfoModel[] = []
+                let stockDetails = "Select id AS rollId,p.barcode_id AS barcode from stocks s left join pallets p on p.id = s.pallet_id where location_id ="+req.rackPositionId+" and pallet_id = "+ress.palletId;
+                const stockInfo = await this.dataSource.query(palletsdata)
+                for(const ress of stockInfo){
+                    let resss = new RollBasicInfoModel(ress.rollId,true,ress.barcode,1,1,1,1,"","","",1,1);
+                    rollBasicInfoModel.push(resss);
+                }
+                let warehouseData = new WarehousePalletRollsModel("",1,ress.palletId,ress.palletCode,0,"",ress.maxItems,ress.currentPalletState,ress.currentPalletLocation,rollInfoModel,rollBasicInfoModel);
+                warehousePalletRollsModel.push(warehouseData);
+            }
+            let binPalletModel = new BinPalletModel(rackPositionInfo[0].binId,rackPositionInfo[0].binCode,rackPositionInfo[0].binDesc,rackPositionInfo[0].totalSupportedPallets,0,0,warehousePalletRollsModel)
+            palletModel.push(binPalletModel)
+            let res = new RackBinPalletsModel(rackInfo[0].rackId,rackInfo[0].rackCode,rackInfo[0].rackDesc,rackInfo[0].totalBins,palletModel);
+            response.push(res);
+            return new RackBinPalletsResponse(true,1,"data retrived successfull.",response);
+        }catch (error) {
+            console.log(error)
+            return new RackBinPalletsResponse(false, 1011, "No data found",response);
+        }
     }
 
 }
