@@ -56,6 +56,8 @@ import {
 import { faL } from "@fortawesome/free-solid-svg-icons";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useIAMClientState } from "../common/iam-client-react";
+import PickListPrint, { getCssFromComponent } from "./pick-list-print";
+import PoPrint from "../purchase-order2/po-print";
 // const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   
@@ -89,7 +91,8 @@ import { useIAMClientState } from "../common/iam-client-react";
     const [checked, setChecked] = useState<boolean>(false)
     const [keyUpdate, setKeyUpdate] = useState<number>(1);
    const { IAMClientAuthContext } = useIAMClientState();
-
+   const [isModalOpen, setIsModalOpen] = useState(false)
+   const [row, setRow] = useState();
  
 
   
@@ -608,7 +611,26 @@ import { useIAMClientState } from "../common/iam-client-react";
     const onSegmentChange = (val) => {
       setTabName(val);
     };
-  
+    const printOrder = () => {
+      const divContents = document.getElementById('printme').innerHTML;
+      const element = window.open('', '', 'height=700, width=1024');
+      element.document.write(divContents);
+      getCssFromComponent(document, element.document);
+      element.document.close();
+      element.print();
+      element.close(); // to close window when click on cancel/Save
+      setIsModalOpen(true); // model should be open
+    };
+   
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+    const showModal = (rowData) => {
+      setIsModalOpen(true);
+      setRow(rowData)
+    };
+
     const HeaderRow = (props: any) => {
 
       
@@ -640,8 +662,16 @@ import { useIAMClientState } from "../common/iam-client-react";
                 <span>{<Tag onClick={() => generateBarcode(requestNo)} style={{cursor:'pointer'}}>
                            <BarcodeOutlined />
                        </Tag>}</span> */}
+                       <>
+                       <span style={{ width: "10px", marginLeft: '10px'  }}>
+            <Button type="primary" size="small" onClick={()=>showModal(index)}>
+              Print
+            </Button>
+          </span></>
                {lifeCycleStatus === LifeCycleStatusEnum.READY_TO_DISPATCH ? (
         <>
+                  <Divider type="vertical" />
+
           <span style={{ width: "10px" }}></span>
           {/* <span>Dispatch Status: <b>{dispatch}</b></span> */}
           <span style={{ marginLeft: 'auto' }}>
@@ -651,6 +681,7 @@ import { useIAMClientState } from "../common/iam-client-react";
               Dispatch 
             </Button>
           </span>
+        
         </>
       ):(<></>)}
         </div>
@@ -994,6 +1025,24 @@ import { useIAMClientState } from "../common/iam-client-react";
             <Barcode value={barcode} height={30} />
           </div>
         </Modal>
+        {isModalOpen ?
+            <Modal
+              className='print-docket-modal'
+              width={'50%'}
+              key={'modal' + Date.now()}
+              style={{ top: 30, alignContent: 'right' }}
+              visible={isModalOpen}
+              title={<React.Fragment>
+              </React.Fragment>}
+              onCancel={handleCancel}
+              footer={[
+
+              ]}
+            >
+
+<PickListPrint printOrder={printOrder} reqNo={row}/>
+            </Modal> : ""}
+    
       </Card>
     );
   };

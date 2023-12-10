@@ -48,7 +48,9 @@ export class PurchaseOrderservice extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/getPodetailsById',req)
       }
 
-      
+      async QrByPoId(req:VendorIdReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/QrByPoId',req)
+      }
 
 }
 
