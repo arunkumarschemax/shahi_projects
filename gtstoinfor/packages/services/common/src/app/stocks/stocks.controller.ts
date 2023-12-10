@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from "@nestjs/common";
 import { StocksService } from "./stocks.service";
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
-import { AllStocksResponseModel, CommonResponseModel, M3trimsDTO, StockFilterRequest, StocksDto } from "@project-management-system/shared-models";
+import { AllStocksResponseModel, CommonResponseModel, M3trimsDTO, RackBinPalletsResponse, StockFilterRequest, StocksDto } from "@project-management-system/shared-models";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 
 @ApiTags("Stocks")
@@ -98,4 +98,15 @@ async getAllTrimStocks(@Body() req: any): Promise<CommonResponseModel> {
     return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
   }
 }
+
+@Post('/getBinPalletsWithoutRolls')
+async getBinPalletsWithoutRolls(@Body() req: any): Promise<RackBinPalletsResponse> {
+  try {
+    return await this.stocksService.getBinPalletsWithoutRolls(req);
+  } catch (error) {
+    return this.applicationExceptionhandler.returnException(RackBinPalletsResponse, error);
+  }
+}
+
+
 }

@@ -12,6 +12,8 @@ import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
 import { MaterialallitemsReq } from './dto/sample-req-size-req';
 import { AllocationApprovalRequest } from './dto/allocation-approval-req';
 import { AllocatedLocationRequest } from './dto/allocated-location-req';
+import { MaterialIssueRequest } from './dto/material-issue.req';
+import { SampleOrderIdRequest } from './dto/sample-req-id';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -378,6 +380,28 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+  @Post('/issueMaterial')
+  @ApiBody({type:MaterialIssueRequest})
+  async issueMaterial(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.issueMaterial(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  @Post('/getGrnRollsForSampleOrder')
+  @ApiBody({type:SampleOrderIdRequest})
+  async getGrnRollsForSampleOrder(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getGrnRollsForSampleOrder(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+  
 
   @Post('/getPickListInfo')
   @ApiBody({ type: requestNoReq })

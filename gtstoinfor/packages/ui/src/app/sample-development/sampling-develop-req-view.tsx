@@ -328,8 +328,8 @@ import PoPrint from "../purchase-order2/po-print";
       },
       {
         title: "Required Quantity",
-        dataIndex: "trim_consumption",
-        sorter: (a, b) => a.trim_consumption.localeCompare(b.trim_consumption),
+        dataIndex: "totalRequirement",
+        sorter: (a, b) => a.totalRequirement.localeCompare(b.totalRequirement),
         sortDirections: ["descend", "ascend"],
       },
       {

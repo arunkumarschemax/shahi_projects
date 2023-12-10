@@ -6,6 +6,9 @@ import { RackPositionEntity } from "./rack-position.entity";
 import { CommonResponseModel, RackPositionDropDownDto, RackPositionDropDownResponse, RackPositionRequest, RackpositionForIds } from "@project-management-system/shared-models";
 import { RackPositionAdapter } from "./rack-position.adaptor";
 import { RackPositionDTO } from "./rack-position.dto";
+import { RackIdRequest } from "./rack-id.request";
+import { RacksEntity } from "../racks/rack.entity";
+import { RacksRepo } from "../racks/rack.repository";
 
 @Injectable()
 export class RackPositionService {
@@ -13,7 +16,10 @@ export class RackPositionService {
   constructor(
     private adapter: RackPositionAdapter,
     @InjectRepository(RackPositionEntity)
-    private repository: Repository<RackPositionEntity>
+    private repository: Repository<RackPositionEntity>,
+    @InjectRepository(RacksEntity)
+    private rackRepo: Repository<RacksEntity>,
+
   ) { }
 
   async createPosition(createDto: RackPositionDTO): Promise<CommonResponseModel> {
@@ -94,4 +100,23 @@ async getIRackPositionForColumnDropDown(req: RackpositionForIds): Promise<RackPo
       return err;
   }
 }
+
+  async getRackPositionByRack(req:RackIdRequest): Promise<CommonResponseModel> {
+    try{
+      const rackDetails = await this.rackRepo.findOne({where:{rackId:req.rackId}});
+      const rackPositions = await this.repository.find({where:{rackId:req.rackId}, order:{"barcodeId":"ASC"}});
+      console.log("rackPositions");
+      console.log(rackDetails);
+
+      if(rackPositions.length > 0){
+        return new CommonResponseModel(true,1,"Rack positions retrived successfully. ", {binData:rackPositions,rackBarcode:rackDetails.barcodeId,rackCode:rackDetails.rackCode,rackId:rackDetails.rackId,rackLevel:rackDetails.levels,rackName:rackDetails.rackName,rackcolumn:rackDetails.columns});
+      }
+      else{
+        return new CommonResponseModel(false,0,"No data found. ",);
+      }
+    }catch (err) {
+      console.log(err)
+      return err;
+    }
+  }
 }

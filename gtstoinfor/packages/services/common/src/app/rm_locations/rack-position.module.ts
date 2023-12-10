@@ -8,11 +8,13 @@ import { RackPositionAdapter } from "./rack-position.adaptor";
 import { Levels } from "../level/level.entity";
 import { Column } from "typeorm";
 import { Columns } from "../cloumn/column.entity";
+import { RacksEntity } from "../racks/rack.entity";
+import { RacksRepo } from "../racks/rack.repository";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([RackPositionEntity,Levels,Columns])],
+    imports: [TypeOrmModule.forFeature([RackPositionEntity,Levels,Columns,RacksEntity])],
     controllers: [RackPositionController],
-    providers: [RackPositionService, ApplicationExceptionHandler, RackPositionAdapter],
+    providers: [RackPositionService, ApplicationExceptionHandler, RackPositionAdapter,RacksRepo],
     exports: [TypeOrmModule, RackPositionService]
 })
 

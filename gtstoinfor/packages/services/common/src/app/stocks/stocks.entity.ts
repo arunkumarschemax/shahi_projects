@@ -22,6 +22,12 @@ export class StocksEntity extends CommonColumns {
     })
     uomId:number;
 
+    @Column('int',{
+        name:'pallet_id',
+        nullable:false
+    })
+    palletId:number;
+
     @Column('varchar', {
         nullable: false,
         length: 30,
