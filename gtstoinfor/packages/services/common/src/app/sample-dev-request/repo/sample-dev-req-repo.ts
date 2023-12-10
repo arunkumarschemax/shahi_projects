@@ -227,7 +227,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { groupBy } from "rxjs";
 import { SampleRequest } from "../entities/sample-dev-request.entity";
-import { LifeCycleStatusEnum, SampleFilterRequest, SampleRequestFilter } from "@project-management-system/shared-models";
+import { LifeCycleStatusEnum, MaterailViewDto, RequestNoReq, SampleFilterRequest, SampleRequestFilter } from "@project-management-system/shared-models";
 import { Location } from "../../locations/location.entity";
 import { Style } from "../../style/dto/style-entity";
 import { ProfitControlHead } from '../../profit-control-head/profit-control-head-entity';
@@ -434,4 +434,81 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
     }
 
 
+async getmaterialissue():Promise<any[]>{
+    const query=this.createQueryBuilder('sr')
+    
+    .select('sr.location_id as location,life_cycle_status as lifeCycleStatus,st.quantity,sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.type,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name,sr.life_cycle_status AS lifeCycleStatus,clr.colour')
+    
+    .addSelect(`l.location_name AS locationName,s.style,pch.profit_control_head AS pch,b.buyer_name AS buyerName,b.buyer_code AS buyerCode,br.brand_name AS brandName,ed1.first_name AS dmmName,ed2.first_name AS techName`)
+    .leftJoin(Location, 'l', 'l.location_id = sr.location_id')
+    .leftJoin(Style, 's', 's.style_id = sr.style_id')
+    .leftJoin(ProfitControlHead, 'pch', 'pch.profit_control_head_id = sr.profit_control_head_id')
+    .leftJoin(Buyers, 'b', 'b.buyer_id = sr.buyer_id')
+    
+    .leftJoin(Brands, 'br', 'br.brand_id = sr.brand_id')
+    .leftJoin(EmplyeeDetails, 'ed1', 'ed1.employee_id = sr.dmm_id')
+    .leftJoin(EmplyeeDetails, 'ed2', 'ed2.employee_id = sr.technician_id')
+    .leftJoin(Countries, 'co', 'co.country_id= sr.made_in')
+    .leftJoin(SampleReqFabricinfoEntity,'srfi','srfi.sample_request_id = sr.sample_request_id',)
+    .leftJoin(Colour,'clr','clr.colour_id = srfi.colour_id')
+    .leftJoin(SampleRequestTriminfoEntity,'srti','srti.sample_request_id = sr.sample_request_id')
+    .leftJoin(M3ItemsEntity,'m3items','m3items.m3_items_Id  = srfi.fabric_code')
+    .leftJoin(M3TrimsEntity,'m3trims','m3trims.m3_trim_Id = srti.trim_code')
+    .leftJoin(StocksEntity,'st','st.buyer_id=sr.buyer_id')
+    .where('sr.life_cycle_status = :status', { status: 'MATERIAL_ISSUED' });
+
+    return await query.getRawMany();
+}
+
+async getbyID(req:MaterailViewDto):Promise<any>{
+    const query =await this.createQueryBuilder('sr')
+    //  .select(`*`)
+    //  .where(`sam.sample_request_id=${req.id}`)
+    .select('sr.location_id as location,life_cycle_status as lifeCycleStatus,st.quantity,sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.type,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name,sr.life_cycle_status AS lifeCycleStatus,clr.colour')
+    
+    .addSelect(`l.location_name AS locationName,s.style,pch.profit_control_head AS pch,b.buyer_name AS buyerName,b.buyer_code AS buyerCode,br.brand_name AS brandName,ed1.first_name AS dmmName,ed2.first_name AS techName`)
+    .leftJoin(Location, 'l', 'l.location_id = sr.location_id')
+    .leftJoin(Style, 's', 's.style_id = sr.style_id')
+    .leftJoin(ProfitControlHead, 'pch', 'pch.profit_control_head_id = sr.profit_control_head_id')
+    .leftJoin(Buyers, 'b', 'b.buyer_id = sr.buyer_id')
+    
+    .leftJoin(Brands, 'br', 'br.brand_id = sr.brand_id')
+    .leftJoin(EmplyeeDetails, 'ed1', 'ed1.employee_id = sr.dmm_id')
+    .leftJoin(EmplyeeDetails, 'ed2', 'ed2.employee_id = sr.technician_id')
+    .leftJoin(Countries, 'co', 'co.country_id= sr.made_in')
+    .leftJoin(SampleReqFabricinfoEntity,'srfi','srfi.sample_request_id = sr.sample_request_id',)
+    .leftJoin(Colour,'clr','clr.colour_id = srfi.colour_id')
+    .leftJoin(SampleRequestTriminfoEntity,'srti','srti.sample_request_id = sr.sample_request_id')
+    .leftJoin(M3ItemsEntity,'m3items','m3items.m3_items_Id  = srfi.fabric_code')
+    .leftJoin(M3TrimsEntity,'m3trims','m3trims.m3_trim_Id = srti.trim_code')
+    .leftJoin(StocksEntity,'st','st.buyer_id=sr.buyer_id')
+    // .where('sr.life_cycle_status = :status', { status: 'MATERIAL_ISSUED' }) ;
+     .where(`sr.life_cycle_status = "MATERIAL_ISSUED" AND sr.sample_request_id= ${req.id} `) ;
+
+     return await query.getRawMany()
+
+}
+async getnoReq(req?: RequestNoReq): Promise<any> {
+    const query = await this.createQueryBuilder('sr')
+      .select(
+        'sr.request_no AS requestNo','sr.sample_request_id AS sampleRequestId '
+      )
+      .leftJoin('buyers', 'b', 'b.buyer_id = sr.buyer_id')
+      .leftJoin('style', 's', 's.style_id = sr.style_id')
+      .leftJoin('profit_control_head', 'pr', 'pr.profit_control_head_id = sr.profit_control_head_id')
+      .leftJoin('brands', 'br', 'br.brand_id = sr.brand_id')
+      .leftJoin('sample_request_fabric_info', 'sf', 'sf.sample_request_id = sr.sample_request_id')
+      .leftJoin('material_allocation', 'ma', 'ma.sample_item_id = sf.fabric_info_id')
+      .leftJoin('material_allocation_items', 'mai', 'mai.material_allocation_id = ma.material_allocation_id')
+      .leftJoin('m3_items', 'mi', 'mi.m3_items_Id = ma.m3_item_id')
+      .leftJoin('colour', 'c', 'c.colour_id = sf.colour_id')
+      .leftJoin('location', 'l', 'l.location_id = mai.location_id')
+      .where('ma.item_type = :itemType', { itemType: 'fabric' })
+      .andWhere('sr.life_cycle_status = :lifeCycleStatus', { lifeCycleStatus: 'MATERIAL_ISSUED' })
+      .andWhere('sr.sample_request_id = :sampleRequestId', { sampleRequestId: req.requestNo })
+      .getRawOne();
+  
+    return query;
+  }
+  
 } 

@@ -2,7 +2,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Any } from 'typeorm';
 import { SampleRequestService } from './sample-dev-request.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, ROSLGroupsResponseModel, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, SampleRequestFilter, UploadResponse, lifeCycleStatusReq } from '@project-management-system/shared-models';
+import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, MaterailViewDto, ProductGroupReq, ROSLGroupsResponseModel, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, SampleRequestFilter, UploadResponse, lifeCycleStatusReq } from '@project-management-system/shared-models';
 import { SampleRequestDto } from './dto/samle-dev-req';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
@@ -69,6 +69,24 @@ export class SampleDevReqController {
     }
   }
 
+  
+  @Post('/getmaterialissue')
+  async getmaterialissue(): Promise<AllSampleDevReqResponseModel> {
+    try {
+      return await this.sampleService.getmaterialissue();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+  @Post('/getbyID')
+  // @ApiBody({})
+  async getbyID( @Body() req:any): Promise<AllSampleDevReqResponseModel> {
+    try {
+      return await this.sampleService.getmaterialissue();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
   @Post('/cancelSampleReqById')
   @ApiBody({ type: SampleFilterRequest })
   async cancelSampleReqById(@Body() req: any): Promise<AllSampleDevReqResponseModel> {
@@ -378,5 +396,13 @@ export class SampleDevReqController {
     }
   }
 
-  
+  @Post('/getRequestno')
+  async getRequestNo(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getRequestNo()
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
 }

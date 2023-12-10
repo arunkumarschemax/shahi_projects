@@ -114,7 +114,7 @@ import { useIAMClientState } from "../common/iam-client-react";
       if (form.getFieldValue("status") !== undefined) {
         req.status = form.getFieldValue("status");
       }
-    req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    // req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
 
       service.getAllSampleDevData(req).then((res) => {
         if (res.status) {

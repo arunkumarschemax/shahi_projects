@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Not, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest} from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto} from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -85,6 +85,8 @@ export class SampleRequestService {
       throw err
     }
   }
+
+
   async getAllSampleData(): Promise<AllSampleDevReqResponseModel> {
     try {
       const details = await this.sampleRepo.find({
@@ -102,7 +104,33 @@ export class SampleRequestService {
 
 
   async getAllSampleReqNo(): Promise<CommonResponseModel> {
-    const details = await this.sampleRepo.getAllSampleReqNo();
+    try{
+    const details = await this.sampleRepo.find({select:['requestNo'],order:{requestNo:'ASC'}});
+    if (details.length > 0) {
+    let request=[];
+    for ( const code of details){
+      request.push(new RequestNoReq ())
+    }
+      return new CommonResponseModel(true, 1, 'data retrieved', details)
+    } else {
+      return new CommonResponseModel(false, 0, 'data not found')
+    }
+   } catch (err) {
+      throw err
+    }
+  }
+
+  // async getmaterialissue(): Promise<CommonResponseModel> {
+  //   const details = await this.sampleRepo.getmaterialissue();
+  //   if (details.length > 0) {
+  //     return new CommonResponseModel(true, 1, 'data retrieved', details)
+  //   } else {
+  //     return new CommonResponseModel(false, 0, 'data not found')
+  //   }
+  // }
+  
+  async getbyID(req:MaterailViewDto): Promise<CommonResponseModel> {
+    const details = await this.sampleRepo.getbyID(req);
     if (details.length > 0) {
       return new CommonResponseModel(true, 1, 'data retrieved', details)
     } else {
@@ -467,7 +495,200 @@ export class SampleRequestService {
       return new CommonResponseModel(false, 0, 'No data found')
   }
 
+  
 
+  // async getmaterialissue(req?: RequestNoReq): Promise<CommonResponseModel> {
+  //   try {
+  //     let fabricInfoQry = `
+  //       SELECT 
+  //         sr.request_no AS requestNo,
+  //         sr.life_cycle_status AS STATUS,
+  //         sr.remarks,
+  //         sr.description,
+  //         sr.cost_ref,
+  //         sr.contact,
+  //         sr.expected_delivery_date,
+  //         sr.user,
+  //         sr.conversion,
+  //         s.style,
+  //         sf.fabric_code,
+  //         sf.total_requirement,
+  //         br.brand_name AS brandName,
+  //         b.buyer_name AS buyerName,
+  //         s.style,
+  //         c.colour,
+  //         sf.consumption,
+  //         ma.item_type,
+  //         mai.allocate_quantity,
+  //         b.buyer_code,
+  //         pr.profit_control_head,
+  //         l.location_name AS location,
+  //         mi.item_code AS itemCode
+  //       FROM sample_request sr 
+  //         LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
+  //         LEFT JOIN style s ON s.style_id = sr.style_id
+  //         LEFT JOIN profit_control_head pr ON pr.profit_control_head_id = sr.profit_control_head_id
+  //         LEFT JOIN brands br ON br.brand_id = sr.brand_id
+  //         LEFT JOIN sample_request_fabric_info sf ON sf.sample_request_id = sr.sample_request_id
+  //         LEFT JOIN material_allocation ma ON ma.sample_item_id = sf.fabric_info_id
+  //         LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
+  //         LEFT JOIN m3_items mi ON mi.m3_items_Id = ma.m3_item_id
+  //         LEFT JOIN colour c ON c.colour_id = sf.colour_id
+  //         LEFT JOIN location l ON l.location_id = mai.location_id
+  //       WHERE ma.item_type = 'fabric' AND sr.life_cycle_status = 'MATERIAL_ISSUED'
+  //       ${req?.requestNo ? `AND sr.request_no = ${req.requestNo}` : ''}`;
+  //       if(req.requestNo){
+  //         fabricInfoQry += ' AND sr.sample_request_id = ' + req.requestNo ;
+  //       }
+  //     const fabricInfo = await this.dataSource.query(fabricInfoQry);
+  
+  //     let trimInfoQry = `
+  //       SELECT 
+  //         sr.request_no AS requestNo,
+  //         sr.life_cycle_status AS STATUS,
+  //         br.brand_name AS brandName,
+  //         b.buyer_code,
+  //         b.buyer_name AS buyerName,
+  //         s.style,
+  //         ma.item_type AS itemType,
+  //         st.consumption,
+  //         mai.allocate_quantity,
+  //         st.trim_code,
+  //         l.location_name AS location,
+  //         mi.item_code AS itemCode
+  //       FROM sample_request sr 
+  //         LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
+  //         LEFT JOIN style s ON s.style_id = sr.style_id
+  //         LEFT JOIN brands br ON br.brand_id = sr.brand_id
+  //         LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_request_id
+  //         LEFT JOIN material_allocation ma ON ma.sample_item_id = st.trim_info_id
+  //         LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
+  //         LEFT JOIN m3_items mi ON mi.m3_items_Id = ma.m3_item_id
+  //         LEFT JOIN location l ON l.location_id = mai.location_id
+  //       WHERE ma.item_type != 'fabric' AND sr.life_cycle_status = 'MATERIAL_ISSUED'
+  //       ${req?.requestNo ? `AND sr.request_no = ${req.requestNo}` : ''}};
+       
+  //       GROUP BY location_name`;
+  //       if(req.requestNo){
+  //         fabricInfoQry += ' AND sr.sample_request_id = ' + req.requestNo ;
+  //       }
+  //     const trimInfo = await this.dataSource.query(trimInfoQry);
+  
+  //     const combineData = [...fabricInfo, ...trimInfo];
+  
+  //     if (combineData.length > 0) {
+  //       return new CommonResponseModel(true, 1, 'Data retrieved', combineData);
+  //     } else {
+  //       return new CommonResponseModel(false, 0, 'No data');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error in getmaterialissue:', error);
+  //     return new CommonResponseModel(false, 0, 'Error fetching data');
+  //   }
+  // }
+  async getmaterialissue(req?: RequestNoReq): Promise<CommonResponseModel> {
+    try {
+      const fabricInfoQry = `
+        SELECT 
+          sr.request_no AS requestNo,
+          sr.life_cycle_status AS STATUS,
+          sr.remarks,
+          sr.description,
+          sr.cost_ref,
+          sr.contact,
+          sr.expected_delivery_date,
+          sr.user,
+          sr.conversion,
+          s.style,
+          sf.fabric_code,
+          sf.total_requirement,
+          br.brand_name AS brandName,
+          b.buyer_name AS buyerName,
+          c.colour,
+          sf.consumption,
+          ma.item_type,
+          mai.allocate_quantity,
+          b.buyer_code,
+          pr.profit_control_head,
+          l.location_name AS location,
+          mi.item_code AS itemCode
+        FROM sample_request sr 
+          LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
+          LEFT JOIN style s ON s.style_id = sr.style_id
+          LEFT JOIN profit_control_head pr ON pr.profit_control_head_id = sr.profit_control_head_id
+          LEFT JOIN brands br ON br.brand_id = sr.brand_id
+          LEFT JOIN sample_request_fabric_info sf ON sf.sample_request_id = sr.sample_request_id
+          LEFT JOIN material_allocation ma ON ma.sample_item_id = sf.fabric_info_id
+          LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
+          LEFT JOIN m3_items mi ON mi.m3_items_Id = ma.m3_item_id
+          LEFT JOIN colour c ON c.colour_id = sf.colour_id
+          LEFT JOIN location l ON l.location_id = mai.location_id
+        WHERE ma.item_type = 'fabric' AND sr.life_cycle_status = 'MATERIAL_ISSUED'
+        ${req?.requestNo ? `AND sr.request_no = ${req.requestNo}` : ''}`;
+  
+      const trimInfoQry = `
+        SELECT 
+          sr.request_no AS requestNo,
+          sr.life_cycle_status AS STATUS,
+          br.brand_name AS brandName,
+          b.buyer_code,
+          b.buyer_name AS buyerName,
+          s.style,
+          ma.item_type AS itemType,
+          st.consumption,
+          mai.allocate_quantity,
+          st.trim_code,
+          l.location_name AS location,
+          mi.item_code AS itemCode
+        FROM sample_request sr 
+          LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
+          LEFT JOIN style s ON s.style_id = sr.style_id
+          LEFT JOIN brands br ON br.brand_id = sr.brand_id
+          LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_request_id
+          LEFT JOIN material_allocation ma ON ma.sample_item_id = st.trim_info_id
+          LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
+          LEFT JOIN m3_items mi ON mi.m3_items_Id = ma.m3_item_id
+          LEFT JOIN location l ON l.location_id = mai.location_id
+        WHERE ma.item_type != 'fabric' AND sr.life_cycle_status = 'MATERIAL_ISSUED'
+        ${req?.requestNo ? `AND sr.request_no = ${req.requestNo}` : ''}
+        GROUP BY l.location_name`;
+  
+      const fabricInfo = await this.dataSource.query(fabricInfoQry);
+      const trimInfo = await this.dataSource.query(trimInfoQry);
+  
+      const combineData = [...fabricInfo, ...trimInfo];
+  
+      if (combineData.length > 0) {
+        return new CommonResponseModel(true, 1, 'Data retrieved', combineData);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data');
+      }
+    } catch (error) {
+      console.error('Error in getmaterialissue:', error);
+      return new CommonResponseModel(false, 0, 'Error fetching data');
+    }
+  }
+  
+  
+
+
+  async getRequestNo(req?:RequestNoReq): Promise<CommonResponseModel> {
+   
+      try {
+        const data = await this.sampleRepo.getnoReq(req)
+        console.log(data,"KKKKKKKKKK");
+        
+        if (data) {
+            return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully..', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'No Data Found..', data)
+
+        }
+  }
+  catch (err) {
+    throw err
+}
+}
 
 
   async createSampling(req: SampleInventoryLog): Promise<CommonResponseModel> {
