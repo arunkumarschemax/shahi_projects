@@ -41,6 +41,7 @@ import { AllocationApprovalRequest } from './dto/allocation-approval-req';
 import { AllocatedLocationRequest } from './dto/allocated-location-req';
 import { StocksEntity } from '../stocks/stocks.entity';
 import { MaterialIssueRequest } from './dto/material-issue.req';
+import { SampleOrderIdRequest } from './dto/sample-req-id';
 
 
 
@@ -1038,7 +1039,7 @@ export class SampleRequestService {
       // if(req.requestNo) {
 
       // }
-      let trimInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,mi.trim_code as itemCode,st.consumption , st.trim_info_id as sampleTrimInfoId , st.sample_request_id as sampleReqTrimId ,'Trim' as type
+      let trimInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,mi.trim_code as itemCode,st.consumption ,st.total_requirement as BOM, st.trim_info_id as sampleTrimInfoId , st.sample_request_id as sampleReqTrimId ,'Trim' as type
       FROM sample_request sr 
 LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_request_id
       LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
@@ -1190,6 +1191,20 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
       // const grnItemData = `select * from grn_items gi where grn_item_no = ${req.GRNItemNumber} `
       
       return
+    }
+
+    async getGrnRollsForSampleOrder(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
+      const grnInfoQry = `SELECT gi.grn_item_no as rollBarcode FROM material_allocation_items mai 
+          LEFT JOIN stocks st ON st.id = mai.stock_id
+          LEFT JOIN grn_items gi ON gi.grn_item_id = st.grn_item_id
+          WHERE material_allocation_id IN
+          (SELECT material_allocation_id FROM material_allocation WHERE sample_order_id = ${req.sampleRequestId})`
+          const res = await this.dataSource.query(grnInfoQry)
+          if(grnInfoQry.length > 0){
+            return new CommonResponseModel(true,1,'data retreived',res)
+          }else{
+            return new CommonResponseModel(false,0,'No data found')
+          }
     }
 
 
