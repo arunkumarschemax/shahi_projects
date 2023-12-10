@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Not, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest} from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest, GRNTypeEnum, ItemTypeEnum} from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -40,6 +40,7 @@ import { StocksRepository } from '../stocks/repository/stocks.repository';
 import { AllocationApprovalRequest } from './dto/allocation-approval-req';
 import { AllocatedLocationRequest } from './dto/allocated-location-req';
 import { StocksEntity } from '../stocks/stocks.entity';
+import { MaterialIssueRequest } from './dto/material-issue.req';
 
 
 
@@ -1120,6 +1121,68 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
       }
 
 
+    }
+
+    async issueMaterial(req:MaterialIssueRequest):Promise<CommonResponseModel>{
+      const manager = new GenericTransactionManager(this.dataSource)
+      try{
+        const grnInfo = `select grn_id,grn_type,item_type from grn where grn_id in(select grn_id from grn_items where grn_item_no = '${req.GRNItemNumber}')`;
+        const grnRes = await this.dataSource.query(grnInfo)
+        console.log(grnRes)
+        if(grnRes.length > 0){
+          await manager.startTransaction()
+          const grnItemInfo = `select sample_item_id as sampleItemId,indent_item_id as indentItemId,sample_req_id as sampleReqId from grn_items where grn_item_no = '${req.GRNItemNumber}'`;
+          const grnItemRes = await this.dataSource.query(grnItemInfo);
+          let sampleItemId
+          if(grnItemRes[0].sampleItemId > 0){
+            sampleItemId = grnItemRes[0].sampleItemId
+          }
+          if(grnItemRes[0].indentItemId > 0){
+            sampleItemId = grnItemRes[0].indentItemId
+          }
+          const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({sampleItemId:sampleItemId},{status:MaterialStatusEnum.MATERIAL_ISSUED})
+          if(updateAllocations.affected){
+            const checkAllIssuedOrNot = `select count(*) as count from material_allocation where sample_order_id = ${req.sampleRequestId} and status = ${MaterialStatusEnum.MATERIAL_ISSUED}`
+            const res = await this.dataSource.query(checkAllIssuedOrNot)
+            if(res[0].count = 0){
+              const updateSamleReq = await manager.getRepository(SampleRequest).update({SampleRequestId:req.sampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ISSUED})
+              if(updateSamleReq.affected){
+                await manager.completeTransaction()
+                return new CommonResponseModel(true,1,'Material Issued successfully')
+              }else{
+                await manager.releaseTransaction()
+                return new CommonResponseModel(false,0,'Something went wrong')
+              }
+            }else{
+                await manager.completeTransaction()
+                return new CommonResponseModel(true,1,'Material Issued successfully')
+            }
+          }else{
+            await manager.releaseTransaction()
+             return new CommonResponseModel(false,0,'Something went wrong')
+          }
+          // let concatstr
+          // if(grnRes[0].grn_type == GRNTypeEnum.SAMPLE_ORDER){
+          //     if(grnRes[0].item_type == ItemTypeEnum.FABRIC){
+          //       concatstr = ` left join sample_request_fabric_info sf on si.fabric_info_id = gi.sample_item_id`
+          //     }else{
+          //       concatstr = ` left join sample_request_trim_info sf on si.trim_info_id = gi.sample_item_id`
+          //     }
+          // }else {
+          //     if(grnRes[0].item_type == ItemTypeEnum.FABRIC){
+          //       concatstr = ` left join indent_fabric ii on ii.ifabric_id = gi.sample_item_id`
+          //     }
+          // }
+        }else{
+          return new CommonResponseModel(false,0,'Invalid Roll Barcode')
+        }
+      }catch(err){
+        await manager.releaseTransaction()
+        return new CommonResponseModel(false,0,err)
+      }
+      // const grnItemData = `select * from grn_items gi where grn_item_no = ${req.GRNItemNumber} `
+      
+      return
     }
 
 

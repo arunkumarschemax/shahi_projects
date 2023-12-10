@@ -12,6 +12,7 @@ import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
 import { MaterialallitemsReq } from './dto/sample-req-size-req';
 import { AllocationApprovalRequest } from './dto/allocation-approval-req';
 import { AllocatedLocationRequest } from './dto/allocated-location-req';
+import { MaterialIssueRequest } from './dto/material-issue.req';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -373,6 +374,16 @@ export class SampleDevReqController {
   async updatedispatch(@Body() req?:any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.updatedispatch(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+  @Post('/issueMaterial')
+  @ApiBody({type:MaterialIssueRequest})
+  async issueMaterial(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.issueMaterial(req)
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
