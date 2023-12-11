@@ -211,6 +211,9 @@ import { RmTrimsView } from "./sourcing-requisition/rm-trims-view"
 import { M3TrimsView } from "./trim-master/m3-trim-items/m3-trims-view"
 import MaterialIssuedView from "./sample-development/material-issued-view"
 import MaterialIssuesDetailsView from "./sample-development/material-issued-detail-view"
+import PickListPrint from "./sample-development/pick-list-print"
+import LocationQrCodePrint from "./rm_locations/location-barcode-print"
+import PurchaseOrderQrCodePrint from "./purchase-order2/po-qrcode-print"
 
 
 
@@ -261,7 +264,6 @@ export const AppRoutes = () => {
 
                 <Route path='/m3-items' element={<M3Items />} />
                 <Route path='/m3-items-view' element={<M3ItemsView />} />
-
                 <Route path='/wh-dashboard' element={<WarehouseDashboard />} />
                 {/* <Route path='/masters'> */}
                 <Route path='quality-form' element={<QualityForm />} />
@@ -777,7 +779,8 @@ export const AppRoutes = () => {
                 <Route path='settings/settings-form' element={<SettingsForm />} />
                 <Route path='settings/settings-view' element={<SettingsView />} />
                 {/* </Route> */}
-
+                <Route path = '/locations-QrCodes-print' element={<LocationQrCodePrint/>}/>
+                <Route path = '/po-QrCodes-print' element={<PurchaseOrderQrCodePrint/>}/>
                 <Route path='sample-development' >
                     <Route path="sample-development-form" element={<SampleDevForm />} />
                     {/* <Route path="sample-development-view" element={<SampleDevView />} /> */}
@@ -1056,7 +1059,6 @@ export const AppRoutes = () => {
                     <Route path="material-allocation-view" element={<MaterialAllocationView />} />
                     <Route path="material-allocation-detail-view" element={<MaterialAllocationDetailView />} />
                     <Route path='allocation-approval' element={<AllocatedStockApproval screen={"Allocated"}/>} />
-                    
 
                 </Route>
 
