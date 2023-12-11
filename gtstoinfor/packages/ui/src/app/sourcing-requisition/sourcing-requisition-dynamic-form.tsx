@@ -1115,7 +1115,9 @@ const onTrimChange = (val, option) => {
         </Form.Item>
         </Col> */}
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                                            <Form.Item name='supplier' label='Supplier' rules={[{ required: true, message: 'Supplier is required' }]}>
+                                            <Form.Item name='supplier' label='Supplier'
+                                            //  rules={[{ required: true, message: 'Supplier is required' }]}
+                                             >
                                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select Supplier' onChange={onSupplierChange}>
                                                     {supplier.map(e => {
                                                         return (

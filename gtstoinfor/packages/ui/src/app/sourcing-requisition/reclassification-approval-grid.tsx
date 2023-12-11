@@ -1,6 +1,6 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { BuyersService, FabricTypeService, FabricWeaveService, M3ItemsService, ReclassificationService, StockService, UomService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag, Tabs, Radio } from "antd";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag, Tabs, Radio, Radio } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
@@ -11,6 +11,7 @@ import { BuyerRefNoRequest, M3ItemsDTO, ReclassificationApproveRequestDto, Recla
 import { Reclassification } from "./reclassification";
 import TabPane from "antd/es/tabs/TabPane";
 import { useIAMClientState } from "../common/iam-client-react";
+import moment from "moment";
 const { TextArea } = Input;
 
 export const ReclassificationApprovalGrid = () => {
@@ -224,20 +225,27 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
       ),
       ...getColumnSearchProps("quantity"),
     },
-    {
-      title: 'Action',
-      dataIndex: 'action',
-      render: (text, rowData) => {
-        return (
-          <span>
-            {
-              rowData.status === ReclassificationStatusEnum.APPROVED ?  <Tag style={{backgroundColor:'#9ccc65', color:'black'}}><b>{rowData.status}</b></Tag>: <Tag style={{backgroundColor:'#fd3d56', color:'black'}}><b>{rowData.status}</b></Tag>
-            }
-            
-          </span>
-        );
-      }
-    }
+
+   
+ 
+    // {
+    //   title: 'Action',
+    //   dataIndex: 'action',
+    //   render: (text, rowData) => {
+    //     return (
+    //       <span>
+    //         {
+    //           rowData.status === ReclassificationStatusEnum.APPROVAL_PENDING ? 
+    //         <Button
+    //           style={{ backgroundColor: '#69c0ff' }}
+    //           onClick={(e) => assignStock(rowData)}
+    //         >
+    //           <b>Assign Stock</b>
+    //         </Button>: "Approved" }
+    //       </span>
+    //     );
+    //   }
+    // }
   ];
   const columns1: ColumnProps<any>[] = [
     {
@@ -294,6 +302,17 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
         </span>
       ),
       ...getColumnSearchProps("quantity"),
+    },
+    
+    {
+      title: "Reclassifiaction Date",
+      dataIndex: "created_at",
+      
+      render: (_, record) => {
+        return record.created_at
+          ? moment(record.created_at).format("YYYY-MM-DD")
+          : "-";
+      },
     },
     {
       title: 'Action',

@@ -13,6 +13,7 @@ export class ItemsDto{
   itemCategory?:string
   itemSubCategory?:string
   brand?:string
+  hsnCode?:string
   uom?:string
   createdAt?: Date;
   createdUser?: string | null;
@@ -34,6 +35,8 @@ export class ItemsDto{
   itemCategory?:string,
   itemSubCategory?:string,
   brand?:string,
+  hsnCode?:string,
+
   uom?:string,
   createdAt?: Date,
   createdUser?: string | null,
@@ -55,6 +58,7 @@ export class ItemsDto{
     this.itemSubCategory=itemSubCategory
     this.brand=brand
     this.uom=uom
+    this.hsnCode=hsnCode
     this.createdAt=createdAt
     this.createdUser=createdUser
     this.updatedAt=updatedAt

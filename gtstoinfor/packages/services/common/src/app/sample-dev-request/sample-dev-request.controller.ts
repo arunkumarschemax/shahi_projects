@@ -2,7 +2,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Any } from 'typeorm';
 import { SampleRequestService } from './sample-dev-request.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, ProductGroupReq, ROSLGroupsResponseModel, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, SampleRequestFilter, UploadResponse, lifeCycleStatusReq } from '@project-management-system/shared-models';
+import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, MaterailViewDto, ProductGroupReq, ROSLGroupsResponseModel, RequestNoDto, RequestNoReq, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, SampleRequestFilter, UploadResponse, lifeCycleStatusReq, requestNoReq } from '@project-management-system/shared-models';
 import { SampleRequestDto } from './dto/samle-dev-req';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
@@ -12,8 +12,7 @@ import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
 import { MaterialallitemsReq } from './dto/sample-req-size-req';
 import { AllocationApprovalRequest } from './dto/allocation-approval-req';
 import { AllocatedLocationRequest } from './dto/allocated-location-req';
-import { MaterialIssueRequest } from './dto/material-issue.req';
-import { SampleOrderIdRequest } from './dto/sample-req-id';
+import { AllLocationRequest } from './dto/location-req';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -72,6 +71,16 @@ export class SampleDevReqController {
     }
   }
 
+  
+  @Post('/getmaterialissue')
+  async getmaterialissue(): Promise<AllSampleDevReqResponseModel> {
+    try {
+      return await this.sampleService.getmaterialissue();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+  
   @Post('/cancelSampleReqById')
   @ApiBody({ type: SampleFilterRequest })
   async cancelSampleReqById(@Body() req: any): Promise<AllSampleDevReqResponseModel> {
@@ -380,28 +389,36 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
-  @Post('/issueMaterial')
-  @ApiBody({type:MaterialIssueRequest})
-  async issueMaterial(@Body() req:any): Promise<CommonResponseModel> {
+
+  @Post('/getRequestno')
+  async getRequestNo(@Body() req?:any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.issueMaterial(req)
+      return await this.sampleService.getRequestNo()
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
 
-  @Post('/getGrnRollsForSampleOrder')
-  @ApiBody({type:SampleOrderIdRequest})
-  async getGrnRollsForSampleOrder(@Body() req:any): Promise<CommonResponseModel> {
+  @Post('/allocatedLocation')
+  @ApiBody({ type: AllLocationRequest })
+  async allocatedLocation(@Body() req:any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.getGrnRollsForSampleOrder(req)
+      return await this.sampleService.allocatedLocation(req)
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
-  
-
-  
+  @Post('/getbyID')
+  @ApiBody({type:RequestNoReq})
+  async getbyID( @Body() req:any): Promise<AllSampleDevReqResponseModel> {
+    console.log(req,"constroller");
+    
+    try {
+      return await this.sampleService.getbyID(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
 }
