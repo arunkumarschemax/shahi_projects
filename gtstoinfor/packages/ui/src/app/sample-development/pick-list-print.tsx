@@ -149,7 +149,7 @@ export const PickListPrint = (props: PickListPrintProps) => {
                                 <h3 style={{ fontFamily: 'initial',textAlign:'left',marginBottom:-5 }}> &#128088;Fabric</h3>
                                     <hr ></hr>
                                     <div style={{ flexDirection: "row", display: "flex" }}>
-                                    <p style={{ fontSize: 15, flex: 1,fontWeight:'bolder' }}>QR Code</p>
+                                    {/* <p style={{ fontSize: 15, flex: 1,fontWeight:'bolder' }}>QR Code</p> */}
 
                                                 <p style={{ fontSize: 15, flex: 1,fontWeight:'bolder' }}>Fabric Code</p>
                                                 <p style={{ fontSize: 15, flex: 1,fontWeight:'bolder' }}>Colour</p>
@@ -160,26 +160,26 @@ export const PickListPrint = (props: PickListPrintProps) => {
                                     {fabricStockData.map((e) => (
                                         <div>
                                             <div style={{ flexDirection: "row", display: "flex" }}>
-                                            <p style={{ fontSize: 15, flex: 1 }}>
-                                            <a> <QRCode
-                                
-                                size={256}
-                                bgColor="lightgrey"
-                                style={{ height: "50px", maxWidth: "40%", width: "30%"}}
-                                value={`${e.location? e.location :'-'}`}
-                                viewBox={`0 0 356 356`}
-                                
-                            />
-                            
-                            </a>
-                                {/* <b style={{ height: "23px", maxWidth: "50%", width: "30%"}}>
-                                {`${e.itemCode? e.itemCode :'-'}`}
-                                </b> */}
-                                </p>
+                                            {/*  */}
                                                 <p style={{ fontSize: 15, flex: 1 }}> {e.itemCode? e.itemCode :'-'}</p>
                                                 <p style={{ fontSize: 15, flex: 1 }}>{e.colour? e.colour :'-'}</p>
                                                 <p style={{ fontSize: 15, flex: 1 }}>{e.consumption ? e.consumption :'-'}</p>
-                                                <p style={{ fontSize: 15, flex: 1 }}>{e.location? e.location :'-'}</p>
+                                                <p style={{ fontSize: 15, flex: 1,display:'flex',flexDirection:'column',}}>
+                               <a> <QRCode
+                                
+                                    size={256}
+                                    bgColor="lightgrey"
+                                    style={{ height: "50px", maxWidth: "40%", width: "30%"}}
+                                    value={`${e.location? e.location :'-'}`}
+                                    viewBox={`0 0 356 356`}
+                                    
+                                />
+                                </a>
+                                <b >
+                                {`${e.location? e.location :'-'}`}
+                                </b>
+                                </p>
+                                                {/* <p style={{ fontSize: 15, flex: 1 }}>{e.location? e.location :'-'}</p> */}
                                                 <p style={{ fontSize: 15, flex: 1 }}>{e.allocateQty ? e.allocateQty :'-'}</p>
                                             </div>
                                            
@@ -192,7 +192,7 @@ export const PickListPrint = (props: PickListPrintProps) => {
                                 <h3 style={{ fontFamily: 'initial',textAlign:'left' ,marginBottom:-5}}>&#129525;Trim</h3>
                                     <hr></hr>
                                     <div style={{ flexDirection: "row", display: "flex" }}>
-                                    <p style={{ fontSize: 15, flex: 1,fontWeight:'bolder' }}>Qr Code</p>
+                                    {/* <p style={{ fontSize: 15, flex: 1,fontWeight:'bolder' }}>Qr Code</p> */}
                                                 <p style={{ fontSize: 15, flex: 1,fontWeight:'bolder' }}>Trim Code</p>
                                                <p style={{ fontSize: 15, flex: 1,fontWeight:'bolder' }}>Consumption</p>
                                                 <p style={{ fontSize: 15, flex: 1,fontWeight:'bolder' }}>Location</p>
@@ -201,7 +201,7 @@ export const PickListPrint = (props: PickListPrintProps) => {
                                     {trimStockData.map((e) => (
                                         <div>
                                             <div style={{ flexDirection: "row", display: "flex" }}>
-                                            <p style={{ fontSize: 15, flex: 1 }}>
+                                            {/* <p style={{ fontSize: 15, flex: 1 }}>
                                <a> <QRCode
                                 
                                     size={256}
@@ -213,13 +213,26 @@ export const PickListPrint = (props: PickListPrintProps) => {
                                 />
                                 
                                 </a>
-                                {/* <b style={{ height: "10px", maxWidth: "20%", width: "20%"}}>
-                                {`${e.itemCode? e.itemCode :'-'}`}
-                                </b> */}
-                                </p>
+                              
+                                </p> */}
                                                 <p style={{ fontSize: 15, flex: 1 }}>{e.itemCode? e.itemCode :'-'}</p>
                                                 <p style={{ fontSize: 15, flex: 1 }}>{e.consumption ? e.consumption : '-'}</p>
-                                                <p style={{ fontSize: 15, flex: 1 }}>{e.location ? e.location :'-'}</p>
+                                                            <p style={{ fontSize: 15, flex: 1,display:'flex',flexDirection:'column',}}>
+                               <a> <QRCode
+                                
+                                    size={256}
+                                    bgColor="lightgrey"
+                                    style={{ height: "50px", maxWidth: "40%", width: "30%"}}
+                                    value={`${e.location? e.location :'-'}`}
+                                    viewBox={`0 0 356 356`}
+                                    
+                                />
+                                </a>
+                                <b>
+                                {`${e.location? e.location :'-'}`}
+                                </b>
+                                </p>
+                                                {/* <p style={{ fontSize: 15, flex: 1 }}>{e.location ? e.location :'-'}</p> */}
                                                 <p style={{ fontSize: 15, flex: 1 }}>{e.allocateQty ? e.allocateQty :'-'}</p>
 
                                             </div>
