@@ -61,7 +61,6 @@ export const PickListPrint = (props: PickListPrintProps) => {
 
     useEffect(() => {
         getAllocatedBomData()
-
     }, []);
 
 
@@ -70,13 +69,9 @@ export const PickListPrint = (props: PickListPrintProps) => {
         req.requestNo = props.reqNo
         await service.getPickListInfo(req).then((res) => {
             if (res.data) {
-                // if(res.data.filter((e) => e. itemType==='fabric').length>0){
                 setFabricStockData(res.data.filter((e) => e.itemType === 'fabric'));
-                // }
-                // if(res.data.filter((e) => e. itemType !='fabric').length>0){
 
                 setTrimStockData(res.data.filter((e) => e.itemType != 'fabric'));
-                // }
                 setShowTabe(true)
             } else {
                 setFabricStockData([]);
@@ -171,7 +166,7 @@ export const PickListPrint = (props: PickListPrintProps) => {
                                 size={256}
                                 bgColor="lightgrey"
                                 style={{ height: "50px", maxWidth: "40%", width: "30%"}}
-                                value={`${e.itemCode? e.itemCode :'-'}`}
+                                value={`${e.location? e.location :'-'}`}
                                 viewBox={`0 0 356 356`}
                                 
                             />
