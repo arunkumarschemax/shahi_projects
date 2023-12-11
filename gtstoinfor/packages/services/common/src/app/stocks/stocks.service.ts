@@ -286,7 +286,7 @@ export class StocksService {
 
             let palletModel:BinPalletModel[] = []
             let warehousePalletRollsModel:WarehousePalletRollsModel[] = []
-            let getpalletsIds = "Select group_concat(pallet_id) AS palletIds from stocks where location_id = "+req.rackPositionId+" and (quantity -allocatd_quantity-transfered_quantity) > 0 ";
+            let getpalletsIds = "Select group_concat(DISTINCT pallet_id) AS palletIds from stocks where location_id = "+req.rackPositionId+" and (quantity -allocatd_quantity-transfered_quantity) > 0 ";
             const palletsIds = await this.dataSource.query(getpalletsIds)
 
             let palletsdata = "select id AS palletId,pallet_name AS palletCode, max_items AS maxItems, current_pallet_state AS currentPalletState, current_pallet_location AS currentPalletLocation from pallets where id in ("+palletsIds[0].palletIds+")";
@@ -296,11 +296,14 @@ export class StocksService {
             for(const ress of palletInfo){
                 let rollBasicInfoModel:RollBasicInfoModel[] = [];
                 let rollInfoModel:RollInfoModel[] = []
-                let stockDetails = "Select id AS rollId,p.barcode_id AS barcode from stocks s left join pallets p on p.id = s.pallet_id where location_id ="+req.rackPositionId+" and pallet_id = "+ress.palletId;
-                const stockInfo = await this.dataSource.query(palletsdata)
+                let stockDetails = "Select s.id AS rollId,p.barcode_id AS barcode,s.stock_bar_code AS rollNo,(s.quantity - s.allocatd_quantity - s.transfered_quantity) AS originalQty from stocks s left join pallets p on p.id = s.pallet_id where location_id ="+req.rackPositionId+" and pallet_id = "+ress.palletId+" order by p.barcode_id ASC";
+                const stockInfo = await this.dataSource.query(stockDetails)
+                console.log("Each Roll Info")
+                console.log(stockInfo)
+
                 for(const ress of stockInfo){
-                    let resss = new RollBasicInfoModel(ress.rollId,true,ress.barcode,1,1,1,1,"","","",1,1);
-                    rollBasicInfoModel.push(resss);
+                    let resss = new RollInfoModel(ress.rollId,ress.rollNo,ress.barcode,ress.originalQty);
+                    rollInfoModel.push(resss);
                 }
                 let warehouseData = new WarehousePalletRollsModel("",1,ress.palletId,ress.palletCode,0,"",ress.maxItems,ress.currentPalletState,ress.currentPalletLocation,rollInfoModel,rollBasicInfoModel);
                 warehousePalletRollsModel.push(warehouseData);
