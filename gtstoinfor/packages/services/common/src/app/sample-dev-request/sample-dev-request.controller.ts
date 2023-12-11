@@ -13,6 +13,7 @@ import { MaterialallitemsReq } from './dto/sample-req-size-req';
 import { AllocationApprovalRequest } from './dto/allocation-approval-req';
 import { AllocatedLocationRequest } from './dto/allocated-location-req';
 import { AllLocationRequest } from './dto/location-req';
+import { MaterialIssueRequest } from './dto/material-issue.req';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -421,4 +422,16 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
     }
   }
+
+  //Mobile App API for material Issues
+  @Post('/issueMaterial')
+  @ApiBody({type:MaterialIssueRequest})
+  async issueMaterial( @Body() req:any): Promise<AllSampleDevReqResponseModel> {
+    try {
+      return await this.sampleService.issueMaterial(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+  
 }

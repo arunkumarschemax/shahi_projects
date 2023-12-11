@@ -6,6 +6,7 @@ import { CommonResponseModel, OperationInventoryResponseModel, OperationInventor
 import { OperationTrackingDto } from "./dto/operation-tracking-dto";
 import { OperationInvRequest } from "./dto/operation-inventory-req";
 import { OperationInventoryRepository } from "./repo/operation-inventory-repository";
+import { operationReportRequest } from "./dto/operation-report-request";
 
 @ApiTags('operation-inventory')
 @Controller('operation-inventory')
@@ -77,7 +78,7 @@ export class OperationIssuingController{
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }
     }
-
+//mobile app  API for operation codes dropdown for operation reporting
     @Post('/getOperationCodes')
     async getOperationCodes(): Promise<CommonResponseModel> {
     try {
@@ -86,6 +87,17 @@ export class OperationIssuingController{
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }
     }
+//mobile app  API to report operation complettion for  operation reporting
+    @Post('/OperationReport')
+    @ApiBody({type: operationReportRequest})
+        async OperationReport(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return await this.operationGroupsService.OperationReport(req);
+          } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+          }
+        }
+    
     
     
 }
