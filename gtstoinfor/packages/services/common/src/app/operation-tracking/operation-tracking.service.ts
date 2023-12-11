@@ -279,7 +279,7 @@ export class OperationTrackingService {
         const res = await this.dataSource.query(nextOpData)
         let nextOperation
         if(res.length > 0){
-          nextOperation = res[0].operation_name
+          nextOperation = res[0].opCode
         }else {
           nextOperation = 'NA'
         }
