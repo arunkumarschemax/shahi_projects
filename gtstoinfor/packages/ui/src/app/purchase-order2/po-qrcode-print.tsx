@@ -80,11 +80,11 @@ getData(data.poNumber)
     return(
         <>
         
-         <Card title={<span>Purchase Order</span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+         <Card title={<span>Role QR-codes Print</span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
       
         <Form form={form} layout={'vertical'} name="control-hooks" onFinish={onFinish}>
           <Row gutter={12}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 20 }} sm={{ span: 20 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }}>
               <Form.Item label="PO Number" name="poNumber"
                 rules={[
                   { required: true, message: 'Field is required' },
@@ -100,21 +100,21 @@ getData(data.poNumber)
                 </Select>
               </Form.Item>
             </Col>
-           
-            
-          </Row>
-          <Row>
-            <Col span={24} style={{ textAlign: 'right' }}>
+            <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 8 }} xl={{ span: 6 }}  style={{paddingTop:'18px'}}>
               <Button type="primary" htmlType="submit">
-                Get Report
+                Generate QR codes
               </Button>
+              </Col>
+          </Row>
+          {/* <Row>
+            
               <Button htmlType="button" style={{ margin: '0 14px' }}
                 onClick={clearData}
               >
                 Reset
               </Button>
-            </Col>
-          </Row>
+            
+          </Row> */}
         </Form>
       </Card>
         
@@ -135,34 +135,43 @@ getData(data.poNumber)
  <html>
             <body>
              <Card
-            title="Purchase Order QR-codes Print"
+            title="Role QR-codes Print"
             style={{ textAlign: "center" }}
             headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
             extra={
                 <span style={{ color: "white" }}>
-                    <Button onClick={printOrder} className='panel_button'><PrinterOutlined /> Print</Button> <Button className='panel_button' onClick={downloadAsPDF}>Download PDF</Button>
+                    <Button onClick={printOrder} className='panel_button'><PrinterOutlined /> Print</Button> 
                 </span>
             }
         >
             <div id="printme">
                 {data && data.length>0 ? (
                     <>
-                    {data.map((e)=>(
-                <h4 style={{ display:'flex',flexDirection:'column',}}>
-                               <a> <QRCode
-                                
-                                    size={256}
-                                    bgColor="lightgrey"
-                                    style={{ height: "60px", maxWidth: "60%", width: "50%",textAlign:'center' }}
-                                    value={`${e.grn_item_no}`}
-                                    viewBox={`0 0 356 356`}
-                                    
-                                />
-                                </a>
-                                <b style={{ height: "60px", maxWidth: "60%", width: "50%",textAlign:'center' }}>
-                                {`${e.grn_item_no}`}
-                                </b>
-                                </h4>
+                    {data?.map((e)=>(
+                        <h4 style={{ display:'flex',flexDirection:'column',textAlign:'center'}}>
+                        <a> 
+                        <QRCode
+                             bgColor="lightgrey"
+                             style={{width:'4in',height:'1.5in',marginTop:"10px",pageBreakAfter:'always', textAlign:'center',alignItems:'center', }}
+                             value={`${e?.grn_item_no}`}
+                             viewBox={`0 0 356 356`}
+                             
+                         />
+                       <style>{`
+ @page {
+   size: 4in 2in; /* Set page size to 4x2 inches */
+   margin: 0; /* Reset default margin */
+ }
+
+ body {
+   margin: 0; /* Reset default margin */
+ }`}</style>
+                         </a>
+                         <b style={{textAlign:'center',fontSize:"30px" }}>
+                         {`${e?.grn_item_no}`}
+                         </b>
+                         </h4>
+                
                                 ))}</>
                                 ):('')}
                                 </div>

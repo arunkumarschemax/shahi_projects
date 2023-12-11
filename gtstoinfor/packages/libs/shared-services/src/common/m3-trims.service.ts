@@ -1,4 +1,4 @@
-import { BuyerIdReq, BuyerRefNoRequest, CommonResponseModel, M3TrimTypeRequest, M3trimsDTO, RackPositionDTO } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyerRefNoRequest, CommonResponseModel, M3TrimType, M3TrimTypeRequest, M3trimsDTO, RackPositionDTO } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class M3TrimsService extends CommonAxiosService {
@@ -69,8 +69,8 @@ export class M3TrimsService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/getAllColors", req)
     }
 
-    async getAllTrimCategories(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL + "/getAllTrimCategories")
+    async getAllTrimCategories(req?:M3TrimType): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllTrimCategories",req)
     }
 
     async getAllBuyers(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {

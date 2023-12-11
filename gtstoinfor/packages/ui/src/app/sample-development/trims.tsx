@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
-import { M3TrimsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
+import { M3TrimsService, SampleDevelopmentService, TrimParamsMappingService, UomService } from '@project-management-system/shared-services';
+import { ItemTypeEnumDisplay, ItemTypeEnum, M3TrimType, BuyerIdReq, TrimIdRequestDto } from '@project-management-system/shared-models';
 
 export interface TrimsFormProps {
   data: any;
@@ -18,6 +19,11 @@ const TrimsForm = (props:TrimsFormProps) => {
   const [uom, setUom] = useState([]);
   const service = new M3TrimsService()
   const uomService =  new UomService()
+  const [trimData, setTrimData] = useState<any[]>([])
+  const[itemType, setItemType] = useState<string>('')
+  const paramsService = new TrimParamsMappingService()
+  const [mapData, setMapData] = useState<any[]>([])
+  const [m3Trims, setM3Trims] = useState<any[]>([])
   const [form] = Form.useForm();
 
  const {Option}=Select
@@ -70,6 +76,35 @@ const TrimsForm = (props:TrimsFormProps) => {
     })
   }
 
+  const getTrimCategory = (value)=>{
+    setItemType(value)
+    const req = new M3TrimType(value,props.buyerId)
+    service.getAllTrimCategories(req).then((res)=>{
+        if(res.status){
+            setTrimData(res.data)
+        }
+    })
+}
+
+const getM3TrimsTypes = (value: number) => {
+  const req = new BuyerIdReq(props.buyerId,itemType,value)
+  service.getM3TrimsByBuyer(req).then(res => {
+      if(res.status) {
+          setM3Trims(res.data)
+      }
+  })
+}
+
+const getMappedTrims = (value, option) => {
+  getM3TrimsTypes(value)
+  const req = new TrimIdRequestDto(undefined,option?.name)
+  paramsService.getMappedParamsByTrim(req).then((res) => {
+    if (res.status) {
+      setMapData(res.data)
+    }
+  });
+}
+
   const getTrimCodes = (value) =>{
     service.getM3TrimsByTrimCode({trimType:value}).then(res =>{
       if(res.status){
@@ -80,6 +115,27 @@ const TrimsForm = (props:TrimsFormProps) => {
       }
     })
   }
+
+  const renderTrimCodeOptions = () => {
+    const trimOptions = [];
+  
+    mapData.forEach((item, index) => {
+      let optionLabel = "Format - Buyer/TrimType/TrimCategory";
+      Object.entries(item).forEach(([key, value]) => {
+        if (value === true && key !== 'isActive') {
+          optionLabel += `/${key.toUpperCase()}`;
+        }
+      });
+  
+      trimOptions.push(
+        <Option key={`${index}`} value={null}>
+          {optionLabel}
+        </Option>
+      );
+    });
+  
+    return trimOptions;
+  };
 
   const handleInputChange = (e, key, field) => {
     console.log(data)
@@ -164,17 +220,43 @@ const TrimsForm = (props:TrimsFormProps) => {
           showSearch
           optionFilterProp="children"
           placeholder="Select Trim"
-          onSelect={trimTypeOnchange}
+          onSelect={getTrimCategory}
          >
-          {trimType.map(item =>{
-            return <Option key={item.trimType} valu={item.trimType}>{item.trimType}</Option>
-          })}
+          {Object.values(ItemTypeEnumDisplay).filter((val) => val.displayVal !== ItemTypeEnum.FABRIC).map((val) => (
+            <Option key={val.name} value={val.name}>
+              {val.displayVal}
+            </Option>
+          ))}
           </Select>
-      </Form.Item>
+          </Form.Item>
       ),
     },
     {
-      title: 'Trim',
+      title: 'Trim Category',
+      dataIndex: 'trimCategory',
+      width:"20%",
+      render: (_, record) => (
+        <Select
+          value={record.trimCategory}
+          onChange={(e) => handleInputChange(e, record.key, 'trimCategory')}
+          style={{width:"100%"}}
+          allowClear
+          showSearch
+          optionFilterProp="children"
+          placeholder="Select Trim"
+          onSelect={getMappedTrims}
+         >
+          {trimData?.map((e) => {
+            return (
+            <Option key={e.trimCategory} value={e.trimCategoryId} name={e.trimMappingId}>
+              {e.trimCategory}
+            </Option>
+          )})}
+          </Select>
+      ),
+    },
+    {
+      title: 'Trim Code',
       dataIndex: 'trimId',
       width:"20%",
       render: (_, record) => (
@@ -186,9 +268,11 @@ const TrimsForm = (props:TrimsFormProps) => {
           allowClear
           showSearch
           optionFilterProp="children"
-          placeholder="Select Trim"
+          placeholder={renderTrimCodeOptions()[0]?.props.children}
+          // onSelect={onTrimChange}
          >
-          {trimCode.map(item =>{
+          {renderTrimCodeOptions()}
+          {m3Trims.map(item =>{
             return <Option key={item.m3TrimsId} value={item.m3TrimsId}>{item.trimCode}</Option>
           })}
           </Select>

@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { BuyerIdReq, CommonResponseModel, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
+import { BuyerIdReq, CommonResponseModel, M3TrimType, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
 import { M3TrimsDTO } from "./m3-trims.dto";
 import { M3TrimsService } from "./m3-trims.service";
 
@@ -169,9 +169,10 @@ async getAllColors(@Body() req?: any): Promise<CommonResponseModel> {
 }
 
 @Post('/getAllTrimCategories')
-async getAllTrimCategories(): Promise<CommonResponseModel> {
+@ApiBody({type:M3TrimType})
+async getAllTrimCategories(@Body() req?:any): Promise<CommonResponseModel> {
   try {
-    return await this.Service.getAllTrimCategories();
+    return await this.Service.getAllTrimCategories(req);
   } catch (error) {
     return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
   }

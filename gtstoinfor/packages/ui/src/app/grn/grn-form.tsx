@@ -1,19 +1,20 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select, Table, Tabs, Typography } from 'antd'
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Modal, Row, Select, Table, Tabs, Typography } from 'antd'
 import style from 'antd/es/alert/style'
 import TabPane from 'antd/es/tabs/TabPane'
 import React, { useEffect, useState } from 'react'
 import PurchaseOrderfabricForm from '../purchase-order2/purchase-order-fabric'
 import PurchaseOrderTrim from '../purchase-order2/purchase-order-trim'
-import { BuyersService, GRNService, PurchaseOrderservice, UomService, VendorsService } from '@project-management-system/shared-services'
+import { BuyersService, GRNService, PurchaseOrderservice, TrimParamsMappingService, UomService, VendorsService } from '@project-management-system/shared-services'
 import TextArea from 'antd/es/input/TextArea'
 import GRNFabricForm from './grn-fabric'
 import GRNTrimForm from './grn-trim'
-import { GRNTypeEnum, GrnDto, GrnItemsDto, GrnItemsFormDto, PoItemEnum, PurchaseOrderStatus, VendorIdReq } from '@project-management-system/shared-models'
+import { GRNTypeEnum, GrnDto, GrnItemsDto, GrnItemsFormDto, ItemTypeEnumDisplay, PoItemEnum, PurchaseOrderStatus, TrimIdRequestDto, VendorIdReq } from '@project-management-system/shared-models'
 import AlertMessages from '../common/common-functions/alert-messages'
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from 'react-router-dom'
-import { EditOutlined, MinusCircleOutlined } from '@ant-design/icons'
+import { EditOutlined, MinusCircleOutlined, QrcodeOutlined } from '@ant-design/icons'
 import { useIAMClientState } from '../common/iam-client-react'
+import { QrScanner } from './qr-scanner'
 
 // const data : GrnItemsFormDto[] = []
 // const obj1 : GrnItemsFormDto = new GrnItemsFormDto(1,1,'YY/FAB00001','Activewear Fabrics',17,PoItemEnum.OPEN,3,'Inch',3000,5,2,5000,0,0,1200,18,'red',1,null,1,'')
@@ -47,6 +48,8 @@ const GRNForm = () => {
   const [selectedItem, setSelectedItem] = useState<any>()
   const [itemsForm] = Form.useForm()
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
+  const paramsService = new TrimParamsMappingService()
+  const [mapData, setMapData] = useState<any[]>([])
 
 
   useEffect(() => {
@@ -103,7 +106,12 @@ const GRNForm = () => {
     itemsForm.resetFields()
     setPoData([])
     setPoItemData([])
-    const req = new VendorIdReq(0, val, option?.name, option.val);
+    if(option && option?.name.includes('TRIM')){
+    getMappedTrims(option?.mapId)
+    }else{
+      setMapData([])
+    }
+    const req = new VendorIdReq(0, val, option?.name, option?.val);
     poService.getPODataById(req).then((res) => {
       if (res.status) {
         setPoData(res.data[0]);
@@ -151,13 +159,21 @@ const GRNForm = () => {
     );
   }
 
+  const getMappedTrims = (value?) => {
+    const req = new TrimIdRequestDto(value)
+    paramsService.getMappedParamsByTrim(req).then((res) => {
+      if (res.status) {
+        setMapData(res.data)
+      }
+    });
+  }
+
 
   const columns: any = [
     {
-      title: <div style={{ textAlign: "center" }}> Item Code</div>,
+      title: <div style={{ textAlign: "center" }}>Buyer</div>,
+      dataIndex: 'buyer',
       fixed: 'left',
-      dataIndex: 'm3ItemCode',
-
     },
     {
       title: <div style={{ textAlign: "center" }}> Item Type</div>,
@@ -165,14 +181,66 @@ const GRNForm = () => {
       fixed: 'left',
 
     },
-    // {
-    //   title: <div style={{textAlign:"center"}}>Style</div>,
-    //   dataIndex: 'style',
-    // },
+    mapData.length > 0?{
+      title: <div style={{textAlign:"center"}}>Trim Category</div>,
+      dataIndex: "trimCategory",
+    }: {},
+    mapData[0]?.structure === true?{
+      title: <div style={{textAlign:"center"}}>Structure</div>,
+      dataIndex: "structure",
+    }: {},
+    mapData[0]?.category === true?{
+      title: <div style={{textAlign:"center"}}>Category</div>,
+      dataIndex: "category",
+    }:{},
+    mapData[0]?.content === true?{
+      title: <div style={{textAlign:"center"}}>Content</div>,
+      dataIndex: "content",
+    }:{},
+    mapData[0]?.type === true?{
+      title: <div style={{textAlign:"center"}}>Type</div>,
+      dataIndex: "type",
+    }: {},
+    mapData[0]?.finish === true?{
+      title: <div style={{textAlign:"center"}}>Finish</div>,
+      dataIndex: "finish",
+    }: {},
+    mapData[0]?.hole === true?{
+      title: <div style={{textAlign:"center"}}>Hole</div>,
+      dataIndex: "hole",
+    }: {},
+    mapData[0]?.quality === true?{
+      title: <div style={{textAlign:"center"}}>Quality</div>,
+      dataIndex: "qualityName",
+    }: {},
+    mapData[0]?.thickness === true?{
+      title: <div style={{textAlign:"center"}}>Thickness</div>,
+      dataIndex: "thickness",
+    }: {},
+    mapData[0]?.variety === true?{
+      title: <div style={{textAlign:"center"}}>Variety</div>,
+      dataIndex: "variety",
+    }: {},
+    mapData[0]?.uom === true?{
+      title: <div style={{textAlign:"center"}}>UOM</div>,
+      dataIndex: "UOM",
+    }: {},
+    mapData[0]?.color === true?{
+      title: <div style={{textAlign:"center"}}>Color</div>,
+      dataIndex: "color",
+    }: {},
+    mapData[0]?.logo === true?{
+      title: <div style={{textAlign:"center"}}>Logo</div>,
+      dataIndex: "logo",
+    }: {},
+    mapData[0]?.part === true?{
+      title: <div style={{textAlign:"center"}}>Part</div>,
+      dataIndex: "part",
+    }:{},
     {
-      title: <div style={{ textAlign: "center" }}>Buyer</div>,
-      dataIndex: 'buyer',
+      title: <div style={{ textAlign: "center" }}> Item Code</div>,
       fixed: 'left',
+      dataIndex: 'm3ItemCode',
 
     },
     {
@@ -297,6 +365,8 @@ const GRNForm = () => {
       </span>
     }
   ]
+  const filteredColumns = columns.filter((column) => Object.keys(column).length > 0);
+
 
 
   function receivedQuantityOnChange(e) {
@@ -380,8 +450,27 @@ const GRNForm = () => {
     itemsForm.resetFields()
   }
 
+  const [showQrSacn, setShowQrScan] = useState<boolean>(false);
+  const [modal, setModal] = useState('')
 
-console.log(form.getFieldsValue())
+  const poNumberQr = (e) =>{
+    setShowQrScan(true);
+     setModal('poNumber')
+  }
+
+  const handleQrScan = (value) => {
+    setShowQrScan(false);
+  
+    const poNumber = poNoData.filter((el) => el.poNumber === value.text)[0];
+  
+    if (poNumber) {
+      getPODataById(poNumber.purchaseOrderId, { name: poNumber.materialType, val: poNumber.poAgainst });
+      form.setFieldsValue({
+        purchaseOrderId: poNumber.poNumber,
+      });
+    }
+  };
+  
 
   return (
     <>
@@ -407,10 +496,14 @@ console.log(form.getFieldsValue())
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
               <Form.Item name='purchaseOrderId' label='PO Number' rules={[{ required: true, message: 'PO Number is required' }]}>
-                <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' onChange={getPODataById}>
+                <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' onChange={getPODataById}
+                suffixIcon={<QrcodeOutlined
+                  onClick={(e) => { poNumberQr(e.target) }}
+                  style={{ fontSize: '28px', marginLeft: '-7px' }} />}
+                >
                   {poNoData.map(e => {
                     return (
-                      <Option key={e.purchaseOrderId} value={e.purchaseOrderId} name={e.materialType} val={e.poAgainst}> {e.poNumber}</Option>
+                      <Option key={e.purchaseOrderId} value={e.purchaseOrderId} name={e.materialType} val={e.poAgainst} mapId={e.trimMappingId}> {e.poNumber}</Option>
                     )
                   })}
                 </Select>
@@ -614,7 +707,7 @@ console.log(form.getFieldsValue())
           </Row>
 
           <Row>
-            <Table scroll={{ x: 'max-content' }} columns={columns} dataSource={poItemData} bordered pagination={false} />
+            <Table scroll={{ x: 'max-content' }} columns={filteredColumns} dataSource={poItemData} bordered pagination={false} />
           </Row>
         </Card>
 
@@ -625,7 +718,16 @@ console.log(form.getFieldsValue())
           </Col>
         </Row>
 
-
+        <Modal
+        className='qr-container'
+        key={'modal' + Date.now()}
+        width={'95%'}
+        style={{ top: 30, textAlign: 'right',height:"50%" }}
+        visible={showQrSacn}
+        onCancel={() => { setShowQrScan(false) }}
+      >
+        {modal === 'poNumber' ? <QrScanner handleScan={(value) =>{handleQrScan(value)}} /> : null}
+      </Modal>
       </Card>
     </>
   )
