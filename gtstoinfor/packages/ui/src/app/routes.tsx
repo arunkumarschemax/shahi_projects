@@ -10,7 +10,6 @@ import FactoriesForm from "./masters/factories/factories-form"
 import ExcelImport from "./excel-import/excel-import"
 import ChangesGrid from "./excel-import/changes-grid"
 import AllOrdersGridView from "./excel-import/orders-view-grid"
-import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import CurrenciesForm from "./masters/currencies/currency-form"
@@ -209,6 +208,7 @@ import HoleGrid from "./trim-master/hole/hole-view"
 import M3TrimItemsForm from "./trim-master/m3-trim-items/m3-trim-items"
 import { RmTrimsView } from "./sourcing-requisition/rm-trims-view"
 import { M3TrimsView } from "./trim-master/m3-trim-items/m3-trims-view"
+import { Dashboard } from "./common/dashboards/dashboard"
 
 
 
