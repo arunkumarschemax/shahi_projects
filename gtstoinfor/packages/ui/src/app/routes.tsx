@@ -281,9 +281,7 @@ export const AppRoutes = () => {
 
                 {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                 <Route path='/masters'>
-                <Route path='material-issued-view' element={<MaterialIssuedView />} />
-                <Route path='material-issued-detail-view' element={<MaterialIssuesDetailsView sample_request_id={0}/>} />
-
+               
 
                     <Route path='quality-form' element={<QualityForm />} />
                     <Route path='quality-view' element={<QualityView />} />
@@ -828,6 +826,9 @@ export const AppRoutes = () => {
 
                 </Route>
                 {/* <Route path='/report'> */}
+                <Route path='material-issued-view' element={<MaterialIssuedView />} />
+                <Route path='material-issued-detail-view' element={<MaterialIssuesDetailsView requestId={0} />} />
+
                 <Route path='material-issue-report' element={<MaterialIssueReport />} />
                 <Route path='indent-report' element={<IndentReport />} />
 

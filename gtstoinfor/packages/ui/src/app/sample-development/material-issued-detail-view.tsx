@@ -207,7 +207,7 @@ const expandFabricTabel = (record) => {
     <div>
       <Card>
         <Card title="Material Detail View" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
-        extra={<span style={{ color: 'white' }} >  <Button className='panel_button' onClick={() => navigate('/masters/material-issued-view')}>Material Issued View</Button> </span>} >
+        extra={<span style={{ color: 'white' }} >  <Button className='panel_button' onClick={() => navigate('/material-issued-view')}>Material Issued View</Button> </span>} >
       
         <br></br>
          <><Table

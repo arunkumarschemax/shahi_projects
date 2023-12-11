@@ -204,7 +204,7 @@ export const MaterialIssuedView = () => {
                 <Tooltip placement="top" title="Detail View">
                   <EyeOutlined
                     onClick={() => {
-                        navigate('/masters/material-issued-detail-view', { state: {requestId:rowData.sample_request_id} })
+                        navigate('/material-issued-detail-view', { state: {requestId:rowData.sample_request_id} })
                      
                     }}
                     style={{ color: "blue", fontSize: 20 }}
