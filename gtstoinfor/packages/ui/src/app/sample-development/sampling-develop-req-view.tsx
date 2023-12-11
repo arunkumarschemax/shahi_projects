@@ -654,36 +654,27 @@ import PoPrint from "../purchase-order2/po-print";
           <span>Location : {<b>{location}</b>}</span>
           <span style={{ width: "10px" }}></span>
           <span style={{ width: "10px" }}></span>
-          {/* <span style={{ width: "10px" }}></span>
-          <span>Status : {<b>{status}</b>}</span> */}
           <span style={{ width: "10px" }}></span>
           <span> Status : {<b>{lifeCycleStatus}</b>}</span>
-          {/* <span style={{width:'10px'}}></span>
-                <span>{<Tag onClick={() => generateBarcode(requestNo)} style={{cursor:'pointer'}}>
-                           <BarcodeOutlined />
-                       </Tag>}</span> */}
-                       <>
-                       <span style={{ width: "10px", marginLeft: '10px'  }}>
-            <Button type="primary" size="small" onClick={()=>showModal(index)}>
-              Print
-            </Button>
-          </span></>
+          <span style={{marginLeft:'auto'}}>
                {lifeCycleStatus === LifeCycleStatusEnum.READY_TO_DISPATCH ? (
         <>
-                  <Divider type="vertical" />
-
-          <span style={{ width: "10px" }}></span>
-          {/* <span>Dispatch Status: <b>{dispatch}</b></span> */}
-          <span style={{ marginLeft: 'auto' }}>
-
-          <span><b>{dispatch}</b></span>
-            <Button type="primary" onClick={()=>handleDispatchClick(index)}>
+          <span style={{paddingRight:20}}  >
+            <Button type="primary"  size="small" onClick={()=>handleDispatchClick(index)}>
               Dispatch 
             </Button>
           </span>
         
         </>
       ):(<></>)}
+             <>
+              <span >
+            <Button type="primary" size="small" onClick={()=>showModal(index)}>
+              Print
+            </Button>
+          </span>
+          </>
+          </span>
         </div>
       );
     };
