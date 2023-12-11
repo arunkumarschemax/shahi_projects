@@ -6,12 +6,12 @@ export class CoLineRequest {
     remarks?: string;
     exFactoryDate?: string;
     deliveryDate?: string;
-    salesPrice?: string;
+    salesPrice?: number;
     currency?: string;
     destinations?: Destinations[]
 
     constructor(
-        buyerPo?: string, remarks?: string, exFactoryDate?: string, deliveryDate?: string, salesPrice?: string, currency?: string, destinations?: Destinations[]
+        buyerPo?: string, remarks?: string, exFactoryDate?: string, deliveryDate?: string, salesPrice?: number, currency?: string, destinations?: Destinations[]
     ) {
         this.buyerPo = buyerPo;
         this.remarks = remarks;

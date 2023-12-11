@@ -446,9 +446,9 @@ export class DpomService {
                 const cur = coLine.currency; // give the dynamic value here
                 await driver.executeScript(`arguments[0].value = '${cur}';`, curDropdown);
 
-                await driver.wait(until.elementLocated(By.xpath('//*[@id="form1"]/table/tbody/tr/td/table/tbody/tr[4]/td/table/tbody/tr/td/table/tbody/tr[2]/td[11]/table/tbody/tr/td[2]')));
-                await driver.findElement(By.name('//*[@id="form1"]/table/tbody/tr/td/table/tbody/tr[4]/td/table/tbody/tr/td/table/tbody/tr[2]/td[11]/table/tbody/tr/td[2]')).clear();
-                await driver.findElement(By.name('//*[@id="form1"]/table/tbody/tr/td/table/tbody/tr[4]/td/table/tbody/tr/td/table/tbody/tr[2]/td[11]/table/tbody/tr/td[2]')).sendKeys(coLine.salesPrice);
+                await driver.wait(until.elementLocated(By.xpath('//*[@id="price"]')));
+                await driver.findElement(By.xpath('//*[@id="price"]')).clear();
+                await driver.findElement(By.xpath('//*[@id="price"]')).sendKeys(coLine.salesPrice);
 
                 await driver.wait(until.elementLocated(By.id('packtrm')));
                 const pkgTermsDropDown = await driver.findElement(By.id('packtrm'));
@@ -619,9 +619,10 @@ export class DpomService {
         } catch (err) {
             console.log(err, 'error');
             return new CommonResponseModel(false, 0, err)
-        } finally {
-            driver.quit()
         }
+        // finally {
+        //     driver.quit()
+        // }
     }
 
     async isAlertPresent(driver) {
