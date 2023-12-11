@@ -23,7 +23,6 @@ export class GrnItemsFormDto {
     indentItemId: number;
     buyer: string
     buyerId: number
-    barcode:string
     receivedQuantity?: number
     acceptedQuantity?: number
     categoryId?:number
@@ -90,7 +89,6 @@ export class GrnItemsFormDto {
         indentItemId: number,
         buyerId: number,
         buyer: string,
-        barcode:string,
         sampleRequestId?: number,
         indentId?: number,
         receivedQuantity?: number,
@@ -152,7 +150,6 @@ export class GrnItemsFormDto {
         this.colourId = colourId;
         this.colour = colour;
         this.sampleItemId = sampleItemId;
-        this.barcode = barcode;
         this.indentItemId = indentItemId;
         this.receivedQuantity = receivedQuantity;
         this.acceptedQuantity = acceptedQuantity;
