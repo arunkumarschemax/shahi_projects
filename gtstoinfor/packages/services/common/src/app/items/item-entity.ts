@@ -61,7 +61,12 @@ export class Item {
     name: "remarks"
   })
   remarks: string;
-
+  @Column("varchar", {
+    nullable: true,
+    length: 250,
+    name: "hsn_code"
+  })
+  hsnCode: string;
 
   @Column("boolean", {
     nullable: false,

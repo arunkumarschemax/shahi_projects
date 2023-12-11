@@ -209,6 +209,8 @@ import HoleGrid from "./trim-master/hole/hole-view"
 import M3TrimItemsForm from "./trim-master/m3-trim-items/m3-trim-items"
 import { RmTrimsView } from "./sourcing-requisition/rm-trims-view"
 import { M3TrimsView } from "./trim-master/m3-trim-items/m3-trims-view"
+import MaterialIssuedView from "./sample-development/material-issued-view"
+import MaterialIssuesDetailsView from "./sample-development/material-issued-detail-view"
 import PickListPrint from "./sample-development/pick-list-print"
 import LocationQrCodePrint from "./rm_locations/location-barcode-print"
 import PurchaseOrderQrCodePrint from "./purchase-order2/po-qrcode-print"
@@ -281,6 +283,8 @@ export const AppRoutes = () => {
 
                 {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                 <Route path='/masters'>
+               
+
                     <Route path='quality-form' element={<QualityForm />} />
                     <Route path='quality-view' element={<QualityView />} />
                     <Route path='rack-form' element={<RackForm />} />
@@ -797,6 +801,7 @@ export const AppRoutes = () => {
                     <Route path="store-issues-detail-view" element={<SourceIssuesDetailView MaterialIssueID={0} />} />
                     {/* <Route path="material-issue-view" element={<MaterialIssueView />} /> */}
                     <Route path="material-issue-view" element={<AllocatedStockApproval screen={"Issued"} />} />
+
                 </Route>
 
                 <Route path='/materialCreation'>
@@ -824,6 +829,9 @@ export const AppRoutes = () => {
 
                 </Route>
                 {/* <Route path='/report'> */}
+                <Route path='material-issued-view' element={<MaterialIssuedView />} />
+                <Route path='material-issued-detail-view' element={<MaterialIssuesDetailsView requestId={0} />} />
+
                 <Route path='material-issue-report' element={<MaterialIssueReport />} />
                 <Route path='indent-report' element={<IndentReport />} />
 
@@ -1134,6 +1142,7 @@ export const AppRoutes = () => {
                 <Route path='/grn-form' element={<GRNForm />} />
                 <Route path='/grn-view' element={<GRNView />} />
                 <Route path='/grn-detail-view' element={<GRNDetailView />} />
+
                 <Route path='/excel-import'>
                     <Route path='excel-import' element={<ExcelImport />} />
                     <Route path='changes-view' element={<ChangesGrid />} />
