@@ -1015,11 +1015,23 @@ export class SampleRequestService {
     async getTrimDetailsOfSample(req:sampleReqIdReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-        const query ='SELECT t.trim_code as m3TrimCode,mt.trim_code AS m3TrimCodeName,t.trim_type AS trimTupe,request_no AS sampleReqNo,trim_info_id AS sampleTrimInfoId,t.uom_id AS uomId,u.uom,consumption AS sampleOrderQuantity,t.sample_request_id AS sampleReqId FROM sample_request_trim_info t LEFT JOIN sample_request sr ON sr.sample_request_id=t.sample_request_id LEFT JOIN m3_trims mt ON mt.m3_trim_Id=t.trim_code left join uom u on u.id = t.uom_id  where t.sample_request_id in ('+req.sampleReqId+') and t.trim_code in('+req.sampleItemId+')'
+        const query ='SELECT t.trim_code as m3TrimCode,mt.trim_code AS m3TrimCodeName,t.trim_type AS trimTupe,request_no AS sampleReqNo,trim_info_id AS sampleTrimInfoId,t.uom_id AS uomId,u.uom,consumption AS sampleOrderQuantity,t.sample_request_id AS sampleReqId,tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part FROM sample_request_trim_info t LEFT JOIN sample_request sr ON sr.sample_request_id=t.sample_request_id LEFT JOIN m3_trims mt ON mt.m3_trim_Id=t.trim_code left join uom u on u.id = t.uom_id LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = mt.trim_mapping_id where t.sample_request_id in ('+req.sampleReqId+') and t.trim_code in('+req.sampleItemId+')'
         const rmData = await manager.query(query);
-        if(rmData){
-          return new CommonResponseModel(true,1,'data',rmData)
-        }else{
+        if (rmData.length > 0) {
+          const modifiedRes = rmData.map(item => {
+              const trueValues = Object.keys(item)
+              .filter(key => ["structure", "category", "content", "type", "finish", "hole", "quality", "thickness", "variety", "uom", "color", "logo", "part"].includes(key) && item[key] === 1)
+              .map(key => key.toUpperCase());
+
+              const concatenatedValues = trueValues.join('/');
+              const label = trueValues.length > 0 ? "BUYER/TRIM TYPE/TRIM CATEGORY/":""
+
+              const trimParams = label + concatenatedValues
+              return { ...item, trimParams };
+          });
+
+          return new CommonResponseModel(true, 1, "Stock retrieved successfully", modifiedRes);
+  }else{
           return new CommonResponseModel(false,0,'no data',[])
 
         }

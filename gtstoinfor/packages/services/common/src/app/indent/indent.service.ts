@@ -160,10 +160,22 @@ export class IndentService {
     async getAllIndentTrimDetailsAgainstIndent(req: indentIdReq): Promise<CommonResponseModel> {
         console.log(req)
         // const data = 'SELECT "" as poQuantity,item_code as trimCodeName,it.trim_type as productGroupId,trim_code as trimId, pg.product_group as trimType,c.colour AS colourName,item_code AS trimCodeName,product_group AS productGroup,itrims_id AS indentTrmId,trim_code AS trimId ,size AS sizeId,color AS colourId, quantity as indentQuantity,quantity_unit AS indentQuantityUnit,m3_trim_code AS m3TrimCode FROM indent_trims it LEFT JOIN indent i ON it.indent_id=i.indent_id LEFT JOIN product_group pg ON pg.product_group_id=it.trim_type LEFT JOIN rm_items ri ON ri.rm_item_id=it.trim_code LEFT JOIN colour c ON c.colour_id=it.color where it.indent_id in(' + req.indentId + ') '
-        const data ='SELECT it.indent_id as indentId,m3_trim_Id AS m3TrimCode,request_no AS indentCode,"" AS poQuantity,ms.trim_type AS trimtype,ms.trim_code AS m3TrimCodeName,ms.trim_mapping_id as trimMappingId,it.trim_type AS productGroupId,it.trim_code AS trimId, itrims_id AS indentTrmId, it.trim_code AS trimId ,quantity AS indentQuantity, it.quantity_unit AS quantityUnitId, u.uom AS quantityUnit FROM indent_trims it LEFT JOIN indent i ON it.indent_id=i.indent_id  LEFT JOIN m3_trims ms ON ms.m3_trim_Id=it.trim_code left join uom u on u.id = it.quantity_unit WHERE it.indent_id in(' + req.indentId + ') '
+        const data ='SELECT it.indent_id as indentId,m3_trim_Id AS m3TrimCode,request_no AS indentCode,"" AS poQuantity,ms.trim_type AS trimtype,ms.trim_code AS m3TrimCodeName,ms.trim_mapping_id as trimMappingId,it.trim_type AS productGroupId,it.trim_code AS trimId, itrims_id AS indentTrmId, it.trim_code AS trimId ,quantity AS indentQuantity, it.quantity_unit AS quantityUnitId, u.uom AS quantityUnit, tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part FROM indent_trims it LEFT JOIN indent i ON it.indent_id=i.indent_id  LEFT JOIN m3_trims ms ON ms.m3_trim_Id=it.trim_code left join uom u on u.id = it.quantity_unit LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = ms.trim_mapping_id WHERE it.indent_id in(' + req.indentId + ') '
         const result = await this.indentRepo.query(data)
-        if (result) {
-            return new CommonResponseModel(true, 1, 'data retived sucessfully', result);
+        if (result.length > 0) {
+            const modifiedRes = result.map(item => {
+                const trueValues = Object.keys(item)
+                .filter(key => ["structure", "category", "content", "type", "finish", "hole", "quality", "thickness", "variety", "uom", "color", "logo", "part"].includes(key) && item[key] === 1)
+                .map(key => key.toUpperCase());
+
+                const concatenatedValues = trueValues.join('/');
+                const label = trueValues.length > 0 ? "BUYER/TRIM TYPE/TRIM CATEGORY/":""
+
+                const trimParams = label + concatenatedValues
+                return { ...item, trimParams };
+            });
+
+            return new CommonResponseModel(true, 1, "Stock retrieved successfully", modifiedRes);
         } else {
             return new CommonResponseModel(false, 0, 'no data found', [])
         }
