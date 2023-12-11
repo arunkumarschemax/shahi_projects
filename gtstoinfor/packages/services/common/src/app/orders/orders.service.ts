@@ -3100,6 +3100,7 @@ export class OrdersService {
         }
     }
 
+    @Cron('10 7,15 * * *')
     async trimOrdersReadCell(): Promise<CommonResponseModel> {
         try {
             let filesArray = []
@@ -3219,10 +3220,18 @@ export class OrdersService {
         }
     }
 
-    // @Cron('0 8 * * *')
+    @Cron('0 7,15 * * *')
     async uniqloTrimOrdersBot(): Promise<any> {
-        const chromeOptions = new chrome.Options();
-        chromeOptions.addArguments('--auto-select-certificate-for-urls=https://spl.fastretailing.com');
+        // var capabilities = Capabilities.chrome();
+
+        // capabilities.set('chromeOptions', {
+
+        //     'args': ['--headless', '--no-sandbox', 'window-size=1024,768', '--disable-gpu', '--disable-popup-blocking']
+
+        // })
+        // const chromeOptions = new chrome.Options();
+        // chromeOptions.addArguments('--auto-select-certificate-for-urls=https://spl.fastretailing.com');
+        // chromeOptions.addArguments('--disable-popup-blocking')
         const today = new Date();
 
         const year = today.getFullYear();
@@ -3230,29 +3239,43 @@ export class OrdersService {
         const day = today.getDate().toString().padStart(2, '0');
 
         const formattedDate = `${year}/${month}/${day}`
-        const driver = await new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
+        // chromeOptions.setUserPreferences({ 'profile.default_content_setting_values.notifications': 2 });
+        // const driver = await new Builder().forBrowser('chrome').withCapabilities(capabilities).build();
+        const chromeOptions = new chrome.Options();
+        chromeOptions.addArguments('--ignore--certificate-errors');
+        chromeOptions.addArguments('user-data-dir=C:/Users/Standby.it/AppData/Local/Google/Chrome/User Data')
+        chromeOptions.addArguments('profile-directory=Default')
 
+        const capabilities = {
+            browserName: 'chrome', acceptInsecureCerts: true
+        }
+        const driver = await new Builder().forBrowser("chrome").setChromeOptions(chromeOptions).withCapabilities(capabilities).build();
+        // const driver = await new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
         try {
             await driver.get('https://spl.fastretailing.com/app/spl/login');
-            // Switch to the alert and accept it (click "OK")
-            // const alert = await driver.switchTo().alert();
-            // await alert.accept()
+            await driver.sleep(5000)
             await driver.findElement(By.id('a-textfield-0')).sendKeys('SwathiG');
             await driver.findElement(By.id('a-textfield-1')).sendKeys('beyIMjX#');
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-login/form/div/div[2]/div[1]/button')).click();
+            await driver.sleep(5000)
             await driver.wait(until.elementLocated(By.xpath('/html/body/app-root/o-main/app-portal/div/o-header/o-menu/div/div')));
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-portal/div/o-header/o-menu/div/div')).click();
+            await driver.sleep(5000)
             await driver.wait(until.elementLocated(By.xpath('/html/body/app-root/o-main/app-portal/div/o-header/o-menu/div/form/table/tbody[2]/tr[1]/td[2]/a')));
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-portal/div/o-header/o-menu/div/form/table/tbody[2]/tr[1]/td[2]/a')).click();
+            await driver.sleep(5000)
             await driver.wait(until.elementLocated(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[1]/div[2]/div/a')));
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[1]/div[2]/div/a')).click();
+            await driver.sleep(5000)
             await driver.wait(until.elementLocated(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[1]/div/m-selectbox[3]')));
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[1]/div/m-selectbox[3]')).click();
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[1]/div/m-selectbox[4]')).click();
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[2]/div/m-selectbox[1]')).click();
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[2]/div/m-selectbox[2]')).click();
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[2]/div/m-selectbox[3]')).click();
-            await driver.findElement(By.xpath('//*[@id="a-textfield-12"]')).sendKeys('2023/12/1');
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[3]/div/m-selectbox[1]')).click();
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/o-section[2]/m-formgroup[3]/div/m-selectbox[2]')).click();
+            await driver.findElement(By.xpath('//*[@id="a-textfield-12"]')).sendKeys('2023/11/15');
             await driver.findElement(By.xpath('//*[@id="a-textfield-13"]')).sendKeys(formattedDate);
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/app-materialpo-index/o-article/form/div[2]/div/div/m-buttongroup/button[2]')).click();
             await driver.sleep(10000)
@@ -3264,10 +3287,11 @@ export class OrdersService {
             await driver.wait(until.elementLocated(By.xpath('/html/body/o-component-host/o-dialog/div[3]/button')));
             await driver.findElement(By.xpath('/html/body/o-component-host/o-dialog/div[3]/button')).click();
             await driver.sleep(5000)
-            await driver.quit();
             return new CommonResponseModel(true, 1, 'Trim Orders Downloaded Successfully')
         } catch (err) {
             return new CommonResponseModel(false, 0, err)
+        } finally {
+            await driver.quit();
         }
     }
 
