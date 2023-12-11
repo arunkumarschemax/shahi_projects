@@ -399,7 +399,7 @@ export class OperationTrackingService {
   }
 
   async getOperationCodes():Promise<CommonResponseModel>{
-    const opCodesQry = `select operation_id,operation_code,sequence from operations`;
+    const opCodesQry = `select operation_id,operation_code,sequence from operations order by sequence`;
     const operationCodeRes = await this.dataSource.query(opCodesQry)
     if(operationCodeRes.length > 0){
       return new CommonResponseModel(true,1,'data retreived',operationCodeRes)
