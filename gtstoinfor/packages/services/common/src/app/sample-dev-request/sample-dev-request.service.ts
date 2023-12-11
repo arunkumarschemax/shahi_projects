@@ -1151,21 +1151,21 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
     async issueMaterial(req:MaterialIssueRequest):Promise<CommonResponseModel>{
       const manager = new GenericTransactionManager(this.dataSource)
       try{
-        const grnInfo = `select grn_id,grn_type,item_type from grn where grn_id in(select grn_id from grn_items where grn_item_no = '${req.GRNItemNumber}')`;
+        const grnInfo = `select grn_id,grn_type,item_type,m3_item_code_id as m3ItemId from grn where grn_id in(select grn_id from grn_items where grn_item_no = '${req.GRNItemNumber}')`;
         const grnRes = await this.dataSource.query(grnInfo)
         console.log(grnRes)
         if(grnRes.length > 0){
           await manager.startTransaction()
-          const grnItemInfo = `select sample_item_id as sampleItemId,indent_item_id as indentItemId,sample_req_id as sampleReqId from grn_items where grn_item_no = '${req.GRNItemNumber}'`;
-          const grnItemRes = await this.dataSource.query(grnItemInfo);
-          let sampleItemId
-          if(grnItemRes[0].sampleItemId > 0){
-            sampleItemId = grnItemRes[0].sampleItemId
-          }
-          if(grnItemRes[0].indentItemId > 0){
-            sampleItemId = grnItemRes[0].indentItemId
-          }
-          const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({sampleItemId:sampleItemId},{status:MaterialStatusEnum.MATERIAL_ISSUED})
+          // const grnItemInfo = `select sample_item_id as sampleItemId,indent_item_id as indentItemId,sample_req_id as sampleReqId from grn_items where grn_item_no = '${req.GRNItemNumber}'`;
+          // const grnItemRes = await this.dataSource.query(grnItemInfo);
+          // let sampleItemId
+          // if(grnItemRes[0].sampleItemId > 0){
+          //   sampleItemId = grnItemRes[0].sampleItemId
+          // }
+          // if(grnItemRes[0].indentItemId > 0){
+          //   sampleItemId = grnItemRes[0].indentItemId
+          // }
+          const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({sampleOrderId:req.sampleRequestId,m3ItemId:grnRes[0].m3ItemId},{status:MaterialStatusEnum.MATERIAL_ISSUED})
           if(updateAllocations.affected){
             const checkAllIssuedOrNot = `select count(*) as count from material_allocation where sample_order_id = ${req.sampleRequestId} and status = ${MaterialStatusEnum.MATERIAL_ISSUED}`
             const res = await this.dataSource.query(checkAllIssuedOrNot)

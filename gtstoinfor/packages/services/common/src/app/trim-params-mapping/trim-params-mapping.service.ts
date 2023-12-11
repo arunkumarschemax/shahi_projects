@@ -56,7 +56,7 @@ export class TrimParamsMappingService {
 
     async getMappedParamsByTrim(req:TrimIdRequest):Promise<CommonResponseModel>{
         try{
-            const data = await this.repo.find({where:{trimId:req.trimId}})
+            const data = await this.repo.find({where:{trimId:req.trimId,trimMappingId: req.trimMapId}})
             if(data.length > 0){
                 return new CommonResponseModel(true,1,'Data retrieved',data)
             } else{

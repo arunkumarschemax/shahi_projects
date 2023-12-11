@@ -64,6 +64,12 @@ export class GrnItemsEntity {
     status: LocationMappedEnum
 
     @Column('text', {
+        name: 'barcode',
+        nullable: true
+    })
+    barcode: string
+
+    @Column('text', {
         name: 'remarks',
         nullable: true
     })
