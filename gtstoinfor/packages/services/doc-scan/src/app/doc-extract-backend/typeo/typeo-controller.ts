@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ScanService } from "./typeo-service";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
@@ -39,5 +39,9 @@ export class ScanController {
     console.log(req,"controll")
     return await this.Service.getdata(req);
   }
-
+  @Get('Emailprocess')
+  processEmails() {
+    this.Service.processEmails();
+    return 'Processing emails';
+  }
 }

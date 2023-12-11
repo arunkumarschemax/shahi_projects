@@ -7,9 +7,10 @@ import { ScanAdapter } from '../adapters/scan-adapters';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { ApplicationExceptionHandler } from 'packages/libs/backend-utils/src/exception-handling/application-exception-handler';
 import { HSNEntity } from '../entity/hsn-entity';
+import { EmailAttachments } from '../entity/mails-entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ScanEntity,HSNEntity])],
+  imports: [TypeOrmModule.forFeature([ScanEntity,HSNEntity,EmailAttachments])],
   controllers: [ScanController],
   providers: [ScanService,ScanAdapter,ApplicationExceptionHandler],
   exports:[TypeOrmModule,ScanService]
