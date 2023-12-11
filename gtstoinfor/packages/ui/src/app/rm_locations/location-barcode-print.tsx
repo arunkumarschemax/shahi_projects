@@ -63,6 +63,7 @@ export  const LocationQrCodePrint = ()=>{
         element.document.write(divContents);
         getCssFromComponent(document, element.document);
         element.document.close();
+        
         element.print();
         element.close(); // to close window when click on cancel/Save
         setIsModalOpen(true); // model should be open
@@ -83,11 +84,11 @@ export  const LocationQrCodePrint = ()=>{
     return(
         <>
         
-         <Card title={<span>Location</span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+         <Card title={<span>Locations QR Codes Print</span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
       
         <Form form={form} layout={'vertical'} name="control-hooks" onFinish={onFinish}>
           <Row gutter={12}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 3 }} xl={{ span: 2}}>
               <Form.Item label="Rack Code" name="rackCode"
                 rules={[
                   { required: true, message: 'Field is required' },
@@ -103,11 +104,15 @@ export  const LocationQrCodePrint = ()=>{
                 </Select>
               </Form.Item>
             </Col>
-           
-            
+            <Col  xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}  style={{paddingTop:'20px',paddingLeft:'20px'}}>
+
+            <Button type="primary" htmlType="submit">
+                Generate QR codes
+              </Button>
+            </Col>
+
           </Row>
-          <Row>
-            <Col span={24} style={{ textAlign: 'right' }}>
+          {/* <Row>
               <Button type="primary" htmlType="submit">
                 Get Report
               </Button>
@@ -116,8 +121,7 @@ export  const LocationQrCodePrint = ()=>{
               >
                 Reset
               </Button>
-            </Col>
-          </Row>
+          </Row> */}
         </Form>
       </Card>
         
@@ -138,12 +142,12 @@ export  const LocationQrCodePrint = ()=>{
  <html>
             <body>
              <Card
-            title="Locations QR-codes Print"
+            title="Locations QR Codes Print"
             style={{ textAlign: "center" }}
             headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
             extra={
                 <span style={{ color: "white" }}>
-                    <Button onClick={printOrder} className='panel_button'><PrinterOutlined /> Print</Button> <Button className='panel_button' onClick={downloadAsPDF}>Download PDF</Button>
+                    <Button onClick={printOrder} className='panel_button'><PrinterOutlined /> Print</Button> 
                 </span>
             }
         >
@@ -151,27 +155,26 @@ export  const LocationQrCodePrint = ()=>{
                 {data && data.length>0 ? (
                     <>
                     {data.map((e)=>(
-                <h4 style={{ display:'flex',flexDirection:'column',}}>
+                <h4 style={{ display:'flex',flexDirection:'column',textAlign:'center'}}>
                                <a> 
-                               {/* <QRCode
-    size={138}  // Set the desired size in pixels
-    bgColor="lightgrey"
-    style={{ width: "1cm", height: "1cm", textAlign: 'center' }}
-        value={`${e.position_code}`}
-    viewBox={`0 0 356 356`}
-/> */}
-
-<QRCode
-                                
-                                    size={256}
+                               <QRCode
                                     bgColor="lightgrey"
-                                    style={{ height: "60px", maxWidth: "60%", width: "50%",textAlign:'center' }}
+                                    style={{width:'4in',height:'1.5in',marginTop:"10px",pageBreakAfter:'always', textAlign:'center',alignItems:'center', }}
                                     value={`${e.position_code}`}
                                     viewBox={`0 0 356 356`}
                                     
                                 />
+                              <style>{`
+        @page {
+          size: 4in 2in; /* Set page size to 4x2 inches */
+          margin: 0; /* Reset default margin */
+        }
+
+        body {
+          margin: 0; /* Reset default margin */
+        }`}</style>
                                 </a>
-                                <b style={{ height: "60px", maxWidth: "60%", width: "50%",textAlign:'center' }}>
+                                <b style={{textAlign:'center',fontSize:"30px" }}>
                                 {`${e.position_code}`}
                                 </b>
                                 </h4>

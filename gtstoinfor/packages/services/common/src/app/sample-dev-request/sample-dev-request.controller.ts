@@ -448,4 +448,13 @@ export class SampleDevReqController {
 
   
   
+  @Post('/getPickListInfo')
+  async getPickListInfo(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getPickListInfo(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
 }
