@@ -14,6 +14,7 @@ import { AllocationApprovalRequest } from './dto/allocation-approval-req';
 import { AllocatedLocationRequest } from './dto/allocated-location-req';
 import { AllLocationRequest } from './dto/location-req';
 import { MaterialIssueRequest } from './dto/material-issue.req';
+import { SampleOrderIdRequest } from './dto/sample-req-id';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -425,13 +426,26 @@ export class SampleDevReqController {
 
   //Mobile App API for material Issues
   @Post('/issueMaterial')
-  @ApiBody({type:MaterialIssueRequest})
-  async issueMaterial( @Body() req:any): Promise<AllSampleDevReqResponseModel> {
+  @ApiBody({ type: MaterialIssueRequest })
+  async issueMaterial(@Body() req:any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.issueMaterial(req);
     } catch (error) {
-      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+
+  //Mobile App API for Roll codes in material issues screen
+  @Post('/getGrnRollsForSampleOrder')
+  @ApiBody({ type: SampleOrderIdRequest })
+  async getGrnRollsForSampleOrder(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getGrnRollsForSampleOrder(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
+  
   
 }
