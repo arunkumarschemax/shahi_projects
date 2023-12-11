@@ -128,7 +128,7 @@ export function PdFInfoGrid() {
         {
             title: 'PO Number',
             dataIndex: 'poNumber',
-            width: 90,
+            width:70 ,
             sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
             sortDirections: ["ascend", "descend"],
             ...getColumnSearchProps('purchaseOrderNumber')
