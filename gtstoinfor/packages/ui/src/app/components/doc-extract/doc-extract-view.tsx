@@ -214,7 +214,29 @@ export const DocView = () => {
         text
       ),
   });
+  
 
+  useEffect(() => {
+    const sharedService = new SharedService();
+
+    const automatic = async () => {
+      try {
+        const response = await sharedService.automatic();
+        console.log(response); 
+      } catch (error) {
+        console.error('Error opening headless browser:', error);
+      }
+    };
+    automatic(); 
+  }, []);
+
+    // useEffect(() => {
+    //   const newWindow = window.open('http://localhost:4200/');
+    //   if (newWindow) {
+    //     newWindow.opener = null;
+    //   }
+    // }, [2000]);
+  
   const columns: any = [
     {
       title: "S.No",
