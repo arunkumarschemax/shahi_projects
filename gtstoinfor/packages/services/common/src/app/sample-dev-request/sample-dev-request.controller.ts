@@ -13,6 +13,8 @@ import { MaterialallitemsReq } from './dto/sample-req-size-req';
 import { AllocationApprovalRequest } from './dto/allocation-approval-req';
 import { AllocatedLocationRequest } from './dto/allocated-location-req';
 import { AllLocationRequest } from './dto/location-req';
+import { MaterialIssueRequest } from './dto/material-issue.req';
+import { SampleOrderIdRequest } from './dto/sample-req-id';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -419,6 +421,40 @@ export class SampleDevReqController {
       return await this.sampleService.getbyID(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
+    }
+  }
+
+  //Mobile App API for material Issues
+  @Post('/issueMaterial')
+  @ApiBody({ type: MaterialIssueRequest })
+  async issueMaterial(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.issueMaterial(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
+  //Mobile App API for Roll codes in material issues screen
+  @Post('/getGrnRollsForSampleOrder')
+  @ApiBody({ type: SampleOrderIdRequest })
+  async getGrnRollsForSampleOrder(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getGrnRollsForSampleOrder(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
+  
+  
+  @Post('/getPickListInfo')
+  async getPickListInfo(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getPickListInfo(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
 }

@@ -226,7 +226,16 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
       ...getColumnSearchProps("quantity"),
     },
 
-   
+    {
+      title: "Reclassifiaction Date",
+      dataIndex: "created_at",
+      
+      render: (_, record) => {
+        return record.created_at
+          ? moment(record.created_at).format("YYYY-MM-DD")
+          : "-";
+      },
+    },
  
     // {
     //   title: 'Action',

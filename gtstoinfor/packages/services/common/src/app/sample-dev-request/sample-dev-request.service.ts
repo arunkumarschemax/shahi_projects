@@ -138,9 +138,12 @@ export class SampleRequestService {
   }
 
   async getIssuedSampleRequests(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
-    const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
-    const res = await this.dataSource.query(buyerdata)
-    const buyerId = res[0].buyer_id
+    let buyerId = null
+    if(req?.buyerRefNo){
+      const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
+      const res = await this.dataSource.query(buyerdata)
+      buyerId = res[0].buyer_id
+    }
     const details = await this.sampleRepo.getIssuedSampleRequests(buyerId);
     if (details.length > 0) {
       return new CommonResponseModel(true, 1, 'data retrieved', details)
@@ -478,10 +481,19 @@ export class SampleRequestService {
   }
 
   async getAllApprovedRequestNo(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
-    const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
-    const res = await this.dataSource.query(buyerdata)
-    const buyerId = res[0].buyer_id
-    const records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION,buyer:{buyerId:buyerId}}});
+    let buyerId
+    if(req?.buyerRefNo){
+      const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
+      const res = await this.dataSource.query(buyerdata)
+      buyerId = res[0].buyer_id
+    }
+    let records
+    if(req?.buyerRefNo){
+      records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION,buyer:{buyerId:buyerId}}});
+      
+    }else{
+      records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION}});
+    }
     if (records.length)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
     else
@@ -1166,22 +1178,22 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
         const grnInfo = `select grn_id,grn_type,item_type from grn where grn_id in(select grn_id from grn_items where grn_item_no = '${req.GRNItemNumber}')`;
         const grnRes = await this.dataSource.query(grnInfo)
         console.log(grnRes)
+        await manager.startTransaction()
         if(grnRes.length > 0){
-          await manager.startTransaction()
-          const grnItemInfo = `select sample_item_id as sampleItemId,indent_item_id as indentItemId,sample_req_id as sampleReqId from grn_items where grn_item_no = '${req.GRNItemNumber}'`;
+          const grnItemInfo = `select sample_item_id as sampleItemId,indent_item_id as indentItemId,sample_req_id as sampleReqId,m3_item_code_id as m3ItemId from grn_items where grn_item_no = '${req.GRNItemNumber}'`;
           const grnItemRes = await this.dataSource.query(grnItemInfo);
-          let sampleItemId
-          if(grnItemRes[0].sampleItemId > 0){
-            sampleItemId = grnItemRes[0].sampleItemId
-          }
-          if(grnItemRes[0].indentItemId > 0){
-            sampleItemId = grnItemRes[0].indentItemId
-          }
-          const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({sampleItemId:sampleItemId},{status:MaterialStatusEnum.MATERIAL_ISSUED})
+          // let sampleItemId
+          // if(grnItemRes[0].sampleItemId > 0){
+          //   sampleItemId = grnItemRes[0].sampleItemId
+          // }
+          // if(grnItemRes[0].indentItemId > 0){
+          //   sampleItemId = grnItemRes[0].indentItemId
+          // }
+          const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({sampleOrderId:req.sampleRequestId,m3ItemId:grnItemRes[0].m3ItemId},{status:MaterialStatusEnum.MATERIAL_ISSUED})
           if(updateAllocations.affected){
-            const checkAllIssuedOrNot = `select count(*) as count from material_allocation where sample_order_id = ${req.sampleRequestId} and status = ${MaterialStatusEnum.MATERIAL_ISSUED}`
-            const res = await this.dataSource.query(checkAllIssuedOrNot)
-            if(res[0].count = 0){
+            const checkAllIssuedOrNot = await manager.getRepository(MaterialAllocationEntity).find({where:{sampleOrderId:req.sampleRequestId,status:Not(MaterialStatusEnum.MATERIAL_ISSUED)}})
+            console.log('resddd',checkAllIssuedOrNot)
+            if(checkAllIssuedOrNot.length == 0){
               const updateSamleReq = await manager.getRepository(SampleRequest).update({SampleRequestId:req.sampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ISSUED})
               if(updateSamleReq.affected){
                 await manager.completeTransaction()
@@ -1211,6 +1223,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
           //     }
           // }
         }else{
+          await manager.releaseTransaction()
           return new CommonResponseModel(false,0,'Invalid Roll Barcode')
         }
       }catch(err){
