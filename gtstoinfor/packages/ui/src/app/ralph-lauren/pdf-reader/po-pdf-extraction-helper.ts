@@ -1,5 +1,8 @@
 import { PoItemDetails, PoItemVariant, RLPoDetails } from "@project-management-system/shared-models";
-import { CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_START_TEXT, ITEM_SHIP_TO_START_INDEX, ITEM_SHIP_TO_END_TEXT, ITEM_TEXT_END_TEXT, ITEM_SHIP_TO_END_INDEX, ITEM_VARIANT_START_TEXT, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, SELLER_ADDRESS_END_TEXT, SELLER_ADDRESS_START_TEXT, UNWANTED_TEXT_1, UNWANTED_TEXT_2, UNWANTED_TEXT_3, ITEM_TEXT_END_TEXT2 } from "./popdf-regex-expressions";
+import {
+    CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_START_TEXT, ITEM_SHIP_TO_START_INDEX, ITEM_SHIP_TO_END_TEXT, ITEM_TEXT_END_TEXT, ITEM_SHIP_TO_END_INDEX, ITEM_VARIANT_START_TEXT, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, SELLER_ADDRESS_END_TEXT, SELLER_ADDRESS_START_TEXT, UNWANTED_TEXT_1, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6,
+    UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13
+} from "./popdf-regex-expressions";
 
 
 /**
@@ -15,7 +18,7 @@ import { CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX,
  */
 export const extractDataFromPoPdf = async (pdf) => {
     const poData = new RLPoDetails()
-    const itemsArr: { itemNo: string, itemIndex: number }[] = []
+    const itemsArr: { itemIndex: number, amountIndex: number }[] = []
     const filteredData = []
     const itemDetailsArr: PoItemDetails[] = []
     for (let i = 1; i <= pdf.numPages; i++) {
@@ -110,17 +113,33 @@ export const extractDataFromPoPdf = async (pdf) => {
             // using NOR operation for filtering 
             return !(
                 EMP_STR_EXP.test(val.str)
+                || val.str.includes(UNWANTED_TEXT_1)
+                || val.str.includes(UNWANTED_TEXT_2)
+                || val.str.includes(UNWANTED_TEXT_3)
+                || val.str.includes(UNWANTED_TEXT_4)
+                || val.str.includes(UNWANTED_TEXT_5)
+                || val.str.includes(UNWANTED_TEXT_6)
+                || val.str.includes(UNWANTED_TEXT_7)
+                || val.str.includes(UNWANTED_TEXT_8)
+                || val.str.includes(UNWANTED_TEXT_9)
+                || val.str.includes(UNWANTED_TEXT_10)
+                || val.str.includes(UNWANTED_TEXT_11)
+                || val.str.includes(UNWANTED_TEXT_12)
+                || val.str.includes(UNWANTED_TEXT_13)
             )
         })
         filteredData.push(...pageContent)
     }
     //------------------------------------------------------------------------------
     console.log(filteredData)
-
+    let prevItemIndex = 0
     for (const [index, rec] of filteredData.entries()) {
         // chech the item No pattern  using regex and push all matched items
         if (rec.str.match(ITEM_NO_EXP)) {
-            itemsArr.push({ itemNo: rec.str, itemIndex: index })
+            prevItemIndex = index
+        }
+        if (rec.str.match(ITEM_VARIANT_START_TEXT)) {
+            itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
         }
     }
 
@@ -155,20 +174,13 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsObj.downFeatherInd = filteredData[rec.itemIndex + 76].str
         itemDetailsObj.fabrication = filteredData[rec.itemIndex + 79].str
 
-        console.log(rec.itemIndex, 'IIIIIIII')
-        if (filteredData[rec.itemIndex + 97].str == ITEM_VARIANT_START_TEXT) {
-            itemTextEndIndex = rec.itemIndex + 97
-        }
-        if (itemTextEndIndex) {
-            itemVariantStartIndex = itemTextEndIndex + 1
-        } else {
-            itemVariantStartIndex = itemDetailsEndIndex - 1
-        }
+        itemTextEndIndex = rec.amountIndex
+        itemVariantStartIndex = itemTextEndIndex + 1
+
         //-------------------------------------------------------------------------
         // item varinat details parsing starts here
         const itemVarinatsTextArr = []
         let k = itemVariantStartIndex
-        console.log(k, 'KKKKKKKKKKKKKKKK')
         while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
             itemVarinatsTextArr.push(filteredData[k].str)
             k++
