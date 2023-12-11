@@ -25,9 +25,10 @@ class ResultPropsModel {
 
 const pdfFilesValidationObject = [
     {
-        pdfName: 'DIA Document',
-        pdfKeyText: 'D E L I V E R Y   I N S T R U C T I O N S'
-    }, {
+        pdfName: 'PO PDF',
+        pdfKeyText: 'RALPH'
+    },
+    {
         pdfName: 'PO PDF',
         pdfKeyText: 'BUYER:'
     }
@@ -87,10 +88,8 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
         const textContent = await page.getTextContent();
         text += textContent.items.map((item: any) => item.str).join(' ');
         let title = pdfFilesValidationObject.filter((val) => text.match(val.pdfKeyText) != undefined)[0]?.pdfName
-        if (title === "PO PDF") {
+        if (title) {
             extractPoPdfData(pdf, textContent)
-        } else if (title === "DIA Document") {
-            extractDiaDocumentData(pdf, textContent)
         }
         updateResultProps(title)
     };

@@ -8,7 +8,7 @@ import UsersView from "./user-management/users/users-view"
 import FactoriesView from "./masters/factories/factories-view"
 import FactoriesForm from "./masters/factories/factories-form"
 import { FabricContentdto, FactoryDto, Fobdto } from "@project-management-system/shared-models"
-import PdfUpload from "./nike/pdf-reader/pdf-upload"
+import PdfUpload from "./ralph-lauren/pdf-reader/pdf-upload"
 import OrdersCompareGrid from "./nike/nike-orders-compare"
 import PoFileImport from "./nike/reports/po-file-import"
 import PPMReport from "./nike/ppm-report"
@@ -26,11 +26,11 @@ import DPOMSyncManually from "./nike/components/dpom-manual-sync"
 import { FOBPriceVariationReport } from "./nike/reports/fob-price-variation-report"
 import FabricTrackerReport1 from "./nike/reports/fabric-tracker-report1"
 import FabricTrackerReport2 from "./nike/reports/fabric-tracker-report2"
-import POPDFInfoGrid from "./nike/pdf-reader/pdf-file-info-grid"
-import PoPdfTable from "./nike/pdf-reader/po-pdf-table"
+import POPDFInfoGrid from "./ralph-lauren/pdf-reader/pdf-file-info-grid"
+import PoPdfTable from "./ralph-lauren/pdf-reader/po-pdf-table"
 import FobPriceListGrid from "./masters/fob-pricelist/fob-price-list-grid"
 import FobPriceListForm from "./masters/fob-pricelist/fob-price-list-form"
-import ChangeComparision from "./nike/pdf-reader/change-detail-view"
+import ChangeComparision from "./ralph-lauren/pdf-reader/change-detail-view"
 import PoDetailedview from "./nike/reports/po-detailed-view"
 import ColineView from "./nike/components/co-line-view"
 import FabricContenGrid from "./masters/fabric-content/fabric-conten-grid"
@@ -85,7 +85,7 @@ export const AppRoutes = () => {
                     <Route path='order-acceptance' element={<OrderAcceptance />} />
                     <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
-                    
+
 
                 </Route>
                 <Route path='/nike-dashboard' element={<NikeDashboard />} />
@@ -120,7 +120,7 @@ export const AppRoutes = () => {
                     }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
                     }} />} />
-                     <Route path='fabric-content-view' element={<FabricContentGrid />} />
+                    <Route path='fabric-content-view' element={<FabricContentGrid />} />
                     <Route path='fabric-content-form' element={<FabricContentForm Data={undefined} updateItem={function (Data: FabricContentdto): void {
                         throw new Error("Function not implemented.")
                     }} isUpdate={false} closeForm={function (): void {
@@ -142,7 +142,7 @@ export const AppRoutes = () => {
                     <Route path='order-acceptance' element={<OrderAcceptance />} />
                     <Route path='pdf-upload' element={<PdfUpload />} />
                     <Route path='pdf-file-info-grid' element={<POPDFInfoGrid />} />
-                    <Route path='po-pdf-table' element={<PoPdfTable data={undefined}/>} />
+                    <Route path='po-pdf-table' element={<PoPdfTable data={undefined} />} />
                     <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
                     <Route path='co-line-view' element={<ColineView />} />
 
@@ -163,8 +163,8 @@ export const AppRoutes = () => {
                     <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
                     <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
-                    <Route path='po-detailed-view' element={<PoDetailedview data={undefined}/>} />
-                    
+                    <Route path='po-detailed-view' element={<PoDetailedview data={undefined} />} />
+
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
