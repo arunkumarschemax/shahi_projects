@@ -24,6 +24,7 @@ import {
   PoOrderFilter,
 } from "@project-management-system/shared-models";
 import { ColumnsType } from "antd/es/table";
+import { useIAMClientState } from "../nike/iam-client-react";
 
 export function RLOrdersGrid() {
   const service = new RLOrdersService();
@@ -40,16 +41,21 @@ export function RLOrdersGrid() {
   const { Option } = Select;
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [filterData, setFilterData] = useState([]);
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   useEffect(() => {
     getorderData();
   }, []);
+  // console.log(IAMClientAuthContext.user.userName,"oooooo")
 
   const getorderData = () => {
     const req = new PoOrderFilter();
+
     if (form.getFieldValue("poNumber") !== undefined) {
       req.poNumber = form.getFieldValue("poNumber");
-    }
+    } 
+   req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+
     service.getorderData(req).then((res) => {
       if (res.status) {
         setOrderData(res.data);

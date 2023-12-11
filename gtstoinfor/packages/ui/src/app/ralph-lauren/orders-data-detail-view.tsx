@@ -345,6 +345,7 @@ import { RLOrdersService } from "@project-management-system/shared-services";
 import { Button, Card, Descriptions, Table, message } from "antd"
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useIAMClientState } from "../nike/iam-client-react";
 
 
 const RLOrdersDetailView = () => {
@@ -354,6 +355,8 @@ const [data, setData] = useState<any[]>([]);
 let location = useLocation();
 const service = new RLOrdersService();
 const [orderData, setOrderData] = useState<any>([]);
+const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
 
 
 
@@ -363,6 +366,7 @@ useEffect(() => {
 
   const getorderData = () => {
     const req = new PoOrderFilter(location?.state?.data?.poNumber);
+    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     service.getorderDataByPoNumber(req).then((res) => {
       if (res.status) {
         setOrderData(res.data);

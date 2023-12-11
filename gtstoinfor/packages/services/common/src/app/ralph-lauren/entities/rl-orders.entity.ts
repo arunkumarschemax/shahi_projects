@@ -196,6 +196,12 @@ export class RLOrdersEntity {
     })
     upcEan: string 
 
+    @Column('varchar', {
+        name: "buyer",
+        length:255
+    })
+    buyer: string 
+
 
     @CreateDateColumn({
         name: "created_at",

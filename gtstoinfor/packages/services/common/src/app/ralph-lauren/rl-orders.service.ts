@@ -63,6 +63,8 @@ export class RLOrdersService {
 
     async getorderDataByPoNumber(req:PoOrderFilter) : Promise<CommonResponseModel> {
       try{
+          //  console.log(req,"sev")
+
         const data = await this.repo.getorderDataByPoNumber(req)
        
         if(data){
