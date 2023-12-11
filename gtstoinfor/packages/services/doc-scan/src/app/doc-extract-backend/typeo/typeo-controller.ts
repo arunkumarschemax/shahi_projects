@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
+import { Body, Controller, Post,Get } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ScanService } from "./typeo-service";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
@@ -32,7 +32,10 @@ export class ScanController {
     }
   }
 
-  
+
+
+
+
   @Post("getdata")
   @ApiBody({type:filterDto})
   async getdata(@Body() req:any): Promise<any> {
@@ -43,5 +46,13 @@ export class ScanController {
   processEmails() {
     this.Service.processEmails();
     return 'Processing emails';
+
+
+  };
+
+  @Get('automatic')
+  async automatic(): Promise<any> {
+    return this.Service.automatic();
   }
+
 }

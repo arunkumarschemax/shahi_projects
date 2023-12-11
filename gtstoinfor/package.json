@@ -20,6 +20,7 @@
     "@nestjs/typeorm": "^9.0.1",
     "@nrwl/nest": "14.7.5",
     "@types/passport-jwt": "3.0.8",
+    "@types/puppeteer": "^7.0.4",
     "@types/react-highlight-words": "0.16.4",
     "antd": "^5.5.1",
     "antd-table-saveas-excel": "2.2.1",
