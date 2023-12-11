@@ -77,5 +77,15 @@ export class OperationIssuingController{
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }
     }
+
+    @Post('/getOperationCodes')
+    async getOperationCodes(): Promise<CommonResponseModel> {
+    try {
+        return await this.operationGroupsService.getOperationCodes();
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
+    
     
 }
