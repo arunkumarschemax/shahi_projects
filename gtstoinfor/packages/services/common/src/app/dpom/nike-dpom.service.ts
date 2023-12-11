@@ -102,9 +102,15 @@ export class DpomService {
             const year = currentDate.getFullYear();
             const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
             const day = currentDate.getDate().toString().padStart(2, '0');
-            const formattedDate = `${year}-${month}-${day}`;
+            const formattedDate = '2023-08-01' //`${year}-${month}-${day}`;
             const results = [];
+            let date;
             // for (const status of dpomItemStatusValues) {
+            // if (status == 'Closed') {
+            //     date = '2023-06-01'
+            // } else {
+            //     date = formattedDate
+            // }
             for (const offset of offsets) {
                 const payload = {
                     "fields": [
@@ -204,8 +210,8 @@ export class DpomService {
                 } else {
                     break;
                 }
-                // }
             }
+            // }
             if (results.length > 0) {
                 return { status: true, data: results };
             } else {
@@ -288,7 +294,7 @@ export class DpomService {
         }
     }
 
-    @Cron('*/10 * * * *')
+    // @Cron('*/10 * * * *')
     async createCOline(req: any): Promise<CommonResponseModel> {
         const poDetails = await this.coLineRepository.getDataforCOLineCreation();
         if (!poDetails.length) {
@@ -464,7 +470,7 @@ export class DpomService {
                                         } else if (dest.name == 'UQJP') {
                                             tabIndex = 2
                                         } else if (dest.name == 'UQIN') {
-                                            tabIndex = 6
+                                            tabIndex = 4
                                         } else if (dest.name == 'UQMY') {
                                             tabIndex = 3
                                         } else {
@@ -690,7 +696,7 @@ export class DpomService {
                     orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVasDetail ? orderDetail.poLine.itemVasDetail[0]?.textDetails : null, orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails.join(',') : null, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
                     orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, orderDetail.sizes.sizePo.sizeQuantity, orderDetail.sizes.sizePo.sizeDescription, null, null, null, null, null, null, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
                     crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, hanger, orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, matches.length ? matches : null, 'username')
-                const details = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
+                const details: any = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: dtoData.purchaseOrderNumber, poLineItemNumber: dtoData.poLineItemNumber, scheduleLineItemNumber: dtoData.scheduleLineItemNumber } })
                 const versionDetails = await this.dpomChildRepo.getVersion(dtoData.purchaseOrderNumber, dtoData.poLineItemNumber, dtoData.scheduleLineItemNumber)
                 let version = 1;
                 if (versionDetails.length > 0) {
