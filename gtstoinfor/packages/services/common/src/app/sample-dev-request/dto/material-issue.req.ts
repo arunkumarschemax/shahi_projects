@@ -7,5 +7,5 @@ export class MaterialIssueRequest {
      @ApiProperty()
      GRNItemNumber: string;
      @ApiProperty()
-     locationCode: string;
+     locationCode?: string;
 }
