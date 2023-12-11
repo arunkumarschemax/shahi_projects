@@ -386,8 +386,11 @@ if(req){
     async getIssuedSampleRequests(buyerId?:number): Promise<any> {
         const query = await this.createQueryBuilder()
             .select(`sample_request_id AS sampleRequestId, request_no AS reqNo,style_id as styleId`)
-            .where(`request_no is not null and life_cycle_status in('${LifeCycleStatusEnum.MATERIAL_ISSUED}','${LifeCycleStatusEnum.CUTTING}','${LifeCycleStatusEnum.SEWING}','${LifeCycleStatusEnum.FINISHING}') and buyer_id = ${buyerId}`)
-            .orderBy(`request_no`)
+            .where(`request_no is not null and life_cycle_status in('${LifeCycleStatusEnum.MATERIAL_ISSUED}','${LifeCycleStatusEnum.CUTTING}','${LifeCycleStatusEnum.SEWING}','${LifeCycleStatusEnum.FINISHING}') `)
+            if(buyerId){
+                query.andWhere(`buyer_id = ${buyerId}`)
+            }
+            query.orderBy(`request_no`)
         return query.getRawMany()
     }
 

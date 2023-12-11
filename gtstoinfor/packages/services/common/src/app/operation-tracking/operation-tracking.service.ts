@@ -279,7 +279,7 @@ export class OperationTrackingService {
         const res = await this.dataSource.query(nextOpData)
         let nextOperation
         if(res.length > 0){
-          nextOperation = res[0].operation_name
+          nextOperation = res[0].opCode
         }else {
           nextOperation = 'NA'
         }
@@ -399,7 +399,7 @@ export class OperationTrackingService {
   }
 
   async getOperationCodes():Promise<CommonResponseModel>{
-    const opCodesQry = `select operation_id,operation_code,sequence from operations`;
+    const opCodesQry = `select operation_id,operation_code,sequence from operations order by sequence`;
     const operationCodeRes = await this.dataSource.query(opCodesQry)
     if(operationCodeRes.length > 0){
       return new CommonResponseModel(true,1,'data retreived',operationCodeRes)
