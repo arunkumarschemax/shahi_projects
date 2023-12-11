@@ -4,7 +4,7 @@ import { Repository, Not, DataSource } from "typeorm";
 import { M3TrimsEntity } from "./m3-trims.entity";
 import { M3TrimsAdapter } from "./m3-trims.adaptor";
 import { M3TrimsRepo } from "./m3-trims.repository";
-import { BuyerIdReq, BuyerRefNoRequest, CommonResponseModel, ItemTypeEnum, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyerRefNoRequest, CommonResponseModel, ItemTypeEnum, M3TrimType, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
 import { M3TrimsDTO } from "./m3-trims.dto";
 
 @Injectable()
@@ -45,7 +45,20 @@ export class M3TrimsService {
   async getM3TrimsByBuyer(req: BuyerIdReq): Promise<CommonResponseModel> {
     try{
       console.log(req)
-      const query = "Select m3.m3_trim_Id as m3TrimsId,m3.trim_code AS trimCode,m3.trim_type AS trimType from m3_trims m3 where buyer_id ="+req.buyerId+ " group by m3.trim_type";
+      let query = `Select m3.m3_trim_Id as m3TrimsId,m3.trim_code AS trimCode,m3.trim_type AS trimType from m3_trims m3 where 1=1`
+      if (req?.buyerId) {
+        query = query + ` AND m3.buyer_id=${req.buyerId}`
+      }
+      if (req?.trimCatId) {
+        query = query + ` AND m3.trim_category_id=${req.trimCatId}`
+      }
+      if (req?.trimType) {
+        query = query + ` AND m3.trim_type="${req.trimType}"`
+      }
+      if (req?.trimMapId) {
+        query = query + ` AND m3.trim_mapping_id=${req.trimMapId}`
+      }
+      query = query + ` group by m3.trim_type`
       const data = await this.datasource.query(query)
       if(data.length > 0){
         return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)
@@ -391,13 +404,19 @@ export class M3TrimsService {
     }
   }
 
-  async getAllTrimCategories():Promise<CommonResponseModel>{
+  async getAllTrimCategories(req?:M3TrimType):Promise<CommonResponseModel>{
     try{
       let query = 
       `SELECT m3t.trim_category_id AS trimCategoryId, t.trim_category AS trimCategory,m3t.trim_mapping_id AS trimMappingId
       FROM m3_trims AS m3t
-      LEFT JOIN trim t ON t.trim_id = m3t.trim_category_id
-      GROUP BY t.trim_id
+      LEFT JOIN trim t ON t.trim_id = m3t.trim_category_id`
+      if (req.trimType) {
+        query = query + ` WHERE m3t.trim_type='${req.trimType}'`
+      }
+      if (req.buyerId) {
+        query = query + ` and m3t.buyer_id=${req.buyerId}`
+      }
+      query = query + ` GROUP BY t.trim_id
       ORDER BY t.trim_category`
       const data = await this.datasource.query(query)
       if(data.length > 0){

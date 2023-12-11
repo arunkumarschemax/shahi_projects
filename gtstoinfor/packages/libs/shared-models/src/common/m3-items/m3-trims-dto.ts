@@ -78,3 +78,14 @@ export class M3trimsDTO {
        
     }
 }
+
+
+
+export class M3TrimType {
+    trimType: string
+    buyerId?:number
+    constructor(trimType: string, buyerId: number){
+        this.trimType = trimType
+        this.buyerId = buyerId
+    }
+}

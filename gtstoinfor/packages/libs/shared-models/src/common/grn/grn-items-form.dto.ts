@@ -1,4 +1,4 @@
-import { LocationMappedEnum, PoItemEnum } from "../../enum";
+import { LocationMappedEnum, LogoEnum, PartEnum, PoItemEnum } from "../../enum";
 import { GrnItemsDto } from "./grn-items-dto"
 
 export class GrnItemsFormDto {
@@ -25,6 +25,33 @@ export class GrnItemsFormDto {
     buyerId: number
     receivedQuantity?: number
     acceptedQuantity?: number
+    categoryId?:number
+    category: string
+    colorId?: number
+    color?: string
+    contentId?: number
+    content?: string
+    finishId?: number
+    finish?: string
+    holeId?: number
+    hole?: string
+    logo?:LogoEnum
+    part?:PartEnum
+    qualityId?: number
+    qualityName?: string
+    structureId?: number
+    structure?: string
+    thicknessId?:number
+    thickness: string
+    typeId?: number
+    type?: string
+    UOMId?:number
+    UOM?: string
+    varietyId?: number
+    variety?: string
+    trimCategoryId?: number
+    trimCategory?: string
+    trimMappingId?: number
     rejectedQuantity?: number
     rejectedUomId?: number
     conversionQuantity?: number
@@ -66,6 +93,33 @@ export class GrnItemsFormDto {
         indentId?: number,
         receivedQuantity?: number,
         acceptedQuantity?: number,
+        categoryId?:number,
+        category?: string,
+        colorId?: number,
+        color?: string,
+        contentId?: number,
+        content?: string,
+        finishId?: number,
+        finish?: string,
+        holeId?: number,
+        hole?: string,
+        logo?:LogoEnum,
+        part?:PartEnum,
+        qualityId?: number,
+        qualityName?: string,
+        structureId?: number,
+        structure?: string,
+        thicknessId?:number,
+        thickness?: string,
+        typeId?: number,
+        type?: string,
+        UOMId?:number,
+        UOM?: string,
+        varietyId?: number,
+        variety?: string,
+        trimCategoryId?: number,
+        trimCategory?: string,
+        trimMappingId?: number,
         rejectedQuantity?: number,
         rejectedUomId?: number,
         conversionUomId?: number,
@@ -99,6 +153,33 @@ export class GrnItemsFormDto {
         this.indentItemId = indentItemId;
         this.receivedQuantity = receivedQuantity;
         this.acceptedQuantity = acceptedQuantity;
+        this.categoryId = categoryId
+        this.category =category
+        this.colorId =colorId
+        this.color =color
+        this.contentId =contentId
+        this.content =content
+        this.finishId =finishId
+        this.finish =finish
+        this.holeId =holeId
+        this.hole =hole
+        this.logo =logo
+        this.part =part
+        this.qualityId =qualityId
+        this.qualityName =qualityName
+        this.structureId =structureId
+        this.structure =structure
+        this.thicknessId = thicknessId
+        this.thickness = thickness
+        this.typeId = typeId
+        this.type = type
+        this.UOMId = UOMId
+        this.UOM = UOM
+        this.varietyId =varietyId
+        this.variety =variety
+        this.trimCategoryId =trimCategoryId
+        this.trimCategory =trimCategory
+        this.trimMappingId =trimMappingId
         this.rejectedQuantity = rejectedQuantity;
         this.rejectedUomId = rejectedUomId;
         this.conversionQuantity = conversionQuantity

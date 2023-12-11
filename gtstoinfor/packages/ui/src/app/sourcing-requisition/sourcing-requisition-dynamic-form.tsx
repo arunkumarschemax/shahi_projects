@@ -2,12 +2,12 @@ import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, S
 import { ColumnProps } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react"
-import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, M3TrimsService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, UomService, VendorsService } from "@project-management-system/shared-services";
+import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, M3TrimsService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, TrimParamsMappingService, TrimService, UomService, VendorsService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { EditOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
-import { BuyerIdReq, BuyerRefNoRequest, M3MastersCategoryReq, SourcingRequisitionReq, StyleIdReq, UomCategoryEnum, buyerReq } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, M3MastersCategoryReq, M3TrimType, M3trimsDTO, SourcingRequisitionReq, StyleIdReq, TrimIdRequestDto, UomCategoryEnum, buyerReq } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -82,6 +82,12 @@ export const SourcingRequisitionDynamicForm = () => {
     const [m3Trims, setM3Trims] = useState<any[]>([])
     const { IAMClientAuthContext, dispatch } = useIAMClientState();
     const [isBuyer, setIsBuyer] = useState(false);
+    const trimService = new TrimService()
+    const [trimData, setTrimData] = useState<any[]>([])
+    const [trimCat, setTrimCat] = useState<any[]>([]);
+    const paramsService = new TrimParamsMappingService()
+    const [mapData, setMapData] = useState<any[]>([])
+
 
 
 
@@ -106,6 +112,7 @@ export const SourcingRequisitionDynamicForm = () => {
         getFabricType()
         getFabricTypes()
         // getM3TrimsTypes()
+        // getTrimCategory()
     },[])
 
     const getFabricTypes = () => {
@@ -116,13 +123,11 @@ export const SourcingRequisitionDynamicForm = () => {
         })
     }
 
-    const getM3TrimsTypes = (option) => {
-        const req = new BuyerIdReq(option)
-        console.log(req,'---------')
+    const getM3TrimsTypes = () => {
+        const req = new BuyerIdReq(sourcingForm.getFieldValue('buyer'),trimForm.getFieldValue('trimType'),trimForm.getFieldValue('trimCategory'))
         m3Service.getM3TrimsByBuyer(req).then(res => {
             if(res.status) {
                 setM3Trims(res.data)
-                console.log(res.data,'000000000000000000')
             }
         })
     }
@@ -188,6 +193,51 @@ export const SourcingRequisitionDynamicForm = () => {
             }
         })
     }
+
+    const getTrimCategory = (value)=>{
+        getTrimCodes()
+        const req = new M3TrimType(value,sourcingForm.getFieldValue('buyer'))
+        m3Service.getAllTrimCategories(req).then((res)=>{
+            if(res.status){
+                setTrimData(res.data)
+            }
+        })
+    }
+
+    const getMappedTrims = (value, option) => {
+        getM3TrimsTypes()
+        setTrimCat(option?.name)
+        const req = new TrimIdRequestDto(undefined,option?.name)
+        paramsService.getMappedParamsByTrim(req).then((res) => {
+          if (res.status) {
+            setMapData(res.data)
+          }
+        });
+      }
+
+      const renderTrimCodeOptions = () => {
+        const trimOptions = [];
+      
+        mapData.forEach((item, index) => {
+          let optionLabel = "Format - Buyer/TrimType/TrimCategory";
+          Object.entries(item).forEach(([key, value]) => {
+            if (value === true && key !== 'isActive') {
+              optionLabel += `/${key.toUpperCase()}`;
+            }
+          });
+      
+          trimOptions.push(
+            <Option key={`${index}`} value={null}>
+              {optionLabel}
+            </Option>
+          );
+        });
+      
+        return trimOptions;
+      };
+      
+      
+      
 
     const getweave = () => {
         weaveService.getAllActiveFabricWeave().then(res =>{
@@ -677,7 +727,7 @@ export const SourcingRequisitionDynamicForm = () => {
         setFabricBuyer(option)
         fabricForm.setFieldsValue({buyerName:option})
         getStyle(val);
-        getM3TrimsTypes(val);
+        // getM3TrimsTypes(val);
         getM3FabricStyleCodes(val)
     }
 
@@ -843,6 +893,7 @@ const onTrimChange = (val, option) => {
             console.log("iii");
         }
     }
+    
     return(
         <><Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
             <Form form={sourcingForm} layout="vertical">
@@ -1217,19 +1268,44 @@ const onTrimChange = (val, option) => {
                                                     showSearch
                                                     optionFilterProp="children"
                                                     placeholder="Select Trim Type"
-                                                    onChange={getTrimCodes}
+                                                    onChange={getTrimCategory}
                                                 >
-                                                    {m3Trims?.map((e) => {
+                                                    {Object.values(ItemTypeEnumDisplay).filter((val) => val.displayVal !== ItemTypeEnum.FABRIC).map((val) => (
+                                                        <Option key={val.name} value={val.name}>
+                                                            {val.displayVal}
+                                                        </Option>
+                                                    ))}
+                                                </Select>
+                                            </Form.Item>
+                                        </Col>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+                                            <Form.Item
+                                                name="trimCategory"
+                                                label="Trim Category"
+                                                rules={[
+                                                    {
+                                                        required: true,
+                                                        message: "Trim Category Is Required",
+                                                    }
+                                                ]}>
+                                                <Select
+                                                    allowClear
+                                                    showSearch
+                                                    optionFilterProp="children"
+                                                    placeholder="Select Trim Category"
+                                                    onChange={getMappedTrims}
+                                                >
+                                                    {trimData?.map((e) => {
                                                         return (
-                                                            <Option key={e.trimType} value={e.trimType} >
-                                                                {e.trimType}
+                                                            <Option key={e.trimCategory} value={e.trimCategoryId} name={e.trimMappingId}>
+                                                                {e.trimCategory}
                                                             </Option>
                                                         );
                                                     })}
                                                 </Select>
                                             </Form.Item>
                                         </Col>
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 12 }}>
                                             <Form.Item
                                                 name="trimCode"
                                                 label="Trim Code"
@@ -1237,19 +1313,16 @@ const onTrimChange = (val, option) => {
                                                     {
                                                         required: true,
                                                         message: "Trim Code Is Required",
-                                                    },
-                                                    {
-                                                        pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                                                        message: `Should contain only alphabets.`,
-                                                    },
+                                                    }
                                                 ]}>
                                                 <Select
                                                     allowClear
                                                     showSearch
                                                     optionFilterProp="children"
-                                                    placeholder="Select Trim Code"
+                                                    placeholder={renderTrimCodeOptions()[0]?.props.children}
                                                     onChange={onTrimChange}
                                                 >
+                                                    {renderTrimCodeOptions()}
                                                     {m3Trims.map((e) => {
                                                         return (
                                                             <Option key={e.m3TrimsId} value={e.m3TrimsId}>

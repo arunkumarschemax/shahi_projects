@@ -124,12 +124,18 @@ export class PurchaseOrderService {
                 const res = await this.dataSource.query(buyerdata)
                 buyerId = res[0].buyer_id
             }
-            let query = `SELECT purchase_order_id as purchaseOrderId,po_number AS poNumber,vendor_id as vendorId,po_material_type as materialType,po_against as poAgainst FROM purchase_order WHERE status NOT IN ('cancelled', 'closed')`
+            let query = `
+            SELECT po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.po_material_type AS materialType,po.po_against AS poAgainst,
+            mt.trim_mapping_id AS trimMappingId
+            FROM purchase_order po
+            LEFT JOIN purchae_order_items poi ON poi.purchase_order_id = po.purchase_order_id
+            LEFT JOIN m3_trims mt ON mt.m3_trim_Id=poi.m3_item_id
+            WHERE status NOT IN ('cancelled', 'closed')`
             if(req.buyerRefNo){
-                query = query + ` AND buyer_id = '${buyerId}'`;
+                query = query + ` AND po.buyer_id = '${buyerId}'`;
             }
             if (req.vendorId) {
-                query = query + ` AND vendor_id = '${req.vendorId}'`;
+                query = query + ` AND po.vendor_id = '${req.vendorId}'`;
             }
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
@@ -184,7 +190,22 @@ export class PurchaseOrderService {
                 }
             }
             if (req.materialType === 'Trim') {
-                query = `SELECT mt.trim_code as m3itemCode,poi.m3_item_id AS m3ItemCodeId,mt.trim_type as m3ItemType,poi.purchase_order_id AS purchaseOrderId, poi.po_quantity AS poQuantity,poi.purchase_order_item_id as poItemId,
+                query = `SELECT mt.trim_code as m3itemCode,
+                mt.category_id AS categoryId,cg.category,
+                mt.color_id AS colorId,cl.colour as color,
+                mt.content_id AS contentId,ct.content,
+                mt.finish_id AS finishId,f.finish,
+                mt.hole_id AS holeId,h.hole,
+                mt.logo, mt.part,
+                mt.quality_id AS qualityId,q.quality_name AS qualityName,
+                mt.structure_id AS structureId,st.structure,
+                mt.thickness_id AS thicknessId,th.thickness,
+                mt.type_id AS typeId,ty.type,
+                mt.uom_id AS UOMId, uom.uom as UOM,
+                mt.variety_id AS varietyId,v.variety,
+                mt.trim_category_id AS trimCategoryId,tr.trim_category AS trimCategory,
+                mt.trim_mapping_id AS trimMappingId,
+                poi.m3_item_id AS m3ItemCodeId,mt.trim_type as m3ItemType,poi.purchase_order_id AS purchaseOrderId, poi.po_quantity AS poQuantity,poi.purchase_order_item_id as poItemId,
                 poi.quantity_uom_id AS quantityUomId,u.uom,poi.grn_quantity AS grnQuantity,poi.indent_item_id as indentItemId, poi.sample_item_id as sampleItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour`
                 if(req.poAgainst == 'Indent'){
                     query = query + `,i.indent_id as indentId `
@@ -197,6 +218,19 @@ export class PurchaseOrderService {
                 LEFT JOIN uom u ON u.id = poi.quantity_uom_id
                 LEFT JOIN m3_trims mt ON mt.m3_trim_Id=poi.m3_item_id
                 LEFT JOIN colour c ON c.colour_id = poi.colour_id
+                LEFT JOIN category cg ON cg.category_id = mt.category_id
+                LEFT JOIN content ct ON ct.content_id = mt.content_id
+                LEFT JOIN finish f ON f.finish_id = mt.finish_id
+                LEFT JOIN hole h ON h.hole_id = mt.hole_id
+                LEFT JOIN qualitys q ON q.quality_id = mt.quality_id
+                LEFT JOIN structure st ON st.structure_id = mt.structure_id
+                LEFT JOIN thickness th ON th.thickness_id = mt.thickness_id
+                LEFT JOIN type ty ON ty.type_id = mt.type_id
+                LEFT JOIN variety v ON v.variety_id = mt.variety_id
+                LEFT JOIN trim tr ON tr.trim_id = mt.trim_category_id
+                LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = mt.trim_mapping_id
+                LEFT JOIN colour cl ON cl.colour_id = mt.color_id
+                LEFT JOIN uom uom ON uom.id = mt.uom_id
                 `
                 if (req.poAgainst == 'Indent') {
                     query = query + ` 
@@ -221,7 +255,7 @@ export class PurchaseOrderService {
             const grnItemsArr: GrnItemsFormDto[] = []
             for (const rec of itemData) {
                 const receivedQty = rec.poQuantity - rec.grnQuantity
-                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer,rec?.sampleRequestId,rec?.indentId,receivedQty,receivedQty)
+                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer,rec?.sampleRequestId,rec?.indentId,receivedQty,receivedQty,rec.categoryId,rec.category,rec.colorId,rec.color,rec.contentId,rec.content,rec.finishId,rec.finish,rec.holeId,rec.hole,rec.logo,rec.part,rec.qualityId,rec.qualityName,rec.structureId,rec.structure,rec.thicknessId,rec.thickness,rec.typeId,rec.type,rec.UOMId,rec.UOM,rec.varietyId,rec.variety,rec.trimCategoryId,rec.trimCategory,rec.trimMappingId)
                 grnItemsArr.push(grnItemsDto)
             }
             const poQuery = `select p.purchase_order_id as poId,p.style_id as styleId,p.po_material_type as poMaterialType,p.po_against as poAgainst,p.grn_quantity as grnQuantity from purchase_order p where p.purchase_order_id = ${req.poId}`
