@@ -305,6 +305,7 @@ export class StocksService {
                     let resss = new RollInfoModel(ress.rollId,ress.rollNo,ress.barcode,ress.originalQty);
                     rollInfoModel.push(resss);
                 }
+                
                 let warehouseData = new WarehousePalletRollsModel("",1,ress.palletId,ress.palletCode,0,"",ress.maxItems,ress.currentPalletState,ress.currentPalletLocation,rollInfoModel,rollBasicInfoModel);
                 warehousePalletRollsModel.push(warehouseData);
             }
