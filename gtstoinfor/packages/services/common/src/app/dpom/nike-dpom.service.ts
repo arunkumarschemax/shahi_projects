@@ -378,6 +378,8 @@ export class DpomService {
                     const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
                     coLine.deliveryDate = moment(coData.deliveryDate).format('DD/MM/YYYY')
                     coLine.exFactoryDate = exFactoryDate
+                    coLine.salesPrice = coData.salesPrice
+                    coLine.currency = coData.currency
                     coLine.destinations = coData.destinations
                     const request = { country: coData.destinations[0]?.name }
                     const address = await axios.post(`https://uniqlov2-backend.xpparel.com/api/address/getAddressInfoByCountry`, request);
@@ -438,6 +440,16 @@ export class DpomService {
                 }
                 const number = optionValues.find(value => value.includes(buyerAddress)); // give the dynamic value here
                 await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
+
+                await driver.wait(until.elementLocated(By.xpath('//*[@id="cur"]')));
+                const curDropdown = await driver.findElement(By.xpath('//*[@id="cur"]'));
+                const cur = coLine.currency; // give the dynamic value here
+                await driver.executeScript(`arguments[0].value = '${cur}';`, curDropdown);
+
+                await driver.wait(until.elementLocated(By.xpath('//*[@id="form1"]/table/tbody/tr/td/table/tbody/tr[4]/td/table/tbody/tr/td/table/tbody/tr[2]/td[11]/table/tbody/tr/td[2]')));
+                await driver.findElement(By.name('//*[@id="form1"]/table/tbody/tr/td/table/tbody/tr[4]/td/table/tbody/tr/td/table/tbody/tr[2]/td[11]/table/tbody/tr/td[2]')).clear();
+                await driver.findElement(By.name('//*[@id="form1"]/table/tbody/tr/td/table/tbody/tr[4]/td/table/tbody/tr/td/table/tbody/tr[2]/td[11]/table/tbody/tr/td[2]')).sendKeys(coLine.salesPrice);
+
                 await driver.wait(until.elementLocated(By.id('packtrm')));
                 const pkgTermsDropDown = await driver.findElement(By.id('packtrm'));
                 await driver.executeScript(`arguments[0].value = '${pkgTerms}';`, pkgTermsDropDown)
@@ -469,7 +481,9 @@ export class DpomService {
                                             tabIndex = 5
                                         } else if (dest.name == 'UQJP') {
                                             tabIndex = 2
-                                        } else if (dest.name == 'UQIN') {
+                                        } else if (po.item_no != '694M' && dest.name == 'UQIN') {
+                                            tabIndex = 6
+                                        } else if (po.item_no == '694M' && dest.name == 'UQIN') {
                                             tabIndex = 4
                                         } else if (dest.name == 'UQMY') {
                                             tabIndex = 3
