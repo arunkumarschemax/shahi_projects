@@ -342,7 +342,7 @@
 
 import { OrderDataModel, PoOrderFilter } from "@project-management-system/shared-models";
 import { RLOrdersService } from "@project-management-system/shared-services";
-import { Button, Card, Descriptions, Table } from "antd"
+import { Button, Card, Descriptions, Table, message } from "antd"
 import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -366,12 +366,14 @@ useEffect(() => {
     service.getorderDataByPoNumber(req).then((res) => {
       if (res.status) {
         setOrderData(res.data);
+      } else {
+        message.error(res.internalMessage)
       }
     });
   };
 
 
- console.log(location.state.data,"yyyyyyyyyyyyy")
+ console.log(location?.state?.data,"yyyyyyyyyyyyy")
 
 
 
@@ -385,7 +387,8 @@ useEffect(() => {
             // fixed: 'left'
         },
         {
-            title: <div style={{textAlign:"center"}}>Size</div>,
+            // title: <div style={{textAlign:"center"}}>Size</div>,4
+            title:"Size",
             dataIndex: 'size',
             // align:"center",
             // width: 60,
@@ -485,20 +488,20 @@ useEffect(() => {
         extra ={<Link to='/ralph-lauren/order-data-info-grid' ><Button className='panel_button' >View </Button></Link>}
         >
         <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }} >
-        <Descriptions.Item label='Material Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.materialNo}</Descriptions.Item>
-        <Descriptions.Item label='PO Number' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.poNumber}</Descriptions.Item>
-        <Descriptions.Item label='PO Item' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.poItem}</Descriptions.Item>
-        <Descriptions.Item label='Purchase Group' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.purchaseGroup}</Descriptions.Item>
-        <Descriptions.Item label='Supplier' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.supplier}</Descriptions.Item>
-        <Descriptions.Item label='Revision Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.revisionNo}</Descriptions.Item>
-        <Descriptions.Item label='Season Code'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.seasonCode}</Descriptions.Item>
-        <Descriptions.Item label='Board Code'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.boardCode}</Descriptions.Item>
-        <Descriptions.Item label='Color'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.color}</Descriptions.Item>
-        <Descriptions.Item label='Division'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.division}</Descriptions.Item>
-        <Descriptions.Item label='Ship Mode'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipMode}</Descriptions.Item>
-        <Descriptions.Item label='Ship Date'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipDate}</Descriptions.Item>
-        <Descriptions.Item label='Ship To Address'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipToAddress}</Descriptions.Item>
-        <Descriptions.Item label='Agent'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.agent}</Descriptions.Item>
+        <Descriptions.Item label='Material Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.materialNo ? location.state.data.materialNo : "--"}</Descriptions.Item>
+        <Descriptions.Item label='PO Number' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.poNumber ? location?.state?.data?.poNumber : "--"}</Descriptions.Item>
+        <Descriptions.Item label='PO Item' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.poItem ? location?.state?.data?.poItem :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Purchase Group' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.purchaseGroup ? location?.state?.data?.purchaseGroup :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Supplier' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.supplier ? location?.state?.data?.supplier :"--" }</Descriptions.Item>
+        <Descriptions.Item label='Revision Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.revisionNo ? location?.state?.data?.revisionNo :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Season Code'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.seasonCode ? location?.state?.data?.seasonCode :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Board Code'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.boardCode ? location?.state?.data?.boardCode :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Color'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.color ? location?.state?.data?.color :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Division'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.division ? location?.state?.data?.division :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Ship Mode'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipMode ? location?.state?.data?.shipMode :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Ship Date'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipDate ? location?.state?.data?.shipDate :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Ship To Address'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipToAddress ? location?.state?.data?.shipToAddress :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Agent'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.agent ? location?.state?.data?.agent :"--"}</Descriptions.Item>
        
 
         </Descriptions>
