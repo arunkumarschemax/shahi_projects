@@ -1,4 +1,4 @@
-import { CommonResponseModel, RackPositionDTO } from "@project-management-system/shared-models";
+import { CommonResponseModel, RackIdReq, RackPositionDTO } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class RacksService extends CommonAxiosService {
@@ -19,5 +19,8 @@ export class RacksService extends CommonAxiosService {
 
     async activateOrDeactivateRacks(payload: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/activateOrDeactivateRacks", payload)
+    }
+    async getRackPositionQrs(req:RackIdReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getRackPositionQrs",req)
     }
 }

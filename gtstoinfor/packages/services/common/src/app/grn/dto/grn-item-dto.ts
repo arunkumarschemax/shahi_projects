@@ -25,6 +25,8 @@ export class GRNItemDto{
     @ApiProperty()
     conversionUomId:number
     @ApiProperty()
+    barcode:string
+    @ApiProperty()
     remarks:string
     @ApiProperty()
     createdAt?: Date;

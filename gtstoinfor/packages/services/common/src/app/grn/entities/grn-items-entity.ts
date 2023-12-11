@@ -17,6 +17,12 @@ export class GrnItemsEntity {
     })
     poItemId: number
 
+    @Column('varchar',{
+        name:'grn_item_no',
+        nullable:true
+    })
+    grnItemNumber:string
+
 
     @Column('varchar', {
         name: 'received_quantity',
@@ -56,6 +62,12 @@ export class GrnItemsEntity {
         enum: LocationMappedEnum
     })
     status: LocationMappedEnum
+
+    @Column('text', {
+        name: 'barcode',
+        nullable: true
+    })
+    barcode: string
 
     @Column('text', {
         name: 'remarks',

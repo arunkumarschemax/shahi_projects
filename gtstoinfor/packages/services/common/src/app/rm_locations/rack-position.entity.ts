@@ -1,4 +1,4 @@
-import { RackPositionStatusEnum } from "@project-management-system/shared-models";
+import { ItemTypeEnum, RackPositionStatusEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { Columns } from "../cloumn/column.entity";
 import { Levels } from "../level/level.entity";
@@ -24,16 +24,54 @@ export class RackPositionEntity {
 
   @Column('varchar', {
     nullable: false,
-    length: 30,
-    name: 'rack_name',
+    length: 20,
+    name: 'barcode_id',
   })
-  rackName: string;
+  barcodeId: string;
+
+  @Column('varchar', {
+    nullable: false,
+    name: 'remarks',
+  })
+  remarks: string;
+
+  @Column('int',{
+    name:'level',
+    nullable:false,
+  })
+  level:number
+
+  @Column('int',{
+    name:'column',
+    nullable:false,
+  })
+  column:number
+
+  @Column('int',{
+    name:'rack_id',
+    nullable:false,
+  })
+  rackId:number
+
+
+  @Column('int',{
+    name:'supported_pallets_count',
+    nullable:false,
+  })
+  supportedPalletsCount:number
+
 
   @Column('enum',{
     name:'status',
     enum: RackPositionStatusEnum
 })
 status: RackPositionStatusEnum;
+
+@Column('enum',{
+  name:'preffered_storage_material',
+  enum: ItemTypeEnum
+})
+prefferedStorageMaterial: ItemTypeEnum;
 
   @Column("boolean", {
     nullable: false,
@@ -69,20 +107,5 @@ status: RackPositionStatusEnum;
     name: 'version_flag'
   })
   versionFlag: number;
-
-  @Column('int', {
-    nullable: false,
-    name: 'column_id',
-  })
-  columnId: number;
-
-  @Column('int', {
-    nullable: false,
-    name: 'level_Id',
-  })
-  levelId: number;
-
-
-
 
 }

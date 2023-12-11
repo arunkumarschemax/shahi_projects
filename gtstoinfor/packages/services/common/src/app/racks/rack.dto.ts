@@ -19,6 +19,18 @@ export class RacksDTO {
     rackType: RackEnum;
 
     @ApiProperty()
+    levels:number
+    
+    @ApiProperty()
+    columns:number
+    
+    @ApiProperty()
+    priority:number
+      
+    @ApiProperty()
+    barcodeId: string;
+
+    @ApiProperty()
     isActive: boolean;
 
     @ApiProperty()

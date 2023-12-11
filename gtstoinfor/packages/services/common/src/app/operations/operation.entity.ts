@@ -69,6 +69,12 @@ export class Operations {
       name: "version_flag"
   })
   versionFlag: number;
+
+    @Column('int',{
+      nullable:true,
+      name:'sequence'
+  })
+  sequence:number;
    
   @ManyToOne(type=>OperationGroups, operationGroups=>operationGroups.operationInfo,{  nullable:false, })
   @JoinColumn({ name:"operation_group_id"})

@@ -83,7 +83,16 @@ export class PurchaseOrderController {
     }
   }
 
-  
+  @Post('/QrByPoId')
+  async QrByPoId(@Body() req?: any ): Promise<CommonResponseModel> {
+    try {
+      
+      return await this.purchasseOrdrSerivice.QrByPoId(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+
 
 
 

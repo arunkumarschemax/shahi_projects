@@ -94,20 +94,38 @@ const FabricsForm = (props:FabricsFormProps) => {
     } 
 
     else if(field === 'consumption'){
+      let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
       updatedData = data.map((record) => {
         if (record.key === key) {
           console.log(e);
       console.log(record.totalCount);
           let consumptionCal = Number(record.totalCount) * Number(e);
-          let withPer = (Number(consumptionCal) * Number(2))/ 100;
+          let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
           console.log(consumptionCal);
           console.log(withPer);
-          form.setFieldValue(`totalRequirement${key}`,Number(consumptionCal) + Number(withPer));
-          return { ...record, [field]: e, [`totalRequirement`]:Number(consumptionCal) + Number(withPer) };
+          form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+          return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
         return record;
       });
     }
+    else if(field === 'wastage'){
+      let cons = form.getFieldValue(`consumption${key}`) != undefined ? form.getFieldValue(`consumption${key}`) : 0
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          console.log(e);
+      console.log(record.totalCount);
+          let consumptionCal = Number(record.totalCount) * Number(cons);
+          let withPer = (Number(consumptionCal) * Number(e))/ 100;
+          console.log(consumptionCal);
+          console.log(withPer);
+          form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+          return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
+        }
+        return record;
+      });
+    }
+    
     else {
       updatedData = data.map((record) => {
         if (record.key === key) {
@@ -299,7 +317,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'wastage',
       width:"10%",
       render: (_, record) => (
-      <Form.Item name={`wastage${record.key}`}>
+      <Form.Item name={`wastage${record.key}`} initialValue={2}>
         <InputNumber
         defaultValue={2}
         onChange={(e) => handleInputChange(e, record.key, 'wastage',0)}
@@ -313,7 +331,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       width:"10%",
       render: (_, record) => (
       <Form.Item name={`totalRequirement${record.key}`}>
-        <Input disabled
+        <Input disabled style={{fontWeight:'bold', color:'black'}}
         value={record.totalRequirement}
         onChange={(e) => handleInputChange(e.target.value, record.key, 'totalRequirement',0)}
         />

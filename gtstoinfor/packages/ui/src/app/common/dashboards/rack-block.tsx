@@ -16,6 +16,12 @@ const RackBlock = (props: RackBlockProps) => {
     const { rackId, rackLevel, column, binInfo, filterVal } = props;
     useEffect(() => {
         // getBinsData(rackId, rackLevel, column);
+        console.log("rackId");
+        console.log(rackId);
+        console.log(rackLevel);
+        console.log(column);
+        console.log(binInfo);
+        console.log(filterVal);
     }, []);
 
     // const rackDashboardServices = new RackDashboardService();

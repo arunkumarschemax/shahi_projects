@@ -216,7 +216,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
       title: "Qunatity",
       dataIndex: "BOM",
       render:(value,record) => {
-        return(<>{value > 0 ? value : record.consumption}</>)
+        return(<>{value > 0 ? value : 0}</>)
       }
     },
     // {

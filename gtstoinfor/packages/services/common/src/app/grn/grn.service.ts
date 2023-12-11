@@ -184,6 +184,7 @@ export class GrnService {
                 itemEntity.indentId = item.indentId
                 itemEntity.buyerId = item.buyerId
                 itemEntity.uomId = item.uomId
+                itemEntity.barcode = item.barcode
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo = itemInfo

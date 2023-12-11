@@ -10,9 +10,13 @@ export class RackPositionAdapter {
         const entity = new RackPositionEntity();
         entity.rackPositionName = dto.rackPositionName;
         entity.positionCode = dto.positionCode;
-         entity.columnId = dto.columnId
-         entity.levelId = dto.levelId
-        entity.rackName = dto.rackName;
+         entity.column = dto.column
+         entity.level = dto.level
+         entity.rackId = dto.rackId
+        entity.barcodeId = dto.barcodeId;
+        entity.prefferedStorageMaterial = dto.prefferedStorageMaterial;
+        entity.supportedPalletsCount = dto.supportedPalletsCount;
+        entity.remarks = dto.remarks;
         entity.createdUser = dto.createdUser
         if (dto.positionId) {
             entity.positionId = dto.positionId;
@@ -26,8 +30,13 @@ export class RackPositionAdapter {
         entity.positionId = dto.positionId;
         dto.rackPositionName = entity.rackPositionName
         dto.positionCode = entity.positionCode
-        dto.rackName = entity.rackName
-
+        dto.barcodeId = entity.barcodeId;
+        dto.prefferedStorageMaterial = entity.prefferedStorageMaterial;
+        dto.supportedPalletsCount = entity.supportedPalletsCount;
+        dto.remarks = entity.remarks;
+        dto.column = entity.column;
+        dto.level = entity.level;
+        dto.rackId = entity.rackId;
         return dto;
     }
 

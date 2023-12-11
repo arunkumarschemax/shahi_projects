@@ -117,7 +117,7 @@ export class LocationMappingService {
             // LEFT JOIN  indent idf ON idf.indent_id = indf.indent_id
             // LEFT JOIN  indent idt ON idt.indent_id = indt.indent_id
             let query = `SELECT gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, 
-            gi.accepted_quantity AS balance, 
+            gi.accepted_quantity AS balance, gi.grn_item_no AS grnItemNo,
             IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,
             IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
