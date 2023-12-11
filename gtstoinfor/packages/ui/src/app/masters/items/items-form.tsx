@@ -211,6 +211,15 @@ const itemCategoryOnchange = (value) =>{
           <Input.TextArea rows={2}/>
         </Form.Item>
         </Col>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}>
+           <Form.Item
+          name="hsnCode"
+          label="HSN Code"
+         
+        >
+          <Input.TextArea rows={2}/>
+        </Form.Item>
+        </Col>
         </Row>
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>

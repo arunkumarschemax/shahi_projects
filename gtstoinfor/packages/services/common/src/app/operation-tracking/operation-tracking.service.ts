@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationInventoryResponseModel, TrackingEnum, OperationTrackingDto, MaterialFabricEnum, TabNameReq, OperationsRequest, LifeCycleStatusEnum, SampleIdRequest } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationInventoryResponseModel, TrackingEnum, OperationTrackingDto, MaterialFabricEnum, TabNameReq, OperationsRequest, LifeCycleStatusEnum, SampleIdRequest, sampleReqIdReq } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
@@ -265,6 +265,23 @@ export class OperationTrackingService {
       return new CommonResponseModel(false,0,'no reportings',opStatus)
     }
     return
+  }
+  //Mobile app API
+  async OperationReport(req:sampleReqIdReq):Promise<CommonResponseModel>{
+    const styleInfoQry = `select style_id from `
+    const opTrackObj = new OperationTracking()
+
+    return
+  }
+
+  async getOperationCodes():Promise<CommonResponseModel>{
+    const opCodesQry = `select operation_id,operation_code,sequence from operations`;
+    const operationCodeRes = await this.dataSource.query(opCodesQry)
+    if(operationCodeRes.length > 0){
+      return new CommonResponseModel(true,1,'data retreived',operationCodeRes)
+    }else{
+      return new CommonResponseModel(false,0,'No data found')
+    }
   }
    
 

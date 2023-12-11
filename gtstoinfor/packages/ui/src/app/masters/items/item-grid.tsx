@@ -137,6 +137,13 @@ export const ItemsGrid = (props: ItemsGridProps) => {
       
       },
       {
+        title: "HSN Code",
+        dataIndex: "hsnCode",
+        sorter: (a, b) => a.hsnCode.localeCompare(b.hsnCode),
+        ...getColumnSearchProps("hsnCode"),
+      
+      },
+      {
         title: "Min Quantity",
         dataIndex: "minQuantity",
         align:'left',
