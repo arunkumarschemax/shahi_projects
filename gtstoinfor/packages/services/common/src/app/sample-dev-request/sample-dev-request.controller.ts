@@ -2,7 +2,7 @@ import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { Any } from 'typeorm';
 import { SampleRequestService } from './sample-dev-request.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, MaterailViewDto, ProductGroupReq, ROSLGroupsResponseModel, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, SampleRequestFilter, UploadResponse, lifeCycleStatusReq } from '@project-management-system/shared-models';
+import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, MaterailViewDto, ProductGroupReq, ROSLGroupsResponseModel, RequestNoDto, RequestNoReq, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, SampleRequestFilter, UploadResponse, lifeCycleStatusReq } from '@project-management-system/shared-models';
 import { SampleRequestDto } from './dto/samle-dev-req';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
@@ -12,6 +12,7 @@ import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
 import { MaterialallitemsReq } from './dto/sample-req-size-req';
 import { AllocationApprovalRequest } from './dto/allocation-approval-req';
 import { AllocatedLocationRequest } from './dto/allocated-location-req';
+import { AllLocationRequest } from './dto/location-req';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -24,6 +25,7 @@ export class SampleDevReqController {
   @Post('/getAllSampleDevData')
   @ApiBody({ type: SampleFilterRequest })
   async getAllSampleDevData(@Body() req?: any): Promise<AllSampleDevReqResponseModel> {
+    console.log(req,"cont")
     try {
       return await this.sampleService.getAllSampleDevData(req);
     } catch (error) {
@@ -78,15 +80,7 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
     }
   }
-  @Post('/getbyID')
-  // @ApiBody({})
-  async getbyID( @Body() req:any): Promise<AllSampleDevReqResponseModel> {
-    try {
-      return await this.sampleService.getmaterialissue();
-    } catch (error) {
-      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
-    }
-  }
+  
   @Post('/cancelSampleReqById')
   @ApiBody({ type: SampleFilterRequest })
   async cancelSampleReqById(@Body() req: any): Promise<AllSampleDevReqResponseModel> {
@@ -403,6 +397,28 @@ export class SampleDevReqController {
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  @Post('/allocatedLocation')
+  @ApiBody({ type: AllLocationRequest })
+  async allocatedLocation(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.allocatedLocation(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+  @Post('/getbyID')
+  @ApiBody({type:RequestNoReq})
+  async getbyID( @Body() req:any): Promise<AllSampleDevReqResponseModel> {
+    console.log(req,"constroller");
+    
+    try {
+      return await this.sampleService.getbyID(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
     }
   }
 }

@@ -203,13 +203,14 @@ export function M3TrimItemsForm() {
   }
 
   const onFinish = (value) => {
-    console.log(form.getFieldValue('trimType'),'8888888888')
-    const req = new M3trimsDTO(0,value.buyerId,"",value.categoryId,value.colorId,value.contentId,value.finishId,value.holeId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.typeId,value.uomId,value.varietyId,value.trimCategoryId,form.getFieldValue("trimMappingId"),form.getFieldValue("buyerCode"),value.trimType,value.description,"")
+    // console.log(form.getFieldValue('m3Code'),'8888888888')
+    const req = new M3trimsDTO(0,value.buyerId,"",value.categoryId,value.colorId,value.contentId,value.finishId,value.holeId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.typeId,value.uomId,value.varietyId,value.trimCategoryId,form.getFieldValue("trimMappingId"),form.getFieldValue("buyerCode"),value.trimType,value.description,"",'',value.m3Code)
     console.log(req,'---------------------')
     m3TrimService.createM3Trims(req).then((res) => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage);
-        // navigate('/grn-view')
+        navigate('/trim-master/m3-trim-items/m3-trim-items-view')
+        onReset()
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
       }
@@ -401,6 +402,11 @@ export function M3TrimItemsForm() {
                             );
                         })}
                     </Select>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="m3Code" label="M3 Code" >
+                    <Input placeholder="Enter M3 Code"/>
                 </Form.Item>
             </Col>
             {mapData[0]?.structure === true ? (

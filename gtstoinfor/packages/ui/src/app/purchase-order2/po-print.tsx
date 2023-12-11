@@ -8,6 +8,8 @@ import { useLocation } from "react-router-dom";
 import numberToWords from 'number-to-words';
 import './po-print.css';
 import html2pdf from 'html2pdf.js';
+import Barcode from "react-barcode";
+import QRCode from "react-qr-code";
 
 export interface PoPrintProps {
     poId: number
@@ -73,7 +75,16 @@ export function PoPrint(props: PoPrintProps) {
                             </td>
                             <td className={'ta-b'} colSpan={4} style={{ textAlign: 'left' }}>
                                 Purchase Order No.:
-                                <h4>{`${poData[0]?.po_number}`} </h4>
+                                <h4>{`${poData[0]?.po_number}`}
+                                <QRCode
+                                    size={256}
+                                    bgColor="lightgrey"
+                                    style={{ height: "50px", maxWidth: "50%", width: "20%" }}
+                                    value={`${poData[0]?.po_number}`}
+                                    viewBox={`0 0 256 256`}
+                                />
+                                    {/* <Barcode value={`${poData[0]?.po_number}`} height={20} /> */}
+                                </h4>
 
                             </td>
                             <td className={'ta-b'} colSpan={4} style={{ textAlign: 'left' }}>

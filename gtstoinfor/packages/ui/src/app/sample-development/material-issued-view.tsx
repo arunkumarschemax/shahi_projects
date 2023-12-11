@@ -134,15 +134,20 @@ export const MaterialIssuedView = () => {
                   width:'200px',
             align: 'left',
 
-              sorter: (a, b) => a.requestNo().localeCompare(b.requestNo()),
+              sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
               sortDirections: ['descend', 'ascend'],
        },
         {
             title: 'Quantity',
             dataIndex: "allocate_quantity",
             align: 'left',
-              sorter: (a, b) => a.allocate_quantity().localeCompare(b.allocate_quantity()),
-              sortDirections: ['descend', 'ascend'],
+            sorter: (a, b) => {
+              const allocateQtyA = String(a.allocate_quantity);
+              const allocateQtyB = String(b.allocate_quantity);
+              return allocateQtyA.localeCompare(allocateQtyB);
+            },
+            sortDirections: ['descend', 'ascend'],
+            
               // ...getColumnSearchProps('allocate_quantity')
         },
        
@@ -150,7 +155,7 @@ export const MaterialIssuedView = () => {
             title: 'Buyer Name',
             dataIndex: "buyerName",
             align: 'left',
-              sorter: (a, b) => a.buyerName().localeCompare(b.buyerName()),
+              sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
               sortDirections: ['descend', 'ascend'],
               ...getColumnSearchProps('buyerName')
 
@@ -159,7 +164,7 @@ export const MaterialIssuedView = () => {
             title: 'Buyer Code',
             dataIndex: "buyer_code",
             align: 'left',
-              sorter: (a, b) => a.buyer_code().localeCompare(b.buyer_code()),
+              sorter: (a, b) => a.buyer_code.localeCompare(b.buyer_code),
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
@@ -167,26 +172,27 @@ export const MaterialIssuedView = () => {
             title: 'Brand Name ',
             dataIndex: "brandName",
             align: 'left',
-              sorter: (a, b) => a.brandName().localeCompare(b.brandName()),
+              sorter: (a, b) => a.brandName.localeCompare(b.brandName),
               sortDirections: ['descend', 'ascend'],
               ...getColumnSearchProps('brandName')
         },
-        {
-            title: 'Item Code ',
-            dataIndex: "itemCode",
-            align: 'left',
-              sorter: (a, b) => a.itemCode().localeCompare(b.itemCode()),
-              sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
-        },
-        {
-            title: 'Location',
-            dataIndex: "location",
-            align: 'left',
-              sorter: (a, b) => a.location.trim().localeCompare(b.location.trim()),
-              sortDirections: ['descend', 'ascend'],
-              ...getColumnSearchProps('location')
-        },
+        // {
+        //     title: 'Item Code ',
+        //     dataIndex: "itemCode",
+        //     align: 'left',
+        //     sorter: (a, b) => a.itemCode.localeCompare(b.itemCode),
+        //     sortDirections: ['descend', 'ascend'],
+            
+        //     //   ...getColumnSearchProps('vendorName')
+        // },
+        // {
+        //     title: 'Location',
+        //     dataIndex: "location",
+        //     align: 'left',
+        //       sorter: (a, b) => a.location.trim().localeCompare(b.location.trim()),
+        //       sortDirections: ['descend', 'ascend'],
+        //       ...getColumnSearchProps('location')
+        // },
        
         {
             title: 'Action',
@@ -198,10 +204,8 @@ export const MaterialIssuedView = () => {
                 <Tooltip placement="top" title="Detail View">
                   <EyeOutlined
                     onClick={() => {
-      
-                      navigate('/masters/material-issued-detail-view', { state: rowData.sample_request_id })
-                      // setHideCancelButton(false);
-                      // DetailView(rowData.SampleRequestId, false);
+                        navigate('/masters/material-issued-detail-view', { state: {requestId:rowData.sample_request_id} })
+                     
                     }}
                     style={{ color: "blue", fontSize: 20 }}
                   />
@@ -229,7 +233,7 @@ export const MaterialIssuedView = () => {
                 headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
         <Form form={form} layout="vertical">
         <Row gutter={24}>
-        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6}}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4}}>
                     <Form.Item
                 name="requestNo"
                 label="Request No"

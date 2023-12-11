@@ -269,15 +269,15 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
     async sampleFabric(sampleId: string) {
         const query = await this.dataSource.createQueryBuilder(SampleReqFabricinfoEntity, 'srfi')
-            .select(`(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,sum(st.quantity) AS availableQuantity,"fabric" as itemType,sr.sample_request_id as sampleRequestid,st.m3_item as stockM3ItemId,sr.buyer_id as buyerId,fabric_info_id,srfi.sample_request_id,c.colour,srfi.fabric_info_id,srfi.fabric_code as m3ItemFabricId,srfi.colour_id,srfi.remarks AS fab_remarks,srfi.consumption AS fabric_consumption,srfi.sample_request_id AS fabric_sample_request_id,rm.item_code AS fabric_item_code,m3items.item_code,Group_concat(st.id) AS stockIds,srfi.total_requirement,sb.status AS status`)
+            .select(`(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,sum(st.quantity) AS availableQuantity,"fabric" as itemType,sr.sample_request_id as sampleRequestid,st.m3_item as stockM3ItemId,sr.buyer_id as buyerId,fabric_info_id,srfi.sample_request_id,c.colour,srfi.fabric_info_id,srfi.fabric_code as m3ItemFabricId,srfi.colour_id,srfi.remarks AS fab_remarks,srfi.consumption AS fabric_consumption,srfi.sample_request_id AS fabric_sample_request_id,m3items.item_code,Group_concat(st.id) AS stockIds,srfi.total_requirement,sb.status AS status`)
             .leftJoin(SampleRequest, 'sr', ' sr.sample_request_id=srfi.sample_request_id ')
             .leftJoin(SamplingbomEntity, 'sb', 'sb.m3_item_id= srfi.fabric_code and sb.sample_request_id = srfi.sample_request_id')
-            .leftJoin(RmCreationEntity, 'rm', ' rm.rm_item_id=srfi.fabric_code ')
+            // .leftJoin(RmCreationEntity, 'rm', ' rm.rm_item_id=srfi.fabric_code ')
             .leftJoin(M3ItemsEntity,'m3items','m3items.m3_items_Id  = srfi.fabric_code')
             .leftJoin(StocksEntity,'st','st.m3_item=srfi.fabric_code and st.item_type = "fabric" and st.buyer_id=sr.buyer_id')
             .leftJoin(Colour,'c','c.colour_id=srfi.colour_id')
             .where(`srfi.sample_request_id = "${sampleId}"`)
-            .groupBy(`st.buyer_id,st.m3_item`)
+            .groupBy(`srfi.fabric_info_id`)
             .getRawMany()
         return query.map((rec) => {
             return {
@@ -289,7 +289,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
     async sampleTrimData(sampleId: string) {
         const query = await this.dataSource.createQueryBuilder(SampleRequestTriminfoEntity, 'stri')
-            .addSelect(`(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,stri.sample_request_id,mt.trim_type as trimType,sum(st.quantity) as availabeQuantity,stri.trim_info_id,stri.consumption AS trim_consumption,stri.sample_request_id AS trim_sample_request_id,stri.remarks AS tri_remarks,mt.trim_code AS trim_item_code,mt.trim_code AS m3trimcode, sr.buyer_id as buyerId, stri.trim_code as trimCode, sb.status AS status,stri.trim_info_id AS trimInfoId`)
+            .addSelect(`(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,stri.sample_request_id,mt.trim_type as trimType,sum(st.quantity) as availabeQuantity,stri.trim_info_id,stri.consumption AS trim_consumption,stri.total_requirement ,stri.sample_request_id AS trim_sample_request_id,stri.remarks AS tri_remarks,mt.trim_code AS trim_item_code,mt.trim_code AS m3trimcode, sr.buyer_id as buyerId, stri.trim_code as trimCode, sb.status AS status,stri.trim_info_id AS trimInfoId`)
             .leftJoin(SampleRequest, 'sr', 'sr.sample_request_id= stri.sample_request_id ')
             .leftJoin(SamplingbomEntity, 'sb', 'sb.m3_item_id= stri.trim_code and sb.sample_request_id = stri.sample_request_id')
             .leftJoin(M3TrimsEntity, 'mt', 'mt.m3_trim_id=stri.trim_code ')
@@ -301,7 +301,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .getRawMany()
         return query.map((rec) => {
             return {
-                trim_info_id: rec.trim_info_id,trim_item_code:rec.trim_item_code, trim_description: rec.trim_description, trim_consumption: rec.trim_consumption, tri_remarks: rec.tri_remarks, trim_sample_request_id: rec.trim_sample_request_id,trim_code:rec.m3trimcode,availabeQuantity:rec.availabeQuantity,trimType:rec.trimType,sample_request_idmt:rec.sample_request_id,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,buyerId:rec.buyerId,trimCode:rec.trimCode,status:rec.status,itemType:rec.trimType,sampleRequestid:rec.trim_sample_request_id,sampleItemId:rec.trimInfoId
+                trim_info_id: rec.trim_info_id,trim_item_code:rec.trim_item_code, trim_description: rec.trim_description, trim_consumption: rec.trim_consumption, tri_remarks: rec.tri_remarks, trim_sample_request_id: rec.trim_sample_request_id,trim_code:rec.m3trimcode,availabeQuantity:rec.availabeQuantity,trimType:rec.trimType,sample_request_idmt:rec.sample_request_id,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,buyerId:rec.buyerId,trimCode:rec.trimCode,status:rec.status,itemType:rec.trimType,sampleRequestid:rec.trim_sample_request_id,sampleItemId:rec.trimInfoIdm,totalRequirement:rec.total_requirement
             }
         })
 
@@ -310,8 +310,8 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
 
 
-    async getAllSampleDevData(req?: SampleFilterRequest): Promise<any[]> {
-        console.log(req,"req")
+    async getAllSampleDevData(req: SampleFilterRequest): Promise<any[]> {
+        console.log(req,"hhhhhhhhhhhh")
         const query = this.createQueryBuilder('sr')
             .select(`sr.location_id as location,life_cycle_status as lifeCycleStatus,st.quantity,sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.type,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name,sr.life_cycle_status AS lifeCycleStatus,clr.colour`)
             .addSelect(`l.location_name AS locationName,s.style,pch.profit_control_head AS pch,b.buyer_name AS buyerName,b.buyer_code AS buyerCode,br.brand_name AS brandName,ed1.first_name AS dmmName,ed2.first_name AS techName`)
@@ -334,26 +334,35 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .leftJoin(StocksEntity,'st','st.buyer_id=sr.buyer_id')
             // .leftJoin(SampleReqFabricinfoEntity,'sf','sf.fabric_code=st.item_id')
             // .leftJoin(SampleRequestTriminfoEntity,'srt','srt.trim_code=st.item_id')
-            // .where('st.quantity is not null')
+             .where('1 =1')
 
-        if (req.reqNo !== undefined) {
-            query.andWhere(`sr.request_no ='${req.reqNo}'`)
-        }
-        if (req.pch !== undefined) {
-            query.andWhere(`pch.profit_control_head ='${req.pch}'`)
-        }
-        // if (req.styleNo !== undefined) {
-        //     query.andWhere(`sr.style_no ='${req.styleNo}'`)
-        // }
-        if (req.status !== undefined) {
-            query.andWhere(`sr.status ='${req.status}'`)
-        }
-        if(req.extRefNumber){
-            query.where(` b.external_ref_number = '${req.extRefNumber}'`)
-        }
+if(req){
+    console.log(req.reqNo,"req.reqqqqqqqqqqqqqqqqqqqqqq");
+    
+    if (req.reqNo !== undefined) {
+        query.andWhere(`sr.sample_request_id =${req.reqNo}`);
+    }
+    if (req.pch !== undefined) {
+        query.andWhere(`pch.profit_control_head_id
+        =${req.pch}`);
+    }
+    if (req.styleNo !== undefined) {
+        query.andWhere(`sr.style_id ='${req.styleNo}'`)
+    }
+    if (req.pch !== undefined) {
+        query.andWhere(`sr.profit_control_head_id ='${req.pch}'`)
+    }
+    if (req.status !== undefined) {
+        query.andWhere(`sr.life_cycle_status ='${req.status}'`);
+    }
+    if(req.extRefNumber){
+        query.andWhere(` b.external_ref_number = '${req.extRefNumber}'`)
+    }
+}
+        
         query.groupBy(`sr.sample_request_id`)
-        console.log('query-----------------')
-        console.log(query)
+        // console.log('query-----------------')
+        // console.log(query)
         return await query.getRawMany();
 
     }

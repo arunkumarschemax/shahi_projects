@@ -24,7 +24,8 @@ export class M3trimsDTO {
     trimType?: ItemTypeEnum
     description?: string
     extRefNumber?: string
-    
+    itemType?: string
+    m3Code?:string
 
     constructor(m3ItemsId:number,buyerId:number,
         itemCode:string,
@@ -47,6 +48,8 @@ export class M3trimsDTO {
         trimType?:ItemTypeEnum,
         description?: string,
         extRefNumber?: string,
+        itemType?: string,
+        m3Code?:string,
     ) {
         this.m3ItemsId=m3ItemsId;
         this.buyerId=buyerId;
@@ -70,7 +73,8 @@ export class M3trimsDTO {
         this.trimType = trimType
         this.description = description
         this.extRefNumber = extRefNumber
-       
+       this.itemType = itemType
+       this.m3Code = m3Code
        
     }
 }

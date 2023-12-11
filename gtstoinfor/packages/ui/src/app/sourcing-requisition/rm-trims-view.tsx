@@ -54,10 +54,14 @@ export const RmTrimsView = () => {
   const [mapData, setMapData] = useState<any[]>([])
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [isBuyer, setIsBuyer] = useState(false);
+  const [rowData, setRowData] = useState<any>(undefined);
+  const [visibleModel, setVisibleModel] = useState<boolean>(false);
+
+  const userrefNo = IAMClientAuthContext.user?.externalRefNo;
+  const roles = IAMClientAuthContext.user?.roles;
 
 
   useEffect(() => {
-    const userrefNo = IAMClientAuthContext.user?.externalRefNo
     if(userrefNo){
       setIsBuyer(true)
     }
@@ -229,11 +233,32 @@ export const RmTrimsView = () => {
     form.resetFields();
   };
 
+  const getItemsForOtherBuyers = () => {
+    let req = new M3trimsDTO(0,undefined,undefined,form.getFieldValue("category"),form.getFieldValue("color"),form.getFieldValue("content"),form.getFieldValue("finish"),form.getFieldValue("hole"),form.getFieldValue("logo"),form.getFieldValue("part"),form.getFieldValue("quality"),form.getFieldValue("structure"),form.getFieldValue("thickness"),form.getFieldValue("type"),form.getFieldValue("uom"),form.getFieldValue("variety"),form.getFieldValue("trimCategory"),0)
+    console.log(req);
+    req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    stockService.getAllTrimStocks(req).then((res) => {
+      if (res.status) {
+        setData(res.data);
+        AlertMessages.getSuccessMessage(res.internalMessage);
+        // window.location.reload();
+      }
+      else{
+        setData([]);
+        AlertMessages.getWarningMessage(res.internalMessage);
+      }
+    })
+    .catch((err) => {
+      setData([]);
+      AlertMessages.getErrorMessage(err.message);
+    });
 
+  }
   
   const setModel = (val) => {
     console.log(val);
-    // setVisibleModel(val);
+    setVisibleModel(val);
+    onFinish()
   }
 
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
@@ -324,6 +349,13 @@ export const RmTrimsView = () => {
     if (value === null) return true; // If filter is not active, show all rows
     return record.itemType === value;
   };
+
+  const getRowData = async (m3StyleDto: any) => {
+    setRowData(m3StyleDto);
+    console.log(m3StyleDto,"kk")
+    setVisibleModel(true);
+  }
+
   const columns: ColumnProps<any>[] = [
     {
       title: "S No",
@@ -446,12 +478,15 @@ export const RmTrimsView = () => {
     
         return (
           <span>
-            {/* <Button
+            {
+              rowData.refNo === userrefNo ? "-" : roles === "sourcingUser" ?
+            <Button
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}
             >
               <b>Request Reclassification</b>
-            </Button> */}
+            </Button>:"-"
+          }
           </span>
         );
       }
@@ -489,8 +524,8 @@ export const RmTrimsView = () => {
   // }
 
   const onFinish = () => {
-
-    let req = new M3trimsDTO(0,form.getFieldValue("buyer"),undefined,form.getFieldValue("category"),form.getFieldValue("color"),form.getFieldValue("content"),form.getFieldValue("finish"),form.getFieldValue("hole"),form.getFieldValue("logo"),form.getFieldValue("part"),form.getFieldValue("quality"),form.getFieldValue("structure"),form.getFieldValue("thickness"),form.getFieldValue("type"),form.getFieldValue("uom"),form.getFieldValue("variety"),form.getFieldValue("trimCategory"),0)
+    console.log(form.getFieldValue("buyerId"))
+    let req = new M3trimsDTO(0,form.getFieldValue("buyerId"),undefined,form.getFieldValue("category"),form.getFieldValue("color"),form.getFieldValue("content"),form.getFieldValue("finish"),form.getFieldValue("hole"),form.getFieldValue("logo"),form.getFieldValue("part"),form.getFieldValue("quality"),form.getFieldValue("structure"),form.getFieldValue("thickness"),form.getFieldValue("type"),form.getFieldValue("uom"),form.getFieldValue("variety"),form.getFieldValue("trimCategory"),0)
     console.log(req);
     req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     stockService.getAllTrimStocks(req).then((res) => {
@@ -864,9 +899,12 @@ export const RmTrimsView = () => {
             ) : (<></>)}
         {/* </Row>
         <Row> */}
-            <Col span={4} style={{paddingTop:'23px'}}>
+            <Col span={6} style={{paddingTop:'23px'}}>
                 <Button type="primary" htmlType="submit">Get Stock</Button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
                 <Button htmlType="button" onClick={onReset}>Reset</Button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <Button type="primary" onClick={(e) => getItemsForOtherBuyers()}  >Check Other Buyers </Button>
             </Col>
         </Row>
       </Form>
@@ -877,7 +915,7 @@ export const RmTrimsView = () => {
         columns={columns}
         size="small"
       />
-      {/* <Modal
+      <Modal
             className='rm-'
             key={'modal' + Date.now()}
             width={'80%'}
@@ -890,7 +928,7 @@ export const RmTrimsView = () => {
         >
             <Reclassification data = {rowData} buyer= {form.getFieldValue("buyerId")} type="stock" status={setModel}/>
 
-            </Modal> */}
+            </Modal>
     </Card>
   );
 };

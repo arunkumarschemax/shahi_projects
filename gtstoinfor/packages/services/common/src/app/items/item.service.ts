@@ -30,7 +30,7 @@ export class ItemsService{
 
             itemSubcategoryEntity.itemSubCategoryId=req.itemSubCategoryId
             itemEntity.itemSubCategory=itemSubcategoryEntity
-            
+            itemEntity.hsnCode=req.hsnCode
             itemEntity.brandId=req.brandId
             itemEntity.minQuantity=req.minQuantity
             itemEntity.uomId=req.uomId
@@ -81,23 +81,37 @@ export class ItemsService{
 
     }
 
-    async getAllItems():Promise<CommonResponseModel>{
-        let items:ItemsDto[]=[]
-        const data = await this.itemsRepo.getItem();
-        const manager = this.dataSource;
-        // const dataSource = new DataSource()
+    // async getAllItems():Promise<CommonResponseModel>{
+    //     let items:ItemsDto[]=[]
+    //     const data = await this.itemsRepo.getItem();
+    //     const manager = this.dataSource;
+    //     // const dataSource = new DataSource()
        
-        // const result = await manager.query(query)
-        // const res = await this.dataSource.manager.find(ItemView,{where:{brandId:1,itemCode:'UQ-FAB-01'}})
-        const res = await this.dataSource.manager.find(ItemView)
+    //     // const result = await manager.query(query)
+    //     // const res = await this.dataSource.manager.find(ItemView,{where:{brandId:1,itemCode:'UQ-FAB-01'}})
+    //     const res = await this.dataSource.manager.find(ItemView)
         
-        if(data.length >0){
+    //     if(data.length >0){
 
-            return new CommonResponseModel(true,1,'Items Retrived Sucessfully..',res)
+    //         return new CommonResponseModel(true,1,'Items Retrived Sucessfully..',res)
+    //     }else{
+    //         return new AllItemsResponseModel(false,0,'No Items Found..',[])
+
+    //     }
+    // }
+   
+       
+    async getAllItems():Promise<CommonResponseModel>{
+        const style = await this.itemsRepo.find({
+            order:{itemName:'ASC'}
+        })
+        console.log(style);
+        if(style.length >0){
+            return new CommonResponseModel(true,1,'Active Categories Retrived Sucessfully',style)
         }else{
-            return new AllItemsResponseModel(false,0,'No Items Found..',[])
+            return new CommonResponseModel(false,0,'No  Categories Found ',[])
 
         }
+
     }
-    
 }

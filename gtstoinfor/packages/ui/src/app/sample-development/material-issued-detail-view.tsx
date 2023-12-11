@@ -5,10 +5,13 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { type } from 'os';
-import { MaterailViewDto, PurchaseViewDto } from '@project-management-system/shared-models';
+import { AllocatedLocationReq, LocationReq, MaterailViewDto, PurchaseViewDto, RequestNoReq } 
+from '@project-management-system/shared-models';
+import { columnProps } from '../masters/column/column-form';
+import { ColumnProps } from 'antd/es/table';
 
 export interface MaterailDetailViewPagesProps {
-    sample_request_id:number
+  requestId:number
 }
 
 // export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
@@ -17,6 +20,7 @@ export interface MaterailDetailViewPagesProps {
   const [data, setData] = useState<any[]>([])
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const page = 1
+  const [childData, setChildData] = useState({});
   const navigate = useNavigate();
   const service = new SampleDevelopmentService();
   const [form] = Form.useForm()
@@ -25,20 +29,33 @@ export interface MaterailDetailViewPagesProps {
   const [drop, setDrop] = useState('')
   const location = useLocation()
   const [sampleData, setSampleData] = useState<any[]>([]);
-
+  const [requestNo, setRequestNo] = useState<any>([]);
+  // const [showTabe, setShowTabe] = useState(false);
 
   useEffect(() => {
-    // if(location?.state?.sample_request_id){
-      getAllData()
-
-    // }
+      getAllData();
 
   },[])
-  // ,[props.sample_request_id])
-console.log(location.state,"namuuuuuuuuuuuuuu");
+
+const allocatedLocationInfo = (value) => {
+  const req = new LocationReq();
+  req.sampleRequestItemId = value;
+ 
+  service.allocatedLocation(req).then((res) => {
+    if (res.status) {
+      setChildData((prev) => {
+        return { ...prev, [value]: res.data };
+      });
+    }
+  });
+};
+
 
   const getAllData = () => {
-    const req = new MaterailViewDto(location?.state)
+    const req = new RequestNoReq()
+    req.sampreqId = location.state.requestId
+    console.log( location.state.requestId,"&&&&&&&&&&");
+    
     service.getbyID(req).then((res) => {
         if(res.status){
 
@@ -47,12 +64,15 @@ console.log(location.state,"namuuuuuuuuuuuuuu");
         setData(res.data)
 
         }
+        
     })
 }
 //   }, [props.purchaseOrderId])
 
-console.log(data,"LLLLLLLLLLLLL");
-
+function onReset() {
+  form.resetFields();
+  setData([]);
+}
   const renderCellData = (data) => {
     return data ? data : "-";
   }
@@ -61,71 +81,117 @@ console.log(data,"LLLLLLLLLLLLL");
     setDrop(value)
     // console.log(value,'[[[[[[[[[[[[[[')
   })
-//   const itemColumns: any = [
-//     {
-//       title: 'S No',
-//       key: 'sno',
-//       width: '70px',
-//       responsive: ['sm'],
-//       render: (text, object, index) => (page - 1) * 10 + (index + 1),
-//       onCell: (record: any) => ({
-//         rowSpan: record.rowSpan,
-//       }),
-//       fixed: 'left',
-//     },
-//     {
-//       title: 'Material Type',
-//       key: 'Material Type',
-//       dataIndex: 'po_material_type',
-//     },
-//     {
-//       title: 'Item Code',
-//       key: 'Item Code',
-//       dataIndex: 'item_code',
-//     },
-//     {
-//       title: 'PO Quantity',
-//       key: 'PO Quantity',
-//       dataIndex: 'po_quantity',
-//     },
-//     {
-//       title: 'GRN Quantity',
-//       key: 'GRN Quantity',
-//       dataIndex: 'grn_quantity',
-//       render: (text, record) => {
-//         return (<span>{record.grn_quantity > 0 ? record.grn_quantity : 0}</span>)
-//       }
-//     },
 
-//     {
-//       title: 'Unit Price',
-//       key: 'Unit Price',
-//       dataIndex: 'unit_price',
-//     },
-//     {
-//       title: 'Discount %',
-//       key: 'Discount',
-//       dataIndex: 'discount',
-//     },
-//     {
-//       title: 'Tax %',
-//       key: 'Tax %',
-//       dataIndex: 'tax',
-//     },
-//     {
-//       title: 'Total Amount',
-//       key: 'Tax %',
-//       dataIndex: 'subjective_amount',
-//     },
+const columns:ColumnProps<any>[]=[
+  {
+    title: "S No",
+    key: "sno",
+    width: "70px",
+    responsive: ["sm"],
+    render: (text, object, index) => (page - 1) * 10 + (index + 1),
+  },
 
-//   ]
+  {
+    title: "Request No",
+    dataIndex: "requestNo",
+    render: (text) => text || "-"
 
+  },
+  {
+    title: "Type",
+    dataIndex: "itemType",
+    render: (text) => text || "-"
 
+  },
+  {
+    title: "Brand Name",
+    dataIndex: "brandName",
+    render: (text) => text || "-"
+
+  },
+  {
+    title: "Style",
+    dataIndex: "style",
+    render: (text) => text || "-"
+
+  },
+  {
+    title: "Colour",
+    dataIndex: "colour",
+    render:(value,record) => {
+      return(<>{value ? value : 'NA'}</>)
+    }
+  },
+  {
+    title: "Item Code",
+    dataIndex: "itemCode",
+    render: (text) => text || "-"
+  },
+  {
+    title: "Consumption",
+    dataIndex: "consumption",
+    render: (text) => text || "-"
+
+  },
+  {
+    title: "Qunatity",
+    dataIndex: "BOM",
+    render:(value,record) => {
+      return(<>{value > 0 ? value : record.consumption}</>)
+    }
+  },
+]
+
+const childColumns:ColumnProps<any>[]=[
+  {
+    title: "Location",
+    dataIndex: "location",
+    render: (text) => text || "-"
+
+  },
+  {
+    title: "Item Type",
+    dataIndex: "itemType",
+    render: (text) => text || "-"
+
+  },
+  {
+    title: "Quantity",
+    dataIndex: "quantity",
+    render: (text) => text || "-"
+
+  },
+  {
+    title: "Allocated Quantity",
+    dataIndex: "allocatedQty",
+    render: (text) => text || "-"
+
+  },
+]
+
+const expandFabricTabel = (record) => {
+  return (
+    <Table
+      rowKey={(record) => record.sampleFabricId}
+      columns={childColumns}
+      dataSource={childData[record.sample_request_id]}
+    ></Table>
+  );
+};
   const handleCancel = () => {
     setIsModalVisible(false);
   };
 
 
+  const expandTrimTabel = (record) => {
+    return (
+      <Table
+        rowKey={(record) => record.sampleTrimInfoId}
+        columns={childColumns}
+        dataSource={childData[record.sampleReqTrimId]}
+      ></Table>
+    );
+  };
 
   /**
  * get form data 
@@ -142,71 +208,24 @@ console.log(data,"LLLLLLLLLLLLL");
       <Card>
         <Card title="Material Detail View" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
         extra={<span style={{ color: 'white' }} >  <Button className='panel_button' onClick={() => navigate('/masters/material-issued-view')}>Material Issued View</Button> </span>} >
-          <Descriptions size='small' >
-          <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Status</span>}>{data[0]?.STATUS || "-"}</DescriptionsItem>
-
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Remarks</span>}>{data[0]?.reamrks || "-"}
-              </DescriptionsItem>
-
-              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>User</span>}>{data[0]?.user || "-"}</DescriptionsItem>
-              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Cost Ref</span>}>{data[0]?.costRef || "-"}</DescriptionsItem>
-              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Contact</span>}>{data[0]?.contact || "-"}</DescriptionsItem>
-              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Extension</span>}>{data[0]?.extension || "-"}</DescriptionsItem>
-              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Sam Value</span>}>{data[0]?.samValue || "-"}</DescriptionsItem>
-              {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Description</span>}>{data[0]?.description}</DescriptionsItem> */}
-
-            {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Material Type</span>}>{data[0]?.materialType}</DescriptionsItem> */}
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Expected DeliveryDate:</span>}>{moment(data[0]?.expected_delivery_date || "-").format('YYYY-MM-DD')}
-            </DescriptionsItem>
-            {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Country Name:</span>}>{data[0]?.country_name}</DescriptionsItem> */}
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Colour:</span>}>{data[0]?.colour || "-"}</DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Style: </span>}>{data[0]?.style || "-"}</DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Pch: </span>}>{data[0]?.profit_control_head || "-"}</DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Tech Name:</span>}>{data[0]?.techName || "-"}</DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Total Requirement:</span>}>{data[0]?.total_requirement || "-"}</DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Consumption:</span>}>{data[0]?.consumption || "-"}</DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Item Type</span>}>{data[0]?.item_type || "-"}</DescriptionsItem>
-            {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Location</span>}>{data[0]?.location || "-"}</DescriptionsItem> */}
-
+      
+        <br></br>
+         <><Table
+          rowKey={(record) => record.sampleFabricId}
+          columns={columns}
+          dataSource={data}
+          expandable={{
+            expandedRowRender: (record) => expandFabricTabel(record),
+            onExpand(expanded, record) {
+              allocatedLocationInfo(record.sample_request_id);
+            },
+            rowExpandable: (record) => record.name !== "Not Expandable",
+          }}
+          //   className="custom-table-wrapper"
+        /></>
+        
           
-
-          </Descriptions>
-
-          {/* <Form form={form}>
-                  <Row>
-                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 7 }} xl={{ span: 5 }}>
-                          <Form.Item label='Material Type' name='materialType'>
-                              <Select showSearch allowClear optionFilterProp="children" placeholder='Select Operation' onChange={onChange}>
-                                  {
-                                      material.map(e => {
-                                          return (
-                                              <Option key={e.purchaseOrderId} value={e.materialType}>{e.materialType}</Option>
-                                          )
-                                      })
-                                  }
-
-                              </Select>
-                          </Form.Item>
-                      </Col>
-                  </Row>
-            </Form> */}
-
-          
-          {/* {isModalVisible ?
-            <Modal
-              key={'modal' + Date.now()}
-              width={'100%'}
-              style={{ top: 30, alignContent: 'right' }}
-              visible={isModalVisible}
-              title={<React.Fragment>
-              </React.Fragment>}
-              onCancel={handleCancel}
-              footer={[
-
-              ]}
-            >
-
-            </Modal> : ""} */}
+         
         </Card>
       </Card>
     </div>

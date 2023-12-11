@@ -37,6 +37,11 @@ export class SampleReqFabricinfoEntity{
     })
     totalRequirement : number;
 
+    @Column('decimal',{
+      name:'wastage',
+  })
+  wastage : number;
+
       @Column('text',{
         name:'remarks',
         nullable:true
