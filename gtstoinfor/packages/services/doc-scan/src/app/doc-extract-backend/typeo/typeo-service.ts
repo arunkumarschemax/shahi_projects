@@ -4,7 +4,7 @@ import { CommonResponseModel, GlobalResponseObject, ScanResponseModel } from "@x
 import * as base64 from 'base64-stream';
 import * as fs from 'fs';
 import * as Imap from 'imap';
-import * as puppeteer from 'puppeteer';
+
 import { Repository } from "typeorm";
 import * as winston from 'winston';
 import { ScanAdapter } from "../adapters/scan-adapters";
@@ -12,6 +12,9 @@ import { filterDto } from "../dtos/filter.dto";
 import { ScanDto } from "../dtos/typeo.dto";
 import { EmailAttachments } from "../entity/mails-entity";
 import { ScanEntity } from "../entity/typeo-entity";
+import * as puppeteer from 'puppeteer';
+
+import * as path from 'path';
 
 
 
@@ -37,18 +40,19 @@ export class ScanService {
   ) { }
 
   async postdata(req: ScanDto): Promise<ScanResponseModel> {
-    console.log(req, "88888888888");
+    console.log(req, "88888888888")
     const adapterData = this.adapter.convertDtoToEntity(req);
-    console.log(adapterData, '*******');
-    await this.repository.save(adapterData);
+    console.log(adapterData, '*******')
+    await this.repository.save(adapterData)
     const internalMessage: string = req.gstNumber
       ? "Created Successfully"
       : "Created Successfully";
     return new ScanResponseModel(true, 48896, internalMessage);
   }
 
+  
   async getdata(req: filterDto): Promise<CommonResponseModel> {
-    console.log(req, "services");
+    console.log(req, "services")
 
     const records = await this.repository.find({
       where: { venName: req.vendorName },

@@ -32,10 +32,6 @@ export class ScanController {
     }
   }
 
-
-
-
-
   @Post("getdata")
   @ApiBody({type:filterDto})
   async getdata(@Body() req:any): Promise<any> {
@@ -46,13 +42,10 @@ export class ScanController {
   processEmails() {
     this.Service.processEmails();
     return 'Processing emails';
-
-
-  };
-
+  }
   @Get('automatic')
   async automatic(): Promise<any> {
     return this.Service.automatic();
-  }
 
+  }
 }
