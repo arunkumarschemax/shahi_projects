@@ -10,6 +10,7 @@ import { ColumnType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
 import { useNavigate } from 'react-router-dom';
 import { PoOrderFilter } from '@project-management-system/shared-models';
+import { useIAMClientState } from '../nike/iam-client-react';
 
 
 const OrderAcceptanceGrid = () => {
@@ -31,6 +32,8 @@ const OrderAcceptanceGrid = () => {
   let navigate = useNavigate()
   const service = new RLOrdersService();
   const [orderData, setOrderData] = useState<any>([]);
+const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
 
   const { Text } = Typography
 
@@ -43,6 +46,8 @@ const OrderAcceptanceGrid = () => {
     if (form.getFieldValue("poNumber") !== undefined) {
       req.poNumber = form.getFieldValue("poNumber");
     }
+    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+
     service.getorderData(req).then((res) => {
       if (res.status) {
         setOrderData(res.data);
@@ -50,154 +55,6 @@ const OrderAcceptanceGrid = () => {
     });
   };
 
-//   const getTrimOrderNumberData = (orderNumber) => {
-//     const req = new TrimOrdersReq()
-//     req.OrderNumber = orderNumber
-//     service.getTrimOrdersData(req).then(res => {
-//       if (res.status) {
-//         setOrderNumberDetails(res.data)
-//         // showModal()
-//       } else {
-//         // setFilteredData([])
-//         setOrderNumberDetails([])
-//       }
-//     }).catch(err => {
-//       console.log(err.message)
-//     })
-//   }
-
-//   const getData = () => {
-//     const req = new TrimOrdersReq()
-//     if (form.getFieldValue('approvalDate') !== undefined) {
-//       req.approvalFromDate = (form.getFieldValue('approvalDate')[0]).format('YYYY-MM-DD')
-//     }
-//     if (form.getFieldValue('approvalDate') !== undefined) {
-//       req.approvalToDate = (form.getFieldValue('approvalDate')[1]).format('YYYY-MM-DD')
-//     }
-//     if (form.getFieldValue('orderNo') !== undefined) {
-//       req.OrderNumber = (form.getFieldValue('orderNo'))
-//     }
-//     if (form.getFieldValue('sampleCode') !== undefined) {
-//       req.sampleCode = (form.getFieldValue('sampleCode'))
-//     }
-//     service.getUnacceptedTrimOrders(req).then(res => {
-
-//       if (res.status) {
-//         setGridData(res.data)
-//         setFilteredData(res.data)
-//       }
-//       else {
-//         setFilteredData([])
-//         setGridData([])
-//       }
-//     }).catch(err => {
-//       console.log(err.message)
-//     })
-
-    // service.getTrimOrdersNo().then(res => {
-    //   if (res.status) {
-    //     setItem(res.data)
-    //   } else {
-    //     setFilteredData([])
-    //     setItem([])
-    //   }
-    // }).catch(err => {
-    //   console.log(err.message)
-    // })
-
-//     service.getTrimSampleCode().then(res => {
-//       if (res.status) {
-//         setStyle(res.data)
-//       } else {
-//         setFilteredData([])
-//         setItem([])
-//       }
-//     }).catch(err => {
-//       console.log(err.message)
-//     })
-
-//   }
-
-//   const DetailedView = (orderNumber) => {
-//     getTrimOrderNumberData(orderNumber)
-//     // showModal();
-//     // const poFilterData = filteredData.filter(order_no => order_no.trim_order_id == record)
-//     // navigate('/excel-import/order-details', { state: { data: poFilterData } })
-//   }
-
-//   const saveItemNuberDetails = (record) => {
-//     const req = new OrderAcceptanceRequest()
-//     req.itemNo = record.itemNumber
-//     req.purchaseOrderNumber = record.order_no
-//     req.poLineItemNumber = record.order_plan_number
-//     req.buyer = 'Uniqlo-U12'
-//     service.saveItemDetailsOfTrimOrder(req).then(res => {
-//       if (res.status) {
-//         message.success('CO-Line request created')
-//       } else {
-//         message.error(res.internalMessage)
-//       }
-//     }).catch(err => {
-//       console.log(err.message)
-//     })
-//   }
-
-  // const approveOrderStatus = (record) => {
-  //     console.log(record)
-  // const req = new COLineRequest(record.itemNumber,record.order_no,record.color_code,record.color,record.size_code,record.size,record.item_code,record.item,null,null,record.order_no,record.itemNumber,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,record.trim_order_id);
-  // // req.itemNumber = record.itemNumber
-  // // req.orderNumber = record.order_no
-  // service.createCOLineInternal(req).then(coLineRes => {
-  //     if(coLineRes.status){
-  //         service.createCOline(req).then((res) => {
-  //             if (res.status) {
-  //                 const statusReq = new CoLineStatusReq()
-  //                 statusReq.coLineId = coLineRes?.data?.coLineId
-  //                 statusReq.status = 'Success'
-  //                 service.updateStatusAfterCoLineCreationInM3(statusReq)
-  //                 getData()
-  //                 message.success(res.internalMessage)
-  //             } else {
-  //                 const statusReq = new CoLineStatusReq()
-  //                 statusReq.coLineId = coLineRes?.data?.coLineId
-  //                 statusReq.status = 'Failed'
-  //                 service.updateStatusAfterCoLineCreationInM3(statusReq)
-  //                 message.error(res.internalMessage)
-  //             }
-  //         })
-  //     } else{
-  //         message.error(coLineRes.internalMessage)
-  //     }
-  // })
-  // }
-
-  // const getFilterdData = () => {
-  //     let orderNo = form.getFieldValue('orderNo');
-  //     let startDate = selectedEstimatedFromDate;
-  //     let endDate = selectedEstimatedStartDate;
-  //     let selectedDate = selectedEstimatedFromDate;
-
-  //     let filteredData = gridData;
-  //     if (orderNo) {
-  //         filteredData = filteredData.filter(record => record.order_no === orderNo);
-  //         if (filteredData.length === 0) {
-  //             message.error("No Data Found")
-  //         }
-  //         setFilteredData(filteredData);
-  //     }
-  //     if (selectedDate) {
-  //         selectedDate = moment(selectedDate).format('YYYY/MM/DD');
-
-  //         filteredData = filteredData.filter(record => {
-  //             const dateInData = moment(record.approval_date).format('YYYY/MM/DD');
-  //             return dateInData === selectedDate;
-  //         });
-  //       }
-  //       setFilteredData(filteredData);
-  //       if (filteredData.length === 0) {
-  //         message.error("No Data Found");
-  //       }
-  // }
 
   const onReset = () => {
     form.resetFields();
