@@ -128,18 +128,14 @@ const TrimOrderAcceptance = () => {
     req.buyer = 'Uniqlo-U12'
     service.saveItemDetailsOfTrimOrder(req).then(res => {
       if (res.status) {
-        console.log(res)
-        // setItem(res.data)
+        message.success('CO-Line request created')
       } else {
-        // setFilteredData([])
-        // setItem([])
+        message.error(res.internalMessage)
       }
     }).catch(err => {
       console.log(err.message)
     })
-
   }
-
 
   // const approveOrderStatus = (record) => {
   //     console.log(record)
@@ -191,7 +187,6 @@ const TrimOrderAcceptance = () => {
   //             const dateInData = moment(record.approval_date).format('YYYY/MM/DD');
   //             return dateInData === selectedDate;
   //         });
-
   //       }
   //       setFilteredData(filteredData);
   //       if (filteredData.length === 0) {

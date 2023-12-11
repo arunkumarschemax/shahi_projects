@@ -3052,7 +3052,8 @@ export class OrdersService {
 
             const priceListQry = `select sample_code as sampleCode,business,fob_local_currency as fobLocalCurrency,currency from price_list where business in(select distinct(business_unit) from trim_orders)`;
             const priceListData = await this.dataSource.query(priceListQry)
-
+            let salesPrice;
+            let currency: string;
             for (const record of priceListData) {
                 if (!(priceMap.has(record.business))) {
                     priceMap.set(record.business, new Map<string, string>)
@@ -3074,12 +3075,18 @@ export class OrdersService {
             if (data) {
                 let colorMap = new Map<string, Colors>()
                 for (const rec of data) {
+                    if (rec.businessUnit == 'UQIN') {
+                        currency = 'INR'
+                    } else {
+                        currency = 'USD'
+                    }
                     if (!destinationMap.has(rec.businessUnit)) {
                         destinationMap.set(rec.businessUnit, new Destinations(rec.businessUnit, []))
                     }
                     if (!colorMap.has(rec.color)) {
                         colorMap.set(rec.color, new Colors(`${rec.colorCode} ${rec.color}`, []))
                     }
+                    salesPrice = Number(priceMap.get(rec.businessUnit).get(rec.sampleCode.slice(2)));
                     colorMap.get(rec.color).sizes.push(new Sizes(rec.size, rec.orderQtyPcs, Number(priceMap.get(rec.businessUnit).get(rec.sampleCode.slice(2)))))
                 }
                 const destinations: Destinations[] = []
@@ -3089,8 +3096,7 @@ export class OrdersService {
                     })
                     destinations.push(rec)
                 })
-
-                const info = new CoLineFormatModel(data[0].orderNo, data[0].trimItemNo, null, data[0].contractedETD, destinations)
+                const info = new CoLineFormatModel(data[0].orderNo, data[0].trimItemNo, salesPrice, currency, data[0].contractedETD, destinations)
                 return new CommonResponseModel(true, 1, 'Data retrieved successfully', info)
             } else {
                 return new CommonResponseModel(false, 0, 'No data found')
