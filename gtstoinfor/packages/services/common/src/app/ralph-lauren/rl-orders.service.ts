@@ -1,9 +1,11 @@
 
 import { Injectable } from "@nestjs/common";
 import { RLOrdersRepository } from "./repositories/rl-orders.repo";
-import { CommonResponseModel, FactoryReportModel, FactoryReportSizeModel, OrderDataModel, OrderSizeWiseModel, PoOrderFilter } from "@project-management-system/shared-models";
+import { CoLineModel, Color, Colors, CommonResponseModel, Destination, Destinations, FactoryReportModel, FactoryReportSizeModel, OrderDataModel, OrderSizeWiseModel, PoOrderFilter, Size } from "@project-management-system/shared-models";
 import { DataSource } from "typeorm";
 import { PdfFileUploadRepository } from "./repositories/pdf-file.repo";
+import { OrderDetailsReq } from "./dto/order-details-req";
+import { RLOrdersEntity } from "./entities/rl-orders.entity";
 
 @Injectable()
 export class RLOrdersService {
@@ -76,6 +78,71 @@ export class RLOrdersService {
         throw err
       }
     }
+
+  async getOrderDetails(req:OrderDetailsReq): Promise<CommonResponseModel> {
+      try {
+
+        const data = await this.repo.find({ where: { poNumber: req.poNumber } })
+        //  const data = await this.repo.find()
+
+        
+           let destinationMap = new Map<string, Destination>();
+
+           // po -> destination -> color -> sizes
+           const destinationColSizesMap = new Map<string, Map<string, Map<string, {size:string,quantity:number,price:string}[] >>>();
+            const poMap = new Map <string, RLOrdersEntity>();
+
+          data.forEach(rec=> {
+            poMap.set(rec.poNumber,rec)
+
+            const dest = rec.shipToAddress.slice(-4).trim();
+            if(!destinationColSizesMap.has(rec.poNumber)) {
+              destinationColSizesMap.set(rec.poNumber, new Map<string, Map<string, [] >>());
+            }
+            if(!destinationColSizesMap.get(rec.poNumber).has(dest)) {
+              destinationColSizesMap.get(rec.poNumber).set(dest, new Map<string, []>());
+            }
+            if(!destinationColSizesMap.get(rec.poNumber).get(dest).has(rec.color)) {
+              destinationColSizesMap.get(rec.poNumber).get(dest).set(rec.color, []);
+            }
+            destinationColSizesMap.get(rec.poNumber).get(dest).get(rec.color).push({size:rec.size,quantity:rec.quantity,price:rec.price});
+          });
+           const coData = []
+          destinationColSizesMap.forEach((destColorSize, poNumber) => {
+  
+            const desArray = []
+            destColorSize.forEach((colorSizes, dest) => {
+              const ColArray = []
+              colorSizes.forEach((sizes,color) =>{
+                const sizeArray = []
+                sizes.forEach((size)=>{
+                  const sizeObj = new Size(size.size,size.quantity,size.price);
+                  sizeArray.push(sizeObj)
+                }) 
+              const col = new Color(color, sizeArray);
+              ColArray.push(col)
+              });
+              const des = new Destination(dest, ColArray);
+              desArray.push(des)
+            });
+            const  poInfo = poMap.get(poNumber)
+
+            const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price,poInfo.currency, poInfo.shipDate,desArray);
+            coData.push(co)
+          });
+          console.log(coData,"pppppppppppppp")
+          console.log(destinationColSizesMap,"reeeeeeeeee");
+           if (coData){
+            return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully',coData);
+           } else {
+          return new CommonResponseModel(false, 0, 'No data found');
+             
+           }
+      } catch (err) {
+          throw err
+      }
+  }
+
  }
         
 
