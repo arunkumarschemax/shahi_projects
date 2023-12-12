@@ -354,6 +354,43 @@ export class SampleRequestService {
             }
 
           }
+          let trimAllocation;
+       
+          for (const trimObj of req.trimInfo) {
+            for (const stock of trimObj?.allocatedStock) {
+              let allocationItemsEntity =  new MaterialAllocationItemsEntity()
+              if(stock.checkedStatus === 1 &&  stock.issuedQty > 0){
+                totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
+                allocationItemsEntity.allocateQuantity = stock.issuedQty;
+                allocationItemsEntity.locationId = stock.locationId;
+                allocationItemsEntity.stockId = stock.stockId;
+                allocationItemsdata.push(allocationItemsEntity);
+                let stockUpdate = await manager.getRepository(StocksEntity).update({id:stock.stockId},{allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}`});
+                if(stockUpdate.affected === 0){
+                  await manager.releaseTransaction();
+                }
+              }
+            }
+            allocationEntity.buyerId = req.buyerId
+            allocationEntity.itemType = ItemTypeEnum.SEWING_TRIM;
+            allocationEntity.m3ItemId = trimObj.trimCode;
+            allocationEntity.totalIssueQty = totalAllocated;
+            allocationEntity.sampleOrderId = save.SampleRequestId;
+            allocationEntity.sampleItemId = save.sampleReqTrimInfo.find((e) => e.trimCode === trimObj.trimCode).trimInfoId;
+            trimAllocation = await manager.getRepository(MaterialAllocationEntity).save(allocationEntity)
+            if(!trimAllocation){
+              await manager.releaseTransaction();
+              return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+            }
+            else{
+              let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:save.SampleRequestId, m3ItemId: trimObj.trimCode },{receivedQuantity : () => `received_quantity + ${totalAllocated}`})
+              if(updateSampleFabricInfo.affected === 0){
+                await manager.releaseTransaction();
+                return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+              }
+            }
+
+          }
         }
         else{
           await manager.releaseTransaction();
