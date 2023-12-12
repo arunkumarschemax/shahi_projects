@@ -13,6 +13,15 @@ export class RLOrdersController {
         private readonly applicationExceptionhandler: ApplicationExceptionHandler
     ) { }
 
+    @Post('/saveOrdersDataFromPDF')
+    async saveOrdersDataFromPDF(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.rlOrdersService.saveOrdersDataFromPDF(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
     @Post('/getPdfFileInfo')
     async getPdfFileInfo(): Promise<CommonResponseModel> {
         try {
@@ -23,8 +32,8 @@ export class RLOrdersController {
     }
 
     @Post('/getorderData')
-    @ApiBody({ type: PoOrderFilter })   
-    async getorderData(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: PoOrderFilter })
+    async getorderData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             // console.log(req,"con")
             return await this.rlOrdersService.getorderData(req);
@@ -34,11 +43,54 @@ export class RLOrdersController {
     }
 
     @Post('/getorderDataByPoNumber')
-    @ApiBody({ type: PoOrderFilter })   
-    async getorderDataByPoNumber(@Body() req:any): Promise<CommonResponseModel> {
+    @ApiBody({ type: PoOrderFilter })
+    async getorderDataByPoNumber(@Body() req: any): Promise<CommonResponseModel> {
         try {
             // console.log(req,"con")
             return await this.rlOrdersService.getorderDataByPoNumber(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/coLineCreationReq')
+    async coLineCreationReq(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.rlOrdersService.coLineCreationReq(req)
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/getCoLine')
+    async getCoLine(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.rlOrdersService.getCoLine(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getBuyerPo')
+    async getBuyerPo(): Promise<CommonResponseModel> {
+        try {
+            return await this.rlOrdersService.getBuyerPo();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getColineItem')
+    async getColineItem(): Promise<CommonResponseModel> {
+        try {
+            return await this.rlOrdersService.getColineItem();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+    @Post('/getColineOrderNo')
+    async getColineOrderNo(): Promise<CommonResponseModel> {
+        try {
+            return await this.rlOrdersService.getColineOrderNo();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

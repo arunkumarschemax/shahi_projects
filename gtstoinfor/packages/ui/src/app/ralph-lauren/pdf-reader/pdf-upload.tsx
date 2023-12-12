@@ -7,7 +7,7 @@ const { Dragger } = Upload;
 import { Document, pdfjs } from 'react-pdf';
 
 import { DiaPDFModel, LegalPoPdfModel } from '@project-management-system/shared-models';
-import { AdobeAcrobatApiService, NikeService } from '@project-management-system/shared-services';
+import { AdobeAcrobatApiService, NikeService, RLOrdersService } from '@project-management-system/shared-services';
 import PoPdfTable from './po-pdf-table';
 import { extractDataFromPoPdf } from './po-pdf-extraction-helper'
 import { DiaPdfDataExtractor } from './dia-pdf-extraction-helper';
@@ -48,7 +48,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
 
     const [diaPDfForm] = Form.useForm()
-    const nikeDpomService = new NikeService();
+    const rlService = new RLOrdersService();
     const adobeAcrobatApi = new AdobeAcrobatApiService()
 
     const uploadProps: UploadProps = {
@@ -72,12 +72,6 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
     async function extractPoPdfData(pdf: any, pdfText: any) {
         const poData = await extractDataFromPoPdf(pdf)
         setPoPdfData(poData)
-    }
-
-    async function extractDiaDocumentData(pdf: any, pdfText: any) {
-        const data: DiaPDFModel = await DiaPdfDataExtractor(pdf)
-        setDiaPDFValues(data)
-        diaPDfForm.setFieldsValue(data)
     }
 
     const extractTextFromPdf = async (pdfFile) => {
@@ -138,32 +132,18 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
     }
 
     const savePdfFields = () => {
-        if (resultProps?.title.includes('DIA Document')) {
-            const formValues = diaPDfForm.getFieldsValue();
-            nikeDpomService.saveDIAPDFData(formValues).then((res) => {
-                if (res.status) {
-                    onReset()
-                    // alert(res.internalMessage)
-                    message.success(res.internalMessage)
-                } else {
-                    message.error(res.internalMessage)
-                }
-            })
-        } else {
-            nikeDpomService.saveLegalPOPDFData(poPdfData).then((res) => {
-                if (res.status) {
-                    onReset()
-                    // alert(res.internalMessage)
-                    message.success(res.internalMessage)
-                } else {
-                    message.error(res.internalMessage)
-                }
-            })
-        }
+        rlService.saveOrdersDataFromPDF(poPdfData).then((res) => {
+            if (res.status) {
+                onReset()
+                // alert(res.internalMessage)
+                message.success(res.internalMessage)
+            } else {
+                message.error(res.internalMessage)
+            }
+        })
     }
 
     function onReset() {
-        setDiaPDFValues(undefined);
         setFileList([]);
         setPoPdfData(undefined)
         setResultProps(undefined)
@@ -171,11 +151,8 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
     function renderPDFOutPut() {
         if (resultProps && resultProps.status == 'success') {
-            if (resultProps?.title.includes('PO PDF') && poPdfData) {
+            if (poPdfData) {
                 return <PoPdfTable data={poPdfData} />
-            }
-            if (resultProps?.title.includes('DIA Document') && diaPDFValues) {
-                return renderDiaForm()
             }
         }
         return <></>

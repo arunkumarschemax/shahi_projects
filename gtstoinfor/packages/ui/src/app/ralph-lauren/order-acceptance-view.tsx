@@ -3,13 +3,13 @@ import { useEffect, useRef, useState, } from 'react';
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { Excel } from 'antd-table-saveas-excel';
-import { OrdersService, RLOrdersService } from '@project-management-system/shared-services';
+import { RLOrdersService } from '@project-management-system/shared-services';
 import moment from 'moment';
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'antd/es/table';
 import { FilterConfirmProps } from 'antd/es/table/interface';
 import { useNavigate } from 'react-router-dom';
-import { PoOrderFilter } from '@project-management-system/shared-models';
+import { OrderAcceptanceRequest, PoOrderFilter } from '@project-management-system/shared-models';
 import { useIAMClientState } from '../nike/iam-client-react';
 
 
@@ -27,12 +27,10 @@ const OrderAcceptanceGrid = () => {
   const searchInput = useRef<InputRef>(null);
   const [searchedColumn, setSearchedColumn] = useState("");
   const [item, setItem] = useState<any[]>([]);
-  const [style, setStyle] = useState<any[]>([]);
-  const [orderNumberDetails, setOrderNumberDetails] = useState<any[]>([]);
   let navigate = useNavigate()
   const service = new RLOrdersService();
   const [orderData, setOrderData] = useState<any>([]);
-const { IAMClientAuthContext, dispatch } = useIAMClientState();
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
 
   const { Text } = Typography
@@ -46,7 +44,7 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
     if (form.getFieldValue("poNumber") !== undefined) {
       req.poNumber = form.getFieldValue("poNumber");
     }
-    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
 
     service.getorderData(req).then((res) => {
       if (res.status) {
@@ -64,11 +62,8 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   const handleItemNoChange = (value, record) => {
     record.itemNumber = value
-    // setItemNoValues((prevValues) => ({
-    //     ...prevValues,
-    //     [record.key]: value,
-    // }));
   };
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -156,87 +151,103 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
       ),
   });
 
+  const createCOLine = (record) => {
+    const req = new OrderAcceptanceRequest();
+    req.purchaseOrderNumber = record.poLineItemNumber
+    req.poLineItemNumber = record.purchaseOrderNumber
+    req.itemNo = record.itemNumber
+    req.buyer = 'RL-U12'
+    service.coLineCreationReq(req).then((res) => {
+      if (res.status) {
+        // getOrderAcceptanceData()
+        message.success(res.internalMessage)
+      } else (
+        message.error(res.internalMessage)
+      )
+    })
+  }
+
   const columns: any = [
     {
-        title: "S.No",
-        key: "sno",
-        width: 50,
-        render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-        fixed: "left",
-      },
+      title: "S.No",
+      key: "sno",
+      width: 50,
+      render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+      fixed: "left",
+    },
     {
-        title: "PO Number",
-        dataIndex: "poNumber",
-        width: 90,
-        sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-        sortDirections: ["ascend", "descend"],
-        fixed: "left",
-        // ...getColumnSearchProps('purchaseOrderNumber')
-      },
-      {
-        title: "PO Item",
-        dataIndex: "poItem",
-        width: 90,
-        sorter: (a, b) => a.poItem.localeCompare(b.poItem),
-        sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('purchaseOrderNumber')
-      },
-      {
-        title: "Material Number",
-        dataIndex: "materialNo",
-        width: 90,
-        sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
-        sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('purchaseOrderNumber')
-      },
-      {
-        title: "Season Code",
-        dataIndex: "seasonCode",
-        width: 90,
-        sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
-        sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('purchaseOrderNumber')
-      },
-      {
-        title: "Address",
-        dataIndex: "shipToAddress",
-        width: 90,
-        sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-        sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('purchaseOrderNumber')
-      },
-      {
-        title: "Agent",
-        dataIndex: "agent",
-        align: "center",
-        width: 90,
-        sorter: (a, b) => a.agent.localeCompare(b.agent),
-        sortDirections: ["ascend", "descend"],
-      },
-      {
-        title: "Purchase Group",
-        dataIndex: "purchaseGroup",
-        align: "center",
-        width: 90,
-        sorter: (a, b) => a.purchaseGroup.localeCompare(b.purchaseGroup),
-        sortDirections: ["ascend", "descend"],
-      },
-      {
-        title: "Supplier",
-        dataIndex: "supplier",
-        align: "center",
-        width: 90,
-        sorter: (a, b) => a.supplier.localeCompare(b.supplier),
-        sortDirections: ["ascend", "descend"],
-      },
-      {
-        title: "Revision No",
-        dataIndex: "revisionNo",
-        align: "center",
-        width: 90,
-        sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
-        sortDirections: ["ascend", "descend"],
-      },
+      title: "PO Number",
+      dataIndex: "poNumber",
+      width: 90,
+      sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+      sortDirections: ["ascend", "descend"],
+      fixed: "left",
+      // ...getColumnSearchProps('purchaseOrderNumber')
+    },
+    {
+      title: "PO Item",
+      dataIndex: "poItem",
+      width: 90,
+      sorter: (a, b) => a.poItem.localeCompare(b.poItem),
+      sortDirections: ["ascend", "descend"],
+      // ...getColumnSearchProps('purchaseOrderNumber')
+    },
+    {
+      title: "Material Number",
+      dataIndex: "materialNo",
+      width: 90,
+      sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
+      sortDirections: ["ascend", "descend"],
+      // ...getColumnSearchProps('purchaseOrderNumber')
+    },
+    {
+      title: "Season Code",
+      dataIndex: "seasonCode",
+      width: 90,
+      sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
+      sortDirections: ["ascend", "descend"],
+      // ...getColumnSearchProps('purchaseOrderNumber')
+    },
+    {
+      title: "Address",
+      dataIndex: "shipToAddress",
+      width: 90,
+      sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+      sortDirections: ["ascend", "descend"],
+      // ...getColumnSearchProps('purchaseOrderNumber')
+    },
+    {
+      title: "Agent",
+      dataIndex: "agent",
+      align: "center",
+      width: 90,
+      sorter: (a, b) => a.agent.localeCompare(b.agent),
+      sortDirections: ["ascend", "descend"],
+    },
+    {
+      title: "Purchase Group",
+      dataIndex: "purchaseGroup",
+      align: "center",
+      width: 90,
+      sorter: (a, b) => a.purchaseGroup.localeCompare(b.purchaseGroup),
+      sortDirections: ["ascend", "descend"],
+    },
+    {
+      title: "Supplier",
+      dataIndex: "supplier",
+      align: "center",
+      width: 90,
+      sorter: (a, b) => a.supplier.localeCompare(b.supplier),
+      sortDirections: ["ascend", "descend"],
+    },
+    {
+      title: "Revision No",
+      dataIndex: "revisionNo",
+      align: "center",
+      width: 90,
+      sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
+      sortDirections: ["ascend", "descend"],
+    },
     //   {
     //     title: "Color",
     //     dataIndex: "color",
@@ -245,14 +256,14 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
     //     sorter: (a, b) => a.color.localeCompare(b.color),
     //     sortDirections: ["ascend", "descend"],
     //   },
-      {
-        title: "Status",
-        dataIndex: "status",
-        align: "center",
-        width: 90,
-        sorter: (a, b) => a.status.localeCompare(b.status),
-        sortDirections: ["ascend", "descend"],
-      },
+    {
+      title: "Status",
+      dataIndex: "status",
+      align: "center",
+      width: 90,
+      sorter: (a, b) => a.status.localeCompare(b.status),
+      sortDirections: ["ascend", "descend"],
+    },
     {
       title: "Item No",
       dataIndex: "itemNo",
@@ -288,7 +299,7 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
         return (
           <Popconfirm
             title="Are you sure to Accept"
-            // onConfirm={() => saveItemNuberDetails(record)}
+            onConfirm={() => createCOLine(record)}
           // disabled={record.answered_status == 'Accepted'}
           // disabled= {record.answered_status !== 'Accepted' ? false : true}
 
@@ -312,79 +323,79 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
 
 
-//   const handleExport = (e: any) => {
-//     e.preventDefault();
+  //   const handleExport = (e: any) => {
+  //     e.preventDefault();
 
-//     const currentDate = new Date()
-//       .toISOString()
-//       .slice(0, 10)
-//       .split("-")
-//       .join("/");
+  //     const currentDate = new Date()
+  //       .toISOString()
+  //       .slice(0, 10)
+  //       .split("-")
+  //       .join("/");
 
-//     let exportingColumns: IExcelColumn[] = []
-//     let i = 1;
+  //     let exportingColumns: IExcelColumn[] = []
+  //     let i = 1;
 
-//     exportingColumns = [
-//       // { title: '#', dataIndex: 'id' ,render: (value, record, index) => {
-//       //     return index + 1; 
-//       //   }},
-//       // { title: 'Trim Order Id', dataIndex: 'trim_order_id' },
-//       { title: 'Order No', dataIndex: 'order_no' },
-//       { title: 'Year', dataIndex: 'year' },
-//       { title: 'Revision No', dataIndex: 'revision_no' },
-//       { title: 'Planning ssn', dataIndex: 'planning_ssn' },
-//       { title: 'Global Business Unit', dataIndex: 'global_business_unit' },
-//       { title: 'Business Unit', dataIndex: 'business_unit' },
-//       // { title: 'Item Brand', dataIndex: 'item_brand' },
-//       { title: 'Department', dataIndex: 'department' },
-//       { title: 'Revised Date', dataIndex: 'revised_date' },
-//       { title: 'Document Status', dataIndex: 'document_status' },
-//       { title: 'Status', dataIndex: 'answered_status' },
-//       { title: 'Vendor Person InCharge', dataIndex: 'vendor_person_incharge' },
-//       { title: 'Decision Date', dataIndex: 'decision_date' },
-//       { title: 'Payment Terms', dataIndex: 'payment_terms' },
-//       { title: 'Eta Wh', dataIndex: 'eta_wh' },
-//       { title: 'Approver', dataIndex: 'approver' },
-//       { title: 'Approval Date', dataIndex: 'approval_date' },
-//       { title: 'Order Conditions', dataIndex: 'order_conditions' },
-//       { title: 'Remarks', dataIndex: 'remark' },
-//       { title: 'Raw Material Code', dataIndex: 'raw_material_code' },
-//       { title: 'Supplier Raw Material Code', dataIndex: 'supplier_raw_material_code' },
-//       { title: 'Supplier Raw Material', dataIndex: 'supplier_raw_material' },
-//       // { title: 'Vendor Code', dataIndex: 'vendor_code' },
-//       // { title: 'Vendor ', dataIndex: 'vendor' },
-//       { title: 'Management Factory Code  ', dataIndex: 'management_factory_code' },
-//       { title: 'Management Factory ', dataIndex: 'management_factory' },
-//       { title: 'Branch Factory Code ', dataIndex: 'branch_factory_code' },
-//       { title: 'Branch Factory ', dataIndex: 'branch_factory' },
-//       { title: 'Order Plan Number ', dataIndex: 'order_plan_number' },
-//       { title: 'Item Code ', dataIndex: 'item_code' },
-//       { title: 'Item  ', dataIndex: 'item' },
-//       { title: 'Representative Sample Code ', dataIndex: 'representative_sample_code' },
-//       { title: 'Representative Sample', dataIndex: 'representative_Sample' },
-//       { title: 'Color Code', dataIndex: 'color_code' },
-//       { title: 'Color', dataIndex: 'color' },
-//       { title: 'Pattern Dimension Code', dataIndex: 'pattern_dimension_code' },
-//       { title: 'Size Code', dataIndex: 'size_code' },
-//       { title: 'Size ', dataIndex: 'size' },
-//       { title: 'Order Quantity Pcs', dataIndex: 'order_qty_pcs' },
-//       { title: 'Arrangement By', dataIndex: 'arrangement_by' },
-//       { title: 'Trim Description', dataIndex: 'trim_description' },
-//       { title: 'Trim Item No', dataIndex: 'trim_item_no' },
-//       { title: 'Trim Supplier', dataIndex: 'trim_supplier' },
-//       { title: 'Status', dataIndex: 'answered_status' },
+  //     exportingColumns = [
+  //       // { title: '#', dataIndex: 'id' ,render: (value, record, index) => {
+  //       //     return index + 1; 
+  //       //   }},
+  //       // { title: 'Trim Order Id', dataIndex: 'trim_order_id' },
+  //       { title: 'Order No', dataIndex: 'order_no' },
+  //       { title: 'Year', dataIndex: 'year' },
+  //       { title: 'Revision No', dataIndex: 'revision_no' },
+  //       { title: 'Planning ssn', dataIndex: 'planning_ssn' },
+  //       { title: 'Global Business Unit', dataIndex: 'global_business_unit' },
+  //       { title: 'Business Unit', dataIndex: 'business_unit' },
+  //       // { title: 'Item Brand', dataIndex: 'item_brand' },
+  //       { title: 'Department', dataIndex: 'department' },
+  //       { title: 'Revised Date', dataIndex: 'revised_date' },
+  //       { title: 'Document Status', dataIndex: 'document_status' },
+  //       { title: 'Status', dataIndex: 'answered_status' },
+  //       { title: 'Vendor Person InCharge', dataIndex: 'vendor_person_incharge' },
+  //       { title: 'Decision Date', dataIndex: 'decision_date' },
+  //       { title: 'Payment Terms', dataIndex: 'payment_terms' },
+  //       { title: 'Eta Wh', dataIndex: 'eta_wh' },
+  //       { title: 'Approver', dataIndex: 'approver' },
+  //       { title: 'Approval Date', dataIndex: 'approval_date' },
+  //       { title: 'Order Conditions', dataIndex: 'order_conditions' },
+  //       { title: 'Remarks', dataIndex: 'remark' },
+  //       { title: 'Raw Material Code', dataIndex: 'raw_material_code' },
+  //       { title: 'Supplier Raw Material Code', dataIndex: 'supplier_raw_material_code' },
+  //       { title: 'Supplier Raw Material', dataIndex: 'supplier_raw_material' },
+  //       // { title: 'Vendor Code', dataIndex: 'vendor_code' },
+  //       // { title: 'Vendor ', dataIndex: 'vendor' },
+  //       { title: 'Management Factory Code  ', dataIndex: 'management_factory_code' },
+  //       { title: 'Management Factory ', dataIndex: 'management_factory' },
+  //       { title: 'Branch Factory Code ', dataIndex: 'branch_factory_code' },
+  //       { title: 'Branch Factory ', dataIndex: 'branch_factory' },
+  //       { title: 'Order Plan Number ', dataIndex: 'order_plan_number' },
+  //       { title: 'Item Code ', dataIndex: 'item_code' },
+  //       { title: 'Item  ', dataIndex: 'item' },
+  //       { title: 'Representative Sample Code ', dataIndex: 'representative_sample_code' },
+  //       { title: 'Representative Sample', dataIndex: 'representative_Sample' },
+  //       { title: 'Color Code', dataIndex: 'color_code' },
+  //       { title: 'Color', dataIndex: 'color' },
+  //       { title: 'Pattern Dimension Code', dataIndex: 'pattern_dimension_code' },
+  //       { title: 'Size Code', dataIndex: 'size_code' },
+  //       { title: 'Size ', dataIndex: 'size' },
+  //       { title: 'Order Quantity Pcs', dataIndex: 'order_qty_pcs' },
+  //       { title: 'Arrangement By', dataIndex: 'arrangement_by' },
+  //       { title: 'Trim Description', dataIndex: 'trim_description' },
+  //       { title: 'Trim Item No', dataIndex: 'trim_item_no' },
+  //       { title: 'Trim Supplier', dataIndex: 'trim_supplier' },
+  //       { title: 'Status', dataIndex: 'answered_status' },
 
 
-//       // { title: 'Currency', dataIndex: 'currency' },
-//       // { title: 'Cost', dataIndex: 'cost' },
-//     ]
-//     const excel = new Excel();
-//     excel.addSheet("Sheet1");
-//     excel.addRow();
-//     excel.addColumns(exportingColumns);
-//     excel.addDataSource(gridData);
-//     excel.saveAs(`Order Acceptance-Report-${currentDate}.xlsx`);
-//   };
+  //       // { title: 'Currency', dataIndex: 'currency' },
+  //       // { title: 'Cost', dataIndex: 'cost' },
+  //     ]
+  //     const excel = new Excel();
+  //     excel.addSheet("Sheet1");
+  //     excel.addRow();
+  //     excel.addColumns(exportingColumns);
+  //     excel.addDataSource(gridData);
+  //     excel.saveAs(`Order Acceptance-Report-${currentDate}.xlsx`);
+  //   };
 
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
@@ -397,14 +408,14 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
         extra={filteredData.length > 0 ? (<Button
           type="default"
           style={{ color: 'green' }}
-        //   onClick={handleExport}
+          //   onClick={handleExport}
           icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
 
 
         <Form
           onFinish={getorderData}
           form={form}
-          // layout='vertical'
+        // layout='vertical'
         >
           <Row gutter={24}>
             <Col

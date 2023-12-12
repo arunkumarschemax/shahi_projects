@@ -8,6 +8,8 @@ import { PdfFileUploadRepository } from './repositories/pdf-file.repo';
 import { RLOrdersRepository } from './repositories/rl-orders.repo';
 import { PdfFileUploadEntity } from './entities/pdf-file-upload.entity';
 import { RLOrdersEntity } from './entities/rl-orders.entity';
+import { COLineEntity } from './entities/co-line.entity';
+import { COLineRepository } from './repositories/co-line.repository';
 
 
 
@@ -16,11 +18,11 @@ import { RLOrdersEntity } from './entities/rl-orders.entity';
         ScheduleModule.forRoot(),
         TypeOrmModule.forFeature([
             PdfFileUploadEntity,
-            RLOrdersEntity
-
+            RLOrdersEntity,
+            COLineEntity
 
         ])],
     controllers: [RLOrdersController],
-    providers: [RLOrdersService,PdfFileUploadRepository,RLOrdersRepository,ApplicationExceptionHandler]
+    providers: [RLOrdersService, PdfFileUploadRepository, RLOrdersRepository, COLineRepository, ApplicationExceptionHandler]
 })
 export class RLOrdersModule { }

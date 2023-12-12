@@ -1,6 +1,6 @@
 import { PoItemDetails, PoItemVariant, RLPoDetails } from "@project-management-system/shared-models";
 import {
-    CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_START_TEXT, ITEM_SHIP_TO_START_INDEX, ITEM_SHIP_TO_END_TEXT, ITEM_TEXT_END_TEXT, ITEM_SHIP_TO_END_INDEX, ITEM_VARIANT_START_TEXT, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, SELLER_ADDRESS_END_TEXT, SELLER_ADDRESS_START_TEXT, UNWANTED_TEXT_1, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6,
+    CURR_INDEX, COLOR_DESC, EMP_STR_EXP, FACTORYLOCATION_INDEX, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_START_TEXT, ITEM_SHIP_TO_START_INDEX, ITEM_SHIP_TO_END_TEXT, ITEM_TEXT_END_TEXT, ITEM_SHIP_TO_END_INDEX, ITEM_VARIANT_START_TEXT, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, SELLER_ADDRESS_END_TEXT, SELLER_ADDRESS_START_TEXT, UNWANTED_TEXT_1, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6,
     UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13
 } from "./popdf-regex-expressions";
 
@@ -18,13 +18,13 @@ import {
  */
 export const extractDataFromPoPdf = async (pdf) => {
     const poData = new RLPoDetails()
-    const itemsArr: { itemIndex: number, amountIndex: number }[] = []
+    const itemsArr: { itemIndex: number, colorIndex: number, amountIndex: number }[] = []
     const filteredData = []
     const itemDetailsArr: PoItemDetails[] = []
     for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const textContent: any = await page.getTextContent();
-        console.log(textContent)
+        // console.log(textContent)
         //parsing  po data 
         // po details exists only in first data of pdf ,so using only first page for extracting po details
         if (i == 1) {
@@ -54,9 +54,8 @@ export const extractDataFromPoPdf = async (pdf) => {
                     buyerAddStartIndex = ind
                 }
                 if (ele.str === ITEM_SHIP_TO_START_TEXT) {
-                    // Found the first "ship to"
-                    shipToAddStartIndex = ind;
-                    buyerAddEndIndex = ind
+                    shipToAddStartIndex = ind + 11;
+                    buyerAddEndIndex = ind + 11
                 }
                 if (ele.str == ITEM_SHIP_TO_END_TEXT) {
                     shipToAddEndIndex = ind
@@ -74,7 +73,6 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.purchaseGroup = firstPageContent[dateSentIndex + 2].str
             poData.orderType = firstPageContent[dateSentIndex + 3].str
             poData.paymentCategory = firstPageContent[dateSentIndex + 4].str
-            // poData.customerDept = firstPageContent[dateSentIndex + 5].str
             poData.plant = firstPageContent[dateSentIndex + 5].str
             poData.mfgOrigin = firstPageContent[dateSentIndex + 6].str
             poData.poPrint = firstPageContent[dateSentIndex + 7].str
@@ -93,7 +91,10 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.buyerAddress = buyerAddress;
             let shipToAddress = ''
             for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) {
-                shipToAddress += firstPageContent[c].str + ','
+                if (c < shipToAddEndIndex - 1)
+                    shipToAddress += firstPageContent[c].str + ','
+                else
+                    shipToAddress += firstPageContent[c].str
             }
             poData.shipToAddress = shipToAddress;
         }
@@ -133,13 +134,17 @@ export const extractDataFromPoPdf = async (pdf) => {
     //------------------------------------------------------------------------------
     console.log(filteredData)
     let prevItemIndex = 0
+    let prevColorIndex = 0;
     for (const [index, rec] of filteredData.entries()) {
         // chech the item No pattern  using regex and push all matched items
         if (rec.str.match(ITEM_NO_EXP)) {
             prevItemIndex = index
         }
+        if (rec.str.match(COLOR_DESC)) {
+            prevColorIndex = index
+        }
         if (rec.str.match(ITEM_VARIANT_START_TEXT)) {
-            itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
+            itemsArr.push({ itemIndex: prevItemIndex, colorIndex: prevColorIndex, amountIndex: index })
         }
     }
 
@@ -164,7 +169,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsObj.model = filteredData[rec.itemIndex + 43].str
         itemDetailsObj.productType = filteredData[rec.itemIndex + 46].str
         itemDetailsObj.merchDivision = filteredData[rec.itemIndex + 49].str
-        itemDetailsObj.colorDescription = filteredData[rec.itemIndex + 53].str
+        itemDetailsObj.colorDescription = filteredData[rec.colorIndex + 2].str
         itemDetailsObj.class = filteredData[rec.itemIndex + 56].str
         itemDetailsObj.conceptShortDesc = filteredData[rec.itemIndex + 59].str
         itemDetailsObj.fabricContent = filteredData[rec.itemIndex + 62].str
@@ -186,16 +191,19 @@ export const extractDataFromPoPdf = async (pdf) => {
             k++
         }
         console.log(itemVarinatsTextArr, 'VVVVVVVv')
+        const stringsWithLength13 = itemVarinatsTextArr.filter(value => typeof value === 'string' && value.length === 13 || value.length === 12);
+        const sizes = stringsWithLength13.length;
+        const count = itemVarinatsTextArr.length / sizes;
         const itemVariantsArr: PoItemVariant[] = []
-        for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / 8); l++) {
+        for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
             const itemVariantsObj = new PoItemVariant();
-            itemVariantsObj.size = itemVarinatsTextArr[(8 * l) + 0]
-            itemVariantsObj.upc = itemVarinatsTextArr[(8 * l) + 1]
-            itemVariantsObj.unitPrice = itemVarinatsTextArr[(8 * l) + 3]
-            itemVariantsObj.currency = itemVarinatsTextArr[(8 * l) + 4]
-            itemVariantsObj.qunatity = itemVarinatsTextArr[(8 * l) + 5]
-            itemVariantsObj.amount = itemVarinatsTextArr[(8 * l) + 7]
-            // console.log(itemVariantsObj)
+            itemVariantsObj.size = itemVarinatsTextArr[(count * l) + 0]
+            itemVariantsObj.upc = itemVarinatsTextArr[(count * l) + 1]
+            itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) + count - 5]
+            itemVariantsObj.currency = itemVarinatsTextArr[(count * l) + count - 4]
+            itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count - 3]
+            itemVariantsObj.amount = itemVarinatsTextArr[(count * l) + count - 1]
+            console.log(itemVariantsObj)
             itemVariantsArr.push(itemVariantsObj)
         }
         itemDetailsObj.poItemVariantDetails = itemVariantsArr

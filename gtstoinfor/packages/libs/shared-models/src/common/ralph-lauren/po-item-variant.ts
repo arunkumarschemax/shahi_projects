@@ -4,6 +4,6 @@ export class PoItemVariant {
     upc: string;
     unitPrice: string;
     currency: string;
-    qunatity: string;
+    quantity: string;
     amount: string;
 }
