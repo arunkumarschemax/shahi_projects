@@ -201,18 +201,25 @@ export class RLOrdersService {
   }
 
   async coLineCreationReq(req: any): Promise<CommonResponseModel> {
-    const entity = new COLineEntity()
-    entity.buyer = req.buyer
-    entity.buyerPo = req.purchaseOrderNumber;
-    entity.lineItemNo = req.poLineItemNumber;
-    entity.itemNo = req.itemNo
-    entity.status = 'Open';
-    entity.createdUser = 'Admin';
-    const save = await this.coLineRepo.save(entity);
-    if (save) {
-      return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
-    } else {
-      return new CommonResponseModel(false, 1, 'CO-Line request failed')
+    try {
+      if (req.itemNo == undefined || null) {
+        return new CommonResponseModel(false, 0, 'Please enter Item No')
+      }
+      const entity = new COLineEntity()
+      entity.buyer = req.buyer
+      entity.buyerPo = req.purchaseOrderNumber;
+      entity.lineItemNo = req.poLineItemNumber;
+      entity.itemNo = req.itemNo
+      entity.status = 'Open';
+      entity.createdUser = 'Admin';
+      const save = await this.coLineRepo.save(entity);
+      if (save) {
+        return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
+      } else {
+        return new CommonResponseModel(false, 0, 'CO-Line request failed')
+      }
+    } catch (err) {
+      return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
     }
   }
 
@@ -225,11 +232,9 @@ export class RLOrdersService {
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
       await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447#');
-
       await driver.findElement(By.id('username')).sendKeys('60566910');
       await driver.findElement(By.id('password')).sendKeys('60566910');
       await driver.findElement(By.css('button.btn-primary')).click();
-
       await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447')
       const newPAge = await driver.executeScript(
         `javascript:openAccessPage('http://intranet.shahi.co.in:8080/IntraNet/CRMPRDNEW.jsp', 'CRM', '2448', 'R', '60566910', 'N', '20634576', 'null');`
