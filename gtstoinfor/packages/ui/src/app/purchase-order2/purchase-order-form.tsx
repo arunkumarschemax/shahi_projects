@@ -120,7 +120,7 @@ export const PurchaseOrderForm = () => {
     }
     useEffect(() => {
         if (stateData != undefined) {
-
+            console.log(stateData)
             if (stateData.type == 'Indent') {
                 console.log(stateData)
                 setIndentDropDownVisible(true)
@@ -138,10 +138,11 @@ export const PurchaseOrderForm = () => {
                 }
             }
             if (stateData.type == 'Sampling') {
-                // console.log(stateData)
+                console.log(stateData.data[3])
                 // console.log(stateData.data[2].m3itemid)
                 setnavigateData(stateData)
                 // setSampleItemId(stateData.data[2].m3itemid)
+                poForm.setFieldsValue({ buyerId:stateData.data[3].buyerId })
                 poForm.setFieldsValue({ indentAgainst: 'Sample Order' })
                 setSampleDropDownVisible(true)
                 poForm.setFieldsValue({ requestNo: stateData.data[1].sampleReqIds })
