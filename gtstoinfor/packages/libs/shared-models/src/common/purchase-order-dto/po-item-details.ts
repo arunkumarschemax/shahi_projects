@@ -17,7 +17,8 @@ export class PoItemDetailsDto {
     subjectiveAmount: number;
     indentId:number
     sampleReqId:number
-    styleId: number
+    styleId:number
+
     constructor(
         // purchaseOrderItemId: number,
         colourId: number,
@@ -35,8 +36,7 @@ export class PoItemDetailsDto {
         subjectiveAmount: number,
        indentId:number,
     sampleReqId:number,
-    styleId: number,
-
+    styleId:number
 
     ){
 //    this.purchaseOrderItemId = purchaseOrderItemId
@@ -55,6 +55,7 @@ export class PoItemDetailsDto {
    this.subjectiveAmount = subjectiveAmount
    this.indentId=indentId
    this.sampleReqId=sampleReqId
-    this.styleId = styleId
+   this.styleId=styleId
+
     }
 }
