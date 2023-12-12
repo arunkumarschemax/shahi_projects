@@ -193,7 +193,6 @@ export const PurchaseOrderForm = () => {
             }
         })
     }
-
     const getIndnetNo = () => {
         const req = new BuyerRefNoRequest()
         req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
@@ -225,7 +224,7 @@ export const PurchaseOrderForm = () => {
             }
         }
         console.log(poItemDetails)
-        const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('styleId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'), poForm.getFieldValue('indentId'), poForm.getFieldValue('buyerId'), poItemDetails,poForm.getFieldValue('currencyId'),poForm.getFieldValue('exchangeRate'),poForm.getFieldValue('totalAmount'),poForm.getFieldValue('deliveryAddress'), poForm.getFieldValue('indentAgainst'))
+        const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'), poForm.getFieldValue('indentId'), poForm.getFieldValue('buyerId'), poItemDetails,poForm.getFieldValue('currencyId'),poForm.getFieldValue('exchangeRate'),poForm.getFieldValue('totalAmount'),poForm.getFieldValue('deliveryAddress'), poForm.getFieldValue('indentAgainst'))
         console.log(poDto)
         if (poDto.poItemInfo.length > 0) {
             purchaseOrderService.cretePurchaseOrder(poDto).then(res => {

@@ -879,7 +879,8 @@ export class SampleRequestService {
               fabricType: item.itemType,
               quantity: item.requiredQuantity,
               assignedQuantity:item.assigned_quantity,
-              bomQuantity:item.bomQuantity
+              bomQuantity:item.bomQuantity,
+              styleId:item.styleId
             }
           );
           console.log(result)

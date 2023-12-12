@@ -29,7 +29,7 @@ export class FabricIndentRepository extends Repository<IndentFabricEntity> {
             .select(`"Fabric" as materialType,itf.ifabric_id,itf.indent_id as indentId,
         itf.m3_fabric_code,itf.color,itf.quantity,itf.quantity_unit,
         itf.created_at,itf.updated_at,itf.indent_id,m3.item_code,m3.description,
-        co.colour,it.status, uom.uom AS quantityUnit,CONCAT(b.buyer_code,'-',b.buyer_name)AS buyer,s.buyer_id AS buyerId`)
+        co.colour,it.status, uom.uom AS quantityUnit,CONCAT(b.buyer_code,'-',b.buyer_name)AS buyer,s.buyer_id AS buyerId, it.style as styleId`)
             .leftJoin(M3ItemsEntity, 'm3', `m3.m3_items_Id = itf.m3_fabric_code`)
             .leftJoin(Colour, 'co', 'co.colour_id=itf.color')
             .leftJoin(Indent, 'it', 'it.indent_id=itf.indent_id')
