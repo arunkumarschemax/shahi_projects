@@ -17,6 +17,11 @@ export class GrnItemsEntity {
     })
     poItemId: number
 
+    @Column('int', {
+        name: 'style_id'
+    })
+    styleId: number
+
 
     @Column('varchar', {
         name: 'received_quantity',

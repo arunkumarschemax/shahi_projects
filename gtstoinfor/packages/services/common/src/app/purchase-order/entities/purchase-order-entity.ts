@@ -23,11 +23,11 @@ export class PurchaseOrderEntity{
     })
     vendorId:number
 
-    @Column('int',{
-        name:'style_id',
-        nullable:false
-    })
-    styleId:number
+    // @Column('int',{
+    //     name:'style_id',
+    //     nullable:false
+    // })
+    // styleId:number
 
     @Column('int',{
       name:'buyer_id',

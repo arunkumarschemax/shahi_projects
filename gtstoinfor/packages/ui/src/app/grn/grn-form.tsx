@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Modal, Row, Select, Table, Tabs, Typography } from 'antd'
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Modal, Row, Select, Table, Tabs, Typography, notification } from 'antd'
 import style from 'antd/es/alert/style'
 import TabPane from 'antd/es/tabs/TabPane'
 import React, { useEffect, useState } from 'react'
@@ -460,16 +460,29 @@ const GRNForm = () => {
 
   const handleQrScan = (value) => {
     setShowQrScan(false);
+    const selectedVendor = form.getFieldValue('vendorId');
+    if (!selectedVendor) {
+      setTimeout(() => {
+        notification.info({message:'Please select a vendor'});
+      });
+      return;
+    }
   
     const poNumber = poNoData.filter((el) => el.poNumber === value.text)[0];
-  
+    if (!poNumber) {
+      setTimeout(() => {
+      notification.warning({message:'Scanned PO does not match with Vendor POs'});
+    },2000);
+      return;
+    }
+
     if (poNumber) {
       getPODataById(poNumber.purchaseOrderId, { name: poNumber.materialType, val: poNumber.poAgainst });
       form.setFieldsValue({
         purchaseOrderId: poNumber.poNumber,
       });
     }
-  };
+  }
   
 
   return (

@@ -67,4 +67,7 @@ export class PoItemdetails{
   @ApiProperty()  
   sampleReqId:number
 
+  @ApiProperty()
+  styleId:number
+
 }

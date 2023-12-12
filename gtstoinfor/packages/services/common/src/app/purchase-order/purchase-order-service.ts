@@ -54,7 +54,7 @@ export class PurchaseOrderService {
             const poEntity = new PurchaseOrderEntity()
             poEntity.poNumber = poNumber
             poEntity.vendorId = req.vendorId
-            poEntity.styleId = req.styleId
+            // poEntity.styleId = req.styleId
             poEntity.buyerId = req.buyerId
             poEntity.expectedDeliveryDate = req.expectedDeliveryDate
             poEntity.purchaseOrderDate = req.purchaseOrderDate
@@ -83,6 +83,7 @@ export class PurchaseOrderService {
                         pofabricEntity.transportation = item.transportation
                         pofabricEntity.tax = item.tax
                         pofabricEntity.subjectiveAmount = item.subjectiveAmount
+                        pofabricEntity.styleId = item.styleId
                         poItemInfo.push(pofabricEntity)
             }
             poEntity.poItemInfo=poItemInfo
