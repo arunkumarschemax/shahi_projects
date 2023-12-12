@@ -4,6 +4,7 @@ import { RLOrdersService } from "./rl-orders.service";
 import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req } from '@nestjs/common';
 import { CommonResponseModel, PoOrderFilter } from "@project-management-system/shared-models";
 import { ApiBody } from "@nestjs/swagger";
+import { OrderDetailsReq } from "./dto/order-details-req";
 
 
 @Controller("/rl-orders")
@@ -71,6 +72,16 @@ export class RLOrdersController {
         }
     }
 
+    @Post('/getOrderDetails')
+    @ApiBody({ type: OrderDetailsReq })
+    async getOrderDetails(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.rlOrdersService.getOrderDetails(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
     @Post('/getBuyerPo')
     async getBuyerPo(): Promise<CommonResponseModel> {
         try {
@@ -79,6 +90,7 @@ export class RLOrdersController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
     @Post('/getColineItem')
     async getColineItem(): Promise<CommonResponseModel> {
         try {
@@ -87,6 +99,7 @@ export class RLOrdersController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
     @Post('/getColineOrderNo')
     async getColineOrderNo(): Promise<CommonResponseModel> {
         try {

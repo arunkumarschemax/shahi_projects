@@ -1,9 +1,10 @@
 
 import { Injectable } from "@nestjs/common";
 import { RLOrdersRepository } from "./repositories/rl-orders.repo";
-import { CoLineRequest, Colors, CommonResponseModel, Destinations, FactoryReportModel, FactoryReportSizeModel, OrderDataModel, OrderSizeWiseModel, PoOrderFilter, Sizes, coLineRequest } from "@project-management-system/shared-models";
+import { CoLineModel, Color, CoLineRequest, Destination, Colors, CommonResponseModel, Destinations, OrderDataModel, OrderSizeWiseModel, PoOrderFilter, Sizes, coLineRequest, Size } from "@project-management-system/shared-models";
 import { DataSource } from "typeorm";
 import { PdfFileUploadRepository } from "./repositories/pdf-file.repo";
+import { OrderDetailsReq } from "./dto/order-details-req";
 import { RLOrdersEntity } from "./entities/rl-orders.entity";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { COLineEntity } from "./entities/co-line.entity";
@@ -11,7 +12,6 @@ import { COLineRepository } from "./repositories/co-line.repository";
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 import axios from 'axios';
 const moment = require('moment');
-
 
 @Injectable()
 export class RLOrdersService {
@@ -145,6 +145,61 @@ export class RLOrdersService {
     }
   }
 
+  async getOrderDetails(req: OrderDetailsReq): Promise<CommonResponseModel> {
+    try {
+      const data = await this.rlOrdersRepo.find({ where: { poNumber: req.poNumber } })
+      //  const data = await this.repo.find()
+      let destinationMap = new Map<string, Destination>();
+      // po -> destination -> color -> sizes
+      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: number, price: string }[]>>>();
+      const poMap = new Map<string, RLOrdersEntity>();
+      data.forEach(rec => {
+        poMap.set(rec.poNumber, rec)
+        const dest = rec.shipToAddress.slice(-4).trim();
+        if (!destinationColSizesMap.has(rec.poNumber)) {
+          destinationColSizesMap.set(rec.poNumber, new Map<string, Map<string, []>>());
+        }
+        if (!destinationColSizesMap.get(rec.poNumber).has(dest)) {
+          destinationColSizesMap.get(rec.poNumber).set(dest, new Map<string, []>());
+        }
+        if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(rec.color)) {
+          destinationColSizesMap.get(rec.poNumber).get(dest).set(rec.color, []);
+        }
+        destinationColSizesMap.get(rec.poNumber).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.price });
+      });
+      const coData = []
+      destinationColSizesMap.forEach((destColorSize, poNumber) => {
+        const desArray = []
+        destColorSize.forEach((colorSizes, dest) => {
+          const ColArray = []
+          colorSizes.forEach((sizes, color) => {
+            const sizeArray = []
+            sizes.forEach((size) => {
+              const sizeObj = new Size(size.size, size.quantity, size.price);
+              sizeArray.push(sizeObj)
+            })
+            const col = new Color(color, sizeArray);
+            ColArray.push(col)
+          });
+          const des = new Destination(dest, ColArray);
+          desArray.push(des)
+        });
+        const poInfo = poMap.get(poNumber)
+        const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price, poInfo.currency, poInfo.shipDate, desArray);
+        coData.push(co)
+      });
+      // console.log(coData, "pppppppppppppp")
+      // console.log(destinationColSizesMap, "reeeeeeeeee");
+      if (coData) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
   async coLineCreationReq(req: any): Promise<CommonResponseModel> {
     const entity = new COLineEntity()
     entity.buyer = req.buyer
@@ -193,7 +248,8 @@ export class RLOrdersService {
         let pkgTerms;
         let paymentTerms;
         if (po.buyer === 'Nike-U12') {
-          const data = await this.getDataForColine({ poNumber: po.buyer_po, lineNumber: po.line_item_no })
+          const response = await this.getOrderDetails({ poNumber: po.buyer_po })
+          const data = response.data
           const result = data[0].color_desc.split('/')[0]
           const firstTenChars = result.substring(0, 10);
           const lastFourDigits = data[0].style_number.slice(-4)
@@ -528,8 +584,8 @@ export class RLOrdersService {
     else
       return new CommonResponseModel(false, 0, 'No data found');
   }
-}
 
+}
 
 
 
