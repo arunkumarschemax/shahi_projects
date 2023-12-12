@@ -195,6 +195,7 @@ export const SourcingRequisitionDynamicForm = () => {
     }
 
     const getTrimCategory = (value)=>{
+        trimForm.setFieldsValue(undefined)
         getTrimCodes()
         const req = new M3TrimType(value,sourcingForm.getFieldValue('buyer'))
         m3Service.getAllTrimCategories(req).then((res)=>{

@@ -197,7 +197,7 @@ export class StocksService {
             // CONCAT(it.item_code,'-',it.description) AS m3Item,
             console.log(req);
             let query = ` SELECT b.external_ref_number AS refNo,s.location_id AS locationId,s.m3_item AS m3itemId, s.uom_id AS uomId, s.grn_item_id AS grnItemId,  s.id AS stockId,
-            it.trim_code AS m3Item,
+            it.trim_code AS m3Item,  tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part,
             s.item_type AS itemType, (s.quantity-s.allocatd_quantity-transfered_quantity) AS qty,
              u.uom AS uom, b.buyer_name AS buyer,r.rack_position_name AS location,
              it.thickness_id, it.type_id,it.trim_category_id,it.variety_id,
@@ -208,6 +208,7 @@ export class StocksService {
              LEFT JOIN uom u ON u.id = s.uom_id
              LEFT JOIN grn_items gi ON gi.grn_item_id = s.grn_item_id
              LEFT JOIN grn g ON g.grn_id = gi.grn_id
+             LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = it.trim_mapping_id
              WHERE s.id > 0 AND g.grn_type = 'INDENT' AND (quantity-s.allocatd_quantity-transfered_quantity) > 0 AND s.item_type != 'fabric'`
             if(req.buyerId != undefined){
                 query = query + " and s.buyer_id = "+req.buyerId;
@@ -261,10 +262,22 @@ export class StocksService {
             query = query + " order by b.buyer_name ASC ";
 
             const res = await AppDataSource.query(query);
-            if (res.length  > 0) {
-                return new CommonResponseModel(true,1,"Stock retrived successfully" , res);
+            if (res.length > 0) {
+                const modifiedRes = res.map(item => {
+                    const trueValues = Object.keys(item)
+                    .filter(key => ["structure", "category", "content", "type", "finish", "hole", "quality", "thickness", "variety", "uom", "color", "logo", "part"].includes(key) && item[key] === 1)
+                    .map(key => key.toUpperCase());
+    
+                    const concatenatedValues = trueValues.join('/');
+                    const label = trueValues.length > 0 ? "BUYER/TRIM TYPE/TRIM CATEGORY/":""
+
+                    const trimParams = label + concatenatedValues
+                    return { ...item, trimParams };
+                });
+    
+                return new CommonResponseModel(true, 1, "Stock retrieved successfully", modifiedRes);
             } else {
-                return new CommonResponseModel(false,0,"No data found" ,);
+                return new CommonResponseModel(false, 0, "No data found");
             }
         }
 
@@ -305,6 +318,7 @@ export class StocksService {
                     let resss = new RollInfoModel(ress.rollId,ress.rollNo,ress.barcode,ress.originalQty);
                     rollInfoModel.push(resss);
                 }
+                
                 let warehouseData = new WarehousePalletRollsModel("",1,ress.palletId,ress.palletCode,0,"",ress.maxItems,ress.currentPalletState,ress.currentPalletLocation,rollInfoModel,rollBasicInfoModel);
                 warehousePalletRollsModel.push(warehouseData);
             }

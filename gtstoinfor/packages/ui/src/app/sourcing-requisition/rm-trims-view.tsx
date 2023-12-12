@@ -401,13 +401,6 @@ export const RmTrimsView = () => {
     //   sorter: (a, b) => a.Indent.localeCompare(b.Indent),
     //   sortDirections: ["descend", "ascend"],
     // },
-    // {
-    //   title: "Style",
-    //   dataIndex: "style",
-    //   ...getColumnSearchProps("style"),
-    //   sorter: (a, b) => a.style.localeCompare(b.style),
-    //   sortDirections: ["descend", "ascend"],
-    // },
     {
       title: "Material Type",
       dataIndex: "itemType",
@@ -425,6 +418,10 @@ export const RmTrimsView = () => {
     //   ),
     //   ...getColumnSearchProps("item_code"),
     // },
+    {
+      title: <div style={{textAlign:"center"}}>Trim Params</div>,
+      dataIndex: "trimParams",
+    },
     {
       title: "M3 Item",
       dataIndex: "m3Item",

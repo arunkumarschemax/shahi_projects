@@ -199,6 +199,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
             width:'100px' 
         },
         {
+            title:'Trim Params',
+            dataIndex:'trimParams',
+            // width:'100px' 
+        },
+        {
             title:'M3 Trim Code',
             dataIndex:'m3TrimCodeName',
             width:'100px'
@@ -283,6 +288,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
             title:' Sample Request Number',
             dataIndex:'sampleReqNo',
             width:'190px'
+        },
+        {
+            title:'Trim Params',
+            dataIndex:'trimParams',
+            // width:'100px' 
         },
         {
             title:'M3 Trim Code',
