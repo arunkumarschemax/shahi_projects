@@ -474,21 +474,18 @@ export class DpomService {
                                             const ele = (await labelElement.getText())?.trim();
                                             ele.length > 0 ? fileteredElements.push(labelElement) : '';
                                         }
-                                        let tabIndex;
-                                        if (dest.name == 'UQAU') {
-                                            tabIndex = 4 //colorsTabs.indexOf(tab); // Adjust index to start from 1
-                                        } else if (dest.name == 'UQEU') {
-                                            tabIndex = 5
-                                        } else if (dest.name == 'UQJP') {
-                                            tabIndex = 2
-                                        } else if (po.item_no != '694M' && dest.name == 'UQIN') {
-                                            tabIndex = 6
-                                        } else if (po.item_no == '694M' && dest.name == 'UQIN') {
-                                            tabIndex = 4
-                                        } else if (dest.name == 'UQMY') {
-                                            tabIndex = 3
-                                        } else {
-                                            tabIndex = 1
+                                        const destToTabIndexMapping = {
+                                            'UQAU': 4,
+                                            'UQEU': 5,
+                                            'UQJP': 2,
+                                            'UQIN': 6,  // common case for 'UQIN' in the original conditions
+                                            'UQMY': 3
+                                            // Add more mappings as needed
+                                        };
+                                        let tabIndex = destToTabIndexMapping[dest.name] || 1; // Default to 1 if no match
+                                        // Additional conditions for 'UQIN' with specific item numbers
+                                        if ((po.item_no === '691M' || po.item_no === '694M') && dest.name === 'UQIN') {
+                                            tabIndex = 4;
                                         }
                                         const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
                                         const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
