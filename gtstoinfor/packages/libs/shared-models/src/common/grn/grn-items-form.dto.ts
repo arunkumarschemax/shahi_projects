@@ -52,6 +52,7 @@ export class GrnItemsFormDto {
     trimCategoryId?: number
     trimCategory?: string
     trimMappingId?: number
+    styleId?: number
     rejectedQuantity?: number
     rejectedUomId?: number
     conversionQuantity?: number
@@ -65,7 +66,6 @@ export class GrnItemsFormDto {
     updatedAt?: Date;
     updatedUser?: string | null;
     versionFlag?: number;
-    styleId?: number
 
     constructor(
         poItemId: number,
@@ -120,6 +120,7 @@ export class GrnItemsFormDto {
         trimCategoryId?: number,
         trimCategory?: string,
         trimMappingId?: number,
+        styleId?: number,
         rejectedQuantity?: number,
         rejectedUomId?: number,
         conversionUomId?: number,
@@ -131,7 +132,6 @@ export class GrnItemsFormDto {
         updatedAt?: Date,
         updatedUser?: string | null,
         versionFlag?: number,
-        styleId?: number
     ) {
         this.poItemId = poItemId;
         this.m3ItemCode = m3ItemCode;
@@ -181,6 +181,7 @@ export class GrnItemsFormDto {
         this.trimCategoryId =trimCategoryId
         this.trimCategory =trimCategory
         this.trimMappingId =trimMappingId
+        this.styleId = styleId
         this.rejectedQuantity = rejectedQuantity;
         this.rejectedUomId = rejectedUomId;
         this.conversionQuantity = conversionQuantity
@@ -196,7 +197,6 @@ export class GrnItemsFormDto {
         this.grnItemAmount = grnItemAmount
         this.sampleRequestId = sampleRequestId
         this.indentId = indentId
-        this.styleId = styleId
     }
 
 }
