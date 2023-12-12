@@ -171,6 +171,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
             trimForm.setFieldsValue({ transportation: rowData.transportation })
             trimForm.setFieldsValue({quantityUomName:rowData?.uom})
             trimForm.setFieldsValue({quantityUomId:rowData?.uomId,})
+            trimForm.setFieldsValue({styleId:rowData?.styleId,})
         setInputDisable(true)
         }
    
@@ -672,6 +673,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                             rules={[{ required: true, message: 'Subjective Amount of Fabric is required' }]}
                         >
                             <Input disabled placeholder="Subjective amount" />
+                        </Form.Item>
+                        <Form.Item name='styleId'  style={{display:'none'}}
+                            rules={[{ required: true, message: 'Style is required' }]}
+                        >
+                            <Input name='styleId' disabled placeholder="Subjective amount"  style={{display:'none'}}/>
                         </Form.Item>
                     </Col>
                    
