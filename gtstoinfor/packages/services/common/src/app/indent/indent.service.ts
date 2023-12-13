@@ -114,7 +114,7 @@ export class IndentService {
                 fabricModel.push(new IndentFabricModel(fabric.ifabric_id, fabric.content,
                     fabric.fabric_type_name, fabric.fabric_weave_name, fabric.weight, fabric.width, fabric.yarn_count, fabric.unit, fabric.construction, fabric.finish, fabric.shrinkage, fabric.item_code,fabric.colour,
                     fabric.pch, fabric.moq, fabric.moqUnit, fabric.moq_price, fabric.moqPriceUnit, fabric.season, fabric.vendor_name,
-                    fabric.buyer, fabric.grn_date, fabric.xl_no, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId,data.styleId,fabric.poQty))
+                    fabric.buyer, fabric.grn_date, fabric.xlNo, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId,data.styleId,fabric.poQty))
             }
             const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id);
             for (const trim of trimIndentData) {

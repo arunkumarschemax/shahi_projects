@@ -259,22 +259,22 @@ export const SourcingRequisitionDynamicView = () => {
       title: "Season",
       dataIndex: "season",
     },
-    {
-      title: "Supplier",
-      dataIndex: "supplierId",
-      ...getColumnSearchProps("supplierId"),
-      render: (text, record) => {
-        return <>{record.supplierId ? record.supplierId : "-"}</>;
-      },
-    },
-    {
-      title: "GRN Date",
-      dataIndex: "grnDate",
-      render: (text, record) => {
-        const date = new Date(record.grnDate);
-        return <>{record.grnDate ? moment(date).format("YYYY-MM-DD") : "-"}</>;
-      },
-    },
+    // {
+    //   title: "Supplier",
+    //   dataIndex: "supplierId",
+    //   ...getColumnSearchProps("supplierId"),
+    //   render: (text, record) => {
+    //     return <>{record.supplierId ? record.supplierId : "-"}</>;
+    //   },
+    // },
+    // {
+    //   title: "GRN Date",
+    //   dataIndex: "grnDate",
+    //   render: (text, record) => {
+    //     const date = new Date(record.grnDate);
+    //     return <>{record.grnDate ? moment(date).format("YYYY-MM-DD") : "-"}</>;
+    //   },
+    // },
     {
       title: "XL No",
       dataIndex: "xlNo",

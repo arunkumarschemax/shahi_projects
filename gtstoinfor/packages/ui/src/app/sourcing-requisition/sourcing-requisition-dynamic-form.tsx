@@ -1166,7 +1166,7 @@ const onTrimChange = (val, option) => {
             </Select>
         </Form.Item>
         </Col> */}
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                                             <Form.Item name='supplier' label='Supplier'
                                             //  rules={[{ required: true, message: 'Supplier is required' }]}
                                              >
@@ -1178,12 +1178,12 @@ const onTrimChange = (val, option) => {
                                                     })}
                                                 </Select>
                                             </Form.Item>
-                                        </Col>
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                        </Col> */}
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                                             <Form.Item name='grnDate' label='GRN Date' rules={[{ required: true, message: 'Grn date is required' }]}>
                                                 <DatePicker style={{ width: '100%' }} />
                                             </Form.Item>
-                                        </Col>
+                                        </Col> */}
                                         
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                                             <Form.Item name='xlNo' label='XL No' rules={[{ required: true, message: 'XL No is required' }]}>
