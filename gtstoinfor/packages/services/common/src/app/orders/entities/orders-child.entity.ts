@@ -161,6 +161,18 @@ export class OrdersChildEntity {
         name: 'file_id',
     })
     fileId : number;
+
+    @Column('date', {
+        nullable: true,
+        name: "wh_date",
+    })
+    whDate: Date;
+
+    @Column('date', {
+        nullable: true,
+        name: "exf_date",
+    })
+    exfDate: Date;
     
 
     @ManyToOne(() => OrdersEntity, orders => orders.ordersChild)

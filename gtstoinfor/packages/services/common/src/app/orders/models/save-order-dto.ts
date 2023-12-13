@@ -334,6 +334,10 @@ export class SaveOrderDto {
     updatedUser?:string;
     @ApiProperty()
     userName?: string;
+    @ApiProperty()
+    whDate: Date;
+    @ApiProperty()
+    exfDate: Date;
 
     constructor(
         productionPlanId: number,
@@ -498,6 +502,8 @@ export class SaveOrderDto {
         createdUser?: string,
         userName?: string,
         updatedUser?:string,
+        whDate?:Date,
+        exfDate?:Date
  
     ) {
         this.productionPlanId = productionPlanId
@@ -667,6 +673,8 @@ export class SaveOrderDto {
         // this.updateUserId  = updateUserId;
         // this.updateUserName = updateUserName;
         // this.updateFunction  =  updateFunction;
+        this.exfDate = exfDate
+        this.whDate = whDate
         
     }
 }

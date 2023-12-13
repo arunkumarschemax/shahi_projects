@@ -165,6 +165,8 @@ export class OrdersAdapter {
         entity.fileId = id
         // entity.month= month
         entity.version = dto.version ? dto.version : 1
+        entity.whDate = dto.whDate
+        entity.exfDate = dto.exfDate
       
         return entity
     }

@@ -164,6 +164,18 @@ export class OrdersEntity {
     })
     fileId : number;
 
+    @Column('date', {
+        nullable: true,
+        name: "wh_date",
+    })
+    whDate: Date;
+
+    @Column('date', {
+        nullable: true,
+        name: "exf_date",
+    })
+    exfDate: Date;
+
     @OneToMany(() => OrdersChildEntity, (ordersChild) => { ordersChild.orders }, { cascade: true })
     ordersChild: OrdersChildEntity;
 

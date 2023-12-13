@@ -169,6 +169,8 @@ export class OrdersChildAdapter {
         ordersEntity.productionPlanId = productionPlanId;
         entity.orders = ordersEntity;
         entity.fileId = id
+        entity.whDate = dto.whDate
+        entity.exfDate = dto.exfDate
         return entity
     
     }

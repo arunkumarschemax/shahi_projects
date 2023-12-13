@@ -2874,10 +2874,13 @@ export class OrdersService {
                 let dtoData: SaveOrderDto;
                 if (updatedObj.Order_Plan_Number !== null) {
                     if(uploadType == 'Manual'){
-                        updatedObj.WH = moment(updatedObj.WH).add(1, 'days').format('MM-DD')
-                        updatedObj.EXF = moment(updatedObj.EXF).add(1, 'days').format('MM-DD')
+                        updatedObj.whDate = updatedObj.WH ?  moment(updatedObj.WH).add(1, 'days').format('YYYY-MM-DD') : null
+                        updatedObj.exfDate =updatedObj.EXF ?  moment(updatedObj.EXF).add(1, 'days').format('YYYY-MM-DD') : null
+                        updatedObj.WH =updatedObj.WH ? moment(updatedObj.WH).add(1, 'days').format('MM-DD') : null
+                        updatedObj.EXF = updatedObj.EXF ?  moment(updatedObj.EXF).add(1, 'days').format('MM-DD') : null
+                        
                     }
-                    dtoData = new SaveOrderDto(null, updatedObj.Year, updatedObj.Planning_Ssn, updatedObj.Biz, updatedObj.Core_Category, updatedObj.Planning_Sum, updatedObj.Coeff, updatedObj.Publish_Flag_for_Factory, updatedObj.Order_Plan_Number, (updatedObj.Order_Plan_Qty).toString().replace(/,/g, ''), (updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g, ''), updatedObj.Prod_Plan_Type, updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null, updatedObj.EXF_ETD, updatedObj.ETD_WH, updatedObj.Sample, updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD') : null, id, null, 'bidhun')
+                    dtoData = new SaveOrderDto(null, updatedObj.Year, updatedObj.Planning_Ssn, updatedObj.Biz, updatedObj.Core_Category, updatedObj.Planning_Sum, updatedObj.Coeff, updatedObj.Publish_Flag_for_Factory, updatedObj.Order_Plan_Number, (updatedObj.Order_Plan_Qty).toString().replace(/,/g, ''), (updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g, ''), updatedObj.Prod_Plan_Type, updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null, updatedObj.EXF_ETD, updatedObj.ETD_WH, updatedObj.Sample, updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD') : null, id, null, 'bidhun',null,null,updatedObj.whDate ? moment(updatedObj.whDate).format('YYYY-MM-DD') : null,updatedObj.exfDate ? moment(updatedObj.exfDate).format('YYYY-MM-DD') : null)
                     let newDate
                     if (dtoData.exf == null && dtoData.publishFlagForFactory !== 'NotPub') {
                         let inputDate = dtoData.wh ? moment(dtoData.wh).format('MM-DD') : null;
@@ -2885,7 +2888,6 @@ export class OrdersService {
                             await transactionManager.releaseTransaction()
                             return new CommonResponseModel(false, 101, 'Null value in WH column')
                         } else {
-
                             let parts = inputDate.split('-');
                             let months = parseInt(parts[0], 10);
                             let day = parseInt(parts[1], 10);
@@ -2894,6 +2896,13 @@ export class OrdersService {
                             dateObject.setDate(dateObject.getDate() - numberOfDays);
                             newDate = moment(dateObject).format('MM-DD');
                             dtoData.exf = newDate;
+                            // Convert the string to a Date object
+                            var date = new Date(dtoData.whDate);
+                            // Subtract one day from the date
+                            date.setDate(date.getDate() - Number(dtoData.exfEtd));
+                            // Convert the updated date back to a string
+                            let updatedDateString = moment(date).format('YYYY-MM-DD')
+                            dtoData.exfDate = updatedDateString
                         }
                     }
                 } else {
@@ -2910,7 +2919,7 @@ export class OrdersService {
                     dtoData.version = version
                     if (details) {
                         const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber }, {
-                            year: dtoData.year, planningSsn: dtoData.planningSsn, biz: dtoData.biz, coreCategory: dtoData.coreCategory, planningSum: dtoData.planningSum, coeff: dtoData.coeff, publishFlagForFactory: dtoData.publishFlagForFactory, orderPlanQty: dtoData.orderPlanQty, orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff, prodPlanType: dtoData.prodPlanType, wh: dtoData.wh, exfEtd: dtoData.exfEtd, etdWh: dtoData.etdWh, sample: dtoData.sample, version: dtoData.version, fileId: dtoData.fileId, updatedUser: dtoData.createdUser,exf:dtoData.exf
+                            year: dtoData.year, planningSsn: dtoData.planningSsn, biz: dtoData.biz, coreCategory: dtoData.coreCategory, planningSum: dtoData.planningSum, coeff: dtoData.coeff, publishFlagForFactory: dtoData.publishFlagForFactory, orderPlanQty: dtoData.orderPlanQty, orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff, prodPlanType: dtoData.prodPlanType, wh: dtoData.wh, exfEtd: dtoData.exfEtd, etdWh: dtoData.etdWh, sample: dtoData.sample, version: dtoData.version, fileId: dtoData.fileId, updatedUser: dtoData.createdUser,exf:dtoData.exf,whDate:dtoData.whDate,exfDate:dtoData.exfDate
                         })
                         if (!updateOrder.affected) {
                             await transactionManager.releaseTransaction();
@@ -2921,8 +2930,10 @@ export class OrdersService {
                         const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id, details.productionPlanId, 10, dtoData.exf);
                         const saveExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedExcelEntity);
                         if (saveExcelEntity) {
+                            console.log(details,'------')
                             //difference insertion to order diff table
                             const existingDataKeys = Object.keys(details)
+                            console.log(existingDataKeys,'---existingDataKeys---')
                             const currentDataKeys = Object.keys(dtoData)
                             for (const existingDataKey of existingDataKeys) {
                                 if (details[existingDataKey] != dtoData[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month' && existingDataKey != 'productionPlanId') {

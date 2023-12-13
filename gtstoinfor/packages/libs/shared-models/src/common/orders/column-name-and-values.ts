@@ -153,5 +153,7 @@ export const orderColumnValues = {
     qtyLtPoExf: 'qty_lt_po_exf',
     country2Y: 'country2_y',
     phase: 'phase',
+    whDate:'wh_date',
+    exfDate:'exf_date'
     
 }
