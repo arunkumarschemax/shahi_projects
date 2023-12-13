@@ -265,6 +265,13 @@ export const StockView = () => {
     //   // sorter: (a, b) => a.plant - b.plant,
     //   // sortDirections: ['descend', 'ascend'],
     // },
+    {
+      title: "GRN Number",
+      dataIndex: "grnNumber",
+      ...getColumnSearchProps("grnNumber"),
+      sorter: (a, b) => a.grnNumber.localeCompare(b.stockType),
+      sortDirections: ["descend", "ascend"],
+    },
     
 
     {
@@ -275,13 +282,6 @@ export const StockView = () => {
       sortDirections: ["descend", "ascend"],
       
     },
-    // {
-    //   title: "Stock Type",
-    //   dataIndex: "stockType",
-    //   ...getColumnSearchProps("stockType"),
-    //   sorter: (a, b) => a.stockType.localeCompare(b.stockType),
-    //   sortDirections: ["descend", "ascend"],
-    // },
     // {
     //   title: "Sample Order",
     //   dataIndex: "sampleOrder",
@@ -321,7 +321,7 @@ export const StockView = () => {
     //   ...getColumnSearchProps("item_code"),
     // },
     {
-      title: "M3 Item",
+      title:<div style={{textAlign:"center"}}>M3 Item</div>,
       dataIndex: "m3Item",
       ...getColumnSearchProps("m3Item"),
       sorter: (a, b) => a.m3Item.localeCompare(b.m3Item),

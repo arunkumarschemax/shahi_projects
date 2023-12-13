@@ -371,7 +371,13 @@ export const RmTrimsView = () => {
     //   // sortDirections: ['descend', 'ascend'],
     // },
     
-
+    {
+      title: "GRN Number",
+      dataIndex: "grnNumber",
+      ...getColumnSearchProps("grnNumber"),
+      sorter: (a, b) => a.grnNumber.localeCompare(b.stockType),
+      sortDirections: ["descend", "ascend"],
+    },
     {
       title: "Buyer",
       dataIndex: "buyer",

@@ -41,7 +41,7 @@ export class StocksService {
         // }
         try {
             console.log(req);
-            let query = "SELECT b.external_ref_number AS refNo,s.location_id AS locationId,s.m3_item AS m3itemId, if(s.item_type != 'fabric' , itt.trim_code, concat(it.item_code,'-',it.description)) AS m3Item, s.item_type AS itemType, (quantity-s.allocatd_quantity-transfered_quantity) AS qty, u.uom AS uom, b.buyer_name AS buyer,r.rack_position_name AS location, s.uom_id AS uomId, s.grn_item_id AS grnItemId,  s.id AS stockId,s.buyer_id  from stocks s left join buyers b on b.buyer_id = s.buyer_id left join m3_items it on it.m3_items_Id = s.m3_item and s.item_type = 'Fabric' left join m3_trims itt on itt.m3_trim_id = s.m3_item left join rack_position r on r.position_Id = s.location_id left join uom u on u.id = s.uom_id left join grn_items gi on gi.grn_item_id = s.grn_item_id left join grn g on g.grn_id = gi.grn_id where s.id > 0 and g.grn_type = 'INDENT' and s.item_type = 'fabric' and (quantity-s.allocatd_quantity-transfered_quantity) > 0 ";
+            let query = "SELECT b.external_ref_number AS refNo,s.location_id AS locationId,s.m3_item AS m3itemId, if(s.item_type != 'fabric' , itt.trim_code, concat(it.item_code,'-',it.description)) AS m3Item, s.item_type AS itemType, (quantity-s.allocatd_quantity-transfered_quantity) AS qty, u.uom AS uom, b.buyer_name AS buyer,r.rack_position_name AS location, s.uom_id AS uomId, s.grn_item_id AS grnItemId,  s.id AS stockId,s.buyer_id,g.grn_number grnNumber  from stocks s left join buyers b on b.buyer_id = s.buyer_id left join m3_items it on it.m3_items_Id = s.m3_item and s.item_type = 'Fabric' left join m3_trims itt on itt.m3_trim_id = s.m3_item left join rack_position r on r.position_Id = s.location_id left join uom u on u.id = s.uom_id left join grn_items gi on gi.grn_item_id = s.grn_item_id left join grn g on g.grn_id = gi.grn_id where s.id > 0 and g.grn_type = 'INDENT' and s.item_type = 'fabric' and (quantity-s.allocatd_quantity-transfered_quantity) > 0 ";
             if(req.buyerId != undefined){
                 query = query + " and b.buyer_id = "+req.buyerId;
             }
@@ -201,7 +201,8 @@ export class StocksService {
             s.item_type AS itemType, (s.quantity-s.allocatd_quantity-transfered_quantity) AS qty,
              u.uom AS uom, b.buyer_name AS buyer,r.rack_position_name AS location,
              it.thickness_id, it.type_id,it.trim_category_id,it.variety_id,
-             s.buyer_id  FROM stocks s
+             s.buyer_id,g.grn_number AS grnNumber  
+             FROM stocks s
              LEFT JOIN buyers b ON b.buyer_id = s.buyer_id
              LEFT JOIN m3_trims it ON it.m3_trim_Id = s.m3_item
              LEFT JOIN rack_position r ON r.position_Id = s.location_id

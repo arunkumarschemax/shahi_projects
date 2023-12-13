@@ -174,74 +174,14 @@ const GRNForm = () => {
       title: <div style={{ textAlign: "center" }}>Buyer</div>,
       dataIndex: 'buyer',
       fixed: 'left',
+    },{
+      title:<div style={{textAlign:"center"}}>Trim Params</div>,
+      dataIndex:"trimParams",
     },
-    {
-      title: <div style={{ textAlign: "center" }}> Item Type</div>,
-      dataIndex: 'm3ItemType',
-      fixed: 'left',
-
-    },
-    mapData.length > 0?{
-      title: <div style={{textAlign:"center"}}>Trim Category</div>,
-      dataIndex: "trimCategory",
-    }: {},
-    mapData[0]?.structure === true?{
-      title: <div style={{textAlign:"center"}}>Structure</div>,
-      dataIndex: "structure",
-    }: {},
-    mapData[0]?.category === true?{
-      title: <div style={{textAlign:"center"}}>Category</div>,
-      dataIndex: "category",
-    }:{},
-    mapData[0]?.content === true?{
-      title: <div style={{textAlign:"center"}}>Content</div>,
-      dataIndex: "content",
-    }:{},
-    mapData[0]?.type === true?{
-      title: <div style={{textAlign:"center"}}>Type</div>,
-      dataIndex: "type",
-    }: {},
-    mapData[0]?.finish === true?{
-      title: <div style={{textAlign:"center"}}>Finish</div>,
-      dataIndex: "finish",
-    }: {},
-    mapData[0]?.hole === true?{
-      title: <div style={{textAlign:"center"}}>Hole</div>,
-      dataIndex: "hole",
-    }: {},
-    mapData[0]?.quality === true?{
-      title: <div style={{textAlign:"center"}}>Quality</div>,
-      dataIndex: "qualityName",
-    }: {},
-    mapData[0]?.thickness === true?{
-      title: <div style={{textAlign:"center"}}>Thickness</div>,
-      dataIndex: "thickness",
-    }: {},
-    mapData[0]?.variety === true?{
-      title: <div style={{textAlign:"center"}}>Variety</div>,
-      dataIndex: "variety",
-    }: {},
-    mapData[0]?.uom === true?{
-      title: <div style={{textAlign:"center"}}>UOM</div>,
-      dataIndex: "UOM",
-    }: {},
-    mapData[0]?.color === true?{
-      title: <div style={{textAlign:"center"}}>Color</div>,
-      dataIndex: "color",
-    }: {},
-    mapData[0]?.logo === true?{
-      title: <div style={{textAlign:"center"}}>Logo</div>,
-      dataIndex: "logo",
-    }: {},
-    mapData[0]?.part === true?{
-      title: <div style={{textAlign:"center"}}>Part</div>,
-      dataIndex: "part",
-    }:{},
     {
       title: <div style={{ textAlign: "center" }}> Item Code</div>,
-      fixed: 'left',
+      // fixed: 'left',
       dataIndex: 'm3ItemCode',
-
     },
     {
       title: <div style={{ textAlign: "center" }}>PO Qty</div>,

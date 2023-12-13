@@ -53,6 +53,7 @@ export class GrnItemsFormDto {
     trimCategory?: string
     trimMappingId?: number
     styleId?: number
+    trimParams?: string
     rejectedQuantity?: number
     rejectedUomId?: number
     conversionQuantity?: number
@@ -121,6 +122,7 @@ export class GrnItemsFormDto {
         trimCategory?: string,
         trimMappingId?: number,
         styleId?: number,
+        trimParams?:string,
         rejectedQuantity?: number,
         rejectedUomId?: number,
         conversionUomId?: number,
@@ -197,6 +199,7 @@ export class GrnItemsFormDto {
         this.grnItemAmount = grnItemAmount
         this.sampleRequestId = sampleRequestId
         this.indentId = indentId
+        this.trimParams =trimParams
     }
 
 }
