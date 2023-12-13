@@ -32,11 +32,12 @@ export class M3ItemsDTO {
         buyerId: number,
         description:string,
         buyerCode:string,
-        m3Code?:string,
-        hsnCode?:string,
         isActive?:boolean,
         versionFlag?:number,
         extRefNumber?: string,
+        m3Code?:string,
+        hsnCode?:string
+       
         
         
         
