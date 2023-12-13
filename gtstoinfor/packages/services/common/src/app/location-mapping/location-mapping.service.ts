@@ -117,9 +117,9 @@ export class LocationMappingService {
             // LEFT JOIN  indent idf ON idf.indent_id = indf.indent_id
             // LEFT JOIN  indent idt ON idt.indent_id = indt.indent_id
             let query = `SELECT gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, 
-            gi.accepted_quantity AS balance, gi.grn_item_no AS grnItemNo,gi.style_id AS styleId,sty.style,
-            IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,
-            IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName
+            (gi.accepted_quantity - IF(SUM(st.quantity) IS NULL, 0,SUM(st.quantity))) AS balance, gi.grn_item_no AS grnItemNo,gi.style_id AS styleId,sty.style,
+            IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,IF(SUM(st.quantity) IS NULL, 0,SUM(st.quantity)) AS allocatedQty,
+            IF(g.item_type = "FABRIC", CONCAT(mit.item_code,'-',mit.description), CONCAT(mtr.trim_code,'-',mit.description)) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND g.item_type = "FABRIC"
@@ -128,7 +128,7 @@ export class LocationMappingService {
             LEFT JOIN  buyers idfb ON idfb.buyer_id = gi.buyer_id
             LEFT JOIN  style sty ON sty.style_id = g.style_id
            LEFT JOIN  uom u ON u.id = gi.uom_id
-           where gi.location_mapped_status!='COMPLETED'`
+           where gi.location_mapped_status!='COMPLETED' `
             let param :any={}
     if(req){
       if (req.externalRefNo){
@@ -138,6 +138,7 @@ export class LocationMappingService {
 
     }
     // const data = await this.datasource.query(query,param)
+        query += ` GROUP BY gi.grn_item_id `
             const res = await AppDataSource.query(query,param);
             if (res) {
                 return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);

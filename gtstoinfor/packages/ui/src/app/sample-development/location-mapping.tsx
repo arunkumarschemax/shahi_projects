@@ -154,8 +154,8 @@ export const LocationMapping = () => {
             <Card size="small" title={<span style={{ color: 'white' }} >Location Mapping</span>}
                 style={{ textAlign: 'center' }} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/grn-pending-info-grid' ><span style={{ color: 'white' }} ><Button style={{ marginTop: "10%", marginBottom: "10%" }} className='panel_button' >View </Button> </span></Link>} >
                 <Row gutter={24}>
-                    <Col span={12}>
-                        <Descriptions column={2}>
+                    <Col span={24}>
+                        <Descriptions column={4}>
                             <Descriptions.Item label="GRN Number" style={{ width: '33%' }}>
                                 {grnData.grnNumber}
                             </Descriptions.Item>
@@ -168,7 +168,7 @@ export const LocationMapping = () => {
                             {/* <Descriptions.Item label="Stock" style={{ width: '33%' }}>
                                 {grnData.quantity > 0 ? Number(grnData.quantity) : 0}
                             </Descriptions.Item> */}
-                            <Descriptions.Item label="Location Pending Quantity" style={{ width: '33%' }}>
+                            <Descriptions.Item label="Location Mapping Quantity" style={{ width: '33%' }}>
                                 {grnData.balance}
                             </Descriptions.Item>
                         </Descriptions>
@@ -182,14 +182,14 @@ export const LocationMapping = () => {
                         <Input hidden />
                     </Form.Item>
                     <Row gutter={24}>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                             <Form.Item name="vendorName" label="Vendor" rules={[{ required: true, message: 'Vendor is required' }]}>
-                                <Input disabled={grnData} defaultValue={grnData.vendor_name} />
+                                <Input disabled={grnData} defaultValue={grnData.vendor_name} style={{fontWeight:'bold',color:'black'}} />
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 10 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 12 }}>
                             <Form.Item name="itemName" label="Item" rules={[{ required: true, message: ' Item is required ' }]}>
-                                <Input disabled={grnData} />
+                                <Input disabled={grnData} style={{fontWeight:'bold',color:'black'}}/>
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -211,7 +211,7 @@ export const LocationMapping = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name="quantity" label="Quantity" rules={[{ required: true, message: 'Missed Quantity' }]}  >
-                                <InputNumber min={1} style={{ width: "100%" }}
+                                <InputNumber min={1} disabled style={{fontWeight:'bold',width: "100%", color:'black'}}
                                 // onChange={e => validateQty(e)}
                                 />
                             </Form.Item>
