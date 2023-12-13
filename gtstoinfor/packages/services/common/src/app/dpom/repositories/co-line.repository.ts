@@ -26,6 +26,7 @@ export class COLineRepository extends Repository<COLineEntity> {
         if (req.orderNo !== undefined) {
             query.andWhere(`co.co_number ='${req.orderNo}'`)
         }
+        query.orderBy(` created_at`, 'DESC')
         return await query.getRawMany();
     }
 
