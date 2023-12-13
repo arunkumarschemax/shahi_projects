@@ -23,7 +23,7 @@ export class M3ItemsDTO {
     versionFlag?:number;
     extRefNumber?: string
     m3Code?:string;
-
+    hsnCode?:string;
     constructor(m3ItemsId:number,itemCode:string,content: m3ItemsContentEnum,
         fabricType:number,weave: number,
         weight:number,weightUnit:string,construction: string,
@@ -33,6 +33,7 @@ export class M3ItemsDTO {
         description:string,
         buyerCode:string,
         m3Code?:string,
+        hsnCode?:string,
         isActive?:boolean,
         versionFlag?:number,
         extRefNumber?: string,
@@ -59,6 +60,7 @@ export class M3ItemsDTO {
         this.buyerCode = buyerCode;
         this.extRefNumber = extRefNumber
         this.m3Code = m3Code
+        this.hsnCode=hsnCode
        
     }
 }

@@ -115,15 +115,15 @@ export class IndentService {
                 fabricModel.push(new IndentFabricModel(fabric.ifabric_id, fabric.content,
                     fabric.fabric_type_name, fabric.fabric_weave_name, fabric.weight, fabric.width, fabric.yarn_count, fabric.unit, fabric.construction, fabric.finish, fabric.shrinkage, fabric.item_code,fabric.colour,
                     fabric.pch, fabric.moq, fabric.moqUnit, fabric.moq_price, fabric.moqPriceUnit, fabric.season, fabric.vendor_name,
-                    fabric.buyer, fabric.grn_date, fabric.xl_no, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId))
+                    fabric.buyer, fabric.grn_date, fabric.xl_no, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId,data.styleId))
             }
             const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id);
             for (const trim of trimIndentData) {
                 trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
                     trim.quantity, trim.m3TrimCode, trim.description,
-                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId))
+                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId))
             }
-            indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName,data.extRefNo ))
+            indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName,data.extRefNo))
         }
         
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully', indentModel);
@@ -148,7 +148,7 @@ export class IndentService {
     async getAllIndentItemDetailsAgainstIndent(req: indentIdReq): Promise<CommonResponseModel> {
         console.log(req)
         // const data = 'SELECT "" as poQuantity,yarn_unit as yarnUnit,ifb.ifabric_id as indentFabricId,ifb.indent_id as indentid,ft.fabric_type_id as fabric_type_id,m3_code as m3FabricCode,fabric_weave_name as fabricTypeName,p.profit_control_head AS pch,color AS colorName,fabric_weave_name AS weaveName,fabric_type_name AS fabricTypeName,content,ifb.fabric_type AS fabricTypeId,weave_id AS weaveId,weight,width,yarn_count AS yarnCount,construction,finish,shrinkage,m3_fabric_code,color AS colourId,pch,moq,moq_unit,quantity AS indentQuantity,ifb.indent_id AS indentId FROM indent_fabric ifb LEFT JOIN indent i ON ifb.indent_id=i.indent_id  LEFT JOIN fabric_type ft ON ft.fabric_type_id=ifb.fabric_type LEFT JOIN fabric_weave fw ON fw.fabric_weave_id=ifb.weave_id  LEFT JOIN colour c ON c.colour_id=ifb.color LEFT JOIN profit_control_head p ON p.profit_control_head_id=ifb.pch left join m3_masters ms on ms.m3_code=ifb.m3_fabric_code where ifb.indent_id in ('+req.indentId+') '
-        const data = '  SELECT i.request_no AS indentCode,"" AS poQuantity,ifb.ifabric_id AS indentFabricId,ifb.indent_id AS indentid,item_code AS itemCode,colour AS colorName, ifb.m3_fabric_code m3FabricCode,color AS colourId,quantity AS indentQuantity,ifb.indent_id AS indentId,i.buyer_id as buyerId  FROM indent_fabric ifb LEFT JOIN indent i ON ifb.indent_id=i.indent_id LEFT JOIN colour c ON c.colour_id=ifb.color LEFT JOIN m3_items ms ON ms.m3_items_Id=ifb.m3_fabric_code WHERE ifb.indent_id IN (' + req.indentId + ')'
+        const data = '  SELECT i.request_no AS indentCode,"" AS poQuantity,ifb.ifabric_id AS indentFabricId,ifb.indent_id AS indentid,item_code AS itemCode,colour AS colorName, ifb.m3_fabric_code m3FabricCode,color AS colourId,quantity AS indentQuantity,ifb.indent_id AS indentId,i.buyer_id as buyerId,i.style  FROM indent_fabric ifb LEFT JOIN indent i ON ifb.indent_id=i.indent_id LEFT JOIN colour c ON c.colour_id=ifb.color LEFT JOIN m3_items ms ON ms.m3_items_Id=ifb.m3_fabric_code WHERE ifb.indent_id IN (' + req.indentId + ')'
         const result = await this.indentRepo.query(data)
         if (result) {
             return new CommonResponseModel(true, 1, 'data retived sucessfully', result)
@@ -160,7 +160,7 @@ export class IndentService {
     async getAllIndentTrimDetailsAgainstIndent(req: indentIdReq): Promise<CommonResponseModel> {
         console.log(req)
         // const data = 'SELECT "" as poQuantity,item_code as trimCodeName,it.trim_type as productGroupId,trim_code as trimId, pg.product_group as trimType,c.colour AS colourName,item_code AS trimCodeName,product_group AS productGroup,itrims_id AS indentTrmId,trim_code AS trimId ,size AS sizeId,color AS colourId, quantity as indentQuantity,quantity_unit AS indentQuantityUnit,m3_trim_code AS m3TrimCode FROM indent_trims it LEFT JOIN indent i ON it.indent_id=i.indent_id LEFT JOIN product_group pg ON pg.product_group_id=it.trim_type LEFT JOIN rm_items ri ON ri.rm_item_id=it.trim_code LEFT JOIN colour c ON c.colour_id=it.color where it.indent_id in(' + req.indentId + ') '
-        const data ='SELECT it.indent_id as indentId,m3_trim_Id AS m3TrimCode,request_no AS indentCode,"" AS poQuantity,ms.trim_type AS trimtype,ms.trim_code AS m3TrimCodeName,ms.trim_mapping_id as trimMappingId,it.trim_type AS productGroupId,it.trim_code AS trimId, itrims_id AS indentTrmId, it.trim_code AS trimId ,quantity AS indentQuantity, it.quantity_unit AS quantityUnitId, u.uom AS quantityUnit, tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part FROM indent_trims it LEFT JOIN indent i ON it.indent_id=i.indent_id  LEFT JOIN m3_trims ms ON ms.m3_trim_Id=it.trim_code left join uom u on u.id = it.quantity_unit LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = ms.trim_mapping_id WHERE it.indent_id in(' + req.indentId + ') '
+        const data ='SELECT it.indent_id as indentId,m3_trim_Id AS m3TrimCode,request_no AS indentCode,"" AS poQuantity,ms.trim_type AS trimtype,ms.trim_code AS m3TrimCodeName,ms.trim_mapping_id as trimMappingId,it.trim_type AS productGroupId,it.trim_code AS trimId, itrims_id AS indentTrmId, it.trim_code AS trimId ,quantity AS indentQuantity, it.quantity_unit AS quantityUnitId, u.uom AS quantityUnit, tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part,i.style as styleId FROM indent_trims it LEFT JOIN indent i ON it.indent_id=i.indent_id  LEFT JOIN m3_trims ms ON ms.m3_trim_Id=it.trim_code left join uom u on u.id = it.quantity_unit LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = ms.trim_mapping_id WHERE it.indent_id in(' + req.indentId + ') '
         const result = await this.indentRepo.query(data)
         if (result.length > 0) {
             const modifiedRes = result.map(item => {

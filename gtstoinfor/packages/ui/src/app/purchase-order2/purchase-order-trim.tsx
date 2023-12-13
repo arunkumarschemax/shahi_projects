@@ -158,7 +158,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         trimForm.setFieldsValue({indentTrmId:rowData.indentTrmId})
         trimForm.setFieldsValue({quantityUomName:rowData?.quantityUnit})
         trimForm.setFieldsValue({quantityUomId:rowData?.quantityUnitId,})
-
+        trimForm.setFieldsValue({styleId: rowData?.styleId})
+        trimForm.setFieldsValue({trimParams: rowData?.trimParams})
         }
         if(rowData.sampleTrimInfoId != undefined){
             trimForm.setFieldsValue({poQuantity:rowData.sampleOrderQuantity})
@@ -171,6 +172,9 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
             trimForm.setFieldsValue({ transportation: rowData.transportation })
             trimForm.setFieldsValue({quantityUomName:rowData?.uom})
             trimForm.setFieldsValue({quantityUomId:rowData?.uomId,})
+            trimForm.setFieldsValue({styleId: rowData?.styleId})
+            trimForm.setFieldsValue({trimParams: rowData?.trimParams})
+            trimForm.setFieldsValue({styleId:rowData?.styleId,})
         setInputDisable(true)
         }
    
@@ -413,7 +417,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                 quantityUomName:defaultTrimFormData.uom,
                 quantityUomId:defaultTrimFormData.quantityUomId,
                 m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
-
+                trimParams: defaultTrimFormData.trimParams,
+                styleId: defaultTrimFormData.styleId
             })
 
             }
@@ -432,7 +437,9 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                     m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
                     indentCode:defaultTrimFormData.indentCode,
                     quantityUomName:defaultTrimFormData.uom,
-                    indentId:defaultTrimFormData.indentId
+                    indentId:defaultTrimFormData.indentId,
+                    styleId: defaultTrimFormData.styleId,
+                    trimParams: defaultTrimFormData.trimParams
                 })
             }
            
@@ -551,6 +558,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                     <Form.Item name={'sampleOrderQuantity'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'quantityUomName'} hidden><Input></Input></Form.Item>
                     <Form.Item name='taxPercentage' hidden ><Input/></Form.Item>
+                    <Form.Item name='styleId' hidden ><Input/></Form.Item>
+                    <Form.Item name='trimPrams' hidden ><Input/></Form.Item>
                     <Form.Item name={'indentQuantity'} label={'Indent Quantity'} style={{display:'none'}}>
                             <Input disabled={inputDisable}></Input>
                         </Form.Item>
@@ -672,6 +681,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                             rules={[{ required: true, message: 'Subjective Amount of Fabric is required' }]}
                         >
                             <Input disabled placeholder="Subjective amount" />
+                        </Form.Item>
+                        <Form.Item name='styleId'  style={{display:'none'}}
+                            rules={[{ required: true, message: 'Style is required' }]}
+                        >
+                            <Input name='styleId' disabled placeholder="Subjective amount"  style={{display:'none'}}/>
                         </Form.Item>
                     </Col>
                    

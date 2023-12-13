@@ -6,7 +6,7 @@ export class PurchaseOrderDto {
   purchaseOrderId: number
   poNumber: string
   vendorId: number
-  styleId: number
+  // styleId: number
   expectedDeliveryDate: Date
   purchaseOrderDate: Date
   createdAt: string;
@@ -29,7 +29,7 @@ export class PurchaseOrderDto {
   constructor(
     poNumber: string,
     vendorId: number,
-    styleId: number,
+    // styleId: number,
     expectedDeliveryDate: any,
     purchaseOrderDate: any,
     remarks: string,
@@ -46,7 +46,7 @@ export class PurchaseOrderDto {
   ) {
     this.poNumber = poNumber
     this.vendorId = vendorId
-    this.styleId = styleId
+    // this.styleId = styleId
     this.expectedDeliveryDate = expectedDeliveryDate
     this.purchaseOrderDate = purchaseOrderDate
     this.remarks = remarks

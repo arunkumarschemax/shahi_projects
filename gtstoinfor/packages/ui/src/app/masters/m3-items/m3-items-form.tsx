@@ -429,6 +429,11 @@ const M3Items = () => {
                     <Input placeholder="Enter M3 Code"/>
                 </Form.Item>
             </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="hsnCode" label="HSN Code" >
+                    <Input placeholder="Enter HSN Code"/>
+                </Form.Item>
+            </Col>
             <Col
               xs={{ span: 12 }}
               sm={{ span: 12 }}
