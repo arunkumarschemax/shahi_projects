@@ -172,9 +172,10 @@ export const SampleDevForm = () => {
     buyerService.getAllActiveBuyers(req).then((res) => {
       if (res.status) {
         setBuyer(res.data);
-        form.setFieldsValue({buyerId: res.data[0]?.buyerId})
-         buyerOnchange(res.data[0]?.buyerId,res.data[0]?.buyerName)
-
+        if(req.buyerRefNo != null){
+          form.setFieldsValue({buyerId: res.data[0]?.buyerId})
+           buyerOnchange(res.data[0]?.buyerId,res.data[0]?.buyerName)
+        }
 
       }
     });
