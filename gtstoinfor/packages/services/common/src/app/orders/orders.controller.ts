@@ -23,9 +23,9 @@ export class OrdersController {
     ) { }
 
     @Post('/saveOrder/:id/:month/:uploadType')
-    async saveOrder(@Param('id') id: number, @Param('month') month: number,@Param('uploadType')uploadType : string,  @Body() data: any): Promise<CommonResponseModel> {
+    async saveOrder(@Param('id') id: number, @Param('month') month: number, @Param('uploadType') uploadType: string, @Body() data: any): Promise<CommonResponseModel> {
         try {
-            return this.ordersService.saveOrdersData(data, id, month,uploadType);
+            return this.ordersService.saveOrdersData(data, id, month, uploadType);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
 
@@ -336,6 +336,15 @@ export class OrdersController {
         }
     }
 
+    @Post('/updateOrderApprovalStatus')
+    async updateOrderApprovalStatus(@Body() req: any) {
+        try {
+            return await this.ordersService.updateOrderApprovalStatus(req)
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+        }
+    }
+
     @Post('/getSeasonWiseOrders')
     async getSeasonWiseOrders(): Promise<CommonResponseModel> {
         try {
@@ -427,7 +436,7 @@ export class OrdersController {
     }
 
     @Post('/getSeasonWiseItemName')
-    @ApiBody({type: SeasonWiseRequest})
+    @ApiBody({ type: SeasonWiseRequest })
     async getSeasonWiseItemName(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.getSeasonWiseItemName(req);
@@ -662,9 +671,9 @@ export class OrdersController {
     @Post('/uniqloTrimOrdersBot')
     async uniqloTrimOrdersBot(): Promise<CommonResponseModel> {
         try {
-             return this.ordersService.uniqloTrimOrdersBot();
-            } catch (err) {
-                return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-            }
+            return this.ordersService.uniqloTrimOrdersBot();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
     }
 }
