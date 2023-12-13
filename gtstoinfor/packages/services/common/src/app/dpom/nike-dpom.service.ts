@@ -283,6 +283,9 @@ export class DpomService {
         // if (data) {
         //     return new CommonResponseModel(false, 1, 'CO-Line request created already')
         // }
+        if (req.itemNo == undefined || null) {
+            return new CommonResponseModel(false, 1, 'Please enter Item No')
+        }
         const entity = new COLineEntity()
         entity.buyer = req.buyer ? req.buyer : 'Nike-U12'
         entity.buyerPo = req.purchaseOrderNumber;
