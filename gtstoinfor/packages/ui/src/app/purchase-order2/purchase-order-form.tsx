@@ -388,7 +388,7 @@ export const PurchaseOrderForm = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='currencyId' label='Currency' rules={[{ required: true, message: 'Currency is required' }]}>
-                                <Select allowClear showSearch placeholder='Select Currency'>
+                                <Select allowClear showSearch optionFilterProp="children"  placeholder='Select Currency'>
                                     {currencydata.map(e => {
                                         return (<Option value={e.currencyId} key={e.currencyId}>{e.currencyName}</Option>)
                                     }
