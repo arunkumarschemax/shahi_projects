@@ -40,16 +40,13 @@ const TrimsForm = (props:TrimsFormProps) => {
       props.sizeDetails?.forEach(element => {
         let qtyy = 0;
         element.sizeInfo?.forEach(qty => {
-          console.log(qty.quantity);
           qtyy = Number(qtyy)+Number(qty.quantity);
         })
-        console.log(qtyy)
         const newRow = {
           key: count,
           colourId:element.colour,
           totalCount: qtyy
         };
-        console.log(newRow)
         setData([...data, newRow]);
         setCount(count + 1);
       });
@@ -144,9 +141,10 @@ const getMappedTrims = (value, option) => {
     return trimOptions;
   };
 
-  const getStockDetails = (record,itemId) => {
+  const getStockDetails = (record,e) => {
     console.log(record);
-    let req = new buyerandM3ItemIdReq(props.buyerId,itemId,"Fabric");
+    record.trimCode = e;
+    let req = new buyerandM3ItemIdReq(props.buyerId,e,record.trimType);
     sampleDevelopmentService.getAvailbelQuantityAginstBuyerAnditem(req).then((res) => {
       if(res.status){
         setStockData(res.data);
@@ -162,23 +160,36 @@ const getMappedTrims = (value, option) => {
   }
   
   const handleInputChange = async (e, key, field, record) => {
-    console.log(data)
     console.log(e)
     console.log(key)
     console.log(field)
 
 
     let updatedData
-    if(field === 'consumption'){
+    if (field === 'trimCode') {
+
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          return { ...record, [field]: e };
+        }
+        return record;
+      });
+      await getStockDetails(record,e)
+    } 
+    else if(field === "allocatedStock"){
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          return { ...record, [field]: e, ["trimCode"] : record.trimCode };
+        }
+        return record;
+      });
+    }
+    else if(field === 'consumption'){
       let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
       updatedData = data.map((record) => {
         if (record.key === key) {
-          console.log(e);
-      console.log(record.totalCount);
           let consumptionCal = Number(record.totalCount) * Number(e);
           let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
-          console.log(consumptionCal);
-          console.log(withPer);
           form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
@@ -189,27 +200,15 @@ const getMappedTrims = (value, option) => {
       let cons = form.getFieldValue(`consumption${key}`) != undefined ? form.getFieldValue(`consumption${key}`) : 0
       updatedData = data.map((record) => {
         if (record.key === key) {
-          console.log(e);
-      console.log(record.totalCount);
           let consumptionCal = Number(record.totalCount) * Number(cons);
           let withPer = (Number(consumptionCal) * Number(e))/ 100;
-          console.log(consumptionCal);
-          console.log(withPer);
           form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
         return record;
       });
     }
-    else if(field === "trimCode"){
-      updatedData = data.map((record) => {
-        if (record.key === key) {
-          return { ...record, [field]: e };
-        }
-        return record;
-      });
-      await getStockDetails(record,e)
-    }
+    
     else{
       updatedData = data.map((record) => {
         if (record.key === key) {
@@ -222,6 +221,7 @@ const getMappedTrims = (value, option) => {
     setData(updatedData);
     console.log(updatedData)
     props.data(updatedData)
+    
   };
 
   const handleDelete = (key) => {
@@ -230,7 +230,6 @@ const getMappedTrims = (value, option) => {
   };
 
   const trimTypeOnchange = (value) =>{
-    console.log(value)
     getTrimCodes(value)
   }
   const columns = [
@@ -290,26 +289,24 @@ const getMappedTrims = (value, option) => {
     },
     {
       title: 'Trim Code',
-      dataIndex: 'trimId',
+      dataIndex: 'trimCode',
       width:"20%",
       render: (_, record) => (
-        <Form.Item name={`trimId${record.key}`}>
-        <Select
-          value={record.trimId}
-          onChange={(e) => handleInputChange(e, record.key, 'trimCode',record)}
-          style={{width:"100%"}}
-          allowClear
-          showSearch
-          optionFilterProp="children"
-          placeholder={renderTrimCodeOptions()[0]?.props.children}
-          // onSelect={onTrimChange}
-         >
-          {renderTrimCodeOptions()}
-          {m3Trims.map(item =>{
-            return <Option key={item.m3TrimsId} value={item.m3TrimsId}>{item.trimCode}</Option>
-          })}
+        <><Form.Item name={`allocatedStock${record.key}`}><Input name={`allocatedStock${record.key}`} style={{ display: 'none' }} /></Form.Item><Form.Item name={`trimCode${record.key}`}>
+          <Select
+            value={record.trimCode}
+            onChange={(e) => handleInputChange(e, record.key, 'trimCode', record)}
+            style={{ width: "100%" }}
+            allowClear
+            showSearch
+            optionFilterProp="children"
+            placeholder="Select Trim Code"
+          >
+            {m3Trims.map(item => {
+              return <Option key={item.m3TrimsId} value={item.m3TrimsId}>{item.trimCode}</Option>;
+            })}
           </Select>
-          </Form.Item>
+        </Form.Item></>
       ),
     },
    
@@ -400,14 +397,9 @@ const getMappedTrims = (value, option) => {
   ];
 
   const setAllocatedQty = (index, rowData, value) => {
-    console.log(index);
-   console.log(stockData);
    rowData.issuedQty = value
    const newData = [...stockData];
-   console.log(newData);
    newData[index].issuedQty = value;
-   console.log(newData[index]);
-   console.log(newData)
    setStockData(newData);
    if (value === 0 || value === null || value < 0 || value === undefined) {
      AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
@@ -492,7 +484,6 @@ const getMappedTrims = (value, option) => {
    
   ]
   const onCheck = (rowData, index, isChecked) => {
-    console.log(rowData);
     if(isChecked){
       if(Number(rowData.issuedQty) > 0){
         rowData.issuedQty = rowData.issuedQty
@@ -501,13 +492,11 @@ const getMappedTrims = (value, option) => {
         newData[index].issuedQty = rowData.issuedQty;
         newData[index].checkedStatus = 1;
         data.map((record) => {
-          console.log(record);
           if (record.fabricCode === rowData.m3ItemId) {
             // record.allocatedStock = [...record.allocatedStock, newData];
             return { ...record, [`allocatedStock`]: newData};
           }
         }); 
-        console.log(data)        
         setStockData(newData);
         
         // setbtnEnable(true)
@@ -522,13 +511,14 @@ const getMappedTrims = (value, option) => {
     
   };
 
+  
   const renderItems = (record:any) => {
-    return  <Table
-    rowKey={record.stockId}
-     dataSource={stockData}
-      columns={renderColumnForFabric} 
-      pagination={false}
-       />;
+      return  <Table
+      rowKey={record.stockId}
+       dataSource={stockData}
+        columns={renderColumnForFabric} 
+        pagination={false}
+         />;
   };
 
   return (
