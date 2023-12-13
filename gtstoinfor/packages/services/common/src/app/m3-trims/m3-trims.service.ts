@@ -98,7 +98,8 @@ export class M3TrimsService {
       m3t.variety_id as varietyId,v.variety,
       m3t.trim_category_id as trimCategoryId,tr.trim_category as trimCategory,
       m3t.trim_mapping_id as trimMappingId,
-      m3t.m3_code as m3Code
+      m3t.m3_code as m3Code,
+      m3t.hsn_code as hsnCode
       from m3_trims m3t
       left join buyers b on b.buyer_id = m3t.buyer_id
       left join category cg on cg.category_id = m3t.category_id

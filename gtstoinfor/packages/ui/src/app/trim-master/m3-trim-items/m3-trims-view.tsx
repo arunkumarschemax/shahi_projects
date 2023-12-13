@@ -576,6 +576,11 @@ export const M3TrimsView = () => {
       dataIndex: "m3Code",
       ...getColumnSearchProps("m3Code"),
     },
+    {
+      title: <div style={{textAlign:"center"}}>HSN Code</div>,
+      dataIndex: "hsnCode",
+      ...getColumnSearchProps("hsnCode"),
+    },
   ]
 
   const filteredColumns = columns.filter((column) => Object.keys(column).length > 0);
