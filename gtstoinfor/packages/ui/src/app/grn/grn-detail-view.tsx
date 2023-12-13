@@ -112,7 +112,7 @@ import QRCode from "react-qr-code";
         title: <div style={{textAlign:"center"}}>Rejected Qty</div>,
         dataIndex: "rejectedQty",
         align:"right",
-        render: (text, record) => (text !== 0 ? `${text} ${record.uom || ''}` : '-')
+        render: (text, record) => (text > 0 ? `${text} ${record.uom || ''}` : '0')
       },
       {
         title: <div style={{textAlign:"center"}}>Conversion Qty</div>,
