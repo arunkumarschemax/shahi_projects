@@ -52,7 +52,6 @@ export class M3trimsDTO {
         itemType?: string,
         m3Code?:string,
         hsnCode?:string
-
     ) {
         this.m3ItemsId=m3ItemsId;
         this.buyerId=buyerId;
@@ -78,7 +77,7 @@ export class M3trimsDTO {
         this.extRefNumber = extRefNumber
        this.itemType = itemType
        this.m3Code = m3Code
-       this.hsnCode=hsnCode
+       this.hsnCode = hsnCode
        
     }
 }
