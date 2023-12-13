@@ -254,4 +254,16 @@ export class OrdersService extends CommonAxiosService {
         return await AxiosInstance.post('https://nike-backend.shahiapps.in/api/nike-dpom/getCoLine', req)
     }
 
+    async getBuyerPo(): Promise<CommonResponseModel> {
+        return await AxiosInstance.post('https://nike-backend.shahiapps.in/api/nike-dpom/getBuyerPo')
+    }
+
+    async getColineItem(): Promise<CommonResponseModel> {
+        return await AxiosInstance.post('https://nike-backend.shahiapps.in/api/nike-dpom/getColineItem')
+    }
+
+    async getColineOrderNo(): Promise<CommonResponseModel> {
+        return await AxiosInstance.post('https://nike-backend.shahiapps.in/api/nike-dpom/getColineOrderNo')
+    }
+
 }
