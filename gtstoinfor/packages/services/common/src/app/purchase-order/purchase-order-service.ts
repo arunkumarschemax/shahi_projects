@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel,GrnItemsFormDto, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel,CustomerOrderStatusEnum,GrnItemsFormDto, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -14,6 +14,7 @@ import { PurchaseOrderFabricRepository } from "./repo/purchase-order-fabric-repo
 import { PurchaseOrderTrimRepository } from "./repo/purchase-order-trim-repository";
 import { PurchaseOrderItemsEntity } from "./entities/purchase-order-items-entity";
 import { SampleRequestRepository } from "../sample-dev-request/repo/sample-dev-req-repo";
+import { IndentRepository } from "../indent/dto/indent-repository";
 let moment = require('moment');
 
 @Injectable()
@@ -21,6 +22,7 @@ export class PurchaseOrderService {
     constructor(
         // @InjectRepository(PurchaseOrderEntity)
         private poRepo: PurchaseOrderRepository,
+        private indentRepo:IndentRepository,
         private poFabricRepo: PurchaseOrderFabricRepository,
         private poTrimRepo: PurchaseOrderTrimRepository,
         @InjectDataSource()
@@ -93,6 +95,7 @@ export class PurchaseOrderService {
             
             if (save) {
                 if(req.poAgainst == 'INDENT'){
+                    const indentUpdate = await this.indentRepo.update({indentId:req.poItemInfo[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
                     for(const update of req.poItemInfo){
                         if(update.indentId != undefined){
 

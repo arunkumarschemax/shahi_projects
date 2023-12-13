@@ -324,6 +324,7 @@ export const SourcingRequisitionDynamicView = () => {
       title: "Action",
     dataIndex: "action",
     render: (text, rowData) => {
+      console.log(rowData)
     return (
     <span>
     {/* <Button onClick={() => generateBarcode(record.m3FabricCode)}>
@@ -332,7 +333,7 @@ export const SourcingRequisitionDynamicView = () => {
     <Divider type='vertical'/> */}
     <Button
     type="primary"
-    disabled={logInUser == "marketUser" ? true : false}
+    disabled={Number(rowData.quantity) == Number(rowData.poQty) ? true :false}
     onClick={() =>generatePoForFabric(rowData)}
     >
               Generate PO
