@@ -71,10 +71,6 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/getStatusWiseItems")
     }
 
-    async getOrderAcceptanceData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getOrderAcceptanceData")
-    }
-
     async approveDpomLineItemStatus(req: DpomApproveRequest): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/approveDpomLineItemStatus", req)
     }
@@ -265,7 +261,7 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/getPpmFactoryForMarketing")
     }
 
-    async getOrderAcceptanceData1(req: any): Promise<CommonResponseModel> {
+    async getOrderAcceptanceData(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getOrderAcceptanceData", req)
     }
 
@@ -349,7 +345,7 @@ export class NikeService extends CommonAxiosService {
     async getColineOrderNo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getColineOrderNo")
     }
-    
+
     async getPpmDocTypeForFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmDocTypeForFactory")
     }
@@ -357,13 +353,13 @@ export class NikeService extends CommonAxiosService {
     async getPpmdesGeoCodeFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmdesGeoCodeFactory")
     }
-    
+
     async getPpmPoLineNumberForFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmPoLineNumberForFactory")
     }
     async getPpmStyleNumberFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmStyleNumberFactory")
-    } 
+    }
     async getPpmPlanningSeasonCodeFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmPlanningSeasonCodeFactory")
     }

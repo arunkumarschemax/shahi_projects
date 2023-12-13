@@ -240,7 +240,6 @@ export class DpomController {
     }
 
     @Post('/getOrderAcceptanceData')
-    @ApiBody({ type: nikeFilterRequest })
     async getOrderAcceptanceData(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.dpomService.getOrderAcceptanceData(req);
@@ -891,7 +890,7 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
-    
+
 
     @Post('/getPpmDocTypeForFactory')
     async getPpmDocTypeForFactory(): Promise<CommonResponseModel> {
@@ -909,7 +908,7 @@ export class DpomController {
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
-    } 
+    }
     @Post('/getPpmPoLineNumberForFactory')
     async getPpmPoLineNumberForFactory(): Promise<CommonResponseModel> {
         try {
@@ -936,7 +935,7 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
-    
+
     @Post('/getPpmPlanningSeasonYearFactory')
     async getPpmPlanningSeasonYearFactory(): Promise<CommonResponseModel> {
         try {

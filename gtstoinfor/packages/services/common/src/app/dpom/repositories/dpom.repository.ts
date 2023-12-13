@@ -493,7 +493,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)
         }
         if (req.documentStartDate !== undefined) {
-            query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndtDate}'`)
+            query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
         }
         if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length > 0) {
             query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
@@ -592,7 +592,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)
         }
         if (req.documentStartDate !== undefined) {
-            query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndtDate}'`)
+            query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
         }
         if (req.productCode !== undefined) {
             query.andWhere(`dpom.product_code ='${req.productCode}'`)
@@ -655,43 +655,107 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
-    async getOrderAcceptanceData(req: nikeFilterRequest): Promise<any[]> {
-        let query = this.createQueryBuilder('d')
-            .select(` d.id,d.po_number, d.dpom_item_line_status, d.po_line_item_number, d.schedule_line_item_number, d.size_qty, d.size_description, d.document_date, d.plant_name, d.purchase_group_name, d.product_code, d.category_desc, d.shipping_type,
-            d.gross_price_fob, d.fob_currency_code, d.mrgac, d.gac, d.total_item_qty, d.po_and_line, d.destination_country,
-            MAX(CASE WHEN df.display_name = 'MRGAC' THEN df.old_val END) AS MRGAC_OLD,
-            MAX(CASE WHEN df.display_name = 'MRGAC' THEN df.new_val END) AS MRGAC_NEW,
-            MAX(CASE WHEN df.display_name = 'totalItemQty' THEN df.new_val END) AS totalItemQty_NEW,
-            MAX(CASE WHEN df.display_name = 'totalItemQty' THEN df.old_val END) AS totalItemQty_OLD,
-            MAX(CASE WHEN df.display_name = 'FOBCurrencyCode' THEN df.new_val END) AS FOBCurrencyCode_NEW,
-            MAX(CASE WHEN df.display_name = 'FOBCurrencyCode' THEN df.old_val END) AS FOBCurrencyCode_OLD,
-            MAX(CASE WHEN df.display_name = 'grossPriceFOB' THEN df.old_val END) AS grossPriceFOB_OLD,
-            MAX(CASE WHEN df.display_name = 'grossPriceFOB' THEN df.new_val END) AS grossPriceFOB_NEW,
-            MAX(CASE WHEN df.display_name = 'GAC' THEN df.old_val END) AS GAC_OLD,
-            MAX(CASE WHEN df.display_name = 'GAC' THEN df.new_val END) AS GAC_NEW,
-            MAX(CASE WHEN df.display_name = 'trCoNetIncludingDisc' THEN df.old_val END) AS trCoNetIncludingDisc_OLD,
-            MAX(CASE WHEN df.display_name = 'trCoNetIncludingDisc' THEN df.new_val END) AS trCoNetIncludingDisc_OLD`)
-            .leftJoin(DpomDifferenceEntity, 'df', 'df.po_number = d.po_number AND df.po_line_item_number = d.po_line_item_number')
-            .where(` d.dpom_item_line_status = 'Unaccepted'`)
-        // .orderBy(`CASE WHEN dpom.dpom_item_line_status = 'Unaccepted' THEN 0 ELSE 1 END`, 'ASC')
+    async getOrderAcceptanceData(req?: PpmDateFilterRequest): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`dpom.po_and_line,dpom.last_modified_date,dpom.item,dpom.factory,dpom.document_date,dpom.po_number,dpom.po_line_item_number,dpom.dpom_item_line_status,dpom.style_number,dpom.product_code,dpom.color_desc,dpom.customer_order,dpom.po_final_approval_date,dpom.plan_no,dpom.lead_time,dpom.category_code,dpom.category_desc,dpom.vendor_code,dpom.gcc_focus_code,dpom.gcc_focus_desc,dpom.gender_age_code,dpom.gender_age_desc,dpom.destination_country_code,dpom.destination_country,dpom.plant,dpom.plant_name,dpom.trading_co_po_no,dpom.upc,dpom.direct_ship_so_no,dpom.direct_ship_so_item_no,dpom.customer_po,dpom.ship_to_customer_no,dpom.ship_to_customer_name,dpom.planning_season_code,dpom.planning_season_year , dpom.pcd,dpom.doc_type_code, dpom.doc_type_desc,dpom.mrgac,dpom.ogac,dpom.gac,dpom.truck_out_date,dpom.origin_receipt_date,dpom.factory_delivery_date,dpom.gac_reason_code,dpom.gac_reason_desc,dpom.shipping_type,dpom.planning_priority_code,dpom.planning_priority_desc,dpom.launch_code,dpom.mode_of_transport_code,dpom.inco_terms,dpom.inventory_segment_code,dpom.purchase_group_code,dpom.purchase_group_name,dpom.total_item_qty,dpom.actual_shipped_qty,dpom.vas_size,dpom.item_vas_text,dpom.item_text,dpom.legal_po_price,dpom.co_price,dpom.pcd,dpom.ship_to_address_legal_po,dpom.ship_to_address_dia,dpom.cab_code,dpom.gross_price_fob,dpom.ne_inc_disc,dpom.trading_net_inc_disc,dpom.actual_unit,dpom.allocated_quantity,dpom.size_description,dpom.size_qty,dpom.trading_co_po_no,dpom.hanger,dpom.legal_po_qty,dpom.geo_code `)
+            // .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
+            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.customer_order IS NULL `)
+        if (req.lastModifedStartDate !== undefined) {
+            query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)
+        }
         if (req.documentStartDate !== undefined) {
-            query.andWhere(`Date(d.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
+            query.andWhere(`Date(dpom.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
+        }
+        if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length > 0) {
+            query.andWhere(`dpom.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
+        } else if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length === 0) {
+            query.andWhere(`1=1`);
         }
         if (req.productCode !== undefined) {
-            query.andWhere(`d.product_code ='${req.productCode}'`)
+            query.andWhere(`dpom.product_code ='${req.productCode}'`)
         }
-        if (req.poandLine !== undefined) {
-            query.andWhere(`d.po_number ='${req.poandLine}'`)
+        if (req.poNumber !== undefined) {
+            query.andWhere(`dpom.po_number ='${req.poNumber}'`)
         }
-        if (req.DPOMLineItemStatus !== undefined) {
-            query.andWhere(`d.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
+        if (req.colorDesc !== undefined) {
+            query.andWhere(`dpom.color_desc ='${req.colorDesc}'`)
         }
-        query = query.orderBy(' d.po_number', 'ASC')
-            .addOrderBy(' d.po_line_item_number', 'ASC')
-            .addOrderBy(' d.schedule_line_item_number', 'ASC')
-            .groupBy(` d.po_number, d.po_line_item_number, d.schedule_line_item_number`)
+        if (req.categoryDesc !== undefined) {
+            query.andWhere(`dpom.category_desc ='${req.categoryDesc}'`)
+        }
+        if (req.destinationCountry !== undefined) {
+            query.andWhere(`dpom.destination_country ='${req.destinationCountry}'`)
+        }
+        if (req.plant !== undefined) {
+            query.andWhere(`dpom.plant ='${req.plant}'`)
+        }
+        if (req.item !== undefined) {
+            query.andWhere(`dpom.item ='${req.item}'`)
+        }
+        if (req.factory !== undefined) {
+            query.andWhere(`dpom.factory ='${req.factory}'`)
+        }
+        if (req.gacStartDate !== undefined) {
+            query.andWhere(`Date(dpom.gac) BETWEEN '${req.gacStartDate}' AND '${req.gacEndDate}'`)
+        }
+        if (req.docTypeCode !== undefined) {
+            query.andWhere(`dpom.doc_type_code ='${req.docTypeCode}'`)
+        }
+        if (req.poLineItemNumber !== undefined) {
+            query.andWhere(`dpom.po_line_item_number ='${req.poLineItemNumber}'`)
+        }
+        if (req.styleNumber !== undefined) {
+            query.andWhere(`dpom.style_number ='${req.styleNumber}'`)
+        }
+        if (req.planningSeasonCode !== undefined) {
+            query.andWhere(`dpom.planning_season_code ='${req.planningSeasonCode}'`)
+        }
+        if (req.planningSeasonYear !== undefined) {
+            query.andWhere(`dpom.planning_season_year ='${req.planningSeasonYear}'`)
+        }
+        if (req.geoCode !== undefined) {
+            query.andWhere(`dpom.geo_code ='${req.geoCode}'`)
+        }
+
         return await query.getRawMany();
     }
+
+    //     let query = this.createQueryBuilder('d')
+    //         .select(` d.id,d.po_number, d.dpom_item_line_status, d.po_line_item_number, d.schedule_line_item_number, d.size_qty, d.size_description, d.document_date, d.plant_name, d.purchase_group_name, d.product_code, d.category_desc, d.shipping_type,
+    //         d.gross_price_fob, d.fob_currency_code, d.mrgac, d.gac, d.total_item_qty, d.po_and_line, d.destination_country,
+    //         MAX(CASE WHEN df.display_name = 'MRGAC' THEN df.old_val END) AS MRGAC_OLD,
+    //         MAX(CASE WHEN df.display_name = 'MRGAC' THEN df.new_val END) AS MRGAC_NEW,
+    //         MAX(CASE WHEN df.display_name = 'totalItemQty' THEN df.new_val END) AS totalItemQty_NEW,
+    //         MAX(CASE WHEN df.display_name = 'totalItemQty' THEN df.old_val END) AS totalItemQty_OLD,
+    //         MAX(CASE WHEN df.display_name = 'FOBCurrencyCode' THEN df.new_val END) AS FOBCurrencyCode_NEW,
+    //         MAX(CASE WHEN df.display_name = 'FOBCurrencyCode' THEN df.old_val END) AS FOBCurrencyCode_OLD,
+    //         MAX(CASE WHEN df.display_name = 'grossPriceFOB' THEN df.old_val END) AS grossPriceFOB_OLD,
+    //         MAX(CASE WHEN df.display_name = 'grossPriceFOB' THEN df.new_val END) AS grossPriceFOB_NEW,
+    //         MAX(CASE WHEN df.display_name = 'GAC' THEN df.old_val END) AS GAC_OLD,
+    //         MAX(CASE WHEN df.display_name = 'GAC' THEN df.new_val END) AS GAC_NEW,
+    //         MAX(CASE WHEN df.display_name = 'trCoNetIncludingDisc' THEN df.old_val END) AS trCoNetIncludingDisc_OLD,
+    //         MAX(CASE WHEN df.display_name = 'trCoNetIncludingDisc' THEN df.new_val END) AS trCoNetIncludingDisc_OLD`)
+    //         .leftJoin(DpomDifferenceEntity, 'df', 'df.po_number = d.po_number AND df.po_line_item_number = d.po_line_item_number')
+    //         .where(` d.dpom_item_line_status = 'Unaccepted'`)
+    //     // .orderBy(`CASE WHEN dpom.dpom_item_line_status = 'Unaccepted' THEN 0 ELSE 1 END`, 'ASC')
+    //     if (req.documentStartDate !== undefined) {
+    //         query.andWhere(`Date(d.document_date) BETWEEN '${req.documentStartDate}' AND '${req.documentEndDate}'`)
+    //     }
+    //     if (req.productCode !== undefined) {
+    //         query.andWhere(`d.product_code ='${req.productCode}'`)
+    //     }
+    //     if (req.poandLine !== undefined) {
+    //         query.andWhere(`d.po_number ='${req.poandLine}'`)
+    //     }
+    //     if (req.DPOMLineItemStatus !== undefined) {
+    //         query.andWhere(`d.dpom_item_line_status IN (:...statuses)`, { statuses: req.DPOMLineItemStatus });
+    //     }
+    //     query = query.orderBy(' d.po_number', 'ASC')
+    //         .addOrderBy(' d.po_line_item_number', 'ASC')
+    //         .addOrderBy(' d.schedule_line_item_number', 'ASC')
+    //         .groupBy(` d.po_number, d.po_line_item_number, d.schedule_line_item_number`)
+    //     return await query.getRawMany();
+    // }
 
     async getPpmProductCodeForOrderCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')

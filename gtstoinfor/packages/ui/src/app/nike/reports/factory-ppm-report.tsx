@@ -85,39 +85,39 @@ const FactoryPPMReport = () => {
 
     const getSesonYear = () => {
         service.getPpmPlanningSeasonYearFactory().then(res => {
-          setPlanSesYear(res.data)
+            setPlanSesYear(res.data)
         })
-      }
+    }
 
     const getSesonCode = () => {
         service.getPpmPlanningSeasonCodeFactory().then(res => {
-          setPlanSesCode(res.data)
+            setPlanSesCode(res.data)
         })
-      }
+    }
 
     const getStyleNumber = () => {
         service.getPpmStyleNumberFactory().then(res => {
-          setStyleNumber(res.data)
+            setStyleNumber(res.data)
         })
-      }
+    }
     const getDocType = () => {
         service.getPpmDocTypeForFactory().then(res => {
-          setDocType(res.data)
+            setDocType(res.data)
         })
-      }
+    }
 
-      const getGeoCode = () => {
+    const getGeoCode = () => {
         service.getPpmdesGeoCodeFactory().then(res => {
-          setGeoCode(res.data)
+            setGeoCode(res.data)
         })
-      }
-      
-      
-      const getPpmPoLineForFactory = () => {
+    }
+
+
+    const getPpmPoLineForFactory = () => {
         service.getPpmPoLineNumberForFactory().then(res => {
-          setPoLineItemNumber(res.data)
+            setPoLineItemNumber(res.data)
         })
-      }
+    }
 
     const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
         const req: FactoryUpdateRequest = {
@@ -332,7 +332,7 @@ const FactoryPPMReport = () => {
             req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('documentDate') !== undefined) {
-            req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
+            req.documentEndDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
         }
         if (form.getFieldValue('productCode') !== undefined) {
             req.productCode = form.getFieldValue('productCode');
@@ -366,28 +366,28 @@ const FactoryPPMReport = () => {
         }
         if (form.getFieldValue('docType') !== undefined) {
             req.docTypeCode = form.getFieldValue('docType');
-          }
+        }
         if (form.getFieldValue('geoCode') !== undefined) {
             req.geoCode = form.getFieldValue('geoCode');
-      }
-      if (form.getFieldValue('poLineItemNumber') !== undefined) {
-        req.poLineItemNumber = form.getFieldValue('poLineItemNumber');
-      }
-      if (form.getFieldValue('styleNumber') !== undefined) {
-        req.styleNumber = form.getFieldValue('styleNumber');
-      }
-      if (form.getFieldValue('planningSeasonCode') !== undefined) {
-        req.planningSeasonCode = form.getFieldValue('planningSeasonCode');
-      }
-      if (form.getFieldValue('planningSeasonYear') !== undefined) {
-        req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
-      }
-      if (form.getFieldValue('gac') !== undefined) {
-        req.gacStartDate = (form.getFieldValue('gac')[0]).format('YYYY-MM-DD');
-      }
-      if (form.getFieldValue('gac') !== undefined) {
-        req.gacEndDate = (form.getFieldValue('gac')[1]).format('YYYY-MM-DD');
-      }
+        }
+        if (form.getFieldValue('poLineItemNumber') !== undefined) {
+            req.poLineItemNumber = form.getFieldValue('poLineItemNumber');
+        }
+        if (form.getFieldValue('styleNumber') !== undefined) {
+            req.styleNumber = form.getFieldValue('styleNumber');
+        }
+        if (form.getFieldValue('planningSeasonCode') !== undefined) {
+            req.planningSeasonCode = form.getFieldValue('planningSeasonCode');
+        }
+        if (form.getFieldValue('planningSeasonYear') !== undefined) {
+            req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
+        }
+        if (form.getFieldValue('gac') !== undefined) {
+            req.gacStartDate = (form.getFieldValue('gac')[0]).format('YYYY-MM-DD');
+        }
+        if (form.getFieldValue('gac') !== undefined) {
+            req.gacEndDate = (form.getFieldValue('gac')[1]).format('YYYY-MM-DD');
+        }
         setTableLoading(true)
         service.getFactoryReportData(req)
             .then(res => {
@@ -1492,7 +1492,7 @@ const FactoryPPMReport = () => {
 
                             </Form.Item>
                         </Col>
-                     
+
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
                             <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
                                 <Select
@@ -1508,20 +1508,20 @@ const FactoryPPMReport = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-              <Form.Item name='docType' label='Doc Type' >
-                <Select
-                  showSearch
-                  placeholder="Select Doc Type"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {docType?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.doc_type_code}>{inc.doc_type_code}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
+                            <Form.Item name='docType' label='Doc Type' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Doc Type"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {docType?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.doc_type_code}>{inc.doc_type_code}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
                             <Form.Item name='item' label='Item' >
                                 <Select
@@ -1575,34 +1575,34 @@ const FactoryPPMReport = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-                    <Form.Item name='poLineItemNumber' label='Po Line Item Number' >
-                        <Select
-                        showSearch
-                        placeholder="Select poLineItemNumber"
-                        optionFilterProp="children"
-                        allowClear
-                        >
-                        {poLineItemNumber?.map((inc: any) => {
-                            return <Option key={inc.id} value={inc.po_line_item_number}>{inc.po_line_item_number}</Option>
-                        })
-                        }
-                        </Select>
-                        </Form.Item>
+                            <Form.Item name='poLineItemNumber' label='Po Line Item Number' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select poLineItemNumber"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {poLineItemNumber?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.po_line_item_number}>{inc.po_line_item_number}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-                        <Form.Item name='styleNumber' label='Style Number' >
-                            <Select
-                            showSearch
-                            placeholder="Select Style Number"
-                            optionFilterProp="children"
-                            allowClear
-                            >
-                            {styleNumber?.map((inc: any) => {
-                                return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
-                            })
-                            }
-                            </Select>
-                        </Form.Item>
+                            <Form.Item name='styleNumber' label='Style Number' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Style Number"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {styleNumber?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
                             <Form.Item name='productCode' label='Product Code' >
@@ -1620,37 +1620,37 @@ const FactoryPPMReport = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-                        <Form.Item name='planningSeasonCode' label='Planning Season Code' >
-                            <Select
-                            showSearch
-                            placeholder="Select Planning Season Code"
-                            optionFilterProp="children"
-                            allowClear
-                            >
-                            {planSesCode?.map((inc: any) => {
-                                return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
-                            })
-                            }
-                            </Select>
-                        </Form.Item>
+                            <Form.Item name='planningSeasonCode' label='Planning Season Code' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Planning Season Code"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {planSesCode?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
-                        <Form.Item name='planningSeasonYear' label='Planning Season Year' >
-                            <Select
-                            showSearch
-                            placeholder="Select Planning Season Year"
-                            optionFilterProp="children"
-                            allowClear
-                            >
-                            {planSesYear?.map((inc: any) => {
-                                return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
-                            })
-                            }
-                            </Select>
-                        </Form.Item>
+                            <Form.Item name='planningSeasonYear' label='Planning Season Year' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Planning Season Year"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {planSesYear?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
                         </Col>
-                      
-                       
+
+
                         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} >
                             <Form.Item name='colorDesc' label='Color Description' >
                                 <Select
@@ -1698,20 +1698,20 @@ const FactoryPPMReport = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
-              <Form.Item name='geoCode' label='Geo Code' >
-                <Select
-                  showSearch
-                  placeholder="Select Geo Code"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {geoCode?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
-                  })
-                  }
-                     </Select>
-                    </Form.Item>
-                 </Col>
+                            <Form.Item name='geoCode' label='Geo Code' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Geo Code"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {geoCode?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
                             <Form.Item name='plant' label='Plant Code' >
                                 <Select
@@ -1727,11 +1727,11 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        
+
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
-                        <Form.Item label="GAC" name="gac">
-                            <RangePicker />
-                        </Form.Item>
+                            <Form.Item label="GAC" name="gac">
+                                <RangePicker />
+                            </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                             <Form.Item>

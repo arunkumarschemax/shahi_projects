@@ -231,7 +231,7 @@ const PPMReport = () => {
       req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD');
     }
     if (form.getFieldValue('documentDate') !== undefined) {
-      req.documentEndtDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
+      req.documentEndDate = (form.getFieldValue('documentDate')[1]).format('YYYY-MM-DD');
     }
     if (form.getFieldValue('productCode') !== undefined) {
       req.productCode = form.getFieldValue('productCode');

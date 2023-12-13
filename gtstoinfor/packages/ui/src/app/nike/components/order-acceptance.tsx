@@ -1,5 +1,5 @@
 import { ArrowDownOutlined, ArrowUpOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
-import { DpomApproveRequest, FactoryReportModel, nikeFilterRequest } from "@project-management-system/shared-models";
+import { DpomApproveRequest, FactoryReportModel, PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, Tooltip, message } from "antd";
 import moment from "moment";
@@ -21,6 +21,9 @@ export function OrderAcceptance() {
     const [productCode, setProductCode] = useState<any>([]);
     const [poLine, setPoLine] = useState<any>([]);
     const [itemNoValues, setItemNoValues] = useState({});
+    const [styleNumber, setStyleNumber] = useState<any>([]);
+    const [planSesCode, setPlanSesCode] = useState<any>([]);
+    const [planSesYear, setPlanSesYear] = useState<any>([]);
 
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -125,11 +128,32 @@ export function OrderAcceptance() {
         getOrderAcceptanceData()
         getProductCode()
         getPoLine()
+        getStyleNumber();
+        getSesonCode();
+        getSesonYear();
     }, [])
 
     const getProductCode = () => {
         service.getPpmProductCodeForOrderCreation().then(res => {
             setProductCode(res.data)
+        })
+    }
+
+    const getSesonYear = () => {
+        service.getPpmPlanningSeasonYearFactory().then(res => {
+            setPlanSesYear(res.data)
+        })
+    }
+
+    const getSesonCode = () => {
+        service.getPpmPlanningSeasonCodeFactory().then(res => {
+            setPlanSesCode(res.data)
+        })
+    }
+
+    const getStyleNumber = () => {
+        service.getPpmStyleNumberFactory().then(res => {
+            setStyleNumber(res.data)
         })
     }
 
@@ -145,7 +169,7 @@ export function OrderAcceptance() {
     }
 
     const getOrderAcceptanceData = () => {
-        const req = new nikeFilterRequest();
+        const req = new PpmDateFilterRequest();
         if (form.getFieldValue('documentDate') !== undefined) {
             req.documentStartDate = (form.getFieldValue('documentDate')[0]).format('YYYY-MM-DD');
         }
@@ -161,13 +185,22 @@ export function OrderAcceptance() {
         if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
             req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
         }
-        service.getFactoryReportData(req).then((res) => {
+        if (form.getFieldValue('styleNumber') !== undefined) {
+            req.styleNumber = form.getFieldValue('styleNumber');
+        }
+        if (form.getFieldValue('planningSeasonCode') !== undefined) {
+            req.planningSeasonCode = form.getFieldValue('planningSeasonCode');
+        }
+        if (form.getFieldValue('planningSeasonYear') !== undefined) {
+            req.planningSeasonYear = form.getFieldValue('planningSeasonYear');
+        }
+        service.getOrderAcceptanceData(req).then((res) => {
             if (res.data) {
-                const unacceptedData = res.data.filter(item => item.DPOMLineItemStatus === "Unaccepted" || item.DPOMLineItemStatus === "Accepted" && item.customerOrder == null && item.docType == 'ZP26');
-                setData(unacceptedData)
-                Finish(data)
-                // message.success(res.internalMessage)
+                setData(res.data)
+                Finish(res.data)
+                message.success(res.internalMessage)
             } else (
+                setData([]),
                 message.error(res.internalMessage)
             )
         })
@@ -278,7 +311,7 @@ export function OrderAcceptance() {
                 dataIndex: 'destinationCountryCode', width: 75,
             },
             {
-                title: 'Destination country Name',
+                title: 'Destination Country Name',
                 dataIndex: 'destinationCountry', width: 75,
             },
             {
@@ -311,6 +344,16 @@ export function OrderAcceptance() {
                 title: 'GAC', dataIndex: 'GAC', className: "right-column", width: 70, render: (text, record) => {
                     return record.GAC ? moment(record.GAC).format('MM/DD/YYYY') : '-';
                 },
+            },
+            {
+                title: 'Planning Season Code',
+                dataIndex: 'planningSeasonCode',
+                align: 'center', width: 70,
+            },
+            {
+                title: 'Planning Season Year',
+                dataIndex: 'planningSeasonYear', width: 70,
+                align: 'center',
             },
             {
                 title: 'Category',
@@ -528,12 +571,12 @@ export function OrderAcceptance() {
                     form={form}
                     layout='vertical'>
                     <Row gutter={24}>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} style={{ padding: '20px' }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 5 }} >
                             <Form.Item label="Document Date" name="documentDate">
                                 <RangePicker />
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                             <Form.Item name='purchaseOrder' label='Purchase Order' >
                                 <Select
                                     showSearch
@@ -548,7 +591,7 @@ export function OrderAcceptance() {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ padding: '20px' }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
                             <Form.Item name='productCode' label='Product Code' >
                                 <Select
                                     showSearch
@@ -563,7 +606,52 @@ export function OrderAcceptance() {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 40 }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                            <Form.Item name='styleNumber' label='Style Number' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Style Number"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {styleNumber?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                            <Form.Item name='planningSeasonCode' label='Planning Season Code' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Planning Season Code"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {planSesCode?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                            <Form.Item name='planningSeasonYear' label='Planning Season Year' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Planning Season Year"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {planSesYear?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 20 }} >
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>SEARCH</Button>
                                 <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
