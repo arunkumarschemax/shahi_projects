@@ -30,7 +30,9 @@ export class M3ItemsAdapter {
         entity.shrinkage = dto.shrinkage;
         entity.width = dto.width;
         entity.widthUnit = dto.widthUnit;
-        entity.m3Code = dto.m3Code
+        entity.m3Code = dto.m3Code;
+        entity.hsnCode = dto.hsnCode
+
         if (dto.m3ItemsId) {
             entity.m3ItemsId = dto.m3ItemsId;
             entity.updatedUser = dto.updatedUser
@@ -53,6 +55,7 @@ export class M3ItemsAdapter {
         dto.finish = entity.finish
         dto.shrinkage=entity.shrinkage
         dto.m3Code = entity.m3Code
+        dto.hsnCode=entity.hsnCode
         return dto;
     }
 
