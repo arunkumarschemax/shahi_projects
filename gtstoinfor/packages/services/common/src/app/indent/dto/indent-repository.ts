@@ -60,7 +60,7 @@ export class IndentRepository extends Repository<Indent> {
     }
     async getAllIndentData(extRefNumber?:string) {
         const query = this.createQueryBuilder(`it`)
-            .select(`b.buyer_name AS buyerName,b.external_ref_number as extRefNo,it.indent_id,it.request_no,it.indent_date,it.expected_date,it.status,it.created_at,it.updated_at,it.style,st.style,st.description `)
+            .select(`b.buyer_name AS buyerName,b.external_ref_number as extRefNo,it.indent_id,it.request_no,it.indent_date,it.expected_date,it.status,it.created_at,it.updated_at,it.style as styleId,st.style,st.description `)
             .leftJoin(Style, 'st', 'st.style_id=it.style')
             .leftJoin(Buyers, 'b', 'b.buyer_id=it.buyer_id')
             if(extRefNumber){

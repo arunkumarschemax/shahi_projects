@@ -7,6 +7,7 @@ export class SampleFabricReq {
     fabricInfoId: number;
     totalRequirement: number;
     wastage: number;
+    allocatedStock:any[];
     constructor(
         fabricCode: number,
         colourId: number,
@@ -15,8 +16,8 @@ export class SampleFabricReq {
         remarks: string,
         totalRequirement: number,
         wastage: number,
-        fabricInfoId?: number
-
+        allocatedStock:any[],
+        fabricInfoId?: number,
     ) {
         this.fabricCode = fabricCode
         this.colourId = colourId
@@ -26,6 +27,7 @@ export class SampleFabricReq {
         this.totalRequirement = totalRequirement
         this.wastage = wastage
         this.fabricInfoId = fabricInfoId
+        this.allocatedStock = allocatedStock
     }
 
 }

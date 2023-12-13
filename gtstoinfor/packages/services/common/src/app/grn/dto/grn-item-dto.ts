@@ -50,4 +50,6 @@ export class GRNItemDto{
     // m3FabricCode?: number
     // @ApiProperty()
     // m3TrimCode?: number
+    @ApiProperty()
+    styleId:number
 }

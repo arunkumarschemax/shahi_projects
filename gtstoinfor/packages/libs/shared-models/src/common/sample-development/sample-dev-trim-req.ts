@@ -5,6 +5,7 @@ export class SampleTrimReq {
     totalRequirement: number
     wastage: number
     remarks: string
+    allocatedStock: any[]
     trimInfoId?: number
     colourId?:number
     uomId?:number
@@ -16,6 +17,7 @@ export class SampleTrimReq {
         totalRequirement: number,
         wastage: number,
         remarks: string,
+        allocatedStock: any[],
         trimInfoId?: number,
        colourId?:number,uomId?:number
 
@@ -27,6 +29,7 @@ export class SampleTrimReq {
         this.wastage = wastage
         this.remarks = remarks
         this.trimInfoId = trimInfoId
+        this.allocatedStock=allocatedStock
         this.colourId=colourId
         this.uomId=uomId
     }
