@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Modal, Row, Select, Table, Tabs, Typography, notification } from 'antd'
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Modal, Row, Select, Table, Tabs, Typography, message, notification } from 'antd'
 import style from 'antd/es/alert/style'
 import TabPane from 'antd/es/tabs/TabPane'
 import React, { useEffect, useState } from 'react'
@@ -66,18 +66,22 @@ const GRNForm = () => {
 
 
   const createGrn = async () => {
-    await form.validateFields()
-    const values = form.getFieldsValue()
-    console.log(values,'rrrr')
-    const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '',values.grnType, values.invoiceNo, poData?.poMaterialType, values.grnAmount,form.getFieldValue('invoiceDate').format('YYYY-MM-DD'));
-    grnService.createGrn(req).then((res) => {
-      if (res.status) {
-        AlertMessages.getSuccessMessage(res.internalMessage);
-        navigate('/grn-view')
-      } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    })
+    form.validateFields().then(() => {
+
+      const values = form.getFieldsValue()
+      console.log(values,'rrrr')
+      const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '',values.grnType, values.invoiceNo, poData?.poMaterialType, values.grnAmount,form.getFieldValue('invoiceDate').format('YYYY-MM-DD'));
+      grnService.createGrn(req).then((res) => {
+        if (res.status) {
+          AlertMessages.getSuccessMessage(res.internalMessage);
+          navigate('/grn-view')
+        } else {
+          AlertMessages.getErrorMessage(res.internalMessage);
+        }
+      })
+    }).catch(() => {
+      // message.error('Please fill all required fields')
+  })
   };
 
 
@@ -580,7 +584,7 @@ const GRNForm = () => {
             
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
               <Form.Item name='invoiceDate' label='Invoice Date'
-              // s rules={[{ required: true, message: 'Date is required' }]}
+              rules={[{ required: true, message: 'Date is required' }]}
                >
                 <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday />
               </Form.Item>
