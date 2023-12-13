@@ -141,9 +141,10 @@ const getMappedTrims = (value, option) => {
     return trimOptions;
   };
 
-  const getStockDetails = (record) => {
+  const getStockDetails = (record,e) => {
     console.log(record);
-    let req = new buyerandM3ItemIdReq(props.buyerId,record.trimCode,record.trimType);
+    record.trimCode = e;
+    let req = new buyerandM3ItemIdReq(props.buyerId,e,record.trimType);
     sampleDevelopmentService.getAvailbelQuantityAginstBuyerAnditem(req).then((res) => {
       if(res.status){
         setStockData(res.data);
@@ -173,9 +174,16 @@ const getMappedTrims = (value, option) => {
         }
         return record;
       });
-      // await getStockDetails(record,e)
+      await getStockDetails(record,e)
     } 
-  
+    else if(field === "allocatedStock"){
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          return { ...record, [field]: e, ["trimCode"] : record.trimCode };
+        }
+        return record;
+      });
+    }
     else if(field === 'consumption'){
       let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
       updatedData = data.map((record) => {

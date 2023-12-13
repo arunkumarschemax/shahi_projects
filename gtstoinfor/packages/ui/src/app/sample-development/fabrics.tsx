@@ -109,7 +109,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     else if(field === "allocatedStock"){
       updatedData = data.map((record) => {
         if (record.key === key) {
-          return { ...record, [field]: e };
+          return { ...record, [field]: e, ["fabricCode"]: record.fabricCode };
         }
         return record;
       });
@@ -164,6 +164,7 @@ const FabricsForm = (props:FabricsFormProps) => {
 
   const getStockDetails = (record,itemId) => {
     console.log(record);
+    record.fabricCode = itemId;
     let req = new buyerandM3ItemIdReq(props.buyerId,itemId,"Fabric");
     service.getAvailbelQuantityAginstBuyerAnditem(req).then((res) => {
       if(res.status){
