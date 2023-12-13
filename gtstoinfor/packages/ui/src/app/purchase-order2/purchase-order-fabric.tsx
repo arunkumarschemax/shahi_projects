@@ -175,8 +175,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
             fabricForm.setFieldsValue({ taxAmount: rowData.taxAmount })
             fabricForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
-            fabricForm.setFieldsValue({ quantityUomId: rowData.uom_id })
-            fabricForm.setFieldsValue({ quantityUom: rowData.uom })
+            fabricForm.setFieldsValue({ quantityUomId: rowData.quantityUom })
+            fabricForm.setFieldsValue({ quantityUom: rowData.quantityUom })
         }
         if (rowData.samplereFabId != undefined) {
             fabricForm.setFieldsValue({ poQuantity: rowData.sampleQuantity })
@@ -223,7 +223,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                     colourId: defaultFabricFormData.colourId,
                     colorName: defaultFabricFormData.colorName,
                     shahiFabricCode: defaultFabricFormData.shahiFabricCode,
-                    quantityUomId: defaultFabricFormData.uom_id,
+                    quantityUomId: defaultFabricFormData.quantityUomId,
                     indentQuantity: defaultFabricFormData.indentQuantity,
                     indentFabricId: defaultFabricFormData.indentFabricId,
                     itemCode: defaultFabricFormData.itemCode,
@@ -298,8 +298,9 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         {
             title: "Action",
             dataIndex: 'action',
-            render: (text: any, rowData: any, index: any) => (
-                <span>
+            render: (text: any, rowData: any, index: any) => {
+                console.log(rowData)
+                return (<span>
                     <Tooltip placement="top" title='Edit'>
                         <Tag >
                             <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -324,7 +325,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                         </Tag>
                     </Tooltip>
                 </span>
-            )
+                )
+        }
         }
     ]
 

@@ -432,7 +432,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                     indentTrmId:defaultTrimFormData.indentTrmId,
                     indentQuantity:defaultTrimFormData.indentQuantity,
                     indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
-                    quantityUomId:defaultTrimFormData.quantityUomId,
+                    quantityUomId:defaultTrimFormData.quantityUnitId,
                     poQuantity:defaultTrimFormData.indentQuantity,
                     m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
                     indentCode:defaultTrimFormData.indentCode,
