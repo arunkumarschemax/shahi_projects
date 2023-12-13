@@ -118,7 +118,7 @@ export const GrnPendingInfoGrid = () => {
                 
                 <span>
                     <Button type="primary" shape="round" size="small"
-                        disabled={Number(Number(rowData.quantity) - Number(rowData.allocatedQty)) > 0}
+                        disabled={Number(rowData.balance) < 0}
                         onClick={() => {
                             setData(rowData);
                         }}>
@@ -145,7 +145,7 @@ export const GrnPendingInfoGrid = () => {
     return (
         <div>
             <Card 
-            title={<span >GRN Pending Details</span>}
+            title={<span >Location Mapping Pending Details</span>}
                 // style={{ textAlign: 'center' }}
                  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
                 <Table

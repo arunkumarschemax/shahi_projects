@@ -277,6 +277,15 @@ const stockService = new StockService();
           
 
       },
+      {
+        title: "HSN Code",
+        dataIndex: "hsnCode",
+        ...getColumnSearchProps('hsnCode'),
+        sorter: (a, b) => a.hsnCode.length - b.hsnCode.length,
+       sortDirections: ['descend', 'ascend'],
+        
+
+    },
         {
             title: "Content",
             dataIndex: "content",

@@ -88,5 +88,9 @@ export class M3TrimsDTO {
     
     @ApiProperty()
     m3Code?: string;
+
+    @ApiProperty()
+    hsnCode?: string;
+
 }
 

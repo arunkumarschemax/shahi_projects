@@ -175,7 +175,12 @@ export class M3TrimsEntity {
   })
   m3Code: string;
 
-
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'hsn_code',
+  })
+  hsnCode: string;
   @ManyToOne(type=>Buyers, m3Trims=>m3Trims.M3TrimCodes,{  nullable:false, })
   @JoinColumn({ name:"buyer_id"})
   buyerInfo: Buyers;

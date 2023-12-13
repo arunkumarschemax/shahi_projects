@@ -162,7 +162,13 @@ const M3Items = () => {
   };
 
   const onFinish = (val) => {
-    const req = new M3ItemsDTO(0,val.itemCode,val.content,val.fabricType,val.weave,val.weight,val.weightUnit,val.construction,val.yarnCount,val.yarnUnit,val.width,val.widthUnit,val.finish,val.shrinkage,val.buyerId,val.description,val.buyerCode)
+    console.log(val,"0000000000")
+    console.log(val.hsnCode,"pppppppppppp")
+
+     const req = new M3ItemsDTO(0,val.itemCode,val.content,val.fabricType,val.weave,val.weight,val.weightUnit,val.construction,val.yarnCount,val.yarnUnit,val.width,val.widthUnit,val.finish,val.shrinkage,val.buyerId,val.description,val.buyerCode,null,null,null,null,val.hsnCode)
+     console.log(req,"LLLLLLLLLLLLLLLLLLLL");
+
+     
     service
       .createM3Items(req)
       .then((res) => {
@@ -427,6 +433,11 @@ const M3Items = () => {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name="m3Code" label="M3 Code" >
                     <Input placeholder="Enter M3 Code"/>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="hsnCode" label="HSN Code" >
+                    <Input placeholder="Enter HSN Code"/>
                 </Form.Item>
             </Col>
             <Col
