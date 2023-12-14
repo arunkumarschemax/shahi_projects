@@ -492,30 +492,30 @@ export const SourcingRequisitionDynamicForm = () => {
         //     title:'MOQ Price',
         //     dataIndex:'moqPrice'
         // },
-        {
-            title:'Supplier',
-            dataIndex:'supplier',
-            render: (text,record) => {
-                return(
-                    <>
-                    {record.supplier ? record.supplierName : '-'}
-                    </>
-                )
-            }
+        // {
+        //     title:'Supplier',
+        //     dataIndex:'supplier',
+        //     render: (text,record) => {
+        //         return(
+        //             <>
+        //             {record.supplier ? record.supplierName : '-'}
+        //             </>
+        //         )
+        //     }
             
-        },
-        {
-            title:'GRN Date',
-            dataIndex:'grnDate',
-            render:(text,record) => {
-                const date = new Date(record.grnDate)
-                return(
-                    <>
-                    {record.grnDate ? moment(date).format('YYYY-MM-DD') : '-'}
-                    </>
-                )
-            }
-        },
+        // },
+        // {
+        //     title:'GRN Date',
+        //     dataIndex:'grnDate',
+        //     render:(text,record) => {
+        //         const date = new Date(record.grnDate)
+        //         return(
+        //             <>
+        //             {record.grnDate ? moment(date).format('YYYY-MM-DD') : '-'}
+        //             </>
+        //         )
+        //     }
+        // },
         // {
         //     title:'Buyer',
         //     dataIndex:'buyer',
