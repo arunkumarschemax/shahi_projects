@@ -2838,11 +2838,13 @@ const PPMReport = () => {
         title: 'Item Vas Text in PDF PO',
         dataIndex: 'itemVasTextPDF', width: 80,
         render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
+          return (
+            <>
+              {record.itemVasTextPDF?.length > 30 ? (<><Tooltip title='Cilck to open full itemVasTextPDF'><p><span onClick={() => handleTextClick(record.itemVasTextPDF)} style={{ cursor: 'pointer' }}>
+                {record.itemVasTextPDF.length > 30 ? `${record.itemVasTextPDF?.substring(0, 30)}....` : record.itemVasTextPDF}
+              </span></p></Tooltip></>) : (<>{record.itemVasTextPDF}</>)}
+            </>
+          )
         },
       },
       {

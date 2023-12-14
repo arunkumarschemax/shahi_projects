@@ -760,7 +760,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPpmProductCodeForOrderCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.productCode,dpom.id`)
-            .where(`dpom.dpom_item_line_status IN('Unaccepted')`)
+            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.customer_order IS NULL`)
             .groupBy(`dpom.productCode`)
         return await query.getRawMany();
     }
@@ -768,7 +768,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPoLineforOrderCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.po_number,dpom.id`)
-            .where(`dpom.dpom_item_line_status = 'Unaccepted'`)
+            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.customer_order IS NULL`)
             .groupBy(`dpom.po_number`)
         return await query.getRawMany();
     }
@@ -894,7 +894,8 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getDataForColine(req: any): Promise<any[]> {
         const query = this.createQueryBuilder('d')
-            .select(` d.po_number, d.po_and_line, d.po_line_item_number, d.style_number, d.size_description, d.size_qty, d.destination_country,d.color_desc, d.gross_price_fob, d.gac`)
+            .select(` d.po_number, d.po_and_line, d.po_line_item_number, d.style_number, d.size_description, d.size_qty, d.destination_country,d.color_desc, d.gross_price_fob, d.gac, f.shahi_confirmed_gross_price as salesPrice, f.shahi_confirmed_gross_price_currency_code as currency `)
+            .leftJoin(FobEntity, 'f', `f.style_number = d.style_number AND f.size_description = d.size_description AND f.color_code = SUBSTRING_INDEX(d.product_code, '-', -1) AND f.planning_season_code = d.planning_season_code`)
             .where(` d.po_number ='${req.poNumber}' AND d.po_line_item_number ='${req.lineNumber}'`)
         return await query.getRawMany();
     }
@@ -906,6 +907,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom.doc_type_code`)
         return await query.getRawMany();
     }
+
     async getPpmGeoCodeFactory(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.geo_code, dpom.id`)
@@ -914,6 +916,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
         return await query.getRawMany();
     }
+
     async getPpmPoLineItemNumberForFactory(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.po_line_item_number,dpom.id`)
@@ -925,7 +928,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPpmStyleNumberForFactory(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.style_number,dpom.id`)
-            .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' AND dpom.style_number IS NOT Null`)
+            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.style_number IS NOT Null`)
             .groupBy(`dpom.style_number`)
         return await query.getRawMany();
     }
@@ -936,6 +939,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom.planning_season_code`)
         return await query.getRawMany();
     }
+
     async getPpmplanningSeasonYearForFactory(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.planning_season_year,dpom.id`)
