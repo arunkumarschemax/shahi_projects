@@ -175,6 +175,7 @@ export class PurchaseOrderService {
             if (req.vendorId) {
                 query = query + ` AND po.vendor_id = '${req.vendorId}'`;
             }
+            query = query +` GROUP BY po.po_number ORDER BY po.po_number`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)

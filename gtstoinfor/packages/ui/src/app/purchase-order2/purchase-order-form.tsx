@@ -189,6 +189,15 @@ export const PurchaseOrderForm = () => {
         poForm.resetFields()
     }
 
+    const indentOnClear = () => {
+        console.log('Indent cleared!');
+        setFabricData([])
+        setTrimData([])
+        console.log('Fabric Data:', fabricData);
+        console.log('Trim Data:', trimData);
+    };
+    
+
     const getVendors = () => {
         vendorService.getAllActiveVendors().then((res) => {
             if (res.status) {
@@ -229,25 +238,36 @@ export const PurchaseOrderForm = () => {
             }
         }
         console.log(poItemDetails)
-        const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'),[poForm.getFieldValue('indentId')], poForm.getFieldValue('buyerId'), poItemDetails,poForm.getFieldValue('currencyId'),poForm.getFieldValue('exchangeRate'),poForm.getFieldValue('totalAmount'),poForm.getFieldValue('deliveryAddress'), poForm.getFieldValue('indentAgainst'))
-        console.log(poDto)
-        if (poDto.poItemInfo.length > 0) {
-            purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
-                if (res.status) {
-                    message.success(res.internalMessage)
-                    navigate('/purchase-view')
-                }
-            })
-        }
-        else {
-            message.error('Please Update Po Quantity')
+        const poItemFilter = poItemDetails.filter(e => e.poQuantity >0)
+        if(poItemFilter.length === poItemDetails.length){
+
+            const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'),[poForm.getFieldValue('indentId')], poForm.getFieldValue('buyerId'), poItemDetails,poForm.getFieldValue('currencyId'),poForm.getFieldValue('exchangeRate'),poForm.getFieldValue('totalAmount'),poForm.getFieldValue('deliveryAddress'), poForm.getFieldValue('indentAgainst'))
+            console.log(poDto)
+            if (poDto.poItemInfo.length > 0) {
+                purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
+                    if (res.status) {
+                        message.success(res.internalMessage)
+                        navigate('/purchase-view')
+                    }
+                })
+            }
+            else {
+                message.error('Please Update Po Quantity')
+            }
+        }else{
+            notification.info({message:'Please update PO Qty for remaining Items'})
         }
 
     }
 
     const indentOnchange = (value) => {
+        console.log(value.length,'------------------------')
+        if(value.length == 0){
+        setIndentId(undefined)
+        }
         setIndentId(value)
     }
+    
     const sampleOnchange = (value) => {
         setSampleId(value)
     }
@@ -312,6 +332,7 @@ export const PurchaseOrderForm = () => {
                                 rules={[{ required: indentDropDownVisible, message: 'IndentCode is required' }]}>
                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent' mode="multiple"
                                     onChange={indentOnchange}
+                                    onClear={indentOnClear}
                                 >
                                     {indenData.map(e => {
                                         return (
@@ -426,9 +447,13 @@ export const PurchaseOrderForm = () => {
                 <Row gutter={24}>
                     {/* <Card title={poType == 'Fabric'?<span style={{color:'blue', fontSize:'17px'}} >Fabric Details</span>:poType =='Trim'?<span style={{color:'blue', fontSize:'17px'}}>Trim Details</span>:''} style={{width:'200%'}}> */}
                     {poType == 'Fabric' ?
-                        <Card style={{ width: '200%' }}><PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={poType == 'Fabric' ? indentId : undefined} data={navigateData} sampleReqId={poType == 'Fabric' ? sampleId : undefined} itemData = {itemData} /></Card>
+                        // <Card style={{ width: '200%' }}>
+                            <PurchaseOrderfabricForm key='fabric' props={handleFabricOnchange} indentId={poType == 'Fabric' ? indentId : undefined} data={navigateData} sampleReqId={poType == 'Fabric' ? sampleId : undefined} itemData = {itemData} />
+                            // </Card>
                         : poType == 'Trim' ?
-                            <Card style={{ width: '130%' }}> <PurchaseOrderTrim key='trim' props={handleTrim} indentId={indentId} data={navigateData} sampleReqId={poType != 'Fabric' ? sampleId : undefined} itemData = {itemData} /></Card>
+                            // <Card style={{ width: '130%' }}>
+                            <PurchaseOrderTrim key='trim' props={handleTrim} indentId={indentId} data={navigateData} sampleReqId={poType != 'Fabric' ? sampleId : undefined} itemData = {itemData} />
+                            // </Card>
                             : <></>
                     }
                     {/* </Card> */}

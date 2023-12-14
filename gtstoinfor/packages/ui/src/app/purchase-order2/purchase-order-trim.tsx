@@ -547,7 +547,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         finalCalculation();
     },[taxPer])
     return(
-        <Card title={<span style={{color:'blue', fontSize:'17px'}} >Trim Details</span>}>
+        // <div style={{ width: '100%', overflowX: 'auto' }}>
+        <Card title={<span style={{color:'blue', fontSize:'17px'}} >Trim Details</span>}  style={{ width: '100%', overflowX: 'auto' }}>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd} style={{width:'100%'}}>
                 <Row gutter={12}>
                    <Form.Item name='sampleReqId' hidden ><Input/></Form.Item>
@@ -701,8 +702,13 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                     }
                 
                 </Row>
+            </Form>
                 <Row>
-                {trimtableVisible ? <Table columns={tableColumns} dataSource={trimTableData}
+                {trimtableVisible ? 
+                <Table 
+                scroll={{ x: 'max-content' }} 
+                columns={tableColumns} 
+                dataSource={trimTableData}
                  pagination={{
                     onChange(current) {
                       setPage(current);
@@ -711,9 +717,9 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                      />
                 :<></>}
                 </Row>
-            </Form>
 
         </Card>
+        // </div>
     )
 
 }
