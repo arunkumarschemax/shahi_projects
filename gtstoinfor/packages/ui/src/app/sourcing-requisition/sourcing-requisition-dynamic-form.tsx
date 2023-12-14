@@ -581,6 +581,10 @@ export const SourcingRequisitionDynamicForm = () => {
         {
           title: 'Trim Type',
           dataIndex: 'trimType',
+          render: (text) => {
+            const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+            return EnumObj ? EnumObj.displayVal : text;
+          },
         },
         // {
         //   title: 'Trim Code',

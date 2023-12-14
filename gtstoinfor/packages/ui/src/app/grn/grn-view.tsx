@@ -7,7 +7,7 @@ import {Button,Card,Col,Collapse,DatePicker,Divider,Form,Input,Modal,Row,Segment
   import { useState } from "react";
   import { useNavigate } from "react-router-dom";
   import Highlighter from "react-highlight-words";
-import { GRNTypeEnum, GRNTypeEnumDisplay, GrnReq, PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { GRNTypeEnum, GRNTypeEnumDisplay, GrnReq, ItemTypeEnumDisplay, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { GRNService } from "@project-management-system/shared-services";
 import Barcode from "react-barcode";
 import { useIAMClientState } from "../common/iam-client-react";
@@ -240,8 +240,9 @@ import { useIAMClientState } from "../common/iam-client-react";
         title: <div style={{textAlign:"center"}}>Item Type</div>,
         dataIndex: 'itemType',
         // ...getColumnSearchProps("itemType"),
-        render: (val,data) => {
-          return data.itemType ? data.itemType : "-";
+        render: (text) => {
+          const EnumObj = GRNTypeEnumDisplay?.find((item) => item.name === text);
+          return EnumObj ? EnumObj.displayVal : text;
         },
         // filters: [
         //   {

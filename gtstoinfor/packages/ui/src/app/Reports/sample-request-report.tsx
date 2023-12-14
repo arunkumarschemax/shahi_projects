@@ -1,5 +1,5 @@
 import { UndoOutlined } from "@ant-design/icons";
-import { SampleRequestFilter, SamplerawmaterialStausReq } from "@project-management-system/shared-models";
+import { ItemTypeEnumDisplay, SampleRequestFilter, SamplerawmaterialStausReq } from "@project-management-system/shared-models";
 import { BuyersService, SampleDevelopmentService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Checkbox, Col, Form, Row, Select, Table } from "antd";
 import moment from "moment";
@@ -200,6 +200,10 @@ const SampleRequestReport = () => {
               dataIndex: "fabricType",
               key: "fabricType",
               align: "center",
+              render: (text) => {
+                const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+                return EnumObj ? EnumObj.displayVal : text;
+              },
             }]}
             pagination={false}
           />

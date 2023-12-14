@@ -7,9 +7,10 @@ import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { BuyerRefNoRequest, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, MenusAndScopesEnum, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
 import { useIAMClientState } from "../common/iam-client-react";
+import { RolePermission } from "../role-permissions";
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -102,7 +103,11 @@ export const RmTrimsView = () => {
     getBuyers();
     getBuyerByRefNo()
   }, [mapData]);
-
+  
+  const checkAccess = (buttonParam) => {   
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus["RM Trim Inventory"],buttonParam)
+    return accessValue
+}
   const getStructures = () => {
     structureService.getAllStructureInfo().then((res) => {
       if (res.status) {
@@ -407,6 +412,10 @@ export const RmTrimsView = () => {
       ...getColumnSearchProps("itemType"),
       sorter: (a, b) => a.itemType.localeCompare(b.itemType),
       sortDirections: ["descend", "ascend"],
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },
     },
     // {
     //   title: "Item Code",
@@ -476,7 +485,7 @@ export const RmTrimsView = () => {
         return (
           <span>
             {
-              rowData.refNo === userrefNo ? "-" : roles === "sourcingUser" ?
+              rowData.refNo === userrefNo ? "-" : checkAccess(MenusAndScopesEnum.Scopes.reclassification)?
             <Button
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}

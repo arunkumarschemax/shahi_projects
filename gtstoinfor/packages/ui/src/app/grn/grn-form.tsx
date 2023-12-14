@@ -8,7 +8,7 @@ import { BuyersService, GRNService, PurchaseOrderservice, TrimParamsMappingServi
 import TextArea from 'antd/es/input/TextArea'
 import GRNFabricForm from './grn-fabric'
 import GRNTrimForm from './grn-trim'
-import { GRNTypeEnum, GrnDto, GrnItemsDto, GrnItemsFormDto, ItemTypeEnumDisplay, PoItemEnum, PurchaseOrderStatus, TrimIdRequestDto, VendorIdReq } from '@project-management-system/shared-models'
+import { GRNTypeEnum, GRNTypeEnumDisplay, GrnDto, GrnItemsDto, GrnItemsFormDto, ItemTypeEnumDisplay, PoItemEnum, PurchaseOrderStatus, TrimIdRequestDto, VendorIdReq } from '@project-management-system/shared-models'
 import AlertMessages from '../common/common-functions/alert-messages'
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from 'react-router-dom'
@@ -513,11 +513,16 @@ const GRNForm = () => {
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                 <Form.Item name='grnType' label='GRN Type' dependencies={['purchaseOrderId']} >
                   <Select showSearch allowClear optionFilterProp="children" disabled>
-                    {Object.values(GRNTypeEnum).map((value) => (
+                  {Object.values(GRNTypeEnumDisplay).map((val) => (
+            <Select.Option key={val.name} value={val.name}>
+              {val.displayVal}
+            </Select.Option>
+          ))}
+                    {/* {Object.values(GRNTypeEnum).map((value) => (
                       <Option key={value} value={value}>
                         <span style={{ fontWeight: 'bold' }}>{value}</span>
                       </Option>
-                    ))}
+                    ))} */}
                   </Select>
                 </Form.Item>
               </Col>

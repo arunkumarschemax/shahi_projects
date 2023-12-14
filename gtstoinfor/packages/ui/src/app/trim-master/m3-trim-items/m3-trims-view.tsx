@@ -500,7 +500,10 @@ export const M3TrimsView = () => {
       ...getColumnSearchProps("type"),
       sorter: (a, b) => a.type.localeCompare(b.type),
       sortDirections: ["descend", "ascend"],
-    }: {},
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },    }: {},
     mapData[0]?.finish === true?{
       title: <div style={{textAlign:"center"}}>Finish</div>,
       dataIndex: "finish",

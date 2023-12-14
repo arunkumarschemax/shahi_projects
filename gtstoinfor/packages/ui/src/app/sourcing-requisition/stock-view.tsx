@@ -7,9 +7,10 @@ import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { BuyerRefNoRequest, M3ItemsDTO, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, M3ItemsDTO, MenusAndScopesEnum, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
 import { useIAMClientState } from "../common/iam-client-react";
+import { RolePermission } from "../role-permissions";
 const { TextArea } = Input;
 
 export const StockView = () => {
@@ -63,7 +64,15 @@ export const StockView = () => {
     getWeaveData();
     getBuyers();
   }, []);
-
+  
+  const checkAccess = (buttonParam) => {  
+    console.log(MenusAndScopesEnum.Menus.Procurment) 
+    console.log(MenusAndScopesEnum.SubMenus["RM Fabric Inventory "]) 
+    console.log(buttonParam) 
+    
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus["RM Fabric Inventory "],buttonParam)
+    return accessValue
+}
   const getBuyers = () => {
     const req = new BuyerRefNoRequest()
     req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
@@ -367,14 +376,16 @@ export const StockView = () => {
       title: 'Action',
       dataIndex: 'action',
       render: (text, rowData) => {
-        if (rowData.buyer_id === buyervalue) {
-          return "-";
-        }
+     
+        // if (rowData.buyer_id === buyervalue) {
+        //   return "-";
+        // }
     
         return (
           <span>
             {
-              rowData.refNo === userrefNo ? "-" : role === "sourcingUser" ?
+              (userrefNo && rowData.refNo === userrefNo) ? "-" : 
+              checkAccess(MenusAndScopesEnum.Scopes.reclassification) ?
             <Button
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}
