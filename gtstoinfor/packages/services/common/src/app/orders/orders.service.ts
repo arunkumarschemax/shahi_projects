@@ -1118,9 +1118,12 @@ export class OrdersService {
         const format = '%'
         let total = ``
         monthsList.forEach((rec, index) => {
+            console.log(index,'indexxxxxxxxxxxxxxxxxxxx')
             qtyQuery.push(`SUM(CASE WHEN MONTH(STR_TO_DATE(${req.qtyLocation}, '%m-%d')) = ${index + 1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS ${rec}`)
             total += `SUM(${rec}) AS ${rec},`
         })
+        // console.log(qtyQuery)
+        // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
         let query = `SELECT file_id,planning_ssn as plannedSeason,year,planning_sum as itemName ,${total}
               SUM(january + february + march + april + may + june + july + august + september + october + november + december) AS total
               FROM (
@@ -3269,5 +3272,84 @@ export class OrdersService {
         }
     }
 
+
+    
+    async seasonWiseReportData(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
+       try{
+        let qtyLocationDate
+        if(req.qtyLocation == 'exf'){
+            qtyLocationDate='exf_date'
+        }
+        if(req.qtyLocation == 'wh'){
+            qtyLocationDate='wh_date'
+        }
+
+        const query=' SELECT  planning_sum AS itemName,planning_ssn AS plannedSeason,YEAR,CONCAT(MONTHNAME('+qtyLocationDate+'),"-",YEAR('+qtyLocationDate+')) AS MONTHNAME,SUM(REPLACE(order_plan_qty,","," ")) AS totalQuantity FROM orders WHERE file_id = (SELECT MAX(file_id) FROM orders) AND YEAR="'+req.year+'" and  planning_ssn ="'+req.season+'" GROUP BY MONTH('+qtyLocationDate+'),planning_sum'
+
+        const data = await this.ordersRepository.query(query)
+
+        const transformedData = {};
+
+        data.forEach(item => {
+        const { itemName, YEAR, MONTHNAME, totalQuantity } = item;
+        
+        if (!transformedData[YEAR]) {
+            transformedData[YEAR] = {};
+        }
+
+        if (!transformedData[YEAR][MONTHNAME][itemName]) {
+            transformedData[YEAR][MONTHNAME][itemName] = [itemName,totalQuantity.toString()];
+        } else {
+            transformedData[YEAR][MONTHNAME][itemName].push(totalQuantity.toString());
+        }
+        });
+        // console.log(transformedData,'tranformed dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        const result = Object.entries(transformedData).map(([year, months]) => {
+        const obj = { YEAR: year };
+        Object.entries(months).forEach(([monthName, totalQuantity]) => {
+            obj[monthName.replace('-', '')] = totalQuantity;
+        });
+        return obj;
+        });
+        console.log(result,'%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
+     
+        const resultData = [];
+
+        result.forEach(item => {
+        const { YEAR, ...rest } = item;
+        const monthNames = Object.keys(rest);
+
+        const yearObj = { YEAR };
+
+        monthNames.forEach(monthName => {
+            const quantities = rest[monthName];
+            yearObj[monthName] = quantities.map(quantity => parseInt(quantity));
+        });
+
+        const maxQtyLength = Math.max(...monthNames.map(monthName => rest[monthName].length));
+
+        for (let i = 0; i < maxQtyLength; i++) {
+            const newObj = { YEAR };
+            monthNames.forEach(monthName => {
+            newObj[monthName] = rest[monthName][i] || 'null';
+            });
+            resultData.push(newObj);
+        }
+        });
+
+        console.log(resultData);
+        // console.log('######################################')
+        if(data){
+            return new CommonResponseModel(true,1,'data retrived sucessfully',resultData)
+        }else{
+            return new CommonResponseModel(true,1,'data retrived sucessfully',[])
+
+        }
+
+    }catch(err){
+        throw err
+    }
+
+}
 }
 
