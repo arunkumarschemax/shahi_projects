@@ -47,6 +47,7 @@ import {
     BomStatusEnum,
     CustomerOrderStatusEnum,
     IndentRequestFilter,
+    ItemTypeEnumDisplay,
     LifeCycleStatusDisplay,
     LifeCycleStatusEnum,
     MenusAndScopesEnum,
@@ -335,6 +336,10 @@ import RolePermission from "../role-permissions";
         title: "Trim Type",
         dataIndex: "trimType",
         ...getColumnSearchProps("trimType"),
+        render: (text) => {
+          const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+          return EnumObj ? EnumObj.displayVal : text;
+        },
       },
       {
         title: "Required Quantity",

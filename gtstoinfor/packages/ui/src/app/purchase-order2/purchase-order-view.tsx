@@ -1,5 +1,5 @@
 import { CloseOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
-import { PurchaseStatusEnum, PurchaseViewDto } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, PurchaseStatusEnum, PurchaseViewDto } from '@project-management-system/shared-models';
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, Tooltip,Tag } from 'antd';
 import moment from 'moment';
@@ -212,6 +212,10 @@ export const PurchaseOrderView = () => {
       sorter: (a, b) => a.poMaterialtype.localeCompare(b.poMaterialtype),
       sortDirections: ["descend", "ascend"],
           ...getColumnSearchProps("poMaterialtype"),
+          render: (text) => {
+            const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+            return EnumObj ? EnumObj.displayVal : text;
+          },
     },
    
 
