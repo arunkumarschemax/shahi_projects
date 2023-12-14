@@ -24,7 +24,7 @@ export default function Login() {
   const {
     token: { colorPrimary, colorPrimaryActive, colorBgTextHover },
   } = useToken();
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   // const location = useLocation();
@@ -40,7 +40,13 @@ export default function Login() {
 
       let response = await loginUser(dispatch, req);
 
-      
+      if(!response.user){
+        return false
+      }else{
+        navigate("/", { replace: true });
+
+        return true;
+      }
       if (!response.user) return false;
       // const from = location.state?.from;
       // if (from) {
