@@ -8,36 +8,42 @@ export class EmailAttachments {
       Id: number;
 
       @Column('varchar', {
-        length: 50,
+        length: 255,
         name: 'file_type',
       })
       fileType: string;
     
 
       @Column('varchar', {
-        length: 50,
+        length: 255,
         name: 'file_name',
       })
       fileName: string;
 
       @Column('varchar', {
-        length: 50,
+        length: 255,
+        name: 'vendor_name',
+      })
+      vendorNames: string;
+
+      @Column('varchar', {
+        length: 255,
         name: 'unique_id',
       })
       uniqueId: string;
 
       @Column('varchar', {
-        length: 50,
+        length: 255,
         name: 'file_path',
       })
       filePath: string;
       @Column('varchar', {
-        length: 50,
+        length: 255,
         name: 'schemax_processed',
       })
       schemaxProcessed: string;
       @Column('varchar', {
-        length: 50,
+        length: 255,
         name: 'ibm_processed',
       })
       ibmProcessed: string;
