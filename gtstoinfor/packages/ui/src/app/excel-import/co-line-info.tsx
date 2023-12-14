@@ -8,53 +8,56 @@ import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react";
 import { Excel } from "antd-table-saveas-excel";
 import { OrdersService } from "@project-management-system/shared-services";
+import { coLineRequest } from "@project-management-system/shared-models";
 
 const ColineView = () => {
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(1);
     const service = new OrdersService()
     const [data, setData] = useState<any[]>([]);
-    // const [buyer, setBuyer] = useState<any>([]);
-    // const [orderNumber, setOrderNumber] = useState<any>([]);
-    // const [item, setItem] = useState<any>([]);
+    const [buyer, setBuyer] = useState<any>([]);
+    const [orderNumber, setOrderNumber] = useState<any>([]);
+    const [item, setItem] = useState<any>([]);
     const [form] = Form.useForm();
     const { Option } = Select;
 
 
     useEffect(() => {
         getData()
-        // BuyerPo()
-        // getItem()
-        // OrderNumber()
+        BuyerPo()
+        getItem()
+        OrderNumber()
     }, [])
 
 
 
-    // const BuyerPo = () => {
-    //     service.getBuyerPo().then(res => {
-    //         if (res.status) {
-    //             setBuyer(res.data)
-    //         }
-    //     })
-    // }
-    // const getItem = () => {
-    //     service.getColineItem().then(res => {
-    //         if (res.status) {
-    //             setItem(res.data)
-    //         }
-    //     })
-    // }
-    // const OrderNumber = () => {
-    //     service.getColineOrderNo().then(res => {
-    //         if (res.status) {
-    //             setOrderNumber(res.data)
-    //         }
-    //     })
-    // }
+    const BuyerPo = () => {
+        service.getBuyerPo().then(res => {
+            if (res.status) {
+                const data = res.data.data.filter(item => item.buyer == 'Uniqlo-U12')
+                setBuyer(data)
+            }
+        })
+    }
+    const getItem = () => {
+        service.getColineItem().then(res => {
+            if (res.status) {
+                const data = res.data.data.filter(item => item.buyer == 'Uniqlo-U12' && item.item_no != null)
+                setItem(data)
+            }
+        })
+    }
+    const OrderNumber = () => {
+        service.getColineOrderNo().then(res => {
+            if (res.status) {
+                const data = res.data.data.filter(item => item.buyer == 'Uniqlo-U12' && item.co_number != null)
+                setOrderNumber(data)
+            }
+        })
+    }
 
     const getData = () => {
-        let req: any;
-
+        let req = new coLineRequest();
         if (form.getFieldValue('buyerPo') !== undefined) {
             req.buyerPo = form.getFieldValue('buyerPo');
         }
@@ -68,7 +71,7 @@ const ColineView = () => {
             if (res.data.status) {
                 const data1 = res.data.data
                 const uniqloData = data1.filter((record) => record.buyer === 'Uniqlo-U12');
-                setData(data1)
+                setData(uniqloData)
             }
             else {
                 setData([])
@@ -164,7 +167,6 @@ const ColineView = () => {
             render: (text, record) => {
                 return (record.buyer_po ? (record.buyer_po) : '-')
             }
-
         },
         {
             title: 'Line Item',
@@ -227,12 +229,10 @@ const ColineView = () => {
                                 allowClear
                             >
                                 {
-
-                                    data.map((inc: any) => (
+                                    buyer.map((inc: any) => (
                                         <Option key={inc.id} value={inc.buyer_po}>{inc.buyer_po}</Option>
                                     ))
                                 }
-
                             </Select>
                         </Form.Item>
                     </Col>
@@ -245,8 +245,7 @@ const ColineView = () => {
                                 allowClear
                             >
                                 {
-
-                                    data.map((inc: any) => {
+                                    item.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.item_no}>{inc.item_no}</Option>
                                     })
                                 }
@@ -262,9 +261,8 @@ const ColineView = () => {
                                 allowClear
                             >
                                 {
-
-                                    data.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.order_no}>{inc.order_no}</Option>
+                                    orderNumber.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.co_number}>{inc.co_number}</Option>
                                     })
                                 }
                             </Select>

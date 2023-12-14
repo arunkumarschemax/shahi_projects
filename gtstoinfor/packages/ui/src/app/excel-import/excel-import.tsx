@@ -319,7 +319,7 @@ export default function ExcelImport() {
             if (month) {
               ordersService.fileUpload(formData, integerPart,form.getFieldsValue().fileType,'Manual').then((fileRes) => {
                 if (fileRes.status) {
-                  ordersService.saveOrder(data, fileRes?.data?.id, integerPart).then((res) => {
+                  ordersService.saveOrder(data, fileRes?.data?.id, integerPart,'Manual').then((res) => {
                     setLoading(true)
                     if (res.status) {
                       const req = new FileStatusReq()
