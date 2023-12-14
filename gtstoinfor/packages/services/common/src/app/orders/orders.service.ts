@@ -1112,7 +1112,7 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async seasonWiseReport(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
+    async seasonWiseReportt(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
         const monthsList = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
         const qtyQuery = [];
         const format = '%'
@@ -3317,7 +3317,7 @@ export class OrdersService {
 
 
     
-    async seasonWiseReportData(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
+    async seasonWiseReport(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
        try{
         let qtyLocationDate
         if(req.qtyLocation == 'exf'){
@@ -3330,7 +3330,7 @@ export class OrdersService {
         const query=' SELECT  planning_sum AS itemName,planning_ssn AS plannedSeason,YEAR,CONCAT(MONTHNAME('+qtyLocationDate+'),"-",YEAR('+qtyLocationDate+')) AS MONTHNAME,SUM(REPLACE(order_plan_qty,","," ")) AS totalQuantity FROM orders WHERE file_id = (SELECT MAX(file_id) FROM orders) AND YEAR="'+req.year+'" and  planning_ssn ="'+req.season+'" GROUP BY MONTH('+qtyLocationDate+'),planning_sum'
 
         const data = await this.ordersRepository.query(query)
-
+        console.log(data,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
         const transformedData = {};
 
         data.forEach(item => {
@@ -3340,13 +3340,13 @@ export class OrdersService {
             transformedData[YEAR] = {};
         }
 
-        if (!transformedData[YEAR][MONTHNAME][itemName]) {
-            transformedData[YEAR][MONTHNAME][itemName] = [itemName,totalQuantity.toString()];
+        if (!transformedData[YEAR][MONTHNAME]) {
+            transformedData[YEAR][MONTHNAME] = [ totalQuantity.toString()];
         } else {
-            transformedData[YEAR][MONTHNAME][itemName].push(totalQuantity.toString());
+            transformedData[YEAR][MONTHNAME].push( totalQuantity.toString());
         }
         });
-        // console.log(transformedData,'tranformed dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
+        console.log(transformedData,'tranformed dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
         const result = Object.entries(transformedData).map(([year, months]) => {
         const obj = { YEAR: year };
         Object.entries(months).forEach(([monthName, totalQuantity]) => {
@@ -3354,8 +3354,9 @@ export class OrdersService {
         });
         return obj;
         });
+       
         console.log(result,'%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-     
+
         const resultData = [];
 
         result.forEach(item => {
