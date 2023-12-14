@@ -21,14 +21,9 @@ export class SharedService extends CommonAxiosService {
   }
 
   
-  async automatic(): Promise<any> {
-    try {
-      const response = await this.axiosPostCall(this.ScanController + "login")
-      return response.data;
-    } catch (error) {
-      console.error('Error opening headless browser:', error);
-      throw new Error('Error opening headless browser');
-    }
-  }
+  // async automatic(): Promise<any> {
+  //     const response = await this.axiosPostCall(this.ScanController + "automatic")
+  //     return response.data;
+  // }
 
 }

@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { CommonResponseModel, GlobalResponseObject, ScanResponseModel } from "@xpparel/shared-models";
+import { CommonResponseModel, GlobalResponseObject, ScanResponseModel, VendorNameEnum } from "@xpparel/shared-models";
 import * as base64 from 'base64-stream';
 import * as fs from 'fs';
 import * as Imap from 'imap';
@@ -15,6 +15,7 @@ import { ScanEntity } from "../entity/typeo-entity";
 import * as puppeteer from 'puppeteer';
 
 import * as path from 'path';
+import { find } from "rxjs";
 
 
 
@@ -40,9 +41,9 @@ export class ScanService {
   ) { }
 
   async postdata(req: ScanDto): Promise<ScanResponseModel> {
-    console.log(req, "88888888888")
+    // console.log(req, "88888888888")
     const adapterData = this.adapter.convertDtoToEntity(req);
-    console.log(adapterData, '*******')
+    // console.log(adapterData, '*******')
     await this.repository.save(adapterData)
     const internalMessage: string = req.gstNumber
       ? "Created Successfully"
@@ -52,7 +53,7 @@ export class ScanService {
 
   
   async getdata(req: filterDto): Promise<CommonResponseModel> {
-    console.log(req, "services")
+    // console.log(req, "services")
 
     const records = await this.repository.find({
       where: { venName: req.vendorName },
@@ -205,11 +206,12 @@ export class ScanService {
 
 
 
-  async automatic(): Promise<any> {
+  async automatic() {
+    await new Promise(resolve => setTimeout(resolve, 2000));
     try {
       const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
       const page = await browser.newPage();
-      await page.setViewport({ width: 1580, height: 1024 });
+      await page.setViewport({ width: 1580, height: 900 });
       await page.goto('http://localhost:4200/', {
         timeout: 100000,
         waitUntil: 'networkidle0',
@@ -223,53 +225,264 @@ export class ScanService {
       await page.click('button.ant-btn-primary');
       await page.waitForNavigation();
 
-      await page.goto('http://localhost:4200/#/doc-extract-form/', {
-        timeout: 100000,
-        waitUntil: 'networkidle0',
-      });
-      await page.click('#vendors')
-    //   .then(async () => {
-    //     // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
-    //     const directoryPath = 'F:/AAA Invoices Folders/4/20CUBE/';
-    //     // Specify the source and destination directories
-    //     const sourceDirectory = 'F:/AAA Invoices Folders/4/20CUBE/';
-    //     const destinationDirectory = 'F:/AAA Invoices Folders/1/OIA';
-    //     const files = fs.readdirSync(directoryPath)
-    //     for (const file of files) {
-    //         await page.waitForSelector('input[type="file"]');
-    //         const fileInput = await page.$('input[type="file"]');
-    //         // Get the full path of the file
-    //         const filePath = path.join(directoryPath, file);
-    //         // Set the file path to be uploaded
-    //         await fileInput.uploadFile(filePath);
-    //         // await input.uploadFile(filePath);
-    //         await page.waitForTimeout(5000)
-    //         // Submit the form if needed
-    //         await page.waitForSelector('button.ant-btn-primary')
-    //         await page.click('button.ant-btn-primary');
-    //         // Check the status after submission
-    //         // const reset = await page.waitForSelector('button.ant-btn-default')
-    //         // if (reset) {
-    //         //     await page.click('button.ant-btn-default')
-    //         // } else {
-    //         const sourceFilePath = path.join(sourceDirectory, file);
-    //         const destinationFilePath = path.join(destinationDirectory, file);
-    //         fs.rename(sourceFilePath, destinationFilePath, (err) => {
-    //             if (err) {
-    //                 return new CommonResponseModel(false, 0, '')
-    //             }
-    //         });
-    //         // }
-    //     }
-    // });
-      // await page.waitForSelector('.dropdown-content');
-      return { message: 'Navigated to doc-extract-form page after login' };
+
+      const directoryPath = 'C:/Users/User1/Desktop/docsmanage/gts-to-infor/gtstoinfor/invoicepdfs/';
+      const sourceDirectory = 'C:/Users/User1/Desktop/docsmanage/gts-to-infor/gtstoinfor/invoicepdfs/';
+      const destinationDirectory = 'C:/Users/User1/Documents/readinvoices/';
+      // http://localhost:4200/#/doc-extract-form?pcid =4685fth546541
+      const files = fs.readdirSync(directoryPath);
+      console.log(files, "files");
+      for (const file of files) {
+        console.log(file, "file");
+
+        const fileNames = file.split(".pdf")[0].split(".PDF")[0];
+        console.log(fileNames, "fileNames");
+
+        const findRecord = await this.emailAttachmentsRepo.findOne({ select:['vendorNames'], where: { fileName:fileNames} })
+        console.log(findRecord,"find");
+
+        await page.goto('http://localhost:4200/#/doc-extract-form/', {
+          timeout: 10000,
+          waitUntil: 'networkidle0',
+        });
+
+        await page.click('#vendors');
+
+        await page.waitForSelector('.ant-select-item-option-content');
+
+        const options = await page.$$('.ant-select-item-option-content');
+        
+        const availableOptions = [];
+        for (const option of options) {
+          const optionText = await page.evaluate(el => el.textContent.trim(), option);
+          availableOptions.push(optionText);
+        }
+        console.log('Available Options:', availableOptions);
+  
+        let optionFound = false;
+        for (const option of options) {
+          const optionText = await page.evaluate(el => el.textContent.trim(), option);
+          if (optionText === fileNames) {
+            await option.click();
+            optionFound = true;
+            break;
+          }
+        }
+        
+        if (!optionFound) {
+          console.log(`Option for file ${fileNames} not found.`);
+        }
+
+
+        await page.waitForSelector('input[type="file"]');
+        const fileInput = await page.$('input[type="file"]');
+        const filePath = path.join(directoryPath, file);
+        await fileInput.uploadFile(filePath);
+        await page.waitForTimeout(5000);
+        
+        await page.waitForSelector('button[type="submit"]');
+        await page.click('button[type="submit"]');
+
+        const sourceFilePath = path.join(sourceDirectory, file);
+        const destinationFilePath = path.join(destinationDirectory, file);
+        fs.rename(sourceFilePath, destinationFilePath, (err) => {
+          if (err) {
+            return new CommonResponseModel(false, 0, '');
+          }
+        });
+      }
+      return new CommonResponseModel(true, 1, 'All PDFs submittedd successfully')
     } catch (error) {
-      console.error('Error:', error);
-      return { error: 'Error performing operation' };
+      return new CommonResponseModel(false, 0, error)
     }
+    //     let i = 0
+    //     const fileNames=['OIA.PDF', 'TEXTILES COMMITEE.pdf']
+    //     for (const file of fileNames) {
+    //       await page.goto('http://localhost:4200/#/doc-extract-form/', {
+    //         timeout: 10000,
+    //         waitUntil: 'networkidle0',
+    //       })
+    //       await page.click('#vendors');
+    //       i += 1
+    //       console.log(file, "fileeeeeeeeeeeeeeeeee")
+    //       console.log(i, 'staringlopp inmdexxxxxxxxxxxxxxxxxxxxxxxx')
+    //       await this.filesData(file, page, directoryPath, sourceDirectory, destinationDirectory, i)
+    //     }
+    //     return { message: 'Navigated to doc-extract-form page after login' };
+    //   } catch (error) {
+    //     console.error('Error:', error);
+    //     return { error: 'Error performing operation' };
+    //   }
+    // }
+
+
+    // async filesData(file, page, directoryPath, sourceDirectory, destinationDirectory, i) {
+    //   const value = file.split(".PDF"||".pdf")[0];
+    //   console.log(value,"vallllllllllllllue")
+    //   console.log(file, "file");
+    //   const findRecords = await this.emailAttachmentsRepo.find({ where: { fileName: value } }).then(values => { return values })
+    //   console.log(findRecords, "find")
+
+    //   console.log(value, "value");
+    //   console.log(i, "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+    //   if (findRecords.length) {
+
+    //     await page.waitForSelector('.ant-select-item-option-content');
+    //     const options = await page.$$('.ant-select-item-option-content');
+
+    //     for (const option of options) {
+    //       console.log(option,"opyttuionssssssssssss")
+    //       const text = await page.evaluate(option => option.textContent, option);
+    //       console.log(text ,"texxxxxxxxxxxxxxt")
+    //       if (text.trim() === value) {
+    //         await option.click();
+    //       }
+    //        break; 
+    //     }
+
+    //     await page.waitForSelector('input[type="file"]');
+    //     const fileInput = await page.$('input[type="file"]');
+
+    //     const filePath = path.join(directoryPath, file);
+
+    //     await fileInput.uploadFile(filePath);
+
+    //     await page.waitForTimeout(5000)
+
+    //     await page.waitForSelector('button[type="submit"]');
+    //     await page.click('button[type="submit"]');
+
+
+    //       await page.goto('http://localhost:4200/#/scan-document/', {
+    //       timeout: 10000,
+    //       waitUntil: 'networkidle0',
+    //     })
+
+    //     //  await page.goto('http://localhost:4200/#/doc-extract-form/', {
+    //     //   timeout: 10000,
+    //     //   waitUntil: 'networkidle0',
+    //     // })
+
+    //     const sourceFilePath = path.join(sourceDirectory, file);
+    //     const destinationFilePath = path.join(destinationDirectory, file);
+    //     fs.rename(sourceFilePath, destinationFilePath, (err) => {
+    //       if (err) {
+    //         return new CommonResponseModel(false, 0, '')
+    //       }
+    //     });
+    //     // }
+    //     // await page.goto('http://localhost:4200/#/doc-extract-form/', {
+    //     //   timeout: 10000,
+    //     //   waitUntil: 'networkidle0',
+    //     // })
+    //     // await page.click('#vendors');
+    //   }
+    // }
+
+
+
+
   }
 }
+
+
+   // await page.waitForSelector('.ant-select-item-option-content');
+        // await page.click('.ant-select-item-option-content');
+        // await page.waitForSelector('.ant-select-item-option-content');
+
+        // const options = await page.$$('.ant-select-item-option-content');
+        
+        // let optionFound = false;
+        // for (const option of options) {
+        //   const optionText = await page.evaluate(el => el.textContent, option);
+        //   if (optionText.trim() === fileNames) {
+        //     await option.click();
+        //     optionFound = true;
+        //     break;
+        //   }
+        // }
+        
+        // if (!optionFound) {
+        //   console.log(`Option for file ${fileNames} not found.`);
+        //   // Handle if the option is not found for this file
+        // }
+
+        // await page.waitForSelector(`.ant-select-item-option[title="${fileNames}"]`);
+        // const selectDropdown = await page.$(`.ant-select-item-option[title="${fileNames}"]`)[0];
+        // await page.select(selectDropdown);
+
+        // await page.click('.ant-select-item-option-content[]');
+
+        // // Wait for the specific option to appear and then click it
+        // await page.waitForSelector(vendorOptionSelector);
+        // await page.click(vendorOptionSelector);
+
+// console.log(vendorName, "vendorNamevendorName")
+// const findRecords = await this.emailAttachmentsRepo.find().then(values => { return values })
+// for (const rec of findRecords) {
+//   console.log(rec.fileName)
+// }
+
+// const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
+
+
+// const optionText = value;
+// await page.waitForSelector('.ant-select-item-option-content');
+
+// for (const rec of Object.keys(VendorNameEnum)) {
+// const value = VendorNameEnum[rec];
+
+// await page.evaluate((text) => {
+//   const options = Array.from(document.querySelectorAll('.ant-select-item-option-content'));
+//   const option = options.find(opt => opt.textContent.includes(text));
+//   if (option) {
+//     option.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+//     option.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+//     option.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+//   }
+// }, optionText);
+
+// await page.waitForSelector('button.ant-btn-primary')
+// await page.click('button.ant-btn-primary');
+// await page.goto('http://localhost:4200/#/scan-document', {
+//   timeout: 10000,
+//   waitUntil: 'networkidle0',
+// })
+//   .then(async () => {
+//     // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
+//     const directoryPath = 'F:/AAA Invoices Folders/4/20CUBE/';
+//     // Specify the source and destination directories
+//     const sourceDirectory = 'F:/AAA Invoices Folders/4/20CUBE/';
+//     const destinationDirectory = 'F:/AAA Invoices Folders/1/OIA';
+//     const files = fs.readdirSync(directoryPath)
+//     for (const file of files) {
+//         await page.waitForSelector('input[type="file"]');
+//         const fileInput = await page.$('input[type="file"]');
+//         // Get the full path of the file
+//         const filePath = path.join(directoryPath, file);
+//         // Set the file path to be uploaded
+//         await fileInput.uploadFile(filePath);
+//         // await input.uploadFile(filePath);
+//         await page.waitForTimeout(5000)
+//         // Submit the form if needed
+//         await page.waitForSelector('button.ant-btn-primary')
+//         await page.click('button.ant-btn-primary');
+//         // Check the status after submission
+//         // const reset = await page.waitForSelector('button.ant-btn-default')
+//         // if (reset) {
+//         //     await page.click('button.ant-btn-default')
+//         // } else {
+//         const sourceFilePath = path.join(sourceDirectory, file);
+//         const destinationFilePath = path.join(destinationDirectory, file);
+//         fs.rename(sourceFilePath, destinationFilePath, (err) => {
+//             if (err) {
+//                 return new CommonResponseModel(false, 0, '')
+//             }
+//         });
+//         // }
+//     }
+// });
+// await page.waitForSelector('.dropdown-content');
 
 //   async legalPOPdfBot() {
 //     try {

@@ -32,6 +32,8 @@ export const DocReader = (props: DocReaderProps) => {
     const [imageDownloadLinks, setImageDownloadLinks] = useState([]);
 
     const handleFileChange = (info) => {
+        console.log("??????????????????????????")
+        // props.form.setFieldValue('vendors',"OIA")
         if (info?.file?.type === 'application/pdf') {
             if (info?.fileList[0]) {
                 setFile(info.fileList[0]);
@@ -273,15 +275,15 @@ export const DocReader = (props: DocReaderProps) => {
                     processedData = await extractedJas(pdfData);
                     console.log('PDF DATA JAS:', processedData);
                     break;
-                    case VendorNameEnum.extractedGLOBELINK: {
-                        const globeLinkPDFData = await extractedGLOBELINK(pdfData);
-                        const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
-                        const allLines = await extractDataFromScannedImages(pageImages, [0]);
-                        const scannedData = await extractGlobelinkInvoiceDataFromScanned(allLines);
-                        processedData['extractedHsnData'] = scannedData.extractedHsnData || {};
-                        processedData['extractedData'] = globeLinkPDFData.extractedData;
-                        break;
-                    }
+                case VendorNameEnum.extractedGLOBELINK: {
+                    const globeLinkPDFData = await extractedGLOBELINK(pdfData);
+                    const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
+                    const allLines = await extractDataFromScannedImages(pageImages, [0]);
+                    const scannedData = await extractGlobelinkInvoiceDataFromScanned(allLines);
+                    processedData['extractedHsnData'] = scannedData.extractedHsnData || {};
+                    processedData['extractedData'] = globeLinkPDFData.extractedData;
+                    break;
+                }
                 case VendorNameEnum.extractedKrsna:
                     {
                         const isScannedPdf = await checkIsScannedPdf(pdfData)
@@ -420,7 +422,7 @@ export const DocReader = (props: DocReaderProps) => {
                             const allLines = await extractDataFromScannedImages(pageImages, [0]);
                             processedData = await extractWaymarknvoiceDataFromScanned(allLines);
                         }
-                         else {
+                        else {
                             processedData = await extractEfl(pdfData);
                         }
                         break;
@@ -567,7 +569,7 @@ export const DocReader = (props: DocReaderProps) => {
                 //     processedData['extractedHsnData'] = nagelPDFData.extractedHsnData;
                 //     break;
                 // }
-                
+
                 case VendorNameEnum.extractedunitedLiner: {
                     const unitedLinerPDFData = await extractedunitedLiner(pdfData);
                     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
@@ -588,7 +590,7 @@ export const DocReader = (props: DocReaderProps) => {
                     break;
                 }
 
-                   case VendorNameEnum.extractedToll: {
+                case VendorNameEnum.extractedToll: {
                     const tollPDFData = await extractToll(pdfData);
                     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
                     const allLines = await extractDataFromScannedImages(pageImages, [0]);
@@ -626,7 +628,7 @@ export const DocReader = (props: DocReaderProps) => {
                 //     break;
                 // }
 
-                
+
                 case VendorNameEnum.extractedRahat: {
                     const rahatPDFData = await extractedRahat(pdfData);
                     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
@@ -639,12 +641,12 @@ export const DocReader = (props: DocReaderProps) => {
                 }
 
                 case VendorNameEnum.extractedEfl: {
-                    const eflPDFData = await extractEfl(pdfData); 
+                    const eflPDFData = await extractEfl(pdfData);
                     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
                     const allLines = await extractDataFromScannedImages(pageImages, [0]);
-                    const scannedGstNumber = await extractEflInvoiceDataFromScanned(allLines); 
+                    const scannedGstNumber = await extractEflInvoiceDataFromScanned(allLines);
                     const bothData = {
-                        ...eflPDFData.extractedData, 
+                        ...eflPDFData.extractedData,
                         gstNumber: scannedGstNumber
                     };
                     processedData['extractedData'] = bothData;
@@ -652,12 +654,12 @@ export const DocReader = (props: DocReaderProps) => {
                     break;
                 }
 
-                 case VendorNameEnum.extractedSolitaire: {
+                case VendorNameEnum.extractedSolitaire: {
                     const solitairePDFData = await extractedSolitaire(pdfData);
                     const pageImages = await getImagesFromPdf(pdfData, setImageDownloadLinks);
                     const allLines = await extractDataFromScannedImages(pageImages, [0]);
                     const scannedData = await extractSolitaireInvoiceDataFromScanned(allLines);
-                    const invoiceAmount = scannedData.extractedData; 
+                    const invoiceAmount = scannedData.extractedData;
                     processedData['extractedHsnData'] = scannedData.extractedHsnData || {};
                     processedData['extractedData'] = solitairePDFData.extractedData;
                     processedData['invoiceAmount'] = invoiceAmount;
@@ -763,6 +765,7 @@ export const DocReader = (props: DocReaderProps) => {
                                     xl={{ span: 8 }}>
                                     <Form.Item label="Vendors" name="vendors">
                                         <Select
+                                            id='vendors'
                                             showSearch
                                             placeholder="Vendors"
                                             optionFilterProp="children"

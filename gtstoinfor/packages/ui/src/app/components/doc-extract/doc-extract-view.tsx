@@ -216,19 +216,19 @@ export const DocView = () => {
   });
   
 
-  useEffect(() => {
-    const sharedService = new SharedService();
+  // useEffect(() => {
+  //   const sharedService = new SharedService();
 
-    const automatic = async () => {
-      try {
-        const response = await sharedService.automatic();
-        console.log(response); 
-      } catch (error) {
-        console.error('Error opening headless browser:', error);
-      }
-    };
-    automatic(); 
-  }, []);
+  //   const automatic = async () => {
+  //     try {
+  //       const response = await sharedService.automatic();
+  //       console.log(response); 
+  //     } catch (error) {
+  //       console.error('Error opening headless browser:', error);
+  //     }
+  //   };
+  //   automatic(); 
+  // }, []);
 
     // useEffect(() => {
     //   const newWindow = window.open('http://localhost:4200/');
@@ -349,6 +349,7 @@ export const DocView = () => {
       ),
     },
   ];
+  
 
   return (
     <Card
@@ -356,7 +357,8 @@ export const DocView = () => {
       size="small"
       extra={
         <Link to="/doc-extract-form">
-          <Button className="panel_button">Upload Document </Button>
+          <Button
+           className="panel_button">Upload Document </Button>
         </Link>
       }
 
