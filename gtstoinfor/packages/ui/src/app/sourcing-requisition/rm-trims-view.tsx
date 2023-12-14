@@ -218,7 +218,7 @@ export const RmTrimsView = () => {
     const req = new BuyerRefNoRequest()
     req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     buyerService.getAllActiveBuyers(req).then((res) => {
-      if (res.status) {
+      if (res.status && req.buyerRefNo) {
         form.setFieldsValue({buyerId: res.data[0]?.buyerId})
         onFinish()
       }
@@ -376,7 +376,13 @@ export const RmTrimsView = () => {
     //   // sortDirections: ['descend', 'ascend'],
     // },
     
-
+    {
+      title: "GRN Number",
+      dataIndex: "grnNumber",
+      ...getColumnSearchProps("grnNumber"),
+      sorter: (a, b) => a.grnNumber.localeCompare(b.stockType),
+      sortDirections: ["descend", "ascend"],
+    },
     {
       title: "Buyer",
       dataIndex: "buyer",

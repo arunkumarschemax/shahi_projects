@@ -175,8 +175,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
             fabricForm.setFieldsValue({ taxAmount: rowData.taxAmount })
             fabricForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
-            fabricForm.setFieldsValue({ quantityUomId: rowData.uom_id })
-            fabricForm.setFieldsValue({ quantityUom: rowData.uom })
+            fabricForm.setFieldsValue({ quantityUomId: rowData.quantityUom })
+            fabricForm.setFieldsValue({ quantityUom: rowData.quantityUom })
         }
         if (rowData.samplereFabId != undefined) {
             fabricForm.setFieldsValue({ poQuantity: rowData.sampleQuantity })
@@ -213,6 +213,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                 itemCode:defaultFabricFormData.itemCode,
                 quantityUomId: defaultFabricFormData.uom_id,
                 quantityUom: defaultFabricFormData.quantityUom,
+                styleId: defaultFabricFormData.style
                 })
             }
             if(defaultFabricFormData.indentId != undefined){
@@ -222,13 +223,14 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                     colourId: defaultFabricFormData.colourId,
                     colorName: defaultFabricFormData.colorName,
                     shahiFabricCode: defaultFabricFormData.shahiFabricCode,
-                    quantityUomId: defaultFabricFormData.uom_id,
+                    quantityUomId: defaultFabricFormData.quantityUomId,
                     indentQuantity: defaultFabricFormData.indentQuantity,
                     indentFabricId: defaultFabricFormData.indentFabricId,
                     itemCode: defaultFabricFormData.itemCode,
                     quantityUom: defaultFabricFormData.quantityUom,
                     indentCode: defaultFabricFormData.indentCode,
-                    indentId:defaultFabricFormData.indentId
+                    indentId:defaultFabricFormData.indentId,
+                    styleId: defaultFabricFormData.style
                 })
             }
        
@@ -296,8 +298,9 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         {
             title: "Action",
             dataIndex: 'action',
-            render: (text: any, rowData: any, index: any) => (
-                <span>
+            render: (text: any, rowData: any, index: any) => {
+                console.log(rowData)
+                return (<span>
                     <Tooltip placement="top" title='Edit'>
                         <Tag >
                             <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -322,7 +325,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                         </Tag>
                     </Tooltip>
                 </span>
-            )
+                )
+        }
         }
     ]
 
@@ -541,6 +545,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                     <Form.Item name='sampleQuantity' hidden ><Input/></Form.Item>
                     <Form.Item name='sampleReqId' hidden ><Input/></Form.Item>
                     <Form.Item name='indentId' hidden ><Input/></Form.Item>
+                    <Form.Item name = 'styleId' hidden><Input/></Form.Item>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 8 }}>
                         <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
                             <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code' onChange={m3FabricOnchange}>

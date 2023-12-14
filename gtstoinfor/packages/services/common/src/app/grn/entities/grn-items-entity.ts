@@ -17,6 +17,11 @@ export class GrnItemsEntity {
     })
     poItemId: number
 
+    @Column('int', {
+        name: 'style_id'
+    })
+    styleId: number
+
 
     @Column('varchar', {
         name: 'received_quantity',
@@ -142,6 +147,12 @@ export class GrnItemsEntity {
         nullable: false
     })
     uomId: number
+
+    @Column('varchar', {
+        name: 'grn_item_no',
+        nullable: false
+    })
+    grnItemNo: number
 
     @ManyToOne(type => GrnEntity, grn => grn.grnItemInfo)
     @JoinColumn({ name: 'grn_id' })

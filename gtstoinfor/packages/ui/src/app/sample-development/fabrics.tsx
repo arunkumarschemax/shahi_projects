@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber } from 'antd';
+import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { ColourService, M3ItemsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
-import { UomCategoryEnum } from '@project-management-system/shared-models';
+import { UomCategoryEnum, buyerandM3ItemIdReq } from '@project-management-system/shared-models';
 import { updateLocale } from 'moment';
+import AlertMessages from '../common/common-functions/alert-messages';
+import { useIAMClientState } from "../common/iam-client-react";
+import moment from 'moment';
+import { StockDetailsInfo } from '../sourcing-requisition/stock-details-info';
+import FormItem from 'antd/es/form/FormItem';
 
 export interface FabricsFormProps {
   data: any;
@@ -17,14 +22,19 @@ const FabricsForm = (props:FabricsFormProps) => {
   const [uom, setUom] = useState([]);
   const [count, setCount] = useState(0);
   const [fabricCodeData, setFabricCodeData] = useState<any[]>([])
+  const [stockData, setStockData] = useState<any[]>([])
+  const [allocatedData, setAllocatedData] = useState<any[]>([])
+
   const [color, setColor] = useState<any[]>([])
+  const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const {Option}=Select
   const service = new SampleDevelopmentService()
   const m3ItemsService = new M3ItemsService()
   const uomService =  new UomService()
-
+  const [checked, setChecked] = useState<boolean>(false)
+  const [sourcingForm] = Form.useForm();
   const colorService = new ColourService()
-
+  const { IAMClientAuthContext } = useIAMClientState();
   const [form] = Form.useForm();
 
   const handleAddRow = () => {
@@ -77,28 +87,40 @@ const FabricsForm = (props:FabricsFormProps) => {
   //   props(updatedData);
   // };
 
-  const handleInputChange = (e, key, field, additionalValue) => {
+  const handleInputChange = async (e, key, field, additionalValue,record) => {
+    console.log(e);
+    console.log(field);
+
     console.log(data);
     console.log(key);
 
     let updatedData;
   
     if (field === 'fabricCode') {
-      const productGroupId = getSelectedProductGroupId(e);
+
       updatedData = data.map((record) => {
         if (record.key === key) {
-          return { ...record, [field]: e, productGroupId: productGroupId };
+          return { ...record, [field]: e };
         }
         return record;
       });
+      await getStockDetails(record,e)
     } 
+    else if(field === "allocatedStock"){
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          return { ...record, [field]: e, ["fabricCode"]: record.fabricCode };
+        }
+        return record;
+      });
+    }
 
     else if(field === 'consumption'){
       let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
       updatedData = data.map((record) => {
         if (record.key === key) {
           console.log(e);
-      console.log(record.totalCount);
+          console.log(record.totalCount);
           let consumptionCal = Number(record.totalCount) * Number(e);
           let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
           console.log(consumptionCal);
@@ -134,10 +156,29 @@ const FabricsForm = (props:FabricsFormProps) => {
         return record;
       });
     }
+    
     setData(updatedData);
     props.data(updatedData);
+
   };
 
+  const getStockDetails = (record,itemId) => {
+    console.log(record);
+    record.fabricCode = itemId;
+    let req = new buyerandM3ItemIdReq(props.buyerId,itemId,"Fabric");
+    service.getAvailbelQuantityAginstBuyerAnditem(req).then((res) => {
+      if(res.status){
+        setStockData(res.data);
+        handleInputChange(res.data, record.key, "allocatedStock", 0,record)
+        // sourcingForm.setFieldValue([`allocatedStock${record.key}`],res.data)
+        AlertMessages.getSuccessMessage(res.internalMessage)
+      }
+      else{
+        setStockData([]);
+        AlertMessages.getErrorMessage(res.internalMessage)
+      }
+    })
+  }
   useEffect(() =>{
     getColors()
   },[])
@@ -177,6 +218,37 @@ const FabricsForm = (props:FabricsFormProps) => {
     return selectedFabric ? selectedFabric.productGroupId : null;
   };
 
+  const onCheck = (rowData, index, isChecked) => {
+    console.log(rowData);
+    if(isChecked){
+      if(Number(rowData.issuedQty) > 0){
+        rowData.issuedQty = rowData.issuedQty
+        rowData.checkedStatus = 1;
+        const newData = [...stockData];
+        newData[index].issuedQty = rowData.issuedQty;
+        newData[index].checkedStatus = 1;
+        data.map((record) => {
+          console.log(record);
+          if (record.fabricCode === rowData.m3ItemId) {
+            // record.allocatedStock = [...record.allocatedStock, newData];
+            return { ...record, [`allocatedStock`]: newData};
+          }
+        }); 
+        console.log(data)        
+        setStockData(newData);
+        
+        // setbtnEnable(true)
+      }
+      else{
+        AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
+      }
+    }
+    else{
+      console.log("")
+    }
+    
+  };
+
   const columns = [
     {
       title: 'S.No',
@@ -188,7 +260,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'fabricCode',
       width:"45%",
       render: (_, record, index) => (
-        <><Form.Item name={`fabricId${record.key}`}>
+        <>
+        <Form.Item name={`allocatedStock${record.key}`}><Input name={`allocatedStock${record.key}`} style={{display:'none'}}/></Form.Item>
+        <Form.Item name={`fabricId${record.key}`}>
           <Select
             // onChange={(e) => handleInputChange(e, record.key, 'fabricCode',getSelectedProductGroupId(e))}
             style={{ width: "100%" }}
@@ -196,7 +270,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             showSearch
             optionFilterProp="children"
             placeholder="Select Fabric Code"
-            onChange={(e) => handleInputChange(e, record.key, 'fabricCode',0)}
+            onChange={(e) => handleInputChange(e, record.key, 'fabricCode',0, record)}
           >
             {fabricCodeData?.map(item => {
               return <Option name={`fabricId${record.key}`} key={item.m3ItemsId} valu={item.m3ItemsId}>{item.itemCode+ "-"+ item.description}</Option>;
@@ -226,10 +300,11 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'color',
       width:"15%",
       render: (_, record) => (
-        <><Form.Item name={`colorId${record.key}`}>
+        <>
+        <Form.Item name={`colorId${record.key}`}>
           <Select
             value={record.colourId}
-            onChange={(e) => handleInputChange(e, record.key, 'colourId', 0)}
+            onChange={(e) => handleInputChange(e, record.key, 'colourId', 0,record)}
             style={{ width: "100%" }}
             allowClear
             showSearch
@@ -257,7 +332,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         <Form.Item name={`consumption${record.key}`}>
         <InputNumber
         value={record.consumption}
-        onChange={(e) => handleInputChange(e, record.key, 'consumption',0)}
+        onChange={(e) => handleInputChange(e, record.key, 'consumption',0,record)}
         />
         </Form.Item>
       ),
@@ -300,7 +375,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         optionFilterProp="children"
         placeholder="Select UOM"
         defaultValue={uom.find((e) => e.uom === "m")?.uom}
-        onChange={(e) => handleInputChange(e, record.key, 'uomId',0)}
+        onChange={(e) => handleInputChange(e, record.key, 'uomId',0,record)}
         >
             {uom.map(e => {
               return(
@@ -320,7 +395,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       <Form.Item name={`wastage${record.key}`} initialValue={2}>
         <InputNumber
         defaultValue={2}
-        onChange={(e) => handleInputChange(e, record.key, 'wastage',0)}
+        onChange={(e) => handleInputChange(e, record.key, 'wastage',0,record)}
         />
       </Form.Item>
       ),
@@ -330,10 +405,10 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'totalRequirement',
       width:"10%",
       render: (_, record) => (
-      <Form.Item name={`totalRequirement${record.key}`}>
+      <Form.Item name={`totalRequirement${record.key}`} >
         <Input disabled style={{fontWeight:'bold', color:'black'}}
         value={record.totalRequirement}
-        onChange={(e) => handleInputChange(e.target.value, record.key, 'totalRequirement',0)}
+        onChange={(e) => handleInputChange(e.target.value, record.key, 'totalRequirement',0,record)}
         />
       </Form.Item>
       ),
@@ -345,7 +420,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       <Form.Item name={`remarks${record.key}`}>
         <TextArea
         value={record.remarks}
-        onChange={(e) => handleInputChange(e.target.value, record.key, 'remarks',0)}
+        onChange={(e) => handleInputChange(e.target.value, record.key, 'remarks',0,record)}
         rows={1}
         />
       </Form.Item>
@@ -359,7 +434,113 @@ const FabricsForm = (props:FabricsFormProps) => {
       ),
     },
   ];
+  const renderColumnForFabric: any =[
+    {
+      title: 'S.No',
+      dataIndex: 'sNo',
+      render: (_, record, index) => index + 1,
+    },
+    {
+      title: "Grn Number",
+      key:'grnNumber',
+      dataIndex: "grnNumber",
+      width: "150px",
 
+    },
+    {
+      title: "Grn Date",
+      key:'grnDate',
+      dataIndex:"grnDate",
+      render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
+      width: "150px",
+
+    },
+    {
+      title: "Location",
+      key:'location',
+
+      dataIndex: "location",
+      width:'80px',
+    },
+  
+    {
+      title: "Available Quantity",
+      width: "150px",
+      dataIndex: "quantity",
+    },
+   
+    {
+      title: "Allocated Quantity",
+      width:'200px',
+      render: (text, rowData, index) => { 
+        return(
+          
+          <Form.Item name={`allocatedQuantity${rowData.key}`}>
+                <InputNumber name={`allocatedQuantity${rowData.key}`}
+                    onChange={(e) => setAllocatedQty(index,rowData, e)} 
+                 />
+          </Form.Item>
+         
+        )
+      }
+    },
+    {
+      title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
+      onClick={() =>allocateQuantity()} 
+      >Allocate</Button>:'Allocate'}</div>,
+      dataIndex: "sm",
+      key: "sm",
+      align: "center",
+      render: (text, rowData, index) => { 
+        return (
+          <Checkbox 
+          onClick={checkboxonclick}
+          onChange={(e) => onCheck(rowData, index, e.target.checked)}
+          // onClick={(e) =>onCheck(rowData,undefined)}
+          />
+        );
+      },
+    },
+   
+  ]
+
+  const setAllocatedQty = (index, rowData, value) => {
+     console.log(index);
+    console.log(stockData);
+    rowData.issuedQty = value
+    const newData = [...stockData];
+    console.log(newData);
+    newData[index].issuedQty = value;
+    console.log(newData[index]);
+    console.log(newData)
+    setStockData(newData);
+    if (value === 0 || value === null || value < 0 || value === undefined) {
+      AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
+      sourcingForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity));
+    }
+    if (Number(value) > Number(rowData.quantity)) {
+      sourcingForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty));
+      AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
+    }
+  }
+
+  const checkboxonclick =() =>{
+    setChecked(true)
+  }
+  const allocateQuantity = () =>{
+    // console.log(avilableQuantity)
+    // createAllocation(avilableQuantity)
+
+  }
+
+  const renderItems = (record:any) => {
+    return  <Table
+    rowKey={record.stockId}
+     dataSource={stockData}
+      columns={renderColumnForFabric} 
+      pagination={false}
+       />;
+  };
   return (
     <div>
       <Form form={form}>
@@ -368,6 +549,14 @@ const FabricsForm = (props:FabricsFormProps) => {
       <Table 
       dataSource={data} 
       columns={columns} 
+      expandedRowRender={renderItems}
+              expandable = {{
+                defaultExpandAllRows : true
+                }}
+      // expandedRowRender={renderItems}
+      // expandable = {{
+      //   defaultExpandAllRows : true, rowExpandable:(record)=>{console.log(record) ; return (stockData.length>0)}
+      //   }}
       bordered={true}
       />
       </Form>

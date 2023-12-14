@@ -348,7 +348,7 @@ const SampleRequestReport = () => {
     setSelectItemIds(updated1);
 
     
-    const resultArray = [{materialType:fabricType}, { sampleReqIds: updatedIndentIds },{m3itemid:updated1}];
+    const resultArray = [{materialType:fabricType}, { sampleReqIds: updatedIndentIds },{m3itemid:updated1}, {buyerId: rowData.buyerId}];
     console.log(resultArray)
     setSelectedItems(resultArray)
 

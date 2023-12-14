@@ -204,7 +204,7 @@ export function M3TrimItemsForm() {
 
   const onFinish = (value) => {
     // console.log(form.getFieldValue('m3Code'),'8888888888')
-    const req = new M3trimsDTO(0,value.buyerId,"",value.categoryId,value.colorId,value.contentId,value.finishId,value.holeId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.typeId,value.uomId,value.varietyId,value.trimCategoryId,form.getFieldValue("trimMappingId"),form.getFieldValue("buyerCode"),value.trimType,value.description,"",'',value.m3Code)
+    const req = new M3trimsDTO(0,value.buyerId,"",value.categoryId,value.colorId,value.contentId,value.finishId,value.holeId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.typeId,value.uomId,value.varietyId,value.trimCategoryId,form.getFieldValue("trimMappingId"),form.getFieldValue("buyerCode"),value.trimType,value.description,"",'',value.m3Code,value.hsnCode)
     console.log(req,'---------------------')
     m3TrimService.createM3Trims(req).then((res) => {
       if (res.status) {
@@ -407,6 +407,11 @@ export function M3TrimItemsForm() {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name="m3Code" label="M3 Code" >
                     <Input placeholder="Enter M3 Code"/>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="hsnCode" label="Hsn Code" >
+                    <Input placeholder="Enter Hsn Code"/>
                 </Form.Item>
             </Col>
             {mapData[0]?.structure === true ? (

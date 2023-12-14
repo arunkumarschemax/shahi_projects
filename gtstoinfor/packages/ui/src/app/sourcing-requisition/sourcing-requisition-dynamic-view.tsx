@@ -274,22 +274,22 @@ export const SourcingRequisitionDynamicView = () => {
       title: "Season",
       dataIndex: "season",
     },
-    {
-      title: "Supplier",
-      dataIndex: "supplierId",
-      ...getColumnSearchProps("supplierId"),
-      render: (text, record) => {
-        return <>{record.supplierId ? record.supplierId : "-"}</>;
-      },
-    },
-    {
-      title: "GRN Date",
-      dataIndex: "grnDate",
-      render: (text, record) => {
-        const date = new Date(record.grnDate);
-        return <>{record.grnDate ? moment(date).format("YYYY-MM-DD") : "-"}</>;
-      },
-    },
+    // {
+    //   title: "Supplier",
+    //   dataIndex: "supplierId",
+    //   ...getColumnSearchProps("supplierId"),
+    //   render: (text, record) => {
+    //     return <>{record.supplierId ? record.supplierId : "-"}</>;
+    //   },
+    // },
+    // {
+    //   title: "GRN Date",
+    //   dataIndex: "grnDate",
+    //   render: (text, record) => {
+    //     const date = new Date(record.grnDate);
+    //     return <>{record.grnDate ? moment(date).format("YYYY-MM-DD") : "-"}</>;
+    //   },
+    // },
     {
       title: "XL No",
       dataIndex: "xlNo",
@@ -339,6 +339,7 @@ export const SourcingRequisitionDynamicView = () => {
       title: "Action",
     dataIndex: "action",
     render: (text, rowData) => {
+      console.log(rowData)
     return (
     <span>
     {/* <Button onClick={() => generateBarcode(record.m3FabricCode)}>
@@ -347,7 +348,7 @@ export const SourcingRequisitionDynamicView = () => {
     <Divider type='vertical'/> */}
     <Button
     type="primary"
-    disabled={logInUser == "marketUser" ? true : false}
+    disabled={Number(rowData.quantity) == Number(rowData.poQty) ? true :false}
     onClick={() =>generatePoForFabric(rowData)}
     >
               Generate PO

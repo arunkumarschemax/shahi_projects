@@ -142,6 +142,15 @@ export class GrnService {
                 grnNumber = 'GRN/' + FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
             }
 
+            let grnItemNumber
+            const data1 = 'select max(grn_item_id) as grnItemId from grn_items'
+            const maxItemId = await this.grnRepo.query(data1)
+            if (maxItemId[0].grnId == null) {
+                grnItemNumber = 'GRNI/' + FromYear + '-' + ToYear + '/' + '001' + ''
+            } else {
+                grnItemNumber = 'GRNI/' + FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
+            }
+
             let mrnNumber
             if (maxId[0].grnId == null) {
                 mrnNumber = 'MRN/' + FromYear + '-' + ToYear + '/' + '001' + ''
@@ -184,6 +193,8 @@ export class GrnService {
                 itemEntity.indentId = item.indentId
                 itemEntity.buyerId = item.buyerId
                 itemEntity.uomId = item.uomId
+                itemEntity.styleId = item.styleId
+                itemEntity.grnItemNo = grnItemNumber
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo = itemInfo

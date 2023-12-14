@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel,GrnItemsFormDto, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel,CustomerOrderStatusEnum,GrnItemsFormDto, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -14,6 +14,7 @@ import { PurchaseOrderFabricRepository } from "./repo/purchase-order-fabric-repo
 import { PurchaseOrderTrimRepository } from "./repo/purchase-order-trim-repository";
 import { PurchaseOrderItemsEntity } from "./entities/purchase-order-items-entity";
 import { SampleRequestRepository } from "../sample-dev-request/repo/sample-dev-req-repo";
+import { IndentRepository } from "../indent/dto/indent-repository";
 let moment = require('moment');
 
 @Injectable()
@@ -21,6 +22,7 @@ export class PurchaseOrderService {
     constructor(
         // @InjectRepository(PurchaseOrderEntity)
         private poRepo: PurchaseOrderRepository,
+        private indentRepo:IndentRepository,
         private poFabricRepo: PurchaseOrderFabricRepository,
         private poTrimRepo: PurchaseOrderTrimRepository,
         @InjectDataSource()
@@ -32,6 +34,7 @@ export class PurchaseOrderService {
 
     async cretePurchaseOrder(req: PurchaseOrderDto): Promise<CommonResponseModel> {
         try {
+            console.log(req);
             const currentYear = moment().format('YYYY')
             const currentDate = moment();
             const netyaer = currentDate.year();
@@ -54,7 +57,7 @@ export class PurchaseOrderService {
             const poEntity = new PurchaseOrderEntity()
             poEntity.poNumber = poNumber
             poEntity.vendorId = req.vendorId
-            poEntity.styleId = req.styleId
+            // poEntity.styleId = req.styleId
             poEntity.buyerId = req.buyerId
             poEntity.expectedDeliveryDate = req.expectedDeliveryDate
             poEntity.purchaseOrderDate = req.purchaseOrderDate
@@ -83,6 +86,7 @@ export class PurchaseOrderService {
                         pofabricEntity.transportation = item.transportation
                         pofabricEntity.tax = item.tax
                         pofabricEntity.subjectiveAmount = item.subjectiveAmount
+                        pofabricEntity.styleId = item.styleId
                         poItemInfo.push(pofabricEntity)
             }
             poEntity.poItemInfo=poItemInfo
@@ -91,6 +95,7 @@ export class PurchaseOrderService {
             
             if (save) {
                 if(req.poAgainst == 'INDENT'){
+                    const indentUpdate = await this.indentRepo.update({indentId:req.poItemInfo[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
                     for(const update of req.poItemInfo){
                         if(update.indentId != undefined){
 
@@ -205,6 +210,7 @@ export class PurchaseOrderService {
                 mt.variety_id AS varietyId,v.variety,
                 mt.trim_category_id AS trimCategoryId,tr.trim_category AS trimCategory,
                 mt.trim_mapping_id AS trimMappingId,
+                tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part,
                 poi.m3_item_id AS m3ItemCodeId,mt.trim_type as m3ItemType,poi.purchase_order_id AS purchaseOrderId, poi.po_quantity AS poQuantity,poi.purchase_order_item_id as poItemId,
                 poi.quantity_uom_id AS quantityUomId,u.uom,poi.grn_quantity AS grnQuantity,poi.indent_item_id as indentItemId, poi.sample_item_id as sampleItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour`
                 if(req.poAgainst == 'Indent'){
@@ -236,7 +242,7 @@ export class PurchaseOrderService {
                     query = query + ` 
                     LEFT JOIN indent_trims it ON it.itrims_id = poi.indent_item_id
                     LEFT JOIN indent i ON i.indent_id = it.indent_id 
-                    LEFT JOIN style s ON s.style_id = i.style 
+                    LEFT JOIN style s ON s.style_id = i.style
                     LEFT JOIN buyers b ON b.buyer_id = i.buyer_id 
                     WHERE poi.purchase_order_id = ${req.poId}`
                 }
@@ -251,16 +257,29 @@ export class PurchaseOrderService {
 
             }
             const itemData = await this.poTrimRepo.query(query)
+
+            const modifiedRes = itemData.map(item => {
+                const trueValues = Object.keys(item)
+                .filter(key => ["structure", "category", "content", "type", "finish", "hole", "quality", "thickness", "variety", "uom", "color", "logo", "part"].includes(key) && item[key] === 1)
+                .map(key => key.toUpperCase());
+
+                const concatenatedValues = trueValues.join('/');
+                const label = trueValues.length > 0 ? "BUYER/TRIM TYPE/TRIM CATEGORY/":""
+
+                const trimParams = label + concatenatedValues
+                return { ...item, trimParams };
+            });
            
             const grnItemsArr: GrnItemsFormDto[] = []
-            for (const rec of itemData) {
+            for (const rec of modifiedRes) {
                 const receivedQty = rec.poQuantity - rec.grnQuantity
-                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer,rec?.sampleRequestId,rec?.indentId,receivedQty,receivedQty,rec.categoryId,rec.category,rec.colorId,rec.color,rec.contentId,rec.content,rec.finishId,rec.finish,rec.holeId,rec.hole,rec.logo,rec.part,rec.qualityId,rec.qualityName,rec.structureId,rec.structure,rec.thicknessId,rec.thickness,rec.typeId,rec.type,rec.UOMId,rec.UOM,rec.varietyId,rec.variety,rec.trimCategoryId,rec.trimCategory,rec.trimMappingId)
+                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer,rec?.sampleRequestId,rec?.indentId,receivedQty,receivedQty,rec.categoryId,rec.category,rec.colorId,rec.color,rec.contentId,rec.content,rec.finishId,rec.finish,rec.holeId,rec.hole,rec.logo,rec.part,rec.qualityId,rec.qualityName,rec.structureId,rec.structure,rec.thicknessId,rec.thickness,rec.typeId,rec.type,rec.UOMId,rec.UOM,rec.varietyId,rec.variety,rec.trimCategoryId,rec.trimCategory,rec.trimMappingId,rec.style_id,rec.trimParams)
                 grnItemsArr.push(grnItemsDto)
             }
-            const poQuery = `select p.purchase_order_id as poId,p.style_id as styleId,p.po_material_type as poMaterialType,p.po_against as poAgainst,p.grn_quantity as grnQuantity from purchase_order p where p.purchase_order_id = ${req.poId}`
+            const poQuery = `select p.purchase_order_id as poId,p.po_material_type as poMaterialType,p.po_against as poAgainst,p.grn_quantity as grnQuantity from purchase_order p where p.purchase_order_id = ${req.poId}`
             const poData = await this.poTrimRepo.query(poQuery)
-             poData[0].grnItems = grnItemsArr 
+             poData[0].grnItems = grnItemsArr
+
 
             if (grnItemsArr.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", poData)
@@ -477,7 +496,7 @@ export class PurchaseOrderService {
         }
         // poData = poData+` where po.purchase_order_id = ${req.id}`
         // const podatares = await this.dataSource.query(poData)
-        const poTrimData = `select po.*,poi.*,${columnName},v.vendor_name,f.address from purchase_order po left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id ${concatString} left join factory f on f.id = po.delivery_address left join vendors v on v.vendor_id = po.vendor_id where po.purchase_order_id = ${req.id}`
+        const poTrimData = `select po.*,poi.*,${columnName},v.vendor_name,v.contact_number,v.bank_acc_no,v.gst_number,v.postal_code,f.address from purchase_order po left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id ${concatString} left join factory f on f.id = po.delivery_address left join vendors v on v.vendor_id = po.vendor_id where po.purchase_order_id = ${req.id} `
         console.log(poTrimData,'ppppppphhh')
         const poTrimdatares = await this.dataSource.query(poTrimData)
         // console.log(podatares)

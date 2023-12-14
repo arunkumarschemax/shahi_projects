@@ -1,7 +1,7 @@
 import { PrinterOutlined } from "@ant-design/icons";
 import { PurchaseViewDto } from "@project-management-system/shared-models";
 import { PurchaseOrderservice } from "@project-management-system/shared-services";
-import { Button, Card } from "antd";
+import { Button, Card, Row } from "antd";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
@@ -40,11 +40,14 @@ export function PoPrint(props: PoPrintProps) {
 
     const printOrder = () => {
         const printableElements = document.getElementById('printme').innerHTML;
-        const orderHTML = '<html><head><title></title></head><body>' + printableElements + '</body></html>'
+        const orderHTML = '<html><head><title></title><style>@media print { @page { size: A4 landscape; } }</style></head><body> ${printableElements}  </body></html>';
         const oldPage = document.body.innerHTML;
         document.body.innerHTML = orderHTML;
         window.print();
+        document.body.innerHTML = oldPage;
+        
     }
+    
     const totalAmount = poData.reduce((sum, item) => sum + parseFloat(item.total_amount || 0), 0);
     const totalAmountInWords = numberToWords.toWords(totalAmount).toUpperCase();
     
@@ -55,7 +58,7 @@ export function PoPrint(props: PoPrintProps) {
             filename: 'PO.pdf',
             image: { type: 'jpeg', quality: 0.98 },
             html2canvas: { scale: 2 },
-            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'Landscape' },
           };
           html2pdf(element, options);
       };
@@ -66,142 +69,160 @@ export function PoPrint(props: PoPrintProps) {
             headStyle={{ backgroundColor: '#69c0ff', border: 0 }}extra={<span style={{ color: 'white' }} ><Button onClick={props.printOrder} className='panel_button'><PrinterOutlined /> Print</Button> <Button className='panel_button' onClick={downloadAsPDF}>Download PDF</Button></span> }>
             <html>
                 <body id='printme'>
-                    <h1 style={{ textAlign: 'center', padding: "20px" }}>{'SHAHI EXPORTS PVT. LIMITED'}</h1>
-                    <table className={'ta-b'} style={{ width: '100%' }}>
-                        <tr>
-                            <td colSpan={4} className={'ta-b'} style={{ textAlign: 'left' }}>
-                                Purchase Order Date:
-                                <h4>{moment(poData[0]?.purchase_order_date).format('DD-MM-YYYY')}</h4>
-                            </td>
-                            <td className={'ta-b'} colSpan={4} style={{ textAlign: 'left' }}>
-                                Purchase Order No.:
-                                <h4>{`${poData[0]?.po_number}`}
-                                <QRCode
-                                    size={256}
-                                    bgColor="lightgrey"
-                                    style={{ height: "50px", maxWidth: "50%", width: "20%" }}
-                                    value={`${poData[0]?.po_number}`}
-                                    viewBox={`0 0 256 256`}
-                                />
-                                    {/* <Barcode value={`${poData[0]?.po_number}`} height={20} /> */}
-                                </h4>
+              <Row>
+                 <div style={{  padding: '20px',height:'300px', width: '200px' }}>
+             <h1 style={{ textAlign: 'start', fontSize:'12px',fontFamily: 'Fancy', lineHeight: '2', marginBottom: '20px' }}>{'"Say flat NO to Wrong Practices"'}</h1>
+             <h2 style={{ textAlign: 'start', fontSize:'10px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Last Updated By :</h2>
+             <h2 style={{ textAlign: 'start', fontSize:'10px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Vendor Name : {`${poData[0]?.vendor_name}`}</h2>
+             <h2 style={{ textAlign: 'start', fontSize:'10px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Address : {`${poData[0]?.address}`}</h2>
+             <h2 style={{ textAlign: 'start', fontSize:'10px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Pin Code : {`${poData[0]?.postal_code}`}</h2>
+             <h2 style={{ textAlign: 'start', fontSize:'10px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Vendor State :</h2>
+             <h2 style={{ textAlign: 'start', fontSize:'10px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' ,}}>
+             Vendor GSTIN : <span style={{ fontFamily: 'Segoe Ui Light',color:'blue' }}>{`${poData[0]?.gst_number}`}</span>
+               </h2>
+             <h2 style={{ textAlign: 'start', fontSize:'10px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Phone No :  {`${poData[0]?.contact_number}`}</h2>
+             <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Fax No :</h2>
+             <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Source Type :</h2>
+             <h2 style={{ textAlign: 'start', fontSize:'10px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Quotation No :</h2>
+             <h2 style={{ textAlign: 'start', fontSize:'10px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Your Reference No :</h2>
+             <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Our Reference No :</h2>
+             <h2 style={{ textAlign: 'start', fontSize:'10px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Agreement No :</h2>
 
-                            </td>
-                            <td className={'ta-b'} colSpan={4} style={{ textAlign: 'left' }}>
-                                Po Against:
-                                <h4>{`${poData[0]?.po_against}`} </h4>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan={6} className={'ta-b'} style={{ textAlign: 'left' }}>
-                                Vendor Name:
-                                <h4>{`${poData[0]?.vendor_name}`} </h4>
-                            </td>
-                            <td className={'ta-b'} colSpan={6} style={{ textAlign: 'left' }}>
-                                Expected Delivery Date:
-                                <h4>{moment(poData[0]?.expected_delivery_date).format('DD-MM-YYYY')} </h4>
+            </div>
+                    
+                    
+                    <div style={{  padding: '20px',height:'300px', width: '200px' }}>
+                    <h1 style={{ textAlign: 'center',marginTop:'-20px', padding: "20px" ,fontSize:"12px",fontFamily:'Century Schoolbook'}}>{'Shahi Exports Pvt.Ltd. Sy.No.13,14 AND 15 Sarjapura Main Road, Bellandur Gate Bengaluru Urban, KARNATAKA (KA) Pin Code:560103'}</h1>
+                    <h1 style={{ textAlign: 'center' ,marginTop:'-30px',fontSize:"12px",fontFamily:'Century Schoolbook',color: 'blue'}}>{'GSTIN : 29AAJCS1175L1ZU'}</h1>
+                    <h1 style={{ textAlign: 'center' ,marginTop:'-10px',fontSize:"12px",fontFamily:'Century Schoolbook',color: 'blue', textDecoration: 'underline' }}>{'Inter State'}</h1>
+                    <h1 style={{ textAlign: 'center' ,marginTop:'-10px',fontSize:"14px",fontFamily:'Century Schoolbook',color: 'blue', textDecoration: 'underline' }}>{'Purchase Order'}</h1>
+                    <h1 style={{ textAlign: 'center' ,marginTop:'-10px',fontSize:"12px",fontFamily:'Century Schoolbook',color: 'blue', textDecoration: 'underline' }}>{'Good Only'}</h1>
 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td className={'ta-b'} colSpan={12} style={{ textAlign: 'left' }}>
-                                Delivery Address:
-                                <h4>{`${poData[0]?.address}`} </h4>
-                            </td>
-                        </tr>
-                        <tr style={{ textAlign: 'left' }}>
-                            <th className={'ta-b'} > Sno</th>
+             <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+  <tr>
+    <th colSpan={2} style={{ textAlign: 'center', border: '1px solid #000' }}>Chargers Summary</th>
+  </tr>
+  <tr>
+    <td style={{ border: '1px solid #000', textAlign: 'left', borderRight: '1px solid #000' }}>Integrated GST</td>
+    <td style={{ border: '1px solid #000' }}>{2389}</td>
+  </tr>
+  <tr>
+    <td style={{ border: '1px solid #000', textAlign: 'left', borderRight: '1px solid #000' }}>Total</td>
+    <td style={{ border: '1px solid #000' }}>{900000}</td>
+  </tr>
+</table>
 
-                            <th colSpan={1} className={'ta-b'} >
-                                Material Type
-                            </th>
 
-                            <th
-                                colSpan={1}
-                                className={'ta-b'}>
-                                Item
-                            </th>
+                    </div>
 
-                            <th colSpan={1} className={'ta-b'} >
-                                PO Quantity
-                            </th>
-                            <th colSpan={1}
-                                //  colSpan={(PoDataModel?.vendor.priceNeeded == GlobalStatus.NO) ? 3 : 1} 
-                                className={'ta-b'}>
-                                GRN Quantity
 
-                            </th>
-                            <th
-                                colSpan={1}
-                                className={'ta-b'}>
-                                Unit Price
-                            </th>
-                            <th
-                                colSpan={1}
-                                className={'ta-b'}>
-                                Discount %
-                            </th>
-                            <th
-                                colSpan={1}
-                                className={'ta-b'}>
-                                Tax
-                            </th>
-                            <th colSpan={1}
-                                className={'ta-b'}>
-                                Amount
-                            </th>
-                        </tr>
-                        {poData.map((item, index) => (
-                            <tr className='css-serial' key={index}>
-                                <td className={'ta-b'} id={`count${index + 1}`}>{index + 1}</td>
-                                <td style={{ textAlign: 'left' }} colSpan={1} className={'ta-b'}>
-                                    {item.po_material_type}
-                                </td>
-                                <td style={{ textAlign: 'left' }} colSpan={1} className={'ta-b'}>
-                                    {item.item_code}
-                                </td>
-                                <td style={{ textAlign: 'right' }} colSpan={1} className={'ta-b'}>
-                                    {item.po_quantity}
-                                </td>
-                                <td style={{ textAlign: 'right' }} colSpan={1} className={'ta-b'}>
-                                    {item.grn_quantity}
-                                </td>
-                                <td style={{ textAlign: 'right' }} colSpan={1} className={'ta-b'}>
-                                    {item.unit_price}
-                                </td>
-                                <td style={{ textAlign: 'right' }} colSpan={1} className={'ta-b'}>
-                                    {item.discount}
-                                </td>
-                                <td style={{ textAlign: 'right' }} colSpan={1} className={'ta-b'}>
-                                    {item.tax}
-                                </td>
-                                <td style={{ textAlign: 'right' }} colSpan={1} className={'ta-b'}>
-                                    {item.total_amount}
-                                </td>
-                            </tr>
-                        ))}
-                        
-                        <tr>
-                            <td colSpan={8} className={'ta-b'} style={{ textAlign: 'left' }}>
-                               Total Amount In Words :
-                                <h4>{totalAmountInWords}</h4>
-                            </td>
-                            <td className={'ta-b'} colSpan={1} style={{ textAlign: 'right' }}>
-                                
-                                <h4>{totalAmount.toFixed(2)} </h4>
+                    <div style={{  padding: '20px',height:'300px', width: '200px' }}>
+                    <h1  style={{ textAlign: 'end',fontSize:'12px', fontFamily: 'Fancy', lineHeight: '2', marginBottom: '20px'  }}>{'"Say a big NO to Child Labour"'}</h1>
+                    <h1  style={{ textAlign: 'end', fontSize:'8pX',fontFamily: 'Candra', marginRight:'-18px',lineHeight: '1', marginBottom: '20px'  }}>{'DISPATCH      INSTRUCTION  TO  BE  STRICTLY FOLLOWED'}</h1>
+                    <h2 style={{ textAlign: 'start', fontSize:'10px',fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>Printed On :</h2>
+                    <h2 style={{ textAlign: 'start',fontSize:'12pX', fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>NON-TUF</h2>
+                    <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>PO Number : {`${poData[0]?.po_number}`}</h2>
+                    <h2 style={{ textAlign: 'start', fontSize:'10px',fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>PO Type :  {`${poData[0]?.po_material_type}`}</h2>
+                    <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>Project  No :</h2>
+                    <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>Account : {`${poData[0]?.bank_acc_no}`}</h2>
+                    <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>Delivery Address : {`${poData[0]?.delivery_address}`}</h2>
+                    <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>Delivery State :</h2>
+                    <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>Delivery Method :</h2>
+                    <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>Delivery Terms :</h2>
+                    <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>Packing Terms :</h2>
+                    <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>Fright Terms :</h2>
 
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={{ textAlign: 'right' }} colSpan={9} className={'ta-b'}>
-                                Signature
-                                <h4>{'SHAHI EXPORTS PVT.LIMITED'}</h4>
-                                <br />
-                                <h4>AUTHORIZED SIGNATORY</h4>
-                            </td>
-                        </tr>
+                    <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>Payment Terms :</h2>
+                    <h2 style={{ textAlign: 'start',fontSize:'10px', fontFamily: 'Un Shinmun',marginLeft:'10px', marginTop: '0', marginBottom: '0' }}>Currency :</h2>
+                    </div>
+                    </Row>
 
-                    </table>
+                   <h5>This is in reference to your above mention quotaion. We are pleased to place an order with you for following items as per terms and conditions mentioned herewith</h5>
+
+                              <table style={{ border: '1px solid #000' }} >
+                     <tr style={{ border: '1px solid #000' }}>
+                          <th style={{fontSize:'10px'}}>Ln</th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+
+                         <th style={{fontSize:'10px'}} >HSN/SAC</th>
+                         <th></th>
+                          <th></th>
+                          <th></th>
+
+                         <th style={{fontSize:'10px'}} >Item Code</th>
+                         <th></th>
+                          <th></th>
+                          <th></th>
+
+                         <th style={{fontSize:'10px'}} >Supplier Item#</th>
+                         <th></th>
+                          <th></th>
+                          <th></th>
+
+                         <th style={{fontSize:'10px'}} >Item Name</th>
+                         <th></th>
+                          <th></th>
+                          <th></th>
+
+                         <th style={{fontSize:'10px'}} >Item Description</th>
+                         <th></th>
+                          <th></th>
+                          <th></th>
+
+                         <th style={{fontSize:'10px'}} >GRM</th>
+                         <th></th>
+                          <th></th>
+                          <th></th>
+
+                         <th style={{fontSize:'10px'}} >Mx.Del.Date</th>
+                         <th></th>
+                          <th></th>
+                          <th></th>
+
+                         <th style={{fontSize:'10px'}} >Unit C.Fact</th>
+                         <th></th>
+                          <th></th>
+                          <th></th>
+
+                         <th style={{fontSize:'10px'}} >Qnty</th>
+                         <th></th>
+                          <th></th>
+                          <th></th>
+                         <th style={{fontSize:'10px'}} >Rate</th>
+                         <th></th>
+                          <th></th>
+                          <th></th>
+
+                         <th style={{fontSize:'10px'}} >Value</th>
+                         <th></th>
+                          <th></th>
+                          <th></th>
+
+                         <th style={{fontSize:'10px'}} >Discount</th>
+                         <th></th>
+                          <th></th>
+                          <th></th>
+
+                         <th style={{fontSize:'10px'}} >Net Value</th>
+
+                          </tr>
+                          
+                        </table>
+                        <br></br>
+                          <h3  style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Fancy', lineHeight: '2', marginBottom: '20px'  }}>{'PO No :'}</h3>
+                          <hr></hr>
+                          <h3  style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Fancy', lineHeight: '2', marginBottom: '20px'  }}>{'Remarks :'}</h3>
+                          <hr></hr>
+                          <h3  style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Fancy', lineHeight: '2', marginBottom: '20px'  }}>{'Delivery Schedule :'}</h3>
+                          <hr></hr>
+                          <br></br>
+                        <h1  style={{ textAlign: 'end',fontSize:'12px', fontFamily: 'Fancy', lineHeight: '2', marginBottom: '20px'  }}>{'Shahi exports Pvt.Ltd.'}</h1>
+                       <h1  style={{ textAlign: 'end',fontSize:'12px', fontFamily: 'Fancy', lineHeight: '2', marginBottom: '20px'  }}>{'Authorised Signatory'}</h1>
+                          <br></br>
+                          <h4  style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Fancy', lineHeight: '2', marginBottom: '20px'  }}>{'Important! Please Read the Terms & Conditions Printed on the Following Pages'}</h4>
+
                 </body>
             </html>
 

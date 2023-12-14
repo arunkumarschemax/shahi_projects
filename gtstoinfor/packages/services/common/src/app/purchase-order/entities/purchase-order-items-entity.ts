@@ -56,6 +56,12 @@ export class PurchaseOrderItemsEntity{
     nullable:true
   })
   indentItemId:number
+
+  @Column('int',{
+        name:'style_id',
+        nullable:false
+    })
+    styleId:number
   
   @Column('int',{
     name:'unit_price',

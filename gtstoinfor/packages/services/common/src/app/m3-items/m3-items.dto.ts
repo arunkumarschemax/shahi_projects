@@ -68,5 +68,9 @@ export class M3ItemsDTO {
     
     @ApiProperty()
     m3Code?: string;
+
+        
+    @ApiProperty()
+    hsnCode?: string;
 }
 

@@ -14,8 +14,8 @@ export class PurchaseOrderDto{
     @ApiProperty()
     vendorId:number
 
-    @ApiProperty()
-    styleId:number
+    // @ApiProperty()
+    // styleId:number
 
     @ApiProperty()
     buyerId:number

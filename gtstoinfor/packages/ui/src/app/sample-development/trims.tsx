@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber } from 'antd';
+import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { M3TrimsService, SampleDevelopmentService, TrimParamsMappingService, UomService } from '@project-management-system/shared-services';
-import { ItemTypeEnumDisplay, ItemTypeEnum, M3TrimType, BuyerIdReq, TrimIdRequestDto } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, ItemTypeEnum, M3TrimType, BuyerIdReq, TrimIdRequestDto, buyerandM3ItemIdReq } from '@project-management-system/shared-models';
+import moment from 'moment';
+import AlertMessages from '../common/common-functions/alert-messages';
 
 export interface TrimsFormProps {
   data: any;
@@ -18,6 +20,7 @@ const TrimsForm = (props:TrimsFormProps) => {
   const [trimType, setTrimtype]= useState<any[]>([])
   const [uom, setUom] = useState([]);
   const service = new M3TrimsService()
+  const sampleDevelopmentService = new SampleDevelopmentService()
   const uomService =  new UomService()
   const [trimData, setTrimData] = useState<any[]>([])
   const[itemType, setItemType] = useState<string>('')
@@ -25,6 +28,10 @@ const TrimsForm = (props:TrimsFormProps) => {
   const [mapData, setMapData] = useState<any[]>([])
   const [m3Trims, setM3Trims] = useState<any[]>([])
   const [form] = Form.useForm();
+  const [stockData, setStockData] = useState<any[]>([])
+  const [sourcingForm] = Form.useForm();
+  const [checked, setChecked] = useState<boolean>(false)
+  const [btnEnable,setbtnEnable]=useState<boolean>(false)
 
  const {Option}=Select
 
@@ -33,16 +40,13 @@ const TrimsForm = (props:TrimsFormProps) => {
       props.sizeDetails?.forEach(element => {
         let qtyy = 0;
         element.sizeInfo?.forEach(qty => {
-          console.log(qty.quantity);
           qtyy = Number(qtyy)+Number(qty.quantity);
         })
-        console.log(qtyy)
         const newRow = {
           key: count,
           colourId:element.colour,
           totalCount: qtyy
         };
-        console.log(newRow)
         setData([...data, newRow]);
         setCount(count + 1);
       });
@@ -137,24 +141,55 @@ const getMappedTrims = (value, option) => {
     return trimOptions;
   };
 
-  const handleInputChange = (e, key, field) => {
-    console.log(data)
+  const getStockDetails = (record,e) => {
+    console.log(record);
+    record.trimCode = e;
+    let req = new buyerandM3ItemIdReq(props.buyerId,e,record.trimType);
+    sampleDevelopmentService.getAvailbelQuantityAginstBuyerAnditem(req).then((res) => {
+      if(res.status){
+        setStockData(res.data);
+        handleInputChange(res.data, record.key, "allocatedStock", record)
+        // sourcingForm.setFieldValue([`allocatedStock${record.key}`],res.data)
+        AlertMessages.getSuccessMessage(res.internalMessage)
+      }
+      else{
+        setStockData([]);
+        AlertMessages.getErrorMessage(res.internalMessage)
+      }
+    })
+  }
+  
+  const handleInputChange = async (e, key, field, record) => {
     console.log(e)
     console.log(key)
     console.log(field)
 
 
     let updatedData
-    if(field === 'consumption'){
+    if (field === 'trimCode') {
+
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          return { ...record, [field]: e };
+        }
+        return record;
+      });
+      await getStockDetails(record,e)
+    } 
+    else if(field === "allocatedStock"){
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          return { ...record, [field]: e, ["trimCode"] : record.trimCode };
+        }
+        return record;
+      });
+    }
+    else if(field === 'consumption'){
       let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
       updatedData = data.map((record) => {
         if (record.key === key) {
-          console.log(e);
-      console.log(record.totalCount);
           let consumptionCal = Number(record.totalCount) * Number(e);
           let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
-          console.log(consumptionCal);
-          console.log(withPer);
           form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
@@ -165,18 +200,15 @@ const getMappedTrims = (value, option) => {
       let cons = form.getFieldValue(`consumption${key}`) != undefined ? form.getFieldValue(`consumption${key}`) : 0
       updatedData = data.map((record) => {
         if (record.key === key) {
-          console.log(e);
-      console.log(record.totalCount);
           let consumptionCal = Number(record.totalCount) * Number(cons);
           let withPer = (Number(consumptionCal) * Number(e))/ 100;
-          console.log(consumptionCal);
-          console.log(withPer);
           form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
         return record;
       });
     }
+    
     else{
       updatedData = data.map((record) => {
         if (record.key === key) {
@@ -189,6 +221,7 @@ const getMappedTrims = (value, option) => {
     setData(updatedData);
     console.log(updatedData)
     props.data(updatedData)
+    
   };
 
   const handleDelete = (key) => {
@@ -197,7 +230,6 @@ const getMappedTrims = (value, option) => {
   };
 
   const trimTypeOnchange = (value) =>{
-    console.log(value)
     getTrimCodes(value)
   }
   const columns = [
@@ -214,7 +246,7 @@ const getMappedTrims = (value, option) => {
         <Form.Item name={`trimType${record.key}`}>
         <Select
           value={record.trimType}
-          onChange={(e) => handleInputChange(e, record.key, 'trimType')}
+          onChange={(e) => handleInputChange(e, record.key, 'trimType',record)}
           style={{width:"100%"}}
           allowClear
           showSearch
@@ -238,7 +270,7 @@ const getMappedTrims = (value, option) => {
       render: (_, record) => (
         <Select
           value={record.trimCategory}
-          onChange={(e) => handleInputChange(e, record.key, 'trimCategory')}
+          onChange={(e) => handleInputChange(e, record.key, 'trimCategory',record)}
           style={{width:"100%"}}
           allowClear
           showSearch
@@ -257,26 +289,24 @@ const getMappedTrims = (value, option) => {
     },
     {
       title: 'Trim Code',
-      dataIndex: 'trimId',
+      dataIndex: 'trimCode',
       width:"20%",
       render: (_, record) => (
-        <Form.Item name={`trimId${record.key}`}>
-        <Select
-          value={record.trimId}
-          onChange={(e) => handleInputChange(e, record.key, 'trimCode')}
-          style={{width:"100%"}}
-          allowClear
-          showSearch
-          optionFilterProp="children"
-          placeholder={renderTrimCodeOptions()[0]?.props.children}
-          // onSelect={onTrimChange}
-         >
-          {renderTrimCodeOptions()}
-          {m3Trims.map(item =>{
-            return <Option key={item.m3TrimsId} value={item.m3TrimsId}>{item.trimCode}</Option>
-          })}
+        <><Form.Item name={`allocatedStock${record.key}`}><Input name={`allocatedStock${record.key}`} style={{ display: 'none' }} /></Form.Item><Form.Item name={`trimCode${record.key}`}>
+          <Select
+            value={record.trimCode}
+            onChange={(e) => handleInputChange(e, record.key, 'trimCode', record)}
+            style={{ width: "100%" }}
+            allowClear
+            showSearch
+            optionFilterProp="children"
+            placeholder="Select Trim Code"
+          >
+            {m3Trims.map(item => {
+              return <Option key={item.m3TrimsId} value={item.m3TrimsId}>{item.trimCode}</Option>;
+            })}
           </Select>
-          </Form.Item>
+        </Form.Item></>
       ),
     },
    
@@ -287,7 +317,7 @@ const getMappedTrims = (value, option) => {
         <Form.Item name={`consumption${record.key}`}>
         <InputNumber
         value={record.consumption}
-        onChange={(e) => handleInputChange(e, record.key, 'consumption')}
+        onChange={(e) => handleInputChange(e, record.key, 'consumption',record)}
         />
         </Form.Item>
       ),
@@ -306,7 +336,7 @@ const getMappedTrims = (value, option) => {
         optionFilterProp="children"
         placeholder="Select UOM" 
         // defaultValue={uom.find((e) => e.uom === "PCS")?.uom}
-        onChange={(e) => handleInputChange(e, record.key, 'uomId')}
+        onChange={(e) => handleInputChange(e, record.key, 'uomId',record)}
         >
             {uom.map(e => {
               return(
@@ -326,7 +356,7 @@ const getMappedTrims = (value, option) => {
       <Form.Item name={`wastage${record.key}`}>
         <InputNumber
         defaultValue={2}
-        onChange={(e) => handleInputChange(e, record.key, 'wastage')}
+        onChange={(e) => handleInputChange(e, record.key, 'wastage',record)}
         />
       </Form.Item>
       ),
@@ -339,7 +369,7 @@ const getMappedTrims = (value, option) => {
       <Form.Item name={`totalRequirement${record.key}`}>
         <Input disabled style={{fontWeight:'bold', color:"black"}}
         value={record.totalRequirement}
-        onChange={(e) => handleInputChange(e.target.value, record.key, 'totalRequirement')}
+        onChange={(e) => handleInputChange(e.target.value, record.key, 'totalRequirement',record)}
         />
       </Form.Item>
       ),
@@ -351,7 +381,7 @@ const getMappedTrims = (value, option) => {
         <Form.Item name={`remarks${record.key}`}>
         <TextArea
         value={record.remarks}
-        onChange={(e) => handleInputChange(e.target.value, record.key, 'remarks')}
+        onChange={(e) => handleInputChange(e.target.value, record.key, 'remarks',record)}
         rows={1}
         />
         </Form.Item>
@@ -366,6 +396,131 @@ const getMappedTrims = (value, option) => {
     },
   ];
 
+  const setAllocatedQty = (index, rowData, value) => {
+   rowData.issuedQty = value
+   const newData = [...stockData];
+   newData[index].issuedQty = value;
+   setStockData(newData);
+   if (value === 0 || value === null || value < 0 || value === undefined) {
+     AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
+     sourcingForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity));
+   }
+   if (Number(value) > Number(rowData.quantity)) {
+     sourcingForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty));
+     AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
+   }
+ }
+ const checkboxonclick =() =>{
+  setChecked(true)
+}
+
+  const renderColumnForFabric: any =[
+    {
+      title: 'S.No',
+      dataIndex: 'sNo',
+      render: (_, record, index) => index + 1,
+    },
+    {
+      title: "Grn Number",
+      key:'grnNumber',
+      dataIndex: "grnNumber",
+      width: "150px",
+
+    },
+    {
+      title: "Grn Date",
+      key:'grnDate',
+      dataIndex:"grnDate",
+      render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
+      width: "150px",
+
+    },
+    {
+      title: "Location",
+      key:'location',
+
+      dataIndex: "location",
+      width:'80px',
+    },
+  
+    {
+      title: "Available Quantity",
+      width: "150px",
+      dataIndex: "quantity",
+    },
+   
+    {
+      title: "Allocated Quantity",
+      width:'200px',
+      render: (text, rowData, index) => { 
+        return(
+          
+          <Form.Item name={`allocatedQuantity${rowData.key}`}>
+                <InputNumber name={`allocatedQuantity${rowData.key}`}
+                    onChange={(e) => setAllocatedQty(index,rowData, e)} 
+                 />
+          </Form.Item>
+         
+        )
+      }
+    },
+    {
+      title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
+      // onClick={() =>allocateQuantity()} 
+      >Allocate</Button>:'Allocate'}</div>,
+      dataIndex: "sm",
+      key: "sm",
+      align: "center",
+      render: (text, rowData, index) => { 
+        return (
+          <Checkbox 
+          onClick={checkboxonclick}
+          onChange={(e) => onCheck(rowData, index, e.target.checked)}
+          // onClick={(e) =>onCheck(rowData,undefined)}
+          />
+        );
+      },
+    },
+   
+  ]
+  const onCheck = (rowData, index, isChecked) => {
+    if(isChecked){
+      if(Number(rowData.issuedQty) > 0){
+        rowData.issuedQty = rowData.issuedQty
+        rowData.checkedStatus = 1;
+        const newData = [...stockData];
+        newData[index].issuedQty = rowData.issuedQty;
+        newData[index].checkedStatus = 1;
+        data.map((record) => {
+          if (record.fabricCode === rowData.m3ItemId) {
+            // record.allocatedStock = [...record.allocatedStock, newData];
+            return { ...record, [`allocatedStock`]: newData};
+          }
+        }); 
+        setStockData(newData);
+        
+        // setbtnEnable(true)
+      }
+      else{
+        AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
+      }
+    }
+    else{
+      console.log("")
+    }
+    
+  };
+
+  
+  const renderItems = (record:any) => {
+      return  <Table
+      rowKey={record.stockId}
+       dataSource={stockData}
+        columns={renderColumnForFabric} 
+        pagination={false}
+         />;
+  };
+
   return (
     <div>
       <Form form={form}>
@@ -374,6 +529,10 @@ const getMappedTrims = (value, option) => {
       <Table 
       dataSource={data} 
       columns={columns} 
+      expandedRowRender={renderItems}
+      expandable = {{
+        defaultExpandAllRows : true
+        }}
       bordered={true}
       />
       </Form>
