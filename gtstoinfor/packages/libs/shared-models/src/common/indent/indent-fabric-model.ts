@@ -44,10 +44,7 @@ export class IndentFabricModel{
     indentFabricId?:number
     m3FabricCodeId?:number
     quantityUomId?:number
-
-
-
-
+    poQty?:number
 
   constructor(
     ifabricId: number,
@@ -91,7 +88,9 @@ export class IndentFabricModel{
     colorId?:number,
     indentFabricId?:number,
     m3FabricCodeId?:number,
-    quantityUomId?:number
+    quantityUomId?:number,
+    poQty?:number
+ 
   ){
     this.ifabricId=ifabricId;
     this.content=content;
@@ -135,8 +134,7 @@ export class IndentFabricModel{
     this.indentFabricId =indentFabricId
     this.m3FabricCodeId = m3FabricCodeId
     this.quantityUomId = quantityUomId
-
-
+    this.poQty = poQty
   }
 
 

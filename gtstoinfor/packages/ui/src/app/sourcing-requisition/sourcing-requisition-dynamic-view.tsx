@@ -42,9 +42,12 @@ import {
   BuyerRefNoRequest,
   CustomerOrderStatusEnum,
   IndentRequestFilter,
+  ItemTypeEnumDisplay,
+  MenusAndScopesEnum,
 } from "@project-management-system/shared-models";
 import Highlighter from "react-highlight-words";
 import { useIAMClientState } from "../common/iam-client-react";
+import RolePermission from "../role-permissions";
 
 const { Option } = Select;
 
@@ -73,14 +76,18 @@ export const SourcingRequisitionDynamicView = () => {
   const [btnEnable,setbtnEnable]=useState<boolean>(true)
 
   useEffect(() => {
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+      setTabName('Trim')
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      setTabName('Fabric')
+    }
     // getStyle();
-    console.log(IAMClientAuthContext.user)
     getAll();
   }, []);
 
   useEffect(() => {
     if (data) {
-    console.log(tableData)
       setTableData(data);
     }
   }, [data]);
@@ -92,6 +99,13 @@ export const SourcingRequisitionDynamicView = () => {
   //     }
   //   });
   // };
+
+  const checkAccess = (buttonParam) => {   
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus.Indent,buttonParam)
+    console.log(accessValue,'access');
+    
+    return accessValue
+}
 
 
   const getAll = () => {
@@ -112,6 +126,7 @@ export const SourcingRequisitionDynamicView = () => {
         setFilterData(res.data);
       }
     });
+    
   };
   console.log(data)
   console.log(tableData)
@@ -306,22 +321,22 @@ export const SourcingRequisitionDynamicView = () => {
         title: "Season",
         dataIndex: "season",
       },
-      {
-        title: "Supplier",
-        dataIndex: "supplierId",
-        ...getColumnSearchProps("supplierId"),
-        render: (text, record) => {
-          return <>{record.supplierId ? record.supplierId : "-"}</>;
-        },
-      },
-      {
-        title: "GRN Date",
-        dataIndex: "grnDate",
-        render: (text, record) => {
-          const date = new Date(record.grnDate);
-          return <>{record.grnDate ? moment(date).format("YYYY-MM-DD") : "-"}</>;
-        },
-      },
+      // {
+      //   title: "Supplier",
+      //   dataIndex: "supplierId",
+      //   ...getColumnSearchProps("supplierId"),
+      //   render: (text, record) => {
+      //     return <>{record.supplierId ? record.supplierId : "-"}</>;
+      //   },
+      // },
+      // {
+      //   title: "GRN Date",
+      //   dataIndex: "grnDate",
+      //   render: (text, record) => {
+      //     const date = new Date(record.grnDate);
+      //     return <>{record.grnDate ? moment(date).format("YYYY-MM-DD") : "-"}</>;
+      //   },
+      // },
       {
         title: "XL No",
         dataIndex: "xlNo",
@@ -724,11 +739,14 @@ export const SourcingRequisitionDynamicView = () => {
               <Segmented
                 onChange={onSegmentChange}
                 style={{ backgroundColor: "#68cc6b" }}
-                options={[
+                //  options= {segmentedOptions}
+                 defaultValue={checkAccess(MenusAndScopesEnum.Scopes.fabricTab)?"Fabric":checkAccess(MenusAndScopesEnum.Scopes.trimTab) ? "Trim":''}
+                options={
+                  [
                   {
                     label: (
                       <>
-                        <b style={{ fontSize: "12px" }}>Fabric Details</b>
+                        <b style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? 'block' : 'none'}}>Fabric Details</b>
                       </>
                     ),
                     value: "Fabric",
@@ -736,14 +754,17 @@ export const SourcingRequisitionDynamicView = () => {
                   {
                     label: (
                       <>
-                        <b style={{ fontSize: "12px" }}>Trim Details</b>
+                        <b style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.trimTab)? 'block' : 'none'}}>Trim Details</b>
                       </>
                     ),
                     value: "Trim",
+
                   },
-                ]}
+                ]
+              }
               />
               <div>
+              <>
                 {tabName === "Fabric" ? (
                   <>
                     <Table
@@ -754,9 +775,8 @@ export const SourcingRequisitionDynamicView = () => {
                       className="custom-table-wrapper"
                     />
                   </>
-                ) : (
-                  <></>
-                )}
+                ) :''}
+                </>
               </div>
               <div>
                 {tabName === "Trim" ? (

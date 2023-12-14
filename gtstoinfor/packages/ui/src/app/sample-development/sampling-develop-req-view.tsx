@@ -31,6 +31,7 @@ import {
     Space,
     Table,
     Tag,
+    Tooltip,
     message,
   } from "antd";
   import style from "antd/es/alert/style";
@@ -46,7 +47,11 @@ import {
     BomStatusEnum,
     CustomerOrderStatusEnum,
     IndentRequestFilter,
+    ItemTypeEnumDisplay,
+    LifeCycleStatusDisplay,
     LifeCycleStatusEnum,
+    MenusAndScopesEnum,
+    SampleDevelopmentStatusDisplay,
     SampleDevelopmentStatusEnum,
     SampleFilterRequest,
     buyerandM3ItemIdReq,
@@ -58,6 +63,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 import { useIAMClientState } from "../common/iam-client-react";
 import PickListPrint, { getCssFromComponent } from "./pick-list-print";
 import PoPrint from "../purchase-order2/po-print";
+import RolePermission from "../role-permissions";
 // const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   
@@ -108,6 +114,11 @@ import PoPrint from "../purchase-order2/po-print";
     }, [data]);
   
   
+    const checkAccess = (buttonParam) => {   
+      const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Sample Development"],MenusAndScopesEnum.SubMenus["Sample Development View"],buttonParam)
+      
+      return accessValue
+  }
     const getAll = () => {
       const req = new SampleFilterRequest();
       if (sourcingForm.getFieldValue("requestNo") !== undefined) {
@@ -325,6 +336,10 @@ import PoPrint from "../purchase-order2/po-print";
         title: "Trim Type",
         dataIndex: "trimType",
         ...getColumnSearchProps("trimType"),
+        render: (text) => {
+          const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+          return EnumObj ? EnumObj.displayVal : text;
+        },
       },
       {
         title: "Required Quantity",
@@ -655,7 +670,7 @@ import PoPrint from "../purchase-order2/po-print";
           <span style={{ width: "10px" }}></span>
           <span style={{ width: "10px" }}></span>
           <span style={{ width: "10px" }}></span>
-          <span> Status : {<b>{lifeCycleStatus}</b>}</span>
+          <span> Status : {<b>{LifeCycleStatusDisplay.find((e)=>e.name === lifeCycleStatus)?.displayVal}</b>}</span>
           <span style={{marginLeft:'auto'}}>
                {lifeCycleStatus === LifeCycleStatusEnum.READY_TO_DISPATCH ? (
         <>
@@ -667,13 +682,17 @@ import PoPrint from "../purchase-order2/po-print";
         
         </>
       ):(<></>)}
+        {lifeCycleStatus === LifeCycleStatusEnum.READY_FOR_PRODUCTION ? (
              <>
               <span >
+            <Tooltip  title='Pick List Print'>
             <Button type="primary" size="small" onClick={()=>showModal(index)}>
-              Print
+            <PrinterOutlined style={{ fontSize: '20px' }}  />
             </Button>
+            </Tooltip>
           </span>
           </>
+           ):(<></>)}
           </span>
         </div>
       );
@@ -820,7 +839,12 @@ import PoPrint from "../purchase-order2/po-print";
                   placeholder="Select Status"
                   allowClear
                 >
-                  {Object.keys(SampleDevelopmentStatusEnum)
+                  {Object.values(SampleDevelopmentStatusDisplay).map((val) => (
+            <Select.Option key={val.name} value={val.name}>
+              {val.displayVal}
+            </Select.Option>
+          ))}
+                  {/* {Object.keys(SampleDevelopmentStatusDisplay)
                     .sort()
                     .map((status) => (
                       <Select.Option
@@ -829,7 +853,7 @@ import PoPrint from "../purchase-order2/po-print";
                       >
                         {SampleDevelopmentStatusEnum[status]}
                       </Select.Option>
-                    ))}
+                    ))} */}
                 </Select>
               </Form.Item>
             </Col>
@@ -946,7 +970,8 @@ import PoPrint from "../purchase-order2/po-print";
                     dataSource={item.fabric}
                     expandedRowRender={renderItems}
                     expandable = {{
-                      defaultExpandAllRows : false, rowExpandable:(record)=>{console.log(record) ; return (record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 && IAMClientAuthContext.user?.roles === "sourcingUser")}
+                      defaultExpandAllRows : false, 
+                      rowExpandable:(record)=>{console.log(record) ; return (record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 && checkAccess(MenusAndScopesEnum.Scopes.allocation))}
                       }}
                     // expandedRowRender={renderItems}
                     // expandedRowKeys={expandedIndex}
@@ -987,11 +1012,11 @@ import PoPrint from "../purchase-order2/po-print";
                         dataSource={item.trimData}
                         expandedRowRender={renderItems}
                         expandable = {{
-                          defaultExpandAllRows : false, rowExpandable:(record)=>{console.log(record) ; return (record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 && IAMClientAuthContext.user?.roles === "sourcingUser")}
+                          defaultExpandAllRows : false, rowExpandable:(record)=>{console.log(record) ; return (
+                          record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 && 
+                            checkAccess(MenusAndScopesEnum.Scopes.allocation))}
                           }}
-                        // expandable = {{
-                        //   defaultExpandAllRows : false
-                        //   }}
+                        
                         onExpand={handleExpandTrim}
                         pagination={false}
                         scroll={{ x: "max-content" }}

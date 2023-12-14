@@ -492,30 +492,30 @@ export const SourcingRequisitionDynamicForm = () => {
         //     title:'MOQ Price',
         //     dataIndex:'moqPrice'
         // },
-        {
-            title:'Supplier',
-            dataIndex:'supplier',
-            render: (text,record) => {
-                return(
-                    <>
-                    {record.supplier ? record.supplierName : '-'}
-                    </>
-                )
-            }
+        // {
+        //     title:'Supplier',
+        //     dataIndex:'supplier',
+        //     render: (text,record) => {
+        //         return(
+        //             <>
+        //             {record.supplier ? record.supplierName : '-'}
+        //             </>
+        //         )
+        //     }
             
-        },
-        {
-            title:'GRN Date',
-            dataIndex:'grnDate',
-            render:(text,record) => {
-                const date = new Date(record.grnDate)
-                return(
-                    <>
-                    {record.grnDate ? moment(date).format('YYYY-MM-DD') : '-'}
-                    </>
-                )
-            }
-        },
+        // },
+        // {
+        //     title:'GRN Date',
+        //     dataIndex:'grnDate',
+        //     render:(text,record) => {
+        //         const date = new Date(record.grnDate)
+        //         return(
+        //             <>
+        //             {record.grnDate ? moment(date).format('YYYY-MM-DD') : '-'}
+        //             </>
+        //         )
+        //     }
+        // },
         // {
         //     title:'Buyer',
         //     dataIndex:'buyer',
@@ -581,6 +581,10 @@ export const SourcingRequisitionDynamicForm = () => {
         {
           title: 'Trim Type',
           dataIndex: 'trimType',
+          render: (text) => {
+            const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+            return EnumObj ? EnumObj.displayVal : text;
+          },
         },
         // {
         //   title: 'Trim Code',
@@ -1166,7 +1170,7 @@ const onTrimChange = (val, option) => {
             </Select>
         </Form.Item>
         </Col> */}
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                                             <Form.Item name='supplier' label='Supplier'
                                             //  rules={[{ required: true, message: 'Supplier is required' }]}
                                              >
@@ -1178,12 +1182,12 @@ const onTrimChange = (val, option) => {
                                                     })}
                                                 </Select>
                                             </Form.Item>
-                                        </Col>
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                        </Col> */}
+                                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                                             <Form.Item name='grnDate' label='GRN Date' rules={[{ required: true, message: 'Grn date is required' }]}>
                                                 <DatePicker style={{ width: '100%' }} />
                                             </Form.Item>
-                                        </Col>
+                                        </Col> */}
                                         
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                                             <Form.Item name='xlNo' label='XL No' rules={[{ required: true, message: 'XL No is required' }]}>

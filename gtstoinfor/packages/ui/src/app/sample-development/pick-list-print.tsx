@@ -26,7 +26,7 @@ import { useIAMClientState } from "../common/iam-client-react";
 import './pick-list-print.css';
 import QRCode from "react-qr-code";
 import html2pdf from 'html2pdf.js';
-
+import logo from './shahi.logo.jpg'
 export interface PickListPrintProps {
     reqNo: number
     printOrder: () => void
@@ -107,12 +107,13 @@ export const PickListPrint = (props: PickListPrintProps) => {
             }
         >
             <div id="printme">
-                <h1 style={{ textAlign: "center", fontFamily:'initial' ,marginBottom:-35}}>
-                Pick List
+                <h1 style={{fontFamily:'initial' ,marginBottom:-35,paddingLeft:'210px'}}>
+                <a>Pick List</a>
+                <b style={{alignContent:'end'}}><img src ={logo} style={{alignContent:'end', width:40,height:10,paddingLeft:'210px',paddingBottom:'5px'}}/></b>
                 </h1>
-                <h3 style={{ textAlign: "right",fontFamily:'sans-serif',marginBottom:-5}}>
+                <h5 style={{ textAlign: "right",fontFamily:'sans-serif',marginBottom:-5}}>
                 SHAHI EXPORTS PVT. LIMITED
-                </h3>
+                </h5>
                 <hr style={{fontWeight:'lighter'}}></hr>
                 <div style={{ flexDirection: "row", display: "flex",textAlign:'left' ,marginBottom:-50}}>
                 <div style={{flex:1,marginBottom:-20}}>
