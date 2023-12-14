@@ -1230,7 +1230,9 @@ const PPMReport = () => {
 
   const onReset = () => {
     form.resetFields()
-    getData()
+    setGridData([])
+    setFilterData([])
+    setFilteredData([])
   }
 
   const toggleHideChildren = () => {
