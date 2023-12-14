@@ -34,25 +34,58 @@ export class PurchaseOrderService {
 
     async cretePurchaseOrder(req: PurchaseOrderDto): Promise<CommonResponseModel> {
         try {
-            console.log(req);
-            const currentYear = moment().format('YYYY')
-            const currentDate = moment();
-            const netyaer = currentDate.year();
-            const nextYear = netyaer + 1;
-            let FromYear = currentYear.toString().substr(-2)
-            let ToYear = (nextYear).toString().substr(-2)
-            console.log(ToYear)
-            console.log('$$$$')
-            let poNumber
-            // if buyer wise ponumber generation happens need to include Buyer also.
-            const data = 'select max(purchase_order_id) as poId from purchase_order where po_material_type = "'+req.poMaterialType+'"';
-            const maxId = await this.poRepo.query(data)
-            let val = maxId[0].poId + 1;
-            if (maxId[0].poId == null) {
-                poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + '000001' + ''
-            } else {
-                poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + val.toString().padStart(5, 0) + ''
+
+            const today = new Date();
+            const CurrentYear = today.getFullYear();
+            const CurrentMonth = today.getMonth();
+            let fromDate = 0;
+            let toDate = 0;
+            let itemType;
+            if(req.poMaterialType === "Fabric"){
+                itemType = 'F';
             }
+            else{
+                itemType = 'T';
+            }
+            const data = 'select max(purchase_order_id) as poId from purchase_order where po_material_type = "'+req.poMaterialType+'"';
+                let totalPO = await this.poRepo.query(data)
+            // if (!isUpdate) {
+                if (CurrentMonth < 4) {
+                    fromDate = (CurrentYear);
+                    toDate = (CurrentYear + 1);
+                } else {
+                    fromDate = (CurrentYear);
+                    toDate = (CurrentYear + 1);
+                }
+
+            // }
+            
+            let val = totalPO[0].poId + 1;
+
+
+            let refNo = val + "";
+            while (refNo.length < 4) refNo = "0" + refNo;
+
+            let poNumber = "PO/" + (fromDate.toString().substr(-2)) + "-" + (toDate.toString().substr(-2)) + "/" + itemType + "/" + refNo;
+
+            console.log(poNumber);
+            // const currentYear = moment().format('YYYY')
+            // const currentDate = moment();
+            // const netyaer = currentDate.year();
+            // const nextYear = netyaer + 1;
+            // let FromYear = currentYear.toString().substr(-2)
+            // let ToYear = (nextYear).toString().substr(-2)
+            // console.log(ToYear)
+            // console.log('$$$$')
+            // if buyer wise ponumber generation happens need to include Buyer also.
+            // const data = 'select max(purchase_order_id) as poId from purchase_order where po_material_type = "'+req.poMaterialType+'"';
+            // const maxId = await this.poRepo.query(data)
+            // let val = maxId[0].poId + 1;
+            // if (maxId[0].poId == null) {
+            //     poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + '000001' + ''
+            // } else {
+            //     poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + val.toString().padStart(5, 0) + ''
+            // }
             let poItemInfo = []
             const poEntity = new PurchaseOrderEntity()
             poEntity.poNumber = poNumber
@@ -142,6 +175,7 @@ export class PurchaseOrderService {
             if (req.vendorId) {
                 query = query + ` AND po.vendor_id = '${req.vendorId}'`;
             }
+            query = query +` GROUP BY po.po_number ORDER BY po.po_number`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)

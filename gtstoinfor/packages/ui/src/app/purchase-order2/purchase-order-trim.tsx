@@ -8,7 +8,7 @@ import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
 import React, { useEffect } from "react";
 import { useState } from "react";
 
-export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
+export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>{
     let tableData: any[] = []
     const [trimForm] = Form.useForm()
     const {Option} = Select
@@ -47,10 +47,14 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
 
     useEffect(() =>{
         if(indentId.length != 0){
+            console.log(itemData)
             setTableColumns([...columns])
-            indentTrimData(indentId)
+            // indentTrimData(indentId)
+            setTrimtableVisible(true)
+            props(itemData.filter((e) => e.checkStatus === true))
+            setTrimTableData(itemData.filter((e) => e.checkStatus === true));
         }
-    },[indentId])
+    },[indentId,itemData])
 
     useEffect(() =>{
         if(sampleReqId.length != 0){
@@ -147,11 +151,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         setUpdate(true)
         setDefaultTrimFormData(rowData)
         setTrimIndexVal(index)
-        if(rowData.indentTrmId != undefined){
+        if(rowData.indentTrimId != undefined){
         setInputDisable(true)
         trimForm.setFieldsValue({poQuantity:rowData.indentQuantity})
         trimForm.setFieldsValue({indentId:rowData.indentId})
-        trimForm.setFieldsValue({m3TrimCode:rowData.m3TrimCode})    
+        trimForm.setFieldsValue({m3TrimCode:rowData.m3TrimCodeId})    
         trimForm.setFieldsValue({m3TrimCodeName:rowData.m3TrimCodeName})    
         trimForm.setFieldsValue({indentQuantity:rowData.indentQuantity})    
         trimForm.setFieldsValue({indentCode:rowData.indentCode})
@@ -160,6 +164,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         trimForm.setFieldsValue({quantityUomId:rowData?.quantityUnitId,})
         trimForm.setFieldsValue({styleId: rowData?.styleId})
         trimForm.setFieldsValue({trimParams: rowData?.trimParams})
+        trimForm.setFieldsValue({poQuantity: rowData?.quantity})
         }
         if(rowData.sampleTrimInfoId != undefined){
             trimForm.setFieldsValue({poQuantity:rowData.sampleOrderQuantity})
@@ -209,7 +214,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         },
         {
             title:'M3 Trim Code',
-            dataIndex:'m3TrimCodeName',
+            dataIndex:'m3TrimCode',
             width:'100px'
         },
         // {
@@ -219,11 +224,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         // },
         {
             title:'Indent Quantity',
-            dataIndex:'indentQuantity',
+            dataIndex:'quantity',
         },
         {
             title:'Po Quantity',
-            dataIndex:'poQuantity',
+            dataIndex:'quantity',
             width:'100px'
             
         },
@@ -542,7 +547,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
         finalCalculation();
     },[taxPer])
     return(
-        <Card title={<span style={{color:'blue', fontSize:'17px'}} >Trim Details</span>}>
+        // <div style={{ width: '100%', overflowX: 'auto' }}>
+        <Card title={<span style={{color:'blue', fontSize:'17px'}} >Trim Details</span>}  style={{ width: '100%', overflowX: 'auto' }}>
             <Form form={trimForm} layout="vertical" onFinish={OnTrimAdd} style={{width:'100%'}}>
                 <Row gutter={12}>
                    <Form.Item name='sampleReqId' hidden ><Input/></Form.Item>
@@ -696,8 +702,13 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                     }
                 
                 </Row>
+            </Form>
                 <Row>
-                {trimtableVisible ? <Table columns={tableColumns} dataSource={trimTableData}
+                {trimtableVisible ? 
+                <Table 
+                scroll={{ x: 'max-content' }} 
+                columns={tableColumns} 
+                dataSource={trimTableData}
                  pagination={{
                     onChange(current) {
                       setPage(current);
@@ -706,9 +717,9 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,}) =>{
                      />
                 :<></>}
                 </Row>
-            </Form>
 
         </Card>
+        // </div>
     )
 
 }

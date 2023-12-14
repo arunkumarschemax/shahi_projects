@@ -115,6 +115,7 @@ const GRNForm = () => {
     }else{
       setMapData([])
     }
+
     const req = new VendorIdReq(0, val, option?.name, option?.val);
     poService.getPODataById(req).then((res) => {
       if (res.status) {
@@ -172,16 +173,16 @@ const GRNForm = () => {
     });
   }
 
-
   const columns: any = [
     {
       title: <div style={{ textAlign: "center" }}>Buyer</div>,
       dataIndex: 'buyer',
       fixed: 'left',
-    },{
+    },
+    poData?.poMaterialType !== 'Fabric'?{
       title:<div style={{textAlign:"center"}}>Trim Params</div>,
       dataIndex:"trimParams",
-    },
+    }:{},
     {
       title: <div style={{ textAlign: "center" }}> Item Code</div>,
       // fixed: 'left',
