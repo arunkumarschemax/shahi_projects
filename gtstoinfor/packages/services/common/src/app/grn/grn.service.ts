@@ -129,6 +129,12 @@ export class GrnService {
         
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try {
+            let materialType
+            if(req.materialtype == 'Fabric'){
+                materialType='F'
+            }else{
+                materialType='T'
+            }
 
             const currentYear = moment().format('YYYY')
             let ToYear = currentYear.toString().substr(-2)
@@ -137,18 +143,18 @@ export class GrnService {
             const data = 'select max(grn_id) as grnId from grn'
             const maxId = await this.grnRepo.query(data)
             if (maxId[0].grnId == null) {
-                grnNumber = 'GRN/' + FromYear + '-' + ToYear + '/' + '001' + ''
+                grnNumber = 'GRN/'+ FromYear + '-' + ToYear + '/' + '001' + ''
             } else {
-                grnNumber = 'GRN/' + FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
+                grnNumber = 'GRN/'+ FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
             }
 
             let grnItemNumber
             const data1 = 'select max(grn_item_id) as grnItemId from grn_items'
             const maxItemId = await this.grnRepo.query(data1)
-            if (maxItemId[0].grnId == null) {
-                grnItemNumber = 'GRNI/' + FromYear + '-' + ToYear + '/' + '001' + ''
+            if (maxItemId[0].grnItemId == null) {
+                grnItemNumber = 'GRNI'+ materialType + '/' + FromYear + '-' + ToYear + '/' + '001' + ''
             } else {
-                grnItemNumber = 'GRNI/' + FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
+                grnItemNumber = 'GRNI'+ materialType + '/' + FromYear + '-' + ToYear + '/' + maxItemId[0].grnItemId.toString().padStart(3, 0) + ''
             }
 
             let mrnNumber
