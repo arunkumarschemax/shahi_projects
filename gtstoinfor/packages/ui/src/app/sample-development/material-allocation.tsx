@@ -21,6 +21,7 @@ import {
   BuyerRefNoRequest,
   BuyersDto,
   GRNLocationPropsRequest,
+  ItemTypeEnumDisplay,
   MaterialIssueLogrequest,
   MaterialStatusEnum,
   StockupdateRequest,
@@ -291,6 +292,10 @@ export const MaterialAllocationGrid = () => {
       sorter: (a, b) => a.item_type.localeCompare(b.item_type),
       sortDirections: ["descend", "ascend"],
       ...getColumnSearchProps("item_type"),
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },
     },
     {
       title: "Description",

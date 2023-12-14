@@ -5,7 +5,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { type } from 'os';
-import { PurchaseViewDto } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, PurchaseViewDto } from '@project-management-system/shared-models';
 import PoPrint from './po-print';
 
 export interface PoDetailViewPagesProps {
@@ -83,6 +83,10 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       title: 'Material Type',
       key: 'Material Type',
       dataIndex: 'po_material_type',
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },
     },
     {
       title: 'Item Code',
