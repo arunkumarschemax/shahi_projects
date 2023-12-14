@@ -25,7 +25,7 @@ export class TrimIndentRepository extends Repository<IndentTrimsEntity> {
 
     async getTrimIndentData (indentId:number){
         const query = this.createQueryBuilder(`itt`)
-        .select (`b.buyer_name as buyerName,itt.trim_type as materialType,mt.trim_code as m3TrimCode,itt.itrims_id,itt.trim_type,itt.trim_code,itt.quantity,itt.indent_id as indentId,itt.quantity_unit AS quantityUnitId,u.uom AS quantityUnit,
+        .select (`it.request_no AS indentCode,b.buyer_name as buyerName,itt.trim_type as materialType,mt.trim_code as m3TrimCode,itt.itrims_id,itt.trim_type,itt.trim_code,itt.quantity,itt.indent_id as indentId,itt.quantity_unit AS quantityUnitId,u.uom AS quantityUnit,
         itt.created_at,itt.updated_at,itt.indent_id,itt.remarks,it.status,CONCAT(b.buyer_code,'-',b.buyer_name)AS buyer,s.buyer_id AS buyerId, it.style as styleId`)
         .leftJoin(Indent,'it','it.indent_id=itt.indent_id')
         .leftJoin(Style,'s','s.style_id = it.style')

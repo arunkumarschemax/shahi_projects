@@ -9,7 +9,7 @@ import React from "react"
 import { useEffect, useState } from "react"
 
 
-export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) => {
+export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, itemData}) => {
     const [fabricForm] = Form.useForm()
     const [weave, setWeave] = useState<any[]>([])
     const [uom, setUom] = useState<any[]>([])
@@ -55,14 +55,19 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     }, [])
 
     useEffect(() => {
+        console.log(itemData);
+        console.log(itemData?.filter((i) => i.checkStatus === true))
         if (indentId.length != 0) {
             setTableColumns([...columns])
-            AllIndnetDetails(indentId)
+            // AllIndnetDetails(indentId)
+            setFabricTableData(itemData?.filter((i) => i.checkStatus === true))
+            setFabricTableVisible(true)
         }
-    }, [indentId])
+    }, [indentId,itemData])
+
 
     useEffect(() => {
-        // console.log(sampleReqId)
+        console.log(sampleReqId)
         // console.log(sampleReqId.data[1].sampleReqIds)
         // console.log(sampleReqId.data[2].m3itemid)
         if (sampleReqId.length != 0) {
@@ -167,6 +172,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         console.log(rowData)
         if (rowData.indentFabricId != undefined) {
             setInputDisable(true)
+            console.log("**********************************************************************")
             fabricForm.setFieldsValue({ poQuantity: rowData.indentQuantity })
             fabricForm.setFieldsValue({ unitPrice: rowData.unitPrice })
             fabricForm.setFieldsValue({ discount: rowData.discount })
@@ -175,8 +181,13 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
             fabricForm.setFieldsValue({ taxAmount: rowData.taxAmount })
             fabricForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
-            fabricForm.setFieldsValue({ quantityUomId: rowData.quantityUom })
+            fabricForm.setFieldsValue({ quantityUomId: rowData.quantityUomId })
             fabricForm.setFieldsValue({ quantityUom: rowData.quantityUom })
+            fabricForm.setFieldsValue({ colourId: rowData.colorId })
+            fabricForm.setFieldsValue({ m3FabricCode: rowData.m3FabricCodeId })
+            fabricForm.setFieldsValue({ styleId: rowData.styleId })
+
+
         }
         if (rowData.samplereFabId != undefined) {
             fabricForm.setFieldsValue({ poQuantity: rowData.sampleQuantity })

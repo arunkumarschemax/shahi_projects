@@ -15,6 +15,7 @@ import {
 import {
   Button,
   Card,
+  Checkbox,
   Col,
   Collapse,
   Divider,
@@ -68,7 +69,8 @@ export const SourcingRequisitionDynamicView = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
-
+  const [selectedRowData, setSelectedRowData] = useState([]);
+  const [btnEnable,setbtnEnable]=useState<boolean>(true)
 
   useEffect(() => {
     // getStyle();
@@ -128,9 +130,10 @@ export const SourcingRequisitionDynamicView = () => {
     setBarcodeModal(true);
   };
 
-  const generatePoForFabric = (rowData:any) =>{
-    // console.log(rowData)
-    navigate('/purchase-order', { state: { data: rowData, type:'Indent' } })
+  const generatePoForFabric = (indentId:number) =>{
+    let indentDetails = tableData.find((e)=>e.indentId === indentId);
+    console.log(indentDetails)
+    navigate('/purchase-order', { state: { data: indentDetails, type:'Indent', materialType:'Fabric' } })
   }
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -220,186 +223,269 @@ export const SourcingRequisitionDynamicView = () => {
     ...fabricDetail,
     buyer: tableData[0].buyer,
   }));
-  
-  const Columns: any = [
 
-    {
-      title: "S No",
-      key: "sno",
-      // width: '70px',
-      responsive: ["sm"],
-      render: (text, object, index) => (page - 1) * 10 + (index + 1),
-    },
-    {
-      title: "Buyer",
-      dataIndex: "buyer",
-      ...getColumnSearchProps("buyer"),
-      render: (text, record) => {
-        return <>{record.buyer ? record.buyer : "-"}</>;
-      },
-    },
-    {
-      title: <div style={{textAlign:"center"}}>M3 Fabric Code</div>,
-      dataIndex: "m3FabricCode",
-      ...getColumnSearchProps("m3FabricCode"),
-      render: (m3FabricCode, row) => (
-        <Tooltip title={row.description} placement="top" arrowPointAtCenter>
-          <span>
-            {`${m3FabricCode} - ${row.description.length > 25 ? row.description.slice(0, 25) + '...' : row.description}`}
-          </span>
-        </Tooltip>
-      ),
-    },
-    {
-      title: "Color",
-      dataIndex: "color",
-      ...getColumnSearchProps("color"),
-    },
-    {
-      title: "Season",
-      dataIndex: "season",
-    },
-    {
-      title: "Supplier",
-      dataIndex: "supplierId",
-      ...getColumnSearchProps("supplierId"),
-      render: (text, record) => {
-        return <>{record.supplierId ? record.supplierId : "-"}</>;
-      },
-    },
-    {
-      title: "GRN Date",
-      dataIndex: "grnDate",
-      render: (text, record) => {
-        const date = new Date(record.grnDate);
-        return <>{record.grnDate ? moment(date).format("YYYY-MM-DD") : "-"}</>;
-      },
-    },
-    {
-      title: "XL No",
-      dataIndex: "xlNo",
-    },
-    {
-      title: "Quantity",
-      dataIndex: "quantity",
-      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
-      sortDirections: ["descend", "ascend"],
-      render: (text, record) => {
-        return (
-          <>
-            {record.quantity
-              ? `${record.quantity} ${record.quantityUnit}`
-              : "-"}
-          </>
-        );
-      },
-    },
-    // {
-    //   title: "Available Quantity",
-    //   dataIndex: "quantity",
-    //   sorter: (a, b) => a.quantity.localeCompare(b.quantity),
-    //   sortDirections: ["descend", "ascend"],
-    //   // render: (text,record) => {
-    //   //     return(
-    //   //         <>
-    //   //         {record.quantity ? `${record.availableQuantity} ${record.quantityUnit}` : '-'}
-    //   //         </>
-    //   //     )
-    //   // }
-    // },
-    // {
-    //   title: "To Be Procured",
-    //   dataIndex: "tobeProcured",
-    //   render: (text, record) => {
-    //     return (
-    //       <>
-    //         {record.quantity - record.availableQuantity > 0
-    //           ? record.quantity - record.availableQuantity
-    //           : 0}
-    //       </>
-    //     );
-    //   },
-    // },
-    {
-      title: "Action",
-    dataIndex: "action",
-    render: (text, rowData) => {
-    return (
-    <span>
-    {/* <Button onClick={() => generateBarcode(record.m3FabricCode)}>
-    <BarcodeOutlined/>
-    </Button>
-    <Divider type='vertical'/> */}
-    <Button
-    type="primary"
-    disabled={logInUser == "marketUser" ? true : false}
-    onClick={() =>generatePoForFabric(rowData)}
-    >
-              Generate PO
-    </Button>
-    </span>
-    );
-    },
-    },
-  ];
+  const onCheck = (e, sampleRequestid, fabricType, value, rowData) => {
+    console.log(e.target.checked);
+    console.log(sampleRequestid);
+    console.log(fabricType);
+    console.log(rowData);
+    if(fabricType === "Fabric"){
+      if(!e.target.checked){
+        (tableData.find((e)=>e.indentId === rowData.indentId)?.indentFabricDetails).find((i)=>i.ifabricId === rowData.ifabricId).checkStatus = false;
+        setTableData(tableData)
+        sourcingForm.setFieldValue([`fabric${rowData.indentFabricId}`],false)
+      }
+      else{
+        (tableData.find((e)=>e.indentId === rowData.indentId)?.indentFabricDetails).find((i)=>i.ifabricId === rowData.ifabricId).checkStatus = true;
+        setTableData(tableData)
+        sourcingForm.setFieldValue([`fabric${rowData.indentFabricId}`],true)
+      }
+      if((tableData.find((e)=>e.indentId === rowData.indentId)?.indentFabricDetails).filter((i)=>i.checkStatus === true).length > 0){
+        setbtnEnable(true);
+      }
+      else{
+        setbtnEnable(false);
+      }
+    }
+    else{
+      if(!e.target.checked){
+        (tableData.find((e)=>e.indentId === rowData.indentId)?.indentTrimDetails).find((i)=>i.itrimsId === rowData.itrimsId).checkStatus = false;
+        setTableData(tableData)
+        sourcingForm.setFieldValue([`trim${rowData.indentTrimId}`],"false")
+      }
+      else{
+        (tableData.find((e)=>e.indentId === rowData.indentId)?.indentTrimDetails).find((i)=>i.itrimsId === rowData.itrimsId).checkStatus = true;
+        setTableData(tableData)
+        sourcingForm.setFieldValue([`trim${rowData.indentTrimId}`],"true")
+      }
+      if((tableData.find((e)=>e.indentId === rowData.indentId)?.indentTrimDetails).filter((i)=>i.checkStatus === true).length > 0){
+        setbtnEnable(true);
+      }
+      else{
+        setbtnEnable(false);
+      }
+    }
+  }
+  const tableColumns = (key) => {
+    console.log(key);
+    const Columns: any = [
 
-  const columnsSkelton: any = [
-    {
-      title: "S No",
-      key: "sno",
-      width: "70px",
-      responsive: ["sm"],
-      render: (text, object, index) => (page - 1) * 10 + (index + 1),
-    },
-    {
-      title: "Trim Type",
-      dataIndex: "materialType",
-      ...getColumnSearchProps("materialType"),
-    },
-    {
-      title: "M3 Trim Code",
-      dataIndex: "m3TrimCode",
-      ...getColumnSearchProps("m3TrimCode"),
-    },
-    {
-      title: "To Be Procured Quantity",
-      dataIndex: "quantity",
-      sorter: (a, b) => a.quantity.localeCompare(b.quantity),
-      sortDirections: ["descend", "ascend"],
-      render: (text, record) => {
-        return (
-          <>
-            {record.quantity
-              ? `${record.quantity}`
-              : "-"}
-          </>
-        );
+      {
+        title: "S No",
+        key: "sno",
+        // width: '70px',
+        responsive: ["sm"],
+        render: (text, object, index) => (page - 1) * 10 + (index + 1),
       },
-    },
-    {
-      title: "Remarks",
-      dataIndex: "remarks",
-    },
-    {
-      title: "Action",
-    dataIndex: "action",
-    render: (text, rowData) => {
-    return (
-    <span>
-    <Button
-    type="primary"
-    disabled={logInUser == "marketUser" ? true : false}
-    onClick={() => genereatePoForTrim(rowData)}
-    >
-              Generate PO
-    </Button>
-    </span>
-    );
-    },
-    },
-  ];
-  const genereatePoForTrim = (rowData: any) => {
-    navigate("/purchase-order", { state: { data: rowData, type:'Indent'  } });
+      {
+        title: "Buyer",
+        dataIndex: "buyer",
+        ...getColumnSearchProps("buyer"),
+        render: (text, record) => {
+          return <>{record.buyer ? record.buyer : "-"}</>;
+        },
+      },
+      {
+        title: <div style={{textAlign:"center"}}>M3 Fabric Code</div>,
+        dataIndex: "m3FabricCode",
+        ...getColumnSearchProps("m3FabricCode"),
+        render: (m3FabricCode, row) => (
+          <Tooltip title={row.description} placement="top" arrowPointAtCenter>
+            <span>
+              {`${m3FabricCode} - ${row.description.length > 25 ? row.description.slice(0, 25) + '...' : row.description}`}
+            </span>
+          </Tooltip>
+        ),
+      },
+      {
+        title: "Color",
+        dataIndex: "color",
+        ...getColumnSearchProps("color"),
+      },
+      {
+        title: "Season",
+        dataIndex: "season",
+      },
+      {
+        title: "Supplier",
+        dataIndex: "supplierId",
+        ...getColumnSearchProps("supplierId"),
+        render: (text, record) => {
+          return <>{record.supplierId ? record.supplierId : "-"}</>;
+        },
+      },
+      {
+        title: "GRN Date",
+        dataIndex: "grnDate",
+        render: (text, record) => {
+          const date = new Date(record.grnDate);
+          return <>{record.grnDate ? moment(date).format("YYYY-MM-DD") : "-"}</>;
+        },
+      },
+      {
+        title: "XL No",
+        dataIndex: "xlNo",
+      },
+      {
+        title: "Quantity",
+        dataIndex: "quantity",
+        sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+        sortDirections: ["descend", "ascend"],
+        render: (text, record) => {
+          return (
+            <>
+              {record.quantity
+                ? `${record.quantity} ${record.quantityUnit}`
+                : "-"}
+            </>
+          );
+        },
+      },
+      // {
+      //   title: "Available Quantity",
+      //   dataIndex: "quantity",
+      //   sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+      //   sortDirections: ["descend", "ascend"],
+      //   // render: (text,record) => {
+      //   //     return(
+      //   //         <>
+      //   //         {record.quantity ? `${record.availableQuantity} ${record.quantityUnit}` : '-'}
+      //   //         </>
+      //   //     )
+      //   // }
+      // },
+      // {
+      //   title: "To Be Procured",
+      //   dataIndex: "tobeProcured",
+      //   render: (text, record) => {
+      //     return (
+      //       <>
+      //         {record.quantity - record.availableQuantity > 0
+      //           ? record.quantity - record.availableQuantity
+      //           : 0}
+      //       </>
+      //     );
+      //   },
+      // },
+      {
+        title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePoForFabric(key)} >Generate Po</Button>:'Genereate PO'}</div>,
+        dataIndex: "sm",
+        key: "sm",
+        align: "center",
+        render: (text, rowData, index) => { 
+          {console.log(rowData)}
+          return(
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+              <Form.Item name={`fabric${rowData.indentFabricId}`} >
+                <Checkbox name={`fabric${rowData.indentFabricId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>
+            </Form.Item>
+            </Col>
+          )
+        }
+      },
+      // {
+      //   title: "Action",
+      // dataIndex: "action",
+      // render: (text, rowData) => {
+      // return (
+      // <span>
+      // {/* <Button onClick={() => generateBarcode(record.m3FabricCode)}>
+      // <BarcodeOutlined/>
+      // </Button>
+      // <Divider type='vertical'/> */}
+      // <Button
+      // type="primary"
+      // disabled={logInUser == "marketUser" ? true : false}
+      // onClick={() =>generatePoForFabric(rowData)}
+      // >
+      //           Generate PO
+      // </Button>
+      // </span>
+      // );
+      // },
+      // },
+    ];
+    return [...Columns];   
+ 
+  }
+  const tableTrimColumns = (key) => {
+    const columnsSkelton: any = [
+      {
+        title: "S No",
+        key: "sno",
+        width: "70px",
+        responsive: ["sm"],
+        render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      },
+      {
+        title: "Trim Type",
+        dataIndex: "materialType",
+        ...getColumnSearchProps("materialType"),
+      },
+      {
+        title: "M3 Trim Code",
+        dataIndex: "m3TrimCode",
+        ...getColumnSearchProps("m3TrimCode"),
+      },
+      {
+        title: "To Be Procured Quantity",
+        dataIndex: "quantity",
+        sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+        sortDirections: ["descend", "ascend"],
+        render: (text, record) => {
+          return (
+            <>
+              {record.quantity
+                ? `${record.quantity}`
+                : "-"}
+            </>
+          );
+        },
+      },
+      {
+        title: "Remarks",
+        dataIndex: "remarks",
+      },
+      {
+        title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>genereatePoForTrim(key)} >Generate Po</Button>:'Genereate PO'}</div>,
+        dataIndex: "sm",
+        key: "sm",
+        align: "center",
+        render: (text, rowData, index) => { 
+          {console.log(rowData)}
+          return(
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+              <Form.Item name={`trim${rowData.indentTrimId}`} >
+                <Checkbox name={`trim${rowData.indentTrimId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>
+            </Form.Item>
+            </Col>
+          )
+        }
+      },
+      // {
+      //   title: "Action",
+      // dataIndex: "action",
+      // render: (text, rowData) => {
+      // return (
+      // <span>
+      // <Button
+      // type="primary"
+      // disabled={logInUser == "marketUser" ? true : false}
+      // onClick={() => genereatePoForTrim(rowData)}
+      // >
+      //           Generate PO
+      // </Button>
+      // </span>
+      // );
+      // },
+      // },
+    ];
+    return [...columnsSkelton];   
+  }
+  const genereatePoForTrim = (indentId: number) => {
+    let indentDetails = tableData.find((e)=>e.indentId === indentId);
+    console.log(indentDetails)
+    navigate('/purchase-order', { state: { data: indentDetails, type:'Indent', materialType:'Trim' } })
   };
 
   const onSegmentChange = (val) => {
@@ -661,7 +747,7 @@ export const SourcingRequisitionDynamicView = () => {
                 {tabName === "Fabric" ? (
                   <>
                     <Table
-                      columns={Columns}
+                      columns={tableColumns(item.indentId)}
                       dataSource={item.indentFabricDetails}
                       pagination={false}
                       scroll={{ x: "max-content" }}
@@ -676,7 +762,7 @@ export const SourcingRequisitionDynamicView = () => {
                 {tabName === "Trim" ? (
                   <>
                     <Table
-                      columns={columnsSkelton}
+                      columns={tableTrimColumns(item.indentId)}
                       dataSource={item.indentTrimDetails}
                       pagination={false}
                       scroll={{ x: "max-content" }}
