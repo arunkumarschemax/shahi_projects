@@ -320,7 +320,7 @@ const PPMReport = () => {
               'Global Category Core Focus': item.gccFocusCode,
               'Global Category Core Focus Description': item.gccFocusDesc,
               'Gender Age': item.genderAgeCode,
-              'Gender Age Description': '',
+              'Gender Age Description': item.genderAgeDesc,
               'Destination Country Code ': item.destinationCountryCode,
               'Destination Country Name': item.destinationCountry,
               'Geo Code': item.geoCode,

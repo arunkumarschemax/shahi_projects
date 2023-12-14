@@ -812,9 +812,9 @@ export class DpomService {
                 const CRMData1 = await this.getCRMOrderDetails1(buyerPo.po_and_line);
                 if (CRMData1.status) {
                     const orderNo = CRMData1?.data[0]?.ordno
-                    const styleNo = (CRMData1?.data[0]?.itemno).substring(0, 4)
+                    // const styleNo = (CRMData1?.data[0]?.itemno).substring(0, 4)
                     const CRMData2 = await this.getCRMOrderDetails2(orderNo);
-                    const CRMData3 = await this.getCRMOrderDetails3(styleNo);
+                    // const CRMData3 = await this.getCRMOrderDetails3(styleNo);
                     if (CRMData2.status) {
                         for (const data1 of CRMData1.data) {
                             const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY })
