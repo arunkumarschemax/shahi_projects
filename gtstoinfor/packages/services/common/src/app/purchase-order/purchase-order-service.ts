@@ -352,13 +352,7 @@ export class PurchaseOrderService {
     async GetPurchaseData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
         try {
             console.log(req,"req,ser")
-            let query = `SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,
-            expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId
-             FROM purchase_order  po 
-            LEFT JOIN style s ON s.style_id=po.style_id
-            LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id
-            LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id
-            `
+            let query = 'SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId FROM purchase_order  po LEFT JOIN style s ON s.style_id=po.style_id LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id'
 
             let param :any={}
             if(req){
@@ -366,9 +360,20 @@ export class PurchaseOrderService {
             //     query += ` where po.purchase_order_id = ${req?.id}`
             //   }
               if (req.ExternalRefNo && req.ExternalRefNo!=null){
-                query += `WHERE b.external_ref_number = '${req.ExternalRefNo}'`
+                query += ` WHERE b.external_ref_number = '${req.ExternalRefNo}'`
               }
-              
+              console.log(req.status,'=================')
+              if (req.status && req.status.length > 0) {
+                // Assuming req.status is an array of enums
+                const statusValues = req.status.map(status => `'${status}'`).join(',');
+                query += ` AND po.status IN (${statusValues})`;
+            }
+            
+            //   if (req.status){
+                
+            //     // query += `and po.status IN  ('${req.status})')`
+            //     query += ` AND po.status IN ("${req.status}")`
+            //   }
             }
             
              query+= ` ORDER BY po.expected_delivery_date`
