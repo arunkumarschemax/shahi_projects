@@ -108,7 +108,7 @@ export class ScanService {
             const findRecord =await this.emailAttachmentsRepo.findOne({ where: { filePath: writeStream.path as string } }).then(values=>{return values})
             
             if (!findRecord) {
-             await this.emailAttachmentsRepo.save({ filePath: writeStream.path as string, fileType: attachment.subtype, uniqueId: attachment.id.slice(1, -1), fileName: attachment.params.name })
+             await this.emailAttachmentsRepo.save({ filePath: writeStream.path as string, fileType: attachment.subtype, uniqueId: attachment.id.slice(1, -1), fileName: attachment.params.name, vendorNames:attachment.params.name.replace(/.pdf|.PDF/g,"") })
             }  
             this.logger.info(finishLogMessage);
             console.log(finishLogMessage);
