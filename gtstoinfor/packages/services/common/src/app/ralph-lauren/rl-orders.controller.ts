@@ -3,8 +3,10 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { RLOrdersService } from "./rl-orders.service";
 import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req } from '@nestjs/common';
 import { CommonResponseModel, PoOrderFilter } from "@project-management-system/shared-models";
-import { ApiBody } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { OrderDetailsReq } from "./dto/order-details-req";
+import { FileInterceptor } from "@nestjs/platform-express";
+import {diskStorage} from 'multer'
 
 
 @Controller("/rl-orders")
@@ -106,6 +108,37 @@ export class RLOrdersController {
             return await this.rlOrdersService.getColineOrderNo();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/fileUpload')
+    @ApiConsumes('multipart/form-data')
+    @UseInterceptors(FileInterceptor('file', {
+        limits: { files: 1 },
+        storage: diskStorage({
+            destination: './upload-files',
+            filename: (req, file, callback) => { 
+                console.log(file.originalname);
+                const name = file.originalname;
+                callback(null,`${name}`);
+            },
+        }),
+        fileFilter: (req, file, callback) => {
+            if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG|xls|xlsx|csv|pdf)$/)) {
+                return callback(new Error('Only pdf,png,jpeg,PNG,jpg,JPG,xls,xlsx and csv files are allowed!'), false);
+            }
+            callback(null, true);
+        },
+    }))
+
+    async fileUpload(@UploadedFile() file,PoNumber:string): Promise<CommonResponseModel> {
+        console.log(file,"file con")
+        console.log(PoNumber,"PoNumber con")
+
+        try {
+            return await this.rlOrdersService.updatePath(file.path, file.filename, file.mimetype)
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
         }
     }
 }

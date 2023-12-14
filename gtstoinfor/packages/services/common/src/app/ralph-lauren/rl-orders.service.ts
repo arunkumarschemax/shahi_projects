@@ -11,6 +11,7 @@ import { COLineEntity } from "./entities/co-line.entity";
 import { COLineRepository } from "./repositories/co-line.repository";
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 import axios from 'axios';
+import { PdfFileUploadEntity } from "./entities/pdf-file-upload.entity";
 const moment = require('moment');
 
 @Injectable()
@@ -26,6 +27,7 @@ export class RLOrdersService {
   async saveOrdersDataFromPDF(req: any): Promise<CommonResponseModel> {
     const transactionManager = new GenericTransactionManager(this.dataSource)
     try {
+      let saved
       await transactionManager.startTransaction()
       const flag = new Set();
       for (const item of req.poItemDetails) {
@@ -64,7 +66,7 @@ export class RLOrdersService {
             entity.size = variant.size
             entity.status = 'Revised'
             entity.upcEan = variant.upc
-            const saved = await transactionManager.getRepository(RLOrdersEntity).save(entity)
+             saved = await transactionManager.getRepository(RLOrdersEntity).save(entity)
             // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
             if (!saved) {
               flag.add(false)
@@ -81,7 +83,7 @@ export class RLOrdersService {
         return new CommonResponseModel(false, 0, 'something went wrong')
       } else {
         await transactionManager.completeTransaction()
-        return new CommonResponseModel(true, 1, 'Data saved successfully')
+        return new CommonResponseModel(true, 1, 'Data saved successfully',saved)
       }
     } catch (err) {
       await transactionManager.releaseTransaction()
@@ -589,6 +591,28 @@ export class RLOrdersService {
     else
       return new CommonResponseModel(false, 0, 'No data found');
   }
+
+  async updatePath(filePath: string, filename: string,mimetype :string): Promise<CommonResponseModel> {
+    console.log(filePath,"ser")
+    console.log(filename,"serl")
+
+    const entity = new PdfFileUploadEntity()
+    entity.pdfFileName = filename;
+    entity.filePath = filePath;
+    entity.fileType = mimetype
+    const file = await this.pdfrepo.findOne({ where: { pdfFileName: filePath } })
+    if (file) {
+        return new CommonResponseModel(false, 0, 'File with same name already uploaded');
+    } else {
+        const save = await this.pdfrepo.save(entity)
+        if (save) {
+            return new CommonResponseModel(true, 1, 'updated successfully', save);
+        }
+        else {
+            return new CommonResponseModel(false, 0, 'uploaded failed');
+        }
+    }
+}
 
 }
 

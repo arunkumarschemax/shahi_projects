@@ -133,8 +133,23 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
     const savePdfFields = () => {
         rlService.saveOrdersDataFromPDF(poPdfData).then((res) => {
+            console.log(res,"iiiii")
             if (res.status) {
                 onReset()
+                if (fileList){
+                const formData = new FormData();
+                    fileList.forEach((file: any) => {
+                        formData.append('file', file);
+                        formData.append('PoNumber', poPdfData?.poNumber);
+                      })
+                      console.log(formData,"form")
+                      rlService.fileUpload(formData).then((res) => {
+                        if(res.status){
+                            message.success(res.internalMessage)
+                        }
+                      })    
+                }
+
                 // alert(res.internalMessage)
                 message.success(res.internalMessage)
             } else {
@@ -142,6 +157,8 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
             }
         })
     }
+
+  console.log(poPdfData?.poNumber,"addddddddd")
 
     function onReset() {
         setFileList([]);

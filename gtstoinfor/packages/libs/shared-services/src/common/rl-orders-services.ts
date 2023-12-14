@@ -41,4 +41,9 @@ export class RLOrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.rlordersController + "/getColineOrderNo")
     }
 
+    async fileUpload(formData: any): Promise<CommonResponseModel> {
+        // console.log(formData,"shar")
+        return this.axiosPostCall(this.rlordersController + "/fileUpload", formData)
+    }
+
 }
