@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { FabricSubType } from "../fabric-sub-types/fabric-sub-type.entity";
+import { FabricWeave } from "../fabric weave/fabric-weave.entity";
 
 @Entity('fabric_type')
 export class FabricType {
@@ -52,4 +53,7 @@ export class FabricType {
 
       @OneToMany(()=>FabricSubType, fabricSubtype=>fabricSubtype.fabricType,{cascade:true})
       fabrictypeName:FabricSubType[];
+
+      @OneToMany(()=>FabricWeave, fabricWeave=>fabricWeave.fabricType,{cascade:true})
+      fabricWeave:FabricWeave[];
 }

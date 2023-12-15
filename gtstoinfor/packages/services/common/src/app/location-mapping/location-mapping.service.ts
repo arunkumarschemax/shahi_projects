@@ -135,10 +135,89 @@ export class LocationMappingService {
         query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
       }
      
-
     }
+    
     // const data = await this.datasource.query(query,param)
+
         query += ` GROUP BY gi.grn_item_id `
+            const res = await AppDataSource.query(query,param);
+            if (res) {
+                return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
+            }
+
+        } catch (error) {
+            return error;
+        }
+    }
+
+    
+    
+    async getgrn(req?:ExternalRefReq): Promise<CommonResponseModel> {
+        try {
+            console.log(req,"LLLLLL");
+            
+            let query = `SELECT DISTINCT
+            IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber
+            FROM grn_items gi
+            LEFT JOIN grn g ON g.grn_id = gi.grn_id 
+            LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
+            LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND g.item_type = "FABRIC"
+            LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND g.item_type != "FABRIC"
+            LEFT JOIN stock_log st ON st.grn_item_id = gi.grn_item_id
+            LEFT JOIN buyers idfb ON idfb.buyer_id = gi.buyer_id
+            LEFT JOIN style sty ON sty.style_id = g.style_id
+            LEFT JOIN uom u ON u.id = gi.uom_id
+            WHERE gi.location_mapped_status != 'COMPLETED' ;
+            `
+            let param :any={}
+    if(req){
+      if (req.externalRefNo){
+        query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
+      }
+      if (req.grnNo){
+        query += ` AND g.grn_item_no = '${req.grnNo}'`
+      }
+   
+    }
+    
+            const res = await AppDataSource.query(query,param);
+            if (res) {
+                return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
+            }
+
+        } catch (error) {
+            return error;
+        }
+    }
+   
+    async getMaterial(req?:ExternalRefReq): Promise<CommonResponseModel> {
+        try {
+            console.log(req,"LLLLLL");
+            
+            let query = `SELECT DISTINCT g.item_type AS materialType,
+            IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode,
+            g.grn_number AS grnNumber
+        FROM grn_items gi
+        LEFT JOIN grn g ON g.grn_id = gi.grn_id 
+        LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
+        LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND g.item_type = "FABRIC"
+        LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND g.item_type != "FABRIC"
+        LEFT JOIN stock_log st ON st.grn_item_id = gi.grn_item_id
+        LEFT JOIN buyers idfb ON idfb.buyer_id = gi.buyer_id
+        LEFT JOIN style sty ON sty.style_id = g.style_id
+        LEFT JOIN uom u ON u.id = gi.uom_id
+        WHERE gi.location_mapped_status != 'COMPLETED'; `
+            let param :any={}
+    if(req){
+      if (req.externalRefNo){
+        query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
+      }
+      if (req.material){
+        query += ` AND g.item_type = '${req.material}'`
+      }
+   
+    }
+    
             const res = await AppDataSource.query(query,param);
             if (res) {
                 return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
@@ -163,17 +242,38 @@ export class LocationMappingService {
             stk_lg.grn_item_id,
             stk_lg.stock_id,
             SUM(stk_lg.quantity) AS total_quantity,
-            m3_it.item_code,
+            m3_it.item_code AS itemcode,
+            m3_it.fabric_type,
+            m3_it.item_type as type,
+            m3tr.trim_type as type,
+            m3_it.yarn_count,
+            m3_it.construction,
+            m3_it.weave,
+            m3_it.finish,
+            m3tr.trim_code AS itemcode,
+            m3_it.shrinkage,
             m3_it.content,
             rk_po.rack_position_name,
-            rk_po.status
+            rk_po.status,
+            u.uom,
+            grn.grn_item_no,
+            grn.received_quantity,
+            grn.accepted_quantity,
+            grn.rejected_quantity,
+            grn.conversion_quantity
+
         FROM 
             stock_log AS stk_lg
         LEFT JOIN 
             rack_position AS rk_po ON rk_po.position_id = stk_lg.location_id
             LEFT JOIN 
             m3_items AS m3_it ON m3_it.m3_items_id = stk_lg.m3_item
-        WHERE 
+            LEFT JOIN m3_trims AS m3tr ON m3tr.buyer_id= stk_lg.buyer_id
+            LEFT JOIN uom AS u  ON  u.id = stk_lg.uom_id
+            LEFT JOIN grn_items AS grn ON grn.grn_item_id= stk_lg.grn_item_id
+
+
+         WHERE 
             stk_lg.grn_item_id = '${req.id}'
         GROUP BY 
             stk_lg.location_id,

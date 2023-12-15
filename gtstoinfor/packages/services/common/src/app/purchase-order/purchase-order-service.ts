@@ -248,12 +248,13 @@ export class PurchaseOrderService {
                 poi.m3_item_id AS m3ItemCodeId,mt.trim_type as m3ItemType,poi.purchase_order_id AS purchaseOrderId, poi.po_quantity AS poQuantity,poi.purchase_order_item_id as poItemId,
                 poi.quantity_uom_id AS quantityUomId,u.uom,poi.grn_quantity AS grnQuantity,poi.indent_item_id as indentItemId, poi.sample_item_id as sampleItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour`
                 if(req.poAgainst == 'Indent'){
-                    query = query + `,i.indent_id as indentId `
+                    query = query + `,i.indent_id as indentId`
                 }
                 if(req.poAgainst == 'Sample Order'){
                     query = query +  `,sr.sample_request_id as sampleRequestId `
                 }
-                query = query + `FROM purchae_order_items poi
+                query = query + `
+                FROM purchae_order_items poi
                 LEFT JOIN taxes t on t.tax_id = poi.tax
                 LEFT JOIN uom u ON u.id = poi.quantity_uom_id
                 LEFT JOIN m3_trims mt ON mt.m3_trim_Id=poi.m3_item_id
@@ -271,21 +272,20 @@ export class PurchaseOrderService {
                 LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = mt.trim_mapping_id
                 LEFT JOIN colour cl ON cl.colour_id = mt.color_id
                 LEFT JOIN uom uom ON uom.id = mt.uom_id
+                LEFT JOIN purchase_order po ON po.purchase_order_id = poi.purchase_order_id
+                LEFT JOIN buyers b ON b.buyer_id = po.buyer_id
+                LEFT JOIN style s ON s.style_id = poi.style_id
                 `
                 if (req.poAgainst == 'Indent') {
                     query = query + ` 
                     LEFT JOIN indent_trims it ON it.itrims_id = poi.indent_item_id
                     LEFT JOIN indent i ON i.indent_id = it.indent_id 
-                    LEFT JOIN style s ON s.style_id = i.style
-                    LEFT JOIN buyers b ON b.buyer_id = i.buyer_id 
                     WHERE poi.purchase_order_id = ${req.poId}`
                 }
                 if (req.poAgainst == 'Sample Order') {
                     query = query + `
                      LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id  = poi.sample_item_id   
-                     LEFT JOIN sample_request sr ON sr.sample_request_id  = srf.sample_request_id 
-                     LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id 
-                     LEFT JOIN style s ON s.style_id = sr.style_id
+                     LEFT JOIN sample_request sr ON sr.sample_request_id  = srf.sample_request_id
                      WHERE poi.purchase_order_id = ${req.poId}`
                 }
 
@@ -446,7 +446,7 @@ export class PurchaseOrderService {
     }
     async GetPurchaseTrimData(purchaseOrderId: number): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT ri.trim_code AS trimcode,ri.trim_type AS trimtype,pg.product_group AS productGroup,po_trim_id AS poTrimid,pt.product_group_id AS productGrouoId,trim_id AS trimId,m3_trim_code AS m3trimCode,
+            let query = `SELECT ri.trim_code AS trimcode,ri.trim_type AS trimtype,pg.product_group AS productGroup,po_trim_id AS poTrimid,pt.product_group_id AS productGrouoId,trim_id AS trimId,m3_trim_code AS m3trimCode ,
             purchase_order_id,colour_id AS clourId,
                        indent_trim_id AS indentTrimId,po_quantity AS poQuantity,trim_item_status AS trimItemStaus ,
                        grn_quantity AS grnQuantity 
@@ -526,20 +526,25 @@ export class PurchaseOrderService {
         // let poData = `select * from purchase_order po `
         if(poTypeRes[0].po_material_type == 'Fabric'){
             concatString = ` 
-            left join m3_items mi on mi.m3_items_Id = poi.m3_item_id 
+            left join m3_items mi on mi.m3_items_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id 
             LEFT JOIN indent_fabric ii ON ii.ifabric_id = poi.indent_item_id`
-            columnName = 'mi.item_code'
+            columnName = 'mi.item_code,mi.hsn_code as hsnCode,mi.description,u.uom'
         //     poData = poData+` left join purchase_order_fabric pof on pof.purchase_order_id = po.purchase_order_id `
         }else{
             concatString = ` 
-            left join m3_trims mi on mi.m3_trim_Id = poi.m3_item_id
+            left join m3_trims mi on mi.m3_trim_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id
             LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id`
-            columnName = 'mi.trim_code as item_code'
+            columnName = 'mi.trim_code as item_code , mi.hsn_code as hsnCode,mi.description ,u.uom'
         //     poData = poData+` left join purchase_order_trim pot on pot.purchase_order_id = po.purchase_order_id`
         }
         // poData = poData+` where po.purchase_order_id = ${req.id}`
         // const podatares = await this.dataSource.query(poData)
-        const poTrimData = `select po.*,poi.*,${columnName},i.request_no as indentNo,i.indent_date as indentDate,v.vendor_name,v.contact_number,v.bank_acc_no,v.gst_number,v.postal_code,f.address,t.tax_percentage AS taxPercentage from purchase_order po left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id ${concatString} LEFT JOIN indent i ON i.indent_id = ii.indent_id left join factory f on f.id = po.delivery_address left join vendors v on v.vendor_id = po.vendor_id LEFT JOIN taxes t ON t.tax_id = poi.tax
+        const poTrimData = `select po.*,poi.*,${columnName},poi.unit_price,i.request_no as indentNo,i.indent_date as indentDate,v.vendor_name,v.contact_number,v.bank_acc_no,v.gst_number,v.postal_code,f.address,t.tax_percentage AS taxPercentage ,cur.currency_name as currencyName
+        from purchase_order po
+        left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id ${concatString}
+        LEFT JOIN indent i ON i.indent_id = ii.indent_id left join factory f on f.id = po.delivery_address 
+        left join currencies cur on cur.currency_id=po.currency_id  
+        left join vendors v on v.vendor_id = po.vendor_id LEFT JOIN taxes t ON t.tax_id = poi.tax
         where po.purchase_order_id = ${req.id} `
         console.log(poTrimData,'ppppppphhh')
         const poTrimdatares = await this.dataSource.query(poTrimData)
