@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, Select, Tooltip, message, Form } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { BuyerDestinationService, ColourService } from '@project-management-system/shared-services';
+import AlertMessages from '../common/common-functions/alert-messages';
 
-const SizeDetail = ({props,buyerId}) => {
+const SizeDetail = ({props,buyerId,form}) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [color, setColor] = useState<any[]>([])
@@ -11,8 +12,7 @@ const SizeDetail = ({props,buyerId}) => {
   const colorService = new ColourService()
   const buyerDestinaytionService=new BuyerDestinationService()
   const { Option } = Select;
-  const [form] = Form.useForm();
-  const [onchangeData, setOnchangeData] = useState([]); 
+  const [onchangeData, setOnchangeData] = useState<any[]>([]); 
 
   useEffect(()=>{
     getColors()
@@ -27,7 +27,7 @@ const SizeDetail = ({props,buyerId}) => {
   const getColors = () => {
     colorService.getAllActiveColour().then((res) => {
       if (res.status) {
-        console.log(res,'size data')
+        // console.log(res,'size data')
         setColor(res.data);
       }
     });
@@ -52,35 +52,49 @@ const SizeDetail = ({props,buyerId}) => {
     setCount(count + 1);
   };
 
-   const handleInputChange = (colourId, sizeId, quantity,recordKey) => {
+   const handleInputChange = (colourId, sizeId, quantity,recordKey,name) => {
     console.log(recordKey)
-    let newData = [...onchangeData];
-    const updatedData = data.map((record) => {
-      if (record.key === recordKey) {
-        let existingEntry = newData.find((entry) => entry.colour === colourId);
-        if (!existingEntry) {
-          existingEntry = {
-            colour: colourId,
-            sizeInfo: [],
-          };
-          newData.push(existingEntry);
-        }
-        if (quantity !== 0) {
-          let sizeInfoEntry = existingEntry.sizeInfo.find((info) => info.sizeId === sizeId);
-          if (!sizeInfoEntry) {
-            sizeInfoEntry = {
-              sizeId: sizeId,
-              quantity: quantity,
+    console.log(onchangeData)
+    console.log(colourId)
+    console.log(form.getFieldsValue())
+    let isDuplicate = onchangeData.find((r) => r.colour === colourId);
+    console.log(isDuplicate);
+    console.log(isDuplicate?.colour);
+
+    if(isDuplicate?.colour > 0 && name === "colorId")
+    {
+      AlertMessages.getErrorMessage("Duplicate Colors not allowed. ")
+      form.setFieldValue(`colorId${recordKey}`,0)
+    }
+    else{
+      let newData = [...onchangeData];
+      const updatedData = data.map((record) => {
+        if (record.key === recordKey) {
+          let existingEntry = newData.find((entry) => entry.colour === colourId);
+          if (!existingEntry) {
+            existingEntry = {
+              colour: colourId,
+              sizeInfo: [],
             };
-            existingEntry.sizeInfo.push(sizeInfoEntry);
-          } else {
-            sizeInfoEntry.quantity = quantity;
+            newData.push(existingEntry);
+          }
+          if (quantity !== 0) {
+            let sizeInfoEntry = existingEntry.sizeInfo.find((info) => info.sizeId === sizeId);
+            if (!sizeInfoEntry) {
+              sizeInfoEntry = {
+                sizeId: sizeId,
+                quantity: quantity,
+              };
+              existingEntry.sizeInfo.push(sizeInfoEntry);
+            } else {
+              sizeInfoEntry.quantity = quantity;
+            }
           }
         }
-      }
-      setOnchangeData(newData); 
-      props(newData)
-    });
+        setOnchangeData(newData); 
+        props(newData)
+      });
+    }
     };
 
 
@@ -89,21 +103,21 @@ const SizeDetail = ({props,buyerId}) => {
     setData(updatedData);
     props(updatedData)
   };
-  const add =()=>{
-    form.validateFields().then((val) =>{
-      console.log(val)
-    })
-  }
+  // const add =()=>{
+  //   form.validateFields().then((val) =>{
+  //     // console.log(val)
+  //   })
+  // }
 
-  const calculateTotal = (size) => {
-    return data.reduce((total, record) => total + parseInt(record[size] || 0), 0);
-  };
+  // const calculateTotal = (size) => {
+  //   return data.reduce((total, record) => total + parseInt(record[size] || 0), 0);
+  // };
 
   const sizeColumns = sizeData.map(size => ({
     title: size.size,
     dataIndex: size.size,
     render:(_, record) =>{
-      console.log(record)
+      // console.log(record)
       return (
         <><Form.Item name={`sizeId${size.sizeId}+${record.key}`} initialValue={size.sizeId} hidden>
           <Input
@@ -125,7 +139,7 @@ const SizeDetail = ({props,buyerId}) => {
                   form.getFieldValue(`colorId${record.key}`),
                   size.sizeId,
                   e.target.value,
-                  record.key
+                  record.key,'quantity'
                 )
               }
               type='number'
@@ -158,8 +172,9 @@ const SizeDetail = ({props,buyerId}) => {
           showSearch
           optionFilterProp="children"
           placeholder="Select Color"
-          onChange={(value) => handleInputChange(value, 0, 0, record.key)}
+          onChange={(value) => handleInputChange(value, 0, 0, record.key,'colorId')}
         >
+          <Option name={`colorId${record.key}`} key={0} value={0}>Please Select Color</Option>
           {color.map((e) => {
                   return (
                     <Option name={`colorId${record.key}`} key={e.colourId} value={e.colourId}>

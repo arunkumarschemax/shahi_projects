@@ -116,11 +116,14 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       title: 'Discount %',
       key: 'Discount',
       dataIndex: 'discount',
+      render: (text) => {
+        return text !== undefined && text !== null ? text : '-';
+      },
     },
     {
       title: 'Tax %',
       key: 'Tax %',
-      dataIndex: 'tax',
+      dataIndex: 'taxPercentage',
     },
     {
       title: 'Total Amount',
@@ -272,12 +275,14 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       <Card>
         <Card title="PO Detail View" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span style={{ color: 'white' }} > <Button className='panel_button' onClick={openPrint}>Print</Button> <Button className='panel_button' onClick={() => navigate('/purchase-view')}>Po View</Button> </span>} >
           <Descriptions size='small' >
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>PO Against</span>}>{data[0]?.po_against}</DescriptionsItem>
 
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Po Number</span>}>{data[0]?.po_number}</DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Po Date</span>}>{moment(data[0]?.purchase_order_date).format('YYYY-MM-DD')}
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>PO Number</span>}>{data[0]?.po_number}</DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>PO Date</span>}>{moment(data[0]?.purchase_order_date).format('YYYY-MM-DD')}
               {data[0]?.orderDates}</DescriptionsItem>
             {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Material Type</span>}>{data[0]?.materialType}</DescriptionsItem> */}
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>PO Against</span>}>{data[0]?.po_against}</DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent No</span>}>{data[0]?.indentNo}</DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent Date</span>}>{moment(data[0]?.indentDate).format('YYYY-MM-DD')}</DescriptionsItem>
 
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Vendor Name</span>}>{data[0]?.vendor_name}</DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>ETD</span>}>{moment(data[0]?.expected_delivery_date).format('YYYY-MM-DD')}
@@ -319,7 +324,7 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
             <Modal
               className='print-docket-modal'
               key={'modal' + Date.now()}
-              width={'50%'}
+              width={'70%'}
               style={{ top: 30, alignContent: 'right' }}
               visible={isModalVisible}
               title={<React.Fragment>

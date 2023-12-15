@@ -386,13 +386,7 @@ export class PurchaseOrderService {
     async GetPurchaseData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
         try {
             console.log(req,"req,ser")
-            let query = `SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,
-            expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId
-             FROM purchase_order  po 
-            LEFT JOIN style s ON s.style_id=po.style_id
-            LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id
-            LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id
-            `
+            let query = 'SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId FROM purchase_order  po LEFT JOIN style s ON s.style_id=po.style_id LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id'
 
             let param :any={}
             if(req){
@@ -400,9 +394,20 @@ export class PurchaseOrderService {
             //     query += ` where po.purchase_order_id = ${req?.id}`
             //   }
               if (req.ExternalRefNo && req.ExternalRefNo!=null){
-                query += `WHERE b.external_ref_number = '${req.ExternalRefNo}'`
+                query += ` WHERE b.external_ref_number = '${req.ExternalRefNo}'`
               }
-              
+              console.log(req.status,'=================')
+              if (req.status && req.status.length > 0) {
+                // Assuming req.status is an array of enums
+                const statusValues = req.status.map(status => `'${status}'`).join(',');
+                query += ` AND po.status IN (${statusValues})`;
+            }
+            
+            //   if (req.status){
+                
+            //     // query += `and po.status IN  ('${req.status})')`
+            //     query += ` AND po.status IN ("${req.status}")`
+            //   }
             }
             
              query+= ` ORDER BY po.expected_delivery_date`
@@ -441,7 +446,7 @@ export class PurchaseOrderService {
     }
     async GetPurchaseTrimData(purchaseOrderId: number): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT ri.trim_code AS trimcode,ri.trim_type AS trimtype,pg.product_group AS productGroup,po_trim_id AS poTrimid,pt.product_group_id AS productGrouoId,trim_id AS trimId,m3_trim_code AS m3trimCode,
+            let query = `SELECT ri.trim_code AS trimcode,ri.trim_type AS trimtype,pg.product_group AS productGroup,po_trim_id AS poTrimid,pt.product_group_id AS productGrouoId,trim_id AS trimId,m3_trim_code AS m3trimCode ,
             purchase_order_id,colour_id AS clourId,
                        indent_trim_id AS indentTrimId,po_quantity AS poQuantity,trim_item_status AS trimItemStaus ,
                        grn_quantity AS grnQuantity 
@@ -520,17 +525,27 @@ export class PurchaseOrderService {
         let columnName
         // let poData = `select * from purchase_order po `
         if(poTypeRes[0].po_material_type == 'Fabric'){
-            concatString = ` left join m3_items mi on mi.m3_items_Id = poi.m3_item_id`
-            columnName = 'mi.item_code'
+            concatString = ` 
+            left join m3_items mi on mi.m3_items_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id 
+            LEFT JOIN indent_fabric ii ON ii.ifabric_id = poi.indent_item_id`
+            columnName = 'mi.item_code,mi.hsn_code as hsnCode,mi.description,u.uom'
         //     poData = poData+` left join purchase_order_fabric pof on pof.purchase_order_id = po.purchase_order_id `
         }else{
-            concatString = ` left join m3_trims mi on mi.m3_trim_Id = poi.m3_item_id`
-            columnName = 'mi.trim_code as item_code'
+            concatString = ` 
+            left join m3_trims mi on mi.m3_trim_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id
+            LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id`
+            columnName = 'mi.trim_code as item_code , mi.hsn_code as hsnCode,mi.description ,u.uom'
         //     poData = poData+` left join purchase_order_trim pot on pot.purchase_order_id = po.purchase_order_id`
         }
         // poData = poData+` where po.purchase_order_id = ${req.id}`
         // const podatares = await this.dataSource.query(poData)
-        const poTrimData = `select po.*,poi.*,${columnName},v.vendor_name,v.contact_number,v.bank_acc_no,v.gst_number,v.postal_code,f.address from purchase_order po left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id ${concatString} left join factory f on f.id = po.delivery_address left join vendors v on v.vendor_id = po.vendor_id where po.purchase_order_id = ${req.id} `
+        const poTrimData = `select po.*,poi.*,${columnName},poi.unit_price,i.request_no as indentNo,i.indent_date as indentDate,v.vendor_name,v.contact_number,v.bank_acc_no,v.gst_number,v.postal_code,f.address,t.tax_percentage AS taxPercentage ,cur.currency_name as currencyName
+        from purchase_order po
+        left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id ${concatString}
+        LEFT JOIN indent i ON i.indent_id = ii.indent_id left join factory f on f.id = po.delivery_address 
+        left join currencies cur on cur.currency_id=po.currency_id  
+        left join vendors v on v.vendor_id = po.vendor_id LEFT JOIN taxes t ON t.tax_id = poi.tax
+        where po.purchase_order_id = ${req.id} `
         console.log(poTrimData,'ppppppphhh')
         const poTrimdatares = await this.dataSource.query(poTrimData)
         // console.log(podatares)
