@@ -65,6 +65,10 @@ const FabricsForm = (props:FabricsFormProps) => {
       fabricCode(props.buyerId)
     }
   },[props.buyerId])
+
+  useEffect(() =>{
+    console.log(props.sizeDetails)
+  },[props.sizeDetails])
   useEffect(() =>{
       getUom()
   },[])
@@ -148,6 +152,30 @@ const FabricsForm = (props:FabricsFormProps) => {
       });
     }
     
+    else if(field === 'colourId'){
+      console.log(props.sizeDetails);
+      console.log(props.sizeDetails.find((s) => s.colour === e));
+
+      if(props.sizeDetails.find((s) => s.colour === e)?.colour > 0){
+        updatedData = data.map((record) => {
+          if (record.key === key) {
+            return { ...record, [field]: e };
+          }
+          return record;
+        });
+      }
+      else{
+        AlertMessages.getErrorMessage("Fabric color is not in size details")
+        form.setFieldValue(`colorId${key}`,0)
+        updatedData = data.map((record) => {
+          // if (record.key === key) {
+          //   return { ...record, [field]: e };
+          // }
+          return record;
+        });
+      }
+    }
+
     else {
       updatedData = data.map((record) => {
         if (record.key === key) {
@@ -183,7 +211,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     getColors()
   },[])
   useEffect(() =>{
-    console.log(props.sizeDetails[0])
+    console.log(props.sizeDetails)
   },[props.sizeDetails])
 
   const fabricCode = (buyerId) =>{
@@ -311,6 +339,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             optionFilterProp="children"
             placeholder="Select Fabric Code"
           >
+          <Option name={`colorId${record.key}`} key={0} value={0}>Please Select Color</Option>
             {color.map((e) => {
               return (
                 <Option name={`colorId${record.key}`} key={e.colourId} value={e.colourId}>
@@ -536,7 +565,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   const renderItems = (record:any) => {
     return  <Table
     rowKey={record.stockId}
-     dataSource={stockData}
+     dataSource={record.allocatedStock}
       columns={renderColumnForFabric} 
       pagination={false}
        />;
