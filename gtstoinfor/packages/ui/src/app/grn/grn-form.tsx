@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Modal, Row, Select, Table, Tabs, Typography, notification } from 'antd'
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Modal, Row, Select, Table, Tabs, Typography, message, notification } from 'antd'
 import style from 'antd/es/alert/style'
 import TabPane from 'antd/es/tabs/TabPane'
 import React, { useEffect, useState } from 'react'
@@ -8,7 +8,7 @@ import { BuyersService, GRNService, PurchaseOrderservice, TrimParamsMappingServi
 import TextArea from 'antd/es/input/TextArea'
 import GRNFabricForm from './grn-fabric'
 import GRNTrimForm from './grn-trim'
-import { GRNTypeEnum, GrnDto, GrnItemsDto, GrnItemsFormDto, ItemTypeEnumDisplay, PoItemEnum, PurchaseOrderStatus, TrimIdRequestDto, VendorIdReq } from '@project-management-system/shared-models'
+import { GRNTypeEnum, GRNTypeEnumDisplay, GrnDto, GrnItemsDto, GrnItemsFormDto, ItemTypeEnumDisplay, PoItemEnum, PurchaseOrderStatus, TrimIdRequestDto, VendorIdReq } from '@project-management-system/shared-models'
 import AlertMessages from '../common/common-functions/alert-messages'
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from 'react-router-dom'
@@ -66,18 +66,22 @@ const GRNForm = () => {
 
 
   const createGrn = async () => {
-    await form.validateFields()
-    const values = form.getFieldsValue()
-    console.log(values,'rrrr')
-    const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '',values.grnType, values.invoiceNo, poData?.poMaterialType, values.grnAmount,form.getFieldValue('invoiceDate').format('YYYY-MM-DD'));
-    grnService.createGrn(req).then((res) => {
-      if (res.status) {
-        AlertMessages.getSuccessMessage(res.internalMessage);
-        navigate('/grn-view')
-      } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    })
+    form.validateFields().then(() => {
+
+      const values = form.getFieldsValue()
+      console.log(values,'rrrr')
+      const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '',values.grnType, values.invoiceNo, poData?.poMaterialType, values.grnAmount,form.getFieldValue('invoiceDate').format('YYYY-MM-DD'));
+      grnService.createGrn(req).then((res) => {
+        if (res.status) {
+          AlertMessages.getSuccessMessage(res.internalMessage);
+          navigate('/grn-view')
+        } else {
+          AlertMessages.getErrorMessage(res.internalMessage);
+        }
+      })
+    }).catch(() => {
+      // message.error('Please fill all required fields')
+  })
   };
 
 
@@ -111,6 +115,7 @@ const GRNForm = () => {
     }else{
       setMapData([])
     }
+
     const req = new VendorIdReq(0, val, option?.name, option?.val);
     poService.getPODataById(req).then((res) => {
       if (res.status) {
@@ -168,80 +173,20 @@ const GRNForm = () => {
     });
   }
 
-
   const columns: any = [
     {
       title: <div style={{ textAlign: "center" }}>Buyer</div>,
       dataIndex: 'buyer',
       fixed: 'left',
     },
-    {
-      title: <div style={{ textAlign: "center" }}> Item Type</div>,
-      dataIndex: 'm3ItemType',
-      fixed: 'left',
-
-    },
-    mapData.length > 0?{
-      title: <div style={{textAlign:"center"}}>Trim Category</div>,
-      dataIndex: "trimCategory",
-    }: {},
-    mapData[0]?.structure === true?{
-      title: <div style={{textAlign:"center"}}>Structure</div>,
-      dataIndex: "structure",
-    }: {},
-    mapData[0]?.category === true?{
-      title: <div style={{textAlign:"center"}}>Category</div>,
-      dataIndex: "category",
-    }:{},
-    mapData[0]?.content === true?{
-      title: <div style={{textAlign:"center"}}>Content</div>,
-      dataIndex: "content",
-    }:{},
-    mapData[0]?.type === true?{
-      title: <div style={{textAlign:"center"}}>Type</div>,
-      dataIndex: "type",
-    }: {},
-    mapData[0]?.finish === true?{
-      title: <div style={{textAlign:"center"}}>Finish</div>,
-      dataIndex: "finish",
-    }: {},
-    mapData[0]?.hole === true?{
-      title: <div style={{textAlign:"center"}}>Hole</div>,
-      dataIndex: "hole",
-    }: {},
-    mapData[0]?.quality === true?{
-      title: <div style={{textAlign:"center"}}>Quality</div>,
-      dataIndex: "qualityName",
-    }: {},
-    mapData[0]?.thickness === true?{
-      title: <div style={{textAlign:"center"}}>Thickness</div>,
-      dataIndex: "thickness",
-    }: {},
-    mapData[0]?.variety === true?{
-      title: <div style={{textAlign:"center"}}>Variety</div>,
-      dataIndex: "variety",
-    }: {},
-    mapData[0]?.uom === true?{
-      title: <div style={{textAlign:"center"}}>UOM</div>,
-      dataIndex: "UOM",
-    }: {},
-    mapData[0]?.color === true?{
-      title: <div style={{textAlign:"center"}}>Color</div>,
-      dataIndex: "color",
-    }: {},
-    mapData[0]?.logo === true?{
-      title: <div style={{textAlign:"center"}}>Logo</div>,
-      dataIndex: "logo",
-    }: {},
-    mapData[0]?.part === true?{
-      title: <div style={{textAlign:"center"}}>Part</div>,
-      dataIndex: "part",
+    poData?.poMaterialType !== 'Fabric'?{
+      title:<div style={{textAlign:"center"}}>Trim Params</div>,
+      dataIndex:"trimParams",
     }:{},
     {
       title: <div style={{ textAlign: "center" }}> Item Code</div>,
-      fixed: 'left',
+      // fixed: 'left',
       dataIndex: 'm3ItemCode',
-
     },
     {
       title: <div style={{ textAlign: "center" }}>PO Qty</div>,
@@ -526,11 +471,16 @@ const GRNForm = () => {
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                 <Form.Item name='grnType' label='GRN Type' dependencies={['purchaseOrderId']} >
                   <Select showSearch allowClear optionFilterProp="children" disabled>
-                    {Object.values(GRNTypeEnum).map((value) => (
+                  {Object.values(GRNTypeEnumDisplay).map((val) => (
+            <Select.Option key={val.name} value={val.name}>
+              {val.displayVal}
+            </Select.Option>
+          ))}
+                    {/* {Object.values(GRNTypeEnum).map((value) => (
                       <Option key={value} value={value}>
                         <span style={{ fontWeight: 'bold' }}>{value}</span>
                       </Option>
-                    ))}
+                    ))} */}
                   </Select>
                 </Form.Item>
               </Col>
@@ -580,7 +530,7 @@ const GRNForm = () => {
             
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
               <Form.Item name='invoiceDate' label='Invoice Date'
-              // s rules={[{ required: true, message: 'Date is required' }]}
+              rules={[{ required: true, message: 'Date is required' }]}
                >
                 <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday />
               </Form.Item>

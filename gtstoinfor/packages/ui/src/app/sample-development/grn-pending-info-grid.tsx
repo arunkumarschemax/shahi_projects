@@ -147,7 +147,7 @@ const getMaterial=()=>{
                 
                 <span>
                     <Button type="primary" shape="round" size="small"
-                        disabled={Number(Number(rowData.quantity) - Number(rowData.allocatedQty)) > 0}
+                        disabled={Number(rowData.balance) < 0}
                         onClick={() => {
                             setData(rowData);
                         }}>
@@ -180,7 +180,7 @@ const getMaterial=()=>{
     return (
         <div>
             <Card 
-            title={<span >GRN Pending Details</span>}
+            title={<span >Location Mapping Pending Details</span>}
                 // style={{ textAlign: 'center' }}
                  headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
                     <Form form={form} onFinish={onFinish}>

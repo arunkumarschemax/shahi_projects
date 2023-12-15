@@ -260,6 +260,7 @@ export class SampleRequestService {
         sampleFabricInfo.push(fabricEntity)
         const fabricInfoReq = new FabricInfoReq(fabricObj.fabricCode,fabricObj.colourId,fabricObj.consumption,fabricObj.uomId,fabricObj.remarks)
         indentFabInfo.push(fabricInfoReq);
+      }
       sampleReqEntity.sampleReqFabricInfo = sampleFabricInfo;
       let indentTrimInfo : TrimInfoReq[] = [];
       for (const trimObj of req.trimInfo) {
@@ -290,7 +291,8 @@ export class SampleRequestService {
       console.log(save);
 
       // save = await this.sampleRepo.save(sampleReqEntity)
-      if (save) {
+      if (save) 
+      {
         if (req.fabricInfo) {
           for (const fabricData of req.fabricInfo) {
             const quantityWithWastage = Number(fabricData.consumption) + Number((2 / 100) * fabricData.consumption)
@@ -316,87 +318,109 @@ export class SampleRequestService {
             // saveBomDetails = await this.bomRepo.save(bomEntity)
           }
         }
+        let fabBomStatus= BomStatusEnum.OPEN
         let fabricAllocation;
         let allocationEntity =  new MaterialAllocationEntity()
         let allocationItemsdata:MaterialAllocationItemsEntity[] = []
         let totalAllocated = 0
-          for (let fabricObj of req.fabricInfo) {
-            for (const stock of fabricObj?.allocatedStock) {
-              let allocationItemsEntity =  new MaterialAllocationItemsEntity()
-              if(stock.checkedStatus === 1 &&  stock.issuedQty > 0){
-                totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
-                allocationItemsEntity.allocateQuantity = stock.issuedQty;
-                allocationItemsEntity.locationId = stock.locationId;
-                allocationItemsEntity.stockId = stock.stockId;
-                allocationItemsdata.push(allocationItemsEntity);
-                let stockUpdate = await manager.getRepository(StocksEntity).update({id:stock.stockId},{allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}`});
-                if(stockUpdate.affected === 0){
-                  await manager.releaseTransaction();
-                }
+        for (let fabricObj of req.fabricInfo) {
+          for (const stock of fabricObj?.allocatedStock) {
+            let allocationItemsEntity =  new MaterialAllocationItemsEntity()
+            if(stock.checkedStatus === 1 &&  stock.issuedQty > 0){
+              totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
+              allocationItemsEntity.allocateQuantity = stock.issuedQty;
+              allocationItemsEntity.locationId = stock.locationId;
+              allocationItemsEntity.stockId = stock.stockId;
+              allocationItemsdata.push(allocationItemsEntity);
+              let stockUpdate = await manager.getRepository(StocksEntity).update({id:stock.stockId},{allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}`});
+              if(stockUpdate.affected === 0){
+                await manager.releaseTransaction();
               }
             }
-            allocationEntity.buyerId = req.buyerId
-            allocationEntity.itemType = ItemTypeEnum.FABRIC;
-            allocationEntity.m3ItemId = fabricObj.fabricCode;
-            allocationEntity.totalIssueQty = totalAllocated;
-            allocationEntity.sampleOrderId = save.SampleRequestId;
-            allocationEntity.sampleItemId = save.sampleReqFabricInfo.find((e) => e.fabricCode === fabricObj.fabricCode).fabricInfoId;
-            fabricAllocation = await manager.getRepository(MaterialAllocationEntity).save(allocationEntity)
-            if(!fabricAllocation){
+          }
+          console.log("save.sampleReqFabricInfo.find((e) => e.fabricCode === fabricObj.fabricCode)");
+          console.log(save.sampleReqFabricInfo.find((e) => e.fabricCode === fabricObj.fabricCode));
+
+          allocationEntity.buyerId = req.buyerId
+          allocationEntity.itemType = ItemTypeEnum.FABRIC;
+          allocationEntity.m3ItemId = fabricObj.fabricCode;
+          allocationEntity.totalIssueQty = totalAllocated;
+          allocationEntity.sampleOrderId = save.SampleRequestId;
+          allocationEntity.sampleItemId = save.sampleReqFabricInfo.find((e) => e.fabricCode === fabricObj.fabricCode).fabricInfoId;
+          fabricAllocation = await manager.getRepository(MaterialAllocationEntity).save(allocationEntity)
+          if(!fabricAllocation){
+            await manager.releaseTransaction();
+            return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+          }
+          else{
+            if(fabricObj.totalRequirement === totalAllocated){
+              fabBomStatus = BomStatusEnum.ALLOCATED
+            }
+            let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:save.SampleRequestId, m3ItemId: fabricObj.fabricCode },{status:fabBomStatus,receivedQuantity : () => `received_quantity + ${totalAllocated}`})
+            if(updateSampleFabricInfo.affected === 0){
               await manager.releaseTransaction();
               return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
             }
-            else{
-              let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:save.SampleRequestId, m3ItemId: fabricObj.fabricCode },{receivedQuantity : () => `received_quantity + ${totalAllocated}`})
-              if(updateSampleFabricInfo.affected === 0){
-                await manager.releaseTransaction();
-                return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
-              }
-            }
-
           }
-          let trimAllocation;
-       
-          for (const trimObj of req.trimInfo) {
-            for (const stock of trimObj?.allocatedStock) {
-              let allocationItemsEntity =  new MaterialAllocationItemsEntity()
-              if(stock.checkedStatus === 1 &&  stock.issuedQty > 0){
-                totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
-                allocationItemsEntity.allocateQuantity = stock.issuedQty;
-                allocationItemsEntity.locationId = stock.locationId;
-                allocationItemsEntity.stockId = stock.stockId;
-                allocationItemsdata.push(allocationItemsEntity);
-                let stockUpdate = await manager.getRepository(StocksEntity).update({id:stock.stockId},{allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}`});
-                if(stockUpdate.affected === 0){
-                  await manager.releaseTransaction();
-                }
+
+        }
+        let trimAllocation;
+        let trimBomStatus= BomStatusEnum.OPEN
+      
+        for (const trimObj of req.trimInfo) {
+          for (const stock of trimObj?.allocatedStock) {
+            let allocationItemsEntity =  new MaterialAllocationItemsEntity()
+            if(stock.checkedStatus === 1 &&  stock.issuedQty > 0){
+              totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
+              allocationItemsEntity.allocateQuantity = stock.issuedQty;
+              allocationItemsEntity.locationId = stock.locationId;
+              allocationItemsEntity.stockId = stock.stockId;
+              allocationItemsdata.push(allocationItemsEntity);
+              let stockUpdate = await manager.getRepository(StocksEntity).update({id:stock.stockId},{allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}`});
+              if(stockUpdate.affected === 0){
+                await manager.releaseTransaction();
               }
             }
-            allocationEntity.buyerId = req.buyerId
-            allocationEntity.itemType = ItemTypeEnum.SEWING_TRIM;
-            allocationEntity.m3ItemId = trimObj.trimCode;
-            allocationEntity.totalIssueQty = totalAllocated;
-            allocationEntity.sampleOrderId = save.SampleRequestId;
-            allocationEntity.sampleItemId = save.sampleReqTrimInfo.find((e) => e.trimCode === trimObj.trimCode).trimInfoId;
-            trimAllocation = await manager.getRepository(MaterialAllocationEntity).save(allocationEntity)
-            if(!trimAllocation){
+          }
+          console.log("save.sampleTrimInfo.find((e) => e.trimCode === trimObj.trimCode)");
+          console.log(save.sampleTrimInfo.find((e) => e.trimCode === trimObj.trimCode));
+
+          allocationEntity.buyerId = req.buyerId
+          allocationEntity.itemType = ItemTypeEnum.SEWING_TRIM;
+          allocationEntity.m3ItemId = trimObj.trimCode;
+          allocationEntity.totalIssueQty = totalAllocated;
+          allocationEntity.sampleOrderId = save.SampleRequestId;
+          allocationEntity.sampleItemId = save.sampleTrimInfo.find((e) => e.trimCode === trimObj.trimCode).trimInfoId;
+          trimAllocation = await manager.getRepository(MaterialAllocationEntity).save(allocationEntity)
+          if(!trimAllocation){
+            await manager.releaseTransaction();
+            return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+          }
+          else{
+            if(trimObj.totalRequirement === totalAllocated){
+              trimBomStatus = BomStatusEnum.ALLOCATED
+            }
+            let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:save.SampleRequestId, m3ItemId: trimObj.trimCode },{status:trimBomStatus,receivedQuantity : () => `received_quantity + ${totalAllocated}`})
+            if(updateSampleFabricInfo.affected === 0){
               await manager.releaseTransaction();
               return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
             }
-            else{
-              let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:save.SampleRequestId, m3ItemId: trimObj.trimCode },{receivedQuantity : () => `received_quantity + ${totalAllocated}`})
-              if(updateSampleFabricInfo.affected === 0){
-                await manager.releaseTransaction();
-                return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
-              }
-            }
-
           }
+
         }
-        else{
-          await manager.releaseTransaction();
-          return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
+
+        if(fabBomStatus === BomStatusEnum.ALLOCATED && trimBomStatus === BomStatusEnum.ALLOCATED){
+          let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ALLOCATED})
+            if(updateSampleRequestStatus.affected === 0){
+              await manager.releaseTransaction();
+              return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+            }
         }
+      }
+      else{
+        await manager.releaseTransaction();
+        return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
+      }
       if (save && saveBomDetails) {
         await manager.completeTransaction();
         console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
@@ -414,7 +438,6 @@ export class SampleRequestService {
       else {
         return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
       }
-    }
     }
     catch (err) {
       await manager.releaseTransaction();

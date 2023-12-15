@@ -66,12 +66,12 @@ export class IndentAdapter
               fabEntity.quantity=indentitems.quantity;
               fabEntity.quantityUnit=indentitems.quantityUnit;
               fabEntity.remarks=indentitems.remarks;
-              // fabEntity.season=indentitems.season;
+              fabEntity.season=indentitems.season;
               // fabEntity.shrinkage=indentitems.shrinkage;
               // fabEntity.supplierId=indentitems.supplierId;
               // fabEntity.yarnUnit=indentitems.yarnUnit;
               // fabEntity.yarnCount=indentitems.yarnCount;
-              // fabEntity.xlNo=indentitems.xlNo;
+              fabEntity.xlNo=indentitems.xlNo;
               // fabEntity.weight=indentitems.weight;
               // fabEntity.width=indentitems.width;
               // fabEntity.weaveId=indentitems.weaveId;

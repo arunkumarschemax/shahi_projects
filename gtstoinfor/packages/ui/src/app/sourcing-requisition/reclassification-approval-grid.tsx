@@ -1,17 +1,18 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { BuyersService, FabricTypeService, FabricWeaveService, M3ItemsService, ReclassificationService, StockService, UomService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag, Tabs, Radio } from "antd";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag, Tabs, Radio, Segmented } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { BuyerRefNoRequest, M3ItemsDTO, ReclassificationApproveRequestDto, ReclassificationStatusEnum, UomCategoryEnum, buyerReq, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, ItemTypeEnumDisplay, M3ItemsDTO, MenusAndScopesEnum, ReclassificationApproveRequestDto, ReclassificationStatusEnum, UomCategoryEnum, buyerReq, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
 import TabPane from "antd/es/tabs/TabPane";
 import { useIAMClientState } from "../common/iam-client-react";
 import moment from "moment";
+import { RolePermission } from "../role-permissions";
 const { TextArea } = Input;
 
 export const ReclassificationApprovalGrid = () => {
@@ -37,6 +38,7 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
 
   }, []);
 
+
   // const getBuyersData = () => {
   //   const req = new BuyerRefNoRequest()
   //   req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
@@ -55,7 +57,7 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
             setReclassificationData(res.data);
             console.log(res.data,'ressssss');
             setAccepted(res.data.filter(e =>e.fromExtRef ===  refNo && (itemType === "fabric" ? e.itemType === "Fabric": itemType === undefined ? e.itemType === "Fabric" : e.itemType != "Fabric")))
-            setRequest(res.data.filter(e =>e.toExtRef ===  refNo && (itemType === "fabric" ? e.itemType === "Fabric": itemType === undefined ? e.itemType === "Fabric" : e.itemType != "Fabric")))
+            setRequest(res.data.filter(e =>e.toExtRef ===  refNo && (itemType === "fabric" ? e.itemType != "Fabric": itemType === undefined ? e.itemType === "Fabric" : e.itemType != "Fabric")))
         }
         else{
             setReclassificationData([]);
@@ -199,6 +201,10 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
       ...getColumnSearchProps("itemType"),
       sorter: (a, b) => a.itemType.localeCompare(b.itemType),
       sortDirections: ["descend", "ascend"],
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },
     },
     {
       title: "M3 Item",
@@ -330,7 +336,7 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
         return (
           <span>
             {
-              rowData.status === ReclassificationStatusEnum.APPROVAL_PENDING && roles==="sourcingUser" ? 
+              rowData.status === ReclassificationStatusEnum.APPROVAL_PENDING ? 
             <><Button
                   style={{ backgroundColor: '#69c0ff' }}
                   onClick={(e) => assignStock(rowData, "yes")}
@@ -347,14 +353,21 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
       }
     }
   ];
+  const checkAccess = (buttonParam) => {   
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus["Reclassification Approval"],buttonParam)
+    console.log(accessValue,'access');
+    
+    return accessValue
+}
   return (
     <Card title="Reclassification Approval" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
       <Row gutter={24}>
         <Col span={8}></Col>
         <Col span={8} style={{alignContent:'center'}}>
+       
           <Radio.Group defaultValue="fabric" buttonStyle="solid" onChange={(e) =>  {console.log(e.target.value);getReclassificationData(e.target.value)}}>
-            <Radio.Button value="fabric">FABRICS</Radio.Button>
-            <Radio.Button value="trim">TRIMS</Radio.Button>
+            <Radio.Button value="fabric" disabled = {checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? false : true} >FABRICS</Radio.Button>
+            <Radio.Button value="trim" disabled = {checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? false : true}>TRIMS</Radio.Button>
           </Radio.Group>
         </Col>
         <Col span={8}></Col>

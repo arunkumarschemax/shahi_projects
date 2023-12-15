@@ -1,5 +1,5 @@
 import { CloseOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
-import { PurchaseStatusEnum, PurchaseViewDto } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, PurchaseOrderStatus, PurchaseOrderStatusEnumDisplay, PurchaseStatusEnum, PurchaseViewDto } from '@project-management-system/shared-models';
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, Tooltip,Tag } from 'antd';
 import moment from 'moment';
@@ -22,13 +22,11 @@ export const PurchaseOrderView = () => {
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-  const options = [{ value: 'OPEN' }, { value: 'INPROGRESS' }, { value: 'CLOSED' }, { value: 'CANCELED' }];
+  const options = [{ value: 'OPEN' }, { value: 'IN PROGRESS' }, { value: 'CLOSED' }, { value: 'CANCELED' }];
   const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
   console.log(externalRefNo,"req")
-
-  // let Location = useLocation()
-  // const stateData = Location.state.data
-
+  const { Option } = Select
+  
   useEffect(() => {
     getPo();
   }, [])
@@ -118,9 +116,8 @@ export const PurchaseOrderView = () => {
     // if (status === PurchaseStatusEnum.INPROGRESS) {
     //   status === "IN PROGRESS"
     // }
-    console.log(status, 'ttttttttttttttttttttttt');
-
-     const req = new PurchaseViewDto(null,null,null,null,null,null,null,externalRefNo)
+     const req = new PurchaseViewDto(null,null,null,null,null,form.getFieldValue('poStatus'),null,externalRefNo)
+     console.log(form.getFieldValue('poStatus'),'ppppppppppp');
     // if (form.getFieldValue('deliveryDate') !== undefined) {
     //   req.confirmStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
     // }
@@ -133,7 +130,7 @@ export const PurchaseOrderView = () => {
     // if (form.getFieldValue('orderDate') !== undefined) {
     //   req.poconfirmEndDate = (form.getFieldValue('orderDate')[1]).format('YYYY-MM-DD');
     // };
-    // req.status = status
+    // req.status = form.getFieldValue('po_status')
     // Service.getAllPurchaseOrderData().then((res) => {
     //   console.log(res,"llllllllllllll");
       
@@ -147,6 +144,7 @@ export const PurchaseOrderView = () => {
     //     setData([])
     //   }
     // })
+    console.log(req,'----------------------------------')
 
     Service.getAllPurchaseOrderData(req).then((res)=>{
       if(res.status){
@@ -212,6 +210,10 @@ export const PurchaseOrderView = () => {
       sorter: (a, b) => a.poMaterialtype.localeCompare(b.poMaterialtype),
       sortDirections: ["descend", "ascend"],
           ...getColumnSearchProps("poMaterialtype"),
+          render: (text) => {
+            const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+            return EnumObj ? EnumObj.displayVal : text;
+          },
     },
    
 
@@ -426,18 +428,26 @@ export const PurchaseOrderView = () => {
               <RangePicker />
             </Form.Item>
           </Col>
-          {/* <Col span={6}>
-            <Form.Item label="PO Status	" name="po_status">
-            
-            <Select
+          
+          <Col span={6}>
+            <Form.Item label="PO Status	" name="poStatus" initialValue={[PurchaseOrderStatus.OPEN, PurchaseOrderStatus.IN_PROGRESS]}>
+            <Select showSearch allowClear optionFilterProp="children" placeholder='Select status' mode="multiple" 
+            defaultValue ={[PurchaseOrderStatus.OPEN, PurchaseOrderStatus.IN_PROGRESS]}
+           >   {PurchaseOrderStatusEnumDisplay.map(e => {
+            return (
+                <Option key={e.name} value={e.displayVal} > {e.displayVal}</Option>
+            )
+        })}</Select>
+            {/* <Select
                 mode="multiple"
                 tagRender={tagRender}
-                defaultValue={['OPEN', 'INPROGRESS']}
+                defaultValue={['OPEN', 'IN PROGRESS']}
                 style={{ width: '100%' }}
                 options={options}
-              />
+                
+              /> */}
             </Form.Item>
-          </Col> */}
+          </Col>
           <Col span={2}>
             <Button htmlType='submit' type="primary" onClick={onSearch}> Get Detail </Button>
           </Col>

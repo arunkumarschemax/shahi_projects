@@ -13,7 +13,7 @@ export class IndentFabricModel{
     construction: string;
     finish: string;
     shrinkage: string;
-    m3FabricCode: string;
+    m3FabricCode: number;
     color: string;
     pch: number;
     moq: number;
@@ -33,6 +33,18 @@ export class IndentFabricModel{
     description?: string
     buyerId?:number
     styleId?: number
+    checkStatus?: boolean
+    indentCode?: string
+    itemCode?:string
+    colorName?:string
+    indentQuantity?:number
+    poQuantity?:number
+    quantityUom?:string
+    colorId?:number
+    indentFabricId?:number
+    m3FabricCodeName?:string
+    quantityUomId?:number
+    poQty?:number
 
   constructor(
     ifabricId: number,
@@ -46,7 +58,7 @@ export class IndentFabricModel{
     construction: string,
     finish: string,
     shrinkage: string,
-    m3FabricCode: string,
+    m3FabricCode: number,
     color: string,
     pch: number,
     moq: number,
@@ -65,7 +77,19 @@ export class IndentFabricModel{
     materialType?:string,
     description?: string,
     buyerId?:number,
-    styleId?: number
+    styleId?: number,
+    checkStatus?: boolean,
+    indentCode?: string,
+    itemCode?:string,
+    colorName?:string,
+    indentQuantity?:number,
+    poQuantity?:number,
+    quantityUom?:string,
+    colorId?:number,
+    indentFabricId?:number,
+    m3FabricCodeName?:string,
+    quantityUomId?:number,
+    poQty?:number
  
   ){
     this.ifabricId=ifabricId;
@@ -99,6 +123,18 @@ export class IndentFabricModel{
     this.description = description
     this.buyerId = buyerId
     this.styleId = styleId
+    this.checkStatus = checkStatus
+    this.indentCode =indentCode
+    this.itemCode =itemCode
+    this.colorName =colorName
+    this.indentQuantity = indentQuantity
+    this.poQuantity = poQuantity
+    this.quantityUom = quantityUom
+    this.colorId = colorId
+    this.indentFabricId =indentFabricId
+    this.m3FabricCodeName = m3FabricCodeName
+    this.quantityUomId = quantityUomId
+    this.poQty = poQty
   }
 
 
