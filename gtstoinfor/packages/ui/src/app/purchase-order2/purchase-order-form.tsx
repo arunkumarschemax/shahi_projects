@@ -331,12 +331,12 @@ export const PurchaseOrderForm = () => {
                             <Form.Item name='indentId' label='Indent Code'
                                 rules={[{ required: indentDropDownVisible, message: 'IndentCode is required' }]}>
                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select Indent' mode="multiple"
-                                    onChange={indentOnchange}
-                                    onClear={indentOnClear}
+                                    onChange={indentOnchange} disabled
+                                    // onClear={indentOnClear}
                                 >
                                     {indenData.map(e => {
                                         return (
-                                            <Option key={e.indentId} value={e.indentId} name={e.indentCode}> {e.indentCode}</Option>
+                                            <Option key={e.indentId} value={e.indentId} name={e.indentCode}><b>{e.indentCode}</b> </Option>
                                         )
                                     })}
                                 </Select>

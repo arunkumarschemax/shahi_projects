@@ -415,7 +415,10 @@ export const PurchaseOrderView = () => {
     );
   };
   return (
-    <div><Card title="Purchase Orders" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to={'/purchase-order'}><Button className='panel_button'>Create</Button></Link>}>
+    <div><Card title="Purchase Orders" 
+    headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
+    // extra={<Link to={'/purchase-order'}><Button className='panel_button'>Create</Button></Link>}
+    >
       <Form form={form}>
         <Row gutter={12}>
           <Col span={6}>

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, IsOptional, ValidateIf } from 'class-validator';
 import {BaseEntity,Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
+import { FabricType } from '../fabric-types/fabric-type.entity';
 
 @Entity('fabric_weave')
 export class FabricWeave {
@@ -72,4 +73,8 @@ export class FabricWeave {
       name: "version_flag"
   })
   versionFlag: number;
+
+  @ManyToOne(()=> FabricType,fabricType=>fabricType.fabricWeave)
+  @JoinColumn({name:'fabric_type_id'})
+  fabricType:FabricType
   }

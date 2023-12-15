@@ -1,5 +1,5 @@
 import { DownloadOutlined, FilePdfOutlined, UndoOutlined } from '@ant-design/icons';
-import { SampleFilterRequest, StockFilterRequest, StocksDto } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, SampleFilterRequest, StockFilterRequest, StocksDto } from '@project-management-system/shared-models';
 import { StockService } from '@project-management-system/shared-services';
 import { Button, Card, Col, Form, Row, Select, Statistic, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
@@ -123,7 +123,11 @@ const StockReport = () => {
         },
         {
           title:"Material Type",
-          dataIndex:"itemType"
+          dataIndex:"itemType",
+          render: (text) => {
+            const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+            return EnumObj ? EnumObj.displayVal : text;
+          },
           
       },
         {
