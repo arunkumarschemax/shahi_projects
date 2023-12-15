@@ -4,3 +4,10 @@ export enum PurchaseOrderStatus{
     CANCELLED = 'CANCELLED',
     CLOSED = 'CLOSED',
 }
+
+export const PurchaseOrderStatusEnumDisplay = [
+    { name: "OPEN", displayVal:'OPEN'},
+    { name:'IN_PROGRESS', displayVal:'IN PROGRESS'},
+    { name:'CLOSED', displayVal:'CLOSED'},
+    { name:'CANCELLED', displayVal:'CANCELLED'}
+ ]
