@@ -6,6 +6,9 @@ export class FinishDTO {
   finishId:number;
 
   @ApiProperty()
+  type:string;
+
+  @ApiProperty()
   finish:string;
 
   @ApiProperty()
