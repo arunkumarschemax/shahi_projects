@@ -180,7 +180,7 @@ export function OrderAcceptance() {
             req.productCode = form.getFieldValue('productCode');
         }
         if (form.getFieldValue('purchaseOrder') !== undefined) {
-            req.poandLine = form.getFieldValue('purchaseOrder');
+            req.poNumber = form.getFieldValue('purchaseOrder');
         }
         if (form.getFieldValue('DPOMLineItemStatus') !== undefined) {
             req.DPOMLineItemStatus = form.getFieldValue('DPOMLineItemStatus');
