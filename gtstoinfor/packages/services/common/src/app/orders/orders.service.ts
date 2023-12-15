@@ -78,7 +78,7 @@ export class OrdersService {
             service: 'gmail',
             auth: {
                 user: 'uma.boddeda@schemaxtech.com',
-                pass: 'nizt qqgq lech eoyj',
+                pass: 'edww bgvf vgxi ppar',
             },
         });
 
@@ -3122,7 +3122,7 @@ export class OrdersService {
         try {
             let filesArray = []
             const fs = require('fs');
-            const files = fs.readdirSync('D:/Trim-Orders');
+            const files = fs.readdirSync('F:/Trim-Orders');
             const uplodedFiles = await this.getUplodedFilesInfo()
             const difference = files.filter((element) => !uplodedFiles.data.includes(element))
             if (difference.length == 0) {
@@ -3131,7 +3131,7 @@ export class OrdersService {
             } else {
                 for (const filerec of difference) {
                     const filename = filerec
-                    const filepath = 'D:/Trim-Orders/' + filerec
+                    const filepath = 'F:/Trim-Orders/' + filerec
                     const promiseA = () => new Promise((resolve, reject) => {
                         xlsxFile(filepath, { getSheets: true }).then((sheets: any[]) => {
                             resolve(sheets)
