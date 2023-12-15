@@ -33,6 +33,7 @@ import TrimOrderAcceptance from "./excel-import/trim-order-acceptance"
 import ColineView from "./excel-import/co-line-info"
 import AddressUpload from "./masters/address/address-excel-upload"
 import AddressView from "./masters/address/address-view"
+import SeasonWiseReportData from "./common/reports/season-wise-data"
 // import ExcelImport from "./excel-import/excel-import"
 
 
@@ -86,6 +87,8 @@ export const AppRoutesNew = () => {
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/ex-factory-report' key='/ex-factory-report' element={<ExFactoryReport />} />
                 <Route path='/season-wise-report' key='/season-wise-report' element={<SeasonWiseReport />} />
+                <Route path='/season-wise-reportData' key='/season-wise-reportData' element={<SeasonWiseReportData />} />
+
                 <Route path='/ex-factory-report-with-comparision' key='/ex-factory-report-with-comparision' element={<ExFactoryReportWithComparision />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
