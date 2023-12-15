@@ -474,7 +474,8 @@ export class DpomService {
                                             'UQEU': 5,
                                             'UQJP': 2,
                                             'UQIN': 6,  // common case for 'UQIN' in the original conditions
-                                            'UQMY': 3
+                                            'UQMY': 3,
+                                            'UQSG': 2
                                             // Add more mappings as needed
                                         };
                                         let tabIndex = destToTabIndexMapping[dest.name] || 1; // Default to 1 if no match
