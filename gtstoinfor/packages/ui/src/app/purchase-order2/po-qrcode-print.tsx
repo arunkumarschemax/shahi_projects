@@ -148,16 +148,18 @@ getData(data.poNumber)
                 {data && data.length>0 ? (
                     <>
                     {data?.map((e)=>(
-                        <h4 style={{ display:'flex',flexDirection:'column',textAlign:'center'}}>
-                        <a> 
-                        <QRCode
-                             bgColor="lightgrey"
-                             style={{width:'4in',height:'1.5in',marginTop:"10px",pageBreakAfter:'always', textAlign:'center',alignItems:'center', }}
-                             value={`${e?.grn_item_no}`}
-                             viewBox={`0 0 356 356`}
-                             
-                         />
-                       <style>{`
+                        <>
+                                   
+                  <h4 style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+                  <div style={{ flexDirection: "row", display: "flex",textAlign:'left'}}>
+                <div style={{flex:1}}>
+                        <a style={{ marginLeft: -65 }}>
+                          <QRCode
+                            bgColor="lightgrey"
+                            style={{ width: '4in', height: '1.5in', marginTop: "8px", pageBreakAfter: 'always', textAlign: 'left' }}
+                            value={`${e?.grn_item_no}`}
+                            viewBox={` 356 356 `} />
+                          <style>{`
  @page {
    size: 4in 2in; /* Set page size to 4x2 inches */
    margin: 0; /* Reset default margin */
@@ -166,12 +168,21 @@ getData(data.poNumber)
  body {
    margin: 0; /* Reset default margin */
  }`}</style>
-                         </a>
-                         <b style={{textAlign:'center',fontSize:"30px" }}>
-                         {`${e?.grn_item_no}`}
-                         </b>
-                         </h4>
-                
+                        </a>
+                        <b style={{ textAlign: 'left', fontSize: "30px", marginLeft: 10 }}>
+                          {`${e?.grn_item_no}`}
+                        </b>
+                        </div>
+                      <div style={{flex:1}}>
+                                   
+                    <h4><a style={{ color: 'green',textAlign: 'left',marginLeft:-100}}>Invoice No : </a><b>{e.invoice_no}</b></h4>
+                    <h4><a style={{ color: 'green',textAlign: 'left',marginLeft:-100}}>Type : </a><b>{e.item_type}</b></h4>
+                  
+                    </div>
+                      </div>
+                      </h4>
+                    
+                      </>
                                 ))}</>
                                 ):('')}
                                 </div>

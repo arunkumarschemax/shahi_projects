@@ -559,7 +559,7 @@ export class PurchaseOrderService {
     }
     async QrByPoId(req: VendorIdReq): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT grn.grn_id,p.purchase_order_id, gi.grn_item_id,gi.grn_item_no FROM  purchase_order p 
+            let query = `SELECT grn.grn_id,p.purchase_order_id, gi.grn_item_id,gi.grn_item_no,grn.invoice_no,grn.item_type FROM  purchase_order p 
             LEFT JOIN grn ON grn.po_id = p.purchase_order_id
             LEFT JOIN grn_items gi ON gi.grn_id = grn.grn_id
             WHERE p.purchase_order_id = '${req.poId}'`

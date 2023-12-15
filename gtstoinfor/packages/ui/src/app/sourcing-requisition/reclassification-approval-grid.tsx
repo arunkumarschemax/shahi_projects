@@ -367,7 +367,7 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
        
           <Radio.Group defaultValue="fabric" buttonStyle="solid" onChange={(e) =>  {console.log(e.target.value);getReclassificationData(e.target.value)}}>
             <Radio.Button value="fabric" disabled = {checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? false : true} >FABRICS</Radio.Button>
-            <Radio.Button value="trim" disabled = {checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? false : true}>TRIMS</Radio.Button>
+            <Radio.Button value="trim" disabled = {checkAccess(MenusAndScopesEnum.Scopes.trimTab)? false : true}>TRIMS</Radio.Button>
           </Radio.Group>
         </Col>
         <Col span={8}></Col>
