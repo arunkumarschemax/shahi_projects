@@ -483,6 +483,9 @@ export class DpomService {
                                         if ((po.item_no === '691M' || po.item_no === '694M') && dest.name === 'UQIN') {
                                             tabIndex = 4;
                                         }
+                                        if (po.item_no === '102P' && dest.name === 'UQIN') {
+                                            tabIndex = 3;
+                                        }
                                         const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
                                         const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
                                         await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
@@ -605,12 +608,15 @@ export class DpomService {
                         }
                     } else {
                         await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
-                        const coDateElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[6]'));
-                        const coDate = await coDateElement.getAttribute('innerText');
                         const coNoElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[7]'));
                         const coNo = await coNoElement.getAttribute('innerText');
+                        const currentDate = new Date();
+                        const day = currentDate.getDate().toString().padStart(2, '0');
+                        const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
+                        const year = currentDate.getFullYear().toString().slice(-2);
+                        const currentDateFormatted = `${day}-${month}-${year}`;
                         if (coNo) {
-                            const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: coDate });
+                            const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
                             // await driver.navigate().refresh();
                             await driver.sleep(10000)
                         } else {
