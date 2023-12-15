@@ -107,7 +107,26 @@ export const SourcingRequisitionDynamicView = () => {
     return accessValue
 }
 
+const options = () => {
+  let segmentOptions = [
+    { key: 'Fabric', label: 'Fabric' },
+    { key: 'Trim', label: 'Trim' }
+  ];
 
+  if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
+    segmentOptions = segmentOptions.filter((e) => e.label === 'Fabric');
+  }
+  if (checkAccess(MenusAndScopesEnum.Scopes.trimTab)) {
+    segmentOptions = segmentOptions.filter((e) => e.label === 'Trim');
+  }
+  return segmentOptions.map((operation, index) => ({
+    label: <b>{operation.label}</b>,
+    value: operation.label,
+    key: index.toString(),
+
+  }));
+};
+const segmentedOptions = options();
   const getAll = () => {
     const req = new IndentRequestFilter();
     if (form.getFieldValue("requestNo") !== undefined) {
@@ -739,29 +758,29 @@ export const SourcingRequisitionDynamicView = () => {
               <Segmented
                 onChange={onSegmentChange}
                 style={{ backgroundColor: "#68cc6b" }}
-                //  options= {segmentedOptions}
+                  options= {segmentedOptions}
                  defaultValue={checkAccess(MenusAndScopesEnum.Scopes.fabricTab)?"Fabric":checkAccess(MenusAndScopesEnum.Scopes.trimTab) ? "Trim":''}
-                options={
-                  [
-                  {
-                    label: (
-                      <>
-                        <b style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? 'block' : 'none'}}>Fabric Details</b>
-                      </>
-                    ),
-                    value: "Fabric",
-                  },
-                  {
-                    label: (
-                      <>
-                        <b style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.trimTab)? 'block' : 'none'}}>Trim Details</b>
-                      </>
-                    ),
-                    value: "Trim",
+                // options={
+                //   [
+                //   {
+                //     label: (
+                //       <>
+                //         <b style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? 'block' : 'none'}} >Fabric Details</b>
+                //       </>
+                //     ),
+                //     value: "Fabric",
+                //   },
+                //   {
+                //     label: (
+                //       <>
+                //         <b style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.trimTab)? 'block' : 'none'}}>Trim Details</b>
+                //       </>
+                //     ),
+                //     value: "Trim",
 
-                  },
-                ]
-              }
+                //   },
+                // ]
+              // }
               />
               <div>
               <>

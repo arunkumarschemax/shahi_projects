@@ -16,6 +16,7 @@ import ProcessForm from "./process";
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { useIAMClientState } from "../common/iam-client-react";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 
 const { Option } = Select;
@@ -51,7 +52,7 @@ export const SampleDevForm = () => {
   const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
   const [qualities,setQualities] = useState<any[]>([])
   const [styleaginstpch,setStyleaginstpch] = useState<any[]>([])
-
+  const [sizeForm] = Form.useForm();
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
   const brandService = new MasterBrandsService();
@@ -71,6 +72,10 @@ export const SampleDevForm = () => {
   const navigate = useNavigate();
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
+
+  useEffect(() => {
+    console.log(sizeForm.getFieldsValue())
+  },[sizeData])
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
@@ -332,9 +337,24 @@ export const SampleDevForm = () => {
   }
 
     const handleSizeDataUpdate = (updatedData) => {
-      // console.log(updatedData)
-      setData((prevData) => ({ ...prevData, sizeData: updatedData }));
-      setSizeData(updatedData);
+     
+      console.log(updatedData)
+      // var valueArr = updatedData.map(function(item){ return item.colour });
+      // console.log(valueArr)
+      // var isDuplicate = valueArr.some(function(item, idx){ 
+      //   console.log(item);
+      //   console.log(idx);
+      //   return valueArr.indexOf(item) != idx 
+      // });
+      // console.log(isDuplicate)
+      // if(!isDuplicate){
+        console.log(sizeForm.getFieldsValue());
+        setData((prevData) => ({ ...prevData, sizeData: updatedData }));
+        setSizeData(updatedData);
+      // }
+      // else{
+      //   AlertMessages.getErrorMessage("Duplicate color is not allowed. ")
+      // }
   };
 
   const handleProcessDataUpdate = (updatedData) => {
@@ -827,8 +847,8 @@ export const SampleDevForm = () => {
         {selectedBuyerId != null ?
          <Card size='small'>
          <Tabs type={'card'} tabPosition={'top'}>
-             <TabPane key="1" tab={<span><b>{`Size Detail`}</b></span>}>
-             <SizeDetail props = {handleSizeDataUpdate} buyerId={selectedBuyerId}/>
+             <TabPane key="1" tab={<span><b>{`Size Detail`}</b></span>}> 
+             <SizeDetail props = {handleSizeDataUpdate} buyerId={selectedBuyerId} form={sizeForm}/>
              </TabPane>
              <TabPane key="2" tab={<span><b>{`Fabric`}</b></span>}>
              <FabricsForm data = {handleFabricsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData}/>
