@@ -36,6 +36,8 @@ import ColineView from "./nike/components/co-line-view"
 import FabricContenGrid from "./masters/fabric-content/fabric-conten-grid"
 import FabricContentGrid from "./masters/fabric-content/fabric-conten-grid"
 import FabricContentForm from "./masters/fabric-content/fabric-content-form"
+import AddressView from "./masters/address/address-view"
+import AddressUpload from "./masters/address/address-excel-upload"
 
 
 export const AppRoutes = () => {
@@ -132,6 +134,9 @@ export const AppRoutes = () => {
                         }} isUpdate={false} closeForm={function (): void {
                             throw new Error("Function not implemented.")
                         }} />} /> */}
+
+                        <Route path='address-upload' element={<AddressUpload />} />
+                        <Route path ='address-view' element={<AddressView />} />
 
                 </Route>
                 <Route path='/nike'>
