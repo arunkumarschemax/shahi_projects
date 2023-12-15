@@ -3331,60 +3331,29 @@ export class OrdersService {
 
         const data = await this.ordersRepository.query(query)
         console.log(data,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-        const transformedData = {};
+
+        const result = {};
+        const uniqueMonths = Array.from(new Set(data.map(item => item.MONTHNAME)));
 
         data.forEach(item => {
-        const { itemName, YEAR, MONTHNAME, totalQuantity } = item;
+          const { itemName, YEAR, totalQuantity, MONTHNAME } = item;
         
-        if (!transformedData[YEAR]) {
-            transformedData[YEAR] = {};
-        }
-
-        if (!transformedData[YEAR][MONTHNAME]) {
-            transformedData[YEAR][MONTHNAME] = [ totalQuantity.toString()];
-        } else {
-            transformedData[YEAR][MONTHNAME].push( totalQuantity.toString());
-        }
-        });
-        console.log(transformedData,'tranformed dataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')
-        const result = Object.entries(transformedData).map(([year, months]) => {
-        const obj = { YEAR: year };
-        Object.entries(months).forEach(([monthName, totalQuantity]) => {
-            obj[monthName.replace('-', '')] = totalQuantity;
-        });
-        return obj;
-        });
-       
-        console.log(result,'%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%');
-
-        const resultData = [];
-
-        result.forEach(item => {
-        const { YEAR, ...rest } = item;
-        const monthNames = Object.keys(rest);
-
-        const yearObj = { YEAR };
-
-        monthNames.forEach(monthName => {
-            const quantities = rest[monthName];
-            yearObj[monthName] = quantities.map(quantity => parseInt(quantity));
-        });
-
-        const maxQtyLength = Math.max(...monthNames.map(monthName => rest[monthName].length));
-
-        for (let i = 0; i < maxQtyLength; i++) {
-            const newObj = { YEAR };
-            monthNames.forEach(monthName => {
-            newObj[monthName] = rest[monthName][i] || 'null';
+          if (!result[itemName]) {
+            result[itemName] = { itemName, YEAR };
+            uniqueMonths.forEach(month => {
+              result[itemName][month] = null;
             });
-            resultData.push(newObj);
-        }
+          }
+        
+          result[itemName][MONTHNAME] = totalQuantity;
         });
+        
+        const structuredData = Object.values(result);
+        
+        console.log(structuredData,'22222222222222222222222')
 
-        console.log(resultData);
-        // console.log('######################################')
         if(data){
-            return new CommonResponseModel(true,1,'data retrived sucessfully',resultData)
+            return new CommonResponseModel(true,1,'data retrived sucessfully',structuredData)
         }else{
             return new CommonResponseModel(true,1,'data retrived sucessfully',[])
 
