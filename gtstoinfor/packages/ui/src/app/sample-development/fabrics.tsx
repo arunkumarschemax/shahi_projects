@@ -36,6 +36,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   const colorService = new ColourService()
   const { IAMClientAuthContext } = useIAMClientState();
   const [form] = Form.useForm();
+  const [stockForm] = Form.useForm();
 
   const handleAddRow = () => {
 
@@ -125,7 +126,15 @@ const FabricsForm = (props:FabricsFormProps) => {
         if (record.key === key) {
           console.log(e);
           console.log(record.totalCount);
-          let consumptionCal = Number(record.totalCount) * Number(e);
+          let totalSizeCountForSize = props.sizeDetails.find((s) => s.colour === form.getFieldValue(`colorId${key}`))?.sizeInfo;
+          console.log(totalSizeCountForSize);
+          let qtyy = 0;
+          totalSizeCountForSize?.forEach(qty => {
+          console.log(qty.quantity);
+          qtyy = Number(qtyy)+Number(qty.quantity);
+        })
+        console.log(qtyy);
+          let consumptionCal = Number(qtyy) * Number(e);
           let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
           console.log(consumptionCal);
           console.log(withPer);
@@ -155,11 +164,25 @@ const FabricsForm = (props:FabricsFormProps) => {
     else if(field === 'colourId'){
       console.log(props.sizeDetails);
       console.log(props.sizeDetails.find((s) => s.colour === e));
-
+      let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
       if(props.sizeDetails.find((s) => s.colour === e)?.colour > 0){
         updatedData = data.map((record) => {
           if (record.key === key) {
-            return { ...record, [field]: e };
+            
+            let totalSizeCountForSize = props.sizeDetails.find((s) => s.colour === e)?.sizeInfo;
+            console.log(totalSizeCountForSize);
+            let qtyy = 0;
+            totalSizeCountForSize?.forEach(qty => {
+            console.log(qty.quantity);
+            qtyy = Number(qtyy)+Number(qty.quantity);
+          })
+          console.log(qtyy);
+            let consumptionCal = Number(qtyy) * Number(form.getFieldValue(`consumption${key}`));
+            let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
+            console.log(consumptionCal);
+            console.log(withPer);
+            form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+            return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
           }
           return record;
         });
@@ -503,13 +526,13 @@ const FabricsForm = (props:FabricsFormProps) => {
       width:'200px',
       render: (text, rowData, index) => { 
         return(
-          
-          <Form.Item name={`allocatedQuantity${rowData.key}`}>
-                <InputNumber name={`allocatedQuantity${rowData.key}`}
+          <Form form={stockForm}>
+          <Form.Item name={`allocatedQuantity${index}`}>
+                <InputNumber name={`allocatedQuantity${index}`}
                     onChange={(e) => setAllocatedQty(index,rowData, e)} 
                  />
           </Form.Item>
-         
+          </Form>
         )
       }
     },
@@ -534,21 +557,26 @@ const FabricsForm = (props:FabricsFormProps) => {
   ]
 
   const setAllocatedQty = (index, rowData, value) => {
+    
      console.log(index);
-    console.log(stockData);
+    console.log(data);
+    console.log(rowData);
     rowData.issuedQty = value
-    const newData = [...stockData];
+    const newData = data.find((record) => Number(record.fabricCode) === rowData.m3ItemId)?.allocatedStock;
+    // const newData = [...stockData];
     console.log(newData);
-    newData[index].issuedQty = value;
-    console.log(newData[index]);
-    console.log(newData)
-    setStockData(newData);
+    let stockRecord = newData.find((s) => s.stockId === rowData.stockId);
+    stockRecord.issuedQty = value;
+    // newData[index].issuedQty = value;
+    // console.log(newData[index]);
+    // console.log(newData)
+    // setStockData(newData);
     if (value === 0 || value === null || value < 0 || value === undefined) {
       AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
-      sourcingForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity));
+      stockForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity));
     }
     if (Number(value) > Number(rowData.quantity)) {
-      sourcingForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty));
+      stockForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty));
       AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
     }
   }
