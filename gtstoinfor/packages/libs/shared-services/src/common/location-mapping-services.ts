@@ -12,7 +12,14 @@ export class LocationMappingService extends CommonAxiosService {
         console.log(req,"sh req")
         return this.axiosPostCall(this.URL + "/getAllFabrics",req)
     }
-
+    async getgrn(req?:any):Promise<any> {
+        console.log(req,"sh req")
+        return this.axiosPostCall(this.URL + "/getgrn",req)
+    }
+    async getMaterial(req?:any):Promise<any> {
+        console.log(req,"sh req")
+        return this.axiosPostCall(this.URL + "/getMaterial",req)
+    }
     async getOneItemAllocateDetails(req:MaterialIssueIdreq): Promise<any> {
         return this.axiosPostCall(this.URL + "/getOneItemAllocateDetails", req)
     }

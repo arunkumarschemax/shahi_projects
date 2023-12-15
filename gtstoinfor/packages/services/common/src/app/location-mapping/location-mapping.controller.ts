@@ -21,6 +21,28 @@ export class LocationMappingController {
             return error;
         }
     }
+    @Post("/getgrn")
+    @ApiBody({ type: ExternalRefReq })
+    async getgrn(@Body() req:any): Promise<any> {
+        
+        console.log(req,"con......")
+        try {
+            return this.service.getgrn(req);
+        } catch (error) {
+            return error;
+        }
+    }
+    @Post("/getMaterial")
+    @ApiBody({ type: ExternalRefReq })
+    async getMaterial(@Body() req:any): Promise<any> {
+        
+        console.log(req,"con......")
+        try {
+            return this.service.getMaterial(req);
+        } catch (error) {
+            return error;
+        }
+    }
 
     @Post("/getAllActiveRackPositions")
     async getAllActiveRackPositions(): Promise<any> {
