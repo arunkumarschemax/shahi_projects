@@ -4,7 +4,7 @@ import * as XLSX from 'xlsx';
 import Papa from 'papaparse'
 // import { AddressService } from "@project-management-system/shared-services";
 import AlertMessages from "../../common/common-functions/alert-messages";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AddressService } from "@project-management-system/shared-services";
 
 
@@ -17,6 +17,7 @@ export const AddressUpload = () => {
     const service = new AddressService()
     const [loading, setLoading] = useState(false);
     const [jsonData, setJsonData] = useState(null);
+    const navigate = useNavigate()
 
     const importExcel = (file: any[]) => {
         var data = new Uint8Array(file);
@@ -89,23 +90,9 @@ export const AddressUpload = () => {
     //     }
     //   };
 
-    //   console.log(data,"ssssss")
-    // console.log(selectedFile,"fff")
+  
 
-    // const handleFileChange = (event) => {
-    //     const file = event.target.files[0];
-    //     setSelectedFile(event.target.files[0])
-    //     const reader = new FileReader();
-    //     reader.onload = (e:any) => {
-    //       const data = new Uint8Array(e.target.result);
-    //       const workbook = XLSX.read(data, { type: 'array' });
-    //       const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    //       const json = XLSX.utils.sheet_to_json(worksheet, { header: 0});
-    //       setData(json);
-    //     };
-    
-    //     reader.readAsArrayBuffer(file);
-    //   };
+   
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         setSelectedFile(event.target.files[0]);
@@ -117,11 +104,11 @@ export const AddressUpload = () => {
           const worksheet = workbook.Sheets[workbook.SheetNames[0]];
       
           // Specify the desired column names in the headers array
-          const headers = ['S.NO', 'Destination', 'Buyer Code',"Buyer Address","Delivery Code","Delivery Address"];
+          const headers = ['s_no', 'destination', 'buyer_code',"buyer_address","delivery_code","delivery_address"];
       
           // Pass the headers array to the sheet_to_json function
           const json = XLSX.utils.sheet_to_json(worksheet, { header: headers });
-      
+          json.splice(0, 2);
           setData(json);
         };
       
@@ -136,6 +123,8 @@ export const AddressUpload = () => {
                     setLoading(true);
                     if(res.status){
                         AlertMessages.getSuccessMessage(res.internalMessage)
+                        navigate("/masters/address-view")
+
                     } else{
                         AlertMessages.getErrorMessage(res.internalMessage)
                     }

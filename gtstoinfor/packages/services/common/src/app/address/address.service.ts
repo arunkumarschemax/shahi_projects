@@ -18,6 +18,7 @@ export class AddressService {
     ) { }
 
     async saveAddressInfo(formData: any): Promise<CommonResponseModel> {
+        console.log(formData,"oooooooser")
         const transactionManager = new GenericTransactionManager(this.dataSource);
         try {
             await transactionManager.startTransaction()
@@ -64,11 +65,11 @@ export class AddressService {
                 if (data.destination != null) {
                     // dtoData = new AddressReq(data.Country,data.delivary_address,data.Buyeraddress,'admin')
                     const addObj = new AddressEntity()
-                    addObj.destination = data.Destination
-                    addObj.deliveryAddress = data.DeliveryAddress
-                    addObj.buyerAddress = data.BuyerAddress
-                    // addObj.buyerCode = data.Buyer_code
-                    // addObj.deliveryCode = data.Delivery_code
+                    addObj.destination = data.destination
+                    addObj.deliveryAddress = data.delivery_address
+                    addObj.buyerAddress = data.buyer_address
+                    addObj.buyerCode = data.buyer_code
+                    addObj.deliveryCode = data.delivery_code
                     const addSave = await transactionManager.getRepository(AddressEntity).save(addObj)
                     if (addSave) {
                         flag.add(true)
