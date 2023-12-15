@@ -180,11 +180,6 @@ export class DpomService {
                             "fieldName": "poHeader.documentDate",
                             "operator": ">",
                             "fieldValue": formattedDate
-                        },
-                        {
-                            "fieldName": "poHeader.poNumber",
-                            "operator": "=",
-                            "fieldValue": "4509911047"
                         }
                     ],
                     "offset": offset,
