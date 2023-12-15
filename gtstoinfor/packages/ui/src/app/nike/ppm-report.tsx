@@ -320,7 +320,7 @@ const PPMReport = () => {
               'Global Category Core Focus': item.gccFocusCode,
               'Global Category Core Focus Description': item.gccFocusDesc,
               'Gender Age': item.genderAgeCode,
-              'Gender Age Description': '',
+              'Gender Age Description': item.genderAgeDesc,
               'Destination Country Code ': item.destinationCountryCode,
               'Destination Country Name': item.destinationCountry,
               'Geo Code': item.geoCode,
@@ -1230,7 +1230,9 @@ const PPMReport = () => {
 
   const onReset = () => {
     form.resetFields()
-    getData()
+    setGridData([])
+    setFilterData([])
+    setFilteredData([])
   }
 
   const toggleHideChildren = () => {
@@ -2838,11 +2840,13 @@ const PPMReport = () => {
         title: 'Item Vas Text in PDF PO',
         dataIndex: 'itemVasTextPDF', width: 80,
         render: (text, record) => {
-          if (!text || text.trim() === '') {
-            return '-';
-          } else {
-            return text;
-          }
+          return (
+            <>
+              {record.itemVasTextPDF?.length > 30 ? (<><Tooltip title='Cilck to open full itemVasTextPDF'><p><span onClick={() => handleTextClick(record.itemVasTextPDF)} style={{ cursor: 'pointer' }}>
+                {record.itemVasTextPDF.length > 30 ? `${record.itemVasTextPDF?.substring(0, 30)}....` : record.itemVasTextPDF}
+              </span></p></Tooltip></>) : (<>{record.itemVasTextPDF}</>)}
+            </>
+          )
         },
       },
       {
