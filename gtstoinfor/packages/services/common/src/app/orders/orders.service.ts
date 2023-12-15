@@ -1112,15 +1112,18 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async seasonWiseReport(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
+    async seasonWiseReportt(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
         const monthsList = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
         const qtyQuery = [];
         const format = '%'
         let total = ``
         monthsList.forEach((rec, index) => {
+            console.log(index,'indexxxxxxxxxxxxxxxxxxxx')
             qtyQuery.push(`SUM(CASE WHEN MONTH(STR_TO_DATE(${req.qtyLocation}, '%m-%d')) = ${index + 1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS ${rec}`)
             total += `SUM(${rec}) AS ${rec},`
         })
+        // console.log(qtyQuery)
+        // console.log('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
         let query = `SELECT file_id,planning_ssn as plannedSeason,year,planning_sum as itemName ,${total}
               SUM(january + february + march + april + may + june + july + august + september + october + november + december) AS total
               FROM (
@@ -3312,5 +3315,54 @@ export class OrdersService {
         }
     }
 
+
+    
+    async seasonWiseReport(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
+       try{
+        let qtyLocationDate
+        if(req.qtyLocation == 'exf'){
+            qtyLocationDate='exf_date'
+        }
+        if(req.qtyLocation == 'wh'){
+            qtyLocationDate='wh_date'
+        }
+
+        const query=' SELECT  planning_sum AS itemName,planning_ssn AS plannedSeason,YEAR,CONCAT(MONTHNAME('+qtyLocationDate+'),"-",YEAR('+qtyLocationDate+')) AS MONTHNAME,SUM(REPLACE(order_plan_qty,","," ")) AS totalQuantity FROM orders WHERE file_id = (SELECT MAX(file_id) FROM orders) AND YEAR="'+req.year+'" and  planning_ssn ="'+req.season+'" GROUP BY MONTH('+qtyLocationDate+'),planning_sum'
+
+        const data = await this.ordersRepository.query(query)
+        console.log(data,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+
+        const result = {};
+        const uniqueMonths = Array.from(new Set(data.map(item => item.MONTHNAME)));
+
+        data.forEach(item => {
+          const { itemName, YEAR, totalQuantity, MONTHNAME } = item;
+        
+          if (!result[itemName]) {
+            result[itemName] = { itemName, YEAR };
+            uniqueMonths.forEach(month => {
+              result[itemName][month] = null;
+            });
+          }
+        
+          result[itemName][MONTHNAME] = totalQuantity;
+        });
+        
+        const structuredData = Object.values(result);
+        
+        console.log(structuredData,'22222222222222222222222')
+
+        if(data){
+            return new CommonResponseModel(true,1,'data retrived sucessfully',structuredData)
+        }else{
+            return new CommonResponseModel(true,1,'data retrived sucessfully',[])
+
+        }
+
+    }catch(err){
+        throw err
+    }
+
+}
 }
 
