@@ -7,6 +7,7 @@ import { DataSource } from "typeorm";
 import { AddressEntity } from "./address.entity";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { AddressRepository } from "./address.repo";
+import { DestinationReq } from "./destination-req.dto";
 
 @Injectable()
 export class AddressService {
@@ -106,7 +107,7 @@ export class AddressService {
         }
     }
 
-    async getAddressInfoByCountry(req: any): Promise<CommonResponseModel> {
+    async getAddressInfoByDestination(req: DestinationReq): Promise<CommonResponseModel> {
         try {
             const info = await this.repo.findOne({ where: { destination: req.destination } })
             if (info) {

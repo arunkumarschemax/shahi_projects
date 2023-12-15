@@ -5,6 +5,7 @@ import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { CommonResponseModel } from '@project-management-system/shared-models';
+import { DestinationReq } from './destination-req.dto';
 // import { AddressResponseModel } from '@project-management-system/shared-models';
 
 
@@ -38,10 +39,11 @@ export class AddressController {
         }
     }
 
-    @Post('/getAddressInfoByCountry')
-    async getAddressInfoByCountry(@Body() req: any): Promise<CommonResponseModel> {
+    @Post('/getAddressInfoByDestination')
+    @ApiBody({ type: DestinationReq })
+    async getAddressInfoByDestination(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.addressService.getAddressInfoByCountry(req);
+            return this.addressService.getAddressInfoByDestination(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
 

@@ -1,5 +1,4 @@
-// import { AddressResponseModel } from "@project-management-system/shared-models";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, DestinationreqModel } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -14,4 +13,8 @@ export class AddressService extends CommonAxiosService {
     async getAddressInfo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAddressInfo")
     }  
+
+    async getAddressInfoByDestination(req:DestinationreqModel): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAddressInfoByDestination",req)
+    } 
 }
