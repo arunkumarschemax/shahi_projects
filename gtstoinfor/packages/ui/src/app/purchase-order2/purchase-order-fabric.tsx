@@ -184,7 +184,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
             fabricForm.setFieldsValue({ quantityUomId: rowData.quantityUomId })
             fabricForm.setFieldsValue({ quantityUom: rowData.quantityUom })
             fabricForm.setFieldsValue({ colourId: rowData.colorId })
-            fabricForm.setFieldsValue({ m3FabricCode: rowData.m3FabricCodeId })
+            fabricForm.setFieldsValue({ m3FabricCode: rowData.m3FabricCode })
             fabricForm.setFieldsValue({ styleId: rowData.styleId })
 
 
@@ -267,7 +267,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         },
         {
             title: 'M3 Fabric Code',
-            dataIndex: 'itemCode',
+            dataIndex: 'm3FabricCodeName',
             width: '170px'
         },
         {

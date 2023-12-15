@@ -13,7 +13,7 @@ export class IndentFabricModel{
     construction: string;
     finish: string;
     shrinkage: string;
-    m3FabricCode: string;
+    m3FabricCode: number;
     color: string;
     pch: number;
     moq: number;
@@ -42,7 +42,7 @@ export class IndentFabricModel{
     quantityUom?:string
     colorId?:number
     indentFabricId?:number
-    m3FabricCodeId?:number
+    m3FabricCodeName?:string
     quantityUomId?:number
     poQty?:number
 
@@ -58,7 +58,7 @@ export class IndentFabricModel{
     construction: string,
     finish: string,
     shrinkage: string,
-    m3FabricCode: string,
+    m3FabricCode: number,
     color: string,
     pch: number,
     moq: number,
@@ -87,7 +87,7 @@ export class IndentFabricModel{
     quantityUom?:string,
     colorId?:number,
     indentFabricId?:number,
-    m3FabricCodeId?:number,
+    m3FabricCodeName?:string,
     quantityUomId?:number,
     poQty?:number
  
@@ -132,7 +132,7 @@ export class IndentFabricModel{
     this.quantityUom = quantityUom
     this.colorId = colorId
     this.indentFabricId =indentFabricId
-    this.m3FabricCodeId = m3FabricCodeId
+    this.m3FabricCodeName = m3FabricCodeName
     this.quantityUomId = quantityUomId
     this.poQty = poQty
   }
