@@ -324,7 +324,7 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
             <Modal
               className='print-docket-modal'
               key={'modal' + Date.now()}
-              width={'50%'}
+              width={'70%'}
               style={{ top: 30, alignContent: 'right' }}
               visible={isModalVisible}
               title={<React.Fragment>

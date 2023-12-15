@@ -20,8 +20,12 @@ export class BuyerIdReq{
 
 export class ExternalRefReq{
     externalRefNo?:string;
-
-    constructor(externalRefNo?:string){
+   grnNo?:string;
+   material?:string;
+    constructor(externalRefNo?:string,grnNo?:string,material?:string){
         this.externalRefNo = externalRefNo
+        this.grnNo=grnNo
+        this.material=material
+
     }
 }

@@ -132,9 +132,19 @@ export const LocationMapping = () => {
             render: (text, object, index) => (page - 1) * 10 + (index + 1)
         },
         {
-            title: 'Item',
-            dataIndex: 'item_code',
+            title: 'Item Code',
+            dataIndex: 'itemcode',
+            width:120
         },
+        {
+            title: 'Location',
+            dataIndex: 'rack_position_name',
+        },
+        {
+            title: 'Item Type',
+            dataIndex: 'type',
+        },
+       
         {
             title: 'Location',
             dataIndex: 'rack_position_name',
@@ -146,6 +156,22 @@ export const LocationMapping = () => {
                 return <>{Number(text)}</>
             }
 
+        },
+        {
+            title:'Uom',
+            dataIndex:'uom'
+        },
+        {
+            title:'Yarn Count',
+            dataIndex:'yarn_count'
+        },
+        {
+            title:'Accepted Qty',
+            dataIndex:'accepted_quantity'
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
         },
     ]
 
