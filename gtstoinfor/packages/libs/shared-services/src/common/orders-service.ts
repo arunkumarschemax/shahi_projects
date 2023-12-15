@@ -266,4 +266,8 @@ export class OrdersService extends CommonAxiosService {
         return await AxiosInstance.post('https://nike-backend.shahiapps.in/api/nike-dpom/getColineOrderNo')
     }
 
+    async seasonWiseReportData(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/seasonWiseReportData", req)
+    }
+
 }

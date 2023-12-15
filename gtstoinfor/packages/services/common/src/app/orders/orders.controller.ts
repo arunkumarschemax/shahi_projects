@@ -676,4 +676,12 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/seasonWiseReportData')
+    async seasonWiseReportData(@Body() req?:any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.seasonWiseReportData(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }

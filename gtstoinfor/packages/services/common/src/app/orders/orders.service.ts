@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq, CoLineFormatModel, Destinations, Colors, Sizes } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq, CoLineFormatModel, Destinations, Colors, Sizes, sesaonWisereportModel, MonthItemData } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -1112,7 +1112,7 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async seasonWiseReportt(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
+    async seasonWiseReport(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
         const monthsList = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
         const qtyQuery = [];
         const format = '%'
@@ -3317,7 +3317,7 @@ export class OrdersService {
 
 
     
-    async seasonWiseReport(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
+    async seasonWiseReportData(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
        try{
         let qtyLocationDate
         if(req.qtyLocation == 'exf'){
@@ -3330,30 +3330,22 @@ export class OrdersService {
         const query=' SELECT  planning_sum AS itemName,planning_ssn AS plannedSeason,YEAR,CONCAT(MONTHNAME('+qtyLocationDate+'),"-",YEAR('+qtyLocationDate+')) AS MONTHNAME,SUM(REPLACE(order_plan_qty,","," ")) AS totalQuantity FROM orders WHERE file_id = (SELECT MAX(file_id) FROM orders) AND YEAR="'+req.year+'" and  planning_ssn ="'+req.season+'" GROUP BY MONTH('+qtyLocationDate+'),planning_sum'
 
         const data = await this.ordersRepository.query(query)
-        console.log(data,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-
-        const result = {};
-        const uniqueMonths = Array.from(new Set(data.map(item => item.MONTHNAME)));
-
-        data.forEach(item => {
-          const { itemName, YEAR, totalQuantity, MONTHNAME } = item;
-        
-          if (!result[itemName]) {
-            result[itemName] = { itemName, YEAR };
-            uniqueMonths.forEach(month => {
-              result[itemName][month] = null;
-            });
-          }
-        
-          result[itemName][MONTHNAME] = totalQuantity;
-        });
-        
-        const structuredData = Object.values(result);
-        
-        console.log(structuredData,'22222222222222222222222')
-
-        if(data){
-            return new CommonResponseModel(true,1,'data retrived sucessfully',structuredData)
+        console.log(data,'$$$$$$$$$$$$$$$$$$$$$$')
+        const sizeDataMap = new Map<string, sesaonWisereportModel>();
+        for(const rec of data){
+            if(!sizeDataMap.has(rec.itemName)){
+                sizeDataMap.set(rec.itemName, new sesaonWisereportModel(rec.itemName,rec.YEAR,rec.plannedSeason,[]))
+            }
+            const monthData=sizeDataMap.get(rec.itemName).MonthItemData
+            if(rec.itemName != null){
+                monthData.push(new MonthItemData(rec.MONTHNAME,rec.totalQuantity))
+            }
+        }
+        const detailedarray :sesaonWisereportModel[]= Array.from(sizeDataMap.values());
+        console.log(detailedarray,'$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+      
+        if(detailedarray){
+            return new CommonResponseModel(true,1,'data retrived sucessfully',detailedarray)
         }else{
             return new CommonResponseModel(true,1,'data retrived sucessfully',[])
 
