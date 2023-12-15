@@ -39,7 +39,7 @@ import { AddressModule } from './address/address.module';
     FactoriesModule,
     SupplierModule,
     UsersModule,
-    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule, FabricContentModule,AddressModule],
+    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule, FabricContentModule, AddressModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,

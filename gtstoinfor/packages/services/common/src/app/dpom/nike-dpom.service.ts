@@ -33,6 +33,8 @@ const moment = require('moment');
 const qs = require('querystring');
 import * as nodemailer from 'nodemailer';
 import * as winston from 'winston';
+import { AddressService } from '../address/address.service';
+import { DestinationReq } from '../address/destination-req.dto';
 
 @Injectable()
 export class DpomService {
@@ -45,6 +47,7 @@ export class DpomService {
         private dpomChildAdapter: DpomChildAdapter,
         private fileUploadRepo: NikeFileUploadRepository,
         private coLineRepository: COLineRepository,
+        private addressService: AddressService,
         @InjectDataSource()
         private dataSource: DataSource,
     ) {
@@ -177,6 +180,11 @@ export class DpomService {
                             "fieldName": "poHeader.documentDate",
                             "operator": ">",
                             "fieldValue": formattedDate
+                        },
+                        {
+                            "fieldName": "poHeader.poNumber",
+                            "operator": "=",
+                            "fieldValue": "4509911047"
                         }
                     ],
                     "offset": offset,
@@ -355,11 +363,16 @@ export class DpomService {
                     destinations.colors = colorsArr
                     destinationsArr.push(destinations)
                     coLine.destinations = destinationsArr
+                    const req = new DestinationReq()
+                    req.destination = data[0].destination_country
+                    const addressResponse = await this.addressService.getAddressInfoByDestination(req);
+                    console.log(addressResponse)
+                    const addressData = addressResponse.data[0]
                     buyerValue1 = "NKE-NIKE"
                     buyerValue2 = "NIK00003-NIKE USA INC"
                     agent = "NA-DIRECT CUSTOMER"
-                    buyerAddress = '19'
-                    deliveryAddress = '10'
+                    buyerAddress = addressData ? addressData.buyerCode + '-' + addressData.buyerAddress : 19
+                    deliveryAddress = addressData ? addressData.deliveryCode : 10
                     pkgTerms = "BOX-BOXES"
                     paymentTerms = "031-Trde Card45 Day"
                 } else if (po.buyer === 'Uniqlo-U12') {
@@ -435,6 +448,7 @@ export class DpomService {
                     const value = await option.getAttribute('value');
                     optionValues.push(value);
                 }
+                console.log(buyerAddress)
                 const number = optionValues.find(value => value.includes(buyerAddress)); // give the dynamic value here
                 await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
                 await driver.wait(until.elementLocated(By.xpath('//*[@id="cur"]')));
@@ -701,7 +715,7 @@ export class DpomService {
                     // Flatten the array of instruction arrays into a single array
                     const flattenedInstructionsArray = [].concat(...instructionsArray);
                     // Combine the instructions into a single string
-                    const combinedInstructions = flattenedInstructionsArray.join('.');
+                    combinedInstructions = flattenedInstructionsArray.join('.');
                     const text = combinedInstructions;
                     const searchText = 'HANGING IS REQUIRED';
                     const isPresent = text?.includes(searchText)
@@ -729,7 +743,7 @@ export class DpomService {
                     orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null,
                     orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonDescription,
                     orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.geographyCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, orderDetail.sizes.sizePo.inventorySegmentCode, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity,
-                    orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVasDetail ? combinedInstructions : null, orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails.join(',') : null, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
+                    orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVas ? combinedInstructions : null, orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails.join(',') : null, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
                     orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, orderDetail.sizes.sizePo.sizeQuantity, orderDetail.sizes.sizePo.sizeDescription, null, null, null, null, null, null, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
                     crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, hanger, orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, matches.length ? matches : null, 'username')
 

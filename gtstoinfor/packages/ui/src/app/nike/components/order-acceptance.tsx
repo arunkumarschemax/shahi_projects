@@ -459,6 +459,12 @@ export function OrderAcceptance() {
                     return transformedText;
                 },
             },
+            {
+                title: 'Total Item Qty',
+                dataIndex: 'totalItemQty', width: 70,
+                align: 'right',
+                render: (text) => <strong>{text}</strong>
+            }
         ];
 
         sizeHeaders?.forEach(version => {

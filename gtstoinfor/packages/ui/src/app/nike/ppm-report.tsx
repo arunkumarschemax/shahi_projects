@@ -1225,7 +1225,7 @@ const PPMReport = () => {
 
   }
 
-  const totalItemQty = gridData?.map(i => i.totalItemQty)
+  const totalItemQty = filterData?.map(i => i.totalItemQty)
   const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
 
   const onReset = () => {
