@@ -269,7 +269,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     return selectedFabric ? selectedFabric.productGroupId : null;
   };
 
-  const onCheck = (rowData, index, isChecked) => {
+  const onCheck = (rowData, index, isChecked, fabIndex) => {
     console.log(rowData);
     if(isChecked){
       if(Number(rowData.issuedQty) > 0){
@@ -295,6 +295,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       }
     }
     else{
+      stockForm.setFieldsValue({[`allocatedQuantity${fabIndex}-${index}`]:0, [`checkStatus${index}`]:false});
       console.log("")
     }
     
@@ -486,97 +487,118 @@ const FabricsForm = (props:FabricsFormProps) => {
       ),
     },
   ];
-  const renderColumnForFabric: any =[
-    {
-      title: 'S.No',
-      dataIndex: 'sNo',
-      render: (_, record, index) => index + 1,
-    },
-    {
-      title: "Grn Number",
-      key:'grnNumber',
-      dataIndex: "grnNumber",
-      width: "150px",
 
-    },
-    {
-      title: "Grn Date",
-      key:'grnDate',
-      dataIndex:"grnDate",
-      render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
-      width: "150px",
-
-    },
-    {
-      title: "Location",
-      key:'location',
-
-      dataIndex: "location",
-      width:'80px',
-    },
-  
-    {
-      title: "Available Quantity",
-      width: "150px",
-      dataIndex: "quantity",
-    },
-   
-    {
-      title: "Allocated Quantity",
-      width:'200px',
-      render: (text, rowData, index) => { 
-        return(
-          <Form form={stockForm}>
-          <Form.Item name={`allocatedQuantity${index}`}>
-                <InputNumber name={`allocatedQuantity${index}`}
-                    onChange={(e) => setAllocatedQty(index,rowData, e)} 
-                 />
-          </Form.Item>
-          </Form>
-        )
-      }
-    },
-    {
-      title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
-      onClick={() =>allocateQuantity()} 
-      >Allocate</Button>:'Allocate'}</div>,
-      dataIndex: "sm",
-      key: "sm",
-      align: "center",
-      render: (text, rowData, index) => { 
-        return (
-          <Checkbox 
-          onClick={checkboxonclick}
-          onChange={(e) => onCheck(rowData, index, e.target.checked)}
-          // onClick={(e) =>onCheck(rowData,undefined)}
-          />
-        );
+  const tableColumns = (val,fabindex) => {
+    if(val === undefined){
+      AlertMessages.getWarningMessage("Please give required consumption. ");
+    }
+    console.log(val);
+    const renderColumnForFabric: any =[
+      {
+        title: 'S.No',
+        dataIndex: 'sNo',
+        render: (_, record, index) => index + 1,
       },
-    },
-   
-  ]
+      {
+        title: "Grn Number",
+        key:'grnNumber',
+        dataIndex: "grnNumber",
+        width: "150px",
 
-  const setAllocatedQty = (index, rowData, value) => {
+      },
+      {
+        title: "Grn Date",
+        key:'grnDate',
+        dataIndex:"grnDate",
+        render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
+        width: "150px",
+
+      },
+      {
+        title: "Location",
+        key:'location',
+
+        dataIndex: "location",
+        width:'80px',
+      },
     
-     console.log(index);
+      {
+        title: "Available Quantity",
+        width: "150px",
+        dataIndex: "quantity",
+      },
+    
+      {
+        title: "Allocated Quantity",
+        width:'200px',
+        render: (text, rowData, index) => { 
+          return(
+            <Form form={stockForm}>
+            <Form.Item name={`allocatedQuantity${fabindex}-${index}`}>
+                  <InputNumber name={`allocatedQuantity${fabindex}-${index}`}
+                      onChange={(e) => setAllocatedQty(index,rowData, e, val,fabindex)} 
+                  />
+            </Form.Item>
+            </Form>
+          )
+        }
+      },
+      {
+        title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
+        onClick={() =>allocateQuantity()} 
+        >Allocate</Button>:'Allocate'}</div>,
+        dataIndex: "sm",
+        key: "sm",
+        align: "center",
+        render: (text, rowData, index) => { 
+          return (
+            <Form.Item name={`checkStatus${index}`}>
+            <Checkbox 
+            onClick={checkboxonclick}
+            onChange={(e) => onCheck(rowData, index, e.target.checked,fabindex)}
+            // onClick={(e) =>onCheck(rowData,undefined)}
+            />
+            </Form.Item>
+          );
+        },
+      },
+    
+    ]
+    return [...renderColumnForFabric]
+  }
+
+  const setAllocatedQty = (index, rowData, value, total,fabIndex) => {
+    console.log(fabIndex)
+    console.log(total);
+    console.log(index);
     console.log(data);
     console.log(rowData);
     rowData.issuedQty = value
-    const newData = data.find((record) => Number(record.fabricCode) === rowData.m3ItemId)?.allocatedStock;
+    const newData = data.find((record,index) => index === fabIndex)?.allocatedStock;
     // const newData = [...stockData];
     console.log(newData);
     let stockRecord = newData.find((s) => s.stockId === rowData.stockId);
     stockRecord.issuedQty = value;
+    const sum = newData.reduce((accumulator, object) => {
+      console.log(accumulator);
+      console.log(object.issuedQty);
+      return accumulator + (object.issuedQty != undefined ? Number(object.issuedQty) : 0);
+    }, 0);
+    console.log(sum);
+    if(Number(sum) > Number(total)){
+      AlertMessages.getErrorMessage('Issued Quantity should not exceed total required. ')
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,0)
+    }
     // newData[index].issuedQty = value;
     // console.log(newData[index]);
     // console.log(newData)
     // setStockData(newData);
     if (value === 0 || value === null || value < 0 || value === undefined) {
       AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
-      stockForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity));
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity));
     }
     if (Number(value) > Number(rowData.quantity)) {
-      stockForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty));
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty));
       AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
     }
   }
@@ -590,11 +612,11 @@ const FabricsForm = (props:FabricsFormProps) => {
 
   }
 
-  const renderItems = (record:any) => {
+  const renderItems = (record:any, index:any) => {
     return  <Table
     rowKey={record.stockId}
      dataSource={record.allocatedStock}
-      columns={renderColumnForFabric} 
+      columns={tableColumns(record.totalRequirement,index)} 
       pagination={false}
        />;
   };
