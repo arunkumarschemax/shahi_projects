@@ -13,7 +13,8 @@ export class M3ItemsDTO {
     weightUnit:string;
     construction: string;
     yarnType: string;
-    // yarnUnit: string;
+    yarnCount: number
+    yarnUnit: string;
     width:number;
     widthUnit:string;
     finish: string;
@@ -36,6 +37,7 @@ export class M3ItemsDTO {
         weight:number,weightUnit:string,
         construction: string,
         yarnType: string,
+        yarnCount: number,
         width:number,
         widthUnit:string,
         finish: string,
