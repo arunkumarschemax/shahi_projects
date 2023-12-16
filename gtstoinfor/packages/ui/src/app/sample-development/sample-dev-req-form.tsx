@@ -1,6 +1,6 @@
 import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import { BuyerRefNoRequest, DepartmentReq,SampleDevelopmentRequest } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, DepartmentReq,SampleDevelopmentRequest, StyleIdReq } from "@project-management-system/shared-models";
 import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Tabs, message } from "antd";
 import { useEffect, useState } from "react";
@@ -51,6 +51,7 @@ export const SampleDevForm = () => {
   const [data, setData] = useState<any>();
   const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
   const [qualities,setQualities] = useState<any[]>([])
+  const [styleaginstpch,setStyleaginstpch] = useState<any[]>([])
   const [sizeForm] = Form.useForm();
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
@@ -209,6 +210,18 @@ export const SampleDevForm = () => {
       }
     });
   };
+
+  const getstyleaginstpch=(value)=>{
+    console.log(value,'.,,,,,,,,,,,,,,,,,,,,')
+    const req = new StyleIdReq(value)
+    console.log(req,'===================')
+    styleService.getstyleaginstpch(req).then((res)=>{
+      if (res.status) {
+        setStyleaginstpch(res.data);
+        form.setFieldValue('pchId',res.data[0]?.pch)
+      }
+    })
+  }
 
   const getBrands = () => {
     brandService.getAllBrands().then((res) => {
@@ -399,57 +412,6 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }}sm={{ span: 24 }}md={{ span: 8 }}lg={{ span: 8 }}xl={{ span: 4 }} style={{display:'none'}}>
-            <Form.Item
-              name="requestNo"
-              label="Request No"
-              // rules={[
-              //   {
-              //    required:true
-
-              //   },
-              // ]}
-            >
-              <Input disabled/>
-            </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-            <Form.Item
-              name="pchId"
-              label="PCH"
-              rules={[{ required: true, message: "PCH is required" }]}
-            >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select PCH"
-              >
-                {pch.map((e) => {
-                  return (
-                    <Option key={e.profitControlHeadId} value={e.profitControlHeadId}>
-                      {e.profitControlHead}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-            <Form.Item
-              name="user"
-              label="User"
-              rules={[
-                {
-                  required:true,
-                  pattern: /^[0-9a-zA-Z]*$/,
-                  message: `Only numbers are accepted`,
-                },
-              ]}
-            >
-              <Input placeholder="Enter User" />
-            </Form.Item>
-          </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="buyerId"
@@ -473,6 +435,83 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
+          <Col xs={{ span: 24 }}sm={{ span: 24 }}md={{ span: 8 }}lg={{ span: 8 }}xl={{ span: 4 }} style={{display:'none'}}>
+            <Form.Item
+              name="requestNo"
+              label="Request No"
+              // rules={[
+              //   {
+              //    required:true
+
+              //   },
+              // ]}
+            >
+              <Input disabled/>
+            </Form.Item>
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+            <Form.Item
+              name="styleId"
+              label="Style"
+              rules={[{ required: true, message: "Style is required" }]}
+            >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Style"
+                onChange={getstyleaginstpch}
+              >
+                {styles.map((e) => {
+                  return (
+                    <Option key={e.styleId} value={e.styleId}>
+                      {e.style}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            <Form.Item
+              name="pchId"
+              label="PCH"
+              dependencies={['styleId']}
+              rules={[{ required: true, message: "PCH is required" }]}
+            >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select PCH"
+                disabled
+              >
+                {styleaginstpch.map((e) => {
+                  return (
+                    <Option key={e.pchId} value={e.pchId}>
+                      {e.pch}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            <Form.Item
+              name="user"
+              label="User"
+              rules={[
+                {
+                  required:true,
+                  pattern: /^[0-9a-zA-Z]*$/,
+                  message: `Only numbers are accepted`,
+                },
+              ]}
+            >
+              <Input placeholder="Enter User" />
+            </Form.Item>
+          </Col>
+          
           {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="sampleTypeId"
@@ -523,28 +562,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col> */}
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-            <Form.Item
-              name="styleId"
-              label="Style"
-              rules={[{ required: true, message: "Style is required" }]}
-            >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select Style"
-              >
-                {styles.map((e) => {
-                  return (
-                    <Option key={e.styleId} value={e.styleId}>
-                      {e.style}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
+         
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="brandId"

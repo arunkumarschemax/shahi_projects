@@ -2,7 +2,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { Style } from './style-entity';
-import { AllStyleResponseModel } from '@project-management-system/shared-models';
+import { AllStyleResponseModel, StyleAgainstPchDto, StyleIdReq } from '@project-management-system/shared-models';
+import { ProfitControlHead } from '../../profit-control-head/profit-control-head-entity';
 
 @Injectable()
 export class StyleRepository extends Repository<Style> {
@@ -24,5 +25,14 @@ export class StyleRepository extends Repository<Style> {
 
     }
 
+    async getstyleaginstpch (req?:StyleIdReq):Promise<any>{
+        const query = await this .createQueryBuilder('s')
+        .select('s.style_id as styleId,s.style,s.pch as pchId,pch.profit_control_head as pch')
+        .leftJoin(ProfitControlHead,'pch','pch.profit_control_head_id = s.pch')
+        .where(`s.style_id = ${req.styleId} `)
+        .orderBy(`pch.profit_control_head`)
+        return query.getRawMany()
+    
+      }
    
 }

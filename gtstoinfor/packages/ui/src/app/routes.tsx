@@ -214,6 +214,8 @@ import MaterialIssuesDetailsView from "./sample-development/material-issued-deta
 import PickListPrint from "./sample-development/pick-list-print"
 import LocationQrCodePrint from "./rm_locations/location-barcode-print"
 import PurchaseOrderQrCodePrint from "./purchase-order2/po-qrcode-print"
+import WeightForm from "./common/weight/weight-form"
+import WeightView from "./common/weight/weight-view"
 
 
 
@@ -735,6 +737,11 @@ export const AppRoutes = () => {
                     updateItem={(undefined) => { }} />} />
                    <Route path="category/category-view" element={<CategoryView />} />
                     <Route path='category/category-form' element={<CategoryForm columnData={undefined}
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} />} />
+                        <Route path="weight/weight-view" element={<WeightView />} />
+                    <Route path='weight/weight-form' element={<WeightForm columnData={undefined}
                         isUpdate={false}
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} />} />
