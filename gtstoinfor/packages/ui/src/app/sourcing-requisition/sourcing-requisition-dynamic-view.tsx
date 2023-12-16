@@ -819,7 +819,7 @@ const segmentedOptions = options();
                 {tabName === "Fabric" ? (
                   <>
                     <Table
-                      columns={tableColumns(item.indentId, (item.indentFabricDetails).filter((e) => Number(e.poQty) < Number(e.quantity)).length)}
+                      columns={tableColumns(item.indentId, (item.indentFabricDetails).filter((e) => Number(e.poQty) < Number(e.quantity) && e.checkStatus === true).length)}
                       dataSource={item.indentFabricDetails}
                       pagination={false}
                       scroll={{ x: "max-content" }}
@@ -833,7 +833,7 @@ const segmentedOptions = options();
                 {tabName === "Trim" ? (
                   <>
                     <Table
-                      columns={tableTrimColumns(item.indentId, (item.indentTrimDetails).filter((e) => Number(e.poQty) < Number(e.quantity)).length)}
+                      columns={tableTrimColumns(item.indentId, (item.indentTrimDetails).filter((e) => Number(e.poQty) < Number(e.quantity) && e.checkStatus === true).length)}
                       dataSource={item.indentTrimDetails}
                       pagination={false}
                       scroll={{ x: "max-content" }}
