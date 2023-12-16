@@ -366,7 +366,7 @@ export class DpomService {
                     buyerValue1 = "NKE-NIKE"
                     buyerValue2 = "NIK00003-NIKE USA INC"
                     agent = "NA-DIRECT CUSTOMER"
-                    buyerAddress = addressData ? addressData.buyerCode + '-' + addressData.buyerAddress : 19
+                    buyerAddress = addressData ? addressData.buyerCode : 19
                     deliveryAddress = addressData ? addressData.deliveryCode : 10
                     pkgTerms = "BOX-BOXES"
                     paymentTerms = "031-Trde Card45 Day"
@@ -443,8 +443,9 @@ export class DpomService {
                     const value = await option.getAttribute('value');
                     optionValues.push(value);
                 }
-                console.log(buyerAddress)
-                const number = optionValues.find(value => value.includes(buyerAddress)); // give the dynamic value here
+                const number = optionValues.find(value => {
+                    return Number(value.split('-')[0].trim()) == Number(buyerAddress)
+                });
                 await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
                 await driver.wait(until.elementLocated(By.xpath('//*[@id="cur"]')));
                 const curDropdown = await driver.findElement(By.xpath('//*[@id="cur"]'));
@@ -552,7 +553,9 @@ export class DpomService {
                                             const value = await option.getAttribute('value');
                                             optionValues.push(value);
                                         }
-                                        const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
+                                        const number = optionValues.find(value => {
+                                            return Number(value.split('-')[0].trim()) == Number(deliveryAddress)
+                                        });
                                         await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
                                         // Find all the input fields in the first row.
                                         const inputElements = await driver.findElements(By.xpath("//tbody/tr[1]/td/div/input[@name='salespsizes']"));
@@ -616,8 +619,19 @@ export class DpomService {
                             await driver.sleep(10000)
                         }
                     } else {
-                        await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
-                        const coNoElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[7]'));
+                        await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[4]')), 10000);
+                        let j;
+                        for (let i = 1; i < 100; i++) {
+                            const poNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${i}]/td[4]`));
+                            const poNo = await poNoElement.getAttribute('innerText');
+                            if (poNo == coLine.buyerPo) {
+                                j = i;
+                                break;
+                            } else {
+                                continue;
+                            }
+                        }
+                        const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${j}]/td[7]`));
                         const coNo = await coNoElement.getAttribute('innerText');
                         const currentDate = new Date();
                         const day = currentDate.getDate().toString().padStart(2, '0');
@@ -704,9 +718,9 @@ export class DpomService {
                 const daysDifference = date4.diff(date3, 'days');
                 let combinedInstructions: string;
                 let hanger: string;
-                if (orderDetail.poLine.itemVas) {
+                if (orderDetail.poLine.itemVasDetail) {
                     // Extract valueAddedServiceInstructions from each object in the array
-                    const instructionsArray = orderDetail.poLine.itemVas?.map(vas => vas.valueAddedServiceInstructions);
+                    const instructionsArray = orderDetail.poLine.itemVasDetail?.map(vas => vas.textDetails);
                     // Flatten the array of instruction arrays into a single array
                     const flattenedInstructionsArray = [].concat(...instructionsArray);
                     // Combine the instructions into a single string
@@ -738,7 +752,7 @@ export class DpomService {
                     orderDetail.poLine.productCode, orderDetail.product.colorDescription, orderDetail.poLine.destinationCountryCode, orderDetail.poLine.destinationCountryName, orderDetail.poLine.plantCode, orderDetail.poLine.plantName, orderDetail.poHeader.trcoPoNumber, orderDetail.sizes.sizeProduct.upc, orderDetail.poLine.directshipSalesOrderNumber, orderDetail.poLine.directshipSalesOrderItemNumber, orderDetail.salesOrder.customerPo, orderDetail.salesOrder.customerShipTo, null,
                     orderDetail.poLine.seasonCode, orderDetail.poLine.seasonYear, orderDetail.poHeader.poDocTypeCode, orderDetail.poHeader.poDocTypeDescription, orderDetail.planning.mrgacDate, orderDetail.poLine.originalGoodsAtConsolidatorDate, orderDetail.sizes.sizePo.goodsAtConsolidatorDate, orderDetail.sizes.sizeLogisticsOR.originReceiptActualDate, orderDetail.manufacturing.factoryDeliveryActualDate, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonCode, orderDetail.sizes.sizePo.goodsAtConsolidatorReasonDescription,
                     orderDetail.poLine.shippingType, orderDetail.planning.planningPriorityCode, orderDetail.planning.planningPriorityDescription, orderDetail.product.launchCode, orderDetail.poLine.geographyCode, orderDetail.poLine.dpomItemStatus, orderDetail.sizes.sizePo.transportationModeCode, orderDetail.poHeader.incoTerms, orderDetail.sizes.sizePo.inventorySegmentCode, orderDetail.poHeader.purchaseGroupCode, orderDetail.poHeader.purchaseGroupName, orderDetail.poLine.itemQuantity, orderDetail.sizes.sizeLogisticsOR.originReceiptQuantity,
-                    orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVas ? combinedInstructions : null, orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails.join(',') : null, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
+                    orderDetail.sizes.sizeVas.valueAddedServiceInstructions, orderDetail.poLine.itemVasDetail ? combinedInstructions : null, orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails.join(',') : null, orderDetail.sizes.sizePo.sizePricing.fob.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.fob.crpoCurrencyCode, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.crpoCurrencyCode,
                     orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoRateUnitValue, orderDetail.sizes.sizePo.sizePricing.netIncludingDiscounts.trcoCurrencyCode, orderDetail.sizes.sizePo.sizeQuantity, orderDetail.sizes.sizePo.sizeDescription, null, null, null, null, null, null, crmData.item, crmData.factory, crmData.customerOrder, crmData.coFinalApprovalDate,
                     crmData.planNo, crmData.truckOutDate, crmData.actualShippedQty, crmData.coPrice, crmData.shipToAddress, crmData.paymentTerm, crmData.styleDesc, crmData.fabricContent, crmData.fabricSource, crmData.commission, crmData.PCD, hanger, orderDetail.poHeader.poNumber + '-' + orderDetail.poLine.itemNumber, todayDate, (daysDifference).toLocaleString(), todayDate, matches.length ? matches : null, 'username')
 
@@ -773,7 +787,7 @@ export class DpomService {
                     const existingDataKeys = Object.keys(details);
                     const currentDataKeys = Object.keys(dtoData);
                     const dpomDiffObjects = [];
-                    existingDataKeys.forEach((existingDataKey) => {
+                    for (const existingDataKey of existingDataKeys) {
                         if (
                             details[existingDataKey] !== orderDetail[existingDataKey] &&
                             existingDataKey !== 'createdAt' && existingDataKey !== 'updatedAt' &&
@@ -790,11 +804,11 @@ export class DpomService {
                             dpomDiffObj.odVersion = dtoData.odVersion;
                             dpomDiffObj.fileId = save.id;
 
-                            if (dpomDiffObj.oldValue !== dpomDiffObj.newValue) {
+                            if (dpomDiffObj.oldValue != dpomDiffObj.newValue) {
                                 dpomDiffObjects.push(dpomDiffObj);
                             }
                         }
-                    });
+                    };
                     // Bulk insert differences
                     if (dpomDiffObjects.length > 0) {
                         await transactionManager.getRepository(DpomDifferenceEntity).save(dpomDiffObjects);
@@ -816,8 +830,6 @@ export class DpomService {
         }
     }
 
-
-
     @Cron('0 3 * * *')
     async syncCRMData(): Promise<CommonResponseModel> {
         // const transactionManager = new GenericTransactionManager(this.dataSource)
@@ -837,6 +849,7 @@ export class DpomService {
                             if (updateOrder.affected) {
                                 continue;
                             } else {
+                                await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.pcd })
                                 continue;
                                 // await transactionManager.releaseTransaction()
                                 // return new CommonResponseModel(false, 0, 'CRM data sync failed')
@@ -848,6 +861,7 @@ export class DpomService {
                             if (updateOrder.affected) {
                                 continue;
                             } else {
+                                await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, coPrice: data1.price, coPriceCurrency: data1.currency, styleDesc: '', commission: data1.commission, PCD: data1.pcd })
                                 continue;
                                 // await transactionManager.releaseTransaction()
                                 // return new CommonResponseModel(false, 0, 'CRM data sync failed')

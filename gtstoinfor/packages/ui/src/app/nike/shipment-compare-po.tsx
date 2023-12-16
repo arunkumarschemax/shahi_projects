@@ -105,24 +105,24 @@ const ShipmentChangesCompareGrid = () => {
                 .addColumns(data1)
                 .addDataSource(filteredQtyData, { str2num: true })
         }
-        if (unitChangeData?.length > 0) {
-            excel
-                .addSheet('MRGAC Revised PO changes')
-                .addColumns(data4)
-                .addDataSource(unitChangeData, { str2num: true })
-        }
+        // if (unitChangeData?.length > 0) {
+        //     excel
+        //         .addSheet('MRGAC Revised PO changes')
+        //         .addColumns(data4)
+        //         .addDataSource(unitChangeData, { str2num: true })
+        // }
         if (itemChangeData?.length > 0) {
             excel
                 .addSheet('Mode of Transportation Revised PO')
                 .addColumns(data2)
                 .addDataSource(itemChangeData, { str2num: true })
         }
-        if (poStatusData?.length > 0) {
-            excel
-                .addSheet('Plant Code Revised PO')
-                .addColumns(data3)
-                .addDataSource(poStatusData, { str2num: true })
-        }
+        // if (poStatusData?.length > 0) {
+        //     excel
+        //         .addSheet('Plant Code Revised PO')
+        //         .addColumns(data3)
+        //         .addDataSource(poStatusData, { str2num: true })
+        // }
         excel.saveAs('revisedPOs.xlsx');
     }
 
@@ -149,8 +149,8 @@ const ShipmentChangesCompareGrid = () => {
             title: 'PO Line Item No',
             dataIndex: 'po_line_item_number'
         }, {
-            title:'Document Date',
-            dataIndex:'document_date',
+            title: 'Document Date',
+            dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
@@ -178,11 +178,11 @@ const ShipmentChangesCompareGrid = () => {
             dataIndex: 'rc_code',
             render: (text, record) => {
                 if (!text || text.trim() === '') {
-                  return '-';
+                    return '-';
                 } else {
-                  return text;
+                    return text;
                 }
-              },
+            },
         }
     ]
 
@@ -432,8 +432,8 @@ const ShipmentChangesCompareGrid = () => {
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
-            title: 'Item',align:'center',
-            dataIndex: 'item',width: 60, render: (text, record) => {
+            title: 'Item', align: 'center',
+            dataIndex: 'item', width: 60, render: (text, record) => {
                 if (!text || text.trim() === '') {
                     return '-';
                 } else {
@@ -443,8 +443,8 @@ const ShipmentChangesCompareGrid = () => {
             },
         },
         {
-            title: 'Unit',align:'center',
-            dataIndex: 'factory',width: 60, render: (text, record) => {
+            title: 'Unit', align: 'center',
+            dataIndex: 'factory', width: 60, render: (text, record) => {
                 if (!text || text.trim() === '') {
                     return '-';
                 } else {
@@ -460,11 +460,11 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number', width:70,align:'center'
+            dataIndex: 'po_line_item_number', width: 70, align: 'center'
         },
         {
-            title:'Document Date',
-            dataIndex:'document_date',
+            title: 'Document Date',
+            dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
@@ -489,7 +489,7 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'RC Code',
-            dataIndex: 'rc_code',width:70, render: (text, record) => {
+            dataIndex: 'rc_code', width: 70, render: (text, record) => {
                 if (!text || text.trim() === '') {
                     return '-';
                 } else {
@@ -649,7 +649,7 @@ const ShipmentChangesCompareGrid = () => {
             key: 'sno',
             width: 60,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
-        }, 
+        },
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
@@ -668,17 +668,17 @@ const ShipmentChangesCompareGrid = () => {
             },
         },
         {
+            title: 'Unit',
+            dataIndex: 'factory',
+        },
+        {
             title: 'PO Number',
             dataIndex: 'po_number',
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number', 
+            dataIndex: 'po_line_item_number',
             // fixed: 'left'
-        },
-        {
-            title: 'Unit',
-            dataIndex: 'factory',
         },
         {
             title: 'CO Number',
@@ -689,7 +689,7 @@ const ShipmentChangesCompareGrid = () => {
             dataIndex: 'documentDate',
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
-       
+
         {
             title: 'OGAC',
             dataIndex: 'ogac',
@@ -714,7 +714,7 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'S No',
             key: 'sno',
-            render: (text, object, index) => (page - 1) * pageSize + (index + 1),fixed:'left'
+            render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
         },
         // {
         //     title: 'PO Number',
@@ -722,7 +722,7 @@ const ShipmentChangesCompareGrid = () => {
         // },
         {
             title: 'PO And Line ',
-            dataIndex: 'po_and_line', align: 'center', fixed:'left'
+            dataIndex: 'po_and_line', align: 'center', fixed: 'left'
         },
         {
             title: 'Schedule Line Item No',
@@ -732,13 +732,13 @@ const ShipmentChangesCompareGrid = () => {
         },
         {
             title: 'Previous MRGAC',
-            dataIndex: 'old_val',align: 'center',
+            dataIndex: 'old_val', align: 'center',
 
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Revised MRGAC',
-            dataIndex: 'new_val',align: 'center',
+            dataIndex: 'new_val', align: 'center',
             render: (text) => moment(text).format('MM/DD/YYYY')
         }
     ];
@@ -750,7 +750,7 @@ const ShipmentChangesCompareGrid = () => {
             width: 60,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
         },
-        
+
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
@@ -771,20 +771,20 @@ const ShipmentChangesCompareGrid = () => {
         {
             title: 'Factory',
             dataIndex: 'factory',
-           width: 80
+            width: 80
         },
         {
             title: 'Document Date',
             dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY'), width: 80
-        },{
+        }, {
             title: 'PO Number',
             dataIndex: 'po_number',
-           width: 80
+            width: 80
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',  width: 80
+            dataIndex: 'po_line_item_number', width: 80
         },
         {
             title: 'Product Code',
@@ -854,24 +854,24 @@ const ShipmentChangesCompareGrid = () => {
             children: <Table className="custom-table-wrapper" bordered dataSource={filteredQtyData} columns={columns} pagination={false} scroll={{ x: 'max-content', y: 450 }}
             />,
         },
+        // {
+        //     key: '2',
+        //     label: <b>MRGAC Revised PO's : {unitChangeData?.length}</b>,
+        //     children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} pagination={false} scroll={{ x: 'max-content', y: 450 }}
+        //     />,
+        // },
         {
             key: '2',
-            label: <b>MRGAC Revised PO's : {unitChangeData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} pagination={false} scroll={{ x: 'max-content', y: 450 }}
-            />,
-        },
-        {
-            key: '3',
             label: <b style={{ color: '#29D6DE' }} >Mode of Transportation Revised PO's : {itemChangeData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns3} pagination={false} scroll={{ x: 'max-content', y: 450 }}
             />,
-        },
-        {
-            key: '4',
-            label: <b>Plant Code Revised PO's : {poStatusData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns5} pagination={false} scroll={{ x: 'max-content', y: 450 }}
-            />,
         }
+        // {
+        //     key: '4',
+        //     label: <b>Plant Code Revised PO's : {poStatusData?.length}</b>,
+        //     children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns5} pagination={false} scroll={{ x: 'max-content', y: 450 }}
+        //     />,
+        // }
     ];
 
     const onReset = () => {
