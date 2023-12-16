@@ -73,7 +73,8 @@ export const SourcingRequisitionDynamicView = () => {
   const searchInput = useRef(null);
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [selectedRowData, setSelectedRowData] = useState([]);
-  const [btnEnable,setbtnEnable]=useState<boolean>(true)
+  const [btnEnable,setbtnEnable]=useState<boolean>(false)
+
 
   useEffect(() => {
     if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
@@ -102,7 +103,7 @@ export const SourcingRequisitionDynamicView = () => {
 
   const checkAccess = (buttonParam) => {   
     const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus.Indent,buttonParam)
-    console.log(accessValue,'access');
+    // console.log(accessValue,'access');
     
     return accessValue
 }
@@ -147,8 +148,8 @@ const segmentedOptions = options();
     });
     
   };
-  console.log(data)
-  console.log(tableData)
+  // console.log(data)
+  // console.log(tableData)
 
   const getStyle = () => {
     styleService.getAllActiveStyle().then((res) => {
@@ -166,7 +167,7 @@ const segmentedOptions = options();
 
   const generatePoForFabric = (indentId:number) =>{
     let indentDetails = tableData.find((e)=>e.indentId === indentId);
-    console.log(indentDetails)
+    // console.log(indentDetails)
     navigate('/purchase-order', { state: { data: indentDetails, type:'Indent', materialType:'Fabric' } })
   }
 
@@ -259,10 +260,10 @@ const segmentedOptions = options();
   }));
 
   const onCheck = (e, sampleRequestid, fabricType, value, rowData) => {
-    console.log(e.target.checked);
-    console.log(sampleRequestid);
-    console.log(fabricType);
-    console.log(rowData);
+    // console.log(e.target.checked);
+    // console.log(sampleRequestid);
+    // console.log(fabricType);
+    // console.log(rowData);
     if(fabricType === "Fabric"){
       if(!e.target.checked){
         (tableData.find((e)=>e.indentId === rowData.indentId)?.indentFabricDetails).find((i)=>i.ifabricId === rowData.ifabricId).checkStatus = false;
@@ -300,8 +301,8 @@ const segmentedOptions = options();
       }
     }
   }
-  const tableColumns = (key) => {
-    console.log(key);
+  const tableColumns = (key,val) => {
+    // console.log(key);
     const Columns: any = [
 
       {
@@ -361,6 +362,10 @@ const segmentedOptions = options();
         dataIndex: "xlNo",
       },
       {
+        title: "PO Raised",
+        dataIndex: "poQty",
+      },
+      {
         title: "Quantity",
         dataIndex: "quantity",
         sorter: (a, b) => a.quantity.localeCompare(b.quantity),
@@ -402,18 +407,19 @@ const segmentedOptions = options();
       //   },
       // },
       {
-        title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePoForFabric(key)} >Generate Po</Button>:'Genereate PO'}</div>,
+        title: <div style={{ textAlign: "center" }}>{val > 0 ?<Button  type="primary" onClick={() =>generatePoForFabric(key)} >Generate Po</Button>:<></>}</div>,
         dataIndex: "sm",
         key: "sm",
         align: "center",
         render: (text, rowData, index) => { 
-          {console.log(rowData)}
+          // {console.log(rowData)}
           return(
+            (Number(rowData.poQty) < Number(rowData.quantity)) ?
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
               <Form.Item name={`fabric${rowData.indentFabricId}`} >
                 <Checkbox name={`fabric${rowData.indentFabricId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>
             </Form.Item>
-            </Col>
+            </Col> : <Tag></Tag>
           )
         }
       },
@@ -442,7 +448,8 @@ const segmentedOptions = options();
     return [...Columns];   
  
   }
-  const tableTrimColumns = (key) => {
+  const tableTrimColumns = (key, val) => {
+    // console.log(val);
     const columnsSkelton: any = [
       {
         title: "S No",
@@ -458,8 +465,13 @@ const segmentedOptions = options();
       },
       {
         title: "M3 Trim Code",
-        dataIndex: "m3TrimCode",
-        ...getColumnSearchProps("m3TrimCode"),
+        dataIndex: "m3TrimCodeName",
+        ...getColumnSearchProps("m3TrimCodeName"),
+      },
+      {
+        title: "PO Raised",
+        dataIndex: "poQty",
+        ...getColumnSearchProps("poQty"),
       },
       {
         title: "To Be Procured Quantity",
@@ -481,18 +493,37 @@ const segmentedOptions = options();
         dataIndex: "remarks",
       },
       {
-        title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>genereatePoForTrim(key)} >Generate Po</Button>:'Genereate PO'}</div>,
+        title: <div style={{ textAlign: "center" }}>
+          
+        {val > 0 ?<Button  type="primary" onClick={() =>genereatePoForTrim(key)} >Generate Po</Button>:<></>}
+          </div>,
         dataIndex: "sm",
         key: "sm",
         align: "center",
         render: (text, rowData, index) => { 
-          {console.log(rowData)}
+          // console.log(rowData)
+          // if(Number(rowData.poQty) < Number(rowData.quantity)){
+          //   console.log("iii")
+          //   // nwArray.push(true)
+          //   setPoQtyFlag([...poQtyFlag,true])
+          //   console.log(poQtyFlag)
+          // }
+          // else{
+          //   console.log("else")
+          //   // nwArray.push(false)
+          //   setPoQtyFlag([...poQtyFlag,false])
+          //   console.log(poQtyFlag)
+
+          // }
           return(
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
-              <Form.Item name={`trim${rowData.indentTrimId}`} >
-                <Checkbox name={`trim${rowData.indentTrimId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>
-            </Form.Item>
-            </Col>
+          //   {
+              (Number(rowData.poQty) < Number(rowData.quantity)) ?
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+                <Form.Item name={`trim${rowData.indentTrimId}`} >
+                  <Checkbox name={`trim${rowData.indentTrimId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>
+              </Form.Item>
+              </Col>: <Tag></Tag> 
+          // }
           )
         }
       },
@@ -518,11 +549,12 @@ const segmentedOptions = options();
   }
   const genereatePoForTrim = (indentId: number) => {
     let indentDetails = tableData.find((e)=>e.indentId === indentId);
-    console.log(indentDetails)
+    // console.log(indentDetails)
     navigate('/purchase-order', { state: { data: indentDetails, type:'Indent', materialType:'Trim' } })
   };
 
   const onSegmentChange = (val) => {
+    // console.log(val);
     setTabName(val);
   };
 
@@ -566,7 +598,7 @@ const segmentedOptions = options();
 
   const onSearch = () => {
     let filterData = [];
-    console.log(data)
+    // console.log(data)
     // filterData = data.filter
     if (sourcingForm.getFieldValue("style") !== undefined) {
       const style = sourcingForm.getFieldValue("style");
@@ -721,7 +753,7 @@ const segmentedOptions = options();
         </Row>
       </Form>
 
-      <Collapse
+      <Collapse 
         collapsible="icon"
         expandIcon={({ isActive }) => (
           <CaretRightOutlined rotate={isActive ? 90 : 0} />
@@ -729,7 +761,7 @@ const segmentedOptions = options();
         accordion
       >
         {tableData.map((item: any, index: any) => (
-          <Collapse.Panel
+          <Collapse.Panel 
             header={
               <HeaderRow
                 requestNo={item.requestNo}
@@ -787,7 +819,7 @@ const segmentedOptions = options();
                 {tabName === "Fabric" ? (
                   <>
                     <Table
-                      columns={tableColumns(item.indentId)}
+                      columns={tableColumns(item.indentId, (item.indentFabricDetails).filter((e) => Number(e.poQty) < Number(e.quantity)).length)}
                       dataSource={item.indentFabricDetails}
                       pagination={false}
                       scroll={{ x: "max-content" }}
@@ -801,7 +833,7 @@ const segmentedOptions = options();
                 {tabName === "Trim" ? (
                   <>
                     <Table
-                      columns={tableTrimColumns(item.indentId)}
+                      columns={tableTrimColumns(item.indentId, (item.indentTrimDetails).filter((e) => Number(e.poQty) < Number(e.quantity)).length)}
                       dataSource={item.indentTrimDetails}
                       pagination={false}
                       scroll={{ x: "max-content" }}
