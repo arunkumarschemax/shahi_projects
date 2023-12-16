@@ -457,4 +457,15 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+  @Post('/getSizeWiseOrders')
+  @ApiBody({ type: SampleOrderIdRequest })
+  async getSizeWiseOrders(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getSizeWiseOrders(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+  
 }
