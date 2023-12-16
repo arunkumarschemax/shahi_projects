@@ -20,7 +20,7 @@ export  const PurchaseOrderQrCodePrint = ()=>{
     }, []);
 
     const getdropDown =() =>{
-        service.getPAllPurchaseOrderData().then((res) =>{
+        service.getAllPos().then((res) =>{
             if(res.status){
                 setData2(res.data)
             }
@@ -32,7 +32,6 @@ export  const PurchaseOrderQrCodePrint = ()=>{
     const getData =(val) =>{
       const req = new VendorIdReq()
       req.poId = val
-      console.log(val,'ooooooooooooo');
       
         service.QrByPoId (req).then((res) =>
             {
@@ -93,8 +92,8 @@ getData(data.poNumber)
               >
                  <Select placeholder=" Select PO Number" >
                   {data2.map((option) => (
-                    <Option key={option.purchaseOrderId} value={option.purchaseOrderId}>
-                      {option.poNumber}
+                    <Option key={option.purchase_order_id} value={option.po_number}>
+                      {option.po_number}
                     </Option>
                   ))}
                 </Select>
@@ -144,20 +143,22 @@ getData(data.poNumber)
                 </span>
             }
         >
-            <div id="printme">
+            <div id="printme" style={{marginTop:30}} >
                 {data && data.length>0 ? (
                     <>
                     {data?.map((e)=>(
-                        <h4 style={{ display:'flex',flexDirection:'column',textAlign:'center'}}>
-                        <a> 
-                        <QRCode
-                             bgColor="lightgrey"
-                             style={{width:'4in',height:'1.5in',marginTop:"10px",pageBreakAfter:'always', textAlign:'center',alignItems:'center', }}
-                             value={`${e?.grn_item_no}`}
-                             viewBox={`0 0 356 356`}
-                             
-                         />
-                       <style>{`
+                        <>
+                                   
+                  <h4 style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
+                  <div style={{ flexDirection: "row", display: "flex",textAlign:'left'}}>
+                <div style={{flex:1,padding:8}}>
+                        <div style={{ marginLeft: -100 }}>
+                          <QRCode
+                            bgColor="lightgrey"
+                            style={{ width: '4in', height: '1.5in', marginTop: "8px", pageBreakAfter: 'always', textAlign: 'left' }}
+                            value={`${e?.grn_item_no}`}
+                            viewBox={`356 356 0 0`} />
+                          <style>{`
  @page {
    size: 4in 2in; /* Set page size to 4x2 inches */
    margin: 0; /* Reset default margin */
@@ -166,12 +167,24 @@ getData(data.poNumber)
  body {
    margin: 0; /* Reset default margin */
  }`}</style>
-                         </a>
-                         <b style={{textAlign:'center',fontSize:"30px" }}>
-                         {`${e?.grn_item_no}`}
-                         </b>
-                         </h4>
-                
+                        </div>
+                        <div style={{ textAlign: 'left', fontSize: "30px", marginLeft: 10,marginTop:30}}>
+                          {`${e?.grn_item_no}`}
+                        </div>
+                        </div>
+                      <div style={{flex:1,margin:5}}>
+                    <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:3}}>Invoice No : </p>
+                    <p style={{textAlign: 'left',marginLeft:-100,fontSize:'15px',padding:3}}>{e.invoice_no}</p>
+                    <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:3}}>Type : </p>
+                    <p style={{ textAlign: 'left',marginLeft:-100,fontSize:'15px',padding:3}}>{e.item_type}</p>
+                    <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:3}}>Item : </p>
+                    <p style={{textAlign: 'left',marginLeft:-100,fontSize:'15px',padding:3}}>{e.itemCode}</p>
+
+                    </div>
+                      </div>
+                      </h4>
+                    
+                      </>
                                 ))}</>
                                 ):('')}
                                 </div>

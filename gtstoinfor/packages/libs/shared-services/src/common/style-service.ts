@@ -24,4 +24,7 @@ async ActivateOrDeactivateStyle(dto: StyleIdReq): Promise<AllStyleResponseModel>
   return this.axiosPostCall(this.URL + "/ActivateOrDeactivateStyle", dto)
 }
 
+async getstyleaginstpch(dto: StyleIdReq): Promise<AllStyleResponseModel> {
+  return this.axiosPostCall(this.URL + "/getstyleaginstpch", dto)
+}
 }

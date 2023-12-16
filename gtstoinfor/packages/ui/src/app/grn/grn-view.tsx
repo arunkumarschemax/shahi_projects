@@ -241,7 +241,7 @@ import { useIAMClientState } from "../common/iam-client-react";
         dataIndex: 'itemType',
         // ...getColumnSearchProps("itemType"),
         render: (text) => {
-          const EnumObj = GRNTypeEnumDisplay?.find((item) => item.name === text);
+          const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
           return EnumObj ? EnumObj.displayVal : text;
         },
         // filters: [

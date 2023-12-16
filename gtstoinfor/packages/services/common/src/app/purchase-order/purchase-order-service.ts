@@ -562,11 +562,27 @@ export class PurchaseOrderService {
         }
         return 
     }
+    async getAllPos(): Promise<CommonResponseModel> {
+        try {
+            let query = `SELECT p.purchase_order_id,p.po_number FROM  purchase_order p '`
+            const data = await this.dataSource.query(query)
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
+            } else {
+                return new CommonResponseModel(false, 1, "No data found", [])
+            }
+        } catch (err) {
+            throw (err)
+        }
+    }
     async QrByPoId(req: VendorIdReq): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT grn.grn_id,p.purchase_order_id, gi.grn_item_id,gi.grn_item_no FROM  purchase_order p 
+            let query = `SELECT grn.grn_id,p.purchase_order_id, gi.grn_item_id,gi.grn_item_no,grn.invoice_no,grn.item_type, IF(grn.item_type = "FABRIC",mit.description , 
+            mtr.description) AS itemCode FROM  purchase_order p 
             LEFT JOIN grn ON grn.po_id = p.purchase_order_id
             LEFT JOIN grn_items gi ON gi.grn_id = grn.grn_id
+            LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND grn.item_type = "FABRIC"
+            LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND grn.item_type != "FABRIC"
             WHERE p.purchase_order_id = '${req.poId}'`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {

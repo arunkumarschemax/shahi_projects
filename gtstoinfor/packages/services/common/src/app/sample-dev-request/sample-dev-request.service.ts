@@ -1752,5 +1752,19 @@ return new CommonResponseModel(true,1,'data retreived',combineData)
 // }
 }
 
+//mobile APP API for operation reporting UI
+async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
+  const dataQry = `SELECT ss.quantity,sr.request_no as requestNo,c.colour,s.sizes FROM sample_request_size_info ss
+  LEFT JOIN sample_request sr ON sr.sample_request_id = ss.sample_request_id
+  LEFT JOIN colour c ON c.colour_id = ss.colour_id
+  LEFT JOIN size s ON s.size_id = ss.size_id where ss.sample_request_id = ${req.sampleRequestId}`
+  const data  = await this.dataSource.query(dataQry)
+  if(dataQry.length > 0){
+    return new CommonResponseModel(true,1,'data retreived',data)
+  }else{
+    return new CommonResponseModel(false,0,'No data')
+  }
+}
+
 
 }
