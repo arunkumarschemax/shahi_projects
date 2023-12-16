@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox } from 'antd';
+import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { ColourService, M3ItemsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
@@ -15,6 +15,7 @@ export interface FabricsFormProps {
   data: any;
   buyerId: number;
   sizeDetails: any[]
+  form:FormInstance<any>
 }
 
 const FabricsForm = (props:FabricsFormProps) => {
@@ -35,7 +36,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   const [sourcingForm] = Form.useForm();
   const colorService = new ColourService()
   const { IAMClientAuthContext } = useIAMClientState();
-  const [form] = Form.useForm();
+  // const [form] =props.form.useForm();
   const [stockForm] = Form.useForm();
 
   const handleAddRow = () => {
@@ -121,12 +122,12 @@ const FabricsForm = (props:FabricsFormProps) => {
     }
 
     else if(field === 'consumption'){
-      let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
+      let wastg =props.form.getFieldValue(`wastage${key}`) != undefined ?props.form.getFieldValue(`wastage${key}`) : 2;
       updatedData = data.map((record) => {
         if (record.key === key) {
           console.log(e);
           console.log(record.totalCount);
-          let totalSizeCountForSize = props.sizeDetails.find((s) => s.colour === form.getFieldValue(`colorId${key}`))?.sizeInfo;
+          let totalSizeCountForSize = props.sizeDetails.find((s) => s.colour ===props.form.getFieldValue(`colorId${key}`))?.sizeInfo;
           console.log(totalSizeCountForSize);
           let qtyy = 0;
           totalSizeCountForSize?.forEach(qty => {
@@ -138,14 +139,14 @@ const FabricsForm = (props:FabricsFormProps) => {
           let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
           console.log(consumptionCal);
           console.log(withPer);
-          form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+         props.form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
         return record;
       });
     }
     else if(field === 'wastage'){
-      let cons = form.getFieldValue(`consumption${key}`) != undefined ? form.getFieldValue(`consumption${key}`) : 0
+      let cons =props.form.getFieldValue(`consumption${key}`) != undefined ?props.form.getFieldValue(`consumption${key}`) : 0
       updatedData = data.map((record) => {
         if (record.key === key) {
           console.log(e);
@@ -154,7 +155,7 @@ const FabricsForm = (props:FabricsFormProps) => {
           let withPer = (Number(consumptionCal) * Number(e))/ 100;
           console.log(consumptionCal);
           console.log(withPer);
-          form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+         props.form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
         return record;
@@ -164,7 +165,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     else if(field === 'colourId'){
       console.log(props.sizeDetails);
       console.log(props.sizeDetails.find((s) => s.colour === e));
-      let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
+      let wastg =props.form.getFieldValue(`wastage${key}`) != undefined ?props.form.getFieldValue(`wastage${key}`) : 2;
       if(props.sizeDetails.find((s) => s.colour === e)?.colour > 0){
         updatedData = data.map((record) => {
           if (record.key === key) {
@@ -177,11 +178,11 @@ const FabricsForm = (props:FabricsFormProps) => {
             qtyy = Number(qtyy)+Number(qty.quantity);
           })
           console.log(qtyy);
-            let consumptionCal = Number(qtyy) * Number(form.getFieldValue(`consumption${key}`));
+            let consumptionCal = Number(qtyy) * Number(props.form.getFieldValue(`consumption${key}`));
             let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
             console.log(consumptionCal);
             console.log(withPer);
-            form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+           props.form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
             return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
           }
           return record;
@@ -189,7 +190,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       }
       else{
         AlertMessages.getErrorMessage("Fabric color is not in size details")
-        form.setFieldValue(`colorId${key}`,0)
+       props.form.setFieldValue(`colorId${key}`,0)
         updatedData = data.map((record) => {
           // if (record.key === key) {
           //   return { ...record, [field]: e };
@@ -314,7 +315,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       render: (_, record, index) => (
         <>
         <Form.Item name={`allocatedStock${record.key}`}><Input name={`allocatedStock${record.key}`} style={{display:'none'}}/></Form.Item>
-        <Form.Item name={`fabricId${record.key}`}>
+        <Form.Item name={`fabricId${record.key}`}
+         rules={[{ required: true, message: 'Missing Fabric' }]}
+        >
           <Select
             // onChange={(e) => handleInputChange(e, record.key, 'fabricCode',getSelectedProductGroupId(e))}
             style={{ width: "100%" }}
@@ -353,7 +356,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       width:"15%",
       render: (_, record) => (
         <>
-        <Form.Item name={`colorId${record.key}`}>
+        <Form.Item name={`colorId${record.key}`}
+        rules={[{ required: true, message: 'Missing Color' }]}
+        >
           <Select
             value={record.colourId}
             onChange={(e) => handleInputChange(e, record.key, 'colourId', 0,record)}
@@ -382,7 +387,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'consumption',
       width:"10%",
       render: (_, record) => (
-        <Form.Item name={`consumption${record.key}`}>
+        <Form.Item name={`consumption${record.key}`}
+        rules={[{ required: true, message: 'Missing Consumption' }]}
+        >
         <InputNumber
         value={record.consumption}
         onChange={(e) => handleInputChange(e, record.key, 'consumption',0,record)}
@@ -418,7 +425,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'UomId',
       width:"10%",
       render: (_, record) => (
-        <Form.Item name={`uomId${record.key}`}>
+        <Form.Item name={`uomId${record.key}`}
+        rules={[{ required: true, message: 'Missing UOM' }]}
+        >
 
         <Select
         value={record.uomId}
@@ -445,7 +454,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'wastage',
       width:"10%",
       render: (_, record) => (
-      <Form.Item name={`wastage${record.key}`} initialValue={2}>
+      <Form.Item name={`wastage${record.key}`} initialValue={2} 
+      rules={[{ required: true, message: 'Missing Wastage' }]}
+      >
         <InputNumber
         defaultValue={2}
         onChange={(e) => handleInputChange(e, record.key, 'wastage',0,record)}
@@ -458,7 +469,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'totalRequirement',
       width:"10%",
       render: (_, record) => (
-      <Form.Item name={`totalRequirement${record.key}`} >
+      <Form.Item name={`totalRequirement${record.key}`} 
+      rules={[{ required: true, message: 'Missing Total Requirement' }]}
+      >
         <Input disabled style={{fontWeight:'bold', color:'black'}}
         value={record.totalRequirement}
         onChange={(e) => handleInputChange(e.target.value, record.key, 'totalRequirement',0,record)}
@@ -623,7 +636,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   };
   return (
     <div>
-      <Form form={form}>
+      <Form form={props.form}>
 
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 

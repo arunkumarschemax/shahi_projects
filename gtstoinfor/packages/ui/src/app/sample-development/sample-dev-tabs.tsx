@@ -52,11 +52,11 @@ export const SampleDevTabs = (props:SampleDevTabsProps) => {
                 </TabPane>
                 <TabPane key="2" tab={<span><b>{`Fabric`}</b></span>}>
                 {/* <FabricsForm props = {handleFabricsDataUpdate} buyerId={0} /> */}
-             <FabricsForm data = {handleFabricsDataUpdate} buyerId={0} sizeDetails={sizeData}/>
+             <FabricsForm data = {handleFabricsDataUpdate} buyerId={0} sizeDetails={sizeData} form={undefined} />
 
                 </TabPane>
                 <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
-                <TrimsForm data = {handleTrimsDataUpdate} buyerId={0} sizeDetails={sizeData} />
+                <TrimsForm data = {handleTrimsDataUpdate} buyerId={0} sizeDetails={sizeData} form={undefined} />
                 </TabPane>
                 <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
                 <ProcessForm props={handleProcessDataUpdate}/>

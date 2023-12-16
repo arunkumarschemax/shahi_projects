@@ -130,7 +130,7 @@ const SizeDetail = ({props,buyerId,form}) => {
           >
           </Input>
         </Form.Item>
-          <Form.Item name={`quantity${size.sizeId}+${record.key}`}>
+          <Form.Item name={`quantity${size.sizeId}+${record.key}`} rules={[{ required: true, message: 'Missing Size' }]}>
             <Input
               name={`quantity${size.sizeId}`}
               value={record[size.sizeId]}
@@ -165,7 +165,7 @@ const SizeDetail = ({props,buyerId,form}) => {
       dataIndex: 'colourId',
       width:"25%",
       render: (_, record) => (
-        <Form.Item name={`colorId${record.key}`}>
+        <Form.Item name={`colorId${record.key}`} rules={[{ required: true, message: 'Missing Color' }]}>
         <Select
           style={{width:"100%"}}
           allowClear
