@@ -154,7 +154,7 @@ const SizeDetail = ({props,buyerId,form}) => {
   }));
 
 
-  const columns = [
+  const columns:any = [
     {
       title: 'S.No',
       dataIndex: 'sNo',
@@ -195,6 +195,7 @@ const SizeDetail = ({props,buyerId,form}) => {
     {
       title: 'Action',
       dataIndex: 'action',
+      fixed:'right',
       render: (_, record) => (
         <Button htmlType='submit' onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
       ),
@@ -224,6 +225,7 @@ const SizeDetail = ({props,buyerId,form}) => {
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
       dataSource={data} 
+      scroll = {{x:'max-content',y:'max-content'}}
       columns={columns} 
       // summary={summary}
       bordered={true}

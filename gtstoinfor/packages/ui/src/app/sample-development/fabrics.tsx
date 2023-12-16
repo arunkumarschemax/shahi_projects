@@ -301,7 +301,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     
   };
 
-  const columns = [
+  const columns:any = [
     {
       title: 'S.No',
       dataIndex: 'sNo',
@@ -482,6 +482,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Action',
       dataIndex: 'action',
+      fixed:'right',
       render: (_, record) => (
         <Button onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
       ),
@@ -626,6 +627,7 @@ const FabricsForm = (props:FabricsFormProps) => {
 
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
+            scroll = {{x:'max-content',y:'max-content'}}
       dataSource={data} 
       columns={columns} 
       expandedRowRender={renderItems}

@@ -20,7 +20,7 @@ export  const PurchaseOrderQrCodePrint = ()=>{
     }, []);
 
     const getdropDown =() =>{
-        service.getPAllPurchaseOrderData().then((res) =>{
+        service.getAllPos().then((res) =>{
             if(res.status){
                 setData2(res.data)
             }
@@ -32,7 +32,6 @@ export  const PurchaseOrderQrCodePrint = ()=>{
     const getData =(val) =>{
       const req = new VendorIdReq()
       req.poId = val
-      console.log(val,'ooooooooooooo');
       
         service.QrByPoId (req).then((res) =>
             {
@@ -93,8 +92,8 @@ getData(data.poNumber)
               >
                  <Select placeholder=" Select PO Number" >
                   {data2.map((option) => (
-                    <Option key={option.purchaseOrderId} value={option.purchaseOrderId}>
-                      {option.poNumber}
+                    <Option key={option.purchase_order_id} value={option.po_number}>
+                      {option.po_number}
                     </Option>
                   ))}
                 </Select>

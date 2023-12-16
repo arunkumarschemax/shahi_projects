@@ -562,6 +562,19 @@ export class PurchaseOrderService {
         }
         return 
     }
+    async getAllPos(): Promise<CommonResponseModel> {
+        try {
+            let query = `SELECT p.purchase_order_id,p.po_number FROM  purchase_order p '`
+            const data = await this.dataSource.query(query)
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
+            } else {
+                return new CommonResponseModel(false, 1, "No data found", [])
+            }
+        } catch (err) {
+            throw (err)
+        }
+    }
     async QrByPoId(req: VendorIdReq): Promise<CommonResponseModel> {
         try {
             let query = `SELECT grn.grn_id,p.purchase_order_id, gi.grn_item_id,gi.grn_item_no,grn.invoice_no,grn.item_type, IF(grn.item_type = "FABRIC",mit.description , 

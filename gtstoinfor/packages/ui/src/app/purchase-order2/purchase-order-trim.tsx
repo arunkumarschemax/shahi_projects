@@ -103,6 +103,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
     const sampleTrimData = (sampleReqId,sampleItemId) =>{
         sampleService.getTrimDetailsOfSample({sampleReqId:sampleReqId,sampleItemId:sampleItemId}).then(res =>{
             if(res.status){
+                // console.log(res.data)
                 setTrimtableVisible(true)
                 props(res.data)
                 setTrimTableData(res.data);
@@ -175,7 +176,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
             trimForm.setFieldsValue({ taxAmount: rowData.taxAmount })
             trimForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
             trimForm.setFieldsValue({ transportation: rowData.transportation })
-            trimForm.setFieldsValue({quantityUomName:rowData?.uom})
+            trimForm.setFieldsValue({quantityUomName:rowData?.uomName})
             trimForm.setFieldsValue({quantityUomId:rowData?.uomId,})
             trimForm.setFieldsValue({styleId: rowData?.styleId})
             trimForm.setFieldsValue({trimParams: rowData?.trimParams})
@@ -322,11 +323,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
             dataIndex:'poQuantity',
             
         },
-        {
-            title:'Quantity UOM',
-            dataIndex:'uom',
+        // {
+        //     title:'Quantity UOM',
+        //     dataIndex:'uom',
             
-        },
+        // },
         {
             title: 'Unit Price',
             dataIndex: 'unitPrice',
@@ -420,8 +421,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                 consumption : defaultTrimFormData.consumption,
                 m3TrimCode: defaultTrimFormData.m3TrimCode,
                 trimCodeName: defaultTrimFormData.trimCodeName,
-                quantityUomName:defaultTrimFormData.uom,
-                quantityUomId:defaultTrimFormData.quantityUomId,
+                quantityUomName:defaultTrimFormData.uomName,
+                quantityUomId:defaultTrimFormData.uomId,
                 m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
                 trimParams: defaultTrimFormData.trimParams,
                 styleId: defaultTrimFormData.styleId
