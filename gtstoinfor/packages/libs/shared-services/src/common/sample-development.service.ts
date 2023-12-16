@@ -22,6 +22,10 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/getAllSampleData")
   }
 
+  async getstyleaginstpch(): Promise<AllSampleDevReqResponseModel> {
+    // console.log(req, 'shared service')
+    return this.axiosPostCall(this.URL + "/getstyleaginstpch")
+  }
   async getAllSampleReqNo(): Promise<AllSampleDevReqResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllSampleReqNo")
   }

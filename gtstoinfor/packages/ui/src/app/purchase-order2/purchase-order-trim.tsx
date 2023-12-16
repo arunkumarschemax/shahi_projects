@@ -214,7 +214,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         },
         {
             title:'M3 Trim Code',
-            dataIndex:'m3TrimCode',
+            dataIndex:'m3TrimCodeName',
             width:'100px'
         },
         // {
@@ -385,6 +385,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
     }
     
     const OnTrimAdd = (values) =>{
+        console.log(values);    
         trimForm.validateFields().then(() =>{
           if(trimIndexVal !== undefined){
             trimTableData[trimIndexVal] = values;

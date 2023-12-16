@@ -248,12 +248,13 @@ export class PurchaseOrderService {
                 poi.m3_item_id AS m3ItemCodeId,mt.trim_type as m3ItemType,poi.purchase_order_id AS purchaseOrderId, poi.po_quantity AS poQuantity,poi.purchase_order_item_id as poItemId,
                 poi.quantity_uom_id AS quantityUomId,u.uom,poi.grn_quantity AS grnQuantity,poi.indent_item_id as indentItemId, poi.sample_item_id as sampleItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour`
                 if(req.poAgainst == 'Indent'){
-                    query = query + `,i.indent_id as indentId `
+                    query = query + `,i.indent_id as indentId`
                 }
                 if(req.poAgainst == 'Sample Order'){
                     query = query +  `,sr.sample_request_id as sampleRequestId `
                 }
-                query = query + `FROM purchae_order_items poi
+                query = query + `
+                FROM purchae_order_items poi
                 LEFT JOIN taxes t on t.tax_id = poi.tax
                 LEFT JOIN uom u ON u.id = poi.quantity_uom_id
                 LEFT JOIN m3_trims mt ON mt.m3_trim_Id=poi.m3_item_id
@@ -271,21 +272,20 @@ export class PurchaseOrderService {
                 LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = mt.trim_mapping_id
                 LEFT JOIN colour cl ON cl.colour_id = mt.color_id
                 LEFT JOIN uom uom ON uom.id = mt.uom_id
+                LEFT JOIN purchase_order po ON po.purchase_order_id = poi.purchase_order_id
+                LEFT JOIN buyers b ON b.buyer_id = po.buyer_id
+                LEFT JOIN style s ON s.style_id = poi.style_id
                 `
                 if (req.poAgainst == 'Indent') {
                     query = query + ` 
                     LEFT JOIN indent_trims it ON it.itrims_id = poi.indent_item_id
                     LEFT JOIN indent i ON i.indent_id = it.indent_id 
-                    LEFT JOIN style s ON s.style_id = i.style
-                    LEFT JOIN buyers b ON b.buyer_id = i.buyer_id 
                     WHERE poi.purchase_order_id = ${req.poId}`
                 }
                 if (req.poAgainst == 'Sample Order') {
                     query = query + `
                      LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id  = poi.sample_item_id   
-                     LEFT JOIN sample_request sr ON sr.sample_request_id  = srf.sample_request_id 
-                     LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id 
-                     LEFT JOIN style s ON s.style_id = sr.style_id
+                     LEFT JOIN sample_request sr ON sr.sample_request_id  = srf.sample_request_id
                      WHERE poi.purchase_order_id = ${req.poId}`
                 }
 
@@ -564,9 +564,12 @@ export class PurchaseOrderService {
     }
     async QrByPoId(req: VendorIdReq): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT grn.grn_id,p.purchase_order_id, gi.grn_item_id,gi.grn_item_no FROM  purchase_order p 
+            let query = `SELECT grn.grn_id,p.purchase_order_id, gi.grn_item_id,gi.grn_item_no,grn.invoice_no,grn.item_type, IF(grn.item_type = "FABRIC",mit.description , 
+            mtr.description) AS itemCode FROM  purchase_order p 
             LEFT JOIN grn ON grn.po_id = p.purchase_order_id
             LEFT JOIN grn_items gi ON gi.grn_id = grn.grn_id
+            LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND grn.item_type = "FABRIC"
+            LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND grn.item_type != "FABRIC"
             WHERE p.purchase_order_id = '${req.poId}'`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {

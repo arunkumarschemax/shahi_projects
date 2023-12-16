@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
-import { AllStyleResponseModel, UploadResponse, buyerReq } from "@project-management-system/shared-models";
+import { AllStyleResponseModel, CommonResponseModel, StyleIdReq, UploadResponse, buyerReq } from "@project-management-system/shared-models";
 import { StyleService } from "./style-service";
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express'
@@ -101,5 +101,14 @@ export class StyleController{
     }
 
 
+    @Post('/getstyleaginstpch')
+    @ApiBody({type:StyleIdReq})
+    async getstyleaginstpch(@Body() req:any): Promise<CommonResponseModel> {
+      try {
+        return await this.styleService.getstyleaginstpch(req);
+      } catch (error) {
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+      }
+    }
 
 }

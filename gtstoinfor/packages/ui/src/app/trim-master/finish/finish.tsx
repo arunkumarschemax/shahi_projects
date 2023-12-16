@@ -1,11 +1,13 @@
 import { FinishDTO } from "@project-management-system/shared-models";
 import { FinishService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, message } from "antd";
+import { Button, Card, Col, Form, Input, Row, Select, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import AlertMessages from "../../common/common-functions/alert-messages";
 
 
 const { TextArea } = Input;
+const {Option} = Select;
+
 
 export interface FinishFormProps {
   data:FinishDTO;
@@ -62,7 +64,15 @@ export function FinishForm(props: FinishFormProps) {
       <Input hidden/>
     </Form.Item>
     <Row gutter={12}>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
+      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='type' label='Type' rules={[{ required: true, message: 'Type is required' }]}>
+          <Select showSearch allowClear optionFilterProp="children" placeholder='Select Type'>
+            <Option value='Fabric'>Fabric</Option>
+            <Option value='Trim'>Trim</Option>
+          </Select>
+        </Form.Item>
+        </Col>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:6}} xl={{span:6}}>
               <Form.Item
                   name="finish"
                   label="Finish"
