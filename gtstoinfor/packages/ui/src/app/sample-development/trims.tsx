@@ -142,7 +142,7 @@ const getMappedTrims = (value, option) => {
   };
 
   const getStockDetails = (record,e) => {
-    console.log(record);
+    // console.log(record);
     record.trimCode = e;
     let req = new buyerandM3ItemIdReq(props.buyerId,e,record.trimType);
     sampleDevelopmentService.getAvailbelQuantityAginstBuyerAnditem(req).then((res) => {
@@ -160,9 +160,9 @@ const getMappedTrims = (value, option) => {
   }
   
   const handleInputChange = async (e, key, field, record) => {
-    console.log(e)
-    console.log(key)
-    console.log(field)
+    // console.log(e)
+    // console.log(key)
+    // console.log(field)
 
 
     let updatedData
@@ -188,8 +188,17 @@ const getMappedTrims = (value, option) => {
       let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
       updatedData = data.map((record) => {
         if (record.key === key) {
-          let consumptionCal = Number(record.totalCount) * Number(e);
+          let qtyy = 0;
+          props.sizeDetails?.forEach(element => {
+            element.sizeInfo?.forEach(qty => {
+              qtyy = Number(qtyy)+Number(qty.quantity);
+            })
+          });
+          console.log(qtyy);
+          let consumptionCal = Number(qtyy) * Number(e);
           let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
+          console.log(consumptionCal);
+          console.log(withPer);
           form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
@@ -200,8 +209,17 @@ const getMappedTrims = (value, option) => {
       let cons = form.getFieldValue(`consumption${key}`) != undefined ? form.getFieldValue(`consumption${key}`) : 0
       updatedData = data.map((record) => {
         if (record.key === key) {
-          let consumptionCal = Number(record.totalCount) * Number(cons);
+          let qtyy = 0;
+          props.sizeDetails?.forEach(element => {
+            element.sizeInfo?.forEach(qty => {
+              qtyy = Number(qtyy)+Number(qty.quantity);
+            })
+          });
+          console.log(qtyy);
+          let consumptionCal = Number(qtyy) * Number(cons);
           let withPer = (Number(consumptionCal) * Number(e))/ 100;
+          console.log(consumptionCal);
+          console.log(withPer);
           form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
@@ -219,7 +237,7 @@ const getMappedTrims = (value, option) => {
     }
     
     setData(updatedData);
-    console.log(updatedData)
+    // console.log(updatedData)
     props.data(updatedData)
     
   };
