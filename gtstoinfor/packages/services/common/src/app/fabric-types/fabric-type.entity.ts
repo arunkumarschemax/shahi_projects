@@ -53,7 +53,4 @@ export class FabricType {
 
       @OneToMany(()=>FabricSubType, fabricSubtype=>fabricSubtype.fabricType,{cascade:true})
       fabrictypeName:FabricSubType[];
-
-      @OneToMany(()=>FabricWeave, fabricWeave=>fabricWeave.fabricType,{cascade:true})
-      fabricWeave:FabricWeave[];
 }

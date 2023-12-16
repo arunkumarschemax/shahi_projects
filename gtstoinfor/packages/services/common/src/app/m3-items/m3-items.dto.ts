@@ -1,6 +1,8 @@
 import { IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate, IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { m3ItemsContentEnum } from 'packages/libs/shared-models/src/enum';
+import { FabricYarnDto } from './fabric-yarn-dto';
+import { FabricContentDto } from './fabric-content-dto';
 
 export class M3ItemsDTO {
 
@@ -29,13 +31,19 @@ export class M3ItemsDTO {
     weightUnit: string;
 
     @ApiProperty()
-    construction: string;
+    epiConstruction: string;
 
     @ApiProperty()
-    yarnCount: string;
+    ppiConstruction: string;
 
     @ApiProperty()
-    yarnUnit: string;
+    yarnType: string;
+
+    // @ApiProperty()
+    // yarnCount: string;
+
+    // @ApiProperty()
+    // yarnUnit: string;
 
     @ApiProperty()
     width: number;
@@ -72,5 +80,11 @@ export class M3ItemsDTO {
         
     @ApiProperty()
     hsnCode?: string;
+
+    @ApiProperty({type:[FabricYarnDto]})
+    fabricYarnInfo: FabricYarnDto[]
+
+    @ApiProperty({type:[FabricContentDto]})
+    fabricContentInfo: FabricContentDto[]
 }
 

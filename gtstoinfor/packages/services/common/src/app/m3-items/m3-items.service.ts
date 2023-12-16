@@ -117,7 +117,7 @@ export class M3ItemsService {
     }
   }
   async checkDuplicate(createDto: M3ItemsDTO): Promise<CommonResponseModel> {
-    let query = `Select * from m3_items m3 where content = "` + createDto.content + `" and fabric_type = ` + createDto.fabricType + ` and weave = ` + createDto.weave + ` and weight = "` + createDto.weight + `" and weight_unit = ` + createDto.weightUnit + ` and construction = "` + createDto.construction + `" and yarn_count = "` + createDto.yarnCount + `" and yarn_unit = ` + createDto.yarnUnit + ` and finish = "` + createDto.finish + `" and shrinkage = "` + createDto.shrinkage+`"`;
+    let query = `Select * from m3_items m3 where content = "` + createDto.content + `" and fabric_type = ` + createDto.fabricType + ` and weave = ` + createDto.weave + ` and weight = "` + createDto.weight + `" and weight_unit = ` + createDto.weightUnit + ` and construction = "` + createDto.ppiConstruction + `" and yarn_count = "` + createDto.epiConstruction + `" and yarn_unit = ` + createDto.yarnType + ` and finish = "` + createDto.finish + `" and shrinkage = "` + createDto.shrinkage+`"`;
     const data = await this.datasource.query(query)
     if (data.length > 0){
       return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)

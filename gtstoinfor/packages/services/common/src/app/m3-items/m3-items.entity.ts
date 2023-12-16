@@ -4,6 +4,8 @@ import { Buyers } from "../buyers/buyers.entity";
 import { trimEntity } from "../Trim Masters/trim/trim-entity";
 import { CategoryEntity } from "../Trim Masters/category/dto/category-entity";
 import { SampleRequestItemsEntity } from "../sample-dev-request/entities/sample-request-items.entity";
+import { FabricYarnEntity } from "./fabric-yarn-entity";
+import { FabricContentEntity } from "./fabric-content-entity";
 
 @Entity('m3_items')
 export class M3ItemsEntity {
@@ -42,12 +44,12 @@ export class M3ItemsEntity {
   description: string;
 
 
-  @Column('varchar', {
-    nullable: true,
-    length: 30,
-    name: 'content',
-  })
-  content: m3ItemsContentEnum;
+  // @Column('varchar', {
+  //   nullable: true,
+  //   length: 30,
+  //   name: 'content',
+  // })
+  // content: m3ItemsContentEnum;
 
   @Column('varchar', {
     nullable: true,
@@ -80,24 +82,37 @@ export class M3ItemsEntity {
   @Column('varchar', {
     nullable: true,
     length: 30,
-    name: 'construction',
+    name: 'epi_construction',
   })
-  construction: string;
+  epiConstruction: string;
 
   @Column('varchar', {
     nullable: true,
     length: 30,
-    name: 'yarn_count',
+    name: 'ppi_construction',
   })
-  yarnCount: string;
+  ppiConstruction: string;
+
+  // @Column('varchar', {
+  //   nullable: true,
+  //   length: 30,
+  //   name: 'yarn_count',
+  // })
+  // yarnCount: string;
 
   
+  // @Column('varchar', {
+  //   nullable: true,
+  //   length: 30,
+  //   name: 'yarn_unit',
+  // })
+  // yarnUnit: string;
+
   @Column('varchar', {
     nullable: true,
-    length: 30,
-    name: 'yarn_unit',
+    name: 'yarn_type',
   })
-  yarnUnit: string;
+  yarnType: string;
 
   @Column('varchar', {
     nullable: true,
@@ -290,5 +305,11 @@ export class M3ItemsEntity {
 
   @OneToMany(type => SampleRequestItemsEntity, sampleReqItems => sampleReqItems.sampleRequestInfo, { cascade: true })
   m3ItemsInfo: SampleRequestItemsEntity[]
+
+  @OneToMany(type => FabricYarnEntity, fabricYarn => fabricYarn.m3Items, { cascade: true })
+  fabricYarnInfo: FabricYarnEntity[]
+
+  @OneToMany(type => FabricContentEntity, fabricContent => fabricContent.m3Items, { cascade: true })
+  fabricContentInfo: FabricContentEntity[]
 
 }
