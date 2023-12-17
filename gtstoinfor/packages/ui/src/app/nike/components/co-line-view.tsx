@@ -33,27 +33,30 @@ const ColineView = () => {
     const BuyerPo = () => {
         service.getBuyerPo().then(res => {
             if (res.status) {
-                setBuyer(res.data)
+                const data = res.data.filter(item => item.buyer == 'Nike-U12');
+                setBuyer(data)
             }
         })
     }
     const getItem = () => {
         service.getColineItem().then(res => {
             if (res.status) {
-                setItem(res.data)
+                const data = res.data.filter(item => item.buyer == 'Nike-U12');
+                setItem(data)
             }
         })
     }
     const OrderNumber = () => {
         service.getColineOrderNo().then(res => {
             if (res.status) {
-                setOrderNumber(res.data)
+                const data = res.data.filter(item => item.buyer == 'Nike-U12');
+                setOrderNumber(data)
             }
         })
     }
+
     const getData = () => {
         const req = new coLineRequest();
-
         if (form.getFieldValue('buyerPo') !== undefined) {
             req.buyerPo = form.getFieldValue('buyerPo');
         }
@@ -65,13 +68,15 @@ const ColineView = () => {
         }
         service.getCoLine(req).then(res => {
             if (res.status) {
-                setData(res.data)
+                const data = res.data.filter(item => item.buyer == 'Nike-U12');
+                setData(data)
             }
             else {
                 setData([])
             }
         })
     }
+
     const resetHandler = () => {
         form.resetFields();
         getData();
@@ -80,8 +85,6 @@ const ColineView = () => {
 
     const handleExport = (e: any) => {
         e.preventDefault();
-
-
         const currentDate = new Date()
             .toISOString()
             .slice(0, 10)

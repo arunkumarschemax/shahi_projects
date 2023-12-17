@@ -112,29 +112,29 @@ const VASChangesCompareGrid = () => {
                 .addColumns(data1)
                 .addDataSource(filteredQtyData, { str2num: true })
         }
-        if (unitChangeData.length > 0) {
-            excel
-                .addSheet('Unit changes')
-                .addColumns(data4)
-                .addDataSource(unitChangeData, { str2num: true })
-        }
-        if (itemChangeData.length > 0) {
-            excel
-                .addSheet('Item changes')
-                .addColumns(data2)
-                .addDataSource(itemChangeData, { str2num: true })
-        }
-        if (productCodeChaneData.length > 0) {
-            excel
-                .addSheet('Product Code Revised')
-                .addColumns(data3)
-                .addDataSource(productCodeChaneData, { str2num: true })
-        }
-        excel.saveAs('revisedProductCode.xlsx');
+        // if (unitChangeData.length > 0) {
+        //     excel
+        //         .addSheet('Unit changes')
+        //         .addColumns(data4)
+        //         .addDataSource(unitChangeData, { str2num: true })
+        // }
+        // if (itemChangeData.length > 0) {
+        //     excel
+        //         .addSheet('Item changes')
+        //         .addColumns(data2)
+        //         .addDataSource(itemChangeData, { str2num: true })
+        // }
+        // if (productCodeChaneData.length > 0) {
+        //     excel
+        //         .addSheet('Product Code Revised')
+        //         .addColumns(data3)
+        //         .addDataSource(productCodeChaneData, { str2num: true })
+        // }
+        excel.saveAs('VasRevised.xlsx');
     }
 
     const data1 = [
-       
+
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
@@ -211,13 +211,13 @@ const VASChangesCompareGrid = () => {
             dataIndex: 'item_vas_pdf_po',
 
         },
-       
+
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number',
         },
         {
-            title: 'Previous Order Quantity Pieces',width:80,
+            title: 'Previous Order Quantity Pieces', width: 80,
             dataIndex: 'old_val',
         },
         {
@@ -255,9 +255,9 @@ const VASChangesCompareGrid = () => {
                 </>
             )
         },
-       
+
         {
-            title: 'Order Status',width:80,
+            title: 'Order Status', width: 80,
             dataIndex: 'dpom_item_line_status',
         }
     ]
@@ -298,7 +298,7 @@ const VASChangesCompareGrid = () => {
     ];
 
     const data3 = [
-        
+
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
@@ -516,7 +516,7 @@ const VASChangesCompareGrid = () => {
     //     //     title: 'Document Date',
     //     //     dataIndex: 'document_date'
     //     // },
-        
+
     //     {
     //         title: 'Total Item Quantity',
     //         dataIndex: 'totalItemQty',width:70,
@@ -846,7 +846,7 @@ const VASChangesCompareGrid = () => {
             width: 60,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
         },
-        
+
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
@@ -867,20 +867,20 @@ const VASChangesCompareGrid = () => {
         {
             title: 'Factory',
             dataIndex: 'factory',
-           width: 80
+            width: 80
         },
         {
             title: 'Document Date',
             dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY'), width: 80
-        },{
+        }, {
             title: 'PO Number',
             dataIndex: 'po_number',
-           width: 80
+            width: 80
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',  width: 80
+            dataIndex: 'po_line_item_number', width: 80
         },
         {
             title: 'Product Code',
@@ -934,7 +934,7 @@ const VASChangesCompareGrid = () => {
         },
     ];
 
-    
+
     const getSizeWiseHeaders = (data: TotalQuantityChangeModel[]) => {
         const sizeHeaders = new Set<string>();
         data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
@@ -1422,11 +1422,11 @@ const VASChangesCompareGrid = () => {
         //     label: <b style={{ color: '#F39292' }}>Destination Country Revised PO's : {poStatusData?.length}</b>,
         //     children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns2} />,
         // }
-        {
-            key: '2',
-            label: <b>Product Code Revised : {productCodeChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} pagination={false} scroll={{ x: 1800, y: 450}} />,
-        },
+        // {
+        //     key: '2',
+        //     label: <b>Product Code Revised : {productCodeChaneData?.length}</b>,
+        //     children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} pagination={false} scroll={{ x: 1800, y: 450}} />,
+        // },
     ];
 
     const onReset = () => {

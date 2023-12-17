@@ -17,6 +17,9 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { PDFFileInfoEntity } from './entites/pdf-file-info.entity';
 import { COLineEntity } from './entites/co-line.entity';
 import { COLineRepository } from './repositories/co-line.repository';
+import { AddressService } from '../address/address.service';
+import { AddressRepository } from '../address/address.repo';
+import { AddressEntity } from '../address/address.entity';
 
 
 @Module({
@@ -28,9 +31,10 @@ import { COLineRepository } from './repositories/co-line.repository';
       DpomDifferenceEntity,
       NikeFileUploadEntity,
       PDFFileInfoEntity,
-      COLineEntity
+      COLineEntity,
+      AddressEntity
     ])],
   controllers: [DpomController],
-  providers: [DpomService, ApplicationExceptionHandler, DpomRepository, DpomChildRepository, DpomAdapter, DpomChildAdapter, DpomDifferenceRepository, NikeFileUploadRepository, COLineRepository]
+  providers: [DpomService, AddressService, AddressRepository, ApplicationExceptionHandler, DpomRepository, DpomChildRepository, DpomAdapter, DpomChildAdapter, DpomDifferenceRepository, NikeFileUploadRepository, COLineRepository]
 })
 export class DpomModule { }

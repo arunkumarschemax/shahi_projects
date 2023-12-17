@@ -122,14 +122,14 @@ export function OrderAcceptance() {
     }, [])
 
     const getOrderAcceptanceData = () => {
-        service.getOrderAcceptanceData().then((res) => {
-            if (res.data) {
-                setData(res.data)
-                // message.success(res.internalMessage)
-            } else (
-                message.error(res.internalMessage)
-            )
-        })
+        // service.getOrderAcceptanceData().then((res) => {
+        //     if (res.data) {
+        //         setData(res.data)
+        //         // message.success(res.internalMessage)
+        //     } else (
+        //         message.error(res.internalMessage)
+        //     )
+        // })
     }
 
     const columns: any = [

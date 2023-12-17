@@ -2,7 +2,7 @@ export class PpmDateFilterRequest {
     lastModifedStartDate?: any;
     lastModifedEndtDate?: any;
     documentStartDate?: any;
-    documentEndtDate?: any;
+    documentEndDate?: any;
     productCode?: string;
     poandLine?: string;
     colorDesc?: string;
@@ -25,7 +25,7 @@ export class PpmDateFilterRequest {
 
     constructor(
         lastModifedStartDate?: any, lastModifedEndtDate?: any, documentStartDate?: any,
-        documentEndtDate?: any, productCode?: string, poandLine?: string,
+        documentEndDate?: any, productCode?: string, poandLine?: string,
         colorDesc?: string, categoryDesc?: string, destinationCountry?: string,
         plant?: string, item?: string, factory?: string, DPOMLineItemStatus?: string, poNumber?: string, docTypeCode?: string,
         poLineItemNumber?: string,
@@ -37,7 +37,7 @@ export class PpmDateFilterRequest {
         this.lastModifedStartDate = lastModifedStartDate;
         this.lastModifedEndtDate = lastModifedEndtDate;
         this.documentStartDate = documentStartDate;
-        this.documentEndtDate = documentEndtDate;
+        this.documentEndDate = documentEndDate;
         this.productCode = productCode;
         this.poandLine = poandLine;
         this.colorDesc = colorDesc;

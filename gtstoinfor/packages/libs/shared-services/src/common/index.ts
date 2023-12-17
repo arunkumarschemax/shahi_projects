@@ -6,3 +6,4 @@ export * from './nike-service';
 export * from './adobe-acrobat-api.service'
 export * from './fob-service';
 export * from './fabric-content-fe-services';
+export * from './address.services'

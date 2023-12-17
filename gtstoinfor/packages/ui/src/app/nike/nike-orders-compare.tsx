@@ -673,7 +673,7 @@ const OrdersCompareGrid = () => {
             width: 60,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
             fixed: 'left'
-        }, 
+        },
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
@@ -692,7 +692,7 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number', 
+            dataIndex: 'po_line_item_number',
             width: 70,
         },
         {
@@ -784,7 +784,7 @@ const OrdersCompareGrid = () => {
             key: 'sno',
             width: 60,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
-        }, 
+        },
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at', width: 70,
@@ -812,7 +812,7 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'PO Line Item No', width: 70,
-            dataIndex: 'po_line_item_number', 
+            dataIndex: 'po_line_item_number',
         },
         {
             title: 'Document Date',
@@ -965,7 +965,7 @@ const OrdersCompareGrid = () => {
             key: 'sno',
             width: 60,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
-        }, 
+        },
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
@@ -989,7 +989,7 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number', 
+            dataIndex: 'po_line_item_number',
             // fixed: 'left'
         },
         {
@@ -1005,7 +1005,7 @@ const OrdersCompareGrid = () => {
             dataIndex: 'documentDate',
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
-       
+
         {
             title: 'OGAC',
             dataIndex: 'ogac',
@@ -1029,19 +1029,19 @@ const OrdersCompareGrid = () => {
     const columns4: any = [
         {
             title: 'S No',
-            key: 'sno',width:40,
+            key: 'sno', width: 40,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
             fixed: 'left'
         },
-        
+
         {
             title: 'Report Generate Date',
-            dataIndex: 'created_at',width:70,
+            dataIndex: 'created_at', width: 70,
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Item No',
-            dataIndex: 'item',width:70,
+            dataIndex: 'item', width: 70,
             render: (text, record) => {
                 if (!text || text.trim() === '') {
                     return '-';
@@ -1053,53 +1053,53 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'PO Number',
-            dataIndex: 'po_number',width:70,
+            dataIndex: 'po_number', width: 70,
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',width:70,
+            dataIndex: 'po_line_item_number', width: 70,
         },
         {
             title: 'Document Date',
-            dataIndex: 'document_date',width:70,
+            dataIndex: 'document_date', width: 70,
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Style Number',
-            dataIndex: 'style_number',width:70,
+            dataIndex: 'style_number', width: 70,
         },
         {
             title: 'Product Code',
-            dataIndex: 'product_code',width:70,
+            dataIndex: 'product_code', width: 70,
         },
         {
             title: 'Color Description',
-            dataIndex: 'color_desc',width:70,
+            dataIndex: 'color_desc', width: 70,
         },
         {
             title: 'OGAC',
-            dataIndex: 'ogac',width:70,
+            dataIndex: 'ogac', width: 70,
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'GAC',
-            dataIndex: 'gac',width:70,
+            dataIndex: 'gac', width: 70,
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'Total Item Quantity',
-            dataIndex: 'total_item_qty',width:70,
+            dataIndex: 'total_item_qty', width: 70,
         },
         {
             title: 'From Factory',
-            dataIndex: 'from_factory',width:70,
+            dataIndex: 'from_factory', width: 70,
         },
         {
             title: 'Change to Factory',
-            dataIndex: 'change_to_factory',width:70,
+            dataIndex: 'change_to_factory', width: 70,
         },
-  
-        
+
+
 
     ];
 
@@ -1108,7 +1108,7 @@ const OrdersCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: 60,
-            
+
             render: (text, object, index) => (page - 1) * pageSize + (index + 1)
         },
         {
@@ -1213,7 +1213,7 @@ const OrdersCompareGrid = () => {
             width: 60,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1), fixed: 'left'
         },
-        
+
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
@@ -1234,20 +1234,20 @@ const OrdersCompareGrid = () => {
         {
             title: 'Factory',
             dataIndex: 'factory',
-           width: 80
+            width: 80
         },
         {
             title: 'Document Date',
             dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY'), width: 80
-        },{
+        }, {
             title: 'PO Number',
             dataIndex: 'po_number',
-           width: 80
+            width: 80
         },
         {
             title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',  width: 80
+            dataIndex: 'po_line_item_number', width: 80
         },
         {
             title: 'Product Code',
@@ -1311,7 +1311,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'PO Number',
             dataIndex: 'po_number', width: 70,
-          
+
         },
         {
             title: 'PO Line Item No', width: 70,
@@ -1324,7 +1324,7 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Item',
-            dataIndex: 'item', width: 70,align:'center',
+            dataIndex: 'item', width: 70, align: 'center',
             render: (text, record) => {
                 if (!text || text.trim() === '') {
                     return '-';
@@ -1346,7 +1346,7 @@ const OrdersCompareGrid = () => {
                     return firstFourDigits;
                 }
             },
-            
+
         },
 
         {
@@ -1365,12 +1365,12 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Size Description',
-            dataIndex: 'size_description', width: 80,align:'center'
+            dataIndex: 'size_description', width: 80, align: 'center'
             // ('size_description')
         },
         {
             title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number', width: 80,align:'center'
+            dataIndex: 'schedule_line_item_number', width: 80, align: 'center'
             // ('schedule_line_item_number')
         },
         {
@@ -1555,15 +1555,14 @@ const OrdersCompareGrid = () => {
             //         </>
             //     )
             // },
-
-            // {
-            //     title: 'Total Quantity',
-            //     align: 'right',
-            //     dataIndex: 'totalQuantity',
-            //     render: (text) => (
-            //         <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
-            //     ),
-            // },
+            {
+                title: 'Total Quantity',
+                align: 'right',
+                dataIndex: 'totalQuantity',
+                render: (text) => (
+                    <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+                ),
+            },
         ]
 
         const columns: any = [

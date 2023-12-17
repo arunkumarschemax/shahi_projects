@@ -15,6 +15,7 @@ import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
 import { FobModule } from './fob-price-list/fob.module';
 import { FabricContentModule } from './fabric-content/fabric-content.module';
+import { AddressModule } from './address/address.module';
 
 
 @Module({
@@ -38,7 +39,7 @@ import { FabricContentModule } from './fabric-content/fabric-content.module';
     FactoriesModule,
     SupplierModule,
     UsersModule,
-    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule, FabricContentModule],
+    AuthModule, JwtModule, DpomModule, AdobeAcrobatApiModule, FobModule, FabricContentModule, AddressModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
