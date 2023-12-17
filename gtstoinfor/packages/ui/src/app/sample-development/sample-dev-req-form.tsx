@@ -51,7 +51,7 @@ export const SampleDevForm = () => {
   const [data, setData] = useState<any>();
   const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
   const [qualities,setQualities] = useState<any[]>([])
-  const [styleaginstpch,setStyleaginstpch] = useState<any[]>([])
+  const [styleAginstPch,setStyleAginstPch] = useState<any[]>([])
   const [sizeForm] = Form.useForm();
   const [fabricForm] = Form.useForm();
   const [trimForm] = Form.useForm();
@@ -171,6 +171,9 @@ export const SampleDevForm = () => {
       if (res.status) {
         setPch(res.data);
       }
+      else{
+        setPch([]);
+      }
     });
   };
 
@@ -219,8 +222,7 @@ export const SampleDevForm = () => {
     console.log(req,'===================')
     styleService.getstyleaginstpch(req).then((res)=>{
       if (res.status) {
-        setStyleaginstpch(res.data);
-        form.setFieldValue('pchId',res.data[0]?.pch)
+        form.setFieldValue('pchId',res.data?.pchId)
       }
     })
   }
@@ -493,10 +495,10 @@ export const SampleDevForm = () => {
                 placeholder="Select PCH"
                 disabled
               >
-                {styleaginstpch.map((e) => {
+                {pch.map((e) => {
                   return (
-                    <Option key={e.pchId} value={e.pchId}>
-                      {e.pch}
+                    <Option key={e.profitControlHeadId} value={e.profitControlHeadId}>
+                      {e.profitControlHead}
                     </Option>
                   );
                 })}

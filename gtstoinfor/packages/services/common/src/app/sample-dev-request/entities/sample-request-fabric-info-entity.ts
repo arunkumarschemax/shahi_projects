@@ -29,16 +29,19 @@ export class SampleReqFabricinfoEntity{
 
       @Column('decimal',{
         name:'consumption',
+        nullable:false,
     })
       consumption : number;
 
       @Column('decimal',{
         name:'total_requirement',
+        nullable:false,
     })
     totalRequirement : number;
 
     @Column('decimal',{
       name:'wastage',
+      nullable:false,
   })
   wastage : number;
 
