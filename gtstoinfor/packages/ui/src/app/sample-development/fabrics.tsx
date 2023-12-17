@@ -102,7 +102,7 @@ const FabricsForm = (props:FabricsFormProps) => {
 
     let updatedData;
   
-    if (field === 'fabricCode') {
+    if (field === 'fabricCode' && e != undefined) {
 
       updatedData = data.map((record) => {
         if (record.key === key) {
@@ -223,7 +223,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         setStockData(res.data);
         handleInputChange(res.data, record.key, "allocatedStock", 0,record)
         // sourcingForm.setFieldValue([`allocatedStock${record.key}`],res.data)
-        AlertMessages.getSuccessMessage(res.internalMessage)
+        // AlertMessages.getSuccessMessage(res.internalMessage)
       }
       else{
         setStockData([]);

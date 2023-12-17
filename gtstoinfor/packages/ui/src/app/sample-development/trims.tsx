@@ -151,7 +151,7 @@ const getMappedTrims = (value, option) => {
         setStockData(res.data);
         handleInputChange(res.data, record.key, "allocatedStock", record)
         // sourcingForm.setFieldValue([`allocatedStock${record.key}`],res.data)
-        AlertMessages.getSuccessMessage(res.internalMessage)
+        // AlertMessages.getSuccessMessage(res.internalMessage)
       }
       else{
         setStockData([]);
@@ -167,7 +167,7 @@ const getMappedTrims = (value, option) => {
 
 
     let updatedData
-    if (field === 'trimCode') {
+    if (field === 'trimCode' && e != undefined) {
 
       updatedData = data.map((record) => {
         if (record.key === key) {
