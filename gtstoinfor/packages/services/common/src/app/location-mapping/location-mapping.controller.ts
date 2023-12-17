@@ -14,7 +14,6 @@ export class LocationMappingController {
     @Post("/getAllFabrics")
     @ApiBody({ type: ExternalRefReq })
     async getAllFabrics(@Body() req:any): Promise<any> {
-        console.log(req,"con")
         try {
             return this.service.getAllFabrics(req);
         } catch (error) {
@@ -25,7 +24,7 @@ export class LocationMappingController {
     @ApiBody({ type: ExternalRefReq })
     async getgrn(@Body() req:any): Promise<any> {
         
-        console.log(req,"con......")
+     
         try {
             return this.service.getgrn(req);
         } catch (error) {
@@ -36,7 +35,6 @@ export class LocationMappingController {
     @ApiBody({ type: ExternalRefReq })
     async getMaterial(@Body() req:any): Promise<any> {
         
-        console.log(req,"con......")
         try {
             return this.service.getMaterial(req);
         } catch (error) {
