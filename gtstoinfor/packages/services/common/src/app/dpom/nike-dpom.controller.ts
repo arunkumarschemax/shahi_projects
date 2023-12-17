@@ -944,5 +944,14 @@ export class DpomController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/updateCOLineStatus')
+    async updateCOLineStatus(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.updateCOLineStatus(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
 

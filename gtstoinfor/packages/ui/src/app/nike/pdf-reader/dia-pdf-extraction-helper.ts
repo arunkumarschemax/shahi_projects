@@ -13,37 +13,36 @@ export const DiaPdfDataExtractor = async (pdf) => {
         const pageContent = textContent.items.filter((val, index) => {
             return !(
                 EMP_STR_EXP.test(val.str)
-               
             )
         })
-
         filteredData.push(...pageContent)
     }
+
     let poNumberIndex;
     let cabCodeIndex;
     let shipToStartIndex;
     let shipToEndIndex
-    for(const [index,rec] of filteredData.entries()){
-        if(rec.str.includes("Delivery Instructions:")){
+    for (const [index, rec] of filteredData.entries()) {
+        if (rec.str.includes("Delivery Instructions:")) {
             poNumberIndex = index
         }
-        if(rec.str.includes("CAB Code:")){
+        if (rec.str.includes("CAB Code:")) {
             cabCodeIndex = index
         }
-        if(rec.str.includes("Ship To Address:")){
+        if (rec.str.includes("Ship To Address:")) {
             shipToStartIndex = index
         }
-        if(rec.str.includes("Notify Parties:")){
+        if (rec.str.includes("Notify Parties:")) {
             shipToEndIndex = index
         }
     }
+
     diaPDF.cabCode = filteredData[cabCodeIndex + 1].str
     const deliveryInstructionsStr = filteredData[poNumberIndex].str.split(":")[1];
     diaPDF.poNumber = deliveryInstructionsStr.split("-")[0].replace(/ /g, '')
     diaPDF.lineNo = deliveryInstructionsStr.split("-")[1].replace(/ /g, '')
-    const addarr = filteredData.slice(shipToStartIndex,shipToEndIndex)
-    console.log(addarr)
-    diaPDF.shipToAddress = filteredData.slice(shipToStartIndex + 1,shipToEndIndex).map((a) => a.str).join(",")
+    const addarr = filteredData.slice(shipToStartIndex, shipToEndIndex)
+    diaPDF.shipToAddress = filteredData.slice(shipToStartIndex + 1, shipToEndIndex).map((a) => a.str).join(",")
 
     return diaPDF
 }

@@ -213,7 +213,7 @@ export function OrderAcceptance() {
         req.itemNo = itemNoValues[record.key]
         service.coLineCreationReq(req).then((res) => {
             if (res.status) {
-                // getOrderAcceptanceData()
+                getOrderAcceptanceData()
                 message.success(res.internalMessage)
             } else (
                 message.error(res.internalMessage)
@@ -314,22 +314,22 @@ export function OrderAcceptance() {
                 title: 'Destination Country Name',
                 dataIndex: 'destinationCountry', width: 75,
             },
-            {
-                title: 'Item',
-                dataIndex: 'item', align: 'center', width: 70,
-                render: (text, record) => {
-                    if (!text || text.trim() === '') {
-                        return '-';
-                    } else {
-                        const firstFourDigits = text.substring(0, 4);
-                        return firstFourDigits;
-                    }
-                },
-            },
-            {
-                title: 'CO No', width: 70,
-                dataIndex: 'customerOrder',
-            },
+            // {
+            //     title: 'Item',
+            //     dataIndex: 'item', align: 'center', width: 70,
+            //     render: (text, record) => {
+            //         if (!text || text.trim() === '') {
+            //             return '-';
+            //         } else {
+            //             const firstFourDigits = text.substring(0, 4);
+            //             return firstFourDigits;
+            //         }
+            //     },
+            // },
+            // {
+            //     title: 'CO No', width: 70,
+            //     dataIndex: 'customerOrder',
+            // },
             {
                 title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column", width: 70, render: (text, record) => {
                     return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-';
@@ -509,6 +509,10 @@ export function OrderAcceptance() {
                 dataIndex: 'DPOMLineItemStatus', width: 80,
             },
             {
+                title: 'CO Line Status',
+                dataIndex: 'coLineStatus', width: 80,
+            },
+            {
                 title: "Item No",
                 dataIndex: "itemNo", width: 100,
                 render: (text, record) => {
@@ -529,14 +533,13 @@ export function OrderAcceptance() {
                 dataIndex: "action", width: 80,
                 render: (value, record) => {
                     const isEnabled = isActionButtonEnabled(record);
-
                     return (
                         <Popconfirm
                             title="Are you sure to approve"
                             onConfirm={() => approveDpomLineItemStatus(record)}
                             disabled={!isEnabled}
                         >
-                            <Button disabled={!isEnabled}>Accept</Button>
+                            <Button disabled={record.coLineStatus == 'Open' ? true : !isEnabled}>Accept</Button>
                         </Popconfirm>
                     );
                 },

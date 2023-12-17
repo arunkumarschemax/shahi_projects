@@ -16,7 +16,12 @@ root.render(
             algorithm: theme.compactAlgorithm,
             token: {
                 colorPrimary: '#29397d'
-            }
+            },
+            // components: {
+            //     Table: {
+            //         lineHeight: 5,
+            //     }
+            // }
         }}
     >
         <HashRouter>

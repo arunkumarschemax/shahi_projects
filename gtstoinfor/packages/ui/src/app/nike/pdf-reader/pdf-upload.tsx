@@ -75,6 +75,9 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
     async function extractDiaDocumentData(pdf: any, pdfText: any) {
         const data: DiaPDFModel = await DiaPdfDataExtractor(pdf)
+        if (data.cabCode.length > 5) {
+            data.cabCode = null
+        }
         setDiaPDFValues(data)
         diaPDfForm.setFieldsValue(data)
     }

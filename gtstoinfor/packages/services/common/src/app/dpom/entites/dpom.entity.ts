@@ -698,6 +698,13 @@ export class DpomEntity {
     })
     allocatedQuantity: string;
 
+    @Column('varchar', {
+        name: "co_line_status",
+        length: 0,
+        nullable: true
+    })
+    coLineStatus: string;
+
     @OneToMany(() => DpomChildEntity, (dpomChild) => { dpomChild.dpom }, { cascade: true })
     dpomChild: DpomChildEntity;
 
