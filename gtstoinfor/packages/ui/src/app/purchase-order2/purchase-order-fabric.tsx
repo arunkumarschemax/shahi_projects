@@ -547,7 +547,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     <Form.Item name='colorName' hidden><Input ></Input></Form.Item>
                     <Form.Item name='indentQuantity' hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentFabricId'} hidden><Input></Input></Form.Item>
-                    <Form.Item name={'itemCode'} ><Input></Input></Form.Item>
+                    <Form.Item name={'itemCode'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'quantityUom'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentCode'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'samplereFabId'} hidden><Input></Input></Form.Item>
@@ -556,7 +556,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     <Form.Item name='sampleQuantity' hidden ><Input/></Form.Item>
                     <Form.Item name='sampleReqId' hidden ><Input/></Form.Item>
                     <Form.Item name='indentId' hidden ><Input/></Form.Item>
-                    <Form.Item name = 'styleId'><Input/></Form.Item>
+                    <Form.Item name = 'styleId' hidden><Input/></Form.Item>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 8 }}>
                         <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
                             <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code' onChange={m3FabricOnchange}>
