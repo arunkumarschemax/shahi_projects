@@ -118,7 +118,7 @@ export class LocationMappingService {
             let query = `SELECT gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, 
             (gi.accepted_quantity - IF(SUM(st.quantity) IS NULL, 0,SUM(st.quantity))) AS balance, gi.grn_item_no AS grnItemNo,gi.style_id AS styleId,sty.style,
             IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,IF(SUM(st.quantity) IS NULL, 0,SUM(st.quantity)) AS allocatedQty,
-            IF(g.item_type = "FABRIC", CONCAT(mit.item_code,'-',mit.description), CONCAT(mtr.trim_code,'-',mtr.description)) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName
+            IF(g.item_type = "FABRIC", CONCAT(mit.item_code), CONCAT(mtr.trim_code)) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND g.item_type = "FABRIC"
@@ -173,13 +173,14 @@ export class LocationMappingService {
             WHERE gi.location_mapped_status != 'COMPLETED' 
             `
             let param :any={}
-    // if(req){
-      if (req.externalRefNo != undefined){
+    if(req){
+      if (req?.externalRefNo != undefined){
         query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
       }
     
    
-    // }
+    }
+    query += ` GROUP BY g.grn_number`
     
             const res = await AppDataSource.query(query,param);
             if (res) {
