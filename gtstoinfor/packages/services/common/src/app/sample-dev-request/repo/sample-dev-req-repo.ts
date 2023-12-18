@@ -227,7 +227,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { groupBy } from "rxjs";
 import { SampleRequest } from "../entities/sample-dev-request.entity";
-import { LifeCycleStatusEnum, MaterailViewDto, RequestNoReq, SampleFilterRequest, SampleRequestFilter } from "@project-management-system/shared-models";
+import { LifeCycleStatusEnum, MaterailViewDto, RequestNoReq, SampleFilterRequest, SampleRequestFilter, buyerandM3ItemIdReq } from "@project-management-system/shared-models";
 import { Location } from "../../locations/location.entity";
 import { Style } from "../../style/dto/style-entity";
 import { ProfitControlHead } from '../../profit-control-head/profit-control-head-entity';
@@ -249,6 +249,7 @@ import { StocksEntity } from "../../stocks/stocks.entity";
 import { Colour } from "../../colours/colour.entity";
 import { GrnItemsEntity } from "../../grn/entities/grn-items-entity";
 import { GrnEntity } from "../../grn/entities/grn-entity";
+import { SampleDevelopmentService } from "@project-management-system/shared-services";
 
 
 
@@ -256,7 +257,8 @@ import { GrnEntity } from "../../grn/entities/grn-entity";
 export class SampleRequestRepository extends Repository<SampleRequest> {
     constructor(@InjectRepository(SampleRequest)
     private repo: Repository<SampleRequest>,
-        public dataSource: DataSource
+        public dataSource: DataSource,
+        private sampleService: SampleDevelopmentService,
     ) {
         super(repo.target, repo.manager, repo.queryRunner);
     }
@@ -269,27 +271,36 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
     async sampleFabric(sampleId: string) {
         const query = await this.dataSource.createQueryBuilder(SampleReqFabricinfoEntity, 'srfi')
-            .select(`(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,sum(st.quantity) AS availableQuantity,"fabric" as itemType,sr.sample_request_id as sampleRequestid,st.m3_item as stockM3ItemId,sr.buyer_id as buyerId,fabric_info_id,srfi.sample_request_id,c.colour,srfi.fabric_info_id,srfi.fabric_code as m3ItemFabricId,srfi.colour_id,srfi.remarks AS fab_remarks,srfi.consumption AS fabric_consumption,srfi.sample_request_id AS fabric_sample_request_id,m3items.item_code,Group_concat(st.id) AS stockIds,srfi.total_requirement,sb.status AS status`)
+            .select(`IF(sb.received_quantity IS NULL, 0, sb.received_quantity) AS receivedQty,(srfi.total_requirement - (IF(sb.received_quantity IS NULL, 0, sb.received_quantity))) AS tobeProcured,(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,sum(st.quantity) AS availableQuantity,"fabric" as itemType,sr.sample_request_id as sampleRequestid,st.m3_item as stockM3ItemId,sr.buyer_id as buyerId,fabric_info_id,srfi.sample_request_id,c.colour,srfi.fabric_info_id,srfi.fabric_code as m3ItemFabricId,srfi.colour_id,srfi.remarks AS fab_remarks,srfi.consumption AS fabric_consumption,srfi.sample_request_id AS fabric_sample_request_id,m3items.item_code,Group_concat(st.id) AS stockIds,srfi.total_requirement,sb.status AS status`)
             .leftJoin(SampleRequest, 'sr', ' sr.sample_request_id=srfi.sample_request_id ')
-            .leftJoin(SamplingbomEntity, 'sb', 'sb.m3_item_id= srfi.fabric_code and sb.sample_request_id = srfi.sample_request_id')
+            .leftJoin(SamplingbomEntity, 'sb', 'sb.m3_item_id= srfi.fabric_code and sb.sample_request_id = srfi.sample_request_id and sb.colour_id = srfi.colour_id')
             // .leftJoin(RmCreationEntity, 'rm', ' rm.rm_item_id=srfi.fabric_code ')
             .leftJoin(M3ItemsEntity,'m3items','m3items.m3_items_Id  = srfi.fabric_code')
             .leftJoin(StocksEntity,'st','st.m3_item=srfi.fabric_code and st.item_type = "fabric" and st.buyer_id=sr.buyer_id')
             .leftJoin(Colour,'c','c.colour_id=srfi.colour_id')
             .where(`srfi.sample_request_id = "${sampleId}"`)
             .groupBy(`srfi.fabric_info_id`)
-            .getRawMany()
-        return query.map((rec) => {
-            return {
-                fabric_info_id: rec.fabric_info_id,fabric_item_code:rec.fabric_item_code, m3ItemFabricId: rec.m3ItemFabricId, fabric_description: rec.fabric_description, colour_id: rec.colour_id, fab_remarks: rec.fab_remarks, fabric_consumption: rec.fabric_consumption, fabric_sample_request_id: rec.fabric_sample_request_id,colour :rec.colour,item_code:rec.item_code,stockM3ItemId:rec.stockM3ItemId,buyerId:rec.buyerId,sampleRequestid:rec.sampleRequestid,itemType:rec.itemType,availableQuantity:rec.availableQuantity,stockIds:rec.stockIds,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,totalRequirement:rec.total_requirement,status:rec.status
+            .getRawMany();
+            let respnse: any[] = []
+            for(const rec of query)
+            {
+                let req = new  buyerandM3ItemIdReq(rec.buyerId,rec.m3ItemFabricId,rec.itemType)
+                let stockdata = await this.sampleService.getAvailbelQuantityAginstBuyerAnditem(req)
+                let data = {
+                    fabric_info_id: rec.fabric_info_id,fabric_item_code:rec.fabric_item_code, m3ItemFabricId: rec.m3ItemFabricId, fabric_description: rec.fabric_description, colour_id: rec.colour_id, fab_remarks: rec.fab_remarks, fabric_consumption: rec.fabric_consumption, fabric_sample_request_id: rec.fabric_sample_request_id,colour :rec.colour,item_code:rec.item_code,stockM3ItemId:rec.stockM3ItemId,buyerId:rec.buyerId,sampleRequestid:rec.sampleRequestid,itemType:rec.itemType,availableQuantity:rec.availableQuantity,stockIds:rec.stockIds,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,totalRequirement:rec.total_requirement,status:rec.status,receivedQty:rec.receivedQty,tobeProcured:rec.tobeProcured,allocatedStock:stockdata.data
+                };
+                console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                console.log(data)
+                respnse.push(data);
             }
-        })
-
+            if(respnse.length > 0){
+                return respnse;
+            }
     };
 
     async sampleTrimData(sampleId: string) {
         const query = await this.dataSource.createQueryBuilder(SampleRequestTriminfoEntity, 'stri')
-            .addSelect(`(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,stri.sample_request_id,mt.trim_type as trimType,sum(st.quantity) as availabeQuantity,stri.trim_info_id,stri.consumption AS trim_consumption,stri.total_requirement ,stri.sample_request_id AS trim_sample_request_id,stri.remarks AS tri_remarks,mt.trim_code AS trim_item_code,mt.trim_code AS m3trimcode, sr.buyer_id as buyerId, stri.trim_code as trimCode, sb.status AS status,stri.trim_info_id AS trimInfoId`)
+            .addSelect(`(stri.total_requirement - IF(sb.received_quantity IS NULL, 0, sb.received_quantity)) AS tobeProcured, IF(sb.received_quantity IS NULL, 0, sb.received_quantity) AS receivedQty,(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,stri.sample_request_id,mt.trim_type as trimType,sum(st.quantity) as availabeQuantity,stri.trim_info_id,stri.consumption AS trim_consumption,stri.total_requirement ,stri.sample_request_id AS trim_sample_request_id,stri.remarks AS tri_remarks,mt.trim_code AS trim_item_code,mt.trim_code AS m3trimcode, sr.buyer_id as buyerId, stri.trim_code as trimCode, sb.status AS status,stri.trim_info_id AS trimInfoId`)
             .leftJoin(SampleRequest, 'sr', 'sr.sample_request_id= stri.sample_request_id ')
             .leftJoin(SamplingbomEntity, 'sb', 'sb.m3_item_id= stri.trim_code and sb.sample_request_id = stri.sample_request_id')
             .leftJoin(M3TrimsEntity, 'mt', 'mt.m3_trim_id=stri.trim_code ')
@@ -299,12 +310,19 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .where(`stri.sample_request_id = "${sampleId}"`)
             .groupBy(`st.buyer_id,stri.trim_info_id`)
             .getRawMany()
-        return query.map((rec) => {
-            return {
-                trim_info_id: rec.trim_info_id,trim_item_code:rec.trim_item_code, trim_description: rec.trim_description, trim_consumption: rec.trim_consumption, tri_remarks: rec.tri_remarks, trim_sample_request_id: rec.trim_sample_request_id,trim_code:rec.m3trimcode,availabeQuantity:rec.availabeQuantity,trimType:rec.trimType,sample_request_idmt:rec.sample_request_id,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,buyerId:rec.buyerId,trimCode:rec.trimCode,status:rec.status,itemType:rec.trimType,sampleRequestid:rec.trim_sample_request_id,sampleItemId:rec.trimInfoIdm,totalRequirement:rec.total_requirement
-            }
-        })
+            let respnse: any[] = []
 
+        query.map(async (rec) => {
+            let req = new buyerandM3ItemIdReq(rec.buyerId,rec.trimCode,rec.trimType)
+            let stockdata = await this.sampleService.getAvailbelQuantityAginstBuyerAnditem(req)
+            let data = {
+                trim_info_id: rec.trim_info_id,trim_item_code:rec.trim_item_code, trim_description: rec.trim_description, trim_consumption: rec.trim_consumption, tri_remarks: rec.tri_remarks, trim_sample_request_id: rec.trim_sample_request_id,trim_code:rec.m3trimcode,availabeQuantity:rec.availabeQuantity,trimType:rec.trimType,sample_request_idmt:rec.sample_request_id,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,buyerId:rec.buyerId,trimCode:rec.trimCode,status:rec.status,itemType:rec.trimType,sampleRequestid:rec.trim_sample_request_id,sampleItemId:rec.trimInfoIdm,totalRequirement:rec.total_requirement,receivedQty:rec.receivedQty,allocatedStock:stockdata.data
+            }
+            respnse.push(data);
+        })
+        if(respnse.length > 0){
+            return respnse;
+        }
     };
 
 
