@@ -1526,6 +1526,14 @@ const OrdersCompareGrid = () => {
                 dataIndex: 'destinationCountry',
             },
             {
+                title: 'Total Quantity',
+                align: 'right',
+                dataIndex: 'totalQuantity',
+                render: (text) => (
+                    <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+                ),
+            },
+            {
                 title: 'Item Text',
                 dataIndex: 'itemText',
                 // render:(text,record) => {
@@ -1555,14 +1563,6 @@ const OrdersCompareGrid = () => {
             //         </>
             //     )
             // },
-            {
-                title: 'Total Quantity',
-                align: 'right',
-                dataIndex: 'totalQuantity',
-                render: (text) => (
-                    <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
-                ),
-            },
         ]
 
         const columns: any = [
@@ -1641,7 +1641,7 @@ const OrdersCompareGrid = () => {
             },
             {
                 title: 'Destination Country',
-                dataIndex: 'destinationCountry', width: 80,
+                dataIndex: 'destinationCountry', width: 90,
                 align: 'center',
             }
         ];
@@ -1812,6 +1812,15 @@ const OrdersCompareGrid = () => {
         });
 
         columns.push(
+            {
+                title: 'Total Quantity',
+                align: 'right',
+                dataIndex: 'totalQuantity',
+                width: 100,
+                render: (text) => (
+                    <span>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</span>
+                ),
+            },
             {
                 title: 'Item Text',
                 dataIndex: 'itemText',
