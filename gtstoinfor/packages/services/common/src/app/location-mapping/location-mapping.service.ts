@@ -14,6 +14,7 @@ import { MaterialAllocationEntity } from "../sample-dev-request/entities/materia
 import { MaterialAllocationItemsEntity } from "../sample-dev-request/entities/material-allocation-items";
 import { SamplingbomEntity } from "../sample-dev-request/entities/sampling-bom-entity";
 import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
+import { GrnEntity } from "../grn/entities/grn-entity";
 
 @Injectable()
 export class LocationMappingService {
@@ -118,7 +119,7 @@ export class LocationMappingService {
             let query = `SELECT gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, 
             (gi.accepted_quantity - IF(SUM(st.quantity) IS NULL, 0,SUM(st.quantity))) AS balance, gi.grn_item_no AS grnItemNo,gi.style_id AS styleId,sty.style,
             IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,IF(SUM(st.quantity) IS NULL, 0,SUM(st.quantity)) AS allocatedQty,
-            IF(g.item_type = "FABRIC", CONCAT(mit.item_code), CONCAT(mtr.trim_code)) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName
+            IF(g.item_type = "FABRIC", CONCAT(mit.item_code,'-',mit.description), CONCAT(mtr.trim_code,'-',mtr.description)) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName,g.grn_id as grnId
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND g.item_type = "FABRIC"
@@ -341,9 +342,23 @@ export class LocationMappingService {
                 let saveStockLog = await this.stockLogRepository.save(stockLogEntity)
                 if(saveStockLog){
                     let updateGrnItemStatus = await manager.getRepository(GrnItemsEntity).update({grnItemId:req.grn_item_id},{ status: LocationMappedEnum.COMPLETED});
+                    // after completin the GRN of th child check for the GRN status of all the items and updated the parent status
+                    let grnStatus = LocationMappedEnum.COMPLETED;
+                    const grnItems = await manager.getRepository(GrnItemsEntity).find({ select: ['status'], where:{   grnEntity : {grnId:req.grn_id} } });
+                    for(const item of grnItems) {
+                        if(item.status == LocationMappedEnum.PARTIALLY_COMPLETED) {
+                            grnStatus = LocationMappedEnum.PARTIALLY_COMPLETED;
+                            break;
+                        }
+                        if(item.status == LocationMappedEnum.OPEN) {
+                            grnStatus = LocationMappedEnum.PARTIALLY_COMPLETED;
+                        }
+                    }
+                    await manager.getRepository(GrnEntity).update({grnId:req.grn_id},{ locationMapStatus: grnStatus});
+                
                     console.log(updateGrnItemStatus)
                     console.log("**********************************")
-                    if(updateGrnItemStatus.affected > 0){
+                    if(updateGrnItemStatus.affected > 0 ){
                         if(grnDetails[0].grnType === "INDENT"){
                             return new CommonResponseModel(true, 1111, "Data posted Succesufully");
                         }
