@@ -1769,5 +1769,27 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
   }
 }
 
+//Mobile App API for sizes dropdown for operation reporting for sample request
 
+  async getOrderedSizes(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
+    const sizesDataQry = `select distinct(ss.size_id) as sizeId,s.sizes as size from sample_request_size_info ss left join size s on s.size_id = ss.size_id where sample_request_id = ${req.sampleRequestId}`;
+    const sizesData = await this.dataSource.query(sizesDataQry)
+    if(sizesData.length > 0){
+      return new CommonResponseModel(true,1,'data retrieved',sizesData)
+    }else{
+      return new CommonResponseModel(false,0,'NO data')
+    }
+  }
+
+  //Mobile App API for Colors dropdown for operation reporting for sample request
+
+  async getOrderedColors(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
+    const colorsDataQry = `select distinct(ss.colour_id) as colorId,c.colour as colour from sample_request_size_info ss left join colour c on c.colour_id = ss.colour_id where sample_request_id = ${req.sampleRequestId}`;
+    const colorsData = await this.dataSource.query(colorsDataQry)
+    if(colorsData.length > 0){
+      return new CommonResponseModel(true,1,'data retrieved',colorsData)
+    }else{
+      return new CommonResponseModel(false,0,'NO data')
+    }
+  }
 }
