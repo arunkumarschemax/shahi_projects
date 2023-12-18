@@ -41,7 +41,6 @@ export class LocationMappingService {
     }
 
     async getAllFabrics(req?:ExternalRefReq): Promise<CommonResponseModel> {
-        console.log(req,"ser")
         try {
 
             // let dataquery = `SELECT 
@@ -134,7 +133,12 @@ export class LocationMappingService {
       if (req.externalRefNo){
         query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
       }
-     
+      if (req.grnNo != undefined){
+        query += ` AND g.grn_number = '${req.grnNo}'`
+      }
+      if (req.material != undefined){
+        query += ` AND g.item_type = '${req.material}'`
+      }
     }
     
     // const data = await this.datasource.query(query,param)
@@ -154,7 +158,6 @@ export class LocationMappingService {
     
     async getgrn(req?:ExternalRefReq): Promise<CommonResponseModel> {
         try {
-            console.log(req,"LLLLLL");
             
             let query = `SELECT DISTINCT
             IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber
@@ -167,18 +170,16 @@ export class LocationMappingService {
             LEFT JOIN buyers idfb ON idfb.buyer_id = gi.buyer_id
             LEFT JOIN style sty ON sty.style_id = g.style_id
             LEFT JOIN uom u ON u.id = gi.uom_id
-            WHERE gi.location_mapped_status != 'COMPLETED' ;
+            WHERE gi.location_mapped_status != 'COMPLETED' 
             `
             let param :any={}
-    if(req){
-      if (req.externalRefNo){
+    // if(req){
+      if (req.externalRefNo != undefined){
         query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
       }
-      if (req.grnNo){
-        query += ` AND g.grn_item_no = '${req.grnNo}'`
-      }
+    
    
-    }
+    // }
     
             const res = await AppDataSource.query(query,param);
             if (res) {
@@ -206,15 +207,13 @@ export class LocationMappingService {
         LEFT JOIN buyers idfb ON idfb.buyer_id = gi.buyer_id
         LEFT JOIN style sty ON sty.style_id = g.style_id
         LEFT JOIN uom u ON u.id = gi.uom_id
-        WHERE gi.location_mapped_status != 'COMPLETED'; `
+        WHERE gi.location_mapped_status != 'COMPLETED' `
             let param :any={}
     if(req){
       if (req.externalRefNo){
         query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
       }
-      if (req.material){
-        query += ` AND g.item_type = '${req.material}'`
-      }
+      
    
     }
     
@@ -229,7 +228,6 @@ export class LocationMappingService {
     }
 
     async getOneItemAllocateDetails(req: MaterialIssueIdreq): Promise<CommonResponseModel> {
-        console.log(req, "id");
         try {
             let dataquery = `SELECT 
             stk_lg.stock_log_id,

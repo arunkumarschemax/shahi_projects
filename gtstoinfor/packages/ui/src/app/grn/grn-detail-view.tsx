@@ -6,7 +6,7 @@ import {Button,Card,Col,Collapse,Descriptions,Divider,Form,Input,Modal,Row,Segme
   import React, { useEffect, useRef } from "react";
   import { useState } from "react";
   import { useLocation, useNavigate } from "react-router-dom";
-import { GrnReq, LocationMappedEnumDisplay } from "@project-management-system/shared-models";
+import { GRNTypeEnumDisplay, GrnReq, ItemTypeEnumDisplay, LocationMappedEnumDisplay } from "@project-management-system/shared-models";
 import { GRNService } from "@project-management-system/shared-services";
 import Barcode from "react-barcode";
 import QRCode from "react-qr-code";
@@ -171,8 +171,10 @@ import QRCode from "react-qr-code";
           {/* <Descriptions.Item label='Contact Person' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.contactPerson?stateData?.data?.[0]?.contactPerson:'-'}</Descriptions.Item> */}
           <Descriptions.Item label='Invoice No' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.invoiceNo?stateData?.data?.[0]?.invoiceNo:'-'}</Descriptions.Item>
           <Descriptions.Item label='Invoice Date' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.invoiceDate? moment(stateData?.data?.[0]?.invoiceDate).format('DD-MM-YYYY'):'-'}</Descriptions.Item>
-          <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.itemType?stateData?.data?.[0]?.itemType:'-'}</Descriptions.Item>
-          <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnType?stateData?.data?.[0]?.grnType:'-'}</Descriptions.Item>
+          <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{ItemTypeEnumDisplay.find((e) => e.name === stateData?.data?.[0]?.itemType)?.displayVal ?? '-'}</Descriptions.Item>
+          {/* <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{ItemTypeEnumDisplay.find((e)=> e.name === stateData?.data?.[0]?.itemType)?.displayVal}</Descriptions.Item> */}
+          <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{GRNTypeEnumDisplay.find((e) => e.name === stateData?.data?.[0]?.grnType)?.displayVal ?? '-'}</Descriptions.Item>
+          {/* <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnType?stateData?.data?.[0]?.grnType:'-'}</Descriptions.Item> */}
           <Descriptions.Item label='Status' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.status?stateData?.data?.[0]?.status:'-'}</Descriptions.Item>
         </Descriptions>
         <br/>

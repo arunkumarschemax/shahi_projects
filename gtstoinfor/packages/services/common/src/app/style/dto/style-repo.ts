@@ -31,7 +31,7 @@ export class StyleRepository extends Repository<Style> {
         .leftJoin(ProfitControlHead,'pch','pch.profit_control_head_id = s.pch')
         .where(`s.style_id = ${req.styleId} `)
         .orderBy(`pch.profit_control_head`)
-        return query.getRawMany()
+        return query.getRawOne()
     
       }
    

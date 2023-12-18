@@ -51,8 +51,10 @@ export const SampleDevForm = () => {
   const [data, setData] = useState<any>();
   const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
   const [qualities,setQualities] = useState<any[]>([])
-  const [styleaginstpch,setStyleaginstpch] = useState<any[]>([])
+  const [styleAginstPch,setStyleAginstPch] = useState<any[]>([])
   const [sizeForm] = Form.useForm();
+  const [fabricForm] = Form.useForm();
+  const [trimForm] = Form.useForm();
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
   const brandService = new MasterBrandsService();
@@ -169,6 +171,9 @@ export const SampleDevForm = () => {
       if (res.status) {
         setPch(res.data);
       }
+      else{
+        setPch([]);
+      }
     });
   };
 
@@ -217,8 +222,7 @@ export const SampleDevForm = () => {
     console.log(req,'===================')
     styleService.getstyleaginstpch(req).then((res)=>{
       if (res.status) {
-        setStyleaginstpch(res.data);
-        form.setFieldValue('pchId',res.data[0]?.pch)
+        form.setFieldValue('pchId',res.data?.pchId)
       }
     })
   }
@@ -277,53 +281,58 @@ export const SampleDevForm = () => {
 
 
   const onFinish = (val) =>{
-    // console.log(data);
-    if(data != undefined){
-      // console.log('hoii')
-      // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
-      if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
+    sizeForm.validateFields().then(size => {
+      fabricForm.validateFields().then(fab => {
+        trimForm.validateFields().then(trim => {
+          // console.log(data);
+          if(data != undefined){
+            // console.log('hoii')
+            // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
+            if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
 
-        // console.log('TTTTT')
-        const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData)
-        // console.log(req.sizeData)
-        console.log(req)
+              // console.log('TTTTT')
+              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData)
+              // console.log(req.sizeData)
+              console.log(req)
 
-       
-          sampleService.createSampleDevelopmentRequest(req).then((res) => {
-            if (res.status) {
-              // console.log(res.data);
-              message.success(res.internalMessage, 2);
-              if (fileList.length > 0) {    
-                const formData = new FormData();
-                fileList.forEach((file) => {
-                  // console.log(file.originFileObj)
-                  formData.append('file', file.originFileObj);
+            
+                sampleService.createSampleDevelopmentRequest(req).then((res) => {
+                  if (res.status) {
+                    // console.log(res.data);
+                    message.success(res.internalMessage, 2);
+                    if (fileList.length > 0) {    
+                      const formData = new FormData();
+                      fileList.forEach((file) => {
+                        // console.log(file.originFileObj)
+                        formData.append('file', file.originFileObj);
+                      });
+              
+                      formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
+                      console.log(res.data[0].SampleRequestId)
+                      // console.log(formData);
+                      sampleService.fileUpload(formData).then((file) => {
+                        // console.log(file.data)
+                        res.data[0].filepath = file.data;
+                      });
+                    }
+                    navigate("/sample-development/sample-requests")
+                  } else {
+                    message.success(res.internalMessage, 2);
+                  }
                 });
-        
-                formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
-                console.log(res.data[0].SampleRequestId)
-                // console.log(formData);
-                sampleService.fileUpload(formData).then((file) => {
-                  // console.log(file.data)
-                  res.data[0].filepath = file.data;
-                });
-              }
-              navigate("/sample-development/sample-requests")
-            } else {
-              message.success(res.internalMessage, 2);
+                // console.log(req.sizeData);
+            }else{
+              // console.log('ddddddd')
+              message.error('Please Fill The Size,Fabric, Trim And process Details')
             }
-          });
-          // console.log(req.sizeData);
-      }else{
-        // console.log('ddddddd')
-        message.error('Please Fill The Size,Fabric, Trim And process Details')
-      }
-      
-    }else{
-      // console.log('********')
-      message.error('Please Fill The Below Details')
-    }
-   
+            
+          }else{
+            // console.log('********')
+            message.error('Please Fill The Below Details')
+          }
+        }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0])   });
+      }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0]) });
+    }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0])  });
   }
 
   const handleSubmit = (data) => {
@@ -486,10 +495,10 @@ export const SampleDevForm = () => {
                 placeholder="Select PCH"
                 disabled
               >
-                {styleaginstpch.map((e) => {
+                {pch.map((e) => {
                   return (
-                    <Option key={e.pchId} value={e.pchId}>
-                      {e.pch}
+                    <Option key={e.profitControlHeadId} value={e.profitControlHeadId}>
+                      {e.profitControlHead}
                     </Option>
                   );
                 })}
@@ -851,10 +860,10 @@ export const SampleDevForm = () => {
              <SizeDetail props = {handleSizeDataUpdate} buyerId={selectedBuyerId} form={sizeForm}/>
              </TabPane>
              <TabPane key="2" tab={<span><b>{`Fabric`}</b></span>}>
-             <FabricsForm data = {handleFabricsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData}/>
+             <FabricsForm data = {handleFabricsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData} form={fabricForm}/>
              </TabPane>
              <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
-             <TrimsForm data = {handleTrimsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData}/>
+             <TrimsForm data = {handleTrimsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData} form={trimForm}/>
              </TabPane>
              {/* <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
              <ProcessForm props={handleProcessDataUpdate}/>

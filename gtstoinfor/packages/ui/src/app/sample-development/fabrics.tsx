@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox } from 'antd';
+import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { ColourService, M3ItemsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
@@ -15,6 +15,7 @@ export interface FabricsFormProps {
   data: any;
   buyerId: number;
   sizeDetails: any[]
+  form:FormInstance<any>
 }
 
 const FabricsForm = (props:FabricsFormProps) => {
@@ -35,7 +36,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   const [sourcingForm] = Form.useForm();
   const colorService = new ColourService()
   const { IAMClientAuthContext } = useIAMClientState();
-  const [form] = Form.useForm();
+  // const [form] =props.form.useForm();
   const [stockForm] = Form.useForm();
 
   const handleAddRow = () => {
@@ -101,7 +102,7 @@ const FabricsForm = (props:FabricsFormProps) => {
 
     let updatedData;
   
-    if (field === 'fabricCode') {
+    if (field === 'fabricCode' && e != undefined) {
 
       updatedData = data.map((record) => {
         if (record.key === key) {
@@ -121,12 +122,12 @@ const FabricsForm = (props:FabricsFormProps) => {
     }
 
     else if(field === 'consumption'){
-      let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
+      let wastg =props.form.getFieldValue(`wastage${key}`) != undefined ?props.form.getFieldValue(`wastage${key}`) : 2;
       updatedData = data.map((record) => {
         if (record.key === key) {
           console.log(e);
           console.log(record.totalCount);
-          let totalSizeCountForSize = props.sizeDetails.find((s) => s.colour === form.getFieldValue(`colorId${key}`))?.sizeInfo;
+          let totalSizeCountForSize = props.sizeDetails.find((s) => s.colour ===props.form.getFieldValue(`colorId${key}`))?.sizeInfo;
           console.log(totalSizeCountForSize);
           let qtyy = 0;
           totalSizeCountForSize?.forEach(qty => {
@@ -138,14 +139,14 @@ const FabricsForm = (props:FabricsFormProps) => {
           let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
           console.log(consumptionCal);
           console.log(withPer);
-          form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+         props.form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
         return record;
       });
     }
     else if(field === 'wastage'){
-      let cons = form.getFieldValue(`consumption${key}`) != undefined ? form.getFieldValue(`consumption${key}`) : 0
+      let cons =props.form.getFieldValue(`consumption${key}`) != undefined ?props.form.getFieldValue(`consumption${key}`) : 0
       updatedData = data.map((record) => {
         if (record.key === key) {
           console.log(e);
@@ -154,7 +155,7 @@ const FabricsForm = (props:FabricsFormProps) => {
           let withPer = (Number(consumptionCal) * Number(e))/ 100;
           console.log(consumptionCal);
           console.log(withPer);
-          form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+         props.form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
         return record;
@@ -164,7 +165,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     else if(field === 'colourId'){
       console.log(props.sizeDetails);
       console.log(props.sizeDetails.find((s) => s.colour === e));
-      let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
+      let wastg =props.form.getFieldValue(`wastage${key}`) != undefined ?props.form.getFieldValue(`wastage${key}`) : 2;
       if(props.sizeDetails.find((s) => s.colour === e)?.colour > 0){
         updatedData = data.map((record) => {
           if (record.key === key) {
@@ -177,11 +178,11 @@ const FabricsForm = (props:FabricsFormProps) => {
             qtyy = Number(qtyy)+Number(qty.quantity);
           })
           console.log(qtyy);
-            let consumptionCal = Number(qtyy) * Number(form.getFieldValue(`consumption${key}`));
+            let consumptionCal = Number(qtyy) * Number(props.form.getFieldValue(`consumption${key}`));
             let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
             console.log(consumptionCal);
             console.log(withPer);
-            form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+           props.form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
             return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
           }
           return record;
@@ -189,7 +190,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       }
       else{
         AlertMessages.getErrorMessage("Fabric color is not in size details")
-        form.setFieldValue(`colorId${key}`,0)
+       props.form.setFieldValue(`colorId${key}`,0)
         updatedData = data.map((record) => {
           // if (record.key === key) {
           //   return { ...record, [field]: e };
@@ -222,7 +223,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         setStockData(res.data);
         handleInputChange(res.data, record.key, "allocatedStock", 0,record)
         // sourcingForm.setFieldValue([`allocatedStock${record.key}`],res.data)
-        AlertMessages.getSuccessMessage(res.internalMessage)
+        // AlertMessages.getSuccessMessage(res.internalMessage)
       }
       else{
         setStockData([]);
@@ -269,7 +270,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     return selectedFabric ? selectedFabric.productGroupId : null;
   };
 
-  const onCheck = (rowData, index, isChecked) => {
+  const onCheck = (rowData, index, isChecked, fabIndex) => {
     console.log(rowData);
     if(isChecked){
       if(Number(rowData.issuedQty) > 0){
@@ -295,12 +296,13 @@ const FabricsForm = (props:FabricsFormProps) => {
       }
     }
     else{
+      stockForm.setFieldsValue({[`allocatedQuantity${fabIndex}-${index}`]:0, [`checkStatus${index}`]:false});
       console.log("")
     }
     
   };
 
-  const columns = [
+  const columns:any = [
     {
       title: 'S.No',
       dataIndex: 'sNo',
@@ -313,7 +315,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       render: (_, record, index) => (
         <>
         <Form.Item name={`allocatedStock${record.key}`}><Input name={`allocatedStock${record.key}`} style={{display:'none'}}/></Form.Item>
-        <Form.Item name={`fabricId${record.key}`}>
+        <Form.Item name={`fabricId${record.key}`}
+         rules={[{ required: true, message: 'Missing Fabric' }]}
+        >
           <Select
             // onChange={(e) => handleInputChange(e, record.key, 'fabricCode',getSelectedProductGroupId(e))}
             style={{ width: "100%" }}
@@ -352,7 +356,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       width:"15%",
       render: (_, record) => (
         <>
-        <Form.Item name={`colorId${record.key}`}>
+        <Form.Item name={`colorId${record.key}`}
+        rules={[{ required: true, message: 'Missing Color' }]}
+        >
           <Select
             value={record.colourId}
             onChange={(e) => handleInputChange(e, record.key, 'colourId', 0,record)}
@@ -381,7 +387,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'consumption',
       width:"10%",
       render: (_, record) => (
-        <Form.Item name={`consumption${record.key}`}>
+        <Form.Item name={`consumption${record.key}`}
+        rules={[{ required: true, message: 'Missing Consumption' }]}
+        >
         <InputNumber
         value={record.consumption}
         onChange={(e) => handleInputChange(e, record.key, 'consumption',0,record)}
@@ -417,7 +425,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'UomId',
       width:"10%",
       render: (_, record) => (
-        <Form.Item name={`uomId${record.key}`}>
+        <Form.Item name={`uomId${record.key}`}
+        rules={[{ required: true, message: 'Missing UOM' }]}
+        >
 
         <Select
         value={record.uomId}
@@ -444,7 +454,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'wastage',
       width:"10%",
       render: (_, record) => (
-      <Form.Item name={`wastage${record.key}`} initialValue={2}>
+      <Form.Item name={`wastage${record.key}`} initialValue={2} 
+      rules={[{ required: true, message: 'Missing Wastage' }]}
+      >
         <InputNumber
         defaultValue={2}
         onChange={(e) => handleInputChange(e, record.key, 'wastage',0,record)}
@@ -457,7 +469,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       dataIndex: 'totalRequirement',
       width:"10%",
       render: (_, record) => (
-      <Form.Item name={`totalRequirement${record.key}`} >
+      <Form.Item name={`totalRequirement${record.key}`} 
+      rules={[{ required: true, message: 'Missing Total Requirement' }]}
+      >
         <Input disabled style={{fontWeight:'bold', color:'black'}}
         value={record.totalRequirement}
         onChange={(e) => handleInputChange(e.target.value, record.key, 'totalRequirement',0,record)}
@@ -481,102 +495,124 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Action',
       dataIndex: 'action',
+      fixed:'right',
       render: (_, record) => (
         <Button onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
       ),
     },
   ];
-  const renderColumnForFabric: any =[
-    {
-      title: 'S.No',
-      dataIndex: 'sNo',
-      render: (_, record, index) => index + 1,
-    },
-    {
-      title: "Grn Number",
-      key:'grnNumber',
-      dataIndex: "grnNumber",
-      width: "150px",
 
-    },
-    {
-      title: "Grn Date",
-      key:'grnDate',
-      dataIndex:"grnDate",
-      render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
-      width: "150px",
-
-    },
-    {
-      title: "Location",
-      key:'location',
-
-      dataIndex: "location",
-      width:'80px',
-    },
-  
-    {
-      title: "Available Quantity",
-      width: "150px",
-      dataIndex: "quantity",
-    },
-   
-    {
-      title: "Allocated Quantity",
-      width:'200px',
-      render: (text, rowData, index) => { 
-        return(
-          <Form form={stockForm}>
-          <Form.Item name={`allocatedQuantity${index}`}>
-                <InputNumber name={`allocatedQuantity${index}`}
-                    onChange={(e) => setAllocatedQty(index,rowData, e)} 
-                 />
-          </Form.Item>
-          </Form>
-        )
-      }
-    },
-    {
-      title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
-      onClick={() =>allocateQuantity()} 
-      >Allocate</Button>:'Allocate'}</div>,
-      dataIndex: "sm",
-      key: "sm",
-      align: "center",
-      render: (text, rowData, index) => { 
-        return (
-          <Checkbox 
-          onClick={checkboxonclick}
-          onChange={(e) => onCheck(rowData, index, e.target.checked)}
-          // onClick={(e) =>onCheck(rowData,undefined)}
-          />
-        );
+  const tableColumns = (val,fabindex) => {
+    if(val === undefined){
+      AlertMessages.getWarningMessage("Please give required consumption. ");
+    }
+    console.log(val);
+    const renderColumnForFabric: any =[
+      {
+        title: 'S.No',
+        dataIndex: 'sNo',
+        render: (_, record, index) => index + 1,
       },
-    },
-   
-  ]
+      {
+        title: "Grn Number",
+        key:'grnNumber',
+        dataIndex: "grnNumber",
+        width: "150px",
 
-  const setAllocatedQty = (index, rowData, value) => {
+      },
+      {
+        title: "Grn Date",
+        key:'grnDate',
+        dataIndex:"grnDate",
+        render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
+        width: "150px",
+
+      },
+      {
+        title: "Location",
+        key:'location',
+
+        dataIndex: "location",
+        width:'80px',
+      },
     
-     console.log(index);
+      {
+        title: "Available Quantity",
+        width: "150px",
+        dataIndex: "quantity",
+      },
+    
+      {
+        title: "Allocated Quantity",
+        width:'200px',
+        render: (text, rowData, index) => { 
+          return(
+            <Form form={stockForm}>
+            <Form.Item name={`allocatedQuantity${fabindex}-${index}`}>
+                  <InputNumber name={`allocatedQuantity${fabindex}-${index}`}
+                      onChange={(e) => setAllocatedQty(index,rowData, e, val,fabindex)} 
+                  />
+            </Form.Item>
+            </Form>
+          )
+        }
+      },
+      {
+        title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
+        onClick={() =>allocateQuantity()} 
+        >Allocate</Button>:'Allocate'}</div>,
+        dataIndex: "sm",
+        key: "sm",
+        align: "center",
+        render: (text, rowData, index) => { 
+          return (
+            <Form.Item name={`checkStatus${index}`}>
+            <Checkbox 
+            onClick={checkboxonclick}
+            onChange={(e) => onCheck(rowData, index, e.target.checked,fabindex)}
+            // onClick={(e) =>onCheck(rowData,undefined)}
+            />
+            </Form.Item>
+          );
+        },
+      },
+    
+    ]
+    return [...renderColumnForFabric]
+  }
+
+  const setAllocatedQty = (index, rowData, value, total,fabIndex) => {
+    console.log(fabIndex)
+    console.log(total);
+    console.log(index);
     console.log(data);
     console.log(rowData);
     rowData.issuedQty = value
-    const newData = data.find((record) => Number(record.fabricCode) === rowData.m3ItemId)?.allocatedStock;
+    const newData = data.find((record,index) => index === fabIndex)?.allocatedStock;
     // const newData = [...stockData];
     console.log(newData);
     let stockRecord = newData.find((s) => s.stockId === rowData.stockId);
     stockRecord.issuedQty = value;
+    const sum = newData.reduce((accumulator, object) => {
+      console.log(accumulator);
+      console.log(object.issuedQty);
+      return accumulator + (object.issuedQty != undefined ? Number(object.issuedQty) : 0);
+    }, 0);
+    console.log(sum);
+    if(Number(sum) > Number(total)){
+      AlertMessages.getErrorMessage('Issued Quantity should not exceed total required. ')
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,0)
+    }
     // newData[index].issuedQty = value;
     // console.log(newData[index]);
     // console.log(newData)
     // setStockData(newData);
     if (value === 0 || value === null || value < 0 || value === undefined) {
       AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
-      stockForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity));
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity));
     }
     if (Number(value) > Number(rowData.quantity)) {
-      stockForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty));
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty));
       AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
     }
   }
@@ -590,20 +626,21 @@ const FabricsForm = (props:FabricsFormProps) => {
 
   }
 
-  const renderItems = (record:any) => {
+  const renderItems = (record:any, index:any) => {
     return  <Table
     rowKey={record.stockId}
      dataSource={record.allocatedStock}
-      columns={renderColumnForFabric} 
+      columns={tableColumns(record.totalRequirement,index)} 
       pagination={false}
        />;
   };
   return (
     <div>
-      <Form form={form}>
+      <Form form={props.form}>
 
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
+            scroll = {{x:'max-content',y:'max-content'}}
       dataSource={data} 
       columns={columns} 
       expandedRowRender={renderItems}

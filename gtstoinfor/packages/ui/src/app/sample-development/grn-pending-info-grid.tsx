@@ -36,20 +36,18 @@ export const GrnPendingInfoGrid = () => {
     const getAllData = () => {
         const  req = new ExternalRefReq(externalRefNo) 
 
-        // console.log(req,"req")
-        if(form.getFieldValue('grnNumber') !== undefined){
-            req.grnNo=form.getFieldValue('grnNumber')
+        if(form.getFieldValue('grnNo') !== undefined){
+            req.grnNo=form.getFieldValue('grnNo')
         }
-        if(form.getFieldValue('materialType') !== undefined){
-            req.material=form.getFieldValue('materialType')
+        if(form.getFieldValue('material') !== undefined){
+            req.material=form.getFieldValue('material')
         }
-        locationService.getAllFabrics(req).then((res) => {
+                locationService.getAllFabrics(req).then((res) => {
             setFabData(res.data);
-            // console.log(res.data, "?????????????????????????????");
+             // console.log(res.data, "?????????????????????????????");
         })
     }
 
-    console.log(form.getFieldValue('materialType'),"OOOOOOOOOOOOOOO");
     
 const getgrn=()=>{
     const  req = new ExternalRefReq(externalRefNo)     
@@ -162,7 +160,8 @@ const getMaterial=()=>{
         form.resetFields();
         getAllData();
       };
-      const onFinish = () => {
+      const onFinish = (val) => {
+        
         getAllData();
       };
     const onChange = (pagination, filters, sorter, extra) => {
@@ -186,13 +185,13 @@ const getMaterial=()=>{
                     <Form form={form} onFinish={onFinish}>
                         <Row gutter={24}>
                         <Col xs={24} sm={12} md={8} lg={6} xl={6}>
-                            <Form.Item name="materialType" label="Material Type">
+                            <Form.Item name="material" label="Material Type">
                    <Select
                    showSearch
                    placeholder="Select MaterialType "
                    optionFilterProp="children"
                    allowClear>
-                    {material.map((qc: any) => (
+                    {material?.map((qc: any) => (
                   <Select.Option key={qc.materialType} value={qc.materialType}>
                     {qc.materialType}
                   </Select.Option>
@@ -201,13 +200,13 @@ const getMaterial=()=>{
                             </Form.Item>
                        </Col>
                        <Col xs={24} sm={12} md={8} lg={6} xl={6}>
-                            <Form.Item name="grnNumber" label=" GRN number ">
+                            <Form.Item name="grnNo" label=" GRN number ">
                    <Select
                    showSearch
                    placeholder="Select MaterialType "
                    optionFilterProp="children"
                    allowClear>
-                    {grndata.map((qc: any) => (
+                    {grndata?.map((qc: any) => (
                   <Select.Option key={qc.grnNumber} value={qc.grnNumber}>
                     {qc.grnItemNo}
                   </Select.Option>

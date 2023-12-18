@@ -93,7 +93,15 @@ export class PurchaseOrderController {
     }
   }
 
-
+  @Post('/getAllPos')
+  async getAllPos( ): Promise<CommonResponseModel> {
+    try {
+      
+      return await this.purchasseOrdrSerivice.getAllPos();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
 
 
 }

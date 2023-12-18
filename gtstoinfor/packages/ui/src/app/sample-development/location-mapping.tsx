@@ -215,7 +215,7 @@ export const LocationMapping = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 12 }}>
                             <Form.Item name="itemName" label="Item" rules={[{ required: true, message: ' Item is required ' }]}>
-                                <Input disabled={grnData} style={{fontWeight:'bold',color:'black'}}/>
+                                <Input.TextArea disabled={grnData} style={{fontWeight:'bold',color:'black'}}/>
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
