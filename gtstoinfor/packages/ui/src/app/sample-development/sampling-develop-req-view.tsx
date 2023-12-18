@@ -772,7 +772,7 @@ import RolePermission from "../role-permissions";
         //   </Link>
         // }
       >
-        <Form form={sourcingForm} onFinish={getAll}>
+        <Form form={sourcingForm} onFinish={getAll} layout="vertical">
           <Row gutter={8}>
           {/* <Form.Item name="dispatched date" style={{display:'none'}}>
     <DatePicker value={moment}/>
@@ -780,9 +780,9 @@ import RolePermission from "../role-permissions";
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 5 }}
+              md={{ span: 8 }}
+              lg={{ span: 8 }}
+              xl={{ span: 4 }}
             >
               <Form.Item name="requestNo" label="Request Number">
                 <Select
@@ -809,9 +809,9 @@ import RolePermission from "../role-permissions";
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 5 }}
+              md={{ span: 8 }}
+              lg={{ span: 8 }}
+              xl={{ span: 4 }}
             >
               <Form.Item name="style" label="Style">
                 <Select
@@ -834,9 +834,9 @@ import RolePermission from "../role-permissions";
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 5 }}
+              md={{ span: 6 }}
+              lg={{ span: 6 }}
+              xl={{ span: 4 }}
             >
               <Form.Item name="status" label="Status">
                 <Select
@@ -862,7 +862,7 @@ import RolePermission from "../role-permissions";
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={5}>
+            <Col xs={24} sm={12} md={8} lg={6} xl={4}>
             <Form.Item name="pch" label="PCH">
               <Select
                 showSearch
@@ -891,6 +891,7 @@ import RolePermission from "../role-permissions";
                   type="primary"
                   htmlType="submit"
                   icon={<SearchOutlined />}
+                  style={{marginTop:20,marginLeft:30}}
                   // onClick={onSearch}
                 >
                   Search
@@ -905,7 +906,9 @@ import RolePermission from "../role-permissions";
               xl={{ span: 2 }}
             >
               <Form.Item>
-                <Button danger icon={<UndoOutlined />} onClick={onReset}>
+                <Button danger icon={<UndoOutlined />} onClick={onReset}
+                 style={{marginTop:20,marginLeft:30}}
+                >
                   Reset
                 </Button>
               </Form.Item>
