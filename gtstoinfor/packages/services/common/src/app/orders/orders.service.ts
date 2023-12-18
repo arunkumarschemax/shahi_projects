@@ -39,7 +39,7 @@ import { readSheetNames } from 'read-excel-file'
 const csv = require('csv-parser');
 const Excel = require('exceljs');
 import { CoLine } from './entities/co-line.entity';
-import { CoLineRepository } from './repository/co-line-repo';
+// import { CoLineRepository } from './repository/co-line-repo';
 let moment = require('moment');
 moment().format();
 import * as nodemailer from 'nodemailer';
@@ -49,6 +49,7 @@ import { promises } from 'dns';
 const { Builder, Browser, By, Capabilities, until } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome')
 import { Cron } from '@nestjs/schedule';
+import { CoLineRepository } from './repository/co-line-repo';
 
 
 @Injectable()
@@ -3318,6 +3319,8 @@ export class OrdersService {
 
     
     async seasonWiseReportData(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
+
+        console.log(req,"==ser=")
        try{
         let qtyLocationDate
         if(req.qtyLocation == 'exf'){
@@ -3326,8 +3329,14 @@ export class OrdersService {
         if(req.qtyLocation == 'wh'){
             qtyLocationDate='wh_date'
         }
+       
+        let query=' SELECT  planning_sum AS itemName,planning_ssn AS plannedSeason,YEAR,CONCAT(MONTHNAME('+qtyLocationDate+'),"-",YEAR('+qtyLocationDate+')) AS MONTHNAME,SUM(REPLACE(order_plan_qty,","," ")) AS totalQuantity FROM orders WHERE file_id = (SELECT MAX(file_id) FROM orders) AND YEAR="'+req.year+'" and  planning_ssn ="'+req.season+'"'
+        
+        if(req.itemName){
+            query += ` AND  planning_sum  ='${req.itemName}' `;
+        }
 
-        const query=' SELECT  planning_sum AS itemName,planning_ssn AS plannedSeason,YEAR,CONCAT(MONTHNAME('+qtyLocationDate+'),"-",YEAR('+qtyLocationDate+')) AS MONTHNAME,SUM(REPLACE(order_plan_qty,","," ")) AS totalQuantity FROM orders WHERE file_id = (SELECT MAX(file_id) FROM orders) AND YEAR="'+req.year+'" and  planning_ssn ="'+req.season+'" GROUP BY MONTH('+qtyLocationDate+'),planning_sum'
+        query += ` GROUP BY MONTH('${qtyLocationDate}'),planning_sum order by MONTH('${qtyLocationDate}')`;
 
         const data = await this.ordersRepository.query(query)
         console.log(data,'$$$$$$$$$$$$$$$$$$$$$$')

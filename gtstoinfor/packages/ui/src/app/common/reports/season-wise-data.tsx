@@ -310,6 +310,7 @@ const excelColumnsWH:any = [
     dataIndex: "itemName",
     // ellipsis: true,
   },
+  
 
 ];
 
