@@ -513,6 +513,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       {
         title: 'S.No',
         dataIndex: 'sNo',
+        width:"5%",
         render: (_, record, index) => index + 1,
       },
       {

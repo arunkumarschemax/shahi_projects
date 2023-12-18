@@ -444,6 +444,7 @@ const getMappedTrims = (value, option) => {
     {
       title: 'S.No',
       dataIndex: 'sNo',
+      width:"5%",
       render: (_, record, index) => index + 1,
     },
     {
