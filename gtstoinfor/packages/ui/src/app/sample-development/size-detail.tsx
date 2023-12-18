@@ -100,6 +100,7 @@ const SizeDetail = ({props,buyerId,form}) => {
 
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
+    setOnchangeData(updatedData); 
     setData(updatedData);
     props(updatedData)
   };

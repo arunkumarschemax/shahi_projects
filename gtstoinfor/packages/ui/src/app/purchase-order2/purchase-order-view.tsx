@@ -1,5 +1,5 @@
 import { CloseOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
-import { ItemTypeEnumDisplay, PurchaseOrderStatus, PurchaseOrderStatusEnumDisplay, PurchaseStatusEnum, PurchaseViewDto } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, PurchaseOrderStatus, PurchaseOrderStatusEnumDisplay, PurchaseStatusEnum, PurchaseViewDto, StatusEnum } from '@project-management-system/shared-models';
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, Tooltip,Tag } from 'antd';
 import moment from 'moment';
@@ -20,6 +20,8 @@ export const PurchaseOrderView = () => {
   const [form] = Form.useForm();
   const [count, setCount] = useState<any>(0);
   const k = [];
+  const [poCount, setpoCount] = useState<number>(0);
+
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
@@ -119,42 +121,43 @@ export const PurchaseOrderView = () => {
     // }
      const req = new PurchaseViewDto(null,null,null,null,null,form.getFieldValue('poStatus'),null,externalRefNo)
      console.log(form.getFieldValue('poStatus'),'ppppppppppp');
-    // if (form.getFieldValue('deliveryDate') !== undefined) {
-    //   req.confirmStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
-    // }
-    // if (form.getFieldValue('deliveryDate') !== undefined) {
-    //   req.confirmEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
-    // }
-    // if (form.getFieldValue('orderDate') !== undefined) {
-    //   req.poconfirmStartDate = (form.getFieldValue('orderDate')[0]).format('YYYY-MM-DD');
-    // }
-    // if (form.getFieldValue('orderDate') !== undefined) {
-    //   req.poconfirmEndDate = (form.getFieldValue('orderDate')[1]).format('YYYY-MM-DD');
-    // };
-    // req.status = form.getFieldValue('po_status')
-    // Service.getAllPurchaseOrderData().then((res) => {
-    //   console.log(res,"llllllllllllll");
-      
-    //   if (res.status) {
-    //     console.log(res,":::::::::::::::::");
-        
-    //     setCount(res?.data[res.data?.length - 1]);
-    //     res.data.pop()
-    //     setData(res.data);
-    //   } else {
-    //     setData([])
-    //   }
-    // })
+    
     console.log(req,'----------------------------------')
 
     Service.getAllPurchaseOrderData(req).then((res)=>{
       if(res.status){
         setData(res.data)
-      }else{
-        setData([])
+        const count =res.data.reduce((total,record:any)=>{
+if(record.count >0){
+  return total + 1;
+
+}else{
+  return total;
+
+} 
+        },0)
+        setpoCount(count);
       }
-    })
+    
+  if(req){
+Service.getAllPurchaseOrderData(req).then(res=>{
+  if (res.status) {
+    setData(res.data);
+    const count = res.data.reduce((total, record:any) => {
+      if (record.count > 0) {
+        return total + 1;
+      } else {
+        return total;
+      }
+    }, 0);
+    setpoCount(count);
+  } else{
+    setData([])
   }
+})
+  }
+})
+}
   const onSearch = () => {
     form.validateFields().then((values) => {
       getPo();
@@ -346,18 +349,21 @@ export const PurchaseOrderView = () => {
       align: 'right',
       render: (text, record) => {
         const daysDifference = moment(record.expectedDeliverydate).diff(moment(), 'days');
+        
         const age = {
           children: daysDifference,
           props: {
             style: {
-              background: daysDifference > 0 ? '#3BC744' : '',
+              background: daysDifference > 0 ? '#3BC744' : '#FF0000',
               color: 'black',
             },
           },
         };
+        
         return age;
       },
     },
+    
     {
       title: 'Action',
       dataIndex: 'requestNumber',
@@ -415,6 +421,8 @@ export const PurchaseOrderView = () => {
       </Tag>
     );
   };
+  console.log(StatusEnum.OPEN,"pppppppppppp");
+  
   return (
     <div><Card title="Purchase Orders" 
     headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
@@ -433,7 +441,7 @@ export const PurchaseOrderView = () => {
             </Form.Item>
           </Col>
           
-          <Col span={6}>
+          {/* <Col span={6}>
             <Form.Item label="PO Status	" name="poStatus" initialValue={[PurchaseOrderStatus.OPEN, PurchaseOrderStatus.IN_PROGRESS]}>
             <Select showSearch allowClear optionFilterProp="children" placeholder='Select status' mode="multiple" 
             defaultValue ={[PurchaseOrderStatus.OPEN, PurchaseOrderStatus.IN_PROGRESS]}
@@ -450,8 +458,8 @@ export const PurchaseOrderView = () => {
                 options={options}
                 
               /> */}
-            </Form.Item>
-          </Col>
+            {/* </Form.Item>
+          </Col> */} 
           <Col span={2}>
             <Button htmlType='submit' type="primary" onClick={onSearch}> Get Detail </Button>
           </Col>
@@ -461,21 +469,24 @@ export const PurchaseOrderView = () => {
         </Row>
         <Row gutter={24}>
           <Col className="gutter-row" xs={24} sm={24} md={5} lg={5} xl={{ span: 2 }}>
-            <Card size="small" title={'OPEN :' + data.filter(r => r.status === 'OPEN').length} style={{ height: '35px', width: 100, backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
+            <Card size="small" title={'OPEN :' + data.filter(r => r.poStatus == PurchaseStatusEnum.OPEN).length} style={{ height: '35px', width: 100, backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
+            
           </Col>
           <Col className="gutter-row" xs={24} sm={24} md={5} lg={5} xl={{ span: 3 }}>
-            <Card size="small" title={'INPROGRESS  : ' + data.filter(r => r.status === 'INPROGRESS').length} style={{ height: '35px', width: 150, marginBottom: '8', backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
+            <Card size="small" title={'INPROGRESS  : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.INPROGRESS).length} style={{ height: '35px', width: 150, marginBottom: '8', backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
-            <Card size="small" title={'CLOSED : ' + data.filter(r => r.status === 'CLOSED').length} style={{ height: '35px', width: 150, backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
+            <Card size="small" title={'CLOSED : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.CLOSED).length} style={{ height: '35px', width: 150, backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
-            <Card size="small" title={'CANCLED : ' + data.filter(r => r.status === 'CANCLED').length} style={{ height: '35px', backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
+            <Card size="small" title={'CANCLED : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.CANCELLED).length} style={{ height: '35px', backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
             <Card size="small" title={'TOTAL : ' + data.length} style={{ height: '35px', backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
+          
         </Row> 
+
 
         {/* <Tabs
           defaultActiveKey="1"
