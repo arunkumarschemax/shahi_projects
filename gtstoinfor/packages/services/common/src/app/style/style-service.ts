@@ -142,8 +142,7 @@ export class StyleService{
     async getstyleaginstpch(request?: StyleIdReq):Promise<CommonResponseModel>{
     
         const details = await this.styleRepo.getstyleaginstpch(request)
-        console.log(details)
-        if (details.pchId > 0) {
+        if (details.length > 0) {
           return new CommonResponseModel(true, 1, 'data retrieved', details)
         } else {
           return new CommonResponseModel(false, 0, 'data not found')
