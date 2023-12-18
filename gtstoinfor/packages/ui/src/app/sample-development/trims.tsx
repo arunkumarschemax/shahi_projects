@@ -255,6 +255,7 @@ const getMappedTrims = (value, option) => {
     {
       title: 'S.No',
       dataIndex: 'sNo',
+      width:"10%",
       render: (_, record, index) => index + 1,
     },
     {
@@ -311,7 +312,7 @@ const getMappedTrims = (value, option) => {
     {
       title: 'Trim Code',
       dataIndex: 'trimCode',
-      width:"20%",
+      width:"40%",
       render: (_, record) => (
         <><Form.Item name={`allocatedStock${record.key}`} ><Input name={`allocatedStock${record.key}`} style={{ display: 'none' }} /></Form.Item><Form.Item name={`trimCode${record.key}`} rules={[{ required: true, message: 'Missing Trim Code' }]}>
           <Select
@@ -334,6 +335,7 @@ const getMappedTrims = (value, option) => {
     {
       title: 'Consumption',
       dataIndex: 'consumption',
+      width:"15%",
       render: (_, record) => (
         <Form.Item name={`consumption${record.key}`} rules={[{ required: true, message: 'Missing Consumption' }]}>
         <InputNumber
@@ -346,7 +348,7 @@ const getMappedTrims = (value, option) => {
     {
       title:"UOM",
       dataIndex: 'Uom',
-
+      width:"13%",
       render: (_, record) => (
         <Form.Item name={`uomId${record.key}`} rules={[{ required: true, message: 'Missing UOM' }]}>
         <Select
@@ -372,7 +374,7 @@ const getMappedTrims = (value, option) => {
     {
       title: 'Wastage %',
       dataIndex: 'wastage',
-      width:"10%",
+      width:"15%",
       render: (_, record) => (
       <Form.Item name={`wastage${record.key}`} rules={[{ required: true, message: 'Missing Wastage' }]}>
         <InputNumber
@@ -385,7 +387,7 @@ const getMappedTrims = (value, option) => {
     {
       title: 'Total Requirement',
       dataIndex: 'totalRequirement',
-      width:"10%",
+      width:"15%",
       render: (_, record) => (
       <Form.Item name={`totalRequirement${record.key}`} rules={[{ required: true, message: 'Missing total requirement' }]}>
         <Input disabled style={{fontWeight:'bold', color:"black"}}
@@ -398,6 +400,7 @@ const getMappedTrims = (value, option) => {
     {
       title: 'Remarks',
       dataIndex: 'remarks',
+      width:"40%",
       render: (_, record) => (
         <Form.Item name={`remarks${record.key}`}>
         <TextArea
@@ -411,6 +414,7 @@ const getMappedTrims = (value, option) => {
     {
       title: 'Action',
       dataIndex: 'action',
+      width:"10%",
       fixed:'right',
       render: (_, record) => (
         <Button onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
@@ -549,14 +553,15 @@ const getMappedTrims = (value, option) => {
 
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
-      scroll = {{x:'max-content',y:'max-content'}}
       dataSource={data} 
       columns={columns} 
       expandedRowRender={renderItems}
       expandable = {{
         defaultExpandAllRows : true
         }}
-      bordered={true}
+        scroll={{ x: true }}
+        size="large"
+        bordered
       />
       </Form>
     </div>

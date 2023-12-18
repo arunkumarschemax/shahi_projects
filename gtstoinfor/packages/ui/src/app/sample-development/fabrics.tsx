@@ -385,7 +385,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Consumption',
       dataIndex: 'consumption',
-      width:"10%",
+      width:"12%",
       render: (_, record) => (
         <Form.Item name={`consumption${record.key}`}
         rules={[{ required: true, message: 'Missing Consumption' }]}
@@ -452,7 +452,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Wastage %',
       dataIndex: 'wastage',
-      width:"10%",
+      width:"12%",
       render: (_, record) => (
       <Form.Item name={`wastage${record.key}`} initialValue={2} 
       rules={[{ required: true, message: 'Missing Wastage' }]}
@@ -482,6 +482,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Remarks',
       dataIndex: 'remarks',
+      width:"15%",
       render: (_, record) => (
       <Form.Item name={`remarks${record.key}`}>
         <TextArea
@@ -495,6 +496,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Action',
       dataIndex: 'action',
+      width:"10%",
       fixed:'right',
       render: (_, record) => (
         <Button onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
@@ -640,7 +642,6 @@ const FabricsForm = (props:FabricsFormProps) => {
 
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
-            scroll = {{x:'max-content',y:'max-content'}}
       dataSource={data} 
       columns={columns} 
       expandedRowRender={renderItems}
@@ -651,7 +652,9 @@ const FabricsForm = (props:FabricsFormProps) => {
       // expandable = {{
       //   defaultExpandAllRows : true, rowExpandable:(record)=>{console.log(record) ; return (stockData.length>0)}
       //   }}
-      bordered={true}
+      scroll={{ x: 200 }}
+      size="large"
+      bordered
       />
       </Form>
 
