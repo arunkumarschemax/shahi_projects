@@ -422,13 +422,15 @@ export const PurchaseOrderForm = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                            <Form.Item name='exchangeRate' label='Exchange Rate' rules={[{ required: false, message: 'Exchange Rate is required' }]}>
-                                <Input style={{ width: '93%', marginLeft: 5 }} />
+                            <Form.Item name='exchangeRate' label='Exchange Rate'
+                            
+                             rules={[{ required: false, message: 'Exchange Rate is required' }]}>
+                                <Input style={{ width: '93%', marginLeft: 5 }}  placeholder='Enter Exchange Rate' />
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='deliveryAddress' label='Delivery Address' rules={[{ required: true, message: 'Delivery Address is required' }]}>
-                                <Select placeholder='Select Currency'>
+                                <Select showSearch optionFilterProp="children"  allowClear placeholder='Select Delivery Address'>
                                     {activeFactoryData.map(e => {
                                         return (<Option value={e.id} key={e.id}>{e.address}</Option>)
                                     }
