@@ -212,10 +212,10 @@ export function PoPrint(props: PoPrintProps) {
                    <h4 style={{fontFamily:' Fancy',fontSize:'12px'}}>This is in reference to your above mention quotaion. We are pleased to place an order with you for following items as per terms and conditions mentioned herewith</h4>
                   
                         {/* To add border to html table
-                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'> */}
+                        // <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'> */}
 
-                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}}  cellSpacing="0" cellPadding='0'>
-                          <tr style={{textAlign:'right'}}>
+                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
+                          <tr >
                             <th >Ln</th>
                             <th>HSN/SAC</th>
                             <th>Item Code</th>
@@ -241,25 +241,25 @@ export function PoPrint(props: PoPrintProps) {
 
                           <tr>
                             <td>1</td>
-                            <td style={{textAlign:'right'}}>{e.hsnCode? e.hsnCode:'-'}</td>
-                            <td style={{textAlign:'right'}}>{e.item_code? e.item_code:'-'}</td>
-                            <td style={{textAlign:'right'}}>{e.name? e.name:'-'}</td>
-                            <td style={{textAlign:'right'}}>{e.po_material_type? e.po_material_type:'-'}</td>
-                            <td style={{textAlign:'right'}}>{e.description? e.description:'-'}</td>
-                        <td style={{textAlign:'right'}}>{e.name? e.name:'-'}</td>
-                        <td style={{textAlign:'right'}}>{e.expected_delivery_date ? new Date(e.expected_delivery_date).toLocaleDateString() : '-'}</td>
-                        <td style={{textAlign:'right'}}>{e.uom?e.uom:'-'}</td>
-                        <td style={{textAlign:'right'}}>
+                            <td >{e.hsnCode? e.hsnCode:'-'}</td>
+                            <td >{e.item_code? e.item_code:'-'}</td>
+                            <td >{e.name? e.name:'-'}</td>
+                            <td >{e.po_material_type? e.po_material_type:'-'}</td>
+                            <td >{e.description? e.description:'-'}</td>
+                        <td >{e.name? e.name:'-'}</td>
+                        <td >{e.expected_delivery_date ? new Date(e.expected_delivery_date).toLocaleDateString() : '-'}</td>
+                        <td >{e.uom?e.uom:'-'}</td>
+                        <td >
                           {typeof e.po_quantity === 'number'
                           ? e.po_quantity.toFixed(2)
                           : typeof e.po_quantity === 'string'
                            ? parseFloat(e.po_quantity).toFixed(2)
                                        : '-'}
                                  </td>
-                        <td style={{textAlign:'right'}}>{typeof e.unit_price === 'number' ? e.unit_price.toFixed(2) : '-'}</td>
-                        <td style={{textAlign:'right'}}>{e.unit_price ? (e.po_quantity * e.unit_price).toFixed(2): '-'} </td>                                
-                          <td style={{textAlign:'right'}}>{e.discount? `${((e.po_quantity * e.unit_price * e.discount) / 100).toFixed(2)} (${e.discount}%)`: '-'}</td>
-                          <td style={{textAlign:'right'}}>{e.unit_price? ((e.po_quantity * e.unit_price) - ((e.po_quantity * e.unit_price) * (e.discount / 100))).toFixed(2): '-'}</td>
+                        <td >{typeof e.unit_price === 'number' ? e.unit_price.toFixed(2) : '-'}</td>
+                        <td >{e.unit_price ? (e.po_quantity * e.unit_price).toFixed(2): '-'} </td>                                
+                          <td >{e.discount? `${((e.po_quantity * e.unit_price * e.discount) / 100).toFixed(2)} (${e.discount}%)`: '-'}</td>
+                          <td >{e.unit_price? ((e.po_quantity * e.unit_price) - ((e.po_quantity * e.unit_price) * (e.discount / 100))).toFixed(2): '-'}</td>
                             
 
                           </tr>
