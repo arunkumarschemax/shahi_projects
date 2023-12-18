@@ -44,7 +44,7 @@ export class FinishService {
             } 
           }
           const entity = new FinishEntity();
-          entity.type = req.type
+          // entity.type = req.type
           entity.finish = req.finish;
           entity.finishCode = req.finishCode;
           if (isUpdate) {

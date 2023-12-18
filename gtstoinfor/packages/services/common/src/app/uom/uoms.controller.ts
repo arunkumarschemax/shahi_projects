@@ -3,7 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { UomService } from './uom.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { UomRequest } from './dto/uom.request';
-import { UomCategoryRequest, UomIdRequest, UomResponse } from '@project-management-system/shared-models';
+import { CommonResponseModel, UomCategoryRequest, UomIdRequest, UomResponse } from '@project-management-system/shared-models';
 
 @ApiTags('Uoms')
 @Controller('Uoms')
@@ -56,6 +56,24 @@ async getUomByCategory(@Body() req: UomCategoryRequest): Promise<UomResponse>{
     return await this.uomService.getUomByCategory(req);
   } catch (error) {
     return this.applicationExceptionHandler.returnException(UomResponse, error);
+}
+}
+
+@Post('/getUomByYarn')
+async getUomByYarn(): Promise<CommonResponseModel>{
+  try {
+    return await this.uomService.getUomByYarn();
+  } catch (error) {
+    return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+}
+}
+
+@Post('/getUomByWeight')
+async getUomByWeight(): Promise<CommonResponseModel>{
+  try {
+    return await this.uomService.getUomByWeight();
+  } catch (error) {
+    return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
 }
 }
   

@@ -1,8 +1,8 @@
 
 import React, { useState,} from "react";
-import { Form, Input, Button, Card, Row, Col } from "antd";
+import { Form, Input, Button, Card, Row, Col, Select } from "antd";
 import { Link, useLocation, useNavigate, useNavigation } from "react-router-dom";
-import { ContentDtos, VarietyDtos } from "@project-management-system/shared-models";
+import { ContentDtos, ItemEnum, TypeEnum, VarietyDtos } from "@project-management-system/shared-models";
 import { ContentService, VarietyService } from "@project-management-system/shared-services";
 import { __values } from "tslib";
 import AlertMessages from "../../common/common-functions/alert-messages";
@@ -13,6 +13,7 @@ export interface ContentFormProps {
   isUpdate: boolean;
   closeForm: () => void;
 }
+const {Option} = Select;
 
 export const ContentForm = (props: ContentFormProps) => {
   const [form] = Form.useForm();
@@ -92,6 +93,19 @@ export const ContentForm = (props: ContentFormProps) => {
             <Input hidden />
           </Form.Item>
           <Row gutter={24}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+        <Form.Item name='itemType' label='Item Type' rules={[{ required: true, message: 'Type is required' }]}>
+          <Select showSearch allowClear optionFilterProp="children" placeholder='Select Type'>
+          {Object.values(ItemEnum).map((val) => {
+                    return (
+                      <Option key={val} value={val}>
+                        {val}
+                      </Option>
+                    );
+                  })}
+          </Select>
+        </Form.Item>
+        </Col>
           <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}>
             <Form.Item
             name="content"

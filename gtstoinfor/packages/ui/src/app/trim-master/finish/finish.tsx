@@ -64,14 +64,14 @@ export function FinishForm(props: FinishFormProps) {
       <Input hidden/>
     </Form.Item>
     <Row gutter={12}>
-      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+      {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
         <Form.Item name='type' label='Type' rules={[{ required: true, message: 'Type is required' }]}>
           <Select showSearch allowClear optionFilterProp="children" placeholder='Select Type'>
             <Option value='Fabric'>Fabric</Option>
             <Option value='Trim'>Trim</Option>
           </Select>
         </Form.Item>
-        </Col>
+        </Col> */}
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:6}} xl={{span:6}}>
               <Form.Item
                   name="finish"

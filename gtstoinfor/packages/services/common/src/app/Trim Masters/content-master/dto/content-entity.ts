@@ -1,4 +1,4 @@
-import { TaxCategoriesEnum } from '@project-management-system/shared-models';
+import { ItemEnum, TaxCategoriesEnum } from '@project-management-system/shared-models';
 import { CommonColumns } from 'packages/services/common/common-columns.entity';
 import {Column,Entity,Index,PrimaryGeneratedColumn,VersionColumn,UpdateDateColumn,CreateDateColumn} from 'typeorm';
 
@@ -6,6 +6,13 @@ import {Column,Entity,Index,PrimaryGeneratedColumn,VersionColumn,UpdateDateColum
 export class ContentEntity {
   @PrimaryGeneratedColumn('increment', { name: 'content_id' })
   contentId: number;
+
+  @Column("enum",{
+    nullable:false,
+    name:"item_type",
+    enum: ItemEnum
+    })
+  itemType:ItemEnum;
 
   @Column('varchar',{
     name:'content',

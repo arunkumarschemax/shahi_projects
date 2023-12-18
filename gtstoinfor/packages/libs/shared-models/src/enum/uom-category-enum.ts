@@ -1,13 +1,15 @@
 export enum UomCategoryEnum {
     LENGTH = 'Length',
-    MASS = 'Weight',
+    WEIGHT = 'Weight',
     AREA = 'Area',
-    VOLUME = 'Volume'
+    VOLUME = 'Volume',
+    yarn_count = 'yarn count'
 }
 export const UomCategoryEnumDispaly = [
     { name: "LENGTH", displayVal:'LENGTH'},
-    { name:'MASS', displayVal:'MASS'},
+    { name:'WEIGHT', displayVal:'WEIGHT'},
     { name:'AREA', displayVal:'AREA'},
-    { name:'VOLUME', displayVal:'VOLUME'}
+    { name:'VOLUME', displayVal:'VOLUME'},
+    { name:'yarn count', displayVal:'YARN COUNT'}
 
 ]
