@@ -171,6 +171,28 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
 
 
+
+
+
+
+    async getMonthWiseReportDataNew(req:YearReq): Promise<any[]>{
+        let query='SELECT MONTH(exf_date),planning_ssn,YEAR, planning_sum,prod_plan_type,file_id,CONCAT(MONTHNAME(wh_date),YEAR) AS whMonthName,CONCAT(MONTHNAME(exf_date),YEAR) AS exfMonthName,ROUND(SUM(CASE WHEN MONTH(exf_date) THEN REPLACE(order_plan_qty,",","") ELSE 0 END)) AS exfPcs,ROUND(SUM(CASE WHEN MONTH(wh_date) THEN REPLACE(order_plan_qty,",","") ELSE 0 END)) AS whPcs,ROUND(SUM(CASE WHEN MONTH(wh_date) THEN REPLACE(order_plan_qty_coeff,",","") ELSE 0 END)) AS whCoeff, ROUND(SUM(CASE WHEN MONTH(exf_date) THEN REPLACE(order_plan_qty_coeff,",","") ELSE 0 END)) AS exfCoeff FROM orders WHERE file_id = (SELECT MAX(file_id) FROM orders) AND YEAR ="'+req.year+'" AND prod_plan_type != "STOP" GROUP BY MONTH(exf_date),planning_sum,prod_plan_type '
+        if(req.tabName === 'ExFactory'){
+            query=query+' ORDER BY MONTH(wh_date),planning_sum'
+        }
+        if(req.tabName === 'WareHouse'){
+            query=query+' ORDER BY MONTH(wh_date),planning_sum'
+        }
+        else{
+            query=query+' ORDER BY planning_sum'
+        }
+        const result = await this.query(query)
+        return result
+    }
+
+
+
+
 async getdata(req: YearReq): Promise<any[]> {
     const query = 
     `  SELECT  YEAR,file_id,
@@ -462,6 +484,19 @@ async getYearDropdown():Promise<any>{
     .groupBy(`o.year`)
     .orderBy(`o.year`)
     return await query.getRawMany()
+}
+
+async getDataNew(req:YearReq):Promise<any[]>{
+    const query='SELECT  YEAR,file_id,CASE WHEN prod_plan_type LIKE "%Ph3%"" THEN "Ph3" WHEN prod_plan_type LIKE "%Ph2%" THEN "Ph2" WHEN prod_plan_type LIKE "%Ph1%" THEN "Ph1" ELSE prod_plan_type END AS prod_plan_type,CONCAT(MONTHNAME(exf_date),YEAR(exf_date)) AS exfMonth,CONCAT(MONTHNAME(wh_date),YEAR(wh_date)) AS whMonth,ROUND(SUM(CASE WHEN MONTH(exf_date) THEN REPLACE(order_plan_qty,",","") ELSE 0 END)) AS exfPcs,ROUND(SUM(CASE WHEN MONTH(wh_date) THEN REPLACE(order_plan_qty,",","") ELSE 0 END)) AS whPcs,ROUND(SUM(CASE WHEN MONTH(wh_date) THEN REPLACE(order_plan_qty_coeff,",","") ELSE 0 END)) AS whCoeff,ROUND(SUM(CASE WHEN MONTH(exf_date) THEN REPLACE(order_plan_qty_coeff,",","") ELSE 0 END)) AS exfCoeff FROM orders WHERE exf IS NOT NULL AND YEAR = '+req.year+' AND file_id = (SELECT MAX(file_id) FROM orders)  AND prod_plan_type !="STOP"  GROUP BY  CASE WHEN prod_plan_type LIKE "%Ph3%" THEN "Ph3" WHEN prod_plan_type LIKE "%Ph2%" THEN "Ph2"  WHEN prod_plan_type LIKE "%Ph1%" THEN "Ph1"  ELSE prod_plan_type  END,MONTH(exf_date),MONTH(wh_date)'
+    const result = await this.query(query)
+    return result
+
+}
+
+async getData1New(req:YearReq):Promise<any[]>{
+    const query=' SELECT  YEAR,file_id,CASE WHEN prod_plan_type LIKE "%Ph3%" THEN "Ph3"  WHEN prod_plan_type LIKE "%Ph2%" THEN "Ph2"  WHEN prod_plan_type LIKE "%Ph1%" THEN "Ph1" ELSE prod_plan_type  END AS prod_plan_type, CONCAT(MONTHNAME(exf_date),YEAR(exf_date)) AS exfMonth,CONCAT(MONTHNAME(wh_date),YEAR(wh_date)) AS whMonth,ROUND(ROUND(SUM(CASE WHEN MONTH(exf_date) THEN REPLACE(order_plan_qty,",","") ELSE 0 END))/(SELECT SUM(REPLACE(order_plan_qty,",","")) AS total FROM orders WHERE YEAR="'+req.year+'")*100) AS exfper,ROUND(ROUND(SUM(CASE WHEN MONTH(wh_date) THEN REPLACE(order_plan_qty,",","") ELSE 0 END))/(SELECT SUM(REPLACE(order_plan_qty,",","")) AS total FROM orders WHERE YEAR="'+req.year+'")*100) AS whper,ROUND(ROUND(SUM(CASE WHEN MONTH(wh_date) THEN REPLACE(order_plan_qty_coeff,",","") ELSE 0 END))/(SELECT SUM(REPLACE(order_plan_qty_coeff,",","")) AS total FROM orders WHERE YEAR="'+req.year+'")*100) AS whcoefper,ROUND(ROUND(SUM(CASE WHEN MONTH(exf_date) THEN REPLACE(order_plan_qty_coeff,",","") ELSE 0 END))/(SELECT SUM(REPLACE(order_plan_qty_coeff,",","")) AS total FROM orders WHERE YEAR="'+req.year+'")*100) AS exfcoefper FROM orders WHERE exf IS NOT NULL AND YEAR = "'+req.year+'" AND file_id = (SELECT MAX(file_id) FROM orders)  AND prod_plan_type !="STOP" GROUP BY  CASE WHEN prod_plan_type LIKE "%Ph3%" THEN "Ph3" WHEN prod_plan_type LIKE "%Ph2%" THEN "Ph2" WHEN prod_plan_type LIKE "%Ph1%" THEN "Ph1" ELSE prod_plan_type END, MONTH(exf_date),MONTH(wh_date)'
+    const result = await this.query(query)
+    return result
 }
 
 } 

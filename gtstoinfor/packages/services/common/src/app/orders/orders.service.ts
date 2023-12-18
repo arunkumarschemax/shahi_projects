@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq, CoLineFormatModel, Destinations, Colors, Sizes, sesaonWisereportModel, MonthItemData } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq, CoLineFormatModel, Destinations, Colors, Sizes, sesaonWisereportModel, MonthItemData, NewitemDataDto, NewMonthWiseDto, pcsData } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -24,7 +24,7 @@ import { TrimOrdersChildEntity } from './entities/trim-orders-child.entity';
 import { TrimOrdersChildAdapter } from './adapters/trim-orders-child.adapter';
 import { TrimOrdersAdapter } from './adapters/trim-orders.adapter';
 import { TrimOrdersChildRepository } from './repository/trim-order-child.repo';
-import { find, groupBy } from 'rxjs';
+import { find, groupBy, map } from 'rxjs';
 import { log } from 'console';
 import { appConfig } from 'packages/services/common/config';
 import * as fs from 'fs';
@@ -1096,6 +1096,52 @@ export class OrdersService {
         const dataModelArray: ItemDataDto[] = Array.from(DateMap.values());
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
+
+    async getMonthWiseReportDataNew(req:YearReq): Promise<CommonResponseModel>{
+        const data = await this.ordersRepository.getMonthWiseReportDataNew(req);
+        if(data.length == 0){
+            return new CommonResponseModel(false, 0, 'data not found')
+        }
+        const datamap = new Map<string, NewitemDataDto>();
+        for(const rec of data){
+            if(req.tabName === 'ExFactory'){
+                if(!datamap.has(rec.planning_sum)) {
+                    datamap.set(rec.planning_sum, new NewitemDataDto(rec.planning_sum,[]))
+                }
+                const monthwiseData = datamap.get(rec.planning_sum).monthWiseData;
+                const exfpc :pcsData[] =[];
+                exfpc.push({
+                    monthName:rec.exfMonthName,
+                    inPcs:rec.exfPcs,
+                    inCoeffPcs:rec.exfCoeff
+
+                })
+                const  exfData = new NewMonthWiseDto(rec.planning_sum,exfpc)
+                monthwiseData.push(exfData)
+            }
+            if(req.tabName === 'WareHouse'){
+                if(!datamap.has(rec.planning_sum)){
+                    datamap.set(rec.planning_sum,new NewitemDataDto(rec.planning_sum,[]))
+                }
+                const whMonthInfo = datamap.get(rec.planning_sum).monthWiseData
+                const whpcs:pcsData[]=[];
+                whpcs.push({
+                    monthName:rec.whMonthName,
+                    inPcs:rec.whPcs,
+                    inCoeffPcs:rec.whCoeff
+                })
+                const whdata = new NewMonthWiseDto(rec.planning_sum,whpcs)
+                whMonthInfo.push(whdata)
+            }  
+        }
+        const detailedarray: NewitemDataDto[] = Array.from(datamap.values());
+        return new CommonResponseModel(true,1,'Data retrived',detailedarray)
+    }
+
+
+
+
+
 
     async getSeasonWiseOrders(): Promise<CommonResponseModel> {
         const data = await this.ordersRepository.getSeasonCount()
