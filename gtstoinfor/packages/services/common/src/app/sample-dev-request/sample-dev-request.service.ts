@@ -304,7 +304,7 @@ export class SampleRequestService {
             bomEntity.sampleRequestId = save.SampleRequestId
             bomEntity.colourId = fabricData.colourId
             bomEntity.m3ItemId=fabricData.fabricCode
-            bomEntity.itemType='Fabric'
+            bomEntity.itemType='Fabric';
             bomEntity.requiredQuantity = fabricData.totalRequirement
             saveBomDetails = await manager.getRepository(SamplingbomEntity).save(bomEntity)
             // saveBomDetails = await this.bomRepo.save(bomEntity)
@@ -346,7 +346,7 @@ export class SampleRequestService {
               else{
                 fabFlag.add(false)
               }
-              let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:save.SampleRequestId, m3ItemId: fabricData.fabricCode },{status:fabBomStatus,receivedQuantity : () => `received_quantity + ${totalAllocated}`})
+              let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:save.SampleRequestId, m3ItemId: fabricData.fabricCode, colourId:fabricData.colourId },{status:fabBomStatus,receivedQuantity : () => `received_quantity + ${totalAllocated}`})
               if(updateSampleFabricInfo.affected === 0){
                 await manager.releaseTransaction();
                 return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
