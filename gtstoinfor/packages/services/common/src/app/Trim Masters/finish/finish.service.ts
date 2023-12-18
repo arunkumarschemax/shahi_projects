@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { FinishEntity } from "./finish.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
+import { DataSource, Repository } from "typeorm";
 import { CommonResponseModel } from "@project-management-system/shared-models";
 import { retry } from "rxjs";
 import { FinishDTO } from "./dto/finish.dto";
@@ -13,6 +13,8 @@ export class FinishService {
       
         @InjectRepository(FinishEntity)
         private finishRepo: Repository<FinishEntity>,
+        @InjectDataSource()
+    private datasource: DataSource
     ){}
   
   
@@ -118,6 +120,23 @@ export class FinishService {
             }
         } catch (err) {
           return err;
+        }
+      }
+
+      async getFabricFinishData():Promise<CommonResponseModel>{
+        try{
+          let query = `
+          SELECT finish, finish_code AS finishCode,item_type,finish_id AS finishId
+          FROM finish
+          WHERE item_type = 'Fabric'`
+          const data = await this.datasource.query(query)
+          if(data.length>0){
+            return new CommonResponseModel(true, 0, 'Data retrieved successfully',data)
+          }else{
+            return new CommonResponseModel(false, 1, 'No data found',[])
+          }
+        }catch(err){
+          throw(err)
         }
       }
       

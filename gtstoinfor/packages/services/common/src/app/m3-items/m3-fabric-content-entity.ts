@@ -2,29 +2,23 @@ import { ItemTypeEnum, TypeEnum } from "@project-management-system/shared-models
 import { Entity, PrimaryGeneratedColumn, Column, JoinColumn, ManyToOne, CreateDateColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { M3ItemsEntity } from "./m3-items.entity";
 
-@Entity('fabric_yarn')
-export class FabricYarnEntity {
+@Entity('m3_fabric_content')
+export class M3FabricContentEntity {
 
-  @PrimaryGeneratedColumn("increment", { name: 'fabric_yarn_id' })
-  fabricYarnId: number;
+  @PrimaryGeneratedColumn("increment", { name: 'fabric_content_id' })
+  fabricContentId: number;
 
   @Column('varchar',{
-    name:'yarn_type',
+    name:'content',
     nullable: false,
   })
-  yarnType: string;
+  content: string;
 
   @Column('int',{
-    name:'count',
+    name:'percentage',
     nullable: false,
   })
-  count: number;
-
-  @Column('int',{
-    name:'uom_id',
-    nullable: false,
-  })
-  uomId: number;
+  percentage: number;
 
   @Column("varchar", {
     nullable: true,
@@ -54,7 +48,7 @@ export class FabricYarnEntity {
   })
   versionFlag: number;
 
-  @ManyToOne(type=>M3ItemsEntity,  m3Items=>m3Items.fabricYarnInfo,{  nullable:false, })
+  @ManyToOne(type=>M3ItemsEntity,  m3Items=>m3Items.fabricContentInfo,{  nullable:false, })
   @JoinColumn({ name:"m3_items_id"})
   m3Items: M3ItemsEntity;
 

@@ -9,6 +9,7 @@ import { M3ItemsDTO } from "./m3-items.dto";
 import { M3ItemsRepo } from "./m3-items.repository";
 import { M3TrimItemsDTO } from "./m3-trim-items.dto";
 import { M3TrimsAdapter } from "./m3-trims.adaptor";
+import { M3FabricsDTO } from "./m3-fabrics-dto";
 
 
 @Injectable()
@@ -23,7 +24,7 @@ export class M3ItemsService {
     private datasource: DataSource
   ) { }
 
-  async createM3Items(createDto: M3ItemsDTO): Promise<CommonResponseModel> {
+  async createM3Items(createDto: M3FabricsDTO): Promise<CommonResponseModel> {
     try {
       let checkData = await this.checkDuplicate(createDto);
       if(checkData.status){
@@ -36,7 +37,7 @@ export class M3ItemsService {
         const entity: M3ItemsEntity = this.adapter.convertDtoToEntity(createDto);
         entity.itemCode = nextItemCode;
         const count: M3ItemsEntity = await this.repository.save(entity);
-        const saveDto: M3ItemsDTO = this.adapter.convertEntityToDto(count);
+        const saveDto: M3FabricsDTO = this.adapter.convertEntityToDto(count);
         return new CommonResponseModel(true, 1, 'Data saved successfully', saveDto);
       }
     } catch (error) {
@@ -116,8 +117,8 @@ export class M3ItemsService {
       return new CommonResponseModel(false, 0, error)
     }
   }
-  async checkDuplicate(createDto: M3ItemsDTO): Promise<CommonResponseModel> {
-    let query = `Select * from m3_items m3 where content = "` + createDto.content + `" and fabric_type = ` + createDto.fabricType + ` and weave = ` + createDto.weave + ` and weight = "` + createDto.weight + `" and weight_unit = ` + createDto.weightUnit + ` and construction = "` + createDto.ppiConstruction + `" and yarn_count = "` + createDto.epiConstruction + `" and yarn_unit = ` + createDto.yarnType + ` and finish = "` + createDto.finish + `" and shrinkage = "` + createDto.shrinkage+`"`;
+  async checkDuplicate(createDto: M3FabricsDTO): Promise<CommonResponseModel> {
+    let query = `Select * from m3_items m3 where fabric_type_id = ` + createDto.fabricTypeId + ` and weave_id = ` + createDto.weaveId + ` and weight_id = "` + createDto.weightId + `" and weight_unit = ` + createDto.weightUnit + ` and epi_construction = "` + createDto.epiConstruction + `" and yarn_type = "` + createDto.yarnType + `" and finish_id = "` + createDto.finishId + `" and shrinkage = "` + createDto.shrinkage+`"`;
     const data = await this.datasource.query(query)
     if (data.length > 0){
       return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)

@@ -1,8 +1,10 @@
 import { IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate, IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { m3ItemsContentEnum } from 'packages/libs/shared-models/src/enum';
+import { FabricYarnDto } from './fabric-yarn-dto';
+import { FabricContentDto } from './fabric-content-dto';
 
-export class M3ItemsDTO {
+export class M3FabricsDTO {
 
     @ApiProperty()
     m3ItemsId: number;
@@ -14,37 +16,34 @@ export class M3ItemsDTO {
     itemCode: string;
 
     @ApiProperty()
-    content: m3ItemsContentEnum;
+    fabricTypeId: number;
 
     @ApiProperty()
-    fabricType: number;
+    weaveId: number;
 
     @ApiProperty()
-    weave: number;
-
-    @ApiProperty()
-    weight: number;
+    weightId: number;
 
     @ApiProperty()
     weightUnit: string;
 
     @ApiProperty()
-    construction: string;
+    epiConstruction: string;
 
     @ApiProperty()
-    yarnCount: string;
+    ppiConstruction: string;
 
     @ApiProperty()
-    yarnUnit: string;
+    yarnType: string;
 
     @ApiProperty()
     width: number;
 
     @ApiProperty()
-    widthUnit: string;
+    widthUnit: number;
 
     @ApiProperty()
-    finish: string;
+    finishId: number
 
     @ApiProperty()
     shrinkage: string;
@@ -72,5 +71,11 @@ export class M3ItemsDTO {
         
     @ApiProperty()
     hsnCode?: string;
+
+    @ApiProperty({type:[FabricYarnDto]})
+    fabricYarnInfo: FabricYarnDto[]
+
+    @ApiProperty({type:[FabricContentDto]})
+    fabricContentInfo: FabricContentDto[]
 }
 

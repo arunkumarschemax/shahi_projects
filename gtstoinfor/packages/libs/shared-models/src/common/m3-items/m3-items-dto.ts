@@ -1,6 +1,4 @@
 import { m3ItemsContentEnum } from "../../enum";
-import { FabricContentDto } from "./fabric-content-dto";
-import { FabricYarnDto } from "./fabric-yarn-dto";
 
 
 export class M3ItemsDTO {
@@ -12,8 +10,7 @@ export class M3ItemsDTO {
     weight:number;
     weightUnit:string;
     construction: string;
-    yarnType: string;
-    yarnCount: number
+    yarnCount: string;
     yarnUnit: string;
     width:number;
     widthUnit:string;
@@ -27,20 +24,10 @@ export class M3ItemsDTO {
     extRefNumber?: string
     m3Code?:string;
     hsnCode?:string;
-    fabricYarnInfo?:FabricYarnDto[]
-    fabricContentInfo?:FabricContentDto[]
-    constructor(
-        m3ItemsId:number,
-        itemCode:string,
-        content: m3ItemsContentEnum,
+    constructor(m3ItemsId:number,itemCode:string,content: m3ItemsContentEnum,
         fabricType:number,weave: number,
-        weight:number,weightUnit:string,
-        construction: string,
-        yarnType: string,
-        yarnCount: number,
-        width:number,
-        widthUnit:string,
-        finish: string,
+        weight:number,weightUnit:string,construction: string,
+        yarnCount: string,yarnUnit: string,width:number,widthUnit:string,finish: string,
         shrinkage: string,
         buyerId: number,
         description:string,
@@ -49,10 +36,9 @@ export class M3ItemsDTO {
         versionFlag?:number,
         extRefNumber?: string,
         m3Code?:string,
-        hsnCode?:string,
-        fabricYarnInfo?: FabricYarnDto[],
-        fabricContentInfo?:FabricContentDto[]
-
+        hsnCode?:string
+       
+        
         
         
     ) {
@@ -66,9 +52,8 @@ export class M3ItemsDTO {
         this.description = description;
         this.weightUnit = weightUnit;
         this.construction = construction;
-        this.yarnType = yarnType;
-        this.width = width;
-        this.widthUnit = widthUnit;
+        this.yarnCount = yarnCount;
+        this.yarnUnit = yarnUnit;
         this.finish = finish;
         this.shrinkage = shrinkage;
         this.isActive = isActive;
@@ -77,7 +62,6 @@ export class M3ItemsDTO {
         this.extRefNumber = extRefNumber
         this.m3Code = m3Code
         this.hsnCode=hsnCode
-       this.fabricYarnInfo = fabricYarnInfo
-       this.fabricContentInfo = fabricContentInfo
+       
     }
 }

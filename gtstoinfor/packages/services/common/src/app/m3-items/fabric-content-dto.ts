@@ -6,7 +6,7 @@ export class FabricContentDto {
     fabricContentId: number;
 
     @ApiProperty()
-    contentId: string;
+    content: string;
 
     @ApiProperty()
     percentage: number;
