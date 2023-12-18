@@ -8,9 +8,13 @@ import { ScanAdapter } from '../adapters/scan-adapters';
 import { ApplicationExceptionHandler } from 'packages/libs/backend-utils/src/exception-handling/application-exception-handler';
 import { HSNEntity } from '../entity/hsn-entity';
 import { EmailAttachments } from '../entity/mails-entity';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ScanEntity,HSNEntity,EmailAttachments])],
+  imports: [
+    TypeOrmModule.forFeature([ScanEntity, HSNEntity, EmailAttachments]),
+    ScheduleModule.forRoot(),
+  ],
   controllers: [ScanController],
   providers: [ScanService,ScanAdapter,ApplicationExceptionHandler],
   exports:[TypeOrmModule,ScanService]

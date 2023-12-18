@@ -1,5 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { Cron, CronExpression, Interval } from '@nestjs/schedule';
 import { CommonResponseModel, GlobalResponseObject, ScanResponseModel, VendorNameEnum } from "@xpparel/shared-models";
 import * as base64 from 'base64-stream';
 import * as fs from 'fs';
@@ -204,18 +205,28 @@ export class ScanService {
     };
   }
 
-
+  @Interval(15000)
+  async handleAutomaticCron() {
+    try {
+      await this.automatic();
+    } catch (error) {
+      console.error('Error', error);
+    }
+  }
 
   async automatic() {
-    await new Promise(resolve => setTimeout(resolve, 2000));
     try {
       const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
+   
       const page = await browser.newPage();
       await page.setViewport({ width: 1580, height: 900 });
+
+      setTimeout(async()=>{
       await page.goto('http://localhost:4200/', {
         timeout: 100000,
         waitUntil: 'networkidle0',
-      });
+      })},1000);
+
       await page.waitForSelector('#login-form_username');
       await page.type('#login-form_username', 'docscanadmin@gmail.com');
 
@@ -225,12 +236,16 @@ export class ScanService {
       await page.click('button.ant-btn-primary');
       await page.waitForNavigation();
 
-
       const directoryPath = 'C:/Users/User1/Desktop/docsmanage/gts-to-infor/gtstoinfor/invoicepdfs/';
-      const sourceDirectory = 'C:/Users/User1/Desktop/docsmanage/gts-to-infor/gtstoinfor/invoicepdfs/';
+      // const sourceDirectory = 'C:/Users/User1/Desktop/docsmanage/gts-to-infor/gtstoinfor/invoicepdfs/';
       const destinationDirectory = 'C:/Users/User1/Documents/readinvoices/';
-      // http://localhost:4200/#/doc-extract-form?pcid =4685fth546541
+
       const files = fs.readdirSync(directoryPath);
+    if (files.length === 0) {
+      console.log('No files found');
+      return new CommonResponseModel(false, 0, 'No files found');
+    }
+
       console.log(files, "files");
       for (const file of files) {
         console.log(file, "file");
@@ -238,42 +253,49 @@ export class ScanService {
         const fileNames = file.split(".pdf")[0].split(".PDF")[0];
         console.log(fileNames, "fileNames");
 
-        const findRecord = await this.emailAttachmentsRepo.findOne({ select:['vendorNames'], where: { fileName:fileNames} })
+        const findRecord = await this.emailAttachmentsRepo.findOne({ select:['vendorNames'], where: { fileName:file} })
         console.log(findRecord,"find");
 
         await page.goto('http://localhost:4200/#/doc-extract-form/', {
-          timeout: 10000,
+          timeout: 100000,
           waitUntil: 'networkidle0',
         });
 
         await page.click('#vendors');
-
+        
         await page.waitForSelector('.ant-select-item-option-content');
-
-        const options = await page.$$('.ant-select-item-option-content');
+        let options = await page.$$('.ant-select-item-option-content');
         
-        const availableOptions = [];
-        for (const option of options) {
-          const optionText = await page.evaluate(el => el.textContent.trim(), option);
-          availableOptions.push(optionText);
-        }
-        console.log('Available Options:', availableOptions);
-  
-        let optionFound = false;
-        for (const option of options) {
-          const optionText = await page.evaluate(el => el.textContent.trim(), option);
-          if (optionText === fileNames) {
-            await option.click();
-            optionFound = true;
-            break;
-          }
-        }
-        
-        if (!optionFound) {
-          console.log(`Option for file ${fileNames} not found.`);
-        }
+        const trimmedVendorName = findRecord.vendorNames.trim();
 
+let foundOption = false;
 
+while (!foundOption) {
+  for (const option of options) {
+    const dropDownOption = await page.evaluate(rec => rec.textContent.trim(), option);
+    const trimmedDropDownOption = dropDownOption.trim();
+
+    if (trimmedDropDownOption === trimmedVendorName) {
+      await option.click();
+      foundOption = true;
+      break;
+    }
+  }
+
+  if (!foundOption) {
+    
+    for (let i = 0; i < 10; i++) {
+      await page.keyboard.press('ArrowDown'); 
+      await page.waitForTimeout(100); 
+    }
+    options = await page.$$('.ant-select-item-option-content');
+  }
+}
+
+if (!foundOption) {
+  console.error('Vendor not found in the dropdown.');
+}
+       
         await page.waitForSelector('input[type="file"]');
         const fileInput = await page.$('input[type="file"]');
         const filePath = path.join(directoryPath, file);
@@ -283,7 +305,13 @@ export class ScanService {
         await page.waitForSelector('button[type="submit"]');
         await page.click('button[type="submit"]');
 
-        const sourceFilePath = path.join(sourceDirectory, file);
+        setTimeout(async()=>{
+        await page.goto('http://localhost:4200/#/scan-document/', {
+          timeout: 100000,
+          waitUntil: 'networkidle0',
+        })},1000);
+
+        const sourceFilePath = path.join(directoryPath, file);
         const destinationFilePath = path.join(destinationDirectory, file);
         fs.rename(sourceFilePath, destinationFilePath, (err) => {
           if (err) {
@@ -291,11 +319,16 @@ export class ScanService {
           }
         });
       }
+      await browser.close();
       return new CommonResponseModel(true, 1, 'All PDFs submittedd successfully')
     } catch (error) {
       return new CommonResponseModel(false, 0, error)
     }
-    //     let i = 0
+  }
+  
+}
+
+  //     let i = 0
     //     const fileNames=['OIA.PDF', 'TEXTILES COMMITEE.pdf']
     //     for (const file of fileNames) {
     //       await page.goto('http://localhost:4200/#/doc-extract-form/', {
@@ -380,10 +413,6 @@ export class ScanService {
     // }
 
 
-
-
-  }
-}
 
 
    // await page.waitForSelector('.ant-select-item-option-content');
@@ -545,4 +574,97 @@ export class ScanService {
 //     } catch (error) {
 //         return new CommonResponseModel(false, 0, error)
 //     }
+// }
+
+// const allVendorsList = [ "DHL FREIGHT",                    
+//         "DHL COURIER FRIEGHT",            
+//         "DART",                           
+//         "EXPEDITORS",                     
+//         "EFL",                            
+//         "OOCL",                           
+//         "KUEHNE NAGEL",                   
+//         "APL",                            
+//         "MAERSK",                         
+//         "SRIVARU",                        
+//         "KRSNA",                          
+//        "SRIJI",                           
+//         "KSR",                            
+//         "DP",                             
+//         "NIPPON",                         
+//         "VINAYAKA",                       
+//         "WAYMARK",                        
+//        "LIGI",                            
+//        "NIKKOU",                          
+//        "TRIWAY",                          
+//        "RINGO CARGO",                     
+//        "MSN",                             
+//        "FREDEX FRIEGHT",                  
+//        "FREDEX  COURIER",                 
+//        "DHL AIR DUTY",                    
+//        "TOTAL TRANSPORT",                 
+//        "SANJAY FORWARDER",                
+//        "ONE TIME",                        
+//        "TIGER",                           
+//        "OIA",                             
+//        "TEXTILES COMMITEE",               
+//        "TOLL",                            
+//        "DELMAR",                          
+//        "MGH",                             
+//        "LX PANTOS",                       
+//        "SAVINO DELL",                     
+//        "NEW BLOBE",                       
+//        "DACHSER",                         
+//        "SCANWELL",                        
+//        "MATRIX",                          
+//        "RAHAT",                           
+//        "SOLITAIRE",                       
+//        "COGO PORT",                       
+//        "UNICORN",                         
+//        "UNIQUE",                          
+//        "TVS",                             
+//        "VELOGIC INDIA",                   
+//        "WIDER LOGISTICS",                 
+//        "WORLD LINE",                      
+//        "KWE",                             
+//         "UPS",                            
+//        "20 CUBE",                         
+//        "APS",                             
+//        "CH ROWBIN",                       
+//        "DB SCHENKAR",                     
+//        "CEVA",                            
+//        "UNITED LINER",                    
+//        "WEN PARKER",                      
+//        "JEENA & COMPANY",                 
+//        "KERRY INDEV",                     
+//        'GATEWAY',                         
+//        'FEDERATION OF INDIA',             
+//        'LOGWIN',                          
+//        "HELLMANN",                        
+//        "GEODIS",                          
+//        "JAS",                             
+//        "GLOBELINK",];
+
+
+// await page.click('#vendors');
+
+// await page.waitForSelector('.ant-select-item-option-content');
+
+// const options = await page.$$('.ant-select-item-option-content');
+
+// // Debug: Output available options in the dropdown
+// const availableOptions = [];
+// for (const option of options) {
+//   const optionText = await page.evaluate(el => el.textContent.trim(), option);
+//   availableOptions.push(optionText);
+// }
+// console.log('Available Options:', availableOptions);
+
+// let optionFound = false;
+// for (const option of options) {
+//   const optionText = await page.evaluate(el => el.textContent.trim(), option);
+//   if (optionText === fileNames) {
+//     await option.click();
+//     optionFound = true;
+//     break;
+//   }
 // }
