@@ -303,7 +303,7 @@ export const PurchaseOrderForm = () => {
                             </Form.Item>
                         </Col>
 
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ display: sampleDropDownVisible == true ? '' : 'none' }}>
+                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ display: sampleDropDownVisible == true ? '' : 'none' }}>
                             <Form.Item name="requestNo" label="Request Number" rules={[{ required: sampleDropDownVisible, message: 'PO Type is required' }]}>
                                 <Select
                                     mode="multiple"
@@ -326,7 +326,7 @@ export const PurchaseOrderForm = () => {
                                     })}
                                 </Select>
                             </Form.Item>
-                        </Col>
+                        </Col> */}
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ display: indentDropDownVisible == true ? '' : 'none' }}>
                             <Form.Item name='indentId' label='Indent Code'
                                 rules={[{ required: indentDropDownVisible, message: 'IndentCode is required' }]}>
@@ -390,7 +390,7 @@ export const PurchaseOrderForm = () => {
                         </Form.Item>
                     </Col> */}
 
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='vendorId' label='Vendor' rules={[{ required: true, message: 'vendor is required' }]}>
                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor'>
                                     {vendordata.map(e => {

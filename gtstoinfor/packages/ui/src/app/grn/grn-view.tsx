@@ -273,13 +273,13 @@ import { useIAMClientState } from "../common/iam-client-react";
           return data.grnDate ?moment( data.grnDate).format('YYYY-MM-DD') : "-";
         }
       },
-      {
-        title: <div style={{textAlign:"center"}}>Status</div>,
-        dataIndex: "status",
-        render: (val,data) => {
-          return data.status ? data.status : "-";
-        }
-      },
+      // {
+      //   title: <div style={{textAlign:"center"}}>Status</div>,
+      //   dataIndex: "status",
+      //   render: (val,data) => {
+      //     return data.status ? data.status : "-";
+      //   }
+      // },
       {
         title: <div style={{textAlign:'center'}}>Action</div>,
         dataIndex: 'action',
@@ -309,7 +309,7 @@ import { useIAMClientState } from "../common/iam-client-react";
       >
         <Form form={form} layout="vertical" onFinish={getAll}>
           <Row gutter={16}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 4 }}>
               <Form.Item name="poNumber" label="PO Number">
                 <Select showSearch allowClear optionFilterProp="children" placeholder="Select PO Number">
                   {poNoFilter.map((e) => (
@@ -320,7 +320,7 @@ import { useIAMClientState } from "../common/iam-client-react";
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 4 }}>
               <Form.Item name="grnNo" label="GRN No">
                 <Select showSearch allowClear optionFilterProp="children" placeholder="Select GRB No">
                   {grnNoFilter.map((e) => (
@@ -331,12 +331,12 @@ import { useIAMClientState } from "../common/iam-client-react";
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-              <Form.Item label='GRN Date' name='grnDate'>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 12 }} xl={{ span: 5 }}>
+              <Form.Item label='GRN Date' name='grnDate'style={{width:"100%"}}>
                 <RangePicker />
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 4 }}>
               <Form.Item name="status" label="Status">
                 <Select showSearch allowClear placeholder="Select Status" optionFilterProp="children">
                   {Object.values(PurchaseOrderStatus).map(e => (
