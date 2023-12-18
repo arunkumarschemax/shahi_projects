@@ -644,7 +644,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         } else if (req.DPOMLineItemStatus !== undefined && req.DPOMLineItemStatus.length === 0) {
             query.andWhere(`1=1`);
         }
-        query.orderBy('dpom.document_date DESC, dpom.po_number DESC, dpom.po_line_item_number ASC, dpom.schedule_line_item_number', 'DESC');
+        query.orderBy('dpom.document_date DESC, dpom.po_number DESC, dpom.po_line_item_number ASC, dpom.item', 'DESC');
         return await query.getRawMany();
     }
 

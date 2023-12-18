@@ -292,7 +292,7 @@ export class DpomService {
         }
     }
 
-    // @Cron('*/10 * * * *')
+    // @Cron('*/5 * * * *')
     async createCOline(req: any): Promise<CommonResponseModel> {
         const poDetails = await this.coLineRepository.getDataforCOLineCreation();
         if (!poDetails.length) {
@@ -362,7 +362,6 @@ export class DpomService {
                     const req = new DestinationReq()
                     req.destination = data[0].destination_country
                     const addressResponse = await this.addressService.getAddressInfoByDestination(req);
-                    console.log(addressResponse)
                     const addressData = addressResponse.data[0]
                     buyerValue1 = "NKE-NIKE"
                     buyerValue2 = "NIK00003-NIKE USA INC"
@@ -620,19 +619,9 @@ export class DpomService {
                             await driver.sleep(10000)
                         }
                     } else {
-                        await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[4]')), 10000);
-                        let j;
-                        for (let i = 1; i < 100; i++) {
-                            const poNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${i}]/td[4]`));
-                            const poNo = await poNoElement.getAttribute('innerText');
-                            if (poNo == coLine.buyerPo) {
-                                j = i;
-                                break;
-                            } else {
-                                continue;
-                            }
-                        }
-                        const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[${j}]/td[7]`));
+                        await driver.sleep(15000)
+                        await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[4]')));
+                        const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[last()]/td[7]`));
                         const coNo = await coNoElement.getAttribute('innerText');
                         const currentDate = new Date();
                         const day = currentDate.getDate().toString().padStart(2, '0');
@@ -644,11 +633,13 @@ export class DpomService {
                             await this.updateCOLineStatus({ poNumber: po.buyer_po, poLineItemNumber: po.line_item_no, status: 'Success' })
                             // await driver.navigate().refresh();
                             await driver.sleep(10000)
+                            driver.quit()
                         } else {
                             const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', isActive: false });
                             await this.updateCOLineStatus({ poNumber: po.buyer_po, poLineItemNumber: po.line_item_no, status: 'Failed' })
                             // await driver.navigate().refresh();
                             await driver.sleep(10000)
+                            driver.quit()
                         }
                     }
                 }
@@ -658,9 +649,9 @@ export class DpomService {
             console.log(err, 'error');
             return new CommonResponseModel(false, 0, err)
         }
-        // finally {
-        //     driver.quit()
-        // }
+        finally {
+            driver.quit()
+        }
     }
 
     async isAlertPresent(driver) {
