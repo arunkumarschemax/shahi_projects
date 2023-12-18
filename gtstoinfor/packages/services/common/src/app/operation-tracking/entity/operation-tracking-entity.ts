@@ -69,6 +69,16 @@ issuedUomId:number;
   name:'sample_req_id'
 })
 sampleReqId:number;
+@Column('int',{
+  nullable:false,
+  name:'colour_id'
+})
+colourId:number;
+@Column('int',{
+  nullable:false,
+  name:'size_id'
+})
+sizeId:number;
 
 //   @Column('int',{
 //     nullable:false,

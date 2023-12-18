@@ -467,5 +467,45 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  @Post('/getOrderedSizes')
+  @ApiBody({ type: SampleOrderIdRequest })
+  async getOrderedSizes(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getOrderedSizes(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+  @Post('/getPch')
+  async getPch(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getPch()
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  @Post('/getOrderedColors')
+  @ApiBody({ type: SampleOrderIdRequest })
+  async getOrderedColors(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getOrderedColors(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+  @Post('/getStyle')
+  async getStyle(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getStyle()
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
   
 }

@@ -15,7 +15,7 @@ export interface PoDetailViewPagesProps {
 export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
   const [data, setData] = useState<any[]>([])
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const page = 1
+  const [page, setPage] = React.useState(1);
   const navigate = useNavigate();
   const Service = new PurchaseOrderservice()
   const [form] = Form.useForm()
@@ -317,6 +317,11 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
             <Table
               rowKey={record => record.purchase_order_item_id}
               columns={itemColumns}
+              pagination={{
+                onChange(current) {
+                  setPage(current);
+                }
+              }}
               dataSource={data}
             />
           </Card>

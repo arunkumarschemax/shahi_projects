@@ -429,7 +429,10 @@ const GRNForm = () => {
     }
   }
   
-
+  const disabledDate = (current) => {
+    // console.log(current.valueOf(), 'current');
+     return current.valueOf() > Date.now();
+   };
   return (
     <>
       <Card title='GRN' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={
@@ -532,7 +535,7 @@ const GRNForm = () => {
               <Form.Item name='invoiceDate' label='Invoice Date'
               rules={[{ required: true, message: 'Date is required' }]}
                >
-                <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday />
+                <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday disabledDate={disabledDate} />
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>

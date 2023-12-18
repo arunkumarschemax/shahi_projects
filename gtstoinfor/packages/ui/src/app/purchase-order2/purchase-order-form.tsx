@@ -283,6 +283,10 @@ export const PurchaseOrderForm = () => {
             setSampleDropDownVisible(true)
         }
     }
+    const disabledDate = (current) => {
+        // console.log(current.valueOf(), 'current');
+         return current.valueOf() < Date.now();
+       };
     return (
         <>
             <Card title='Purchase Order' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/purchase-view' > <Button className='panel_button' >View </Button></Link>}>
@@ -403,12 +407,12 @@ export const PurchaseOrderForm = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='purchaseOrderDate' label='Purchase Order Date' rules={[{ required: true, message: 'purchaseOrderDate is required' }]}>
-                                <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday />
+                                <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday disabledDate={disabledDate}/>
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='expectedDeliveryDate' label='Expected Delivery Date' rules={[{ required: true, message: 'expectedDeliveryDate is required' }]}>
-                                <DatePicker style={{ width: '93%', marginLeft: 5 }} />
+                                <DatePicker style={{ width: '93%', marginLeft: 5 }} disabledDate={disabledDate}/>
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
