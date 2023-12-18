@@ -58,4 +58,13 @@ export class ContentController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getFabricContentData')
+    async getFabricContentData(): Promise<CommonResponseModel> {
+        try {
+            return await this.contentService.getFabricContentData();
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
 }

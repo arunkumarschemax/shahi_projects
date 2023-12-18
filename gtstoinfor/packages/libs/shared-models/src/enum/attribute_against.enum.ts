@@ -33,3 +33,9 @@ export const GRNTypeEnumDisplay = [
   {name:'INDENT' , displayVal :'INDENT'},
   {name:'SAMPLE_ORDER' , displayVal :'SAMPLE ORDER'},
 ]
+
+
+export enum ItemEnum {
+  Fabric = 'Fabric',
+  Trim = 'Trim',
+}

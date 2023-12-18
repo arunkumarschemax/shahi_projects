@@ -4,11 +4,15 @@ import { UomRequest } from './dto/uom.request';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { UomEntity } from './uom-entity';
 import { UomCategoryRequest } from './dto/uom-category-request';
-import { UomIdRequest, UomInfoModel, UomResponse } from '@project-management-system/shared-models';
+import { CommonResponseModel, UomIdRequest, UomInfoModel, UomResponse } from '@project-management-system/shared-models';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
 
 
 @Injectable()
 export class UomService {
+    @InjectDataSource()
+    private datasource: DataSource
     constructor(
         private uomRepo : UomRepository
     ) {
@@ -111,6 +115,40 @@ export class UomService {
             throw err;
         }
     }
+
+    async getUomByYarn():Promise<CommonResponseModel>{
+        try{
+          let query = `
+          SELECT id,uom,uom_category as category
+          FROM uom
+          WHERE uom_category = 'yarn count'`
+          const data = await this.datasource.query(query)
+          if(data.length>0){
+            return new CommonResponseModel(true, 0, 'Data retrieved successfully',data)
+          }else{
+            return new CommonResponseModel(false, 1, 'No data found',[])
+          }
+        }catch(err){
+          throw(err)
+        }
+      }
+
+    async getUomByWeight():Promise<CommonResponseModel>{
+        try{
+          let query = `
+          SELECT id,uom,uom_category as category
+          FROM uom
+          WHERE uom_category = 'Weight'`
+          const data = await this.datasource.query(query)
+          if(data.length>0){
+            return new CommonResponseModel(true, 0, 'Data retrieved successfully',data)
+          }else{
+            return new CommonResponseModel(false, 1, 'No data found',[])
+          }
+        }catch(err){
+          throw(err)
+        }
+      }
     
 
 

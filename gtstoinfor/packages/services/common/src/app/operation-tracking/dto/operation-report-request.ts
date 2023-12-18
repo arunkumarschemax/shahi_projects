@@ -10,4 +10,8 @@ export class operationReportRequest {
     operationCode: string;
     @ApiProperty()
     sequence: number;
+    @ApiProperty()
+    colorId: number;
+    @ApiProperty()
+    sizeId: number;
 }

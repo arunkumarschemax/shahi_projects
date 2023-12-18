@@ -9,7 +9,8 @@ import { log } from 'console';
 import Highlighter from 'react-highlight-words';
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 export const PurchaseOrderView = () => {
-  const page = 1;
+  const [page, setPage] = React.useState(1);
+
   const [hideCancelButton, setHideCancelButton] = useState(false);
   const [filterData, setFilterData] = useState<any[]>([]);
   const [data, setData] = useState<any[]>([]);
@@ -205,7 +206,12 @@ Service.getAllPurchaseOrderData(req).then(res=>{
 
       render: text => (text ? text : "-")
     },
-    
+    {
+      title: 'PO Against',
+      dataIndex: 'poAgainst',
+      width: '100px',
+      render: text => (text ? text : "-"),
+    },
     {
       title: 'Material Type',
       dataIndex: 'poMaterialtype',
@@ -530,7 +536,12 @@ Service.getAllPurchaseOrderData(req).then(res=>{
       <Card>
         {/* <Table columns={columns} dataSource={data} bordered /> */}
 
-        <Table columns={columns} dataSource={data} pagination={{pageSize:20}} bordered size='small' />
+        <Table columns={columns} dataSource={data} bordered size='small' pagination={{
+          pageSize:20,
+          onChange(current) {
+            setPage(current);
+          }
+        }} />
 
       </Card>
     </Card>

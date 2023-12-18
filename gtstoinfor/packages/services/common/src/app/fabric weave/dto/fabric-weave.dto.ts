@@ -31,7 +31,7 @@ export class FabriCWeaveDto {
   @ApiProperty()
   versionFlag : number;
 
-  @ApiProperty({type:[FabricType]})
-  fabricType: FabricType[]
+  @ApiProperty()
+  fabricTypeId : number;
 }
 

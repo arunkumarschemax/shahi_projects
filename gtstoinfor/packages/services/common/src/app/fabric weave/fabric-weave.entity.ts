@@ -37,6 +37,12 @@ export class FabricWeave {
   })
   fabricWeaveImagePath: string;
 
+  @Column('int',{
+    nullable: false,
+    name:"fabric_type_id"
+    })
+    fabricTypeId:number;
+
   @Column("boolean",{
     nullable:false,
     default:true,
@@ -73,8 +79,4 @@ export class FabricWeave {
       name: "version_flag"
   })
   versionFlag: number;
-
-  @ManyToOne(()=> FabricType,fabricType=>fabricType.fabricWeave)
-  @JoinColumn({name:'fabric_type_id'})
-  fabricType:FabricType
   }

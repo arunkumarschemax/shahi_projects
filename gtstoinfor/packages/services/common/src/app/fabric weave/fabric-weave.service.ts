@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Raw, Repository } from 'typeorm';
+import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
+import { DataSource, Raw, Repository } from 'typeorm';
 import { FabricWeave } from './fabric-weave.entity';
 import { FabricWeaveAdapter } from './dto/fabric-weave.adapter';
 import { FabriCWeaveDto } from './dto/fabric-weave.dto';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { FabricWeaveRequest } from './dto/fabric-weave-request';
-import { AllFabricWeaveResponseModel, FabricWeaveDto, FabricWeaveResponseModel, UploadResponse } from '@project-management-system/shared-models';
+import { AllFabricWeaveResponseModel, CommonResponseModel, FabricTypeIdReq, FabricWeaveDto, FabricWeaveResponseModel, UploadResponse } from '@project-management-system/shared-models';
+import { FabricType } from '../fabric-types/fabric-type.entity';
 
 @Injectable()
 export class FabricWeaveService {
@@ -15,6 +16,8 @@ export class FabricWeaveService {
         @InjectRepository(FabricWeave)
         private fabricWeaveRepository: Repository<FabricWeave>,
         private fabricWeaveAdapter: FabricWeaveAdapter,
+        @InjectDataSource()
+        private dataSource: DataSource,
       ){}
 
       async getFabricWeaveWithoutRelations( fabricWeaveName: string): Promise<FabricWeave>{
@@ -29,26 +32,37 @@ export class FabricWeaveService {
         }
       }
 
-      async createFabricWeave(dto: FabriCWeaveDto, isUpdate: boolean): Promise<FabricWeaveResponseModel> {
+      async createFabricWeave(dto: FabriCWeaveDto, isUpdate: boolean): Promise<CommonResponseModel> {
         try {
-          let previousValue;
-            const entity = await this.fabricWeaveRepository.findOne({ where: { fabricWeaveName: dto.fabricWeaveName } });
-            if (entity) {
-              throw new FabricWeaveResponseModel(false, 11104, 'Fabric Weave already exists');
-            }
-            if(isUpdate){
-            const certificatePrevious = await this.fabricWeaveRepository.findOne({ where: { fabricWeaveId: dto.fabricWeaveId } });
-            if (!certificatePrevious) {
-              throw new ErrorResponse(0, 'Given Fabric Weave does not exist');
-            }
-            previousValue = certificatePrevious.fabricWeaveName;
+          const weaveData = await this.fabricWeaveRepository.findOne({ where: { fabricWeaveName: dto.fabricWeaveName } });
+
+          if (isUpdate && weaveData && weaveData.fabricWeaveId !== weaveData.fabricWeaveId) {
+            return new CommonResponseModel(false, 1, 'Fabric Weave already exists');
           }
-          const converted: FabricWeave = this.fabricWeaveAdapter.convertDtoToEntity(dto, isUpdate);
-          const savedEntity: FabricWeave = await this.fabricWeaveRepository.save(converted);
-          const savedDto: FabriCWeaveDto = this.fabricWeaveAdapter.convertEntityToDto(savedEntity);
+
+          if (!isUpdate && weaveData) {
+            return new CommonResponseModel(false, 1, 'Fabric Weave already exists');
+          }
+          // const converted: FabricWeave = this.fabricWeaveAdapter.convertDtoToEntity(dto, isUpdate);
+          // const savedEntity: FabricWeave = await this.fabricWeaveRepository.save(converted);
+          // const savedDto: FabriCWeaveDto = this.fabricWeaveAdapter.convertEntityToDto(savedEntity);
+          const fabricWeaveEntity = new FabricWeave();
+          fabricWeaveEntity.fabricTypeId = dto.fabricTypeId
+          fabricWeaveEntity.fabricWeaveCode = dto.fabricWeaveCode;
+          fabricWeaveEntity.fabricWeaveName = dto.fabricWeaveName;
+          fabricWeaveEntity.fabricWeaveImageName = dto.fabricWeaveImageName;
+          fabricWeaveEntity.fabricWeaveImagePath = dto.fabricWeaveImagePath;
+          if (isUpdate) {
+            fabricWeaveEntity.fabricWeaveId = dto.fabricWeaveId;
+            fabricWeaveEntity.updatedUser = dto.updatedUser;
+          } else {
+            fabricWeaveEntity.isActive = true;
+            fabricWeaveEntity.createdUser = dto.createdUser;
+          }
+          const savedDto = await this.fabricWeaveRepository.save(fabricWeaveEntity)
           
           if (savedDto) {
-            const response = new FabricWeaveResponseModel(true, 1, isUpdate ? 'Fabric Weave Updated Successfully' : 'Fabric Weave Created Successfully',[savedDto]);
+            const response = new CommonResponseModel(true, 1, isUpdate ? 'Fabric Weave Updated Successfully' : 'Fabric Weave Created Successfully',[savedDto]);
             return response;
           } else {
             throw new FabricWeaveResponseModel(false, 11106, 'Fabric Weave saved but issue while transforming into DTO');
@@ -60,23 +74,23 @@ export class FabricWeaveService {
       
       
 
-      async getAllFabricWeave():Promise<AllFabricWeaveResponseModel>{
+      async getAllFabricWeave():Promise<CommonResponseModel>{
         const fabricWeave = await this.fabricWeaveRepository.find({order:{createdAt:'ASC'}})
         if(fabricWeave.length >0){
-            return new AllFabricWeaveResponseModel(true,1,'Fabric Weaves Retrieved Successfully',fabricWeave)
+            return new CommonResponseModel(true,1,'Fabric Weaves Retrieved Successfully',fabricWeave)
         }else{
-            return new AllFabricWeaveResponseModel(false,0,'No Fabric Weaves Found',[])
+            return new CommonResponseModel(false,0,'No Fabric Weaves Found',[])
 
         }
 
     }
 
-    async getAllActiveFabricWeave():Promise<AllFabricWeaveResponseModel>{
+    async getAllActiveFabricWeave():Promise<CommonResponseModel>{
       const fabricWeave = await this.fabricWeaveRepository.find({where:{isActive:true},order:{fabricWeaveName:'ASC'}})
       if(fabricWeave.length >0){
-          return new AllFabricWeaveResponseModel(true,1,'Active fabricWeaves Retrieved Successfully',fabricWeave)
+          return new CommonResponseModel(true,1,'Active fabricWeaves Retrieved Successfully',fabricWeave)
       }else{
-          return new AllFabricWeaveResponseModel(false,0,'No  Employees Found ',[])
+          return new CommonResponseModel(false,0,'No  Employees Found ',[])
 
       }
 
@@ -166,6 +180,23 @@ async getFabricWeaveById(fabricWeaveId: number): Promise<FabricWeave> {
   catch (error) {
       console.log(error);
   }
+  }
+
+  async getWeaveByTypeId(req?: FabricTypeIdReq): Promise<CommonResponseModel>{
+    try{
+      let query = 
+      `SELECT fabric_type_id AS fabricTypeId, fabric_weave_id AS weaveId,fabric_weave_name AS weaveName
+      FROM fabric_weave
+      where fabric_type_id = ${req.fabricTypeId}`
+      const data = await this.dataSource.query(query)
+      if(data.length > 0){
+        return new CommonResponseModel(true, 0, 'Data retrieved successfully',data)
+      }else{
+        return new CommonResponseModel(false, 1, 'No data found',[])
+      }
+    }catch(err){
+      throw(err)
+    }
   }
 
 }

@@ -291,6 +291,9 @@ export class OperationTrackingService {
         }
         const inventoryEntity = new OperationInventory()
         inventoryEntity.styleId = styleId
+        inventoryEntity.sampleReqId = req.sampleRequestId
+        inventoryEntity.colourId = req.colorId
+        inventoryEntity.sizeId = req.sizeId
         // inventoryEntity.operationSequenceId = dto.operationSequenceId
         inventoryEntity.operation = req.operationCode
         inventoryEntity.physicalQuantity = totalFgQty
@@ -326,6 +329,8 @@ export class OperationTrackingService {
         const trackingEntity = new OperationTracking()
         trackingEntity.jobNumber = operationJobNo
         trackingEntity.styleId = styleId
+        trackingEntity.colourId = req.colorId
+        trackingEntity.sizeId = req.sizeId
         // trackingEntity.operationSequenceId = dto.operationSequenceId
         trackingEntity.operationInventoryId = save.operationInventoryId
         // trackingEntity.rejectedQuantity = dto.rejectedQuantity

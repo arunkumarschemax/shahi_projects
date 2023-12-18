@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Select, Card, Row, Col, message, Typography, Upload, UploadProps } from "antd";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FabricWeaveDto } from "@project-management-system/shared-models";
-import { FabricWeaveService } from "@project-management-system/shared-services";
+import { FabricTypeService, FabricWeaveService } from "@project-management-system/shared-services";
 import AlertMessages from "../../common/common-functions/alert-messages";
 import { LoadingOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 
 const { TextArea } = Input;
+const {Option} = Select;
 
 export interface FabricWeaveFormProps {
   data: FabricWeaveDto;
@@ -19,13 +20,14 @@ export interface FabricWeaveFormProps {
 export function FabricWeaveForm(props: FabricWeaveFormProps) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const [fabricWeaveList,setFabricWeaveList] = useState<any[]>([]);
+  const [fabricType,setFabricType] = useState<any[]>([]);
   const [imageUrl,setImageUrl] = useState('')
   const [loading, setLoading] = useState<boolean>(false);
   const [isUpdateImg, setIsUpdateImg]=useState('')
   const [disable, setDisable] = useState<boolean>(false);
 
   const Service = new FabricWeaveService();
+  const fabricService = new FabricTypeService()
 
   const [fileList, setFileList] = useState<any>(props.isUpdate?[{
     name: props.data.fabricWeaveImageName,
@@ -40,6 +42,7 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
      // const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+props.styleData.styleFileName
      setIsUpdateImg(updateImage)
     }
+    getFabricType()
    }, [])
 
 
@@ -72,7 +75,8 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
     setDisable(true);
     // const file:any = data.fabricWeaveImageName
     // const abc:string =file.file.name
-    const req = new FabricWeaveDto(data.fabricWeaveId,data.fabricWeaveName,data.fabricWeaveCode,null,null,data.isActive,data.createdAt,data.createdUser,data.updatedAt,data.updatedUser,data.versionFlag)
+    console.log(data,'------------------')
+    const req = new FabricWeaveDto(data.fabricWeaveId,data.fabricWeaveName,data.fabricWeaveCode,null,null,data.isActive,data.createdAt,data.createdUser,data.updatedAt,data.updatedUser,data.versionFlag,data.fabricTypeId)
     Service.createFabricWeave(req).then((res) => {
       // console.log(req,'req');
       setDisable(false);
@@ -102,6 +106,14 @@ export function FabricWeaveForm(props: FabricWeaveFormProps) {
       });
    
   };
+
+  const getFabricType = () =>{
+    fabricService.getAllActiveFabricType().then((res)=>{
+      if(res.status){
+        setFabricType(res.data)
+      }
+    })
+  }
 
   const saveData = (values: FabricWeaveDto) => {
     if (props.isUpdate) {
@@ -171,6 +183,17 @@ return (
        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 14 }}>
         <Card>
           <Row gutter={24}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
+            <Form.Item name='fabricTypeId' label='Fabric Type' rules={[{ required: true, message: 'Fabric Type is required' }]}>
+              <Select showSearch allowClear optionFilterProp="children" placeholder='Select Fabric Type'>
+              {fabricType.map((option) => (
+              <Option key={option.fabricTypeId} value={option.fabricTypeId}>
+                {option.fabricTypeName}
+              </Option>
+              ))}
+              </Select>
+            </Form.Item>
+            </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
               <Form.Item name='fabricWeaveName' label='Fabric Weave'
               rules={[{

@@ -73,5 +73,14 @@ export class FinishController {
           }
       }
 
+      @Post('/getFabricFinishData')
+      async getFabricFinishData(): Promise<CommonResponseModel>{
+          try{
+              return await this.finishService.getFabricFinishData()
+          }catch (error){
+              return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+          }
+      }
+
 }
 

@@ -131,7 +131,7 @@ export const StockView = () => {
           (rec) => rec.uomCategory == UomCategoryEnum.LENGTH
         );
         const weight = res.data.filter(
-          (rec) => rec.uomCategory == UomCategoryEnum.MASS
+          (rec) => rec.uomCategory == UomCategoryEnum.WEIGHT
         );
         const width = res.data.filter(
           (rec) => rec.uomCategory == UomCategoryEnum.AREA
@@ -743,6 +743,11 @@ export const StockView = () => {
         dataSource={data.length > 0 ? data : []}
         columns={columns}
         size="small"
+        pagination={{
+          onChange(current) {
+            setPage(current);
+          }
+        }}
       />
       <Modal
             className='rm-'

@@ -100,10 +100,13 @@ import RolePermission from "../role-permissions";
    const [isModalOpen, setIsModalOpen] = useState(false)
    const [row, setRow] = useState();
    const [stockForm] = Form.useForm();
-
+   const [pch, setPch] = useState<any>([]);
+   const [styled, setStyled] = useState<any>([]);
   
     useEffect(() => {
       getAll();
+      getAllStyle();
+      getAllPch();
     }, []);
   
     useEffect(() => {
@@ -148,7 +151,21 @@ import RolePermission from "../role-permissions";
         setData([]);
       })
     }
+    const getAllPch=()=>{
+      service .getPch().then((res)=>{
+        if (res.status) {
+          setPch(res.data);
+        }
+      })
+    }
   
+    const getAllStyle=()=>{
+      service.getStyle().then((res)=>{
+        if (res.status) {
+          setStyled(res.data);
+        }
+      })
+    }
   
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -898,7 +915,7 @@ import RolePermission from "../role-permissions";
                   optionFilterProp="children"
                   placeholder="Select Style"
                 >
-                  {data.map((e) => {
+                  {styled.map((e) => {
                     return (
                       <Option key={e.style_id} value={e.style_id} name={e.style}>
                         {" "}
@@ -948,10 +965,10 @@ import RolePermission from "../role-permissions";
                 optionFilterProp="children"
                 allowClear
               >
-                {data.map((qc: any) => (
+                {pch.map((qc: any) => (
                   <Select.Option key={qc.profit_control_head_id} value={qc.profit_control_head_id
                   }>
-                    {qc.pch}
+                    {qc.profit_control_head}
                   </Select.Option>
                 ))}
               </Select>

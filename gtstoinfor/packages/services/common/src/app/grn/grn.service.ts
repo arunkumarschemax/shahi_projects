@@ -290,7 +290,7 @@ export class GrnService {
         try {
             const manager = this.dataSource;
             let query = `SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,DATE(g.invoice_date) AS invoiceDate,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
-            g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber,gi.buyer_id AS buyerId
+            g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber,gi.buyer_id AS buyerId,g.location_mapped_status as locationMapStatus
             FROM grn g
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
