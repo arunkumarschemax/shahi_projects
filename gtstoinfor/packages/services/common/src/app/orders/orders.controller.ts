@@ -531,23 +531,24 @@ export class OrdersController {
         }
     }
 
-    @Post('/createCOLineInternal')
-    async createCOLineInternal(@Body() req: any): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.createCOLineInternal(req);
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-        }
-    }
+    // @Post('/createCOLineInternal')
+    // async createCOLineInternal(@Body() req: any): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.createCOLineInternal(req);
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
 
-    @Post('/updateStatusAfterCoLineCreationInM3')
-    async updateStatusAfterCoLineCreationInM3(@Body() req: any): Promise<CommonResponseModel> {
-        try {
-            return this.ordersService.updateStatusAfterCoLineCreationInM3(req);
-        } catch (err) {
-            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
-        }
-    }
+    // @Post('/updateStatusAfterCoLineCreationInM3')
+    // async updateStatusAfterCoLineCreationInM3(@Body() req: any): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.ordersService.updateStatusAfterCoLineCreationInM3(req);
+    //     } catch (err) {
+    //         return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
+
     @Post('/getMonthlyComparisionDate')
     @ApiBody({ type: YearReq })
     async getMonthlyComparisionDate(@Body() req: any): Promise<CommonResponseModel> {
@@ -676,12 +677,22 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }
     }
+
     @Post('/seasonWiseReportData')
-    async seasonWiseReportData(@Body() req?:any): Promise<CommonResponseModel> {
+    async seasonWiseReportData(@Body() req?: any): Promise<CommonResponseModel> {
         try {
             return this.ordersService.seasonWiseReportData(req);
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/coLineCreationReq')
+    async coLineCreationReq(@Body() req: any) {
+        try {
+            return await this.ordersService.coLineCreationReq(req)
+        } catch (error) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
 }

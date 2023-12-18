@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq, CoLineFormatModel, Destinations, Colors, Sizes, sesaonWisereportModel, MonthItemData } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq, CoLineFormatModel, Destinations, Colors, Sizes, sesaonWisereportModel, MonthItemData, CoLineRequest } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -38,15 +38,16 @@ const xlsxFile = require('read-excel-file/node');
 import { readSheetNames } from 'read-excel-file'
 const csv = require('csv-parser');
 const Excel = require('exceljs');
-import { CoLine } from './entities/co-line.entity';
-// import { CoLineRepository } from './repository/co-line-repo';
+import { COLineEntity } from './entities/co-line.entity';
+import { CoLineRepository } from './repository/co-line-repo';
 let moment = require('moment');
 moment().format();
 import * as nodemailer from 'nodemailer';
 import { PriceListService } from '@project-management-system/shared-services';
 import { TrimDetailsRequest } from './models/trim-details.req';
 import { promises } from 'dns';
-const { Builder, Browser, By, Capabilities, until } = require('selenium-webdriver');
+
+const { Builder, Browser, By, Capabilities, until, Select } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome')
 import { Cron } from '@nestjs/schedule';
 import { CoLineRepository } from './repository/co-line-repo';
@@ -1119,7 +1120,7 @@ export class OrdersService {
         const format = '%'
         let total = ``
         monthsList.forEach((rec, index) => {
-            console.log(index,'indexxxxxxxxxxxxxxxxxxxx')
+            console.log(index, 'indexxxxxxxxxxxxxxxxxxxx')
             qtyQuery.push(`SUM(CASE WHEN MONTH(STR_TO_DATE(${req.qtyLocation}, '%m-%d')) = ${index + 1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS ${rec}`)
             total += `SUM(${rec}) AS ${rec},`
         })
@@ -1183,38 +1184,38 @@ export class OrdersService {
     }
 
 
-    async createCOline(req: any): Promise<CommonResponseModel> {
-        // console.log(req)
-        try {
-            const manager = this.dataSource
-            const orderNo = req.orderNumber
-            const itemNo = req.itemNumber
-            // req.purchaseOrderNumber = 3504865987
-            // req.poLineItemNumber = 10000
-            // req.scheduleLineItemNumber = 100
-            const m3Config = appConfig.m3Cred.headerRequest()
-            const sale_price_qry = `select price from price_list where style = ${req.itemcode} and destination = ${req.destination}`
-            const salePriceData = await manager.query(sale_price_qry)
-            const salePrice = salePriceData[0].price
-            const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=${orderNo}&ITNO=${itemNo}&SAPR=${salePrice}`;
-            // const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.purchaseOrderNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${styleNumber}`;
-            const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
-            // console.log(response, 'response')
-            // console.log(response.data?.MIRecord, 'MIRecord')
-            if (response.data['@type'])
-                return new CommonResponseModel(false, 0, "M3 error ,Error message " + " : '" + response.data['Message'] + "'")
-            if (!response.data?.MIRecord && !response.data?.MIRecord.length)
-                return new CommonResponseModel(false, 0, "No data found for this item")
-            // const meToCustomObj = [{ m3Key: 'STAT', yourKey: 'status' }, { m3Key: 'ORNO', yourKey: 'orderNO' }, { m3Key: 'PONR', yourKey: 'poLine' }]
-            // const myObj = construnctDataFromM3Result(meToCustomObj, response.data.MIRecord)
-            if (response.status !== 200)
-                return new CommonResponseModel(false, 1, `Validation failed as`)
-            await this.updateOrderApprovalStatus(req);
-            return new CommonResponseModel(true, 1, `COline created successfully`)
-        } catch (err) {
-            throw err
-        }
-    }
+    // async createCOline(req: any): Promise<CommonResponseModel> {
+    //     // console.log(req)
+    //     try {
+    //         const manager = this.dataSource
+    //         const orderNo = req.orderNumber
+    //         const itemNo = req.itemNumber
+    //         // req.purchaseOrderNumber = 3504865987
+    //         // req.poLineItemNumber = 10000
+    //         // req.scheduleLineItemNumber = 100
+    //         const m3Config = appConfig.m3Cred.headerRequest()
+    //         const sale_price_qry = `select price from price_list where style = ${req.itemcode} and destination = ${req.destination}`
+    //         const salePriceData = await manager.query(sale_price_qry)
+    //         const salePrice = salePriceData[0].price
+    //         const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddBatchLine?CONO=111&ORNO=${orderNo}&ITNO=${itemNo}&SAPR=${salePrice}`;
+    //         // const rptOperation = `https://172.17.3.115:23005/m3api-rest/execute/OIZ100MI/AddFreeField?CONO=111&ORNO=${req.purchaseOrderNumber}&PONR=${req.poLineItemNumber}&POSX=${req.scheduleLineItemNumber}&HDPR=${styleNumber}`;
+    //         const response = await axios.get(rptOperation, { headers: m3Config.headersRequest, httpsAgent: m3Config.agent });
+    //         // console.log(response, 'response')
+    //         // console.log(response.data?.MIRecord, 'MIRecord')
+    //         if (response.data['@type'])
+    //             return new CommonResponseModel(false, 0, "M3 error ,Error message " + " : '" + response.data['Message'] + "'")
+    //         if (!response.data?.MIRecord && !response.data?.MIRecord.length)
+    //             return new CommonResponseModel(false, 0, "No data found for this item")
+    //         // const meToCustomObj = [{ m3Key: 'STAT', yourKey: 'status' }, { m3Key: 'ORNO', yourKey: 'orderNO' }, { m3Key: 'PONR', yourKey: 'poLine' }]
+    //         // const myObj = construnctDataFromM3Result(meToCustomObj, response.data.MIRecord)
+    //         if (response.status !== 200)
+    //             return new CommonResponseModel(false, 1, `Validation failed as`)
+    //         await this.updateOrderApprovalStatus(req);
+    //         return new CommonResponseModel(true, 1, `COline created successfully`)
+    //     } catch (err) {
+    //         throw err
+    //     }
+    // }
 
     async updateOrderApprovalStatus(req: any): Promise<CommonResponseModel> {
         const orderNo = req.orderNumber
@@ -2053,95 +2054,95 @@ export class OrdersService {
         }
     }
 
-    async createCOLineInternal(req: COLineRequest): Promise<CommonResponseModel> {
-        try {
-            const entity = new CoLine()
-            entity.itemNumber = req.itemNumber;
-            entity.orderNumber = req.orderNumber;
-            entity.colorCode = req.colorCode;
-            entity.color = req.color;
-            entity.sizeCode = req.sizeCode;
-            entity.size = req.size;
-            entity.itemCode = req.itemCode;
-            entity.item = req.item;
-            entity.destination = req.destination;
-            entity.company_CONO = req.company_CONO;
-            entity.temporaryOrderNumber_ORNO = req.temporaryOrderNumber_ORNO;
-            entity.itemNumber_ITNO = req.itemNumber_ITNO;
-            entity.orderedQuantity_ORQT = req.orderedQuantity_ORQT;
-            entity.warehouse_WHLO = req.warehouse_WHLO;
-            entity.requestedDeliveryDate_DWDT = req.requestedDeliveryDate_DWDT;
-            entity.jointDeliveryDate_JDCD = req.jointDeliveryDate_JDCD;
-            entity.customersOrderNumber_CUPO = req.customersOrderNumber_CUPO;
-            entity.salesPrice_SAPR = req.salesPrice_SAPR;
-            entity.discountAmount1_DIA1 = req.discountAmount1_DIA1;
-            entity.discountAmount2_DIA2 = req.discountAmount2_DIA2;
-            entity.discountAmount3_DIA3 = req.discountAmount3_DIA3;
-            entity.discountAmount4_DIA4 = req.discountAmount4_DIA4;
-            entity.discountAmount5_DIA5 = req.discountAmount5_DIA5;
-            entity.discountAmount6_DIA6 = req.discountAmount6_DIA6;
-            entity.deliverySpecification_DLSP = req.deliverySpecification_DLSP;
-            entity.deliverySpecificationText_DLSX = req.deliverySpecificationText_DLSX;
-            entity.oldCFIN_CFXX = req.oldCFIN_CFXX;
-            entity.simulationsNumber_ECVS = req.simulationsNumber_ECVS;
-            entity.alternateUM_ALUN = req.alternateUM_ALUN;
-            entity.confirmedDateOfDelivery_CODT = req.confirmedDateOfDelivery_CODT;
-            entity.itemDescription_ITDS = req.itemDescription_ITDS;
-            entity.discountPercent1_DIP1 = req.discountPercent1_DIP1;
-            entity.discountPercent2_DIP2 = req.discountPercent2_DIP2;
-            entity.discountPercent3_DIP3 = req.discountPercent3_DIP3;
-            entity.discountPercent4_DIP4 = req.discountPercent4_DIP4;
-            entity.discountPercent5_DIP5 = req.discountPercent5_DIP5;
-            entity.discountPercent6_DIP6 = req.discountPercent6_DIP6;
-            entity.aliasQualifier_ALWT = req.aliasQualifier_ALWT;
-            entity.blanketAgreementNumber_AGNO = req.blanketAgreementNumber_AGNO;
-            entity.container_CAMU = req.container_CAMU;
-            entity.projectNumber_PROJ = req.projectNumber_PROJ;
-            entity.projectElement_ELON = req.projectElement_ELON;
-            entity.customerOrderNumber_CUOR = req.customerOrderNumber_CUOR;
-            entity.customersPackagingIdentity_CUPA = req.customersPackagingIdentity_CUPA;
-            entity.requestedDeliveryTime_DWHM = req.requestedDeliveryTime_DWHM;
-            entity.standardQuantity_D1QT = req.standardQuantity_D1QT;
-            entity.packaging_PACT = req.packaging_PACT;
-            entity.aliasNumber_POPN = req.aliasNumber_POPN;
-            entity.salesPriceQuantity_SACD = req.salesPriceQuantity_SACD;
-            entity.saledPriceUOM_SPUN = req.saledPriceUOM_SPUN;
-            entity.packagingTerms_TEPA = req.packagingTerms_TEPA;
-            entity.EDIFACTPrice_EDFP = req.EDIFACTPrice_EDFP;
-            entity.requestedDeliveryDate_DWDZ = req.requestedDeliveryDate_DWDZ;
-            entity.requestedDeliveryTime_DWHZ = req.requestedDeliveryTime_DWHZ;
-            entity.confirmedDeliveryTime_COHM = req.confirmedDeliveryTime_COHM;
-            entity.confirmedDeliveryDate_CODZ = req.confirmedDeliveryDate_CODZ;
-            entity.confirmedDeliveryTime_COHZ = req.confirmedDeliveryTime_COHZ;
-            entity.mainProduct_HDPR = req.mainProduct_HDPR;
-            entity.addressNumber_ADID = req.addressNumber_ADID;
-            entity.lineSuffix_CUSX = req.lineSuffix_CUSX;
-            entity.statusDiscount_DICI = req.statusDiscount_DICI;
-            entity.trimOrderId = req.trimOrderId;
-            const save = await this.colineRepo.save(entity)
-            if (save) {
-                return new CommonResponseModel(true, 1, 'Created Successfully', save)
-            } else {
-                return new CommonResponseModel(false, 0, 'Something went wrong')
-            }
+    // async createCOLineInternal(req: COLineRequest): Promise<CommonResponseModel> {
+    //     try {
+    //         const entity = new CoLine()
+    //         entity.itemNumber = req.itemNumber;
+    //         entity.orderNumber = req.orderNumber;
+    //         entity.colorCode = req.colorCode;
+    //         entity.color = req.color;
+    //         entity.sizeCode = req.sizeCode;
+    //         entity.size = req.size;
+    //         entity.itemCode = req.itemCode;
+    //         entity.item = req.item;
+    //         entity.destination = req.destination;
+    //         entity.company_CONO = req.company_CONO;
+    //         entity.temporaryOrderNumber_ORNO = req.temporaryOrderNumber_ORNO;
+    //         entity.itemNumber_ITNO = req.itemNumber_ITNO;
+    //         entity.orderedQuantity_ORQT = req.orderedQuantity_ORQT;
+    //         entity.warehouse_WHLO = req.warehouse_WHLO;
+    //         entity.requestedDeliveryDate_DWDT = req.requestedDeliveryDate_DWDT;
+    //         entity.jointDeliveryDate_JDCD = req.jointDeliveryDate_JDCD;
+    //         entity.customersOrderNumber_CUPO = req.customersOrderNumber_CUPO;
+    //         entity.salesPrice_SAPR = req.salesPrice_SAPR;
+    //         entity.discountAmount1_DIA1 = req.discountAmount1_DIA1;
+    //         entity.discountAmount2_DIA2 = req.discountAmount2_DIA2;
+    //         entity.discountAmount3_DIA3 = req.discountAmount3_DIA3;
+    //         entity.discountAmount4_DIA4 = req.discountAmount4_DIA4;
+    //         entity.discountAmount5_DIA5 = req.discountAmount5_DIA5;
+    //         entity.discountAmount6_DIA6 = req.discountAmount6_DIA6;
+    //         entity.deliverySpecification_DLSP = req.deliverySpecification_DLSP;
+    //         entity.deliverySpecificationText_DLSX = req.deliverySpecificationText_DLSX;
+    //         entity.oldCFIN_CFXX = req.oldCFIN_CFXX;
+    //         entity.simulationsNumber_ECVS = req.simulationsNumber_ECVS;
+    //         entity.alternateUM_ALUN = req.alternateUM_ALUN;
+    //         entity.confirmedDateOfDelivery_CODT = req.confirmedDateOfDelivery_CODT;
+    //         entity.itemDescription_ITDS = req.itemDescription_ITDS;
+    //         entity.discountPercent1_DIP1 = req.discountPercent1_DIP1;
+    //         entity.discountPercent2_DIP2 = req.discountPercent2_DIP2;
+    //         entity.discountPercent3_DIP3 = req.discountPercent3_DIP3;
+    //         entity.discountPercent4_DIP4 = req.discountPercent4_DIP4;
+    //         entity.discountPercent5_DIP5 = req.discountPercent5_DIP5;
+    //         entity.discountPercent6_DIP6 = req.discountPercent6_DIP6;
+    //         entity.aliasQualifier_ALWT = req.aliasQualifier_ALWT;
+    //         entity.blanketAgreementNumber_AGNO = req.blanketAgreementNumber_AGNO;
+    //         entity.container_CAMU = req.container_CAMU;
+    //         entity.projectNumber_PROJ = req.projectNumber_PROJ;
+    //         entity.projectElement_ELON = req.projectElement_ELON;
+    //         entity.customerOrderNumber_CUOR = req.customerOrderNumber_CUOR;
+    //         entity.customersPackagingIdentity_CUPA = req.customersPackagingIdentity_CUPA;
+    //         entity.requestedDeliveryTime_DWHM = req.requestedDeliveryTime_DWHM;
+    //         entity.standardQuantity_D1QT = req.standardQuantity_D1QT;
+    //         entity.packaging_PACT = req.packaging_PACT;
+    //         entity.aliasNumber_POPN = req.aliasNumber_POPN;
+    //         entity.salesPriceQuantity_SACD = req.salesPriceQuantity_SACD;
+    //         entity.saledPriceUOM_SPUN = req.saledPriceUOM_SPUN;
+    //         entity.packagingTerms_TEPA = req.packagingTerms_TEPA;
+    //         entity.EDIFACTPrice_EDFP = req.EDIFACTPrice_EDFP;
+    //         entity.requestedDeliveryDate_DWDZ = req.requestedDeliveryDate_DWDZ;
+    //         entity.requestedDeliveryTime_DWHZ = req.requestedDeliveryTime_DWHZ;
+    //         entity.confirmedDeliveryTime_COHM = req.confirmedDeliveryTime_COHM;
+    //         entity.confirmedDeliveryDate_CODZ = req.confirmedDeliveryDate_CODZ;
+    //         entity.confirmedDeliveryTime_COHZ = req.confirmedDeliveryTime_COHZ;
+    //         entity.mainProduct_HDPR = req.mainProduct_HDPR;
+    //         entity.addressNumber_ADID = req.addressNumber_ADID;
+    //         entity.lineSuffix_CUSX = req.lineSuffix_CUSX;
+    //         entity.statusDiscount_DICI = req.statusDiscount_DICI;
+    //         entity.trimOrderId = req.trimOrderId;
+    //         const save = await this.colineRepo.save(entity)
+    //         if (save) {
+    //             return new CommonResponseModel(true, 1, 'Created Successfully', save)
+    //         } else {
+    //             return new CommonResponseModel(false, 0, 'Something went wrong')
+    //         }
 
-        } catch (err) {
-            throw err
-        }
-    }
+    //     } catch (err) {
+    //         throw err
+    //     }
+    // }
 
-    async updateStatusAfterCoLineCreationInM3(req: CoLineStatusReq): Promise<CommonResponseModel> {
-        try {
-            const statusUpdate = await this.colineRepo.update({ coLineId: req.coLineId }, { status: req.status })
-            if (statusUpdate.affected) {
-                return new CommonResponseModel(true, 1, 'Status Updated')
-            } else {
-                return new CommonResponseModel(false, 0, 'Something went erong in status update')
-            }
-        } catch (err) {
-            throw (err)
-        }
-    }
+    // async updateStatusAfterCoLineCreationInM3(req: CoLineStatusReq): Promise<CommonResponseModel> {
+    //     try {
+    //         const statusUpdate = await this.colineRepo.update({ coLineId: req.coLineId }, { status: req.status })
+    //         if (statusUpdate.affected) {
+    //             return new CommonResponseModel(true, 1, 'Status Updated')
+    //         } else {
+    //             return new CommonResponseModel(false, 0, 'Something went erong in status update')
+    //         }
+    //     } catch (err) {
+    //         throw (err)
+    //     }
+    // }
 
     async getPhaseMonthData(req): Promise<CommonResponseModel> {
         try {
@@ -2876,13 +2877,13 @@ export class OrdersService {
                 let dtoData: SaveOrderDto;
                 if (updatedObj.Order_Plan_Number !== null) {
                     if (uploadType == 'Manual') {
-                        updatedObj.whDate = updatedObj.WH ?  moment(updatedObj.WH).add(1, 'days').format('YYYY-MM-DD') : null
-                        updatedObj.exfDate =updatedObj.EXF ?  moment(updatedObj.EXF).add(1, 'days').format('YYYY-MM-DD') : null
-                        updatedObj.WH =updatedObj.WH ? moment(updatedObj.WH).add(1, 'days').format('MM-DD') : null
-                        updatedObj.EXF = updatedObj.EXF ?  moment(updatedObj.EXF).add(1, 'days').format('MM-DD') : null
-                        
+                        updatedObj.whDate = updatedObj.WH ? moment(updatedObj.WH).add(1, 'days').format('YYYY-MM-DD') : null
+                        updatedObj.exfDate = updatedObj.EXF ? moment(updatedObj.EXF).add(1, 'days').format('YYYY-MM-DD') : null
+                        updatedObj.WH = updatedObj.WH ? moment(updatedObj.WH).add(1, 'days').format('MM-DD') : null
+                        updatedObj.EXF = updatedObj.EXF ? moment(updatedObj.EXF).add(1, 'days').format('MM-DD') : null
+
                     }
-                    dtoData = new SaveOrderDto(null, updatedObj.Year, updatedObj.Planning_Ssn, updatedObj.Biz, updatedObj.Core_Category, updatedObj.Planning_Sum, updatedObj.Coeff, updatedObj.Publish_Flag_for_Factory, updatedObj.Order_Plan_Number, (updatedObj.Order_Plan_Qty).toString().replace(/,/g, ''), (updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g, ''), updatedObj.Prod_Plan_Type, updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null, updatedObj.EXF_ETD, updatedObj.ETD_WH, updatedObj.Sample, updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD') : null, id, null, 'bidhun',null,null,updatedObj.whDate ? moment(updatedObj.whDate).format('YYYY-MM-DD') : null,updatedObj.exfDate ? moment(updatedObj.exfDate).format('YYYY-MM-DD') : null)
+                    dtoData = new SaveOrderDto(null, updatedObj.Year, updatedObj.Planning_Ssn, updatedObj.Biz, updatedObj.Core_Category, updatedObj.Planning_Sum, updatedObj.Coeff, updatedObj.Publish_Flag_for_Factory, updatedObj.Order_Plan_Number, (updatedObj.Order_Plan_Qty).toString().replace(/,/g, ''), (updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g, ''), updatedObj.Prod_Plan_Type, updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null, updatedObj.EXF_ETD, updatedObj.ETD_WH, updatedObj.Sample, updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD') : null, id, null, 'bidhun', null, null, updatedObj.whDate ? moment(updatedObj.whDate).format('YYYY-MM-DD') : null, updatedObj.exfDate ? moment(updatedObj.exfDate).format('YYYY-MM-DD') : null)
                     let newDate
                     if (dtoData.exf == null && dtoData.publishFlagForFactory !== 'NotPub') {
                         let inputDate = dtoData.wh ? moment(dtoData.wh).format('MM-DD') : null;
@@ -2921,7 +2922,7 @@ export class OrdersService {
                     dtoData.version = version
                     if (details) {
                         const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber }, {
-                            year: dtoData.year, planningSsn: dtoData.planningSsn, biz: dtoData.biz, coreCategory: dtoData.coreCategory, planningSum: dtoData.planningSum, coeff: dtoData.coeff, publishFlagForFactory: dtoData.publishFlagForFactory, orderPlanQty: dtoData.orderPlanQty, orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff, prodPlanType: dtoData.prodPlanType, wh: dtoData.wh, exfEtd: dtoData.exfEtd, etdWh: dtoData.etdWh, sample: dtoData.sample, version: dtoData.version, fileId: dtoData.fileId, updatedUser: dtoData.createdUser, exf: dtoData.exf,whDate:dtoData.whDate,exfDate:dtoData.exfDate
+                            year: dtoData.year, planningSsn: dtoData.planningSsn, biz: dtoData.biz, coreCategory: dtoData.coreCategory, planningSum: dtoData.planningSum, coeff: dtoData.coeff, publishFlagForFactory: dtoData.publishFlagForFactory, orderPlanQty: dtoData.orderPlanQty, orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff, prodPlanType: dtoData.prodPlanType, wh: dtoData.wh, exfEtd: dtoData.exfEtd, etdWh: dtoData.etdWh, sample: dtoData.sample, version: dtoData.version, fileId: dtoData.fileId, updatedUser: dtoData.createdUser, exf: dtoData.exf, whDate: dtoData.whDate, exfDate: dtoData.exfDate
                         })
                         if (!updateOrder.affected) {
                             await transactionManager.releaseTransaction();
@@ -2932,10 +2933,10 @@ export class OrdersService {
                         const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id, details.productionPlanId, 10, dtoData.exf);
                         const saveExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedExcelEntity);
                         if (saveExcelEntity) {
-                            console.log(details,'------')
+                            console.log(details, '------')
                             //difference insertion to order diff table
                             const existingDataKeys = Object.keys(details)
-                            console.log(existingDataKeys,'---existingDataKeys---')
+                            console.log(existingDataKeys, '---existingDataKeys---')
                             const currentDataKeys = Object.keys(dtoData)
                             for (const existingDataKey of existingDataKeys) {
                                 if (details[existingDataKey] != dtoData[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month' && existingDataKey != 'productionPlanId') {
@@ -3317,7 +3318,7 @@ export class OrdersService {
     }
 
 
-    
+
     async seasonWiseReportData(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
 
         console.log(req,"==ser=")
@@ -3338,32 +3339,322 @@ export class OrdersService {
 
         query += ` GROUP BY MONTH('${qtyLocationDate}'),planning_sum order by MONTH('${qtyLocationDate}')`;
 
-        const data = await this.ordersRepository.query(query)
-        console.log(data,'$$$$$$$$$$$$$$$$$$$$$$')
-        const sizeDataMap = new Map<string, sesaonWisereportModel>();
-        for(const rec of data){
-            if(!sizeDataMap.has(rec.itemName)){
-                sizeDataMap.set(rec.itemName, new sesaonWisereportModel(rec.itemName,rec.YEAR,rec.plannedSeason,[]))
+            const data = await this.ordersRepository.query(query)
+            console.log(data, '$$$$$$$$$$$$$$$$$$$$$$')
+            const sizeDataMap = new Map<string, sesaonWisereportModel>();
+            for (const rec of data) {
+                if (!sizeDataMap.has(rec.itemName)) {
+                    sizeDataMap.set(rec.itemName, new sesaonWisereportModel(rec.itemName, rec.YEAR, rec.plannedSeason, []))
+                }
+                const monthData = sizeDataMap.get(rec.itemName).MonthItemData
+                if (rec.itemName != null) {
+                    monthData.push(new MonthItemData(rec.MONTHNAME, rec.totalQuantity))
+                }
             }
-            const monthData=sizeDataMap.get(rec.itemName).MonthItemData
-            if(rec.itemName != null){
-                monthData.push(new MonthItemData(rec.MONTHNAME,rec.totalQuantity))
+            const detailedarray: sesaonWisereportModel[] = Array.from(sizeDataMap.values());
+            console.log(detailedarray, '$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+
+            if (detailedarray) {
+                return new CommonResponseModel(true, 1, 'data retrived sucessfully', detailedarray)
+            } else {
+                return new CommonResponseModel(true, 1, 'data retrived sucessfully', [])
+
             }
-        }
-        const detailedarray :sesaonWisereportModel[]= Array.from(sizeDataMap.values());
-        console.log(detailedarray,'$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-      
-        if(detailedarray){
-            return new CommonResponseModel(true,1,'data retrived sucessfully',detailedarray)
-        }else{
-            return new CommonResponseModel(true,1,'data retrived sucessfully',[])
 
+        } catch (err) {
+            throw err
         }
 
-    }catch(err){
-        throw err
     }
 
-}
+    async coLineCreationReq(req: any): Promise<CommonResponseModel> {
+        // const data = this.coLineRepository.findOne({ where: { buyerPo: req.purchaseOrderNumber, lineItemNo: req.poLineItemNumber } })
+        // if (data) {
+        //     return new CommonResponseModel(false, 1, 'CO-Line request created already')
+        // }
+        if (req.itemNo == undefined || null) {
+            return new CommonResponseModel(false, 1, 'Please enter Item No')
+        }
+        const entity = new COLineEntity()
+        entity.buyer = req.buyer ? req.buyer : 'Nike-U12'
+        entity.buyerPo = req.purchaseOrderNumber;
+        entity.lineItemNo = req.poLineItemNumber;
+        entity.itemNo = req.itemNo
+        entity.status = 'Open';
+        entity.createdUser = 'Admin';
+        const save = await this.colineRepo.save(entity);
+        if (save) {
+            return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
+        } else {
+            return new CommonResponseModel(false, 1, 'CO-Line request failed')
+        }
+    }
+
+    async createCOline(req: any): Promise<CommonResponseModel> {
+        const poDetails = await this.colineRepo.getDataforCOLineCreation();
+        if (!poDetails.length) {
+            return new CommonResponseModel(false, 0, 'No CO-Line creation requests')
+        }
+        let driver = await new Builder().forBrowser(Browser.CHROME).build();
+        try {
+            await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447#');
+
+            await driver.findElement(By.id('username')).sendKeys('60566910');
+            await driver.findElement(By.id('password')).sendKeys('60566910');
+            await driver.findElement(By.css('button.btn-primary')).click();
+
+            await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447')
+            const newPAge = await driver.executeScript(
+                `javascript:openAccessPage('http://intranet.shahi.co.in:8080/IntraNet/CRMPRDNEW.jsp', 'CRM', '2448', 'R', '60566910', 'N', '20634576', 'null');`
+            );
+            const windowHandles = await driver.getAllWindowHandles()
+            await driver.switchTo().window(windowHandles[1]);
+            const frame = await driver.findElement(By.id('mainFrame'));
+            await driver.switchTo().frame(frame)
+            for (const po of poDetails) {
+                const coLine = new CoLineRequest();
+                let buyerValue1;
+                let buyerValue2;
+                let agent;
+                let buyerAddress;
+                let deliveryAddress;
+                let pkgTerms;
+                let paymentTerms;
+                if (po.buyer === 'Uniqlo-U12') {
+                    const req = new TrimDetailsRequest()
+                    req.orderNumber = po.buyer_po;
+                    const response = await this.getTrimOrderDetails(req);
+                    const coData = response.data;
+                    coLine.buyerPo = coData.buyerPo;
+                    const gacDate = new Date(coData.deliveryDate); // Parse the GAC date
+                    // Calculate the date 7 days before the GAC date
+                    const sevenDaysBeforeGAC = new Date(gacDate);
+                    sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
+                    // Format the result as 'DD/MM/YYYY'
+                    const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
+                    coLine.deliveryDate = moment(coData.deliveryDate).format('DD/MM/YYYY')
+                    coLine.exFactoryDate = exFactoryDate
+                    coLine.salesPrice = coData.salesPrice
+                    coLine.currency = coData.currency
+                    coLine.destinations = coData.destinations
+                    const request = { country: coData.destinations[0]?.name }
+                    const address = await axios.post(`https://uniqlov2-backend.xpparel.com/api/address/getAddressInfoByCountry`, request);
+                    const addressData = address.data.data[0];
+                    buyerAddress = addressData?.buyerAddress ? addressData?.buyerAddress : 71;
+                    deliveryAddress = addressData?.deliveryAddress
+                    buyerValue1 = "UNQ-UNIQLO"
+                    buyerValue2 = "UNI0003-UNIQLO CO LTD"
+                    agent = "-NA"
+                    pkgTerms = "STD-STD PACK"
+                    paymentTerms = "048-TT 15 DAYS"
+                }
+                const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
+                const allApps = await apps.findElements(By.tagName('span'));
+                for (const app of allApps) {
+                    if ((await app.getAttribute('innerText')).includes('Style Orders')) {
+                        await driver.executeScript('arguments[0].click();', app);
+                        break;
+                    }
+                }
+                await driver.wait(until.elementLocated(By.id('styleid2H')))
+                await driver.findElement(By.id('styleid2H')).sendKeys(po.item_no);
+                await driver.sleep(10000)
+                await driver.wait(until.elementLocated(By.id('bgpset1')));
+                const dropdownElement1 = await driver.findElement(By.id('bgpset1'));
+                const dropdown1 = await driver.wait(until.elementIsVisible(dropdownElement1)).then(element => new Select(element))
+                await dropdown1.selectByValue(buyerValue1)
+                // await driver.executeScript(`arguments[0].value = '${buyerValue1}';`, buyerDropDown1)
+                await driver.sleep(10000)
+                await driver.wait(until.elementLocated(By.id('byr')));
+                const dropdownElement2 = await driver.findElement(By.id('byr'));
+                const dropdown2 = await driver.wait(until.elementIsVisible(dropdownElement2)).then(element => new Select(element))
+                await dropdown2.selectByValue(buyerValue2)
+                // await driver.executeScript(`arguments[0].value = '${buyerValue2}';`, dropdownElement2)
+                await driver.sleep(5000)
+                await driver.wait(until.elementLocated(By.id('CreateOrderID')))
+                await driver.sleep(3000)
+                await driver.findElement(By.id('CreateOrderID')).click();
+                await driver.wait(until.elementLocated(By.id('bpo')))
+                await driver.findElement(By.id('bpo')).clear();
+                await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
+                await driver.wait(until.elementLocated(By.id('agnt')));
+                const agentDropDown = await driver.findElement(By.id('agnt'));
+                await driver.executeScript(`arguments[0].value = '${agent}';`, agentDropDown)
+                await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
+                await driver.findElement(By.name('dojo.EXFACTORYDATE')).clear();
+                await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
+                await driver.wait(until.elementLocated(By.name('dojo.delydt')));
+                await driver.findElement(By.name('dojo.delydt')).clear();
+                await driver.findElement(By.name('dojo.delydt')).sendKeys(coLine.deliveryDate);
+                await driver.wait(until.elementLocated(By.name('byd')));
+                const dropdown = await driver.findElement(By.name('byd'));
+                const options = await dropdown.findElements(By.tagName('option'));
+                const optionValues = [];
+                for (const option of options) {
+                    const value = await option.getAttribute('value');
+                    optionValues.push(value);
+                }
+                const number = optionValues.find(value => value.includes(buyerAddress)); // give the dynamic value here
+                await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
+                await driver.wait(until.elementLocated(By.xpath('//*[@id="cur"]')));
+                const curDropdown = await driver.findElement(By.xpath('//*[@id="cur"]'));
+                const cur = coLine.currency; // give the dynamic value here
+                await driver.executeScript(`arguments[0].value = '${cur}';`, curDropdown);
+                await driver.wait(until.elementLocated(By.xpath('//*[@id="price"]')));
+                await driver.findElement(By.xpath('//*[@id="price"]')).clear();
+                await driver.findElement(By.xpath('//*[@id="price"]')).sendKeys(coLine.salesPrice);
+
+                await driver.wait(until.elementLocated(By.id('packtrm')));
+                const pkgTermsDropDown = await driver.findElement(By.id('packtrm'));
+                await driver.executeScript(`arguments[0].value = '${pkgTerms}';`, pkgTermsDropDown)
+                await driver.wait(until.elementLocated(By.id('ptr')));
+                const ptrDropDown = await driver.findElement(By.id('ptr'));
+                await driver.executeScript(`arguments[0].value = '${paymentTerms}';`, ptrDropDown)
+                await driver.sleep(10000)
+                for (let dest of coLine.destinations) {
+                    const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
+                    const colorsTabs = await colorsContainer.findElements(By.tagName('span'));
+                    for (const tab of colorsTabs) {
+                        if ((await tab.getAttribute('innerText')) == dest.name) {
+                            await driver.executeScript('arguments[0].click();', tab);
+                            for (let [colorIndex, color] of dest.colors.entries()) {
+                                for (let [sizeIndex, size] of color.sizes.entries()) {
+                                    if (colorIndex === 0) {
+                                        // Find all the labels in the second row.
+                                        await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
+                                        let labelElements: any[] = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
+                                        const fileteredElements: any[] = [];
+                                        for (const labelElement of labelElements) {
+                                            const ele = (await labelElement.getText())?.trim();
+                                            ele.length > 0 ? fileteredElements.push(labelElement) : '';
+                                        }
+                                        const destToTabIndexMapping = {
+                                            'UQAU': 4,
+                                            'UQEU': 5,
+                                            'UQJP': 2,
+                                            'UQIN': 6,  // common case for 'UQIN' in the original conditions
+                                            'UQMY': 3,
+                                            'UQSG': 2
+                                            // Add more mappings as needed
+                                        };
+                                        let tabIndex = destToTabIndexMapping[dest.name] || 1; // Default to 1 if no match
+                                        // Additional conditions for 'UQIN' with specific item numbers
+                                        if ((po.item_no === '691M' || po.item_no === '694M') && dest.name === 'UQIN') {
+                                            tabIndex = 4;
+                                        }
+                                        if (po.item_no === '102P' && dest.name === 'UQIN') {
+                                            tabIndex = 3;
+                                        }
+                                        const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
+                                        const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
+                                        await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
+                                        const dropdown = await driver.findElement(By.id(`bydline/${string}`));
+                                        const options = await dropdown.findElements(By.tagName('option'));
+                                        const optionValues = [];
+                                        for (const option of options) {
+                                            const value = await option.getAttribute('value');
+                                            optionValues.push(value);
+                                        }
+                                        const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
+                                        await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
+                                        // Find all the input fields in the first row.
+                                        const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
+                                        // Create a map of size labels to input fields.
+                                        const sizeToInputMap = {};
+                                        for (let i = 0; i < fileteredElements.length; i++) {
+                                            const label = (await fileteredElements[i].getText()).trim().toUpperCase().toString(); // Remove leading/trailing spaces
+                                            if (label.length)
+                                                sizeToInputMap[label] = inputElements[i];
+                                        }
+                                        const inputField = await sizeToInputMap[size.name.trim().toUpperCase().toString()];
+                                        if (inputField) {
+                                            // Clear the existing value (if any) and fill it with the new price.
+                                            await inputField.clear();
+                                            await inputField.sendKeys(size.price);
+                                        }
+                                    }
+                                    const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
+                                    const input = await driver.wait(until.elementLocated(By.id(inputId)))
+                                    await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
+                                }
+                            }
+                        }
+                    }
+                }
+                await driver.sleep(10000)
+                const element = await driver.findElement(By.id('OrderCreateID')).click();
+                await driver.wait(until.alertIsPresent(), 10000);
+                // Switch to the alert and accept it (click "OK")
+                const alert = await driver.switchTo().alert();
+                await alert.accept();
+                if (await this.isAlertPresent(driver)) {
+                    const alert = await driver.switchTo().alert();
+                    const alertText = await alert.getText();
+                    const update = await this.colineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText });
+                    await alert.accept();
+                    await driver.sleep(5000)
+                    await driver.navigate().refresh();
+                    await driver.quit();
+                } else {
+                    if (po.buyer == 'Uniqlo-U12') {
+                        await driver.sleep(10000)
+                        await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
+                        const coNoElement = await driver.findElement(By.xpath('//*[@id="orno"]'));
+                        const coNo = await coNoElement.getAttribute('value');
+                        await driver.sleep(5000)
+                        const currentDate = new Date();
+                        const day = currentDate.getDate().toString().padStart(2, '0');
+                        const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
+                        const year = currentDate.getFullYear().toString().slice(-2);
+                        const currentDateFormatted = `${day}-${month}-${year}`;
+                        if (coNo) {
+                            const update = await this.colineRepo.update({ buyerPo: po.buyer_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+                            // await driver.navigate().refresh();
+                            await driver.sleep(10000)
+                        } else {
+                            const update = await this.colineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed' });
+                            // await driver.navigate().refresh();
+                            await driver.sleep(10000)
+                        }
+                    } else {
+                        await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
+                        const coNoElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[14]/td[7]'));
+                        const coNo = await coNoElement.getAttribute('innerText');
+                        const currentDate = new Date();
+                        const day = currentDate.getDate().toString().padStart(2, '0');
+                        const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
+                        const year = currentDate.getFullYear().toString().slice(-2);
+                        const currentDateFormatted = `${day}-${month}-${year}`;
+                        if (coNo) {
+                            const update = await this.colineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+                            // await driver.navigate().refresh();
+                            await driver.sleep(10000)
+                        } else {
+                            const update = await this.colineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed' });
+                            // await driver.navigate().refresh();
+                            await driver.sleep(10000)
+                        }
+                    }
+                }
+            }
+            return new CommonResponseModel(true, 1, `COline created successfully`)
+        } catch (err) {
+            console.log(err, 'error');
+            return new CommonResponseModel(false, 0, err)
+        }
+        // finally {
+        //     driver.quit()
+        // }
+    }
+
+    async isAlertPresent(driver) {
+        try {
+            await driver.switchTo().alert();
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
 }
 
