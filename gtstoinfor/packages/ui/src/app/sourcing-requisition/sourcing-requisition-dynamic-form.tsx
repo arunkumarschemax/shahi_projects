@@ -7,12 +7,13 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { EditOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
-import { BuyerIdReq, BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, M3MastersCategoryReq, M3TrimType, M3trimsDTO, SourcingRequisitionReq, StyleIdReq, TrimIdRequestDto, UomCategoryEnum, buyerReq } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, M3MastersCategoryReq, M3TrimType, M3trimsDTO, MenusAndScopesEnum, SourcingRequisitionReq, StyleIdReq, TrimIdRequestDto, UomCategoryEnum, buyerReq } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import AlertMessages from "../common/common-functions/alert-messages";
 import M3Items from "../masters/m3-items/m3-items-form";
 import { useIAMClientState } from "../common/iam-client-react";
+import RolePermission from "../role-permissions";
 
 
 const {Option} = Select;
@@ -113,6 +114,10 @@ export const SourcingRequisitionDynamicForm = () => {
         getFabricTypes()
         // getM3TrimsTypes()
         // getTrimCategory()
+    },[])
+
+    useEffect(()=>{
+        checkAccess(MenusAndScopesEnum.Scopes.fabricTab) ? setTabName('Fabric') : setTabName('Trim')
     },[])
 
     const getFabricTypes = () => {
@@ -898,7 +903,34 @@ const onTrimChange = (val, option) => {
             console.log("iii");
         }
     }
-    
+    const checkAccess = (buttonParam) => {   
+        const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus.Indent,buttonParam)
+        // console.log(accessValue,'access');
+        
+        return accessValue
+    }
+const options = () => {
+    let segmentOptions = [
+      { key: 'Fabric', label: 'Fabric' },
+      { key: 'Trim', label: 'Trim' }
+    ];
+  
+    if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
+        // setTabName('Fabric')
+      segmentOptions = segmentOptions.filter((e) => e.label === 'Fabric');
+    }
+    if (checkAccess(MenusAndScopesEnum.Scopes.trimTab)) {
+        // setTabName('Trim')
+      segmentOptions = segmentOptions.filter((e) => e.label === 'Trim');
+    }
+    return segmentOptions.map((operation, index) => ({
+      label: <b>{operation.label}</b>,
+      value: operation.label,
+      key: index.toString(),
+  
+    }));
+  };
+  const segmentedOptions = options();
     return(
         <><Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
             <Form form={sourcingForm} layout="vertical">
@@ -948,24 +980,27 @@ const onTrimChange = (val, option) => {
             <Row gutter={8}>
                 <Space direction="vertical" style={{ fontSize: "16px", width: '100%' }}>
                     <Segmented onChange={onSegmentChange} style={{ backgroundColor: '#68cc6b' }}
-                        options={[
-                            {
-                                label: (
-                                    <>
-                                        <b style={{ fontSize: "12px" }}>Fabric Details</b>
-                                    </>
-                                ),
-                                value: "Fabric",
-                            },
-                            {
-                                label: (
-                                    <>
-                                        <b style={{ fontSize: "12px" }}>Trim Details</b>
-                                    </>
-                                ),
-                                value: "Trim",
-                            },
-                        ]} />
+                        defaultValue={checkAccess(MenusAndScopesEnum.Scopes.fabricTab)?"Fabric":checkAccess(MenusAndScopesEnum.Scopes.trimTab) ? "Trim":''}
+                        // options={[
+                        //     {
+                        //         label: (
+                        //             <>
+                        //                 <b style={{ fontSize: "12px" }}>Fabric Details</b>
+                        //             </>
+                        //         ),
+                        //         value: "Fabric",
+                        //     },
+                        //     {
+                        //         label: (
+                        //             <>
+                        //                 <b style={{ fontSize: "12px" }}>Trim Details</b>
+                        //             </>
+                        //         ),
+                        //         value: "Trim",
+                        //     },
+                        // ]} 
+                        options= {segmentedOptions}
+                        />
                     <div>
                         {tabName === 'Fabric' ? (<>
                             <Card>
@@ -1476,7 +1511,7 @@ const onTrimChange = (val, option) => {
             </Row>
             <Row justify={'end'}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }}>
-                    <Button type="primary" onClick={onSubmit} disabled={fabricTableData.length > 0 && trimsTableData.length > 0 ? false : true}>Submit</Button>
+                    <Button type="primary" onClick={onSubmit} disabled={fabricTableData.length>0 || trimsTableData.length > 0 ?false:true}>Submit</Button>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }}>
                     <Button onClick={onReset}>Reset</Button>

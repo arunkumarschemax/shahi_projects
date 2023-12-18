@@ -358,7 +358,7 @@ const SampleRequestReport = () => {
   return (
     <div>
       <Card
-        title={<span>Sample Raw Material </span>}
+        title={<span>Sample Material Status</span>}
         // style={{ textAlign: "center" }}
         headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       >
