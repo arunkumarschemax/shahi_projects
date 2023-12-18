@@ -50,7 +50,6 @@ import { promises } from 'dns';
 const { Builder, Browser, By, Capabilities, until, Select } = require('selenium-webdriver');
 const chrome = require('selenium-webdriver/chrome')
 import { Cron } from '@nestjs/schedule';
-import { CoLineRepository } from './repository/co-line-repo';
 
 
 @Injectable()
