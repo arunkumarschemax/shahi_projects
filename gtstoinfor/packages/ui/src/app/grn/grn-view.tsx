@@ -315,14 +315,14 @@ import { useIAMClientState } from "../common/iam-client-react";
                   {poNoFilter.map((e) => (
                     <Option key={e.poNumber} value={e.poNumber}>
                       {e.poNumber}
-                    </Option>
+                    </Option>                     
                   ))}
                 </Select>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
               <Form.Item name="grnNo" label="GRN No">
-                <Select showSearch allowClear optionFilterProp="children" placeholder="Select GRB No">
+                <Select showSearch allowClear optionFilterProp="children" placeholder="Select GRN No">
                   {grnNoFilter.map((e) => (
                     <Option key={e.grnId} value={e.grnNo}>
                       {e.grnNo}
@@ -353,7 +353,11 @@ import { useIAMClientState } from "../common/iam-client-react";
             </Col>
           </Row>
         </Form>
-        <Table columns={tableColumns} dataSource={filterData} />
+        <Table columns={tableColumns} dataSource={filterData} pagination={{
+          onChange(current) {
+            setPage(current);
+          }
+        }}/>
       </Card>
     );
     

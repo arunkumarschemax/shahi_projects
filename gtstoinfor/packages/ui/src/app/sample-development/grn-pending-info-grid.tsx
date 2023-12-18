@@ -206,9 +206,9 @@ const getMaterial=()=>{
                    placeholder="Select MaterialType "
                    optionFilterProp="children"
                    allowClear>
-                    {grndata?.map((qc: any) => (
+                    {grndata.map((qc: any) => (
                   <Select.Option key={qc.grnNumber} value={qc.grnNumber}>
-                    {qc.grnItemNo}
+                    {qc.grnNumber}
                   </Select.Option>
                 ))}
                  </Select>
