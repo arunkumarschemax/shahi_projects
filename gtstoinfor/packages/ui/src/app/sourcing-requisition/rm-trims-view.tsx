@@ -926,6 +926,11 @@ export const RmTrimsView = () => {
         dataSource={data.length > 0 ? data : []}
         columns={columns}
         size="small"
+        pagination={{
+          onChange(current) {
+            setPage(current);
+          }
+        }}
       />
       <Modal
             className='rm-'
@@ -939,7 +944,6 @@ export const RmTrimsView = () => {
             footer={[]}
         >
             <Reclassification data = {rowData} buyer= {form.getFieldValue("buyerId")} type="stock" status={setModel}/>
-
             </Modal>
     </Card>
   );

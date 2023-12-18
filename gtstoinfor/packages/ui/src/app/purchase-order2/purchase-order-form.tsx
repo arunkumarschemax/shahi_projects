@@ -283,6 +283,15 @@ export const PurchaseOrderForm = () => {
             setSampleDropDownVisible(true)
         }
     }
+    const disabledDate = (current) => {
+        // console.log(current.valueOf(), 'current');
+         return current.valueOf() < Date.now();
+         
+       };
+     const disabledDate2 = (current) => {
+        // console.log(current.valueOf(), 'current');
+         return current.valueOf() < Date.now();
+       };
     return (
         <>
             <Card title='Purchase Order' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/purchase-view' > <Button className='panel_button' >View </Button></Link>}>
@@ -303,7 +312,7 @@ export const PurchaseOrderForm = () => {
                             </Form.Item>
                         </Col>
 
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ display: sampleDropDownVisible == true ? '' : 'none' }}>
+                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ display: sampleDropDownVisible == true ? '' : 'none' }}>
                             <Form.Item name="requestNo" label="Request Number" rules={[{ required: sampleDropDownVisible, message: 'PO Type is required' }]}>
                                 <Select
                                     mode="multiple"
@@ -326,7 +335,7 @@ export const PurchaseOrderForm = () => {
                                     })}
                                 </Select>
                             </Form.Item>
-                        </Col>
+                        </Col> */}
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ display: indentDropDownVisible == true ? '' : 'none' }}>
                             <Form.Item name='indentId' label='Indent Code'
                                 rules={[{ required: indentDropDownVisible, message: 'IndentCode is required' }]}>
@@ -390,7 +399,7 @@ export const PurchaseOrderForm = () => {
                         </Form.Item>
                     </Col> */}
 
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='vendorId' label='Vendor' rules={[{ required: true, message: 'vendor is required' }]}>
                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor'>
                                     {vendordata.map(e => {
@@ -403,7 +412,7 @@ export const PurchaseOrderForm = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='purchaseOrderDate' label='Purchase Order Date' rules={[{ required: true, message: 'purchaseOrderDate is required' }]}>
-                                <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday />
+                                <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday disabledDate={disabledDate}/>
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>

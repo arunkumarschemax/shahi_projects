@@ -173,13 +173,14 @@ export class LocationMappingService {
             WHERE gi.location_mapped_status != 'COMPLETED' 
             `
             let param :any={}
-    // if(req){
-      if (req.externalRefNo != undefined){
+    if(req){
+      if (req?.externalRefNo != undefined){
         query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
       }
     
    
-    // }
+    }
+    query += ` GROUP BY g.grn_number`
     
             const res = await AppDataSource.query(query,param);
             if (res) {

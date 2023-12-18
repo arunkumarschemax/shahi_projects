@@ -310,13 +310,20 @@ import RolePermission from "../role-permissions";
           },
       },
       {
+        title: "Allocated Quantity",
+        dataIndex: "receivedQty",
+        sorter: (a, b) => a.receivedQty.localeCompare(b.receivedQty),
+        sortDirections: ["descend", "ascend"],
+      },
+      {
         title: "To Be Procured",
         dataIndex: "tobeProcured",
+        sorter: (a, b) => a.tobeProcured.localeCompare(b.tobeProcured),
         render: (text, record) => {
           return (
             <>
-              {Number(record.totalRequirement) - Number(record.availableQuantity) > 0
-                ? Number(record.totalRequirement) - Number(record.availableQuantity)
+              {Number(record.tobeProcured) > 0
+                ? Number(record.tobeProcured).toFixed(2)
                 : 0}
             </>
           );
@@ -382,6 +389,26 @@ import RolePermission from "../role-permissions";
           },
       },
       {
+        title: "Allocated Quantity",
+        dataIndex: "receivedQty",
+        sorter: (a, b) => a.receivedQty.localeCompare(b.receivedQty),
+        sortDirections: ["descend", "ascend"],
+      },
+      {
+        title: "To Be Procured",
+        dataIndex: "tobeProcured",
+        sorter: (a, b) => a.tobeProcured.localeCompare(b.tobeProcured),
+        render: (text, record) => {
+          return (
+            <>
+              {Number(record.tobeProcured) > 0
+                ? Number(record.tobeProcured).toFixed(2)
+                : 0}
+            </>
+          );
+        },
+      },
+      {
         title: "Status",
         dataIndex: "status",
         render: (text, record) => {
@@ -441,8 +468,8 @@ import RolePermission from "../role-permissions";
           render: (text, rowData, index) => { 
             return(
               
-              <Form.Item name='allocatedQuantity'>
-                    <InputNumber
+              <Form.Item name={`allocatedQuantity${fabindex}-${index}`}>
+                    <InputNumber name={`allocatedQuantity${fabindex}-${index}`}
                         onChange={(e) => setAllocatedQty(index,rowData, e, fabindex)} 
                     />
               </Form.Item>
@@ -511,8 +538,10 @@ import RolePermission from "../role-permissions";
 
     
     const setAllocatedQty = (index, rowData, value, fabindex) => {
-     
-
+      console.log(index);
+      console.log(rowData);
+      console.log(value);
+      console.log(fabindex);
       rowData.issuedQty = value
       const newData = [...avilableQuantity];
       newData[index].issuedQty = value;
@@ -520,10 +549,10 @@ import RolePermission from "../role-permissions";
       setAvailableQuantity(newData);
       if (value === 0 || value === null || value < 0 || value === undefined) {
         AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
-        sourcingForm.setFieldsValue({["allocatedQuantity"]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity)});
+        sourcingForm.setFieldsValue({[`allocatedQuantity${fabindex}-${index}`]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity)});
       }
       if (Number(value) > Number(rowData.quantity)) {
-        sourcingForm.setFieldsValue({["allocatedQuantity"]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty)});
+        sourcingForm.setFieldsValue({[`allocatedQuantity${fabindex}-${index}`]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty)});
         AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
       }
     }
@@ -741,40 +770,57 @@ import RolePermission from "../role-permissions";
       };
 
       const renderItems = (record:any, index:any) => {
+        console.log(record);
         return  <Table
-         dataSource={avilableQuantity}
+         dataSource={record.allocatedStock}
           columns={tableColumns(record.totalRequirement,index)} 
           pagination={false}
            rowKey={record.stockId}/>;
       };
 
 
-      const handleExpandFabric = (expanded, record) => {
-        let req = new  buyerandM3ItemIdReq(record.buyerId,record.m3ItemFabricId,record.itemType)
-        console.log(record);
-       getAllAvailbaleQuantity(req,record)
-      };
-      const handleExpandTrim = (expanded, record) => {
-        let req = new buyerandM3ItemIdReq(record.buyerId,record.trimCode,record.itemType)
-        console.log(record);
-       getAllAvailbaleQuantity(req,record)
-      };
+      // const handleExpandFabric = (expanded,sampleReqId, record) => {
+      //   let req = new  buyerandM3ItemIdReq(record.buyerId,record.m3ItemFabricId,record.itemType)
+      //   console.log(record);
+      //  getAllAvailbaleQuantity(req,record,sampleReqId,"fabric")
+      // };
+      // const handleExpandTrim = (expanded,sampleReqId,record) => {
+      //   let req = new buyerandM3ItemIdReq(record.buyerId,record.trimCode,record.itemType)
+      //   console.log(record);
+      //  getAllAvailbaleQuantity(req,record,sampleReqId,"trim")
+      // };
 
-      const getAllAvailbaleQuantity =(req,rowData) =>{
-        service.getAvailbelQuantityAginstBuyerAnditem(req).then(res =>{
-          if(res.status){
-            // const dataWithRow = { rowData: rowData, responseData: res.data };
-            const updatedData = res.data.map(item => ({
-              ...item,
-              sampleRequestid:rowData.sampleRequestid,
-              sampleItemId:rowData.sampleRequestid,
-              itemType:rowData.itemType,
-              issuedQty:0
-              }))
-              setAvailableQuantity(updatedData)           
-          }
-        })
-      }
+      // const getAllAvailbaleQuantity =(req,rowData,sampleReqId,type) =>{
+      //   console.log(type);
+      //   console.log(sampleReqId);
+      //   console.log(rowData);
+
+
+      //   console.log(tableData);
+      //   service.getAvailbelQuantityAginstBuyerAnditem(req).then(res =>{
+      //     if(res.status){
+            
+      //       // const dataWithRow = { rowData: rowData, responseData: res.data };
+      //       const updatedData = res.data.map(item => ({
+      //         ...item,
+      //         sampleRequestid:rowData.sampleRequestid,
+      //         sampleItemId:rowData.sampleRequestid,
+      //         itemType:rowData.itemType,
+      //         issuedQty:0
+      //         }))
+             
+
+      //         if(type === "fabric"){
+      //           (tableData.find((e) => e.sample_request_id === sampleReqId).fabric).find((f) => f.fabric_info_id === rowData.fabric_info_id).allocatedStock = updatedData
+      //         }
+      //         else{
+      //           (tableData.find((e) => e.sample_request_id === sampleReqId).trimData).find((f) => f.trim_info_id === rowData.trim_info_id).allocatedStock = updatedData
+      //         }
+              
+      //         setAvailableQuantity(updatedData)           
+      //     }
+      //   })
+      // }
 
     return (
       <Card
@@ -788,7 +834,7 @@ import RolePermission from "../role-permissions";
         //   </Link>
         // }
       >
-        <Form form={sourcingForm} onFinish={getAll}>
+        <Form form={sourcingForm} onFinish={getAll} layout="vertical">
           <Row gutter={8}>
           {/* <Form.Item name="dispatched date" style={{display:'none'}}>
     <DatePicker value={moment}/>
@@ -796,9 +842,9 @@ import RolePermission from "../role-permissions";
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 5 }}
+              md={{ span: 8 }}
+              lg={{ span: 8 }}
+              xl={{ span: 4 }}
             >
               <Form.Item name="requestNo" label="Request Number">
                 <Select
@@ -825,9 +871,9 @@ import RolePermission from "../role-permissions";
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 5 }}
+              md={{ span: 8 }}
+              lg={{ span: 8 }}
+              xl={{ span: 4 }}
             >
               <Form.Item name="style" label="Style">
                 <Select
@@ -850,9 +896,9 @@ import RolePermission from "../role-permissions";
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 5 }}
+              md={{ span: 6 }}
+              lg={{ span: 6 }}
+              xl={{ span: 4 }}
             >
               <Form.Item name="status" label="Status">
                 <Select
@@ -878,7 +924,7 @@ import RolePermission from "../role-permissions";
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={5}>
+            <Col xs={24} sm={12} md={8} lg={6} xl={4}>
             <Form.Item name="pch" label="PCH">
               <Select
                 showSearch
@@ -907,6 +953,7 @@ import RolePermission from "../role-permissions";
                   type="primary"
                   htmlType="submit"
                   icon={<SearchOutlined />}
+                  style={{marginTop:20,marginLeft:30}}
                   // onClick={onSearch}
                 >
                   Search
@@ -921,7 +968,9 @@ import RolePermission from "../role-permissions";
               xl={{ span: 2 }}
             >
               <Form.Item>
-                <Button danger icon={<UndoOutlined />} onClick={onReset}>
+                <Button danger icon={<UndoOutlined />} onClick={onReset}
+                 style={{marginTop:20,marginLeft:30}}
+                >
                   Reset
                 </Button>
               </Form.Item>
@@ -996,7 +1045,7 @@ import RolePermission from "../role-permissions";
                       }}
                     // expandedRowRender={renderItems}
                     // expandedRowKeys={expandedIndex}
-                    onExpand={handleExpandFabric}
+                    // onExpand={(record) =>{ console.log(record); handleExpandFabric(undefined,item.sample_request_id,record)}}
                     // expandIconColumnIndex={7}
                     // bordered
                     pagination={false}
@@ -1037,8 +1086,7 @@ import RolePermission from "../role-permissions";
                           record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 && 
                             checkAccess(MenusAndScopesEnum.Scopes.allocation))}
                           }}
-                        
-                        onExpand={handleExpandTrim}
+                        // onExpand={(record) => handleExpandTrim(undefined,item.sample_request_id,record)}
                         pagination={false}
                         scroll={{ x: "max-content" }}
                         className="custom-table-wrapper"
