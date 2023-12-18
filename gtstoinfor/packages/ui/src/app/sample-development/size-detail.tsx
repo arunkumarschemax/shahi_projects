@@ -100,6 +100,7 @@ const SizeDetail = ({props,buyerId,form}) => {
 
   const handleDelete = (key) => {
     const updatedData = data.filter((record) => record.key !== key);
+    setOnchangeData(updatedData); 
     setData(updatedData);
     props(updatedData)
   };
@@ -130,7 +131,7 @@ const SizeDetail = ({props,buyerId,form}) => {
           >
           </Input>
         </Form.Item>
-          <Form.Item name={`quantity${size.sizeId}+${record.key}`}>
+          <Form.Item name={`quantity${size.sizeId}+${record.key}`} rules={[{ required: true, message: 'Missing Size' }]}>
             <Input
               name={`quantity${size.sizeId}`}
               value={record[size.sizeId]}
@@ -154,7 +155,7 @@ const SizeDetail = ({props,buyerId,form}) => {
   }));
 
 
-  const columns = [
+  const columns:any = [
     {
       title: 'S.No',
       dataIndex: 'sNo',
@@ -165,7 +166,7 @@ const SizeDetail = ({props,buyerId,form}) => {
       dataIndex: 'colourId',
       width:"25%",
       render: (_, record) => (
-        <Form.Item name={`colorId${record.key}`}>
+        <Form.Item name={`colorId${record.key}`} rules={[{ required: true, message: 'Missing Color' }]}>
         <Select
           style={{width:"100%"}}
           allowClear
@@ -195,6 +196,7 @@ const SizeDetail = ({props,buyerId,form}) => {
     {
       title: 'Action',
       dataIndex: 'action',
+      fixed:'right',
       render: (_, record) => (
         <Button htmlType='submit' onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
       ),
@@ -224,6 +226,7 @@ const SizeDetail = ({props,buyerId,form}) => {
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
       dataSource={data} 
+      scroll = {{x:'max-content',y:'max-content'}}
       columns={columns} 
       // summary={summary}
       bordered={true}

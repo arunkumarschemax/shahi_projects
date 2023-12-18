@@ -73,10 +73,11 @@ export class GrnService {
         try {
             const manager = this.dataSource;
             let query = 'SELECT pt.grn_quantity AS ptGrnQuantity,pf.grn_quantity AS pfGrnQuantity,po_fabric_id AS poFabricId,po_trim_id AS poTrimId,po.purchase_order_id AS purchaseOrderId,po_number AS poNumber,po.status AS poStatus,fab_item_status AS fabItemStatus,trim_item_status AS trimItemStatus FROM purchase_order po LEFT JOIN purchase_order_fabric pf ON pf.purchase_order_id=po.purchase_order_id LEFT JOIN purchase_order_trim pt ON pt.purchase_order_id=po.purchase_order_id WHERE po.purchase_order_id=' + purchaseOrderId + ''
+            console.log(materialType,'materialTypematerialTypematerialType')
             if (materialType == 'Fabric') {
                 query = query + ' and fab_item_status in ("OPEN","PARTAILLY RECEIVED")'
             }
-            if (materialType == 'Trim') {
+            else {
                 query = query + ' and trim_item_status in ("OPEN","PARTAILLY RECEIVED")'
             }
             const result = await manager.query(query)
@@ -94,7 +95,7 @@ export class GrnService {
             if (materialType == 'Fabric') {
                 query = query + ' and i.indent_id =' + id + ' and ifc.quantity != ifc.received_quantity'
             }
-            if (materialType == 'Trim') {
+            else {
                 query = query + ' and i.indent_id=' + id + '  and it.quantity != it.received_quantity'
             }
             const result = await manager.query(query)
@@ -113,7 +114,7 @@ export class GrnService {
             if (materialType == 'Fabric') {
                 query = query + ' and ifabric_id =' + id + ''
             }
-            if (materialType == 'Trim') {
+            else {
                 query = query + ' and itrims_id=' + id + ''
             }
             const result = await manager.query(query)
@@ -210,18 +211,21 @@ export class GrnService {
                 for (const item of req.grnItemInfo) {
                     if (item.m3ItemCode != null) {
                         const poQuantity = await this.poItemRepo.find({ where: { purchaseOrderItemId: item.poItemId } })
-                        if (poQuantity[0].poQuantity == item.conversionQuantity) {
+                        if (Number(poQuantity[0].poQuantity) == Number(item.receivedQuantity)) {
                             await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, {grnQuantity: () => `grn_quantity + ${item.acceptedQuantity}`, poitemStatus: PoItemEnum.RECEIVED })
                         }
                         else {
                             await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { poitemStatus: PoItemEnum.PARTAILLY_RECEIVED, grnQuantity: () => `grn_quantity + ${item.acceptedQuantity}` })
                         }
-                        const indentId = await this.getIndentid(req.materialtype, item.indentItemId)
-                        const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype, indentId.data[0].indentId)
-                        if (indentData.data.length == 0) {
-                            await this.indentRepo.update({ indentId: indentId.data[0].indentId }, { status: CustomerOrderStatusEnum.CLOSED })
-                        } else {
-                            await this.indentRepo.update({ indentId: indentId.data[0].indentId }, { status: CustomerOrderStatusEnum.IN_PROGRESS })
+                        console.log(req.materialtype,'req.materialtype')
+                        if(req.grnType != GRNTypeEnum.SAMPLE_ORDER){
+                            const indentId = await this.getIndentid(req.materialtype, item.indentItemId)
+                            const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype, indentId.data[0].indentId)
+                            if (indentData.data.length == 0) {
+                                await this.indentRepo.update({ indentId: indentId.data[0].indentId }, { status: CustomerOrderStatusEnum.CLOSED })
+                            } else {
+                                await this.indentRepo.update({ indentId: indentId.data[0].indentId }, { status: CustomerOrderStatusEnum.IN_PROGRESS })
+                            }
                         }
                     }
                 }

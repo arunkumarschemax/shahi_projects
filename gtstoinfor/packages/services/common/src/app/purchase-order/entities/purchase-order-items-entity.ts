@@ -41,7 +41,8 @@ export class PurchaseOrderItemsEntity{
 
  @Column('decimal',{
     name:'grn_quantity',
-    nullable:true
+    nullable:true,
+    default:0
   })
   grnQuantity:number
 

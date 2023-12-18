@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox } from 'antd';
+import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { M3TrimsService, SampleDevelopmentService, TrimParamsMappingService, UomService } from '@project-management-system/shared-services';
@@ -10,7 +10,8 @@ import AlertMessages from '../common/common-functions/alert-messages';
 export interface TrimsFormProps {
   data: any;
   buyerId: number;
-  sizeDetails: any[]
+  sizeDetails: any[];
+  form:FormInstance<any>
 }
 
 const TrimsForm = (props:TrimsFormProps) => {
@@ -27,7 +28,7 @@ const TrimsForm = (props:TrimsFormProps) => {
   const paramsService = new TrimParamsMappingService()
   const [mapData, setMapData] = useState<any[]>([])
   const [m3Trims, setM3Trims] = useState<any[]>([])
-  const [form] = Form.useForm();
+  // const [form] = Form.useForm();
   const [stockData, setStockData] = useState<any[]>([])
   const [sourcingForm] = Form.useForm();
   const [checked, setChecked] = useState<boolean>(false)
@@ -150,7 +151,7 @@ const getMappedTrims = (value, option) => {
         setStockData(res.data);
         handleInputChange(res.data, record.key, "allocatedStock", record)
         // sourcingForm.setFieldValue([`allocatedStock${record.key}`],res.data)
-        AlertMessages.getSuccessMessage(res.internalMessage)
+        // AlertMessages.getSuccessMessage(res.internalMessage)
       }
       else{
         setStockData([]);
@@ -166,7 +167,7 @@ const getMappedTrims = (value, option) => {
 
 
     let updatedData
-    if (field === 'trimCode') {
+    if (field === 'trimCode' && e != undefined) {
 
       updatedData = data.map((record) => {
         if (record.key === key) {
@@ -185,7 +186,7 @@ const getMappedTrims = (value, option) => {
       });
     }
     else if(field === 'consumption'){
-      let wastg = form.getFieldValue(`wastage${key}`) != undefined ? form.getFieldValue(`wastage${key}`) : 2;
+      let wastg =props.form.getFieldValue(`wastage${key}`) != undefined ?props.form.getFieldValue(`wastage${key}`) : 2;
       updatedData = data.map((record) => {
         if (record.key === key) {
           let qtyy = 0;
@@ -199,14 +200,14 @@ const getMappedTrims = (value, option) => {
           let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
           console.log(consumptionCal);
           console.log(withPer);
-          form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+         props.form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
         return record;
       });
     }
     else if(field === 'wastage'){
-      let cons = form.getFieldValue(`consumption${key}`) != undefined ? form.getFieldValue(`consumption${key}`) : 0
+      let cons =props.form.getFieldValue(`consumption${key}`) != undefined ?props.form.getFieldValue(`consumption${key}`) : 0
       updatedData = data.map((record) => {
         if (record.key === key) {
           let qtyy = 0;
@@ -220,7 +221,7 @@ const getMappedTrims = (value, option) => {
           let withPer = (Number(consumptionCal) * Number(e))/ 100;
           console.log(consumptionCal);
           console.log(withPer);
-          form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+         props.form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
         return record;
@@ -250,7 +251,7 @@ const getMappedTrims = (value, option) => {
   const trimTypeOnchange = (value) =>{
     getTrimCodes(value)
   }
-  const columns = [
+  const columns:any = [
     {
       title: 'S.No',
       dataIndex: 'sNo',
@@ -261,7 +262,7 @@ const getMappedTrims = (value, option) => {
       dataIndex: 'trimType',
       width:"20%",
       render: (_, record) => (
-        <Form.Item name={`trimType${record.key}`}>
+        <Form.Item name={`trimType${record.key}`} rules={[{ required: true, message: 'Missing Trim Type' }]}>
         <Select
           value={record.trimType}
           onChange={(e) => handleInputChange(e, record.key, 'trimType',record)}
@@ -286,6 +287,7 @@ const getMappedTrims = (value, option) => {
       dataIndex: 'trimCategory',
       width:"20%",
       render: (_, record) => (
+        <Form.Item name={`trimCategory${record.key}`} rules={[{ required: true, message: 'Missing Trim Category' }]}> 
         <Select
           value={record.trimCategory}
           onChange={(e) => handleInputChange(e, record.key, 'trimCategory',record)}
@@ -303,6 +305,7 @@ const getMappedTrims = (value, option) => {
             </Option>
           )})}
           </Select>
+          </Form.Item>
       ),
     },
     {
@@ -310,7 +313,7 @@ const getMappedTrims = (value, option) => {
       dataIndex: 'trimCode',
       width:"20%",
       render: (_, record) => (
-        <><Form.Item name={`allocatedStock${record.key}`}><Input name={`allocatedStock${record.key}`} style={{ display: 'none' }} /></Form.Item><Form.Item name={`trimCode${record.key}`}>
+        <><Form.Item name={`allocatedStock${record.key}`} ><Input name={`allocatedStock${record.key}`} style={{ display: 'none' }} /></Form.Item><Form.Item name={`trimCode${record.key}`} rules={[{ required: true, message: 'Missing Trim Code' }]}>
           <Select
             value={record.trimCode}
             onChange={(e) => handleInputChange(e, record.key, 'trimCode', record)}
@@ -332,7 +335,7 @@ const getMappedTrims = (value, option) => {
       title: 'Consumption',
       dataIndex: 'consumption',
       render: (_, record) => (
-        <Form.Item name={`consumption${record.key}`}>
+        <Form.Item name={`consumption${record.key}`} rules={[{ required: true, message: 'Missing Consumption' }]}>
         <InputNumber
         value={record.consumption}
         onChange={(e) => handleInputChange(e, record.key, 'consumption',record)}
@@ -345,7 +348,7 @@ const getMappedTrims = (value, option) => {
       dataIndex: 'Uom',
 
       render: (_, record) => (
-        <Form.Item name={`uomId${record.key}`}>
+        <Form.Item name={`uomId${record.key}`} rules={[{ required: true, message: 'Missing UOM' }]}>
         <Select
         value={record.uomId}
         style={{width:"100%"}}
@@ -371,7 +374,7 @@ const getMappedTrims = (value, option) => {
       dataIndex: 'wastage',
       width:"10%",
       render: (_, record) => (
-      <Form.Item name={`wastage${record.key}`}>
+      <Form.Item name={`wastage${record.key}`} rules={[{ required: true, message: 'Missing Wastage' }]}>
         <InputNumber
         defaultValue={2}
         onChange={(e) => handleInputChange(e, record.key, 'wastage',record)}
@@ -384,7 +387,7 @@ const getMappedTrims = (value, option) => {
       dataIndex: 'totalRequirement',
       width:"10%",
       render: (_, record) => (
-      <Form.Item name={`totalRequirement${record.key}`}>
+      <Form.Item name={`totalRequirement${record.key}`} rules={[{ required: true, message: 'Missing total requirement' }]}>
         <Input disabled style={{fontWeight:'bold', color:"black"}}
         value={record.totalRequirement}
         onChange={(e) => handleInputChange(e.target.value, record.key, 'totalRequirement',record)}
@@ -408,6 +411,7 @@ const getMappedTrims = (value, option) => {
     {
       title: 'Action',
       dataIndex: 'action',
+      fixed:'right',
       render: (_, record) => (
         <Button onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
       ),
@@ -541,10 +545,11 @@ const getMappedTrims = (value, option) => {
 
   return (
     <div>
-      <Form form={form}>
+      <Form form={props.form}>
 
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
+      scroll = {{x:'max-content',y:'max-content'}}
       dataSource={data} 
       columns={columns} 
       expandedRowRender={renderItems}

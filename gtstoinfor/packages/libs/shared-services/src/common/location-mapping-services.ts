@@ -1,4 +1,4 @@
-import { LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq } from "@project-management-system/shared-models";
+import { ExternalRefReq, LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class LocationMappingService extends CommonAxiosService {
@@ -8,16 +8,15 @@ export class LocationMappingService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/getAllActiveRackPositions");
     }
 
-    async getAllFabrics(req?:any):Promise<any> {
-        console.log(req,"sh req")
+    async getAllFabrics(req?:ExternalRefReq):Promise<any> {
+       
         return this.axiosPostCall(this.URL + "/getAllFabrics",req)
     }
     async getgrn(req?:any):Promise<any> {
-        console.log(req,"sh req")
+ 
         return this.axiosPostCall(this.URL + "/getgrn",req)
     }
-    async getMaterial(req?:any):Promise<any> {
-        console.log(req,"sh req")
+    async getMaterial(req?:ExternalRefReq):Promise<any> {
         return this.axiosPostCall(this.URL + "/getMaterial",req)
     }
     async getOneItemAllocateDetails(req:MaterialIssueIdreq): Promise<any> {

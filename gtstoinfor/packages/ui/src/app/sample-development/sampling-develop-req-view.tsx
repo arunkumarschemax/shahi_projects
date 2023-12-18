@@ -377,79 +377,84 @@ import RolePermission from "../role-permissions";
         },
       },
     ];
-
-    const renderColumnForFabric: any =[
-      {
-        title: "S No",
-        key: "sno",
-        width: "100px",
-        responsive: ["sm"],
-        render: (text, object, index) => (page - 1) * 10 + (index + 1),
-      },
-      {
-        title: "Grn Number",
-        key:'grnNumber',
-        dataIndex: "grnNumber",
-        width: "150px",
-
-      },
-      {
-        title: "Grn Date",
-        key:'grnDate',
-        dataIndex:"grnDate",
-        render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
-        width: "150px",
-
-      },
-      {
-        title: "Location",
-        key:'location',
-
-        dataIndex: "location",
-        width:'80px',
-      },
-    
-      {
-        title: "Available Quantity",
-        width: "150px",
-        dataIndex: "quantity",
-      },
-     
-      {
-        title: "Allocated Quantity",
-        width:'200px',
-        render: (text, rowData, index) => { 
-          return(
-            
-            <Form.Item name='allocatedQuantity'>
-                  <InputNumber
-                      onChange={(e) => setAllocatedQty(index,rowData, e)} 
-                   />
-            </Form.Item>
-           
-          )
-        }
-      },
-      {
-        title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
-        onClick={() =>allocateQuantity()} 
-        >Allocate</Button>:'Allocate'}</div>,
-        dataIndex: "sm",
-        key: "sm",
-        align: "center",
-        render: (text, rowData, index) => { 
-          return (
-            <Checkbox 
-            onClick={checkboxonclick}
-            onChange={(e) => onCheck(rowData, index, e.target.checked)}
-            // onClick={(e) =>onCheck(rowData,undefined)}
-            />
-          );
+    const tableColumns = (val,fabindex) => {
+      if(val === undefined){
+        AlertMessages.getWarningMessage("Please give required consumption. ");
+      }
+      console.log(val);
+      const renderColumnForFabric: any =[
+        {
+          title: "S No",
+          key: "sno",
+          width: "100px",
+          responsive: ["sm"],
+          render: (text, object, index) => (page - 1) * 10 + (index + 1),
         },
-      },
-     
-    ]
+        {
+          title: "Grn Number",
+          key:'grnNumber',
+          dataIndex: "grnNumber",
+          width: "150px",
 
+        },
+        {
+          title: "Grn Date",
+          key:'grnDate',
+          dataIndex:"grnDate",
+          render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
+          width: "150px",
+
+        },
+        {
+          title: "Location",
+          key:'location',
+
+          dataIndex: "location",
+          width:'80px',
+        },
+      
+        {
+          title: "Available Quantity",
+          width: "150px",
+          dataIndex: "quantity",
+        },
+      
+        {
+          title: "Allocated Quantity",
+          width:'200px',
+          render: (text, rowData, index) => { 
+            return(
+              
+              <Form.Item name='allocatedQuantity'>
+                    <InputNumber
+                        onChange={(e) => setAllocatedQty(index,rowData, e, fabindex)} 
+                    />
+              </Form.Item>
+            
+            )
+          }
+        },
+        {
+          title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
+          onClick={() =>allocateQuantity()} 
+          >Allocate</Button>:'Allocate'}</div>,
+          dataIndex: "sm",
+          key: "sm",
+          align: "center",
+          render: (text, rowData, index) => { 
+            return (
+              <Checkbox 
+              onClick={checkboxonclick}
+              onChange={(e) => onCheck(rowData, index, e.target.checked)}
+              // onClick={(e) =>onCheck(rowData,undefined)}
+              />
+            );
+          },
+        },
+      
+      ]
+      return [...renderColumnForFabric]
+    }
     const allocateQuantity = () =>{
       // console.log(avilableQuantity)
       createAllocation(avilableQuantity)
@@ -489,7 +494,7 @@ import RolePermission from "../role-permissions";
 
 
     
-    const setAllocatedQty = (index, rowData, value) => {
+    const setAllocatedQty = (index, rowData, value, fabindex) => {
      
 
       rowData.issuedQty = value
@@ -719,10 +724,10 @@ import RolePermission from "../role-permissions";
     
       };
 
-      const renderItems = (record:any) => {
+      const renderItems = (record:any, index:any) => {
         return  <Table
          dataSource={avilableQuantity}
-          columns={renderColumnForFabric} 
+          columns={tableColumns(record.totalRequirement,index)} 
           pagination={false}
            rowKey={record.stockId}/>;
       };

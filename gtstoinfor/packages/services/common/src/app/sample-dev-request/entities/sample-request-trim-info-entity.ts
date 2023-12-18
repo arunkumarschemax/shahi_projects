@@ -16,8 +16,7 @@ export class SampleRequestTriminfoEntity {
 
     @Column('decimal', {
         name: 'consumption',
-        precision: 4,
-        scale: 2,
+        nullable:false,
     })
     consumption: number
     @Column('text', {
@@ -39,10 +38,12 @@ export class SampleRequestTriminfoEntity {
     trimType: string
     @Column('decimal',{
         name:'total_requirement',
+      nullable:false,
     })
     totalRequirement : number;
     @Column('decimal',{
         name:'wastage',
+      nullable:false,
     })
     wastage : number;
 
