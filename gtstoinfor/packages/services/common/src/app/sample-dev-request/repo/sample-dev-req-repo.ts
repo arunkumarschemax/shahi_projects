@@ -367,6 +367,23 @@ if(req){
 
     }
 
+    async getPch(): Promise<any[]> {
+        const query = this.createQueryBuilder('sr')
+          .select(`DISTINCT sr.profit_control_head_id, pch.profit_control_head`)
+          .leftJoin(ProfitControlHead, 'pch', 'pch.profit_control_head_id = sr.profit_control_head_id');
+        
+        return await query.getRawMany();
+      }
+      
+    async getStyle(): Promise<any[]> {
+        const query = this.createQueryBuilder('sr')
+            .select(` DISTINCT sr.style_id,s.style`)
+            .leftJoin(Style, 's', 's.style_id = sr.style_id')
+            .groupBy('sr.style_id, s.style');
+
+        return await query.getRawMany();
+
+    } 
     async getAllSampleReqNo(): Promise<any> {
         const query = await this.createQueryBuilder()
             .select(`request_no`)

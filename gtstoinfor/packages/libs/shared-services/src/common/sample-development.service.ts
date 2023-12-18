@@ -239,4 +239,10 @@ export class SampleDevelopmentService extends CommonAxiosService {
   async allocatedLocation(req:LocationReq): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/allocatedLocation" ,req)
   }
+  async getPch(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getPch" )
+  }
+  async getStyle(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getStyle" )
+  }
 }
