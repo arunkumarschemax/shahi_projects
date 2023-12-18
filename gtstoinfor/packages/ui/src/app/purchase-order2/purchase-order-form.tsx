@@ -286,11 +286,6 @@ export const PurchaseOrderForm = () => {
     const disabledDate = (current) => {
         // console.log(current.valueOf(), 'current');
          return current.valueOf() < Date.now();
-         
-       };
-     const disabledDate2 = (current) => {
-        // console.log(current.valueOf(), 'current');
-         return current.valueOf() < Date.now();
        };
     return (
         <>
@@ -312,7 +307,7 @@ export const PurchaseOrderForm = () => {
                             </Form.Item>
                         </Col>
 
-                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ display: sampleDropDownVisible == true ? '' : 'none' }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ display: sampleDropDownVisible == true ? '' : 'none' }}>
                             <Form.Item name="requestNo" label="Request Number" rules={[{ required: sampleDropDownVisible, message: 'PO Type is required' }]}>
                                 <Select
                                     mode="multiple"
@@ -335,7 +330,7 @@ export const PurchaseOrderForm = () => {
                                     })}
                                 </Select>
                             </Form.Item>
-                        </Col> */}
+                        </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ display: indentDropDownVisible == true ? '' : 'none' }}>
                             <Form.Item name='indentId' label='Indent Code'
                                 rules={[{ required: indentDropDownVisible, message: 'IndentCode is required' }]}>
@@ -399,7 +394,7 @@ export const PurchaseOrderForm = () => {
                         </Form.Item>
                     </Col> */}
 
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
                             <Form.Item name='vendorId' label='Vendor' rules={[{ required: true, message: 'vendor is required' }]}>
                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor'>
                                     {vendordata.map(e => {
@@ -417,7 +412,7 @@ export const PurchaseOrderForm = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='expectedDeliveryDate' label='Expected Delivery Date' rules={[{ required: true, message: 'expectedDeliveryDate is required' }]}>
-                                <DatePicker style={{ width: '93%', marginLeft: 5 }} />
+                                <DatePicker style={{ width: '93%', marginLeft: 5 }} disabledDate={disabledDate}/>
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -431,15 +426,13 @@ export const PurchaseOrderForm = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                            <Form.Item name='exchangeRate' label='Exchange Rate'
-                            
-                             rules={[{ required: false, message: 'Exchange Rate is required' }]}>
-                                <Input style={{ width: '93%', marginLeft: 5 }}  placeholder='Enter Exchange Rate' />
+                            <Form.Item name='exchangeRate' label='Exchange Rate' rules={[{ required: false, message: 'Exchange Rate is required' }]}>
+                                <Input style={{ width: '93%', marginLeft: 5 }} />
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='deliveryAddress' label='Delivery Address' rules={[{ required: true, message: 'Delivery Address is required' }]}>
-                                <Select showSearch optionFilterProp="children"  allowClear placeholder='Select Delivery Address'>
+                                <Select placeholder='Select Currency'>
                                     {activeFactoryData.map(e => {
                                         return (<Option value={e.id} key={e.id}>{e.address}</Option>)
                                     }
