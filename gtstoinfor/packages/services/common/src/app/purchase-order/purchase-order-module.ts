@@ -27,6 +27,6 @@ import { Indent } from "../indent/indent-entity";
     ]),
     ],
     controllers: [PurchaseOrderController],
-    providers: [PurchaseOrderService,ApplicationExceptionHandler,PurchaseOrderRepository,PurchaseOrderFabricRepository,PurchaseOrderTrimRepository,SampleRequestRepository,IndentRepository]
+    providers: [PurchaseOrderService,ApplicationExceptionHandler,PurchaseOrderRepository,PurchaseOrderFabricRepository,PurchaseOrderTrimRepository,SampleRequestRepository,IndentRepository,SampleRequestRepository]
   })
   export class PurchaseOrderModule {}
