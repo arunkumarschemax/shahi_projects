@@ -402,6 +402,12 @@ export class PurchaseOrderService {
                 const statusValues = req.status.map(status => `'${status}'`).join(',');
                 query += ` AND po.status IN (${statusValues})`;
             }
+              if (req.poconfirmStartDate) {
+                query += ` AND purchase_order_date between '${req.poconfirmStartDate}'  and '${req.poconfirmEndDate}'`;
+            }
+              if (req.confirmStartDate) {
+                query += ` AND expected_delivery_date between '${req.confirmStartDate}' and '${req.confirmEndDate}'`;
+            }
             
             //   if (req.status){
                 

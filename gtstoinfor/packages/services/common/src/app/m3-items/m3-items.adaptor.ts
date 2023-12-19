@@ -19,9 +19,9 @@ export class M3ItemsAdapter {
         const entity = new M3ItemsEntity();
         // entity.itemCode = dto.itemCode;
         // entity.content = dto.content;
-        entity.fabricTypeId = dto.fabricTypeId;
-        entity.weaveId = dto.weaveId;
-        entity.weightId = dto.weightId;
+        entity.fabricType = dto.fabricTypeId;
+        entity.weave = dto.weaveId;
+        entity.weight = dto.weightId;
         entity.weightUnit = dto.weightUnit;
         entity.epiConstruction = dto.epiConstruction;
         entity.ppiConstruction = dto.ppiConstruction;
@@ -64,9 +64,9 @@ export class M3ItemsAdapter {
         entity.m3ItemsId = dto.m3ItemsId;
         dto.itemCode = entity.itemCode
         // dto.content = entity.content
-        dto.fabricTypeId = entity.fabricTypeId
-        dto.weaveId = entity.weaveId
-        dto.weightId = entity.weightId
+        dto.fabricTypeId = entity.fabricType
+        dto.weaveId = entity.weave
+        dto.weightId = entity.weight
         dto.weightUnit = entity.weightUnit
         dto.epiConstruction = entity.epiConstruction
         dto.ppiConstruction = entity.ppiConstruction

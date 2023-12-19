@@ -120,7 +120,18 @@ export const PurchaseOrderView = () => {
     //   status === "IN PROGRESS"
     // }
      const req = new PurchaseViewDto(null,null,null,null,null,form.getFieldValue('poStatus'),null,externalRefNo)
-     console.log(form.getFieldValue('poStatus'),'ppppppppppp');
+     if (form.getFieldValue('orderDate') !== undefined) {
+      req.poconfirmStartDate = (form.getFieldValue('orderDate')[0]).format('YYYY-MM-DD')
+    }
+    if (form.getFieldValue('orderDate') !== undefined) {
+    req.poconfirmEndDate = (form.getFieldValue('orderDate')[1]).format('YYYY-MM-DD')
+    }
+     if (form.getFieldValue('deliveryDate') !== undefined) {
+      req.confirmStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD')
+    }
+    if (form.getFieldValue('deliveryDate') !== undefined) {
+    req.confirmEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD')
+    }
     
     console.log(req,'----------------------------------')
 
