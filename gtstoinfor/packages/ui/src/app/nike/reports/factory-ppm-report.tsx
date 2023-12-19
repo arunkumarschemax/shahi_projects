@@ -191,8 +191,9 @@ const FactoryPPMReport = () => {
 
     const resetHandler = () => {
         form.resetFields();
-        getData();
-
+        setGridData([]);
+        setFilterData([]);
+        setFilteredData([]);
     }
     const handleSearch = (selectedKeys: any, confirm: any, dataIndex: string) => {
         confirm();
@@ -593,7 +594,7 @@ const FactoryPPMReport = () => {
                 sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
             }
             rec.sizeWiseData?.forEach(version => {
-                sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
+                sizeWiseMap.get(rec.purchaseOrderNumber).set(version.sizeDescription, version.sizeQty);
             })
         });
         return sizeWiseMap;
@@ -1205,11 +1206,11 @@ const FactoryPPMReport = () => {
             }
         ];
 
-        sizeHeaders?.forEach(version => {
+        sizeHeaders?.forEach(size => {
             columns.push({
-                title: version,
-                dataIndex: version,
-                key: version,
+                title: size,
+                dataIndex: size,
+                key: size,
                 width: 70,
                 align: 'center',
                 children: [
@@ -1220,21 +1221,8 @@ const FactoryPPMReport = () => {
                         width: 70,
                         className: 'centered-column',
                         render: (text, record) => {
-                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-                            if (sizeData) {
-                                if (sizeData.sizeQty !== null) {
-                                    const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-                                    return (
-                                        formattedQty
-                                    );
-                                } else {
-                                    return (
-                                        '-'
-                                    );
-                                }
-                            } else {
-                                return '-';
-                            }
+                            const sizeData = sizeWiseMap?.get(record.purchaseOrderNumber)?.get(size)
+                            return sizeData ? sizeData : '-'
                         }
                     },
                     {
@@ -1244,18 +1232,12 @@ const FactoryPPMReport = () => {
                         width: 70,
                         className: 'centered-column',
                         render: (text, record) => {
-                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
+                            const sizeData = sizeWiseMap?.get(record.purchaseOrderNumber)?.get(size)
                             if (sizeData) {
-                                if (sizeData.sizeQty !== null) {
-                                    const formattedQty = Number(sizeData.sizeQty);
-                                    return (
-                                        Number(formattedQty * 0.03).toFixed(0)
-                                    );
-                                } else {
-                                    return (
-                                        '-'
-                                    );
-                                }
+                                const formattedQty = Number(sizeData);
+                                return (
+                                    Number(formattedQty * 0.03).toFixed(0)
+                                );
                             } else {
                                 return '-';
                             }

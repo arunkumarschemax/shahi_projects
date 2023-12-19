@@ -120,10 +120,6 @@ export function OrderAcceptance() {
         return itemNoValues[record.key] && itemNoValues[record.key].trim() !== "";
     };
 
-    const ClearData = () => {
-        form.resetFields();
-    }
-
     useEffect(() => {
         getOrderAcceptanceData()
         getProductCode()
@@ -197,7 +193,6 @@ export function OrderAcceptance() {
         service.getOrderAcceptanceData(req).then((res) => {
             if (res.data) {
                 setData(res.data)
-                Finish(res.data)
                 message.success(res.internalMessage)
             } else (
                 setData([]),
@@ -213,7 +208,7 @@ export function OrderAcceptance() {
         req.itemNo = itemNoValues[record.key]
         service.coLineCreationReq(req).then((res) => {
             if (res.status) {
-                getOrderAcceptanceData()
+                getOrderAcceptanceData();
                 message.success(res.internalMessage)
             } else (
                 message.error(res.internalMessage)
@@ -235,8 +230,8 @@ export function OrderAcceptance() {
             if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
                 sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
             }
-            rec.sizeWiseData?.forEach(version => {
-                sizeWiseMap.get(rec.purchaseOrderNumber).set(' ' + version.sizeDescription, version.sizeQty);
+            rec.sizeWiseData?.forEach(size => {
+                sizeWiseMap.get(rec.purchaseOrderNumber).set(size.sizeDescription, size.sizeQty);
             })
         });
         return sizeWiseMap;
@@ -467,39 +462,17 @@ export function OrderAcceptance() {
             }
         ];
 
-        sizeHeaders?.forEach(version => {
+        sizeHeaders?.forEach(size => {
             columns.push({
-                title: version,
-                dataIndex: version,
-                key: version,
+                title: size,
+                dataIndex: size,
+                key: size,
                 width: 70,
                 align: 'center',
-                children: [
-                    {
-                        title: 'Quantity',
-                        dataIndex: '',
-                        key: '',
-                        width: 70,
-                        className: 'centered-column',
-                        render: (text, record) => {
-                            const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-                            if (sizeData) {
-                                if (sizeData.sizeQty !== null) {
-                                    const formattedQty = Number(sizeData.sizeQty).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-                                    return (
-                                        formattedQty
-                                    );
-                                } else {
-                                    return (
-                                        '-'
-                                    );
-                                }
-                            } else {
-                                return '-';
-                            }
-                        }
-                    }
-                ]
+                render: (text, record) => {
+                    const sizeData = sizeWiseMap?.get(record.purchaseOrderNumber)?.get(size)
+                    return sizeData ? sizeData : '-'
+                }
             });
         });
 
@@ -534,13 +507,7 @@ export function OrderAcceptance() {
                 render: (value, record) => {
                     const isEnabled = isActionButtonEnabled(record);
                     return (
-                        <Popconfirm
-                            title="Are you sure to approve"
-                            onConfirm={() => approveDpomLineItemStatus(record)}
-                            disabled={!isEnabled}
-                        >
-                            <Button disabled={record.coLineStatus == 'Open' ? true : !isEnabled}>Accept</Button>
-                        </Popconfirm>
+                        <Button onClick={() => approveDpomLineItemStatus(record)} disabled={record.coLineStatus == 'Open' ? true : !isEnabled}>Accept</Button>
                     );
                 },
             },
@@ -671,7 +638,6 @@ export function OrderAcceptance() {
                 <Card>
                     {renderReport(filterData.length > 0 ? filterData : data)}
                 </Card>
-
             </Card>
         </>
     )
