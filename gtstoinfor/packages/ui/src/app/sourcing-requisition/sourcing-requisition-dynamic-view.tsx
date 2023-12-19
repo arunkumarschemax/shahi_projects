@@ -4,6 +4,7 @@ import {
   CaretRightOutlined,
   InfoCircleOutlined,
   PrinterOutlined,
+  QrcodeOutlined,
   SearchOutlined,
   UndoOutlined,
 } from "@ant-design/icons";
@@ -22,6 +23,7 @@ import {
   Form,
   Input,
   Modal,
+  QRCode,
   Row,
   Segmented,
   Select,
@@ -775,12 +777,10 @@ const segmentedOptions = options();
             }
             key={index}
             extra={
-              <Tag
-                onClick={() => generateBarcode(item.requestNo, "requestNo")}
-                style={{ cursor: "pointer" }}
-              >
-                <BarcodeOutlined />
-              </Tag>
+             
+              <QrcodeOutlined   onClick={() => generateBarcode(item.requestNo, "requestNo")}
+                style={{ cursor: "pointer",color:'blue',height:'5px',width:'40px' }}/>
+             
             }
           >
             <Space
@@ -849,13 +849,15 @@ const segmentedOptions = options();
         ))}
       </Collapse>
       <Modal
-        open={barcodeModal}
+      width='15%'
+              open={barcodeModal}
         onCancel={onBarcodeModalCancel}
         footer={[]}
         title={barcodeInfo === "m3ItemCode" ? "M3 Item Code" : "Request Number"}
       >
-        <div style={{ textAlign: "center" }}>
-          <Barcode value={barcode} height={30} />
+        <div style={{alignContent:'center'}}>
+          <QRCode value={barcode}  />
+          {barcode}
         </div>
       </Modal>
     </Card>
