@@ -105,8 +105,15 @@ export class OrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.ordersController + "/createCOline", req)
     }
     async getMonthWiseReportData(req: YearReq): Promise<CommonResponseModel> {
+        console.log(req)
         return this.axiosPostCall(this.ordersController + "/getMonthWiseReportData", req)
     }
+
+    async getMonthWiseReportDataNew(req: YearReq): Promise<CommonResponseModel> {
+        console.log('hiiiiiii')
+        return this.axiosPostCall(this.ordersController + "/getMonthWiseReportDataNew", req)
+    }
+    
     async getExfactoryYearData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/getExfactoryYear")
     }

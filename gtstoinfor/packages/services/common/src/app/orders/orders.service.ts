@@ -1104,21 +1104,23 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'data not found')
         }
         const datamap = new Map<string, NewitemDataDto>();
+        
         for(const rec of data){
             if(req.tabName === 'ExFactory'){
                 if(!datamap.has(rec.planning_sum)) {
-                    datamap.set(rec.planning_sum, new NewitemDataDto(rec.planning_sum,[]))
+                    datamap.set(rec.planning_sum, 
+                        new NewitemDataDto(rec.planning_sum,[]))
                 }
-                const monthwiseData = datamap.get(rec.planning_sum).monthWiseData;
+                const monthInstance = datamap.get(rec.planning_sum).monthWiseData;
                 const exfpc :pcsData[] =[];
                 exfpc.push({
                     monthName:rec.exfMonthName,
                     inPcs:rec.exfPcs,
                     inCoeffPcs:rec.exfCoeff
-
                 })
-                const  exfData = new NewMonthWiseDto(rec.planning_sum,exfpc)
-                monthwiseData.push(exfData)
+                const  exfData = new NewMonthWiseDto(rec.prod_plan_type,exfpc)
+                monthInstance.push(exfData)
+                // console.log(monthInstance,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
             }
             if(req.tabName === 'WareHouse'){
                 if(!datamap.has(rec.planning_sum)){
@@ -1131,16 +1133,14 @@ export class OrdersService {
                     inPcs:rec.whPcs,
                     inCoeffPcs:rec.whCoeff
                 })
-                const whdata = new NewMonthWiseDto(rec.planning_sum,whpcs)
+                const whdata = new NewMonthWiseDto(rec.prod_plan_type,whpcs)
                 whMonthInfo.push(whdata)
             }  
         }
         const detailedarray: NewitemDataDto[] = Array.from(datamap.values());
+        console.log(detailedarray,'$$$$$$$$$$$$$$$$$$$$$')
         return new CommonResponseModel(true,1,'Data retrived',detailedarray)
     }
-
-
-
 
 
 
@@ -2586,6 +2586,8 @@ export class OrdersService {
         //     throw err
         // }
     }
+
+
 
     async getComparisionphaseExcelData(req: YearReq): Promise<CommonResponseModel> {
         try {
