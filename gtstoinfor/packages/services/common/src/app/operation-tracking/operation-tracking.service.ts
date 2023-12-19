@@ -102,7 +102,6 @@ export class OperationTrackingService {
 
     
     async getOperationinventory(req:OperationInvRequest): Promise<OperationInventoryResponseModel> {
-        console.log(req,'kkkkkkkkkkkkkkk')
         const data = await this.inventoryRepo.getOperationinventory(req)
     
             return new OperationInventoryResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)
