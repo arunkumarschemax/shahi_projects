@@ -3,7 +3,7 @@ import { InjectDataSource } from "@nestjs/typeorm";
 import { DataSource } from "typeorm";
 import { AddressRepository } from "./address.repo";
 import { GenericTransactionManager } from "../../../typeorm-transactions";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { AddressColumns, CommonResponseModel } from "@project-management-system/shared-models";
 import { AddressEntity } from "./address-entity";
 
 @Injectable()
@@ -17,6 +17,7 @@ export class AddressService {
     async saveAddressInfo(formData: any): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
         try {
+            console.log(formData,"ffffff")
             await transactionManager.startTransaction()
             const flag = new Set<boolean>()
             const columnArray = []
@@ -31,12 +32,15 @@ export class AddressService {
                 }
                 return updatedObj;
             })
-            // const difference = columnArray.filter((element) => !AddressColumns.includes(element));
-            // console.log(difference, '----')
-            // if (difference.length > 0) {
-            //     await transactionManager.releaseTransaction();
-            //     return new CommonResponseModel(false, 1110, "Excel columns doesn't match. Please attach the correct file.");
-            // }
+         
+            console.log(updatedArray,"iiiii")
+            const difference = columnArray.filter((element) => !AddressColumns.includes(element));
+            console.log(difference, '----')
+            if (difference.length > 0) {
+                await transactionManager.releaseTransaction();
+                return new CommonResponseModel(false, 1110, "Excel columns doesn't match. Please attach the correct file.");
+            }
+            
             const convertedData = updatedArray.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
@@ -61,9 +65,10 @@ export class AddressService {
                 if (data.Country != null) {
                     // dtoData = new AddressReq(data.Country,data.delivary_address,data.Buyeraddress,'admin')
                     const addObj = new AddressEntity()
-                    addObj.buyerAddress = data.Country
-                    addObj.deliveryAddress = data.Delivary_address
-                    addObj.buyerAddress = data.Buyeradderss
+                    addObj.billTo = data.BILLTO
+                    addObj.shipTo= data.SHIPTO
+                    addObj.buyerAddress = data.BUYERADDCRM
+                    addObj.deliveryAddress = data.DELIVERYADDCRM
                     const addSave = await transactionManager.getRepository(AddressEntity).save(addObj)
                     if (addSave) {
                         flag.add(true)
