@@ -136,15 +136,9 @@ const ChangeComparision = (props: Props) => {
 
         }
       }
-
-    },
-
-
-
-
-
-
+    }
   ]
+
   const columns: any = [
     {
       title: "S.No",
@@ -170,9 +164,9 @@ const ChangeComparision = (props: Props) => {
       render: (text: any, record: any) => {
         // Check if sizeWiseData is defined
         if (record.sizeWiseData) {
-          const customOrder = ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "XS-S", "S-S", "M-S", "L-S", "XL-S", "2XL-S", "3XL-S", "XS-T", "S-T", "M-T", "L-T", "XS-T", "S-T", "M-T", "L-T", "XL-T", "2XL-T", "3XL-T", "4XL-T", "5XL-T", "STT", "MTT", "LTT", "XLTT", "2XLTT", "3XLTT", "Custm"];
+          const customOrder = ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "XS-S", "S-S", "M-S", "L-S", "XL-S", "2XL-S", "3XL-S", "4XL-S", "XS-T", "S-T", "M-T", "L-T", "XS-T", "S-T", "M-T", "L-T", "XL-T", "2XL-T", "3XL-T", "4XL-T", "5XL-T", "STT", "MTT", "LTT", "XLTT", "2XLTT", "3XLTT", "Custm"];
           // Sort the sizeWiseData array based on customOrder
-          const sortedSizeWiseData = record.sizeWiseData.sort((a, b) => customOrder.indexOf(a.sizeDescription) - customOrder.indexOf(b.sizeDescription));
+          const sortedSizeWiseData = record.sizeWiseData?.sort((a, b) => customOrder.indexOf(a.sizeDescription) - customOrder.indexOf(b.sizeDescription));
           // Render the nested table with the sorted sizeWiseData
           return (
             <Table

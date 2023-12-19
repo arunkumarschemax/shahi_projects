@@ -221,7 +221,10 @@ export function OrderAcceptance() {
         data?.forEach(rec => rec.sizeWiseData?.forEach(version => {
             sizeHeaders.add('' + version.sizeDescription);
         }))
-        return Array.from(sizeHeaders);
+        const sizeHeadersArr = Array.from(sizeHeaders)
+        const customOrder = ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "XS-S", "S-S", "M-S", "L-S", "XL-S", "2XL-S", "3XL-S", "4XL-S", "XS-T", "S-T", "M-T", "L-T", "XS-T", "S-T", "M-T", "L-T", "XL-T", "2XL-T", "3XL-T", "4XL-T", "5XL-T", "STT", "MTT", "LTT", "XLTT", "2XLTT", "3XLTT", "Custm"];
+        sizeHeadersArr?.sort((a, b) => customOrder.indexOf(a) - customOrder.indexOf(b));
+        return sizeHeadersArr;
     };
 
     const getMap = (data: FactoryReportModel[]) => {
