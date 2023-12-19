@@ -311,18 +311,18 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .groupBy(`st.buyer_id,stri.trim_info_id`)
             .getRawMany()
             let respnse: any[] = []
-
-        query.map(async (rec) => {
-            let req = new buyerandM3ItemIdReq(rec.buyerId,rec.trimCode,rec.trimType)
-            let stockdata = await this.sampleService.getAvailbelQuantityAginstBuyerAnditem(req)
-            let data = {
-                trim_info_id: rec.trim_info_id,trim_item_code:rec.trim_item_code, trim_description: rec.trim_description, trim_consumption: rec.trim_consumption, tri_remarks: rec.tri_remarks, trim_sample_request_id: rec.trim_sample_request_id,trim_code:rec.m3trimcode,availabeQuantity:rec.availabeQuantity,trimType:rec.trimType,sample_request_idmt:rec.sample_request_id,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,buyerId:rec.buyerId,trimCode:rec.trimCode,status:rec.status,itemType:rec.trimType,sampleRequestid:rec.trim_sample_request_id,sampleItemId:rec.trimInfoIdm,totalRequirement:rec.total_requirement,receivedQty:rec.receivedQty,allocatedStock:stockdata.data
+            for(const recc of query)
+            {
+                let reqq = new buyerandM3ItemIdReq(recc.buyerId,recc.trimCode,recc.trimType)
+                let stockdata = await this.sampleService.getAvailbelQuantityAginstBuyerAnditem(reqq)
+                let data = {
+                    trim_info_id: recc.trim_info_id,trim_item_code:recc.trim_item_code, trim_description: recc.trim_description, trim_consumption: recc.trim_consumption, tri_remarks: recc.tri_remarks, trim_sample_request_id: recc.trim_sample_request_id,trim_code:recc.m3trimcode,availabeQuantity:recc.availabeQuantity,trimType:recc.trimType,sample_request_idmt:recc.sample_request_id,resltantavaliblequantity:recc.resltantavaliblequantity,consumedQty:recc.consumedQty,buyerId:recc.buyerId,trimCode:recc.trimCode,status:recc.status,itemType:recc.trimType,sampleRequestid:recc.trim_sample_request_id,sampleItemId:recc.trimInfoIdm,totalRequirement:recc.total_requirement,receivedQty:recc.receivedQty,allocatedStock:stockdata.data
+                }
+                respnse.push(data);
             }
-            respnse.push(data);
-        })
-        if(respnse.length > 0){
-            return respnse;
-        }
+            if(respnse.length > 0){
+                return respnse;
+            }
     };
 
 
