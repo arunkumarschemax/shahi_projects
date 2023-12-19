@@ -749,76 +749,76 @@ export class SampleRequestService {
 
     return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
   }
-  async creatematerialAlloction(req:MaterialAllocationDTO[]):Promise<CommonResponseModel>{
+  async creatematerialAlloction(req:MaterialAllocationDTO):Promise<CommonResponseModel>{
     // console.log(req)
     const manager = new GenericTransactionManager(this.dataSource)
     const queryManager = this.dataSource;
     try{
       let save
-      const filteredData = req.filter(item => item.checkedStatus === 1);
-      const transformedData = filteredData.reduce((acc, item) => {
-        // console.log(transformedData,'transformedData')
-        const foundIndex = acc.findIndex(
-          (el) =>
-            el.sampleOrderId === item.sampleOrderId &&
-            el.sampleItemId === item.sampleItemId &&
-            el.m3ItemId === item.m3ItemId &&
-            el.buyerId ===item.buyerId
-        );
+      // const filteredData = req.filter(item => item.checkedStatus === 1);
+      // const transformedData = filteredData.reduce((acc, item) => {
+      //   // console.log(transformedData,'transformedData')
+      //   const foundIndex = acc.findIndex(
+      //     (el) =>
+      //       el.sampleOrderId === item.sampleOrderId &&
+      //       el.sampleItemId === item.sampleItemId &&
+      //       el.m3ItemId === item.m3ItemId &&
+      //       el.buyerId ===item.buyerId
+      //   );
       
-        if (foundIndex !== -1) {
-          acc[foundIndex].itemData.push({
-            quantity: item.quantity,
-            stockId: item.stockId,
-            LocationId: item.LocationId,
-            checkedStatus: item.checkedStatus,
-            issuedQty: item.issuedQty
-          });
-        } else {
-          acc.push({
-            itemType: item.itemType,
-            sampleOrderId: item.sampleOrderId,
-            sampleItemId: item.sampleItemId,
-            m3ItemId: item.m3ItemId,
-            buyerId:item.buyerId,
-            itemData: [
-              {
-                quantity: item.quantity,
-                stockId: item.stockId,
-                LocationId: item.LocationId,
-                checkedStatus: item.checkedStatus,
-                issuedQty: item.issuedQty
-              }
-            ]
-          });
-        }
+      //   if (foundIndex !== -1) {
+      //     acc[foundIndex].itemData.push({
+      //       quantity: item.quantity,
+      //       stockId: item.stockId,
+      //       LocationId: item.LocationId,
+      //       checkedStatus: item.checkedStatus,
+      //       issuedQty: item.issuedQty
+      //     });
+      //   } else {
+      //     acc.push({
+      //       itemType: item.itemType,
+      //       sampleOrderId: item.sampleOrderId,
+      //       sampleItemId: item.sampleItemId,
+      //       m3ItemId: item.m3ItemId,
+      //       buyerId:item.buyerId,
+      //       itemData: [
+      //         {
+      //           quantity: item.quantity,
+      //           stockId: item.stockId,
+      //           LocationId: item.LocationId,
+      //           checkedStatus: item.checkedStatus,
+      //           issuedQty: item.issuedQty
+      //         }
+      //       ]
+      //     });
+      //   }
       
-        return acc;
-      }, []);
-      // console.log(transformedData);
-      let materialitemdata =[];
-      for(const mainData of transformedData ){
+      //   return acc;
+      // }, []);
+      // // console.log(transformedData);
+      let materialitemdata:MaterialAllocationItemsEntity[] =[];
+      // for(const mainData of transformedData ){
          const entity = new MaterialAllocationEntity()
-         entity.buyerId=mainData.buyerId
-         entity.itemType=mainData.itemType
-         entity.sampleOrderId=mainData.sampleOrderId
-         entity.sampleItemId=mainData.sampleItemId
-         entity.m3ItemId=mainData.m3ItemId
-         entity.totalIssueQty=0
+         entity.buyerId=req.buyerId
+         entity.itemType=req.itemType
+         entity.sampleOrderId=req.sampleOrderId
+         entity.sampleItemId=req.sampleItemId
+         entity.m3ItemId=req.m3ItemId
+         entity.totalIssueQty=req.allocatioQuantity
          entity.status=MaterialStatusEnum.MATERIAL_ALLOCATED
-         for(const itemData of mainData.itemData){
+         for(const itemData of req.allocatedItems){
           const itemEntity = new MaterialAllocationItemsEntity()
               itemEntity.locationId=itemData.LocationId
               itemEntity.stockId=itemData.stockId
               itemEntity.quantity=itemData.quantity
-              itemEntity.allocateQuantity=itemData.issuedQty
+              itemEntity.allocateQuantity=itemData.allocatioQuantity
               materialitemdata.push(itemEntity)
          }
          entity.materialAllocationinfo=materialitemdata
          console.log(entity)
         await manager.startTransaction();
         save = await manager.getRepository(MaterialAllocationEntity).save(entity)
-      }
+      // }
       console.log(save)
       console.log('***********************************8')
       console.log(materialitemdata);
@@ -827,7 +827,7 @@ export class SampleRequestService {
         let updateStockFlag =true;
         for(const itemData of materialitemdata){
           console.log(itemData);
-          const update = await manager.getRepository(StocksEntity).update({id:itemData.stockId},{allocateQuanty:itemData.allocateQuantity})
+          const update = await manager.getRepository(StocksEntity).update({id:itemData.stockId},{allocateQuanty: () => `allocatd_quantity +  ${itemData.allocateQuantity}`})
           console.log(update);
           console.log("update Stock");
           if(!update.affected){
@@ -836,22 +836,24 @@ export class SampleRequestService {
             break
           }
         }
-        let flag =true;
-        for(const mainData of transformedData ){
-          let updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:mainData.sampleOrderId,m3ItemId:mainData.m3ItemId},{status: `${BomStatusEnum.ALLOCATED}`});
+        let bomUpdateFlag =true;
+        let bomStatus = BomStatusEnum.OPEN;
+        if(req.allocatioQuantity >= req.toBeProcured){
+          bomStatus = BomStatusEnum.ALLOCATED
+        }
+        // for(const mainData of transformedData ){
+          let updateBomStatus = await manager.getRepository(SamplingbomEntity).update({samplingBomId:req.samplingBomId},{status:bomStatus});
           console.log("updateBomStatus");
           console.log(updateBomStatus);
 
           if(updateBomStatus.affected <1){
-            flag = false;
+            bomUpdateFlag = false;
             await manager.releaseTransaction();
           }
-          else{
-
-          }
-        }
+          
+        // }
         let updateSampleOrderStatus
-        let getBomStatusquery = "Select * from sampling_bom where status!= 'Allocated' and sample_request_id = "+transformedData[0].sampleOrderId;
+        let getBomStatusquery = "Select * from sampling_bom where status!= 'Allocated' and sample_request_id = "+req.sampleOrderId;
         let getBomStatus = await queryManager.query(getBomStatusquery);
         // let getBomStatus = await manager.getRepository(SamplingbomEntity).find({where:{status: Not(BomStatusEnum.ALLOCATED),sampleRequestId: transformedData[0].sampleOrderId}});
         console.log("getBomStatus")
@@ -860,10 +862,10 @@ export class SampleRequestService {
         if(getBomStatus.length-1 < 1){
           updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:req[0].sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION});
           console.log(updateSampleOrderStatus);
-          console.log(flag);
+          console.log(bomUpdateFlag);
           console.log(updateStockFlag);
 
-          if(!updateSampleOrderStatus || !flag || !updateStockFlag){
+          if(!updateSampleOrderStatus || !bomUpdateFlag || !updateStockFlag){
             await manager.releaseTransaction();
             return new CommonResponseModel(false,1,'Something Went Wrong',[])
           }
