@@ -308,6 +308,16 @@ export class OrdersController {
         }
     }
 
+    @Post('/getMonthWiseReportDataNew')
+    // @ApiBody({ type: YearReq })
+    async getMonthWiseReportDataNew(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.ordersService.getMonthWiseReportDataNew(req);
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
     @Post('/seasonWiseReport')
     @ApiBody({ type: SeasonWiseRequest })
     async seasonWiseReport(@Body() req?: any): Promise<CommonResponseModel> {
