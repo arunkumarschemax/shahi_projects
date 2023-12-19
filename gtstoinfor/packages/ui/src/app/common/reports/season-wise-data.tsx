@@ -47,10 +47,15 @@ const SeasonWiseReportData = () => {
 
   const handleTabChange = (value?: string, itemName?: string) => {
     setTabChange(value);
+    console.log(value,"tabname")
     reportSS(value, itemName);
     form.resetFields();
   };
-
+  console.log(tabChange,"ggg");
+  // console.log(tabChange.split(""),"ttt")
+  const test = tabChange?.split(",")[0];
+  console.log(test,"77")
+  
   const reportSS = (value?: string, itemName?: string) => {
     const req = new SeasonWiseRequest();
     if (form.getFieldValue("itemCode") !== undefined) {
@@ -69,10 +74,10 @@ const SeasonWiseReportData = () => {
     service.seasonWiseReportData(req).then((res) => {
       if (res.data) {
         setData(res.data);
-        console.log(data, "data");
+        // console.log(data, "data");
         if (!itemName) {
           setStoreData(res.data);
-          console.log(storeData, "storedata");
+          // console.log(storeData, "storedata");
         }
         // handleTabChange(tabsData[0])
       }
@@ -136,16 +141,7 @@ const SeasonWiseReportData = () => {
       width: "200px",
       // ellipsis: true,
     },
-    // {
-    //   title: <div style={{textAlign: "center"}}>Year</div>,
-    //   dataIndex: 'year',
-    //   width:"80px"
-    // },
-    // {
-    //   title: <div style={{textAlign: "center"}}>Season</div>,
-    //   dataIndex: 'season',
-    //   width:"80px"
-    // },
+  
   ];
   sizeHeaders?.forEach((version) => {
     columnsWH.push({
@@ -188,112 +184,37 @@ const SeasonWiseReportData = () => {
 
 
 
-  // const exportExcel = () => {
-  //   // const whMonthTotals = (data) => {
-
-  //   //   const monthTotals = {
-  //   //     itemName: 0,
-  //   //     january: 0,
-  //   //     february: 0,
-  //   //     march: 0,
-  //   //     april: 0,
-  //   //     may: 0,
-  //   //     june: 0,
-  //   //     july: 0,
-  //   //     august: 0,
-  //   //     september: 0,
-  //   //     october: 0,
-  //   //     november: 0,
-  //   //     december: 0,
-  //   //     total: 0,
-  //   //   };
-
-    
-
-    
-
-  //   //   return {
-  //   //     ...monthTotals,
-  //   //     itemName: "Grand Total",
-  //   //     __style: {
-  //   //       bold: true,
-  //   //       fill: {
-  //   //         type: "pattern",
-  //   //         patternType: "solid",
-  //   //         backgroundColor: "d9e1f2",
-  //   //       },
-  //   //     },
-  //   //   };
-  //   // };
-  //   // console.log(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
-  //   const excel = new Excel();
-
-  //   // let excelData = [];
-  //   // let tabsNames = [];
-  //   // let promises = [];
-
-  //   // // Create an array of promises
-  //   // for (const rec of tabsData) {
-  //   //   const req = new SeasonWiseRequest();
-  //   //   req.year = Number(rec.split(",")[1]);
-  //   //   req.season = rec.split(",")[2];
-  //   //   req.qtyLocation = rec.split(",")[0].split("-")[1].toLocaleLowerCase();
-  //   //   const promise = service.seasonWiseReport(req);
-  //   //   promises.push(promise);
-
-  //   //   promise.then((res) => {
-  //   //     if (res.status) {
-  //   //       console.log(res, "pppppppppppppppppppppppppppp");
-  //   //       excelData.push(res.data);
-  //   //       tabsNames.push(rec.split(",")[0]);
-
-  //   //       console.log(rec.split(",")[0]);
-  //   //     }
-  //   //   });
-  //   // }
-  //      excel
-  //     .addSheet('attendance-report')
-  //     .addColumns(excelColumnsWH)
-  //     .addDataSource(data, { str2num: true })
-  //     .saveAs("SeasonWise.xlsx");
-
-
-
-
-   
-  
-
-  
-  //   // Promise.all(promises).then(() => {
-  //   //   console.log(excelData, tabsNames, "LLLLLLLLLLLLLLLLls");
-
-  //   //   if (excelData.length) {
-  //   //     excelData.forEach((seasonData, index) => {
-  //   //       const whData = seasonData;
-  //   //       console.log(whData, "------");
-
-  //   //       if (whData.length > 0) {
-  //   //         excel
-  //   //           .addSheet(`${tabsNames[index]}`)
-  //   //           .addColumns(excelColumnsWH)
-  //   //           .addDataSource(whData, { str2num: true });
-
-  //   //         const monthTotals = whMonthTotals(whData);
-  //   //         excel.addDataSource([monthTotals], { str2num: true });
-  //   //       }
-  //   //     });
-  //   //     excel.saveAs("SeasonWise.xlsx");
-  //   //   }
-  //   // });
-  // };
 
   const exportExcel = () => {
     const excel = new Excel();
+    const obj = {};
 
+    const monthTotals = {};
+    sizeHeaders.forEach((mon) => {
+      let monthValue = 0;
+      monthTotals[mon] = 0;
+      data.forEach((r) => {
+        const sizeData = r?.MonthItemData?.find((item) => item.monthName == mon);
+        // console.log(sizeData);
+        monthValue = sizeData ? Number(sizeData?.totalQuantity) : 0;
+        monthTotals[mon] += monthValue;
+        // grandTotal += monthValue;
+      });
+    });
+    console.log(monthTotals);
+    console.log(data[0]);
+    obj['MonthItemData'] = [];
+    obj['itemName'] = "Grand Total";
+    Object.keys(monthTotals).forEach(k => {
+      obj['MonthItemData'].push({ monthName : k, totalQuantity : monthTotals[k]});
+    });
+    const dataDuplicate = JSON.parse(JSON.stringify(data));
+    dataDuplicate.push(obj);
+    console.log(dataDuplicate[dataDuplicate.length]);
     excel
-      .addSheet('attendance-report')
+      .addSheet(tabChange?.split(",")[0])
       .addColumns(excelColumnsWH)
-      .addDataSource(data)
+      .addDataSource(dataDuplicate,{ str2num: true })
       .saveAs('SeasonWise.xlsx');
   }
 
@@ -301,25 +222,35 @@ const SeasonWiseReportData = () => {
 
 
   let i = 1;
-const excelColumnsWH:any = [
+  const excelColumnsWH:any = [
    
-  { title: "#", dataIndex: "sno", render: (text, object, index) => { return i++; } },
+    { 
+      title: "#", 
+      // dataIndex: "sno", 
+      render: (text, object, index) => { 
+        if(index == data.length) { 
+          return null;
+        } else { 
+          return i++; 
+        } 
+      }
+    },
 
-  {
-    title:"Planning Sum",
-    dataIndex: "itemName",
-    // ellipsis: true,
-  },
-  
+    {
+      title:"Planning Sum",
+      dataIndex: "itemName",
+      // ellipsis: true,
+    },
+    
 
-];
+  ];
 
 sizeHeaders?.forEach((version) => {
   excelColumnsWH.push({
     title: version,
     dataIndex: version,
     key: version,
-    width: "110px",
+    // width: "110px",
     align: "right",
     render: (text, record) => {
       const sizeData = record.MonthItemData.find(
@@ -343,7 +274,7 @@ excelColumnsWH.push({
   title: "Total",
   dataIndex: "total",
   align: "right",
-  width: "30px",
+  // width: "30px",
   render: (text, record) => {
     let sum = 0;
     record.MonthItemData.forEach((r: any) => {
@@ -382,7 +313,7 @@ excelColumnsWH.push({
       monthTotals[mon] = 0;
       data.forEach((r) => {
         const sizeData = r.MonthItemData.find((item) => item.monthName == mon);
-        console.log(sizeData);
+        // console.log(sizeData);
         monthValue = sizeData ? Number(sizeData?.totalQuantity) : 0;
         monthTotals[mon] += monthValue;
 
@@ -491,7 +422,7 @@ excelColumnsWH.push({
         >
           {tabsData.map((e: string, index) => {
             return (
-              <Tabs.TabPane key={e} tab={<b>{e.split(",")[0]}</b>}>
+              <Tabs.TabPane key={e} tab={<b>{e.split(",")[0]}</b>} >
                 {data.length > 0 ? (
                   <div className="specific-screen">
                     <Table
