@@ -22,12 +22,12 @@ export class AddressEntity {
     })
     buyerAddress: string
 
-    @Column('varchar',{
+    @Column('int',{
         name:'buyer_code',
         nullable:false,
-        length:50
+       
     })
-    buyerCode: string
+    buyerCode: number
 
     @Column('text',{
         name:'delivery_address',
@@ -35,12 +35,12 @@ export class AddressEntity {
     })
     deliveryAddress: string
 
-    @Column('varchar',{
+    @Column('int',{
         name:'delivery_code',
         nullable:false,
-        length:50
+       
     })
-    deliveryCode: string
+    deliveryCode: number
 
     @Column("text",{
         name:'ship_to',

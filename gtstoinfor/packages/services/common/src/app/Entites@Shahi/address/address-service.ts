@@ -58,17 +58,22 @@ export class AddressService {
                 flag.add(true)
             } else {
                 flag.add(false)
-                return new CommonResponseModel(false, 0, 'Something wwent wrong in data deletion')
+                return new CommonResponseModel(false, 0, 'Something went wrong in data deletion')
             }
             for (const data of convertedData) {
-                // let dtoData
-                if (data.Country != null) {
-                    // dtoData = new AddressReq(data.Country,data.delivary_address,data.Buyeraddress,'admin')
+                const match = data.BUYERADDCRM.match(/^\d+/);
+                const match1 = data.DELIVERYADDCRM.match(/^\d+/);
+                const result = match ? parseInt(match[0], 10) : null;
+                const result1 = match1 ? parseInt(match1[0], 10) : null;
+
+                if (data.BILLTO != null) {
                     const addObj = new AddressEntity()
                     addObj.billTo = data.BILLTO
                     addObj.shipTo= data.SHIPTO
                     addObj.buyerAddress = data.BUYERADDCRM
                     addObj.deliveryAddress = data.DELIVERYADDCRM
+                    addObj.buyerCode = result
+                    addObj.deliveryCode = result1
                     const addSave = await transactionManager.getRepository(AddressEntity).save(addObj)
                     if (addSave) {
                         flag.add(true)

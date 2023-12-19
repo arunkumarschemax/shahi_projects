@@ -2,7 +2,7 @@ import { Button, Card, Col, Form, Row } from "antd"
 import { useState } from "react";
 import * as XLSX from 'xlsx';
 import Papa from 'papaparse'
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AddressService } from "@project-management-system/shared-services";
 import AlertMessages from "../../common/common-functions/alert-messages";
 
@@ -15,6 +15,7 @@ export const AddressUpload = () => {
     const [values, setValues] = useState([])
     const service = new AddressService()
     const [loading, setLoading] = useState(false);
+    const navigate = useNavigate()
 
     const importExcel = (file: any[]) => {
         var data = new Uint8Array(file);
@@ -46,6 +47,7 @@ export const AddressUpload = () => {
                     valueArray.push(Object.values(d))
                               });
                             setData(result.data)
+                            console.log(result.data,"uu")
                 setColumns(columnArray[0])
                 setValues(valueArray)
               }
@@ -86,7 +88,7 @@ export const AddressUpload = () => {
           setSelectedFile(null);
         }
       };
-
+         
       const handleUpload = async() => {
         try{
             form.validateFields().then(async () => {
@@ -94,6 +96,7 @@ export const AddressUpload = () => {
                     setLoading(true);
                     if(res.status){
                         AlertMessages.getSuccessMessage(res.internalMessage)
+                        navigate('/ralph-lauren/masters/address/address-excel-upload')
                     } else{
                         AlertMessages.getErrorMessage(res.internalMessage)
                     }

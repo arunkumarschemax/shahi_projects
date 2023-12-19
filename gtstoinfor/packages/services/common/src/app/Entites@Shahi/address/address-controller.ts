@@ -34,13 +34,5 @@ export class AddressController {
         }
     }
 
-    // @Post('/getAddressInfoByCountry')
-    // async getAddressInfoByCountry(@Body() req: any): Promise<CommonResponseModel> {
-    //     try {
-    //         return this.addressService.getAddressInfoByCountry(req);
-    //     } catch (err) {
-    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
 
-    //     }
-    // }
 }
