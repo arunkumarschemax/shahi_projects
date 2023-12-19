@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq, CoLineFormatModel, Destinations, Colors, Sizes } from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq, CoLineFormatModel, Destinations, Colors, Sizes, FileInfoModel } from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -714,15 +714,50 @@ export class OrdersService {
     }
 
     async getUploadFilesData(req: FileTypeDto): Promise<CommonResponseModel> {
-        let data
-        if (req.fileType !== undefined) {
+        // let data
+        // if (req.fileType !== undefined) {
 
-            data = await this.fileUploadRepo.getFilesData(req)
-        } else {
-            data = await this.fileUploadRepo.getFilesData()
+        //     data = await this.fileUploadRepo.getFilesData(req)
+        // } else {
+        //     data = await this.fileUploadRepo.getFilesData()
+        // }
+        const info = []
+        let query = `select fup.id as fileId , fup.file_name as fileName , fup.file_path as filePath,DATE_FORMAT(fup.created_at, '%Y-%m-%d %h:%i %p') as uploadedDate, fup.created_user as createdUser, fup.status as status,fup.file_type as fileType,fup.upload_type AS uploadType,fup.columns, fup.failed_reason as failedReason,fup.is_active as isActive from file_upload fup where fup.id > 0`
+        if(req.fileType){
+            query += ` and fup.file_type = '${req.fileType}'`
+        } 
+        if(req.fromDate){
+            query += ` and DATE(fup.created_at) BETWEEN '${req.fromDate}' AND '${req.toDate}'`
+        }
+        if(req.type !== 'UploadView'){
+            query += ` and fup.is_active = 1 AND fup.status = 'Success'`
+        }
+        if(req.uploadStatus){
+            query += ` and fup.status = '${req.uploadStatus}'`
+        }
+        query += ` group by fup.id order by fup.created_at DESC`
+        const data = await this.dataSource.query(query)
+        const trimQuery = `SELECT file_id as fileId,COUNT(*) as trimRecords,SUM(order_qty_pcs) as trimorderqty FROM trim_orders_child WHERE file_id IN(SELECT file_id FROM file_upload) GROUP BY file_id`
+        const trimdata = await this.dataSource.query(trimQuery)
+        const trimMap = new Map<number,any>()
+        for (const rec of trimdata) {
+            if (!(trimMap.has(rec.fileId))) {
+                trimMap.set(rec.fileId, rec)
+            }
+        }
+        const projectionQuery = `SELECT file_id as fileId,COUNT(*) as projectionRecords,SUM(order_plan_qty) as proorderqty FROM orders_child WHERE file_id IN(SELECT file_id FROM file_upload) GROUP BY file_id`
+        const projectiondata = await this.dataSource.query(projectionQuery)
+        const projectionMap = new Map<number,any>()
+        for (const rec of projectiondata) {
+            if (!(projectionMap.has(rec.fileId))) {
+                projectionMap.set(rec.fileId, rec)
+            }
         }
         if (data.length > 0) {
-            return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', data);
+            for(const rec of data){
+                info.push(new FileInfoModel(rec.fileId,rec.fileName,rec.filePath,rec.uploadedDate,rec.createdUser,rec.status,rec.fileType,projectionMap.get(rec.fileId)?.projectionRecords,trimMap.get(rec.fileId)?.trimRecords,projectionMap.get(rec.fileId)?.proorderqty,trimMap.get(rec.fileId)?.trimorderqty,rec.uploadType,rec.columns,rec.failedReason,rec.isActive))
+            }
+            return new CommonResponseModel(true, 1, 'uploaded files data retrived successfully', info);
         }
         else {
             return new CommonResponseModel(false, 0, 'No data found', data);
@@ -1118,7 +1153,6 @@ export class OrdersService {
         const format = '%'
         let total = ``
         monthsList.forEach((rec, index) => {
-            console.log(index,'indexxxxxxxxxxxxxxxxxxxx')
             qtyQuery.push(`SUM(CASE WHEN MONTH(STR_TO_DATE(${req.qtyLocation}, '%m-%d')) = ${index + 1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS ${rec}`)
             total += `SUM(${rec}) AS ${rec},`
         })
@@ -2931,10 +2965,8 @@ export class OrdersService {
                         const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id, details.productionPlanId, 10, dtoData.exf);
                         const saveExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedExcelEntity);
                         if (saveExcelEntity) {
-                            console.log(details,'------')
                             //difference insertion to order diff table
                             const existingDataKeys = Object.keys(details)
-                            console.log(existingDataKeys,'---existingDataKeys---')
                             const currentDataKeys = Object.keys(dtoData)
                             for (const existingDataKey of existingDataKeys) {
                                 if (details[existingDataKey] != dtoData[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month' && existingDataKey != 'productionPlanId') {
@@ -3029,7 +3061,7 @@ export class OrdersService {
                 await transactionManager.completeTransaction()
                 return new CommonResponseModel(true, 1, 'Created Successfully')
             } else {
-                await transactionManager.completeTransaction()
+                await transactionManager.releaseTransaction()
                 return new CommonResponseModel(false, 0, 'Something went wrong in uploading')
             }
         } catch (err) {
@@ -3330,7 +3362,6 @@ export class OrdersService {
         const query=' SELECT  planning_sum AS itemName,planning_ssn AS plannedSeason,YEAR,CONCAT(MONTHNAME('+qtyLocationDate+'),"-",YEAR('+qtyLocationDate+')) AS MONTHNAME,SUM(REPLACE(order_plan_qty,","," ")) AS totalQuantity FROM orders WHERE file_id = (SELECT MAX(file_id) FROM orders) AND YEAR="'+req.year+'" and  planning_ssn ="'+req.season+'" GROUP BY MONTH('+qtyLocationDate+'),planning_sum'
 
         const data = await this.ordersRepository.query(query)
-        console.log(data,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
 
         const result = {};
         const uniqueMonths = Array.from(new Set(data.map(item => item.MONTHNAME)));
@@ -3350,7 +3381,6 @@ export class OrdersService {
         
         const structuredData = Object.values(result);
         
-        console.log(structuredData,'22222222222222222222222')
 
         if(data){
             return new CommonResponseModel(true,1,'data retrived sucessfully',structuredData)
