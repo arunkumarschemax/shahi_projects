@@ -1,4 +1,4 @@
-import { GRNTypeEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { GRNTypeEnum, LocationMappedEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { GrnFabricEntity } from "./grn-fabric-entity";
 import { GrnTrimsEntity } from "./grn-trims.entity";
@@ -124,6 +124,12 @@ export class GrnEntity {
     nullable: false
   })
   invoiceNoDate: Date
+
+  @Column('enum', {
+    name: 'location_mapped_status',
+    enum: LocationMappedEnum
+})
+ locationMapStatus: LocationMappedEnum
 
   // @OneToMany(type => GrnFabricEntity, grnFab => grnFab.grnEntity, { cascade: true })
   // grnFabricInfo: GrnFabricEntity[]

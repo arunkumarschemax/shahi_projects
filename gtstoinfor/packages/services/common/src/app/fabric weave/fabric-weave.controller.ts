@@ -4,7 +4,7 @@ import { Any } from 'typeorm';
 import { FabriCWeaveDto } from './dto/fabric-weave.dto';
 import { FabricWeaveService } from './fabric-weave.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllFabricWeaveResponseModel, FabricWeaveResponseModel, UploadResponse } from '@project-management-system/shared-models';
+import { AllFabricWeaveResponseModel, CommonResponseModel, FabricTypeIdReq, FabricWeaveResponseModel, UploadResponse, fabricTypeIdreq } from '@project-management-system/shared-models';
 import { FabricWeaveRequest } from './dto/fabric-weave-request';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { extname } from 'path';
@@ -20,11 +20,11 @@ export class FabricWeaveController {
 
     @Post('/createFabricWeave')
     @ApiBody({type:FabriCWeaveDto})
-    async createFabricWeave(@Body() req:any): Promise<FabricWeaveResponseModel> {
+    async createFabricWeave(@Body() req:any): Promise<CommonResponseModel> {
     try {
         return await this.service.createFabricWeave(req, false);
     } catch (error) {
-        return this.applicationExceptionHandler.returnException(FabricWeaveResponseModel, error);
+        return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
     }
   
@@ -64,6 +64,16 @@ export class FabricWeaveController {
       return await this.service.activateOrDeactivateFabricWeave(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(FabricWeaveResponseModel, error);
+    }
+  }
+
+  @Post('/getWeaveByTypeId')
+  @ApiBody({type: FabricTypeIdReq})
+  async getWeaveByTypeId(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+      return await this.service.getWeaveByTypeId(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
 
@@ -109,4 +119,6 @@ export class FabricWeaveController {
       return this.applicationExceptionHandler.returnException(UploadResponse, error);
     }
   }
+
+  
 }

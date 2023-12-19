@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 
 
 export class FinishDTO {
-    type: string
+    // type: string
     finish:string;
     finishCode: string;
     isActive?: boolean;
@@ -14,7 +14,7 @@ export class FinishDTO {
     finishId? :number;
 
     constructor(
-        type: string,
+        // type: string,
         finish:string,
         finishCode: string,
         isActive?: boolean,
@@ -25,7 +25,7 @@ export class FinishDTO {
         versionFlag?: number,
         finishId?:number,
     ){
-        this.type = type
+        // this.type = type
         this.finish = finish
         this.finishCode = finishCode
         this.isActive = isActive

@@ -282,19 +282,22 @@ export class OperationTrackingService {
         }else {
           nextOperation = 'NA'
         }
-        const qtyInfoQry = `SELECT SUM(quantity) as totQty FROM sample_request_size_info WHERE sample_request_id = ${req.sampleRequestId}`
-        const qtyRes = await this.dataSource.query(qtyInfoQry)
-        let totalFgQty = 0
-        if(qtyRes.length > 0){
-          totalFgQty = qtyRes[0].totQty
-        }
+        // const qtyInfoQry = `SELECT SUM(quantity) as totQty FROM sample_request_size_info WHERE sample_request_id = ${req.sampleRequestId}`
+        // const qtyRes = await this.dataSource.query(qtyInfoQry)
+        // let totalFgQty = 0
+        // if(qtyRes.length > 0){
+        //   totalFgQty = qtyRes[0].totQty
+        // }
         const inventoryEntity = new OperationInventory()
         inventoryEntity.styleId = styleId
+        inventoryEntity.sampleReqId = req.sampleRequestId
+        inventoryEntity.colourId = req.colorId
+        inventoryEntity.sizeId = req.sizeId
         // inventoryEntity.operationSequenceId = dto.operationSequenceId
         inventoryEntity.operation = req.operationCode
-        inventoryEntity.physicalQuantity = totalFgQty
+        inventoryEntity.physicalQuantity = req.quantity
         // inventoryEntity.physicalUom = dto.physicalUom
-        inventoryEntity.issuedQuantity = totalFgQty
+        inventoryEntity.issuedQuantity = req.quantity
         // inventoryEntity.issuedUomId = dto.issuedUomId
         inventoryEntity.nextOperation = nextOperation
         // inventoryEntity.materialIssueId = dto.materialIssueId
@@ -325,15 +328,17 @@ export class OperationTrackingService {
         const trackingEntity = new OperationTracking()
         trackingEntity.jobNumber = operationJobNo
         trackingEntity.styleId = styleId
+        trackingEntity.colourId = req.colorId
+        trackingEntity.sizeId = req.sizeId
         // trackingEntity.operationSequenceId = dto.operationSequenceId
         trackingEntity.operationInventoryId = save.operationInventoryId
         // trackingEntity.rejectedQuantity = dto.rejectedQuantity
         // trackingEntity.rejectedUomId = dto.rejectedUomId
-        trackingEntity.reportedQuantity = totalFgQty
+        trackingEntity.reportedQuantity = req.quantity
         // trackingEntity.reportedUomId = dto.reportedUomId
         trackingEntity.operation = req.operationCode
         trackingEntity.nextOperation = nextOperation
-        trackingEntity.issuedQuantity = totalFgQty
+        trackingEntity.issuedQuantity = req.quantity
         // trackingEntity.issuedUomId = dto.issuedUomId
         trackingEntity.sampleReqId = req.sampleRequestId
         trackingEntity.status = TrackingEnum.YES

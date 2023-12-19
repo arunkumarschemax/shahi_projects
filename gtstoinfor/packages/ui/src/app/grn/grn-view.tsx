@@ -273,13 +273,13 @@ import { useIAMClientState } from "../common/iam-client-react";
           return data.grnDate ?moment( data.grnDate).format('YYYY-MM-DD') : "-";
         }
       },
-      // {
-      //   title: <div style={{textAlign:"center"}}>Status</div>,
-      //   dataIndex: "status",
-      //   render: (val,data) => {
-      //     return data.status ? data.status : "-";
-      //   }
-      // },
+      {
+        title: <div style={{textAlign:"center"}}>Location Mapping Status</div>,
+        dataIndex: "locationMapStatus",
+        render: (val,data) => {
+          return data.locationMapStatus ? data.locationMapStatus : "-";
+        }
+      },
       {
         title: <div style={{textAlign:'center'}}>Action</div>,
         dataIndex: 'action',

@@ -205,7 +205,12 @@ Service.getAllPurchaseOrderData(req).then(res=>{
 
       render: text => (text ? text : "-")
     },
-    
+    {
+      title: 'PO Against',
+      dataIndex: 'poAgainst',
+      width: '100px',
+      render: text => (text ? text : "-"),
+    },
     {
       title: 'Material Type',
       dataIndex: 'poMaterialtype',

@@ -9,9 +9,10 @@ export class LocationMappingReq {
     uom_id:number;
     description?:string;
     uomName?:string
+    grn_id?:number
     // stock_bar_code?:string
 
-    constructor( m3_item: number, location_id: number, quantity: number, grn_item_id: number,style_id: number,buyer_id:number,uom_id:number, item_type: string,description?:string,uomName?:string
+    constructor( m3_item: number, location_id: number, quantity: number, grn_item_id: number,style_id: number,buyer_id:number,uom_id:number, item_type: string,description?:string,uomName?:string, grn_id?:number
         // stock_bar_code?:string
         ) {
         this.m3_item = m3_item
@@ -24,6 +25,7 @@ export class LocationMappingReq {
         this.item_type = item_type
         this.description = description
         this.uomName = uomName
+        this.grn_id = grn_id
         // this.stock_bar_code = stock_bar_code
     }
 

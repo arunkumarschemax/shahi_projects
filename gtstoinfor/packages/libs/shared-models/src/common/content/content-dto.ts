@@ -1,3 +1,4 @@
+import { ItemEnum } from "../../enum";
 
 export class ContentDtos {
     contentId?: number;
@@ -8,6 +9,7 @@ export class ContentDtos {
     updatedAt : Date | any;
     updatedUser : string;
     versionFlag : number;
+    itemType?: any
 }
 
 export const ContentDtoDefault : ContentDtos = {
@@ -18,5 +20,6 @@ export const ContentDtoDefault : ContentDtos = {
     createdUser : '0',
     updatedAt : new Date() ,
     updatedUser : '0',
-    versionFlag : 1
+    versionFlag : 1,
+    itemType: ''
 };

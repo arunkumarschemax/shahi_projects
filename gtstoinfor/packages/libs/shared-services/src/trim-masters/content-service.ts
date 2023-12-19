@@ -27,6 +27,10 @@ import {
       return this.axiosPostCall(this.URL + "/activateOrDeactivateContent", req);
     }
   
+    async getFabricContentData(): Promise<CommonResponseModel> {
+      return this.axiosPostCall(this.URL + "/getFabricContentData");
+    }
+  
 
   }
   
