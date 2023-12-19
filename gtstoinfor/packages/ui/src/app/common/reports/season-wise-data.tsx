@@ -53,7 +53,7 @@ const SeasonWiseReportData = () => {
   };
   console.log(tabChange,"ggg");
   // console.log(tabChange.split(""),"ttt")
-  const test = tabChange.split(",")[0];
+  const test = tabChange?.split(",")[0];
   console.log(test,"77")
   
   const reportSS = (value?: string, itemName?: string) => {
