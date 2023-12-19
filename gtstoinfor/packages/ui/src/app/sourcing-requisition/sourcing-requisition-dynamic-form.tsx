@@ -1229,7 +1229,7 @@ const options = () => {
                                                 <Input placeholder="Enter XL No" />
                                             </Form.Item>
                                         </Col>
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                                             <Form.Item name='quantity' label='Quantity' rules={[{ required: true, message: 'Quantity is required' }]}>
                                                 <Input type="number" placeholder="Enter Quantity" addonAfter={ <Form.Item name='quantityUnit' style={{width:'90px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}><Select showSearch allowClear optionFilterProp="children" placeholder='Unit' >
                                                     {uom.filter((e)=> e.uomCategory === UomCategoryEnum.LENGTH)?.map(e => {

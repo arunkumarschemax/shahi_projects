@@ -429,7 +429,7 @@ export class SampleRequestService {
         }
 
         if(!fabFlag.has(false) && !trimFlag.has(false)){
-          let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ALLOCATED})
+          let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})
             if(updateSampleRequestStatus.affected === 0){
               await manager.releaseTransaction();
               return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
@@ -858,7 +858,7 @@ export class SampleRequestService {
         console.log(getBomStatus)
 
         if(getBomStatus.length-1 < 1){
-          updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:req[0].sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ALLOCATED});
+          updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:req[0].sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION});
           console.log(updateSampleOrderStatus);
           console.log(flag);
           console.log(updateStockFlag);

@@ -52,8 +52,10 @@ const FabricsForm = (props:FabricsFormProps) => {
         const newRow = {
           key: count,
           colourId:element.colour,
-          totalCount: qtyy
+          totalCount: qtyy,
+          wastage:2
         };
+        props.form.setFieldValue([`wastage${count}`],2)
         console.log(newRow)
         setData([...data, newRow]);
         setCount(count + 1);
@@ -178,7 +180,8 @@ const FabricsForm = (props:FabricsFormProps) => {
             qtyy = Number(qtyy)+Number(qty.quantity);
           })
           console.log(qtyy);
-            let consumptionCal = Number(qtyy) * Number(props.form.getFieldValue(`consumption${key}`));
+          console.log(props.form.getFieldValue(`consumption${key}`));
+            let consumptionCal = Number(qtyy) * (props.form.getFieldValue(`consumption${key}`) !=undefined ? Number(props.form.getFieldValue(`consumption${key}`)) : Number(0));
             let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
             console.log(consumptionCal);
             console.log(withPer);

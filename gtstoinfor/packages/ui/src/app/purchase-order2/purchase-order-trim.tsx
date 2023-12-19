@@ -573,7 +573,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                     <Form.Item name={'indentQuantity'} label={'Indent Quantity'} style={{display:'none'}}>
                             <Input disabled={inputDisable}></Input>
                         </Form.Item>
-                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 10 }}>
                     <Form.Item name='m3TrimCode' label='M3 Trim Code' rules={[{required:true,message:'M3 code is required'}]}>
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
                              disabled={inputDisable}

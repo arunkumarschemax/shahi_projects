@@ -282,15 +282,15 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
             {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Material Type</span>}>{data[0]?.materialType}</DescriptionsItem> */}
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>PO Against</span>}>{data[0]?.po_against}</DescriptionsItem>
             {data[0]?.po_against === 'Sample Order' ? (            
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Sample Request No</span>}>{data[0]?.Number}</DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Sample Request No</span>}>{data[0]?.sample_req_no}</DescriptionsItem>
             ):(
-              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent No</span>}>{data[0]?.Number}</DescriptionsItem>
+              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent No</span>}>{data[0]?.request_no}</DescriptionsItem>
               )}
             {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent No</span>}>{data[0]?.Number}</DescriptionsItem> */}
             {data[0]?.po_against === 'Sample Order' ? (            
-              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Expected Delivery Date</span>}>{moment(data[0]?.req_date).format('YYYY-MM-DD')}</DescriptionsItem>
+              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Expected Delivery Date</span>}>{moment(data[0]?.date).format('YYYY-MM-DD')}</DescriptionsItem>
             ):(
-              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent Date</span>}>{moment(data[0]?.req_date).format('YYYY-MM-DD')}</DescriptionsItem>
+              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent Date</span>}>{moment(data[0]?.indent_date).format('YYYY-MM-DD')}</DescriptionsItem>
             )}
             {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent Date</span>}>{moment(data[0]?.req_date).format('YYYY-MM-DD')}</DescriptionsItem> */}
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Vendor Name</span>}>{data[0]?.vendor_name}</DescriptionsItem>
