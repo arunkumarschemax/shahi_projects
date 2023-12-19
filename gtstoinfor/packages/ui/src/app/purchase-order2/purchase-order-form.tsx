@@ -246,8 +246,12 @@ export const PurchaseOrderForm = () => {
             if (poDto.poItemInfo.length > 0) {
                 purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
                     if (res.status) {
-                        message.success(res.internalMessage)
-                        navigate('/purchase-view')
+                        console.log(res.data,"9999")
+                        message.success(`Purchase Order ${res?.data?.poNumber} Created Successfully`);
+                        navigate('/purchase-view');
+                        setTimeout(() => {
+                           
+                        }, 5000); 
                     }
                 })
             }
@@ -312,7 +316,7 @@ export const PurchaseOrderForm = () => {
                             </Form.Item>
                         </Col>
 
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ display: sampleDropDownVisible == true ? '' : 'none' }}>
+                        {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ display: sampleDropDownVisible == true ? '' : 'none' }}>
                             <Form.Item name="requestNo" label="Request Number" rules={[{ required: sampleDropDownVisible, message: 'PO Type is required' }]}>
                                 <Select
                                     mode="multiple"
@@ -335,7 +339,7 @@ export const PurchaseOrderForm = () => {
                                     })}
                                 </Select>
                             </Form.Item>
-                        </Col>
+                        </Col> */}
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ display: indentDropDownVisible == true ? '' : 'none' }}>
                             <Form.Item name='indentId' label='Indent Code'
                                 rules={[{ required: indentDropDownVisible, message: 'IndentCode is required' }]}>
