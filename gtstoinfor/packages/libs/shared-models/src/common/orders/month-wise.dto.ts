@@ -17,3 +17,36 @@ export class MonthWiseDto {
          this.orderPlanNo =orderPlanNo
      };
  }
+
+
+ export class pcsData{
+    monthName:string
+    inPcs:number
+    inCoeffPcs:number
+    total?:number
+    constructor(
+        monthName:string,
+        inPcs:number,
+        inCoeffPcs:number,
+       total?:number
+
+    ){
+        this.monthName=monthName
+        this.inPcs=inPcs
+        this.inCoeffPcs=inCoeffPcs
+        this.total=total
+    }
+ }
+
+ export class NewMonthWiseDto{
+    phaseType:string;
+    pcsData:pcsData[]
+    constructor(
+        phaseType:string,
+        pcsData:pcsData[]
+    ){
+        this.phaseType=phaseType
+        this.pcsData=pcsData
+    }
+
+ }
