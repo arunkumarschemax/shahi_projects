@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
 import { Button, Card, Col, Form, Row, Select, Table } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { ExternalRefReq, GRNLocationPropsRequest } from '@project-management-system/shared-models';
+import { ExternalRefReq, GRNLocationPropsRequest, ItemTypeEnumDisplay } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
 import { UndoOutlined } from '@ant-design/icons';
 
@@ -28,7 +28,7 @@ export const GrnPendingInfoGrid = () => {
     useEffect(() => {
         getAllData()
         getgrn()
-        getMaterial()
+        // getMaterial()
     }, [])
 
 
@@ -102,7 +102,10 @@ const getMaterial=()=>{
             dataIndex: "materialType",
             align: 'left',
             sorter: (a, b) => a.materialType - b.materialType,
-
+            render: (text) => {
+              const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+              return EnumObj ? EnumObj.displayVal : text;
+            },
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
         },
@@ -191,11 +194,16 @@ const getMaterial=()=>{
                    placeholder="Select MaterialType "
                    optionFilterProp="children"
                    allowClear>
-                    {material?.map((qc: any) => (
+                    {Object.values(ItemTypeEnumDisplay).map((val) => (
+            <Select.Option key={val.name} value={val.name}>
+              {val.displayVal}
+            </Select.Option>
+          ))}
+                    {/* {material?.map((qc: any) => (
                   <Select.Option key={qc.materialType} value={qc.materialType}>
                     {qc.materialType}
                   </Select.Option>
-                ))}
+                ))} */}
                  </Select>
                             </Form.Item>
                        </Col>

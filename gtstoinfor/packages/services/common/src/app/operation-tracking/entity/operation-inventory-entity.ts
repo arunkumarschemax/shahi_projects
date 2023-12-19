@@ -68,6 +68,7 @@ nextOperation:string;
 })
 issuedUomId:number;
 
+
 //   @Column('int',{
 //     nullable:true,
 //     name:'damaged_quantity'
@@ -93,6 +94,21 @@ issuedUomId:number;
     default:0
 })
 rejectedUomId:number;
+@Column('int',{
+  nullable:false,
+  name:'sample_req_id'
+})
+sampleReqId:number;
+@Column('int',{
+  nullable:false,
+  name:'colour_id'
+})
+colourId:number;
+@Column('int',{
+  nullable:false,
+  name:'size_id'
+})
+sizeId:number;
 
   @CreateDateColumn({
     name: "created_at",

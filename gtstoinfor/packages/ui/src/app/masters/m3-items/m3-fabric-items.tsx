@@ -148,7 +148,7 @@ import {
             (rec) => rec.uomCategory == UomCategoryEnum.LENGTH
           );
           const weight = res.data.filter(
-            (rec) => rec.uomCategory == UomCategoryEnum.MASS
+            (rec) => rec.uomCategory == UomCategoryEnum.WEIGHT
           );
           const width = res.data.filter(
             (rec) => rec.uomCategory == UomCategoryEnum.AREA

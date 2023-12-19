@@ -18,6 +18,7 @@ import {
   AllocatedLocationReq,
   AllocationApprovalReq,
   BuyerRefNoRequest,
+  ItemTypeEnumDisplay,
   RequestNoReq,
 } from "@project-management-system/shared-models";
 import { useIAMClientState } from "../common/iam-client-react";
@@ -296,6 +297,10 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
     {
       title: "Item Type",
       dataIndex: "itemType",
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },
     },
     {
       title: "Quantity",
@@ -414,6 +419,11 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
           rowKey={(record) => record.sampleFabricId}
           columns={fabColumns}
           dataSource={fabricStockData}
+          pagination={{
+            onChange(current) {
+              setPage(current);
+            }
+          }}
           expandable={{
             expandedRowRender: (record) => expandFabricTabel(record),
             onExpand(expanded, record) {

@@ -59,7 +59,7 @@ export const LocationMapping = () => {
     }
 
     const saveLocation = (result: any) => {
-        console.log(grnData)
+        console.log(grnData,"grnData")
         if(form.getFieldValue("locationId") === undefined || null){
          AlertMessages.getErrorMessage('Please select the Location')
         }
@@ -69,7 +69,7 @@ export const LocationMapping = () => {
       
         // const req = new LocationMappingReq(grnData.m3_items_Id
         //     , locationId, qty, grnData.grnItemId, shahi_item_code, item_type_id, plant_id,grnData.style_id, grnData.item_id, grnData.style_id,grnData.buyer_id );
-            const req = new LocationMappingReq(grnData.itemId,locationId,qty,grnData.grnItemId,1,grnData.buyerId,grnData.uomId,grnData.materialType,grnData.m3itemDescription,grnData.uom);
+            const req = new LocationMappingReq(grnData.itemId,locationId,qty,grnData.grnItemId,1,grnData.buyerId,grnData.uomId,grnData.materialType,grnData.m3itemDescription,grnData.uom,grnData.grnId);
         if (req) {
             locationService.postToStockLogs(req).then((res) => {
                 if (res.status === true) {
@@ -213,7 +213,7 @@ export const LocationMapping = () => {
                                 <Input disabled={grnData} defaultValue={grnData.vendor_name} style={{fontWeight:'bold',color:'black'}} />
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 12 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 8 }}>
                             <Form.Item name="itemName" label="Item" rules={[{ required: true, message: ' Item is required ' }]}>
                                 <Input.TextArea disabled={grnData} style={{fontWeight:'bold',color:'black'}}/>
                             </Form.Item>

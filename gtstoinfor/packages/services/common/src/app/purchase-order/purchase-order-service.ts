@@ -144,7 +144,7 @@ export class PurchaseOrderService {
                 }
                 
 
-                return new CommonResponseModel(true, 1, 'purchased Order Created Sucessfully')
+                return new CommonResponseModel(true, 1, 'purchased Order Created Sucessfully',save)
             } else {
                 return new CommonResponseModel(false, 0, 'Something went Wrong')
 
@@ -385,8 +385,7 @@ export class PurchaseOrderService {
 
     async GetPurchaseData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
         try {
-            console.log(req,"req,ser")
-            let query = 'SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId FROM purchase_order  po LEFT JOIN style s ON s.style_id=po.style_id LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id'
+            let query = 'SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.po_against as poAgainst,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId FROM purchase_order  po LEFT JOIN style s ON s.style_id=po.style_id LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id WHERE 1=1'
 
             let param :any={}
             if(req){
@@ -394,9 +393,8 @@ export class PurchaseOrderService {
             //     query += ` where po.purchase_order_id = ${req?.id}`
             //   }
               if (req.ExternalRefNo && req.ExternalRefNo!=null){
-                query += ` WHERE b.external_ref_number = '${req.ExternalRefNo}'`
+                query += ` AND b.external_ref_number = '${req.ExternalRefNo}'`
               }
-              console.log(req.status,'=================')
               if (req.status && req.status.length > 0) {
                 // Assuming req.status is an array of enums
                 const statusValues = req.status.map(status => `'${status}'`).join(',');
@@ -465,12 +463,12 @@ export class PurchaseOrderService {
         }
     }
     async getAllPurchaseOrderData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
+        console.log(req, '^^^^^^^^^^^^^^^^^^^')
+
         try {
             const data = []
             const podata = await this.GetPurchaseData(req)
-            console.log(podata,"po")
             for (const po of podata.data) {
-                console.log(po, '^^^^^^^^^^^^^^^^^^^')
                 const fabData = await this.GetPurchaseFabricData(po.purchaseOrderId)
                 const fabricInfo = []
                 // for (const fabrData of fabData.data) {
@@ -495,14 +493,14 @@ export class PurchaseOrderService {
                     purchaseOrderDate: po.purchaseOrderDate,
                     poMaterialtype: po.poMaterialtype,
                     poStatus: po.poStatus,
-                    poId:po.purchaseOrderId
+                    poId:po.purchaseOrderId,
+                    poAgainst: po.poAgainst
                     // fabInfo: fabricInfo,
                     // triminfo: triminfo
 
                 })
             }
             if (data) {
-                console.log(data, "kkkkkkkkkkkk");
 
                 return new CommonResponseModel(true, 1, 'data retrived sucessfully', data)
 
@@ -527,14 +525,39 @@ export class PurchaseOrderService {
         if(poTypeRes[0].po_material_type == 'Fabric'){
             concatString = ` 
             left join m3_items mi on mi.m3_items_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id 
-            LEFT JOIN indent_fabric ii ON ii.ifabric_id = poi.indent_item_id`
-            columnName = 'mi.item_code,mi.hsn_code as hsnCode,mi.description,u.uom'
+            LEFT JOIN indent_fabric ii ON ii.ifabric_id = poi.indent_item_id
+            LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id = poi.sample_item_id
+            LEFT JOIN sample_request s ON s.sample_request_id = srf.sample_request_id`
+            columnName =    `mi.item_code,mi.hsn_code as hsnCode,mi.description,u.uom,
+            CASE
+            WHEN po.po_against = 'Sample Order' THEN s.request_no
+            WHEN po.po_against = 'Indent' THEN i.request_no
+            ELSE NULL
+        END AS Number,
+        CASE
+        WHEN po.po_against = 'Sample Order' THEN sr.expected_delivery_date
+        WHEN po.po_against = 'Indent' THEN i.indent_date
+        ELSE NULL
+    END AS req_date `
         //     poData = poData+` left join purchase_order_fabric pof on pof.purchase_order_id = po.purchase_order_id `
         }else{
             concatString = ` 
             left join m3_trims mi on mi.m3_trim_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id
-            LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id`
-            columnName = 'mi.trim_code as item_code , mi.hsn_code as hsnCode,mi.description ,u.uom'
+            LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id
+            LEFT JOIN sample_request_trim_info srt ON srt.trim_info_id = poi.sample_item_id
+            LEFT JOIN sample_request sr ON sr.sample_request_id = srt.sample_request_id
+            `
+            columnName = `mi.trim_code as item_code , mi.hsn_code as hsnCode,mi.description ,u.uom,
+            CASE
+            WHEN po.po_against = 'Sample Order' THEN sr.request_no
+            WHEN po.po_against = 'Indent' THEN i.request_no
+            ELSE NULL
+        END AS Number,
+        CASE
+        WHEN po.po_against = 'Sample Order' THEN sr.expected_delivery_date
+        WHEN po.po_against = 'Indent' THEN i.indent_date
+        ELSE NULL
+    END AS req_date `
         //     poData = poData+` left join purchase_order_trim pot on pot.purchase_order_id = po.purchase_order_id`
         }
         // poData = poData+` where po.purchase_order_id = ${req.id}`

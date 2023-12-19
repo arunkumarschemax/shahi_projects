@@ -241,7 +241,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     quantityUom: defaultFabricFormData.quantityUom,
                     indentCode: defaultFabricFormData.indentCode,
                     indentId:defaultFabricFormData.indentId,
-                    styleId: defaultFabricFormData.style
+                    // styleId: defaultFabricFormData.style
                 })
             }
        

@@ -7,12 +7,12 @@ export class FinishEntity {
   {name:'finish_id'})
   finishId:number;
 
-  @Column("varchar",{
-    nullable:false,
-    length:100,
-    name:"type"
-    })
-  type:string;
+  // @Column("varchar",{
+  //   nullable:false,
+  //   length:100,
+  //   name:"type"
+  //   })
+  // type:string;
 
   @Column("varchar",{
     nullable:false,

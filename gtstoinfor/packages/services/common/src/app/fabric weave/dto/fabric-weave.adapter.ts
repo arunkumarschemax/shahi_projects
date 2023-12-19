@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import { FabriCWeaveDto } from './fabric-weave.dto';
 import { FabricWeave } from '../fabric-weave.entity';
+import { FabricType } from '../../fabric-types/fabric-type.entity';
 
 @Injectable()
 export class FabricWeaveAdapter {
@@ -37,6 +38,7 @@ export class FabricWeaveAdapter {
         fabricWeaveDto.createdUser = fabricWeaveData.createdUser;
         fabricWeaveDto.updatedUser = fabricWeaveData.updatedUser;
         fabricWeaveDto.versionFlag = fabricWeaveData.versionFlag;
+        fabricWeaveDto.fabricTypeId = fabricWeaveData.fabricTypeId
         return fabricWeaveDto;
       }
 }

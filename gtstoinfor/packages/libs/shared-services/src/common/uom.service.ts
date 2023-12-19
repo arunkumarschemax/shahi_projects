@@ -1,4 +1,4 @@
-import {  UomCategoryRequest, UomIdRequest, UomRequest, UomResponse } from '@project-management-system/shared-models';
+import {  CommonResponseModel, UomCategoryRequest, UomIdRequest, UomRequest, UomResponse } from '@project-management-system/shared-models';
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class UomService extends CommonAxiosService{
@@ -27,6 +27,14 @@ export class UomService extends CommonAxiosService{
 
   async getUomByCategory(req:UomCategoryRequest): Promise<UomResponse> {
     return this.axiosPostCall(this.URL + '/getUomByCategory',req)
+  }
+
+  async getUomByWeight(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + '/getUomByWeight')
+  }
+
+  async getUomByYarn(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + '/getUomByYarn')
   }
 
 }

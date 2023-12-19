@@ -44,6 +44,7 @@ import { MaterialIssueRequest } from './dto/material-issue.req';
 import { SampleOrderIdRequest } from './dto/sample-req-id';
 import { AllLocationRequest } from './dto/location-req';
 import { RackPositionEntity } from '../rm_locations/rack-position.entity';
+import { OrderQuantityRequset } from './dto/order-quantity-request';
 
 
 
@@ -1009,7 +1010,7 @@ export class SampleRequestService {
         const manager = this.dataSource;
         //  const query='SELECT st.quantity-IF(st.issued_quantity IS NOT NULL,st.issued_quantity,0) AS totalAvailablequntity, mai.allocate_quantity AS materialAlloctedquantity,st.allocatd_quantity AS stockAllocatedQty,st.quantity AS stockQuantity,(st.quantity-st.allocatd_quantity) AS resultAvailableQuantity,st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId, st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, FALSE AS checkedStatus,date(g.grn_date) as grnDate FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id LEFT JOIN material_allocation_items mai ON mai.stock_id=st.id WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+'  AND st.item_type="'+req.itemType+'" AND (st.quantity-IF(st.issued_quantity IS NOT NULL,st.issued_quantity,0)) >0 order by g.grn_date'
 
-         const rawQuery = 'Select st.buyer_id AS buyerId,st.location_id AS locationId,st.m3_item AS m3ItemId,st.item_type AS itemType,st.grn_item_id AS grnItemId, st.id AS stockId,(quantity-allocatd_quantity-transfered_quantity) AS quantity, g.grn_number AS grnNumber, date(g.grn_date) as grnDate, rp.rack_position_name AS location, FALSE AS checkedStatus, stock_bar_code AS stockBarCode from stocks st left join grn_items gi on gi.grn_item_id = st.grn_item_id left join rack_position rp on rp.position_id = st.location_id left join grn g on g.grn_id = gi.grn_id where id>0 and g.grn_type = "INDENT" and st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' AND st.item_type="'+req.itemType+'" and (quantity-allocatd_quantity-transfered_quantity) > 0';
+         const rawQuery = 'Select 0 AS issuedQty,st.buyer_id AS buyerId,st.location_id AS locationId,st.m3_item AS m3ItemId,st.item_type AS itemType,st.grn_item_id AS grnItemId, st.id AS stockId,(quantity-allocatd_quantity-transfered_quantity) AS quantity, g.grn_number AS grnNumber, date(g.grn_date) as grnDate, rp.rack_position_name AS location, FALSE AS checkedStatus, stock_bar_code AS stockBarCode from stocks st left join grn_items gi on gi.grn_item_id = st.grn_item_id left join rack_position rp on rp.position_id = st.location_id left join grn g on g.grn_id = gi.grn_id where id>0 and g.grn_type = "INDENT" and st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' AND st.item_type="'+req.itemType+'" and (quantity-allocatd_quantity-transfered_quantity) > 0';
         // const queryy ='SELECT mai.allocate_quantity AS materialAlloctedquantity,st.allocatd_quantity AS stockAllocatedQty,st.quantity AS stockQuantity,(st.quantity-st.allocatd_quantity) AS resultAvailableQuantity,st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS checkedStatus FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  LEFT JOIN material_allocation_items mai ON mai.stock_id=st.id WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'" AND (st.quantity-st.allocatd_quantity)>0'
         
         const rmData = await manager.query(rawQuery);
@@ -1804,5 +1805,49 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
   }
 }
 
+//Mobile App API for sizes dropdown for operation reporting for sample request
 
+  async getOrderedSizes(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
+    const sizesDataQry = `select distinct(ss.size_id) as sizeId,s.sizes as size from sample_request_size_info ss left join size s on s.size_id = ss.size_id where sample_request_id = ${req.sampleRequestId}`;
+    const sizesData = await this.dataSource.query(sizesDataQry)
+    if(sizesData.length > 0){
+      return new CommonResponseModel(true,1,'data retrieved',sizesData)
+    }else{
+      return new CommonResponseModel(false,0,'NO data')
+    }
+  }
+
+  //Mobile App API for Colors dropdown for operation reporting for sample request
+
+  async getOrderedColors(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
+    const colorsDataQry = `select distinct(ss.colour_id) as colorId,c.colour as colour from sample_request_size_info ss left join colour c on c.colour_id = ss.colour_id where sample_request_id = ${req.sampleRequestId}`;
+    const colorsData = await this.dataSource.query(colorsDataQry)
+    if(colorsData.length > 0){
+      return new CommonResponseModel(true,1,'data retrieved',colorsData)
+    }else{
+      return new CommonResponseModel(false,0,'NO data')
+    }
+  }
+
+  //Mobile App API to get quantity for a colour and size operation reporting for sample request
+
+  async getQuantityForSIzeAndColor(req:OrderQuantityRequset):Promise<CommonResponseModel>{
+    const sampleOrderDataQry = `select sample_req_size_id as SampleOrderInfoId,quantity from sample_request_size_info where sample_request_id = ${req.sampleRequestId} and colour_id = ${req.colourId} and size_id = ${req.sizeId}`
+    const sampleOrderData = await this.dataSource.query(sampleOrderDataQry)
+    if(sampleOrderData.length == 1){
+      const checkOperationQry = `select operation,next_operation as nextOperation from operation_tracking where colour_id = ${req.colourId} and size_id = ${req.sizeId} and sample_req_id = ${req.sampleRequestId} ORDER BY operation_tracking_id DESC LIMIT 1`
+      const nextOperationInfo = await this.dataSource.query(checkOperationQry)
+      let nextOperation
+      if(nextOperationInfo.length > 0){
+        nextOperation = nextOperationInfo[0].nextOperation
+      }
+      const resData = {nextOperation:nextOperation,sampledata:sampleOrderData}
+      return new CommonResponseModel(true,1,'data retreived',resData)
+    }
+    if(sampleOrderData.length > 1){
+      return new CommonResponseModel(false,0,'Something Went wrong')
+    }else{
+      return new CommonResponseModel(false,0,'No Quantity found')
+    }
+  }
 }

@@ -246,8 +246,12 @@ export const PurchaseOrderForm = () => {
             if (poDto.poItemInfo.length > 0) {
                 purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
                     if (res.status) {
-                        message.success(res.internalMessage)
-                        navigate('/purchase-view')
+                        console.log(res.data,"9999")
+                        message.success(`Purchase Order ${res?.data?.poNumber} Created Successfully`);
+                        navigate('/purchase-view');
+                        setTimeout(() => {
+                           
+                        }, 5000); 
                     }
                 })
             }
@@ -286,12 +290,12 @@ export const PurchaseOrderForm = () => {
     const disabledDate = (current) => {
         // console.log(current.valueOf(), 'current');
          return current.valueOf() < Date.now();
-         
-       };
-     const disabledDate2 = (current) => {
-        // console.log(current.valueOf(), 'current');
-         return current.valueOf() < Date.now();
-       };
+      };
+     const disabledDate1=(current) => {
+        return (
+          current && current <= dayjs(poForm.getFieldValue('purchaseOrderDate'))
+        )
+              }
     return (
         <>
             <Card title='Purchase Order' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/purchase-view' > <Button className='panel_button' >View </Button></Link>}>
@@ -399,7 +403,7 @@ export const PurchaseOrderForm = () => {
                         </Form.Item>
                     </Col> */}
 
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
                             <Form.Item name='vendorId' label='Vendor' rules={[{ required: true, message: 'vendor is required' }]}>
                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor'>
                                     {vendordata.map(e => {
@@ -417,7 +421,7 @@ export const PurchaseOrderForm = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='expectedDeliveryDate' label='Expected Delivery Date' rules={[{ required: true, message: 'expectedDeliveryDate is required' }]}>
-                                <DatePicker style={{ width: '93%', marginLeft: 5 }} />
+                                <DatePicker style={{ width: '93%', marginLeft: 5 }} disabledDate={disabledDate1}/>
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -431,15 +435,13 @@ export const PurchaseOrderForm = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                            <Form.Item name='exchangeRate' label='Exchange Rate'
-                            
-                             rules={[{ required: false, message: 'Exchange Rate is required' }]}>
-                                <Input style={{ width: '93%', marginLeft: 5 }}  placeholder='Enter Exchange Rate' />
+                            <Form.Item name='exchangeRate' label='Exchange Rate' rules={[{ required: false, message: 'Exchange Rate is required' }]}>
+                                <Input style={{ width: '93%', marginLeft: 5 }} />
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='deliveryAddress' label='Delivery Address' rules={[{ required: true, message: 'Delivery Address is required' }]}>
-                                <Select showSearch optionFilterProp="children"  allowClear placeholder='Select Delivery Address'>
+                                <Select placeholder='Select Currency'>
                                     {activeFactoryData.map(e => {
                                         return (<Option value={e.id} key={e.id}>{e.address}</Option>)
                                     }

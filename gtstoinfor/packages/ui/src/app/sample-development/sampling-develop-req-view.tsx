@@ -99,6 +99,7 @@ import RolePermission from "../role-permissions";
    const { IAMClientAuthContext } = useIAMClientState();
    const [isModalOpen, setIsModalOpen] = useState(false)
    const [row, setRow] = useState();
+   const [stockForm] = Form.useForm();
    const [pch, setPch] = useState<any>([]);
    const [styled, setStyled] = useState<any>([]);
   
@@ -420,7 +421,7 @@ import RolePermission from "../role-permissions";
         },
       },
     ];
-    const tableColumns = (val,fabindex) => {
+    const tableColumns = (val,fabindex,sampleReqId,itemId) => {
       if(val === undefined){
         AlertMessages.getWarningMessage("Please give required consumption. ");
       }
@@ -467,13 +468,13 @@ import RolePermission from "../role-permissions";
           width:'200px',
           render: (text, rowData, index) => { 
             return(
-              
+            <Form form={stockForm}>
               <Form.Item name={`allocatedQuantity${fabindex}-${index}`}>
                     <InputNumber name={`allocatedQuantity${fabindex}-${index}`}
-                        onChange={(e) => setAllocatedQty(index,rowData, e, fabindex)} 
+                        onChange={(e) => setAllocatedQty(index,rowData, e, fabindex, sampleReqId,itemId)} 
                     />
               </Form.Item>
-            
+            </Form>
             )
           }
         },
@@ -499,6 +500,7 @@ import RolePermission from "../role-permissions";
       return [...renderColumnForFabric]
     }
     const allocateQuantity = () =>{
+      console.log(tableData)
       // console.log(avilableQuantity)
       createAllocation(avilableQuantity)
 
@@ -537,22 +539,53 @@ import RolePermission from "../role-permissions";
 
 
     
-    const setAllocatedQty = (index, rowData, value, fabindex) => {
+    const setAllocatedQty = (index, rowData, value, fabindex, sampleReqId, itemId) => {
+      console.log(tableData);
       console.log(index);
       console.log(rowData);
       console.log(value);
       console.log(fabindex);
-      rowData.issuedQty = value
-      const newData = [...avilableQuantity];
-      newData[index].issuedQty = value;
-      console.log(newData)
-      setAvailableQuantity(newData);
+      console.log(sampleReqId);
+      console.log(itemId);
+      let itemData;
+      let stockData;
+      itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.fabric
+      stockData = itemData?.find((f) => f.fabric_info_id === itemId)?.allocatedStock;
+      let stockRecord = stockData.find((s)=> s.stockId === rowData.stockId)
+      stockRecord.issuedQty = value;
+      stockRecord.checkStatus = 1;
+      console.log(tableData);
+      const sum = stockData.reduce((accumulator, object) => {
+        console.log(accumulator);
+        console.log(object.issuedQty);
+        return accumulator + (object.issuedQty != undefined ? Number(object.issuedQty) : 0);
+      }, 0);
+      console.log(sum);
+      console.log(itemData?.find((f) => f.fabric_info_id === itemId).tobeProcured)
+      if(Number(sum) > Number(itemData?.find((f) => f.fabric_info_id === itemId).tobeProcured)){
+        AlertMessages.getErrorMessage('Issued Quantity should not exceed total required. ')
+        stockForm.setFieldValue(`allocatedQuantity${fabindex}-${index}`,0)
+      }
+      else{
+        stockForm.setFieldValue(`allocatedQuantity${fabindex}-${index}`,value)
+      }
+      if(stockData.find((e)=> e.checkedStatus === 1)){
+        setbtnEnable(true);
+      }
+      else{
+        setbtnEnable(false);
+      }
+      // rowData.issuedQty = value
+      // const newData = [...avilableQuantity];
+      // newData[index].issuedQty = value;
+      // console.log(newData)
+      // setAvailableQuantity(newData);
       if (value === 0 || value === null || value < 0 || value === undefined) {
         AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
-        sourcingForm.setFieldsValue({[`allocatedQuantity${fabindex}-${index}`]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity)});
+        // sourcingForm.setFieldsValue({[`allocatedQuantity${fabindex}-${index}`]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity)});
       }
       if (Number(value) > Number(rowData.quantity)) {
-        sourcingForm.setFieldsValue({[`allocatedQuantity${fabindex}-${index}`]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty)});
+        // sourcingForm.setFieldsValue({[`allocatedQuantity${fabindex}-${index}`]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty)});
         AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
       }
     }
@@ -773,7 +806,7 @@ import RolePermission from "../role-permissions";
         console.log(record);
         return  <Table
          dataSource={record.allocatedStock}
-          columns={tableColumns(record.totalRequirement,index)} 
+          columns={tableColumns(record.totalRequirement,index,record.sampleRequestid,record.fabric_info_id)} 
           pagination={false}
            rowKey={record.stockId}/>;
       };
