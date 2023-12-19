@@ -48,7 +48,7 @@ export class M3ItemsService {
   async getM3Items(req?:M3Itemsfilter): Promise<CommonResponseModel> {
     console.log(req,"req");
     
-    let query = `SELECT m3i.item_code AS itemCode, m3i.description,m3i.weight_id AS weightId,
+    let query = `SELECT m3i.m3_items_id AS m3ItemsId,m3i.item_code AS itemCode, m3i.description,m3i.weight_id AS weightId,
     m3i.fabric_type_id AS fabricTypeId, ft.fabric_type_name AS fabricType,
     m3i.weave_id AS weaveId,fw.fabric_weave_name AS fabricWeave,
     m3i.weight_unit AS weightUnit,wu.uom AS weightUom,
