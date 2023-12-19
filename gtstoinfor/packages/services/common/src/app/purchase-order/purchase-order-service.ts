@@ -195,7 +195,7 @@ export class PurchaseOrderService {
             let query
             if (req.materialType === 'Fabric') {
                 query = `SELECT m.item_code AS m3itemCode,poi.m3_item_id as m3ItemCodeId,poi.po_quantity AS poQuantity,poi.quantity_uom_id AS quantityUomId,u.uom,poi.purchase_order_item_id as poItemId,
-                poi.purchase_order_id AS purchaseOrderId,m.fabric_type AS m3ItemTypeId,ft.fabric_type_name AS m3ItemType,
+                poi.purchase_order_id AS purchaseOrderId,m.fabric_type_id AS m3ItemTypeId,ft.fabric_type_name AS m3ItemType,
                 poi.grn_quantity AS grnQuantity,poi.sample_item_id AS sampleItemId,poi.indent_item_id as indentItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour`
                 if(req.poAgainst == 'Indent'){
                     query = query + `,i.indent_id as indentId `
@@ -208,7 +208,7 @@ export class PurchaseOrderService {
                 LEFT JOIN uom u ON u.id = poi.quantity_uom_id
                 LEFT JOIN taxes t on t.tax_id = poi.tax
                 LEFT JOIN m3_items m ON m.m3_items_Id = poi.m3_item_id
-                LEFT JOIN fabric_type ft ON ft.fabric_type_id = m.fabric_type
+                LEFT JOIN fabric_type ft ON ft.fabric_type_id = m.fabric_type_id
                 LEFT JOIN colour c ON c.colour_id = poi.colour_id
                 `
                 if (req.poAgainst == 'Indent') {
@@ -516,52 +516,43 @@ export class PurchaseOrderService {
     }
 
     async getPodetailsById(req:PurchaseViewDto):Promise<CommonResponseModel>{
-        const PoType = `select po_material_type from purchase_order where purchase_order_id = ${req.id}`
+        const PoType = `select po_material_type,po_against from purchase_order where purchase_order_id = ${req.id}`
         const poTypeRes = await this.dataSource.query(PoType)
         console.log(poTypeRes,'poTypeResdd')
         let concatString
         let columnName
+        let joinString
+        let columns
+        console.log(poTypeRes[0].po_against,'kkkkkk')
+        if(poTypeRes[0].po_against == 'Sample Order'){
+            joinString = `LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id = poi.sample_item_id
+            LEFT JOIN sample_request s ON s.sample_request_id = srf.sample_request_id`
+            columns = `s.request_no as sample_req_no,s.expected_delivery_date as date ` 
+        }else {
+            joinString = `LEFT JOIN sample_request_trim_info srt ON srt.trim_info_id = poi.sample_item_id
+            LEFT JOIN sample_request sr ON sr.sample_request_id = srt.sample_request_id`
+            columns = `i.request_no,i.indent_date`
+        }
         // let poData = `select * from purchase_order po `
         if(poTypeRes[0].po_material_type == 'Fabric'){
             concatString = ` 
             left join m3_items mi on mi.m3_items_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id 
-            LEFT JOIN indent_fabric ii ON ii.ifabric_id = poi.indent_item_id
-            LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id = poi.sample_item_id
-            LEFT JOIN sample_request s ON s.sample_request_id = srf.sample_request_id`
-            columnName =    `mi.item_code,mi.hsn_code as hsnCode,mi.description,u.uom,
-            CASE
-            WHEN po.po_against = 'Sample Order' THEN s.request_no
-            WHEN po.po_against = 'Indent' THEN i.request_no
-            ELSE NULL
-        END AS Number,
-        CASE
-        WHEN po.po_against = 'Sample Order' THEN s.expected_delivery_date
-        WHEN po.po_against = 'Indent' THEN i.indent_date
-        ELSE NULL
-    END AS req_date `
+            LEFT JOIN indent_fabric ii ON ii.ifabric_id = poi.indent_item_id ${joinString}
+            `
+            columnName =    `mi.item_code,mi.hsn_code as hsnCode,mi.description,u.uom,${columns}`
         //     poData = poData+` left join purchase_order_fabric pof on pof.purchase_order_id = po.purchase_order_id `
         }else{
             concatString = ` 
             left join m3_trims mi on mi.m3_trim_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id
-            LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id
-            LEFT JOIN sample_request_trim_info srt ON srt.trim_info_id = poi.sample_item_id
-            LEFT JOIN sample_request sr ON sr.sample_request_id = srt.sample_request_id
+            LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id ${joinString}
+            
             `
-            columnName = `mi.trim_code as item_code , mi.hsn_code as hsnCode,mi.description ,u.uom,
-            CASE
-            WHEN po.po_against = 'Sample Order' THEN sr.request_no
-            WHEN po.po_against = 'Indent' THEN i.request_no
-            ELSE NULL
-        END AS Number,
-        CASE
-        WHEN po.po_against = 'Sample Order' THEN sr.expected_delivery_date
-        WHEN po.po_against = 'Indent' THEN i.indent_date
-        ELSE NULL
-    END AS req_date `
+            columnName = `mi.trim_code as item_code , mi.hsn_code as hsnCode,mi.description ,u.uom,${columns} `
         //     poData = poData+` left join purchase_order_trim pot on pot.purchase_order_id = po.purchase_order_id`
         }
         // poData = poData+` where po.purchase_order_id = ${req.id}`
         // const podatares = await this.dataSource.query(poData)
+        
         const poTrimData = `select po.*,poi.*,${columnName},poi.unit_price,i.request_no as indentNo,i.indent_date as indentDate,v.vendor_name,v.contact_number,v.bank_acc_no,v.gst_number,v.postal_code,f.address,t.tax_percentage AS taxPercentage ,cur.currency_name as currencyName
         from purchase_order po
         left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id ${concatString}
@@ -570,6 +561,8 @@ export class PurchaseOrderService {
         left join vendors v on v.vendor_id = po.vendor_id LEFT JOIN taxes t ON t.tax_id = poi.tax
         where po.purchase_order_id = ${req.id} `
         console.log(poTrimData,'ppppppphhh')
+        console.log(concatString,'columnsssss');
+
         const poTrimdatares = await this.dataSource.query(poTrimData)
         // console.log(podatares)
         // const PoDetails = {
