@@ -1822,7 +1822,6 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
   async getQuantityForSIzeAndColor(req:OrderQuantityRequset):Promise<CommonResponseModel>{
     const sampleOrderDataQry = `select sample_req_size_id as SampleOrderInfoId,quantity from sample_request_size_info where sample_request_id = ${req.sampleRequestId} and colour_id = ${req.colourId} and size_id = ${req.sizeId}`
     const sampleOrderData = await this.dataSource.query(sampleOrderDataQry)
-    console.log(sampleOrderData.length,'jjjjj')
     if(sampleOrderData.length == 1){
       return new CommonResponseModel(true,1,'data retreived',sampleOrderData)
     }
