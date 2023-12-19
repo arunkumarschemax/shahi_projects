@@ -15,6 +15,7 @@ import { AllocatedLocationRequest } from './dto/allocated-location-req';
 import { AllLocationRequest } from './dto/location-req';
 import { MaterialIssueRequest } from './dto/material-issue.req';
 import { SampleOrderIdRequest } from './dto/sample-req-id';
+import { OrderQuantityRequset } from './dto/order-quantity-request';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -507,5 +508,16 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+  @Post('/getQuantityForSIzeAndColor')
+  @ApiBody({ type: OrderQuantityRequset })
+  async getQuantityForSIzeAndColor(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getQuantityForSIzeAndColor(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+  
   
 }

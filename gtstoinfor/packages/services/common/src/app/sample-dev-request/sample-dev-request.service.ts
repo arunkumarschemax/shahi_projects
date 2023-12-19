@@ -44,6 +44,7 @@ import { MaterialIssueRequest } from './dto/material-issue.req';
 import { SampleOrderIdRequest } from './dto/sample-req-id';
 import { AllLocationRequest } from './dto/location-req';
 import { RackPositionEntity } from '../rm_locations/rack-position.entity';
+import { OrderQuantityRequset } from './dto/order-quantity-request';
 
 
 
@@ -1813,6 +1814,22 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
       return new CommonResponseModel(true,1,'data retrieved',colorsData)
     }else{
       return new CommonResponseModel(false,0,'NO data')
+    }
+  }
+
+  //Mobile App API to get quantity for a colour and size operation reporting for sample request
+
+  async getQuantityForSIzeAndColor(req:OrderQuantityRequset):Promise<CommonResponseModel>{
+    const sampleOrderDataQry = `select sample_req_size_id as SampleOrderInfoId,quantity from sample_request_size_info where sample_request_id = ${req.sampleRequestId} and colour_id = ${req.colourId} and size_id = ${req.sizeId}`
+    const sampleOrderData = await this.dataSource.query(sampleOrderDataQry)
+    console.log(sampleOrderData.length,'jjjjj')
+    if(sampleOrderData.length == 1){
+      return new CommonResponseModel(true,1,'data retreived',sampleOrderData)
+    }
+    if(sampleOrderData.length > 1){
+      return new CommonResponseModel(false,0,'Something Went wrong')
+    }else{
+      return new CommonResponseModel(false,0,'No Quantity found')
     }
   }
 }
