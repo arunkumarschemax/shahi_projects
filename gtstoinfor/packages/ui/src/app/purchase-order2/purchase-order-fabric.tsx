@@ -559,7 +559,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     <Form.Item name = 'styleId' hidden><Input/></Form.Item>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 8 }}>
                         <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
-                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code' onChange={m3FabricOnchange}>
+                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code' onChange={m3FabricOnchange}disabled={inputDisbale}>
                                 {fabricM3Code.map(e => {
                                     return (
                                         <Option key={e.m3ItemsId} value={e.m3ItemsId} name={e.itemCode}> {e.itemCode + "-" + e.description}</Option>

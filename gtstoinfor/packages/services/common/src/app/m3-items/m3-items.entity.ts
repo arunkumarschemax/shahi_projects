@@ -54,23 +54,23 @@ export class M3ItemsEntity {
   @Column('varchar', {
     nullable: true,
     length: 30,
-    name: 'fabric_type_id',
+    name: 'fabric_type',
   })
-  fabricTypeId: number;
+  fabricType: number;
 
   @Column('varchar', {
     nullable: true,
     length: 30,
-    name: 'weave_id',
+    name: 'weave',
   })
-  weaveId: number;
+  weave: number;
 
   @Column('varchar', {
     nullable: true,
     length: 11,
-    name: 'weight_id',
+    name: 'weight',
   })
-  weightId: number;
+  weight: number;
 
   @Column('varchar', {
     nullable: true,
@@ -131,9 +131,9 @@ export class M3ItemsEntity {
   @Column('varchar', {
     nullable: true,
     length: 30,
-    name: 'finish_id',
+    name: 'finish',
   })
-  finishId: number;
+  finish: number;
 
   @Column('varchar', {
     nullable: true,
@@ -170,9 +170,9 @@ export class M3ItemsEntity {
 
   @Column("int", {
     nullable: true,
-    name: "finish"
+    name: "finish_id"
   })
-  finish: number;
+  finishId: number;
 
   @Column("int", {
     nullable: true,
