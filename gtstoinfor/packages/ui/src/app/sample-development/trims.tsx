@@ -46,8 +46,10 @@ const TrimsForm = (props:TrimsFormProps) => {
         const newRow = {
           key: count,
           colourId:element.colour,
-          totalCount: qtyy
+          totalCount: qtyy,
+          wastage:2
         };
+        props.form.setFieldValue([`wastage${count}`],2)
         setData([...data, newRow]);
         setCount(count + 1);
       });
