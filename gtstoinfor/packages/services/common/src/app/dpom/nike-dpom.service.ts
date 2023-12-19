@@ -683,7 +683,7 @@ export class DpomService {
         return sendMail
     }
 
-    @Cron('0 21 * * *')
+    @Cron('0 4 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
         try {
@@ -825,7 +825,7 @@ export class DpomService {
         }
     }
 
-    @Cron('0 3 * * *')
+    @Cron('30 6 * * *')
     async syncCRMData(): Promise<CommonResponseModel> {
         // const transactionManager = new GenericTransactionManager(this.dataSource)
         const getBuyerPOs = await this.dpomRepository.getBuyerPOs()
@@ -864,6 +864,7 @@ export class DpomService {
                         }
                     }
                 } else {
+                    await this.dpomRepository.findOne({ where: {} })
                     continue;
                 }
             }

@@ -19,7 +19,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getBuyerPOs(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(`po_number, po_line_item_number, schedule_line_item_number, po_and_line, style_number, size_qty, size_description `)
+            .select(`po_number, po_line_item_number, schedule_line_item_number, po_and_line, style_number, size_qty, size_description, item, factory `)
             .where(` doc_type_code != 'ZP26' AND dpom_item_line_status != 'Cancelled' AND factory IS NULL OR item IS NULL OR po_final_approval_date = 0 OR plan_no IS NULL`)
             .groupBy(` po_and_line `)
         return await query.getRawMany()
