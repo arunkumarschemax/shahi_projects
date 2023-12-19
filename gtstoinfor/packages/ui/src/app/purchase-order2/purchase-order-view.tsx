@@ -27,7 +27,6 @@ export const PurchaseOrderView = () => {
   const searchInput = useRef(null);
   const options = [{ value: 'OPEN' }, { value: 'IN PROGRESS' }, { value: 'CLOSED' }, { value: 'CANCELED' }];
   const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
-  console.log(externalRefNo,"req")
   const { Option } = Select
   
   useEffect(() => {
@@ -457,7 +456,7 @@ Service.getAllPurchaseOrderData(req).then(res=>{
             </Form.Item>
           </Col>
           
-          {/* <Col span={6}>
+          <Col span={6}>
             <Form.Item label="PO Status	" name="poStatus" initialValue={[PurchaseOrderStatus.OPEN, PurchaseOrderStatus.IN_PROGRESS]}>
             <Select showSearch allowClear optionFilterProp="children" placeholder='Select status' mode="multiple" 
             defaultValue ={[PurchaseOrderStatus.OPEN, PurchaseOrderStatus.IN_PROGRESS]}
@@ -473,9 +472,9 @@ Service.getAllPurchaseOrderData(req).then(res=>{
                 style={{ width: '100%' }}
                 options={options}
                 
-              /> */}
-            {/* </Form.Item>
-          </Col> */} 
+              /> */} 
+             </Form.Item>
+          </Col>
           <Col span={2}>
             <Button htmlType='submit' type="primary" onClick={onSearch}> Get Detail </Button>
           </Col>

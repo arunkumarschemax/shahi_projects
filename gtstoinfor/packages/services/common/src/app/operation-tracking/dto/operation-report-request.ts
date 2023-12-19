@@ -14,4 +14,6 @@ export class operationReportRequest {
     colorId: number;
     @ApiProperty()
     sizeId: number;
+    @ApiProperty()
+    quantity: number;
 }
