@@ -291,8 +291,8 @@ import RolePermission from "../role-permissions";
       },
       {
         title: "Available Quantity",
-        dataIndex: "resltantavaliblequantity",
-        sorter: (a, b) => a.resltantavaliblequantity.localeCompare(b.resltantavaliblequantity),
+        dataIndex: "availabeQuantity",
+        sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
           // let consumedQty = 0
@@ -301,7 +301,7 @@ import RolePermission from "../role-permissions";
           // }
             return (
               <>
-               {record.resltantavaliblequantity ? (record.resltantavaliblequantity) : "Not Available"
+               {record.availableQuantity ? (record.availableQuantity) : "Not Available"
                   }
                 {/* {record.availableQuantity ? (record.availableQuantity-consumedQty) : "Not Available"
                   } */}
@@ -372,8 +372,8 @@ import RolePermission from "../role-permissions";
       },
       {
         title: "Available Quantity",
-        dataIndex: "resltantavaliblequantity",
-        sorter: (a, b) => a.resltantavaliblequantity.localeCompare(b.resltantavaliblequantity),
+        dataIndex: "availabeQuantity",
+        sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
           let consumedQty = 0
@@ -382,7 +382,7 @@ import RolePermission from "../role-permissions";
           // }
             return (
               <>
-                {record.resltantavaliblequantity ? (record.resltantavaliblequantity) : "Not Available"
+                {record.availabeQuantity ? (record.availabeQuantity) : "Not Available"
                   }
               </>
             );
