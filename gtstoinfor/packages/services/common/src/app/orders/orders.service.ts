@@ -3382,10 +3382,13 @@ export class OrdersService {
             query += ' AND  planning_sum  ="'+req.itemName+'"'
         }
 
-        query += ' GROUP BY MONTH('+qtyLocationDate+'),planning_sum order by MONTH('+qtyLocationDate+')';
+        query += ' GROUP BY MONTH('+qtyLocationDate+'),YEAR('+qtyLocationDate+'),planning_sum order by YEAR('+qtyLocationDate+'),MONTH('+qtyLocationDate+')';
 
-            const data = await this.ordersRepository.query(query)
+            // const data = await this.ordersRepository.query(query)
+            const data = await this.dataSource.query(query)
             // console.log(data, '$$$$$$$$$$$$$$$$$$$$$$')
+            // console.log(data.length, '$$$$$$$$$$$$$$$$$$$$$$')
+
             const sizeDataMap = new Map<string, sesaonWisereportModel>();
             for (const rec of data) {
                 if (!sizeDataMap.has(rec.itemName)) {
