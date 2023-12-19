@@ -96,7 +96,7 @@ export const AddressUpload = () => {
                     setLoading(true);
                     if(res.status){
                         AlertMessages.getSuccessMessage(res.internalMessage)
-                        navigate('/ralph-lauren/masters/address/address-excel-upload')
+                        navigate('/ralph-lauren/masters/address/address-view')
                     } else{
                         AlertMessages.getErrorMessage(res.internalMessage)
                     }

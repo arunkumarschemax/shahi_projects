@@ -61,12 +61,13 @@ export class AddressService {
                 return new CommonResponseModel(false, 0, 'Something went wrong in data deletion')
             }
             for (const data of convertedData) {
-                const match = data.BUYERADDCRM.match(/^\d+/);
-                const match1 = data.DELIVERYADDCRM.match(/^\d+/);
-                const result = match ? parseInt(match[0], 10) : null;
-                const result1 = match1 ? parseInt(match1[0], 10) : null;
+            
 
                 if (data.BILLTO != null) {
+                    const match = data.BUYERADDCRM.match(/^\d+/);
+                    const match1 = data.DELIVERYADDCRM.match(/^\d+/);
+                    const result = match ? parseInt(match[0], 10) : null;
+                    const result1 = match1 ? parseInt(match1[0], 10) : null;
                     const addObj = new AddressEntity()
                     addObj.billTo = data.BILLTO
                     addObj.shipTo= data.SHIPTO
@@ -82,7 +83,24 @@ export class AddressService {
                         await transactionManager.releaseTransaction();
                         break;
                     }
-                } else {
+                } else if (data.BillTo != null) {
+                    const addObj = new AddressEntity()
+                    addObj.billTo = data.BillTo
+                    addObj.shipTo= data.ShipTo
+                    addObj.buyerAddress = data.BuyerAddress
+                    addObj.deliveryAddress = data.DeliveryAddress
+                    addObj.buyerCode = data.BuyerCode
+                    addObj.deliveryCode = data.DeliveryCode
+                    const addSave = await transactionManager.getRepository(AddressEntity).save(addObj)
+                    if (addSave) {
+                        flag.add(true)
+                    } else {
+                        flag.add(false)
+                        await transactionManager.releaseTransaction();
+                        break;
+                    }
+                    
+                }else {
                     break
                 }
             }

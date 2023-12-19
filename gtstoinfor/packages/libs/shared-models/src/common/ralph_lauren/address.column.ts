@@ -3,5 +3,11 @@ export const AddressColumns = [
     "SHIPTO",
     "BILLTO",
     "BUYERADDCRM",
-    "DELIVERYADDCRM"
+    "DELIVERYADDCRM",
+    "BillTo",
+    "ShipTo",
+    "BuyerCode",
+    "BuyerAddress",
+    "DeliveryAddress",
+    "DeliveryCode"
 ]
