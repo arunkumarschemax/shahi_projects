@@ -534,8 +534,8 @@ export class PurchaseOrderService {
             WHEN po.po_against = 'Indent' THEN i.request_no
             ELSE NULL
         END AS Number,
-        CASE
-        WHEN po.po_against = 'Sample Order' THEN sr.expected_delivery_date
+        CASEexpected_delivery_date
+        WHEN po.po_against = 'Sample Order' THEN sr.
         WHEN po.po_against = 'Indent' THEN i.indent_date
         ELSE NULL
     END AS req_date `
