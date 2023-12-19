@@ -260,9 +260,19 @@ const FabricsForm = (props:FabricsFormProps) => {
   };
 
   const handleDelete = (key) => {
+    console.log(key);
+    console.log(data);
     const updatedData = data.filter((record) => record.key !== key);
-    setData(updatedData);
-    props.data(updatedData)
+    console.log(updatedData);
+    if(updatedData.length === 0){
+      setData([]);
+      props.data([])
+    }
+    else{
+      setData(updatedData);
+      props.data(updatedData)
+    }
+   
   };
 
   const getSelectedProductGroupId = (selectedFabricId) => {
