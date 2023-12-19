@@ -34,8 +34,9 @@ const ChangeComparision = (props: Props) => {
   const getChangeCompare = () => {
     const req = props.data
     service.getChangeComparision(req).then(res => {
-      if (res.status)
+      if (res.status) {
         setPdfData(res.data)
+      }
       else
         setPdfData([])
     })
@@ -166,14 +167,24 @@ const ChangeComparision = (props: Props) => {
       title: <CustomTitle />,
       dataIndex: "sizeWiseData",
       align: 'left',
-      render: (text: any, record: any) => (
-        <Table
-          dataSource={record.sizeWiseData}
-          columns={childColumns1}
-          pagination={false}
-          rowKey={(record) => record.sizeDescription}
-        />
-      ),
+      render: (text: any, record: any) => {
+        // Check if sizeWiseData is defined
+        if (record.sizeWiseData) {
+          const customOrder = ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "XS-S", "S-S", "M-S", "L-S", "XL-S", "2XL-S", "3XL-S", "XS-T", "S-T", "M-T", "L-T", "XS-T", "S-T", "M-T", "L-T", "XL-T", "2XL-T", "3XL-T", "4XL-T", "5XL-T", "STT", "MTT", "LTT", "XLTT", "2XLTT", "3XLTT", "Custm"];
+          // Sort the sizeWiseData array based on customOrder
+          const sortedSizeWiseData = record.sizeWiseData.sort((a, b) => customOrder.indexOf(a.sizeDescription) - customOrder.indexOf(b.sizeDescription));
+          // Render the nested table with the sorted sizeWiseData
+          return (
+            <Table
+              dataSource={sortedSizeWiseData}
+              columns={childColumns1}
+              pagination={false}
+              rowKey={(record) => record.sizeDescription}
+            />
+          );
+        }
+        return null; // Handle the case when sizeWiseData is undefined
+      },
     },
   ]
 
@@ -185,7 +196,7 @@ const ChangeComparision = (props: Props) => {
           columns={columns}
           dataSource={pdfData}
           bordered
-           className="table-header"
+          className="table-header"
           pagination={false}
           scroll={{ x: 'max-content', y: 400 }}
 
