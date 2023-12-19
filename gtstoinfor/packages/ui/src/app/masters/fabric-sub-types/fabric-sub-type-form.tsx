@@ -37,7 +37,6 @@ export function FabricSubTypeForm(
     services.getAllActiveFabricType().then(res => {
       if (res.status) {
         setFabricSubtypeData(res.data);
-        console.log(res.data,'kkkkkkkkkkkkkkkkkkkkkkkk')
       } 
     })
   }

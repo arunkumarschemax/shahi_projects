@@ -73,32 +73,58 @@ const M3Items = () => {
     })
   }
 
-  const generateItemCode = (value?) => {
-    getWeaveData(value)
-    const yarnTypeInfo = yarnType + '-'
+  const generateItemCode = () => {
+    const buyerId = form.getFieldValue("buyerId");
+    const fabricTypeId = form.getFieldValue("fabricTypeId");
+    const weaveId = form.getFieldValue("weaveId");
+    const weightUomId = form.getFieldValue("weightUomId");
+    const weightValue = form.getFieldValue("weightValue");
+    const contentId = form.getFieldValue("contentId");
+    const finishId = form.getFieldValue("finishId");
+    const shrinkage = form.getFieldValue("shrinkage");
+    const epi = form.getFieldValue("epiConstruction")
+    const ppi = form.getFieldValue("ppiConstruction")
+    const yarnTypeInfo = form.getFieldValue("yarnType");
+  
+    const buyerDetails = buyer.find((e) => e.buyerId === buyerId)?.shortCode || "";
+    console.log(buyerDetails,'........kl')
+    console.log(buyerId,'kllkl')
+    const fabricTypeDetails = fabricType.find((e) => e.fabricTypeId === fabricTypeId)?.fabricTypeName || "";
+    const weaveDetails = weave.find((e) => e.weaveId === weaveId)?.weaveName || "";
+    const weightUomInfo = weightUomData.find((e) => e.id === weightUomId)?.uom || "";
+    const weightInfo = weightValue !== undefined ? weightValue  : "";
+    const finishInfo = fabricFinish.find((e)=>e.fabricFinishTypeId === finishId)?.fabricFinishType || "";
+    const shrinkageInfo = shrinkage !== undefined ? shrinkage : "";
+    const epiInfo = epi != undefined? epi :"";
+    const ppiInfo = ppi != undefined ? ppi :""
+    const yarnTypeDetails = yarnTypeInfo != undefined ? yarnTypeInfo :"";
 
-    const weightInfo = weightChange + '...'
-    console.log(weightInfo,'weight info')
-
-    const weightUomInfo = weightUomData
-
-    let buyerDetails = buyer.find((e) => e.buyerId === form.getFieldValue("buyerId"))?.shortCode;
-    const buyersData = buyerDetails != undefined? buyerDetails + '...' : "";
-    form.setFieldsValue({buyerCode:buyerDetails != undefined ? buyerDetails : ""});
-
-    const finish = form.getFieldValue("finish") != undefined ? form.getFieldValue("finish") + '...' : "" ;
-
-    const shrinkage = form.getFieldValue("shrinkage") != undefined ? form.getFieldValue("shrinkage") : "";
-
-    let weaveDetails = weave.find((e) => e.weaveId === form.getFieldValue("weaveId"))?.weaveName;
-    const weaveData = weaveDetails != undefined ? weaveDetails + '...' : ""  ;
-
-    let fabricTypeDetails = fabricType.find((e) => e.fabricTypeId === form.getFieldValue("fabricTypeId"))?.fabricTypeName;
-    const fabricTypeData =  fabricTypeDetails != undefined ? fabricTypeDetails + '...' : "" ;
-
-    getVarcodeDefaultValue(`${buyersData != undefined ? buyersData : ''}${fabricTypeData != undefined ? fabricTypeData : ''}${weaveData != undefined ? weaveData : ''}${yarnTypeInfo != undefined ? yarnTypeInfo : ''}${finish != undefined ? finish : ''}${shrinkage != undefined ? shrinkage : ''}${weightInfo != undefined ? weightInfo : ''}${weightUomInfo != undefined ? weightUomInfo :''}`);
-    // form.setFieldsValue({"itemCode":code})
-  }
+    const yarnDetails = yarn.map((yarnItem) => {
+      const count = yarnItem.count || '';
+      const uomId = yarnItem.uomId;
+      const uom = uomId !== null ? yarnUom.find((e) => e.id === uomId)?.uom || '' : '';
+      return `${count}${uom}`;
+    }).join(', ');
+  
+    const contentInfo = formData.map((cont)=>{
+      const content = cont.content || '';
+      const percentage = cont.percentage
+      const data = contentData.find((e)=>e.contentId === content )?.content || ''
+      return`${data}${percentage}`
+    })
+  
+    const buyersData = buyerDetails + '...';
+    console.log(buyersData,'........114 line')
+    const fabricTypeData = fabricTypeDetails + '...';
+    const weaveData = weaveDetails + '...';
+    const finishData = finishInfo + '...'
+    const epiData = epiInfo + '-';
+    const ppiData = ppiInfo + '...';
+    const yarnInfo = yarnDetails + '...';
+  
+    getVarcodeDefaultValue(`${buyersData}${fabricTypeData}${weaveData}${yarnDetails}${epiData}${ppiData}${contentInfo}${finishData}${shrinkageInfo}${weightInfo}${weightUomInfo}`);
+  };
+  
 
   const getVarcodeDefaultValue = (defaultCode: string) => {
     console.log(defaultCode);
@@ -142,6 +168,11 @@ const M3Items = () => {
       });
   };
 
+  const onFabricTpe = (val) =>{
+    generateItemCode()
+    getWeaveData(val)
+  }
+
   useEffect(() => {
     getUom();
     getFabricTypedata();
@@ -169,6 +200,7 @@ const M3Items = () => {
         setWeightData(weight);
         setWidthData(width);
         setUom(res.data);
+        form.setFieldValue('widthUomId',res?.data[2].uomId)
       }
     });
   };
@@ -189,8 +221,13 @@ const M3Items = () => {
     })
   }
 
-  const onFinish = (val) => {
+  const onBuyerChange = (val,option)=>{
+    generateItemCode()
+    form.setFieldValue('buyerCode', option?.name)
+  }
 
+  const onFinish = (val) => {
+console.log('coming')
   const totalPercentage = formData.reduce((sum, item) => sum + (item.percentage || 0), 0);
   if (totalPercentage !== 100) {
     AlertMessages.getErrorMessage("Total percentage must be equal to 100.");
@@ -207,7 +244,7 @@ const M3Items = () => {
 
 
     console.log(formData,'on content')
-     const req = new M3FabricsDTO(0,val.buyerId,val.itemCode,val.fabricTypeId,val.weaveId,weightChange,weightUom,epiData,ppiData,yarnType,widthChange,widthUom,val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code,val.hsnCode,yarn,formData)
+     const req = new M3FabricsDTO(0,val.buyerId,val.itemCode,val.fabricTypeId,val.weaveId,weightChange,weightUom,epiData,ppiData,yarnType,widthChange,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code,val.hsnCode,yarn,formData)
      console.log(req,"LLLLLLLLLLLLLLLLLLLL");
     service.createM3Items(req).then((res) => {
       if (res.status) {
@@ -228,7 +265,6 @@ const M3Items = () => {
   };
 
   const yarnSelect = (val) =>{
-    console.log(val,'-jjjjjjkkk')
     setYarnRadio(true)
     setYarnType(val)
   }
@@ -333,10 +369,10 @@ const handleYarnUnitChange = (index, value) => {
               showSearch
               optionFilterProp="children"
               placeholder="Select Buyer"
-              onChange={generateItemCode}
+              onChange={onBuyerChange}
               >
                 {buyer.map((e) => {
-                  return (<Option key={e.buyerId} value={e.buyerId}>
+                  return (<Option key={e.buyerId} value={e.buyerId} name={e.shortCode}>
                     {`${e.buyerCode} - ${e.buyerName}`}
                     </Option>
                   )
@@ -344,16 +380,14 @@ const handleYarnUnitChange = (index, value) => {
               </Select>
             </Form.Item>
           </Col>
-          <Col style={{display:"none"}}>
-            <Form.Item name="buyerCode" rules={[{ required: true, message: "BuyerCode is required" }]}>
+            <Form.Item name="buyerCode" rules={[{ required: true, message: "BuyerCode is required" }]} hidden>
               <Input />
             </Form.Item>
-          </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item label=" Fabric Type" name="fabricTypeId" rules={[{ required: true, message: "Field is required" }]}>
               <Select 
               placeholder=" Select Fabric Type" 
-              onChange={generateItemCode}
+              onChange={onFabricTpe}
               >
                 {fabricType.map((option) => (
                 <Option key={option.fabricTypeId} value={option.fabricTypeId}>
@@ -380,7 +414,10 @@ const handleYarnUnitChange = (index, value) => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item label="Weight" name="weightId" rules={[{ required: false, message: "Field is required" }]}>
             <Space.Compact>
+              <Form.Item name='weightValue'>
               <Input placeholder="Enter Weight" allowClear onChange={(e)=>onWeightChange(e?.target?.value)} onBlur={generateItemCode}/>
+              </Form.Item>
+              <Form.Item name='weightUomId'>
                 <Select allowClear placeholder="Select Unit" onChange={onWeightUom} onBlur={generateItemCode}>
                   {weightUomData.map((e) => (
                     <Option key={e.id} value={e.id} name={e.uom}>
@@ -388,29 +425,38 @@ const handleYarnUnitChange = (index, value) => {
                     </Option>
                   ))}
                 </Select>
+              </Form.Item>
             </Space.Compact>
             </Form.Item>
           </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item label="Width" name="width" rules={[{ required: true, message: "Field is required" }]} >
+              <Form.Item label="Width" name="widthValue" rules={[{ required: false, message: "Field is required" }]} >
                 <Space.Compact>
+                  <Form.Item name="width">
                   <Input placeholder="Enter Width" allowClear onChange={(e)=>onWidthChange(e?.target?.value)}/>
+                  </Form.Item>
+                  <Form.Item name='widthUomId'>
                   <Select  allowClear placeholder="Select Unit" onChange={onWidthUomChange}>
-                    {weightData.map((e) => {
+                    {uom.map((e) => {
                       return (
                       <Option key={e.uomId} value={e.uomId}>
                         {e.uom}
                       </Option>
                     )})}
                   </Select>
+                  </Form.Item>
                 </Space.Compact>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label="Construction" name="construction" rules={[{ required: false, message: "Field is required" }]}>
                 <Space.Compact>
+                  <Form.Item name='epiConstruction'>
                   <Input placeholder="Enter EPI" allowClear onChange={(e) => epiChange(e?.target?.value)}/>
+                  </Form.Item>
+                  <Form.Item name='ppiConstruction'>
                   <Input placeholder="Enter PPI" allowClear onChange={(e) => ppiChange(e?.target?.value)}/>
+                  </Form.Item>
                 </Space.Compact>
               </Form.Item>
             </Col>
@@ -425,10 +471,12 @@ const handleYarnUnitChange = (index, value) => {
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
-            <Form.Item name="yarnType">
-              Yarn Type : <Radio.Group name="yarnType" style={{ marginTop: "25px" }} onChange={(e)=>yarnSelect(e?.target?.value)}>
+            <Form.Item name="yarnT">
+              Yarn Type : <Radio.Group name="yarnType" style={{ marginTop: "25px" }} onChange={(e)=>yarnSelect(e?.target?.value)} onBlur={generateItemCode}>
+                {/* <Form.Item name='yarnType'> */}
                 <Radio value="Wrap">Wrap</Radio>
                 <Radio value="Weft">Weft</Radio>
+                {/* </Form.Item> */}
               </Radio.Group>
             </Form.Item>
             </Col>
@@ -481,11 +529,13 @@ const handleYarnUnitChange = (index, value) => {
                                   placeholder="Yarn Count"
                                   allowClear
                                   onChange={(e) => handleYarnCountChange(index, e.target.value)}
+                                  onBlur={generateItemCode}
                                 />
                                 <Select
                                   allowClear
                                   placeholder="Unit"
                                   onChange={(value) => handleYarnUnitChange(index, value)}
+                                  onBlur={generateItemCode}
                                 >
                                   {yarnUom.map((e) => (
                                     <Option key={e.id} value={e.id}>
@@ -534,10 +584,12 @@ const handleYarnUnitChange = (index, value) => {
                             rules={[{ required: false, message: 'Field is required' }]}
                           >
                             <Space.Compact>
+                            {/* <Form.Item name='contentId'> */}
                             <Select
                                   allowClear
                                   placeholder="Select Content"
                                   onChange={(value) => onContentChange(index, value)}
+                                  onBlur={generateItemCode}
                                 >
                                   {contentData.map((e) => (
                                     <Option key={e.contentId} value={e.contentId}>
@@ -545,11 +597,14 @@ const handleYarnUnitChange = (index, value) => {
                                     </Option>
                                   ))}
                                 </Select>
+                              {/* </Form.Item> */}
+                              {/* <Form.Item name='percentage'> */}
                               <Input
                                 placeholder="Enter %"
                                 allowClear
                                 onChange={(e) => onPercentChange(index, e.target.value)}
                               />
+                              {/* </Form.Item> */}
                               {fields.length > 1 && (
                                 <MinusOutlined
                                   style={{ fontSize: '16px', cursor: 'pointer', marginLeft: '8px' }}

@@ -379,6 +379,11 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
             className="custom-table-wrapper"
             dataSource={requested.length > 0 ? requested : []}
             columns={columns}
+            pagination={{
+              onChange(current, pageSize) {
+                  setPage(current);
+              }
+          }}
             size="small" />
 
         </TabPane>
@@ -387,6 +392,11 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
             className="custom-table-wrapper"
             dataSource={accepted.length > 0 ? accepted : []}
             columns={columns1}
+            pagination={{
+              onChange(current, pageSize) {
+                  setPage(current);
+              }
+          }}
             size="small" />
         </TabPane>
       </Tabs>    
