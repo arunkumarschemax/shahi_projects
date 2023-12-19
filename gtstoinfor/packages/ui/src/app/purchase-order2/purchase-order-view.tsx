@@ -484,20 +484,20 @@ Service.getAllPurchaseOrderData(req).then(res=>{
         </Row>
         <Row gutter={24}>
           <Col className="gutter-row" xs={24} sm={24} md={5} lg={5} xl={{ span: 2 }}>
-            <Card size="small" title={'OPEN :' + data.filter(r => r.poStatus == PurchaseStatusEnum.OPEN).length} style={{ height: '35px', width: 100, backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
+            <Card  size="small" title={'OPEN :' + data.filter(r => r.poStatus == PurchaseStatusEnum.OPEN).length} style={{ height: '35px', width: 100, backgroundColor: '#d4e09b', borderRadius: 3 }}></Card>
             
           </Col>
           <Col className="gutter-row" xs={24} sm={24} md={5} lg={5} xl={{ span: 3 }}>
-            <Card size="small" title={'INPROGRESS  : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.INPROGRESS).length} style={{ height: '35px', width: 150, marginBottom: '8', backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
+            <Card size="small" title={'INPROGRESS  : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.INPROGRESS).length} style={{ height: '35px', width: 150, marginBottom: '8', backgroundColor: '#f6f4d2', borderRadius: 3 }}></Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
-            <Card size="small" title={'CLOSED : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.CLOSED).length} style={{ height: '35px', width: 150, backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
+            <Card size="small" title={'CLOSED : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.CLOSED).length} style={{ height: '35px', width: 150, backgroundColor: '#cbdfbd', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
-            <Card size="small" title={'CANCLED : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.CANCELLED).length} style={{ height: '35px', backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
+            <Card size="small" title={'CANCLED : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.CANCELLED).length} style={{ height: '35px', backgroundColor: '#ffd6ba', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
-            <Card size="small" title={'TOTAL : ' + data.length} style={{ height: '35px', backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
+            <Card size="small" title={'TOTAL : ' + data.length} style={{ height: '35px', backgroundColor: '#ece4db ', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
           
         </Row> 

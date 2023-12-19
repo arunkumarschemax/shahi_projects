@@ -414,6 +414,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
            if (defaultTrimFormData.sampleReqId != undefined){
                 trimForm.setFieldsValue({sampleReqId:defaultTrimFormData.sampleReqId,
                 poQuantity:defaultTrimFormData.sampleOrderQuantity,
+                sampleOrderQuantity:defaultTrimFormData.sampleOrderQuantity,
                 sampleTrimInfoId:defaultTrimFormData.sampleTrimInfoId,
                 sampleReqNo:defaultTrimFormData.sampleReqNo,
                 colourName: defaultTrimFormData.colourName,
@@ -567,7 +568,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                     <Form.Item name={'quantityUomName'} hidden><Input></Input></Form.Item>
                     <Form.Item name='taxPercentage' hidden ><Input/></Form.Item>
                     <Form.Item name='styleId' hidden ><Input/></Form.Item>
-                    <Form.Item name='trimPrams' hidden ><Input/></Form.Item>
+                    <Form.Item name='trimParams' hidden ><Input/></Form.Item>
+                    <Form.Item name='sampleOrderQuantity' hidden ><Input/></Form.Item>
                     <Form.Item name={'indentQuantity'} label={'Indent Quantity'} style={{display:'none'}}>
                             <Input disabled={inputDisable}></Input>
                         </Form.Item>
