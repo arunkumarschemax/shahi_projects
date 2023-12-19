@@ -41,7 +41,8 @@ export class PurchaseOrderItemsEntity{
 
  @Column('decimal',{
     name:'grn_quantity',
-    nullable:true
+    nullable:true,
+    default:0
   })
   grnQuantity:number
 
@@ -56,6 +57,12 @@ export class PurchaseOrderItemsEntity{
     nullable:true
   })
   indentItemId:number
+
+  @Column('int',{
+        name:'style_id',
+        nullable:false
+    })
+    styleId:number
   
   @Column('int',{
     name:'unit_price',

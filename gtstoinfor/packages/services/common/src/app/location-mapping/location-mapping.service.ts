@@ -14,6 +14,7 @@ import { MaterialAllocationEntity } from "../sample-dev-request/entities/materia
 import { MaterialAllocationItemsEntity } from "../sample-dev-request/entities/material-allocation-items";
 import { SamplingbomEntity } from "../sample-dev-request/entities/sampling-bom-entity";
 import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
+import { GrnEntity } from "../grn/entities/grn-entity";
 
 @Injectable()
 export class LocationMappingService {
@@ -41,7 +42,6 @@ export class LocationMappingService {
     }
 
     async getAllFabrics(req?:ExternalRefReq): Promise<CommonResponseModel> {
-        console.log(req,"ser")
         try {
 
             // let dataquery = `SELECT 
@@ -117,26 +117,108 @@ export class LocationMappingService {
             // LEFT JOIN  indent idf ON idf.indent_id = indf.indent_id
             // LEFT JOIN  indent idt ON idt.indent_id = indt.indent_id
             let query = `SELECT gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, 
-            gi.accepted_quantity AS balance, 
-            IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,
-            IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName
+            (gi.accepted_quantity - IF(SUM(st.quantity) IS NULL, 0,SUM(st.quantity))) AS balance, gi.grn_item_no AS grnItemNo,gi.style_id AS styleId,sty.style,
+            IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,IF(SUM(st.quantity) IS NULL, 0,SUM(st.quantity)) AS allocatedQty,
+            IF(g.item_type = "FABRIC", CONCAT(mit.item_code,'-',mit.description), CONCAT(mtr.trim_code,'-',mtr.description)) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName,g.grn_id as grnId
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND g.item_type = "FABRIC"
             LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND g.item_type != "FABRIC"
             LEFT JOIN stock_log st ON st.grn_item_id = gi.grn_item_id
             LEFT JOIN  buyers idfb ON idfb.buyer_id = gi.buyer_id
+            LEFT JOIN  style sty ON sty.style_id = g.style_id
            LEFT JOIN  uom u ON u.id = gi.uom_id
-           where gi.location_mapped_status!='COMPLETED'`
+           where gi.location_mapped_status!='COMPLETED' `
             let param :any={}
     if(req){
-      if (req.externalRefNo!== undefined){
+      if (req.externalRefNo){
         query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
       }
-     
-
+      if (req.grnNo != undefined){
+        query += ` AND g.grn_number = '${req.grnNo}'`
+      }
+      if (req.material != undefined){
+        query += ` AND g.item_type = '${req.material}'`
+      }
     }
+    
     // const data = await this.datasource.query(query,param)
+
+        query += ` GROUP BY gi.grn_item_id `
+            const res = await AppDataSource.query(query,param);
+            if (res) {
+                return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
+            }
+
+        } catch (error) {
+            return error;
+        }
+    }
+
+    
+    
+    async getgrn(req?:ExternalRefReq): Promise<CommonResponseModel> {
+        try {
+            
+            let query = `SELECT DISTINCT
+            IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber
+            FROM grn_items gi
+            LEFT JOIN grn g ON g.grn_id = gi.grn_id 
+            LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
+            LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND g.item_type = "FABRIC"
+            LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND g.item_type != "FABRIC"
+            LEFT JOIN stock_log st ON st.grn_item_id = gi.grn_item_id
+            LEFT JOIN buyers idfb ON idfb.buyer_id = gi.buyer_id
+            LEFT JOIN style sty ON sty.style_id = g.style_id
+            LEFT JOIN uom u ON u.id = gi.uom_id
+            WHERE gi.location_mapped_status != 'COMPLETED' 
+            `
+            let param :any={}
+    if(req){
+      if (req?.externalRefNo != undefined){
+        query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
+      }
+    
+   
+    }
+    query += ` GROUP BY g.grn_number`
+    
+            const res = await AppDataSource.query(query,param);
+            if (res) {
+                return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
+            }
+
+        } catch (error) {
+            return error;
+        }
+    }
+   
+    async getMaterial(req?:ExternalRefReq): Promise<CommonResponseModel> {
+        try {
+            console.log(req,"LLLLLL");
+            
+            let query = `SELECT DISTINCT g.item_type AS materialType,
+            IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode,
+            g.grn_number AS grnNumber
+        FROM grn_items gi
+        LEFT JOIN grn g ON g.grn_id = gi.grn_id 
+        LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
+        LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND g.item_type = "FABRIC"
+        LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND g.item_type != "FABRIC"
+        LEFT JOIN stock_log st ON st.grn_item_id = gi.grn_item_id
+        LEFT JOIN buyers idfb ON idfb.buyer_id = gi.buyer_id
+        LEFT JOIN style sty ON sty.style_id = g.style_id
+        LEFT JOIN uom u ON u.id = gi.uom_id
+        WHERE gi.location_mapped_status != 'COMPLETED' `
+            let param :any={}
+    if(req){
+      if (req.externalRefNo){
+        query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
+      }
+      
+   
+    }
+    
             const res = await AppDataSource.query(query,param);
             if (res) {
                 return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
@@ -148,7 +230,6 @@ export class LocationMappingService {
     }
 
     async getOneItemAllocateDetails(req: MaterialIssueIdreq): Promise<CommonResponseModel> {
-        console.log(req, "id");
         try {
             let dataquery = `SELECT 
             stk_lg.stock_log_id,
@@ -161,17 +242,38 @@ export class LocationMappingService {
             stk_lg.grn_item_id,
             stk_lg.stock_id,
             SUM(stk_lg.quantity) AS total_quantity,
-            m3_it.item_code,
+            m3_it.item_code AS itemcode,
+            m3_it.fabric_type,
+            m3_it.item_type as type,
+            m3tr.trim_type as type,
+            m3_it.yarn_count,
+            m3_it.construction,
+            m3_it.weave,
+            m3_it.finish,
+            m3tr.trim_code AS itemcode,
+            m3_it.shrinkage,
             m3_it.content,
             rk_po.rack_position_name,
-            rk_po.status
+            rk_po.status,
+            u.uom,
+            grn.grn_item_no,
+            grn.received_quantity,
+            grn.accepted_quantity,
+            grn.rejected_quantity,
+            grn.conversion_quantity
+
         FROM 
             stock_log AS stk_lg
         LEFT JOIN 
             rack_position AS rk_po ON rk_po.position_id = stk_lg.location_id
             LEFT JOIN 
             m3_items AS m3_it ON m3_it.m3_items_id = stk_lg.m3_item
-        WHERE 
+            LEFT JOIN m3_trims AS m3tr ON m3tr.buyer_id= stk_lg.buyer_id
+            LEFT JOIN uom AS u  ON  u.id = stk_lg.uom_id
+            LEFT JOIN grn_items AS grn ON grn.grn_item_id= stk_lg.grn_item_id
+
+
+         WHERE 
             stk_lg.grn_item_id = '${req.id}'
         GROUP BY 
             stk_lg.location_id,
@@ -240,9 +342,23 @@ export class LocationMappingService {
                 let saveStockLog = await this.stockLogRepository.save(stockLogEntity)
                 if(saveStockLog){
                     let updateGrnItemStatus = await manager.getRepository(GrnItemsEntity).update({grnItemId:req.grn_item_id},{ status: LocationMappedEnum.COMPLETED});
+                    // after completin the GRN of th child check for the GRN status of all the items and updated the parent status
+                    let grnStatus = LocationMappedEnum.COMPLETED;
+                    const grnItems = await manager.getRepository(GrnItemsEntity).find({ select: ['status'], where:{   grnEntity : {grnId:req.grn_id} } });
+                    for(const item of grnItems) {
+                        if(item.status == LocationMappedEnum.PARTIALLY_COMPLETED) {
+                            grnStatus = LocationMappedEnum.PARTIALLY_COMPLETED;
+                            break;
+                        }
+                        if(item.status == LocationMappedEnum.OPEN) {
+                            grnStatus = LocationMappedEnum.PARTIALLY_COMPLETED;
+                        }
+                    }
+                    await manager.getRepository(GrnEntity).update({grnId:req.grn_id},{ locationMapStatus: grnStatus});
+                
                     console.log(updateGrnItemStatus)
                     console.log("**********************************")
-                    if(updateGrnItemStatus.affected > 0){
+                    if(updateGrnItemStatus.affected > 0 ){
                         if(grnDetails[0].grnType === "INDENT"){
                             return new CommonResponseModel(true, 1111, "Data posted Succesufully");
                         }

@@ -10,10 +10,12 @@ import { ProductGroup } from "./product-group-entity";
 import { RmCreationEntity } from "./rm-items.entity";
 import { M3ItemView } from "./m3-items-view.entity";
 import { M3TrimsAdapter } from "./m3-trims.adaptor";
+import { M3FabricContentEntity } from "./m3-fabric-content-entity";
+import { M3FabricYarnEntity } from "./m3-fabric-yarn-entity";
 
 
 @Module({
-    imports: [TypeOrmModule.forFeature([M3ItemsEntity,ProductGroup,RmCreationEntity,M3ItemView])],
+    imports: [TypeOrmModule.forFeature([M3ItemsEntity,ProductGroup,RmCreationEntity,M3ItemView,M3FabricContentEntity,M3FabricYarnEntity])],
     controllers: [M3ItemsController],
     providers: [M3ItemsService, ApplicationExceptionHandler, M3ItemsAdapter,M3TrimsAdapter,M3ItemsRepo],
     exports: [TypeOrmModule, M3ItemsService]

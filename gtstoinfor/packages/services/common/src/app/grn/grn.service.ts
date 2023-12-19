@@ -73,10 +73,11 @@ export class GrnService {
         try {
             const manager = this.dataSource;
             let query = 'SELECT pt.grn_quantity AS ptGrnQuantity,pf.grn_quantity AS pfGrnQuantity,po_fabric_id AS poFabricId,po_trim_id AS poTrimId,po.purchase_order_id AS purchaseOrderId,po_number AS poNumber,po.status AS poStatus,fab_item_status AS fabItemStatus,trim_item_status AS trimItemStatus FROM purchase_order po LEFT JOIN purchase_order_fabric pf ON pf.purchase_order_id=po.purchase_order_id LEFT JOIN purchase_order_trim pt ON pt.purchase_order_id=po.purchase_order_id WHERE po.purchase_order_id=' + purchaseOrderId + ''
+            console.log(materialType,'materialTypematerialTypematerialType')
             if (materialType == 'Fabric') {
                 query = query + ' and fab_item_status in ("OPEN","PARTAILLY RECEIVED")'
             }
-            if (materialType == 'Trim') {
+            else {
                 query = query + ' and trim_item_status in ("OPEN","PARTAILLY RECEIVED")'
             }
             const result = await manager.query(query)
@@ -94,7 +95,7 @@ export class GrnService {
             if (materialType == 'Fabric') {
                 query = query + ' and i.indent_id =' + id + ' and ifc.quantity != ifc.received_quantity'
             }
-            if (materialType == 'Trim') {
+            else {
                 query = query + ' and i.indent_id=' + id + '  and it.quantity != it.received_quantity'
             }
             const result = await manager.query(query)
@@ -113,7 +114,7 @@ export class GrnService {
             if (materialType == 'Fabric') {
                 query = query + ' and ifabric_id =' + id + ''
             }
-            if (materialType == 'Trim') {
+            else {
                 query = query + ' and itrims_id=' + id + ''
             }
             const result = await manager.query(query)
@@ -130,23 +131,75 @@ export class GrnService {
         const transactionalEntityManager = new GenericTransactionManager(this.dataSource);
         try {
 
-            const currentYear = moment().format('YYYY')
-            let ToYear = currentYear.toString().substr(-2)
-            let FromYear = (currentYear - 1).toString().substr(-2)
-            let grnNumber
-            const data = 'select max(grn_id) as grnId from grn'
-            const maxId = await this.grnRepo.query(data)
-            if (maxId[0].grnId == null) {
-                grnNumber = 'GRN/' + FromYear + '-' + ToYear + '/' + '001' + ''
+            const today = new Date();
+            const CurrentYear = today.getFullYear();
+            const CurrentMonth = today.getMonth();
+            let fromDate = 0;
+            let toDate = 0;
+            let itemType;
+            if(req.materialtype === "Fabric"){
+                itemType = 'F';
+            }
+            else{
+                itemType = 'T';
+            }
+            const data = 'select max(grn_id) as grnId from grn where item_type = "'+req.materialtype+'"';
+                let totalGrn = await this.grnRepo.query(data)
+            // if (!isUpdate) {
+                if (CurrentMonth < 4) {
+                    fromDate = (CurrentYear);
+                    toDate = (CurrentYear + 1);
+                } else {
+                    fromDate = (CurrentYear);
+                    toDate = (CurrentYear + 1);
+                }
+
+            // }
+            
+            let val = totalGrn[0].grnId + 1;
+
+
+            let refNo = val + "";
+            while (refNo.length < 4) refNo = "0" + refNo;
+
+            let grnNumber = "GRN/" + (fromDate.toString().substr(-2)) + "-" + (toDate.toString().substr(-2)) + "/" + itemType + "/" + refNo;
+
+            console.log(grnNumber);
+
+
+            // let materialType
+            // if(req.materialtype == 'Fabric'){
+            //     materialType='F'
+            // }else{
+            //     materialType='T'
+            // }
+
+            // const currentYear = moment().format('YYYY')
+            // let ToYear = currentYear.toString().substr(-2)
+            // let FromYear = (currentYear - 1).toString().substr(-2)
+            // let grnNumber
+            // const data = 'select max(grn_id) as grnId from grn'
+            // const maxId = await this.grnRepo.query(data)
+            // if (maxId[0].grnId == null) {
+            //     grnNumber = 'GRN/'+ FromYear + '-' + ToYear + '/' + '001' + ''
+            // } else {
+            //     grnNumber = 'GRN/'+ FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
+            // }
+
+            let grnItemNumber
+            const data1 = 'select max(grn_item_id) as grnItemId from grn_items'
+            const maxItemId = await this.grnRepo.query(data1)
+            if (maxItemId[0].grnItemId == null) {
+                grnItemNumber = 'GRNI'+ req.materialtype + '/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + '001' + ''
             } else {
-                grnNumber = 'GRN/' + FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
+                grnItemNumber = 'GRNI'+ req.materialtype + '/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + maxItemId[0].grnItemId.toString().padStart(3, 0) + ''
             }
 
             let mrnNumber
-            if (maxId[0].grnId == null) {
-                mrnNumber = 'MRN/' + FromYear + '-' + ToYear + '/' + '001' + ''
+            if (totalGrn[0].grnId == null) {
+                mrnNumber = 'MRN/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + '001' + ''
             } else {
-                mrnNumber = 'MRN/' + FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
+                mrnNumber = 'MRN/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + totalGrn[0].grnId.toString().padStart(3, 0) + ''
             }
             await transactionalEntityManager.startTransaction();
             const itemInfo = []
@@ -184,6 +237,8 @@ export class GrnService {
                 itemEntity.indentId = item.indentId
                 itemEntity.buyerId = item.buyerId
                 itemEntity.uomId = item.uomId
+                itemEntity.styleId = item.styleId
+                itemEntity.grnItemNo = grnItemNumber
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo = itemInfo
@@ -193,18 +248,21 @@ export class GrnService {
                 for (const item of req.grnItemInfo) {
                     if (item.m3ItemCode != null) {
                         const poQuantity = await this.poItemRepo.find({ where: { purchaseOrderItemId: item.poItemId } })
-                        if (poQuantity[0].poQuantity == item.conversionQuantity) {
+                        if (Number(poQuantity[0].poQuantity) == Number(item.receivedQuantity)) {
                             await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, {grnQuantity: () => `grn_quantity + ${item.acceptedQuantity}`, poitemStatus: PoItemEnum.RECEIVED })
                         }
                         else {
                             await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { poitemStatus: PoItemEnum.PARTAILLY_RECEIVED, grnQuantity: () => `grn_quantity + ${item.acceptedQuantity}` })
                         }
-                        const indentId = await this.getIndentid(req.materialtype, item.indentItemId)
-                        const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype, indentId.data[0].indentId)
-                        if (indentData.data.length == 0) {
-                            await this.indentRepo.update({ indentId: indentId.data[0].indentId }, { status: CustomerOrderStatusEnum.CLOSED })
-                        } else {
-                            await this.indentRepo.update({ indentId: indentId.data[0].indentId }, { status: CustomerOrderStatusEnum.IN_PROGRESS })
+                        console.log(req.materialtype,'req.materialtype')
+                        if(req.grnType != GRNTypeEnum.SAMPLE_ORDER){
+                            const indentId = await this.getIndentid(req.materialtype, item.indentItemId)
+                            const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype, indentId.data[0].indentId)
+                            if (indentData.data.length == 0) {
+                                await this.indentRepo.update({ indentId: indentId.data[0].indentId }, { status: CustomerOrderStatusEnum.CLOSED })
+                            } else {
+                                await this.indentRepo.update({ indentId: indentId.data[0].indentId }, { status: CustomerOrderStatusEnum.IN_PROGRESS })
+                            }
                         }
                     }
                 }
@@ -232,7 +290,7 @@ export class GrnService {
         try {
             const manager = this.dataSource;
             let query = `SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,DATE(g.invoice_date) AS invoiceDate,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
-            g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber,gi.buyer_id AS buyerId
+            g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber,gi.buyer_id AS buyerId,g.location_mapped_status as locationMapStatus
             FROM grn g
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
@@ -295,24 +353,18 @@ export class GrnService {
             // console.log(req,'--------------')
             let query = `SELECT g.grn_number AS grnNumber,gi.received_quantity AS receivedQty,gi.accepted_quantity AS acceptedQty,gi.rejected_quantity  AS rejectedQty,u.uom,
             gi.conversion_quantity  AS conversionQty,uom.uom AS convertedUom,gi.location_mapped_status AS locMapStatus,gi.remarks,gi.m3_item_code_id AS m3ItemCodeId,m3.item_code AS itemCode,gi.buyer_id AS buyerId, CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName
-            FROM grn_items gi`
-            // if (req.itemType === 'FABRIC' || req.itemType === 'Fabric') {
-            //     query = query + `gi.m3_item_code_id AS m3ItemCodeId,m3.item_code AS itemCode
-            //     FROM grn_items gi
-            //     LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
-            // }
-            // if (req.itemType.includes('TRIM') || req.itemType.includes('Trim')) {
-            //     query = query + `m3.trim_code AS itemCode,m3.m3_items_id AS m3ItemId
-            //     FROM grn_items gi
-            //     LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
-            // }
-            query = query + ` LEFT JOIN grn g ON g.grn_id = gi.grn_id
-            LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id
+            FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             LEFT JOIN uom u ON u.id = gi.uom_id
             LEFT JOIN uom uom ON uom.id = gi.conversion_uom_id
-            LEFT JOIN buyers b ON b.buyer_id = gi.buyer_id`
+            LEFT JOIN buyers b ON b.buyer_id = gi.buyer_id `
+            if (req.itemType === 'Fabric') {
+                query = query + ` LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
+            }
+            if (req.itemType !== 'Fabric') {
+                query = query + ` LEFT JOIN m3_trims m3 ON m3.m3_trim_id = gi.m3_item_code_id`
+            }
             if (req?.grnId) {
                 query = query + ` where g.grn_id=${req.grnId}`
             }

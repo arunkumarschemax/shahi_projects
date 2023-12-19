@@ -1,12 +1,12 @@
 import axios from 'axios';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { AllFabricWeaveResponseModel, FabricWeaveRequest, FabricWeaveDto, FabricWeaveResponseModel, UploadResponse } from '@project-management-system/shared-models';
+import { AllFabricWeaveResponseModel, FabricWeaveRequest, FabricWeaveDto, FabricWeaveResponseModel, UploadResponse, CommonResponseModel, FabricTypeIdReq } from '@project-management-system/shared-models';
 
 
 export class FabricWeaveService extends CommonAxiosService{
 URL = '/fabric-weave';
 
-        async createFabricWeave(req: FabricWeaveDto): Promise<FabricWeaveResponseModel> {
+        async createFabricWeave(req: FabricWeaveDto): Promise<CommonResponseModel> {
             return this.axiosPostCall(this.URL +  '/createFabricWeave',req)
                 
         }
@@ -33,6 +33,10 @@ URL = '/fabric-weave';
 
         async fabricWeaveImageUpload(file: any): Promise<UploadResponse> {
             return await this.axiosPostCall(this.URL + '/fileUpload', file);
+        }
+
+        async getWeaveByTypeId(req?: FabricTypeIdReq): Promise<UploadResponse> {
+            return await this.axiosPostCall(this.URL + '/getWeaveByTypeId', req);
         }
 
 }

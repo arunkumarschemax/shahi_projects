@@ -12,6 +12,8 @@ import { PurchaseOrderTrimRepository } from "./repo/purchase-order-trim-reposito
 import { PurchaseOrderItemsEntity } from "./entities/purchase-order-items-entity";
 import { SampleRequestRepository } from "../sample-dev-request/repo/sample-dev-req-repo";
 import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
+import { IndentRepository } from "../indent/dto/indent-repository";
+import { Indent } from "../indent/indent-entity";
 
 @Module({
     imports: [
@@ -20,10 +22,11 @@ import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request
         PurchaseOrderFbricEntity,
         PurchaseOrderTrimEntity,
         PurchaseOrderItemsEntity,
-        SampleRequest
+        SampleRequest,
+        Indent
     ]),
     ],
     controllers: [PurchaseOrderController],
-    providers: [PurchaseOrderService,ApplicationExceptionHandler,PurchaseOrderRepository,PurchaseOrderFabricRepository,PurchaseOrderTrimRepository,SampleRequestRepository]
+    providers: [PurchaseOrderService,ApplicationExceptionHandler,PurchaseOrderRepository,PurchaseOrderFabricRepository,PurchaseOrderTrimRepository,SampleRequestRepository,IndentRepository,SampleRequestRepository]
   })
   export class PurchaseOrderModule {}

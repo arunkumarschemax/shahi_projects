@@ -48,15 +48,15 @@ export const SampleDevTabs = (props:SampleDevTabsProps) => {
         <Card size='small'>
             <Tabs type={'card'} tabPosition={'top'}>
                 <TabPane key="1" tab={<span><b>{`Size Detail`}</b></span>}>
-                <SizeDetail props = {handleSizeDataUpdate} buyerId={props.buyerId}/>
+                <SizeDetail props = {handleSizeDataUpdate} buyerId={props.buyerId} form={undefined}/>
                 </TabPane>
                 <TabPane key="2" tab={<span><b>{`Fabric`}</b></span>}>
                 {/* <FabricsForm props = {handleFabricsDataUpdate} buyerId={0} /> */}
-             <FabricsForm data = {handleFabricsDataUpdate} buyerId={0} sizeDetails={sizeData}/>
+             <FabricsForm data = {handleFabricsDataUpdate} buyerId={0} sizeDetails={sizeData} form={undefined} />
 
                 </TabPane>
                 <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
-                <TrimsForm props = {handleTrimsDataUpdate} buyerId={0} />
+                <TrimsForm data = {handleTrimsDataUpdate} buyerId={0} sizeDetails={sizeData} form={undefined} />
                 </TabPane>
                 <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
                 <ProcessForm props={handleProcessDataUpdate}/>

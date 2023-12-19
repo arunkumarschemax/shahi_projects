@@ -160,7 +160,7 @@ const stockService = new StockService();
             (rec) => rec.uomCategory == UomCategoryEnum.LENGTH
           );
           const weight = res.data.filter(
-            (rec) => rec.uomCategory == UomCategoryEnum.MASS
+            (rec) => rec.uomCategory == UomCategoryEnum.WEIGHT
           );
           const width = res.data.filter(
             (rec) => rec.uomCategory == UomCategoryEnum.AREA
@@ -268,6 +268,24 @@ const stockService = new StockService();
             
 
         },
+        {
+          title: "M3 Code",
+          dataIndex: "m3Code",
+          ...getColumnSearchProps('m3Code'),
+          sorter: (a, b) => a.m3Code.length - b.m3Code.length,
+         sortDirections: ['descend', 'ascend'],
+          
+
+      },
+      {
+        title: "HSN Code",
+        dataIndex: "hsnCode",
+        ...getColumnSearchProps('hsnCode'),
+        sorter: (a, b) => a.hsnCode.length - b.hsnCode.length,
+       sortDirections: ['descend', 'ascend'],
+        
+
+    },
         {
             title: "Content",
             dataIndex: "content",

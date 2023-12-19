@@ -24,6 +24,7 @@ export class ContentService{
     
             const entity = new ContentEntity();
             entity.content = req.content;
+            entity.itemType = req.itemType
     
             if (isUpdate) {
                 entity.updatedUser = req.createdUser;
@@ -121,6 +122,23 @@ export class ContentService{
         return err;
     }
 }
+
+async getFabricContentData():Promise<CommonResponseModel>{
+    try{
+      let query = `
+      SELECT content, item_type as itemType, content_id as contentId
+      FROM content
+      WHERE item_type = 'Fabric'`
+      const data = await this.datasource.query(query)
+      if(data.length>0){
+        return new CommonResponseModel(true, 0, 'Data retrieved successfully',data)
+      }else{
+        return new CommonResponseModel(false, 1, 'No data found',[])
+      }
+    }catch(err){
+      throw(err)
+    }
+  }
 
   
 }

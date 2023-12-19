@@ -1,6 +1,6 @@
 import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import { BuyerRefNoRequest, DepartmentReq,SampleDevelopmentRequest } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, DepartmentReq,SampleDevelopmentRequest, StyleIdReq } from "@project-management-system/shared-models";
 import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Tabs, message } from "antd";
 import { useEffect, useState } from "react";
@@ -16,6 +16,7 @@ import ProcessForm from "./process";
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { useIAMClientState } from "../common/iam-client-react";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 
 const { Option } = Select;
@@ -50,7 +51,10 @@ export const SampleDevForm = () => {
   const [data, setData] = useState<any>();
   const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
   const [qualities,setQualities] = useState<any[]>([])
-
+  const [styleAginstPch,setStyleAginstPch] = useState<any[]>([])
+  const [sizeForm] = Form.useForm();
+  const [fabricForm] = Form.useForm();
+  const [trimForm] = Form.useForm();
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
   const brandService = new MasterBrandsService();
@@ -70,6 +74,10 @@ export const SampleDevForm = () => {
   const navigate = useNavigate();
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
+
+  useEffect(() => {
+    console.log(sizeForm.getFieldsValue())
+  },[sizeData])
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
@@ -163,6 +171,9 @@ export const SampleDevForm = () => {
       if (res.status) {
         setPch(res.data);
       }
+      else{
+        setPch([]);
+      }
     });
   };
 
@@ -172,9 +183,10 @@ export const SampleDevForm = () => {
     buyerService.getAllActiveBuyers(req).then((res) => {
       if (res.status) {
         setBuyer(res.data);
-        form.setFieldsValue({buyerId: res.data[0]?.buyerId})
-         buyerOnchange(res.data[0]?.buyerId,res.data[0]?.buyerName)
-
+        if(req.buyerRefNo != null){
+          form.setFieldsValue({buyerId: res.data[0]?.buyerId})
+           buyerOnchange(res.data[0]?.buyerId,res.data[0]?.buyerName)
+        }
 
       }
     });
@@ -203,6 +215,17 @@ export const SampleDevForm = () => {
       }
     });
   };
+
+  const getstyleaginstpch=(value)=>{
+    console.log(value,'.,,,,,,,,,,,,,,,,,,,,')
+    const req = new StyleIdReq(value)
+    console.log(req,'===================')
+    styleService.getstyleaginstpch(req).then((res)=>{
+      if (res.status) {
+        form.setFieldValue('pchId',res.data?.pchId)
+      }
+    })
+  }
 
   const getBrands = () => {
     brandService.getAllBrands().then((res) => {
@@ -258,51 +281,58 @@ export const SampleDevForm = () => {
 
 
   const onFinish = (val) =>{
-    console.log(data);
-    if(data != undefined){
-      console.log('hoii')
-      // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
-      if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
+    sizeForm.validateFields().then(size => {
+      fabricForm.validateFields().then(fab => {
+        trimForm.validateFields().then(trim => {
+          // console.log(data);
+          if(data != undefined){
+            // console.log('hoii')
+            // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
+            if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
 
-        console.log('TTTTT')
-        const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData)
-        console.log(req.sizeData)
-       
-          sampleService.createSampleDevelopmentRequest(req).then((res) => {
-            if (res.status) {
-              console.log(res.data);
-              message.success(res.internalMessage, 2);
-              if (fileList.length > 0) {    
-                const formData = new FormData();
-                fileList.forEach((file) => {
-                  console.log(file.originFileObj)
-                  formData.append('file', file.originFileObj);
+              // console.log('TTTTT')
+              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData)
+              // console.log(req.sizeData)
+              console.log(req)
+
+            
+                sampleService.createSampleDevelopmentRequest(req).then((res) => {
+                  if (res.status) {
+                    // console.log(res.data);
+                    message.success(res.internalMessage, 2);
+                    if (fileList.length > 0) {    
+                      const formData = new FormData();
+                      fileList.forEach((file) => {
+                        // console.log(file.originFileObj)
+                        formData.append('file', file.originFileObj);
+                      });
+              
+                      formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
+                      console.log(res.data[0].SampleRequestId)
+                      // console.log(formData);
+                      sampleService.fileUpload(formData).then((file) => {
+                        // console.log(file.data)
+                        res.data[0].filepath = file.data;
+                      });
+                    }
+                    navigate("/sample-development/sample-requests")
+                  } else {
+                    message.success(res.internalMessage, 2);
+                  }
                 });
-        
-                formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
-                // console.log(res.data[0].SampleRequestId)
-                console.log(formData);
-                sampleService.fileUpload(formData).then((file) => {
-                  console.log(file.data)
-                  res.data[0].filepath = file.data;
-                });
-              }
-              navigate("/sample-development/sample-requests")
-            } else {
-              message.success(res.internalMessage, 2);
+                // console.log(req.sizeData);
+            }else{
+              // console.log('ddddddd')
+              message.error('Please Fill The Size,Fabric, Trim And process Details')
             }
-          });
-          console.log(req.sizeData);
-      }else{
-        console.log('ddddddd')
-        message.error('Please Fill The Size,Fabric, Trim And process Details')
-      }
-      
-    }else{
-      console.log('********')
-      message.error('Please Fill The Below Details')
-    }
-   
+            
+          }else{
+            // console.log('********')
+            message.error('Please Fill The Below Details')
+          }
+        }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0])   });
+      }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0]) });
+    }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0])  });
   }
 
   const handleSubmit = (data) => {
@@ -316,9 +346,24 @@ export const SampleDevForm = () => {
   }
 
     const handleSizeDataUpdate = (updatedData) => {
+     
       console.log(updatedData)
-      setData((prevData) => ({ ...prevData, sizeData: updatedData }));
-      setSizeData(updatedData);
+      // var valueArr = updatedData.map(function(item){ return item.colour });
+      // console.log(valueArr)
+      // var isDuplicate = valueArr.some(function(item, idx){ 
+      //   console.log(item);
+      //   console.log(idx);
+      //   return valueArr.indexOf(item) != idx 
+      // });
+      // console.log(isDuplicate)
+      // if(!isDuplicate){
+        console.log(sizeForm.getFieldsValue());
+        setData((prevData) => ({ ...prevData, sizeData: updatedData }));
+        setSizeData(updatedData);
+      // }
+      // else{
+      //   AlertMessages.getErrorMessage("Duplicate color is not allowed. ")
+      // }
   };
 
   const handleProcessDataUpdate = (updatedData) => {
@@ -327,7 +372,7 @@ export const SampleDevForm = () => {
   };
 
   const handleFabricsDataUpdate = (updatedData) => {
-    console.log(updatedData)
+    // console.log(updatedData)
       setData((prevData) => ({ ...prevData, fabricsData: updatedData }));
       setFabricsData(updatedData);
   };
@@ -376,6 +421,29 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            <Form.Item
+              name="buyerId"
+              label="Buyer"
+              rules={[{ required: true, message: "Buyer is required" }]}
+            >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Buyer"
+                onChange={buyerOnchange}
+              >
+                {buyer.map((e) => {
+                  return (
+                    <Option key={e.buyerId} value={e.buyerId} name={e.buyerName}>
+                      {`${e.buyerCode} - ${e.buyerName}`}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
           <Col xs={{ span: 24 }}sm={{ span: 24 }}md={{ span: 8 }}lg={{ span: 8 }}xl={{ span: 4 }} style={{display:'none'}}>
             <Form.Item
               name="requestNo"
@@ -390,10 +458,34 @@ export const SampleDevForm = () => {
               <Input disabled/>
             </Form.Item>
           </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+            <Form.Item
+              name="styleId"
+              label="Style"
+              rules={[{ required: true, message: "Style is required" }]}
+            >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Style"
+                onChange={getstyleaginstpch}
+              >
+                {styles.map((e) => {
+                  return (
+                    <Option key={e.styleId} value={e.styleId}>
+                      {e.style}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="pchId"
               label="PCH"
+              dependencies={['styleId']}
               rules={[{ required: true, message: "PCH is required" }]}
             >
               <Select
@@ -401,6 +493,7 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select PCH"
+                disabled
               >
                 {pch.map((e) => {
                   return (
@@ -427,29 +520,7 @@ export const SampleDevForm = () => {
               <Input placeholder="Enter User" />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-            <Form.Item
-              name="buyerId"
-              label="Buyer"
-              rules={[{ required: true, message: "Buyer is required" }]}
-            >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select Buyer"
-                onChange={buyerOnchange}
-              >
-                {buyer.map((e) => {
-                  return (
-                    <Option key={e.buyerId} value={e.buyerId} name={e.buyerName}>
-                      {`${e.buyerCode} - ${e.buyerName}`}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
+          
           {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="sampleTypeId"
@@ -500,28 +571,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col> */}
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-            <Form.Item
-              name="styleId"
-              label="Style"
-              rules={[{ required: true, message: "Style is required" }]}
-            >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select Style"
-              >
-                {styles.map((e) => {
-                  return (
-                    <Option key={e.styleId} value={e.styleId}>
-                      {e.style}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
+         
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="brandId"
@@ -806,14 +856,14 @@ export const SampleDevForm = () => {
         {selectedBuyerId != null ?
          <Card size='small'>
          <Tabs type={'card'} tabPosition={'top'}>
-             <TabPane key="1" tab={<span><b>{`Size Detail`}</b></span>}>
-             <SizeDetail props = {handleSizeDataUpdate} buyerId={selectedBuyerId}/>
+             <TabPane key="1" tab={<span><b>{`Size Detail`}</b></span>}> 
+             <SizeDetail props = {handleSizeDataUpdate} buyerId={selectedBuyerId} form={sizeForm}/>
              </TabPane>
              <TabPane key="2" tab={<span><b>{`Fabric`}</b></span>}>
-             <FabricsForm data = {handleFabricsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData}/>
+             <FabricsForm data = {handleFabricsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData} form={fabricForm}/>
              </TabPane>
              <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
-             <TrimsForm props = {handleTrimsDataUpdate} buyerId={selectedBuyerId}/>
+             <TrimsForm data = {handleTrimsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData} form={trimForm}/>
              </TabPane>
              {/* <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
              <ProcessForm props={handleProcessDataUpdate}/>

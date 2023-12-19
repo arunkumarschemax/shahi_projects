@@ -33,6 +33,9 @@ export class M3TrimsAdapter {
         entity.typeId = dto.typeId;
         entity.trimCategoryId = dto.trimCategoryId;
         entity.thicknessId = dto.thicknessId;
+        entity.m3Code = dto.m3Code;
+        entity.hsnCode= dto.hsnCode;
+
         if (dto.m3TrimId) {
             entity.m3TrimId = dto.m3TrimId;
             entity.updatedUser = dto.updatedUser
@@ -59,6 +62,9 @@ export class M3TrimsAdapter {
         dto.typeId = entity.typeId;
         dto.trimCategoryId = entity.trimCategoryId;
         dto.thicknessId = entity.thicknessId;
+        dto.m3Code = entity.m3Code;
+        dto.hsnCode = entity.hsnCode;
+
         return dto;
     }
 

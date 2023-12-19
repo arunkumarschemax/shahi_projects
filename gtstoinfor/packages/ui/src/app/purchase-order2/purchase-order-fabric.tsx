@@ -9,7 +9,7 @@ import React from "react"
 import { useEffect, useState } from "react"
 
 
-export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) => {
+export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, itemData}) => {
     const [fabricForm] = Form.useForm()
     const [weave, setWeave] = useState<any[]>([])
     const [uom, setUom] = useState<any[]>([])
@@ -55,14 +55,19 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
     }, [])
 
     useEffect(() => {
+        console.log(itemData);
+        console.log(itemData?.filter((i) => i.checkStatus === true))
         if (indentId.length != 0) {
             setTableColumns([...columns])
-            AllIndnetDetails(indentId)
+            // AllIndnetDetails(indentId)
+            setFabricTableData(itemData?.filter((i) => i.checkStatus === true))
+            setFabricTableVisible(true)
         }
-    }, [indentId])
+    }, [indentId,itemData])
+
 
     useEffect(() => {
-        // console.log(sampleReqId)
+        console.log(sampleReqId)
         // console.log(sampleReqId.data[1].sampleReqIds)
         // console.log(sampleReqId.data[2].m3itemid)
         if (sampleReqId.length != 0) {
@@ -167,6 +172,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         console.log(rowData)
         if (rowData.indentFabricId != undefined) {
             setInputDisable(true)
+            console.log("**********************************************************************")
             fabricForm.setFieldsValue({ poQuantity: rowData.indentQuantity })
             fabricForm.setFieldsValue({ unitPrice: rowData.unitPrice })
             fabricForm.setFieldsValue({ discount: rowData.discount })
@@ -175,8 +181,13 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
             fabricForm.setFieldsValue({ taxAmount: rowData.taxAmount })
             fabricForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
-            fabricForm.setFieldsValue({ quantityUomId: rowData.uom_id })
-            fabricForm.setFieldsValue({ quantityUom: rowData.uom })
+            fabricForm.setFieldsValue({ quantityUomId: rowData.quantityUomId })
+            fabricForm.setFieldsValue({ quantityUom: rowData.quantityUom })
+            fabricForm.setFieldsValue({ colourId: rowData.colorId })
+            fabricForm.setFieldsValue({ m3FabricCode: rowData.m3FabricCode })
+            fabricForm.setFieldsValue({ styleId: rowData.styleId })
+
+
         }
         if (rowData.samplereFabId != undefined) {
             fabricForm.setFieldsValue({ poQuantity: rowData.sampleQuantity })
@@ -213,6 +224,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                 itemCode:defaultFabricFormData.itemCode,
                 quantityUomId: defaultFabricFormData.uom_id,
                 quantityUom: defaultFabricFormData.quantityUom,
+                styleId: defaultFabricFormData.style
                 })
             }
             if(defaultFabricFormData.indentId != undefined){
@@ -222,13 +234,14 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                     colourId: defaultFabricFormData.colourId,
                     colorName: defaultFabricFormData.colorName,
                     shahiFabricCode: defaultFabricFormData.shahiFabricCode,
-                    quantityUomId: defaultFabricFormData.uom_id,
+                    quantityUomId: defaultFabricFormData.quantityUomId,
                     indentQuantity: defaultFabricFormData.indentQuantity,
                     indentFabricId: defaultFabricFormData.indentFabricId,
                     itemCode: defaultFabricFormData.itemCode,
                     quantityUom: defaultFabricFormData.quantityUom,
                     indentCode: defaultFabricFormData.indentCode,
-                    indentId:defaultFabricFormData.indentId
+                    indentId:defaultFabricFormData.indentId,
+                    // styleId: defaultFabricFormData.style
                 })
             }
        
@@ -254,7 +267,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         },
         {
             title: 'M3 Fabric Code',
-            dataIndex: 'itemCode',
+            dataIndex: 'm3FabricCodeName',
             width: '170px'
         },
         {
@@ -296,8 +309,9 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
         {
             title: "Action",
             dataIndex: 'action',
-            render: (text: any, rowData: any, index: any) => (
-                <span>
+            render: (text: any, rowData: any, index: any) => {
+                console.log(rowData)
+                return (<span>
                     <Tooltip placement="top" title='Edit'>
                         <Tag >
                             <EditOutlined className={'editSamplTypeIcon'} type="edit"
@@ -322,7 +336,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                         </Tag>
                     </Tooltip>
                 </span>
-            )
+                )
+        }
         }
     ]
 
@@ -541,6 +556,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId}) =
                     <Form.Item name='sampleQuantity' hidden ><Input/></Form.Item>
                     <Form.Item name='sampleReqId' hidden ><Input/></Form.Item>
                     <Form.Item name='indentId' hidden ><Input/></Form.Item>
+                    <Form.Item name = 'styleId' hidden><Input/></Form.Item>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 8 }}>
                         <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
                             <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code' onChange={m3FabricOnchange}>

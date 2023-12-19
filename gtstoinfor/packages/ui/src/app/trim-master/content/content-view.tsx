@@ -161,6 +161,14 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             render: (text, object, index) => (page - 1) * 10 + (index + 1)
           },
           {
+            title: "Item Type",
+            dataIndex: "itemType",
+            width:300,
+            sorter: (a, b) => a.itemType.localeCompare(b.itemType),
+            sortDirections: ["ascend", "descend"],
+            ...getColumnSearchProps("itemType"),
+          },
+          {
             title: "Content",
             dataIndex: "content",
             width:300,

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DeliveryMethodDto, DeliveryMethodRequest } from 'packages/libs/shared-models/src/common/delivery-method';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, MaterialAllocationitemsIdreq, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq,SampleIdRequest, AllocatedLocationReq, RequestNoReq, AllocationApprovalReq, lifeCycleStatusReq, BuyerRefNoRequest } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, MaterialAllocationitemsIdreq, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq,SampleIdRequest, AllocatedLocationReq, RequestNoReq, AllocationApprovalReq, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, LocationReq, requestNoReq } from '@project-management-system/shared-models';
 import { create } from 'domain';
 
 
@@ -22,6 +22,10 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/getAllSampleData")
   }
 
+  async getstyleaginstpch(): Promise<AllSampleDevReqResponseModel> {
+    // console.log(req, 'shared service')
+    return this.axiosPostCall(this.URL + "/getstyleaginstpch")
+  }
   async getAllSampleReqNo(): Promise<AllSampleDevReqResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllSampleReqNo")
   }
@@ -213,5 +217,32 @@ export class SampleDevelopmentService extends CommonAxiosService {
   async updatedispatch(req?:lifeCycleStatusReq): Promise<CommonResponseModel> {
     
     return this.axiosPostCall(this.URL + "/updatedispatch" ,req)
+  }
+
+  async getPickListInfo(req?:requestNoReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getPickListInfo",req )
+  }
+
+  async getAllMaterialIssue(): Promise<CommonResponseModel> {
+    
+    return this.axiosPostCall(this.URL + "/getmaterialissue" )
+  }
+  async getbyID(req?:RequestNoReq): Promise<CommonResponseModel> {
+    
+    return this.axiosPostCall(this.URL + "/getbyID" ,req)
+  }
+
+  async getRequestno(req?:RequestNoReq): Promise<CommonResponseModel> {
+    
+    return this.axiosPostCall(this.URL + "/getRequestno" ,req)
+  }
+  async allocatedLocation(req:LocationReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/allocatedLocation" ,req)
+  }
+  async getPch(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getPch" )
+  }
+  async getStyle(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getStyle" )
   }
 }

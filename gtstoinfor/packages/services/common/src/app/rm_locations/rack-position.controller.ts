@@ -39,7 +39,10 @@ async activateOrDeactivatePosition(@Body() req: any): Promise<CommonResponseMode
 
 }
 
+@Post('/getRackPositionByRack')
+async getRackPositionByRack(@Body() req: any): Promise<CommonResponseModel> {
+  return await this.Service.getRackPositionByRack(req);
 
-
+}
 
 }

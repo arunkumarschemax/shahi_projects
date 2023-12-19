@@ -23,4 +23,7 @@ export * from './logo.enum'
 export * from './part.enum'
 export * from './item-type.enum'
 export * from './type-enum'
-
+export * from './current-pallet-location.enum'
+export * from './current-pallet-state.enum'
+export * from './pallet-bin-status.enum'
+export * from './menus-scopes-enum'

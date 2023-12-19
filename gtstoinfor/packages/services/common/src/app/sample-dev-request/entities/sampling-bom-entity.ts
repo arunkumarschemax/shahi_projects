@@ -31,23 +31,23 @@ export class SamplingbomEntity {
     })
     colourId:number
 
-    @Column('int',{
-        name:'required_quantity',
-        nullable:false
+    @Column('decimal',{
+      name:'required_quantity',
+    nullable:false,
     })
-    requiredQuantity:number
+    requiredQuantity : number;
 
-    @Column('int',{
-        name:'received_quantity',
-        nullable:false
+    @Column('decimal',{
+      name:'received_quantity',
+    nullable:false,
     })
-    receivedQuantity:number
+    receivedQuantity : number;
 
-    @Column('int',{
-        name:'assigned_quantity',
-        nullable:false
+    @Column('decimal',{
+      name:'assigned_quantity',
+    nullable:false,
     })
-    assignedQuantity:number
+    assignedQuantity : number;
 
     @Column({
       type:"enum",

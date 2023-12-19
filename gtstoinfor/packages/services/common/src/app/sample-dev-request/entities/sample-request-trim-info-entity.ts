@@ -16,8 +16,7 @@ export class SampleRequestTriminfoEntity {
 
     @Column('decimal', {
         name: 'consumption',
-        precision: 4,
-        scale: 2,
+        nullable:false,
     })
     consumption: number
     @Column('text', {
@@ -37,12 +36,16 @@ export class SampleRequestTriminfoEntity {
         nullable: true
     })
     trimType: string
-
-    // @Column('int',{
-    //     name:'product_group_id',
-    //     nullable:false
-    // })
-    // productGroupId:number
+    @Column('decimal',{
+        name:'total_requirement',
+      nullable:false,
+    })
+    totalRequirement : number;
+    @Column('decimal',{
+        name:'wastage',
+      nullable:false,
+    })
+    wastage : number;
 
     @ManyToOne(() => SampleRequest, sampleDevReq => sampleDevReq.sampleTrimInfo)
     @JoinColumn({ name: 'sample_request_id' })

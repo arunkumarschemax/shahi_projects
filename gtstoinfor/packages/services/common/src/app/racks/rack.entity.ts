@@ -34,6 +34,31 @@ export class RacksEntity {
   })
   rackType: RackEnum;
 
+  @Column('int',{
+    name:'levels',
+    nullable:false,
+  })
+  levels:number
+
+  @Column('int',{
+    name:'columns',
+    nullable:false,
+  })
+  columns:number
+
+  @Column('int',{
+    name:'priority',
+    nullable:false,
+  })
+  priority:number
+  
+  @Column('varchar', {
+    nullable: false,
+    length: 30,
+    name: 'barcode_id',
+  })
+  barcodeId: string;
+
   @Column("boolean", {
     nullable: false,
     default: true,

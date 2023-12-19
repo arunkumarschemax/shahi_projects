@@ -5,7 +5,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { type } from 'os';
-import { PurchaseViewDto } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, PurchaseViewDto } from '@project-management-system/shared-models';
 import PoPrint from './po-print';
 
 export interface PoDetailViewPagesProps {
@@ -15,7 +15,7 @@ export interface PoDetailViewPagesProps {
 export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
   const [data, setData] = useState<any[]>([])
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const page = 1
+  const [page, setPage] = React.useState(1);
   const navigate = useNavigate();
   const Service = new PurchaseOrderservice()
   const [form] = Form.useForm()
@@ -83,6 +83,10 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       title: 'Material Type',
       key: 'Material Type',
       dataIndex: 'po_material_type',
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },
     },
     {
       title: 'Item Code',
@@ -112,11 +116,14 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       title: 'Discount %',
       key: 'Discount',
       dataIndex: 'discount',
+      render: (text) => {
+        return text !== undefined && text !== null ? text : '-';
+      },
     },
     {
       title: 'Tax %',
       key: 'Tax %',
-      dataIndex: 'tax',
+      dataIndex: 'taxPercentage',
     },
     {
       title: 'Total Amount',
@@ -268,12 +275,14 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       <Card>
         <Card title="PO Detail View" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span style={{ color: 'white' }} > <Button className='panel_button' onClick={openPrint}>Print</Button> <Button className='panel_button' onClick={() => navigate('/purchase-view')}>Po View</Button> </span>} >
           <Descriptions size='small' >
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>PO Against</span>}>{data[0]?.po_against}</DescriptionsItem>
 
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Po Number</span>}>{data[0]?.po_number}</DescriptionsItem>
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Po Date</span>}>{moment(data[0]?.purchase_order_date).format('YYYY-MM-DD')}
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>PO Number</span>}>{data[0]?.po_number}</DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>PO Date</span>}>{moment(data[0]?.purchase_order_date).format('YYYY-MM-DD')}
               {data[0]?.orderDates}</DescriptionsItem>
             {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Material Type</span>}>{data[0]?.materialType}</DescriptionsItem> */}
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>PO Against</span>}>{data[0]?.po_against}</DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent No</span>}>{data[0]?.indentNo}</DescriptionsItem>
+            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent Date</span>}>{moment(data[0]?.indentDate).format('YYYY-MM-DD')}</DescriptionsItem>
 
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Vendor Name</span>}>{data[0]?.vendor_name}</DescriptionsItem>
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>ETD</span>}>{moment(data[0]?.expected_delivery_date).format('YYYY-MM-DD')}
@@ -308,6 +317,11 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
             <Table
               rowKey={record => record.purchase_order_item_id}
               columns={itemColumns}
+              pagination={{
+                onChange(current) {
+                  setPage(current);
+                }
+              }}
               dataSource={data}
             />
           </Card>
@@ -315,7 +329,7 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
             <Modal
               className='print-docket-modal'
               key={'modal' + Date.now()}
-              width={'100%'}
+              width={'70%'}
               style={{ top: 30, alignContent: 'right' }}
               visible={isModalVisible}
               title={<React.Fragment>

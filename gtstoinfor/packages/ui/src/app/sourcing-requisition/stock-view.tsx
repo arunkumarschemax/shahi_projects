@@ -7,9 +7,10 @@ import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { BuyerRefNoRequest, M3ItemsDTO, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, M3ItemsDTO, MenusAndScopesEnum, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
 import { useIAMClientState } from "../common/iam-client-react";
+import { RolePermission } from "../role-permissions";
 const { TextArea } = Input;
 
 export const StockView = () => {
@@ -49,10 +50,13 @@ export const StockView = () => {
 
 
 
+  const userrefNo = IAMClientAuthContext.user?.externalRefNo
+  const role = IAMClientAuthContext.user?.roles
+
 
   useEffect(() => {
-    const userrefNo = IAMClientAuthContext.user?.externalRefNo
   if(userrefNo){
+    console.log(userrefNo)
     setIsBuyer(true)
   }
   getBuyerByRefNo()
@@ -61,7 +65,15 @@ export const StockView = () => {
     getWeaveData();
     getBuyers();
   }, []);
-
+  
+  const checkAccess = (buttonParam) => {  
+    console.log(MenusAndScopesEnum.Menus.Procurment) 
+    console.log(MenusAndScopesEnum.SubMenus["RM Fabric Inventory "]) 
+    console.log(buttonParam) 
+    
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus["RM Fabric Inventory "],buttonParam)
+    return accessValue
+}
   const getBuyers = () => {
     const req = new BuyerRefNoRequest()
     req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
@@ -76,7 +88,7 @@ export const StockView = () => {
     const req = new BuyerRefNoRequest()
     req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     buyerService.getAllActiveBuyers(req).then((res) => {
-      if (res.status) {
+      if (res.status && req.buyerRefNo != null) {
         form.setFieldsValue({buyerId: res.data[0]?.buyerId})
         onFinish()
       }
@@ -119,7 +131,7 @@ export const StockView = () => {
           (rec) => rec.uomCategory == UomCategoryEnum.LENGTH
         );
         const weight = res.data.filter(
-          (rec) => rec.uomCategory == UomCategoryEnum.MASS
+          (rec) => rec.uomCategory == UomCategoryEnum.WEIGHT
         );
         const width = res.data.filter(
           (rec) => rec.uomCategory == UomCategoryEnum.AREA
@@ -263,6 +275,13 @@ export const StockView = () => {
     //   // sorter: (a, b) => a.plant - b.plant,
     //   // sortDirections: ['descend', 'ascend'],
     // },
+    {
+      title: "GRN Number",
+      dataIndex: "grnNumber",
+      ...getColumnSearchProps("grnNumber"),
+      sorter: (a, b) => a.grnNumber.localeCompare(b.stockType),
+      sortDirections: ["descend", "ascend"],
+    },
     
 
     {
@@ -273,13 +292,6 @@ export const StockView = () => {
       sortDirections: ["descend", "ascend"],
       
     },
-    // {
-    //   title: "Stock Type",
-    //   dataIndex: "stockType",
-    //   ...getColumnSearchProps("stockType"),
-    //   sorter: (a, b) => a.stockType.localeCompare(b.stockType),
-    //   sortDirections: ["descend", "ascend"],
-    // },
     // {
     //   title: "Sample Order",
     //   dataIndex: "sampleOrder",
@@ -319,7 +331,7 @@ export const StockView = () => {
     //   ...getColumnSearchProps("item_code"),
     // },
     {
-      title: "M3 Item",
+      title:<div style={{textAlign:"center"}}>M3 Item</div>,
       dataIndex: "m3Item",
       ...getColumnSearchProps("m3Item"),
       sorter: (a, b) => a.m3Item.localeCompare(b.m3Item),
@@ -365,18 +377,23 @@ export const StockView = () => {
       title: 'Action',
       dataIndex: 'action',
       render: (text, rowData) => {
-        if (rowData.buyer_id === buyervalue) {
-          return "-";
-        }
+     
+        // if (rowData.buyer_id === buyervalue) {
+        //   return "-";
+        // }
     
         return (
           <span>
+            {
+              (userrefNo && rowData.refNo === userrefNo) ? "-" : 
+              checkAccess(MenusAndScopesEnum.Scopes.reclassification) ?
             <Button
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}
             >
               <b>Request Reclassification</b>
-            </Button>
+            </Button>:"-"
+          }
           </span>
         );
       }
@@ -710,7 +727,7 @@ export const StockView = () => {
                 Reset
               </Button>
               &nbsp;&nbsp;&nbsp;&nbsp;
-              <Button type="primary" onClick={(e) => getItemsForOtherBuyers()} disabled={buttonEnable}
+              <Button type="primary" onClick={(e) => getItemsForOtherBuyers()} 
             //  style={{marginRight:300}}
 
               >Check Other Buyers
@@ -726,6 +743,11 @@ export const StockView = () => {
         dataSource={data.length > 0 ? data : []}
         columns={columns}
         size="small"
+        pagination={{
+          onChange(current) {
+            setPage(current);
+          }
+        }}
       />
       <Modal
             className='rm-'

@@ -1,19 +1,20 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Row, Select, Table, Tabs, Typography } from 'antd'
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Modal, Row, Select, Table, Tabs, Typography, message, notification } from 'antd'
 import style from 'antd/es/alert/style'
 import TabPane from 'antd/es/tabs/TabPane'
 import React, { useEffect, useState } from 'react'
 import PurchaseOrderfabricForm from '../purchase-order2/purchase-order-fabric'
 import PurchaseOrderTrim from '../purchase-order2/purchase-order-trim'
-import { BuyersService, GRNService, PurchaseOrderservice, UomService, VendorsService } from '@project-management-system/shared-services'
+import { BuyersService, GRNService, PurchaseOrderservice, TrimParamsMappingService, UomService, VendorsService } from '@project-management-system/shared-services'
 import TextArea from 'antd/es/input/TextArea'
 import GRNFabricForm from './grn-fabric'
 import GRNTrimForm from './grn-trim'
-import { GRNTypeEnum, GrnDto, GrnItemsDto, GrnItemsFormDto, PoItemEnum, PurchaseOrderStatus, VendorIdReq } from '@project-management-system/shared-models'
+import { GRNTypeEnum, GRNTypeEnumDisplay, GrnDto, GrnItemsDto, GrnItemsFormDto, ItemTypeEnumDisplay, PoItemEnum, PurchaseOrderStatus, TrimIdRequestDto, VendorIdReq } from '@project-management-system/shared-models'
 import AlertMessages from '../common/common-functions/alert-messages'
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from 'react-router-dom'
-import { EditOutlined, MinusCircleOutlined } from '@ant-design/icons'
+import { EditOutlined, MinusCircleOutlined, QrcodeOutlined } from '@ant-design/icons'
 import { useIAMClientState } from '../common/iam-client-react'
+import { QrScanner } from './qr-scanner'
 
 // const data : GrnItemsFormDto[] = []
 // const obj1 : GrnItemsFormDto = new GrnItemsFormDto(1,1,'YY/FAB00001','Activewear Fabrics',17,PoItemEnum.OPEN,3,'Inch',3000,5,2,5000,0,0,1200,18,'red',1,null,1,'')
@@ -47,6 +48,8 @@ const GRNForm = () => {
   const [selectedItem, setSelectedItem] = useState<any>()
   const [itemsForm] = Form.useForm()
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
+  const paramsService = new TrimParamsMappingService()
+  const [mapData, setMapData] = useState<any[]>([])
 
 
   useEffect(() => {
@@ -63,18 +66,22 @@ const GRNForm = () => {
 
 
   const createGrn = async () => {
-    await form.validateFields()
-    const values = form.getFieldsValue()
-    console.log(values,'rrrr')
-    const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData[0]?.poMaterialType, poItemData, 0, '',values.grnType, values.invoiceNo, poData?.poMaterialType, values.grnAmount,form.getFieldValue('invoiceDate').format('YYYY-MM-DD'));
-    grnService.createGrn(req).then((res) => {
-      if (res.status) {
-        AlertMessages.getSuccessMessage(res.internalMessage);
-        navigate('/grn-view')
-      } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    })
+    form.validateFields().then(() => {
+
+      const values = form.getFieldsValue()
+      console.log(values,'rrrr')
+      const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData?.poMaterialType, poItemData, 0, '',values.grnType, values.invoiceNo, poData?.poMaterialType, values.grnAmount,form.getFieldValue('invoiceDate').format('YYYY-MM-DD'));
+      grnService.createGrn(req).then((res) => {
+        if (res.status) {
+          AlertMessages.getSuccessMessage(res.internalMessage);
+          navigate('/grn-view')
+        } else {
+          AlertMessages.getErrorMessage(res.internalMessage);
+        }
+      })
+    }).catch(() => {
+      // message.error('Please fill all required fields')
+  })
   };
 
 
@@ -103,7 +110,13 @@ const GRNForm = () => {
     itemsForm.resetFields()
     setPoData([])
     setPoItemData([])
-    const req = new VendorIdReq(0, val, option?.name, option.val);
+    if(option && option?.name.includes('TRIM')){
+    getMappedTrims(option?.mapId)
+    }else{
+      setMapData([])
+    }
+
+    const req = new VendorIdReq(0, val, option?.name, option?.val);
     poService.getPODataById(req).then((res) => {
       if (res.status) {
         setPoData(res.data[0]);
@@ -151,29 +164,29 @@ const GRNForm = () => {
     );
   }
 
+  const getMappedTrims = (value?) => {
+    const req = new TrimIdRequestDto(value)
+    paramsService.getMappedParamsByTrim(req).then((res) => {
+      if (res.status) {
+        setMapData(res.data)
+      }
+    });
+  }
 
   const columns: any = [
-    {
-      title: <div style={{ textAlign: "center" }}> Item Code</div>,
-      fixed: 'left',
-      dataIndex: 'm3ItemCode',
-
-    },
-    {
-      title: <div style={{ textAlign: "center" }}> Item Type</div>,
-      dataIndex: 'm3ItemType',
-      fixed: 'left',
-
-    },
-    // {
-    //   title: <div style={{textAlign:"center"}}>Style</div>,
-    //   dataIndex: 'style',
-    // },
     {
       title: <div style={{ textAlign: "center" }}>Buyer</div>,
       dataIndex: 'buyer',
       fixed: 'left',
-
+    },
+    poData?.poMaterialType !== 'Fabric'?{
+      title:<div style={{textAlign:"center"}}>Trim Params</div>,
+      dataIndex:"trimParams",
+    }:{},
+    {
+      title: <div style={{ textAlign: "center" }}> Item Code</div>,
+      // fixed: 'left',
+      dataIndex: 'm3ItemCode',
     },
     {
       title: <div style={{ textAlign: "center" }}>PO Qty</div>,
@@ -297,6 +310,8 @@ const GRNForm = () => {
       </span>
     }
   ]
+  const filteredColumns = columns.filter((column) => Object.keys(column).length > 0);
+
 
 
   function receivedQuantityOnChange(e) {
@@ -380,9 +395,44 @@ const GRNForm = () => {
     itemsForm.resetFields()
   }
 
+  const [showQrSacn, setShowQrScan] = useState<boolean>(false);
+  const [modal, setModal] = useState('')
 
-console.log(form.getFieldsValue())
+  const poNumberQr = (e) =>{
+    setShowQrScan(true);
+     setModal('poNumber')
+  }
 
+  const handleQrScan = (value) => {
+    setShowQrScan(false);
+    const selectedVendor = form.getFieldValue('vendorId');
+    if (!selectedVendor) {
+      setTimeout(() => {
+        notification.info({message:'Please select a vendor'});
+      });
+      return;
+    }
+  
+    const poNumber = poNoData.filter((el) => el.poNumber === value.text)[0];
+    if (!poNumber) {
+      setTimeout(() => {
+      notification.warning({message:'Scanned PO does not match with Vendor POs'});
+    },2000);
+      return;
+    }
+
+    if (poNumber) {
+      getPODataById(poNumber.purchaseOrderId, { name: poNumber.materialType, val: poNumber.poAgainst });
+      form.setFieldsValue({
+        purchaseOrderId: poNumber.poNumber,
+      });
+    }
+  }
+  
+  const disabledDate = (current) => {
+    // console.log(current.valueOf(), 'current');
+     return current.valueOf() > Date.now();
+   };
   return (
     <>
       <Card title='GRN' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={
@@ -407,10 +457,14 @@ console.log(form.getFieldsValue())
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
               <Form.Item name='purchaseOrderId' label='PO Number' rules={[{ required: true, message: 'PO Number is required' }]}>
-                <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' onChange={getPODataById}>
+                <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' onChange={getPODataById}
+                suffixIcon={<QrcodeOutlined
+                  onClick={(e) => { poNumberQr(e.target) }}
+                  style={{ fontSize: '28px', marginLeft: '-7px' }} />}
+                >
                   {poNoData.map(e => {
                     return (
-                      <Option key={e.purchaseOrderId} value={e.purchaseOrderId} name={e.materialType} val={e.poAgainst}> {e.poNumber}</Option>
+                      <Option key={e.purchaseOrderId} value={e.purchaseOrderId} name={e.materialType} val={e.poAgainst} mapId={e.trimMappingId}> {e.poNumber}</Option>
                     )
                   })}
                 </Select>
@@ -420,11 +474,16 @@ console.log(form.getFieldsValue())
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                 <Form.Item name='grnType' label='GRN Type' dependencies={['purchaseOrderId']} >
                   <Select showSearch allowClear optionFilterProp="children" disabled>
-                    {Object.values(GRNTypeEnum).map((value) => (
+                  {Object.values(GRNTypeEnumDisplay).map((val) => (
+            <Select.Option key={val.name} value={val.name}>
+              {val.displayVal}
+            </Select.Option>
+          ))}
+                    {/* {Object.values(GRNTypeEnum).map((value) => (
                       <Option key={value} value={value}>
                         <span style={{ fontWeight: 'bold' }}>{value}</span>
                       </Option>
-                    ))}
+                    ))} */}
                   </Select>
                 </Form.Item>
               </Col>
@@ -474,9 +533,9 @@ console.log(form.getFieldsValue())
             
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
               <Form.Item name='invoiceDate' label='Invoice Date'
-              // s rules={[{ required: true, message: 'Date is required' }]}
+              rules={[{ required: true, message: 'Date is required' }]}
                >
-                <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday />
+                <DatePicker style={{ width: '93%', marginLeft: 5 }} showToday disabledDate={disabledDate} />
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
@@ -614,7 +673,7 @@ console.log(form.getFieldsValue())
           </Row>
 
           <Row>
-            <Table scroll={{ x: 'max-content' }} columns={columns} dataSource={poItemData} bordered pagination={false} />
+            <Table scroll={{ x: 'max-content' }} columns={filteredColumns} dataSource={poItemData} bordered pagination={false} />
           </Row>
         </Card>
 
@@ -625,7 +684,16 @@ console.log(form.getFieldsValue())
           </Col>
         </Row>
 
-
+        <Modal
+        className='qr-container'
+        key={'modal' + Date.now()}
+        width={'95%'}
+        style={{ top: 30, textAlign: 'right',height:"50%" }}
+        visible={showQrSacn}
+        onCancel={() => { setShowQrScan(false) }}
+      >
+        {modal === 'poNumber' ? <QrScanner handleScan={(value) =>{handleQrScan(value)}} /> : null}
+      </Modal>
       </Card>
     </>
   )

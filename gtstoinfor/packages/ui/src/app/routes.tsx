@@ -10,7 +10,6 @@ import FactoriesForm from "./masters/factories/factories-form"
 import ExcelImport from "./excel-import/excel-import"
 import ChangesGrid from "./excel-import/changes-grid"
 import AllOrdersGridView from "./excel-import/orders-view-grid"
-import { Dashboard } from "./common/dashboards/dashboard"
 import { FileRevert } from "./excel-import/file-revert"
 import VersionChanges from "./excel-import/version-wise-table"
 import CurrenciesForm from "./masters/currencies/currency-form"
@@ -209,6 +208,14 @@ import HoleGrid from "./trim-master/hole/hole-view"
 import M3TrimItemsForm from "./trim-master/m3-trim-items/m3-trim-items"
 import { RmTrimsView } from "./sourcing-requisition/rm-trims-view"
 import { M3TrimsView } from "./trim-master/m3-trim-items/m3-trims-view"
+import { Dashboard } from "./common/dashboards/dashboard"
+import MaterialIssuedView from "./sample-development/material-issued-view"
+import MaterialIssuesDetailsView from "./sample-development/material-issued-detail-view"
+import PickListPrint from "./sample-development/pick-list-print"
+import LocationQrCodePrint from "./rm_locations/location-barcode-print"
+import PurchaseOrderQrCodePrint from "./purchase-order2/po-qrcode-print"
+import WeightForm from "./common/weight/weight-form"
+import WeightView from "./common/weight/weight-view"
 
 
 
@@ -259,7 +266,6 @@ export const AppRoutes = () => {
 
                 <Route path='/m3-items' element={<M3Items />} />
                 <Route path='/m3-items-view' element={<M3ItemsView />} />
-
                 <Route path='/wh-dashboard' element={<WarehouseDashboard />} />
                 {/* <Route path='/masters'> */}
                 <Route path='quality-form' element={<QualityForm />} />
@@ -279,6 +285,8 @@ export const AppRoutes = () => {
 
                 {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                 <Route path='/masters'>
+               
+
                     <Route path='quality-form' element={<QualityForm />} />
                     <Route path='quality-view' element={<QualityView />} />
                     <Route path='rack-form' element={<RackForm />} />
@@ -732,6 +740,11 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} />} />
+                        <Route path="weight/weight-view" element={<WeightView />} />
+                    <Route path='weight/weight-form' element={<WeightForm columnData={undefined}
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateDetails={(undefined) => { }} />} />
                         <Route path="structure/structure-view" element={<StructureView />} />
                     <Route path='structure/structure-form' element={<StructureForm structureData={undefined}
                         isUpdate={false}
@@ -773,7 +786,8 @@ export const AppRoutes = () => {
                 <Route path='settings/settings-form' element={<SettingsForm />} />
                 <Route path='settings/settings-view' element={<SettingsView />} />
                 {/* </Route> */}
-
+                <Route path = '/locations-QrCodes-print' element={<LocationQrCodePrint/>}/>
+                <Route path = '/po-QrCodes-print' element={<PurchaseOrderQrCodePrint/>}/>
                 <Route path='sample-development' >
                     <Route path="sample-development-form" element={<SampleDevForm />} />
                     {/* <Route path="sample-development-view" element={<SampleDevView />} /> */}
@@ -794,6 +808,7 @@ export const AppRoutes = () => {
                     <Route path="store-issues-detail-view" element={<SourceIssuesDetailView MaterialIssueID={0} />} />
                     {/* <Route path="material-issue-view" element={<MaterialIssueView />} /> */}
                     <Route path="material-issue-view" element={<AllocatedStockApproval screen={"Issued"} />} />
+
                 </Route>
 
                 <Route path='/materialCreation'>
@@ -821,6 +836,9 @@ export const AppRoutes = () => {
 
                 </Route>
                 {/* <Route path='/report'> */}
+                <Route path='material-issued-view' element={<MaterialIssuedView />} />
+                <Route path='material-issued-detail-view' element={<MaterialIssuesDetailsView requestId={0} />} />
+
                 <Route path='material-issue-report' element={<MaterialIssueReport />} />
                 <Route path='indent-report' element={<IndentReport />} />
 
@@ -1048,7 +1066,6 @@ export const AppRoutes = () => {
                     <Route path="material-allocation-view" element={<MaterialAllocationView />} />
                     <Route path="material-allocation-detail-view" element={<MaterialAllocationDetailView />} />
                     <Route path='allocation-approval' element={<AllocatedStockApproval screen={"Allocated"}/>} />
-                    
 
                 </Route>
 
@@ -1132,6 +1149,7 @@ export const AppRoutes = () => {
                 <Route path='/grn-form' element={<GRNForm />} />
                 <Route path='/grn-view' element={<GRNView />} />
                 <Route path='/grn-detail-view' element={<GRNDetailView />} />
+
                 <Route path='/excel-import'>
                     <Route path='excel-import' element={<ExcelImport />} />
                     <Route path='changes-view' element={<ChangesGrid />} />

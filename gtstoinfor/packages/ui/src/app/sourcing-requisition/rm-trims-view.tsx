@@ -7,9 +7,10 @@ import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { BuyerRefNoRequest, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, MenusAndScopesEnum, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
 import { useIAMClientState } from "../common/iam-client-react";
+import { RolePermission } from "../role-permissions";
 const { TextArea } = Input;
 const { Option } = Select;
 
@@ -54,10 +55,14 @@ export const RmTrimsView = () => {
   const [mapData, setMapData] = useState<any[]>([])
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [isBuyer, setIsBuyer] = useState(false);
+  const [rowData, setRowData] = useState<any>(undefined);
+  const [visibleModel, setVisibleModel] = useState<boolean>(false);
+
+  const userrefNo = IAMClientAuthContext.user?.externalRefNo;
+  const roles = IAMClientAuthContext.user?.roles;
 
 
   useEffect(() => {
-    const userrefNo = IAMClientAuthContext.user?.externalRefNo
     if(userrefNo){
       setIsBuyer(true)
     }
@@ -98,7 +103,11 @@ export const RmTrimsView = () => {
     getBuyers();
     getBuyerByRefNo()
   }, [mapData]);
-
+  
+  const checkAccess = (buttonParam) => {   
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus["RM Trim Inventory"],buttonParam)
+    return accessValue
+}
   const getStructures = () => {
     structureService.getAllStructureInfo().then((res) => {
       if (res.status) {
@@ -209,7 +218,7 @@ export const RmTrimsView = () => {
     const req = new BuyerRefNoRequest()
     req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     buyerService.getAllActiveBuyers(req).then((res) => {
-      if (res.status) {
+      if (res.status && req.buyerRefNo) {
         form.setFieldsValue({buyerId: res.data[0]?.buyerId})
         onFinish()
       }
@@ -229,11 +238,32 @@ export const RmTrimsView = () => {
     form.resetFields();
   };
 
+  const getItemsForOtherBuyers = () => {
+    let req = new M3trimsDTO(0,undefined,undefined,form.getFieldValue("category"),form.getFieldValue("color"),form.getFieldValue("content"),form.getFieldValue("finish"),form.getFieldValue("hole"),form.getFieldValue("logo"),form.getFieldValue("part"),form.getFieldValue("quality"),form.getFieldValue("structure"),form.getFieldValue("thickness"),form.getFieldValue("type"),form.getFieldValue("uom"),form.getFieldValue("variety"),form.getFieldValue("trimCategory"),0)
+    console.log(req);
+    req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    stockService.getAllTrimStocks(req).then((res) => {
+      if (res.status) {
+        setData(res.data);
+        AlertMessages.getSuccessMessage(res.internalMessage);
+        // window.location.reload();
+      }
+      else{
+        setData([]);
+        AlertMessages.getWarningMessage(res.internalMessage);
+      }
+    })
+    .catch((err) => {
+      setData([]);
+      AlertMessages.getErrorMessage(err.message);
+    });
 
+  }
   
   const setModel = (val) => {
     console.log(val);
-    // setVisibleModel(val);
+    setVisibleModel(val);
+    onFinish()
   }
 
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
@@ -324,6 +354,13 @@ export const RmTrimsView = () => {
     if (value === null) return true; // If filter is not active, show all rows
     return record.itemType === value;
   };
+
+  const getRowData = async (m3StyleDto: any) => {
+    setRowData(m3StyleDto);
+    console.log(m3StyleDto,"kk")
+    setVisibleModel(true);
+  }
+
   const columns: ColumnProps<any>[] = [
     {
       title: "S No",
@@ -339,7 +376,13 @@ export const RmTrimsView = () => {
     //   // sortDirections: ['descend', 'ascend'],
     // },
     
-
+    {
+      title: "GRN Number",
+      dataIndex: "grnNumber",
+      ...getColumnSearchProps("grnNumber"),
+      sorter: (a, b) => a.grnNumber.localeCompare(b.stockType),
+      sortDirections: ["descend", "ascend"],
+    },
     {
       title: "Buyer",
       dataIndex: "buyer",
@@ -369,19 +412,16 @@ export const RmTrimsView = () => {
     //   sorter: (a, b) => a.Indent.localeCompare(b.Indent),
     //   sortDirections: ["descend", "ascend"],
     // },
-    // {
-    //   title: "Style",
-    //   dataIndex: "style",
-    //   ...getColumnSearchProps("style"),
-    //   sorter: (a, b) => a.style.localeCompare(b.style),
-    //   sortDirections: ["descend", "ascend"],
-    // },
     {
       title: "Material Type",
       dataIndex: "itemType",
       ...getColumnSearchProps("itemType"),
       sorter: (a, b) => a.itemType.localeCompare(b.itemType),
       sortDirections: ["descend", "ascend"],
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },
     },
     // {
     //   title: "Item Code",
@@ -393,6 +433,10 @@ export const RmTrimsView = () => {
     //   ),
     //   ...getColumnSearchProps("item_code"),
     // },
+    {
+      title: <div style={{textAlign:"center"}}>Trim Params</div>,
+      dataIndex: "trimParams",
+    },
     {
       title: "M3 Item",
       dataIndex: "m3Item",
@@ -446,12 +490,15 @@ export const RmTrimsView = () => {
     
         return (
           <span>
-            {/* <Button
+            {
+              rowData.refNo === userrefNo ? "-" : checkAccess(MenusAndScopesEnum.Scopes.reclassification)?
+            <Button
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}
             >
               <b>Request Reclassification</b>
-            </Button> */}
+            </Button>:"-"
+          }
           </span>
         );
       }
@@ -489,8 +536,8 @@ export const RmTrimsView = () => {
   // }
 
   const onFinish = () => {
-
-    let req = new M3trimsDTO(0,form.getFieldValue("buyer"),undefined,form.getFieldValue("category"),form.getFieldValue("color"),form.getFieldValue("content"),form.getFieldValue("finish"),form.getFieldValue("hole"),form.getFieldValue("logo"),form.getFieldValue("part"),form.getFieldValue("quality"),form.getFieldValue("structure"),form.getFieldValue("thickness"),form.getFieldValue("type"),form.getFieldValue("uom"),form.getFieldValue("variety"),form.getFieldValue("trimCategory"),0)
+    console.log(form.getFieldValue("buyerId"))
+    let req = new M3trimsDTO(0,form.getFieldValue("buyerId"),undefined,form.getFieldValue("category"),form.getFieldValue("color"),form.getFieldValue("content"),form.getFieldValue("finish"),form.getFieldValue("hole"),form.getFieldValue("logo"),form.getFieldValue("part"),form.getFieldValue("quality"),form.getFieldValue("structure"),form.getFieldValue("thickness"),form.getFieldValue("type"),form.getFieldValue("uom"),form.getFieldValue("variety"),form.getFieldValue("trimCategory"),0)
     console.log(req);
     req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     stockService.getAllTrimStocks(req).then((res) => {
@@ -864,9 +911,12 @@ export const RmTrimsView = () => {
             ) : (<></>)}
         {/* </Row>
         <Row> */}
-            <Col span={4} style={{paddingTop:'23px'}}>
+            <Col span={6} style={{paddingTop:'23px'}}>
                 <Button type="primary" htmlType="submit">Get Stock</Button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
                 <Button htmlType="button" onClick={onReset}>Reset</Button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <Button type="primary" onClick={(e) => getItemsForOtherBuyers()}  >Check Other Buyers </Button>
             </Col>
         </Row>
       </Form>
@@ -876,8 +926,13 @@ export const RmTrimsView = () => {
         dataSource={data.length > 0 ? data : []}
         columns={columns}
         size="small"
+        pagination={{
+          onChange(current) {
+            setPage(current);
+          }
+        }}
       />
-      {/* <Modal
+      <Modal
             className='rm-'
             key={'modal' + Date.now()}
             width={'80%'}
@@ -889,8 +944,7 @@ export const RmTrimsView = () => {
             footer={[]}
         >
             <Reclassification data = {rowData} buyer= {form.getFieldValue("buyerId")} type="stock" status={setModel}/>
-
-            </Modal> */}
+            </Modal>
     </Card>
   );
 };

@@ -31,6 +31,7 @@ import {
     Space,
     Table,
     Tag,
+    Tooltip,
     message,
   } from "antd";
   import style from "antd/es/alert/style";
@@ -46,7 +47,13 @@ import {
     BomStatusEnum,
     CustomerOrderStatusEnum,
     IndentRequestFilter,
+    ItemTypeEnumDisplay,
+    LifeCycleStatusDisplay,
     LifeCycleStatusEnum,
+    MenusAndScopesEnum,
+    SampleDevelopmentStatusDisplay,
+    SampleDevelopmentStatusEnum,
+    SampleFilterRequest,
     buyerandM3ItemIdReq,
     lifeCycleStatusReq,
   } from "@project-management-system/shared-models";
@@ -54,6 +61,9 @@ import {
 import { faL } from "@fortawesome/free-solid-svg-icons";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useIAMClientState } from "../common/iam-client-react";
+import PickListPrint, { getCssFromComponent } from "./pick-list-print";
+import PoPrint from "../purchase-order2/po-print";
+import RolePermission from "../role-permissions";
 // const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   
@@ -87,12 +97,16 @@ import { useIAMClientState } from "../common/iam-client-react";
     const [checked, setChecked] = useState<boolean>(false)
     const [keyUpdate, setKeyUpdate] = useState<number>(1);
    const { IAMClientAuthContext } = useIAMClientState();
-
- 
-
+   const [isModalOpen, setIsModalOpen] = useState(false)
+   const [row, setRow] = useState();
+   const [stockForm] = Form.useForm();
+   const [pch, setPch] = useState<any>([]);
+   const [styled, setStyled] = useState<any>([]);
   
     useEffect(() => {
       getAll();
+      getAllStyle();
+      getAllPch();
     }, []);
   
     useEffect(() => {
@@ -103,16 +117,24 @@ import { useIAMClientState } from "../common/iam-client-react";
     }, [data]);
   
   
+    const checkAccess = (buttonParam) => {   
+      const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Sample Development"],MenusAndScopesEnum.SubMenus["Sample Development View"],buttonParam)
+      
+      return accessValue
+  }
     const getAll = () => {
-      const req = new IndentRequestFilter();
-      if (form.getFieldValue("requestNo") !== undefined) {
-        req.requestNo = form.getFieldValue("requestNo");
+      const req = new SampleFilterRequest();
+      if (sourcingForm.getFieldValue("requestNo") !== undefined) {
+        req.reqNo = sourcingForm.getFieldValue("requestNo");
       }
-      if (form.getFieldValue("style") !== undefined) {
-        req.style = form.getFieldValue("style");
+      if (sourcingForm.getFieldValue("style") !== undefined) {
+        req.styleNo = sourcingForm.getFieldValue("style");
       }
-      if (form.getFieldValue("status") !== undefined) {
-        req.status = form.getFieldValue("status");
+      if (sourcingForm.getFieldValue("status") !== undefined) {
+        req.status = sourcingForm.getFieldValue("status");
+      }
+      if (sourcingForm.getFieldValue("pch") !== undefined) {
+        req.pch = sourcingForm.getFieldValue("pch");
       }
     req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
 
@@ -121,10 +143,29 @@ import { useIAMClientState } from "../common/iam-client-react";
           setData(res.data);
           console.log(res.data,"rrrrr")
           setFilterData(res.data);
+        } else {
+            AlertMessages.getErrorMessage(res.internalMessage);
         }
-      });
-    };
-   
+      }).catch(err => {
+        AlertMessages.getErrorMessage(err.message);
+        setData([]);
+      })
+    }
+    const getAllPch=()=>{
+      service .getPch().then((res)=>{
+        if (res.status) {
+          setPch(res.data);
+        }
+      })
+    }
+  
+    const getAllStyle=()=>{
+      service.getStyle().then((res)=>{
+        if (res.status) {
+          setStyled(res.data);
+        }
+      })
+    }
   
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -270,13 +311,20 @@ import { useIAMClientState } from "../common/iam-client-react";
           },
       },
       {
+        title: "Allocated Quantity",
+        dataIndex: "receivedQty",
+        sorter: (a, b) => a.receivedQty.localeCompare(b.receivedQty),
+        sortDirections: ["descend", "ascend"],
+      },
+      {
         title: "To Be Procured",
         dataIndex: "tobeProcured",
+        sorter: (a, b) => a.tobeProcured.localeCompare(b.tobeProcured),
         render: (text, record) => {
           return (
             <>
-              {Number(record.totalRequirement) - Number(record.availableQuantity) > 0
-                ? Number(record.totalRequirement) - Number(record.availableQuantity)
+              {Number(record.tobeProcured) > 0
+                ? Number(record.tobeProcured).toFixed(2)
                 : 0}
             </>
           );
@@ -312,11 +360,15 @@ import { useIAMClientState } from "../common/iam-client-react";
         title: "Trim Type",
         dataIndex: "trimType",
         ...getColumnSearchProps("trimType"),
+        render: (text) => {
+          const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+          return EnumObj ? EnumObj.displayVal : text;
+        },
       },
       {
         title: "Required Quantity",
-        dataIndex: "trim_consumption",
-        sorter: (a, b) => a.trim_consumption.localeCompare(b.trim_consumption),
+        dataIndex: "totalRequirement",
+        sorter: (a, b) => a.totalRequirement.localeCompare(b.totalRequirement),
         sortDirections: ["descend", "ascend"],
       },
       {
@@ -338,6 +390,26 @@ import { useIAMClientState } from "../common/iam-client-react";
           },
       },
       {
+        title: "Allocated Quantity",
+        dataIndex: "receivedQty",
+        sorter: (a, b) => a.receivedQty.localeCompare(b.receivedQty),
+        sortDirections: ["descend", "ascend"],
+      },
+      {
+        title: "To Be Procured",
+        dataIndex: "tobeProcured",
+        sorter: (a, b) => a.tobeProcured.localeCompare(b.tobeProcured),
+        render: (text, record) => {
+          return (
+            <>
+              {Number(record.tobeProcured) > 0
+                ? Number(record.tobeProcured).toFixed(2)
+                : 0}
+            </>
+          );
+        },
+      },
+      {
         title: "Status",
         dataIndex: "status",
         render: (text, record) => {
@@ -349,80 +421,86 @@ import { useIAMClientState } from "../common/iam-client-react";
         },
       },
     ];
-
-    const renderColumnForFabric: any =[
-      {
-        title: "S No",
-        key: "sno",
-        width: "100px",
-        responsive: ["sm"],
-        render: (text, object, index) => (page - 1) * 10 + (index + 1),
-      },
-      {
-        title: "Grn Number",
-        key:'grnNumber',
-        dataIndex: "grnNumber",
-        width: "150px",
-
-      },
-      {
-        title: "Grn Date",
-        key:'grnDate',
-        dataIndex:"grnDate",
-        render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
-        width: "150px",
-
-      },
-      {
-        title: "Location",
-        key:'location',
-
-        dataIndex: "location",
-        width:'80px',
-      },
-    
-      {
-        title: "Available Quantity",
-        width: "150px",
-        dataIndex: "quantity",
-      },
-     
-      {
-        title: "Allocated Quantity",
-        width:'200px',
-        render: (text, rowData, index) => { 
-          return(
-            
-            <Form.Item name='allocatedQuantity'>
-                  <InputNumber
-                      onChange={(e) => setAllocatedQty(index,rowData, e)} 
-                   />
-            </Form.Item>
-           
-          )
-        }
-      },
-      {
-        title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
-        onClick={() =>allocateQuantity()} 
-        >Allocate</Button>:'Allocate'}</div>,
-        dataIndex: "sm",
-        key: "sm",
-        align: "center",
-        render: (text, rowData, index) => { 
-          return (
-            <Checkbox 
-            onClick={checkboxonclick}
-            onChange={(e) => onCheck(rowData, index, e.target.checked)}
-            // onClick={(e) =>onCheck(rowData,undefined)}
-            />
-          );
+    const tableColumns = (val,fabindex,sampleReqId,itemId) => {
+      if(val === undefined){
+        AlertMessages.getWarningMessage("Please give required consumption. ");
+      }
+      console.log(val);
+      const renderColumnForFabric: any =[
+        {
+          title: "S No",
+          key: "sno",
+          width: "100px",
+          responsive: ["sm"],
+          render: (text, object, index) => (page - 1) * 10 + (index + 1),
         },
-      },
-     
-    ]
+        {
+          title: "Grn Number",
+          key:'grnNumber',
+          dataIndex: "grnNumber",
+          width: "150px",
 
+        },
+        {
+          title: "Grn Date",
+          key:'grnDate',
+          dataIndex:"grnDate",
+          render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
+          width: "150px",
+
+        },
+        {
+          title: "Location",
+          key:'location',
+
+          dataIndex: "location",
+          width:'80px',
+        },
+      
+        {
+          title: "Available Quantity",
+          width: "150px",
+          dataIndex: "quantity",
+        },
+      
+        {
+          title: "Allocated Quantity",
+          width:'200px',
+          render: (text, rowData, index) => { 
+            return(
+            <Form form={stockForm}>
+              <Form.Item name={`allocatedQuantity${fabindex}-${index}`}>
+                    <InputNumber name={`allocatedQuantity${fabindex}-${index}`}
+                        onChange={(e) => setAllocatedQty(index,rowData, e, fabindex, sampleReqId,itemId)} 
+                    />
+              </Form.Item>
+            </Form>
+            )
+          }
+        },
+        {
+          title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" 
+          onClick={() =>allocateQuantity()} 
+          >Allocate</Button>:'Allocate'}</div>,
+          dataIndex: "sm",
+          key: "sm",
+          align: "center",
+          render: (text, rowData, index) => { 
+            return (
+              <Checkbox 
+              onClick={checkboxonclick}
+              onChange={(e) => onCheck(rowData, index, e.target.checked)}
+              // onClick={(e) =>onCheck(rowData,undefined)}
+              />
+            );
+          },
+        },
+      
+      ]
+      return [...renderColumnForFabric]
+    }
     const allocateQuantity = () =>{
+      console.log(tableData)
       // console.log(avilableQuantity)
       createAllocation(avilableQuantity)
 
@@ -461,20 +539,53 @@ import { useIAMClientState } from "../common/iam-client-react";
 
 
     
-    const setAllocatedQty = (index, rowData, value) => {
-     
-
-      rowData.issuedQty = value
-      const newData = [...avilableQuantity];
-      newData[index].issuedQty = value;
-      console.log(newData)
-      setAvailableQuantity(newData);
+    const setAllocatedQty = (index, rowData, value, fabindex, sampleReqId, itemId) => {
+      console.log(tableData);
+      console.log(index);
+      console.log(rowData);
+      console.log(value);
+      console.log(fabindex);
+      console.log(sampleReqId);
+      console.log(itemId);
+      let itemData;
+      let stockData;
+      itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.fabric
+      stockData = itemData?.find((f) => f.fabric_info_id === itemId)?.allocatedStock;
+      let stockRecord = stockData.find((s)=> s.stockId === rowData.stockId)
+      stockRecord.issuedQty = value;
+      stockRecord.checkStatus = 1;
+      console.log(tableData);
+      const sum = stockData.reduce((accumulator, object) => {
+        console.log(accumulator);
+        console.log(object.issuedQty);
+        return accumulator + (object.issuedQty != undefined ? Number(object.issuedQty) : 0);
+      }, 0);
+      console.log(sum);
+      console.log(itemData?.find((f) => f.fabric_info_id === itemId).tobeProcured)
+      if(Number(sum) > Number(itemData?.find((f) => f.fabric_info_id === itemId).tobeProcured)){
+        AlertMessages.getErrorMessage('Issued Quantity should not exceed total required. ')
+        stockForm.setFieldValue(`allocatedQuantity${fabindex}-${index}`,0)
+      }
+      else{
+        stockForm.setFieldValue(`allocatedQuantity${fabindex}-${index}`,value)
+      }
+      if(stockData.find((e)=> e.checkedStatus === 1)){
+        setbtnEnable(true);
+      }
+      else{
+        setbtnEnable(false);
+      }
+      // rowData.issuedQty = value
+      // const newData = [...avilableQuantity];
+      // newData[index].issuedQty = value;
+      // console.log(newData)
+      // setAvailableQuantity(newData);
       if (value === 0 || value === null || value < 0 || value === undefined) {
         AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
-        sourcingForm.setFieldsValue({["allocatedQuantity"]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity)});
+        // sourcingForm.setFieldsValue({[`allocatedQuantity${fabindex}-${index}`]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity)});
       }
       if (Number(value) > Number(rowData.quantity)) {
-        sourcingForm.setFieldsValue({["allocatedQuantity"]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty)});
+        // sourcingForm.setFieldsValue({[`allocatedQuantity${fabindex}-${index}`]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty)});
         AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
       }
     }
@@ -598,7 +709,26 @@ import { useIAMClientState } from "../common/iam-client-react";
     const onSegmentChange = (val) => {
       setTabName(val);
     };
-  
+    const printOrder = () => {
+      const divContents = document.getElementById('printme').innerHTML;
+      const element = window.open('', '', 'height=700, width=1024');
+      element.document.write(divContents);
+      getCssFromComponent(document, element.document);
+      element.document.close();
+      element.print();
+      element.close(); // to close window when click on cancel/Save
+      setIsModalOpen(true); // model should be open
+    };
+   
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+    const showModal = (rowData) => {
+      setIsModalOpen(true);
+      setRow(rowData)
+    };
+
     const HeaderRow = (props: any) => {
 
       
@@ -622,27 +752,31 @@ import { useIAMClientState } from "../common/iam-client-react";
           <span>Location : {<b>{location}</b>}</span>
           <span style={{ width: "10px" }}></span>
           <span style={{ width: "10px" }}></span>
-          {/* <span style={{ width: "10px" }}></span>
-          <span>Status : {<b>{status}</b>}</span> */}
           <span style={{ width: "10px" }}></span>
-          <span> Status : {<b>{lifeCycleStatus}</b>}</span>
-          {/* <span style={{width:'10px'}}></span>
-                <span>{<Tag onClick={() => generateBarcode(requestNo)} style={{cursor:'pointer'}}>
-                           <BarcodeOutlined />
-                       </Tag>}</span> */}
+          <span> Status : {<b>{LifeCycleStatusDisplay.find((e)=>e.name === lifeCycleStatus)?.displayVal}</b>}</span>
+          <span style={{marginLeft:'auto'}}>
                {lifeCycleStatus === LifeCycleStatusEnum.READY_TO_DISPATCH ? (
         <>
-          <span style={{ width: "10px" }}></span>
-          {/* <span>Dispatch Status: <b>{dispatch}</b></span> */}
-          <span style={{ marginLeft: 'auto' }}>
-
-          <span><b>{dispatch}</b></span>
-            <Button type="primary" onClick={()=>handleDispatchClick(index)}>
+          <span style={{paddingRight:20}}  >
+            <Button type="primary"  size="small" onClick={()=>handleDispatchClick(index)}>
               Dispatch 
             </Button>
           </span>
+        
         </>
       ):(<></>)}
+        {lifeCycleStatus === LifeCycleStatusEnum.READY_FOR_PRODUCTION ? (
+             <>
+              <span >
+            <Tooltip  title='Pick List Print'>
+            <Button type="primary" size="small" onClick={()=>showModal(index)}>
+            <PrinterOutlined style={{ fontSize: '20px' }}  />
+            </Button>
+            </Tooltip>
+          </span>
+          </>
+           ):(<></>)}
+          </span>
         </div>
       );
     };
@@ -652,6 +786,7 @@ import { useIAMClientState } from "../common/iam-client-react";
     const onReset = () => {
       sourcingForm.resetFields();
       setTableData(data);
+      getAll()
     };
   
     const onBarcodeModalCancel = () => {
@@ -667,41 +802,58 @@ import { useIAMClientState } from "../common/iam-client-react";
     
       };
 
-      const renderItems = (record:any) => {
+      const renderItems = (record:any, index:any) => {
+        console.log(record);
         return  <Table
-         dataSource={avilableQuantity}
-          columns={renderColumnForFabric} 
+         dataSource={record.allocatedStock}
+          columns={tableColumns(record.totalRequirement,index,record.sampleRequestid,record.fabric_info_id)} 
           pagination={false}
            rowKey={record.stockId}/>;
       };
 
 
-      const handleExpandFabric = (expanded, record) => {
-        let req = new  buyerandM3ItemIdReq(record.buyerId,record.m3ItemFabricId,record.itemType)
-        console.log(record);
-       getAllAvailbaleQuantity(req,record)
-      };
-      const handleExpandTrim = (expanded, record) => {
-        let req = new buyerandM3ItemIdReq(record.buyerId,record.trimCode,record.itemType)
-        console.log(record);
-       getAllAvailbaleQuantity(req,record)
-      };
+      // const handleExpandFabric = (expanded,sampleReqId, record) => {
+      //   let req = new  buyerandM3ItemIdReq(record.buyerId,record.m3ItemFabricId,record.itemType)
+      //   console.log(record);
+      //  getAllAvailbaleQuantity(req,record,sampleReqId,"fabric")
+      // };
+      // const handleExpandTrim = (expanded,sampleReqId,record) => {
+      //   let req = new buyerandM3ItemIdReq(record.buyerId,record.trimCode,record.itemType)
+      //   console.log(record);
+      //  getAllAvailbaleQuantity(req,record,sampleReqId,"trim")
+      // };
 
-      const getAllAvailbaleQuantity =(req,rowData) =>{
-        service.getAvailbelQuantityAginstBuyerAnditem(req).then(res =>{
-          if(res.status){
-            // const dataWithRow = { rowData: rowData, responseData: res.data };
-            const updatedData = res.data.map(item => ({
-              ...item,
-              sampleRequestid:rowData.sampleRequestid,
-              sampleItemId:rowData.sampleRequestid,
-              itemType:rowData.itemType,
-              issuedQty:0
-              }))
-              setAvailableQuantity(updatedData)           
-          }
-        })
-      }
+      // const getAllAvailbaleQuantity =(req,rowData,sampleReqId,type) =>{
+      //   console.log(type);
+      //   console.log(sampleReqId);
+      //   console.log(rowData);
+
+
+      //   console.log(tableData);
+      //   service.getAvailbelQuantityAginstBuyerAnditem(req).then(res =>{
+      //     if(res.status){
+            
+      //       // const dataWithRow = { rowData: rowData, responseData: res.data };
+      //       const updatedData = res.data.map(item => ({
+      //         ...item,
+      //         sampleRequestid:rowData.sampleRequestid,
+      //         sampleItemId:rowData.sampleRequestid,
+      //         itemType:rowData.itemType,
+      //         issuedQty:0
+      //         }))
+             
+
+      //         if(type === "fabric"){
+      //           (tableData.find((e) => e.sample_request_id === sampleReqId).fabric).find((f) => f.fabric_info_id === rowData.fabric_info_id).allocatedStock = updatedData
+      //         }
+      //         else{
+      //           (tableData.find((e) => e.sample_request_id === sampleReqId).trimData).find((f) => f.trim_info_id === rowData.trim_info_id).allocatedStock = updatedData
+      //         }
+              
+      //         setAvailableQuantity(updatedData)           
+      //     }
+      //   })
+      // }
 
     return (
       <Card
@@ -715,7 +867,7 @@ import { useIAMClientState } from "../common/iam-client-react";
         //   </Link>
         // }
       >
-        <Form form={sourcingForm}>
+        <Form form={sourcingForm} onFinish={getAll} layout="vertical">
           <Row gutter={8}>
           {/* <Form.Item name="dispatched date" style={{display:'none'}}>
     <DatePicker value={moment}/>
@@ -723,9 +875,9 @@ import { useIAMClientState } from "../common/iam-client-react";
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 6 }}
+              md={{ span: 8 }}
+              lg={{ span: 8 }}
+              xl={{ span: 4 }}
             >
               <Form.Item name="requestNo" label="Request Number">
                 <Select
@@ -737,8 +889,8 @@ import { useIAMClientState } from "../common/iam-client-react";
                   {data.map((e) => {
                     return (
                       <Option
-                        key={e.requestNo}
-                        value={e.requestNo}
+                        key={e.sample_request_id}
+                        value={e.sample_request_id}
                         name={e.requestNo}
                       >
                         {" "}
@@ -752,9 +904,9 @@ import { useIAMClientState } from "../common/iam-client-react";
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 6 }}
+              md={{ span: 8 }}
+              lg={{ span: 8 }}
+              xl={{ span: 4 }}
             >
               <Form.Item name="style" label="Style">
                 <Select
@@ -763,9 +915,9 @@ import { useIAMClientState } from "../common/iam-client-react";
                   optionFilterProp="children"
                   placeholder="Select Style"
                 >
-                  {data.map((e) => {
+                  {styled.map((e) => {
                     return (
-                      <Option key={e.style} value={e.style} name={e.style}>
+                      <Option key={e.style_id} value={e.style_id} name={e.style}>
                         {" "}
                         {e.style}
                       </Option>
@@ -777,29 +929,35 @@ import { useIAMClientState } from "../common/iam-client-react";
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 6 }}
+              md={{ span: 6 }}
+              lg={{ span: 6 }}
+              xl={{ span: 4 }}
             >
               <Form.Item name="status" label="Status">
                 <Select
                   optionFilterProp="children"
                   placeholder="Select Status"
+                  allowClear
                 >
-                  {Object.keys(CustomerOrderStatusEnum)
+                  {Object.values(SampleDevelopmentStatusDisplay).map((val) => (
+            <Select.Option key={val.name} value={val.name}>
+              {val.displayVal}
+            </Select.Option>
+          ))}
+                  {/* {Object.keys(SampleDevelopmentStatusDisplay)
                     .sort()
                     .map((status) => (
                       <Select.Option
-                        key={CustomerOrderStatusEnum[status]}
-                        value={CustomerOrderStatusEnum[status]}
+                        key={SampleDevelopmentStatusEnum[status]}
+                        value={SampleDevelopmentStatusEnum[status]}
                       >
-                        {CustomerOrderStatusEnum[status]}
+                        {SampleDevelopmentStatusEnum[status]}
                       </Select.Option>
-                    ))}
+                    ))} */}
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+            <Col xs={24} sm={12} md={8} lg={6} xl={4}>
             <Form.Item name="pch" label="PCH">
               <Select
                 showSearch
@@ -807,11 +965,12 @@ import { useIAMClientState } from "../common/iam-client-react";
                 optionFilterProp="children"
                 allowClear
               >
-                {/* {pch.map((qc: any) => (
-                  <Select.Option key={qc.pch} value={qc.pch}>
-                    {qc.pch}
+                {pch.map((qc: any) => (
+                  <Select.Option key={qc.profit_control_head_id} value={qc.profit_control_head_id
+                  }>
+                    {qc.profit_control_head}
                   </Select.Option>
-                ))} */}
+                ))}
               </Select>
             </Form.Item>
           </Col>
@@ -827,6 +986,7 @@ import { useIAMClientState } from "../common/iam-client-react";
                   type="primary"
                   htmlType="submit"
                   icon={<SearchOutlined />}
+                  style={{marginTop:20,marginLeft:30}}
                   // onClick={onSearch}
                 >
                   Search
@@ -841,13 +1001,16 @@ import { useIAMClientState } from "../common/iam-client-react";
               xl={{ span: 2 }}
             >
               <Form.Item>
-                <Button danger icon={<UndoOutlined />} onClick={onReset}>
+                <Button danger icon={<UndoOutlined />} onClick={onReset}
+                 style={{marginTop:20,marginLeft:30}}
+                >
                   Reset
                 </Button>
               </Form.Item>
             </Col>
           </Row>
         </Form>
+        <br></br>
   
         <Collapse
           collapsible="icon"
@@ -910,11 +1073,12 @@ import { useIAMClientState } from "../common/iam-client-react";
                     dataSource={item.fabric}
                     expandedRowRender={renderItems}
                     expandable = {{
-                      defaultExpandAllRows : false, rowExpandable:(record)=>{console.log(record) ; return (record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 && IAMClientAuthContext.user?.roles === "sourcingUser")}
+                      defaultExpandAllRows : false, 
+                      rowExpandable:(record)=>{console.log(record) ; return (record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 && checkAccess(MenusAndScopesEnum.Scopes.allocation))}
                       }}
                     // expandedRowRender={renderItems}
                     // expandedRowKeys={expandedIndex}
-                    onExpand={handleExpandFabric}
+                    // onExpand={(record) =>{ console.log(record); handleExpandFabric(undefined,item.sample_request_id,record)}}
                     // expandIconColumnIndex={7}
                     // bordered
                     pagination={false}
@@ -951,12 +1115,11 @@ import { useIAMClientState } from "../common/iam-client-react";
                         dataSource={item.trimData}
                         expandedRowRender={renderItems}
                         expandable = {{
-                          defaultExpandAllRows : false, rowExpandable:(record)=>{console.log(record) ; return (record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 && IAMClientAuthContext.user?.roles === "sourcingUser")}
+                          defaultExpandAllRows : false, rowExpandable:(record)=>{console.log(record) ; return (
+                          record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 && 
+                            checkAccess(MenusAndScopesEnum.Scopes.allocation))}
                           }}
-                        // expandable = {{
-                        //   defaultExpandAllRows : false
-                        //   }}
-                        onExpand={handleExpandTrim}
+                        // onExpand={(record) => handleExpandTrim(undefined,item.sample_request_id,record)}
                         pagination={false}
                         scroll={{ x: "max-content" }}
                         className="custom-table-wrapper"
@@ -980,6 +1143,24 @@ import { useIAMClientState } from "../common/iam-client-react";
             <Barcode value={barcode} height={30} />
           </div>
         </Modal>
+        {isModalOpen ?
+            <Modal
+              className='print-docket-modal'
+              width={'50%'}
+              key={'modal' + Date.now()}
+              style={{ top: 30, alignContent: 'right' }}
+              visible={isModalOpen}
+              title={<React.Fragment>
+              </React.Fragment>}
+              onCancel={handleCancel}
+              footer={[
+
+              ]}
+            >
+
+<PickListPrint printOrder={printOrder} reqNo={row}/>
+            </Modal> : ""}
+    
       </Card>
     );
   };

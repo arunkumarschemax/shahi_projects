@@ -19,6 +19,8 @@ export class IndentModel{
   createdAt?: Date;
   buyerName?: string;
   buyerRefNo?:string
+  styleId?: number
+  buyerId?: number
 
 
   constructor(
@@ -35,7 +37,9 @@ export class IndentModel{
 
     createdAt?: Date,
     buyerName?: string,
-    buyerRefNo?:string
+    buyerRefNo?:string,
+    styleId?: number,
+    buyerId?: number
 
   ){
     this.indentId = indentId;
@@ -51,6 +55,8 @@ export class IndentModel{
     this.createdAt = createdAt;
     this.buyerName = buyerName;
     this.buyerRefNo = buyerRefNo;
+    this.styleId = styleId
+    this.buyerId = buyerId
 
 
   }

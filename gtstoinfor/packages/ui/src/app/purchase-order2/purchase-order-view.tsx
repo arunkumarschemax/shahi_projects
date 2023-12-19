@@ -1,5 +1,5 @@
 import { CloseOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
-import { PurchaseStatusEnum, PurchaseViewDto } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, PurchaseOrderStatus, PurchaseOrderStatusEnumDisplay, PurchaseStatusEnum, PurchaseViewDto, StatusEnum } from '@project-management-system/shared-models';
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, Tooltip,Tag } from 'antd';
 import moment from 'moment';
@@ -9,7 +9,8 @@ import { log } from 'console';
 import Highlighter from 'react-highlight-words';
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
 export const PurchaseOrderView = () => {
-  const page = 1;
+  const [page, setPage] = React.useState(1);
+
   const [hideCancelButton, setHideCancelButton] = useState(false);
   const [filterData, setFilterData] = useState<any[]>([]);
   const [data, setData] = useState<any[]>([]);
@@ -19,16 +20,16 @@ export const PurchaseOrderView = () => {
   const [form] = Form.useForm();
   const [count, setCount] = useState<any>(0);
   const k = [];
+  const [poCount, setpoCount] = useState<number>(0);
+
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
-  const options = [{ value: 'OPEN' }, { value: 'INPROGRESS' }, { value: 'CLOSED' }, { value: 'CANCELED' }];
+  const options = [{ value: 'OPEN' }, { value: 'IN PROGRESS' }, { value: 'CLOSED' }, { value: 'CANCELED' }];
   const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
   console.log(externalRefNo,"req")
-
-  // let Location = useLocation()
-  // const stateData = Location.state.data
-
+  const { Option } = Select
+  
   useEffect(() => {
     getPo();
   }, [])
@@ -118,44 +119,45 @@ export const PurchaseOrderView = () => {
     // if (status === PurchaseStatusEnum.INPROGRESS) {
     //   status === "IN PROGRESS"
     // }
-    console.log(status, 'ttttttttttttttttttttttt');
-
-     const req = new PurchaseViewDto(null,null,null,null,null,null,null,externalRefNo)
-    // if (form.getFieldValue('deliveryDate') !== undefined) {
-    //   req.confirmStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
-    // }
-    // if (form.getFieldValue('deliveryDate') !== undefined) {
-    //   req.confirmEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
-    // }
-    // if (form.getFieldValue('orderDate') !== undefined) {
-    //   req.poconfirmStartDate = (form.getFieldValue('orderDate')[0]).format('YYYY-MM-DD');
-    // }
-    // if (form.getFieldValue('orderDate') !== undefined) {
-    //   req.poconfirmEndDate = (form.getFieldValue('orderDate')[1]).format('YYYY-MM-DD');
-    // };
-    // req.status = status
-    // Service.getAllPurchaseOrderData().then((res) => {
-    //   console.log(res,"llllllllllllll");
-      
-    //   if (res.status) {
-    //     console.log(res,":::::::::::::::::");
-        
-    //     setCount(res?.data[res.data?.length - 1]);
-    //     res.data.pop()
-    //     setData(res.data);
-    //   } else {
-    //     setData([])
-    //   }
-    // })
+     const req = new PurchaseViewDto(null,null,null,null,null,form.getFieldValue('poStatus'),null,externalRefNo)
+     console.log(form.getFieldValue('poStatus'),'ppppppppppp');
+    
+    console.log(req,'----------------------------------')
 
     Service.getAllPurchaseOrderData(req).then((res)=>{
       if(res.status){
         setData(res.data)
-      }else{
-        setData([])
+        const count =res.data.reduce((total,record:any)=>{
+if(record.count >0){
+  return total + 1;
+
+}else{
+  return total;
+
+} 
+        },0)
+        setpoCount(count);
       }
-    })
+    
+  if(req){
+Service.getAllPurchaseOrderData(req).then(res=>{
+  if (res.status) {
+    setData(res.data);
+    const count = res.data.reduce((total, record:any) => {
+      if (record.count > 0) {
+        return total + 1;
+      } else {
+        return total;
+      }
+    }, 0);
+    setpoCount(count);
+  } else{
+    setData([])
   }
+})
+  }
+})
+}
   const onSearch = () => {
     form.validateFields().then((values) => {
       getPo();
@@ -204,7 +206,12 @@ export const PurchaseOrderView = () => {
 
       render: text => (text ? text : "-")
     },
-    
+    {
+      title: 'PO Against',
+      dataIndex: 'poAgainst',
+      width: '100px',
+      render: text => (text ? text : "-"),
+    },
     {
       title: 'Material Type',
       dataIndex: 'poMaterialtype',
@@ -212,6 +219,10 @@ export const PurchaseOrderView = () => {
       sorter: (a, b) => a.poMaterialtype.localeCompare(b.poMaterialtype),
       sortDirections: ["descend", "ascend"],
           ...getColumnSearchProps("poMaterialtype"),
+          render: (text) => {
+            const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+            return EnumObj ? EnumObj.displayVal : text;
+          },
     },
    
 
@@ -343,18 +354,21 @@ export const PurchaseOrderView = () => {
       align: 'right',
       render: (text, record) => {
         const daysDifference = moment(record.expectedDeliverydate).diff(moment(), 'days');
+        
         const age = {
           children: daysDifference,
           props: {
             style: {
-              background: daysDifference > 0 ? '#3BC744' : '',
+              background: daysDifference > 0 ? '#3BC744' : '#FF0000',
               color: 'black',
             },
           },
         };
+        
         return age;
       },
     },
+    
     {
       title: 'Action',
       dataIndex: 'requestNumber',
@@ -412,8 +426,13 @@ export const PurchaseOrderView = () => {
       </Tag>
     );
   };
+  console.log(StatusEnum.OPEN,"pppppppppppp");
+  
   return (
-    <div><Card title="Purchase Orders" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to={'/purchase-order'}><Button className='panel_button'>Create</Button></Link>}>
+    <div><Card title="Purchase Orders" 
+    headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
+    // extra={<Link to={'/purchase-order'}><Button className='panel_button'>Create</Button></Link>}
+    >
       <Form form={form}>
         <Row gutter={12}>
           <Col span={6}>
@@ -426,18 +445,26 @@ export const PurchaseOrderView = () => {
               <RangePicker />
             </Form.Item>
           </Col>
+          
           {/* <Col span={6}>
-            <Form.Item label="PO Status	" name="po_status">
-            
-            <Select
+            <Form.Item label="PO Status	" name="poStatus" initialValue={[PurchaseOrderStatus.OPEN, PurchaseOrderStatus.IN_PROGRESS]}>
+            <Select showSearch allowClear optionFilterProp="children" placeholder='Select status' mode="multiple" 
+            defaultValue ={[PurchaseOrderStatus.OPEN, PurchaseOrderStatus.IN_PROGRESS]}
+           >   {PurchaseOrderStatusEnumDisplay.map(e => {
+            return (
+                <Option key={e.name} value={e.displayVal} > {e.displayVal}</Option>
+            )
+        })}</Select>
+            {/* <Select
                 mode="multiple"
                 tagRender={tagRender}
-                defaultValue={['OPEN', 'INPROGRESS']}
+                defaultValue={['OPEN', 'IN PROGRESS']}
                 style={{ width: '100%' }}
                 options={options}
-              />
-            </Form.Item>
-          </Col> */}
+                
+              /> */}
+            {/* </Form.Item>
+          </Col> */} 
           <Col span={2}>
             <Button htmlType='submit' type="primary" onClick={onSearch}> Get Detail </Button>
           </Col>
@@ -447,21 +474,24 @@ export const PurchaseOrderView = () => {
         </Row>
         <Row gutter={24}>
           <Col className="gutter-row" xs={24} sm={24} md={5} lg={5} xl={{ span: 2 }}>
-            <Card size="small" title={'OPEN :' + data.filter(r => r.status === 'OPEN').length} style={{ height: '35px', width: 100, backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
+            <Card size="small" title={'OPEN :' + data.filter(r => r.poStatus == PurchaseStatusEnum.OPEN).length} style={{ height: '35px', width: 100, backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
+            
           </Col>
           <Col className="gutter-row" xs={24} sm={24} md={5} lg={5} xl={{ span: 3 }}>
-            <Card size="small" title={'INPROGRESS  : ' + data.filter(r => r.status === 'INPROGRESS').length} style={{ height: '35px', width: 150, marginBottom: '8', backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
+            <Card size="small" title={'INPROGRESS  : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.INPROGRESS).length} style={{ height: '35px', width: 150, marginBottom: '8', backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
-            <Card size="small" title={'CLOSED : ' + data.filter(r => r.status === 'CLOSED').length} style={{ height: '35px', width: 150, backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
+            <Card size="small" title={'CLOSED : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.CLOSED).length} style={{ height: '35px', width: 150, backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
-            <Card size="small" title={'CANCLED : ' + data.filter(r => r.status === 'CANCLED').length} style={{ height: '35px', backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
+            <Card size="small" title={'CANCLED : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.CANCELLED).length} style={{ height: '35px', backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
             <Card size="small" title={'TOTAL : ' + data.length} style={{ height: '35px', backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
+          
         </Row> 
+
 
         {/* <Tabs
           defaultActiveKey="1"
@@ -506,7 +536,12 @@ export const PurchaseOrderView = () => {
       <Card>
         {/* <Table columns={columns} dataSource={data} bordered /> */}
 
-        <Table columns={columns} dataSource={data} pagination={{pageSize:20}} bordered size='small' />
+        <Table columns={columns} dataSource={data} bordered size='small' pagination={{
+          pageSize:20,
+          onChange(current) {
+            setPage(current);
+          }
+        }} />
 
       </Card>
     </Card>

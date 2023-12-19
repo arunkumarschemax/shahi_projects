@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel,GrnItemsFormDto, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel,CustomerOrderStatusEnum,GrnItemsFormDto, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -14,6 +14,7 @@ import { PurchaseOrderFabricRepository } from "./repo/purchase-order-fabric-repo
 import { PurchaseOrderTrimRepository } from "./repo/purchase-order-trim-repository";
 import { PurchaseOrderItemsEntity } from "./entities/purchase-order-items-entity";
 import { SampleRequestRepository } from "../sample-dev-request/repo/sample-dev-req-repo";
+import { IndentRepository } from "../indent/dto/indent-repository";
 let moment = require('moment');
 
 @Injectable()
@@ -21,6 +22,7 @@ export class PurchaseOrderService {
     constructor(
         // @InjectRepository(PurchaseOrderEntity)
         private poRepo: PurchaseOrderRepository,
+        private indentRepo:IndentRepository,
         private poFabricRepo: PurchaseOrderFabricRepository,
         private poTrimRepo: PurchaseOrderTrimRepository,
         @InjectDataSource()
@@ -32,29 +34,63 @@ export class PurchaseOrderService {
 
     async cretePurchaseOrder(req: PurchaseOrderDto): Promise<CommonResponseModel> {
         try {
-            const currentYear = moment().format('YYYY')
-            const currentDate = moment();
-            const netyaer = currentDate.year();
-            const nextYear = netyaer + 1;
-            let FromYear = currentYear.toString().substr(-2)
-            let ToYear = (nextYear).toString().substr(-2)
-            console.log(ToYear)
-            console.log('$$$$')
-            let poNumber
-            // if buyer wise ponumber generation happens need to include Buyer also.
-            const data = 'select max(purchase_order_id) as poId from purchase_order where po_material_type = "'+req.poMaterialType+'"';
-            const maxId = await this.poRepo.query(data)
-            let val = maxId[0].poId + 1;
-            if (maxId[0].poId == null) {
-                poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + '000001' + ''
-            } else {
-                poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + val.toString().padStart(5, 0) + ''
+
+            const today = new Date();
+            const CurrentYear = today.getFullYear();
+            const CurrentMonth = today.getMonth();
+            let fromDate = 0;
+            let toDate = 0;
+            let itemType;
+            if(req.poMaterialType === "Fabric"){
+                itemType = 'F';
             }
+            else{
+                itemType = 'T';
+            }
+            const data = 'select max(purchase_order_id) as poId from purchase_order where po_material_type = "'+req.poMaterialType+'"';
+                let totalPO = await this.poRepo.query(data)
+            // if (!isUpdate) {
+                if (CurrentMonth < 4) {
+                    fromDate = (CurrentYear);
+                    toDate = (CurrentYear + 1);
+                } else {
+                    fromDate = (CurrentYear);
+                    toDate = (CurrentYear + 1);
+                }
+
+            // }
+            
+            let val = totalPO[0].poId + 1;
+
+
+            let refNo = val + "";
+            while (refNo.length < 4) refNo = "0" + refNo;
+
+            let poNumber = "PO/" + (fromDate.toString().substr(-2)) + "-" + (toDate.toString().substr(-2)) + "/" + itemType + "/" + refNo;
+
+            console.log(poNumber);
+            // const currentYear = moment().format('YYYY')
+            // const currentDate = moment();
+            // const netyaer = currentDate.year();
+            // const nextYear = netyaer + 1;
+            // let FromYear = currentYear.toString().substr(-2)
+            // let ToYear = (nextYear).toString().substr(-2)
+            // console.log(ToYear)
+            // console.log('$$$$')
+            // if buyer wise ponumber generation happens need to include Buyer also.
+            // const data = 'select max(purchase_order_id) as poId from purchase_order where po_material_type = "'+req.poMaterialType+'"';
+            // const maxId = await this.poRepo.query(data)
+            // let val = maxId[0].poId + 1;
+            // if (maxId[0].poId == null) {
+            //     poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + '000001' + ''
+            // } else {
+            //     poNumber = 'PO/' + FromYear + '-' + ToYear + '/' + val.toString().padStart(5, 0) + ''
+            // }
             let poItemInfo = []
             const poEntity = new PurchaseOrderEntity()
             poEntity.poNumber = poNumber
             poEntity.vendorId = req.vendorId
-            poEntity.styleId = req.styleId
+            // poEntity.styleId = req.styleId
             poEntity.buyerId = req.buyerId
             poEntity.expectedDeliveryDate = req.expectedDeliveryDate
             poEntity.purchaseOrderDate = req.purchaseOrderDate
@@ -83,6 +119,7 @@ export class PurchaseOrderService {
                         pofabricEntity.transportation = item.transportation
                         pofabricEntity.tax = item.tax
                         pofabricEntity.subjectiveAmount = item.subjectiveAmount
+                        pofabricEntity.styleId = item.styleId
                         poItemInfo.push(pofabricEntity)
             }
             poEntity.poItemInfo=poItemInfo
@@ -91,6 +128,7 @@ export class PurchaseOrderService {
             
             if (save) {
                 if(req.poAgainst == 'INDENT'){
+                    const indentUpdate = await this.indentRepo.update({indentId:req.poItemInfo[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
                     for(const update of req.poItemInfo){
                         if(update.indentId != undefined){
 
@@ -118,16 +156,26 @@ export class PurchaseOrderService {
 
     async getAllPONumbers(req: VendorIdReq): Promise<CommonResponseModel> {
         try {
-            const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
-            const res = await this.dataSource.query(buyerdata)
-            const buyerId = res[0].buyer_id
-            let query = `SELECT purchase_order_id as purchaseOrderId,po_number AS poNumber,vendor_id as vendorId,po_material_type as materialType,po_against as poAgainst FROM purchase_order WHERE status NOT IN ('cancelled', 'closed')`
+            let buyerId
             if(req.buyerRefNo){
-                query = query + ` AND buyer_id = '${buyerId}'`;
+                const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
+                const res = await this.dataSource.query(buyerdata)
+                buyerId = res[0].buyer_id
+            }
+            let query = `
+            SELECT po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.po_material_type AS materialType,po.po_against AS poAgainst,
+            mt.trim_mapping_id AS trimMappingId
+            FROM purchase_order po
+            LEFT JOIN purchae_order_items poi ON poi.purchase_order_id = po.purchase_order_id
+            LEFT JOIN m3_trims mt ON mt.m3_trim_Id=poi.m3_item_id
+            WHERE status NOT IN ('cancelled', 'closed')`
+            if(req.buyerRefNo){
+                query = query + ` AND po.buyer_id = '${buyerId}'`;
             }
             if (req.vendorId) {
-                query = query + ` AND vendor_id = '${req.vendorId}'`;
+                query = query + ` AND po.vendor_id = '${req.vendorId}'`;
             }
+            query = query +` GROUP BY po.po_number ORDER BY po.po_number`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
@@ -181,49 +229,91 @@ export class PurchaseOrderService {
                 }
             }
             if (req.materialType === 'Trim') {
-                query = `SELECT mt.trim_code as m3itemCode,poi.m3_item_id AS m3ItemCodeId,mt.trim_type as m3ItemType,poi.purchase_order_id AS purchaseOrderId, poi.po_quantity AS poQuantity,poi.purchase_order_item_id as poItemId,
+                query = `SELECT mt.trim_code as m3itemCode,
+                mt.category_id AS categoryId,cg.category,
+                mt.color_id AS colorId,cl.colour as color,
+                mt.content_id AS contentId,ct.content,
+                mt.finish_id AS finishId,f.finish,
+                mt.hole_id AS holeId,h.hole,
+                mt.logo, mt.part,
+                mt.quality_id AS qualityId,q.quality_name AS qualityName,
+                mt.structure_id AS structureId,st.structure,
+                mt.thickness_id AS thicknessId,th.thickness,
+                mt.type_id AS typeId,ty.type,
+                mt.uom_id AS UOMId, uom.uom as UOM,
+                mt.variety_id AS varietyId,v.variety,
+                mt.trim_category_id AS trimCategoryId,tr.trim_category AS trimCategory,
+                mt.trim_mapping_id AS trimMappingId,
+                tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part,
+                poi.m3_item_id AS m3ItemCodeId,mt.trim_type as m3ItemType,poi.purchase_order_id AS purchaseOrderId, poi.po_quantity AS poQuantity,poi.purchase_order_item_id as poItemId,
                 poi.quantity_uom_id AS quantityUomId,u.uom,poi.grn_quantity AS grnQuantity,poi.indent_item_id as indentItemId, poi.sample_item_id as sampleItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour`
                 if(req.poAgainst == 'Indent'){
-                    query = query + `,i.indent_id as indentId `
+                    query = query + `,i.indent_id as indentId`
                 }
                 if(req.poAgainst == 'Sample Order'){
                     query = query +  `,sr.sample_request_id as sampleRequestId `
                 }
-                query = query + `FROM purchae_order_items poi
+                query = query + `
+                FROM purchae_order_items poi
                 LEFT JOIN taxes t on t.tax_id = poi.tax
                 LEFT JOIN uom u ON u.id = poi.quantity_uom_id
                 LEFT JOIN m3_trims mt ON mt.m3_trim_Id=poi.m3_item_id
                 LEFT JOIN colour c ON c.colour_id = poi.colour_id
+                LEFT JOIN category cg ON cg.category_id = mt.category_id
+                LEFT JOIN content ct ON ct.content_id = mt.content_id
+                LEFT JOIN finish f ON f.finish_id = mt.finish_id
+                LEFT JOIN hole h ON h.hole_id = mt.hole_id
+                LEFT JOIN qualitys q ON q.quality_id = mt.quality_id
+                LEFT JOIN structure st ON st.structure_id = mt.structure_id
+                LEFT JOIN thickness th ON th.thickness_id = mt.thickness_id
+                LEFT JOIN type ty ON ty.type_id = mt.type_id
+                LEFT JOIN variety v ON v.variety_id = mt.variety_id
+                LEFT JOIN trim tr ON tr.trim_id = mt.trim_category_id
+                LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = mt.trim_mapping_id
+                LEFT JOIN colour cl ON cl.colour_id = mt.color_id
+                LEFT JOIN uom uom ON uom.id = mt.uom_id
+                LEFT JOIN purchase_order po ON po.purchase_order_id = poi.purchase_order_id
+                LEFT JOIN buyers b ON b.buyer_id = po.buyer_id
+                LEFT JOIN style s ON s.style_id = poi.style_id
                 `
                 if (req.poAgainst == 'Indent') {
                     query = query + ` 
                     LEFT JOIN indent_trims it ON it.itrims_id = poi.indent_item_id
                     LEFT JOIN indent i ON i.indent_id = it.indent_id 
-                    LEFT JOIN style s ON s.style_id = i.style 
-                    LEFT JOIN buyers b ON b.buyer_id = i.buyer_id 
                     WHERE poi.purchase_order_id = ${req.poId}`
                 }
                 if (req.poAgainst == 'Sample Order') {
                     query = query + `
                      LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id  = poi.sample_item_id   
-                     LEFT JOIN sample_request sr ON sr.sample_request_id  = srf.sample_request_id 
-                     LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id 
-                     LEFT JOIN style s ON s.style_id = sr.style_id
+                     LEFT JOIN sample_request sr ON sr.sample_request_id  = srf.sample_request_id
                      WHERE poi.purchase_order_id = ${req.poId}`
                 }
 
             }
             const itemData = await this.poTrimRepo.query(query)
+
+            const modifiedRes = itemData.map(item => {
+                const trueValues = Object.keys(item)
+                .filter(key => ["structure", "category", "content", "type", "finish", "hole", "quality", "thickness", "variety", "uom", "color", "logo", "part"].includes(key) && item[key] === 1)
+                .map(key => key.toUpperCase());
+
+                const concatenatedValues = trueValues.join('/');
+                const label = trueValues.length > 0 ? "BUYER/TRIM TYPE/TRIM CATEGORY/":""
+
+                const trimParams = label + concatenatedValues
+                return { ...item, trimParams };
+            });
            
             const grnItemsArr: GrnItemsFormDto[] = []
-            for (const rec of itemData) {
+            for (const rec of modifiedRes) {
                 const receivedQty = rec.poQuantity - rec.grnQuantity
-                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer,rec?.sampleRequestId,rec?.indentId,receivedQty,receivedQty)
+                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer,rec?.sampleRequestId,rec?.indentId,receivedQty,receivedQty,rec.categoryId,rec.category,rec.colorId,rec.color,rec.contentId,rec.content,rec.finishId,rec.finish,rec.holeId,rec.hole,rec.logo,rec.part,rec.qualityId,rec.qualityName,rec.structureId,rec.structure,rec.thicknessId,rec.thickness,rec.typeId,rec.type,rec.UOMId,rec.UOM,rec.varietyId,rec.variety,rec.trimCategoryId,rec.trimCategory,rec.trimMappingId,rec.style_id,rec.trimParams)
                 grnItemsArr.push(grnItemsDto)
             }
-            const poQuery = `select p.purchase_order_id as poId,p.style_id as styleId,p.po_material_type as poMaterialType,p.po_against as poAgainst,p.grn_quantity as grnQuantity from purchase_order p where p.purchase_order_id = ${req.poId}`
+            const poQuery = `select p.purchase_order_id as poId,p.po_material_type as poMaterialType,p.po_against as poAgainst,p.grn_quantity as grnQuantity from purchase_order p where p.purchase_order_id = ${req.poId}`
             const poData = await this.poTrimRepo.query(poQuery)
-             poData[0].grnItems = grnItemsArr 
+             poData[0].grnItems = grnItemsArr
+
 
             if (grnItemsArr.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", poData)
@@ -296,23 +386,28 @@ export class PurchaseOrderService {
     async GetPurchaseData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
         try {
             console.log(req,"req,ser")
-            let query = `SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,
-            expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId
-             FROM purchase_order  po 
-            LEFT JOIN style s ON s.style_id=po.style_id
-            LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id
-            LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id
-            `
+            let query = 'SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.po_against as poAgainst,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId FROM purchase_order  po LEFT JOIN style s ON s.style_id=po.style_id LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id'
 
             let param :any={}
             if(req){
             //   if (req.id!== undefined){
             //     query += ` where po.purchase_order_id = ${req?.id}`
             //   }
-              if (req.ExternalRefNo!== undefined){
-                query += `WHERE b.external_ref_number = '${req.ExternalRefNo}'`
+              if (req.ExternalRefNo && req.ExternalRefNo!=null){
+                query += ` WHERE b.external_ref_number = '${req.ExternalRefNo}'`
               }
-              
+              console.log(req.status,'=================')
+              if (req.status && req.status.length > 0) {
+                // Assuming req.status is an array of enums
+                const statusValues = req.status.map(status => `'${status}'`).join(',');
+                query += ` AND po.status IN (${statusValues})`;
+            }
+            
+            //   if (req.status){
+                
+            //     // query += `and po.status IN  ('${req.status})')`
+            //     query += ` AND po.status IN ("${req.status}")`
+            //   }
             }
             
              query+= ` ORDER BY po.expected_delivery_date`
@@ -351,7 +446,7 @@ export class PurchaseOrderService {
     }
     async GetPurchaseTrimData(purchaseOrderId: number): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT ri.trim_code AS trimcode,ri.trim_type AS trimtype,pg.product_group AS productGroup,po_trim_id AS poTrimid,pt.product_group_id AS productGrouoId,trim_id AS trimId,m3_trim_code AS m3trimCode,
+            let query = `SELECT ri.trim_code AS trimcode,ri.trim_type AS trimtype,pg.product_group AS productGroup,po_trim_id AS poTrimid,pt.product_group_id AS productGrouoId,trim_id AS trimId,m3_trim_code AS m3trimCode ,
             purchase_order_id,colour_id AS clourId,
                        indent_trim_id AS indentTrimId,po_quantity AS poQuantity,trim_item_status AS trimItemStaus ,
                        grn_quantity AS grnQuantity 
@@ -400,7 +495,8 @@ export class PurchaseOrderService {
                     purchaseOrderDate: po.purchaseOrderDate,
                     poMaterialtype: po.poMaterialtype,
                     poStatus: po.poStatus,
-                    poId:po.purchaseOrderId
+                    poId:po.purchaseOrderId,
+                    poAgainst: po.poAgainst
                     // fabInfo: fabricInfo,
                     // triminfo: triminfo
 
@@ -430,17 +526,27 @@ export class PurchaseOrderService {
         let columnName
         // let poData = `select * from purchase_order po `
         if(poTypeRes[0].po_material_type == 'Fabric'){
-            concatString = ` left join m3_items mi on mi.m3_items_Id = poi.m3_item_id`
-            columnName = 'mi.item_code'
+            concatString = ` 
+            left join m3_items mi on mi.m3_items_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id 
+            LEFT JOIN indent_fabric ii ON ii.ifabric_id = poi.indent_item_id`
+            columnName = 'mi.item_code,mi.hsn_code as hsnCode,mi.description,u.uom'
         //     poData = poData+` left join purchase_order_fabric pof on pof.purchase_order_id = po.purchase_order_id `
         }else{
-            concatString = ` left join m3_trims mi on mi.m3_trim_Id = poi.m3_item_id`
-            columnName = 'mi.trim_code as item_code'
+            concatString = ` 
+            left join m3_trims mi on mi.m3_trim_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id
+            LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id`
+            columnName = 'mi.trim_code as item_code , mi.hsn_code as hsnCode,mi.description ,u.uom'
         //     poData = poData+` left join purchase_order_trim pot on pot.purchase_order_id = po.purchase_order_id`
         }
         // poData = poData+` where po.purchase_order_id = ${req.id}`
         // const podatares = await this.dataSource.query(poData)
-        const poTrimData = `select po.*,poi.*,${columnName},v.vendor_name,f.address from purchase_order po left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id ${concatString} left join factory f on f.id = po.delivery_address left join vendors v on v.vendor_id = po.vendor_id where po.purchase_order_id = ${req.id}`
+        const poTrimData = `select po.*,poi.*,${columnName},poi.unit_price,i.request_no as indentNo,i.indent_date as indentDate,v.vendor_name,v.contact_number,v.bank_acc_no,v.gst_number,v.postal_code,f.address,t.tax_percentage AS taxPercentage ,cur.currency_name as currencyName
+        from purchase_order po
+        left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id ${concatString}
+        LEFT JOIN indent i ON i.indent_id = ii.indent_id left join factory f on f.id = po.delivery_address 
+        left join currencies cur on cur.currency_id=po.currency_id  
+        left join vendors v on v.vendor_id = po.vendor_id LEFT JOIN taxes t ON t.tax_id = poi.tax
+        where po.purchase_order_id = ${req.id} `
         console.log(poTrimData,'ppppppphhh')
         const poTrimdatares = await this.dataSource.query(poTrimData)
         // console.log(podatares)
@@ -456,6 +562,38 @@ export class PurchaseOrderService {
             return new CommonResponseModel(false,0,'No data')
         }
         return 
+    }
+    async getAllPos(): Promise<CommonResponseModel> {
+        try {
+            let query = `SELECT p.purchase_order_id,p.po_number FROM  purchase_order p '`
+            const data = await this.dataSource.query(query)
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
+            } else {
+                return new CommonResponseModel(false, 1, "No data found", [])
+            }
+        } catch (err) {
+            throw (err)
+        }
+    }
+    async QrByPoId(req: VendorIdReq): Promise<CommonResponseModel> {
+        try {
+            let query = `SELECT grn.grn_id,p.purchase_order_id, gi.grn_item_id,gi.grn_item_no,grn.invoice_no,grn.item_type, IF(grn.item_type = "FABRIC",mit.description , 
+            mtr.description) AS itemCode FROM  purchase_order p 
+            LEFT JOIN grn ON grn.po_id = p.purchase_order_id
+            LEFT JOIN grn_items gi ON gi.grn_id = grn.grn_id
+            LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND grn.item_type = "FABRIC"
+            LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND grn.item_type != "FABRIC"
+            WHERE p.purchase_order_id = '${req.poId}'`
+            const data = await this.dataSource.query(query)
+            if (data.length > 0) {
+                return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
+            } else {
+                return new CommonResponseModel(false, 1, "No data found", [])
+            }
+        } catch (err) {
+            throw (err)
+        }
     }
 
 }

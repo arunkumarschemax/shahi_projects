@@ -7,7 +7,7 @@ export class IndentTrimsModel{
     size: number;
     color: string;
     quantity: number;
-    m3TrimCode: string;
+    m3TrimCode: number;
     description: string;
     remarks: string;
     availableQuantity:number;
@@ -18,9 +18,12 @@ export class IndentTrimsModel{
     buyer?: string
     buyerId?: number
     quantityUnitId?:number;
-
-
-
+    styleId?: number;
+    checkStatus?: boolean;
+    indentTrimId?:number
+    m3TrimCodeName?:string
+    indentCode?:string
+    poQty?:number;
   constructor(
     itrimsId: number,
     trimType: string,
@@ -28,7 +31,7 @@ export class IndentTrimsModel{
     size: number,
     color: string,
     quantity: number,
-    m3TrimCode: string,
+    m3TrimCode: number,
     description: string,
     remarks: string,
     availableQuantity:number,
@@ -38,8 +41,13 @@ export class IndentTrimsModel{
     materialType?:string,
     buyer?: string,
     buyerId?: number,
-    quantityUnitId?:number  
-    
+    quantityUnitId?:number,
+    styleId?: number,
+    checkStatus?: boolean,
+    indentTrimId?:number,
+    m3TrimCodeName?:string,
+    indentCode?:string,
+    poQty?:number
   ){
     this.itrimsId = itrimsId;
     this.trimType = trimType;
@@ -58,6 +66,14 @@ export class IndentTrimsModel{
     this.buyer = buyer
     this.buyerId = buyerId
     this.quantityUnitId = quantityUnitId
+    this.styleId = styleId
+    this.checkStatus = checkStatus
+    this.indentTrimId = indentTrimId
+    this.m3TrimCodeName = m3TrimCodeName
+    this.indentCode = indentCode
+    this.poQty = poQty
+
+
   }
 
 

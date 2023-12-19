@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { FabricType } from '../../fabric-types/fabric-type.entity';
 
 export class FabriCWeaveDto {
   @ApiProperty()
@@ -29,5 +30,8 @@ export class FabriCWeaveDto {
 
   @ApiProperty()
   versionFlag : number;
+
+  @ApiProperty()
+  fabricTypeId : number;
 }
 

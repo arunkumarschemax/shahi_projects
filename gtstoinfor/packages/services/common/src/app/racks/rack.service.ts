@@ -5,7 +5,8 @@ import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res
 import { RacksAdapter } from "./rack.adaptor";
 import { RacksEntity } from "./rack.entity";
 import { RacksDTO } from "./rack.dto";
-import { CommonResponseModel, RacActiveDeactive, RackCreateRequest } from "@project-management-system/shared-models";
+import { CommonResponseModel, RacActiveDeactive, RackCreateRequest, RackIdReq } from "@project-management-system/shared-models";
+import { RackPositionEntity } from "../rm_locations/rack-position.entity";
 
 @Injectable()
 export class RacksService {
@@ -54,7 +55,25 @@ export class RacksService {
       return new CommonResponseModel(false, 0, error)
     }
   }
-
+  async getRackPositionQrs(req:RackIdReq): Promise<CommonResponseModel> {
+    try {
+        const data: RacksDTO[] = await this.repository
+            .createQueryBuilder('r')
+            .select(' r.rack_id,r.rack_name,r.rack_code,position_code')
+            .leftJoin(RackPositionEntity,'rp',` rp.rack_id = r.rack_id`)
+            .where(`r.rack_id = '${req.rackId}'`)
+            .getRawMany();
+  
+        if (data && data.length > 0) {
+            const response = new CommonResponseModel(true, 11108, "RackPositions retrieved successfully", data);
+            return response;
+        } else {
+            throw new CommonResponseModel(false,99998, 'Data not found');
+        }
+    } catch (err) {
+        return err;
+    }
+  }
 }
 
 

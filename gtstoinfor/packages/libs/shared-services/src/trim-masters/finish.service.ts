@@ -28,4 +28,8 @@ export class FinishService extends CommonAxiosService{
     async  getFinishById(req: FinishDTO): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + '/getFinishById',req)
     }
+    
+    async  getFabricFinishData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + '/getFabricFinishData')
+    }
 }

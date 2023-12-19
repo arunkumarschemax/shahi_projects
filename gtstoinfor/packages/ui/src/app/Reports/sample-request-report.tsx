@@ -1,5 +1,5 @@
 import { UndoOutlined } from "@ant-design/icons";
-import { SampleRequestFilter, SamplerawmaterialStausReq } from "@project-management-system/shared-models";
+import { ItemTypeEnumDisplay, SampleRequestFilter, SamplerawmaterialStausReq } from "@project-management-system/shared-models";
 import { BuyersService, SampleDevelopmentService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Checkbox, Col, Form, Row, Select, Table } from "antd";
 import moment from "moment";
@@ -200,6 +200,10 @@ const SampleRequestReport = () => {
               dataIndex: "fabricType",
               key: "fabricType",
               align: "center",
+              render: (text) => {
+                const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+                return EnumObj ? EnumObj.displayVal : text;
+              },
             }]}
             pagination={false}
           />
@@ -344,7 +348,7 @@ const SampleRequestReport = () => {
     setSelectItemIds(updated1);
 
     
-    const resultArray = [{materialType:fabricType}, { sampleReqIds: updatedIndentIds },{m3itemid:updated1}];
+    const resultArray = [{materialType:fabricType}, { sampleReqIds: updatedIndentIds },{m3itemid:updated1}, {buyerId: rowData.buyerId}];
     console.log(resultArray)
     setSelectedItems(resultArray)
 
@@ -354,13 +358,13 @@ const SampleRequestReport = () => {
   return (
     <div>
       <Card
-        title={<span>Sample Raw Material </span>}
+        title={<span>Sample Material Status</span>}
         // style={{ textAlign: "center" }}
         headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       >
-        <Form form={form} >
+        <Form form={form} layout="vertical" >
           <Row gutter={24}>
-            <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+            <Col xs={24} sm={12} md={9} lg={9} xl={5}>
             <Form.Item name="requestNo" label="Request Number">
                 <Select
                   showSearch
@@ -384,7 +388,7 @@ const SampleRequestReport = () => {
               </Form.Item>
             </Col>
             {!isBuyer?<>
-              <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+              <Col xs={24} sm={12} md={9} lg={9} xl={5}>
               <Form.Item name="buyerId" label="Buyers">
                 <Select
                   showSearch
@@ -402,7 +406,7 @@ const SampleRequestReport = () => {
             </Col>
             </>:<></>}
             
-            <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+            <Col xs={24} sm={12} md={9} lg={9} xl={5}>
               <Form.Item name="style" label="Style">
                 <Select
                   showSearch
@@ -423,7 +427,7 @@ const SampleRequestReport = () => {
                 <Button
                   type="primary"
                   htmlType="submit"
-                  style={{ background: "green", width: "100%" }}
+                  style={{ background: "green", width: "100%",marginTop:20,marginLeft:20 }}
                   onClick={getData}
                 >
                   Search
@@ -436,7 +440,7 @@ const SampleRequestReport = () => {
                   danger
                   icon={<UndoOutlined />}
                   onClick={onReset}
-                  style={{ width: "100%" }}
+                  style={{ width: "100%" ,marginTop:20, marginLeft:20 }}
                 >
                   Reset
                 </Button>

@@ -10,21 +10,21 @@ export class M3TrimsEntity {
 
   @Column('varchar', {
     nullable: false,
-    length: 30,
+    length: 100,
     name: 'trim_code',
   })
   trimCode: string;
 
   @Column('varchar', {
     nullable: false,
-    length: 30,
-    name: 'item_code',
+    length: 100,
+    name: 'item_code',  
   })
   itemCode: string;
 
   @Column('varchar', {
     nullable: false,
-    length: 30,
+    length: 100,
     name: 'description',
   })
   description: string;
@@ -168,6 +168,19 @@ export class M3TrimsEntity {
   })
   versionFlag: number;
 
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'm3_code',
+  })
+  m3Code: string;
+
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'hsn_code',
+  })
+  hsnCode: string;
   @ManyToOne(type=>Buyers, m3Trims=>m3Trims.M3TrimCodes,{  nullable:false, })
   @JoinColumn({ name:"buyer_id"})
   buyerInfo: Buyers;

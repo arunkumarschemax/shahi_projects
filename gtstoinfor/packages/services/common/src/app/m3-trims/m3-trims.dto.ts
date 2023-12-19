@@ -85,5 +85,12 @@ export class M3TrimsDTO {
 
     @ApiProperty()
     buyerCode?: string;
+    
+    @ApiProperty()
+    m3Code?: string;
+
+    @ApiProperty()
+    hsnCode?: string;
+
 }
 

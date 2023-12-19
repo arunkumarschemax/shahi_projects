@@ -20,3 +20,6 @@ export * from'./allocate-material-response-model'
 export * from './request-no.req';
 export * from './allocated-location.request';
 export * from './allocated-approval.req';
+export * from './materailViewDto'
+export * from './locationreq'
+export * from './styleaginstpch'

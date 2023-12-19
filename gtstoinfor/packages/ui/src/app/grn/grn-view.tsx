@@ -7,7 +7,7 @@ import {Button,Card,Col,Collapse,DatePicker,Divider,Form,Input,Modal,Row,Segment
   import { useState } from "react";
   import { useNavigate } from "react-router-dom";
   import Highlighter from "react-highlight-words";
-import { GRNTypeEnum, GRNTypeEnumDisplay, GrnReq, PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { GRNTypeEnum, GRNTypeEnumDisplay, GrnReq, ItemTypeEnumDisplay, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { GRNService } from "@project-management-system/shared-services";
 import Barcode from "react-barcode";
 import { useIAMClientState } from "../common/iam-client-react";
@@ -240,8 +240,9 @@ import { useIAMClientState } from "../common/iam-client-react";
         title: <div style={{textAlign:"center"}}>Item Type</div>,
         dataIndex: 'itemType',
         // ...getColumnSearchProps("itemType"),
-        render: (val,data) => {
-          return data.itemType ? data.itemType : "-";
+        render: (text) => {
+          const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+          return EnumObj ? EnumObj.displayVal : text;
         },
         // filters: [
         //   {
@@ -273,10 +274,10 @@ import { useIAMClientState } from "../common/iam-client-react";
         }
       },
       {
-        title: <div style={{textAlign:"center"}}>Status</div>,
-        dataIndex: "status",
+        title: <div style={{textAlign:"center"}}>Location Mapping Status</div>,
+        dataIndex: "locationMapStatus",
         render: (val,data) => {
-          return data.status ? data.status : "-";
+          return data.locationMapStatus ? data.locationMapStatus : "-";
         }
       },
       {
@@ -308,20 +309,20 @@ import { useIAMClientState } from "../common/iam-client-react";
       >
         <Form form={form} layout="vertical" onFinish={getAll}>
           <Row gutter={16}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 4 }}>
               <Form.Item name="poNumber" label="PO Number">
                 <Select showSearch allowClear optionFilterProp="children" placeholder="Select PO Number">
                   {poNoFilter.map((e) => (
                     <Option key={e.poNumber} value={e.poNumber}>
                       {e.poNumber}
-                    </Option>
+                    </Option>                     
                   ))}
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 4 }}>
               <Form.Item name="grnNo" label="GRN No">
-                <Select showSearch allowClear optionFilterProp="children" placeholder="Select GRB No">
+                <Select showSearch allowClear optionFilterProp="children" placeholder="Select GRN No">
                   {grnNoFilter.map((e) => (
                     <Option key={e.grnId} value={e.grnNo}>
                       {e.grnNo}
@@ -330,12 +331,12 @@ import { useIAMClientState } from "../common/iam-client-react";
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-              <Form.Item label='GRN Date' name='grnDate'>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 12 }} xl={{ span: 5 }}>
+              <Form.Item label='GRN Date' name='grnDate'style={{width:"100%"}}>
                 <RangePicker />
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 4 }}>
               <Form.Item name="status" label="Status">
                 <Select showSearch allowClear placeholder="Select Status" optionFilterProp="children">
                   {Object.values(PurchaseOrderStatus).map(e => (
@@ -352,7 +353,11 @@ import { useIAMClientState } from "../common/iam-client-react";
             </Col>
           </Row>
         </Form>
-        <Table columns={tableColumns} dataSource={filterData} />
+        <Table columns={tableColumns} dataSource={filterData} pagination={{
+          onChange(current) {
+            setPage(current);
+          }
+        }}/>
       </Card>
     );
     

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { StyleRepository } from './dto/style-repo';
-import { AllStyleResponseModel, StyleIdReq, UploadResponse, buyerReq } from '@project-management-system/shared-models';
+import { AllStyleResponseModel, CommonResponseModel, SampleFilterRequest, StyleAgainstPchDto, StyleIdReq, UploadResponse, buyerReq } from '@project-management-system/shared-models';
 import { Style } from './dto/style-entity';
 import { StyleReq } from './dto/style-dto';
 import { DataSource } from 'typeorm';
@@ -77,7 +77,7 @@ export class StyleService{
         try{
             console.log(buyerReq)
             const manager=this.datasource;
-            let query1 = "SELECT s.style_id AS styleId,s.location_id AS locationId,pf.profit_control_head AS pch, s.style, b.buyer_name AS buyer, s.is_active AS isActive, s.style_file_name AS styleFileName, s.style_file_path AS styleFilePath, s.description AS description, s.created_user AS createdUser, s.version_flag AS versionFlag, s.updated_user AS updatedUser, s.updated_at AS updatedAt, s.created_at AS createdAt from style s left join profit_control_head pf on pf.profit_control_head_id = s.pch left join buyers b on b.buyer_id = s.buyer_id where style_id > 0  ";
+            let query1 = "SELECT s.style_id AS styleId,s.location_id AS locationId,pf.profit_control_head_id AS pchId,pf.profit_control_head AS pch, s.style, b.buyer_name AS buyer, s.is_active AS isActive, s.style_file_name AS styleFileName, s.style_file_path AS styleFilePath, s.description AS description, s.created_user AS createdUser, s.version_flag AS versionFlag, s.updated_user AS updatedUser, s.updated_at AS updatedAt, s.created_at AS createdAt from style s left join profit_control_head pf on pf.profit_control_head_id = s.pch left join buyers b on b.buyer_id = s.buyer_id where style_id > 0  ";
             if(buyerReq.buyerId != undefined){
                 query1 = query1 + " and s.buyer_id ="+buyerReq.buyerId;
             }
@@ -139,4 +139,14 @@ export class StyleService{
 
         }
     }
-}
+    async getstyleaginstpch(request?: StyleIdReq):Promise<CommonResponseModel>{
+    
+        const details = await this.styleRepo.getstyleaginstpch(request);
+        console.log(details);
+        if (details.styleId > 0) {
+          return new CommonResponseModel(true, 1, 'data retrieved', details)
+        } else {
+          return new CommonResponseModel(false, 0, 'data not found')
+        }
+      
+    }}

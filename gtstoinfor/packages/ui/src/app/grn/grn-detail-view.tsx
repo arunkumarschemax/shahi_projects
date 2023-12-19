@@ -1,4 +1,4 @@
-import {BarcodeOutlined,CaretDownOutlined,CaretRightOutlined,EyeOutlined,InfoCircleOutlined,PrinterOutlined,SearchOutlined,UndoOutlined,} from "@ant-design/icons";
+import {BarcodeOutlined,CaretDownOutlined,CaretRightOutlined,EyeOutlined,InfoCircleOutlined,PrinterOutlined,QrcodeOutlined,SearchOutlined,UndoOutlined,} from "@ant-design/icons";
 import {Button,Card,Col,Collapse,Descriptions,Divider,Form,Input,Modal,Row,Segmented,Select,Space,Table,Tag,} from "antd";
   import style from "antd/es/alert/style";
   import { ColumnProps } from "antd/es/table";
@@ -6,9 +6,11 @@ import {Button,Card,Col,Collapse,Descriptions,Divider,Form,Input,Modal,Row,Segme
   import React, { useEffect, useRef } from "react";
   import { useState } from "react";
   import { useLocation, useNavigate } from "react-router-dom";
-import { GrnReq, LocationMappedEnumDisplay } from "@project-management-system/shared-models";
+import { GRNTypeEnumDisplay, GrnReq, ItemTypeEnumDisplay, LocationMappedEnumDisplay } from "@project-management-system/shared-models";
 import { GRNService } from "@project-management-system/shared-services";
 import Barcode from "react-barcode";
+import QRCode from "react-qr-code";
+
   
   const { Option } = Select;
   
@@ -110,7 +112,7 @@ import Barcode from "react-barcode";
         title: <div style={{textAlign:"center"}}>Rejected Qty</div>,
         dataIndex: "rejectedQty",
         align:"right",
-        render: (text, record) => (text !== 0 ? `${text} ${record.uom || ''}` : '-')
+        render: (text, record) => (text > 0 ? `${text} ${record.uom || ''}` : '0')
       },
       {
         title: <div style={{textAlign:"center"}}>Conversion Qty</div>,
@@ -132,14 +134,14 @@ import Barcode from "react-barcode";
         },
       },
       {
-        title: <div style={{textAlign:"center"}}>Barcode</div>,
+        title: <div style={{textAlign:"center"}}>QRCode</div>,
         dataIndex: "action",
         align:"center",
         render: (text, record) => {
           const value = `${record.grnNumber}/${record.itemCode}/${record.receivedQty}${record.uom}`;
           return (
             <Tag onClick={() => generateBarcode(value, "GRN")} style={{ cursor: "pointer" }}>
-              <BarcodeOutlined />
+              <QrcodeOutlined />
             </Tag>
           );
         },
@@ -169,8 +171,10 @@ import Barcode from "react-barcode";
           {/* <Descriptions.Item label='Contact Person' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.contactPerson?stateData?.data?.[0]?.contactPerson:'-'}</Descriptions.Item> */}
           <Descriptions.Item label='Invoice No' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.invoiceNo?stateData?.data?.[0]?.invoiceNo:'-'}</Descriptions.Item>
           <Descriptions.Item label='Invoice Date' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.invoiceDate? moment(stateData?.data?.[0]?.invoiceDate).format('DD-MM-YYYY'):'-'}</Descriptions.Item>
-          <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.itemType?stateData?.data?.[0]?.itemType:'-'}</Descriptions.Item>
-          <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnType?stateData?.data?.[0]?.grnType:'-'}</Descriptions.Item>
+          <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{ItemTypeEnumDisplay.find((e) => e.name === stateData?.data?.[0]?.itemType)?.displayVal ?? '-'}</Descriptions.Item>
+          {/* <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{ItemTypeEnumDisplay.find((e)=> e.name === stateData?.data?.[0]?.itemType)?.displayVal}</Descriptions.Item> */}
+          <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{GRNTypeEnumDisplay.find((e) => e.name === stateData?.data?.[0]?.grnType)?.displayVal ?? '-'}</Descriptions.Item>
+          {/* <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnType?stateData?.data?.[0]?.grnType:'-'}</Descriptions.Item> */}
           <Descriptions.Item label='Status' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.status?stateData?.data?.[0]?.status:'-'}</Descriptions.Item>
         </Descriptions>
         <br/>
@@ -192,7 +196,7 @@ import Barcode from "react-barcode";
         style={{ maxWidth: "100%" }}
       >
         <div style={{ textAlign: "center" }}>
-          <Barcode value={barcode} height={30} width={0.8}/>
+          <QRCode value={barcode} height={30} width={0.8}/>
           {/* <PrinterOutlined onClick={handlePrint}/> */}
         </div>
       </Modal>

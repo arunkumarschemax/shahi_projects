@@ -1,16 +1,18 @@
 import { SearchOutlined } from "@ant-design/icons";
 import { BuyersService, FabricTypeService, FabricWeaveService, M3ItemsService, ReclassificationService, StockService, UomService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag, Tabs } from "antd";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag, Tabs, Radio, Segmented } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useNavigate } from "react-router-dom";
-import { BuyerRefNoRequest, M3ItemsDTO, ReclassificationApproveRequestDto, ReclassificationStatusEnum, UomCategoryEnum, buyerReq, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, ItemTypeEnumDisplay, M3ItemsDTO, MenusAndScopesEnum, ReclassificationApproveRequestDto, ReclassificationStatusEnum, UomCategoryEnum, buyerReq, m3ItemsContentEnum } from "@project-management-system/shared-models";
 import { Reclassification } from "./reclassification";
 import TabPane from "antd/es/tabs/TabPane";
 import { useIAMClientState } from "../common/iam-client-react";
+import moment from "moment";
+import { RolePermission } from "../role-permissions";
 const { TextArea } = Input;
 
 export const ReclassificationApprovalGrid = () => {
@@ -29,10 +31,13 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
   // useEffect(() => {
   //   getReclassificationData()
   // }, []);
+  const roles = IAMClientAuthContext.user?.roles;
+
   useEffect(() => {
-    getReclassificationData();
+    getReclassificationData(undefined);
 
   }, []);
+
 
   // const getBuyersData = () => {
   //   const req = new BuyerRefNoRequest()
@@ -44,15 +49,15 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
   //   });
   // };
 
-  const getReclassificationData = () => {
+  const getReclassificationData = (itemType) => {
     const req = new buyerReq();
     req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
         reclassificationService.getAllReclassificationData().then((res) => {
         if(res.status){
             setReclassificationData(res.data);
             console.log(res.data,'ressssss');
-            setRequest(res.data.filter(e =>e.fromExtRef ===  refNo))
-            setAccepted(res.data.filter(e =>e.toExtRef ===  refNo))
+            setAccepted(res.data.filter(e =>e.fromExtRef ===  refNo && (itemType === "fabric" ? e.itemType === "Fabric": itemType === undefined ? e.itemType === "Fabric" : e.itemType != "Fabric")))
+            setRequest(res.data.filter(e =>e.toExtRef ===  refNo && (itemType === "fabric" ? e.itemType != "Fabric": itemType === undefined ? e.itemType === "Fabric" : e.itemType != "Fabric")))
         }
         else{
             setReclassificationData([]);
@@ -65,13 +70,14 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
   }
   
 
-  const assignStock = (rowData) => {
+  const assignStock = (rowData, status) => {
     console.log(rowData)
-    let req = new ReclassificationApproveRequestDto(rowData.reclassificationId,rowData.stockId,rowData.quantity,rowData.m3Item,rowData.locationId,1,rowData.toBuyerId,rowData.fromBuyerId,rowData.itemType,rowData.grnItemId,rowData.uomId)
+    let req = new ReclassificationApproveRequestDto(rowData.reclassificationId,rowData.stockId,rowData.quantity,rowData.m3Item,rowData.locationId,1,rowData.toBuyerId,rowData.fromBuyerId,rowData.itemType,status=== "yes"?ReclassificationStatusEnum.APPROVED:ReclassificationStatusEnum.REJECTED,rowData.grnItemId,rowData.uomId)
     reclassificationService.getApproveStockReclassification(req).then((res) => {
       if(res.status){
         AlertMessages.getSuccessMessage(res.internalMessage)
         navigate('/reclassification-approval-grid')
+        getReclassificationData(undefined);
       }
       else{
           AlertMessages.getInfoMessage(res.internalMessage)
@@ -175,17 +181,17 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
     },
     {
       title: "From Buyer",
-      dataIndex: "fromBuyerName",
-      ...getColumnSearchProps("fromBuyerName"),
-      sorter: (a, b) => a.fromBuyerName.localeCompare(b.fromBuyerName),
+      dataIndex: "toBuyerName",
+      ...getColumnSearchProps("toBuyerName"),
+      sorter: (a, b) => a.toBuyerName.localeCompare(b.toBuyerName),
       sortDirections: ["descend", "ascend"],
       
     },
     {
       title: "To Buyer",
-      dataIndex: "toBuyerName",
-      ...getColumnSearchProps("toBuyerName"),
-      sorter: (a, b) => a.toBuyerName.localeCompare(b.toBuyerName),
+      dataIndex: "fromBuyerName",
+      ...getColumnSearchProps("fromBuyerName"),
+      sorter: (a, b) => a.fromBuyerName.localeCompare(b.fromBuyerName),
       sortDirections: ["descend", "ascend"],
       
     },
@@ -195,6 +201,10 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
       ...getColumnSearchProps("itemType"),
       sorter: (a, b) => a.itemType.localeCompare(b.itemType),
       sortDirections: ["descend", "ascend"],
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },
     },
     {
       title: "M3 Item",
@@ -221,6 +231,18 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
       ),
       ...getColumnSearchProps("quantity"),
     },
+
+    {
+      title: "Reclassifiaction Date",
+      dataIndex: "created_at",
+      
+      render: (_, record) => {
+        return record.created_at
+          ? moment(record.created_at).format("YYYY-MM-DD")
+          : "-";
+      },
+    },
+ 
     // {
     //   title: 'Action',
     //   dataIndex: 'action',
@@ -249,17 +271,18 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
     },
     {
       title: "From Buyer",
-      dataIndex: "fromBuyerName",
-      ...getColumnSearchProps("fromBuyerName"),
-      sorter: (a, b) => a.fromBuyerName.localeCompare(b.fromBuyerName),
-      sortDirections: ["descend", "ascend"],
-      
-    },
-    {
-      title: "To Buyer",
       dataIndex: "toBuyerName",
       ...getColumnSearchProps("toBuyerName"),
       sorter: (a, b) => a.toBuyerName.localeCompare(b.toBuyerName),
+      sortDirections: ["descend", "ascend"],
+      
+    },
+    
+    {
+      title: "To Buyer",
+      dataIndex: "fromBuyerName",
+      ...getColumnSearchProps("fromBuyerName"),
+      sorter: (a, b) => a.fromBuyerName.localeCompare(b.fromBuyerName),
       sortDirections: ["descend", "ascend"],
       
     },
@@ -295,6 +318,17 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
       ),
       ...getColumnSearchProps("quantity"),
     },
+    
+    {
+      title: "Reclassifiaction Date",
+      dataIndex: "created_at",
+      
+      render: (_, record) => {
+        return record.created_at
+          ? moment(record.created_at).format("YYYY-MM-DD")
+          : "-";
+      },
+    },
     {
       title: 'Action',
       dataIndex: 'action',
@@ -303,39 +337,59 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
           <span>
             {
               rowData.status === ReclassificationStatusEnum.APPROVAL_PENDING ? 
-            <Button
-              style={{ backgroundColor: '#69c0ff' }}
-              onClick={(e) => assignStock(rowData)}
-            >
-              <b>Assign Stock</b>
-            </Button>: "Approved" }
+            <><Button
+                  style={{ backgroundColor: '#69c0ff' }}
+                  onClick={(e) => assignStock(rowData, "yes")}
+                >
+                  <b>Assign Stock</b>
+                </Button><Button 
+                  style={{ backgroundColor: '#fd3d56' }}
+                  onClick={(e) => assignStock(rowData, "no")}
+                >
+                    <b>Reject</b>
+                  </Button></>: <Tag style={{backgroundColor:'#9ccc65', color:'black'}}><b>Approved</b></Tag> }
           </span>
         );
       }
     }
   ];
+  const checkAccess = (buttonParam) => {   
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus["Reclassification Approval"],buttonParam)
+    console.log(accessValue,'access');
+    
+    return accessValue
+}
   return (
     <Card title="Reclassification Approval" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
-<Tabs type={'card'} tabPosition={'top'}>
-        <TabPane key="1" tab={<span style={{ fontSize: '15px' }}><b>{`Requested Reclassification`}</b></span>}>
-        <Table
-        className="custom-table-wrapper"
-        dataSource={requested.length > 0 ? requested : []}
-        columns={columns}
-        size="small"
-      />
-      
+      <Row gutter={24}>
+        <Col span={8}></Col>
+        <Col span={8} style={{alignContent:'center'}}>
+       
+          <Radio.Group defaultValue="fabric" buttonStyle="solid" onChange={(e) =>  {console.log(e.target.value);getReclassificationData(e.target.value)}}>
+            <Radio.Button value="fabric" disabled = {checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? false : true} >FABRICS</Radio.Button>
+            <Radio.Button value="trim" disabled = {checkAccess(MenusAndScopesEnum.Scopes.trimTab)? false : true}>TRIMS</Radio.Button>
+          </Radio.Group>
+        </Col>
+        <Col span={8}></Col>
+      </Row>
+    <br/>
+    <Tabs type={'card'} tabPosition={'top'}>
+        <TabPane key="1" tab={<span style={{ fontSize: '15px' }}><b>{`Requested`}</b></span>}>
+          <Table
+            className="custom-table-wrapper"
+            dataSource={requested.length > 0 ? requested : []}
+            columns={columns}
+            size="small" />
+
         </TabPane>
         <TabPane key="2" tab={<span style={{ fontSize: '15px' }}><b>{`To be Accepected`}</b></span>}>
-        <Table
-        className="custom-table-wrapper"
-        dataSource={accepted.length > 0 ? accepted : []}
-        columns={columns1}
-        size="small"
-      />
+          <Table
+            className="custom-table-wrapper"
+            dataSource={accepted.length > 0 ? accepted : []}
+            columns={columns1}
+            size="small" />
         </TabPane>
-      </Tabs>     
-      
+      </Tabs>    
     </Card>
   );
 };
