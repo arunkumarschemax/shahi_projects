@@ -283,12 +283,13 @@ export class OperationTrackingService {
         }else {
           nextOperation = 'NA'
         }
-        // const qtyInfoQry = `SELECT SUM(quantity) as totQty FROM sample_request_size_info WHERE sample_request_id = ${req.sampleRequestId}`
-        // const qtyRes = await this.dataSource.query(qtyInfoQry)
-        // let totalFgQty = 0
-        // if(qtyRes.length > 0){
-        //   totalFgQty = qtyRes[0].totQty
-        // }
+        const qtyInfoQry = `SELECT SUM(quantity) as totQty FROM sample_request_size_info WHERE sample_request_id = ${req.sampleRequestId}`
+        const qtyRes = await this.dataSource.query(qtyInfoQry)
+        let totalOrderedQty = 0
+        if(qtyRes.length > 0){
+          totalOrderedQty = qtyRes[0].totQty
+        }
+       
         const inventoryEntity = new OperationInventory()
         inventoryEntity.styleId = styleId
         inventoryEntity.sampleReqId = req.sampleRequestId
@@ -347,7 +348,13 @@ export class OperationTrackingService {
         // console.log(dto.fabricCode,'*************')
         // const materialFabric = await this.materialFabricRepo.update({fabricCode: dto.fabricCode},{reportedStatus: MaterialFabricEnum.COMPLETED})
         // console.log(materialFabric,'))))))))))))))))))))))')
-        if (save && createLog) {
+        const reportedQtyQry = `select sum(physical_quantity) as reportedQty from operation_inventory where sample_req_id = ${req.sampleRequestId}`
+        const reportedQty = await this.dataSource.query(reportedQtyQry)
+        let totReportedQty = 0
+        if(reportedQty.length > 0){
+          totReportedQty = qtyRes[0].reportedQty
+        }
+        if (save && createLog && (Number(totReportedQty) == Number(totalOrderedQty))) {
           let sampleReqStatus
           if(req.operationCode == 'Cutting'){
             sampleReqStatus = LifeCycleStatusEnum.CUTTING

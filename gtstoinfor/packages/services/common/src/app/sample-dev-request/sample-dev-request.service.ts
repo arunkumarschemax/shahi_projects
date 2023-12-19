@@ -1823,7 +1823,14 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
     const sampleOrderDataQry = `select sample_req_size_id as SampleOrderInfoId,quantity from sample_request_size_info where sample_request_id = ${req.sampleRequestId} and colour_id = ${req.colourId} and size_id = ${req.sizeId}`
     const sampleOrderData = await this.dataSource.query(sampleOrderDataQry)
     if(sampleOrderData.length == 1){
-      return new CommonResponseModel(true,1,'data retreived',sampleOrderData)
+      const checkOperationQry = `select operation,next_operation as nextOperation from operation_tracking where colour_id = ${req.colourId} and size_id = ${req.sizeId} and sample_req_id = ${req.sampleRequestId} ORDER BY operation_tracking_id DESC LIMIT 1`
+      const nextOperationInfo = await this.dataSource.query(checkOperationQry)
+      let nextOperation
+      if(nextOperationInfo.length > 0){
+        nextOperation = nextOperationInfo[0].nextOperation
+      }
+      const resData = {nextOperation:nextOperation,sampledata:sampleOrderData}
+      return new CommonResponseModel(true,1,'data retreived',resData)
     }
     if(sampleOrderData.length > 1){
       return new CommonResponseModel(false,0,'Something Went wrong')
