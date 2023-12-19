@@ -3379,13 +3379,13 @@ export class OrdersService {
         let query=' SELECT  planning_sum AS itemName,planning_ssn AS plannedSeason,YEAR,CONCAT(MONTHNAME('+qtyLocationDate+'),"-",YEAR('+qtyLocationDate+')) AS MONTHNAME,SUM(REPLACE(order_plan_qty,","," ")) AS totalQuantity FROM orders WHERE file_id = (SELECT MAX(file_id) FROM orders) AND YEAR="'+req.year+'" and  planning_ssn ="'+req.season+'"'
         
         if(req.itemName){
-            query += ` AND  planning_sum  ='${req.itemName}' `;
+            query += ' AND  planning_sum  ="'+req.itemName+'"'
         }
 
-        query += ` GROUP BY MONTH('${qtyLocationDate}'),planning_sum order by MONTH('${qtyLocationDate}')`;
+        query += ' GROUP BY MONTH('+qtyLocationDate+'),planning_sum order by MONTH('+qtyLocationDate+')';
 
             const data = await this.ordersRepository.query(query)
-            console.log(data, '$$$$$$$$$$$$$$$$$$$$$$')
+            // console.log(data, '$$$$$$$$$$$$$$$$$$$$$$')
             const sizeDataMap = new Map<string, sesaonWisereportModel>();
             for (const rec of data) {
                 if (!sizeDataMap.has(rec.itemName)) {
@@ -3397,7 +3397,7 @@ export class OrdersService {
                 }
             }
             const detailedarray: sesaonWisereportModel[] = Array.from(sizeDataMap.values());
-            console.log(detailedarray, '$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+            // console.log(detailedarray, '$$$$$$$$$$$$$$$$$$$$$$$$$$$')
 
             if (detailedarray) {
                 return new CommonResponseModel(true, 1, 'data retrived sucessfully', detailedarray)
