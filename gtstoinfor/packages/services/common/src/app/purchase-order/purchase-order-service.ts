@@ -195,7 +195,7 @@ export class PurchaseOrderService {
             let query
             if (req.materialType === 'Fabric') {
                 query = `SELECT m.item_code AS m3itemCode,poi.m3_item_id as m3ItemCodeId,poi.po_quantity AS poQuantity,poi.quantity_uom_id AS quantityUomId,u.uom,poi.purchase_order_item_id as poItemId,
-                poi.purchase_order_id AS purchaseOrderId,m.fabric_type_id AS m3ItemTypeId,ft.fabric_type_name AS m3ItemType,
+                poi.purchase_order_id AS purchaseOrderId,m.fabric_type AS m3ItemTypeId,ft.fabric_type_name AS m3ItemType,
                 poi.grn_quantity AS grnQuantity,poi.sample_item_id AS sampleItemId,poi.indent_item_id as indentItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour`
                 if(req.poAgainst == 'Indent'){
                     query = query + `,i.indent_id as indentId `
@@ -208,7 +208,7 @@ export class PurchaseOrderService {
                 LEFT JOIN uom u ON u.id = poi.quantity_uom_id
                 LEFT JOIN taxes t on t.tax_id = poi.tax
                 LEFT JOIN m3_items m ON m.m3_items_Id = poi.m3_item_id
-                LEFT JOIN fabric_type ft ON ft.fabric_type_id = m.fabric_type_id
+                LEFT JOIN fabric_type ft ON ft.fabric_type_id = m.fabric_type
                 LEFT JOIN colour c ON c.colour_id = poi.colour_id
                 `
                 if (req.poAgainst == 'Indent') {
