@@ -159,6 +159,8 @@ const SizeDetail = ({props,buyerId,form}) => {
     {
       title: 'S.No',
       dataIndex: 'sNo',
+      width:"5%",
+      fixed:'left',
       render: (_, record, index) => index + 1,
     },
     {

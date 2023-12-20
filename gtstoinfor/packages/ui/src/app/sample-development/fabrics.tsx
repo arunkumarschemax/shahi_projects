@@ -327,7 +327,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       width:"45%",
       render: (_, record, index) => (
         <>
-        <Form.Item name={`allocatedStock${record.key}`}><Input name={`allocatedStock${record.key}`} style={{display:'none'}}/></Form.Item>
+        <Form.Item name={`allocatedStock${record.key}`} style={{display:'none'}}><Input name={`allocatedStock${record.key}`} style={{display:'none'}}/></Form.Item>
         <Form.Item name={`fabricId${record.key}`}
          rules={[{ required: true, message: 'Missing Fabric' }]}
         >
@@ -452,7 +452,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         defaultValue={uom.find((e) => e.uom === "m")?.uom}
         onChange={(e) => handleInputChange(e, record.key, 'uomId',0,record)}
         >
-            {uom.map(e => {
+            {uom.filter((e) => e.uomCategory === UomCategoryEnum.LENGTH)?.map(e => {
               return(
                   <option key={e.uomId} value={e.uomId}>{e.uom}</option>
                   

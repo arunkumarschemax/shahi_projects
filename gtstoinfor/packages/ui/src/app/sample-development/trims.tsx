@@ -3,7 +3,7 @@ import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Chec
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { M3TrimsService, SampleDevelopmentService, TrimParamsMappingService, UomService } from '@project-management-system/shared-services';
-import { ItemTypeEnumDisplay, ItemTypeEnum, M3TrimType, BuyerIdReq, TrimIdRequestDto, buyerandM3ItemIdReq } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, ItemTypeEnum, M3TrimType, BuyerIdReq, TrimIdRequestDto, buyerandM3ItemIdReq, UomCategoryEnum } from '@project-management-system/shared-models';
 import moment from 'moment';
 import AlertMessages from '../common/common-functions/alert-messages';
 
@@ -363,7 +363,7 @@ const getMappedTrims = (value, option) => {
         // defaultValue={uom.find((e) => e.uom === "PCS")?.uom}
         onChange={(e) => handleInputChange(e, record.key, 'uomId',record)}
         >
-            {uom.map(e => {
+            {uom.filter((e) => e.uomCategory === UomCategoryEnum.VOLUME)?.map(e => {
               return(
                   <option key={e.uomId} value={e.uomId}>{e.uom}</option>
                   
