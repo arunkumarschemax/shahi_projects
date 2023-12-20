@@ -1054,7 +1054,7 @@ export class SampleRequestService {
       //   return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
 
       //   }
-        let query1=`SELECT required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity, required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS sampleBalanceQuanty,sb.required_quantity AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,c.colour AS colourName, mi.item_code AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,st.quantity AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId FROM sampling_bom sb     
+        let query1=`SELECT sb.sample_item_id AS sampleItemId,sb.sampling_bom_id AS samplingBomId,required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity, required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS sampleBalanceQuanty,sb.required_quantity AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,c.colour AS colourName, mi.item_code AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,st.quantity AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId FROM sampling_bom sb     
         LEFT JOIN  sample_request_fabric_info srf ON srf.sample_request_id=sb.sample_item_id AND sb.item_type='Fabric' 
         LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id=sb.sample_item_id AND sb.item_type!='Fabric'
         LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id  
@@ -1079,7 +1079,7 @@ export class SampleRequestService {
           query1 = query1 + ' AND sr.style_id=' + req.styleId;
         }
         
-        query1 = query1+ ` group by sb.sampling_bom_id`;
+        query1 = query1+ ` group by sb.sampling_bom_id order by sr.request_no, sb.item_type`;
         const rmData = await manager.query(query1);
         console.log(rmData)
         console.log(rmData.length)
@@ -1264,7 +1264,7 @@ export class SampleRequestService {
     async getfabricDetailsOfSample(req:sampleReqIdReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-        const query ='  SELECT srf.fabric_code as m3FabricCode, srf.colour_id as colourId,c.colour as colorName,request_no AS sampleReqNo, item_code AS itemCode,fabric_info_id AS samplereFabId,(sb.required_quantity - sb.received_quantity) AS sampleQuantity,srf.sample_request_id AS sampleReqId,srf.uom_id,u.uom,sr.style_id as style FROM sample_request_fabric_info srf LEFT JOIN sample_request sr ON sr.sample_request_id=srf.sample_request_id LEFT JOIN sampling_bom sb on sb.sample_request_id = srf.sample_request_id and sb.m3_item_id = srf.fabric_code and sb.colour_id = srf.colour_id LEFT JOIN m3_items mi ON mi.m3_items_Id =srf.fabric_code left join colour c on c.colour_id=srf.colour_id left join uom u on u.id = srf.uom_id  where srf.sample_request_id in ('+req.sampleReqId+') and srf.fabric_code in('+req.sampleItemId+')'
+        const query ='  SELECT srf.fabric_code as m3FabricCode, srf.colour_id as colourId,c.colour as colorName,request_no AS sampleReqNo, item_code AS itemCode,fabric_info_id AS samplereFabId,(sb.required_quantity - sb.received_quantity) AS sampleQuantity,srf.sample_request_id AS sampleReqId,srf.uom_id,u.uom,sr.style_id as style FROM sample_request_fabric_info srf LEFT JOIN sample_request sr ON sr.sample_request_id=srf.sample_request_id LEFT JOIN sampling_bom sb on sb.sample_request_id = srf.sample_request_id and sb.m3_item_id = srf.fabric_code and sb.colour_id = srf.colour_id LEFT JOIN m3_items mi ON mi.m3_items_Id =srf.fabric_code left join colour c on c.colour_id=srf.colour_id left join uom u on u.id = srf.uom_id  where srf.sample_request_id in ('+req.sampleReqId+') and srf.fabric_info_id in ('+req.sampleItemId+')'
         const rmData = await manager.query(query);
         if(rmData){
           return new CommonResponseModel(true,1,'data',rmData)
@@ -1281,7 +1281,7 @@ export class SampleRequestService {
     async getTrimDetailsOfSample(req:sampleReqIdReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-        const query ='SELECT t.trim_code as m3TrimCode,mt.trim_code AS m3TrimCodeName,t.trim_type AS trimTupe,request_no AS sampleReqNo,trim_info_id AS sampleTrimInfoId,mt.uom_id AS uomId,u.uom as uomName,(sb.required_quantity - sb.received_quantity) AS sampleOrderQuantity,t.sample_request_id AS sampleReqId,tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part,sr.style_id AS styleId FROM sample_request_trim_info t LEFT JOIN sample_request sr ON sr.sample_request_id=t.sample_request_id LEFT JOIN m3_trims mt ON mt.m3_trim_Id=t.trim_code left join uom u on u.id = mt.uom_id LEFT JOIN sampling_bom sb on sb.sample_request_id = t.sample_request_id and m3_item_id = t.trim_code LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = mt.trim_mapping_id where t.sample_request_id in ('+req.sampleReqId+') and t.trim_code in('+req.sampleItemId+')'
+        const query ='SELECT t.trim_code as m3TrimCode,mt.trim_code AS m3TrimCodeName,t.trim_type AS trimTupe,request_no AS sampleReqNo,trim_info_id AS sampleTrimInfoId,mt.uom_id AS uomId,u.uom as uomName,(sb.required_quantity - sb.received_quantity) AS sampleOrderQuantity,t.sample_request_id AS sampleReqId,tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part,sr.style_id AS styleId FROM sample_request_trim_info t LEFT JOIN sample_request sr ON sr.sample_request_id=t.sample_request_id LEFT JOIN m3_trims mt ON mt.m3_trim_Id=t.trim_code left join uom u on u.id = mt.uom_id LEFT JOIN sampling_bom sb on sb.sample_request_id = t.sample_request_id and m3_item_id = t.trim_code LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = mt.trim_mapping_id where t.sample_request_id in ('+req.sampleReqId+') and t.trim_info_id in('+req.sampleItemId+')'
         const rmData = await manager.query(query);
         if (rmData.length > 0) {
           const modifiedRes = rmData.map(item => {

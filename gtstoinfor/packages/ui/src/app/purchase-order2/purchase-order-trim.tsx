@@ -108,6 +108,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                 props(res.data)
                 setTrimTableData(res.data);
             }
+            else{
+                setTrimtableVisible(false)
+                props([])
+                setTrimTableData([]);
+            }
         })
     }
     const getColor = () => {
