@@ -232,8 +232,10 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                 fabricForm.setFieldsValue({
                     poQuantity: defaultFabricFormData.indentQuantity,
                     m3FabricCode: defaultFabricFormData.m3FabricCode,
-                    colourId: defaultFabricFormData.colourId,
+                    colourId: defaultFabricFormData.colorId,
                     colorName: defaultFabricFormData.colorName,
+                    tax: defaultFabricFormData.tax,
+                    taxAmount: defaultFabricFormData.taxAmount,
                     shahiFabricCode: defaultFabricFormData.shahiFabricCode,
                     quantityUomId: defaultFabricFormData.quantityUomId,
                     indentQuantity: defaultFabricFormData.indentQuantity,
@@ -268,7 +270,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         },
         {
             title: 'M3 Fabric Code',
-            dataIndex: 'm3FabricCodeName',
+            dataIndex: 'itemCode',
             width: '170px'
         },
         {
