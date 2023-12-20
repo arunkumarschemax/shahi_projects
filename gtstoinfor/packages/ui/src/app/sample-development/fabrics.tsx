@@ -324,7 +324,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Fabric Code',
       dataIndex: 'fabricCode',
-      width:"45%",
+      width:"50%",
       render: (_, record, index) => (
         <>
         <Form.Item name={`allocatedStock${record.key}`} style={{display:'none'}}><Input name={`allocatedStock${record.key}`} style={{display:'none'}}/></Form.Item>
@@ -495,7 +495,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Remarks',
       dataIndex: 'remarks',
-      width:"15%",
+      width:"25%",
       render: (_, record) => (
       <Form.Item name={`remarks${record.key}`}>
         <TextArea
@@ -666,7 +666,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       // expandable = {{
       //   defaultExpandAllRows : true, rowExpandable:(record)=>{console.log(record) ; return (stockData.length>0)}
       //   }}
-      scroll={{ x: 200 }}
+      scroll={{ x: true }}
       size="large"
       bordered
       />

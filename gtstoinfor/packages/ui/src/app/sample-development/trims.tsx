@@ -314,9 +314,9 @@ const getMappedTrims = (value, option) => {
     {
       title: 'Trim Code',
       dataIndex: 'trimCode',
-      width:"40%",
+      width:"50%",
       render: (_, record) => (
-        <><Form.Item name={`allocatedStock${record.key}`} ><Input name={`allocatedStock${record.key}`} style={{ display: 'none' }} /></Form.Item><Form.Item name={`trimCode${record.key}`} rules={[{ required: true, message: 'Missing Trim Code' }]}>
+        <><Form.Item name={`allocatedStock${record.key}`} style={{ display: 'none' }}><Input name={`allocatedStock${record.key}`} style={{ display: 'none' }} /></Form.Item><Form.Item name={`trimCode${record.key}`} rules={[{ required: true, message: 'Missing Trim Code' }]}>
           <Select
             value={record.trimCode}
             onChange={(e) => handleInputChange(e, record.key, 'trimCode', record)}
