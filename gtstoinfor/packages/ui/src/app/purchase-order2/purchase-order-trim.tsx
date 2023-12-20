@@ -225,7 +225,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         // },
         {
             title:'Indent Quantity',
-            dataIndex:'quantity',
+            dataIndex:'indentQuantity',
         },
         {
             title:'Po Quantity',

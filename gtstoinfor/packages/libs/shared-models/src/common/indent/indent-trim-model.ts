@@ -24,6 +24,7 @@ export class IndentTrimsModel{
     m3TrimCodeName?:string
     indentCode?:string
     poQty?:number;
+    indentQuantity?:number
   constructor(
     itrimsId: number,
     trimType: string,
@@ -47,7 +48,8 @@ export class IndentTrimsModel{
     indentTrimId?:number,
     m3TrimCodeName?:string,
     indentCode?:string,
-    poQty?:number
+    poQty?:number,
+    indentQuantity?:number
   ){
     this.itrimsId = itrimsId;
     this.trimType = trimType;
@@ -72,6 +74,8 @@ export class IndentTrimsModel{
     this.m3TrimCodeName = m3TrimCodeName
     this.indentCode = indentCode
     this.poQty = poQty
+    this.indentQuantity = indentQuantity
+
 
 
   }
