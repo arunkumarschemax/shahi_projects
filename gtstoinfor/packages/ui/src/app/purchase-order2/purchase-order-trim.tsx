@@ -161,11 +161,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         setInputDisable(true)
         trimForm.setFieldsValue({poQuantity:rowData.indentQuantity})
         trimForm.setFieldsValue({indentId:rowData.indentId})
-        trimForm.setFieldsValue({m3TrimCode:rowData.m3TrimCodeId})    
+        // trimForm.setFieldsValue({m3TrimCode:rowData.m3TrimCodeId})    
         trimForm.setFieldsValue({m3TrimCodeName:rowData.m3TrimCodeName})    
         trimForm.setFieldsValue({indentQuantity:rowData.indentQuantity})    
         trimForm.setFieldsValue({indentCode:rowData.indentCode})
-        trimForm.setFieldsValue({indentTrmId:rowData.indentTrmId})
+        trimForm.setFieldsValue({indentTrmId:rowData.indentTrimId})
         trimForm.setFieldsValue({quantityUomName:rowData?.quantityUnit})
         trimForm.setFieldsValue({quantityUomId:rowData?.quantityUnitId,})
         trimForm.setFieldsValue({styleId: rowData?.styleId})
@@ -234,7 +234,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         },
         {
             title:'Po Quantity',
-            dataIndex:'quantity',
+            dataIndex:'poQuantity',
             width:'100px'
             
         },
@@ -442,7 +442,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                     consumption : defaultTrimFormData.consumption,
                     m3TrimCode: defaultTrimFormData.m3TrimCode,
                     trimCodeName: defaultTrimFormData.trimCodeName,
-                    indentTrmId:defaultTrimFormData.indentTrmId,
+                    indentTrmId:defaultTrimFormData.indentTrimId,
                     indentQuantity:defaultTrimFormData.indentQuantity,
                     indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
                     quantityUomId:defaultTrimFormData.quantityUnitId,

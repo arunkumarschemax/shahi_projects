@@ -124,7 +124,7 @@ export class IndentService {
                 // console.log(trimModel);
 
             }
-            indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName,data.extRefNo,data.buyerId))
+            indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName,data.extRefNo,data.styleId,data.buyerId))
         }
         
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully', indentModel);
