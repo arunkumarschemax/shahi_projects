@@ -32,3 +32,4 @@ export * from './co-line-create.req';
 export * from './destinations';
 export * from './colors';
 export * from './sizes';
+export * from './month-wise-phase-wise-req'

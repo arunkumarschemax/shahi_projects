@@ -47,6 +47,7 @@ import { ColumnsType } from "antd/es/table";
     const [excelsData, setExcelData] = useState<any[]>([]);
     const { Text } = Typography;
     const [comuns, setColumns] =useState([])
+    const [tableData, setTableData] = useState<any[]>([])
     useEffect(() => {
         console.log(selected, tab)
       getData(selected, tab);
@@ -95,14 +96,14 @@ import { ColumnsType } from "antd/es/table";
     //       setData([]);
     //     }
     //   });
-      // service.getPhaseMonthData(req).then((res) => {
-      //   // console.log(res,"*********")
-      //   if (res.status) {
-      //     setPhase(res.data);
-      //   } else {
-      //     setPhase([]);
-      //   }
-      // });
+      service.getPhaseMonthExcelDataNew(req).then((res) => {
+        // console.log(res,"*********")
+        if (res.status) {
+          setPhase(res.data);
+        } else {
+          setPhase([]);
+        }
+      });
     //   service.getPhaseMonthExcelData(req).then((res) => {
     //     // console.log(res, "res==========");
     //     if (res.status) {
