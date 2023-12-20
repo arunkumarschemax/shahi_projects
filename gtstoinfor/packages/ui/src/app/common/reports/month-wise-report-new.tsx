@@ -24,7 +24,7 @@ import {
   import { useEffect, useState } from "react";
   import { OrdersService } from "@project-management-system/shared-services";
   import React from "react";
-  import { YearReq, orders } from "@project-management-system/shared-models";
+  import { NewMonthWiseDto, NewitemDataDto, YearReq, orders } from "@project-management-system/shared-models";
   import { Excel } from "antd-table-saveas-excel";
   import { IExcelColumn } from "antd-table-saveas-excel/app";
   import "./comparision-report.css";
@@ -51,6 +51,7 @@ import { ColumnsType } from "antd/es/table";
         console.log(selected, tab)
       getData(selected, tab);
       getTabs();
+      getSizeWiseHeaders(data)
     }, []);
    
    
@@ -130,9 +131,15 @@ import { ColumnsType } from "antd/es/table";
       form.resetFields();
       getData(selected, tab);
     };
+
     const renderCellData = (data) => {
       return data ? data : "-";
     };
+
+    const productionPlanColumn:ColumnsType<any> =[
+     
+    ]
+
     const columns: ColumnsType<any> = [
       {
         title: "#",
@@ -145,28 +152,87 @@ import { ColumnsType } from "antd/es/table";
       {
         title: 'Planning Sum',
         dataIndex: "itemName",
-        width: "200px",
+        width: "0px",
         // ellipsis: true,
       },
       {
         title: <div style={{ textAlign: "center" }}>Production Plan Type</div>,
-        dataIndex: "sm",
-        key: "sm",
+        dataIndex: "monthWiseData",
+        key: "monthWiseData",
         align: "center",
+        width:'10px',
         render: (monthWiseData, text) => {
           renderCellData(text);
-          console.log(monthWiseData)
           return (
-
-          
-           ''
-       
+            <Table
+              dataSource={monthWiseData}
+              // columns={productionPlanColumn}
+              children
+              columns={[
+                {
+                  dataIndex: "phaseType",
+                  key: "phaseType",
+                  align: "center",
+                  // children:[{
+                  //   title:'data'
+                  // }]
+                },
+              
+              ]}
+              pagination={false}
+            />
           );
         },
       },
-    
+      {
+        title: 'Planning Sum',
+        dataIndex: "itemName",
+        width: "0px",
+        // ellipsis: true,
+      },
     ];
   
+    const getSizeWiseHeaders = (data: NewitemDataDto[]) => {
+      const sizeHeaders = new Set<string>();
+      data?.forEach((rec) =>
+        rec.monthWiseData?.forEach((version) => {
+          version.pcsData?.forEach((pc =>{
+          sizeHeaders.add("" + pc.monthName);
+          }))
+          
+        })
+      );
+      return Array.from(sizeHeaders);
+    };
+
+    const sizeHeaders = getSizeWiseHeaders(data);
+    console.log(sizeHeaders)
+    
+     sizeHeaders?.forEach((version) => {
+      productionPlanColumn.push({
+      title: version,
+      dataIndex: version,
+      key: version,
+      width: "110px",
+      align: "right",
+      render: (text, record) => {
+          const sizeData = record.MonthItemData.find(
+            (item) => item.monthName === version
+          );
+          if (sizeData) {
+            if (sizeData.monthName ) {
+              const formattedQty = sizeData?.totalQuantity;
+              return formattedQty;
+            } else {
+              return "-";
+            }
+          } else {
+            return "-";
+          }
+        }
+    });
+  });
+
     return (
       <>
         <Card>
@@ -303,7 +369,7 @@ import { ColumnsType } from "antd/es/table";
                   </Form>
                   <Table
                     bordered={false}
-                    dataSource={filteredData}
+                    dataSource={data}
                     columns={columns}
                     size="small"
                     scroll={{ x: "max-content",y:500 }}
