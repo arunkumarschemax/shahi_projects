@@ -46,7 +46,7 @@ import { ColumnsType } from "antd/es/table";
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const [excelsData, setExcelData] = useState<any[]>([]);
     const { Text } = Typography;
-  
+    const [comuns, setColumns] =useState([])
     useEffect(() => {
         console.log(selected, tab)
       getData(selected, tab);
@@ -155,6 +155,7 @@ import { ColumnsType } from "antd/es/table";
         width: "0px",
         // ellipsis: true,
       },
+    
       {
         title: <div style={{ textAlign: "center" }}>Production Plan Type</div>,
         dataIndex: "monthWiseData",
@@ -173,25 +174,19 @@ import { ColumnsType } from "antd/es/table";
                   dataIndex: "phaseType",
                   key: "phaseType",
                   align: "center",
-                  // children:[{
-                  //   title:'data'
-                  // }]
                 },
-              
+          
+               
               ]}
               pagination={false}
             />
           );
         },
       },
-      {
-        title: 'Planning Sum',
-        dataIndex: "itemName",
-        width: "0px",
-        // ellipsis: true,
-      },
     ];
-  
+
+    // columns.push(...sizeColumns);
+
     const getSizeWiseHeaders = (data: NewitemDataDto[]) => {
       const sizeHeaders = new Set<string>();
       data?.forEach((rec) =>
@@ -206,8 +201,37 @@ import { ColumnsType } from "antd/es/table";
     };
 
     const sizeHeaders = getSizeWiseHeaders(data);
-    console.log(sizeHeaders)
-    
+   
+
+
+    const generateSizeColumns = (): ColumnsType<any> => {
+      const sizeColumns: ColumnsType<any> = sizeHeaders.map((header) => ({
+        title: header,
+        dataIndex: header,
+        key: header,
+        align: 'center',
+        // You can add additional configurations or rendering logic as needed
+      }));
+      return sizeColumns;
+    };
+    const sizeColumns = generateSizeColumns();
+   columns.push(...sizeColumns);
+
+
+
+    // const sizeColumns: ColumnsType<any> = [];
+
+// Dynamically generate columns based on sizeHeaders
+      sizeHeaders.forEach((header) => {
+        sizeColumns.push({
+          title: header,
+          dataIndex: header,
+          key: header,
+          align: 'center',
+          // You can add additional configurations or rendering logic as needed
+        });
+      });
+
      sizeHeaders?.forEach((version) => {
       productionPlanColumn.push({
       title: version,
