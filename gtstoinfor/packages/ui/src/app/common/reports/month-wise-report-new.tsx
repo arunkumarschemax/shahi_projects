@@ -152,7 +152,7 @@ import { ColumnsType } from "antd/es/table";
       {
         title: 'Planning Sum',
         dataIndex: "itemName",
-        width: "0px",
+        width: "100px",
         // ellipsis: true,
       },
     
