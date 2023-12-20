@@ -15,10 +15,10 @@ export class MaterialAllocationItemsDTO {
       stockId: number
 
      @ApiProperty()
-     locationId: number
+     LocationId: number
 
      @ApiProperty()
-     allocateQuantity: number
+     allocatioQuantity: number
 
      @ApiProperty()
      createdUser: string | null;

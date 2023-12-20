@@ -200,6 +200,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
             fabricForm.setFieldsValue({ quantityUomId: rowData.uom_id })
             fabricForm.setFieldsValue({ quantityUom: rowData.uom })
+            fabricForm.setFieldsValue({ styleId: rowData.style })
 
 
         }

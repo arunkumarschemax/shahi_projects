@@ -1,3 +1,5 @@
+import { allocateMaterialItems } from "./allocate-material-items-request";
+
 export class Allocatematerial{
     itemType: string;
     sampleOrderId:number
@@ -14,6 +16,9 @@ export class Allocatematerial{
 //    status: MaterialStatusEnum;
     createdUser: string | null;
     updatedUser: string | null;
+    allocatedItems:allocateMaterialItems[]
+    toBeProcured:number
+    samplingBomId:number
     
     constructor(
         itemType: string,
@@ -25,11 +30,15 @@ export class Allocatematerial{
         LocationId:number,
         buyerId:number,
         allocatioQuantity:number,
+        allocatedItems:allocateMaterialItems[],
+        toBeProcured:number,
+        samplingBomId:number,
         checkedStatus?:boolean,
         issuedQty?:number,
     //    status: MaterialStatusEnumnumber,
         createdUser?: string ,
         updatedUser?: string ,
+
     ){
         this.itemType=itemType
         this.sampleOrderId=sampleOrderId
@@ -44,6 +53,11 @@ export class Allocatematerial{
         this.issuedQty=issuedQty
         this.createdUser=createdUser
         this.updatedUser=updatedUser
+        this.allocatedItems = allocatedItems
+        this.toBeProcured = toBeProcured
+        this.samplingBomId = samplingBomId
+
+
 
     }
 
