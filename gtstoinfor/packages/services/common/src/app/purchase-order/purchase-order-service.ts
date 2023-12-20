@@ -228,7 +228,7 @@ export class PurchaseOrderService {
                     WHERE poi.purchase_order_id = ${req.poId}`
                 }
             }
-            if (req.materialType === 'Trim') {
+            else {
                 query = `SELECT mt.trim_code as m3itemCode,
                 mt.category_id AS categoryId,cg.category,
                 mt.color_id AS colorId,cl.colour as color,
@@ -284,7 +284,7 @@ export class PurchaseOrderService {
                 }
                 if (req.poAgainst == 'Sample Order') {
                     query = query + `
-                     LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id  = poi.sample_item_id   
+                     LEFT JOIN sample_request_trim_info srf ON srf.trim_info_id  = poi.sample_item_id   
                      LEFT JOIN sample_request sr ON sr.sample_request_id  = srf.sample_request_id
                      WHERE poi.purchase_order_id = ${req.poId}`
                 }
