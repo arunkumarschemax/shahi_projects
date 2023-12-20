@@ -319,12 +319,13 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'S.No',
       dataIndex: 'sNo',
+      width:"10%",
       render: (_, record, index) => index + 1,
     },
     {
       title: 'Fabric Code',
       dataIndex: 'fabricCode',
-      width:"45%",
+      width:"100%",
       render: (_, record, index) => (
         <>
         <Form.Item name={`allocatedStock${record.key}`} style={{display:'none'}}><Input name={`allocatedStock${record.key}`} style={{display:'none'}}/></Form.Item>
@@ -366,7 +367,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Color',
       dataIndex: 'color',
-      width:"15%",
+      width:"25%",
       render: (_, record) => (
         <>
         <Form.Item name={`colorId${record.key}`}
@@ -398,7 +399,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Consumption',
       dataIndex: 'consumption',
-      width:"12%",
+      width:"15%",
       render: (_, record) => (
         <Form.Item name={`consumption${record.key}`}
         rules={[{ required: true, message: 'Missing Consumption' }]}
@@ -436,7 +437,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title:"UOM",
       dataIndex: 'UomId',
-      width:"10%",
+      width:"13%",
       render: (_, record) => (
         <Form.Item name={`uomId${record.key}`}
         rules={[{ required: true, message: 'Missing UOM' }]}
@@ -465,7 +466,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Wastage %',
       dataIndex: 'wastage',
-      width:"12%",
+      width:"15%",
       render: (_, record) => (
       <Form.Item name={`wastage${record.key}`} initialValue={2} 
       rules={[{ required: true, message: 'Missing Wastage' }]}
@@ -480,7 +481,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Total Requirement',
       dataIndex: 'totalRequirement',
-      width:"10%",
+      width:"15%",
       render: (_, record) => (
       <Form.Item name={`totalRequirement${record.key}`} 
       rules={[{ required: true, message: 'Missing Total Requirement' }]}
@@ -495,7 +496,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Remarks',
       dataIndex: 'remarks',
-      width:"15%",
+      width:"40%",
       render: (_, record) => (
       <Form.Item name={`remarks${record.key}`}>
         <TextArea
@@ -666,7 +667,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       // expandable = {{
       //   defaultExpandAllRows : true, rowExpandable:(record)=>{console.log(record) ; return (stockData.length>0)}
       //   }}
-      scroll={{ x: 200 }}
+      scroll={{ x: 1500 }}
       size="large"
       bordered
       />

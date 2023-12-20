@@ -119,6 +119,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                 setFabricTableVisible(true)
             } else {
                 setFabricTableData([])
+                setFabricTableVisible(false)
             }
         })
     }

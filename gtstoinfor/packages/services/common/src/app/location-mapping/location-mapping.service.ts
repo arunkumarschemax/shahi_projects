@@ -381,17 +381,20 @@ export class LocationMappingService {
                             let allocateStock = await manager.getRepository(MaterialAllocationEntity).save(materialAllocationEntity);
                             console.log(allocateStock)
                             if(allocateStock.materialAllocationId > 0){
+                                const bomQuery = "select * from sampling_bom where sample_request_id = "+grnDetails[0].sampleOrderId+" and status != '"+BomStatusEnum.ALLOCATED+"'";
+                                let getBomStatus = await manager.query(bomQuery)
+                                // let getBomStatus = await manager.getRepository(SamplingbomEntity).find({where:{sampleRequestId:grnDetails[0].sampleOrderId,status: Not(BomStatusEnum.ALLOCATED)}});
                                 let updateBomStatus
                                 if(req.item_type === "Fabric"){
-                                    updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item,colourId:req.colorId},{status: `${BomStatusEnum.ALLOCATED}`});
+                                    updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item,colourId:req.colorId},{receivedQuantity : () => `received_quantity + ${req.quantity}`,status: `${BomStatusEnum.ALLOCATED}`});
                                 }
                                 else{
-                                    updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item},{status: `${BomStatusEnum.ALLOCATED}`});
+                                    updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item},{receivedQuantity : () => `received_quantity + ${req.quantity}`,status: `${BomStatusEnum.ALLOCATED}`});
                                 }
                                 
                                 if(updateBomStatus.affected > 0){
-                                    let getBomStatus = await manager.getRepository(SamplingbomEntity).find({where:{sampleRequestId:grnDetails[0].sampleOrderId,status: Not(BomStatusEnum.ALLOCATED)}});
-                                    if(getBomStatus.length < 1){
+                                    
+                                    if(Number(getBomStatus.length) - Number(1) < 1){
                                         let updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:grnDetails[0].sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION});
                                         if(updateSampleOrderStatus.affected > 0){
                                             let updateAllocatedStock = await manager.getRepository(MaterialAllocationEntity).update({sampleOrderId:grnDetails[0].sampleOrderId},{status:MaterialStatusEnum.READY_FOR_PRODUCTION})
