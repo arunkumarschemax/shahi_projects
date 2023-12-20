@@ -185,7 +185,6 @@ import { ColumnsType } from "antd/es/table";
       },
     ];
 
-    // columns.push(...sizeColumns);
 
     const getSizeWiseHeaders = (data: NewitemDataDto[]) => {
       const sizeHeaders = new Set<string>();
@@ -210,6 +209,17 @@ import { ColumnsType } from "antd/es/table";
         dataIndex: header,
         key: header,
         align: 'center',
+        children:[
+          {
+          title:'in Pcs',
+          dataIndex:'inPcs',
+          key:'inpcs'
+        },
+        {
+          title:'Coeff Pcs',
+          dataIndex:'exfpcs'
+        }
+      ]
         // You can add additional configurations or rendering logic as needed
       }));
       return sizeColumns;
@@ -232,30 +242,30 @@ import { ColumnsType } from "antd/es/table";
         });
       });
 
-     sizeHeaders?.forEach((version) => {
-      productionPlanColumn.push({
-      title: version,
-      dataIndex: version,
-      key: version,
-      width: "110px",
-      align: "right",
-      render: (text, record) => {
-          const sizeData = record.MonthItemData.find(
-            (item) => item.monthName === version
-          );
-          if (sizeData) {
-            if (sizeData.monthName ) {
-              const formattedQty = sizeData?.totalQuantity;
-              return formattedQty;
-            } else {
-              return "-";
-            }
-          } else {
-            return "-";
-          }
-        }
-    });
-  });
+  //    sizeHeaders?.forEach((version) => {
+  //     productionPlanColumn.push({
+  //     title: version,
+  //     dataIndex: version,
+  //     key: version,
+  //     width: "110px",
+  //     align: "right",
+  //     render: (text, record) => {
+  //         const sizeData = record.MonthItemData.find(
+  //           (item) => item.monthName === version
+  //         );
+  //         if (sizeData) {
+  //           if (sizeData.monthName ) {
+  //             const formattedQty = sizeData?.totalQuantity;
+  //             return formattedQty;
+  //           } else {
+  //             return "-";
+  //           }
+  //         } else {
+  //           return "-";
+  //         }
+  //       }
+  //   });
+  // });
 
     return (
       <>
