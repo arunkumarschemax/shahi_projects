@@ -597,8 +597,8 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.productCode !== undefined) {
             query.andWhere(`dpom.product_code ='${req.productCode}'`)
         }
-        if (req.poNumber !== undefined) {
-            query.andWhere(`dpom.po_number ='${req.poNumber}'`)
+        if (req.poNumber !== undefined && req.poNumber.length > 0) {
+            query.andWhere(`dpom.po_number IN (:...ponumbers)`, { ponumbers: req.poNumber })
         }
         if (req.colorDesc !== undefined) {
             query.andWhere(`dpom.color_desc ='${req.colorDesc}'`)
@@ -612,8 +612,8 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.plant !== undefined) {
             query.andWhere(`dpom.plant ='${req.plant}'`)
         }
-        if (req.item !== undefined) {
-            query.andWhere(` LEFT(dpom.item, 4) ='${req.item}'`)
+        if (req.item !== undefined && req.item.length > 0) {
+            query.andWhere(` LEFT(dpom.item, 4) IN (:...items)`, { items: req.item })
         }
         if (req.factory !== undefined) {
             query.andWhere(`dpom.factory ='${req.factory}'`)
@@ -621,8 +621,8 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.docTypeCode !== undefined) {
             query.andWhere(`dpom.doc_type_code ='${req.docTypeCode}'`)
         }
-        if (req.poLineItemNumber !== undefined) {
-            query.andWhere(`dpom.po_line_item_number ='${req.poLineItemNumber}'`)
+        if (req.poLineItemNumber !== undefined && req.poLineItemNumber.length > 0) {
+            query.andWhere(`dpom.po_line_item_number IN (:...lineItemNumbers)`, { lineItemNumbers: req.poLineItemNumber })
         }
         if (req.styleNumber !== undefined) {
             query.andWhere(`dpom.style_number ='${req.styleNumber}'`)

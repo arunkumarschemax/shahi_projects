@@ -281,6 +281,7 @@ const PPMReport = () => {
     if (form.getFieldValue('gac') !== undefined) {
       req.gacEndDate = (form.getFieldValue('gac')[1]).format('YYYY-MM-DD');
     }
+    console.log(req.DPOMLineItemStatus)
     setTableLoading(true)
     service.getPPMData(req)
       .then(res => {
@@ -3204,7 +3205,7 @@ const PPMReport = () => {
 
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
               <Form.Item name='item' label='Item' >
-                <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear>
+                <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear mode='multiple'>
                   {item?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
                   })}
@@ -3240,6 +3241,7 @@ const PPMReport = () => {
                   placeholder="Select Po Number"
                   optionFilterProp="children"
                   allowClear
+                  mode='multiple'
                 >
                   {poNumber?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
@@ -3255,6 +3257,7 @@ const PPMReport = () => {
                   placeholder="Select poLineItemNumber"
                   optionFilterProp="children"
                   allowClear
+                  mode='multiple'
                 >
                   {poLineItemNumber?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.po_line_item_number}>{inc.po_line_item_number}</Option>
