@@ -1135,83 +1135,71 @@ export class OrdersService {
     }
 
     async getMonthWiseReportDataNew(req:YearReq): Promise<CommonResponseModel>{
-        console.log(req,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+        // console.log(req,'$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+        const detailedarray: NewitemDataDto[] = [];
+
         const data = await this.ordersRepository.getMonthWiseReportDataNew(req);
         if(data.length == 0){
             return new CommonResponseModel(false, 0, 'data not found')
         }
-        const datamap = new Map<string, NewitemDataDto>();
         const itemPhaseTypeYearWiseMap = new Map<string, Map<string, pcsData[]>>();
-        // itemName =>  phase type => moth wise consumption
-        // const datamap = new Map<string, Map<string,NewitemDataDto >>()
-
-        for(const rec of data){
-            if(!itemPhaseTypeYearWiseMap.has(rec.planning_sum)){
-                itemPhaseTypeYearWiseMap.set(rec.planning_sum, new Map<string, pcsData[]>())
+        
+        if(req.tabName === 'ExFactory'){
+            for(const rec of data){
+                if(!itemPhaseTypeYearWiseMap.has(rec.planning_sum)){
+                    itemPhaseTypeYearWiseMap.set(rec.planning_sum, new Map<string, pcsData[]>())
+                }
+                if(!itemPhaseTypeYearWiseMap.get(rec.planning_sum).has(rec.prod_plan_type)){
+                    itemPhaseTypeYearWiseMap.get(rec.planning_sum).set(rec.prod_plan_type, []);
+                }
+                const exfpc = {
+                    monthName:rec.exfMonthName,
+                    inPcs:rec.exfPcs,
+                    inCoeffPcs:rec.exfCoeff
+                }
+                itemPhaseTypeYearWiseMap.get(rec.planning_sum).get(rec.prod_plan_type).push(exfpc);
             }
-            if(!itemPhaseTypeYearWiseMap.get(rec.planning_sum).has(rec.prod_plan_type)){
-                itemPhaseTypeYearWiseMap.get(rec.planning_sum).set(rec.prod_plan_type, []);
+    
+            itemPhaseTypeYearWiseMap.forEach((yearRecs, item) => {
+                const monthWiseDtoArray: NewMonthWiseDto[] = [];
+                yearRecs.forEach( (yr, phaseType) => {
+                    const  exfData = new NewMonthWiseDto(phaseType, []);
+                    yr.forEach(mData => {
+                        exfData.pcsData.push(mData);
+                    });
+                    monthWiseDtoArray.push(exfData);
+                });
+                detailedarray.push(new NewitemDataDto(item,monthWiseDtoArray));
+            });    
+        }
+        if(req.tabName === 'WareHouse'){
+            for(const rec of data){
+                if(!itemPhaseTypeYearWiseMap.has(rec.planning_sum)){
+                    itemPhaseTypeYearWiseMap.set(rec.planning_sum, new Map<string, pcsData[]>())
+                }
+                if(!itemPhaseTypeYearWiseMap.get(rec.planning_sum).has(rec.prod_plan_type)){
+                    itemPhaseTypeYearWiseMap.get(rec.planning_sum).set(rec.prod_plan_type, []);
+                }
+                const whpc = {
+                    monthName:rec.whMonthName,
+                    inPcs:rec.whPcs,
+                    inCoeffPcs:rec.whCoeff
+                }
+                itemPhaseTypeYearWiseMap.get(rec.planning_sum).get(rec.prod_plan_type).push(whpc);
             }
-            const exfpc = {
-                monthName:rec.exfMonthName,
-                inPcs:rec.exfPcs,
-                inCoeffPcs:rec.exfCoeff
-            }
-            itemPhaseTypeYearWiseMap.get(rec.planning_sum).get(rec.prod_plan_type).push(exfpc);
+            itemPhaseTypeYearWiseMap.forEach((yearRecs, item) => {
+                const monthWiseDtoArray:NewMonthWiseDto[] =[];
+                yearRecs.forEach((yr, phaseType) =>{
+                    const  whData = new NewMonthWiseDto(phaseType, []);
+                    yr.forEach(mData =>{
+                        whData.pcsData.push(mData)
+                    });
+                    detailedarray.push(new NewitemDataDto(item,monthWiseDtoArray))
+                })
+            })
         }
 
-        const detailedarray: NewitemDataDto[] = [];
-        itemPhaseTypeYearWiseMap.forEach((yearRecs, item) => {
-            const monthWiseDtoArray: NewMonthWiseDto[] = [];
-            yearRecs.forEach( (yr, phaseType) => {
-                const  exfData = new NewMonthWiseDto(phaseType, []);
-                yr.forEach(mData => {
-                    exfData.pcsData.push(mData);
-                });
-                monthWiseDtoArray.push(exfData);
-            });
-            detailedarray.push(new NewitemDataDto(item,monthWiseDtoArray));
-        });
-
-        return new CommonResponseModel(true,1,'Data retrived',detailedarray)
-        // // const detailedarray:NewitemDataDto[]=[]
-        // // datamap.forEach(res =>res.forEach(item =>detailedarray.push(item)))
-        
-        // for(const rec of data){
-        //     if(req.tabName === 'ExFactory'){
-        //         if(!datamap.has(rec.planning_sum)) {
-        //             datamap.set(rec.planning_sum, 
-        //                 new NewitemDataDto(rec.planning_sum,[]))
-        //         }
-        //         const monthInstance = datamap.get(rec.planning_sum).monthWiseData;
-        //         const exfpc :pcsData[] =[];
-        //         exfpc.push({
-        //             monthName:rec.exfMonthName,
-        //             inPcs:rec.exfPcs,
-        //             inCoeffPcs:rec.exfCoeff
-        //         })
-        //         const  exfData = new NewMonthWiseDto(rec.prod_plan_type,exfpc)
-        //         monthInstance.push(exfData)
-        //         // console.log(monthInstance,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
-        //     }
-        //     if(req.tabName === 'WareHouse'){
-        //         if(!datamap.has(rec.planning_sum)){
-        //             datamap.set(rec.planning_sum,new NewitemDataDto(rec.planning_sum,[]))
-        //         }
-        //         const whMonthInfo = datamap.get(rec.planning_sum).monthWiseData
-        //         const whpcs:pcsData[]=[];
-        //         whpcs.push({
-        //             monthName:rec.whMonthName,
-        //             inPcs:rec.whPcs,
-        //             inCoeffPcs:rec.whCoeff
-        //         })
-        //         const whdata = new NewMonthWiseDto(rec.prod_plan_type,whpcs)
-        //         whMonthInfo.push(whdata)
-        //     }  
-        // }
-        // // const detailedarray: NewitemDataDto[] = Array.from(datamap.values());
-        // console.log(detailedarray,'$$$$$$$$$$$$$$$$$$$$$')
-        // return new CommonResponseModel(true,1,'Data retrived',detailedarray)
+        return new CommonResponseModel(true,1,'Data retrived',detailedarray)     
     }
 
 
