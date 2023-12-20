@@ -79,6 +79,7 @@ import { ColumnsType } from "antd/es/table";
       const req = new YearReq( tabName,val);
      service.getMonthWiseReportDataNew(req).then((res) => {
         if (res.status) {
+          console.log(res.data)
           setData(res.data);
           setFilteredData(res.data);
         } else {
@@ -129,7 +130,9 @@ import { ColumnsType } from "antd/es/table";
       form.resetFields();
       getData(selected, tab);
     };
-
+    const renderCellData = (data) => {
+      return data ? data : "-";
+    };
     const columns: ColumnsType<any> = [
       {
         title: "#",
@@ -145,10 +148,25 @@ import { ColumnsType } from "antd/es/table";
         width: "200px",
         // ellipsis: true,
       },
+      {
+        title: <div style={{ textAlign: "center" }}>Production Plan Type</div>,
+        dataIndex: "sm",
+        key: "sm",
+        align: "center",
+        render: (monthWiseData, text) => {
+          renderCellData(text);
+          console.log(monthWiseData)
+          return (
+
+          
+           ''
+       
+          );
+        },
+      },
     
     ];
   
- 
     return (
       <>
         <Card>
