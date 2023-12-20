@@ -117,40 +117,40 @@ const SampleRequestReport = () => {
     return data ? data : "-";
   };
 
-  const ItemColumns: any = [
-    {
-      title: "Material Type",
-      dataIndex: "fabricType",
-      key: "fabricType",
-      align: "center",
-    },
-    {
-      title: "Item Name",
-      dataIndex: "itemCode",
-      key: "itemCode",
-      align: "center",
-    },
-    {
-      title: "Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
-      align: "center",
-    },
-    {
-      title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
-      dataIndex: "sm",
-      key: "sm",
-      align: "center",
-      render: (text, rowData, index) => { 
-        return(
-          <Checkbox 
-          onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, text, rowData)}
+  // const ItemColumns: any = [
+  //   {
+  //     title: "Material Type",
+  //     dataIndex: "fabricType",
+  //     key: "fabricType",
+  //     align: "center",
+  //   },
+  //   {
+  //     title: "Item Name",
+  //     dataIndex: "itemCode",
+  //     key: "itemCode",
+  //     align: "center",
+  //   },
+  //   {
+  //     title: "Quantity",
+  //     dataIndex: "quantity",
+  //     key: "quantity",
+  //     align: "center",
+  //   },
+  //   {
+  //     title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
+  //     dataIndex: "sm",
+  //     key: "sm",
+  //     align: "center",
+  //     render: (text, rowData, index) => { 
+  //       return(
+  //         <Checkbox  name={rowData.samplingBomId}
+  //         onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, text, rowData)}
          
-        />
-        )
-      }
-    }
-  ]
+  //       />
+  //       )
+  //     }
+  //   }
+  // ]
   const Columns: any = [
     {
       title: "Request No",
@@ -286,7 +286,7 @@ const SampleRequestReport = () => {
   ];
 
   const generatePo =()=>{
-    navigate("/purchase-order", { state: { data: selectedItems, type:'Sampling'  } });
+    // navigate("/purchase-order", { state: { data: selectedItems, type:'Sampling'  } });
   }
   
   const dataa=[];
@@ -302,16 +302,19 @@ const SampleRequestReport = () => {
 
     if(e.target.checked){
       
-      let rowsData = [...selectedRowData,rowData]
-      setSelectedRowData(rowsData)
       let checkItemType:boolean = true;
       checkItemType = (selectedRowData.find((rec) => rec.fabricType != fabricType) != undefined) ? false: true;
       console.log(checkItemType)
       if(!checkItemType){
+        samplingPO.setFieldValue([rowData.samplingBomId],"false")
         AlertMessages.getErrorMessage('Generate PO for single Material Type. ')
         setbtnEnable(false)
       }
-      setbtnEnable(true)
+      else{
+        let rowsData = [...selectedRowData,rowData];
+        setSelectedRowData(rowsData)
+        setbtnEnable(true)
+      }
       console.log(data)
     }
     else{
