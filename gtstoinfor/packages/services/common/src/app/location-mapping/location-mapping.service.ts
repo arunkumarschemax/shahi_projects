@@ -409,6 +409,9 @@ export class LocationMappingService {
                                             return new CommonResponseModel(false, 10005, "Data not posted");
                                         }
                                     }
+                                    else{
+                                        return new CommonResponseModel(true, 1111, "Data posted Succesufully");
+                                    }
                                 }
                                 else {
                                     return new CommonResponseModel(false, 10005, "Data not posted");
