@@ -137,9 +137,7 @@ import { ColumnsType } from "antd/es/table";
       return data ? data : "-";
     };
 
-    const productionPlanColumn:ColumnsType<any> =[
-     
-    ]
+
 
     const columns: ColumnsType<any> = [
       {
@@ -176,8 +174,6 @@ import { ColumnsType } from "antd/es/table";
                   key: "phaseType",
                   align: "center",
                 },
-          
-               
               ]}
               pagination={false}
             />
@@ -228,45 +224,16 @@ import { ColumnsType } from "antd/es/table";
     const sizeColumns = generateSizeColumns();
    columns.push(...sizeColumns);
 
-
-
-    // const sizeColumns: ColumnsType<any> = [];
-
-// Dynamically generate columns based on sizeHeaders
       sizeHeaders.forEach((header) => {
         sizeColumns.push({
           title: header,
           dataIndex: header,
           key: header,
+          width:'150px',
           align: 'center',
-          // You can add additional configurations or rendering logic as needed
         });
       });
 
-  //    sizeHeaders?.forEach((version) => {
-  //     productionPlanColumn.push({
-  //     title: version,
-  //     dataIndex: version,
-  //     key: version,
-  //     width: "110px",
-  //     align: "right",
-  //     render: (text, record) => {
-  //         const sizeData = record.MonthItemData.find(
-  //           (item) => item.monthName === version
-  //         );
-  //         if (sizeData) {
-  //           if (sizeData.monthName ) {
-  //             const formattedQty = sizeData?.totalQuantity;
-  //             return formattedQty;
-  //           } else {
-  //             return "-";
-  //           }
-  //         } else {
-  //           return "-";
-  //         }
-  //       }
-  //   });
-  // });
 
     return (
       <>
