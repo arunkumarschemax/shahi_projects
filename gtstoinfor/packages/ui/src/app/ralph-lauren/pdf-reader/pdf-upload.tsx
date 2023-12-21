@@ -102,54 +102,23 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
         setResultProps(resultProps)
     }
 
-    function renderDiaForm() {
-        return (
-            <Form form={diaPDfForm} initialValues={diaPDFValues} layout='vertical'>
-                <Row gutter={24} justify={'center'}>
-                    <Col span={4}>
-                        <Form.Item name={'poNumber'} label='PO Numnber'>
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                    <Col span={4}>
-                        <Form.Item name={'lineNo'} label='Line item No'>
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                    <Col span={4}>
-                        <Form.Item name={'cabCode'} label='CAB code'>
-                            <Input />
-                        </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                        <Form.Item name={'shipToAddress'} label='Ship to address'>
-                            <Input.TextArea rows={4} />
-                        </Form.Item>
-                    </Col>
-                </Row>
-            </Form>
-        )
-    }
-
     const savePdfFields = () => {
         rlService.saveOrdersDataFromPDF(poPdfData).then((res) => {
-            console.log(res,"iiiii")
             if (res.status) {
                 onReset()
-                if (fileList){
-                const formData = new FormData();
+                if (fileList) {
+                    const formData = new FormData();
                     fileList.forEach((file: any) => {
                         formData.append('file', file);
                         formData.append('PoNumber', poPdfData?.poNumber);
-                      })
-                      console.log(formData,"form")
-                      rlService.fileUpload(formData).then((res) => {
-                        if(res.status){
+                    })
+                    console.log(formData, "form")
+                    rlService.fileUpload(formData).then((res) => {
+                        if (res.status) {
                             message.success(res.internalMessage)
                         }
-                      })    
+                    })
                 }
-
                 // alert(res.internalMessage)
                 message.success(res.internalMessage)
             } else {
@@ -158,7 +127,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
         })
     }
 
-  console.log(poPdfData?.poNumber,"addddddddd")
+    console.log(poPdfData?.poNumber, "addddddddd")
 
     function onReset() {
         setFileList([]);

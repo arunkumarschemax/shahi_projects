@@ -15,6 +15,6 @@ export class RLPoDetails {
     poIssue: string;
     poContact: string;
     dateSent: string;
-    shipToAddress: string
+    shipToAddress: string;
     poItemDetails: PoItemDetails[]
 }

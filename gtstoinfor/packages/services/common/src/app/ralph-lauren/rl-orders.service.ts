@@ -21,6 +21,7 @@ export class RLOrdersService {
     private pdfrepo: PdfFileUploadRepository,
     private coLineRepo: COLineRepository,
     private dataSource: DataSource,
+    // private addressService: 
 
   ) { }
 
@@ -29,62 +30,51 @@ export class RLOrdersService {
     try {
       let saved
       await transactionManager.startTransaction()
-      const flag = new Set();
       for (const item of req.poItemDetails) {
         const match = item.poItem.match(/\d+/);
         // Check if a match is found and convert it to an integer
         const poItem = match ? parseInt(match[0], 10) : null;
         for (const variant of item.poItemVariantDetails) {
           const orderData = await this.rlOrdersRepo.findOne({ where: { poNumber: req.poNumber, poItem: poItem, size: variant.size } })
+
+          const entity = new RLOrdersEntity()
+          entity.agent = req.agent
+          entity.amount = variant.amount
+          entity.boardCode = item.board
+          entity.buyer = 'RL'
+          entity.color = item.colorDescription
+          entity.currency = variant.currency
+          entity.materialNo = item.materialNo
+          entity.poItem = poItem
+          entity.poNumber = req.poNumber
+          entity.poUploadDate = req.poIssue
+          entity.price = variant.unitPrice
+          entity.purchaseGroup = req.purchaseGroup
+          entity.quantity = variant.quantity
+          entity.revisionNo = req.revisionNo
+          entity.seasonCode = item.season
+          entity.handoverDate = item.handoverDate
+          entity.shipToAddress = req.shipToAddress
+          entity.billToAddress = req.buyerAddress
+          entity.size = variant.size
+          entity.status = 'Revised'
+          entity.upcEan = variant.upc
           if (orderData) {
             const update = await transactionManager.getRepository(RLOrdersEntity).update({ poNumber: req.poNumber, poItem: poItem, size: variant.size }, { revisionNo: req.revisionNo, agent: req.agent, amount: variant.amount, price: variant.unitPrice, currency: variant.currency, materialNo: item.materialNo, shipToAddress: req.shipToAddress })
             if (!update.affected) {
-              flag.add(false)
-              await transactionManager.releaseTransaction();
-              break;
-            } else {
-              continue;
+              throw new Error('Update failed');
             }
           } else {
-            const entity = new RLOrdersEntity()
-            entity.agent = req.agent
-            entity.amount = variant.amount
-            entity.boardCode = item.board
-            entity.buyer = 'RL'
-            entity.color = item.colorDescription
-            entity.currency = variant.currency
-            entity.materialNo = item.materialNo
-            entity.poItem = poItem
-            entity.poNumber = req.poNumber
-            entity.poUploadDate = req.poIssue
-            entity.price = variant.unitPrice
-            entity.purchaseGroup = req.purchaseGroup
-            entity.quantity = variant.quantity
-            entity.revisionNo = req.revisionNo
-            entity.seasonCode = item.season
-            entity.shipToAddress = req.shipToAddress
-            entity.size = variant.size
-            entity.status = 'Revised'
-            entity.upcEan = variant.upc
-             saved = await transactionManager.getRepository(RLOrdersEntity).save(entity)
+            saved = await transactionManager.getRepository(RLOrdersEntity).save(entity)
             // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
             if (!saved) {
-              flag.add(false)
-              await transactionManager.releaseTransaction();
-              break;
-            } else {
-              continue;
+              throw new Error('Save failed')
             }
           }
         }
       }
-      if (flag.has(false)) {
-        await transactionManager.releaseTransaction()
-        return new CommonResponseModel(false, 0, 'something went wrong')
-      } else {
-        await transactionManager.completeTransaction()
-        return new CommonResponseModel(true, 1, 'Data saved successfully',saved)
-      }
+      await transactionManager.completeTransaction()
+      return new CommonResponseModel(true, 1, 'Data saved successfully', saved)
     } catch (err) {
       await transactionManager.releaseTransaction()
       return new CommonResponseModel(false, 0, 'Failed', err)
@@ -103,7 +93,6 @@ export class RLOrdersService {
       throw err
     }
   }
-
 
   async getorderData(req?: PoOrderFilter): Promise<CommonResponseModel> {
     try {
@@ -131,12 +120,9 @@ export class RLOrdersService {
     }
   }
 
-
   async getorderDataByPoNumber(req: PoOrderFilter): Promise<CommonResponseModel> {
     try {
-      //  console.log(req,"sev")
       const data = await this.rlOrdersRepo.getorderDataByPoNumber(req)
-
       if (data) {
         return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
       } else {
@@ -157,7 +143,7 @@ export class RLOrdersService {
       const poMap = new Map<string, RLOrdersEntity>();
       data.forEach(rec => {
         poMap.set(rec.poNumber, rec)
-        const dest = rec.shipToAddress.slice(-4).trim();
+        const dest = rec.shipToAddress.slice(-2).trim();
         if (!destinationColSizesMap.has(rec.poNumber)) {
           destinationColSizesMap.set(rec.poNumber, new Map<string, Map<string, []>>());
         }
@@ -187,11 +173,9 @@ export class RLOrdersService {
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price, poInfo.currency, poInfo.shipDate, desArray);
+        const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price, poInfo.currency, poInfo.handoverDate, desArray);
         coData.push(co)
       });
-      // console.log(coData, "pppppppppppppp")
-      // console.log(destinationColSizesMap, "reeeeeeeeee");
       if (coData) {
         return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
       } else {
@@ -234,12 +218,12 @@ export class RLOrdersService {
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
       await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447#');
-      await driver.findElement(By.id('username')).sendKeys('60566910');
-      await driver.findElement(By.id('password')).sendKeys('60566910');
+      await driver.findElement(By.id('username')).sendKeys('99901347');
+      await driver.findElement(By.id('password')).sendKeys('99901347');
       await driver.findElement(By.css('button.btn-primary')).click();
       await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447')
       const newPAge = await driver.executeScript(
-        `javascript:openAccessPage('http://intranet.shahi.co.in:8080/IntraNet/CRMPRDNEW.jsp', 'CRM', '2448', 'R', '60566910', 'N', '20634576', 'null');`
+        `javascript:openAccessPage('http://intranet.shahi.co.in:8080/IntraNet/CRMPRDNEW.jsp', 'CRM', '2448', 'R', '99901347', 'N', '20634576', 'null');`
       );
       const windowHandles = await driver.getAllWindowHandles()
       await driver.switchTo().window(windowHandles[1]);
@@ -254,51 +238,9 @@ export class RLOrdersService {
         let deliveryAddress;
         let pkgTerms;
         let paymentTerms;
-        if (po.buyer === 'Nike-U12') {
+        if (po.buyer === 'RL-U12') {
           const response = await this.getOrderDetails({ poNumber: po.buyer_po })
-          const data = response.data
-          const result = data[0].color_desc.split('/')[0]
-          const firstTenChars = result.substring(0, 10);
-          const lastFourDigits = data[0].style_number.slice(-4)
-          const gacDate = new Date(data[0].gac); // Parse the GAC date
-          // Calculate the date 7 days before the GAC date
-          const sevenDaysBeforeGAC = new Date(gacDate);
-          sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
-          // Format the result as 'DD/MM/YYYY'
-          const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
-          coLine.buyerPo = data[0].po_number + '-' + data[0].po_line_item_number
-          coLine.exFactoryDate = exFactoryDate
-          coLine.deliveryDate = moment(data[0].gac).format("DD/MM/YYYY")
-          const destinationsArr: Destinations[] = []
-          const destinations = new Destinations()
-          destinations.name = data[0].destination_country
-          const colorsArr: Colors[] = []
-          const colors = new Colors()
-          colors.name = firstTenChars + ' ' + lastFourDigits
-          const sizesArr: Sizes[] = []
-
-          for (let item of data) {
-            const sizes = new Sizes()
-            sizes.name = item.size_description
-            sizes.qty = item.size_qty
-            sizes.price = item.gross_price_fob
-            sizesArr.push(sizes)
-          }
-          colors.sizes = sizesArr
-          colorsArr.push(colors)
-          destinations.colors = colorsArr
-          destinationsArr.push(destinations)
-          coLine.destinations = destinationsArr
-          buyerValue1 = "NKE-NIKE"
-          buyerValue2 = "NIK00003-NIKE USA INC"
-          agent = "NA-DIRECT CUSTOMER"
-          buyerAddress = '19'
-          pkgTerms = "BOX-BOXES"
-          paymentTerms = "031-Trde Card45 Day"
-        } else if (po.buyer === 'Uniqlo-U12') {
-          const req = { orderNumber: po.buyer_po }
-          const response = await axios.post(`https://uniqlov2-backend.xpparel.com/api/orders/getTrimOrderDetails`, req);
-          const coData = response.data.data;
+          const coData = response.data;
           coLine.buyerPo = coData.buyerPo;
           const gacDate = new Date(coData.deliveryDate); // Parse the GAC date
           // Calculate the date 7 days before the GAC date
@@ -316,8 +258,8 @@ export class RLOrdersService {
           const addressData = address.data.data[0];
           buyerAddress = addressData?.buyerAddress ? addressData?.buyerAddress : 71;
           deliveryAddress = addressData?.deliveryAddress
-          buyerValue1 = "UNQ-UNIQLO"
-          buyerValue2 = "UNI0003-UNIQLO CO LTD"
+          buyerValue1 = "RAL-RALPH LAUREN"
+          buyerValue2 = "RAL00001-RALPH LAUREN CORPORATION"
           agent = "-NA"
           pkgTerms = "STD-STD PACK"
           paymentTerms = "048-TT 15 DAYS"
@@ -337,13 +279,11 @@ export class RLOrdersService {
         const dropdownElement1 = await driver.findElement(By.id('bgpset1'));
         const dropdown1 = await driver.wait(until.elementIsVisible(dropdownElement1)).then(element => new Select(element))
         await dropdown1.selectByValue(buyerValue1)
-        // await driver.executeScript(`arguments[0].value = '${buyerValue1}';`, buyerDropDown1)
         await driver.sleep(10000)
         await driver.wait(until.elementLocated(By.id('byr')));
         const dropdownElement2 = await driver.findElement(By.id('byr'));
         const dropdown2 = await driver.wait(until.elementIsVisible(dropdownElement2)).then(element => new Select(element))
         await dropdown2.selectByValue(buyerValue2)
-        // await driver.executeScript(`arguments[0].value = '${buyerValue2}';`, dropdownElement2)
         await driver.sleep(5000)
         await driver.wait(until.elementLocated(By.id('CreateOrderID')))
         await driver.sleep(3000)
@@ -404,19 +344,7 @@ export class RLOrdersService {
                       const ele = (await labelElement.getText())?.trim();
                       ele.length > 0 ? fileteredElements.push(labelElement) : '';
                     }
-                    const destToTabIndexMapping = {
-                      'UQAU': 4,
-                      'UQEU': 5,
-                      'UQJP': 2,
-                      'UQIN': 6,  // common case for 'UQIN' in the original conditions
-                      'UQMY': 3
-                      // Add more mappings as needed
-                    };
-                    let tabIndex = destToTabIndexMapping[dest.name] || 1; // Default to 1 if no match
-                    // Additional conditions for 'UQIN' with specific item numbers
-                    if ((po.item_no === '691M' || po.item_no === '694M') && dest.name === 'UQIN') {
-                      tabIndex = 4;
-                    }
+                    let tabIndex = 1; // Default to 1 if no match
                     const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
                     const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
                     await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
@@ -450,40 +378,6 @@ export class RLOrdersService {
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
               }
-            } else if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
-              await driver.executeScript('arguments[0].click();', tab);
-              for (let [colorIndex, color] of dest.colors.entries()) {
-                for (let [sizeIndex, size] of color.sizes.entries()) {
-                  if (colorIndex === 0) {
-                    // Find all the labels in the second row.
-                    await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
-                    let labelElements: any[] = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
-                    const fileteredElements: any[] = [];
-                    for (const labelElement of labelElements) {
-                      const ele = (await labelElement.getText())?.trim();
-                      ele.length > 0 ? fileteredElements.push(labelElement) : '';
-                    }
-                    // Find all the input fields in the first row.
-                    const inputElements = await driver.findElements(By.xpath("//tbody/tr[1]/td/div/input[@name='salespsizes']"));
-                    // Create a map of size labels to input fields.
-                    const sizeToInputMap = {};
-                    for (let i = 0; i < fileteredElements.length; i++) {
-                      const label = (await fileteredElements[i].getText()).trim().toUpperCase(); // Remove leading/trailing spaces
-                      if (label.length)
-                        sizeToInputMap[label] = inputElements[i];
-                    }
-                    const inputField = sizeToInputMap[size.name.trim().toUpperCase()];
-                    if (inputField) {
-                      // Clear the existing value (if any) and fill it with the new price.
-                      await inputField.clear();
-                      await inputField.sendKeys(size.price);
-                    }
-                  }
-                  const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
-                  await driver.wait(until.elementLocated(By.id(inputId)))
-                  await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
-                }
-              }
             }
           }
         }
@@ -502,42 +396,22 @@ export class RLOrdersService {
           await driver.navigate().refresh();
           await driver.quit();
         } else {
-          if (po.buyer == 'Uniqlo-U12') {
+          await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
+          const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[last()]/td[7]`));
+          const coNo = await coNoElement.getAttribute('innerText');
+          const currentDate = new Date();
+          const day = currentDate.getDate().toString().padStart(2, '0');
+          const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
+          const year = currentDate.getFullYear().toString().slice(-2);
+          const currentDateFormatted = `${day}-${month}-${year}`;
+          if (coNo) {
+            const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+            // await driver.navigate().refresh();
             await driver.sleep(10000)
-            await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
-            const coNoElement = await driver.findElement(By.xpath('//*[@id="orno"]'));
-            const coNo = await coNoElement.getAttribute('value');
-            await driver.sleep(5000)
-            const currentDate = new Date();
-            const day = currentDate.getDate().toString().padStart(2, '0');
-            const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
-            const year = currentDate.getFullYear().toString().slice(-2);
-            const currentDateFormatted = `${day}-${month}-${year}`;
-            if (coNo) {
-              const update = await this.coLineRepo.update({ buyerPo: po.buyer_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
-              const req = { orderNumber: po.buyer_po, itemNumber: po.item_no }
-              // await driver.navigate().refresh();
-              await driver.sleep(10000)
-            } else {
-              const update = await this.coLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed' });
-              // await driver.navigate().refresh();
-              await driver.sleep(10000)
-            }
           } else {
-            await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
-            const coDateElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[6]'));
-            const coDate = await coDateElement.getAttribute('innerText');
-            const coNoElement = await driver.findElement(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr/td[7]'));
-            const coNo = await coNoElement.getAttribute('innerText');
-            if (coNo) {
-              const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: coDate });
-              // await driver.navigate().refresh();
-              await driver.sleep(10000)
-            } else {
-              const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed' });
-              // await driver.navigate().refresh();
-              await driver.sleep(10000)
-            }
+            const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed' });
+            // await driver.navigate().refresh();
+            await driver.sleep(10000)
           }
         }
       }
@@ -592,9 +466,7 @@ export class RLOrdersService {
       return new CommonResponseModel(false, 0, 'No data found');
   }
 
-  async updatePath(filePath: string, filename: string,mimetype :string): Promise<CommonResponseModel> {
-    console.log(filePath,"ser")
-    console.log(filename,"serl")
+  async updatePath(filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
 
     const entity = new PdfFileUploadEntity()
     entity.pdfFileName = filename;
@@ -602,17 +474,17 @@ export class RLOrdersService {
     entity.fileType = mimetype
     const file = await this.pdfrepo.findOne({ where: { pdfFileName: filePath } })
     if (file) {
-        return new CommonResponseModel(false, 0, 'File with same name already uploaded');
+      return new CommonResponseModel(false, 0, 'File with same name already uploaded');
     } else {
-        const save = await this.pdfrepo.save(entity)
-        if (save) {
-            return new CommonResponseModel(true, 1, 'updated successfully', save);
-        }
-        else {
-            return new CommonResponseModel(false, 0, 'uploaded failed');
-        }
+      const save = await this.pdfrepo.save(entity)
+      if (save) {
+        return new CommonResponseModel(true, 1, 'uploaded successfully', save);
+      }
+      else {
+        return new CommonResponseModel(false, 0, 'uploaded failed');
+      }
     }
-}
+  }
 
 }
 

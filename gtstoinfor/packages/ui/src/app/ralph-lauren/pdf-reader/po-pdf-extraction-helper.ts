@@ -1,6 +1,6 @@
 import { PoItemDetails, PoItemVariant, RLPoDetails } from "@project-management-system/shared-models";
 import {
-    CURR_INDEX, COLOR_DESC, EMP_STR_EXP, FACTORYLOCATION_INDEX, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_START_TEXT, ITEM_SHIP_TO_START_INDEX, ITEM_SHIP_TO_END_TEXT, ITEM_TEXT_END_TEXT, ITEM_SHIP_TO_END_INDEX, ITEM_VARIANT_START_TEXT, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, SELLER_ADDRESS_END_TEXT, SELLER_ADDRESS_START_TEXT, UNWANTED_TEXT_1, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6,
+    CURR_INDEX, COLOR_DESC, EMP_STR_EXP, ITEM_BILL_TO_START_TEXT, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_START_TEXT, ITEM_SHIP_TO_START_INDEX, ITEM_SHIP_TO_END_TEXT, ITEM_TEXT_END_TEXT, ITEM_SHIP_TO_END_INDEX, ITEM_VARIANT_START_TEXT, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, SELLER_ADDRESS_END_TEXT, SELLER_ADDRESS_START_TEXT, UNWANTED_TEXT_1, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6,
     UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13
 } from "./popdf-regex-expressions";
 
@@ -46,16 +46,24 @@ export const extractDataFromPoPdf = async (pdf) => {
                 if (ele.str == PO_NUMBER_TEXT) {
                     poNumberTextIndex = ind
                 }
-                if (ele.str == SELLER_ADDRESS_START_TEXT) {
-                    sellerStartIndex = ind
+                if (ele.str == ITEM_BILL_TO_START_TEXT) {
+                    buyerAddStartIndex = ind + 2
                 }
-                if (ele.str == SELLER_ADDRESS_END_TEXT) {
-                    sellerEndIndex = ind
-                    buyerAddStartIndex = ind
+                if (ele.str == 'GREENSBORO') {
+                    shipToAddStartIndex = ind + 3;
+                    buyerAddEndIndex = ind + 4
                 }
-                if (ele.str === ITEM_SHIP_TO_START_TEXT) {
-                    shipToAddStartIndex = ind + 11;
-                    buyerAddEndIndex = ind + 11
+                if (ele.str === 'PLAN LES OUATES') {
+                    shipToAddStartIndex = ind + 2;
+                    buyerAddEndIndex = ind + 3
+                }
+                if (ele.str == 'TORONTO') {
+                    shipToAddStartIndex = ind + 3;
+                    buyerAddEndIndex = ind + 4
+                }
+                if (ele.str === 'SEOUL') {
+                    shipToAddStartIndex = ind + 2;
+                    buyerAddEndIndex = ind + 3
                 }
                 if (ele.str == ITEM_SHIP_TO_END_TEXT) {
                     shipToAddEndIndex = ind
@@ -86,7 +94,10 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.sellerAddress = selleraddress
             let buyerAddress = '';
             for (let b = buyerAddStartIndex + 1; b < buyerAddEndIndex; b++) {
-                buyerAddress += firstPageContent[b].str + ','
+                if (b < buyerAddEndIndex - 1)
+                    buyerAddress += firstPageContent[b].str + ','
+                else
+                    buyerAddress += firstPageContent[b].str
             }
             poData.buyerAddress = buyerAddress;
             let shipToAddress = ''

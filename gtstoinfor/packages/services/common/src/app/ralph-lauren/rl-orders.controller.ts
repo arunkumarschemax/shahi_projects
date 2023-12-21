@@ -6,7 +6,7 @@ import { CommonResponseModel, PoOrderFilter } from "@project-management-system/s
 import { ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { OrderDetailsReq } from "./dto/order-details-req";
 import { FileInterceptor } from "@nestjs/platform-express";
-import {diskStorage} from 'multer'
+import { diskStorage } from 'multer'
 
 
 @Controller("/rl-orders")
@@ -117,24 +117,21 @@ export class RLOrdersController {
         limits: { files: 1 },
         storage: diskStorage({
             destination: './upload-files',
-            filename: (req, file, callback) => { 
+            filename: (req, file, callback) => {
                 console.log(file.originalname);
                 const name = file.originalname;
-                callback(null,`${name}`);
+                callback(null, `${name}`);
             },
         }),
         fileFilter: (req, file, callback) => {
-            if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG|xls|xlsx|csv|pdf)$/)) {
-                return callback(new Error('Only pdf,png,jpeg,PNG,jpg,JPG,xls,xlsx and csv files are allowed!'), false);
+            if (!file.originalname.match(/\.(pdf)$/)) {
+                return callback(new Error('Only pdf files are allowed!'), false);
             }
             callback(null, true);
         },
     }))
 
-    async fileUpload(@UploadedFile() file,PoNumber:string): Promise<CommonResponseModel> {
-        console.log(file,"file con")
-        console.log(PoNumber,"PoNumber con")
-
+    async fileUpload(@UploadedFile() file, PoNumber: string): Promise<CommonResponseModel> {
         try {
             return await this.rlOrdersService.updatePath(file.path, file.filename, file.mimetype)
         } catch (error) {
