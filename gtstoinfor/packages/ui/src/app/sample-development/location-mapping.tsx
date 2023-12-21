@@ -28,7 +28,7 @@ export const LocationMapping = () => {
 
     useEffect(() => {
         if (grnData) {
-            form.setFieldsValue({quantity : grnData.balance, itemName:grnData.itemCode, itemId:grnData.itemId, colorId:grnData.colorId})
+            form.setFieldsValue({quantity : grnData.balance, itemName:grnData.itemCode, itemId:grnData.itemId, colorId:grnData.colorId,grnType:grnData.grnType,sampleReqId:grnData.sampleReqId,sampleItemId:grnData.sampleItemId })
             if (grnData.grnItemId) {
                 const id = grnData.grnItemId;
                 getOneItemAllocateDetailsData(id);
@@ -69,7 +69,7 @@ export const LocationMapping = () => {
       
         // const req = new LocationMappingReq(grnData.m3_items_Id
         //     , locationId, qty, grnData.grnItemId, shahi_item_code, item_type_id, plant_id,grnData.style_id, grnData.item_id, grnData.style_id,grnData.buyer_id );
-            const req = new LocationMappingReq(grnData.itemId,locationId,qty,grnData.grnItemId,1,grnData.buyerId,grnData.uomId,grnData.materialType,grnData.m3itemDescription,grnData.uom,grnData.grnId,grnData.colorId);
+            const req = new LocationMappingReq(grnData.itemId,locationId,qty,grnData.grnItemId,1,grnData.buyerId,grnData.uomId,grnData.materialType,grnData.m3itemDescription,grnData.uom,grnData.grnId,grnData.colorId,grnData.grnType);
         if (req) {
             locationService.postToStockLogs(req).then((res) => {
                 if (res.status === true) {
@@ -208,6 +208,15 @@ export const LocationMapping = () => {
                         <Input hidden />
                     </Form.Item>
                     <Form.Item name="colorId" style={{ display: "none" }} >
+                        <Input hidden />
+                    </Form.Item>
+                    <Form.Item name="grnType" style={{ display: "none" }} >
+                        <Input hidden />
+                    </Form.Item>
+                    <Form.Item name="sampleReqId" style={{ display: "none" }} >
+                        <Input hidden />
+                    </Form.Item>
+                    <Form.Item name="sampleItemId" style={{ display: "none" }} >
                         <Input hidden />
                     </Form.Item>
                     <Row gutter={24}>

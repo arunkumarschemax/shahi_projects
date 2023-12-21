@@ -1,3 +1,5 @@
+import { GRNTypeEnum } from "../../enum";
+
 export class LocationMappingReq {
     m3_item: number;
     location_id: number;
@@ -11,10 +13,15 @@ export class LocationMappingReq {
     uomName?:string
     grn_id?:number
     colorId?:number
+    grnType?:GRNTypeEnum
+    sampleReqId?:number
+    sampleItemId?:number
+
+
 
     // stock_bar_code?:string
 
-    constructor( m3_item: number, location_id: number, quantity: number, grn_item_id: number,style_id: number,buyer_id:number,uom_id:number, item_type: string,description?:string,uomName?:string, grn_id?:number, colorId?:number
+    constructor( m3_item: number, location_id: number, quantity: number, grn_item_id: number,style_id: number,buyer_id:number,uom_id:number, item_type: string,description?:string,uomName?:string, grn_id?:number, colorId?:number,grnType?:GRNTypeEnum,sampleReqId?:number, sampleItemId?:number
         // stock_bar_code?:string
         ) {
         this.m3_item = m3_item
@@ -29,6 +36,10 @@ export class LocationMappingReq {
         this.uomName = uomName
         this.grn_id = grn_id
         this.colorId = colorId
+        this.grnType = grnType
+        this.sampleReqId = sampleReqId
+        this.sampleItemId = sampleItemId
+
     }
 
 }
