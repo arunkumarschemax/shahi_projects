@@ -391,7 +391,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
     }
     
     const OnTrimAdd = (values) =>{
-        console.log(values);    
+        console.log(values); 
+        values.materialType = defaultTrimFormData.materialType   
         trimForm.validateFields().then(() =>{
           if(trimIndexVal !== undefined){
             trimTableData[trimIndexVal] = values;
@@ -400,6 +401,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
           }else{
             tableData=[...trimTableData,values]
           }
+        //   console.log(tableData)
           setTrimTableData(tableData)
           props(tableData)
           setInputDisable(false)

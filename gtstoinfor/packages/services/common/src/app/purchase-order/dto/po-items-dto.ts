@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { PoItemEnum } from "@project-management-system/shared-models"
+import { ItemTypeEnum, PoItemEnum, TypeEnum } from "@project-management-system/shared-models"
 
 export class PoItemdetails{
 
@@ -70,5 +70,7 @@ export class PoItemdetails{
 
   @ApiProperty()  
   sampleReqId:number
+  @ApiProperty()  
+  materialType?:ItemTypeEnum
 
 }

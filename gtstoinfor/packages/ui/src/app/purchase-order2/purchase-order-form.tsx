@@ -228,13 +228,13 @@ export const PurchaseOrderForm = () => {
         let poItemDetails :PoItemDetailsDto[]=[];
         if(fabricData.length != 0){
             for(const fabdata of fabricData){
-                const fab  = new PoItemDetailsDto(fabdata.colourId,fabdata.m3FabricCode,fabdata.poQuantity,fabdata.quantityUomId,undefined,fabdata.samplereFabId,fabdata.indentFabricId,fabdata.unitPrice,fabdata.discount,fabdata.tax,fabdata.transportation,fabdata.subjectiveAmount,fabdata.indentId,fabdata.sampleReqId,fabdata.styleId)
+                const fab  = new PoItemDetailsDto(fabdata.colourId,fabdata.m3FabricCode,fabdata.poQuantity,fabdata.quantityUomId,undefined,fabdata.samplereFabId,fabdata.indentFabricId,fabdata.unitPrice,fabdata.discount,fabdata.tax,fabdata.transportation,fabdata.subjectiveAmount,fabdata.indentId,fabdata.sampleReqId,fabdata.styleId,fabdata.materialType)
                 poItemDetails.push(fab)
             }
         }
         if(trimData.length != 0){
             for (const trimdata of trimData) {
-                const trim  = new PoItemDetailsDto(null,trimdata.m3TrimCode,trimdata.poQuantity,trimdata.quantityUomId,undefined,trimdata.sampleTrimInfoId,trimdata.indentTrmId,trimdata.unitPrice,trimdata.discount,trimdata.tax,trimdata.transportation,trimdata.subjectiveAmount,trimdata.indentId,trimdata.sampleReqId,trimdata.styleId)
+                const trim  = new PoItemDetailsDto(null,trimdata.m3TrimCode,trimdata.poQuantity,trimdata.quantityUomId,undefined,trimdata.sampleTrimInfoId,trimdata.indentTrmId,trimdata.unitPrice,trimdata.discount,trimdata.tax,trimdata.transportation,trimdata.subjectiveAmount,trimdata.indentId,trimdata.sampleReqId,trimdata.styleId,trimdata.materialType)
                 poItemDetails.push(trim)
             }
         }

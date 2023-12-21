@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel,CustomerOrderStatusEnum,GrnItemsFormDto, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel,CustomerOrderStatusEnum,GrnItemsFormDto, ItemTypeEnum, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -120,6 +120,12 @@ export class PurchaseOrderService {
                         pofabricEntity.tax = item.tax
                         pofabricEntity.subjectiveAmount = item.subjectiveAmount
                         pofabricEntity.styleId = item.styleId
+                        if((req.poAgainst).toUpperCase() == 'SAMPLE ORDER'){
+                            pofabricEntity.materialType = ItemTypeEnum[(req.poMaterialType).toUpperCase()]
+                        }
+                        if((req.poAgainst).toUpperCase() == 'INDENT'){
+                            pofabricEntity.materialType = ItemTypeEnum[(item.materialType).toUpperCase()]
+                        }
                         poItemInfo.push(pofabricEntity)
             }
             poEntity.poItemInfo=poItemInfo
@@ -127,7 +133,7 @@ export class PurchaseOrderService {
             const save = await this.poRepo.save(poEntity)
             
             if (save) {
-                if(req.poAgainst == 'INDENT'){
+                if((req.poAgainst).toUpperCase() == 'INDENT'){
                     const indentUpdate = await this.indentRepo.update({indentId:req.poItemInfo[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
                     for(const update of req.poItemInfo){
                         if(update.indentId != undefined){
@@ -135,7 +141,7 @@ export class PurchaseOrderService {
                         }
                     }
                 }
-                if(req.poAgainst == 'SAMPLE ORDER'){
+                if((req.poAgainst).toUpperCase() == 'SAMPLE ORDER'){
                     for(const update of req.poItemInfo){
                         if(update.sampleReqId != undefined){
                            const  dat = await this.sampleReqRepo.update({SampleRequestId:update.sampleReqId},{lifeCycleStatus:LifeCycleStatusEnum.PO_RAISED})

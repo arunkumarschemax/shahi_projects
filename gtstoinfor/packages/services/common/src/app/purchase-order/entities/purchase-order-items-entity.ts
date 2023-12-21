@@ -1,4 +1,4 @@
-import { PoItemEnum } from "@project-management-system/shared-models";
+import { ItemTypeEnum, PoItemEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { PurchaseOrderEntity } from "./purchase-order-entity";
 
@@ -97,6 +97,13 @@ export class PurchaseOrderItemsEntity{
     nullable:true
   })
   subjectiveAmount:number
+
+  @Column('enum',{
+    name:'item_type',
+    nullable: true,
+    enum:ItemTypeEnum,
+  })
+  materialType: ItemTypeEnum;
 
   @CreateDateColumn({
     name: "created_at",

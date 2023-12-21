@@ -441,6 +441,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
 
     const onFabricAdd = (values) => {
         console.log(values);
+        values.materialType = defaultFabricFormData.materialType
         fabricForm.validateFields().then(() => {
             if (fabricIndexVal !== undefined) {
                 fabricTableData[fabricIndexVal] = values;
