@@ -231,7 +231,7 @@ const SeasonWiseReportData = () => {
               title: "#", 
               // dataIndex: "sno", 
               render: (text, object, index) => { 
-                if(index == seasonData.length+1) { 
+                if(index == seasonData.length-1) { 
                   return null;
                 } else { 
                   return rowIndex++; 
