@@ -15,6 +15,7 @@ import { M3ItemsEntity } from "../../m3-items/m3-items.entity";
 import { Vendors } from "../../vendors/vendors.entity";
 import { Style } from "../../style/dto/style-entity";
 import { PurchaseOrderItemsEntity } from "../../purchase-order/entities/purchase-order-items-entity";
+import { ItemTypeEnum } from "@project-management-system/shared-models";
 
 
 @Injectable()
@@ -37,7 +38,7 @@ export class FabricIndentRepository extends Repository<IndentFabricEntity> {
             .leftJoin(UomEntity, 'uom', 'uom.id=itf.quantity_unit')
             .leftJoin(Style,'s','s.style_id = it.style')
             .leftJoin(Buyers,'b','b.buyer_id = s.buyer_id')
-            .leftJoin(PurchaseOrderItemsEntity,'poi',`poi.indent_item_id = itf.ifabric_id and poi.m3_item_id = itf.m3_fabric_code`)
+            .leftJoin(PurchaseOrderItemsEntity,'poi',`poi.indent_item_id = itf.ifabric_id and poi.m3_item_id = itf.m3_fabric_code and poi.item_type = ${ItemTypeEnum.FABRIC}`)
             .where(`itf.indent_id=${indentId} and (itf.quantity-itf.received_quantity) >0`)
             .groupBy(`itf.ifabric_id`)
         const data = await query.getRawMany()
