@@ -296,6 +296,7 @@ const PPMReport = () => {
               'Last Modified Date': item.lastModifiedDate,
               'Item': item.item,
               'Factory': item.factory,
+              'Actual Unit': item.actualUnit,
               'PCD': item.PCD,
               'Document Date': item.documentDate,
               'Purchase Order Number': item.purchaseOrderNumber,
@@ -2263,14 +2264,13 @@ const PPMReport = () => {
               width: 70,
               dataIndex: '',
               render: (text, record) => {
-                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.actualShippedQty;
                 return sizeData ? sizeData : '-'
               }
             },
           ],
         });
       }
-
     });
 
     const getRowClassName = (record) => {
