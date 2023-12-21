@@ -92,7 +92,7 @@ getData(data.poNumber)
               >
                  <Select placeholder=" Select PO Number" >
                   {data2.map((option) => (
-                    <Option key={option.purchase_order_id} value={option.po_number}>
+                    <Option key={option.purchase_order_id} value={option.purchase_order_id}>
                       {option.po_number}
                     </Option>
                   ))}
@@ -155,7 +155,7 @@ getData(data.poNumber)
                         <div style={{ marginLeft: -100 }}>
                           <QRCode
                             bgColor="lightgrey"
-                            style={{ width: '4in', height: '1.5in', marginTop: "8px", pageBreakAfter: 'always', textAlign: 'left' }}
+                            style={{ width: '4in', height: '1.4in', marginTop: "8px", pageBreakAfter: 'always', textAlign: 'left' }}
                             value={`${e?.grn_item_no}`}
                             viewBox={`356 356 0 0`} />
                           <style>{`
@@ -168,17 +168,17 @@ getData(data.poNumber)
    margin: 0; /* Reset default margin */
  }`}</style>
                         </div>
-                        <div style={{ textAlign: 'left', fontSize: "30px", marginLeft: 10,marginTop:30}}>
+                        <div style={{ textAlign: 'left', fontSize: "20px", marginLeft: 10,}}>
                           {`${e?.grn_item_no}`}
                         </div>
                         </div>
                       <div style={{flex:1,margin:5}}>
-                    <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:3}}>Invoice No : </p>
-                    <p style={{textAlign: 'left',marginLeft:-100,fontSize:'15px',padding:3}}>{e.invoice_no}</p>
-                    <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:3}}>Type : </p>
-                    <p style={{ textAlign: 'left',marginLeft:-100,fontSize:'15px',padding:3}}>{e.item_type}</p>
-                    <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:3}}>Item : </p>
-                    <p style={{textAlign: 'left',marginLeft:-100,fontSize:'15px',padding:3}}>{e.itemCode}</p>
+                    <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:1}}>Invoice No : </p>
+                    <p style={{textAlign: 'left',marginLeft:-100,fontSize:'10px',padding:1}}>{e.invoice_no}</p>
+                    <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:1}}>Type : </p>
+                    <p style={{ textAlign: 'left',marginLeft:-100,fontSize:'10px',padding:1}}>{e.item_type}</p>
+                    <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:1}}>Item : </p>
+                    <p style={{textAlign: 'left',marginLeft:-100,fontSize:'10px',padding:1}}>{e.itemCode}</p>
 
                     </div>
                       </div>

@@ -108,6 +108,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                 props(res.data)
                 setTrimTableData(res.data);
             }
+            else{
+                setTrimtableVisible(false)
+                props([])
+                setTrimTableData([]);
+            }
         })
     }
     const getColor = () => {
@@ -156,11 +161,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         setInputDisable(true)
         trimForm.setFieldsValue({poQuantity:rowData.indentQuantity})
         trimForm.setFieldsValue({indentId:rowData.indentId})
-        trimForm.setFieldsValue({m3TrimCode:rowData.m3TrimCodeId})    
+        // trimForm.setFieldsValue({m3TrimCode:rowData.m3TrimCodeId})    
         trimForm.setFieldsValue({m3TrimCodeName:rowData.m3TrimCodeName})    
         trimForm.setFieldsValue({indentQuantity:rowData.indentQuantity})    
         trimForm.setFieldsValue({indentCode:rowData.indentCode})
-        trimForm.setFieldsValue({indentTrmId:rowData.indentTrmId})
+        trimForm.setFieldsValue({indentTrmId:rowData.indentTrimId})
         trimForm.setFieldsValue({quantityUomName:rowData?.quantityUnit})
         trimForm.setFieldsValue({quantityUomId:rowData?.quantityUnitId,})
         trimForm.setFieldsValue({styleId: rowData?.styleId})
@@ -225,11 +230,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         // },
         {
             title:'Indent Quantity',
-            dataIndex:'quantity',
+            dataIndex:'indentQuantity',
         },
         {
             title:'Po Quantity',
-            dataIndex:'quantity',
+            dataIndex:'poQuantity',
             width:'100px'
             
         },
@@ -414,6 +419,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
            if (defaultTrimFormData.sampleReqId != undefined){
                 trimForm.setFieldsValue({sampleReqId:defaultTrimFormData.sampleReqId,
                 poQuantity:defaultTrimFormData.sampleOrderQuantity,
+                sampleOrderQuantity:defaultTrimFormData.sampleOrderQuantity,
                 sampleTrimInfoId:defaultTrimFormData.sampleTrimInfoId,
                 sampleReqNo:defaultTrimFormData.sampleReqNo,
                 colourName: defaultTrimFormData.colourName,
@@ -436,7 +442,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                     consumption : defaultTrimFormData.consumption,
                     m3TrimCode: defaultTrimFormData.m3TrimCode,
                     trimCodeName: defaultTrimFormData.trimCodeName,
-                    indentTrmId:defaultTrimFormData.indentTrmId,
+                    indentTrmId:defaultTrimFormData.indentTrimId,
                     indentQuantity:defaultTrimFormData.indentQuantity,
                     indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
                     quantityUomId:defaultTrimFormData.quantityUnitId,
@@ -567,11 +573,12 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                     <Form.Item name={'quantityUomName'} hidden><Input></Input></Form.Item>
                     <Form.Item name='taxPercentage' hidden ><Input/></Form.Item>
                     <Form.Item name='styleId' hidden ><Input/></Form.Item>
-                    <Form.Item name='trimPrams' hidden ><Input/></Form.Item>
+                    <Form.Item name='trimParams' hidden ><Input/></Form.Item>
+                    <Form.Item name='sampleOrderQuantity' hidden ><Input/></Form.Item>
                     <Form.Item name={'indentQuantity'} label={'Indent Quantity'} style={{display:'none'}}>
                             <Input disabled={inputDisable}></Input>
                         </Form.Item>
-                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 10 }}>
                     <Form.Item name='m3TrimCode' label='M3 Trim Code' rules={[{required:true,message:'M3 code is required'}]}>
                     <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
                              disabled={inputDisable}

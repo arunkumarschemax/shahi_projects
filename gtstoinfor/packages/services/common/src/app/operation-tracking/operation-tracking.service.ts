@@ -102,7 +102,6 @@ export class OperationTrackingService {
 
     
     async getOperationinventory(req:OperationInvRequest): Promise<OperationInventoryResponseModel> {
-        console.log(req,'kkkkkkkkkkkkkkk')
         const data = await this.inventoryRepo.getOperationinventory(req)
     
             return new OperationInventoryResponseModel(true, 1, 'Inventory data Retrived Sucessfully', data)
@@ -285,10 +284,11 @@ export class OperationTrackingService {
         }
         const qtyInfoQry = `SELECT SUM(quantity) as totQty FROM sample_request_size_info WHERE sample_request_id = ${req.sampleRequestId}`
         const qtyRes = await this.dataSource.query(qtyInfoQry)
-        let totalFgQty = 0
+        let totalOrderedQty = 0
         if(qtyRes.length > 0){
-          totalFgQty = qtyRes[0].totQty
+          totalOrderedQty = qtyRes[0].totQty
         }
+       
         const inventoryEntity = new OperationInventory()
         inventoryEntity.styleId = styleId
         inventoryEntity.sampleReqId = req.sampleRequestId
@@ -296,9 +296,9 @@ export class OperationTrackingService {
         inventoryEntity.sizeId = req.sizeId
         // inventoryEntity.operationSequenceId = dto.operationSequenceId
         inventoryEntity.operation = req.operationCode
-        inventoryEntity.physicalQuantity = totalFgQty
+        inventoryEntity.physicalQuantity = req.quantity
         // inventoryEntity.physicalUom = dto.physicalUom
-        inventoryEntity.issuedQuantity = totalFgQty
+        inventoryEntity.issuedQuantity = req.quantity
         // inventoryEntity.issuedUomId = dto.issuedUomId
         inventoryEntity.nextOperation = nextOperation
         // inventoryEntity.materialIssueId = dto.materialIssueId
@@ -335,11 +335,11 @@ export class OperationTrackingService {
         trackingEntity.operationInventoryId = save.operationInventoryId
         // trackingEntity.rejectedQuantity = dto.rejectedQuantity
         // trackingEntity.rejectedUomId = dto.rejectedUomId
-        trackingEntity.reportedQuantity = totalFgQty
+        trackingEntity.reportedQuantity = req.quantity
         // trackingEntity.reportedUomId = dto.reportedUomId
         trackingEntity.operation = req.operationCode
         trackingEntity.nextOperation = nextOperation
-        trackingEntity.issuedQuantity = totalFgQty
+        trackingEntity.issuedQuantity = req.quantity
         // trackingEntity.issuedUomId = dto.issuedUomId
         trackingEntity.sampleReqId = req.sampleRequestId
         trackingEntity.status = TrackingEnum.YES
@@ -347,52 +347,66 @@ export class OperationTrackingService {
         // console.log(dto.fabricCode,'*************')
         // const materialFabric = await this.materialFabricRepo.update({fabricCode: dto.fabricCode},{reportedStatus: MaterialFabricEnum.COMPLETED})
         // console.log(materialFabric,'))))))))))))))))))))))')
+        const reportedQtyQry = `select sum(physical_quantity) as reportedQty from operation_inventory where sample_req_id = ${req.sampleRequestId} and operation = '${req.operationCode}'`
+        const reportedQtyRes = await manager.getRepository(OperationInventory).query(reportedQtyQry)
+        console.log(reportedQtyRes,'reportedQtyQry')
+        console.log(totalOrderedQty,'totalOrderedQty')
+        let totReportedQty = 0
+        if(reportedQtyRes[0].reportedQty > 0){
+          totReportedQty = reportedQtyRes[0].reportedQty
+        }
         if (save && createLog) {
-          let sampleReqStatus
-          if(req.operationCode == 'Cutting'){
-            sampleReqStatus = LifeCycleStatusEnum.CUTTING
-          }else if(req.operationCode == 'Sewing In'){
-            sampleReqStatus = LifeCycleStatusEnum.SEWING
+          if((Number(totReportedQty) == Number(totalOrderedQty))){
 
-          }else if(req.operationCode == 'Sewing'){
-            sampleReqStatus = LifeCycleStatusEnum.SEWING
-
-          }else if(req.operationCode == 'Sewing Out'){
-            sampleReqStatus = LifeCycleStatusEnum.SEWING
-
-          }else if(req.operationCode == 'Trimming'){
-            sampleReqStatus = LifeCycleStatusEnum.CUTTING
-
-          }else if(req.operationCode == 'Quality Check'){
-            sampleReqStatus = LifeCycleStatusEnum.QUALITY_CONTROL
-
-          }else if(req.operationCode == 'Washing'){
-            // sampleReqStatus = LifeCycleStatusEnum.CUTTING
-
-          }else if(req.operationCode == 'Finishing'){
-            sampleReqStatus = LifeCycleStatusEnum.FINISHING
-
-          }else if(req.operationCode == 'Packing'){
-            sampleReqStatus = LifeCycleStatusEnum.PACKING
-
-          }else if(req.operationCode == 'Shipment'){
-            sampleReqStatus = LifeCycleStatusEnum.SHIPMENT
-
-          }
-          if(nextOperation == 'NA'){
-            sampleReqStatus = LifeCycleStatusEnum.READY_TO_DISPATCH
-          }
-
-            const SampleReqStatusUpdate = await this.sampleReqRepo.update({SampleRequestId:req.sampleRequestId},{lifeCycleStatus:sampleReqStatus})
-            // `update sample_request set life_cycle_status = '${dto.operation}' where sample_request_id = ${dto.styleId}`
-            // const update  = await this.dataSource.query(SampleReqStatusUpdate)
-            if(SampleReqStatusUpdate.affected){
-              await manager.completeTransaction();
-              return new OperationInventoryResponseModel(true, 1111, 'Quantity reported Successfully');
-            }else{
-              await manager.releaseTransaction();
-              throw new ErrorResponse(9999, 'Failed To Update Sample Request');
+            let sampleReqStatus
+            if(req.operationCode == 'Cutting'){
+              sampleReqStatus = LifeCycleStatusEnum.CUTTING
+            }else if(req.operationCode == 'Sewing In'){
+              sampleReqStatus = LifeCycleStatusEnum.SEWING
+  
+            }else if(req.operationCode == 'Sewing'){
+              sampleReqStatus = LifeCycleStatusEnum.SEWING
+  
+            }else if(req.operationCode == 'Sewing Out'){
+              sampleReqStatus = LifeCycleStatusEnum.SEWING
+  
+            }else if(req.operationCode == 'Trimming'){
+              sampleReqStatus = LifeCycleStatusEnum.CUTTING
+  
+            }else if(req.operationCode == 'Quality Check'){
+              sampleReqStatus = LifeCycleStatusEnum.QUALITY_CONTROL
+  
+            }else if(req.operationCode == 'Washing'){
+              // sampleReqStatus = LifeCycleStatusEnum.CUTTING
+  
+            }else if(req.operationCode == 'Finishing'){
+              sampleReqStatus = LifeCycleStatusEnum.FINISHING
+  
+            }else if(req.operationCode == 'Packing'){
+              sampleReqStatus = LifeCycleStatusEnum.PACKING
+  
+            }else if(req.operationCode == 'Shipment'){
+              sampleReqStatus = LifeCycleStatusEnum.SHIPMENT
+  
             }
+            if(nextOperation == 'NA'){
+              sampleReqStatus = LifeCycleStatusEnum.READY_TO_DISPATCH
+            }
+  
+              const SampleReqStatusUpdate = await this.sampleReqRepo.update({SampleRequestId:req.sampleRequestId},{lifeCycleStatus:sampleReqStatus})
+              // `update sample_request set life_cycle_status = '${dto.operation}' where sample_request_id = ${dto.styleId}`
+              // const update  = await this.dataSource.query(SampleReqStatusUpdate)
+              if(SampleReqStatusUpdate.affected){
+                await manager.completeTransaction();
+                return new OperationInventoryResponseModel(true, 1111, 'Quantity reported Successfully');
+              }else{
+                await manager.releaseTransaction();
+                throw new ErrorResponse(9999, 'Failed To Update Sample Request');
+              }
+          }else{
+              await manager.completeTransaction();
+                return new OperationInventoryResponseModel(true, 1111, 'Quantity reported Successfully');
+          }
           } else {
             await manager.releaseTransaction();
             throw new ErrorResponse(9999, 'Failed To Update Operation');

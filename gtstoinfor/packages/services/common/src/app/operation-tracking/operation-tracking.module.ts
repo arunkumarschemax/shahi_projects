@@ -14,6 +14,7 @@ import { MaterialFabricRepository } from '../material-issue/repo/material-fabric
 import { MaterialFabricEntity } from '../material-issue/entity/material-fabric-entity';
 import { SampleRequestRepository } from '../sample-dev-request/repo/sample-dev-req-repo';
 import { SampleRequest } from '../sample-dev-request/entities/sample-dev-request.entity';
+import { SampleDevelopmentService } from '@project-management-system/shared-services';
 @Module({
   imports: [
     
@@ -21,7 +22,7 @@ import { SampleRequest } from '../sample-dev-request/entities/sample-dev-request
     // forwardRef(() => ClusterModule),
   ],
   controllers: [OperationIssuingController],
-  providers: [OperationTrackingService,ApplicationExceptionHandler,OperationInventoryRepository,OperationTrackingRepository,StyleRepository,MaterialFabricRepository,SampleRequestRepository],
+  providers: [OperationTrackingService,ApplicationExceptionHandler,OperationInventoryRepository,OperationTrackingRepository,StyleRepository,MaterialFabricRepository,SampleRequestRepository,SampleDevelopmentService],
   exports: [OperationTrackingService],
 })
 export class OperationTrackingModule {}

@@ -25,7 +25,14 @@ const SizeDetail = ({props,buyerId,form}) => {
   },[buyerId])
 
   const getColors = () => {
-    colorService.getAllActiveColour().then((res) => {
+    // colorService.getAllActiveColour().then((res) => {
+    //   if (res.status) {
+    //     // console.log(res,'size data')
+    //     setColor(res.data);
+    //   }
+    // });
+
+    buyerDestinaytionService.getAllColorsAgainstBuyer({buyerId:buyerId}).then((res) => {
       if (res.status) {
         // console.log(res,'size data')
         setColor(res.data);
@@ -64,7 +71,13 @@ const SizeDetail = ({props,buyerId,form}) => {
     if(isDuplicate?.colour > 0 && name === "colorId")
     {
       AlertMessages.getErrorMessage("Duplicate Colors not allowed. ")
-      form.setFieldValue(`colorId${recordKey}`,0)
+      form.setFieldValue(`colorId${recordKey}`,null)
+      form.validateFields().then(size => {
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      
     }
     else{
       let newData = [...onchangeData];
@@ -159,6 +172,8 @@ const SizeDetail = ({props,buyerId,form}) => {
     {
       title: 'S.No',
       dataIndex: 'sNo',
+      width:"5%",
+      fixed:'left',
       render: (_, record, index) => index + 1,
     },
     {
@@ -175,7 +190,7 @@ const SizeDetail = ({props,buyerId,form}) => {
           placeholder="Select Color"
           onChange={(value) => handleInputChange(value, 0, 0, record.key,'colorId')}
         >
-          <Option name={`colorId${record.key}`} key={0} value={0}>Please Select Color</Option>
+          <Option name={`colorId${record.key}`} key={0} value={null}>Please Select Color</Option>
           {color.map((e) => {
                   return (
                     <Option name={`colorId${record.key}`} key={e.colourId} value={e.colourId}>

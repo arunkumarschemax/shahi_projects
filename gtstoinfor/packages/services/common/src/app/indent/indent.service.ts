@@ -120,11 +120,11 @@ export class IndentService {
             for (const trim of trimIndentData) {
                 trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
                     trim.quantity, trim.trim_code, trim.description,
-                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty))
+                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity))
                 // console.log(trimModel);
 
             }
-            indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName,data.extRefNo,data.buyerId))
+            indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName,data.extRefNo,data.styleId,data.buyerId))
         }
         
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully', indentModel);

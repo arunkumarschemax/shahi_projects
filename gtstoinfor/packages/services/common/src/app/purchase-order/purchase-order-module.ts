@@ -14,6 +14,7 @@ import { SampleRequestRepository } from "../sample-dev-request/repo/sample-dev-r
 import { SampleRequest } from "../sample-dev-request/entities/sample-dev-request.entity";
 import { IndentRepository } from "../indent/dto/indent-repository";
 import { Indent } from "../indent/indent-entity";
+import { SampleDevelopmentService } from "@project-management-system/shared-services";
 
 @Module({
     imports: [
@@ -27,6 +28,6 @@ import { Indent } from "../indent/indent-entity";
     ]),
     ],
     controllers: [PurchaseOrderController],
-    providers: [PurchaseOrderService,ApplicationExceptionHandler,PurchaseOrderRepository,PurchaseOrderFabricRepository,PurchaseOrderTrimRepository,SampleRequestRepository,IndentRepository,SampleRequestRepository]
+    providers: [PurchaseOrderService,ApplicationExceptionHandler,PurchaseOrderRepository,PurchaseOrderFabricRepository,PurchaseOrderTrimRepository,SampleRequestRepository,IndentRepository,SampleRequestRepository,SampleDevelopmentService]
   })
   export class PurchaseOrderModule {}

@@ -119,6 +119,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                 setFabricTableVisible(true)
             } else {
                 setFabricTableData([])
+                setFabricTableVisible(false)
             }
         })
     }
@@ -200,6 +201,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
             fabricForm.setFieldsValue({ quantityUomId: rowData.uom_id })
             fabricForm.setFieldsValue({ quantityUom: rowData.uom })
+            fabricForm.setFieldsValue({ styleId: rowData.style })
 
 
         }
@@ -231,8 +233,10 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                 fabricForm.setFieldsValue({
                     poQuantity: defaultFabricFormData.indentQuantity,
                     m3FabricCode: defaultFabricFormData.m3FabricCode,
-                    colourId: defaultFabricFormData.colourId,
+                    colourId: defaultFabricFormData.colorId,
                     colorName: defaultFabricFormData.colorName,
+                    tax: defaultFabricFormData.tax,
+                    taxAmount: defaultFabricFormData.taxAmount,
                     shahiFabricCode: defaultFabricFormData.shahiFabricCode,
                     quantityUomId: defaultFabricFormData.quantityUomId,
                     indentQuantity: defaultFabricFormData.indentQuantity,
@@ -267,7 +271,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         },
         {
             title: 'M3 Fabric Code',
-            dataIndex: 'm3FabricCodeName',
+            dataIndex: 'itemCode',
             width: '170px'
         },
         {
@@ -559,7 +563,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     <Form.Item name = 'styleId' hidden><Input/></Form.Item>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 8 }}>
                         <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
-                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code' onChange={m3FabricOnchange}>
+                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code' onChange={m3FabricOnchange}disabled={inputDisbale}>
                                 {fabricM3Code.map(e => {
                                     return (
                                         <Option key={e.m3ItemsId} value={e.m3ItemsId} name={e.itemCode}> {e.itemCode + "-" + e.description}</Option>

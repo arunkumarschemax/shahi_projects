@@ -48,52 +48,48 @@ export class M3ItemsService {
   async getM3Items(req?:M3Itemsfilter): Promise<CommonResponseModel> {
     console.log(req,"req");
     
-    let query = `SELECT m3.description,m3.m3_items_Id AS m3ItemsId,m3.item_code AS itemCode,m3.content,m3.fabric_type,m3.weave,m3.weight,m3.construction,
-    m3.yarn_count,m3.finish,m3.shrinkage,ft.fabric_type_name,fw.fabric_weave_name, uom1.uom AS weightUnit,m3.m3_code as m3Code,m3.hsn_code as hsnCode,
-     uom2.uom AS yarnUnit, b.buyer_name AS buyer, m3.width ,uom3.uom AS widthUnit,m3.buyer_id FROM m3_items m3
-     
-     LEFT JOIN fabric_type ft ON ft.fabric_type_id=m3.fabric_type 
-     LEFT JOIN fabric_weave fw ON fw.fabric_weave_id=m3.weave 
-     LEFT JOIN buyers b ON b.buyer_id = m3.buyer_id
-      LEFT JOIN uom uom1 ON uom1.id=m3.weight_unit 
-    LEFT JOIN uom uom2 ON uom2.id=m3.yarn_unit 
-    LEFT JOIN uom uom3 ON uom3.id=m3.width_unit 
+    let query = `SELECT m3i.m3_items_id AS m3ItemsId,m3i.item_code AS itemCode, m3i.description,m3i.weight AS weightId,
+    m3i.fabric_type AS fabricTypeId, ft.fabric_type_name AS fabricType,
+    m3i.weave AS weaveId,fw.fabric_weave_name AS fabricWeave,
+    m3i.weight_unit AS weightUnit,wu.uom AS weightUom,
+    m3i.ppi_construction AS ppiConstruction, m3i.epi_construction AS epiConstruction,m3i.yarn_type AS yarnType,
+    m3i.width, m3i.width_unit AS widthUnit,wi.uom AS widthUom,
+    m3i.finish AS finishId,fft.fabric_finish_type AS fabricFinish,
+    m3i.shrinkage,
+    m3i.buyer_id AS buyerId,b.buyer_name AS buyerName,
+    m3i.m3_code AS m3Code, m3i.hsn_code AS hsnCode
+    FROM m3_items m3i
+    LEFT JOIN fabric_type ft ON ft.fabric_type_id = m3i.fabric_type
+    LEFT JOIN fabric_weave fw ON fw.fabric_weave_id = m3i.weave
+    LEFT JOIN uom wu ON wu.id = m3i.weight_unit
+    LEFT JOIN uom wi ON wi.id = m3i.width_unit
+    LEFT JOIN fabric_finish_types fft ON fft.fabric_finish_type_id = m3i.finish
+    LEFT JOIN buyers b ON b.buyer_id = m3i.buyer_id 
      WHERE 1 = 1 `
     let param :any={}
     if(req){
       if (req.buyerId!== undefined){
-        query += ` AND m3.buyer_id = ${req.buyerId}`
-      }
-      if (req.content!== undefined){
-        query += ` AND m3.content = '${req.content}'`
+        query += ` AND m3i.buyer_id = ${req.buyerId}`
       }
       if (req.fabricType!== undefined){
         query += ` AND fabric_type = ${req.fabricType}`
       }
       if (req.weave!== undefined){
-        query += ` AND m3.weave = ${req.weave}`
-      }
-      if (req.construction!== undefined){
-        query += ` AND m3.construction = '${req.construction}'`
+        query += ` AND m3i.weave_id = ${req.weave}`
       }
       if (req.finish!== undefined){
-        query += ` AND m3.finish = '${req.finish}'`
-      }
-      
-      if (req.weight!== undefined){
-        query += ` AND m3.weight = ${req.weight}`
+        query += ` AND m3i.finish_id = '${req.finish}'`
       }
       if (req.width!== undefined){
         query += ` AND m3.width = ${req.width}`
       }
-
       if (req.yarnCount!== undefined){
-        query += ` AND m3.yarn_count = ${req.yarnCount}`
+        query += ` AND m3i.yarn_type = ${req.yarnCount}`
       }
     }
    
    
-    query+= ` ORDER BY b.buyer_name,m3.content,m3.fabric_type,m3.weave,m3.weight`
+    query+= ` ORDER BY b.buyer_name,m3i.fabric_type,m3i.weave`
     
     const data = await this.datasource.query(query,param)
     if (data)
@@ -118,7 +114,7 @@ export class M3ItemsService {
     }
   }
   async checkDuplicate(createDto: M3FabricsDTO): Promise<CommonResponseModel> {
-    let query = `Select * from m3_items m3 where fabric_type_id = ` + createDto.fabricTypeId + ` and weave_id = ` + createDto.weaveId + ` and weight_id = "` + createDto.weightId + `" and weight_unit = ` + createDto.weightUnit + ` and epi_construction = "` + createDto.epiConstruction + `" and yarn_type = "` + createDto.yarnType + `" and finish_id = "` + createDto.finishId + `" and shrinkage = "` + createDto.shrinkage+`"`;
+    let query = `Select * from m3_items m3 where fabric_type = ` + createDto.fabricTypeId + ` and weave = ` + createDto.weaveId + ` and weight = "` + createDto.weightId + `" and weight_unit = ` + createDto.weightUnit + ` and epi_construction = "` + createDto.epiConstruction + `" and yarn_type = "` + createDto.yarnType + `" and finish = "` + createDto.finishId + `" and shrinkage = "` + createDto.shrinkage+`"`;
     const data = await this.datasource.query(query)
     if (data.length > 0){
       return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)

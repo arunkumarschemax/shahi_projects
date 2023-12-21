@@ -3,7 +3,7 @@ import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Chec
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { M3TrimsService, SampleDevelopmentService, TrimParamsMappingService, UomService } from '@project-management-system/shared-services';
-import { ItemTypeEnumDisplay, ItemTypeEnum, M3TrimType, BuyerIdReq, TrimIdRequestDto, buyerandM3ItemIdReq } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, ItemTypeEnum, M3TrimType, BuyerIdReq, TrimIdRequestDto, buyerandM3ItemIdReq, UomCategoryEnum } from '@project-management-system/shared-models';
 import moment from 'moment';
 import AlertMessages from '../common/common-functions/alert-messages';
 
@@ -46,8 +46,10 @@ const TrimsForm = (props:TrimsFormProps) => {
         const newRow = {
           key: count,
           colourId:element.colour,
-          totalCount: qtyy
+          totalCount: qtyy,
+          wastage:2
         };
+        props.form.setFieldValue([`wastage${count}`],2)
         setData([...data, newRow]);
         setCount(count + 1);
       });
@@ -312,9 +314,9 @@ const getMappedTrims = (value, option) => {
     {
       title: 'Trim Code',
       dataIndex: 'trimCode',
-      width:"40%",
+      width:"100%",
       render: (_, record) => (
-        <><Form.Item name={`allocatedStock${record.key}`} ><Input name={`allocatedStock${record.key}`} style={{ display: 'none' }} /></Form.Item><Form.Item name={`trimCode${record.key}`} rules={[{ required: true, message: 'Missing Trim Code' }]}>
+        <><Form.Item name={`allocatedStock${record.key}`} style={{ display: 'none' }}><Input name={`allocatedStock${record.key}`} style={{ display: 'none' }} /></Form.Item><Form.Item name={`trimCode${record.key}`} rules={[{ required: true, message: 'Missing Trim Code' }]}>
           <Select
             value={record.trimCode}
             onChange={(e) => handleInputChange(e, record.key, 'trimCode', record)}
@@ -335,7 +337,7 @@ const getMappedTrims = (value, option) => {
     {
       title: 'Consumption',
       dataIndex: 'consumption',
-      width:"15%",
+      width:"16%",
       render: (_, record) => (
         <Form.Item name={`consumption${record.key}`} rules={[{ required: true, message: 'Missing Consumption' }]}>
         <InputNumber
@@ -348,7 +350,7 @@ const getMappedTrims = (value, option) => {
     {
       title:"UOM",
       dataIndex: 'Uom',
-      width:"13%",
+      width:"14%",
       render: (_, record) => (
         <Form.Item name={`uomId${record.key}`} rules={[{ required: true, message: 'Missing UOM' }]}>
         <Select
@@ -361,7 +363,7 @@ const getMappedTrims = (value, option) => {
         // defaultValue={uom.find((e) => e.uom === "PCS")?.uom}
         onChange={(e) => handleInputChange(e, record.key, 'uomId',record)}
         >
-            {uom.map(e => {
+            {uom.filter((e) => e.uomCategory === UomCategoryEnum.VOLUME)?.map(e => {
               return(
                   <option key={e.uomId} value={e.uomId}>{e.uom}</option>
                   
@@ -560,7 +562,7 @@ const getMappedTrims = (value, option) => {
       expandable = {{
         defaultExpandAllRows : true
         }}
-        scroll={{ x: true }}
+        scroll={{ x: 2000 }}
         size="large"
         bordered
       />

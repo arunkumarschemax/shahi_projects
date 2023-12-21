@@ -21,7 +21,8 @@ export class PurchaseOrderItemsEntity{
     })
   m3ItemId:number
 
-  @Column('decimal',{
+  @Column({
+    type: "decimal", precision: 10, scale: 3,
     name:'po_quantity',
     nullable:true
   })
@@ -39,7 +40,8 @@ export class PurchaseOrderItemsEntity{
   })
  poitemStatus:PoItemEnum
 
- @Column('decimal',{
+ @Column({
+    type: "decimal", precision: 10, scale: 3,
     name:'grn_quantity',
     nullable:true,
     default:0
@@ -89,7 +91,8 @@ export class PurchaseOrderItemsEntity{
   })
   transportation:number
 
-  @Column('int',{
+  @Column({
+    type: "decimal", precision: 10, scale: 3,
     name:'subjective_amount',
     nullable:true
   })

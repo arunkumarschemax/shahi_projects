@@ -9,6 +9,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 import { useIAMClientState } from "../common/iam-client-react";
 
 const SampleRequestReport = () => {
+  const [page, setPage] = useState(1)
   const service = new SampleDevelopmentService();
   const buyerservice= new BuyersService()
   const styleservice = new StyleService();
@@ -31,6 +32,7 @@ const SampleRequestReport = () => {
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [samplingPO] = Form.useForm()
   const [isBuyer, setIsBuyer] = useState(false);
+  const [checked, setChecked] = useState<boolean>(false)
 
 
   const {Option} = Select
@@ -117,173 +119,292 @@ const SampleRequestReport = () => {
     return data ? data : "-";
   };
 
-  const ItemColumns: any = [
+  // const ItemColumns: any = [
+  //   {
+  //     title: "Material Type",
+  //     dataIndex: "fabricType",
+  //     key: "fabricType",
+  //     align: "center",
+  //   },
+  //   {
+  //     title: "Item Name",
+  //     dataIndex: "itemCode",
+  //     key: "itemCode",
+  //     align: "center",
+  //   },
+  //   {
+  //     title: "Quantity",
+  //     dataIndex: "quantity",
+  //     key: "quantity",
+  //     align: "center",
+  //   },
+  //   {
+  //     title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
+  //     dataIndex: "sm",
+  //     key: "sm",
+  //     align: "center",
+  //     render: (text, rowData, index) => { 
+  //       return(
+  //         <Checkbox  name={rowData.samplingBomId}
+  //         onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, text, rowData)}
+         
+  //       />
+  //       )
+  //     }
+  //   }
+  // ]
+  const Columns:any  = [
+    // { title: 'S.no', render: (text: any, object: any, index: any) => (page - 1) * 10 + (index + 1), },
+
+    // {
+    //   title: "Request No",
+    //   dataIndex: "sampleReqNo",
+    //   sorter: (a, b) => a.sampleReqNo.localeCompare(b.sampleReqNo),
+    //   sortDirections: ['descend', 'ascend'],
+    // },
+    {
+      title: 'Sample Request No',
+      dataIndex: 'sampleReqNo',
+      key: 'sampleReqNo',
+      render: (text, record, index) => {
+        if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
+          const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
+          return {
+            children: record.sampleReqNo,
+            props: {
+              rowSpan: rowSpan,
+            },
+          };
+        } else {
+          return {
+            children: null,
+            props: {
+              rowSpan: 0,
+            },
+          };
+        }
+      },
+   
+    },
+    {
+      title: 'Buyer',
+      dataIndex: 'buyername',
+      key: 'buyername',
+      render: (text, record, index) => {
+        if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
+          const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
+          return {
+            children: record.buyername,
+            props: {
+              rowSpan: rowSpan,
+            },
+          };
+        } else {
+          return {
+            children: null,
+            props: {
+              rowSpan: 0,
+            },
+          };
+        }
+      },
+   
+    },
+    {
+      title: 'Brand',
+      dataIndex: 'brandName',
+      key: 'brandName',
+      render: (text, record, index) => {
+        if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
+          const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
+          return {
+            children: record.brandName,
+            props: {
+              rowSpan: rowSpan,
+            },
+          };
+        } else {
+          return {
+            children: null,
+            props: {
+              rowSpan: 0,
+            },
+          };
+        }
+      },
+    },
+    {
+      title: 'Location',
+      dataIndex: 'location',
+      key: 'location',
+      render: (text, record, index) => {
+        if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
+          const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
+          return {
+            children: record.location,
+            props: {
+              rowSpan: rowSpan,
+            },
+          };
+        } else {
+          return {
+            children: null,
+            props: {
+              rowSpan: 0,
+            },
+          };
+        }
+      },
+    },
+    {
+      title: 'Style',
+      dataIndex: 'styleName',
+      key: 'styleName',
+      render: (text, record, index) => {
+        if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
+          const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
+          return {
+            children: record.styleName,
+            props: {
+              rowSpan: rowSpan,
+            },
+          };
+        } else {
+          return {
+            children: null,
+            props: {
+              rowSpan: 0,
+            },
+          };
+        }
+      },
+   
+    },
     {
       title: "Material Type",
-      dataIndex: "fabricType",
-      key: "fabricType",
-      align: "center",
+      dataIndex: "itemType",
+      sorter: (a, b) => a.itemType.localeCompare(b.itemType),
+      sortDirections: ['descend', 'ascend'],
     },
     {
-      title: "Item Name",
+      title: "Item",
       dataIndex: "itemCode",
-      key: "itemCode",
-      align: "center",
-    },
-    {
-      title: "Quantity",
-      dataIndex: "quantity",
-      key: "quantity",
-      align: "center",
-    },
-    {
-      title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
-      dataIndex: "sm",
-      key: "sm",
-      align: "center",
-      render: (text, rowData, index) => { 
-        return(
-          <Checkbox 
-          onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, text, rowData)}
-         
-        />
-        )
-      }
-    }
-  ]
-  const Columns: any = [
-    {
-      title: "Request No",
-      dataIndex: "sampleReqNo",
-      sorter: (a, b) => a.sampleReqNo.localeCompare(b.sampleReqNo),
+      sorter: (a, b) => a.itemCode.localeCompare(b.itemCode),
       sortDirections: ['descend', 'ascend'],
     },
     {
-      title: "Buyer",
-      dataIndex: "buyerName",
-      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
+      title: "Color",
+      dataIndex: "colourName",
+      sorter: (a, b) => a.colourName.localeCompare(b.colourName),
       sortDirections: ['descend', 'ascend'],
-    },
+    },  
     {
-      title: "Brand",
-      dataIndex: "brandName",
-      sorter: (a, b) => a.brandName.localeCompare(b.brandName),
-      sortDirections: ['descend', 'ascend'],
-    },
-    {
-      title: "Location",
-      dataIndex: "locationName",
-      sorter: (a, b) => a.locationName.localeCompare(b.locationName),
+      title: "Required Qty",
+      dataIndex: "bomQuantity",
+      sorter: (a, b) => a.bomQuantity.localeCompare(b.bomQuantity),
       sortDirections: ['descend', 'ascend'],
     },
     
-    {
-      title: "Style",
-      dataIndex: "stylename",
-      sorter: (a, b) => a.stylename.localeCompare(b.stylename),
-      sortDirections: ['descend', 'ascend'],
-    },
+    // {
+    //   title: "Style",
+    //   dataIndex: "stylename",
+    //   sorter: (a, b) => a.stylename.localeCompare(b.stylename),
+    //   sortDirections: ['descend', 'ascend'],
+    // },
 
     
    
-    {
-      title: <div style={{ textAlign: "center" }}>Material Type</div>,
-      dataIndex: "sm",
-      key: "sm",
-      align: "center",
-      render: (sm, text) => {
-        renderCellData(text);
-        return (
-          <Table
-            dataSource={sm}
-            columns={[{
-              dataIndex: "fabricType",
-              key: "fabricType",
-              align: "center",
-              render: (text) => {
-                const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
-                return EnumObj ? EnumObj.displayVal : text;
-              },
-            }]}
-            pagination={false}
-          />
-        );
-      },
-    },
+    // {
+    //   title: <div style={{ textAlign: "center" }}>Material Type</div>,
+    //   dataIndex: "sm",
+    //   key: "sm",
+    //   align: "center",
+    //   render: (sm, text) => {
+    //     renderCellData(text);
+    //     return (
+    //       <Table
+    //         dataSource={sm}
+    //         columns={[{
+    //           dataIndex: "fabricType",
+    //           key: "fabricType",
+    //           align: "center",
+    //           render: (text) => {
+    //             const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+    //             return EnumObj ? EnumObj.displayVal : text;
+    //           },
+    //         }]}
+    //         pagination={false}
+    //       />
+    //     );
+    //   },
+    // },
  
-    {
-      title: <div style={{ textAlign: "center" }}>Item</div>,
-      dataIndex: "sm",
-      key: "sm",
-      align: "center",
-      render: (sm, text) => {
-        renderCellData(text);
-        return (
-          <Table
-            dataSource={sm}
-            columns={[
-              {
-                dataIndex: "itemCode",
-                key: "itemCode",
-                align: "center",
-              },
-            ]}
-            pagination={false}
-          />
-        );
-      },
-    },
-    {
-      title: <div style={{ textAlign: "center" }}>Required Qty</div>,
-      dataIndex: "sm",
-      key: "sm",
-      align: "center",
-      render: (sm) => {
-        return (
-          <Table
-            dataSource={sm}
-            columns={[
-              {
-                dataIndex: "bomQuantity",
-                key: "bomQuantity",
-                align: "center",
-              },
-            ]}
-            pagination={false}
-          />
-        );
-      },
-    },
+    // {
+    //   title: <div style={{ textAlign: "center" }}>Item</div>,
+    //   dataIndex: "sm",
+    //   key: "sm",
+    //   align: "center",
+    //   render: (sm, text) => {
+    //     renderCellData(text);
+    //     return (
+    //       <Table
+    //         dataSource={sm}
+    //         columns={[
+    //           {
+    //             dataIndex: "itemCode",
+    //             key: "itemCode",
+    //             align: "center",
+    //           },
+    //         ]}
+    //         pagination={false}
+    //       />
+    //     );
+    //   },
+    // },
+    // {
+    //   title: <div style={{ textAlign: "center" }}>Required Qty</div>,
+    //   dataIndex: "sm",
+    //   key: "sm",
+    //   align: "center",
+    //   render: (sm) => {
+    //     return (
+    //       <Table
+    //         dataSource={sm}
+    //         columns={[
+    //           {
+    //             dataIndex: "bomQuantity",
+    //             key: "bomQuantity",
+    //             align: "center",
+    //           },
+    //         ]}
+    //         pagination={false}
+    //       />
+    //     );
+    //   },
+    // },
     {
       title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
-      dataIndex: "sm",
-      key: "sm",
-      align: "center",
-      render: (sm) => {
+      dataIndex: "checkStatus",
+      key: "checkStatus",
+      align: "left",
+      render: (text, record, index) => {
         return (
-          <Table
-            dataSource={sm}
-            columns={[
-              {
-                render: (text, rowData, index) => { 
-                  return(
-                    <Form form={samplingPO} layout="vertical">
-                      <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
-                        <Form.Item name={rowData.samplingBomId} >
-                            <Checkbox  name={rowData.samplingBomId} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.fabricType, text, rowData)}/>
-                        </Form.Item>
-                      </Col>
-                    </Form>
-                  )
-                }
-              },
-            ]}
-            pagination={false}
-          />
+          <Form form={samplingPO} layout="vertical">
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+              <Form.Item name={`checkStatus${index}`}  >
+                  <Checkbox name={`checkStatus${index}`} onClick={checkboxonclick} onChange={(e) => onCheck(e, record.sampleRequestid, record.fabricType, text, record, index)}/>
+              </Form.Item>
+            </Col>
+          </Form>
+                 
         );
       },
     },
   ];
+
+  const checkboxonclick =() =>{
+    setChecked(true)
+  }
 
   const generatePo =()=>{
     navigate("/purchase-order", { state: { data: selectedItems, type:'Sampling'  } });
@@ -291,40 +412,42 @@ const SampleRequestReport = () => {
   
   const dataa=[];
 
-  const onCheck = (e, sampleRequestid, fabricType, value, rowData) => {
+  const onCheck = (e, sampleRequestid, fabricType, value, rowData, index) => {
     console.log(e.target.checked);
     console.log(sampleRequestid);
     console.log(fabricType);
     console.log(rowData);
 
     console.log(selectedRowData);
-    console.log(selectedRowData.find((rec) => rec.fabricType != fabricType));
 
     if(e.target.checked){
       
-      let rowsData = [...selectedRowData,rowData]
-      setSelectedRowData(rowsData)
       let checkItemType:boolean = true;
-      checkItemType = (selectedRowData.find((rec) => rec.fabricType != fabricType) != undefined) ? false: true;
+      checkItemType = (selectedRowData.length > 0 ? ((selectedRowData.find((rec) => rec.itemType === rowData.itemType) != undefined) ? true: false) :true);
       console.log(checkItemType)
       if(!checkItemType){
+        samplingPO.setFieldsValue({[`checkStatus${index}`]:false})
         AlertMessages.getErrorMessage('Generate PO for single Material Type. ')
         setbtnEnable(false)
       }
-      setbtnEnable(true)
+      else{
+        let rowsData = [...selectedRowData,rowData];
+        setSelectedRowData(rowsData)
+        setbtnEnable(true)
+      }
       console.log(data)
     }
     else{
       console.log(rowData)
       console.log(selectedRowData)
       let itemsArray = [...selectedRowData];
-      console.log(itemsArray.findIndex((e) => e.samplingBomId === rowData.samplingBomId));
       let index = itemsArray.findIndex((e) => e.samplingBomId === rowData.samplingBomId);
       itemsArray.splice(index, 1);
-      let newArray = [...itemsArray]
-      setSelectedRowData(newArray);
+      console.log(itemsArray)
+      // let newArray = [...itemsArray]
+      setSelectedRowData(itemsArray);
       console.log(selectedRowData)
-      samplingPO.setFieldValue([rowData.samplingBomId],"false")
+      samplingPO.setFieldsValue({[`checkStatus${index}`]:false})
       console.log(selectedRowData.length)
       selectedRowData.length - Number(1) > 0 ? setbtnEnable(true) : setbtnEnable(false)
     }
@@ -334,21 +457,29 @@ const SampleRequestReport = () => {
 
 
     setType(fabricType)
-    const updatedIndentIds = selectedIndentIds.includes(sampleRequestid)
-      ? selectedIndentIds.filter(id => id !== sampleRequestid)
-      : [...selectedIndentIds, sampleRequestid];
+    const updatedIndentIds = selectedIndentIds.push(sampleRequestid)
+    ? selectedIndentIds
+    : [...selectedIndentIds, sampleRequestid];
     setSelectedIndentIds(updatedIndentIds);
     console.log(selectedIndentIds)
     // setbtnEnable(true)
 
-    const updated1 = selectItemIds.push(rowData.m3ItemId)
+    const updated1 = selectItemIds.push(rowData.sampleItemId)
   ? selectItemIds
-  : [...selectItemIds, rowData.m3ItemId];
-  // console.log(updated1);
+  : [...selectItemIds, rowData.sampleItemId];
+  console.log(updated1);
     setSelectItemIds(updated1);
 
+    console.log(selectedRowData)
+    let type
+    if(e.target.checked){
+      type = selectedRowData[0]?.itemType === undefined ? rowData.itemType:selectedRowData[0]?.itemType;
+    }
+    else{
+      type = selectedRowData.length - Number(1) > 0 ? (selectedRowData[0]?.itemType === undefined ? rowData.itemType:selectedRowData[0]?.itemType) : undefined;
+    }
     
-    const resultArray = [{materialType:fabricType}, { sampleReqIds: updatedIndentIds },{m3itemid:updated1}, {buyerId: rowData.buyerId}];
+    const resultArray = [{materialType:type}, { sampleReqIds: updatedIndentIds },{m3itemid:updated1}, {buyerId: rowData.buyerId}];
     console.log(resultArray)
     setSelectedItems(resultArray)
 
@@ -449,9 +580,10 @@ const SampleRequestReport = () => {
           </Row>
         </Form>
         <Table
+          pagination={false}
           columns={Columns}
           dataSource={data}
-          className="custom-table-wrapper"
+          rowKey="id"
         />
       </Card>
     </div>
