@@ -39,6 +39,8 @@ const SeasonWiseReportData = () => {
   const { Option } = Select;
   const [tabChange, setTabChange] = useState<string>();
   const [storeData, setStoreData] = useState<any>([]);
+  const [excelDataa, setExcelDataa] = useState<any>([]);
+
 
   useEffect(() => {
     tabHeaderData();
@@ -91,7 +93,7 @@ const SeasonWiseReportData = () => {
       }
     });
   };
-
+   console.log(tabsData,"hai")
   const getItemCode = () => {
     service.getSeasonWiseItemCode().then((res) => {
       setItemCode(res.data);
@@ -123,9 +125,10 @@ const SeasonWiseReportData = () => {
     );
     return Array.from(sizeHeaders);
   };
-
+  
 
   const sizeHeaders = getSizeWiseHeaders(data);
+  
   const columnsWH: ColumnsType<any> = [
     {
       title: "#",
@@ -187,6 +190,140 @@ const SeasonWiseReportData = () => {
 
   const exportExcel = () => {
     const excel = new Excel();
+
+    let excelData = [];
+    let tabsNames = [];
+    let promises = [];
+
+    // Create an array of promises
+    for (const rec of tabsData) {
+      const req = new SeasonWiseRequest();
+      req.year = Number(rec.split(",")[1]);
+      req.season = rec.split(",")[2];
+      req.qtyLocation = rec.split(",")[0].split("-")[1].toLocaleLowerCase();
+      console.log(req,"rrreq")
+      const promise = service.seasonWiseReportData(req);
+      promises.push(promise);
+
+      promise.then((res) => {
+        if (res.status) {
+          console.log(res, "pppppppppppppppppppppppppppp");
+          excelData.push(res.data);
+          setExcelDataa(res.data)
+          tabsNames.push(rec.split(",")[0]);
+
+          console.log(rec.split(",")[0]);
+        }
+      });
+    }
+
+  
+    Promise.all(promises).then(() => {
+      console.log(excelData, tabsNames, "LLLLLLLLLLLLLLLLls");
+
+      if (excelData.length) {
+        excelData.forEach((seasonData, index) => {
+
+          let rowIndex = 1;
+          const excelColumnsWH: any[] = [];
+          excelColumnsWH.push(
+            { 
+              title: "#", 
+              // dataIndex: "sno", 
+              render: (text, object, index) => { 
+                if(index == seasonData.length+1) { 
+                  return null;
+                } else { 
+                  return rowIndex++; 
+                } 
+              }
+            },
+            {
+              title:"Planning Sum",
+              dataIndex: "itemName",
+              // ellipsis: true,
+            }
+          );
+          const sizeHeaders = new Set<string>();
+          seasonData?.forEach((rec) =>
+            rec.MonthItemData?.forEach((version) => {
+              sizeHeaders.add("" + version.monthName);
+            })
+          );
+
+          sizeHeaders?.forEach((version) => {
+            excelColumnsWH.push({
+              title: version,
+              dataIndex: version,
+              key: version,
+              // width: "110px",
+              align: "right",
+              render: (text, record) => {
+                const sizeData = record.MonthItemData.find(
+                  (item) => item.monthName === version
+                );
+                if (sizeData) {
+                  if (sizeData.monthName) {
+                    const formattedQty = sizeData?.totalQuantity;
+                    return formattedQty;
+                  } else {
+                    return "-";
+                  }
+                } else {
+                  return "-";
+                }
+              },
+            });
+          });
+
+          excelColumnsWH.push({
+            title: "Total",
+            dataIndex: "total",
+            align: "right",
+            // width: "30px",
+            render: (text, record) => {
+              let sum = 0;
+              record.MonthItemData.forEach((r: any) => {
+                sum += r.totalQuantity;
+              });
+              return sum;
+            },
+          });
+
+          const obj = {};
+          const monthTotals = {};
+          sizeHeaders.forEach((mon) => {
+            let monthValue = 0;
+            monthTotals[mon] = 0;
+            seasonData.forEach((r) => {
+              const sizeData = r?.MonthItemData?.find((item) => item.monthName == mon);
+              // console.log(sizeData);
+              monthValue = sizeData ? Number(sizeData?.totalQuantity) : 0;
+              monthTotals[mon] += monthValue;
+            });
+          });
+          console.log(monthTotals);
+          console.log(data[0]);
+          obj['MonthItemData'] = [];
+          obj['itemName'] = "Grand Total";
+          Object.keys(monthTotals).forEach(k => {
+            obj['MonthItemData'].push({ monthName : k, totalQuantity : monthTotals[k]});
+          });
+          seasonData.push(obj);
+          if (seasonData.length > 0) {
+            excel
+              .addSheet(`${tabsNames[index]}`)
+              .addColumns(excelColumnsWH)
+              .addDataSource(seasonData, { str2num: true });
+
+          }
+        });
+        excel.saveAs("SeasonWise.xlsx");
+      }
+    });
+
+
+
     const obj = {};
 
     const monthTotals = {};
@@ -211,78 +348,76 @@ const SeasonWiseReportData = () => {
     const dataDuplicate = JSON.parse(JSON.stringify(data));
     dataDuplicate.push(obj);
     console.log(dataDuplicate[dataDuplicate.length]);
-    excel
-      .addSheet(tabChange?.split(",")[0])
-      .addColumns(excelColumnsWH)
-      .addDataSource(dataDuplicate,{ str2num: true })
-      .saveAs('SeasonWise.xlsx');
+
+
+ 
   }
 
 
 
 
-  let i = 1;
-  const excelColumnsWH:any = [
+//   let i = 1;
+//   const excelColumnsWH:any = [
    
-    { 
-      title: "#", 
-      // dataIndex: "sno", 
-      render: (text, object, index) => { 
-        if(index == data.length) { 
-          return null;
-        } else { 
-          return i++; 
-        } 
-      }
-    },
+//     { 
+//       title: "#", 
+//       // dataIndex: "sno", 
+//       render: (text, object, index) => { 
+//         if(index == data.length) { 
+//           return null;
+//         } else { 
+//           return i++; 
+//         } 
+//       }
+//     },
 
-    {
-      title:"Planning Sum",
-      dataIndex: "itemName",
-      // ellipsis: true,
-    },
+//     {
+//       title:"Planning Sum",
+//       dataIndex: "itemName",
+//       // ellipsis: true,
+//     },
     
 
-  ];
+//   ];
 
-sizeHeaders?.forEach((version) => {
-  excelColumnsWH.push({
-    title: version,
-    dataIndex: version,
-    key: version,
-    // width: "110px",
-    align: "right",
-    render: (text, record) => {
-      const sizeData = record.MonthItemData.find(
-        (item) => item.monthName === version
-      );
-      if (sizeData) {
-        if (sizeData.monthName) {
-          const formattedQty = sizeData?.totalQuantity;
-          return formattedQty;
-        } else {
-          return "-";
-        }
-      } else {
-        return "-";
-      }
-    },
-  });
-});
+// sizeHeaders?.forEach((version) => {
+//   excelColumnsWH.push({
+//     title: version,
+//     dataIndex: version,
+//     key: version,
+//     // width: "110px",
+//     align: "right",
+//     render: (text, record) => {
+//       const sizeData = record.MonthItemData.find(
+//         (item) => item.monthName === version
+//       );
+//       if (sizeData) {
+//         if (sizeData.monthName) {
+//           const formattedQty = sizeData?.totalQuantity;
+//           return formattedQty;
+//         } else {
+//           return "-";
+//         }
+//       } else {
+//         return "-";
+//       }
+//     },
+//   });
+// });
 
-excelColumnsWH.push({
-  title: "Total",
-  dataIndex: "total",
-  align: "right",
-  // width: "30px",
-  render: (text, record) => {
-    let sum = 0;
-    record.MonthItemData.forEach((r: any) => {
-      sum += r.totalQuantity;
-    });
-    return sum;
-  },
-});
+// excelColumnsWH.push({
+//   title: "Total",
+//   dataIndex: "total",
+//   align: "right",
+//   // width: "30px",
+//   render: (text, record) => {
+//     let sum = 0;
+//     record.MonthItemData.forEach((r: any) => {
+//       sum += r.totalQuantity;
+//     });
+//     return sum;
+//   },
+// });
 
 
 
