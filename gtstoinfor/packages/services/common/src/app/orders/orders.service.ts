@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq, CoLineFormatModel, Destinations, Colors, Sizes, FileInfoModel, sesaonWisereportModel, MonthItemData, CoLineRequest ,NewitemDataDto, NewMonthWiseDto, pcsData} from '@project-management-system/shared-models';
+import { CoeffDataDto, COLineRequest, CommonResponseModel, FileStatusReq, FileTypeDto, FileTypesEnum, ItemDataDto, MonthAndQtyModel, MonthWiseDataModel, MonthWiseDto, MonthWiseExcelDataModel, PcsDataDto, PhaseAndQtyModel, PhaseWiseDataModel, PhaseWiseExcelDataModel, VersionAndQtyModel, VersionDataModel, YearReq, orderColumnValues, ProductionOrderColumns, TrimOrderColumns, SeasonWiseRequest, CompareOrdersFilterReq, orders, CoLineStatusReq, TrimOrdersReq, ordersPlanNo, RequiredColumns, ordersMailFileStatusArrayReq, CoLineFormatModel, Destinations, Colors, Sizes, FileInfoModel, sesaonWisereportModel, MonthItemData, CoLineRequest ,NewitemDataDto, NewMonthWiseDto, pcsData, PhaseWiseReq, itemData} from '@project-management-system/shared-models';
 import axios, { Axios } from 'axios';
 import { SaveOrderDto } from './models/save-order-dto';
 import { OrdersRepository } from './repository/orders.repository';
@@ -2350,6 +2350,7 @@ export class OrdersService {
             return new CommonResponseModel(false, 0, 'error occurred', null);
         }
     }
+
     async getComparisionphaseData(req: YearReq): Promise<CommonResponseModel> {
         const data = await this.ordersChildRepo.getComparisionphaseData(req);
         const DateMap = new Map<string, MonthWiseDto>();
@@ -2646,7 +2647,7 @@ export class OrdersService {
         // }
     }
 
-
+  
 
     async getComparisionphaseExcelData(req: YearReq): Promise<CommonResponseModel> {
         try {
@@ -3443,10 +3444,7 @@ export class OrdersService {
 
         query += ' GROUP BY MONTH('+qtyLocationDate+'),YEAR('+qtyLocationDate+'),planning_sum order by YEAR('+qtyLocationDate+'),MONTH('+qtyLocationDate+')';
 
-            // const data = await this.ordersRepository.query(query)
             const data = await this.dataSource.query(query)
-            // console.log(data, '$$$$$$$$$$$$$$$$$$$$$$')
-            // console.log(data.length, '$$$$$$$$$$$$$$$$$$$$$$')
 
             const sizeDataMap = new Map<string, sesaonWisereportModel>();
             for (const rec of data) {
@@ -3459,7 +3457,6 @@ export class OrdersService {
                 }
             }
             const detailedarray: sesaonWisereportModel[] = Array.from(sizeDataMap.values());
-            // console.log(detailedarray, '$$$$$$$$$$$$$$$$$$$$$$$$$$$')
 
             if (detailedarray) {
                 return new CommonResponseModel(true, 1, 'data retrived sucessfully', detailedarray)
@@ -3473,6 +3470,9 @@ export class OrdersService {
         }
 
     }
+
+
+  
 
     async coLineCreationReq(req: any): Promise<CommonResponseModel> {
         // const data = this.coLineRepository.findOne({ where: { buyerPo: req.purchaseOrderNumber, lineItemNo: req.poLineItemNumber } })
@@ -3762,6 +3762,51 @@ export class OrdersService {
             return false;
         }
     }
+
+    async getPhaseMonthExcelDataNew(req: YearReq): Promise<CommonResponseModel>{
+        const data1 = await this.ordersRepository.getData1New(req)
+        const data2 = await this.ordersRepository.getFinalNewData(req)
+        const dataMap = new Map<string, PhaseWiseReq >();
+        const dataMap2 = new Map<string, PhaseWiseReq >();
+
+        for(const rec of data2){
+            if(!dataMap.has(rec.prod_plan_type)){
+                dataMap.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[]))
+            }
+            const item=dataMap.get(rec.prod_plan_type).itemData
+            if(rec.prod_plan_type != null){
+                if(req.tabName == 'ExFactory'){
+                    item.push(new itemData(rec.exfMonth,rec.exfPcs,rec.exfCoeff))
+                }
+                if(req.tabName === 'WareHouse' ){
+                    item.push(new itemData(rec.whMonth,rec.whPcs,rec.whCoeff))
+                }
+            }
+        }
+        const detailedarray: PhaseWiseReq[] = Array.from(dataMap.values())
+        // for(const rec of data1){
+        //     if(!dataMap2.has(rec.prod_plan_type)){
+        //         dataMap2.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[]))
+        //     }
+        //     const item=dataMap2.get(rec.prod_plan_type).itemData
+        //     if(rec.prod_plan_type != null){
+        //         if(req.tabName == 'ExFactory'){
+        //             item.push(new itemData(rec.exfMonth,rec.exfper,rec.exfcoefper))
+        //         }
+        //         if(req.tabName === 'WareHouse' ){
+        //             item.push(new itemData(rec.whMonth,rec.whper,rec.whcoefper))
+        //         }
+        //     }
+        // }
+
+        // console.log(detailedarray,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+        const detaledArray2:PhaseWiseReq[] = Array.from(dataMap2.values())
+        console.log(detaledArray2,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+
+        const finalArray =[...detailedarray,...detaledArray2]
+        return new CommonResponseModel(true,1,'Data Retrived Sucessfully',detailedarray)
+    }
+
 
 }
 

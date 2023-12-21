@@ -705,4 +705,13 @@ export class OrdersController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
         }
     }
+
+    @Post('/getPhaseMonthExcelDataNew')
+    async getPhaseMonthExcelDataNew(@Body() req:any){
+        try{
+            return await this.ordersService.getPhaseMonthExcelDataNew(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,err)
+        }
+    }
 }

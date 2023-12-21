@@ -276,5 +276,7 @@ export class OrdersService extends CommonAxiosService {
     async seasonWiseReportData(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.ordersController + "/seasonWiseReportData", req)
     }
-
+    async getPhaseMonthExcelDataNew(req: YearReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.ordersController + "/getPhaseMonthExcelDataNew", req)
+    }
 }

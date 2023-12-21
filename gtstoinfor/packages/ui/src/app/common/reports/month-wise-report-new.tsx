@@ -47,6 +47,7 @@ import { ColumnsType } from "antd/es/table";
     const [excelsData, setExcelData] = useState<any[]>([]);
     const { Text } = Typography;
     const [comuns, setColumns] =useState([])
+    const [tableData, setTableData] = useState<any[]>([])
     useEffect(() => {
         console.log(selected, tab)
       getData(selected, tab);
@@ -95,14 +96,14 @@ import { ColumnsType } from "antd/es/table";
     //       setData([]);
     //     }
     //   });
-      // service.getPhaseMonthData(req).then((res) => {
-      //   // console.log(res,"*********")
-      //   if (res.status) {
-      //     setPhase(res.data);
-      //   } else {
-      //     setPhase([]);
-      //   }
-      // });
+      service.getPhaseMonthExcelDataNew(req).then((res) => {
+        // console.log(res,"*********")
+        if (res.status) {
+          setPhase(res.data);
+        } else {
+          setPhase([]);
+        }
+      });
     //   service.getPhaseMonthExcelData(req).then((res) => {
     //     // console.log(res, "res==========");
     //     if (res.status) {
@@ -136,9 +137,7 @@ import { ColumnsType } from "antd/es/table";
       return data ? data : "-";
     };
 
-    const productionPlanColumn:ColumnsType<any> =[
-     
-    ]
+
 
     const columns: ColumnsType<any> = [
       {
@@ -152,7 +151,7 @@ import { ColumnsType } from "antd/es/table";
       {
         title: 'Planning Sum',
         dataIndex: "itemName",
-        width: "0px",
+        width: "100px",
         // ellipsis: true,
       },
     
@@ -175,8 +174,6 @@ import { ColumnsType } from "antd/es/table";
                   key: "phaseType",
                   align: "center",
                 },
-          
-               
               ]}
               pagination={false}
             />
@@ -185,7 +182,6 @@ import { ColumnsType } from "antd/es/table";
       },
     ];
 
-    // columns.push(...sizeColumns);
 
     const getSizeWiseHeaders = (data: NewitemDataDto[]) => {
       const sizeHeaders = new Set<string>();
@@ -210,6 +206,17 @@ import { ColumnsType } from "antd/es/table";
         dataIndex: header,
         key: header,
         align: 'center',
+        children:[
+          {
+          title:'in Pcs',
+          dataIndex:'inPcs',
+          key:'inpcs'
+        },
+        {
+          title:'Coeff Pcs',
+          dataIndex:'exfpcs'
+        }
+      ]
         // You can add additional configurations or rendering logic as needed
       }));
       return sizeColumns;
@@ -217,45 +224,16 @@ import { ColumnsType } from "antd/es/table";
     const sizeColumns = generateSizeColumns();
    columns.push(...sizeColumns);
 
-
-
-    // const sizeColumns: ColumnsType<any> = [];
-
-// Dynamically generate columns based on sizeHeaders
       sizeHeaders.forEach((header) => {
         sizeColumns.push({
           title: header,
           dataIndex: header,
           key: header,
+          width:'150px',
           align: 'center',
-          // You can add additional configurations or rendering logic as needed
         });
       });
 
-     sizeHeaders?.forEach((version) => {
-      productionPlanColumn.push({
-      title: version,
-      dataIndex: version,
-      key: version,
-      width: "110px",
-      align: "right",
-      render: (text, record) => {
-          const sizeData = record.MonthItemData.find(
-            (item) => item.monthName === version
-          );
-          if (sizeData) {
-            if (sizeData.monthName ) {
-              const formattedQty = sizeData?.totalQuantity;
-              return formattedQty;
-            } else {
-              return "-";
-            }
-          } else {
-            return "-";
-          }
-        }
-    });
-  });
 
     return (
       <>
