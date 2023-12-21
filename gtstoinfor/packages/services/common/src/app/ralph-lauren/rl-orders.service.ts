@@ -12,6 +12,7 @@ import { COLineRepository } from "./repositories/co-line.repository";
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 import axios from 'axios';
 import { PdfFileUploadEntity } from "./entities/pdf-file-upload.entity";
+import { AddressService } from "../Entites@Shahi/address/address-service";
 const moment = require('moment');
 
 @Injectable()
@@ -21,7 +22,7 @@ export class RLOrdersService {
     private pdfrepo: PdfFileUploadRepository,
     private coLineRepo: COLineRepository,
     private dataSource: DataSource,
-    // private addressService: 
+    private addressService: AddressService
 
   ) { }
 
@@ -143,7 +144,10 @@ export class RLOrdersService {
       const poMap = new Map<string, RLOrdersEntity>();
       data.forEach(rec => {
         poMap.set(rec.poNumber, rec)
-        const dest = rec.shipToAddress.slice(-2).trim();
+        const destCountry = rec.shipToAddress.slice(-2).trim();
+        const parts = rec.shipToAddress.split(',')
+        const destAdd = parts[0].trim();
+        const dest = destAdd + ',' + destCountry;
         if (!destinationColSizesMap.has(rec.poNumber)) {
           destinationColSizesMap.set(rec.poNumber, new Map<string, Map<string, []>>());
         }
@@ -240,24 +244,31 @@ export class RLOrdersService {
         let paymentTerms;
         if (po.buyer === 'RL-U12') {
           const response = await this.getOrderDetails({ poNumber: po.buyer_po })
-          const coData = response.data;
+          const coData = response.data[0];
           coLine.buyerPo = coData.buyerPo;
-          const gacDate = new Date(coData.deliveryDate); // Parse the GAC date
+          const months = [
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+          ];
+          const [day, monthAbbrev, year] = coData.deliveryDate.split('-');
+          const month = (months.indexOf(monthAbbrev) + 1).toString().padStart(2, '0');
+          coLine.deliveryDate = `${day}/${month}/${year}`
+          // Create a Date object using the extracted components
+          const inputDate = new Date(year, Number(month) - 1, day)
           // Calculate the date 7 days before the GAC date
-          const sevenDaysBeforeGAC = new Date(gacDate);
-          sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
-          // Format the result as 'DD/MM/YYYY'
-          const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
-          coLine.deliveryDate = moment(coData.deliveryDate).format('DD/MM/YYYY')
+          const sevenDaysBefore = new Date(inputDate);
+          sevenDaysBefore.setDate(inputDate.getDate() - 7);
+          const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBefore)
           coLine.exFactoryDate = exFactoryDate
           coLine.salesPrice = coData.salesPrice
           coLine.currency = coData.currency
           coLine.destinations = coData.destinations
-          const request = { country: coData.destinations[0]?.name }
-          const address = await axios.post(`https://uniqlov2-backend.xpparel.com/api/address/getAddressInfoByCountry`, request);
-          const addressData = address.data.data[0];
-          buyerAddress = addressData?.buyerAddress ? addressData?.buyerAddress : 71;
-          deliveryAddress = addressData?.deliveryAddress
+          const parts = coData.destinations[0]?.name.split(',');
+          const request = { country: parts[0].trim() }
+          const address = await this.addressService.getAddressInfoByCountry(request);
+          const addressData = address.data[0];
+          buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 25;
+          deliveryAddress = addressData?.deliveryCode
           buyerValue1 = "RAL-RALPH LAUREN"
           buyerValue2 = "RAL00001-RALPH LAUREN CORPORATION"
           agent = "-NA"
@@ -382,7 +393,7 @@ export class RLOrdersService {
           }
         }
         await driver.sleep(10000)
-        const element = await driver.findElement(By.id('OrderCreateID')).click();
+        // const element = await driver.findElement(By.id('OrderCreateID')).click();
         await driver.wait(until.alertIsPresent(), 10000);
         // Switch to the alert and accept it (click "OK")
         const alert = await driver.switchTo().alert();

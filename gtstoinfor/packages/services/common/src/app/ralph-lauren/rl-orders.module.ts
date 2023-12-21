@@ -10,7 +10,9 @@ import { PdfFileUploadEntity } from './entities/pdf-file-upload.entity';
 import { RLOrdersEntity } from './entities/rl-orders.entity';
 import { COLineEntity } from './entities/co-line.entity';
 import { COLineRepository } from './repositories/co-line.repository';
-
+import { AddressService } from '../Entites@Shahi/address/address-service';
+import { AddressRepository } from '../Entites@Shahi/address/address.repo';
+import { AddressEntity } from '../Entites@Shahi/address/address-entity';
 
 
 @Module({
@@ -19,10 +21,10 @@ import { COLineRepository } from './repositories/co-line.repository';
         TypeOrmModule.forFeature([
             PdfFileUploadEntity,
             RLOrdersEntity,
-            COLineEntity
-
+            COLineEntity,
+            AddressEntity
         ])],
     controllers: [RLOrdersController],
-    providers: [RLOrdersService, PdfFileUploadRepository, RLOrdersRepository, COLineRepository, ApplicationExceptionHandler]
+    providers: [RLOrdersService, PdfFileUploadRepository, RLOrdersRepository, COLineRepository, ApplicationExceptionHandler, AddressRepository, AddressService]
 })
 export class RLOrdersModule { }

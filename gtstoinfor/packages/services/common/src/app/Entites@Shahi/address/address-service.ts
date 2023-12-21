@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectDataSource } from "@nestjs/typeorm";
-import { DataSource } from "typeorm";
+import { DataSource, Like } from "typeorm";
 import { AddressRepository } from "./address.repo";
 import { GenericTransactionManager } from "../../../typeorm-transactions";
 import { AddressColumns, CommonResponseModel } from "@project-management-system/shared-models";
@@ -17,7 +17,6 @@ export class AddressService {
     async saveAddressInfo(formData: any): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
         try {
-            console.log(formData,"ffffff")
             await transactionManager.startTransaction()
             const flag = new Set<boolean>()
             const columnArray = []
@@ -32,15 +31,12 @@ export class AddressService {
                 }
                 return updatedObj;
             })
-         
-            console.log(updatedArray,"iiiii")
             const difference = columnArray.filter((element) => !AddressColumns.includes(element));
-            console.log(difference, '----')
             if (difference.length > 0) {
                 await transactionManager.releaseTransaction();
                 return new CommonResponseModel(false, 1110, "Excel columns doesn't match. Please attach the correct file.");
             }
-            
+
             const convertedData = updatedArray.map((obj) => {
                 const updatedObj = {};
                 for (const key in obj) {
@@ -61,8 +57,6 @@ export class AddressService {
                 return new CommonResponseModel(false, 0, 'Something went wrong in data deletion')
             }
             for (const data of convertedData) {
-            
-
                 if (data.BILLTO != null) {
                     const match = data.BUYERADDCRM.match(/^\d+/);
                     const match1 = data.DELIVERYADDCRM.match(/^\d+/);
@@ -70,7 +64,7 @@ export class AddressService {
                     const result1 = match1 ? parseInt(match1[0], 10) : null;
                     const addObj = new AddressEntity()
                     addObj.billTo = data.BILLTO
-                    addObj.shipTo= data.SHIPTO
+                    addObj.shipTo = data.SHIPTO
                     addObj.buyerAddress = data.BUYERADDCRM
                     addObj.deliveryAddress = data.DELIVERYADDCRM
                     addObj.buyerCode = result
@@ -86,7 +80,7 @@ export class AddressService {
                 } else if (data.BillTo != null) {
                     const addObj = new AddressEntity()
                     addObj.billTo = data.BillTo
-                    addObj.shipTo= data.ShipTo
+                    addObj.shipTo = data.ShipTo
                     addObj.buyerAddress = data.BuyerAddress
                     addObj.deliveryAddress = data.DeliveryAddress
                     addObj.buyerCode = data.BuyerCode
@@ -99,8 +93,7 @@ export class AddressService {
                         await transactionManager.releaseTransaction();
                         break;
                     }
-                    
-                }else {
+                } else {
                     break
                 }
             }
@@ -130,16 +123,20 @@ export class AddressService {
         }
     }
 
-    // async getAddressInfoByCountry(req: any): Promise<AddressResponseModel> {
-    //     try {
-    //         const info = await this.repo.findOne({ where: { country: req.country } })
-    //         if (info) {
-    //             return new AddressResponseModel(true, 1, 'Data retrieved', [info])
-    //         } else {
-    //             return new AddressResponseModel(false, 0, 'No data found')
-    //         }
-    //     } catch (err) {
-    //         return new AddressResponseModel(false, 0, 'Something went wrong', err)
-    //     }
-    // }
+    async getAddressInfoByCountry(req: any): Promise<CommonResponseModel> {
+        try {
+            const info = await this.repo.findOne({
+                where: {
+                    shipTo: Like(`%${req.country}%`) // Assuming you want to find records where address includes the given string
+                }
+            })
+            if (info) {
+                return new CommonResponseModel(true, 1, 'Data retrieved', [info])
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found')
+            }
+        } catch (err) {
+            return new CommonResponseModel(false, 0, 'Something went wrong', err)
+        }
+    }
 }

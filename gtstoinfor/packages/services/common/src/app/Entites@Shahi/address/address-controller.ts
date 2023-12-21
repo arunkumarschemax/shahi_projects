@@ -12,15 +12,12 @@ export class AddressController {
 
     ) { }
 
-
-
     @Post('/saveAddressInfo')
     async saveAddressInfo(@Body() data: any): Promise<CommonResponseModel> {
         try {
             return this.addressService.saveAddressInfo(data);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
-
         }
     }
 
@@ -30,7 +27,15 @@ export class AddressController {
             return this.addressService.getAddressInfo();
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 
+    @Post('/getAddressInfoByCountry')
+    async getAddressInfoByCountry(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.addressService.getAddressInfoByCountry(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
 

@@ -65,6 +65,15 @@ export class RLOrdersController {
         }
     }
 
+    @Post('/createCOline')
+    async createCOline(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.rlOrdersService.createCOline(req)
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
     @Post('/getCoLine')
     async getCoLine(@Body() req: any): Promise<CommonResponseModel> {
         try {

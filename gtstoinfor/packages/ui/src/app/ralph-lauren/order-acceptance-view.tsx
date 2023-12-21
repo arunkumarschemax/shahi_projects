@@ -152,9 +152,10 @@ const OrderAcceptanceGrid = () => {
   });
 
   const createCOLine = (record) => {
+    console.log(record)
     const req = new OrderAcceptanceRequest();
-    req.purchaseOrderNumber = record.poLineItemNumber
-    req.poLineItemNumber = record.purchaseOrderNumber
+    req.purchaseOrderNumber = record.poNumber
+    req.poLineItemNumber = record.poItem
     req.itemNo = record.itemNumber
     req.buyer = 'RL-U12'
     service.coLineCreationReq(req).then((res) => {
@@ -286,7 +287,6 @@ const OrderAcceptanceGrid = () => {
         // }
       },
     },
-
     {
       title: "Action",
       dataIndex: "action",
@@ -294,34 +294,14 @@ const OrderAcceptanceGrid = () => {
       fixed: 'right',
       render: (value, record) => {
         // const isEnabled = isActionButtonEnabled(record);
-        // if(record.answered_status != 'Accepted'){
-
         return (
-          <Popconfirm
-            title="Are you sure to Accept"
-            onConfirm={() => createCOLine(record)}
-          // disabled={record.answered_status == 'Accepted'}
-          // disabled= {record.answered_status !== 'Accepted' ? false : true}
-
-          >
-            <Button
-            // disabled={!isEnabled}
-            // disabled= {record.answered_status !== 'Accepted' ? false : true}
-            >Accept</Button>
-          </Popconfirm>
+          <Button  // disabled={!isEnabled} disabled= {record.answered_status !== 'Accepted' ? false : true}
+            onClick={() => createCOLine(record)}
+          >Accept</Button>
         );
-        // }else{
-        //     return <></>
-        // }
       },
-
-
     },
-
-
   ];
-
-
 
   //   const handleExport = (e: any) => {
   //     e.preventDefault();
