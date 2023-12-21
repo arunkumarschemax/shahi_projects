@@ -399,7 +399,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Consumption',
       dataIndex: 'consumption',
-      width:"15%",
+      width:"17%",
       render: (_, record) => (
         <Form.Item name={`consumption${record.key}`}
         rules={[{ required: true, message: 'Missing Consumption' }]}
@@ -466,7 +466,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Wastage %',
       dataIndex: 'wastage',
-      width:"15%",
+      width:"17%",
       render: (_, record) => (
       <Form.Item name={`wastage${record.key}`} initialValue={2} 
       rules={[{ required: true, message: 'Missing Wastage' }]}
@@ -667,7 +667,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       // expandable = {{
       //   defaultExpandAllRows : true, rowExpandable:(record)=>{console.log(record) ; return (stockData.length>0)}
       //   }}
-      scroll={{ x: 1500 }}
+      scroll={{ x: 2000 }}
       size="large"
       bordered
       />
