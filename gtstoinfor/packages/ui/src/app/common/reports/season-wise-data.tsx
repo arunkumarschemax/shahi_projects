@@ -159,7 +159,7 @@ const SeasonWiseReportData = () => {
           );
           if (sizeData) {
             if (sizeData.monthName ) {
-              const formattedQty = sizeData?.totalQuantity;
+              const formattedQty = sizeData?.totalQuantity?.toLocaleString("en-IN");
               return formattedQty;
             } else {
               return "-";
@@ -178,7 +178,7 @@ const SeasonWiseReportData = () => {
     render: (text, record) => {
       let sum = 0;
       record.MonthItemData.forEach(r => {
-        sum += r.totalQuantity;
+        sum += r.totalQuantity
       });
       return sum;
     }
@@ -264,7 +264,7 @@ const SeasonWiseReportData = () => {
                 );
                 if (sizeData) {
                   if (sizeData.monthName) {
-                    const formattedQty = sizeData?.totalQuantity;
+                    const formattedQty = sizeData?.totalQuantity?.toLocaleString("en-IN");
                     return formattedQty;
                   } else {
                     return "-";
@@ -284,7 +284,7 @@ const SeasonWiseReportData = () => {
             render: (text, record) => {
               let sum = 0;
               record.MonthItemData.forEach((r: any) => {
-                sum += r.totalQuantity;
+                sum += r.totalQuantity
               });
               return sum;
             },
