@@ -1,5 +1,5 @@
 import { LegalPoDetails, PoItemDetailsDto, PoItemVariantDto } from "@project-management-system/shared-models";
-import { CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_INDEX, ITEM_SHIP_TO_INDEXES, ITEM_SHIP_TO_TEXT, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT2, ITEM_TEXT_INDEX, ITEM_TEXT_START_INDEX, PO_DOC_DATE_INDEX, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, SELLER_ADDRESS_END_TEXT, SELLER_ADDRESS_START_TEXT, UNWANTED_TEXT_1, UNWANTED_TEXT_2, UNWANTED_TEXT_3 } from "./popdf-regex-expressions";
+import { CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_INDEX, ITEM_SHIP_TO_INDEXES, ITEM_SHIP_TO_TEXT, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT2, ITEM_TEXT_INDEX, ITEM_TEXT_START_INDEX, PO_DOC_DATE_INDEX, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, SELLER_ADDRESS_END_TEXT, SELLER_ADDRESS_START_TEXT, UNWANTED_TEXT_1, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4 } from "./popdf-regex-expressions";
 
 
 /**
@@ -125,6 +125,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 || val.str.includes(UNWANTED_TEXT_1)
                 || val.str.includes(UNWANTED_TEXT_2)
                 || val.str.includes(UNWANTED_TEXT_3)
+                || val.str.includes(UNWANTED_TEXT_4)
                 || startFlag
             )
         })
@@ -165,23 +166,23 @@ export const extractDataFromPoPdf = async (pdf) => {
             ITEM_SHIP_TO_INDEXES.forEach((val) => shipToText = shipToText + filteredData[rec.itemIndex + val].str + ',')
             itemDetailsObj.shipToAddress = shipToText
             shipToEndIndex = rec.itemIndex + ITEM_SHIP_TO_INDEXES[ITEM_SHIP_TO_INDEXES.length - 1]
-            isShipToTextExist= true
+            isShipToTextExist = true
         }
 
         //------------------------------------------------------------------
         // check if item text exists
-        
-        if(isShipToTextExist){
-            itemTextIndex =rec.itemIndex + ITEM_TEXT_INDEX
-        }else{
+
+        if (isShipToTextExist) {
+            itemTextIndex = rec.itemIndex + ITEM_TEXT_INDEX
+        } else {
             itemTextIndex = rec.itemIndex + ITEM_SHIP_TO_INDEX
         }
         if (filteredData[itemTextIndex].str == 'ITEM TEXT') {
             console.log('item text exists')
             let itemText = ''
             const itemTextSatrtIndex = itemTextIndex + 1
-            console.log(itemTextIndex,'itemTextIndex')
-            console.log(itemTextSatrtIndex,'itemTextSatrtIndex')
+            console.log(itemTextIndex, 'itemTextIndex')
+            console.log(itemTextSatrtIndex, 'itemTextSatrtIndex')
             // Find the index where the str is "__________________" and stop the loop there ,item text ends there
             let j = itemTextSatrtIndex;
             while (!filteredData[j].str.includes(ITEM_TEXT_END_TEXT)) {

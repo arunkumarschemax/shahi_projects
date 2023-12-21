@@ -302,13 +302,13 @@ export class DpomService {
         try {
             await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447#');
 
-            await driver.findElement(By.id('username')).sendKeys('60566910');
-            await driver.findElement(By.id('password')).sendKeys('60566910');
+            await driver.findElement(By.id('username')).sendKeys('99901347');
+            await driver.findElement(By.id('password')).sendKeys('99901347');
             await driver.findElement(By.css('button.btn-primary')).click();
 
             await driver.get('http://intranetn.shahi.co.in:8080/ShahiExportIntranet/subApp?slNo=2447')
             const newPAge = await driver.executeScript(
-                `javascript:openAccessPage('http://intranet.shahi.co.in:8080/IntraNet/CRMPRDNEW.jsp', 'CRM', '2448', 'R', '60566910', 'N', '20634576', 'null');`
+                `javascript:openAccessPage('http://intranet.shahi.co.in:8080/IntraNet/CRMPRDNEW.jsp', 'CRM', '2448', 'R', '99901347', 'N', '20634576', 'null');`
             );
             const windowHandles = await driver.getAllWindowHandles()
             await driver.switchTo().window(windowHandles[1]);
