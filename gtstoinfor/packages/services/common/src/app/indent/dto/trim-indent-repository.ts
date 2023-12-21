@@ -34,7 +34,7 @@ export class TrimIndentRepository extends Repository<IndentTrimsEntity> {
         .leftJoin(Buyers,'b','b.buyer_id = s.buyer_id')
         .leftJoin(M3TrimsEntity,'mt','itt.trim_code=mt.m3_trim_Id')
         .leftJoin(UomEntity,'u','itt.quantity_unit=u.id')
-        .leftJoin(PurchaseOrderItemsEntity,'poi',`poi.indent_item_id = itt.itrims_id and poi.m3_item_id = itt.trim_code and poi.item_type != ${ItemTypeEnum.FABRIC}`)
+        .leftJoin(PurchaseOrderItemsEntity,'poi',`poi.indent_item_id = itt.itrims_id and poi.m3_item_id = itt.trim_code and poi.item_type != '${ItemTypeEnum.FABRIC}'`)
         .where(`itt.indent_id=${indentId} and (itt.quantity-itt.received_quantity) >0`)
         .groupBy(`itt.itrims_id`)
         const data = await query.getRawMany()
