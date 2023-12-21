@@ -170,6 +170,20 @@ const SeasonWiseReportData = () => {
         }
     });
   });
+  // columnsWH.push({
+  //   title: <div style={{ textAlign: "center" }}>Total</div>,
+  //   dataIndex: "total",
+  //   align: "right",
+  //   width: "30px",
+  //   render: (text, record) => {
+  //     let sum = 0;
+  //     record.MonthItemData.forEach(r => {
+  //       sum += r.totalQuantity;
+  //     });
+  //     return sum;
+  //   }
+  // });
+
   columnsWH.push({
     title: <div style={{ textAlign: "center" }}>Total</div>,
     dataIndex: "total",
@@ -177,11 +191,12 @@ const SeasonWiseReportData = () => {
     width: "30px",
     render: (text, record) => {
       let sum = 0;
-      record.MonthItemData.forEach(r => {
-        sum += r.totalQuantity
+      record.MonthItemData.forEach((r) => {
+        // Convert to number before summing
+        sum += parseFloat(r.totalQuantity) || 0;
       });
-      return sum;
-    }
+      return sum.toLocaleString("en-IN");
+    },
   });
 
 
@@ -276,6 +291,19 @@ const SeasonWiseReportData = () => {
             });
           });
 
+          // excelColumnsWH.push({
+          //   title: "Total",
+          //   dataIndex: "total",
+          //   align: "right",
+          //   // width: "30px",
+          //   render: (text, record) => {
+          //     let sum = 0;
+          //     record.MonthItemData.forEach((r: any) => {
+          //       sum += r.totalQuantity
+          //     });
+          //     return sum;
+          //   },
+          // });
           excelColumnsWH.push({
             title: "Total",
             dataIndex: "total",
@@ -283,10 +311,11 @@ const SeasonWiseReportData = () => {
             // width: "30px",
             render: (text, record) => {
               let sum = 0;
-              record.MonthItemData.forEach((r: any) => {
-                sum += r.totalQuantity
+              record.MonthItemData.forEach((r) => {
+                // Convert to number before summing
+                sum += parseFloat(r.totalQuantity) || 0;
               });
-              return sum;
+              return sum.toLocaleString("en-IN");
             },
           });
 
