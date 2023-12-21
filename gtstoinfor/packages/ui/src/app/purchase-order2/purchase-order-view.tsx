@@ -27,7 +27,6 @@ export const PurchaseOrderView = () => {
   const searchInput = useRef(null);
   const options = [{ value: 'OPEN' }, { value: 'IN PROGRESS' }, { value: 'CLOSED' }, { value: 'CANCELED' }];
   const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
-  console.log(externalRefNo,"req")
   const { Option } = Select
   
   useEffect(() => {
@@ -120,7 +119,18 @@ export const PurchaseOrderView = () => {
     //   status === "IN PROGRESS"
     // }
      const req = new PurchaseViewDto(null,null,null,null,null,form.getFieldValue('poStatus'),null,externalRefNo)
-     console.log(form.getFieldValue('poStatus'),'ppppppppppp');
+     if (form.getFieldValue('orderDate') !== undefined) {
+      req.poconfirmStartDate = (form.getFieldValue('orderDate')[0]).format('YYYY-MM-DD')
+    }
+    if (form.getFieldValue('orderDate') !== undefined) {
+    req.poconfirmEndDate = (form.getFieldValue('orderDate')[1]).format('YYYY-MM-DD')
+    }
+     if (form.getFieldValue('deliveryDate') !== undefined) {
+      req.confirmStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD')
+    }
+    if (form.getFieldValue('deliveryDate') !== undefined) {
+    req.confirmEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD')
+    }
     
     console.log(req,'----------------------------------')
 
@@ -446,7 +456,7 @@ Service.getAllPurchaseOrderData(req).then(res=>{
             </Form.Item>
           </Col>
           
-          {/* <Col span={6}>
+          <Col span={6}>
             <Form.Item label="PO Status	" name="poStatus" initialValue={[PurchaseOrderStatus.OPEN, PurchaseOrderStatus.IN_PROGRESS]}>
             <Select showSearch allowClear optionFilterProp="children" placeholder='Select status' mode="multiple" 
             defaultValue ={[PurchaseOrderStatus.OPEN, PurchaseOrderStatus.IN_PROGRESS]}
@@ -462,9 +472,9 @@ Service.getAllPurchaseOrderData(req).then(res=>{
                 style={{ width: '100%' }}
                 options={options}
                 
-              /> */}
-            {/* </Form.Item>
-          </Col> */} 
+              /> */} 
+             </Form.Item>
+          </Col>
           <Col span={2}>
             <Button htmlType='submit' type="primary" onClick={onSearch}> Get Detail </Button>
           </Col>
@@ -474,20 +484,20 @@ Service.getAllPurchaseOrderData(req).then(res=>{
         </Row>
         <Row gutter={24}>
           <Col className="gutter-row" xs={24} sm={24} md={5} lg={5} xl={{ span: 2 }}>
-            <Card size="small" title={'OPEN :' + data.filter(r => r.poStatus == PurchaseStatusEnum.OPEN).length} style={{ height: '35px', width: 100, backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
+            <Card  size="small" title={'OPEN :' + data.filter(r => r.poStatus == PurchaseStatusEnum.OPEN).length} style={{ height: '35px', width: 100, backgroundColor: '#d4e09b', borderRadius: 3 }}></Card>
             
           </Col>
           <Col className="gutter-row" xs={24} sm={24} md={5} lg={5} xl={{ span: 3 }}>
-            <Card size="small" title={'INPROGRESS  : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.INPROGRESS).length} style={{ height: '35px', width: 150, marginBottom: '8', backgroundColor: '#FFFFFF', borderRadius: 3 }}></Card>
+            <Card size="small" title={'INPROGRESS  : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.INPROGRESS).length} style={{ height: '35px', width: 150, marginBottom: '8', backgroundColor: '#f6f4d2', borderRadius: 3 }}></Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
-            <Card size="small" title={'CLOSED : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.CLOSED).length} style={{ height: '35px', width: 150, backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
+            <Card size="small" title={'CLOSED : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.CLOSED).length} style={{ height: '35px', width: 150, backgroundColor: '#cbdfbd', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
-            <Card size="small" title={'CANCLED : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.CANCELLED).length} style={{ height: '35px', backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
+            <Card size="small" title={'CANCLED : ' + data.filter(r => r.poStatus === PurchaseStatusEnum.CANCELLED).length} style={{ height: '35px', backgroundColor: '#ffd6ba', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
-            <Card size="small" title={'TOTAL : ' + data.length} style={{ height: '35px', backgroundColor: '#FFFFFF', marginBottom: '2px', borderRadius: 3 }}></Card>
+            <Card size="small" title={'TOTAL : ' + data.length} style={{ height: '35px', backgroundColor: '#ece4db ', marginBottom: '2px', borderRadius: 3 }}></Card>
           </Col>
           
         </Row> 

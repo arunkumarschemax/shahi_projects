@@ -1,5 +1,6 @@
 import { MaterialStatusEnum } from "@project-management-system/shared-models";
 import { ApiProperty } from "@nestjs/swagger";
+import { MaterialAllocationItemsDTO } from "./material-allocation-items-dto";
 
 
 export class MaterialAllocationDTO {
@@ -40,10 +41,16 @@ export class MaterialAllocationDTO {
      buyerId:number
 
      @ApiProperty()
-     allocateQuantity: number
+     allocatioQuantity: number
 
      @ApiProperty()
      checkedStatus:number
+     @ApiProperty()
+     allocatedItems:MaterialAllocationItemsDTO[]
+     @ApiProperty()
+     samplingBomId?:number
 
+     @ApiProperty()
+     toBeProcured?:number
 
 }

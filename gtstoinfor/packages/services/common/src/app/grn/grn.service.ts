@@ -239,6 +239,7 @@ export class GrnService {
                 itemEntity.uomId = item.uomId
                 itemEntity.styleId = item.styleId
                 itemEntity.grnItemNo = grnItemNumber
+                itemEntity.poId = req.poId
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo = itemInfo

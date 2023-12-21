@@ -29,7 +29,6 @@ export class allocateMaterialItems{
         this.locationName = locationName
         this.createdUser=createdUser
         this.updatedUser=updatedUser
-
     }
 
 }

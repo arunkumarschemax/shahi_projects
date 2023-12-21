@@ -54,6 +54,7 @@ import {
     SampleDevelopmentStatusDisplay,
     SampleDevelopmentStatusEnum,
     SampleFilterRequest,
+    allocateMaterialItems,
     buyerandM3ItemIdReq,
     lifeCycleStatusReq,
   } from "@project-management-system/shared-models";
@@ -91,6 +92,7 @@ import RolePermission from "../role-permissions";
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
    const [btnEnable,setbtnEnable]=useState<boolean>(false)
+   const [allocatedStock, setAllocatedStock]=useState<any>(undefined)
    const [expandedRowKeys, setExpandedRowKeys] = useState([])
     const searchInput = useRef(null);
     const [avilableQuantity, setAvailableQuantity] = useState<any[]>([])
@@ -102,6 +104,7 @@ import RolePermission from "../role-permissions";
    const [stockForm] = Form.useForm();
    const [pch, setPch] = useState<any>([]);
    const [styled, setStyled] = useState<any>([]);
+   const [expandedIndex, setExpandedIndex] = useState([]);
   
     useEffect(() => {
       getAll();
@@ -252,12 +255,16 @@ import RolePermission from "../role-permissions";
 
     const createAllocation = (dto:any) =>{
       console.log(dto)
-    let materailData :Allocatematerial[]=[]
-      for(const data of dto){
-        const req = new Allocatematerial(data.itemType,data.sampleRequestid,data.sampleItemId,data.m3ItemId,data.quantity,data.stockId,data.locationId,data.buyerId,data.allocatedQuantity, data.checkedStatus, data.issuedQty)
-        materailData.push(req)
+      let materailDataItems :allocateMaterialItems[]=[]
+      let totalQty = 0;
+      for(const data of dto.allocatedStock){
+        totalQty = Number(totalQty) + Number(data.issuedQty);
+        let item = new allocateMaterialItems(0,data.quantity,data.stockId,data.locationId,data.issuedQty,0,"","","");
+        materailDataItems.push(item);
       }
-      service.creatematerialAlloction(materailData).then(res =>{
+      const req = new Allocatematerial(dto.itemType,dto.sampleRequestid,dto.fabric_info_id,dto.m3ItemFabricId,0,0,0,dto.buyerId,totalQty,materailDataItems,dto.tobeProcured,dto.samplingBomId);
+      console.log(req);
+      service.creatematerialAlloction(req).then(res =>{
         if(res.status){
           message.success(res.internalMessage)
           navigate('/sample-development/material-allocation')
@@ -292,8 +299,8 @@ import RolePermission from "../role-permissions";
       },
       {
         title: "Available Quantity",
-        dataIndex: "resltantavaliblequantity",
-        sorter: (a, b) => a.resltantavaliblequantity.localeCompare(b.resltantavaliblequantity),
+        dataIndex: "availabeQuantity",
+        sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
           // let consumedQty = 0
@@ -302,7 +309,7 @@ import RolePermission from "../role-permissions";
           // }
             return (
               <>
-               {record.resltantavaliblequantity ? (record.resltantavaliblequantity) : "Not Available"
+               {record.availableQuantity ? (record.availableQuantity) : "Not Available"
                   }
                 {/* {record.availableQuantity ? (record.availableQuantity-consumedQty) : "Not Available"
                   } */}
@@ -373,8 +380,8 @@ import RolePermission from "../role-permissions";
       },
       {
         title: "Available Quantity",
-        dataIndex: "resltantavaliblequantity",
-        sorter: (a, b) => a.resltantavaliblequantity.localeCompare(b.resltantavaliblequantity),
+        dataIndex: "availabeQuantity",
+        sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
           let consumedQty = 0
@@ -383,7 +390,7 @@ import RolePermission from "../role-permissions";
           // }
             return (
               <>
-                {record.resltantavaliblequantity ? (record.resltantavaliblequantity) : "Not Available"
+                {record.availabeQuantity ? (record.availabeQuantity) : "Not Available"
                   }
               </>
             );
@@ -489,7 +496,7 @@ import RolePermission from "../role-permissions";
             return (
               <Checkbox 
               onClick={checkboxonclick}
-              onChange={(e) => onCheck(rowData, index, e.target.checked)}
+              onChange={(e) => onCheck(rowData, index, e.target.checked,sampleReqId,itemId,fabindex)}
               // onClick={(e) =>onCheck(rowData,undefined)}
               />
             );
@@ -500,45 +507,13 @@ import RolePermission from "../role-permissions";
       return [...renderColumnForFabric]
     }
     const allocateQuantity = () =>{
-      console.log(tableData)
-      // console.log(avilableQuantity)
-      createAllocation(avilableQuantity)
+      console.log(allocatedStock)
+      createAllocation(allocatedStock)
 
     }
     const checkboxonclick =() =>{
       setChecked(true)
     }
-
-    // const onCheck = (rowData,allocatedQuantity,isChecked) =>{
-    //   console.log(rowData)
-    // if (isChecked) {
-    //   setSelectedRowsData( [
-    //     {
-    //       buyerId:rowData.buyerId,
-    //       grnItemId:rowData.grnItemId,
-    //       locationId:rowData.locationId,
-    //       m3ItemId:rowData.m3ItemId,
-    //       stockId: rowData.stockId,
-    //       allocatedQuantity: allocatedQuantity !== undefined ? allocatedQuantity : '',
-    //       sampleRequestId:rowData.sampleRequestid,
-    //       sampleItemId:rowData.sampleItemId,
-    //       itemType:rowData.itemType
-    //     },
-    //   ]);
-    //   setbtnEnable(true)
-    // } else {
-    //   setSelectedRowsData(prevData =>
-    //     prevData.filter(item => item.stockId !== rowData.stockId)
-    //   );
-    // }
-    // console.log(selectedRowsData)
-      
-    // }
-
-    const [allocatedQuantities, setAllocatedQuantities] = useState<any[]>([]);
-
-
-    
     const setAllocatedQty = (index, rowData, value, fabindex, sampleReqId, itemId) => {
       console.log(tableData);
       console.log(index);
@@ -547,47 +522,53 @@ import RolePermission from "../role-permissions";
       console.log(fabindex);
       console.log(sampleReqId);
       console.log(itemId);
+      if (value === 0 || value === null || value < 0 || value === undefined) {
+        AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
+      }
+      if (Number(value) > Number(rowData.quantity)) {
+        AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
+      }
       let itemData;
       let stockData;
-      itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.fabric
-      stockData = itemData?.find((f) => f.fabric_info_id === itemId)?.allocatedStock;
-      let stockRecord = stockData.find((s)=> s.stockId === rowData.stockId)
+      let stockListData;
+      if(rowData.itemType === "Fabric"){
+        itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.fabric
+        stockData = itemData?.find((f) => f.fabric_info_id === itemId);
+        stockListData = stockData?.allocatedStock;
+      }
+      else{
+        itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.trimData
+        stockData = itemData?.find((f) => f.trim_info_id === itemId);
+        stockListData = stockData?.allocatedStock;
+      }
+      console.log(stockData);
+      console.log(stockListData);
+      let stockRecord = stockListData?.find((s)=> s.stockId === rowData.stockId);
+      console.log(stockRecord);
       stockRecord.issuedQty = value;
-      stockRecord.checkStatus = 1;
+      // stockRecord.checkedStatus = 1;
       console.log(tableData);
-      const sum = stockData.reduce((accumulator, object) => {
+      const sum = stockListData.reduce((accumulator, object) => {
         console.log(accumulator);
         console.log(object.issuedQty);
         return accumulator + (object.issuedQty != undefined ? Number(object.issuedQty) : 0);
       }, 0);
       console.log(sum);
-      console.log(itemData?.find((f) => f.fabric_info_id === itemId).tobeProcured)
-      if(Number(sum) > Number(itemData?.find((f) => f.fabric_info_id === itemId).tobeProcured)){
+      console.log(stockData?.tobeProcured)
+      if(Number(sum) > Number(stockData?.tobeProcured)){
         AlertMessages.getErrorMessage('Issued Quantity should not exceed total required. ')
         stockForm.setFieldValue(`allocatedQuantity${fabindex}-${index}`,0)
       }
       else{
         stockForm.setFieldValue(`allocatedQuantity${fabindex}-${index}`,value)
       }
-      if(stockData.find((e)=> e.checkedStatus === 1)){
-        setbtnEnable(true);
-      }
-      else{
-        setbtnEnable(false);
-      }
+      
       // rowData.issuedQty = value
       // const newData = [...avilableQuantity];
       // newData[index].issuedQty = value;
       // console.log(newData)
       // setAvailableQuantity(newData);
-      if (value === 0 || value === null || value < 0 || value === undefined) {
-        AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
-        // sourcingForm.setFieldsValue({[`allocatedQuantity${fabindex}-${index}`]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity)});
-      }
-      if (Number(value) > Number(rowData.quantity)) {
-        // sourcingForm.setFieldsValue({[`allocatedQuantity${fabindex}-${index}`]:(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty)});
-        AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
-      }
+      
     }
 
     const handleDispatchClick=(index)=>{
@@ -613,98 +594,59 @@ import RolePermission from "../role-permissions";
 
       setLifeCycleStatus(LifeCycleStatusEnum.CLOSED);
     }
-    const onCheck = (rowData, index, isChecked) => {
-
-
-
-
-      
+    const onCheck = (rowData, index, isChecked,sampleReqId,itemId,fabindex) => {
       if(isChecked){
-        if(Number(rowData.issuedQty) > 0){
-
-          rowData.issuedQty = rowData.issuedQty
+        if(rowData.issuedQty > 0)
+        {  
           rowData.checkedStatus = 1;
-          const newData = [...avilableQuantity];
+          let itemData;
+          let stockData;
+          let stockListData;
+          if(rowData.itemType === "Fabric"){
+            itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.fabric
+            stockData = itemData?.find((f) => f.fabric_info_id === itemId);
+            stockListData = stockData?.allocatedStock;
+          }
+          else{
+            itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.trimData
+            stockData = itemData?.find((f) => f.trim_info_id === itemId);
+            stockListData = stockData?.allocatedStock;
+          }
 
-          setAvailableQuantity(newData);
-
-          // const updatedAllocatedQuantities = [...allocatedQuantities];
-          // updatedAllocatedQuantities[index] = {
-          //   buyerId:rowData.buyerId,
-          //   grnItemId:rowData.grnItemId,
-          //   grnNumber:rowData.grnNumber,
-          //   itemType:rowData.itemType,
-          //   locationId:rowData.locationId,
-          //   m3ItemId:rowData.m3ItemId,
-          //   quantity:rowData.quantity,
-          //   sampleItemId:rowData.sampleItemId,
-          //   stockBarCode:rowData.stockBarCode,
-          //   sampleRequestid:rowData.sampleRequestid,
-          //   stockId:rowData.stockId,
-          //   allocatedQuantity: rowData.issuedQty,
-          //   checkedStatus: 1,
-          // };
-          // setAllocatedQuantities(updatedAllocatedQuantities);
-          // setAllocatedQuantities(updatedAllocatedQuantities);
-
-          setbtnEnable(true)
+          if(stockListData.find((e)=> e.checkedStatus === 1)){
+            setAllocatedStock(stockData);
+            setbtnEnable(true);
+          }
         }
         else{
-          AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
+          AlertMessages.getErrorMessage("Allocated Quantity should be greater than 0")
         }
       }
       else{
+        let stock = allocatedStock?.allocatedStock;
+        let stockRecord = stock.find((e)=> e.stockId === rowData.stockId)
+        stockRecord.checkedStatus = 0;
+        if(stock.find((e)=> e.checkedStatus === 1)){
+          setbtnEnable(true);
+        }
+        else{
+          setbtnEnable(false);
+        }
         console.log("")
       }
-      // if (isChecked) {
-      //   const updatedAllocatedQuantities = [...allocatedQuantities];
-      //   const index = updatedAllocatedQuantities.findIndex(
-      //     (item) => item.rowData === rowData
-      //   );
-      //     console.log(index)
-      //   if (index !== -1) {
-      //     updatedAllocatedQuantities[index] = {
-      //       buyerId:rowData.buyerId,
-      //       grnItemId:rowData.grnItemId,
-      //       grnNumber:rowData.grnNumber,
-      //       itemType:rowData.itemType,
-      //       locationId:rowData.locationId,
-      //       m3ItemId:rowData.m3ItemId,
-      //       quantity:rowData.quantity,
-      //       sampleItemId:rowData.sampleItemId,
-      //       stockBarCode:rowData.stockBarCode,
-      //       sampleRequestid:rowData.sampleRequestid,
-      //       stockId:rowData.stockId,
-      //       allocatedQuantity: quantityValue,
-      //     };
-      //   } 
-      //   else {
-      //     updatedAllocatedQuantities.push({
-      //       buyerId:rowData.buyerId,
-      //       grnItemId:rowData.grnItemId,
-      //       grnNumber:rowData.grnNumber,
-      //       itemType:rowData.itemType,
-      //       locationId:rowData.locationId,
-      //       m3ItemId:rowData.m3ItemId,
-      //       quantity:rowData.quantity,
-      //       sampleItemId:rowData.sampleItemId,
-      //       stockBarCode:rowData.stockBarCode,
-      //       sampleRequestid:rowData.sampleRequestid,
-      //       stockId:rowData.stockId,
-      //       allocatedQuantity: quantityValue,
-      //     });
-      //   }
-        
-      //   setAllocatedQuantities(updatedAllocatedQuantities);
-      // } else {
-      //   const updated = allocatedQuantities.filter(
-      //     (item) => item.rowData !== rowData
-      //   );
-      //   setAllocatedQuantities(updated);
-      // }
-      // setbtnEnable(true)
-      // console.log(allocatedQuantities)
     };
+    const setIndex = (expanded, record) => {
+      console.log(expanded);
+      console.log(record);
+
+      const expandedRows = []
+      if (expanded) {
+        expandedRows.push(record.fabric_info_id);
+        setExpandedIndex(expandedRows);
+      } else {
+        setExpandedIndex(expandedRows);
+      }
+    }
     
     const onSegmentChange = (val) => {
       setTabName(val);
@@ -1071,7 +1013,10 @@ import RolePermission from "../role-permissions";
                     rowKey={record => record.fabric_info_id}
                     columns={Columns}
                     dataSource={item.fabric}
+
                     expandedRowRender={renderItems}
+                    expandedRowKeys={expandedIndex}
+                    onExpand={setIndex}
                     expandable = {{
                       defaultExpandAllRows : false, 
                       rowExpandable:(record)=>{console.log(record) ; return (record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 && checkAccess(MenusAndScopesEnum.Scopes.allocation))}

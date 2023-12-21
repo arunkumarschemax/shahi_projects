@@ -382,7 +382,10 @@ export const SampleDevForm = () => {
       setData((prevData) => ({ ...prevData, trimsData: updatedData }));
       setTrimsData(updatedData);
   };
-
+  const disabledDate = (current) => {
+    // console.log(current.valueOf(), 'current');
+     return current.valueOf() < Date.now();
+ };
   return (
     <Card title='Sample Development Request' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  
     extra={ JSON.parse(localStorage.getItem('currentUser'))?.user.roles != "samplinguser" ?
@@ -596,7 +599,7 @@ export const SampleDevForm = () => {
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='expectedCloseDate' label='Expected Close Date' rules={[{required:true,message:'expectedCloseDate is required'}]}>
-                    <DatePicker style={{ width: '93%', marginLeft: 5 }} />
+                    <DatePicker style={{ width: '93%', marginLeft: 5 }}  disabledDate={disabledDate}/>
                     </Form.Item>
               </Col>
           
@@ -694,7 +697,7 @@ export const SampleDevForm = () => {
                 },
               ]}
             >
-              <Input placeholder="Enter discount"/>
+              <Input placeholder="Enter Contact"/>
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>

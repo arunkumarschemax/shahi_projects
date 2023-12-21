@@ -71,7 +71,16 @@ const getMaterial=()=>{
             render: (text, object, index) => (page - 1) * pageSize + (index + 1)
         },
         {
-            title: 'GRN number',
+          title: 'GRN Type',
+          dataIndex: "grnType",
+          align: 'left',
+          sorter: (a, b) => a.grnType - b.grnType,
+
+            sortDirections: ['descend', 'ascend'],
+          //   ...getColumnSearchProps('vendorName')
+      },
+        {
+            title: 'GRN Number',
             dataIndex: "grnNumber",
             align: 'left',
             sorter: (a, b) => a.grnNumber - b.grnNumber,

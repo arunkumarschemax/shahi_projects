@@ -67,6 +67,7 @@ export class GrnItemsFormDto {
     updatedAt?: Date;
     updatedUser?: string | null;
     versionFlag?: number;
+    poId?:number
 
     constructor(
         poItemId: number,
@@ -134,6 +135,7 @@ export class GrnItemsFormDto {
         updatedAt?: Date,
         updatedUser?: string | null,
         versionFlag?: number,
+        poId?:number
     ) {
         this.poItemId = poItemId;
         this.m3ItemCode = m3ItemCode;
@@ -200,6 +202,7 @@ export class GrnItemsFormDto {
         this.sampleRequestId = sampleRequestId
         this.indentId = indentId
         this.trimParams =trimParams
+        this.poId = poId
     }
 
 }

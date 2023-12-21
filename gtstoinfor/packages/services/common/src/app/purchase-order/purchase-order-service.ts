@@ -144,7 +144,7 @@ export class PurchaseOrderService {
                 }
                 
 
-                return new CommonResponseModel(true, 1, 'purchased Order Created Sucessfully')
+                return new CommonResponseModel(true, 1, 'purchased Order Created Sucessfully',save)
             } else {
                 return new CommonResponseModel(false, 0, 'Something went Wrong')
 
@@ -228,7 +228,7 @@ export class PurchaseOrderService {
                     WHERE poi.purchase_order_id = ${req.poId}`
                 }
             }
-            if (req.materialType === 'Trim') {
+            else {
                 query = `SELECT mt.trim_code as m3itemCode,
                 mt.category_id AS categoryId,cg.category,
                 mt.color_id AS colorId,cl.colour as color,
@@ -284,7 +284,7 @@ export class PurchaseOrderService {
                 }
                 if (req.poAgainst == 'Sample Order') {
                     query = query + `
-                     LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id  = poi.sample_item_id   
+                     LEFT JOIN sample_request_trim_info srf ON srf.trim_info_id  = poi.sample_item_id   
                      LEFT JOIN sample_request sr ON sr.sample_request_id  = srf.sample_request_id
                      WHERE poi.purchase_order_id = ${req.poId}`
                 }
@@ -385,8 +385,7 @@ export class PurchaseOrderService {
 
     async GetPurchaseData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
         try {
-            console.log(req,"req,ser")
-            let query = 'SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.po_against as poAgainst,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId FROM purchase_order  po LEFT JOIN style s ON s.style_id=po.style_id LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id'
+            let query = 'SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.po_against as poAgainst,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId FROM purchase_order  po LEFT JOIN style s ON s.style_id=po.style_id LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id WHERE 1=1'
 
             let param :any={}
             if(req){
@@ -394,13 +393,18 @@ export class PurchaseOrderService {
             //     query += ` where po.purchase_order_id = ${req?.id}`
             //   }
               if (req.ExternalRefNo && req.ExternalRefNo!=null){
-                query += ` WHERE b.external_ref_number = '${req.ExternalRefNo}'`
+                query += ` AND b.external_ref_number = '${req.ExternalRefNo}'`
               }
-              console.log(req.status,'=================')
               if (req.status && req.status.length > 0) {
                 // Assuming req.status is an array of enums
                 const statusValues = req.status.map(status => `'${status}'`).join(',');
                 query += ` AND po.status IN (${statusValues})`;
+            }
+              if (req.poconfirmStartDate) {
+                query += ` AND purchase_order_date between '${req.poconfirmStartDate}'  and '${req.poconfirmEndDate}'`;
+            }
+              if (req.confirmStartDate) {
+                query += ` AND expected_delivery_date between '${req.confirmStartDate}' and '${req.confirmEndDate}'`;
             }
             
             //   if (req.status){
@@ -465,12 +469,12 @@ export class PurchaseOrderService {
         }
     }
     async getAllPurchaseOrderData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
+        console.log(req, '^^^^^^^^^^^^^^^^^^^')
+
         try {
             const data = []
             const podata = await this.GetPurchaseData(req)
-            console.log(podata,"po")
             for (const po of podata.data) {
-                console.log(po, '^^^^^^^^^^^^^^^^^^^')
                 const fabData = await this.GetPurchaseFabricData(po.purchaseOrderId)
                 const fabricInfo = []
                 // for (const fabrData of fabData.data) {
@@ -503,7 +507,6 @@ export class PurchaseOrderService {
                 })
             }
             if (data) {
-                console.log(data, "kkkkkkkkkkkk");
 
                 return new CommonResponseModel(true, 1, 'data retrived sucessfully', data)
 
@@ -519,27 +522,43 @@ export class PurchaseOrderService {
     }
 
     async getPodetailsById(req:PurchaseViewDto):Promise<CommonResponseModel>{
-        const PoType = `select po_material_type from purchase_order where purchase_order_id = ${req.id}`
+        const PoType = `select po_material_type,po_against from purchase_order where purchase_order_id = ${req.id}`
         const poTypeRes = await this.dataSource.query(PoType)
         console.log(poTypeRes,'poTypeResdd')
         let concatString
         let columnName
+        let joinString
+        let columns
+        console.log(poTypeRes[0].po_against,'kkkkkk')
+        if(poTypeRes[0].po_against == 'Sample Order'){
+            joinString = `LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id = poi.sample_item_id
+            LEFT JOIN sample_request s ON s.sample_request_id = srf.sample_request_id`
+            columns = `s.request_no as sample_req_no,s.expected_delivery_date as date ` 
+        }else {
+            joinString = `LEFT JOIN sample_request_trim_info srt ON srt.trim_info_id = poi.sample_item_id
+            LEFT JOIN sample_request sr ON sr.sample_request_id = srt.sample_request_id`
+            columns = `i.request_no,i.indent_date`
+        }
         // let poData = `select * from purchase_order po `
         if(poTypeRes[0].po_material_type == 'Fabric'){
             concatString = ` 
             left join m3_items mi on mi.m3_items_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id 
-            LEFT JOIN indent_fabric ii ON ii.ifabric_id = poi.indent_item_id`
-            columnName = 'mi.item_code,mi.hsn_code as hsnCode,mi.description,u.uom'
+            LEFT JOIN indent_fabric ii ON ii.ifabric_id = poi.indent_item_id ${joinString}
+            `
+            columnName =    `mi.item_code,mi.hsn_code as hsnCode,mi.description,u.uom,${columns}`
         //     poData = poData+` left join purchase_order_fabric pof on pof.purchase_order_id = po.purchase_order_id `
         }else{
             concatString = ` 
             left join m3_trims mi on mi.m3_trim_Id = poi.m3_item_id left join uom u ON u.id = poi.quantity_uom_id
-            LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id`
-            columnName = 'mi.trim_code as item_code , mi.hsn_code as hsnCode,mi.description ,u.uom'
+            LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id ${joinString}
+            
+            `
+            columnName = `mi.trim_code as item_code , mi.hsn_code as hsnCode,mi.description ,u.uom,${columns} `
         //     poData = poData+` left join purchase_order_trim pot on pot.purchase_order_id = po.purchase_order_id`
         }
         // poData = poData+` where po.purchase_order_id = ${req.id}`
         // const podatares = await this.dataSource.query(poData)
+        
         const poTrimData = `select po.*,poi.*,${columnName},poi.unit_price,i.request_no as indentNo,i.indent_date as indentDate,v.vendor_name,v.contact_number,v.bank_acc_no,v.gst_number,v.postal_code,f.address,t.tax_percentage AS taxPercentage ,cur.currency_name as currencyName
         from purchase_order po
         left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id ${concatString}
@@ -548,6 +567,8 @@ export class PurchaseOrderService {
         left join vendors v on v.vendor_id = po.vendor_id LEFT JOIN taxes t ON t.tax_id = poi.tax
         where po.purchase_order_id = ${req.id} `
         console.log(poTrimData,'ppppppphhh')
+        console.log(concatString,'columnsssss');
+
         const poTrimdatares = await this.dataSource.query(poTrimData)
         // console.log(podatares)
         // const PoDetails = {
@@ -565,7 +586,7 @@ export class PurchaseOrderService {
     }
     async getAllPos(): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT p.purchase_order_id,p.po_number FROM  purchase_order p '`
+            let query = `SELECT p.purchase_order_id,p.po_number FROM  purchase_order p`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
