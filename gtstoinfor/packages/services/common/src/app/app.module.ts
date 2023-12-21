@@ -11,6 +11,7 @@ import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.mod
 import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
 import { RLOrdersModule } from './ralph-lauren/rl-orders.module';
+import { AddressModule } from './Entites@Shahi/address/address-module';
 
 
 @Module({
@@ -32,7 +33,7 @@ import { RLOrdersModule } from './ralph-lauren/rl-orders.module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule, RLOrdersModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule, RLOrdersModule,AddressModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,

@@ -40,6 +40,8 @@ import RLOrdersDetailView from "./ralph-lauren/orders-data-detail-view"
 import OrderAcceptanceGrid from "./ralph-lauren/order-acceptance-view"
 import PdfUpload from "./ralph-lauren/pdf-reader/pdf-upload"
 import ColineView from "./ralph-lauren/co-line-view"
+import AddressView from "./masters/address/address-view"
+import AddressUpload from "./masters/address/address-excel-upload"
 
 
 export const AppRoutes = () => {
@@ -67,6 +69,7 @@ export const AppRoutes = () => {
                     }} isUpdate={false} closeForm={function (): void {
                         throw new Error("Function not implemented.")
                     }} />} /> */}
+             
                 </Route>
                 <Route path='/nike'>
                     <Route path='file-import' element={<PoFileImport />} />
@@ -177,6 +180,8 @@ export const AppRoutes = () => {
                     <Route path='order-acceptance-view' element={<OrderAcceptanceGrid />} />
                     <Route path='pdf-upload' element={<PdfUpload />} />
                     <Route path='co-line-view' element={<ColineView />} />
+                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
+                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
 
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />

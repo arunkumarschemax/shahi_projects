@@ -13,6 +13,7 @@ export const appConfig = {
         dbName: process.env[`APP_DB_DBNAME`] || 'shahi_rl',
         poolLimit: parseInt(process.env[`APP_DB_POOL_LIMIT`]) || 50
     },
+
     adobeAcrobatApiCred: {
         client_credentials: {
             client_id: "976ac685c80d451e95bf497a3a98147c",
