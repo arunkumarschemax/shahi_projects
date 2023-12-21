@@ -44,6 +44,16 @@ export class BuyersDestinationController{
         }
     }
 
+    @Post('/getAllColorsAgainstBuyer')
+    async getAllColorsAgainstBuyer(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return await this.buyersDesService.getAllColorsAgainstBuyer(req)
+        } catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+
     //  @Post('/getSizeDropDown')
     // async getSizeDropDown():Promise<BuyersDestinationResponseModel>{
     //     try{

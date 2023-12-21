@@ -25,7 +25,14 @@ const SizeDetail = ({props,buyerId,form}) => {
   },[buyerId])
 
   const getColors = () => {
-    colorService.getAllActiveColour().then((res) => {
+    // colorService.getAllActiveColour().then((res) => {
+    //   if (res.status) {
+    //     // console.log(res,'size data')
+    //     setColor(res.data);
+    //   }
+    // });
+
+    buyerDestinaytionService.getAllColorsAgainstBuyer({buyerId:buyerId}).then((res) => {
       if (res.status) {
         // console.log(res,'size data')
         setColor(res.data);
