@@ -95,19 +95,19 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
     useEffect(() => {
         if (props?.hsnData != undefined) {
             props?.form.setFieldsValue({
-                HSN: props.hsnData.HSN, description: props.hsnData.description,
-                unitQuantity: props.hsnData.unitQuantity, unitPrice: props.hsnData.unitPrice,
-                taxType: props.hsnData.taxType, taxPercentage: props.hsnData.taxPercentage,
-                charge: props.hsnData.charge, taxAmount: props.hsnData.taxAmount, quotation: props.hsnData.quotation,
-                variance: props.hsnData.variance,
+                HSN: props.hsnData?.HSN, description: props.hsnData?.description,
+                unitQuantity: props.hsnData?.unitQuantity, unitPrice: props.hsnData?.unitPrice,
+                taxType: props.hsnData?.taxType, taxPercentage: props.hsnData?.taxPercentage,
+                charge: props.hsnData?.charge, taxAmount: props.hsnData?.taxAmount, quotation: props.hsnData?.quotation,
+                variance: props.hsnData?.variance,
             })
 
-            getVendorPrice(props.hsnData.venName)
+            getVendorPrice(props.hsnData?.venName)
 
         };
         const vendor = props.form.getFieldValue('venName');
         const filteredPriceData = price.filter(rec => rec.vendor === vendor);
-        const modifiedHsnData = props.hsnData.map(rec => {
+        const modifiedHsnData = props.hsnData?.map(rec => {
             const matchingPriceRec = filteredPriceData.find(priceRec => {
                 const value = priceRec.hsnCode === rec.HSN && priceRec.serviceDescription === rec.description
                 if (value === true) {
@@ -507,11 +507,12 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
 
     const onSubmit = () => {
         const dto1 = []
-        for (const data of hsnData) {
-            const dto = new HsnDto(data.HSN, data.taxType, data.taxAmount, data.description, data.taxPercentage, data.charge, data.unitQuantity, data.quotation, data.unitPrice, data.variance)
-            dto1.push(dto)
+        if (hsnData?.length) {
+            for (const data of hsnData) {
+                const dto = new HsnDto(data.HSN, data.taxType, data.taxAmount, data.description, data.taxPercentage, data.charge, data.unitQuantity, data.quotation, data.unitPrice, data.variance)
+                dto1.push(dto)
+            }
         }
-
         const req = new AllScanDto(props.formData.gstNumber, props.formData.venName, props.form.getFieldValue("venCod"), props.formData.invoiceDate, props.formData.invoiceNumber, props.formData.invoiceAmount, props.formData.igst, props.formData.cgst, props.formData.sgst, props.formData.invoiceCurrency, props.formData.financialYear, status, "", dto1, JSON.parse(localStorage.getItem("currentUser")).user.userName,);
         console.log(req, dto1, "submit");
         service
@@ -519,7 +520,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
             .then((res) => {
                 if (res.status) {
                     message.success("Success");
-                    navigate("/scan-document");
+                    // navigate("/scan-document");
                 } else {
                     message.error("Fill All Fields");
                 }
@@ -541,7 +542,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             <Form.Item
                                 label="Vendor Name"
                                 name="venName"
-                                rules={[{ required: true, message: "Field Is Required" }]}
+                            // rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input
                                     placeholder="Vendor Name"
@@ -556,7 +557,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             <Form.Item
                                 label="Vendor Code"
                                 name="venCod"
-                                rules={[{ required: true, message: "Field Is Required" }]}
+                            // rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Vendor Code"
                                     onChange={(e) => setVenCode(e.target.value)}
@@ -565,7 +566,9 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                         </Col>
 
                         <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
-                            <Form.Item label="GST NUMBER" name="gstNumber" rules={[{ required: true, message: "Field Is Required" }]} >
+                            <Form.Item label="GST NUMBER" name="gstNumber"
+                            // rules={[{ required: true, message: "Field Is Required" }]}
+                            >
                                 <Input
                                     placeholder="GST NUMBER"
                                     onChange={(e) => setGstNumber(e.target.value)}
@@ -579,7 +582,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             <Form.Item
                                 label="Invoice Date"
                                 name="invoiceDate"
-                                rules={[{ required: true, message: "Field Is Required" }]}
+                            // rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Date"
                                     onChange={(e) => setInvoiceDate(e.target.value)}
@@ -591,7 +594,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             <Form.Item
                                 label="Invoice Number"
                                 name="invoiceNumber"
-                                rules={[{ required: true, message: "Field Is Required" }]}
+                            // rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Number"
                                     onChange={(e) => setInvoiceNumber(e.target.value)}
@@ -605,7 +608,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             <Form.Item
                                 label="Invoice Amount"
                                 name="invoiceAmount"
-                                rules={[{ required: true, message: "Field Is Required" }]}
+                            // rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Amount"
                                     onChange={(e) => setInvoiceAmount(e.target.value)}
@@ -619,7 +622,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             <Form.Item
                                 label="IGST"
                                 name="igst"
-                                rules={[{ required: true, message: "Field Is Required" }]}
+                            // rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="IGST"
                                     onChange={(e) => setIgst(e.target.value)}
@@ -631,7 +634,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             <Form.Item
                                 label="CGST"
                                 name="cgst"
-                                rules={[{ required: true, message: "Field Is Required" }]}
+                            // rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="CGST"
                                     onChange={(e) => setCgst(e.target.value)}
@@ -649,7 +652,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             <Form.Item
                                 label="SGST"
                                 name="sgst"
-                                rules={[{ required: true, message: "Field Is Required" }]}
+                            // rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="SGST"
                                     onChange={(e) => setSgst(e.target.value)}
@@ -663,7 +666,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                             <Form.Item
                                 label="Invoice Currency"
                                 name="invoiceCurrency"
-                                rules={[{ required: true, message: "Field Is Required" }]}
+                            // rules={[{ required: true, message: "Field Is Required" }]}
                             >
                                 <Input placeholder="Invoice Currency"
                                     onChange={(e) => setInvoiceCurrency(e.target.value)}
@@ -674,7 +677,7 @@ export const DocFormPreview = (props: DocFormPreviewProps) => {
                         <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >                            <Form.Item
                             label="Financial Year"
                             name="financialYear"
-                            rules={[{ required: true, message: "Field Is Required" }]}
+                        // rules={[{ required: true, message: "Field Is Required" }]}
                         >
                             <Input placeholder="Financial Year"
                                 onChange={(e) => setFinancialyear(e.target.value)}

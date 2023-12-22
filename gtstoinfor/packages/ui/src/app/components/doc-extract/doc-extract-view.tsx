@@ -214,7 +214,29 @@ export const DocView = () => {
         text
       ),
   });
+  
 
+  // useEffect(() => {
+  //   const sharedService = new SharedService();
+
+  //   const automatic = async () => {
+  //     try {
+  //       const response = await sharedService.automatic();
+  //       console.log(response); 
+  //     } catch (error) {
+  //       console.error('Error opening headless browser:', error);
+  //     }
+  //   };
+  //   automatic(); 
+  // }, []);
+
+    // useEffect(() => {
+    //   const newWindow = window.open('http://localhost:4200/');
+    //   if (newWindow) {
+    //     newWindow.opener = null;
+    //   }
+    // }, [2000]);
+  
   const columns: any = [
     {
       title: "S.No",
@@ -327,6 +349,7 @@ export const DocView = () => {
       ),
     },
   ];
+  
 
   return (
     <Card
@@ -334,7 +357,8 @@ export const DocView = () => {
       size="small"
       extra={
         <Link to="/doc-extract-form">
-          <Button className="panel_button">Upload Document </Button>
+          <Button
+           className="panel_button">Upload Document </Button>
         </Link>
       }
 
@@ -400,7 +424,9 @@ export const DocView = () => {
           </Row>
         </Row>
       </Form>
+      <Card style={{border:"1px solid #ffffff"}}>
       <Table size="small" dataSource={formdata} columns={columns} pagination={false} className="custom-table"/>
+    </Card>
     </Card>
   );
 }

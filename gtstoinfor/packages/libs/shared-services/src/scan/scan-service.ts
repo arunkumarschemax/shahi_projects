@@ -20,4 +20,10 @@ export class SharedService extends CommonAxiosService {
     return this.axiosPostCall(this.ScanController + "getdata",req);
   }
 
+  
+  // async automatic(): Promise<any> {
+  //     const response = await this.axiosPostCall(this.ScanController + "automatic")
+  //     return response.data;
+  // }
+
 }

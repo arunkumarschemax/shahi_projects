@@ -19,60 +19,70 @@ export class ScanEntity extends BaseEntity {
   // filePath: string;
 
   @Column('varchar', {
+    nullable: true,
     length: 50,
     name: 'gst',
   })
   gstNumber: string;
 
   @Column('varchar', {
+    nullable: true,
     length: 50,
     name: 'vendor_name',
   })
   venName: string;
 
   @Column('varchar', {
+    nullable: true,
     length: 50,
     name: 'vendor_code',
   })
   venCod: string;
 
   @Column('varchar', {
+    nullable: true,
     length: 50,
     name: 'invoice_date',
   })
   invoiceDate: string;
 
   @Column('varchar', {
+    nullable: true,
     length: 50,
     name: 'invoice_number',
   })
   invoiceNumber: string;
 
   @Column('varchar', {
+    nullable: true,
     length: 50,
     name: 'cgst',
   })
   cgst: string;
 
   @Column('varchar', {
+    nullable: true,
     length: 50,
     name: 'igst',
   })
   igst: string;
 
   @Column('varchar', {
+    nullable: true,
     length: 50,
     name: 'sgst',
   })
   sgst: string;
 
   @Column('varchar', {
+    nullable: true,
     length: 50,
     name: 'invoice_amount',
   })
   invoiceAmount: string;
 
   @Column('varchar', {
+    nullable: true,
     length: 50,
     name: 'invoice_currency',
   })
@@ -80,6 +90,7 @@ export class ScanEntity extends BaseEntity {
 
 
   @Column('varchar', {
+    nullable: true,
     length: 50,
     name: 'financial_year',
   })
@@ -87,6 +98,7 @@ export class ScanEntity extends BaseEntity {
 
   
   @Column('varchar', {
+    nullable: true,
     length: 50,
     name: 'status',
   })
