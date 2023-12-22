@@ -294,6 +294,8 @@ export class OperationTrackingService {
         inventoryEntity.sampleReqId = req.sampleRequestId
         inventoryEntity.colourId = req.colorId
         inventoryEntity.sizeId = req.sizeId
+        inventoryEntity.reporterId = req.reporterId
+        inventoryEntity.supervisorId = req.supervisorId
         // inventoryEntity.operationSequenceId = dto.operationSequenceId
         inventoryEntity.operation = req.operationCode
         inventoryEntity.physicalQuantity = req.quantity
@@ -331,6 +333,8 @@ export class OperationTrackingService {
         trackingEntity.styleId = styleId
         trackingEntity.colourId = req.colorId
         trackingEntity.sizeId = req.sizeId
+        trackingEntity.reporterId = req.reporterId
+        trackingEntity.supervisorId = req.supervisorId
         // trackingEntity.operationSequenceId = dto.operationSequenceId
         trackingEntity.operationInventoryId = save.operationInventoryId
         // trackingEntity.rejectedQuantity = dto.rejectedQuantity

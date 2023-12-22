@@ -316,6 +316,9 @@ export class GrnService {
             if(req.extRefNumber != undefined){
                 query = query +" and b.external_ref_number = " + `"${req.extRefNumber}"`
             }
+            if(req.tab){
+                query += ` AND g.item_type LIKE '%${req.tab}%'`
+            }
             query = query + ' GROUP BY g.grn_id'
             const result = await manager.query(query)
             if (result) {

@@ -384,7 +384,7 @@ export class PurchaseOrderService {
     }
 
     async GetPurchaseData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
-        try {
+                try {
             let query = 'SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.po_against as poAgainst,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId FROM purchase_order  po LEFT JOIN style s ON s.style_id=po.style_id LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id WHERE 1=1'
 
             let param :any={}
@@ -406,7 +406,9 @@ export class PurchaseOrderService {
               if (req.confirmStartDate) {
                 query += ` AND expected_delivery_date between '${req.confirmStartDate}' and '${req.confirmEndDate}'`;
             }
-            
+            if(req.tab){
+                query += ` AND po_material_type LIKE '%${req.tab}%'`
+            }
             //   if (req.status){
                 
             //     // query += `and po.status IN  ('${req.status})')`
@@ -469,7 +471,6 @@ export class PurchaseOrderService {
         }
     }
     async getAllPurchaseOrderData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
-        console.log(req, '^^^^^^^^^^^^^^^^^^^')
 
         try {
             const data = []
