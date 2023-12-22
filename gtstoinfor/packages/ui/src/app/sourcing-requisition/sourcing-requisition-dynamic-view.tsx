@@ -364,6 +364,10 @@ const segmentedOptions = options();
         dataIndex: "xlNo",
       },
       {
+        title: "Indent Raised",
+        dataIndex: "quantity",
+      },
+      {
         title: "PO Raised",
         dataIndex: "poQty",
       },
@@ -469,6 +473,10 @@ const segmentedOptions = options();
         title: "M3 Trim Code",
         dataIndex: "m3TrimCodeName",
         ...getColumnSearchProps("m3TrimCodeName"),
+      },
+      {
+        title: "Indent Raised",
+        dataIndex: "quantity",
       },
       {
         title: "PO Raised",

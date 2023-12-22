@@ -114,13 +114,13 @@ export class IndentService {
                 fabricModel.push(new IndentFabricModel(fabric.ifabric_id, fabric.content,
                     fabric.fabric_type_name, fabric.fabric_weave_name, fabric.weight, fabric.width, fabric.yarn_count, fabric.unit, fabric.construction, fabric.finish, fabric.shrinkage, fabric.m3_fabric_code,fabric.colour,
                     fabric.pch, fabric.moq, fabric.moqUnit, fabric.moq_price, fabric.moqPriceUnit, fabric.season, fabric.vendor_name,
-                    fabric.buyer, fabric.grn_date, fabric.xlNo, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId,data.styleId,true,fabric.indentCode,fabric.description,fabric.colour,fabric.quantity,fabric.quantity,fabric.quantityUnit,fabric.colorId,fabric.ifabric_id,fabric.description,fabric.quantity_unit,fabric.poQty))
+                    fabric.buyer, fabric.grn_date, fabric.xlNo, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId,data.styleId,true,fabric.indentCode,fabric.description,fabric.colour,fabric.quantity,fabric.poQuantity,fabric.quantityUnit,fabric.colorId,fabric.ifabric_id,fabric.description,fabric.quantity_unit,fabric.poQty))
             }
             const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id);
             for (const trim of trimIndentData) {
                 trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
                     trim.quantity, trim.trim_code, trim.description,
-                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity))
+                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity,trim.poQuantity))
                 // console.log(trimModel);
 
             }
