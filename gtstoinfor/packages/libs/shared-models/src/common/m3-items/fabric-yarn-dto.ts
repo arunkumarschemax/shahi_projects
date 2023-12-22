@@ -2,7 +2,8 @@
 export class FabricYarnDto {
     fabricYarnId: number;
     yarnType: string;
-    count: number;
+    countNum: number;
+    countDenom: number;
     uomId: number;
     createdUser: string | null;
     updatedUser: string | null;
@@ -13,7 +14,8 @@ export class FabricYarnDto {
     constructor(
         fabricYarnId: number,
         yarnType: string,
-        count: number,
+        countNum: number,
+        countDenom: number,
         uomId: number,
         createdUser: string | null,
         updatedUser: string | null,
@@ -23,7 +25,8 @@ export class FabricYarnDto {
     ){
         this.fabricYarnId = fabricYarnId
         this.yarnType = yarnType
-        this.count = count
+        this.countNum = countNum
+        this.countDenom = countDenom
         this.uomId = uomId
         this.createdAt = createdAt
         this.createdUser = createdUser

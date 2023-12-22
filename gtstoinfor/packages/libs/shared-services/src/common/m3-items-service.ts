@@ -22,4 +22,16 @@ export class M3ItemsService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/createM3Trim", req)
     }
 
+    async getFabricTypes(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getFabricTypes")
+    }
+
+    async getFabricWeaves(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getFabricWeaves")
+    }
+
+    async getFabricFinishes(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getFabricFinishes")
+    }
+
 }
