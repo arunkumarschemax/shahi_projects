@@ -776,7 +776,7 @@ const segmentedOptions = options();
             header={
               <HeaderRow
                 requestNo={item.requestNo}
-                buyer={item.buyerName}
+                buyerName={item.buyerName}
                 style={item.style}
                 description={item.description}
                 expectedDate={item.expectedDate}
