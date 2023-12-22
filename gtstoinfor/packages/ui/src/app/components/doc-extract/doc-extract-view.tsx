@@ -424,7 +424,9 @@ export const DocView = () => {
           </Row>
         </Row>
       </Form>
+      <Card style={{border:"1px solid #ffffff"}}>
       <Table size="small" dataSource={formdata} columns={columns} pagination={false} className="custom-table"/>
+    </Card>
     </Card>
   );
 }

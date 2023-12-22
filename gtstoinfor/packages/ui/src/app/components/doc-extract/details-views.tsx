@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Card, Descriptions, Input, Space, Table, Tag } from "antd";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -324,19 +325,55 @@ export const ScanDetailView = () => {
       },
     },
 
+    // {
+    //   title: "Unit Quantity",
+    //   dataIndex: "unitQuantity",
+    //   key: "unitQuantity",
+    //   align: "right",
+    //   ...getColumnSearchProps("unitQuantity"),
+    //   sorter: (a, b) => a.unitQuantity.localeCompare(b.unitQuantity),
+    //   // render: (_, record) =>
+    //   //   record?.unitQuantity || "-",
+    //   render: (text, record) => {
+    //     return <span>{record.unitQuantity ? record.unitQuantity : "-"}</span>;
+    //   },
+    // },
+    // {
+    //   title: "Unit Quantity",
+    //   dataIndex: "unitQuantity",
+    //   key: "unitQuantity",
+    //   align: "right",
+    //   ...getColumnSearchProps("unitQuantity"),
+    //   sorter: (a, b) => {
+    //     const aQuantity = a.unitQuantity || "";
+    //     const bQuantity = b.unitQuantity || "";
+    //     return parseFloat(aQuantity) - parseFloat(bQuantity);
+    //   },
+    //   render: (text, record) => {
+    //     let quantity = "1.00";
+    //     if (record.unitQuantity) {
+    //       const parsedQuantity = parseFloat(record.unitQuantity);
+    //       if (!isNaN(parsedQuantity)) {
+    //         quantity = parsedQuantity.toFixed(2);
+    //       }
+    //     }
+    //     return <span>{quantity}</span>;
+    //   },
+    // },
+    
     {
       title: "Unit Quantity",
       dataIndex: "unitQuantity",
       key: "unitQuantity",
       align: "right",
       ...getColumnSearchProps("unitQuantity"),
-      sorter: (a, b) => a.unitQuantity.localeCompare(b.unitQuantity),
-      // render: (_, record) =>
-      //   record?.unitQuantity || "-",
+      sorter: (a, b) => (a.unitQuantity || "").localeCompare(b.unitQuantity || ""),
       render: (text, record) => {
-        return <span>{record.unitQuantity ? record.unitQuantity : "-"}</span>;
+        const quantity = record.unitQuantity ? record.unitQuantity : 1;
+        return <span>{quantity}</span>;
       },
     },
+    
     {
       title: "Subject Amount",
       dataIndex: "unitPrice",
@@ -541,7 +578,7 @@ export const ScanDetailView = () => {
       </Descriptions>
 
       <Card>
-        <>
+      <div style={{ overflowX: 'auto' }}>
           <Table
             columns={columns}
             size="small"
@@ -591,7 +628,7 @@ export const ScanDetailView = () => {
 
               return (
                 <>
-                  <Table.Summary.Row className="tableFooter">
+                  <Table.Summary.Row className="tableFooter" >
                     <Table.Summary.Cell index={1} colSpan={3}>
                       <span></span>
                     </Table.Summary.Cell>
@@ -607,18 +644,19 @@ export const ScanDetailView = () => {
                       </b>
                     </Table.Summary.Cell>
                     <Table.Summary.Cell index={1} colSpan={1}>
-                      <span>
+                    <span style={{marginLeft:"60px"}}>
                         <b>{Number(Subjectamount).toFixed(2)}</b>
                       </span>
                     </Table.Summary.Cell>
+
                     <Table.Summary.Cell index={1} colSpan={1}>
-                      <span>
+                      <span style={{marginLeft:"60px"}}>
                         <b>{Number(taxAmount).toFixed(2)}</b>
                       </span>
                     </Table.Summary.Cell>
 
                     <Table.Summary.Cell index={1} colSpan={1}>
-                      <span style={{ textAlign: "end" }}>
+                      <span style={{marginLeft:"80px"}}>
                         <b>{Number(totalCost).toFixed(2)}</b>
                       </span>
                     </Table.Summary.Cell>
@@ -627,7 +665,7 @@ export const ScanDetailView = () => {
               );
             }}
           />
-        </>
+         </div>
       </Card>
     </Card>
   );

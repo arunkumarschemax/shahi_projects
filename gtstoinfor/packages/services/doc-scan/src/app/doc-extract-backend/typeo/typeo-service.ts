@@ -205,7 +205,7 @@ export class ScanService {
     };
   }
 
-  @Interval(15000)
+  @Interval(20000)
   async handleAutomaticCron() {
     try {
       await this.automatic();
@@ -241,11 +241,11 @@ export class ScanService {
       const destinationDirectory = 'C:/Users/User1/Documents/readinvoices/';
 
       const files = fs.readdirSync(directoryPath);
-    if (files.length === 0) {
-      console.log('No files found');
-      return new CommonResponseModel(false, 0, 'No files found');
-    }
-
+      if (files.length === 0) {
+        console.log('No files found');
+        await browser.close();
+        // return new CommonResponseModel(false, 0, 'No files found');
+      }
       console.log(files, "files");
       for (const file of files) {
         console.log(file, "file");
@@ -313,13 +313,23 @@ if (!foundOption) {
 
         const sourceFilePath = path.join(directoryPath, file);
         const destinationFilePath = path.join(destinationDirectory, file);
-        fs.rename(sourceFilePath, destinationFilePath, (err) => {
+        fs.rename(sourceFilePath, destinationFilePath, async(err) => {
           if (err) {
             return new CommonResponseModel(false, 0, '');
           }
+        
+          try {
+            await this.emailAttachmentsRepo.update(
+              { fileName: file },
+              { schemaxProcessed: 'yes' }
+            );
+          } catch (error) {
+            console.error("Error updating schemaxProcessed:", error);
+            return new CommonResponseModel(false, 0, 'Error updating schemaxProcessed');
+          }
         });
       }
-      await browser.close();
+      // await browser.close();
       return new CommonResponseModel(true, 1, 'All PDFs submittedd successfully')
     } catch (error) {
       return new CommonResponseModel(false, 0, error)
