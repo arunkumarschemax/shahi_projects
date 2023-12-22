@@ -6,6 +6,12 @@ export class SampleRequestInfoModel{
     style:string
     brand: string;
     buyer:string
+    employee:string
+    status:string
+    pch:string
+    lifeCycleStatus:string
+    contact:string
+    ETD:Date
     sizeinfo?:SampleSizeInfoModel[]
     fabInfo?:any[]
     trimInfo?:any[]
@@ -16,6 +22,13 @@ export class SampleRequestInfoModel{
         style:string,
         brand: string,
         buyer:string,
+        employee:string,
+        status:string,
+        lifeCycleStatus:string,
+        contact:string,
+        pch:string,
+        ETD:Date,
+        // conversion:'',
         sizeinfo?:SampleSizeInfoModel[],
         fabInfo?:any[],
         trimInfo?:any[]
@@ -29,6 +42,12 @@ export class SampleRequestInfoModel{
        this.trimInfo = trimInfo
        this.fabInfo = fabInfo
        this.sampleRequestNo = sampleRequestNo
+       this.contact =contact
+       this.status = status
+       this.lifeCycleStatus = lifeCycleStatus
+       this.employee = employee
+       this.pch = pch
+       this.ETD = ETD
         }
 
 

@@ -77,15 +77,21 @@ export const SourcingRequisitionDynamicView = () => {
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [selectedRowData, setSelectedRowData] = useState([]);
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
-
+  const [segmentOptions, setSegmentOptions] = useState<any[]>(
+    [
+      { key: 'Fabric', label: 'Fabric' },
+      { key: 'Trim', label: 'Trim' }
+    ]
+  );
 
   useEffect(() => {
-    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
-      setTabName('Trim')
-    }
-    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
-      setTabName('Fabric')
-    }
+    // if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+    //   setTabName('Trim')
+    // }
+    // if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+    //   setTabName('Fabric')
+    // }
+
     // getStyle();
     getAll();
   }, []);
@@ -104,25 +110,29 @@ export const SourcingRequisitionDynamicView = () => {
   //   });
   // };
 
-  const checkAccess = (buttonParam) => {   
+  const checkAccess = (buttonParam) => {  
     const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus.Indent,buttonParam)
-    // console.log(accessValue,'access');
+     console.log(buttonParam,accessValue,'access');
     
     return accessValue
 }
-
+// let segmentOptions = [
+//   { key: 'Fabric', label: 'Fabric' },
+//   { key: 'Trim', label: 'Trim' }
+// ];
 const options = () => {
-  let segmentOptions = [
-    { key: 'Fabric', label: 'Fabric' },
-    { key: 'Trim', label: 'Trim' }
-  ];
-
-  if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
-    segmentOptions = segmentOptions.filter((e) => e.label === 'Fabric');
-  }
-  if (checkAccess(MenusAndScopesEnum.Scopes.trimTab)) {
-    segmentOptions = segmentOptions.filter((e) => e.label === 'Trim');
-  }
+  
+// if(tableData?.indentFabricDetails)
+  // if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab) ) {
+  //   segmentOptions = segmentOptions.filter((e) => e.label === 'Fabric');
+  //   console.log(segmentOptions);
+  // }
+  // if (checkAccess(MenusAndScopesEnum.Scopes.trimTab && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab))) {
+  //   console.log(segmentOptions);
+  //   segmentOptions = segmentOptions.filter((e) => e.label === 'Trim');
+  // }
+  console.log(segmentOptions);
+  
   return segmentOptions.map((operation, index) => ({
     label: <b>{operation.label}</b>,
     value: operation.label,
@@ -130,7 +140,9 @@ const options = () => {
 
   }));
 };
+
 const segmentedOptions = options();
+
   const getAll = () => {
     const req = new IndentRequestFilter();
     if (form.getFieldValue("requestNo") !== undefined) {
@@ -142,9 +154,26 @@ const segmentedOptions = options();
     if (form.getFieldValue("status") !== undefined) {
       req.status = form.getFieldValue("status");
     }
+    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      req.tab= 'FABRIC'
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+      req.tab= 'Trim'
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      req.tab= 'both'
+    }
     req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     service.getAllIndentData(req).then((res) => {
       if (res.status) {
+      //  if( res.data.indentFabricDetails?.length>0){
+      //   // segmentOptions.filter((e) => e.label === 'Fabric');
+      //   setSegmentOptions(segmentOptions.filter((e) => e.label === 'Fabric'))
+      // }else {
+      //   // segmentOptions.filter((e) => e.label === 'Trim');
+      //   setSegmentOptions(segmentOptions.filter((e) => e.label === 'Trim'))
+
+      // }
         setData(res.data);
         setFilterData(res.data);
       }
@@ -799,8 +828,35 @@ const segmentedOptions = options();
               <Segmented
                 onChange={onSegmentChange}
                 style={{ backgroundColor: "#68cc6b" }}
-                  options= {segmentedOptions}
-                 defaultValue={checkAccess(MenusAndScopesEnum.Scopes.fabricTab)?"Fabric":checkAccess(MenusAndScopesEnum.Scopes.trimTab) ? "Trim":''}
+                  options= {
+                    item.indentFabricDetails.length > 0?[
+                      {
+                        label: (
+                                <>
+                                  <b 
+                                  // style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? 'block' : 'none'}}
+                                   >Fabric Details</b>
+                                </>
+                              ),
+                              value: "Fabric",
+                      }
+                    ]:
+                    [
+                        {
+                    label: (
+                      <>
+                        <b 
+                        // style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.trimTab)? 'block' : 'none'}}
+
+                        >Trim Details</b>
+                      </>
+                    ),
+                    value: "Trim",
+
+                  },
+                    ]
+                  }
+                 defaultValue={item.indentFabricDetails.length> 0?"Fabric": "Trim"}
                 // options={
                 //   [
                 //   {
@@ -825,7 +881,7 @@ const segmentedOptions = options();
               />
               <div>
               <>
-                {tabName === "Fabric" ? (
+                {item.indentFabricDetails.length > 0?  (
                   <>
                     <Table
                       columns={tableColumns(item.indentId, (item.indentFabricDetails).filter((e) => Number(e.poQty) < Number(e.quantity) && e.checkStatus === true).length)}
@@ -839,7 +895,7 @@ const segmentedOptions = options();
                 </>
               </div>
               <div>
-                {tabName === "Trim" ? (
+                {item.indentTrimDetails.length > 0 ? (
                   <>
                     <Table
                       columns={tableTrimColumns(item.indentId, (item.indentTrimDetails).filter((e) => Number(e.poQty) < Number(e.quantity) && e.checkStatus === true).length)}
