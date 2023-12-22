@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { GrnEntity } from "./grn-entity";
-import { GRNTypeEnum, LocationMappedEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { GRNTypeEnum, ItemTypeEnum, LocationMappedEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { PurchaseOrderFbricEntity } from "../../purchase-order/entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "../../purchase-order/entities/purchase-order-trim-entity";
 
@@ -129,6 +129,13 @@ export class GrnItemsEntity {
         nullable: false,
     })
     indentId: number
+
+    @Column('enum',{
+        name:'item_type',
+        nullable: true,
+        enum:ItemTypeEnum,
+      })
+      itemType: ItemTypeEnum;
 
     @Column('int', {
         name: 'grn_item_amount',

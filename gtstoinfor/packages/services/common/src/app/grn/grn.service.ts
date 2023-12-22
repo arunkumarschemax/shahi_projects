@@ -240,6 +240,7 @@ export class GrnService {
                 itemEntity.styleId = item.styleId
                 itemEntity.grnItemNo = grnItemNumber
                 itemEntity.poId = req.poId
+                itemEntity.itemType = item.itemType
                 itemInfo.push(itemEntity)
             }
             grnEntity.grnItemInfo = itemInfo

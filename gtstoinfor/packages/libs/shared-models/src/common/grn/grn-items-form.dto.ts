@@ -1,4 +1,4 @@
-import { LocationMappedEnum, LogoEnum, PartEnum, PoItemEnum } from "../../enum";
+import { ItemTypeEnum, LocationMappedEnum, LogoEnum, PartEnum, PoItemEnum } from "../../enum";
 import { GrnItemsDto } from "./grn-items-dto"
 
 export class GrnItemsFormDto {
@@ -68,6 +68,8 @@ export class GrnItemsFormDto {
     updatedUser?: string | null;
     versionFlag?: number;
     poId?:number
+    itemType?:ItemTypeEnum
+
 
     constructor(
         poItemId: number,
@@ -135,7 +137,7 @@ export class GrnItemsFormDto {
         updatedAt?: Date,
         updatedUser?: string | null,
         versionFlag?: number,
-        poId?:number
+        poId?:number,itemType?:ItemTypeEnum
     ) {
         this.poItemId = poItemId;
         this.m3ItemCode = m3ItemCode;
@@ -203,6 +205,7 @@ export class GrnItemsFormDto {
         this.indentId = indentId
         this.trimParams =trimParams
         this.poId = poId
+        this.itemType = itemType
     }
 
 }
