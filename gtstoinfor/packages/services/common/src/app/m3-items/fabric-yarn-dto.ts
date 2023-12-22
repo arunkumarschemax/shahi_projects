@@ -9,7 +9,10 @@ export class FabricYarnDto {
     yarnType: string;
 
     @ApiProperty()
-    count: number;
+    countNum: number;
+
+    @ApiProperty()
+    countDenom: number;
 
     @ApiProperty()
     uomId: number;

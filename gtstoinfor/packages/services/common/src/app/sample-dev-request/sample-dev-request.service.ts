@@ -1058,7 +1058,7 @@ export class SampleRequestService {
         LEFT JOIN  sample_request_fabric_info srf ON srf.sample_request_id=sb.sample_item_id AND sb.item_type='Fabric' 
         LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id=sb.sample_item_id AND sb.item_type!='Fabric'
         LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id  
-          LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND sb.item_type IN("fabric")
+          LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND st.item_type = sb.item_type
             LEFT JOIN m3_items mi ON mi.m3_items_Id=sb.m3_item_id  
             LEFT JOIN colour c ON c.colour_id=sb.colour_id
             LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id

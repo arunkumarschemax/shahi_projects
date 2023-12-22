@@ -51,4 +51,31 @@ export class M3ItemsController {
       return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
     }
   }
+
+@Post('getFabricTypes')
+  async getFabricTypes(): Promise<CommonResponseModel> {
+    try {
+      return await this.Service.getFabricTypes();
+    } catch (error) {
+      return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+    }
+  }
+
+@Post('getFabricWeaves')
+  async getFabricWeaves(): Promise<CommonResponseModel> {
+    try {
+      return await this.Service.getFabricWeaves();
+    } catch (error) {
+      return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+    }
+  }
+
+@Post('getFabricFinishes')
+  async getFabricFinishes(): Promise<CommonResponseModel> {
+    try {
+      return await this.Service.getFabricFinishes();
+    } catch (error) {
+      return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+    }
+  }
 }

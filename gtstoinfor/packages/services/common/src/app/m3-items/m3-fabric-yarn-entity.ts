@@ -15,10 +15,16 @@ export class M3FabricYarnEntity {
   yarnType: string;
 
   @Column('int',{
-    name:'count',
+    name:'count_num',
     nullable: false,
   })
-  count: number;
+  countNum: number;
+
+  @Column('int',{
+    name:'count_denom',
+    nullable: false,
+  })
+  countDenom: number;
 
   @Column('int',{
     name:'uom_id',

@@ -299,8 +299,8 @@ import RolePermission from "../role-permissions";
       },
       {
         title: "Available Quantity",
-        dataIndex: "availabeQuantity",
-        sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
+        dataIndex: "resltantavaliblequantity",
+        sorter: (a, b) => a.resltantavaliblequantity.localeCompare(b.resltantavaliblequantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
           // let consumedQty = 0
@@ -309,7 +309,7 @@ import RolePermission from "../role-permissions";
           // }
             return (
               <>
-               {record.availableQuantity ? (record.availableQuantity) : "Not Available"
+               {record.resltantavaliblequantity ? (record.resltantavaliblequantity) : "Not Available"
                   }
                 {/* {record.availableQuantity ? (record.availableQuantity-consumedQty) : "Not Available"
                   } */}

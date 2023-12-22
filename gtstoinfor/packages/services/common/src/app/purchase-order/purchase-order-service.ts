@@ -202,7 +202,7 @@ export class PurchaseOrderService {
             if (req.materialType === 'Fabric') {
                 query = `SELECT m.item_code AS m3itemCode,poi.m3_item_id as m3ItemCodeId,poi.po_quantity AS poQuantity,poi.quantity_uom_id AS quantityUomId,u.uom,poi.purchase_order_item_id as poItemId,
                 poi.purchase_order_id AS purchaseOrderId,m.fabric_type AS m3ItemTypeId,ft.fabric_type_name AS m3ItemType,
-                poi.grn_quantity AS grnQuantity,poi.sample_item_id AS sampleItemId,poi.indent_item_id as indentItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour`
+                poi.grn_quantity AS grnQuantity,poi.sample_item_id AS sampleItemId,poi.indent_item_id as indentItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour, poi.item_type AS itemType `;
                 if(req.poAgainst == 'Indent'){
                     query = query + `,i.indent_id as indentId `
                 }
@@ -252,7 +252,7 @@ export class PurchaseOrderService {
                 mt.trim_mapping_id AS trimMappingId,
                 tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part,
                 poi.m3_item_id AS m3ItemCodeId,mt.trim_type as m3ItemType,poi.purchase_order_id AS purchaseOrderId, poi.po_quantity AS poQuantity,poi.purchase_order_item_id as poItemId,
-                poi.quantity_uom_id AS quantityUomId,u.uom,poi.grn_quantity AS grnQuantity,poi.indent_item_id as indentItemId, poi.sample_item_id as sampleItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour`
+                poi.quantity_uom_id AS quantityUomId,u.uom,poi.grn_quantity AS grnQuantity,poi.indent_item_id as indentItemId, poi.sample_item_id as sampleItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour, poi.item_type AS itemType`
                 if(req.poAgainst == 'Indent'){
                     query = query + `,i.indent_id as indentId`
                 }
@@ -313,7 +313,7 @@ export class PurchaseOrderService {
             const grnItemsArr: GrnItemsFormDto[] = []
             for (const rec of modifiedRes) {
                 const receivedQty = rec.poQuantity - rec.grnQuantity
-                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer,rec?.sampleRequestId,rec?.indentId,receivedQty,receivedQty,rec.categoryId,rec.category,rec.colorId,rec.color,rec.contentId,rec.content,rec.finishId,rec.finish,rec.holeId,rec.hole,rec.logo,rec.part,rec.qualityId,rec.qualityName,rec.structureId,rec.structure,rec.thicknessId,rec.thickness,rec.typeId,rec.type,rec.UOMId,rec.UOM,rec.varietyId,rec.variety,rec.trimCategoryId,rec.trimCategory,rec.trimMappingId,rec.style_id,rec.trimParams)
+                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer,rec?.sampleRequestId,rec?.indentId,receivedQty,receivedQty,rec.categoryId,rec.category,rec.colorId,rec.color,rec.contentId,rec.content,rec.finishId,rec.finish,rec.holeId,rec.hole,rec.logo,rec.part,rec.qualityId,rec.qualityName,rec.structureId,rec.structure,rec.thicknessId,rec.thickness,rec.typeId,rec.type,rec.UOMId,rec.UOM,rec.varietyId,rec.variety,rec.trimCategoryId,rec.trimCategory,rec.trimMappingId,rec.style_id,rec.trimParams,0,0,0,0,"",0,undefined,"",undefined,"",0,0,rec.itemType);
                 grnItemsArr.push(grnItemsDto)
             }
             const poQuery = `select p.purchase_order_id as poId,p.po_material_type as poMaterialType,p.po_against as poAgainst,p.grn_quantity as grnQuantity from purchase_order p where p.purchase_order_id = ${req.poId}`

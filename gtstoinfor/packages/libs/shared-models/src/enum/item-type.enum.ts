@@ -1,7 +1,7 @@
 export enum ItemTypeEnum {
     FABRIC = 'FABRIC',
-    SEWING_TRIM = 'SEWING TRIM',
-    PACKING_TRIM = 'PACKING TRIM',
+    SEWING_TRIM = 'SEWING_TRIM',
+    PACKING_TRIM = 'PACKING_TRIM',
 }
 
 export const ItemTypeEnumDisplay = [

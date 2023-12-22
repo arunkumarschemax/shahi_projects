@@ -119,7 +119,7 @@ export class LocationMappingService {
             let query = `SELECT poi.colour_id AS colorId,gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, gi.sample_req_id AS sampleReqId,gi.sample_item_id AS sampleItemId,
             (gi.accepted_quantity - IF(SUM(st.quantity) IS NULL, 0,SUM(st.quantity))) AS balance, gi.grn_item_no AS grnItemNo,gi.style_id AS styleId,sty.style,
             IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,IF(SUM(st.quantity) IS NULL, 0,SUM(st.quantity)) AS allocatedQty,
-            IF(g.item_type = "FABRIC", CONCAT(mit.item_code,'-',mit.description), CONCAT(mtr.trim_code,'-',mtr.description)) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName,g.grn_id as grnId, g.grn_type AS grnType
+            IF(g.item_type = "FABRIC", CONCAT(mit.item_code,'-',mit.description), CONCAT(mtr.trim_code,'-',mtr.description)) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName,g.grn_id as grnId, g.grn_type AS grnType, gi.item_type AS itemType
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             LEFT JOIN purchae_order_items poi ON poi.purchase_order_item_id = gi.po_item_id

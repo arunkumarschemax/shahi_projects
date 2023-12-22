@@ -43,6 +43,7 @@ const stockService = new StockService();
   const [countUnitValue, setCountUnitValue] = useState<any>();
   const [buttonEnable,setButtonEnable] = useState<boolean>(true)
   const [buyervalue,setBuyervalue] = useState<any>()
+  const [finishData, setFinishData] = useState<any[]>([])
 
 
 
@@ -114,6 +115,7 @@ const stockService = new StockService();
       getFabricTypedata();
       getWeaveData();
       getBuyers();
+      getFabricFinishes()
     }, []);
   
     const getBuyers = () => {
@@ -125,9 +127,7 @@ const stockService = new StockService();
     };
   
     const getFabricTypedata = () => {
-      fabricService
-        .getAllFabricType()
-        .then((res) => {
+      service.getFabricTypes().then((res) => {
           if (res.status) {
             setFabricType(res.data);
           } else {
@@ -140,9 +140,7 @@ const stockService = new StockService();
     };
   
     const getWeaveData = () => {
-      weaveService
-        .getAllFabricWeave()
-        .then((res) => {
+      service.getFabricWeaves().then((res) => {
           if (res.status) {
             setWeave(res.data);
           } else {
@@ -153,6 +151,20 @@ const stockService = new StockService();
           console.log(err.message);
         });
     };
+  
+    const getFabricFinishes = () => {
+      service.getFabricFinishes().then((res) => {
+          if (res.status) {
+            setFinishData(res.data);
+          } else {
+            setFinishData([]);
+          }
+        })
+        .catch((err) => {
+          console.log(err.message);
+        });
+    };
+
     const getUom = () => {
       uomService.getAllUoms().then((res) => {
         if (res.status) {
@@ -254,9 +266,9 @@ const stockService = new StockService();
       },
         {
             title: "Buyer",
-            dataIndex: "buyer",
-            ...getColumnSearchProps('buyer'),
-            sorter: (a, b) => a.buyer.length - b.buyer.length,
+            dataIndex: "buyerName",
+            ...getColumnSearchProps('buyerName'),
+            sorter: (a, b) => a.buyerName.length - b.buyerName.length,
            sortDirections: ['descend', 'ascend'],
         },
         {
@@ -286,36 +298,36 @@ const stockService = new StockService();
         
 
     },
-        {
-            title: "Content",
-            dataIndex: "content",
-            ...getColumnSearchProps('content'),
-            sorter: (a, b) => a.content.length - b.content.length,
-           sortDirections: ['descend', 'ascend'],
-        },
+        // {
+        //     title: "Content",
+        //     dataIndex: "content",
+        //     ...getColumnSearchProps('content'),
+        //     sorter: (a, b) => a.content.length - b.content.length,
+        //    sortDirections: ['descend', 'ascend'],
+        // },
         {
             title: "Fabric Type",
-            dataIndex: "fabric_type_name",
-            ...getColumnSearchProps('fabric_type_name'),
-            sorter: (a, b) => a.fabric_type_name.length - b.fabric_type_name.length,
+            dataIndex: "fabricType",
+            ...getColumnSearchProps('fabricType'),
+            sorter: (a, b) => a.fabricType.length - b.fabricType.length,
            sortDirections: ['descend', 'ascend'],
-           ...getColumnSearchProps('itemCode')
+           ...getColumnSearchProps('fabricType')
         },
         {
             title: "Weave",
-            dataIndex: "fabric_weave_name",
-            ...getColumnSearchProps('fabric_weave_name'),
-            sorter: (a, b) => a.fabric_weave_name.length - b.fabric_weave_name.length,
+            dataIndex: "fabricWeave",
+            ...getColumnSearchProps('fabricWeave'),
+            sorter: (a, b) => a.fabricWeave.length - b.fabricWeave.length,
            sortDirections: ['descend', 'ascend'],
         },
   
         {
           title: "Weight",
-          dataIndex: "weight-uom",
+          dataIndex: "weight",
           render : (text,record) => {
               return (
                   <span>
-                      {record.weight ? `${record.weight}${record.weightUnit}`: '-'}
+                      {record.weight ? `${record.weight}-${record.weightUom}`: '-'}
                   </span>
               )
           },
@@ -325,11 +337,11 @@ const stockService = new StockService();
 
         {
           title: "Width",
-          dataIndex: "width-uom",
+          dataIndex: "width",
           render : (text,record) => {
               return (
                   <span>
-                      {record.width ? `${record.width}${record.widthUnit}`: '-'}
+                      {record.width ? `${record.width}${record.widthUom}`: '-'}
                   </span>
               )
           },
@@ -340,31 +352,40 @@ const stockService = new StockService();
         {
             title: "Construction",
             dataIndex: "construction",
-            ...getColumnSearchProps('construction'),
-            sorter: (a, b) => a.construction.length - b.construction.length,
-            sortDirections: ['descend', 'ascend'],
+            children:[
+              {
+                title:'EPI',
+                dataIndex:'epiConstruction'
+              },
+              {
+                title:'PPI',
+                dataIndex:'ppiConstruction'
+              }
+            ]
+            // ...getColumnSearchProps('construction'),
+            // sorter: (a, b) => a.construction.length - b.construction.length,
+            // sortDirections: ['descend', 'ascend'],
         },
      
-        {
-          title: "Yarn Count",
-          dataIndex: "yarn_count-uom",
-          render : (text,record) => {
-              return (
-                  <span>
-                      {record.yarn_count ? `${record.yarn_count}${record.yarnUnit}`: '-'}
-                  </span>
-              )
-          },
-          sorter: (a, b) => a.yarn_count - b.yarn_count,
-          sortDirections: ['descend', 'ascend'],
+      //   {
+      //     title: "Yarn Count",
+      //     dataIndex: "yarn_count-uom",
+      //     render : (text,record) => {
+      //         return (
+      //             <span>
+      //                 {record.yarn_count ? `${record.yarn_count}${record.yarnUnit}`: '-'}
+      //             </span>
+      //         )
+      //     },
+      //     sorter: (a, b) => a.yarn_count - b.yarn_count,
+      //     sortDirections: ['descend', 'ascend'],
 
-      },
+      // },
         {
             title: "Finish",
-            dataIndex: "finish",
-            sorter: (a, b) => a.finish.length - b.finish.length,
-            sortDirections: ['descend', 'ascend'],
-            
+            dataIndex: "fabricFinish",
+            sorter: (a, b) => a.fabricFinish.length - b.fabricFinish.length,
+            sortDirections: ['descend', 'ascend'],     
         },
         {
             title: "Shrinkage",
@@ -405,7 +426,7 @@ const stockService = new StockService();
             <Form.Item
               name="buyerId"
               label="Buyer"
-              rules={[{ required: true, message: "Buyer is required" }]}
+              rules={[{ required: false, message: "Buyer is required" }]}
             >
               <Select
                 allowClear
@@ -434,7 +455,7 @@ const stockService = new StockService();
                 <Input />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
               <Form.Item
                 label="Content"
                 name="content"
@@ -458,7 +479,7 @@ const stockService = new StockService();
                     ))}
                 </Select>
               </Form.Item>
-            </Col>
+            </Col> */}
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
 
               <Form.Item
@@ -471,8 +492,8 @@ const stockService = new StockService();
                     <option
                       key={option.fabricTypeId}
                       value={option.fabricTypeId}
-                    >width
-                      {option.fabricTypeName}
+                    >
+                      {option.fabricType}
                     </option>
                   ))}
                 </Select>
@@ -490,16 +511,16 @@ const stockService = new StockService();
                 >
                   {weave.map((option) => (
                     <option
-                      key={option.fabricWeaveId}
-                      value={option.fabricWeaveId}
+                      key={option.weave}
+                      value={option.weave}
                     >
-                      {option.fabricWeaveName}
+                      {option.fabricWeave}
                     </option>
                   ))}
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
 
                <Form.Item
                 label="Weight"
@@ -523,7 +544,7 @@ const stockService = new StockService();
                </Form.Item> 
 
          
-            </Col>
+            </Col> */}
             {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 2 }} style={{ marginTop: "2%" }}>
 
               <Form.Item name="weightUnit" 
@@ -545,7 +566,7 @@ const stockService = new StockService();
                 </Select>
               </Form.Item>
             </Col> */}
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
 
               <Form.Item
                 label="Width"
@@ -567,8 +588,8 @@ const stockService = new StockService();
           </Space.Compact>
 
               </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            </Col> */}
+            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
 
               <Form.Item
                 label=" Construction"
@@ -579,8 +600,8 @@ const stockService = new StockService();
               >
                 <Input placeholder=" Enter  Construction" allowClear/>
               </Form.Item>
-            </Col>
-            <Col
+            </Col> */}
+            {/* <Col
               xs={{ span: 12 }}
               sm={{ span: 12 }}
               md={{ span: 4 }}
@@ -608,7 +629,7 @@ const stockService = new StockService();
          </Select>
           </Space.Compact>
               </Form.Item>
-            </Col>
+            </Col> */}
 
             <Col
               xs={{ span: 12 }}
@@ -624,10 +645,18 @@ const stockService = new StockService();
                   { required: false, message: 'Field is required' },
                 ]}
               >
-                <Input placeholder=" Enter  Finish"  allowClear/>
+                <Select allowClear placeholder="Select Finish">
+              {finishData.map((e) => {
+                    return (
+                      <option key={e.finish} value={e.finish}>
+                        {e.fabricFinish}
+                      </option>
+                    );
+                  })}
+         </Select>
               </Form.Item>
             </Col>
-            <Col
+            {/* <Col
               xs={{ span: 12 }}
               sm={{ span: 12 }}
               md={{ span: 4 }}
@@ -643,7 +672,7 @@ const stockService = new StockService();
               >
                 <Input placeholder=" Enter  Shrinkage" allowClear />
               </Form.Item>
-            </Col>
+            </Col> */}
             <Row gutter={8}>
             <Col span={24} >
               <Button type="primary" htmlType="submit"

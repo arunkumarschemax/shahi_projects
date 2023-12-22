@@ -48,7 +48,7 @@ export class M3ItemsService {
   async getM3Items(req?:M3Itemsfilter): Promise<CommonResponseModel> {
     console.log(req,"req");
     
-    let query = `SELECT m3i.m3_items_id AS m3ItemsId,m3i.item_code AS itemCode, m3i.description,m3i.weight AS weightId,
+    let query = `SELECT m3i.m3_items_id AS m3ItemsId,m3i.item_code AS itemCode, m3i.description,m3i.weight AS weight,
     m3i.fabric_type AS fabricTypeId, ft.fabric_type_name AS fabricType,
     m3i.weave AS weaveId,fw.fabric_weave_name AS fabricWeave,
     m3i.weight_unit AS weightUnit,wu.uom AS weightUom,
@@ -75,17 +75,17 @@ export class M3ItemsService {
         query += ` AND fabric_type = ${req.fabricType}`
       }
       if (req.weave!== undefined){
-        query += ` AND m3i.weave_id = ${req.weave}`
+        query += ` AND m3i.weave = ${req.weave}`
       }
       if (req.finish!== undefined){
-        query += ` AND m3i.finish_id = '${req.finish}'`
+        query += ` AND m3i.finish = '${req.finish}'`
       }
-      if (req.width!== undefined){
-        query += ` AND m3.width = ${req.width}`
-      }
-      if (req.yarnCount!== undefined){
-        query += ` AND m3i.yarn_type = ${req.yarnCount}`
-      }
+      // if (req.width!== undefined){
+      //   query += ` AND m3.width = ${req.width}`
+      // }
+      // if (req.yarnCount!== undefined){
+      //   query += ` AND m3i.yarn_type = ${req.yarnCount}`
+      // }
     }
    
    
@@ -184,6 +184,64 @@ export class M3ItemsService {
     } else {
         return new CommonResponseModel(false, 1001, "");
     }
+}
+
+async getFabricTypes(): Promise<CommonResponseModel>{
+  try{
+    let query = `
+    SELECT m3i.fabric_type AS fabricTypeId, ft.fabric_type_name AS fabricType
+    FROM m3_items m3i
+    LEFT JOIN fabric_type ft ON ft.fabric_type_id = m3i.fabric_type
+    GROUP BY ft.fabric_type_id
+    ORDER BY ft.fabric_type_name`
+    const data = await this.datasource.query(query)
+    if(data.length > 0){
+      return new CommonResponseModel(true,1,'Data retrieved successfully',data)
+    }else{
+      return new CommonResponseModel(false,0,'No data found',[])
+    }
+  }catch(err){
+    throw(err)
+  }
+}
+
+async getFabricWeaves(): Promise<CommonResponseModel>{
+  try{
+    let query = `
+    SELECT m3i.weave, fw.fabric_weave_name AS fabricWeave
+    FROM m3_items m3i
+    LEFT JOIN fabric_weave fw ON fw.fabric_weave_id = m3i.weave
+    GROUP BY fw.fabric_weave_id
+    ORDER BY fw.fabric_weave_name`
+    const data = await this.datasource.query(query)
+    if(data.length > 0){
+      return new CommonResponseModel(true,1,'Data retrieved successfully',data)
+    }else{
+      return new CommonResponseModel(false,0,'No data found',[])
+    }
+  }catch(err){
+    throw(err)
+  }
+}
+
+async getFabricFinishes(): Promise<CommonResponseModel>{
+  try{
+    let query = `
+    SELECT m3i.finish, fft.fabric_finish_type AS fabricFinish
+    FROM m3_items m3i
+    LEFT JOIN fabric_finish_types fft ON fft.fabric_finish_type_id = m3i.finish
+    WHERE fft.fabric_finish_type IS NOT NULL
+    GROUP BY m3i.finish
+    ORDER BY fft.fabric_finish_type`
+    const data = await this.datasource.query(query)
+    if(data.length > 0){
+      return new CommonResponseModel(true,1,'Data retrieved successfully',data)
+    }else{
+      return new CommonResponseModel(false,0,'No data found',[])
+    }
+  }catch(err){
+    throw(err)
+  }
 }
 
 
