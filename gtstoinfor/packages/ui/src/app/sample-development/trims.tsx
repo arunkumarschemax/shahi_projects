@@ -431,10 +431,10 @@ const getMappedTrims = (value, option) => {
    setStockData(newData);
    if (value === 0 || value === null || value < 0 || value === undefined) {
      AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
-     sourcingForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity));
+     sourcingForm.setFieldValue(`allocatedQuantity${index}`,0);
    }
    if (Number(value) > Number(rowData.quantity)) {
-     sourcingForm.setFieldValue(`allocatedQuantity${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty));
+     sourcingForm.setFieldValue(`allocatedQuantity${index}`,0);
      AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
    }
  }

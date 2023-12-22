@@ -626,10 +626,10 @@ const FabricsForm = (props:FabricsFormProps) => {
     // setStockData(newData);
     if (value === 0 || value === null || value < 0 || value === undefined) {
       AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
-      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity));
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,0);
     }
     if (Number(value) > Number(rowData.quantity)) {
-      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty));
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,0);
       AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
     }
   }
