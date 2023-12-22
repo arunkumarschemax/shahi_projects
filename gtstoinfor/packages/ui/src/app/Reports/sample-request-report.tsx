@@ -172,8 +172,8 @@ const SampleRequestReport = () => {
     },
     {
       title: "Location",
-      dataIndex: "locationName",
-      sorter: (a, b) => a.locationName.localeCompare(b.locationName),
+      dataIndex: "location",
+      sorter: (a, b) => a.location.localeCompare(b.location),
       sortDirections: ['descend', 'ascend'],
     },
     
