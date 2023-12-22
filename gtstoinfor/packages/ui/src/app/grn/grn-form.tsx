@@ -240,13 +240,13 @@ const GRNForm = () => {
       dataIndex: 'uom',
 
     },
-    {
-      title: 'Received UOM',
-      dataIndex: 'convertedUOMOnChange',
-      render: (value, record) => {
-        return value ? value : record.uom
-      }
-    },
+    // {
+    //   title: 'Received UOM',
+    //   dataIndex: 'convertedUOMOnChange',
+    //   render: (value, record) => {
+    //     return value ? value : record.uom
+    //   }
+    // },
     {
       title: <div style={{ textAlign: 'center' }}>Unit Price</div>,
       dataIndex: 'unitPrice',

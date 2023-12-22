@@ -108,6 +108,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                 props(res.data)
                 setTrimTableData(res.data);
             }
+            else{
+                setTrimtableVisible(false)
+                props([])
+                setTrimTableData([]);
+            }
         })
     }
     const getColor = () => {
@@ -154,18 +159,18 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         setTrimIndexVal(index)
         if(rowData.indentTrimId != undefined){
         setInputDisable(true)
-        trimForm.setFieldsValue({poQuantity:rowData.indentQuantity})
+        trimForm.setFieldsValue({poQuantity:Number(rowData.indentQuantity) - Number(rowData.poQuantity)})
         trimForm.setFieldsValue({indentId:rowData.indentId})
-        trimForm.setFieldsValue({m3TrimCode:rowData.m3TrimCodeId})    
+        // trimForm.setFieldsValue({m3TrimCode:rowData.m3TrimCodeId})    
         trimForm.setFieldsValue({m3TrimCodeName:rowData.m3TrimCodeName})    
         trimForm.setFieldsValue({indentQuantity:rowData.indentQuantity})    
         trimForm.setFieldsValue({indentCode:rowData.indentCode})
-        trimForm.setFieldsValue({indentTrmId:rowData.indentTrmId})
+        trimForm.setFieldsValue({indentTrmId:rowData.indentTrimId})
         trimForm.setFieldsValue({quantityUomName:rowData?.quantityUnit})
         trimForm.setFieldsValue({quantityUomId:rowData?.quantityUnitId,})
         trimForm.setFieldsValue({styleId: rowData?.styleId})
         trimForm.setFieldsValue({trimParams: rowData?.trimParams})
-        trimForm.setFieldsValue({poQuantity: rowData?.quantity})
+        // trimForm.setFieldsValue({poQuantity: rowData?.quantity})
         }
         if(rowData.sampleTrimInfoId != undefined){
             trimForm.setFieldsValue({poQuantity:rowData.sampleOrderQuantity})
@@ -225,11 +230,11 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         // },
         {
             title:'Indent Quantity',
-            dataIndex:'quantity',
+            dataIndex:'indentQuantity',
         },
         {
             title:'Po Quantity',
-            dataIndex:'quantity',
+            dataIndex:'poQuantity',
             width:'100px'
             
         },
@@ -386,7 +391,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
     }
     
     const OnTrimAdd = (values) =>{
-        console.log(values);    
+        console.log(values); 
+        values.materialType = defaultTrimFormData.materialType   
         trimForm.validateFields().then(() =>{
           if(trimIndexVal !== undefined){
             trimTableData[trimIndexVal] = values;
@@ -395,6 +401,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
           }else{
             tableData=[...trimTableData,values]
           }
+        //   console.log(tableData)
           setTrimTableData(tableData)
           props(tableData)
           setInputDisable(false)
@@ -437,11 +444,10 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                     consumption : defaultTrimFormData.consumption,
                     m3TrimCode: defaultTrimFormData.m3TrimCode,
                     trimCodeName: defaultTrimFormData.trimCodeName,
-                    indentTrmId:defaultTrimFormData.indentTrmId,
+                    indentTrmId:defaultTrimFormData.indentTrimId,
                     indentQuantity:defaultTrimFormData.indentQuantity,
                     indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
                     quantityUomId:defaultTrimFormData.quantityUnitId,
-                    poQuantity:defaultTrimFormData.indentQuantity,
                     m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
                     indentCode:defaultTrimFormData.indentCode,
                     quantityUomName:defaultTrimFormData.uom,

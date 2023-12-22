@@ -16,4 +16,8 @@ export class operationReportRequest {
     sizeId: number;
     @ApiProperty()
     quantity: number;
+    @ApiProperty()
+    reporterId: number;
+    @ApiProperty()
+    supervisorId: number;
 }

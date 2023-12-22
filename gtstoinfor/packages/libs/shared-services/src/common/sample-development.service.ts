@@ -166,7 +166,7 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/getAvailbelQuantityAginstBuyerAnditem", req)
 
   }
-  async creatematerialAlloction(req: Allocatematerial[]): Promise<CommonResponseModel> {
+  async creatematerialAlloction(req: Allocatematerial): Promise<CommonResponseModel> {
     console.log(req,'shared service')
     return this.axiosPostCall(this.URL + "/creatematerialAlloction", req)
 
@@ -244,5 +244,8 @@ export class SampleDevelopmentService extends CommonAxiosService {
   }
   async getStyle(): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getStyle" )
+  }
+  async getAllSampleRequestsInfo(req:sampleReqIdReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllSampleRequestsInfo",req )
   }
 }

@@ -1,5 +1,5 @@
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
-import { Button, Card, Col, Descriptions, Form, Modal, Row, Select, Table } from 'antd';
+import { Button, Card, Col, Descriptions, Form, Modal, Row, Select, Table, Tooltip } from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
@@ -92,6 +92,13 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       title: 'Item Code',
       key: 'Item Code',
       dataIndex: 'item_code',
+      render: (m3FabricCode, row) => (
+        <Tooltip title={row.description} placement="top" arrowPointAtCenter>
+          <span className="fabCode">
+            {`${row.item_code} - ${row.description}`}
+          </span>
+        </Tooltip>
+      ),
     },
     {
       title: 'PO Quantity',

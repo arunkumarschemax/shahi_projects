@@ -316,6 +316,9 @@ export class GrnService {
             if(req.extRefNumber != undefined){
                 query = query +" and b.external_ref_number = " + `"${req.extRefNumber}"`
             }
+            if(req.tab){
+                query += ` AND g.item_type LIKE '%${req.tab}%'`
+            }
             query = query + ' GROUP BY g.grn_id'
             const result = await manager.query(query)
             if (result) {
@@ -353,7 +356,7 @@ export class GrnService {
         try {
             // console.log(req,'--------------')
             let query = `SELECT g.grn_number AS grnNumber,gi.received_quantity AS receivedQty,gi.accepted_quantity AS acceptedQty,gi.rejected_quantity  AS rejectedQty,u.uom,
-            gi.conversion_quantity  AS conversionQty,uom.uom AS convertedUom,gi.location_mapped_status AS locMapStatus,gi.remarks,gi.m3_item_code_id AS m3ItemCodeId,m3.item_code AS itemCode,gi.buyer_id AS buyerId, CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName
+            gi.conversion_quantity  AS conversionQty,uom.uom AS convertedUom,gi.location_mapped_status AS locMapStatus,gi.remarks,gi.m3_item_code_id AS m3ItemCodeId,CONCAT(m3.item_code,'-',m3.description) AS itemCode,gi.buyer_id AS buyerId, CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id

@@ -19,8 +19,9 @@ export const MenusAndScopesEnum ={
         'RM Trim Inventory' : 'RM Trim Inventory',
         'RM Fabric Inventory ' : 'RM Fabric Inventory ',
         'Reclassification Approval' : 'Reclassification Approval',
-        'Allocation Approval' : 'Allocation Approval'
-
+        'Allocation Approval' : 'Allocation Approval',
+        'Purchase Order' : 'Purchase Order',
+        'Grn':"Grn"
         // 'Attributes' : 'Attributes',
         // 'Buyers' : 'Buyers',
         // 'Buyers Destination' : 'Buyers Destination',

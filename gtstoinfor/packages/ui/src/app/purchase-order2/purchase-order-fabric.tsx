@@ -119,6 +119,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                 setFabricTableVisible(true)
             } else {
                 setFabricTableData([])
+                setFabricTableVisible(false)
             }
         })
     }
@@ -173,7 +174,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         if (rowData.indentFabricId != undefined) {
             setInputDisable(true)
             console.log("**********************************************************************")
-            fabricForm.setFieldsValue({ poQuantity: rowData.indentQuantity })
+            fabricForm.setFieldsValue({ poQuantity: Number(rowData.indentQuantity) - Number(rowData.poQuantity) })
             fabricForm.setFieldsValue({ unitPrice: rowData.unitPrice })
             fabricForm.setFieldsValue({ discount: rowData.discount })
             fabricForm.setFieldsValue({ discountAmount: rowData.discountAmount })
@@ -200,6 +201,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
             fabricForm.setFieldsValue({ quantityUomId: rowData.uom_id })
             fabricForm.setFieldsValue({ quantityUom: rowData.uom })
+            fabricForm.setFieldsValue({ styleId: rowData.style })
 
 
         }
@@ -229,10 +231,12 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
             }
             if(defaultFabricFormData.indentId != undefined){
                 fabricForm.setFieldsValue({
-                    poQuantity: defaultFabricFormData.indentQuantity,
+                    poQuantity: Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity),
                     m3FabricCode: defaultFabricFormData.m3FabricCode,
-                    colourId: defaultFabricFormData.colourId,
+                    colourId: defaultFabricFormData.colorId,
                     colorName: defaultFabricFormData.colorName,
+                    tax: defaultFabricFormData.tax,
+                    taxAmount: defaultFabricFormData.taxAmount,
                     shahiFabricCode: defaultFabricFormData.shahiFabricCode,
                     quantityUomId: defaultFabricFormData.quantityUomId,
                     indentQuantity: defaultFabricFormData.indentQuantity,
@@ -267,7 +271,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         },
         {
             title: 'M3 Fabric Code',
-            dataIndex: 'm3FabricCodeName',
+            dataIndex: 'itemCode',
             width: '170px'
         },
         {
@@ -437,6 +441,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
 
     const onFabricAdd = (values) => {
         console.log(values);
+        values.materialType = defaultFabricFormData.materialType
         fabricForm.validateFields().then(() => {
             if (fabricIndexVal !== undefined) {
                 fabricTableData[fabricIndexVal] = values;

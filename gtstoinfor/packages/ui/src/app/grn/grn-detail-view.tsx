@@ -3,6 +3,7 @@ import {Button,Card,Col,Collapse,Descriptions,Divider,Form,Input,Modal,Row,Segme
   import style from "antd/es/alert/style";
   import { ColumnProps } from "antd/es/table";
   import moment from "moment";
+  import './detail-view.css'
   import React, { useEffect, useRef } from "react";
   import { useState } from "react";
   import { useLocation, useNavigate } from "react-router-dom";
@@ -30,6 +31,9 @@ import QRCode from "react-qr-code";
   useEffect(() => {
     getAllData();
   }, []); 
+  useEffect(() => {
+    console.log(stateData)
+  }, [stateData]); 
 
     const getAllData = () => {
       const grnId = stateData?.data?.[0]?.grnId;
@@ -89,7 +93,7 @@ import QRCode from "react-qr-code";
         dataIndex: "itemCode",
         align:"center",
         render: (val,data) => {
-          return data.itemCode ? data.itemCode : "-";
+          return <span className="itemCode">{data.itemCode ? data.itemCode : "-"}</span> 
         }
       },
     
@@ -171,7 +175,7 @@ import QRCode from "react-qr-code";
           {/* <Descriptions.Item label='Contact Person' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.contactPerson?stateData?.data?.[0]?.contactPerson:'-'}</Descriptions.Item> */}
           <Descriptions.Item label='Invoice No' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.invoiceNo?stateData?.data?.[0]?.invoiceNo:'-'}</Descriptions.Item>
           <Descriptions.Item label='Invoice Date' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.invoiceDate? moment(stateData?.data?.[0]?.invoiceDate).format('DD-MM-YYYY'):'-'}</Descriptions.Item>
-          <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{ItemTypeEnumDisplay.find((e) => e.name === stateData?.data?.[0]?.itemType)?.displayVal ?? '-'}</Descriptions.Item>
+          <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{ItemTypeEnumDisplay.find((e) => e.name === (stateData?.data?.[0]?.itemType).toUpperCase())?.displayVal ?? '-'}</Descriptions.Item>
           {/* <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{ItemTypeEnumDisplay.find((e)=> e.name === stateData?.data?.[0]?.itemType)?.displayVal}</Descriptions.Item> */}
           <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{GRNTypeEnumDisplay.find((e) => e.name === stateData?.data?.[0]?.grnType)?.displayVal ?? '-'}</Descriptions.Item>
           {/* <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnType?stateData?.data?.[0]?.grnType:'-'}</Descriptions.Item> */}

@@ -1,5 +1,5 @@
 import { CloseOutlined, EyeOutlined, SearchOutlined } from '@ant-design/icons';
-import { ItemTypeEnumDisplay, PurchaseOrderStatus, PurchaseOrderStatusEnumDisplay, PurchaseStatusEnum, PurchaseViewDto, StatusEnum } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, MenusAndScopesEnum, PurchaseOrderStatus, PurchaseOrderStatusEnumDisplay, PurchaseStatusEnum, PurchaseViewDto, StatusEnum } from '@project-management-system/shared-models';
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tabs, Tooltip,Tag } from 'antd';
 import moment from 'moment';
@@ -8,6 +8,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { log } from 'console';
 import Highlighter from 'react-highlight-words';
 import type { CustomTagProps } from 'rc-select/lib/BaseSelect';
+import RolePermission from '../role-permissions';
 export const PurchaseOrderView = () => {
   const [page, setPage] = React.useState(1);
 
@@ -29,10 +30,19 @@ export const PurchaseOrderView = () => {
   const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
   const { Option } = Select
   
-  useEffect(() => {
-    getPo();
-  }, [])
+ 
+  const checkAccess = (buttonParam) => {   
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus['Purchase Order'],buttonParam)
+    // console.log(accessValue,'access');
+    
+    return accessValue
+}
+useEffect(() => {
+  // if (data) {
 
+// }
+  getPo();
+}, [])
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
     setSearchText(selectedKeys[0]);
@@ -131,9 +141,15 @@ export const PurchaseOrderView = () => {
     if (form.getFieldValue('deliveryDate') !== undefined) {
     req.confirmEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD')
     }
-    
-    console.log(req,'----------------------------------')
-
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+      req.tab = "TRIM"
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      req.tab = "FABRIC"
+        }
+        if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+          req.tab = undefined
+            }
     Service.getAllPurchaseOrderData(req).then((res)=>{
       if(res.status){
         setData(res.data)

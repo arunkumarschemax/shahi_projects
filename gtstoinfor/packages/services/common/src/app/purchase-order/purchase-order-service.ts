@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel,CustomerOrderStatusEnum,GrnItemsFormDto, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel,CustomerOrderStatusEnum,GrnItemsFormDto, ItemTypeEnum, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -120,6 +120,12 @@ export class PurchaseOrderService {
                         pofabricEntity.tax = item.tax
                         pofabricEntity.subjectiveAmount = item.subjectiveAmount
                         pofabricEntity.styleId = item.styleId
+                        if((req.poAgainst).toUpperCase() == 'SAMPLE ORDER'){
+                            pofabricEntity.materialType = ItemTypeEnum[(req.poMaterialType).toUpperCase()]
+                        }
+                        if((req.poAgainst).toUpperCase() == 'INDENT'){
+                            pofabricEntity.materialType = ItemTypeEnum[(item.materialType).toUpperCase()]
+                        }
                         poItemInfo.push(pofabricEntity)
             }
             poEntity.poItemInfo=poItemInfo
@@ -127,7 +133,7 @@ export class PurchaseOrderService {
             const save = await this.poRepo.save(poEntity)
             
             if (save) {
-                if(req.poAgainst == 'INDENT'){
+                if((req.poAgainst).toUpperCase() == 'INDENT'){
                     const indentUpdate = await this.indentRepo.update({indentId:req.poItemInfo[0].indentId},{status:CustomerOrderStatusEnum.IN_PROGRESS})
                     for(const update of req.poItemInfo){
                         if(update.indentId != undefined){
@@ -135,7 +141,7 @@ export class PurchaseOrderService {
                         }
                     }
                 }
-                if(req.poAgainst == 'SAMPLE ORDER'){
+                if((req.poAgainst).toUpperCase() == 'SAMPLE ORDER'){
                     for(const update of req.poItemInfo){
                         if(update.sampleReqId != undefined){
                            const  dat = await this.sampleReqRepo.update({SampleRequestId:update.sampleReqId},{lifeCycleStatus:LifeCycleStatusEnum.PO_RAISED})
@@ -228,7 +234,7 @@ export class PurchaseOrderService {
                     WHERE poi.purchase_order_id = ${req.poId}`
                 }
             }
-            if (req.materialType === 'Trim') {
+            else {
                 query = `SELECT mt.trim_code as m3itemCode,
                 mt.category_id AS categoryId,cg.category,
                 mt.color_id AS colorId,cl.colour as color,
@@ -284,7 +290,7 @@ export class PurchaseOrderService {
                 }
                 if (req.poAgainst == 'Sample Order') {
                     query = query + `
-                     LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id  = poi.sample_item_id   
+                     LEFT JOIN sample_request_trim_info srf ON srf.trim_info_id  = poi.sample_item_id   
                      LEFT JOIN sample_request sr ON sr.sample_request_id  = srf.sample_request_id
                      WHERE poi.purchase_order_id = ${req.poId}`
                 }
@@ -384,7 +390,7 @@ export class PurchaseOrderService {
     }
 
     async GetPurchaseData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
-        try {
+                try {
             let query = 'SELECT  null as pofabricData,null as poTrimdata, s.style AS styleName,po.purchase_order_id AS purchaseOrderId,po.po_number AS poNumber,po.po_against as poAgainst,po.vendor_id AS vendorId,po.style_id AS styleId,po.vendor_id AS vendorId, v.vendor_name AS vendorName,expected_delivery_date AS expectedDeliverydate,purchase_order_date AS purchaseOrderDate,po.status AS poStatus,po_material_type AS poMaterialtype,b.buyer_name as buyername,po.buyer_id as buyerId FROM purchase_order  po LEFT JOIN style s ON s.style_id=po.style_id LEFT JOIN  vendors v ON v.vendor_id= po.vendor_id LEFT JOIN buyers b ON  b.buyer_id = po.buyer_id WHERE 1=1'
 
             let param :any={}
@@ -406,7 +412,9 @@ export class PurchaseOrderService {
               if (req.confirmStartDate) {
                 query += ` AND expected_delivery_date between '${req.confirmStartDate}' and '${req.confirmEndDate}'`;
             }
-            
+            if(req.tab){
+                query += ` AND po_material_type LIKE '%${req.tab}%'`
+            }
             //   if (req.status){
                 
             //     // query += `and po.status IN  ('${req.status})')`
@@ -469,7 +477,6 @@ export class PurchaseOrderService {
         }
     }
     async getAllPurchaseOrderData(req?: PurchaseViewDto): Promise<CommonResponseModel> {
-        console.log(req, '^^^^^^^^^^^^^^^^^^^')
 
         try {
             const data = []
@@ -586,7 +593,7 @@ export class PurchaseOrderService {
     }
     async getAllPos(): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT p.purchase_order_id,p.po_number FROM  purchase_order p '`
+            let query = `SELECT p.purchase_order_id,p.po_number FROM  purchase_order p`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)

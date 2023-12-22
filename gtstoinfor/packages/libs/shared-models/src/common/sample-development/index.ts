@@ -23,3 +23,5 @@ export * from './allocated-approval.req';
 export * from './materailViewDto'
 export * from './locationreq'
 export * from './styleaginstpch'
+export * from './sampleRequest-model'
+export * from './sampleSize-model'
