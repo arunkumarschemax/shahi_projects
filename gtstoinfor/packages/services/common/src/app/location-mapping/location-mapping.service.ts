@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { AppDataSource } from "../app-datasource";
-import { BomStatusEnum, CommonResponseModel, ExternalRefReq, LifeCycleStatusEnum, LocationMappedEnum, LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq, StockTypeEnum } from "@project-management-system/shared-models";
+import { BomStatusEnum, CommonResponseModel, ExternalRefReq, LifeCycleStatusEnum, LocationMappedEnum, LocationMappingReq, MaterialIssueIdreq, MaterialStatusEnum, RackLocationStatusReq, StockTypeEnum } from "@project-management-system/shared-models";
 import { StocksEntity } from "../stocks/stocks.entity";
 import { StocksRepository } from "../stocks/repository/stocks.repository";
 import { StockLogEntity } from "../stocks/stock-log-entity";
@@ -116,12 +116,13 @@ export class LocationMappingService {
             // LEFT JOIN  indent_trims indt ON indt.itrims_id = gi.indent_item_id AND g.grn_type = "INDENT" AND g.item_type != "FABRIC"
             // LEFT JOIN  indent idf ON idf.indent_id = indf.indent_id
             // LEFT JOIN  indent idt ON idt.indent_id = indt.indent_id
-            let query = `SELECT gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, 
+            let query = `SELECT poi.colour_id AS colorId,gi.uom_id AS uomId, u.uom AS uom, gi.grn_item_id As grnItemId,g.item_type AS materialType, gi.sample_req_id AS sampleReqId,gi.sample_item_id AS sampleItemId,
             (gi.accepted_quantity - IF(SUM(st.quantity) IS NULL, 0,SUM(st.quantity))) AS balance, gi.grn_item_no AS grnItemNo,gi.style_id AS styleId,sty.style,
             IF(g.item_type = "FABRIC", mit.m3_items_id, mtr.m3_trim_id) AS itemId,IF(SUM(st.quantity) IS NULL, 0,SUM(st.quantity)) AS allocatedQty,
-            IF(g.item_type = "FABRIC", CONCAT(mit.item_code,'-',mit.description), CONCAT(mtr.trim_code,'-',mtr.description)) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName,g.grn_id as grnId
+            IF(g.item_type = "FABRIC", CONCAT(mit.item_code,'-',mit.description), CONCAT(mtr.trim_code,'-',mtr.description)) AS itemCode, g.grn_number AS grnNumber, v.vendor_name, gi.accepted_quantity AS acceptedQuantity, gi.buyer_id AS buyerId, idfb.buyer_name AS buyerName,g.grn_id as grnId, g.grn_type AS grnType
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id 
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
+            LEFT JOIN purchae_order_items poi ON poi.purchase_order_item_id = gi.po_item_id
             LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND g.item_type = "FABRIC"
             LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND g.item_type != "FABRIC"
             LEFT JOIN stock_log st ON st.grn_item_id = gi.grn_item_id
@@ -321,12 +322,16 @@ export class LocationMappingService {
             stockEntity.issuedQuantity = 0;
             stockEntity.itemType = req.item_type;
             stockEntity.locationId = req.location_id;
-            stockEntity.quantity = grnDetails[0].grnType === "INDENT" ? req.quantity : 0;
+            stockEntity.quantity = req.quantity;
             stockEntity.styleId = req.style_id;
             stockEntity.m3Item = req.m3_item;
             stockEntity.stockType = StockTypeEnum.STOCK;
             stockEntity.uomId = req.uom_id;
             stockEntity.stockBarCode = stock_bar_code;
+            stockEntity.grnType = req.grnType
+            stockEntity.sampleItemId = req.sampleItemId
+            stockEntity.sampleReqId = req.sampleReqId
+
             // stockEntity.uuid = '';
             saveStock = await this.stocksRepository.save(stockEntity)
             if(saveStock){
@@ -380,17 +385,36 @@ export class LocationMappingService {
                             let allocateStock = await manager.getRepository(MaterialAllocationEntity).save(materialAllocationEntity);
                             console.log(allocateStock)
                             if(allocateStock.materialAllocationId > 0){
-                                let updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item},{status: `${BomStatusEnum.ALLOCATED}`});
+                                const bomQuery = "select * from sampling_bom where sample_request_id = "+grnDetails[0].sampleOrderId+" and status != '"+BomStatusEnum.ALLOCATED+"'";
+                                let getBomStatus = await manager.query(bomQuery)
+                                // let getBomStatus = await manager.getRepository(SamplingbomEntity).find({where:{sampleRequestId:grnDetails[0].sampleOrderId,status: Not(BomStatusEnum.ALLOCATED)}});
+                                let updateBomStatus
+                                if(req.item_type === "Fabric"){
+                                    updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item,colourId:req.colorId},{receivedQuantity : () => `received_quantity + ${req.quantity}`,status: `${BomStatusEnum.ALLOCATED}`});
+                                }
+                                else{
+                                    updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item},{receivedQuantity : () => `received_quantity + ${req.quantity}`,status: `${BomStatusEnum.ALLOCATED}`});
+                                }
+                                
                                 if(updateBomStatus.affected > 0){
-                                    let getBomStatus = await manager.getRepository(SamplingbomEntity).findBy({status: Not(BomStatusEnum.ALLOCATED)});
-                                    if(getBomStatus.length < 1){
-                                        let updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:grnDetails[0].sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ALLOCATED});
-                                        if(updateBomStatus.affected > 0){
-                                            return new CommonResponseModel(true, 1111, "Data posted Succesufully");
+                                    
+                                    if(Number(getBomStatus.length) - Number(1) < 1){
+                                        let updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:grnDetails[0].sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION});
+                                        if(updateSampleOrderStatus.affected > 0){
+                                            let updateAllocatedStock = await manager.getRepository(MaterialAllocationEntity).update({sampleOrderId:grnDetails[0].sampleOrderId},{status:MaterialStatusEnum.READY_FOR_PRODUCTION})
+                                            if(updateAllocatedStock.affected > 0){
+                                                return new CommonResponseModel(true, 1111, "Data posted Succesufully");
+                                            }
+                                            else{
+                                                return new CommonResponseModel(false, 10005, "Data not posted");
+                                            }
                                         }
                                         else {
                                             return new CommonResponseModel(false, 10005, "Data not posted");
                                         }
+                                    }
+                                    else{
+                                        return new CommonResponseModel(true, 1111, "Data posted Succesufully");
                                     }
                                 }
                                 else {

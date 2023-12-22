@@ -1,4 +1,4 @@
-import { StockTypeEnum } from "@project-management-system/shared-models";
+import { GRNTypeEnum, StockTypeEnum } from "@project-management-system/shared-models";
 import { CommonColumns } from "packages/services/common/common-columns.entity";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
@@ -79,6 +79,24 @@ export class StocksEntity extends CommonColumns {
         name: "stock_bar_code",
     })
     stockBarCode: string;
+    
+    @Column('enum', {
+        name: 'grn_type',
+        nullable: false,
+        enum: GRNTypeEnum
+      })
+      grnType: GRNTypeEnum
+    
+      @Column('int',{
+        nullable: true,
+        name: "sample_item_id",
+    })
+    sampleItemId: number;
+    @Column('int',{
+        nullable: true,
+        name: "sample_req_id",
+    })
+    sampleReqId: number;
 
     @Column('enum',{
         name:'stock_type',

@@ -14,6 +14,12 @@ export class SamplingbomEntity {
     sampleRequestId:number
 
     @Column('int',{
+      name:'sample_item_id',
+      nullable:false
+  })
+  sampleItemId:number
+
+    @Column('int',{
         name:'m3_item_id',
         nullable:false
     })

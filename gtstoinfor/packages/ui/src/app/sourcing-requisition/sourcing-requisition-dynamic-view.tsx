@@ -33,6 +33,7 @@ import {
   Tooltip,
 } from "antd";
 import style from "antd/es/alert/style";
+import './sourcing-view.css';
 import { ColumnProps } from "antd/es/table";
 import moment from "moment";
 import React, { useEffect, useRef } from "react";
@@ -328,8 +329,8 @@ const segmentedOptions = options();
         ...getColumnSearchProps("m3FabricCode"),
         render: (m3FabricCode, row) => (
           <Tooltip title={row.description} placement="top" arrowPointAtCenter>
-            <span>
-              {`${m3FabricCode} - ${row.description?.length > 25 ? row.description.slice(0, 25) + '...' : row.description}`}
+            <span className="fabCode">
+              {`${m3FabricCode} - ${row.description}`}
             </span>
           </Tooltip>
         ),
@@ -362,6 +363,10 @@ const segmentedOptions = options();
       {
         title: "XL No",
         dataIndex: "xlNo",
+      },
+      {
+        title: "Indent Raised",
+        dataIndex: "quantity",
       },
       {
         title: "PO Raised",
@@ -469,6 +474,10 @@ const segmentedOptions = options();
         title: "M3 Trim Code",
         dataIndex: "m3TrimCodeName",
         ...getColumnSearchProps("m3TrimCodeName"),
+      },
+      {
+        title: "Indent Raised",
+        dataIndex: "quantity",
       },
       {
         title: "PO Raised",

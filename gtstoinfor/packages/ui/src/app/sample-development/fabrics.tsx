@@ -319,15 +319,16 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'S.No',
       dataIndex: 'sNo',
+      width:"10%",
       render: (_, record, index) => index + 1,
     },
     {
       title: 'Fabric Code',
       dataIndex: 'fabricCode',
-      width:"45%",
+      width:"100%",
       render: (_, record, index) => (
         <>
-        <Form.Item name={`allocatedStock${record.key}`}><Input name={`allocatedStock${record.key}`} style={{display:'none'}}/></Form.Item>
+        <Form.Item name={`allocatedStock${record.key}`} style={{display:'none'}}><Input name={`allocatedStock${record.key}`} style={{display:'none'}}/></Form.Item>
         <Form.Item name={`fabricId${record.key}`}
          rules={[{ required: true, message: 'Missing Fabric' }]}
         >
@@ -366,7 +367,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Color',
       dataIndex: 'color',
-      width:"15%",
+      width:"25%",
       render: (_, record) => (
         <>
         <Form.Item name={`colorId${record.key}`}
@@ -398,7 +399,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Consumption',
       dataIndex: 'consumption',
-      width:"12%",
+      width:"17%",
       render: (_, record) => (
         <Form.Item name={`consumption${record.key}`}
         rules={[{ required: true, message: 'Missing Consumption' }]}
@@ -436,7 +437,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title:"UOM",
       dataIndex: 'UomId',
-      width:"10%",
+      width:"13%",
       render: (_, record) => (
         <Form.Item name={`uomId${record.key}`}
         rules={[{ required: true, message: 'Missing UOM' }]}
@@ -452,7 +453,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         defaultValue={uom.find((e) => e.uom === "m")?.uom}
         onChange={(e) => handleInputChange(e, record.key, 'uomId',0,record)}
         >
-            {uom.map(e => {
+            {uom.filter((e) => e.uomCategory === UomCategoryEnum.LENGTH)?.map(e => {
               return(
                   <option key={e.uomId} value={e.uomId}>{e.uom}</option>
                   
@@ -465,7 +466,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Wastage %',
       dataIndex: 'wastage',
-      width:"12%",
+      width:"17%",
       render: (_, record) => (
       <Form.Item name={`wastage${record.key}`} initialValue={2} 
       rules={[{ required: true, message: 'Missing Wastage' }]}
@@ -480,7 +481,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Total Requirement',
       dataIndex: 'totalRequirement',
-      width:"10%",
+      width:"15%",
       render: (_, record) => (
       <Form.Item name={`totalRequirement${record.key}`} 
       rules={[{ required: true, message: 'Missing Total Requirement' }]}
@@ -495,7 +496,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Remarks',
       dataIndex: 'remarks',
-      width:"15%",
+      width:"40%",
       render: (_, record) => (
       <Form.Item name={`remarks${record.key}`}>
         <TextArea
@@ -625,10 +626,10 @@ const FabricsForm = (props:FabricsFormProps) => {
     // setStockData(newData);
     if (value === 0 || value === null || value < 0 || value === undefined) {
       AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
-      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.quantity));
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,0);
     }
     if (Number(value) > Number(rowData.quantity)) {
-      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,(rowData.requiredQty>rowData.quantity?rowData.requiredQty:rowData.availableQty));
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,0);
       AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
     }
   }
@@ -666,7 +667,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       // expandable = {{
       //   defaultExpandAllRows : true, rowExpandable:(record)=>{console.log(record) ; return (stockData.length>0)}
       //   }}
-      scroll={{ x: 200 }}
+      scroll={{ x: 2000 }}
       size="large"
       bordered
       />

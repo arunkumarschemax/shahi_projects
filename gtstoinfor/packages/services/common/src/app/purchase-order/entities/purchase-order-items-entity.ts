@@ -1,4 +1,4 @@
-import { PoItemEnum } from "@project-management-system/shared-models";
+import { ItemTypeEnum, PoItemEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { PurchaseOrderEntity } from "./purchase-order-entity";
 
@@ -21,7 +21,8 @@ export class PurchaseOrderItemsEntity{
     })
   m3ItemId:number
 
-  @Column('decimal',{
+  @Column({
+    type: "decimal", precision: 10, scale: 3,
     name:'po_quantity',
     nullable:true
   })
@@ -39,7 +40,8 @@ export class PurchaseOrderItemsEntity{
   })
  poitemStatus:PoItemEnum
 
- @Column('decimal',{
+ @Column({
+    type: "decimal", precision: 10, scale: 3,
     name:'grn_quantity',
     nullable:true,
     default:0
@@ -89,11 +91,19 @@ export class PurchaseOrderItemsEntity{
   })
   transportation:number
 
-  @Column('int',{
+  @Column({
+    type: "decimal", precision: 10, scale: 3,
     name:'subjective_amount',
     nullable:true
   })
   subjectiveAmount:number
+
+  @Column('enum',{
+    name:'item_type',
+    nullable: true,
+    enum:ItemTypeEnum,
+  })
+  materialType: ItemTypeEnum;
 
   @CreateDateColumn({
     name: "created_at",
