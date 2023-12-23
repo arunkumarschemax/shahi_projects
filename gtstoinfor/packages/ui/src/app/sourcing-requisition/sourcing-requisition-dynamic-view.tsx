@@ -85,12 +85,15 @@ export const SourcingRequisitionDynamicView = () => {
   );
 
   useEffect(() => {
-    // if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
-    //   setTabName('Trim')
-    // }
-    // if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
-    //   setTabName('Fabric')
-    // }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      setTabName('Trim')
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+      setTabName('Fabric')
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      setTabName('Fabric')
+    }
 
     // getStyle();
     getAll();
@@ -828,35 +831,36 @@ const segmentedOptions = options();
               <Segmented
                 onChange={onSegmentChange}
                 style={{ backgroundColor: "#68cc6b" }}
-                  options= {
-                    item.indentFabricDetails.length > 0?[
-                      {
-                        label: (
-                                <>
-                                  <b 
-                                  // style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? 'block' : 'none'}}
-                                   >Fabric Details</b>
-                                </>
-                              ),
-                              value: "Fabric",
-                      }
-                    ]:
-                    [
-                        {
-                    label: (
-                      <>
-                        <b 
-                        // style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.trimTab)? 'block' : 'none'}}
+                  options= {segmentedOptions}
+                  //   item.indentFabricDetails.length > 0?[
+                  //     {
+                  //       label: (
+                  //               <>
+                  //                 <b 
+                  //                 // style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? 'block' : 'none'}}
+                  //                  >Fabric Details</b>
+                  //               </>
+                  //             ),
+                  //             value: "Fabric",
+                  //     }
+                  //   ]:
+                  //   [
+                  //       {
+                  //   label: (
+                  //     <>
+                  //       <b 
+                  //       // style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.trimTab)? 'block' : 'none'}}
 
-                        >Trim Details</b>
-                      </>
-                    ),
-                    value: "Trim",
+                  //       >Trim Details</b>
+                  //     </>
+                  //   ),
+                  //   value: "Trim",
 
-                  },
-                    ]
-                  }
-                 defaultValue={item.indentFabricDetails.length> 0?"Fabric": "Trim"}
+                  // },
+                  //   ]
+                  // }
+                 defaultValue={(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab))?"Fabric":(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) ? "Trim":item.indentFabricDetails.length> 0?"Fabric": "Trim"}
+                //  {item.indentFabricDetails.length> 0?"Fabric": "Trim"}
                 // options={
                 //   [
                 //   {
@@ -881,7 +885,7 @@ const segmentedOptions = options();
               />
               <div>
               <>
-                {item.indentFabricDetails.length > 0?  (
+                {item.indentFabricDetails.length > 0 ?   (
                   <>
                     <Table
                       columns={tableColumns(item.indentId, (item.indentFabricDetails).filter((e) => Number(e.poQty) < Number(e.quantity) && e.checkStatus === true).length)}
@@ -895,7 +899,7 @@ const segmentedOptions = options();
                 </>
               </div>
               <div>
-                {item.indentTrimDetails.length > 0 ? (
+                {item.indentTrimDetails.length > 0  ? (
                   <>
                     <Table
                       columns={tableTrimColumns(item.indentId, (item.indentTrimDetails).filter((e) => Number(e.poQty) < Number(e.quantity) && e.checkStatus === true).length)}
