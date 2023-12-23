@@ -370,7 +370,7 @@ Service.getAllPurchaseOrderData(req).then(res=>{
       width: '80px',
       sorter: (a, b) => a.poStatus.localeCompare(b.poStatus),
       sortDirections: ["descend", "ascend"],
-          ...getColumnSearchProps("poStatus"),
+          // ...getColumnSearchProps("poStatus"),
     },
     {
       title: 'Aging(EDD)',
