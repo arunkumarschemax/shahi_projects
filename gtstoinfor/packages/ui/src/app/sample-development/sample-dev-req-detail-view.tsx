@@ -33,6 +33,8 @@ export const SampleReqDetailView = () =>{
             if (res.status) {
               setData(res.data);
               setFabData(res.data.filter((e)=>e.fabricInfo))
+              setTrimData(res.data.filter((e)=>e.trimInfo))
+
               setFilterData(res.data);
             } else {
                 AlertMessages.getErrorMessage(res.internalMessage);
@@ -188,11 +190,11 @@ return(
                 <DescriptionsItem label='Life Cycle Status'>{data?.[0]?.lifeCycleStatus?LifeCycleStatusDisplay.find((e)=>e.name === data?.[0]?.lifeCycleStatus)?.displayVal:'-'}</DescriptionsItem>
                 <DescriptionsItem label='Status'>{data?.[0]?.status}</DescriptionsItem>
         </Descriptions>
-        {fabData.length < 0 ?(
-        <Table columns={fabricColumns} dataSource={fabData}/>):(<></>)}
-        {trimData.length < 0 ?(
-        <Table columns={trimColumns} dataSource={trimData}/>):(<></>)}
-        <Table/>
+        {fabData.length < 0 && (
+        <Table columns={fabricColumns} dataSource={fabData}/>)}
+        {trimData.length < 0 && (
+        <Table columns={trimColumns} dataSource={trimData}/>)}
+        {/* <Table/> */}
 
     </Card>
 )
