@@ -34,7 +34,8 @@ import ColineView from "./excel-import/co-line-info"
 import AddressUpload from "./masters/address/address-excel-upload"
 import AddressView from "./masters/address/address-view"
 import SeasonWiseReportData from "./common/reports/season-wise-data"
-import MonthWiseReportNew from "./common/reports/month-wise-report-new"
+import MonthWiseReportNew from "./common/reports/month-wise-reports/month-wise-report-new"
+import MonthWiseReportV2 from "./common/reports/month-wise-reports/month-wise-rep"
 // import ExcelImport from "./excel-import/excel-import"
 
 
@@ -77,8 +78,10 @@ export const AppRoutesNew = () => {
                 </Route>
                 <Route>
                     <Route path='/ware-house-comparision' key='/ware-house-comparision' element={<WareHouseComparision />} />
-                    <Route path='/month-wise-report' key='/month-wise-report' element={<MonthWiseReport />} />
+                    <Route path='/month-wise-report' key='/month-wise-report' element={<MonthWiseReportV2 />} />
                     <Route path='/new-month-wise-report' key='/new-month-wise-report' element={<MonthWiseReportNew />} />
+                    
+                    <Route path='/new-month-wise-report-v2' key='/new-month-wise-report-v2' element={<MonthWiseReportV2 />} />
 
                     <Route path='/month-wise-comparision-report' key='/month-wise-comparision-report' element={<MonthWiseComparisionReport />} />
 
