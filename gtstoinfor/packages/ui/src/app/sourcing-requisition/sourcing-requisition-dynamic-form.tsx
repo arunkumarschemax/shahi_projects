@@ -117,7 +117,16 @@ export const SourcingRequisitionDynamicForm = () => {
     },[])
 
     useEffect(()=>{
-        checkAccess(MenusAndScopesEnum.Scopes.fabricTab) ? setTabName('Fabric') : checkAccess(MenusAndScopesEnum.Scopes.fabricTab) ? setTabName('Trim') :'both'
+        if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+            setTabName('Trim')
+          }
+          if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+            setTabName('Fabric')
+          }
+          if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+            setTabName('Fabric')
+          }
+        // checkAccess(MenusAndScopesEnum.Scopes.fabricTab) ? setTabName('Fabric') : checkAccess(MenusAndScopesEnum.Scopes.fabricTab) ? setTabName('Trim') :'both'
     },[])
 
     const getFabricTypes = () => {
@@ -909,27 +918,34 @@ const onTrimChange = (val, option) => {
         
         return accessValue
     }
-const options = () => {
-    let segmentOptions = [
-      { key: 'Fabric', label: 'Fabric' },
-      { key: 'Trim', label: 'Trim' }
-    ];
-  
-    if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab && !checkAccess(MenusAndScopesEnum.Scopes.trimTab))) {
-        setTabName('Fabric')
-      segmentOptions = segmentOptions.filter((e) => e.label === 'Fabric');
-    }
-    if (checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
-        setTabName('Trim')
-      segmentOptions = segmentOptions.filter((e) => e.label === 'Trim');
-    }
-    return segmentOptions.map((operation, index) => ({
-      label: <b>{operation.label}</b>,
-      value: operation.label,
-      key: index.toString(),
-  
-    }));
-  };
+
+    const options = () => {
+        let segmentOptions = [
+        { key: 'Fabric', label: 'Fabric' },
+        { key: 'Trim', label: 'Trim' }
+      ];
+      if (checkAccess(MenusAndScopesEnum.Scopes.trimTab && checkAccess(MenusAndScopesEnum.Scopes.fabricTab))) {
+        console.log(segmentOptions);
+        segmentOptions = segmentOptions
+      }
+      // if(tableData?.indentFabricDetails)
+        if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab) ) {
+          segmentOptions = segmentOptions.filter((e) => e.label === 'Fabric');
+          console.log(segmentOptions);
+        }
+        if (checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
+          console.log(segmentOptions);
+          segmentOptions = segmentOptions.filter((e) => e.label === 'Trim');
+        }
+        console.log(segmentOptions);
+        
+        return segmentOptions.map((operation, index) => ({
+          label: <b>{operation.label}</b>,
+          value: operation.label,
+          key: index.toString(),
+      
+        }));
+      };
   const segmentedOptions = options();
     return(
         <><Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
