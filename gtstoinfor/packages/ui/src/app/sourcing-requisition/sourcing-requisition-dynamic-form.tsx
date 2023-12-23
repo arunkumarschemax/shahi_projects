@@ -748,6 +748,8 @@ export const SourcingRequisitionDynamicForm = () => {
         getStyle(val);
         // getM3TrimsTypes(val);
         getM3FabricStyleCodes(val)
+        setFabricTableData([])
+        setFabricTableVisible(false)
     }
 
     const onWeaveChange = (val,option) => {
