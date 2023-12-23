@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
-import { ColourService, M3ItemsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
+import { BuyerDestinationService, ColourService, M3ItemsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
 import { UomCategoryEnum, buyerandM3ItemIdReq } from '@project-management-system/shared-models';
 import { updateLocale } from 'moment';
 import AlertMessages from '../common/common-functions/alert-messages';
@@ -35,6 +35,8 @@ const FabricsForm = (props:FabricsFormProps) => {
   const [checked, setChecked] = useState<boolean>(false)
   const [sourcingForm] = Form.useForm();
   const colorService = new ColourService()
+  const buyerDestinationService = new BuyerDestinationService()
+
   const { IAMClientAuthContext } = useIAMClientState();
   // const [form] =props.form.useForm();
   const [stockForm] = Form.useForm();
@@ -254,7 +256,8 @@ const FabricsForm = (props:FabricsFormProps) => {
     })
   }
   const getColors = () => {
-    colorService.getAllActiveColour().then((res) => {
+    buyerDestinationService.getAllColorsAgainstBuyer({buyerId:props.buyerId}).then((res) => {
+    // colorService.getAllActiveColour().then((res) => {
       if (res.status) {
         console.log(res,'size data')
         setColor(res.data);

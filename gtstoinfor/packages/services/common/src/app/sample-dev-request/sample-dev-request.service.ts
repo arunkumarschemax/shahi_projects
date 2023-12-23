@@ -1997,7 +1997,8 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
     try{
       const manager = this.dataSource;
       const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,si.size_id,
-      st.style,pch.profit_control_head,mi.item_code as fabCode,mt.item_code as trimCode FROM sample_request s
+      st.style,pch.profit_control_head,mi.item_code as fabCode,mt.item_code as trimCode,e.first_name,s.contact,s.status,
+      s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date FROM sample_request s
       LEFT JOIN brands b ON b.brand_id = s.brand_id
       LEFT JOIN buyers bu ON bu.buyer_id = s.buyer_id
       LEFT JOIN style st ON st.style_id = s.style_id
@@ -2009,6 +2010,7 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
       LEFT JOIN colour c ON c.colour_id = srs.colour_id
       LEFT JOIN m3_items mi ON mi.m3_items_Id = srf.fabric_info_id
       LEFT JOIN m3_trims mt ON mt.m3_trim_Id = srt.trim_info_id
+      LEFT JOIN employee_details e ON e.employee_id = s.technician_id
       WHERE s.sample_request_id = ${req.sampleReqId}`
       // const info = await this.sampleRepo.find(
       //   {relations:['sampleTrimInfo','sampleReqFabricInfo','sampleReqSizeInfo','style','buyer','brand'],
@@ -2022,7 +2024,7 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
         if(info.length > 0){
             for(const rec of info){
               if(!MapData.has(rec.requestNo)){
-                    MapData.set(rec.requestNo,new SampleRequestInfoModel(rec.request_no,rec.sample_request_id,rec.style,rec.brand_name,rec.buyer_name,[],[],[]))
+                    MapData.set(rec.requestNo,new SampleRequestInfoModel(rec.request_no,rec.sample_request_id,rec.style,rec.brand_name,rec.buyer_name,rec.first_name,rec.status,rec.lifeCycleStatus,rec.contact,rec.profit_control_head,rec.expected_delivery_date,[],[],[]))
                 }
                
                   if(!sizedata.has(rec.size_id)){

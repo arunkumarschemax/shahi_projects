@@ -117,7 +117,7 @@ export const SourcingRequisitionDynamicForm = () => {
     },[])
 
     useEffect(()=>{
-        checkAccess(MenusAndScopesEnum.Scopes.fabricTab) ? setTabName('Fabric') : setTabName('Trim')
+        checkAccess(MenusAndScopesEnum.Scopes.fabricTab) ? setTabName('Fabric') : checkAccess(MenusAndScopesEnum.Scopes.fabricTab) ? setTabName('Trim') :'both'
     },[])
 
     const getFabricTypes = () => {
@@ -917,12 +917,12 @@ const options = () => {
       { key: 'Trim', label: 'Trim' }
     ];
   
-    if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
-        // setTabName('Fabric')
+    if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab && !checkAccess(MenusAndScopesEnum.Scopes.trimTab))) {
+        setTabName('Fabric')
       segmentOptions = segmentOptions.filter((e) => e.label === 'Fabric');
     }
-    if (checkAccess(MenusAndScopesEnum.Scopes.trimTab)) {
-        // setTabName('Trim')
+    if (checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
+        setTabName('Trim')
       segmentOptions = segmentOptions.filter((e) => e.label === 'Trim');
     }
     return segmentOptions.map((operation, index) => ({

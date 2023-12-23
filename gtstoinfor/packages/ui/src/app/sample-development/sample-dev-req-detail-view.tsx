@@ -10,7 +10,7 @@ import { useState } from "react"
 import Highlighter from "react-highlight-words"
 import { useNavigate } from "react-router-dom"
 import AlertMessages from "../common/common-functions/alert-messages"
-import { sampleReqIdReq } from "@project-management-system/shared-models"
+import { LifeCycleStatusDisplay, sampleReqIdReq } from "@project-management-system/shared-models"
 
 export const SampleReqDetailView = () =>{
     const searchInput = useRef(null);
@@ -21,7 +21,8 @@ export const SampleReqDetailView = () =>{
     const navigate = useNavigate();
     const [data, setData] = useState<any[]>([]);
     const [filterData, setFilterData] = useState<any[]>([]);
-
+    const [trimData, setTrimData] = useState<any[]>([]);
+    const [fabData, setFabData] = useState<any[]>([]);
     useEffect(() => {
         getData()
       }, []);
@@ -31,7 +32,7 @@ export const SampleReqDetailView = () =>{
         service.getAllSampleRequestsInfo(req).then((res) => {
             if (res.status) {
               setData(res.data);
-              console.log(res.data,"rrrrr")
+              setFabData(res.data.filter((e)=>e.fabricInfo))
               setFilterData(res.data);
             } else {
                 AlertMessages.getErrorMessage(res.internalMessage);
@@ -174,30 +175,23 @@ export const SampleReqDetailView = () =>{
 return(
     <Card>
         <Descriptions>
-        <DescriptionsItem label='Location'>locationName</DescriptionsItem>
-                <DescriptionsItem label='PCH'>profitControlHead</DescriptionsItem>
-                <DescriptionsItem label='User'>companyName</DescriptionsItem>
-                <DescriptionsItem label='Buyer'>buyerName</DescriptionsItem>
-                <DescriptionsItem label='Sample Type'>sampleType</DescriptionsItem>
-                <DescriptionsItem label='Sample Sub Type'>sampleSubType</DescriptionsItem>
-                <DescriptionsItem label='Style'>style</DescriptionsItem>
-                <DescriptionsItem label='Description'>salesPerson</DescriptionsItem>
-                <DescriptionsItem label='Brand'>brandName</DescriptionsItem>
-                <DescriptionsItem label='Cost Ref'>costRef</DescriptionsItem>
-                <DescriptionsItem label='M3 Style No'>m3StyleNo</DescriptionsItem>
-                <DescriptionsItem label='Contact No'>contact</DescriptionsItem>
-                <DescriptionsItem label='Extn'>extension</DescriptionsItem>
-                <DescriptionsItem label='SAM'>samValue</DescriptionsItem>
-                <DescriptionsItem label='DMM'>dmmEmployee</DescriptionsItem>
-                <DescriptionsItem label='Technician'>techEmployee</DescriptionsItem>
-                <DescriptionsItem label='Product'>product</DescriptionsItem>
-                <DescriptionsItem label='Type'>type</DescriptionsItem>
-                <DescriptionsItem label='Conversion'>conversion</DescriptionsItem>
-                <DescriptionsItem label='Made In'>madeIn</DescriptionsItem>
-                <DescriptionsItem label='Remarks'>deliveryMethod</DescriptionsItem>
+                <DescriptionsItem label='PCH'>{data?.[0]?.pch}</DescriptionsItem>
+                <DescriptionsItem label='Buyer'>{data?.[0]?.buyer}</DescriptionsItem>
+                <DescriptionsItem label='Style'>{data?.[0]?.style}</DescriptionsItem>
+                <DescriptionsItem label='Employee'>{data?.[0]?.employee}</DescriptionsItem>
+                <DescriptionsItem label='Brand'>{data?.[0]?.brand}</DescriptionsItem>
+                <DescriptionsItem label='Sample Request No'>{data?.[0]?.sampleRequestNo}</DescriptionsItem>
+                {/* <DescriptionsItem label='DMM'>{data?.[0]?.dmm}</DescriptionsItem> */}
+                <DescriptionsItem label='Contact No'>{data?.[0]?.contact}</DescriptionsItem>
+                <DescriptionsItem label='Epected Delivery Date'>{data?.[0]?.ETD}</DescriptionsItem>
+                {/* <DescriptionsItem label='Conversion'>{data?.[0]?.conversion}</DescriptionsItem> */}
+                <DescriptionsItem label='Life Cycle Status'>{data?.[0]?.lifeCycleStatus?LifeCycleStatusDisplay.find((e)=>e.name === data?.[0]?.lifeCycleStatus)?.displayVal:'-'}</DescriptionsItem>
+                <DescriptionsItem label='Status'>{data?.[0]?.status}</DescriptionsItem>
         </Descriptions>
-        <Table columns={fabricColumns}/>
-        <Table columns={trimColumns}/>
+        {fabData.length < 0 ?(
+        <Table columns={fabricColumns} dataSource={fabData}/>):(<></>)}
+        {trimData.length < 0 ?(
+        <Table columns={trimColumns} dataSource={trimData}/>):(<></>)}
         <Table/>
 
     </Card>
