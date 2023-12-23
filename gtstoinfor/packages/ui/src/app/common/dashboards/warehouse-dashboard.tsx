@@ -22,7 +22,7 @@ const WarehouseDashboard = () => {
     const [binsData, setBinsData] = useState<any[]>([]);
     const [selectedRackId, setSelectedRackId] = useState<number>(0);
     const [filteredCategory, setFilteredCategory] = useState<string>();
-    const [filteredVal, setFilteredVal] = useState<string>('');
+    const [filteredVal, setFilteredVal] = useState<string>(undefined);
     const getAllRacks = () => {
         // const commonReq = new CommonRequestAttrs(user?.userName, user?.orgData?.unitCode, user?.orgData?.companyCode, user?.userId);
         racksService.getRacks().then(res => {
@@ -128,8 +128,8 @@ const WarehouseDashboard = () => {
                     })}
                 </Select>
             </div> */}
-            <Tooltip title={"Batch No | Pack List Code | Roll Barcode"}>
-                <Search name="manB" placeholder="Batch | Pack Code | Roll Barcode" onSearch={filter} enterButton={<Button icon={<FilterTwoTone />} className="btn-yellow" />} />
+            <Tooltip title={"Item | Item Type | Barcode"}>
+                <Search name="manB" placeholder="Item | Item Type | Barcode" onSearch={filter} enterButton={<Button icon={<FilterTwoTone />} className="btn-yellow" />} />
             </Tooltip>
 
 
