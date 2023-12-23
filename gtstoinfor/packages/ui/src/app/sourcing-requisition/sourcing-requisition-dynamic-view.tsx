@@ -77,20 +77,23 @@ export const SourcingRequisitionDynamicView = () => {
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [selectedRowData, setSelectedRowData] = useState([]);
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
-  const [segmentOptions, setSegmentOptions] = useState<any[]>(
-    [
-      { key: 'Fabric', label: 'Fabric' },
-      { key: 'Trim', label: 'Trim' }
-    ]
-  );
-
+  // const [segmentOptions, setSegmentOptions] = useState<any[]>(
+  //   [
+  //     { key: 'Fabric', label: 'Fabric' },
+  //     { key: 'Trim', label: 'Trim' }
+  //   ]
+  // );
+ const [details, setDetails] = useState('')
   useEffect(() => {
-    // if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
-    //   setTabName('Trim')
-    // }
-    // if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
-    //   setTabName('Fabric')
-    // }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      setTabName('Trim')
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+      setTabName('Fabric')
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      setTabName('Fabric')
+    }
 
     // getStyle();
     getAll();
@@ -116,21 +119,25 @@ export const SourcingRequisitionDynamicView = () => {
     
     return accessValue
 }
-// let segmentOptions = [
-//   { key: 'Fabric', label: 'Fabric' },
-//   { key: 'Trim', label: 'Trim' }
-// ];
+
 const options = () => {
-  
+  let segmentOptions = [
+  { key: 'Fabric', label: 'Fabric' },
+  { key: 'Trim', label: 'Trim' }
+];
+if (checkAccess(MenusAndScopesEnum.Scopes.trimTab && checkAccess(MenusAndScopesEnum.Scopes.fabricTab))) {
+  console.log(segmentOptions);
+  segmentOptions = segmentOptions
+}
 // if(tableData?.indentFabricDetails)
-  // if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab) ) {
-  //   segmentOptions = segmentOptions.filter((e) => e.label === 'Fabric');
-  //   console.log(segmentOptions);
-  // }
-  // if (checkAccess(MenusAndScopesEnum.Scopes.trimTab && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab))) {
-  //   console.log(segmentOptions);
-  //   segmentOptions = segmentOptions.filter((e) => e.label === 'Trim');
-  // }
+  if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab) ) {
+    segmentOptions = segmentOptions.filter((e) => e.label === 'Fabric');
+    console.log(segmentOptions);
+  }
+  if (checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
+    console.log(segmentOptions);
+    segmentOptions = segmentOptions.filter((e) => e.label === 'Trim');
+  }
   console.log(segmentOptions);
   
   return segmentOptions.map((operation, index) => ({
@@ -498,6 +505,10 @@ const segmentedOptions = options();
         title: "Trim Type",
         dataIndex: "materialType",
         ...getColumnSearchProps("materialType"),
+        render: (text) => {
+          const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+          return EnumObj ? EnumObj.displayVal : text;
+        },
       },
       {
         title: "M3 Trim Code",
@@ -662,7 +673,12 @@ const segmentedOptions = options();
     setBarcode("");
     window.close();
   };
-
+const test = (val, row) =>{
+  console.log(val,row);
+  // setDetails(val)
+  // setTabName(val)
+  return val
+}
   return (
     <Card
       headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
@@ -799,6 +815,7 @@ const segmentedOptions = options();
           <CaretRightOutlined rotate={isActive ? 90 : 0} />
         )}
         accordion
+        
       >
         {tableData.map((item: any, index: any) => (
           <Collapse.Panel 
@@ -828,35 +845,36 @@ const segmentedOptions = options();
               <Segmented
                 onChange={onSegmentChange}
                 style={{ backgroundColor: "#68cc6b" }}
-                  options= {
-                    item.indentFabricDetails.length > 0?[
-                      {
-                        label: (
-                                <>
-                                  <b 
-                                  // style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? 'block' : 'none'}}
-                                   >Fabric Details</b>
-                                </>
-                              ),
-                              value: "Fabric",
-                      }
-                    ]:
-                    [
-                        {
-                    label: (
-                      <>
-                        <b 
-                        // style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.trimTab)? 'block' : 'none'}}
+                  options= {segmentedOptions}
+                  //   item.indentFabricDetails.length > 0?[
+                  //     {
+                  //       label: (
+                  //               <>
+                  //                 <b 
+                  //                 // style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? 'block' : 'none'}}
+                  //                  >Fabric Details</b>
+                  //               </>
+                  //             ),
+                  //             value: "Fabric",
+                  //     }
+                  //   ]:
+                  //   [
+                  //       {
+                  //   label: (
+                  //     <>
+                  //       <b 
+                  //       // style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.trimTab)? 'block' : 'none'}}
 
-                        >Trim Details</b>
-                      </>
-                    ),
-                    value: "Trim",
+                  //       >Trim Details</b>
+                  //     </>
+                  //   ),
+                  //   value: "Trim",
 
-                  },
-                    ]
-                  }
-                 defaultValue={item.indentFabricDetails.length> 0?"Fabric": "Trim"}
+                  // },
+                  //   ]
+                  // }
+                 defaultValue={(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab))?"Fabric":(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) ? "Trim":item.indentFabricDetails.length> 0? 'Fabric': "Trim"}
+                //  {item.indentFabricDetails.length> 0?"Fabric": "Trim"}
                 // options={
                 //   [
                 //   {
@@ -881,7 +899,7 @@ const segmentedOptions = options();
               />
               <div>
               <>
-                {item.indentFabricDetails.length > 0?  (
+                { tabName === 'Fabric' ? item.indentFabricDetails.length > 0 ?   (
                   <>
                     <Table
                       columns={tableColumns(item.indentId, (item.indentFabricDetails).filter((e) => Number(e.poQty) < Number(e.quantity) && e.checkStatus === true).length)}
@@ -891,11 +909,13 @@ const segmentedOptions = options();
                       className="custom-table-wrapper"
                     />
                   </>
-                ) :''}
+                ) :(
+                  <> No Data</>
+                ):''}
                 </>
               </div>
               <div>
-                {item.indentTrimDetails.length > 0 ? (
+                { tabName === 'Trim' ? item.indentTrimDetails.length > 0 ?  (
                   <>
                     <Table
                       columns={tableTrimColumns(item.indentId, (item.indentTrimDetails).filter((e) => Number(e.poQty) < Number(e.quantity) && e.checkStatus === true).length)}
@@ -906,8 +926,8 @@ const segmentedOptions = options();
                     />
                   </>
                 ) : (
-                  <></>
-                )}
+                  <> No Data</>
+                ):''}
               </div>
             </Space>
           </Collapse.Panel>

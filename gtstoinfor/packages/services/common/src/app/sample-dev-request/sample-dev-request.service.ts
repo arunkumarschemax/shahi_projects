@@ -2028,7 +2028,7 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
                 }
                
                   if(!sizedata.has(rec.size_id)){
-                    sizedata.set(rec.size_id,new SampleSizeInfoModel(rec.size_id,rec.size_name,[]))
+                    sizedata.set(rec.size_id,new SampleSizeInfoModel(rec.size_id,rec.sizes,[]))
                   }
                   
         sizedata.get(rec.size_id).colours.push({ colour: rec.colour });
@@ -2048,6 +2048,8 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
             
       const sizes: SampleSizeInfoModel[] = [];
       sizedata.forEach((e) => {
+        console.log(e,'pp');
+        
         sizes.push(e);
       });
 
