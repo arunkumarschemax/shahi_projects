@@ -24,31 +24,9 @@ const RackBlock = (props: RackBlockProps) => {
         console.log(filterVal);
     }, []);
 
-    // const rackDashboardServices = new RackDashboardService();
-    // const [binsData, setBinsData] = useState<RackAndBinModel[]>([]);
-
-
-    // const getBinsData = (rId: number, rLevel: number, rColumn: number) => {
-    //     const rackIdReq = new RackIdRequest(user?.userName, user?.orgData?.unitCode, user?.orgData?.companyCode, user?.userId, rId, rLevel, rColumn);
-    //     rackDashboardServices.getBinsForRackLevelAndColumn(rackIdReq).then(res => {
-    //         if (res.status) {
-    //             setBinsData(res.data);
-    //         } else {
-    //             AlertMessages.getErrorMessage(res.internalMessage)
-    //         }
-    //     }).catch(err => {
-    //         AlertMessages.getErrorMessage(err.message)
-    //     })
-    // }
-
-
 
     return (
         <Card size="small" title={`Level-${rackLevel} | Column-${column} `} id={`${rackLevel}-${column}`} headStyle={{ minHeight: 0, background: '#ded18a', color: '#165790', textAlign: 'center' }} bodyStyle={{ padding: 0, minHeight: '138px' }}  >
-            {/* {binsData[0]?.binData?.map(binObj => {
-                return <BinBlock rackId={rackId} rackLevel={rackLevel} column={column} binInfo={binObj} />
-            })} */}
-
             {<BinBlock rackId={rackId} rackLevel={rackLevel} column={column} binInfo={binInfo} filterVal={filterVal} />}
 
         </Card>
