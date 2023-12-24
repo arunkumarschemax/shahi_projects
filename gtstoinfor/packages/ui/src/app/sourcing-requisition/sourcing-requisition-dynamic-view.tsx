@@ -351,14 +351,14 @@ const segmentedOptions = options();
         responsive: ["sm"],
         render: (text, object, index) => (page - 1) * 10 + (index + 1),
       },
-      {
-        title: "Buyer",
-        dataIndex: "buyer",
-        ...getColumnSearchProps("buyer"),
-        render: (text, record) => {
-          return <>{record.buyer ? record.buyer : "-"}</>;
-        },
-      },
+      // {
+      //   title: "Buyer",
+      //   dataIndex: "buyer",
+      //   ...getColumnSearchProps("buyer"),
+      //   render: (text, record) => {
+      //     return <>{record.buyer ? record.buyer : "-"}</>;
+      //   },
+      // },
       {
         title: <div style={{textAlign:"center"}}>M3 Fabric Code</div>,
         dataIndex: "m3FabricCode",
