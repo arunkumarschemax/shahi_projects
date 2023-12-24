@@ -145,6 +145,7 @@ const getMappedTrims = (value, option) => {
   };
 
   const getStockDetails = (record,e) => {
+    
     // console.log(record);
     record.trimCode = e;
     let req = new buyerandM3ItemIdReq(props.buyerId,e,record.trimType);
@@ -273,7 +274,7 @@ const getMappedTrims = (value, option) => {
           allowClear
           showSearch
           optionFilterProp="children"
-          placeholder="Select Trim"
+          placeholder="Select Trim Type"
           onSelect={getTrimCategory}
          >
           {Object.values(ItemTypeEnumDisplay).filter((val) => val.displayVal !== ItemTypeEnum.FABRIC).map((val) => (
@@ -298,7 +299,7 @@ const getMappedTrims = (value, option) => {
           allowClear
           showSearch
           optionFilterProp="children"
-          placeholder="Select Trim"
+          placeholder="Select Trim Category"
           onSelect={getMappedTrims}
          >
           {trimData?.map((e) => {
@@ -318,7 +319,7 @@ const getMappedTrims = (value, option) => {
       render: (_, record) => (
         <><Form.Item name={`allocatedStock${record.key}`} style={{ display: 'none' }}><Input name={`allocatedStock${record.key}`} style={{ display: 'none' }} /></Form.Item><Form.Item name={`trimCode${record.key}`} rules={[{ required: true, message: 'Missing Trim Code' }]}>
           <Select
-            value={record.trimCode}
+            value={record.trimCode} 
             onChange={(e) => handleInputChange(e, record.key, 'trimCode', record)}
             style={{ width: "100%" }}
             allowClear
@@ -340,7 +341,7 @@ const getMappedTrims = (value, option) => {
       width:"16%",
       render: (_, record) => (
         <Form.Item name={`consumption${record.key}`} rules={[{ required: true, message: 'Missing Consumption' }]}>
-        <InputNumber
+        <InputNumber placeholder="Consumption" min={1}
         value={record.consumption}
         onChange={(e) => handleInputChange(e, record.key, 'consumption',record)}
         />
@@ -379,8 +380,8 @@ const getMappedTrims = (value, option) => {
       width:"15%",
       render: (_, record) => (
       <Form.Item name={`wastage${record.key}`} rules={[{ required: true, message: 'Missing Wastage' }]}>
-        <InputNumber
-        defaultValue={2}
+        <InputNumber placeholder='wastage'
+        defaultValue={2} min={0}
         onChange={(e) => handleInputChange(e, record.key, 'wastage',record)}
         />
       </Form.Item>
@@ -402,7 +403,7 @@ const getMappedTrims = (value, option) => {
     {
       title: 'Remarks',
       dataIndex: 'remarks',
-      width:"40%",
+      width:"50%",
       render: (_, record) => (
         <Form.Item name={`remarks${record.key}`}>
         <TextArea
