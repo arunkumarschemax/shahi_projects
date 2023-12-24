@@ -400,16 +400,12 @@ const segmentedOptions = options();
         title: "XL No",
         dataIndex: "xlNo",
       },
+      // {
+      //   title: "Indent Raised",
+      //   dataIndex: "quantity",
+      // },
       {
-        title: "Indent Raised",
-        dataIndex: "quantity",
-      },
-      {
-        title: "PO Raised",
-        dataIndex: "poQty",
-      },
-      {
-        title: "Quantity",
+        title: "Indent Quantity",
         dataIndex: "quantity",
         sorter: (a, b) => a.quantity.localeCompare(b.quantity),
         sortDirections: ["descend", "ascend"],
@@ -422,6 +418,10 @@ const segmentedOptions = options();
             </>
           );
         },
+      },
+      {
+        title: "PO Raised",
+        dataIndex: "poQty",
       },
       // {
       //   title: "Available Quantity",
