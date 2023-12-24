@@ -21,6 +21,7 @@ export default function MonthWiseReportV2() {
     const [selectedYear, setSelectedYear] = useState<any>()
     const [selectedCompParam, setSelectedCompParam] = useState<any>("ExFactory")
     const [flattenedReportData, setFlattenedReportData] = useState<any[]>([])
+    const [distinctMonths, setDistinctMonths] = useState<any[]>([])
 
     useEffect(() => {
         getDistinctYears()
@@ -73,9 +74,10 @@ export default function MonthWiseReportV2() {
     }
 
     function getFlattenReportData(data: any[]) {
-        console.log('my functionn called')
         if (data.length) {
             const flattenedArrTemp = []
+            const monthHeadersSet = new Set<string>();
+
             for (const rec of data) {
                 // const itemRowSpan = rec.monthWiseData.length
                 const itemName = rec.itemName
@@ -85,9 +87,13 @@ export default function MonthWiseReportV2() {
                     const monthsArr: any = []
                     const monthWiseObj = {}
                     for (const month of phase.pcsData) {
-                        const monthName = month.monthName.replace(/\d+/g, '');
+                        const monthName = month.monthName
                         monthWiseObj[`${monthName}_inCoeffPcs`] = month.inCoeffPcs,
                             monthWiseObj[`${monthName}_inPcs`] = month.inPcs
+
+                        //----------------------------------------------------------------//
+
+                        monthHeadersSet.add("" + monthName);
 
                     }
                     monthsArr.push(monthWiseObj)
@@ -102,6 +108,9 @@ export default function MonthWiseReportV2() {
                 }
             }
             setFlattenedReportData(flattenedArrTemp)
+
+            //-----------------------------------------------------------------//
+            setDistinctMonths(Array.from(monthHeadersSet))
         }
     }
 
@@ -122,16 +131,18 @@ export default function MonthWiseReportV2() {
                 <thead className="ant-table-thead">
                     <tr>
                         {
-                            months.map((m, i) => {
-                                const exCls = i % 2 ? 'even-color' : 'odd-color';
+                            distinctMonths.length ?
+                                distinctMonths.map((m, i) => {
+                                    const exCls = i % 2 ? 'even-color' : 'odd-color';
 
-                                return <th colSpan={2} className={`ant-table-cell ${exCls}`} scope="col" >{m}</th>
+                                    return <th colSpan={2} className={`ant-table-cell ${exCls}`} scope="col" >{m}</th>
 
-                            })
-                        }``
+                                }) : <th></th>
+
+                        }
                     </tr>
                     <tr>
-                        {childTitles(12)}
+                        {childTitles(distinctMonths.length)}
                     </tr>
                 </thead>
             </table>
@@ -140,12 +151,18 @@ export default function MonthWiseReportV2() {
         );
     };
 
-    const monthWiseColumns: { [key: string]: any }[] = [];
 
-    months.forEach((month) => {
-        monthWiseColumns.push({ dataIndex: `${month}_inCoeffPcs`, width: '60px', render: (value: any) => value ? value : 0 });
-        monthWiseColumns.push({ dataIndex: `${month}_inPcs`, width: '50px', render: (value: any) => value ? value : 0 });
-    });
+    function getMonthWiseColumns() {
+        const monthWiseColumns: { [key: string]: any }[] = [];
+        Array.from(distinctMonths).forEach((month) => {
+            monthWiseColumns.push({ dataIndex: `${month}_inCoeffPcs`, width: '60px', render: (value: any) => value ? value : 0 });
+            monthWiseColumns.push({ dataIndex: `${month}_inPcs`, width: '50px', render: (value: any) => value ? value : 0 });
+        });;
+        return monthWiseColumns
+
+    }
+
+
 
     const columns = [
         {
@@ -187,7 +204,7 @@ export default function MonthWiseReportV2() {
                     bordered={false}
                     className="report-child-tbl"
                     dataSource={record.monthsArr}
-                    columns={monthWiseColumns}
+                    columns={getMonthWiseColumns()}
                     pagination={false}
                     rowKey={(record) => record.itemName}
                 />
