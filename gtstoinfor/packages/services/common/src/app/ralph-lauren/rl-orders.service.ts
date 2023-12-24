@@ -213,6 +213,38 @@ export class RLOrdersService {
     }
   }
 
+  async getTradeLinkPdf():Promise<CommonResponseModel>{
+    let driver = await new Builder().forBrowser(Browser.CHROME).build();
+     try{
+        await driver.get('https://www.tradelinkone.com/')
+        await driver.wait(until.elementLocated(By.id('wt-cli-accept-all-btn')))
+        const acceptButton = await driver.findElement(By.id('wt-cli-accept-all-btn'));
+        await acceptButton.click();
+        await driver.wait(until.elementLocated(By.id('forminator-field-text-1')))
+        await driver.findElement(By.id('forminator-field-text-1')).sendKeys('sounder.kumar@shahi.co.in');
+        await driver.wait(until.elementLocated(By.id('forminator-field-password-1')))
+        await driver.findElement(By.id('forminator-field-password-1')).sendKeys('6A09CD34C2');
+        await driver.wait(until.elementLocated(By.xpath('//*[@id="forminator-module-3303"]/div[4]/div/div/button')))
+        await driver.findElement(By.xpath('//*[@id="forminator-module-3303"]/div[4]/div/div/button')).click();
+        await driver.wait(until.elementLocated(By.xpath('//*[@id="ui-id-10"]/div[1]/a')))
+        await driver.findElement(By.xpath('//*[@id="ui-id-10"]/div[1]/a')).click();
+        await driver.sleep(10000)
+        await driver.wait(until.elementLocated(By.xpath('//*[@id="tab1"]/div[1]/div[1]/div[2]')))
+        await driver.findElement(By.xpath('//*[@id="tab1"]/div[1]/div[1]/div[2]')).click();
+        await driver.wait(until.elementLocated(By.id('linkButton3D_256')));
+        await driver.findElement(By.id('linkButton3D_256')).click();
+        await driver.wait(until.elementLocated(By.xpath('//*[@id="ui-id-4"]/div[3]/div/div[1]/span/a')))
+        await driver.findElement(By.xpath('//*[@id="ui-id-4"]/div[3]/div/div[1]/span/a')).click();
+        await driver.wait(until.elementLocated(By.xpath('//*[@id="ui-id-14"]/div[4]/div[4]/button')))
+        await driver.findElement(By.xpath('//*[@id="ui-id-14"]/div[4]/div[4]/button')).click();
+        await driver.wait(until.elementLocated(By.xpath('//*[@id="frmMasterInt"]/div[1]/div[2]/div[2]/div[2]/div[3]')))
+        await driver.findElement(By.xpath('//*[@id="frmMasterInt"]/div[1]/div[2]/div[2]/div[2]/div[3]')).click();
+     }catch (err) {
+      console.log(err, 'error');
+      return new CommonResponseModel(false, 0, err)
+    }
+  }
+
   // @Cron('*/10 * * * *')
   async createCOline(req: any): Promise<CommonResponseModel> {
     const poDetails = await this.coLineRepo.getDataforCOLineCreation();

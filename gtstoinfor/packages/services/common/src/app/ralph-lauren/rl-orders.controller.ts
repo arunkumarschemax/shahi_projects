@@ -147,4 +147,13 @@ export class RLOrdersController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
         }
     }
+
+    @Post('/getTradeLinkPdf')
+    async getTradeLinkPdf(): Promise<CommonResponseModel> {
+        try {
+            return await this.rlOrdersService.getTradeLinkPdf()
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
 }
