@@ -366,7 +366,7 @@ const segmentedOptions = options();
         render: (m3FabricCode, row) => (
           <Tooltip title={row.description} placement="top" arrowPointAtCenter>
             <span className="fabCode">
-              {`${m3FabricCode} - ${row.description}`}
+              {`${row.fabricCode} - ${row.description}`}
             </span>
           </Tooltip>
         ),
