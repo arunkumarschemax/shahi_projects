@@ -46,7 +46,7 @@ export const StockView = () => {
   const [buyervalue,setBuyervalue] = useState<any>()
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [isBuyer, setIsBuyer] = useState(false);
-
+  const [button,setButton] = useState<boolean>(true)
 
 
 
@@ -381,18 +381,26 @@ export const StockView = () => {
         // if (rowData.buyer_id === buyervalue) {
         //   return "-";
         // }
-    
+        console.log(rowData,'=================rowadat')
+        console.log(form.getFieldValue('buyerId'))
         return (
           <span>
+            {/* {userrefNo === '' && !button ? <Button
+              style={{ backgroundColor: '#69c0ff' }}
+              onClick={(e) => getRowData(rowData)}
+            >
+              <b>Request Reclassification</b>
+            </Button>:""
+            } */}
             {
               (userrefNo && rowData.refNo === userrefNo) ? "-" : 
-              checkAccess(MenusAndScopesEnum.Scopes.reclassification) ?
+              checkAccess(MenusAndScopesEnum.Scopes.reclassification) ? userrefNo === '' && !button || form.getFieldValue('buyerId') !=  rowData.buyer_id ?
             <Button
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}
             >
               <b>Request Reclassification</b>
-            </Button>:"-"
+            </Button>:"-":''
           }
           </span>
         );
@@ -412,6 +420,9 @@ export const StockView = () => {
   const getItemsForOtherBuyers = () => {
     console.log(form.getFieldsValue())
     // console.log()
+    if(userrefNo === undefined){
+      setButton(false)
+    }
     const data = new M3ItemsDTO(null,'',form.getFieldValue("content"),form.getFieldValue("fabricType"),form.getFieldValue("weave"),weightValue,weightUnitValue,form.getFieldValue("construction"),countValue,countUnitValue,widthValue,widthUnitValue,form.getFieldValue("finish"),form.getFieldValue("shrinkage"),form.getFieldValue("buyerId"),"",form.getFieldValue("buyerCode"))
 
     let formData: M3ItemsDTO = data;
@@ -458,6 +469,9 @@ export const StockView = () => {
    const onBuyerChange = (value) =>{
     console.log(value)
     setBuyervalue(value)
+    if(userrefNo === ''){
+      setButton(true)
+    }
    }
 
  
