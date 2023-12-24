@@ -21,7 +21,8 @@ export const MenusAndScopesEnum ={
         'Reclassification Approval' : 'Reclassification Approval',
         'Allocation Approval' : 'Allocation Approval',
         'Purchase Order' : 'Purchase Order',
-        'Grn':"Grn"
+        'Grn':"Grn",
+        'Sample Material Status' :'Sample Material Status'
         // 'Attributes' : 'Attributes',
         // 'Buyers' : 'Buyers',
         // 'Buyers Destination' : 'Buyers Destination',

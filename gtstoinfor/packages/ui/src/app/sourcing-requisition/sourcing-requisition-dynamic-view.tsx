@@ -449,8 +449,9 @@ const segmentedOptions = options();
       //     );
       //   },
       // },
+      
       {
-        title: <div style={{ textAlign: "center" }}>{val > 0 ?<Button  type="primary" onClick={() =>generatePoForFabric(key)} >Generate Po</Button>:<></>}</div>,
+        title: <div style={{ textAlign: "center" }}>{val > 0 && checkAccess(MenusAndScopesEnum.Scopes.Create)?<Button  type="primary" onClick={() =>generatePoForFabric(key)} >Generate Po</Button>:<></>}</div>,
         dataIndex: "sm",
         key: "sm",
         align: "center",
@@ -684,8 +685,12 @@ const test = (val, row) =>{
       headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
       title="Indent Requisition"
       extra={
-        <span>
+               <span>
+                        {checkAccess(MenusAndScopesEnum.Scopes.Create)?(
+
           <Button onClick={() => navigate("/indent-form")}>New</Button>
+          ):(<></>)}
+
         </span>
       }
     >
