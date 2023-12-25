@@ -1474,7 +1474,7 @@ const onTrimChange = (val, option) => {
                                                     },
                                                 ]}>
                                                 <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'80px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}>
-                                                    <Select showSearch allowClear optionFilterProp="children" >
+                                                    <Select showSearch allowClear optionFilterProp="children" placeholder="Enter uom">
                                                     {uom?.map(e => {
                                                         return (
                                                             <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>

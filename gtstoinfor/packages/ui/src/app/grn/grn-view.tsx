@@ -299,7 +299,7 @@ import RolePermission from "../role-permissions";
       {
         title: <div style={{textAlign:"center"}}>Location Mapping Status</div>,
         dataIndex: "locationMapStatus",
-        render: (data) => {
+        render: (val,data) => {
           const EnumObj = LocationMappedEnumDisplay?.find((item) => item.name === data.locationMapStatus);
           return EnumObj ? EnumObj.displayVal : data.locationMapStatus;
         },
