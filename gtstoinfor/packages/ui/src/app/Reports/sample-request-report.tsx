@@ -394,7 +394,7 @@ const SampleRequestReport = () => {
     //   },
     // },
     {
-      title: <div style={{ textAlign: "center" }}>{btnEnable  && checkAccess(MenusAndScopesEnum.Scopes.Create)?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
+      title: <div style={{ textAlign: "center" }}>{btnEnable  && checkAccess(MenusAndScopesEnum.Scopes.createPo)?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
       dataIndex: "checkStatus",
       key: "checkStatus",
       align: "left",
@@ -404,7 +404,7 @@ const SampleRequestReport = () => {
           <Form form={samplingPO} layout="vertical">
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
               <Form.Item name={`checkStatus${index}`}  >
-              {btnEnable  && checkAccess(MenusAndScopesEnum.Scopes.Create)? <Checkbox name={`checkStatus${index}`} onClick={checkboxonclick} onChange={(e) => onCheck(e, record.sampleRequestid, record.fabricType, text, record, index)}/>:'-'}
+              {btnEnable  && checkAccess(MenusAndScopesEnum.Scopes.createPo)? <Checkbox name={`checkStatus${index}`} onClick={checkboxonclick} onChange={(e) => onCheck(e, record.sampleRequestid, record.fabricType, text, record, index)}/>:'-'}
               </Form.Item>
             </Col>
           </Form>
