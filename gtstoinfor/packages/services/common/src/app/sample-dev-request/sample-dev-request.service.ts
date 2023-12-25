@@ -874,6 +874,7 @@ export class SampleRequestService {
          entity.m3ItemId=req.m3ItemId
          entity.totalIssueQty=req.allocatioQuantity
          entity.status=MaterialStatusEnum.MATERIAL_ALLOCATED
+         let totalQty = 0
          for(const itemData of req.allocatedItems){
           const itemEntity = new MaterialAllocationItemsEntity()
               itemEntity.locationId=itemData.LocationId
@@ -881,6 +882,7 @@ export class SampleRequestService {
               itemEntity.quantity=itemData.quantity
               itemEntity.allocateQuantity=itemData.allocatioQuantity
               materialitemdata.push(itemEntity)
+              totalQty = Number(totalQty) + Number(itemData.allocatioQuantity)
          }
          entity.materialAllocationinfo=materialitemdata
          console.log(entity)
@@ -910,7 +912,7 @@ export class SampleRequestService {
           bomStatus = BomStatusEnum.ALLOCATED
         }
         // for(const mainData of transformedData ){
-          let updateBomStatus = await manager.getRepository(SamplingbomEntity).update({samplingBomId:req.samplingBomId},{status:bomStatus});
+          let updateBomStatus = await manager.getRepository(SamplingbomEntity).update({samplingBomId:req.samplingBomId},{status:bomStatus, receivedQuantity : () => `received_quantity + ${totalQty}`});
           console.log("updateBomStatus");
           console.log(updateBomStatus);
 
