@@ -984,6 +984,7 @@ import RolePermission from "../role-permissions";
                 style={{ fontSize: "16px", width: "100%" }}
               >
                 <Segmented
+                defaultValue={tabName}
                   onChange={onSegmentChange}
                   style={{ backgroundColor: "#68cc6b" }}
                   options={[
