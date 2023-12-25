@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req } from '@nestjs/common';
+import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req, Get, Res } from '@nestjs/common';
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
 import { CommonResponseModel, FobPriceDiffRequest, PpmDateFilterRequest, coLineRequest, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomService } from './nike-dpom.service';
@@ -8,10 +8,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { DiaPDFDto } from './dto/diaPDF.dto';
 import { PoAndQtyReq } from './dto/po-qty.req';
-import { log } from 'console';
-import { type } from 'os';
 import { FactoryUpdate } from './dto/factory-update.req';
 import { ChangeComparision } from './dto/change-comparision.req';
+import { Response } from 'express';
+import * as fs from 'fs'; // Import fs module
+
 
 @Controller('/nike-dpom')
 export class DpomController {
@@ -952,6 +953,22 @@ export class DpomController {
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
+    }
+
+    @Get('/downloadPPMReportExcel')
+    async downloadExcel(@Res() res: Response): Promise<void> {
+        // Fetch data (replace this with your actual data retrieval logic)
+        // Generate Excel file
+        const filePath = await this.dpomService.downloadPPMReportExcel({
+            "docTypeCode": "ZP20"
+        });
+
+        // Stream the file to the response for download
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.setHeader('Content-Disposition', `attachment; filename=${filePath}`);
+
+        const fileStream = fs.createReadStream(filePath);
+        fileStream.pipe(res);
     }
 }
 
