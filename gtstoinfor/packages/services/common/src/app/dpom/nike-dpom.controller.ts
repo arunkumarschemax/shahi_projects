@@ -955,20 +955,20 @@ export class DpomController {
         }
     }
 
-    @Get('/downloadPPMReportExcel')
-    async downloadExcel(@Res() res: Response): Promise<void> {
-        // Fetch data (replace this with your actual data retrieval logic)
-        // Generate Excel file
-        const filePath = await this.dpomService.downloadPPMReportExcel({
-            "docTypeCode": "ZP20"
-        });
+    // @Get('/downloadPPMReportExcel')
+    // async downloadExcel(@Res() res: Response): Promise<void> {
+    //     // Fetch data (replace this with your actual data retrieval logic)
+    //     // Generate Excel file
+    //     const filePath = await this.dpomService.downloadPPMReportExcel({
+    //         "docTypeCode": "ZP20"
+    //     });
 
-        // Stream the file to the response for download
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', `attachment; filename=${filePath}`);
+    //     // Stream the file to the response for download
+    //     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    //     res.setHeader('Content-Disposition', `attachment; filename=${filePath}`);
 
-        const fileStream = fs.createReadStream(filePath);
-        fileStream.pipe(res);
-    }
+    //     const fileStream = fs.createReadStream(filePath);
+    //     fileStream.pipe(res);
+    // }
 }
 
