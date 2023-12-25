@@ -1,11 +1,11 @@
-import { PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { LoadingOutlined, PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
 import { BuyerRefNoRequest, DepartmentReq,SampleDevelopmentRequest, StyleIdReq } from "@project-management-system/shared-models";
 import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Tabs, message } from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
-import Upload, { RcFile } from "antd/es/upload";
+import Upload, { RcFile, UploadProps } from "antd/es/upload";
 import SampleDevTabs from "./sample-dev-tabs";
 import { Console } from "console";
 import TabPane from "rc-tabs/lib/TabPanelList/TabPane";
@@ -73,7 +73,8 @@ export const SampleDevForm = () => {
   const qualityService = new QualityService()
   const navigate = useNavigate();
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
-
+  const [imageUrl, setImageUrl] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     console.log(sizeForm.getFieldsValue())
@@ -107,23 +108,21 @@ export const SampleDevForm = () => {
     })
 }
 
-  const getBase64 = (file) =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
-      reader.onerror = (error) => reject(error);
-    });
+const getBase64 = (img, callback) => {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
 
-  const handlePreview = async (file) => {
-    if (!file.url && !file.preview) {
-      file.preview = await getBase64(file.originFileObj as RcFile);
-    }
+  // const handlePreview = async (file) => {
+  //   if (!file.url && !file.preview) {
+  //     file.preview = await getBase64(file.originFileObj as RcFile);
+  //   }
 
-    setPreviewImage(file.url || file.preview);
-    setPreviewVisible(true);
-    setPreviewTitle(file.name || "Image");
-  };
+  //   setPreviewImage(file.url || file.preview);
+  //   setPreviewVisible(true);
+  //   setPreviewTitle(file.name || "Image");
+  // };
 
   const fabricTypeOnchange =(value) =>{
     getFabricSubType(value)
@@ -371,6 +370,43 @@ export const SampleDevForm = () => {
       setProcessData(updatedData);
   };
 
+  const uploadFabricProps: UploadProps = {
+    // alert();
+    multiple: false,
+    onRemove: file => {
+      setFileList([]);
+      setImageUrl('');
+    },
+    beforeUpload: (file: any) => {
+      if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+        AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+        // return true;
+      }
+      var reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onload = data => {
+        if (fileList.length == 1) {
+          AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+          return true;
+        } else {
+            setFileList([...fileList,file]);
+          getBase64(file, imageUrl =>
+            setImageUrl(imageUrl)
+          );
+          return false;
+        }
+      }
+    },
+    progress: {
+      strokeColor: {
+        '0%': '#108ee9',
+        '100%': '#87d068',
+      },
+      strokeWidth: 3,
+      format: percent => `${parseFloat(percent.toFixed(2))}%`,
+    },
+    fileList: fileList,
+  };
   const handleFabricsDataUpdate = (updatedData) => {
     console.log(updatedData)
     console.log(fabricsData)
@@ -616,7 +652,7 @@ export const SampleDevForm = () => {
                 },
               ]}
             >
-              <Input placeholder="Enter Cost Ref" />
+              <Input placeholder="Enter Cost" />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
@@ -638,30 +674,15 @@ export const SampleDevForm = () => {
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
           >
-            <Form.Item name="image" label="Attach File">
-              <Upload
-                action="http://165.22.220.143/crm/gtstoinfor/upload-files/" // Use your upload URL
-                listType="picture-card"
-                fileList={fileList}
-                onPreview={handlePreview}
-                onChange={handleChange}
-                accept=".jpg, .jpeg, .png"
-                beforeUpload={(file) => {
-                  const isImage = file.type.startsWith("image/");
-                  if (!isImage) {
-                    message.error("You can only upload JPG or PNG files!",2);
-                  }
-                  return isImage;
-                }}
-              >
-                {fileList.length >= 1 ? null : (
+            <Form.Item name="image" label='Attach File' >
+              <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
+
                   <div>
-                    <PlusOutlined />
-                    <div style={{ marginTop: 8 }}>Upload</div>
+                      {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                      <div style={{ marginTop: 8 }}>Upload Fabric</div>
                   </div>
-                )}
               </Upload>
-            </Form.Item>
+          </Form.Item>
           </Col>
           
               {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
