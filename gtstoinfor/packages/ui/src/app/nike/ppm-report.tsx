@@ -160,7 +160,7 @@ const PPMReport = () => {
 
   function handleHideSizeColuomns(value) {
     console.log(value, 'selected size column')
-    const selctedSizeTemp = value.map((v) => {return {title : v.children,dataIndex:v.value}})
+    const selctedSizeTemp = value.map((v) => { return { title: v.children, dataIndex: v.value } })
     setSelectedSizeColumns(selctedSizeTemp)
   }
   const handleCheckboxChange = (column, poAndLine) => {
@@ -1895,10 +1895,66 @@ const PPMReport = () => {
               width: 100,
               align: 'right',
               render: (text, record) => {
-                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)
-                const sizeObj = sizeData[`${sc.dataIndex}`]
-                // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-                return sizeObj ? sizeObj : '-';
+                if (sc.dataIndex == 'diffOfPrice') {
+                  const shprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
+                  const buyerprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
+
+                  if (isNaN(shprice) || isNaN(buyerprice)) {
+                    return '-';
+                  } else {
+                    let diff = Number(shprice) - Number(buyerprice);
+                    return (diff).toFixed(2);
+                  }
+                } else if (sc.dataIndex == 'diffOfCurrency') {
+                  const currency1 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobCurrencyCode;
+                  const currency2 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobCurrencyCode;
+                  // Using the equality operator (strict equality)
+                  const areEqual = currency1 === currency2;
+                  if (areEqual) {
+                    return '-'
+                  } else {
+                    return 'Different'
+                  }
+                } else if (sc.dataIndex = 'diffOfLegalPOCOPrice') {
+                  const poCurrency = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
+                  const coCurrency = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
+                  // let diff = Number(Poprice) - Number(coprice)
+                  if (poCurrency && coCurrency !== null) {
+                    return poCurrency + ' ' + coCurrency
+                  }
+                  else {
+                    return "-"
+                  }
+
+                } else if (sc.dataIndex == 'diffOfLegalPOCOCurrency') {
+                  const currency1 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
+                  const currency2 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
+                  // Using the equality operator (strict equality)
+                  const areEqual = currency1 === currency2;
+                  if (areEqual) {
+                    return '-'
+                  } else {
+                    return 'Different'
+                  }
+
+                } else if (sc.dataIndex == 'diffOfQty') {
+                  const PoQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
+                  const coQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
+                  let diff = Number(PoQty) - Number(coQty)
+                  if (Number(PoQty) && Number(coQty) !== null) {
+                    return diff
+                  }
+                  else {
+                    return "-"
+                  }
+                }
+                else {
+
+                  const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)
+                  const sizeObj = sizeData[`${sc.dataIndex}`]
+                  // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                  return sizeObj ? sizeObj : '-';
+                }
               }
             }
           })
@@ -2583,7 +2639,7 @@ const PPMReport = () => {
     <>
       <Card title="PPM Marketing Report" headStyle={{ color: 'black', fontWeight: 'bold' }}>
         <Card>
-        <Row gutter={24}>
+          <Row gutter={24}>
             <Col span={6}>
               <Popconfirm onConfirm={e => { toggleHideChildren() }}
                 title={
@@ -2602,34 +2658,34 @@ const PPMReport = () => {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
               <Form.Item label="Size columns" name="sizeColumns">
-                <Select style={{width:'100%'}} allowClear showSearch placeholder='select isze columns' optionFilterProp="children"
-                  mode='multiple' onChange={(s,opt) => {handleHideSizeColuomns(opt)}}>
+                <Select style={{ width: '100%' }} allowClear showSearch placeholder='select isze columns' optionFilterProp="children"
+                  mode='multiple' onChange={(s, opt) => { handleHideSizeColuomns(opt) }}>
                   {
                     sizeColumns.map((s) => {
-                      return <Option key={s.dataIndex}  value={s.dataIndex}>{s.title}</Option>
+                      return <Option key={s.dataIndex} value={s.dataIndex}>{s.title}</Option>
                     })
                   }
                 </Select>
               </Form.Item>
             </Col>
-           
+
             {filteredData.length > 0 ? (
               <Col span={1}>
-              <Button
-                type="default"
-                style={{ color: 'green' }}
-                icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="marketing-ppm-report.csv" data={csvData}>
-                  Export to CSV
-                </CSVLink></Button>
+                <Button
+                  type="default"
+                  style={{ color: 'green' }}
+                  icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="marketing-ppm-report.csv" data={csvData}>
+                    Export to CSV
+                  </CSVLink></Button>
               </Col>
-                ) : null} </Row>
+            ) : null} </Row>
         </Card>
         <Form
           onFinish={getData}
           form={form}
           layout='vertical'>
 
-          <Row gutter={24} style={{paddingTop:'10px'}}>
+          <Row gutter={24} style={{ paddingTop: '10px' }}>
 
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
               <Form.Item label="Last Modified Date" name="lastModifiedDate">
