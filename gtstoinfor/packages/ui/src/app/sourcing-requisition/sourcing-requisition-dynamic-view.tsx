@@ -84,6 +84,12 @@ export const SourcingRequisitionDynamicView = () => {
   //   ]
   // );
  const [details, setDetails] = useState('')
+ const checkAccess = (buttonParam) => {  
+  const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus.Indent,buttonParam)
+   console.log(buttonParam,accessValue,'access');
+  
+  return accessValue
+}
   useEffect(() => {
     if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
       setTabName('Trim')
@@ -113,12 +119,7 @@ export const SourcingRequisitionDynamicView = () => {
   //   });
   // };
 
-  const checkAccess = (buttonParam) => {  
-    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus.Indent,buttonParam)
-     console.log(buttonParam,accessValue,'access');
-    
-    return accessValue
-}
+ 
 
 const options = () => {
   let segmentOptions = [
@@ -451,7 +452,7 @@ const segmentedOptions = options();
       // },
       
       {
-        title: <div style={{ textAlign: "center" }}>{val > 0 && checkAccess(MenusAndScopesEnum.Scopes.Create)?<Button  type="primary" onClick={() =>generatePoForFabric(key)} >Generate Po</Button>:<></>}</div>,
+        title: <div style={{ textAlign: "center" }}>{checkAccess(MenusAndScopesEnum.Scopes.createPo) && val > 0 ?<Button  type="primary" onClick={() =>generatePoForFabric(key)} >Generate Po</Button>:<></>}</div>,
         dataIndex: "sm",
         key: "sm",
         align: "center",
@@ -461,7 +462,7 @@ const segmentedOptions = options();
             (Number(rowData.poQty) < Number(rowData.quantity)) ?
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
               <Form.Item name={`fabric${rowData.indentFabricId}`} >
-                <Checkbox name={`fabric${rowData.indentFabricId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>
+              {checkAccess(MenusAndScopesEnum.Scopes.createPo) && val > 0 ?<Checkbox name={`fabric${rowData.indentFabricId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>:<></>}
             </Form.Item>
             </Col> : <Tag></Tag>
           )
@@ -547,7 +548,7 @@ const segmentedOptions = options();
       {
         title: <div style={{ textAlign: "center" }}>
           
-        {val > 0 ?<Button  type="primary" onClick={() =>genereatePoForTrim(key)} >Generate Po</Button>:<></>}
+        {val > 0 && checkAccess(MenusAndScopesEnum.Scopes.createPo)?<Button  type="primary" onClick={() =>genereatePoForTrim(key)} >Generate Po</Button>:<></>}
           </div>,
         dataIndex: "sm",
         key: "sm",
@@ -572,7 +573,7 @@ const segmentedOptions = options();
               (Number(rowData.poQty) < Number(rowData.quantity)) ?
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                 <Form.Item name={`trim${rowData.indentTrimId}`} >
-                  <Checkbox name={`trim${rowData.indentTrimId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>
+                { checkAccess(MenusAndScopesEnum.Scopes.createPo) ?<Checkbox name={`trim${rowData.indentTrimId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>:"-"}
               </Form.Item>
               </Col>: <Tag></Tag> 
           // }
