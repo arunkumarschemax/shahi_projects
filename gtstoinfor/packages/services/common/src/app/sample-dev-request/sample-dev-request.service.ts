@@ -1098,7 +1098,9 @@ export class SampleRequestService {
         if (req.styleId != undefined) {
           query1 = query1 + ' AND sr.style_id=' + req.styleId;
         }
-        
+        if(req.tab != undefined){
+          query1 = query1 +` AND sb.item_type LIKE '%${req.tab}%'`
+      }
         query1 = query1+ ` group by sb.sampling_bom_id order by sr.request_no, sb.item_type`;
         const rmData = await manager.query(query1);
         console.log(rmData)
