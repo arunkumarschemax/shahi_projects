@@ -881,7 +881,7 @@ import RolePermission from "../role-permissions";
                   placeholder="Select Status"
                   allowClear
                 >
-                  {Object.values(SampleDevelopmentStatusDisplay).map((val) => (
+                  {Object.values(LifeCycleStatusDisplay).map((val) => (
             <Select.Option key={val.name} value={val.name}>
               {val.displayVal}
             </Select.Option>
@@ -984,6 +984,7 @@ import RolePermission from "../role-permissions";
                 style={{ fontSize: "16px", width: "100%" }}
               >
                 <Segmented
+                defaultValue={tabName}
                   onChange={onSegmentChange}
                   style={{ backgroundColor: "#68cc6b" }}
                   options={[

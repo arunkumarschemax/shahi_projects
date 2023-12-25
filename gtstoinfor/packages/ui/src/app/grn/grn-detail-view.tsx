@@ -175,7 +175,7 @@ import QRCode from "react-qr-code";
           {/* <Descriptions.Item label='Contact Person' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.contactPerson?stateData?.data?.[0]?.contactPerson:'-'}</Descriptions.Item> */}
           <Descriptions.Item label='Invoice No' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.invoiceNo?stateData?.data?.[0]?.invoiceNo:'-'}</Descriptions.Item>
           <Descriptions.Item label='Invoice Date' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.invoiceDate? moment(stateData?.data?.[0]?.invoiceDate).format('DD-MM-YYYY'):'-'}</Descriptions.Item>
-          <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{ItemTypeEnumDisplay.find((e) => e.name === (stateData?.data?.[0]?.itemType).toUpperCase())?.displayVal ?? '-'}</Descriptions.Item>
+          <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{ItemTypeEnumDisplay.find((e) => e.name === (stateData?.data?.[0]?.itemType).toUpperCase())?.displayVal ?? stateData?.data?.[0]?.itemType}</Descriptions.Item>
           {/* <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{ItemTypeEnumDisplay.find((e)=> e.name === stateData?.data?.[0]?.itemType)?.displayVal}</Descriptions.Item> */}
           <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{GRNTypeEnumDisplay.find((e) => e.name === stateData?.data?.[0]?.grnType)?.displayVal ?? '-'}</Descriptions.Item>
           {/* <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnType?stateData?.data?.[0]?.grnType:'-'}</Descriptions.Item> */}

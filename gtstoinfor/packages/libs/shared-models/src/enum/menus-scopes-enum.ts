@@ -116,7 +116,8 @@ export const MenusAndScopesEnum ={
         'trimTab' : 'trimTab',
         'allocation' : 'allocation',
         'reclassification' :'reclassification',
-        'PendingPoTab' : 'PendingPoTab'
+        'PendingPoTab' : 'PendingPoTab',
+        'createPo':'createPo'
        
     },
     roles:{
