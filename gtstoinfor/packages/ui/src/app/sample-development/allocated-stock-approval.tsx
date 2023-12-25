@@ -313,11 +313,12 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
   ];
 
   const expandFabricTabel = (record) => {
+    console.log(record)
     return (
       <Table
-        rowKey={(record) => record.sampleFabricId}
+        rowKey={(record) => record.sampleFabricId? record.sampleFabricId: record.sampleTrimInfoId}
         columns={childColumns}
-        dataSource={childData[record.sampleRequestFabricId]}
+        dataSource={record.type == 'Fabric' ? childData[record.sampleFabricId] : childData[record.sampleTrimInfoId]}
       ></Table>
     );
   };
@@ -427,7 +428,12 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
           expandable={{
             expandedRowRender: (record) => expandFabricTabel(record),
             onExpand(expanded, record) {
-              allocatedLocationInfo(record.sampleRequestFabricId);
+              if(record.type == 'Fabric'){
+                console.log(record)
+                allocatedLocationInfo(record.sampleFabricId);
+              }else{
+                allocatedLocationInfo(record.sampleTrimInfoId);
+              }
             },
             rowExpandable: (record) => record.name !== "Not Expandable",
           }}

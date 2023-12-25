@@ -7,7 +7,7 @@ import {Button,Card,Col,Collapse,DatePicker,Divider,Form,Input,Modal,Row,Segment
   import { useState } from "react";
   import { useNavigate } from "react-router-dom";
   import Highlighter from "react-highlight-words";
-import { GRNTypeEnum, GRNTypeEnumDisplay, GrnReq, ItemTypeEnumDisplay, MenusAndScopesEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { GRNTypeEnum, GRNTypeEnumDisplay, GrnReq, ItemTypeEnumDisplay, LocationMappedEnumDisplay, MenusAndScopesEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { GRNService } from "@project-management-system/shared-services";
 import Barcode from "react-barcode";
 import { useIAMClientState } from "../common/iam-client-react";
@@ -299,9 +299,13 @@ import RolePermission from "../role-permissions";
       {
         title: <div style={{textAlign:"center"}}>Location Mapping Status</div>,
         dataIndex: "locationMapStatus",
-        render: (val,data) => {
-          return data.locationMapStatus ? data.locationMapStatus : "-";
-        }
+        render: (data) => {
+          const EnumObj = LocationMappedEnumDisplay?.find((item) => item.name === data.locationMapStatus);
+          return EnumObj ? EnumObj.displayVal : data.locationMapStatus;
+        },
+        // render: (val,data) => {
+        //   return data.locationMapStatus ? data.locationMapStatus : "-";
+        // }
       },
       {
         title: <div style={{textAlign:'center'}}>Action</div>,

@@ -458,7 +458,7 @@ const GRNForm = () => {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
               <Form.Item name='purchaseOrderId' label='PO Number' rules={[{ required: true, message: 'PO Number is required' }]}>
-                <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' onChange={getPODataById}
+                <Select showSearch allowClear optionFilterProp="children" placeholder='Select PO number' onChange={getPODataById}
                 suffixIcon={<QrcodeOutlined
                   onClick={(e) => { poNumberQr(e.target) }}
                   style={{ fontSize: '28px', marginLeft: '-7px' }} />}

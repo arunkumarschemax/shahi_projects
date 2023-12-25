@@ -60,6 +60,7 @@ export const RmTrimsView = () => {
 
   const userrefNo = IAMClientAuthContext.user?.externalRefNo;
   const roles = IAMClientAuthContext.user?.roles;
+  const [button,setButton] = useState<boolean>(true)
 
 
   useEffect(() => {
@@ -239,6 +240,9 @@ export const RmTrimsView = () => {
   };
 
   const getItemsForOtherBuyers = () => {
+    if(userrefNo === undefined){
+      setButton(false)
+    }
     let req = new M3trimsDTO(0,undefined,undefined,form.getFieldValue("category"),form.getFieldValue("color"),form.getFieldValue("content"),form.getFieldValue("finish"),form.getFieldValue("hole"),form.getFieldValue("logo"),form.getFieldValue("part"),form.getFieldValue("quality"),form.getFieldValue("structure"),form.getFieldValue("thickness"),form.getFieldValue("type"),form.getFieldValue("uom"),form.getFieldValue("variety"),form.getFieldValue("trimCategory"),0)
     console.log(req);
     req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
@@ -490,14 +494,15 @@ export const RmTrimsView = () => {
     
         return (
           <span>
-            {
-              rowData.refNo === userrefNo ? "-" : checkAccess(MenusAndScopesEnum.Scopes.reclassification)?
+             {
+              (userrefNo && rowData.refNo === userrefNo) ? "-" : 
+              checkAccess(MenusAndScopesEnum.Scopes.reclassification) ? userrefNo === '' && !button || form.getFieldValue('buyerId') !=  rowData.buyer_id ?
             <Button
               style={{ backgroundColor: '#69c0ff' }}
               onClick={(e) => getRowData(rowData)}
             >
               <b>Request Reclassification</b>
-            </Button>:"-"
+            </Button>:"-":''
           }
           </span>
         );
@@ -582,6 +587,9 @@ export const RmTrimsView = () => {
   };
    const onBuyerChange = (value) =>{
     console.log(value)
+    if(userrefNo === ''){
+      setButton(true)
+    }
     // setBuyervalue(value)
    }
 

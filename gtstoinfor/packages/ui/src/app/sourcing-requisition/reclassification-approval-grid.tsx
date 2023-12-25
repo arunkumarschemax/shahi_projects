@@ -50,14 +50,21 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
   // };
 
   const getReclassificationData = (itemType) => {
+    console.log(itemType)
     const req = new buyerReq();
     req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
         reclassificationService.getAllReclassificationData().then((res) => {
         if(res.status){
             setReclassificationData(res.data);
             console.log(res.data,'ressssss');
-            setAccepted(res.data.filter(e =>e.fromExtRef ===  refNo && (itemType === "fabric" ? e.itemType === "Fabric": itemType === undefined ? e.itemType === "Fabric" : e.itemType != "Fabric")))
-            setRequest(res.data.filter(e =>e.toExtRef ===  refNo && (itemType === "fabric" ? e.itemType != "Fabric": itemType === undefined ? e.itemType === "Fabric" : e.itemType != "Fabric")))
+            if(refNo != undefined){
+              setAccepted(res.data.filter(e =>e.fromExtRef ===  refNo && (itemType === "FABRIC" ? e.itemType === "FABRIC": itemType != "FABRIC" ? e.itemType != "FABRIC": "")))
+              setRequest(res.data.filter(e =>e.toExtRef ===  refNo && (itemType === "FABRIC" ? e.itemType === "FABRIC": itemType != "FABRIC" ? e.itemType != "FABRIC": "")))
+            }
+            else{
+              setAccepted(res.data.filter(e =>(itemType === "FABRIC" ? e.itemType === "FABRIC": itemType != "FABRIC" ? e.itemType != "FABRIC": "")))
+              setRequest(res.data.filter(e =>(itemType === "FABRIC" ? e.itemType === "FABRIC": itemType != "FABRIC" ? e.itemType != "FABRIC": "")))
+            }
         }
         else{
             setReclassificationData([]);
@@ -366,8 +373,8 @@ const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.us
         <Col span={8} style={{alignContent:'center'}}>
        
           <Radio.Group defaultValue="fabric" buttonStyle="solid" onChange={(e) =>  {console.log(e.target.value);getReclassificationData(e.target.value)}}>
-            <Radio.Button value="fabric" disabled = {checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? false : true} >FABRICS</Radio.Button>
-            <Radio.Button value="trim" disabled = {checkAccess(MenusAndScopesEnum.Scopes.trimTab)? false : true}>TRIMS</Radio.Button>
+            <Radio.Button value="FABRIC" disabled = {checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? false : true} >FABRICS</Radio.Button>
+            <Radio.Button value="TRIM" disabled = {checkAccess(MenusAndScopesEnum.Scopes.trimTab)? false : true}>TRIMS</Radio.Button>
           </Radio.Group>
         </Col>
         <Col span={8}></Col>

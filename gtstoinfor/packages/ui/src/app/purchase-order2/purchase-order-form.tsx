@@ -442,7 +442,7 @@ export const PurchaseOrderForm = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                             <Form.Item name='deliveryAddress' label='Delivery Address' rules={[{ required: true, message: 'Delivery Address is required' }]}>
-                                <Select  showSearch allowClear optionFilterProp="children" placeholder='Select Currency'>
+                                <Select  showSearch allowClear optionFilterProp="children" placeholder='Select Delivery Address'>
                                     {activeFactoryData.map(e => {
                                         return (<Option value={e.id} key={e.id}>{e.address}</Option>)
                                     }
