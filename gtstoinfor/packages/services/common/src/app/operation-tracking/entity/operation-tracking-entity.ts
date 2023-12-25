@@ -123,6 +123,18 @@ rejectedUomId:number | null;
 })
 status:TrackingEnum;
 
+@Column('int',{
+  nullable:false,
+  name:'reporter'
+})
+reporterId:number;
+
+@Column('int',{
+  nullable:false,
+  name:'supervisor'
+})
+supervisorId:number;
+
   @CreateDateColumn({
     name: "created_at",
     type:"datetime"

@@ -1,6 +1,6 @@
 import { IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate, IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { RackEnum, ReclassificationStatusEnum } from '@project-management-system/shared-models';
+import { GRNTypeEnum, RackEnum, ReclassificationStatusEnum } from '@project-management-system/shared-models';
 export class ReclassificationApproveRequestDTO {
 
     @ApiProperty()
@@ -37,5 +37,7 @@ export class ReclassificationApproveRequestDTO {
 
     @ApiProperty()
     uomId?: number;
+    @ApiProperty()
+    grnType?: GRNTypeEnum;
 }
 

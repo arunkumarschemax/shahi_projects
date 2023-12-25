@@ -1,5 +1,5 @@
 import { PurchaseOrderservice } from '@project-management-system/shared-services';
-import { Button, Card, Col, Descriptions, Form, Modal, Row, Select, Table } from 'antd';
+import { Button, Card, Col, Descriptions, Form, Modal, Row, Select, Table, Tooltip } from 'antd';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react'
@@ -92,11 +92,21 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       title: 'Item Code',
       key: 'Item Code',
       dataIndex: 'item_code',
+      render: (m3FabricCode, row) => (
+        <Tooltip title={row.description} placement="top" arrowPointAtCenter>
+          <span className="fabCode">
+            {`${row.item_code} - ${row.description}`}
+          </span>
+        </Tooltip>
+      ),
     },
     {
       title: 'PO Quantity',
       key: 'PO Quantity',
       dataIndex: 'po_quantity',
+      render: (text, record) => {
+        return (<span>{`${record.po_quantity}`}</span>)
+      }
     },
     {
       title: 'GRN Quantity',
@@ -288,7 +298,7 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
               )}
             {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent No</span>}>{data[0]?.Number}</DescriptionsItem> */}
             {data[0]?.po_against === 'Sample Order' ? (            
-              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Expected Delivery Date</span>}>{moment(data[0]?.date).format('YYYY-MM-DD')}</DescriptionsItem>
+              <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Expected Delivery Date</span>}>{moment(data[0]?.expected_delivery_date).format('YYYY-MM-DD')}</DescriptionsItem>
             ):(
               <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent Date</span>}>{moment(data[0]?.indent_date).format('YYYY-MM-DD')}</DescriptionsItem>
             )}

@@ -3,3 +3,7 @@ ALTER TABLE `shahi_crm`.`operation_tracking` ADD COLUMN `colour_id` INT NOT NULL
 ALTER TABLE `shahi_crm`.`operation_inventory` ADD COLUMN `colour_id` INT NOT NULL AFTER `sample_req_id`, ADD COLUMN `size_id` INT NOT NULL AFTER `colour_id`; 19/12/2023
 
 ALTER TABLE `shahi_crm`.`operation_inventory` ADD COLUMN `sample_req_id` INT NOT NULL AFTER `rejected_uom_id`; 19/12/2023
+
+ALTER TABLE `shahi_crm`.`operation_inventory` ADD COLUMN `reporter` INT NOT NULL AFTER `size_id`, ADD COLUMN `supervisor` INT NOT NULL AFTER `reporter`; 22/12/2023
+
+ALTER TABLE `shahi_crm`.`operation_tracking` ADD COLUMN `reporter` INT NOT NULL AFTER `size_id`, ADD COLUMN `supervisor` INT NOT NULL AFTER `reporter`; ; 22/12/2023

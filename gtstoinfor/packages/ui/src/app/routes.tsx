@@ -216,6 +216,7 @@ import LocationQrCodePrint from "./rm_locations/location-barcode-print"
 import PurchaseOrderQrCodePrint from "./purchase-order2/po-qrcode-print"
 import WeightForm from "./common/weight/weight-form"
 import WeightView from "./common/weight/weight-view"
+import SampleReqDetailView from "./sample-development/sample-dev-req-detail-view"
 
 
 
@@ -1149,7 +1150,7 @@ export const AppRoutes = () => {
                 <Route path='/grn-form' element={<GRNForm />} />
                 <Route path='/grn-view' element={<GRNView />} />
                 <Route path='/grn-detail-view' element={<GRNDetailView />} />
-
+                <Route path='/sample-req-detail-view' element={<SampleReqDetailView/>} />
                 <Route path='/excel-import'>
                     <Route path='excel-import' element={<ExcelImport />} />
                     <Route path='changes-view' element={<ChangesGrid />} />

@@ -39,7 +39,8 @@ export class M3ItemsAdapter {
         for(const fYarn of dto.fabricYarnInfo){
             const fYarnEntity = new M3FabricYarnEntity()
             fYarnEntity.yarnType = dto.yarnType
-            fYarnEntity.count = fYarn.count
+            fYarnEntity.countNum = fYarn.countNum
+            fYarnEntity.countDenom = fYarn.countDenom
             fYarnEntity.uomId = fYarn.uomId
             fabricYarnInfo.push(fYarnEntity)
         }entity.fabricYarnInfo = fabricYarnInfo

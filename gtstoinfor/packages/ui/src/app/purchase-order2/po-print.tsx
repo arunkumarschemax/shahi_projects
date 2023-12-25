@@ -55,27 +55,24 @@ export function PoPrint(props: PoPrintProps) {
 
     const printOrder = () => {
       const printableElements = document.getElementById('printme').innerHTML;
-    
       const orderHTML = `
-        <html>
-          <head>
-            <title></title>
-            <style>
-              @media print {
-                @page {
-                  size: landscape;
-                }
-                body {
-                 
-                    width: 100%;
-                    
-                  
-                }
+      <html>
+        <head>
+          <title></title>
+          <style>
+            @media print {
+              @page {
+                size: landscape;
               }
-            </style>
-          </head>
-          <body>${printableElements}</body>
-        </html>`;
+              body {
+                width: 100%;
+              }
+              
+            }
+          </style>
+        </head>
+        <body class="page">${printableElements}</body>
+      </html>`;
     
       const oldPage = document.body.innerHTML;
       document.body.innerHTML = orderHTML;
@@ -91,18 +88,40 @@ export function PoPrint(props: PoPrintProps) {
     const totalAmount = poData.reduce((sum, item) => sum + parseFloat(item.total_amount || 0), 0);
     const totalAmountInWords = numberToWords.toWords(totalAmount).toUpperCase();
     
+    
+    
+    // const downloadAsPDF = () => {
+    
+    //   const element = document.getElementById('printme');
+    //   const options = {
+    //    margin:6,
+    //     width: '100%',
+    //     filename: 'PO.pdf',
+    //     image: { type: 'jpeg', quality: 1.0 },
+    //     html2canvas: { scale: 2 }, // Experiment with different scale values
+    //     jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
+    //   };
+      
+    
+    //   html2pdf(element, options);
+    // };
+    
     const downloadAsPDF = () => {
       const element = document.getElementById('printme');
       const options = {
-        margin: 5,// Adjust the margin as needed
+        margin: 6,
+        width: '100%',
         filename: 'PO.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
+        image: { type: 'jpeg', quality: 1.0 },
         html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape'}, // Set width to 297mm
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
       };
+  
       html2pdf(element, options);
     };
+  
     
+
 
     return (
         <Card title='PO Print'
@@ -181,7 +200,7 @@ export function PoPrint(props: PoPrintProps) {
                     <h2 style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Un Shinmun',marginLeft:'20px', marginTop: '0', marginBottom: '0' }}>Account : {`${poData[0]?.bank_acc_no}`}</h2></div>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginLeft: '50px' }}>
 
-                    <h2 style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Un Shinmun',marginLeft:'20px', marginTop: '0', marginBottom: '0' }}>Delivery Address : {`${poData[0]?.delivery_address}`}</h2></div>
+                    <h2 style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Un Shinmun',marginLeft:'20px', marginTop: '0', marginBottom: '0' }}>Delivery Address : {`${poData[0]?.address}`}</h2></div>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginLeft: '50px' }}>
 
                     <h2 style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Un Shinmun',marginLeft:'20px', marginTop: '0', marginBottom: '0' }}>Delivery State :</h2>
@@ -216,19 +235,19 @@ export function PoPrint(props: PoPrintProps) {
 
                         <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
                           <tr >
-                            <th >Ln</th>
+                            <th style={{width:'3%'}}>Ln</th>
                             <th>HSN/SAC</th>
-                            <th>Item Code</th>
+                            <th style={{width:'50px'}}>Item Code</th>
                             <th>Supplier Item</th>
                             <th>Item Name</th>
-                            <th  style={{width:'150px'}}>Item Description</th>
+                            <th  style={{width:'50px'}}>Item Description</th>
                             <th>GRM</th>
                             <th>Mx.Del.Date</th>
                             <th>Unit C.Fact</th>
                             <th>Qnty </th>
                             <th>Rate</th>
                             <th>Value</th>
-                            <th>Discount</th>
+                            <th style={{width:'7%'}}>Discount</th>
                             <th>Net Value</th>
                            
 
@@ -237,15 +256,27 @@ export function PoPrint(props: PoPrintProps) {
                             totalQty += e.po_quantity ? Number(e.po_quantity) : 0
                             totalValue += e.unit_price ? Number(e.po_quantity*e.unit_price): 0 
                             totalNetValue += e.unit_price? Number((e.po_quantity*e.unit_price)-((e.po_quantity*e.unit_price)*(e.discount/100))): 0
+                            const sno = index + 1;
                             return(
 
-                          <tr>
-                            <td>1</td>
+                          <tr key={index}>
+                            <td>{sno}</td>
                             <td >{e.hsnCode? e.hsnCode:'-'}</td>
-                            <td >{e.item_code? e.item_code:'-'}</td>
+                            <td style={{ minWidth: '100px', maxWidth: '300px', overflow: 'hidden' }}>
+                                    <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
+                                  {e.item_code ? e.item_code : '-'}
+                                          </div>
+                                       </td>
+
                             <td >{e.name? e.name:'-'}</td>
                             <td >{e.po_material_type? e.po_material_type:'-'}</td>
-                            <td >{e.description? e.description:'-'}</td>
+                       
+                                <td style={{ minWidth: '100px', maxWidth: '300px', overflow: 'hidden' }}>
+                                    <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
+                                  {e.description ? e.description : '-'}
+                                          </div>
+                                       </td>
+
                         <td >{e.name? e.name:'-'}</td>
                         <td >{e.expected_delivery_date ? new Date(e.expected_delivery_date).toLocaleDateString() : '-'}</td>
                         <td >{e.uom?e.uom:'-'}</td>
@@ -258,13 +289,14 @@ export function PoPrint(props: PoPrintProps) {
                                  </td>
                         <td >{typeof e.unit_price === 'number' ? e.unit_price.toFixed(2) : '-'}</td>
                         <td >{e.unit_price ? (e.po_quantity * e.unit_price).toFixed(2): '-'} </td>                                
-                          <td >{e.discount? `${((e.po_quantity * e.unit_price * e.discount) / 100).toFixed(2)} (${e.discount}%)`: '-'}</td>
+                          <td style={{width:'7%'}}>{e.discount? `${((e.po_quantity * e.unit_price * e.discount) / 100).toFixed(2)} (${e.discount}%)`: '-'}</td>
                           <td >{e.unit_price? ((e.po_quantity * e.unit_price) - ((e.po_quantity * e.unit_price) * (e.discount / 100))).toFixed(2): '-'}</td>
                             
 
                           </tr>
                             )
                             })}
+                            
                           <tr>
                           <td></td>
                             <td></td>
@@ -296,10 +328,11 @@ export function PoPrint(props: PoPrintProps) {
                           <h4  style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Fancy', lineHeight: '2', marginBottom: '20px'  }}>{'Important! Please Read the Terms & Conditions Printed on the Following Pages'}</h4>
 
                        <br></br>
-
+                       
                        <h3  style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Fancy', lineHeight: '2', marginBottom: '20px'  }}>Terms And Conditions : </h3>
 
                                 <br></br>
+                               
                                 <TermsAndConditions/>
                                 </div>
                 </body>

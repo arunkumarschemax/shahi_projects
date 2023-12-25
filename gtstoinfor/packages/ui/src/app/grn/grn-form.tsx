@@ -71,6 +71,7 @@ const GRNForm = () => {
       const values = form.getFieldsValue()
       console.log(values,'rrrr')
       const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData?.poMaterialType, poItemData, 0, '',values.grnType, values.invoiceNo, poData?.poMaterialType, values.grnAmount,form.getFieldValue('invoiceDate').format('YYYY-MM-DD'));
+      console.log(req);
       grnService.createGrn(req).then((res) => {
         if (res.status) {
           AlertMessages.getSuccessMessage(res.internalMessage);
@@ -457,7 +458,7 @@ const GRNForm = () => {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
               <Form.Item name='purchaseOrderId' label='PO Number' rules={[{ required: true, message: 'PO Number is required' }]}>
-                <Select showSearch allowClear optionFilterProp="children" placeholder='Select Vendor' onChange={getPODataById}
+                <Select showSearch allowClear optionFilterProp="children" placeholder='Select PO number' onChange={getPODataById}
                 suffixIcon={<QrcodeOutlined
                   onClick={(e) => { poNumberQr(e.target) }}
                   style={{ fontSize: '28px', marginLeft: '-7px' }} />}

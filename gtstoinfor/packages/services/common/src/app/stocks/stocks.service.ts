@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { AllStocksResponseModel, BinPalletModel, CommonResponseModel, M3ItemsDTO, M3trimsDTO, RackBinPalletsModel, RackBinPalletsResponse, RollBasicInfoModel, StockFilterRequest, StocksDto, WarehousePalletRollsModel, statusReq } from "@project-management-system/shared-models";
+import { AllStocksResponseModel, BinPalletModel, CommonResponseModel, CurrentPalletLocationEnum, CurrentPalletStateEnum, M3ItemsDTO, M3trimsDTO, RackBinPalletsModel, RackBinPalletsResponse, RollBasicInfoModel, StockFilterRequest, StocksDto, WarehousePalletRollsModel, statusReq } from "@project-management-system/shared-models";
 import { StocksRepository } from "./repository/stocks.repository";
 import { StocksAdapter } from "./adapters/stocks.adatpters";
 import { AppDataSource } from "../app-datasource";
@@ -295,36 +295,40 @@ export class StocksService {
             const rackDetails = `select r.rack_id AS rackId,r.rack_code AS rackCode, r.rack_name AS rackDesc,count(rp.position_id) AS totalBins from rack_position rp left join racks r on r.rack_id = rp.rack_id where rp.position_id = '${req.rackPositionId}'`;
             const rackInfo = await this.dataSource.query(rackDetails)
 
-            const rackPositionDetails = `select rp.position_id AS binId,rp.position_code AS binCode, rp.rack_position_name AS binDesc, rp.supported_pallets_count AS totalSupportedPallets from rack_position rp left join racks r on r.rack_id = rp.rack_id where rp.position_id = '${req.rackPositionId}'`;
-            const rackPositionInfo = await this.dataSource.query(rackPositionDetails)
+            const rackPositionDetails = `select rp.position_id AS binId,rp.position_code AS binCode, rp.rack_position_name AS binDesc, rp.supported_pallets_count AS totalSupportedPallets from rack_position rp left join racks r on r.rack_id = rp.rack_id left join stocks st on st.location_id = rp.position_id  where st.location_id = '${req.rackPositionId}'`;
+            const rackPositionInfo = await this.dataSource.query(rackPositionDetails);
+            console.log("************************************************");
+            console.log(rackPositionInfo);
+            let palletModel:BinPalletModel[] = [];
+            if(rackPositionInfo[0]?.binId > 0)
+            {
+                let warehousePalletRollsModel:WarehousePalletRollsModel[] = []
+                // let getpalletsIds = "Select group_concat(DISTINCT pallet_id) AS palletIds from stocks where location_id = "+req.rackPositionId+" and (quantity -allocatd_quantity-transfered_quantity) > 0 ";
+                // const palletsIds = await this.dataSource.query(getpalletsIds)
 
-            let palletModel:BinPalletModel[] = []
-            let warehousePalletRollsModel:WarehousePalletRollsModel[] = []
-            let getpalletsIds = "Select group_concat(DISTINCT pallet_id) AS palletIds from stocks where location_id = "+req.rackPositionId+" and (quantity -allocatd_quantity-transfered_quantity) > 0 ";
-            const palletsIds = await this.dataSource.query(getpalletsIds)
+                // let palletsdata = "select id AS palletId,pallet_name AS palletCode, max_items AS maxItems, current_pallet_state AS currentPalletState, current_pallet_location AS currentPalletLocation from pallets where id in ("+palletsIds[0].palletIds+")";
+                // const palletInfo = await this.dataSource.query(palletsdata)
 
-            let palletsdata = "select id AS palletId,pallet_name AS palletCode, max_items AS maxItems, current_pallet_state AS currentPalletState, current_pallet_location AS currentPalletLocation from pallets where id in ("+palletsIds[0].palletIds+")";
-            const palletInfo = await this.dataSource.query(palletsdata)
+                const data = await this.stocksRepository.find({where:{locationId:req.rackPositionId, quantity: Raw(alias => `quantity -allocatd_quantity-transfered_quantity > 0 `)}});
+                // for(const ress of palletInfo){
+                    let rollBasicInfoModel:RollBasicInfoModel[] = [];
+                    let rollInfoModel:RollInfoModel[] = []
+                    let stockDetails = "Select IF(s.item_type = 'FABRIC',fab.description, mt.description) AS m3ItemName, s.item_type AS itemType,s.id AS rollId,null AS barcode,s.stock_bar_code AS rollNo,SUM(s.quantity - s.allocatd_quantity - s.transfered_quantity) AS originalQty from stocks s left join m3_items fab on fab.m3_items_Id = s.m3_item and s.item_type = 'FABRIC' left join m3_trims mt on mt.m3_trim_Id = s.m3_item and s.item_type != 'FABRIC'  where location_id ="+req.rackPositionId+" group by s.item_type, s.m3_item, s.grn_item_id Having SUM(s.quantity - s.allocatd_quantity - s.transfered_quantity) > 0 order by s.item_type,IF(s.item_type = 'FABRIC',fab.description, mt.description) ASC";
+                    const stockInfo = await this.dataSource.query(stockDetails)
+                    console.log("Each Roll Info")
+                    console.log(stockInfo)
 
-            const data = await this.stocksRepository.find({where:{locationId:req.rackPositionId, quantity: Raw(alias => `quantity -allocatd_quantity-transfered_quantity > 0 `)}});
-            for(const ress of palletInfo){
-                let rollBasicInfoModel:RollBasicInfoModel[] = [];
-                let rollInfoModel:RollInfoModel[] = []
-                let stockDetails = "Select s.id AS rollId,p.barcode_id AS barcode,s.stock_bar_code AS rollNo,(s.quantity - s.allocatd_quantity - s.transfered_quantity) AS originalQty from stocks s left join pallets p on p.id = s.pallet_id where location_id ="+req.rackPositionId+" and pallet_id = "+ress.palletId+" order by p.barcode_id ASC";
-                const stockInfo = await this.dataSource.query(stockDetails)
-                console.log("Each Roll Info")
-                console.log(stockInfo)
-
-                for(const ress of stockInfo){
-                    let resss = new RollInfoModel(ress.rollId,ress.rollNo,ress.barcode,ress.originalQty);
-                    rollInfoModel.push(resss);
-                }
-                
-                let warehouseData = new WarehousePalletRollsModel("",1,ress.palletId,ress.palletCode,0,"",ress.maxItems,ress.currentPalletState,ress.currentPalletLocation,rollInfoModel,rollBasicInfoModel);
-                warehousePalletRollsModel.push(warehouseData);
+                    for(const ress of stockInfo){
+                        let resss = new RollInfoModel(ress.rollId,ress.rollNo,ress.barcode,ress.originalQty,ress.m3ItemName,ress.itemType,"");
+                        rollInfoModel.push(resss);
+                    }
+                    
+                    let warehouseData = new WarehousePalletRollsModel("",1,0,"ress.palletCode",0,"",30,CurrentPalletLocationEnum.NONE,CurrentPalletStateEnum.FREE,rollInfoModel,rollBasicInfoModel);
+                    warehousePalletRollsModel.push(warehouseData);
+                // }
+                let binPalletModel = new BinPalletModel(rackPositionInfo[0].binId,rackPositionInfo[0].binCode,rackPositionInfo[0].binDesc,rackPositionInfo[0].totalSupportedPallets,0,0,warehousePalletRollsModel)
+                palletModel.push(binPalletModel)
             }
-            let binPalletModel = new BinPalletModel(rackPositionInfo[0].binId,rackPositionInfo[0].binCode,rackPositionInfo[0].binDesc,rackPositionInfo[0].totalSupportedPallets,0,0,warehousePalletRollsModel)
-            palletModel.push(binPalletModel)
             let res = new RackBinPalletsModel(rackInfo[0].rackId,rackInfo[0].rackCode,rackInfo[0].rackDesc,rackInfo[0].totalBins,palletModel);
             response.push(res);
             return new RackBinPalletsResponse(true,1,"data retrived successfull.",response);

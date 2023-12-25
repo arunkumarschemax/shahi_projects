@@ -88,7 +88,8 @@ export class IndentService {
     }
 
     async getAllIndentData(req?: any): Promise<CommonResponseModel> {
-        console.log(req,'ooooo')
+       
+
         const indentData = await this.indentRepo.getAllIndentData(req.extRefNumber);
         // if (req.requestNo) {
         //     indentData = indentData + ' and ,it.request_no = "' + req.requestNo + '"'
@@ -108,23 +109,71 @@ export class IndentService {
         for (const data of indentData) {
             const fabricModel = [];
             const trimModel = [];
-            const fabricIndentData = await this.indentFabricRepo.getFabricIndentData(data.indent_id);
-         
-            for (const fabric of fabricIndentData) {
-                fabricModel.push(new IndentFabricModel(fabric.ifabric_id, fabric.content,
-                    fabric.fabric_type_name, fabric.fabric_weave_name, fabric.weight, fabric.width, fabric.yarn_count, fabric.unit, fabric.construction, fabric.finish, fabric.shrinkage, fabric.m3_fabric_code,fabric.colour,
-                    fabric.pch, fabric.moq, fabric.moqUnit, fabric.moq_price, fabric.moqPriceUnit, fabric.season, fabric.vendor_name,
-                    fabric.buyer, fabric.grn_date, fabric.xlNo, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId,data.styleId,true,fabric.indentCode,fabric.description,fabric.colour,fabric.quantity,fabric.quantity,fabric.quantityUnit,fabric.colorId,fabric.ifabric_id,fabric.description,fabric.quantity_unit,fabric.poQty))
-            }
-            const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id);
-            for (const trim of trimIndentData) {
-                trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
-                    trim.quantity, trim.trim_code, trim.description,
-                    trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity))
-                // console.log(trimModel);
+            if(req.tab === 'both' ){
+                const fabricIndentData = await this.indentFabricRepo.getFabricIndentData(data.indent_id);
+                for (const fabric of fabricIndentData) {
+                    fabricModel.push(new IndentFabricModel(fabric.ifabric_id, fabric.content,
+                        fabric.fabric_type_name, fabric.fabric_weave_name, fabric.weight, fabric.width, fabric.yarn_count, fabric.unit, fabric.construction, fabric.finish, fabric.shrinkage, fabric.m3_fabric_code,fabric.colour,
+                        fabric.pch, fabric.moq, fabric.moqUnit, fabric.moq_price, fabric.moqPriceUnit, fabric.season, fabric.vendor_name,
+                        fabric.buyer, fabric.grn_date, fabric.xlNo, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId,data.styleId,true,fabric.indentCode,fabric.description,fabric.colour,fabric.quantity,fabric.poQuantity,fabric.quantityUnit,fabric.colorId,fabric.ifabric_id,fabric.description,fabric.quantity_unit,fabric.poQty,fabric.item_code))
+                }
+                const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id);
+                for (const trim of trimIndentData) {
+                    //trim params
+                    const trueValues = Object.keys(trim)
+                    .filter(key => ["structure", "category", "content", "type", "finish", "hole", "quality", "thickness", "variety", "uom", "color", "logo", "part"].includes(key) && trim[key] === 1)
+                    .map(key => key.toUpperCase());
+    
+                    const concatenatedValues = trueValues.join('/');
+                    const label = trueValues.length > 0 ? "BUYER/TRIM TYPE/TRIM CATEGORY/":""
+                    const trimParams = label + concatenatedValues
+                    
 
+                    trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
+                        trim.quantity, trim.trim_code, trim.description,
+                        trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity,trim.poQuantity,trimParams))
+                    // console.log(trimModel);
+
+                }
+                indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName,data.extRefNo,data.styleId,data.buyerId))
             }
-            indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, trimModel, data.style, data.description, data.created_at,data.buyerName,data.extRefNo,data.styleId,data.buyerId))
+            else if(req.tab === "FABRIC" ){
+                const fabricIndentData = await this.indentFabricRepo.getFabricIndentData(data.indent_id);
+                for (const fabric of fabricIndentData) {
+                    fabricModel.push(new IndentFabricModel(fabric.ifabric_id, fabric.content,
+                        fabric.fabric_type_name, fabric.fabric_weave_name, fabric.weight, fabric.width, fabric.yarn_count, fabric.unit, fabric.construction, fabric.finish, fabric.shrinkage, fabric.m3_fabric_code,fabric.colour,
+                        fabric.pch, fabric.moq, fabric.moqUnit, fabric.moq_price, fabric.moqPriceUnit, fabric.season, fabric.vendor_name,
+                        fabric.buyer, fabric.grn_date, fabric.xlNo, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId,data.styleId,true,fabric.indentCode,fabric.description,fabric.colour,fabric.quantity,fabric.poQuantity,fabric.quantityUnit,fabric.colorId,fabric.ifabric_id,fabric.description,fabric.quantity_unit,fabric.poQty))
+                }
+                console.log("**********************************")
+                console.log(fabricModel.length)
+                if(fabricModel.length > 0){
+                    indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, fabricModel, [], data.style, data.description, data.created_at,data.buyerName,data.extRefNo,data.styleId,data.buyerId))
+                }
+            }
+            else if(req.tab === 'Trim'){
+                const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id);
+                for (const trim of trimIndentData) {
+                    //trim params
+                    const trueValues = Object.keys(trim)
+                    .filter(key => ["structure", "category", "content", "type", "finish", "hole", "quality", "thickness", "variety", "uom", "color", "logo", "part"].includes(key) && trim[key] === 1)
+                    .map(key => key.toUpperCase());
+    
+                    const concatenatedValues = trueValues.join('/');
+                    const label = trueValues.length > 0 ? "BUYER/TRIM TYPE/TRIM CATEGORY/":""
+                    const trimParams = label + concatenatedValues
+                    trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
+                        trim.quantity, trim.trim_code, trim.description,
+                        trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity,trim.poQuantity,trimParams))
+                    // console.log(trimModel);
+
+                }
+                if(trimModel.length>0){
+                indentModel.push(new IndentModel(data.indent_id, data.request_no, data.indent_date, data.expected_date, data.status, [], trimModel, data.style, data.description, data.created_at,data.buyerName,data.extRefNo,data.styleId,data.buyerId))
+                }
+            }
+
+          
         }
         
         return new CommonResponseModel(true, 1235, 'Data retrieved Successfully', indentModel);

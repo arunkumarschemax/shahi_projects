@@ -7,10 +7,11 @@ import {Button,Card,Col,Collapse,DatePicker,Divider,Form,Input,Modal,Row,Segment
   import { useState } from "react";
   import { useNavigate } from "react-router-dom";
   import Highlighter from "react-highlight-words";
-import { GRNTypeEnum, GRNTypeEnumDisplay, GrnReq, ItemTypeEnumDisplay, PurchaseOrderStatus } from "@project-management-system/shared-models";
+import { GRNTypeEnum, GRNTypeEnumDisplay, GrnReq, ItemTypeEnumDisplay, LocationMappedEnumDisplay, MenusAndScopesEnum, PurchaseOrderStatus } from "@project-management-system/shared-models";
 import { GRNService } from "@project-management-system/shared-services";
 import Barcode from "react-barcode";
 import { useIAMClientState } from "../common/iam-client-react";
+import RolePermission from "../role-permissions";
   
   const { Option } = Select;
   const { RangePicker } = DatePicker;
@@ -37,7 +38,7 @@ import { useIAMClientState } from "../common/iam-client-react";
   
     useEffect(() => {
       // getStyle();
-      console.log(IAMClientAuthContext.user)
+      // console.log(IAMClientAuthContext.user)
       getAll();
       grnNoData()
       poNoData()
@@ -50,8 +51,16 @@ import { useIAMClientState } from "../common/iam-client-react";
       }
     }, [data]);
   
-  
+    const checkAccess = (buttonParam) => {   
+      console.log(buttonParam,'access');
+
+      const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus.Grn,buttonParam)
+       console.log(accessValue,'access');
+      
+      return accessValue
+  }
     const getAll = () => {
+      
       const req = new GrnReq()
       if (form.getFieldValue('grnNo') !== undefined) {
         req.grnNo = form.getFieldValue('grnNo')
@@ -68,7 +77,21 @@ import { useIAMClientState } from "../common/iam-client-react";
       if (form.getFieldValue('grnDate') !== undefined) {
       req.toDate = (form.getFieldValue('grnDate')[1]).format('YYYY-MM-DD')
       }
+      if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
+        console.log('pppppppppppppp');
+        
+        req.tab = 'FABRIC'
+      }
+      if (checkAccess(MenusAndScopesEnum.Scopes.trimTab)) {
+        req.tab = 'TRIM'
+      }
+      if (checkAccess(MenusAndScopesEnum.Scopes.trimTab)&& checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
+        req.tab = undefined
+      }
       req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+      
+      console.log(req,'ooooooooooooo');
+      
       grnService.getAllGrn(req).then((res) => {
         if (res.status) {
           setData(res.data);
@@ -276,9 +299,13 @@ import { useIAMClientState } from "../common/iam-client-react";
       {
         title: <div style={{textAlign:"center"}}>Location Mapping Status</div>,
         dataIndex: "locationMapStatus",
-        render: (val,data) => {
-          return data.locationMapStatus ? data.locationMapStatus : "-";
-        }
+        render: (data) => {
+          const EnumObj = LocationMappedEnumDisplay?.find((item) => item.name === data.locationMapStatus);
+          return EnumObj ? EnumObj.displayVal : data.locationMapStatus;
+        },
+        // render: (val,data) => {
+        //   return data.locationMapStatus ? data.locationMapStatus : "-";
+        // }
       },
       {
         title: <div style={{textAlign:'center'}}>Action</div>,

@@ -1,5 +1,5 @@
 import { UndoOutlined } from "@ant-design/icons";
-import { ItemTypeEnumDisplay, SampleRequestFilter, SamplerawmaterialStausReq } from "@project-management-system/shared-models";
+import { ItemTypeEnumDisplay, MenusAndScopesEnum, SampleRequestFilter, SamplerawmaterialStausReq } from "@project-management-system/shared-models";
 import { BuyersService, SampleDevelopmentService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Checkbox, Col, Form, Row, Select, Table } from "antd";
 import moment from "moment";
@@ -7,6 +7,7 @@ import React, { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useIAMClientState } from "../common/iam-client-react";
+import { RolePermission } from "../role-permissions";
 
 const SampleRequestReport = () => {
   const [page, setPage] = useState(1)
@@ -48,6 +49,12 @@ const SampleRequestReport = () => {
     getAllStyles()
   }, []);
 
+  const checkAccess = (buttonParam) => {  
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Sample Development"],MenusAndScopesEnum.SubMenus["Sample Material Status"],buttonParam)
+     console.log(buttonParam,accessValue,'access');
+    
+    return accessValue
+}
   const getData = () => {
     const req = new SamplerawmaterialStausReq();
     if (form.getFieldValue("requestNo") !== undefined) {
@@ -285,12 +292,16 @@ const SampleRequestReport = () => {
       dataIndex: "itemType",
       sorter: (a, b) => a.itemType.localeCompare(b.itemType),
       sortDirections: ['descend', 'ascend'],
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },
     },
     {
       title: "Item",
       dataIndex: "itemCode",
-      sorter: (a, b) => a.itemCode.localeCompare(b.itemCode),
-      sortDirections: ['descend', 'ascend'],
+      // sorter: (a, b) => a.itemCode.localeCompare(b.itemCode),
+      // sortDirections: ['descend', 'ascend'],
     },
     {
       title: "Color",
@@ -383,16 +394,17 @@ const SampleRequestReport = () => {
     //   },
     // },
     {
-      title: <div style={{ textAlign: "center" }}>{btnEnable ?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
+      title: <div style={{ textAlign: "center" }}>{btnEnable  && checkAccess(MenusAndScopesEnum.Scopes.createPo)?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
       dataIndex: "checkStatus",
       key: "checkStatus",
       align: "left",
       render: (text, record, index) => {
         return (
+
           <Form form={samplingPO} layout="vertical">
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
               <Form.Item name={`checkStatus${index}`}  >
-                  <Checkbox name={`checkStatus${index}`} onClick={checkboxonclick} onChange={(e) => onCheck(e, record.sampleRequestid, record.fabricType, text, record, index)}/>
+              {checkAccess(MenusAndScopesEnum.Scopes.createPo)? <Checkbox name={`checkStatus${index}`} onClick={checkboxonclick} onChange={(e) => onCheck(e, record.sampleRequestid, record.fabricType, text, record, index)}/>:'-'}
               </Form.Item>
             </Col>
           </Form>

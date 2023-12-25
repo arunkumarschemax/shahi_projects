@@ -117,7 +117,16 @@ export const SourcingRequisitionDynamicForm = () => {
     },[])
 
     useEffect(()=>{
-        checkAccess(MenusAndScopesEnum.Scopes.fabricTab) ? setTabName('Fabric') : setTabName('Trim')
+        if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+            setTabName('Trim')
+          }
+          if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+            setTabName('Fabric')
+          }
+          if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+            setTabName('Fabric')
+          }
+        // checkAccess(MenusAndScopesEnum.Scopes.fabricTab) ? setTabName('Fabric') : checkAccess(MenusAndScopesEnum.Scopes.fabricTab) ? setTabName('Trim') :'both'
     },[])
 
     const getFabricTypes = () => {
@@ -739,6 +748,8 @@ export const SourcingRequisitionDynamicForm = () => {
         getStyle(val);
         // getM3TrimsTypes(val);
         getM3FabricStyleCodes(val)
+        setFabricTableData([])
+        setFabricTableVisible(false)
     }
 
     const onWeaveChange = (val,option) => {
@@ -895,6 +906,8 @@ const onTrimChange = (val, option) => {
     const validateExpectedDate = (e) => {
         let selectedDate = e.format("YYYY-MM-DD");
         let indentDate = sourcingForm.getFieldValue("indentDate").format("YYYY-MM-DD");
+        console.log(selectedDate)
+        console.log(indentDate)
         if(selectedDate < indentDate){
             AlertMessages.getErrorMessage("Expected Date must be less than Indent Date")
             sourcingForm.setFieldsValue({"expectedDate" : ''})
@@ -909,27 +922,34 @@ const onTrimChange = (val, option) => {
         
         return accessValue
     }
-const options = () => {
-    let segmentOptions = [
-      { key: 'Fabric', label: 'Fabric' },
-      { key: 'Trim', label: 'Trim' }
-    ];
-  
-    if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
-        // setTabName('Fabric')
-      segmentOptions = segmentOptions.filter((e) => e.label === 'Fabric');
-    }
-    if (checkAccess(MenusAndScopesEnum.Scopes.trimTab)) {
-        // setTabName('Trim')
-      segmentOptions = segmentOptions.filter((e) => e.label === 'Trim');
-    }
-    return segmentOptions.map((operation, index) => ({
-      label: <b>{operation.label}</b>,
-      value: operation.label,
-      key: index.toString(),
-  
-    }));
-  };
+
+    const options = () => {
+        let segmentOptions = [
+        { key: 'Fabric', label: 'Fabric' },
+        { key: 'Trim', label: 'Trim' }
+      ];
+      if (checkAccess(MenusAndScopesEnum.Scopes.trimTab && checkAccess(MenusAndScopesEnum.Scopes.fabricTab))) {
+        console.log(segmentOptions);
+        segmentOptions = segmentOptions
+      }
+      // if(tableData?.indentFabricDetails)
+        if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab) ) {
+          segmentOptions = segmentOptions.filter((e) => e.label === 'Fabric');
+          console.log(segmentOptions);
+        }
+        if (checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
+          console.log(segmentOptions);
+          segmentOptions = segmentOptions.filter((e) => e.label === 'Trim');
+        }
+        console.log(segmentOptions);
+        
+        return segmentOptions.map((operation, index) => ({
+          label: <b>{operation.label}</b>,
+          value: operation.label,
+          key: index.toString(),
+      
+        }));
+      };
   const segmentedOptions = options();
     return(
         <><Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
@@ -1110,7 +1130,9 @@ const options = () => {
         </Col> */}
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 12 }}>
                                             <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
-                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'>
+                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
+                                                dropdownMatchSelectWidth={false}
+                                                    >
                                                     {fabricM3Code.map(e => {
                                                         return (
                                                             <Option key={e.m3ItemsId} value={e.m3ItemsId}>{e.itemCode} - {e.description}</Option>
@@ -1141,7 +1163,7 @@ const options = () => {
                                             </Form.Item>
                                         </Col>
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                                            <Form.Item name='newColor' label='New Color(If not in the list)' rules={[{ required: false, message: 'XL No is required' }]}>
+                                            <Form.Item name='newColor' label='New Color(If not in the list)' rules={[{ required: false, message: 'color is required' }]}>
                                                 <Input placeholder="Enter Color" />
                                             </Form.Item>
                                         </Col>
@@ -1263,6 +1285,22 @@ const options = () => {
                                                 </Upload>
                                             </Form.Item>
                                         </Col>
+                                        {
+                                        imageUrl && (
+                                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                                            <Card style={{ height: '250px' }}>
+                                                <Form.Item>
+                                                <img
+                                                    src={imageUrl}
+                                                    alt="Preview"
+                                                    height={'200px'}
+                                                    width={'500px'}
+                                                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                                                />
+                                                </Form.Item>
+                                            </Card>
+                                            </Col>
+                                        )}
                                     </Row>
                                     <Row justify={'end'}>
                                         <Button type='primary' htmlType="submit">{btnType}</Button>
@@ -1419,7 +1457,7 @@ const options = () => {
                                                 </Select>
                                             </Form.Item>
                                         </Col>
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
                                             <Form.Item 
                                                 name="quantity"
                                                 label="Quantity"
@@ -1435,7 +1473,7 @@ const options = () => {
 
                                                     },
                                                 ]}>
-                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'90px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}>
+                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'80px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}>
                                                     <Select showSearch allowClear optionFilterProp="children" >
                                                     {uom?.map(e => {
                                                         return (

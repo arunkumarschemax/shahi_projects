@@ -299,8 +299,8 @@ import RolePermission from "../role-permissions";
       },
       {
         title: "Available Quantity",
-        dataIndex: "availabeQuantity",
-        sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
+        dataIndex: "resltantavaliblequantity",
+        sorter: (a, b) => a.resltantavaliblequantity.localeCompare(b.resltantavaliblequantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
           // let consumedQty = 0
@@ -309,7 +309,7 @@ import RolePermission from "../role-permissions";
           // }
             return (
               <>
-               {record.availableQuantity ? (record.availableQuantity) : "Not Available"
+               {record.resltantavaliblequantity ? (record.resltantavaliblequantity) : "Not Available"
                   }
                 {/* {record.availableQuantity ? (record.availableQuantity-consumedQty) : "Not Available"
                   } */}
@@ -531,7 +531,7 @@ import RolePermission from "../role-permissions";
       let itemData;
       let stockData;
       let stockListData;
-      if(rowData.itemType === "Fabric"){
+      if(rowData.itemType === "FABRIC"){
         itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.fabric
         stockData = itemData?.find((f) => f.fabric_info_id === itemId);
         stockListData = stockData?.allocatedStock;
@@ -541,6 +541,7 @@ import RolePermission from "../role-permissions";
         stockData = itemData?.find((f) => f.trim_info_id === itemId);
         stockListData = stockData?.allocatedStock;
       }
+      console.log(itemData);
       console.log(stockData);
       console.log(stockListData);
       let stockRecord = stockListData?.find((s)=> s.stockId === rowData.stockId);
@@ -596,13 +597,13 @@ import RolePermission from "../role-permissions";
     }
     const onCheck = (rowData, index, isChecked,sampleReqId,itemId,fabindex) => {
       if(isChecked){
-        if(rowData.issuedQty > 0)
+        if(Number(rowData.issuedQty) > 0)
         {  
           rowData.checkedStatus = 1;
           let itemData;
           let stockData;
           let stockListData;
-          if(rowData.itemType === "Fabric"){
+          if(rowData.itemType === "FABRIC"){
             itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.fabric
             stockData = itemData?.find((f) => f.fabric_info_id === itemId);
             stockListData = stockData?.allocatedStock;
@@ -881,7 +882,7 @@ import RolePermission from "../role-permissions";
                   placeholder="Select Status"
                   allowClear
                 >
-                  {Object.values(SampleDevelopmentStatusDisplay).map((val) => (
+                  {Object.values(LifeCycleStatusDisplay).map((val) => (
             <Select.Option key={val.name} value={val.name}>
               {val.displayVal}
             </Select.Option>
@@ -984,6 +985,7 @@ import RolePermission from "../role-permissions";
                 style={{ fontSize: "16px", width: "100%" }}
               >
                 <Segmented
+                defaultValue={tabName}
                   onChange={onSegmentChange}
                   style={{ backgroundColor: "#68cc6b" }}
                   options={[

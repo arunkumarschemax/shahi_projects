@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Not, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, requestNoReq, RackPositionStatusEnum,ItemTypeEnum} from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, requestNoReq, RackPositionStatusEnum,ItemTypeEnum, SampleRequestInfoModel, SampleSizeInfoModel} from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -383,15 +383,19 @@ export class SampleRequestService {
                 let fabBomStatus = BomStatusEnum.OPEN;
                 if(Number(fabricData.totalRequirement) === Number(totalAllocated)){
                   fabBomStatus = BomStatusEnum.ALLOCATED
-                  fabFlag.add(true)
+                  // fabFlag.add(true)
                 }
-                else{
-                  fabFlag.add(false)
-                }
+                // else{
+                //   fabFlag.add(false)
+                // }
                 let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({samplingBomId:saveBomDetails.samplingBomId},{status:fabBomStatus,receivedQuantity : () => `received_quantity + ${totalAllocated}`})
                 if(updateSampleFabricInfo.affected === 0){
+                  fabFlag.add(false)
                   await manager.releaseTransaction();
                   return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+                }
+                else{
+                  fabFlag.add(true)
                 }
               }
             }
@@ -432,6 +436,8 @@ export class SampleRequestService {
                 item.push(itemData);
                 let stockUpdate = await manager.getRepository(StocksEntity).update({id:stock.stockId},{allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}`});
                   if(stockUpdate.affected === 0){
+                    console.log("1111111111111111111111111111111111111111111111111111111111111");
+                    trimFlag.add(false);
                     await manager.releaseTransaction();
                   }
               }
@@ -449,8 +455,12 @@ export class SampleRequestService {
               // trimAllocation = await this.creatematerialAlloction(materialAllocation);
               trimAllocation = await manager.getRepository(MaterialAllocationEntity).save(materialAllocation);
 
+              console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
               console.log(trimAllocation);
-              if(!trimAllocation.status){
+
+              if(!trimAllocation){
+                console.log("222222222222222222222222222222222222222222222222222222222222");
+
                 trimFlag.add(false)
                 await manager.releaseTransaction();
                 return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
@@ -462,20 +472,28 @@ export class SampleRequestService {
                 let trimBomStatus = BomStatusEnum.OPEN;
                 if(Number(trimData.totalRequirement) === Number(totalAllocated)){
                   trimBomStatus = BomStatusEnum.ALLOCATED
-                  trimFlag.add(true);
+                  // trimFlag.add(true);
                 }
-                else{
-                  trimFlag.add(false);
-                }
+                console.log(saveBomDetails)
                 let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({samplingBomId:saveBomDetails.samplingBomId},{status:trimBomStatus,receivedQuantity : () => `received_quantity + ${totalAllocated}`})
+                console.log("updateSampleFabricInfo")
+                console.log(updateSampleFabricInfo)
+
                 if(updateSampleFabricInfo.affected === 0){
+                  console.log("333333333333333333333333333333333333333333333333333333333333333333333");
+                  trimFlag.add(false);
                   await manager.releaseTransaction();
                   return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+                }
+                else{
+                  trimFlag.add(true);
                 }
               }
             }
           }
         }
+        console.log(fabFlag.has(true) +"-"+ trimFlag.has(true))
+        console.log(fabFlag.has(false) +"-"+ trimFlag.has(false))
 
         if(fabFlag.has(false) || trimFlag.has(false)){
         //   let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})
@@ -856,6 +874,7 @@ export class SampleRequestService {
          entity.m3ItemId=req.m3ItemId
          entity.totalIssueQty=req.allocatioQuantity
          entity.status=MaterialStatusEnum.MATERIAL_ALLOCATED
+         let totalQty = 0
          for(const itemData of req.allocatedItems){
           const itemEntity = new MaterialAllocationItemsEntity()
               itemEntity.locationId=itemData.LocationId
@@ -863,6 +882,7 @@ export class SampleRequestService {
               itemEntity.quantity=itemData.quantity
               itemEntity.allocateQuantity=itemData.allocatioQuantity
               materialitemdata.push(itemEntity)
+              totalQty = Number(totalQty) + Number(itemData.allocatioQuantity)
          }
          entity.materialAllocationinfo=materialitemdata
          console.log(entity)
@@ -892,7 +912,7 @@ export class SampleRequestService {
           bomStatus = BomStatusEnum.ALLOCATED
         }
         // for(const mainData of transformedData ){
-          let updateBomStatus = await manager.getRepository(SamplingbomEntity).update({samplingBomId:req.samplingBomId},{status:bomStatus});
+          let updateBomStatus = await manager.getRepository(SamplingbomEntity).update({samplingBomId:req.samplingBomId},{status:bomStatus, receivedQuantity : () => `received_quantity + ${totalQty}`});
           console.log("updateBomStatus");
           console.log(updateBomStatus);
 
@@ -1058,7 +1078,7 @@ export class SampleRequestService {
         LEFT JOIN  sample_request_fabric_info srf ON srf.sample_request_id=sb.sample_item_id AND sb.item_type='Fabric' 
         LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id=sb.sample_item_id AND sb.item_type!='Fabric'
         LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id  
-          LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND sb.item_type IN("fabric")
+          LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND st.item_type = sb.item_type
             LEFT JOIN m3_items mi ON mi.m3_items_Id=sb.m3_item_id  
             LEFT JOIN colour c ON c.colour_id=sb.colour_id
             LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id
@@ -1264,7 +1284,7 @@ export class SampleRequestService {
     async getfabricDetailsOfSample(req:sampleReqIdReq):Promise<CommonResponseModel>{
       try{
         const manager = this.dataSource;
-        const query ='  SELECT srf.fabric_code as m3FabricCode, srf.colour_id as colourId,c.colour as colorName,request_no AS sampleReqNo, item_code AS itemCode,fabric_info_id AS samplereFabId,(sb.required_quantity - sb.received_quantity) AS sampleQuantity,srf.sample_request_id AS sampleReqId,srf.uom_id,u.uom,sr.style_id as style FROM sample_request_fabric_info srf LEFT JOIN sample_request sr ON sr.sample_request_id=srf.sample_request_id LEFT JOIN sampling_bom sb on sb.sample_request_id = srf.sample_request_id and sb.m3_item_id = srf.fabric_code and sb.colour_id = srf.colour_id LEFT JOIN m3_items mi ON mi.m3_items_Id =srf.fabric_code left join colour c on c.colour_id=srf.colour_id left join uom u on u.id = srf.uom_id  where srf.sample_request_id in ('+req.sampleReqId+') and srf.fabric_info_id in ('+req.sampleItemId+')'
+        const query ='  SELECT srf.fabric_code as m3FabricCode, srf.colour_id as colourId,c.colour as colorName,request_no AS sampleReqNo, item_code AS itemCode,mi.description as description,fabric_info_id AS samplereFabId,(sb.required_quantity - sb.received_quantity) AS sampleQuantity,srf.sample_request_id AS sampleReqId,srf.uom_id,u.uom,sr.style_id as style FROM sample_request_fabric_info srf LEFT JOIN sample_request sr ON sr.sample_request_id=srf.sample_request_id LEFT JOIN sampling_bom sb on sb.sample_request_id = srf.sample_request_id and sb.m3_item_id = srf.fabric_code and sb.colour_id = srf.colour_id LEFT JOIN m3_items mi ON mi.m3_items_Id =srf.fabric_code left join colour c on c.colour_id=srf.colour_id left join uom u on u.id = srf.uom_id  where srf.sample_request_id in ('+req.sampleReqId+') and srf.fabric_info_id in ('+req.sampleItemId+')'
         const rmData = await manager.query(query);
         if(rmData){
           return new CommonResponseModel(true,1,'data',rmData)
@@ -1941,4 +1961,133 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
       return new CommonResponseModel(false,0,'No Quantity found')
     }
   }
+
+  async getAllSampleRequestsInfo1(req?: sampleReqIdReq): Promise<CommonResponseModel> {    
+    try {
+      const data = await this.sampleRepo.find(
+      {relations:['sampleTrimInfo','sampleReqFabricInfo','sampleReqSizeInfo'],
+      where: { SampleRequestId: req.sampleReqId } 
+    }
+      );
+  
+      if (data.length>0 ) {
+        return new CommonResponseModel(true, 1, ' Data retrived successfully',data);
+      } else {
+        return new CommonResponseModel(false, 1, 'Something went wrong',[]);
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  // async getAllSampleRequestsInfo(req?: sampleReqIdReq):Promise<CommonResponseModel>{
+  //   try{
+  //     const manager = this.dataSource;
+  //     const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,
+  //     st.style,pch.profit_control_head,mi.item_code,mt.item_code FROM sample_request s
+  //     LEFT JOIN brands b ON b.brand_id = s.brand_id
+  //     LEFT JOIN buyers bu ON bu.buyer_id = s.buyer_id
+  //     LEFT JOIN style st ON st.style_id = s.style_id
+  //     LEFT JOIN profit_control_head pch ON pch.profit_control_head_id =s.profit_control_head_id
+  //     LEFT JOIN sample_request_fabric_info srf ON srf.sample_request_id = s.sample_request_id
+  //     LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id = s.sample_request_id
+  //     LEFT JOIN sample_request_size_info srs ON srs.sample_request_id = s.sample_request_id
+  //     LEFT JOIN size si ON si.size_id = srs.size_id
+  //     LEFT JOIN colour c ON c.colour_id = srs.colour_id
+  //     LEFT JOIN m3_items mi ON mi.m3_items_Id = srf.fabric_info_id
+  //     LEFT JOIN m3_trims mt ON mt.m3_trim_Id = srt.trim_info_id
+  //     WHERE s.sample_request_id = ${req.sampleReqId}`
+  //     const rmData = await manager.query(rawQuery);
+  //     if(rmData){
+  //       for(const res of rawQuery){
+
+  //       }
+  //       return new CommonResponseModel(true,1,'data',rmData)
+  //     }else{
+  //       return new CommonResponseModel(false,0,'no data',[])
+
+  //     }
+
+  //   }catch(err){
+  //     throw err
+  //   }
+  // }
+
+  async getAllSampleRequestsInfo(req?: sampleReqIdReq):Promise<CommonResponseModel>{
+    try{
+      const manager = this.dataSource;
+      const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,si.size_id,
+      st.style,pch.profit_control_head,mi.item_code as fabCode,mt.item_code as trimCode,e.first_name,s.contact,s.status,
+      s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date FROM sample_request s
+      LEFT JOIN brands b ON b.brand_id = s.brand_id
+      LEFT JOIN buyers bu ON bu.buyer_id = s.buyer_id
+      LEFT JOIN style st ON st.style_id = s.style_id
+      LEFT JOIN profit_control_head pch ON pch.profit_control_head_id =s.profit_control_head_id
+      LEFT JOIN sample_request_fabric_info srf ON srf.sample_request_id = s.sample_request_id
+      LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id = s.sample_request_id
+      LEFT JOIN sample_request_size_info srs ON srs.sample_request_id = s.sample_request_id
+      LEFT JOIN size si ON si.size_id = srs.size_id
+      LEFT JOIN colour c ON c.colour_id = srs.colour_id
+      LEFT JOIN m3_items mi ON mi.m3_items_Id = srf.fabric_info_id
+      LEFT JOIN m3_trims mt ON mt.m3_trim_Id = srt.trim_info_id
+      LEFT JOIN employee_details e ON e.employee_id = s.technician_id
+      WHERE s.sample_request_id = ${req.sampleReqId}`
+      // const info = await this.sampleRepo.find(
+      //   {relations:['sampleTrimInfo','sampleReqFabricInfo','sampleReqSizeInfo','style','buyer','brand'],
+      //   where: { SampleRequestId: req.sampleReqId } 
+      // }
+      //   );       
+        const info = await manager.query(rawQuery);
+         const MapData = new Map<string,SampleRequestInfoModel>()
+         let sizedata = new Map <number,SampleSizeInfoModel>()
+
+        if(info.length > 0){
+            for(const rec of info){
+              if(!MapData.has(rec.requestNo)){
+                    MapData.set(rec.requestNo,new SampleRequestInfoModel(rec.request_no,rec.sample_request_id,rec.style,rec.brand_name,rec.buyer_name,rec.first_name,rec.status,rec.lifeCycleStatus,rec.contact,rec.profit_control_head,rec.expected_delivery_date,[],[],[]))
+                }
+               
+                  if(!sizedata.has(rec.size_id)){
+                    sizedata.set(rec.size_id,new SampleSizeInfoModel(rec.size_id,rec.sizes,[]))
+                  }
+                  
+        sizedata.get(rec.size_id).colours.push({ colour: rec.colour });
+
+                      // sizedata.get(rec.size_id).colours.push({colour:rec.colour})
+ 
+                MapData.get(rec.requestNo).trimInfo.push({trimCode:rec.trimCode,type:rec.trim_type})
+                MapData.get(rec.requestNo).fabInfo.push({fabricCode:rec.fabCode})
+
+            }
+            // const sizes : SampleSizeInfoModel[] = [];
+          //  const sizes : SampleSizeInfoModel[] = [];
+          //   sizedata.forEach((os => sizes.push(os)))
+
+          //   const infoData : SampleRequestInfoModel[] = []
+          //   MapData.forEach((rec) => infoData.push(rec))
+            
+      const sizes: SampleSizeInfoModel[] = [];
+      sizedata.forEach((e) => {
+        console.log(e,'pp');
+        
+        sizes.push(e);
+      });
+
+      MapData.forEach((rec) => {
+        rec.sizeinfo = sizes;
+      });
+
+      const infoData: SampleRequestInfoModel[] = Array.from(MapData.values());
+
+
+            return new CommonResponseModel(true,1,'Data retrieved',infoData)
+        } else{
+            return new CommonResponseModel(false,0,'No data found')
+        }
+
+    }catch(err){
+        throw err
+    }
+}
+
 }

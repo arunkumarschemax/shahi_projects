@@ -109,7 +109,17 @@ colourId:number;
   name:'size_id'
 })
 sizeId:number;
+@Column('int',{
+  nullable:false,
+  name:'reporter'
+})
+reporterId:number;
 
+@Column('int',{
+  nullable:false,
+  name:'supervisor'
+})
+supervisorId:number;
   @CreateDateColumn({
     name: "created_at",
     type: "datetime"

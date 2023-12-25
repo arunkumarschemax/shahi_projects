@@ -33,6 +33,7 @@ import {
   Tooltip,
 } from "antd";
 import style from "antd/es/alert/style";
+import './sourcing-view.css';
 import { ColumnProps } from "antd/es/table";
 import moment from "moment";
 import React, { useEffect, useRef } from "react";
@@ -76,15 +77,30 @@ export const SourcingRequisitionDynamicView = () => {
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [selectedRowData, setSelectedRowData] = useState([]);
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
-
-
+  // const [segmentOptions, setSegmentOptions] = useState<any[]>(
+  //   [
+  //     { key: 'Fabric', label: 'Fabric' },
+  //     { key: 'Trim', label: 'Trim' }
+  //   ]
+  // );
+ const [details, setDetails] = useState('')
+ const checkAccess = (buttonParam) => {  
+  const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus.Indent,buttonParam)
+   console.log(buttonParam,accessValue,'access');
+  
+  return accessValue
+}
   useEffect(() => {
-    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
       setTabName('Trim')
     }
-    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
       setTabName('Fabric')
     }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      setTabName('Fabric')
+    }
+
     // getStyle();
     getAll();
   }, []);
@@ -103,25 +119,28 @@ export const SourcingRequisitionDynamicView = () => {
   //   });
   // };
 
-  const checkAccess = (buttonParam) => {   
-    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus.Indent,buttonParam)
-    // console.log(accessValue,'access');
-    
-    return accessValue
-}
+ 
 
 const options = () => {
   let segmentOptions = [
-    { key: 'Fabric', label: 'Fabric' },
-    { key: 'Trim', label: 'Trim' }
-  ];
-
-  if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
+  { key: 'Fabric', label: 'Fabric' },
+  { key: 'Trim', label: 'Trim' }
+];
+if (checkAccess(MenusAndScopesEnum.Scopes.trimTab && checkAccess(MenusAndScopesEnum.Scopes.fabricTab))) {
+  console.log(segmentOptions);
+  segmentOptions = segmentOptions
+}
+// if(tableData?.indentFabricDetails)
+  if (checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab) ) {
     segmentOptions = segmentOptions.filter((e) => e.label === 'Fabric');
+    console.log(segmentOptions);
   }
-  if (checkAccess(MenusAndScopesEnum.Scopes.trimTab)) {
+  if (checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) {
+    console.log(segmentOptions);
     segmentOptions = segmentOptions.filter((e) => e.label === 'Trim');
   }
+  console.log(segmentOptions);
+  
   return segmentOptions.map((operation, index) => ({
     label: <b>{operation.label}</b>,
     value: operation.label,
@@ -129,7 +148,9 @@ const options = () => {
 
   }));
 };
+
 const segmentedOptions = options();
+
   const getAll = () => {
     const req = new IndentRequestFilter();
     if (form.getFieldValue("requestNo") !== undefined) {
@@ -141,9 +162,26 @@ const segmentedOptions = options();
     if (form.getFieldValue("status") !== undefined) {
       req.status = form.getFieldValue("status");
     }
+    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      req.tab= 'FABRIC'
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+      req.tab= 'Trim'
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      req.tab= 'both'
+    }
     req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     service.getAllIndentData(req).then((res) => {
       if (res.status) {
+      //  if( res.data.indentFabricDetails?.length>0){
+      //   // segmentOptions.filter((e) => e.label === 'Fabric');
+      //   setSegmentOptions(segmentOptions.filter((e) => e.label === 'Fabric'))
+      // }else {
+      //   // segmentOptions.filter((e) => e.label === 'Trim');
+      //   setSegmentOptions(segmentOptions.filter((e) => e.label === 'Trim'))
+
+      // }
         setData(res.data);
         setFilterData(res.data);
       }
@@ -314,22 +352,22 @@ const segmentedOptions = options();
         responsive: ["sm"],
         render: (text, object, index) => (page - 1) * 10 + (index + 1),
       },
-      {
-        title: "Buyer",
-        dataIndex: "buyer",
-        ...getColumnSearchProps("buyer"),
-        render: (text, record) => {
-          return <>{record.buyer ? record.buyer : "-"}</>;
-        },
-      },
+      // {
+      //   title: "Buyer",
+      //   dataIndex: "buyer",
+      //   ...getColumnSearchProps("buyer"),
+      //   render: (text, record) => {
+      //     return <>{record.buyer ? record.buyer : "-"}</>;
+      //   },
+      // },
       {
         title: <div style={{textAlign:"center"}}>M3 Fabric Code</div>,
         dataIndex: "m3FabricCode",
         ...getColumnSearchProps("m3FabricCode"),
         render: (m3FabricCode, row) => (
           <Tooltip title={row.description} placement="top" arrowPointAtCenter>
-            <span>
-              {`${m3FabricCode} - ${row.description?.length > 25 ? row.description.slice(0, 25) + '...' : row.description}`}
+            <span className="fabCode">
+              {`${row.fabricCode} - ${row.description}`}
             </span>
           </Tooltip>
         ),
@@ -363,12 +401,12 @@ const segmentedOptions = options();
         title: "XL No",
         dataIndex: "xlNo",
       },
+      // {
+      //   title: "Indent Raised",
+      //   dataIndex: "quantity",
+      // },
       {
-        title: "PO Raised",
-        dataIndex: "poQty",
-      },
-      {
-        title: "Quantity",
+        title: "Indent Quantity",
         dataIndex: "quantity",
         sorter: (a, b) => a.quantity.localeCompare(b.quantity),
         sortDirections: ["descend", "ascend"],
@@ -381,6 +419,10 @@ const segmentedOptions = options();
             </>
           );
         },
+      },
+      {
+        title: "PO Raised",
+        dataIndex: "poQty",
       },
       // {
       //   title: "Available Quantity",
@@ -408,8 +450,9 @@ const segmentedOptions = options();
       //     );
       //   },
       // },
+      
       {
-        title: <div style={{ textAlign: "center" }}>{val > 0 ?<Button  type="primary" onClick={() =>generatePoForFabric(key)} >Generate Po</Button>:<></>}</div>,
+        title: <div style={{ textAlign: "center" }}>{checkAccess(MenusAndScopesEnum.Scopes.createPo) && val > 0 ?<Button  type="primary" onClick={() =>generatePoForFabric(key)} >Generate Po</Button>:<></>}</div>,
         dataIndex: "sm",
         key: "sm",
         align: "center",
@@ -419,7 +462,7 @@ const segmentedOptions = options();
             (Number(rowData.poQty) < Number(rowData.quantity)) ?
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
               <Form.Item name={`fabric${rowData.indentFabricId}`} >
-                <Checkbox name={`fabric${rowData.indentFabricId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>
+              {checkAccess(MenusAndScopesEnum.Scopes.createPo) && val > 0 ?<Checkbox name={`fabric${rowData.indentFabricId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>:<></>}
             </Form.Item>
             </Col> : <Tag></Tag>
           )
@@ -464,11 +507,19 @@ const segmentedOptions = options();
         title: "Trim Type",
         dataIndex: "materialType",
         ...getColumnSearchProps("materialType"),
+        render: (text) => {
+          const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+          return EnumObj ? EnumObj.displayVal : text;
+        },
       },
       {
         title: "M3 Trim Code",
         dataIndex: "m3TrimCodeName",
         ...getColumnSearchProps("m3TrimCodeName"),
+      },
+      {
+        title: "Indent Raised",
+        dataIndex: "quantity",
       },
       {
         title: "PO Raised",
@@ -497,7 +548,7 @@ const segmentedOptions = options();
       {
         title: <div style={{ textAlign: "center" }}>
           
-        {val > 0 ?<Button  type="primary" onClick={() =>genereatePoForTrim(key)} >Generate Po</Button>:<></>}
+        {val > 0 && checkAccess(MenusAndScopesEnum.Scopes.createPo)?<Button  type="primary" onClick={() =>genereatePoForTrim(key)} >Generate Po</Button>:<></>}
           </div>,
         dataIndex: "sm",
         key: "sm",
@@ -522,7 +573,7 @@ const segmentedOptions = options();
               (Number(rowData.poQty) < Number(rowData.quantity)) ?
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                 <Form.Item name={`trim${rowData.indentTrimId}`} >
-                  <Checkbox name={`trim${rowData.indentTrimId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>
+                { checkAccess(MenusAndScopesEnum.Scopes.createPo) ?<Checkbox name={`trim${rowData.indentTrimId}`} checked={rowData.checkStatus} onChange={(e) => onCheck(e, rowData.sampleRequestid, rowData.materialType, text, rowData)}/>:"-"}
               </Form.Item>
               </Col>: <Tag></Tag> 
           // }
@@ -624,14 +675,23 @@ const segmentedOptions = options();
     setBarcode("");
     window.close();
   };
-
+const test = (val, row) =>{
+  console.log(val,row);
+  // setDetails(val)
+  // setTabName(val)
+  return val
+}
   return (
     <Card
       headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
       title="Indent Requisition"
       extra={
-        <span>
+               <span>
+                        {checkAccess(MenusAndScopesEnum.Scopes.Create)?(
+
           <Button onClick={() => navigate("/indent-form")}>New</Button>
+          ):(<></>)}
+
         </span>
       }
     >
@@ -761,13 +821,14 @@ const segmentedOptions = options();
           <CaretRightOutlined rotate={isActive ? 90 : 0} />
         )}
         accordion
+        
       >
         {tableData.map((item: any, index: any) => (
           <Collapse.Panel 
             header={
               <HeaderRow
                 requestNo={item.requestNo}
-                buyer={item.buyerName}
+                buyerName={item.buyerName}
                 style={item.style}
                 description={item.description}
                 expectedDate={item.expectedDate}
@@ -791,7 +852,35 @@ const segmentedOptions = options();
                 onChange={onSegmentChange}
                 style={{ backgroundColor: "#68cc6b" }}
                   options= {segmentedOptions}
-                 defaultValue={checkAccess(MenusAndScopesEnum.Scopes.fabricTab)?"Fabric":checkAccess(MenusAndScopesEnum.Scopes.trimTab) ? "Trim":''}
+                  //   item.indentFabricDetails.length > 0?[
+                  //     {
+                  //       label: (
+                  //               <>
+                  //                 <b 
+                  //                 // style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.fabricTab)? 'block' : 'none'}}
+                  //                  >Fabric Details</b>
+                  //               </>
+                  //             ),
+                  //             value: "Fabric",
+                  //     }
+                  //   ]:
+                  //   [
+                  //       {
+                  //   label: (
+                  //     <>
+                  //       <b 
+                  //       // style={{ fontSize: "12px", display:checkAccess(MenusAndScopesEnum.Scopes.trimTab)? 'block' : 'none'}}
+
+                  //       >Trim Details</b>
+                  //     </>
+                  //   ),
+                  //   value: "Trim",
+
+                  // },
+                  //   ]
+                  // }
+                 defaultValue={(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && !checkAccess(MenusAndScopesEnum.Scopes.trimTab))?"Fabric":(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && !checkAccess(MenusAndScopesEnum.Scopes.fabricTab)) ? "Trim":item.indentFabricDetails.length> 0? 'Fabric': "Trim"}
+                //  {item.indentFabricDetails.length> 0?"Fabric": "Trim"}
                 // options={
                 //   [
                 //   {
@@ -816,7 +905,7 @@ const segmentedOptions = options();
               />
               <div>
               <>
-                {tabName === "Fabric" ? (
+                { tabName === 'Fabric' ? item.indentFabricDetails.length > 0 ?   (
                   <>
                     <Table
                       columns={tableColumns(item.indentId, (item.indentFabricDetails).filter((e) => Number(e.poQty) < Number(e.quantity) && e.checkStatus === true).length)}
@@ -826,11 +915,13 @@ const segmentedOptions = options();
                       className="custom-table-wrapper"
                     />
                   </>
-                ) :''}
+                ) :(
+                  <> No Data</>
+                ):''}
                 </>
               </div>
               <div>
-                {tabName === "Trim" ? (
+                { tabName === 'Trim' ? item.indentTrimDetails.length > 0 ?  (
                   <>
                     <Table
                       columns={tableTrimColumns(item.indentId, (item.indentTrimDetails).filter((e) => Number(e.poQty) < Number(e.quantity) && e.checkStatus === true).length)}
@@ -841,8 +932,8 @@ const segmentedOptions = options();
                     />
                   </>
                 ) : (
-                  <></>
-                )}
+                  <> No Data</>
+                ):''}
               </div>
             </Space>
           </Collapse.Panel>
