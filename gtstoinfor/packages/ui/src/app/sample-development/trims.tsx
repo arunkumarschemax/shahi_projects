@@ -34,6 +34,7 @@ const TrimsForm = (props:TrimsFormProps) => {
   const [checked, setChecked] = useState<boolean>(false)
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const [stockForm] = Form.useForm();
+  const [keyUpdate, setKeyUpdate] = useState<number>(1);
 
  const {Option}=Select
 
@@ -606,6 +607,8 @@ const tableColumns = (val,fabindex) => {
 
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
+      key={keyUpdate}
+      rowKey={record => record.key}
       dataSource={data} 
       columns={columns} 
       expandedRowRender={renderItems}
