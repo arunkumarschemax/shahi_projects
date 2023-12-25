@@ -881,7 +881,7 @@ import RolePermission from "../role-permissions";
                   placeholder="Select Status"
                   allowClear
                 >
-                  {Object.values(SampleDevelopmentStatusDisplay).map((val) => (
+                  {Object.values(LifeCycleStatusDisplay).map((val) => (
             <Select.Option key={val.name} value={val.name}>
               {val.displayVal}
             </Select.Option>
