@@ -168,7 +168,7 @@ getData(data.poNumber)
    margin: 0; /* Reset default margin */
  }`}</style>
                         </div>
-                        <div style={{ textAlign: 'left', fontSize: "20px", marginLeft: 10,}}>
+                        <div style={{ textAlign: 'left', fontSize: "15px", marginLeft: 10,}}>
                           {`${e?.grn_item_no}`}
                         </div>
                         </div>
