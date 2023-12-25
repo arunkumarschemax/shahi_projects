@@ -619,7 +619,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             query.andWhere(`dpom.factory ='${req.factory}'`)
         }
         if (req.docTypeCode !== undefined) {
-            query.andWhere(`dpom.doc_type_code ='${req.docTypeCode}'`)
+            query.andWhere(`dpom.doc_type_code IN (:...docType)`, { docType: req.docTypeCode })
         }
         if (req.poLineItemNumber !== undefined && req.poLineItemNumber.length > 0) {
             query.andWhere(`dpom.po_line_item_number IN (:...lineItemNumbers)`, { lineItemNumbers: req.poLineItemNumber })
@@ -674,8 +674,8 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.productCode !== undefined) {
             query.andWhere(`dpom.product_code ='${req.productCode}'`)
         }
-        if (req.poNumber !== undefined) {
-            query.andWhere(`dpom.po_number ='${req.poNumber}'`)
+        if (req.poNumber !== undefined && req.poNumber.length > 0) {
+            query.andWhere(`dpom.po_number IN (:...ponumbers)`, { ponumbers: req.poNumber })
         }
         if (req.colorDesc !== undefined) {
             query.andWhere(`dpom.color_desc ='${req.colorDesc}'`)

@@ -2552,6 +2552,7 @@ const PPMReport = () => {
                   placeholder="Select Doc Type"
                   optionFilterProp="children"
                   allowClear
+                  mode='multiple'
                 >
                   {docType?.map((inc: any) => {
                     return <Option key={inc.id} value={inc.doc_type_code}>{inc.doc_type_code}</Option>

@@ -562,6 +562,7 @@ export function OrderAcceptance() {
                                     placeholder="Select PO"
                                     optionFilterProp="children"
                                     allowClear
+                                    mode='multiple'
                                 >
                                     {poLine?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
