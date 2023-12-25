@@ -502,7 +502,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       width:"50%",
       render: (_, record) => (
       <Form.Item name={`remarks${record.key}`}>
-        <TextArea
+        <TextArea placeholder='Remarks'
         value={record.remarks}
         onChange={(e) => handleInputChange(e.target.value, record.key, 'remarks',0,record)}
         rows={1}

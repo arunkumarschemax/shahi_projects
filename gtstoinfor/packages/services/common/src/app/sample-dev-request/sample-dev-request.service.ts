@@ -383,15 +383,19 @@ export class SampleRequestService {
                 let fabBomStatus = BomStatusEnum.OPEN;
                 if(Number(fabricData.totalRequirement) === Number(totalAllocated)){
                   fabBomStatus = BomStatusEnum.ALLOCATED
-                  fabFlag.add(true)
+                  // fabFlag.add(true)
                 }
-                else{
-                  fabFlag.add(false)
-                }
+                // else{
+                //   fabFlag.add(false)
+                // }
                 let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({samplingBomId:saveBomDetails.samplingBomId},{status:fabBomStatus,receivedQuantity : () => `received_quantity + ${totalAllocated}`})
                 if(updateSampleFabricInfo.affected === 0){
+                  fabFlag.add(false)
                   await manager.releaseTransaction();
                   return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+                }
+                else{
+                  fabFlag.add(true)
                 }
               }
             }
@@ -432,6 +436,8 @@ export class SampleRequestService {
                 item.push(itemData);
                 let stockUpdate = await manager.getRepository(StocksEntity).update({id:stock.stockId},{allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}`});
                   if(stockUpdate.affected === 0){
+                    console.log("1111111111111111111111111111111111111111111111111111111111111");
+                    trimFlag.add(false);
                     await manager.releaseTransaction();
                   }
               }
@@ -449,8 +455,12 @@ export class SampleRequestService {
               // trimAllocation = await this.creatematerialAlloction(materialAllocation);
               trimAllocation = await manager.getRepository(MaterialAllocationEntity).save(materialAllocation);
 
+              console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
               console.log(trimAllocation);
-              if(!trimAllocation.status){
+
+              if(!trimAllocation){
+                console.log("222222222222222222222222222222222222222222222222222222222222");
+
                 trimFlag.add(false)
                 await manager.releaseTransaction();
                 return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
@@ -462,20 +472,28 @@ export class SampleRequestService {
                 let trimBomStatus = BomStatusEnum.OPEN;
                 if(Number(trimData.totalRequirement) === Number(totalAllocated)){
                   trimBomStatus = BomStatusEnum.ALLOCATED
-                  trimFlag.add(true);
+                  // trimFlag.add(true);
                 }
-                else{
-                  trimFlag.add(false);
-                }
+                console.log(saveBomDetails)
                 let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({samplingBomId:saveBomDetails.samplingBomId},{status:trimBomStatus,receivedQuantity : () => `received_quantity + ${totalAllocated}`})
+                console.log("updateSampleFabricInfo")
+                console.log(updateSampleFabricInfo)
+
                 if(updateSampleFabricInfo.affected === 0){
+                  console.log("333333333333333333333333333333333333333333333333333333333333333333333");
+                  trimFlag.add(false);
                   await manager.releaseTransaction();
                   return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+                }
+                else{
+                  trimFlag.add(true);
                 }
               }
             }
           }
         }
+        console.log(fabFlag.has(true) +"-"+ trimFlag.has(true))
+        console.log(fabFlag.has(false) +"-"+ trimFlag.has(false))
 
         if(fabFlag.has(false) || trimFlag.has(false)){
         //   let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})

@@ -33,6 +33,7 @@ const TrimsForm = (props:TrimsFormProps) => {
   const [sourcingForm] = Form.useForm();
   const [checked, setChecked] = useState<boolean>(false)
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
+  const [stockForm] = Form.useForm();
 
  const {Option}=Select
 
@@ -146,7 +147,9 @@ const getMappedTrims = (value, option) => {
 
   const getStockDetails = (record,e) => {
     
-    // console.log(record);
+    console.log(record);
+    console.log(e);
+
     record.trimCode = e;
     let req = new buyerandM3ItemIdReq(props.buyerId,e,record.trimType);
     sampleDevelopmentService.getAvailbelQuantityAginstBuyerAnditem(req).then((res) => {
@@ -164,9 +167,10 @@ const getMappedTrims = (value, option) => {
   }
   
   const handleInputChange = async (e, key, field, record) => {
-    // console.log(e)
-    // console.log(key)
-    // console.log(field)
+    console.log("*********************************************")
+    console.log(e)
+    console.log(key)
+    console.log(field)
 
 
     let updatedData
@@ -181,6 +185,9 @@ const getMappedTrims = (value, option) => {
       await getStockDetails(record,e)
     } 
     else if(field === "allocatedStock"){
+      console.log(record.key);
+        console.log(key);
+
       updatedData = data.map((record) => {
         if (record.key === key) {
           return { ...record, [field]: e, ["trimCode"] : record.trimCode };
@@ -247,8 +254,19 @@ const getMappedTrims = (value, option) => {
   };
 
   const handleDelete = (key) => {
+    console.log(key);
+    console.log(data);
     const updatedData = data.filter((record) => record.key !== key);
-    setData(updatedData);
+    console.log(updatedData);
+    if(updatedData.length === 0){
+      setData([]);
+      props.data([])
+    }
+    else{
+      setData(updatedData);
+      props.data(updatedData)
+    }
+   
   };
 
   const trimTypeOnchange = (value) =>{
@@ -317,7 +335,8 @@ const getMappedTrims = (value, option) => {
       dataIndex: 'trimCode',
       width:"100%",
       render: (_, record) => (
-        <><Form.Item name={`allocatedStock${record.key}`} style={{ display: 'none' }}><Input name={`allocatedStock${record.key}`} style={{ display: 'none' }} /></Form.Item><Form.Item name={`trimCode${record.key}`} rules={[{ required: true, message: 'Missing Trim Code' }]}>
+        <><Form.Item name={`allocatedStock${record.key}`} style={{display:'none'}}><Input name={`allocatedStock${record.key}`} style={{display:'none'}}/></Form.Item>
+        <Form.Item name={`trimCode${record.key}`} rules={[{ required: true, message: 'Missing Trim Code' }]}>
           <Select
             value={record.trimCode} 
             onChange={(e) => handleInputChange(e, record.key, 'trimCode', record)}
@@ -407,7 +426,7 @@ const getMappedTrims = (value, option) => {
       render: (_, record) => (
         <Form.Item name={`remarks${record.key}`}>
         <TextArea
-        value={record.remarks}
+        value={record.remarks} placeholder='Remarks'
         onChange={(e) => handleInputChange(e.target.value, record.key, 'remarks',record)}
         rows={1}
         />
@@ -425,23 +444,50 @@ const getMappedTrims = (value, option) => {
     },
   ];
 
-  const setAllocatedQty = (index, rowData, value) => {
-   rowData.issuedQty = value
-   const newData = [...stockData];
-   newData[index].issuedQty = value;
-   setStockData(newData);
-   if (value === 0 || value === null || value < 0 || value === undefined) {
-     AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
-     sourcingForm.setFieldValue(`allocatedQuantity${index}`,0);
-   }
-   if (Number(value) > Number(rowData.quantity)) {
-     sourcingForm.setFieldValue(`allocatedQuantity${index}`,0);
-     AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
-   }
- }
+  const setAllocatedQty = (index, rowData, value, total,fabIndex) => {
+    console.log(fabIndex)
+    console.log(total);
+    console.log(index);
+    console.log(data);
+    console.log(rowData);
+    rowData.issuedQty = value
+    const newData = data.find((record,index) => index === fabIndex)?.allocatedStock;
+    // const newData = [...stockData];
+    console.log(newData);
+    let stockRecord = newData.find((s) => s.stockId === rowData.stockId);
+    stockRecord.issuedQty = value;
+    const sum = newData.reduce((accumulator, object) => {
+      console.log(accumulator);
+      console.log(object.issuedQty);
+      return accumulator + (object.issuedQty != undefined ? Number(object.issuedQty) : 0);
+    }, 0);
+    console.log(sum);
+    if(Number(sum) > Number(total)){
+      AlertMessages.getErrorMessage('Issued Quantity should not exceed total required. ')
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,0)
+    }
+    // newData[index].issuedQty = value;
+    // console.log(newData[index]);
+    // console.log(newData)
+    // setStockData(newData);
+    if (value === 0 || value === null || value < 0 || value === undefined) {
+      AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,0);
+    }
+    if (Number(value) > Number(rowData.quantity)) {
+      stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,0);
+      AlertMessages.getErrorMessage('Issued Quantity should be less than Avaialble Quantity--')
+    }
+  }
  const checkboxonclick =() =>{
   setChecked(true)
 }
+
+const tableColumns = (val,fabindex) => {
+  if(val === undefined){
+    AlertMessages.getWarningMessage("Please give required consumption. ");
+  }
+  console.log(val);
 
   const renderColumnForFabric: any =[
     {
@@ -484,13 +530,13 @@ const getMappedTrims = (value, option) => {
       width:'200px',
       render: (text, rowData, index) => { 
         return(
-          
-          <Form.Item name={`allocatedQuantity${rowData.key}`}>
-                <InputNumber name={`allocatedQuantity${rowData.key}`}
-                    onChange={(e) => setAllocatedQty(index,rowData, e)} 
-                 />
-          </Form.Item>
-         
+          <Form form={stockForm}>
+            <Form.Item name={`allocatedQuantity${fabindex}-${index}`}>
+                  <InputNumber name={`allocatedQuantity${fabindex}-${index}`}
+                      onChange={(e) => setAllocatedQty(index,rowData, e, val,fabindex)} 
+                  />
+            </Form.Item>
+          </Form>
         )
       }
     },
@@ -513,6 +559,8 @@ const getMappedTrims = (value, option) => {
     },
    
   ]
+  return [...renderColumnForFabric]
+}
   const onCheck = (rowData, index, isChecked) => {
     if(isChecked){
       if(Number(rowData.issuedQty) > 0){
@@ -542,11 +590,12 @@ const getMappedTrims = (value, option) => {
   };
 
   
-  const renderItems = (record:any) => {
+  const renderItems = (record:any, index:any) => {
       return  <Table
       rowKey={record.stockId}
-       dataSource={stockData}
-        columns={renderColumnForFabric} 
+       dataSource={record.allocatedStock}
+        columns={tableColumns(record.totalRequirement,index)} 
+
         pagination={false}
          />;
   };
