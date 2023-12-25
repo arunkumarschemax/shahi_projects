@@ -1895,9 +1895,10 @@ const PPMReport = () => {
               width: 100,
               align: 'right',
               render: (text, record) => {
-                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty
+                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)
+                const sizeObj = sizeData[`${sc.dataIndex}`]
                 // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-                return sizeData ? sizeData : '-';
+                return sizeObj ? sizeObj : '-';
               }
             }
           })
