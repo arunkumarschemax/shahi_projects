@@ -531,7 +531,7 @@ import RolePermission from "../role-permissions";
       let itemData;
       let stockData;
       let stockListData;
-      if(rowData.itemType === "Fabric"){
+      if(rowData.itemType === "FABRIC"){
         itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.fabric
         stockData = itemData?.find((f) => f.fabric_info_id === itemId);
         stockListData = stockData?.allocatedStock;
@@ -541,6 +541,7 @@ import RolePermission from "../role-permissions";
         stockData = itemData?.find((f) => f.trim_info_id === itemId);
         stockListData = stockData?.allocatedStock;
       }
+      console.log(itemData);
       console.log(stockData);
       console.log(stockListData);
       let stockRecord = stockListData?.find((s)=> s.stockId === rowData.stockId);
@@ -596,13 +597,13 @@ import RolePermission from "../role-permissions";
     }
     const onCheck = (rowData, index, isChecked,sampleReqId,itemId,fabindex) => {
       if(isChecked){
-        if(rowData.issuedQty > 0)
+        if(Number(rowData.issuedQty) > 0)
         {  
           rowData.checkedStatus = 1;
           let itemData;
           let stockData;
           let stockListData;
-          if(rowData.itemType === "Fabric"){
+          if(rowData.itemType === "FABRIC"){
             itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.fabric
             stockData = itemData?.find((f) => f.fabric_info_id === itemId);
             stockListData = stockData?.allocatedStock;
