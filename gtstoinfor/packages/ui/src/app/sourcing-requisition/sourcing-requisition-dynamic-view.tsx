@@ -352,14 +352,14 @@ const segmentedOptions = options();
         responsive: ["sm"],
         render: (text, object, index) => (page - 1) * 10 + (index + 1),
       },
-      {
-        title: "Buyer",
-        dataIndex: "buyer",
-        ...getColumnSearchProps("buyer"),
-        render: (text, record) => {
-          return <>{record.buyer ? record.buyer : "-"}</>;
-        },
-      },
+      // {
+      //   title: "Buyer",
+      //   dataIndex: "buyer",
+      //   ...getColumnSearchProps("buyer"),
+      //   render: (text, record) => {
+      //     return <>{record.buyer ? record.buyer : "-"}</>;
+      //   },
+      // },
       {
         title: <div style={{textAlign:"center"}}>M3 Fabric Code</div>,
         dataIndex: "m3FabricCode",
@@ -367,7 +367,7 @@ const segmentedOptions = options();
         render: (m3FabricCode, row) => (
           <Tooltip title={row.description} placement="top" arrowPointAtCenter>
             <span className="fabCode">
-              {`${m3FabricCode} - ${row.description}`}
+              {`${row.fabricCode} - ${row.description}`}
             </span>
           </Tooltip>
         ),
@@ -401,16 +401,12 @@ const segmentedOptions = options();
         title: "XL No",
         dataIndex: "xlNo",
       },
+      // {
+      //   title: "Indent Raised",
+      //   dataIndex: "quantity",
+      // },
       {
-        title: "Indent Raised",
-        dataIndex: "quantity",
-      },
-      {
-        title: "PO Raised",
-        dataIndex: "poQty",
-      },
-      {
-        title: "Quantity",
+        title: "Indent Quantity",
         dataIndex: "quantity",
         sorter: (a, b) => a.quantity.localeCompare(b.quantity),
         sortDirections: ["descend", "ascend"],
@@ -423,6 +419,10 @@ const segmentedOptions = options();
             </>
           );
         },
+      },
+      {
+        title: "PO Raised",
+        dataIndex: "poQty",
       },
       // {
       //   title: "Available Quantity",

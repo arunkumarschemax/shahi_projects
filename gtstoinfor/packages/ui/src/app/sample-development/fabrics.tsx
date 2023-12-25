@@ -322,7 +322,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'S.No',
       dataIndex: 'sNo',
-      width:"10%",
+      width:"8%",
       render: (_, record, index) => index + 1,
     },
     {
@@ -383,7 +383,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             allowClear
             showSearch
             optionFilterProp="children"
-            placeholder="Select Fabric Code"
+            placeholder="Select Color"
           >
           <Option name={`colorId${record.key}`} key={0} value={0}>Please Select Color</Option>
             {color.map((e) => {
@@ -407,7 +407,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         <Form.Item name={`consumption${record.key}`}
         rules={[{ required: true, message: 'Missing Consumption' }]}
         >
-        <InputNumber
+        <InputNumber placeholder="Consumption" min={1}
         value={record.consumption}
         onChange={(e) => handleInputChange(e, record.key, 'consumption',0,record)}
         />
@@ -474,7 +474,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       <Form.Item name={`wastage${record.key}`} initialValue={2} 
       rules={[{ required: true, message: 'Missing Wastage' }]}
       >
-        <InputNumber
+        <InputNumber placeholder='wastage' min={0}
         defaultValue={2}
         onChange={(e) => handleInputChange(e, record.key, 'wastage',0,record)}
         />
@@ -499,7 +499,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Remarks',
       dataIndex: 'remarks',
-      width:"40%",
+      width:"50%",
       render: (_, record) => (
       <Form.Item name={`remarks${record.key}`}>
         <TextArea
