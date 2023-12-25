@@ -386,7 +386,7 @@ export class GrnService {
 
     async getGRNNoData(): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT grn_number as grnNo FROM grn ORDER BY grn_number`
+            let query = `SELECT grn_number as grnNo FROM grn GROUP BY grn_number ORDER BY grn_number `
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "GRN's retrieved successfully", data)
