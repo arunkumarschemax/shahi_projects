@@ -1285,6 +1285,22 @@ const onTrimChange = (val, option) => {
                                                 </Upload>
                                             </Form.Item>
                                         </Col>
+                                        {
+                                        imageUrl && (
+                                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                                            <Card style={{ height: '250px' }}>
+                                                <Form.Item>
+                                                <img
+                                                    src={imageUrl}
+                                                    alt="Preview"
+                                                    height={'200px'}
+                                                    width={'500px'}
+                                                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                                                />
+                                                </Form.Item>
+                                            </Card>
+                                            </Col>
+                                        )}
                                     </Row>
                                     <Row justify={'end'}>
                                         <Button type='primary' htmlType="submit">{btnType}</Button>

@@ -372,7 +372,8 @@ export const SampleDevForm = () => {
   };
 
   const handleFabricsDataUpdate = (updatedData) => {
-    // console.log(updatedData)
+    console.log(updatedData)
+    console.log(fabricsData)
       setData((prevData) => ({ ...prevData, fabricsData: updatedData }));
       setFabricsData(updatedData);
   };
@@ -615,7 +616,7 @@ export const SampleDevForm = () => {
                 },
               ]}
             >
-              <Input />
+              <Input placeholder="Enter Cost Ref" />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
