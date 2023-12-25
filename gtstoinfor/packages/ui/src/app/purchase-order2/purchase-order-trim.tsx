@@ -624,7 +624,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                               message: "poQuantity Is Required",
                             }
                         ]}>
-                            <Input type="number" placeholder="PoQuantity" addonAfter={<Form.Item name='quantityUomId' style={{width:'90px', height:"10px"}} rules={[{required:true,message:'Quantity unit is required'}]} >
+                            <Input type="number" placeholder="PoQuantity" addonAfter={<Form.Item name='quantityUomId' style={{width:'90px', height:"10px"}} rules={[{required:false,message:'Quantity unit is required'}]} >
                         <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'
                         onChange={finalCalculation}
                         >
