@@ -191,6 +191,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
 
         }
         if (rowData.samplereFabId != undefined) {
+            setInputDisable(true)
             fabricForm.setFieldsValue({ poQuantity: rowData.sampleQuantity })
             fabricForm.setFieldsValue({ unitPrice: rowData.unitPrice })
             fabricForm.setFieldsValue({ discount: rowData.discount })
@@ -272,7 +273,11 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         {
             title: 'M3 Fabric Code',
             dataIndex: 'itemCode',
-            width: '170px'
+            width: '170px',
+            render:(text,row)=>{
+                console.log(row)
+                return <>{`${row.fabricCode}-${row.itemCode}`}</>
+            }
         },
         {
             title: 'Color',
@@ -360,7 +365,11 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         {
             title: 'M3 Fabric Code',
             dataIndex: 'itemCode',
-            width: '170px'
+            width: '170px',
+            render:(text,row)=>{
+                console.log(row)
+                return <>{`${row.itemCode}-${row.description}`}</>
+            }
         },
         {
             title: 'Color',
