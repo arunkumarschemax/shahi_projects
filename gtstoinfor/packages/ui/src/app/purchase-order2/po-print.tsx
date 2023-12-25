@@ -200,7 +200,7 @@ export function PoPrint(props: PoPrintProps) {
                     <h2 style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Un Shinmun',marginLeft:'20px', marginTop: '0', marginBottom: '0' }}>Account : {`${poData[0]?.bank_acc_no}`}</h2></div>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginLeft: '50px' }}>
 
-                    <h2 style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Un Shinmun',marginLeft:'20px', marginTop: '0', marginBottom: '0' }}>Delivery Address : {`${poData[0]?.delivery_address}`}</h2></div>
+                    <h2 style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Un Shinmun',marginLeft:'20px', marginTop: '0', marginBottom: '0' }}>Delivery Address : {`${poData[0]?.address}`}</h2></div>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginLeft: '50px' }}>
 
                     <h2 style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Un Shinmun',marginLeft:'20px', marginTop: '0', marginBottom: '0' }}>Delivery State :</h2>

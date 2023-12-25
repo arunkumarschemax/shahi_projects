@@ -463,7 +463,7 @@ export const StockView = () => {
  
 
   return (
-    <Card title="RM Inventory" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+    <Card title="RM Fabric Inventory" headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
       <Form layout="vertical" form={form} onFinish={onFinish}>
        <Row gutter={24}>
        {/* {!isBuyer ? 
