@@ -286,7 +286,7 @@ const stockService = new StockService();
           ...getColumnSearchProps('m3Code'),
           sorter: (a, b) => a.m3Code.length - b.m3Code.length,
          sortDirections: ['descend', 'ascend'],
-          
+         render: (text) => text || "-",
 
       },
       {
@@ -295,8 +295,7 @@ const stockService = new StockService();
         ...getColumnSearchProps('hsnCode'),
         sorter: (a, b) => a.hsnCode.length - b.hsnCode.length,
        sortDirections: ['descend', 'ascend'],
-        
-
+       render: (text) => text || "-",
     },
         // {
         //     title: "Content",
@@ -386,6 +385,7 @@ const stockService = new StockService();
             dataIndex: "fabricFinish",
             sorter: (a, b) => a.fabricFinish.length - b.fabricFinish.length,
             sortDirections: ['descend', 'ascend'],     
+            render: (text) => text || "-",
         },
         {
             title: "Shrinkage",
