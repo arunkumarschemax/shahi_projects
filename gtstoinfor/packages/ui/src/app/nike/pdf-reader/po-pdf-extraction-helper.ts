@@ -40,8 +40,10 @@ export const extractDataFromPoPdf = async (pdf) => {
             let shipToAddEndIndex;
             let shipToCount = 0
             let firstShipToFlag = false
+
+            // console.log(firstPageContent)
             for (const [ind, ele] of firstPageContent.entries()) {
-                if (ele.str == PO_DOC_DATE_TXT) {
+                if (ele.str.includes(PO_DOC_DATE_TXT)) {
                     poDocDateIndex = ind
                 }
                 if (ele.str == PO_NUMBER_TEXT) {
@@ -66,14 +68,12 @@ export const extractDataFromPoPdf = async (pdf) => {
                         buyerAddEndIndex = ind
                     }
                 }
-
                 if (ele.str == ITEM_SHIP_TO_TEXT) {
                     firstShipToFlag = true
                 }
                 if (ele.str.includes(UNWANTED_TEXT_1)) {
                     shipToAddEndIndex = ind
                 }
-
             }
             poData.poDocDate = firstPageContent[poDocDateIndex + PO_DOC_DATE_INDEX].str
             poData.seasonYear = firstPageContent[poDocDateIndex + SEASONYEAR_INDEX].str
@@ -227,7 +227,13 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemVariantsObj.uom = itemVarinatsTextArr[(6 * l) + 0]
             itemVariantsObj.unitPrice = itemVarinatsTextArr[(6 * l) + 1] + ' ' + itemVarinatsTextArr[(6 * l) + 2]
             itemVariantsObj.size = itemVarinatsTextArr[(6 * l) + 3]
-            itemVariantsObj.qunatity = itemVarinatsTextArr[(6 * l) + 4]
+            const numberWithComma = itemVarinatsTextArr[(6 * l) + 4]
+            let numberWithoutComma;
+            if (numberWithComma.includes(','))
+                numberWithoutComma = numberWithComma.replace(/,/g, '')
+            else
+                numberWithoutComma = numberWithComma
+            itemVariantsObj.qunatity = numberWithoutComma
             itemVariantsObj.amount = itemVarinatsTextArr[(6 * l) + 5]
             // console.log(itemVariantsObj)
             itemVariantsArr.push(itemVariantsObj)

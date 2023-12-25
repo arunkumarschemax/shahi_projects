@@ -296,10 +296,10 @@ export class DpomRepository extends Repository<DpomEntity> {
             dpm.po_number AS poNumber, dpm.po_line_item_number AS poLine ,dpm.destination_country AS destination,
             dpm.shipping_type AS shipmentType,dpm.inventory_segment_code AS inventorySegmentCode,
             dpm.ogac AS ogac ,dpm.gac AS gac ,dpm.product_code AS productCode,
-            dpm.item_vas_text AS itemVasText,dpm.total_item_qty AS Quantity,dpm.created_at AS dpomCreatedDates,dpm.diverted_to_pos, dpm.factory,dpm.gross_price_fob,dpm.trading_net_inc_disc,od.old_val AS oldQty`)
+            dpm.item_vas_text AS itemVasText,dpm.total_item_qty AS Quantity,dpm.created_at AS dpomCreatedDates,dpm.diverted_to_pos, dpm.factory,dpm.gross_price_fob,dpm.trading_net_inc_disc`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpm.po_number AND od.po_line_item_number = dpm.po_line_item_number AND od.schedule_line_item_number = dpm.schedule_line_item_number')
             .where(`diverted_to_pos IS NOT null`)
-            .andWhere(` od.column_name='total_item_qty' `)
+            // .andWhere(` od.column_name='total_item_qty' `)
             .groupBy(`po_and_line  `)
         return await query.getRawMany()
     }
@@ -619,7 +619,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             query.andWhere(`dpom.factory ='${req.factory}'`)
         }
         if (req.docTypeCode !== undefined) {
-            query.andWhere(`dpom.doc_type_code ='${req.docTypeCode}'`)
+            query.andWhere(`dpom.doc_type_code IN (:...docType)`, { docType: req.docTypeCode })
         }
         if (req.poLineItemNumber !== undefined && req.poLineItemNumber.length > 0) {
             query.andWhere(`dpom.po_line_item_number IN (:...lineItemNumbers)`, { lineItemNumbers: req.poLineItemNumber })
@@ -674,8 +674,8 @@ export class DpomRepository extends Repository<DpomEntity> {
         if (req.productCode !== undefined) {
             query.andWhere(`dpom.product_code ='${req.productCode}'`)
         }
-        if (req.poNumber !== undefined) {
-            query.andWhere(`dpom.po_number ='${req.poNumber}'`)
+        if (req.poNumber !== undefined && req.poNumber.length > 0) {
+            query.andWhere(`dpom.po_number IN (:...ponumbers)`, { ponumbers: req.poNumber })
         }
         if (req.colorDesc !== undefined) {
             query.andWhere(`dpom.color_desc ='${req.colorDesc}'`)
