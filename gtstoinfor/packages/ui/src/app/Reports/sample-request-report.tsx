@@ -66,6 +66,15 @@ const SampleRequestReport = () => {
     if (form.getFieldValue("style") !== undefined) {
       req.styleId = form.getFieldValue("style");
     }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+      req.tab = "TRIM"
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      req.tab = "FABRIC"
+        }
+        if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+          req.tab = undefined
+            }
     req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     
     service.getSampleRequestReport(req).then((res) => {

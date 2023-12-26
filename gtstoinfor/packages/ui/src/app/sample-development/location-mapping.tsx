@@ -28,7 +28,7 @@ export const LocationMapping = () => {
 
     useEffect(() => {
         if (grnData) {
-            form.setFieldsValue({quantity : grnData.balance, itemName:grnData.itemCode, itemId:grnData.itemId, colorId:grnData.colorId,grnType:grnData.itemType,sampleReqId:grnData.sampleReqId,sampleItemId:grnData.sampleItemId })
+            form.setFieldsValue({quantity : `${grnData.balance}`, itemName:grnData.itemCode, itemId:grnData.itemId, colorId:grnData.colorId,grnType:grnData.itemType,sampleReqId:grnData.sampleReqId,sampleItemId:grnData.sampleItemId })
             if (grnData.grnItemId) {
                 const id = grnData.grnItemId;
                 getOneItemAllocateDetailsData(id);
@@ -190,13 +190,13 @@ export const LocationMapping = () => {
                                 {grnData.buyerName}
                             </Descriptions.Item>
                             <Descriptions.Item label="Received Quantity" style={{ width: '33%' }}>
-                                {Number(grnData.acceptedQuantity)}
+                             {`${Number(grnData.acceptedQuantity)}(${grnData.uom})`}
                             </Descriptions.Item>
                             {/* <Descriptions.Item label="Stock" style={{ width: '33%' }}>
                                 {grnData.quantity > 0 ? Number(grnData.quantity) : 0}
                             </Descriptions.Item> */}
                             <Descriptions.Item label="Location Mapping Quantity" style={{ width: '33%' }}>
-                                {grnData.balance}
+                            {`${grnData.balance}(${grnData.uom})`}
                             </Descriptions.Item>
                         </Descriptions>
                     </Col>
