@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CentricEntity } from "./entity/centric.entity";
 import { CentricDto } from "./dto/centric.dto";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CentricOrderDataModel, CommonResponseModel, PoOrderFilter } from "@project-management-system/shared-models";
 import { Repository } from "typeorm/repository/Repository";
 import { CentricRepository } from "./repositories/centric.repo";
 import { DataSource } from "typeorm/data-source/DataSource";
@@ -158,17 +158,48 @@ export class CentricService {
       }
     }
   }
+  
+  async getorderData(req?: PoOrderFilter): Promise<CommonResponseModel> {
+    try {
+      const details = await this.Repo.getorderData(req);
+      // if (details.length === 0) {
+      //   return new CommonResponseModel(false, 0, 'data not found');
+      // }
+      // const sizeDateMap = new Map<string, CentricOrderDataModel>();
+      // for (const rec of details) {
+      //   if (!sizeDateMap.has(rec.po_number)) { 
+      //     sizeDateMap.set(
+      //       rec.po_number,
+      //       new CentricOrderDataModel()
+      //     );
+      //   }
+      //   const sizeWiseData = sizeDateMap.get(rec.po_number).sizeWiseData;
+      //   if (rec.size !== null) {
+      //     sizeWiseData.push(new CentricSizeWiseModel(rec.size, rec.total_qty, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean));
+      //   }
+      // }
+      // const dataModelArray: CentricOrderDataModel[] = Array.from(sizeDateMap.values());
+      // return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+      return new CommonResponseModel(true, 1, 'data retrieved', details);
 
-  //   async getdata(req: filterDto): Promise<CommonResponseModel> {
-  //     // console.log(req, "services")
+    } catch (e) {
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
 
-  //     const records = await this.repository.find({
-  //       where: { venName: req.vendorName },
-  //       relations: ['scanentity']
-  //     });
-  //     if (records.length === 0) {
-  //       return new GlobalResponseObject(false, 65645, "Data not Found");
-  //     }
-  //     return new CommonResponseModel(true, 111111, "Data Retrieved Successfully", records);
-  //   }
+  
+  async getPdfFileInfo(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.pdfRepo.find()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+
 }

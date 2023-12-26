@@ -9,8 +9,15 @@ export class CentricService extends CommonAxiosService {
     }
 
     async fileUpload(formData: any): Promise<CommonResponseModel> {
-        // console.log(formData,"shar")
         return this.axiosPostCall(this.centricOrdersController + "/fileUpload", formData)
+    }
+    async getorderData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.centricOrdersController + "/getorderData")
+    }
+
+    
+    async getPdfFileInfo(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.centricOrdersController + "/getPdfFileInfo")
     }
     
 }

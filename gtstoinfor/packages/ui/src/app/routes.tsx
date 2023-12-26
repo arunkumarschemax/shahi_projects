@@ -43,6 +43,8 @@ import ColineView from "./ralph-lauren/co-line-view"
 import AddressView from "./masters/address/address-view"
 import AddressUpload from "./masters/address/address-excel-upload"
 import PdfUpload from "./centric/pdf-upload"
+import PPKPOReport from "./centric/po-report"
+import CentricPdFInfoGrid from "./centric/pdf-file-grid"
 
 
 export const AppRoutes = () => {
@@ -183,6 +185,13 @@ export const AppRoutes = () => {
                     <Route path='co-line-view' element={<ColineView />} />
                     <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
+
+                </Route>
+
+                <Route path='/centric'>
+                    <Route path='pdf-info' element={<CentricPdFInfoGrid />} />
+                    <Route path='ppk-po-report' element={<PPKPOReport />} />
+                    
 
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
