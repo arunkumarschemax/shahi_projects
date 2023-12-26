@@ -1,6 +1,6 @@
 import { LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
-import { Card, Col, Descriptions, Input, Row, Table, Form, Select, InputNumber, Radio, Button, Modal, RadioChangeEvent } from 'antd'
+import { Card, Col, Descriptions, Input, Row, Table, Form, Select, InputNumber, Radio, Button, Modal, RadioChangeEvent, Tooltip } from 'antd'
 import { Option } from 'antd/es/mentions';
 import { ColumnProps } from 'antd/es/table';
 import React, { useEffect, useState } from 'react'
@@ -25,7 +25,8 @@ export const LocationMapping = () => {
     const [locationStatusValue, setValue] = useState<string>('Occupied');
     const [showQrSacn, setShowQrScan] = useState<boolean>(false);
     const [vendorName, setVendorName] = useState<string>("Hello")
-
+    const [remarkModal,setRemarkModal] = useState<boolean>(false)
+    const [remarks,setRemarks] = useState<string>('')
     useEffect(() => {
         if (grnData) {
             form.setFieldsValue({quantity : `${grnData.balance}`, itemName:grnData.itemCode, itemId:grnData.itemId, colorId:grnData.colorId,grnType:grnData.itemType,sampleReqId:grnData.sampleReqId,sampleItemId:grnData.sampleItemId })
@@ -123,7 +124,13 @@ export const LocationMapping = () => {
             })
         }
     }
-
+    const handleTextClick = (remarks) => {
+        setRemarks(remarks)
+        setRemarkModal(true)
+      }
+      const onRemarksModalOk = () => {
+      setRemarkModal(false)
+      }
     const columnsSkelton: ColumnProps<any>[] = [
         {
             title: 'S No',
@@ -175,7 +182,15 @@ export const LocationMapping = () => {
             dataIndex: 'status',
         },
     ]
-
+    render:(text,record) => {
+        return(
+            <>
+            {record.description?.length > 30 ? (<><Tooltip title='Cilck to open full description'><p><span onClick={() => handleTextClick(record.description)} style={{ cursor: 'pointer' }}>
+                        {record.description.length > 30 ? `${record.description?.substring(0, 30)}....` : record.description}
+                    </span></p></Tooltip></>) : (<>{record.description}</>)}
+            </>
+        )
+    }
     return (
         <div>
             <Card size="small" title={<span style={{ color: 'white' }} >Location Mapping</span>}
@@ -188,6 +203,12 @@ export const LocationMapping = () => {
                             </Descriptions.Item>
                             <Descriptions.Item label="Buyer" style={{ width: '33%' }}>
                                 {grnData.buyerName}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="Description" style={{ width: '33%' }}>
+                                {/* {grnData.description} */}
+                                {grnData.description?.length > 30 ? (<><Tooltip title='Cilck to open full description'><p><span onClick={() => handleTextClick(grnData.description)} style={{ cursor: 'pointer' }}>
+                        {grnData.description.length > 30 ? `${grnData.description?.substring(0, 30)}....` : grnData.description}
+                    </span></p></Tooltip></>) : (<>{grnData.description}</>)}
                             </Descriptions.Item>
                             <Descriptions.Item label="Received Quantity" style={{ width: '33%' }}>
                              {`${Number(grnData.acceptedQuantity)}(${grnData.uom})`}
@@ -297,6 +318,11 @@ export const LocationMapping = () => {
                     // onChange={onChange}
                     bordered
                 /> : <></>}
+<Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{remarks}</p>
+                </Card>
+            </Modal>
             </Card>
         </div>
     )

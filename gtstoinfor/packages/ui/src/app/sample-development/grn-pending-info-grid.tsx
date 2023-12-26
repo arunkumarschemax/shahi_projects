@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
-import { Button, Card, Col, Form, Row, Select, Table } from 'antd';
+import { Button, Card, Col, Form, Modal, Row, Select, Table, Tooltip } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { ExternalRefReq, GRNLocationPropsRequest, GRNTypeEnumDisplay, ItemTypeEnumDisplay } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
@@ -18,7 +18,8 @@ export const GrnPendingInfoGrid = () => {
     const [locationData, setLocationData] = React.useState<GRNLocationPropsRequest>();
     const [form] = Form.useForm();
     const { Option } = Select;
-
+    const [remarkModal,setRemarkModal] = useState<boolean>(false)
+    const [remarks,setRemarks] = useState<string>('')
     const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
     console.log(externalRefNo,"req")
 
@@ -61,6 +62,13 @@ const getMaterial=()=>{
     locationService.getMaterial(req).then((res)=>{
         setmaterial(res.data)
     })
+}
+const handleTextClick = (remarks) => {
+  setRemarks(remarks)
+  setRemarkModal(true)
+}
+const onRemarksModalOk = () => {
+setRemarkModal(false)
 }
     const sampleTypeColumns: ColumnsType<any> = [
         {
@@ -128,6 +136,20 @@ const getMaterial=()=>{
             sorter: (a, b) => a.itemCode - b.itemCode,
               sortDirections: ['descend', 'ascend'],
             //   ...getColumnSearchProps('vendorName')
+        },
+        {
+          title: 'Description',
+          dataIndex: "description",
+          align: 'left',
+          render:(text,record) => {
+            return(
+                <>
+                {record.description?.length > 30 ? (<><Tooltip title='Cilck to open full description'><p><span onClick={() => handleTextClick(record.description)} style={{ cursor: 'pointer' }}>
+                            {record.description.length > 30 ? `${record.description?.substring(0, 30)}....` : record.description}
+                        </span></p></Tooltip></>) : (<>{record.description}</>)}
+                </>
+            )
+        }
         },
         {
             title: 'Grn Quantity',
@@ -264,6 +286,7 @@ const getMaterial=()=>{
                         </Row>
                     </Form>
                 <Table
+                        scroll={{x:'max-content',y:500}}
                     rowKey={record => record.productId}
                     className="components-table-nested"
                     columns={sampleTypeColumns}
@@ -275,10 +298,15 @@ const getMaterial=()=>{
                         }
                     }}
                     onChange={onChange}
-                    scroll={{ x: 500 }}
+                    // scroll={{ x: 500 }}
                     // size='small'
                     bordered
                 />
+                    <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{remarks}</p>
+                </Card>
+            </Modal>
             </Card>
         </div>
     )
