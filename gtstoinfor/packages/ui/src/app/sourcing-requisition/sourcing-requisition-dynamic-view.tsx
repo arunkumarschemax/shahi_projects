@@ -77,6 +77,8 @@ export const SourcingRequisitionDynamicView = () => {
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [selectedRowData, setSelectedRowData] = useState([]);
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
+  const [remarkModal,setRemarkModal] = useState<boolean>(false)
+  const [remarks,setRemarks] = useState<string>('')
   // const [segmentOptions, setSegmentOptions] = useState<any[]>(
   //   [
   //     { key: 'Fabric', label: 'Fabric' },
@@ -493,6 +495,13 @@ const segmentedOptions = options();
     return [...Columns];   
  
   }
+  const handleTextClick = (remarks) => {
+    setRemarks(remarks)
+    setRemarkModal(true)
+}
+const onRemarksModalOk = () => {
+  setRemarkModal(false)
+}
   const tableTrimColumns = (key, val) => {
     // console.log(val);
     const columnsSkelton: any = [
@@ -544,6 +553,15 @@ const segmentedOptions = options();
       {
         title: "Remarks",
         dataIndex: "remarks",
+        render:(text,record) => {
+          return(
+              <>
+              {record.remarks?.length > 30 ? (<><Tooltip title='Cilck to open full remarks'><p><span onClick={() => handleTextClick(record.remarks)} style={{ cursor: 'pointer' }}>
+                          {record.remarks.length > 30 ? `${record.remarks?.substring(0, 30)}....` : record.remarks}
+                      </span></p></Tooltip></>) : (<>{record.remarks}</>)}
+              </>
+          )
+      }
       },
       {
         title: <div style={{ textAlign: "center" }}>
@@ -939,6 +957,11 @@ const test = (val, row) =>{
           </Collapse.Panel>
         ))}
       </Collapse>
+      <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{remarks}</p>
+                </Card>
+            </Modal>
       <Modal
       width='15%'
               open={barcodeModal}
