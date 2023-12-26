@@ -17,7 +17,7 @@ import {
     RLOrdersService,
   } from "@project-management-system/shared-services";
   import React from "react";
-  import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
+  import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
   import Highlighter from "react-highlight-words";
   import { useNavigate } from "react-router-dom";
   import {
@@ -26,6 +26,7 @@ import {
   } from "@project-management-system/shared-models";
   import { ColumnsType } from "antd/es/table";
   import { useIAMClientState } from "../nike/iam-client-react";
+import { Excel } from "antd-table-saveas-excel";
   
   export function PPKPOReport() {
     const service = new CentricService();
@@ -37,7 +38,7 @@ import {
     const [pageSize, setPageSize] = useState(1);
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
-    const [poNumber, setPoNumber] = useState("");
+    const [poNumber, setPoNumber] = useState([]);
     const [form] = Form.useForm();
     const { Option } = Select;
     const [isModalOpen1, setIsModalOpen1] = useState(false);
@@ -46,6 +47,7 @@ import {
   
     useEffect(() => {
       getorderData();
+      getPoNumber()
     }, []);
 
   
@@ -65,89 +67,324 @@ import {
       });
     };
 
-    // const filterData:any = [
-    //   {
-    //     sno: 1,
-    //     poNumber: "4500559754",
-    //     lineNumber: "10",
-    //     division: "Centric Fashion LLC",
-    //     manufacture: "SHAHI EXPORTS PVT LTD 42",
-    //     poDate: "2023-01-01",
-    //     season:"SP24",
-    //     shipmentMethod:"Ocean",
-    //     material:"46IZSHB0NR-311-P0B",
-    //     comptMaterial:"46IZSHB0NR-311",
-    //     gender:"Men",
-    //     shortDescription:" SS ADV PERF SLD POLO",
-    //     color:"GREEN SPRUCE",
-    //     reference:"BELK",
-    //     packMethod:"Flatpacked",
-    //     exFactoryDate:"19-12-2023",
-    //     xPortDate:"24-12-2023",
-    //     deliveryDate:"10-02-2024",
-    //     incoterm:"NHAVA SHEVA (JAWAHARLAL NEHRU), MAHARASHTRA",
-    //     portOfExport:"INNSA",
-    //     portOfEntryName:"USSAV-Sea-Savannah, GA",
-    //     paymentTermsDescription:"Net due in 90 days",
-    //     vendorBookingFlag:"Yes",
-    //     address:"Performance Team Savannah 380 Fort Argyle Road Savannah, GA, 314199226 UNITED STATES",
-
-    //     sizeWiseData: [
-         
-    //       {
-    //         size: "S",
-    //         ratio: 1,
-    //         fobPrice: 50,
-    //         totalPOQty:38,
-    //         specialInstruction:"1 PPK PER CARTON",
-    //         upc:197206111514,
-    //         ppkUPC:197206310566,
-    //         retailPrice:50
-    //       },
-    //       {
-    //         size: "M",
-    //         ratio: 1,
-    //         fobPrice: 50,
-    //         totalPOQty:38,
-    //         specialInstruction:"1 PPK PER CARTON",
-    //         upc:197206111514,
-    //         ppkUPC:197206310566,
-    //         retailPrice:50
-    //       },
-    //       {
-    //         size: "L",
-    //         ratio: 3,
-    //         fobPrice: 50,
-    //         totalPOQty:114,
-    //         specialInstruction:"1 PPK PER CARTON",
-    //         upc:197206111514,
-    //         ppkUPC:197206310566,
-    //         retailPrice:50
-    //       },
-    //       {
-    //         size: "XL",
-    //         ratio: 3,
-    //         fobPrice: 50,
-    //         totalPOQty:114,
-    //         specialInstruction:"1 PPK PER CARTON",
-    //         upc:197206111514,
-    //         ppkUPC:197206310566,
-    //         retailPrice:50
-    //       }, {
-    //         size: "XXL",
-    //         ratio: 2,
-    //         fobPrice: 50,
-    //         totalPOQty:76,
-    //         specialInstruction:"1 PPK PER CARTON",
-    //         upc:197206111514,
-    //         ppkUPC:197206310566,
-    //         retailPrice:50
-    //       },
-    //     ],
+    const getPoNumber = () => {
+      service.getPoNumber().then((res) => {
+        if (res.status) {
+          setPoNumber(res.data);
         
+        }
+      });
+    };
+    
+  const exportExcel = () => {
+    const excel = new Excel();
+
+          let rowIndex = 1;
+          const excelColumnsWH: any[] = [];
+          excelColumnsWH.push(
+            { 
+              title: "#", 
+              // dataIndex: "sno", 
+              render: (text, object, index) => { 
+                if(index == orderData.length) { 
+                  return null;
+                } else { 
+                  return rowIndex++; 
+                } 
+              }
+            },
+            {
+              title: "PO Number",
+              dataIndex: "poNumber",
+              width: 90,
+              sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+              sortDirections: ["ascend", "descend"],
+              fixed: "left",
+              // ...getColumnSearchProps('poNumber')
+            },
+            {
+                title: "Line Number",
+                dataIndex: "poLine",
+                width: 90,
+                sorter: (a, b) => a.lineNumber.localeCompare(b.lineNumber),
+                sortDirections: ["ascend", "descend"],
+                fixed: "left",
+              },
+            {
+              title: "Division",
+              dataIndex: "division",
+              width: 90,
+              sorter: (a, b) => a.division.localeCompare(b.division),
+              sortDirections: ["ascend", "descend"],
+            },
+            {
+              title: "Manufacture",
+              dataIndex: "manufacture",
+              width: 90,
+              sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
+              sortDirections: ["ascend", "descend"],
+            },
+            {
+                title: "Material",
+                dataIndex: "material",
+                width: 90,
+                sorter: (a, b) => a.material.localeCompare(b.material),
+                sortDirections: ["ascend", "descend"],
+              },
+            {
+              title: "Compt.Material",
+              dataIndex: "comptMaterial",
+              width: 110,
+              sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
+              sortDirections: ["ascend", "descend"],
+            },
+            {
+                title: "Gender",
+                dataIndex: "gender",
+                width: 90,
+                sorter: (a, b) => a.gender.localeCompare(b.gender),
+                sortDirections: ["ascend", "descend"],
+              },
+              {
+                title: "Short Description",
+                dataIndex: "shortDescription",
+                width: 90,
+                sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
+                sortDirections: ["ascend", "descend"],
+              },
+              {
+                title: "Color",
+                dataIndex: "color",
+                width: 90,
+                sorter: (a, b) => a.color.localeCompare(b.color),
+                sortDirections: ["ascend", "descend"],
+              },
+              {
+                title: "Reference",
+                dataIndex: "reference",
+                width: 90,
+                sorter: (a, b) => a.reference.localeCompare(b.reference),
+                sortDirections: ["ascend", "descend"],
+              },
+              {
+                title: "Pack Method",
+                dataIndex: "packMethod",
+                width: 90,
+                sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
+                sortDirections: ["ascend", "descend"],
+              },
+              {
+                title: "Season",
+                dataIndex: "season",
+                width: 90,
+                sorter: (a, b) => a.season.localeCompare(b.season),
+                sortDirections: ["ascend", "descend"],
+              },
+              {
+                title: "Shipment Method",
+                dataIndex: "shipmentMethod",
+                width: 90,
+                sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
+                sortDirections: ["ascend", "descend"],
+              },
+          );
+          const sizeHeaders = new Set<string>();
+          orderData?.forEach((rec) =>
+          rec.sizeWiseData?.forEach((version) => {
+            sizeHeaders.add("" + version.size);
+          })
+        );
+         
+
+        sizeHeaders?.forEach(version => {
+          excelColumnsWH.push({
+              title: version,
+              dataIndex: version,
+              key: version,
+              width: 70,
+              align: 'center',
+              children: [
+            
+                  {
+                      title: 'FOB Price',
+                      dataIndex: '',
+                      key: '',
+                      width: 70,
+                      className: "center",
+                      render: (text, record) => {
+                          const sizeData = record.sizeWiseData.find(item => item.size === version);
+                          console.log()
+                          if (sizeData) {
+                              if (sizeData.size !== null) {
+                                  const formattedQty = (sizeData?.fobPrice)
+                                  return (
+                                      formattedQty
+                                  );
+                              } else {
+  
+                                  return (
+                                      '-'
+                                  );
+                              }
+                          } else {
+                              return '-';
+                          }
+                      }
+                  },
+                  {
+                      title: 'Tot PO Qty in PC',
+                      dataIndex: '',
+                      key: '',
+                      width: 70,
+                      className: "center",
+                      render: (text, record) => {
+                          const sizeData = record.sizeWiseData.find(item => item.size === version);
+                          console.log()
+                          if (sizeData) {
+                              if (sizeData.size !== null) {
+                                  const formattedQty = (sizeData?.totalQuantity)
+                                  return (
+                                      formattedQty
+                                  );
+                              } else {
+  
+                                  return (
+                                      '-'
+                                  );
+                              }
+                          } else {
+                              return '-';
+                          }
+                      }
+                  },
+                  
+                  {
+                      title: 'Special Instructions',
+                      dataIndex: '',
+                      key: '',
+                      width: 100,
+                      className: "center",
+                      render: (text, record) => {
+                          const sizeData = record.sizeWiseData.find(item => item.size === version);
+                          console.log()
+                          if (sizeData) {
+                              if (sizeData.size !== null) {
+                                  const formattedQty = (sizeData?.specialInstruction)
+                                  return (
+                                      formattedQty
+                                  );
+                              } else {
+  
+                                  return (
+                                      '-'
+                                  );
+                              }
+                          } else {
+                              return '-';
+                          }
+                      }
+                  },
+                  {
+                      title: 'UPC',
+                      dataIndex: '',
+                      key: '',
+                      width: 70,
+                      className: "center",
+                      render: (text, record) => {
+                          const sizeData = record.sizeWiseData.find(item => item.size === version);
+                          console.log()
+                          if (sizeData) {
+                              if (sizeData.size !== null) {
+                                const formattedQty = (sizeData?.upc)
+                                  // const formattedQty = (sizeData?.amount)
+                                  return (
+                                      formattedQty
+                                  );
+                              } else {
+  
+                                  return (
+                                      '-'
+                                  );
+                              }
+                          } else {
+                              return '-';
+                          }
+                      }
+                  },
+              
+                  {
+                    title: 'Retail Price(USD) ',
+                    dataIndex: '',
+                    key: '',
+                    width: 70,
+                    className: "center",
+                    render: (text, record) => {
+                        const sizeData = record.sizeWiseData.find(item => item.size === version);
+                        console.log()
+                        if (sizeData) {
+                            if (sizeData.size !== null) {
+                                const formattedQty = (sizeData?.retailPrice)
+                                return (
+                                    formattedQty
+                                );
+                            } else {
+
+                                return (
+                                    '-'
+                                );
+                            }
+                        } else {
+                            return '-';
+                        }
+                    }
+                },
+              ]
+          });
+      })
+
+       
+    
+            excel
+              .addSheet(`Order Report`)
+              .addColumns(excelColumnsWH)
+              .addDataSource(filterData, { str2num: true });
+
+     
+        excel.saveAs("OrderReport.xlsx");
+      
+    
+
+
+
+    // const obj = {};
+
+    // const monthTotals = {};
+    // sizeHeaders.forEach((mon) => {
+    //   let monthValue = 0;
+    //   monthTotals[mon] = 0;
+    //   data.forEach((r) => {
+    //     const sizeData = r?.MonthItemData?.find((item) => item.monthName == mon);
+    //     // console.log(sizeData);
+    //     monthValue = sizeData ? Number(sizeData?.totalQuantity) : 0;
+    //     monthTotals[mon] += monthValue;
+    //     // grandTotal += monthValue;
+    //   });
+    // });
+    // console.log(monthTotals);
+    // console.log(data[0]);
+    // obj['MonthItemData'] = [];
+    // obj['itemName'] = "Grand Total";
+    // Object.keys(monthTotals).forEach(k => {
+    //   obj['MonthItemData'].push({ monthName : k, totalQuantity : monthTotals[k]});
+    // });
+    // const dataDuplicate = JSON.parse(JSON.stringify(data));
+    // dataDuplicate.push(obj);
+    // console.log(dataDuplicate[dataDuplicate.length]);
+
+
  
-    //   },
-    // ];
+  }
+
 
     const onReset = () => {
       form.resetFields();
@@ -164,14 +401,14 @@ import {
       setSearchText("");
     };
   
-    const showModal1 = (record) => {
-      setPoNumber(record);
-      setIsModalOpen1(true);
-    };
+    // const showModal1 = (record) => {
+    //   setPoNumber(record);
+    //   setIsModalOpen1(true);
+    // };
   
-    const cancelHandle = () => {
-      setIsModalOpen1(false);
-    };
+    // const cancelHandle = () => {
+    //   setIsModalOpen1(false);
+    // };
     const getColumnSearchProps = (dataIndex: string) => ({
       filterDropdown: ({
         setSelectedKeys,
@@ -379,33 +616,7 @@ import {
               width: 70,
               align: 'center',
               children: [
-                  // {
-                  //     title: 'Color',
-                  //     dataIndex: '',
-                  //     key: '',
-                  //     width: 70,
-                  //     className: "center",
-                  //     render: (text, record) => {
-                  //         const sizeData = record.sizeWiseData.find(item => item.size === version);
-                  //         console.log()
-                  //         if (sizeData) {
-                  //             if (sizeData.size !== null) {
-                  //                 const formattedQty = (sizeData?.color)
-                  //                 return (
-                  //                     formattedQty
-                  //                 );
-                  //             } else {
-  
-                  //                 return (
-                  //                     '-'
-                  //                 );
-                  //             }
-                  //         } else {
-                  //             return '-';
-                  //         }
-                  //     }
-                  // },
-                  
+            
                   {
                       title: 'FOB Price',
                       dataIndex: '',
@@ -512,32 +723,7 @@ import {
                           }
                       }
                   },
-                  // {
-                  //     title: 'PPK UPC ',
-                  //     dataIndex: '',
-                  //     key: '',
-                  //     width: 70,
-                  //     className: "center",
-                  //     render: (text, record) => {
-                  //         const sizeData = record.sizeWiseData.find(item => item.size === version);
-                  //         console.log()
-                  //         if (sizeData) {
-                  //             if (sizeData.size !== null) {
-                  //                 const formattedQty = (sizeData?.ppkUPC)
-                  //                 return (
-                  //                     formattedQty
-                  //                 );
-                  //             } else {
-  
-                  //                 return (
-                  //                     '-'
-                  //                 );
-                  //             }
-                  //         } else {
-                  //             return '-';
-                  //         }
-                  //     }
-                  // },
+              
                   {
                     title: 'Retail Price(USD) ',
                     dataIndex: '',
@@ -715,9 +901,19 @@ import {
   
     return (
       <>
-        <Card title="Order " headStyle={{ fontWeight: "bold" }}>
+        <Card title="Order " headStyle={{ fontWeight: "bold" }} 
+          extra={
+            <Button
+              type="default"
+              style={{ color: "green" }}
+              onClick={exportExcel}
+              icon={<FileExcelFilled />}
+            >
+              Download Excel
+            </Button>
+          }>
           <Form
-            // onFinish={getorderData}
+            onFinish={getorderData}
             form={form}
             // layout='vertical'
           >
@@ -736,16 +932,40 @@ import {
                     optionFilterProp="children"
                     allowClear
                   >
-                    {orderData.map((inc: any) => {
+                    {poNumber.map((inc: any) => {
                       return (
-                        <Option key={inc.poNumber} value={inc.poNumber}>
-                          {inc.poNumber}
+                        <Option key={inc.po_number} value={inc.po_number}>
+                          {inc.po_number}
                         </Option>
                       );
                     })}
                   </Select>
                 </Form.Item>
               </Col>
+              {/* <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 6 }}
+              >
+                <Form.Item name="poLine" label="PO Line">
+                  <Select
+                    showSearch
+                    placeholder="Select PO Line"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {orderData.map((inc: any) => {
+                      return (
+                        <Option key={inc.poLine} value={inc.poLine}>
+                          {inc.poLine}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col> */}
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}

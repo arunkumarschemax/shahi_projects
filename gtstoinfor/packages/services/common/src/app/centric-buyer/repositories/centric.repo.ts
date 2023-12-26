@@ -26,6 +26,15 @@ export class CentricRepository extends Repository<CentricEntity> {
     }
 
     
+    async getDistinctPoNumbers(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`DISTINCT po_number`)
+        
+        return await query.getRawMany()
+    }
+
+
+    
 
 
 }
