@@ -406,7 +406,7 @@ const segmentedOptions = options();
       //   dataIndex: "quantity",
       // },
       {
-        title: "Indent Quantity",
+        title: "Indent Raised",
         dataIndex: "quantity",
         sorter: (a, b) => a.quantity.localeCompare(b.quantity),
         sortDirections: ["descend", "ascend"],
