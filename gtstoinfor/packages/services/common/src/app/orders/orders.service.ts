@@ -1160,13 +1160,24 @@ export class OrdersService {
                 itemPhaseTypeYearWiseMap.get(rec.planning_sum).get(rec.prod_plan_type).push(exfpc);
             }
     
+            let totalSumInPcs = 0
+            let totalSumCoeffpcs = 0
+            let exfData
             itemPhaseTypeYearWiseMap.forEach((yearRecs, item) => {
                 const monthWiseDtoArray: NewMonthWiseDto[] = [];
                 yearRecs.forEach( (yr, phaseType) => {
-                    const  exfData = new NewMonthWiseDto(phaseType, []);
+                      exfData = new NewMonthWiseDto(phaseType, []);
+                     let totalinpc = 0
+                     let totalCoefpc =0
                     yr.forEach(mData => {
+                        totalinpc+=Number(mData.inPcs)
+                        totalCoefpc+=Number(mData.inCoeffPcs)
                         exfData.pcsData.push(mData);
                     });
+                    totalSumInPcs += totalinpc
+                    totalSumCoeffpcs +=totalCoefpc
+                    exfData.totalInpcs=totalSumInPcs
+                    exfData.totalCoeffpcs=totalSumCoeffpcs
                     monthWiseDtoArray.push(exfData);
                 });
                 detailedarray.push(new NewitemDataDto(item,monthWiseDtoArray));
@@ -1187,15 +1198,28 @@ export class OrdersService {
                 }
                 itemPhaseTypeYearWiseMap.get(rec.planning_sum).get(rec.prod_plan_type).push(whpc);
             }
+            let totalSumInPcs = 0
+            let totalSumCoeffpcs = 0
+            let whData
             itemPhaseTypeYearWiseMap.forEach((yearRecs, item) => {
                 const monthWiseDtoArray:NewMonthWiseDto[] =[];
                 yearRecs.forEach((yr, phaseType) =>{
-                    const  whData = new NewMonthWiseDto(phaseType, []);
+                      whData = new NewMonthWiseDto(phaseType, []);
+                      let totalinpc = 0
+                      let totalCoefpc =0
                     yr.forEach(mData =>{
+                        totalinpc+=Number(mData.inPcs)
+                        totalCoefpc+=Number(mData.inCoeffPcs)
                         whData.pcsData.push(mData)
                     });
-                    detailedarray.push(new NewitemDataDto(item,monthWiseDtoArray))
-                })
+                    totalSumInPcs += totalinpc
+                    totalSumCoeffpcs +=totalCoefpc
+                    whData.totalInpcs=totalSumInPcs
+                    whData.totalCoeffpcs=totalSumCoeffpcs
+                    monthWiseDtoArray.push(whData);
+                });
+                detailedarray.push(new NewitemDataDto(item,monthWiseDtoArray))
+
             })
         }
 
@@ -3765,17 +3789,22 @@ export class OrdersService {
 
     async getPhaseMonthExcelDataNew(req: YearReq): Promise<CommonResponseModel>{
         const data1 = await this.ordersRepository.getData1New(req)
-        const data2 = await this.ordersRepository.getFinalNewData(req)
+        const data2 = await this.ordersRepository.getDataNew(req)
         const dataMap = new Map<string, PhaseWiseReq >();
         const dataMap2 = new Map<string, PhaseWiseReq >();
-
+        let sumofInpcs =0
+        let sumOfCoeff =0
         for(const rec of data2){
+            let totalinpc = 0
+            let totalCoefpc =0
             if(!dataMap.has(rec.prod_plan_type)){
                 dataMap.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[]))
             }
             const item=dataMap.get(rec.prod_plan_type).itemData
             if(rec.prod_plan_type != null){
                 if(req.tabName == 'ExFactory'){
+                    totalinpc += Number(rec.exfPcs)
+                    totalCoefpc += Number(rec.exfCoeff)
                     item.push(new itemData(rec.exfMonth,rec.exfPcs,rec.exfCoeff))
                 }
                 if(req.tabName === 'WareHouse' ){
@@ -3784,27 +3813,32 @@ export class OrdersService {
             }
         }
         const detailedarray: PhaseWiseReq[] = Array.from(dataMap.values())
-        // for(const rec of data1){
-        //     if(!dataMap2.has(rec.prod_plan_type)){
-        //         dataMap2.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[]))
-        //     }
-        //     const item=dataMap2.get(rec.prod_plan_type).itemData
-        //     if(rec.prod_plan_type != null){
-        //         if(req.tabName == 'ExFactory'){
-        //             item.push(new itemData(rec.exfMonth,rec.exfper,rec.exfcoefper))
-        //         }
-        //         if(req.tabName === 'WareHouse' ){
-        //             item.push(new itemData(rec.whMonth,rec.whper,rec.whcoefper))
-        //         }
-        //     }
-        // }
+        for(const rec of data1){
+            if(!dataMap2.has(rec.prod_plan_type)){
+                dataMap2.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[]))
+            }
+            const item=dataMap2.get(rec.prod_plan_type).itemData
+            if(rec.prod_plan_type != null){
+                if(req.tabName == 'ExFactory'){
+                   const exper=rec.exfper+'%'
+                   const exfcoefper=rec.exfcoefper+'%'
+                    console.log(exper,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+                    item.push(new itemData(rec.exfMonth,exper,exfcoefper))
+                }
+                if(req.tabName === 'WareHouse' ){
+                    const whper =rec.whper
+                    const whcoefper=rec.whcoefper
+                    item.push(new itemData(rec.whMonth,whper,whcoefper))
+                }
+            }
+        }
 
         // console.log(detailedarray,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
         const detaledArray2:PhaseWiseReq[] = Array.from(dataMap2.values())
-        console.log(detaledArray2,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+        // console.log(detaledArray2,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
 
         const finalArray =[...detailedarray,...detaledArray2]
-        return new CommonResponseModel(true,1,'Data Retrived Sucessfully',detailedarray)
+        return new CommonResponseModel(true,1,'Data Retrived Sucessfully',finalArray)
     }
 
 

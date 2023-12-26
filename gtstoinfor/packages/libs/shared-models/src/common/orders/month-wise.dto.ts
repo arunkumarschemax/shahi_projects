@@ -41,12 +41,18 @@ export class MonthWiseDto {
  export class NewMonthWiseDto{
     phaseType:string;
     pcsData:pcsData[]
+    totalInpcs?:number
+    totalCoeffpcs?:number
     constructor(
         phaseType:string,
-        pcsData:pcsData[]
+        pcsData:pcsData[],
+        totalInpcs?:number,
+        totalCoeffpcs?:number
     ){
         this.phaseType=phaseType
         this.pcsData=pcsData
+        this.totalCoeffpcs=totalCoeffpcs
+        this.totalInpcs=totalInpcs
     }
 
  }

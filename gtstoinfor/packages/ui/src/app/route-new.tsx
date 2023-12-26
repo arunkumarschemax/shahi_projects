@@ -78,7 +78,7 @@ export const AppRoutesNew = () => {
                 </Route>
                 <Route>
                     <Route path='/ware-house-comparision' key='/ware-house-comparision' element={<WareHouseComparision />} />
-                    <Route path='/month-wise-report' key='/month-wise-report' element={<MonthWiseReportV2 />} />
+                    <Route path='/month-wise-report' key='/month-wise-report' element={<MonthWiseReport />} />
                     <Route path='/new-month-wise-report' key='/new-month-wise-report' element={<MonthWiseReportNew />} />
                     
                     <Route path='/new-month-wise-report-v2' key='/new-month-wise-report-v2' element={<MonthWiseReportV2 />} />
