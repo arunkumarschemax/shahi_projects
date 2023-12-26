@@ -169,10 +169,10 @@ export const LocationMapping = () => {
             title:'Uom',
             dataIndex:'uom'
         },
-        {
-            title:'Yarn Count',
-            dataIndex:'yarn_count'
-        },
+        // {
+        //     title:'Yarn Count',
+        //     dataIndex:'yarn_count'
+        // },
         {
             title:'Accepted Qty',
             dataIndex:'accepted_quantity'
@@ -182,15 +182,7 @@ export const LocationMapping = () => {
             dataIndex: 'status',
         },
     ]
-    render:(text,record) => {
-        return(
-            <>
-            {record.description?.length > 30 ? (<><Tooltip title='Cilck to open full description'><p><span onClick={() => handleTextClick(record.description)} style={{ cursor: 'pointer' }}>
-                        {record.description.length > 30 ? `${record.description?.substring(0, 30)}....` : record.description}
-                    </span></p></Tooltip></>) : (<>{record.description}</>)}
-            </>
-        )
-    }
+
     return (
         <div>
             <Card size="small" title={<span style={{ color: 'white' }} >Location Mapping</span>}
@@ -249,7 +241,7 @@ export const LocationMapping = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 8 }}>
                             <Form.Item name="itemName" label="Item" rules={[{ required: true, message: ' Item is required ' }]}>
-                                <Input.TextArea disabled={grnData} style={{fontWeight:'bold',color:'black'}}/>
+                                <Input.TextArea disabled={grnData} style={{fontWeight:'bold',color:'black'}} rows={3}/>
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
