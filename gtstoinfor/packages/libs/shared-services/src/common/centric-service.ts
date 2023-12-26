@@ -11,8 +11,8 @@ export class CentricService extends CommonAxiosService {
     async fileUpload(formData: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.centricOrdersController + "/fileUpload", formData)
     }
-    async getorderData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.centricOrdersController + "/getorderData")
+    async getorderData(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.centricOrdersController + "/getorderData",req)
     }
 
     

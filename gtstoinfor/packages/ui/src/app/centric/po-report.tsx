@@ -12,6 +12,7 @@ import {
   } from "antd";
   import { useEffect, useRef, useState } from "react";
   import {
+    CentricService,
     NikeService,
     RLOrdersService,
   } from "@project-management-system/shared-services";
@@ -27,7 +28,7 @@ import {
   import { useIAMClientState } from "../nike/iam-client-react";
   
   export function PPKPOReport() {
-    const service = new RLOrdersService();
+    const service = new CentricService();
     const navigate = useNavigate();
     const searchInput = useRef(null);
     const [orderData, setOrderData] = useState<any>([]);
@@ -40,117 +41,117 @@ import {
     const [form] = Form.useForm();
     const { Option } = Select;
     const [isModalOpen1, setIsModalOpen1] = useState(false);
-    // const [filterData, setFilterData] = useState([]);
+    const [filterData, setFilterData] = useState([]);
     const { IAMClientAuthContext, dispatch } = useIAMClientState();
   
-    // useEffect(() => {
-    //   getorderData();
-    // }, []);
+    useEffect(() => {
+      getorderData();
+    }, []);
 
   
-    // const getorderData = () => {
-    //   const req = new PoOrderFilter();
+    const getorderData = () => {
+      const req = new PoOrderFilter();
   
-    //   if (form.getFieldValue("poNumber") !== undefined) {
-    //     req.poNumber = form.getFieldValue("poNumber");
-    //   } 
-    //  req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+      if (form.getFieldValue("poNumber") !== undefined) {
+        req.poNumber = form.getFieldValue("poNumber");
+      } 
+     req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
   
-    //   service.getorderData(req).then((res) => {
-    //     if (res.status) {
-    //       setOrderData(res.data);
-    //       setFilterData(res.data);
-    //     }
-    //   });
-    // };
+      service.getorderData(req).then((res) => {
+        if (res.status) {
+          setOrderData(res.data);
+          setFilterData(res.data);
+        }
+      });
+    };
 
-    const filterData:any = [
-      {
-        sno: 1,
-        poNumber: "4500559754",
-        lineNumber: "10",
-        division: "Centric Fashion LLC",
-        manufacture: "SHAHI EXPORTS PVT LTD 42",
-        poDate: "2023-01-01",
-        season:"SP24",
-        shipmentMethod:"Ocean",
-        material:"46IZSHB0NR-311-P0B",
-        comptMaterial:"46IZSHB0NR-311",
-        gender:"Men",
-        shortDescription:" SS ADV PERF SLD POLO",
-        color:"GREEN SPRUCE",
-        reference:"BELK",
-        packMethod:"Flatpacked",
-        exFactoryDate:"19-12-2023",
-        xPortDate:"24-12-2023",
-        deliveryDate:"10-02-2024",
-        incoterm:"NHAVA SHEVA (JAWAHARLAL NEHRU), MAHARASHTRA",
-        portOfExport:"INNSA",
-        portOfEntryName:"USSAV-Sea-Savannah, GA",
-        paymentTermsDescription:"Net due in 90 days",
-        vendorBookingFlag:"Yes",
-        address:"Performance Team Savannah 380 Fort Argyle Road Savannah, GA, 314199226 UNITED STATES",
+    // const filterData:any = [
+    //   {
+    //     sno: 1,
+    //     poNumber: "4500559754",
+    //     lineNumber: "10",
+    //     division: "Centric Fashion LLC",
+    //     manufacture: "SHAHI EXPORTS PVT LTD 42",
+    //     poDate: "2023-01-01",
+    //     season:"SP24",
+    //     shipmentMethod:"Ocean",
+    //     material:"46IZSHB0NR-311-P0B",
+    //     comptMaterial:"46IZSHB0NR-311",
+    //     gender:"Men",
+    //     shortDescription:" SS ADV PERF SLD POLO",
+    //     color:"GREEN SPRUCE",
+    //     reference:"BELK",
+    //     packMethod:"Flatpacked",
+    //     exFactoryDate:"19-12-2023",
+    //     xPortDate:"24-12-2023",
+    //     deliveryDate:"10-02-2024",
+    //     incoterm:"NHAVA SHEVA (JAWAHARLAL NEHRU), MAHARASHTRA",
+    //     portOfExport:"INNSA",
+    //     portOfEntryName:"USSAV-Sea-Savannah, GA",
+    //     paymentTermsDescription:"Net due in 90 days",
+    //     vendorBookingFlag:"Yes",
+    //     address:"Performance Team Savannah 380 Fort Argyle Road Savannah, GA, 314199226 UNITED STATES",
 
-        sizeWiseData: [
+    //     sizeWiseData: [
          
-          {
-            size: "S",
-            ratio: 1,
-            fobPrice: 50,
-            totalPOQty:38,
-            specialInstruction:"1 PPK PER CARTON",
-            upc:197206111514,
-            ppkUPC:197206310566,
-            retailPrice:50
-          },
-          {
-            size: "M",
-            ratio: 1,
-            fobPrice: 50,
-            totalPOQty:38,
-            specialInstruction:"1 PPK PER CARTON",
-            upc:197206111514,
-            ppkUPC:197206310566,
-            retailPrice:50
-          },
-          {
-            size: "L",
-            ratio: 3,
-            fobPrice: 50,
-            totalPOQty:114,
-            specialInstruction:"1 PPK PER CARTON",
-            upc:197206111514,
-            ppkUPC:197206310566,
-            retailPrice:50
-          },
-          {
-            size: "XL",
-            ratio: 3,
-            fobPrice: 50,
-            totalPOQty:114,
-            specialInstruction:"1 PPK PER CARTON",
-            upc:197206111514,
-            ppkUPC:197206310566,
-            retailPrice:50
-          }, {
-            size: "XXL",
-            ratio: 2,
-            fobPrice: 50,
-            totalPOQty:76,
-            specialInstruction:"1 PPK PER CARTON",
-            upc:197206111514,
-            ppkUPC:197206310566,
-            retailPrice:50
-          },
-        ],
+    //       {
+    //         size: "S",
+    //         ratio: 1,
+    //         fobPrice: 50,
+    //         totalPOQty:38,
+    //         specialInstruction:"1 PPK PER CARTON",
+    //         upc:197206111514,
+    //         ppkUPC:197206310566,
+    //         retailPrice:50
+    //       },
+    //       {
+    //         size: "M",
+    //         ratio: 1,
+    //         fobPrice: 50,
+    //         totalPOQty:38,
+    //         specialInstruction:"1 PPK PER CARTON",
+    //         upc:197206111514,
+    //         ppkUPC:197206310566,
+    //         retailPrice:50
+    //       },
+    //       {
+    //         size: "L",
+    //         ratio: 3,
+    //         fobPrice: 50,
+    //         totalPOQty:114,
+    //         specialInstruction:"1 PPK PER CARTON",
+    //         upc:197206111514,
+    //         ppkUPC:197206310566,
+    //         retailPrice:50
+    //       },
+    //       {
+    //         size: "XL",
+    //         ratio: 3,
+    //         fobPrice: 50,
+    //         totalPOQty:114,
+    //         specialInstruction:"1 PPK PER CARTON",
+    //         upc:197206111514,
+    //         ppkUPC:197206310566,
+    //         retailPrice:50
+    //       }, {
+    //         size: "XXL",
+    //         ratio: 2,
+    //         fobPrice: 50,
+    //         totalPOQty:76,
+    //         specialInstruction:"1 PPK PER CARTON",
+    //         upc:197206111514,
+    //         ppkUPC:197206310566,
+    //         retailPrice:50
+    //       },
+    //     ],
         
  
-      },
-    ];
+    //   },
+    // ];
 
     const onReset = () => {
       form.resetFields();
-      // getorderData();
+      getorderData();
     };
   
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -283,7 +284,7 @@ import {
         },
         {
             title: "Line Number",
-            dataIndex: "lineNumber",
+            dataIndex: "poLine",
             width: 90,
             sorter: (a, b) => a.lineNumber.localeCompare(b.lineNumber),
             sortDirections: ["ascend", "descend"],
@@ -378,32 +379,32 @@ import {
               width: 70,
               align: 'center',
               children: [
-                  {
-                      title: 'Ratio',
-                      dataIndex: '',
-                      key: '',
-                      width: 70,
-                      className: "center",
-                      render: (text, record) => {
-                          const sizeData = record.sizeWiseData.find(item => item.size === version);
-                          console.log()
-                          if (sizeData) {
-                              if (sizeData.size !== null) {
-                                  const formattedQty = (sizeData?.ratio)
-                                  return (
-                                      formattedQty
-                                  );
-                              } else {
+                  // {
+                  //     title: 'Color',
+                  //     dataIndex: '',
+                  //     key: '',
+                  //     width: 70,
+                  //     className: "center",
+                  //     render: (text, record) => {
+                  //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+                  //         console.log()
+                  //         if (sizeData) {
+                  //             if (sizeData.size !== null) {
+                  //                 const formattedQty = (sizeData?.color)
+                  //                 return (
+                  //                     formattedQty
+                  //                 );
+                  //             } else {
   
-                                  return (
-                                      '-'
-                                  );
-                              }
-                          } else {
-                              return '-';
-                          }
-                      }
-                  },
+                  //                 return (
+                  //                     '-'
+                  //                 );
+                  //             }
+                  //         } else {
+                  //             return '-';
+                  //         }
+                  //     }
+                  // },
                   
                   {
                       title: 'FOB Price',
@@ -442,7 +443,7 @@ import {
                           console.log()
                           if (sizeData) {
                               if (sizeData.size !== null) {
-                                  const formattedQty = (sizeData?.totalPOQty)
+                                  const formattedQty = (sizeData?.totalQuantity)
                                   return (
                                       formattedQty
                                   );
@@ -462,7 +463,7 @@ import {
                       title: 'Special Instructions',
                       dataIndex: '',
                       key: '',
-                      width: 70,
+                      width: 100,
                       className: "center",
                       render: (text, record) => {
                           const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -511,32 +512,32 @@ import {
                           }
                       }
                   },
-                  {
-                      title: 'PPK UPC ',
-                      dataIndex: '',
-                      key: '',
-                      width: 70,
-                      className: "center",
-                      render: (text, record) => {
-                          const sizeData = record.sizeWiseData.find(item => item.size === version);
-                          console.log()
-                          if (sizeData) {
-                              if (sizeData.size !== null) {
-                                  const formattedQty = (sizeData?.ppkUPC)
-                                  return (
-                                      formattedQty
-                                  );
-                              } else {
+                  // {
+                  //     title: 'PPK UPC ',
+                  //     dataIndex: '',
+                  //     key: '',
+                  //     width: 70,
+                  //     className: "center",
+                  //     render: (text, record) => {
+                  //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+                  //         console.log()
+                  //         if (sizeData) {
+                  //             if (sizeData.size !== null) {
+                  //                 const formattedQty = (sizeData?.ppkUPC)
+                  //                 return (
+                  //                     formattedQty
+                  //                 );
+                  //             } else {
   
-                                  return (
-                                      '-'
-                                  );
-                              }
-                          } else {
-                              return '-';
-                          }
-                      }
-                  },
+                  //                 return (
+                  //                     '-'
+                  //                 );
+                  //             }
+                  //         } else {
+                  //             return '-';
+                  //         }
+                  //     }
+                  // },
                   {
                     title: 'Retail Price(USD) ',
                     dataIndex: '',
@@ -570,20 +571,13 @@ import {
       columns.push(
         {
             title: "PO Date",
-            dataIndex: "poDate",
+            dataIndex: "PODate",
             align: "center",
             width: 90,
-            sorter: (a, b) => a.poDate.localeCompare(b.poDate),
+            sorter: (a, b) => a.PODate.localeCompare(b.PODate),
             sortDirections: ["ascend", "descend"],
           },
-        {
-            title: "X-Port Date",
-            dataIndex: "xPortDate",
-            align: "center",
-            width: 90,
-            sorter: (a, b) => a.xPortDate.localeCompare(b.xPortDate),
-            sortDirections: ["ascend", "descend"],
-          },
+    
         {
             title: "Ex-factory Date",
             dataIndex: "exFactoryDate",
@@ -594,10 +588,10 @@ import {
           },
         {
             title: "X-Port Date",
-            dataIndex: "xPortDate",
+            dataIndex: "exPortDate",
             align: "center",
             width: 90,
-            sorter: (a, b) => a.xPortDate.localeCompare(b.xPortDate),
+            sorter: (a, b) => a.exPortDate.localeCompare(b.exPortDate),
             sortDirections: ["ascend", "descend"],
           },
         {
@@ -629,37 +623,37 @@ import {
 
         {
             title: "Port of Entry Name",
-            dataIndex: "portOfEntryName",
+            dataIndex: "portOfEntry",
             align: "center",
             width: 90,
-            sorter: (a, b) => a.portOfEntryName.localeCompare(b.portOfEntryName),
+            sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
             sortDirections: ["ascend", "descend"],
           },
 
         {
             title: "Payment Terms Description",
-            dataIndex: "paymentTermsDescription",
+            dataIndex: "paymentTermDescription",
             align: "center",
             width: 90,
-            sorter: (a, b) => a.paymentTermsDescription.localeCompare(b.paymentTermsDescription),
+            sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
             sortDirections: ["ascend", "descend"],
           },
 
         {
             title: "Vendor Booking Flag",
-            dataIndex: "vendorBookingFlag",
+            dataIndex: "vendorFlag",
             align: "center",
             width: 90,
-            sorter: (a, b) => a.vendorBookingFlag.localeCompare(b.vendorBookingFlag),
+            sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
             sortDirections: ["ascend", "descend"],
           },
 
           {
               title: "Ship to Address",
-              dataIndex: "address",
+              dataIndex: "shipToAddress",
               align: "center",
               width: 90,
-              sorter: (a, b) => a.address.localeCompare(b.address),
+              sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
               sortDirections: ["ascend", "descend"],
             },
  
