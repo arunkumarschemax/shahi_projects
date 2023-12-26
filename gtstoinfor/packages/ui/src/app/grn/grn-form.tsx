@@ -1,4 +1,4 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Modal, Row, Select, Table, Tabs, Typography, message, notification } from 'antd'
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Modal, Row, Select, Table, Tabs, Tooltip, Typography, message, notification } from 'antd'
 import style from 'antd/es/alert/style'
 import TabPane from 'antd/es/tabs/TabPane'
 import React, { useEffect, useState } from 'react'
@@ -50,7 +50,8 @@ const GRNForm = () => {
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const paramsService = new TrimParamsMappingService()
   const [mapData, setMapData] = useState<any[]>([])
-
+  const [remarkModal,setRemarkModal] = useState<boolean>(false)
+    const [remarks,setRemarks] = useState<string>('')
 
   useEffect(() => {
     getVendorsData()
@@ -173,7 +174,13 @@ const GRNForm = () => {
       }
     });
   }
-
+  const handleTextClick = (remarks) => {
+    setRemarks(remarks)
+    setRemarkModal(true)
+  }
+  const onRemarksModalOk = () => {
+  setRemarkModal(false)
+  }
   const columns: any = [
     {
       title: <div style={{ textAlign: "center" }}>Buyer</div>,
@@ -188,6 +195,20 @@ const GRNForm = () => {
       title: <div style={{ textAlign: "center" }}> Item Code</div>,
       // fixed: 'left',
       dataIndex: 'm3ItemCode',
+    },
+    {
+      title: <div style={{ textAlign: "center" }}> Description</div>,
+      // fixed: 'left',
+      dataIndex: 'description',
+      render:(text,record) => {
+        return(
+            <>
+            {record.description?.length > 30 ? (<><Tooltip title='Cilck to open full description'><p><span onClick={() => handleTextClick(record.description)} style={{ cursor: 'pointer' }}>
+                        {record.description.length > 30 ? `${record.description?.substring(0, 30)}....` : record.description}
+                    </span></p></Tooltip></>) : (<>{record.description}</>)}
+            </>
+        )
+    }
     },
     {
       title: <div style={{ textAlign: "center" }}>PO Qty</div>,
@@ -695,6 +716,11 @@ const GRNForm = () => {
       >
         {modal === 'poNumber' ? <QrScanner handleScan={(value) =>{handleQrScan(value)}} /> : null}
       </Modal>
+      <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{remarks}</p>
+                </Card>
+            </Modal>
       </Card>
     </>
   )
