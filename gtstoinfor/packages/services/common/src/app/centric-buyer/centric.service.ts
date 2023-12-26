@@ -25,7 +25,6 @@ export class CentricService {
   constructor(
     private Repo: CentricRepository,
     private dataSource: DataSource,
-    private CentricRepo: CentricRepository,
     private pdfRepo: CentricPdfRepository
 
   ) { }
@@ -68,18 +67,20 @@ export class CentricService {
   // }
 
   async saveCentricOrder(req: any): Promise<CommonResponseModel> {
-    console.log(req,"reqqqqqqqqqqqqq")
+    console.log(req, "reqqqqqqqqqqqqq")
     // const transactionManager = new GenericTransactionManager(this.dataSource)
     try {
       let saved
       // await transactionManager.startTransaction()
-      for (const item of req.CentricPoItemDetails) {
-        const match = item.poItem.match(/\d+/);
+      for (const item of req.CentricpoItemDetails) {
+        const match = item.poLine.match(/\d+/);
+        console.log(match,"match");
         // Check if a match is found and convert it to an integer
-        const poItem = match ? parseInt(match[0], 10) : null;
+        const poLine = match ? parseInt(match[0], 10) : null;
+        console.log(poLine,"poLine")
         for (const variant of item.CentricpoItemVariantDetails) {
-          // const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber, poLine: item.poLine, size: variant.size } })
-
+          const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber ,poLine:poLine, size:variant.size} })
+          console.log(orderData, "orderData")
           const entity = new CentricEntity();
           entity.poNumber = req.poNumber
           entity.shipment = req.shipment
@@ -104,18 +105,20 @@ export class CentricService {
           entity.exPort = variant.exPort
           entity.deliveryDate = variant.deliveryDate
           entity.retialPrice = variant.retialPrice
-          // if (orderData) {
-          //   const update = await transactionManager.getRepository(CentricEntity).update({ poNumber: req.poNumber, poLine:item.poLine, size: variant.size }, {})
-          //   if (!update.affected) {
-          //     throw new Error('Update failed');
-          //   }
-          // } else {
-          //   saved = await transactionManager.getRepository(CentricEntity).save(entity)
-          //   // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
-          //   if (!saved) {
-          //     throw new Error('Save failed')
-          //   }
-          // }
+
+
+          if (orderData) {
+            const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {})
+            if (!update.affected) {
+              throw new Error('Update failed');
+            }
+          } else {
+            saved = await this.Repo.save(entity)
+            // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
+            if (!saved) {
+              throw new Error('Save failed')
+            }
+          }
         }
       }
       // await transactionManager.completeTransaction()

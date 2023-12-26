@@ -30,7 +30,7 @@ export class CentricDto {
     specialInstructions: string
 
     @ApiProperty()
-    poLine: string
+    poLine: number
 
     @ApiProperty()
     material: string

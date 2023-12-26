@@ -9,7 +9,6 @@ export class CentricEntity {
 
     @Column("varchar", {
         name: "po_number",
-        length: 15,
     })
     poNumber: string
 
@@ -30,19 +29,16 @@ export class CentricEntity {
 
     @Column("varchar", {
         name: "port_of_entry",
-        length: 500,
     })
     portOfEntry: string
 
     @Column("varchar", {
         name: "refrence",
-        length: 50,
     })
     Refrence: string
 
     @Column("varchar", {
         name: "payment_term_description",
-        length: 50,
     })
     paymentTermDescription: string
 
@@ -51,73 +47,69 @@ export class CentricEntity {
     })
     specialInstructions: string
 
-    @Column('varchar', {
+    @Column('int', {
         name: "po_line",
-        length: 50,
 
     })
-    poLine: string
+    poLine: number
 
     @Column('varchar', {
         name: "material",
-        length: 10,
 
     })
     material: string
 
     @Column('varchar', {
         name: "color",
-        length: 100
     })
     color: string
 
     @Column('varchar', {
         name: "gender",
-        length: 25
+        
     })
     gender: string
 
     @Column('varchar', {
         name: "size",
-        length: 25
+        
     })
     size: string
 
     @Column('varchar', {
         name: "upc",
-        length: 15
+        
     })
     upc: string
 
     @Column('varchar', {
         name: "label",
-        length: 10
+        
     })
     label: string
 
     
     @Column('varchar', {
         name: "quantity",
-        length: 15
+        
     })
     quantity: string
 
     @Column('varchar', {
         name: "unit_price",
-        length: 50
+        
     })
     unitPrice: string
 
     @Column('varchar', {
         name: "exfactory",
-        length: 50
+        
     })
     exFactory: string
 
     @Column('varchar', {
         name: "export",
-        length: 5
-    })
+            })
     exPort: string
 
     @Column('varchar', {
@@ -127,7 +119,7 @@ export class CentricEntity {
 
     @Column('varchar', {
         name: "retial_price",
-        length: 15
+        
     })
     retialPrice: string
 
@@ -139,7 +131,6 @@ export class CentricEntity {
 
     @Column("varchar", {
         nullable: true,
-        length: 25,
         name: "created_user",
     })
     createdUser: string | null;
@@ -151,7 +142,6 @@ export class CentricEntity {
 
     @Column("varchar", {
         nullable: true,
-        length: 25,
         name: "updated_user",
     })
     updatedUser: string | null;
