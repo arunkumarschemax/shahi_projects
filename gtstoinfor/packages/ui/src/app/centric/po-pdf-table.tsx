@@ -43,8 +43,8 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                 <tr className='ta-b'>
                     <th className='ta-b'>PO NUMBER</th>
                     <th className='ta-b'>PO DATE</th>
-                    <th className='ta-b'>SEASON</th>
                     <th className='ta-b'>SHIPMENT METHOD</th>
+                    <th className='ta-b'>SEASON</th>
                     <th className='ta-b'>PORT OF EXPORT</th>
                     <th className='ta-b'>PORT OF ENTRY</th>
                     <th className='ta-b'>REFERENCE #POW#</th>

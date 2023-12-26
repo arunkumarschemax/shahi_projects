@@ -67,8 +67,8 @@ export const extractDataFromPoPdf = async (pdf) => {
             }
             poData.poNumber = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX].str
             poData.poDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX+1].str
-            poData.shipment = firstPageContent[dateSentIndex + 4].str
-            poData.season = firstPageContent[dateSentIndex + 13].str
+            poData.shipment = firstPageContent[dateSentIndex + 13].str
+            poData.season = firstPageContent[dateSentIndex + 4].str
             poData.portOfExport = firstPageContent[dateSentIndex + 2].str
             poData.portOfEntry = firstPageContent[dateSentIndex + 3].str
             poData.Refrence = firstPageContent[dateSentIndex + 10].str
@@ -149,7 +149,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             prevItemIndex = index
         }
         if (rec.str.includes(ITEM_VARIANT_START_TEXT)) {
-            itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
+            itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index})
         }
 
     }
@@ -196,10 +196,47 @@ export const extractDataFromPoPdf = async (pdf) => {
                 }
             }
         }
+        let shortDescriptionMatching;
+        let vendorBookingFlagMatching;
+        let packMethodMatching;
+
+        filteredData.forEach(item => {
+          if (/Short/.test(item.str)) {
+            shortDescriptionMatching = item;
+            return; 
+          }
+        });
+        
+        if (shortDescriptionMatching) {
+          itemDetailsObj.shortDescription = shortDescriptionMatching.str.replace(/Short Description: /g,"");
+        } 
+
+        filteredData.forEach(item => {
+          if (/Vendor Booking Flag =/.test(item.str)) {
+            vendorBookingFlagMatching = item;
+            return; 
+          }
+        });
+        
+        if (vendorBookingFlagMatching) {
+          itemDetailsObj.vendorBookingFlag = vendorBookingFlagMatching.str.replace(/Vendor Booking Flag =/g,"");
+        } 
+
+
+        filteredData.forEach(item => {
+            if (/Pack Method: /.test(item.str)) {
+              packMethodMatching = item;
+              return; 
+            }
+          });
+          
+          if (packMethodMatching) {
+            itemDetailsObj.packMethod = packMethodMatching.str.replace(/Pack Method: /g,"");
+          } 
+  
         // itemDetailsObj.shortDescription = filteredData[rec.itemIndex + 20].str;
-        itemDetailsObj.shortDescription = filteredData[rec.itemIndex + 20].str.replace(/Short Description:/g, '');
-        itemDetailsObj.vendorBookingFlag = filteredData[rec.itemIndex + 23].str.replace(/Vendor Booking Flag =/g, '');
-        itemDetailsObj.packMethod = filteredData[rec.itemIndex + 24].str.replace(/Pack Method:/g, '');
+        // itemDetailsObj.vendorBookingFlag = filteredData[rec.itemIndex + 23].str.replace(/Vendor Booking Flag =/g, '');
+        // itemDetailsObj.packMethod = filteredData[rec.itemIndex + 24].str.replace(/Pack Method:/g, '');
 
         // itemDetailsObj.contractualDeliveryDate = filteredData[rec.itemIndex + 12].str
         // itemDetailsObj.inboundPkg = filteredData[rec.itemIndex + 15].str
