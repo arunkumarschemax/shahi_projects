@@ -182,15 +182,7 @@ export const LocationMapping = () => {
             dataIndex: 'status',
         },
     ]
-    render:(text,record) => {
-        return(
-            <>
-            {record.description?.length > 30 ? (<><Tooltip title='Cilck to open full description'><p><span onClick={() => handleTextClick(record.description)} style={{ cursor: 'pointer' }}>
-                        {record.description.length > 30 ? `${record.description?.substring(0, 30)}....` : record.description}
-                    </span></p></Tooltip></>) : (<>{record.description}</>)}
-            </>
-        )
-    }
+
     return (
         <div>
             <Card size="small" title={<span style={{ color: 'white' }} >Location Mapping</span>}
