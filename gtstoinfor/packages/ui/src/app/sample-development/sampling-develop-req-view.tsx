@@ -1014,6 +1014,7 @@ import RolePermission from "../role-permissions";
                     rowKey={record => record.fabric_info_id}
                     columns={Columns}
                     dataSource={item.fabric}
+                    className="custom-table-wrapper"
 
                     expandedRowRender={renderItems}
                     expandedRowKeys={expandedIndex}
