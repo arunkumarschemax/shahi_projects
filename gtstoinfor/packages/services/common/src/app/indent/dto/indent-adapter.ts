@@ -101,6 +101,7 @@ export class IndentAdapter
               trimEntity.versionFlag=indentitems.versionFlag;
               trimEntity.createdUser=indentitems.createdUser;
               trimEntity.isActive=indentitems.isActive;
+              trimEntity.remarks = indentitems.remarks;
               trimDetails.push(trimEntity);
           }
           indententity.iTrimsInfo = trimDetails;
