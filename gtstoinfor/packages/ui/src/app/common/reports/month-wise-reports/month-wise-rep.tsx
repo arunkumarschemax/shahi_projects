@@ -365,6 +365,27 @@ export default function MonthWiseReportV2() {
         form.resetFields(['ItemName'])
         getData(undefined)
     }
+
+    const generateSummary = (data) =>{
+        const months = [
+            "january",
+            "february",
+            "march",
+            "april",
+            "may",
+            "june",
+            "july",
+            "august",
+            "september",
+            "october",
+            "november",
+            "december",
+          ];
+    }
+
+
+
+
     return (
         <Card>
             <Form layout='vertical' form={form}>

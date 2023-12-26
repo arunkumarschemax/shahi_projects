@@ -3788,15 +3788,20 @@ export class OrdersService {
     }
 
     async getPhaseMonthExcelDataNew(req: YearReq): Promise<CommonResponseModel>{
-        const data1 = await this.ordersRepository.getData1New(req)
+        // let perData: any[] = [];
+        // const data1 = await this.ordersRepository.getData1New(req)
         const data2 = await this.ordersRepository.getDataNew(req)
         const dataMap = new Map<string, PhaseWiseReq >();
         const dataMap2 = new Map<string, PhaseWiseReq >();
         let sumofInpcs =0
         let sumOfCoeff =0
+        let sumwhInpcs =0
+        let sumWhCoeffpcs =0
         for(const rec of data2){
             let totalinpc = 0
-            let totalCoefpc =0
+            let totalCoefpc = 0
+            let totalwhInpcs = 0
+            let totalWhCoeffPcs = 0
             if(!dataMap.has(rec.prod_plan_type)){
                 dataMap.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[]))
             }
@@ -3808,27 +3813,37 @@ export class OrdersService {
                     item.push(new itemData(rec.exfMonth,rec.exfPcs,rec.exfCoeff))
                 }
                 if(req.tabName === 'WareHouse' ){
+                    totalwhInpcs += Number(rec.whPcs)
+                    totalWhCoeffPcs += Number(rec.whCoeff)
                     item.push(new itemData(rec.whMonth,rec.whPcs,rec.whCoeff))
                 }
             }
+            sumofInpcs += totalinpc
+            sumOfCoeff += totalCoefpc
+            sumwhInpcs += totalwhInpcs
+            sumWhCoeffpcs += totalWhCoeffPcs
         }
         const detailedarray: PhaseWiseReq[] = Array.from(dataMap.values())
-        for(const rec of data1){
+        
+        for(const rec of data2){
+            console.log()
             if(!dataMap2.has(rec.prod_plan_type)){
                 dataMap2.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[]))
             }
             const item=dataMap2.get(rec.prod_plan_type).itemData
             if(rec.prod_plan_type != null){
                 if(req.tabName == 'ExFactory'){
-                   const exper=rec.exfper+'%'
-                   const exfcoefper=rec.exfcoefper+'%'
-                // const exper=rec.exfper
-                // const exfcoefper=rec.exfcoefper
+                    console.log(rec.exfPcs,'ec.exfPcs')
+                    console.log(sumofInpcs,'sumofInpcs')
+                   const exper=Number(rec.exfPcs/(sumofInpcs)*100).toFixed(0)+'%'
+                   const exfcoefper=Number(rec.exfCoeff/(sumOfCoeff)*100).toFixed(0)+'%'
                     item.push(new itemData(rec.exfMonth,exper,exfcoefper))
                 }
                 if(req.tabName === 'WareHouse' ){
-                    const whper =rec.whper
-                    const whcoefper=rec.whcoefper
+                    // const whper =rec.whper
+                    // const whcoefper=rec.whcoefper
+                    const whper =Number((rec.whPcs)/(sumwhInpcs)*100).toFixed(0)+'%'
+                    const whcoefper=Number(rec.whCoeff/(sumWhCoeffpcs)*100).toFixed(0)+'%'
                     item.push(new itemData(rec.whMonth,whper,whcoefper))
                 }
             }
