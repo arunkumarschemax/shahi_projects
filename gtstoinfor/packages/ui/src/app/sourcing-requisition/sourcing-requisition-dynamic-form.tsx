@@ -1163,7 +1163,7 @@ const onTrimChange = (val, option) => {
                                             </Form.Item>
                                         </Col>
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                                            <Form.Item name='newColor' label='New Color(If not in the list)' rules={[{ required: false, message: 'XL No is required' }]}>
+                                            <Form.Item name='newColor' label='New Color(If not in the list)' rules={[{ required: false, message: 'color is required' }]}>
                                                 <Input placeholder="Enter Color" />
                                             </Form.Item>
                                         </Col>
@@ -1285,6 +1285,22 @@ const onTrimChange = (val, option) => {
                                                 </Upload>
                                             </Form.Item>
                                         </Col>
+                                        {
+                                        imageUrl && (
+                                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                                            <Card style={{ height: '250px' }}>
+                                                <Form.Item>
+                                                <img
+                                                    src={imageUrl}
+                                                    alt="Preview"
+                                                    height={'200px'}
+                                                    width={'500px'}
+                                                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                                                />
+                                                </Form.Item>
+                                            </Card>
+                                            </Col>
+                                        )}
                                     </Row>
                                     <Row justify={'end'}>
                                         <Button type='primary' htmlType="submit">{btnType}</Button>
@@ -1441,7 +1457,7 @@ const onTrimChange = (val, option) => {
                                                 </Select>
                                             </Form.Item>
                                         </Col>
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
                                             <Form.Item 
                                                 name="quantity"
                                                 label="Quantity"
@@ -1457,8 +1473,8 @@ const onTrimChange = (val, option) => {
 
                                                     },
                                                 ]}>
-                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'90px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}>
-                                                    <Select showSearch allowClear optionFilterProp="children" >
+                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'80px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}>
+                                                    <Select showSearch allowClear optionFilterProp="children" placeholder="Enter uom">
                                                     {uom?.map(e => {
                                                         return (
                                                             <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>

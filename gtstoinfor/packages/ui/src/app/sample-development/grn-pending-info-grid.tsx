@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
 import { Button, Card, Col, Form, Row, Select, Table } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { ExternalRefReq, GRNLocationPropsRequest, ItemTypeEnumDisplay } from '@project-management-system/shared-models';
+import { ExternalRefReq, GRNLocationPropsRequest, GRNTypeEnumDisplay, ItemTypeEnumDisplay } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
 import { UndoOutlined } from '@ant-design/icons';
 
@@ -75,7 +75,10 @@ const getMaterial=()=>{
           dataIndex: "grnType",
           align: 'left',
           sorter: (a, b) => a.grnType - b.grnType,
-
+          render: (text) => {
+            const EnumObj = GRNTypeEnumDisplay.find((item) => item.name === text);
+            return EnumObj ? EnumObj.displayVal : text;
+          },
             sortDirections: ['descend', 'ascend'],
           //   ...getColumnSearchProps('vendorName')
       },
@@ -132,6 +135,10 @@ const getMaterial=()=>{
             align: 'left',
             sorter: (a, b) => a.acceptedQuantity - b.acceptedQuantity,
             sortDirections: ['descend', 'ascend'],
+            render: (text,val) => {
+
+              return val.acceptedQuantity ? `${val.acceptedQuantity}(${val.uom})` : text;
+            },
         },
         {
             title: 'Location Mapped',

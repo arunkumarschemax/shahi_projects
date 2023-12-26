@@ -369,6 +369,7 @@ export const RmTrimsView = () => {
     {
       title: "S No",
       key: "sno",
+      width:50,
       responsive: ["sm"],
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
@@ -383,6 +384,7 @@ export const RmTrimsView = () => {
     {
       title: "GRN Number",
       dataIndex: "grnNumber",
+      width:150,
       ...getColumnSearchProps("grnNumber"),
       sorter: (a, b) => a.grnNumber.localeCompare(b.stockType),
       sortDirections: ["descend", "ascend"],
@@ -390,6 +392,7 @@ export const RmTrimsView = () => {
     {
       title: "Buyer",
       dataIndex: "buyer",
+      width:100,
       ...getColumnSearchProps("buyer"),
       sorter: (a, b) => a.buyer.localeCompare(b.buyer),
       sortDirections: ["descend", "ascend"],
@@ -419,6 +422,7 @@ export const RmTrimsView = () => {
     {
       title: "Material Type",
       dataIndex: "itemType",
+      width:150,
       ...getColumnSearchProps("itemType"),
       sorter: (a, b) => a.itemType.localeCompare(b.itemType),
       sortDirections: ["descend", "ascend"],
@@ -440,10 +444,13 @@ export const RmTrimsView = () => {
     {
       title: <div style={{textAlign:"center"}}>Trim Params</div>,
       dataIndex: "trimParams",
+      width:250,
+
     },
     {
       title: "M3 Item",
       dataIndex: "m3Item",
+      width:250,
       ...getColumnSearchProps("m3Item"),
       sorter: (a, b) => a.m3Item.localeCompare(b.m3Item),
       sortDirections: ["descend", "ascend"],
@@ -456,6 +463,7 @@ export const RmTrimsView = () => {
     {
       title: "Location",
       dataIndex: "location",
+      width:100,
       ...getColumnSearchProps("location"),
 
     },
@@ -463,6 +471,7 @@ export const RmTrimsView = () => {
     {
       title: "Quantity",
       dataIndex: "qty",
+      width:50,
       render: (record) => (
         <span>
           {record.qty} + " " + {record.uom} 
@@ -937,6 +946,7 @@ export const RmTrimsView = () => {
         dataSource={data.length > 0 ? data : []}
         columns={columns}
         size="small"
+        scroll={{x:1200,y:500}}
         pagination={{
           onChange(current) {
             setPage(current);

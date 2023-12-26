@@ -36,6 +36,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   const [sourcingForm] = Form.useForm();
   const colorService = new ColourService()
   const buyerDestinationService = new BuyerDestinationService()
+  const [keyUpdate, setKeyUpdate] = useState<number>(1);
 
   const { IAMClientAuthContext } = useIAMClientState();
   // const [form] =props.form.useForm();
@@ -290,7 +291,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     console.log(rowData);
     if(isChecked){
       if(Number(rowData.issuedQty) > 0){
-        rowData.issuedQty = rowData.issuedQty
+        // rowData.issuedQty = rowData.issuedQty
         rowData.checkedStatus = 1;
         const newData = [...stockData];
         newData[index].issuedQty = rowData.issuedQty;
@@ -502,7 +503,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       width:"50%",
       render: (_, record) => (
       <Form.Item name={`remarks${record.key}`}>
-        <TextArea
+        <TextArea placeholder='Remarks'
         value={record.remarks}
         onChange={(e) => handleInputChange(e.target.value, record.key, 'remarks',0,record)}
         rows={1}
@@ -647,8 +648,11 @@ const FabricsForm = (props:FabricsFormProps) => {
   }
 
   const renderItems = (record:any, index:any) => {
+    console.log(record)
+    console.log(index)
+
     return  <Table
-    rowKey={record.stockId}
+      rowKey={record.stockId}
      dataSource={record.allocatedStock}
       columns={tableColumns(record.totalRequirement,index)} 
       pagination={false}
@@ -660,11 +664,13 @@ const FabricsForm = (props:FabricsFormProps) => {
 
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
+      key={keyUpdate}
+      rowKey={record => record.key}
       dataSource={data} 
       columns={columns} 
       expandedRowRender={renderItems}
               expandable = {{
-                defaultExpandAllRows : true
+                defaultExpandAllRows : false
                 }}
       // expandedRowRender={renderItems}
       // expandable = {{

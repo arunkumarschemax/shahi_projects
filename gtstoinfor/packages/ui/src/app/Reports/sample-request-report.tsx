@@ -66,6 +66,15 @@ const SampleRequestReport = () => {
     if (form.getFieldValue("style") !== undefined) {
       req.styleId = form.getFieldValue("style");
     }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+      req.tab = "TRIM"
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      req.tab = "FABRIC"
+        }
+        if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+          req.tab = undefined
+            }
     req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     
     service.getSampleRequestReport(req).then((res) => {
@@ -404,7 +413,7 @@ const SampleRequestReport = () => {
           <Form form={samplingPO} layout="vertical">
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
               <Form.Item name={`checkStatus${index}`}  >
-              {btnEnable  && checkAccess(MenusAndScopesEnum.Scopes.createPo)? <Checkbox name={`checkStatus${index}`} onClick={checkboxonclick} onChange={(e) => onCheck(e, record.sampleRequestid, record.fabricType, text, record, index)}/>:'-'}
+              {checkAccess(MenusAndScopesEnum.Scopes.createPo)? <Checkbox name={`checkStatus${index}`} onClick={checkboxonclick} onChange={(e) => onCheck(e, record.sampleRequestid, record.fabricType, text, record, index)}/>:'-'}
               </Form.Item>
             </Col>
           </Form>
