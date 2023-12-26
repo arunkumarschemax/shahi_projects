@@ -162,10 +162,10 @@ export const LocationMapping = () => {
             title:'Uom',
             dataIndex:'uom'
         },
-        {
-            title:'Yarn Count',
-            dataIndex:'yarn_count'
-        },
+        // {
+        //     title:'Yarn Count',
+        //     dataIndex:'yarn_count'
+        // },
         {
             title:'Accepted Qty',
             dataIndex:'accepted_quantity'
@@ -228,7 +228,7 @@ export const LocationMapping = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 8 }}>
                             <Form.Item name="itemName" label="Item" rules={[{ required: true, message: ' Item is required ' }]}>
-                                <Input.TextArea disabled={grnData} style={{fontWeight:'bold',color:'black'}}/>
+                                <Input.TextArea disabled={grnData} style={{fontWeight:'bold',color:'black'}} rows={3}/>
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>

@@ -695,7 +695,7 @@ const stockService = new StockService();
              
           </Row>
     </Form>
-          <Card>
+          {/* <Card> */}
           <Table columns={Columns}
           dataSource={itemGroup}
           // scroll={{x:true,y:500}}
@@ -706,7 +706,7 @@ const stockService = new StockService();
             }
           }} bordered
           />
-          </Card>
+          {/* </Card> */}
     </Card>
     </div>
   )
