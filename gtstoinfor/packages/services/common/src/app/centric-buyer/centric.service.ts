@@ -167,21 +167,28 @@ export class CentricService {
       }
       const sizeDateMap = new Map<string, CentricOrderDataModel>();
       for (const rec of details) {
-        if (!sizeDateMap.has(rec.po_line)) { 
+        console.log(rec,"rrrrrrrrr")
+        if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) { 
           sizeDateMap.set(
-            rec.po_line,
+            `${rec.po_line},${rec.po_number}`,
             new CentricOrderDataModel(rec.id,rec.po_number,rec.shipment,rec.season,rec.division,rec.manufacture,rec.port_of_export,rec.port_of_entry,rec.refrence,rec.pack_method,rec.payment_term_description,rec.incoterm,rec.special_instructions,rec.po_line,rec.material,rec.compt_material,rec.color,rec.gender,rec.short_description,rec.size,rec.upc,rec.retial_price,rec.unit_price,rec.label,rec.quantity,rec.vendor_booking_flag,rec.exfactory,rec.export,rec.delivery_date,rec.retial_price,rec.po_date,rec.ship_to_add,[])
           );
+
+          console.log(sizeDateMap,)
         }
-        const sizeWiseData = sizeDateMap.get(rec.po_line).sizeWiseData;
+        const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number}`).sizeWiseData;
         if (rec.size !== null) {
           sizeWiseData.push(new CentricSizeWiseModel(rec.size,rec.unit_price,rec.quantity,rec.special_instructions,rec.upc,rec.retial_price,rec.color,));
         }
       }
       const dataModelArray: CentricOrderDataModel[] = Array.from(sizeDateMap.values());
+      console.log(dataModelArray,"kkkk")
       return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+      // return new CommonResponseModel(true, 1, 'data retrieved', details);
+
 
     } catch (e) {
+      console.log(e,"errrrrrrrrr")
       return new CommonResponseModel(false, 0, 'failed', e);
     }
   }
