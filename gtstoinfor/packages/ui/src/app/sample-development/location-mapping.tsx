@@ -28,7 +28,7 @@ export const LocationMapping = () => {
 
     useEffect(() => {
         if (grnData) {
-            form.setFieldsValue({quantity : `${grnData.balance}(${grnData.uom})`, itemName:grnData.itemCode, itemId:grnData.itemId, colorId:grnData.colorId,grnType:grnData.itemType,sampleReqId:grnData.sampleReqId,sampleItemId:grnData.sampleItemId })
+            form.setFieldsValue({quantity : `${grnData.balance}`, itemName:grnData.itemCode, itemId:grnData.itemId, colorId:grnData.colorId,grnType:grnData.itemType,sampleReqId:grnData.sampleReqId,sampleItemId:grnData.sampleItemId })
             if (grnData.grnItemId) {
                 const id = grnData.grnItemId;
                 getOneItemAllocateDetailsData(id);

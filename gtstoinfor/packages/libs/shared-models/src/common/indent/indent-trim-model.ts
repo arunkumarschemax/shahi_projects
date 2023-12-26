@@ -27,6 +27,7 @@ export class IndentTrimsModel{
     indentQuantity?:number
     poQuantity?:number
     trimParams?:string
+    toBeProcured?:number
 
   constructor(
     itrimsId: number,
@@ -54,7 +55,8 @@ export class IndentTrimsModel{
     poQty?:number,
     indentQuantity?:number,
     poQuantity?:number,
-    trimParams?:string
+    trimParams?:string,
+    toBeProcured?:number
   ){
     this.itrimsId = itrimsId;
     this.trimType = trimType;
@@ -82,10 +84,7 @@ export class IndentTrimsModel{
     this.indentQuantity = indentQuantity
     this.poQuantity = poQuantity
     this.trimParams = trimParams
-
-
-
-
+    this.toBeProcured = toBeProcured
   }
 
 

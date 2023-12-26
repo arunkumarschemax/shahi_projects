@@ -408,7 +408,7 @@ const segmentedOptions = options();
       //   dataIndex: "quantity",
       // },
       {
-        title: "Indent Quantity",
+        title: "Indent Raised",
         dataIndex: "quantity",
         sorter: (a, b) => a.quantity.localeCompare(b.quantity),
         sortDirections: ["descend", "ascend"],
@@ -425,6 +425,12 @@ const segmentedOptions = options();
       {
         title: "PO Raised",
         dataIndex: "poQty",
+      },
+      {
+        title: "To Be Procured Quantity",
+        dataIndex: "toBeProcured",
+        sorter: (a, b) => a.toBeProcured.localeCompare(b.toBeProcured),
+        sortDirections: ["descend", "ascend"],
       },
       // {
       //   title: "Available Quantity",
@@ -529,6 +535,15 @@ const onRemarksModalOk = () => {
       {
         title: "Indent Raised",
         dataIndex: "quantity",
+        render: (text, record) => {
+          return (
+            <>
+              {record.quantity
+                ? `${record.quantity} ${record.quantityUnit}`
+                : "-"}
+            </>
+          );
+        },
       },
       {
         title: "PO Raised",
@@ -537,18 +552,18 @@ const onRemarksModalOk = () => {
       },
       {
         title: "To Be Procured Quantity",
-        dataIndex: "quantity",
-        sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+        dataIndex: "toBeProcured",
+        sorter: (a, b) => a.toBeProcured.localeCompare(b.toBeProcured),
         sortDirections: ["descend", "ascend"],
-        render: (text, record) => {
-          return (
-            <>
-              {record.quantity
-                ? `${record.quantity}`
-                : "-"}
-            </>
-          );
-        },
+        // render: (text, record) => {
+        //   return (
+        //     <>
+        //       {record.quantity
+        //         ? `${record.quantity}`
+        //         : "-"}
+        //     </>
+        //   );
+        // },
       },
       {
         title: "Remarks",

@@ -46,6 +46,7 @@ export class IndentFabricModel{
     quantityUomId?:number
     poQty?:number
     fabricCode?:string
+    toBeProcured?:number
 
   constructor(
     ifabricId: number,
@@ -91,7 +92,8 @@ export class IndentFabricModel{
     m3FabricCodeName?:string,
     quantityUomId?:number,
     poQty?:number,
-    fabricCode?:string
+    fabricCode?:string,
+    toBeProcured?:number
  
   ){
     this.ifabricId=ifabricId;
@@ -138,6 +140,7 @@ export class IndentFabricModel{
     this.quantityUomId = quantityUomId
     this.poQty = poQty
     this.fabricCode = fabricCode
+    this.toBeProcured =toBeProcured
   }
 
 

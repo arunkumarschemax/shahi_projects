@@ -31,7 +31,7 @@ export class FabricIndentRepository extends Repository<IndentFabricEntity> {
             .select(`"Fabric" as materialType,itf.ifabric_id,itf.indent_id as indentId,it.request_no AS indentCode,
         itf.m3_fabric_code,itf.color AS colorId,itf.quantity,itf.quantity_unit,
         itf.created_at,itf.updated_at,itf.indent_id,m3.item_code,m3.description,
-        co.colour,it.status, uom.uom AS quantityUnit,CONCAT(b.buyer_code,'-',b.buyer_name)AS buyer,s.buyer_id AS buyerId, it.style as styleId,IF(sum(po_quantity) IS null, 0,sum(po_quantity)) as poQty,IF(sum(po_quantity) IS null, 0,sum(po_quantity)) as poQuantity,itf.season,itf.xl_no as xlNo`)
+        co.colour,it.status, uom.uom AS quantityUnit,CONCAT(b.buyer_code,'-',b.buyer_name)AS buyer,s.buyer_id AS buyerId, it.style as styleId,IF(sum(po_quantity) IS null, 0,sum(po_quantity)) as poQty,IF(sum(po_quantity) IS null, 0,sum(po_quantity)) as poQuantity,itf.season,itf.xl_no as xlNo, (itf.quantity - IF(sum(po_quantity) IS null, 0,sum(po_quantity))) AS toBeProcured`)
             .leftJoin(M3ItemsEntity, 'm3', `m3.m3_items_Id = itf.m3_fabric_code`)
             .leftJoin(Colour, 'co', 'co.colour_id=itf.color')
             .leftJoin(Indent, 'it', 'it.indent_id=itf.indent_id')
@@ -39,7 +39,7 @@ export class FabricIndentRepository extends Repository<IndentFabricEntity> {
             .leftJoin(Style,'s','s.style_id = it.style')
             .leftJoin(Buyers,'b','b.buyer_id = s.buyer_id')
             .leftJoin(PurchaseOrderItemsEntity,'poi',`poi.indent_item_id = itf.ifabric_id and poi.m3_item_id = itf.m3_fabric_code and poi.item_type = '${ItemTypeEnum.FABRIC}'`)
-            .where(`itf.indent_id=${indentId} and (itf.quantity-itf.received_quantity) >0`)
+            .where(`itf.indent_id=${indentId}`)
             .groupBy(`itf.ifabric_id`)
         const data = await query.getRawMany()
         return data
