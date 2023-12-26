@@ -6,7 +6,9 @@ export class CentricPoItemDetails {
     material: string;
     color: string;
     gender: string;
-
+    shortDescription:string;
+    packMethod:string;
+    vendorBookingFlag:string;
     // materialNo: string;
     // poItem: string;
     // season: string;

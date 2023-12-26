@@ -2,6 +2,7 @@ import { CentricPoItemDetails } from "./centric-po-item-details";
 
 export class CentricPoDetails {
     poNumber: string;
+    poDate: string;
     shipment: string;
     season: string;
     portOfExport: string;
@@ -9,6 +10,12 @@ export class CentricPoDetails {
     Refrence: string;
     paymentTermDescription: string;
     specialInstructions: string;
+    division:string;
+    incoterm:string;
+    shipToAdd:string;
+    manufacture:string;
+    comptMaterial:string;
+
 
     buyerAddress: string;
     sellerAddress: String;

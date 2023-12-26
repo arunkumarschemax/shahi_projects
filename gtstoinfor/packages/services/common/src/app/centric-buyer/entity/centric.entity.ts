@@ -12,6 +12,11 @@ export class CentricEntity {
     })
     poNumber: string
 
+    @Column("varchar", {
+        name: "po_date",
+    })
+    poDate: string
+
     @Column('varchar', {
         name: "shipment"
     })
@@ -47,6 +52,36 @@ export class CentricEntity {
     })
     specialInstructions: string
 
+    @Column('varchar', {
+        name: "division"
+    })
+    division: string
+
+    @Column('varchar', {
+        name: "incoterm"
+    })
+    incoterm: string
+
+    @Column('varchar', {
+        name: "ship_to_add"
+    })
+    shipToAdd: string
+
+    
+    @Column('varchar', {
+        name: "manufacture"
+    })
+    manufacture: string
+
+    
+    @Column('varchar', {
+        name: "compt_material"
+    })
+    comptMaterial: string
+
+
+    
+
     @Column('int', {
         name: "po_line",
 
@@ -69,6 +104,27 @@ export class CentricEntity {
         
     })
     gender: string
+
+    @Column('varchar', {
+        name: "short_description",
+        
+    })
+    shortDescription: string
+
+    @Column('varchar', {
+        name: "pack_method",
+        
+    })
+    packMethod: string
+
+    @Column('varchar', {
+        name: "vendor_booking_flag",
+        
+    })
+    vendorBookingFlag: string
+
+
+
 
     @Column('varchar', {
         name: "size",

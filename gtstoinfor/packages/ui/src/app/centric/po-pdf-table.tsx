@@ -37,11 +37,12 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
 
     return (
         <Card>
-            <div><Button style={{backgroundColor:'#29397d',color:'white'}}   onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div>
+            <div><Button style={{ backgroundColor: '#29397d', color: 'white' }} onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div>
             <br />
             <table className='ta-b' style={{ width: '100%' }} >
                 <tr className='ta-b'>
                     <th className='ta-b'>PO NUMBER</th>
+                    <th className='ta-b'>PO DATE</th>
                     <th className='ta-b'>SEASON</th>
                     <th className='ta-b'>SHIPMENT METHOD</th>
                     <th className='ta-b'>PORT OF EXPORT</th>
@@ -49,9 +50,17 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <th className='ta-b'>REFERENCE #POW#</th>
                     <th className='ta-b'>PAYMENT TERM DESCRIPTION</th>
                     <th className='ta-b'>SPECIAL INSTRUCTIONS</th>
+                    <th className='ta-b'>DIVISION</th>
+                    <th className='ta-b'>INCOTERM</th>
+                    <th className='ta-b'>SHIP TO ADDRESS</th>
+                    <th className='ta-b'>MANUFACTURE</th>
+                    <th className='ta-b'>COMPT MATERIAL</th>
+
+
                 </tr>
                 <tr className='ta-b'>
                     <td className='ta-b'>{pdfData?.poNumber}</td>
+                    <td className='ta-b'>{pdfData?.poDate}</td>
                     <td className='ta-b'>{pdfData?.shipment}</td>
                     <td className='ta-b'>{pdfData?.season}</td>
                     <td className='ta-b'>{pdfData?.portOfExport}</td>
@@ -59,6 +68,13 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <td className='ta-b'>{pdfData?.Refrence}</td>
                     <td className='ta-b'>{pdfData?.paymentTermDescription}</td>
                     <td className='ta-b'>{pdfData?.specialInstructions}</td>
+                    <td className='ta-b'>{pdfData?.division}</td>
+                    <td className='ta-b'>{pdfData?.incoterm}</td>
+                    <td className='ta-b'>{pdfData?.shipToAdd}</td>
+                    <td className='ta-b'>{pdfData?.manufacture}</td>
+                    <td className='ta-b'>{pdfData?.comptMaterial}</td>
+                    
+
                 </tr>
                 {pdfData?.CentricpoItemDetails?.map((i) => {
                     return <>
@@ -68,7 +84,10 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                             <th className='ta-b'>MATERIAL</th>
                             <th className='ta-b'>COLOR</th>
                             <th className='ta-b'>GENDER</th>
-                           
+                            <th className='ta-b'>SHORT DESCRIPTION</th>
+                            <th className='ta-b'>PACK METHOD</th>
+                            <th className='ta-b'>VENDOR BOOKING FLAG</th>
+
                         </tr>
                         <tr className='ta-b'>
                             <td></td>
@@ -76,7 +95,10 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                             <td className='ta-b'>{i.material}</td>
                             <td className='ta-b'>{i.color}</td>
                             <td className='ta-b'>{i.gender}</td>
-                            
+                            <td className='ta-b'>{i.shortDescription}</td>
+                            <td className='ta-b'>{i.packMethod}</td>
+                            <td className='ta-b'>{i.vendorBookingFlag}</td>
+
                         </tr>
                         <tr className='ta-b'>
                             <th></th>
@@ -103,7 +125,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                 return <tr>
                                     <td></td>
                                     <td></td>
-                                    
+
                                     {/* <td className='ta-b'>{j.uom}</td> */}
                                     <td className='ta-b'>{j.size}</td>
                                     <td className='ta-b'>{j.upc}</td>
