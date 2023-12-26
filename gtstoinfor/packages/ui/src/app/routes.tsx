@@ -38,10 +38,11 @@ import PdFInfoGrid from "./ralph-lauren/pdf-file-info-grid"
 import RLOrdersGrid from "./ralph-lauren/orders-data-grid-view"
 import RLOrdersDetailView from "./ralph-lauren/orders-data-detail-view"
 import OrderAcceptanceGrid from "./ralph-lauren/order-acceptance-view"
-import PdfUpload from "./ralph-lauren/pdf-reader/pdf-upload"
+// import PdfUpload from "./ralph-lauren/pdf-reader/pdf-upload"
 import ColineView from "./ralph-lauren/co-line-view"
 import AddressView from "./masters/address/address-view"
 import AddressUpload from "./masters/address/address-excel-upload"
+import PdfUpload from "./centric/pdf-upload"
 
 
 export const AppRoutes = () => {

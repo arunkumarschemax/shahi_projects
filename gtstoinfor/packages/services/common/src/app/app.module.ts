@@ -12,6 +12,7 @@ import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
 import { RLOrdersModule } from './ralph-lauren/rl-orders.module';
 import { AddressModule } from './Entites@Shahi/address/address-module';
+import { CentricModule } from './centric-buyer/centric.module';
 
 
 @Module({
@@ -33,7 +34,7 @@ import { AddressModule } from './Entites@Shahi/address/address-module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule, RLOrdersModule,AddressModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,CentricModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
