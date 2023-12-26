@@ -110,7 +110,6 @@ export class OrdersService extends CommonAxiosService {
     }
 
     async getMonthWiseReportDataNew(req: YearReq): Promise<CommonResponseModel> {
-        console.log('hiiiiiii')
         return this.axiosPostCall(this.ordersController + "/getMonthWiseReportDataNew", req)
     }
     

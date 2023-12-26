@@ -3822,7 +3822,8 @@ export class OrdersService {
                 if(req.tabName == 'ExFactory'){
                    const exper=rec.exfper+'%'
                    const exfcoefper=rec.exfcoefper+'%'
-                    console.log(exper,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
+                // const exper=rec.exfper
+                // const exfcoefper=rec.exfcoefper
                     item.push(new itemData(rec.exfMonth,exper,exfcoefper))
                 }
                 if(req.tabName === 'WareHouse' ){
@@ -3833,9 +3834,7 @@ export class OrdersService {
             }
         }
 
-        // console.log(detailedarray,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
         const detaledArray2:PhaseWiseReq[] = Array.from(dataMap2.values())
-        // console.log(detaledArray2,'@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@')
 
         const finalArray =[...detailedarray,...detaledArray2]
         return new CommonResponseModel(true,1,'Data Retrived Sucessfully',finalArray)

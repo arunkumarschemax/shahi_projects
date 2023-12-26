@@ -1,6 +1,6 @@
 import { YearReq } from '@project-management-system/shared-models';
 import { OrdersService } from '@project-management-system/shared-services';
-import { Card, Col, Form, Radio, RadioChangeEvent, Row, Select, Table } from 'antd';
+import { Button, Card, Col, Form, Radio, RadioChangeEvent, Row, Select, Table } from 'antd';
 import React, { useEffect, useState } from 'react'
 const { Option } = Select
 const months: string[] = [
@@ -26,17 +26,19 @@ export default function MonthWiseReportV2() {
     const [distinctMonths, setDistinctMonths] = useState<any[]>([])
     const [phseDistinctMonths, setPhaseDistinctMonths] = useState<any[]>([])
 
+     const [form] = Form.useForm();
+
 
     useEffect(() => {
         getDistinctYears()
     }, [])
 
     useEffect(() => {
-        getData()
+        getData(undefined)
     }, [selectedYear, selectedCompParam])
 
-    const getData = () => {
-        const req = new YearReq(selectedYear, selectedCompParam);
+    const getData = (value) => {
+        const req = new YearReq(selectedYear, selectedCompParam,undefined,undefined,value);
         service.getMonthWiseReportDataNew(req).then((res) => {
             if (res.status) {
                 setMonthWiseData(res.data)
@@ -87,10 +89,12 @@ export default function MonthWiseReportV2() {
                 // const itemRowSpan = rec.monthWiseData.length
                 const itemName = rec.itemName
                 for (const [phaseIndex, phase] of rec.monthWiseData.entries()) {
+                    let inPcsSum =0
+                    let inCoeffSum =0
                     const itemRowSpan = phaseIndex == 0 ? rec.monthWiseData.length : 0
                     const phaseType = phase.phaseType
-                    const totalCoeffpcs=phase.totalCoeffpcs
-                    const totalInpcs=phase.totalInpcs
+                    // const totalCoeffpcs=phase.totalCoeffpcs
+                    // const totalInpcs=phase.totalInpcs
                     const monthsArr: any = []
                     const monthWiseObj = {}
                     for (const month of phase.pcsData) {
@@ -98,7 +102,8 @@ export default function MonthWiseReportV2() {
                         monthWiseObj[`${monthName}_inCoeffPcs`] = month.inCoeffPcs,
                             monthWiseObj[`${monthName}_inPcs`] = month.inPcs
                         monthHeadersSet.add("" + monthName);
-
+                        inCoeffSum += parseFloat(month.inCoeffPcs) || 0;
+                        inPcsSum +=parseFloat(month.inPcs)
                     }
                     monthsArr.push(monthWiseObj)
                     const obj = {
@@ -106,15 +111,15 @@ export default function MonthWiseReportV2() {
                         itemRowSpan,
                         phaseType,
                         monthsArr,
-                        totalCoeffpcs,
-                        totalInpcs
+                        inPcsSum,
+                        inCoeffSum
                     }
                     flattenedArrTemp.push(obj)
 
                 }
             }
             setFlattenedReportData(flattenedArrTemp)
-
+            console.log(flattenedArrTemp)
             //-----------------------------------------------------------------//
             setDistinctMonths(Array.from(monthHeadersSet))
         }
@@ -125,6 +130,8 @@ export default function MonthWiseReportV2() {
         if(data.length){
             const flattenedArrTemp = []
             const monthHeadersSet = new Set<string>();
+            let inPcsSum =0
+            let inCoeffSum =0
             for(const rec of data){
                 const phaseType=rec.phase
                 const monthsArr: any = []
@@ -136,12 +143,17 @@ export default function MonthWiseReportV2() {
                     monthWiseObj[`${monthname}_inPcs`] = month.inPcs
                     monthWiseObj[`${monthname}_coeffPcs`] =  month.coeffPcs
                     monthHeadersSet.add("" + monthname)
+                    inCoeffSum += parseFloat(month.coeffPcs) || 0;
+                    inPcsSum +=parseFloat(month.inPcs)
+
                 }
                 monthsArr.push(monthWiseObj)
                 const obj ={
                     itemRowSpan,
                     phaseType,
-                    monthsArr
+                    monthsArr,
+                    inCoeffSum,
+                    inPcsSum
                 }
                 flattenedArrTemp.push(obj)
             }
@@ -295,11 +307,11 @@ export default function MonthWiseReportV2() {
         },
         {
             title:'Total InPcs',
-            dataIndex:'totalInpcs'
+            dataIndex:'inPcsSum'
         },
         {
             title:'Total InCoeff Pcs',
-            dataIndex:'totalCoeffpcs'
+            dataIndex:'inCoeffSum'
         }
     ]
 
@@ -336,11 +348,26 @@ export default function MonthWiseReportV2() {
 
             ),
         },
+        {
+            title:'Total InPcs',
+            dataIndex:'inPcsSum'
+        },
+        {
+            title:'Total InCoeff Pcs',
+            dataIndex:'inCoeffSum'
+        }
     ]
-    console.log(flattenedPahseData)
+    // console.log(flattenedPahseData)
+    const itemOnchange = (value) =>{
+        getData(value)
+    }
+    const onResetFunction = () =>{
+        form.resetFields(['ItemName'])
+        getData(undefined)
+    }
     return (
         <Card>
-            <Form layout='vertical'>
+            <Form layout='vertical' form={form}>
                 <Row gutter={24} style={{ paddingTop: '50px' }}>
                     <Col span={4}>
                         <Form.Item label='Comparision parameter'>
@@ -369,6 +396,7 @@ export default function MonthWiseReportV2() {
                             placeholder="Select Planning Sum"
                             optionFilterProp="children"
                             allowClear
+                            onChange={itemOnchange}
                           >
                             {monthWiseData.map((e) => (
                               <Option key={e.itemName} value={e.itemName}>
@@ -376,6 +404,11 @@ export default function MonthWiseReportV2() {
                               </Option>
                             ))}
                           </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={2}>
+                        <Form.Item name={'reset'}>
+                                <Button type='primary' style={{ marginTop: 25 }} onClick={onResetFunction}>{'Reset'}</Button>
                         </Form.Item>
                     </Col>
                     <Col span={4}>
@@ -388,6 +421,19 @@ export default function MonthWiseReportV2() {
                                 }
                             </Radio.Group>
                         </Form.Item>
+                    </Col>
+                    <Col span={4} style={{ marginTop: 17 }}>
+                    <Card
+                        title={"Total Items : " + monthWiseData.length}
+                        style={{
+                          textAlign: "center",
+                          width: 150,
+                          height: 35,
+                          borderRadius: 8,
+                          backgroundColor: "#EBEBF1",
+                        }}
+                        size="small"
+                      ></Card>
                     </Col>
                 </Row>
                 <Row>
