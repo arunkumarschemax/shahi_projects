@@ -424,6 +424,12 @@ const segmentedOptions = options();
         title: "PO Raised",
         dataIndex: "poQty",
       },
+      {
+        title: "To Be Procured Quantity",
+        dataIndex: "toBeProcured",
+        sorter: (a, b) => a.toBeProcured.localeCompare(b.toBeProcured),
+        sortDirections: ["descend", "ascend"],
+      },
       // {
       //   title: "Available Quantity",
       //   dataIndex: "quantity",
@@ -520,6 +526,15 @@ const segmentedOptions = options();
       {
         title: "Indent Raised",
         dataIndex: "quantity",
+        render: (text, record) => {
+          return (
+            <>
+              {record.quantity
+                ? `${record.quantity} ${record.quantityUnit}`
+                : "-"}
+            </>
+          );
+        },
       },
       {
         title: "PO Raised",
