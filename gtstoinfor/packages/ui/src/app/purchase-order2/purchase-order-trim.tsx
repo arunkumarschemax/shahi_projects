@@ -172,7 +172,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         trimForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
         trimForm.setFieldsValue({ transportation: rowData.transportation })
         trimForm.setFieldsValue({indentCode:rowData.indentCode})
-        trimForm.setFieldsValue({indentTrmId:rowData.indentTrimId})
+        trimForm.setFieldsValue({indentTrimId:rowData.indentTrimId})
         trimForm.setFieldsValue({quantityUomName:rowData?.quantityUnit})
         trimForm.setFieldsValue({quantityUomId:rowData?.quantityUnitId})
         trimForm.setFieldsValue({styleId: rowData?.styleId})
@@ -464,7 +464,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                     consumption : defaultTrimFormData.consumption,
                     m3TrimCode: defaultTrimFormData.m3TrimCode,
                     trimCodeName: defaultTrimFormData.trimCodeName,
-                    indentTrmId:defaultTrimFormData.indentTrimId,
+                    indentTrimId:defaultTrimFormData.indentTrimId,
                     indentQuantity:defaultTrimFormData.indentQuantity,
                     indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
                     quantityUomId:defaultTrimFormData.quantityUnitId,
@@ -586,7 +586,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                    <Form.Item name='sampleReqId' hidden ><Input/></Form.Item>
                     <Form.Item name='indentId' hidden ><Input/></Form.Item>
                     <Form.Item name={'colourName'} hidden><Input></Input></Form.Item>
-                    <Form.Item name={'indentTrmId'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'indentTrimId'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'sampleTrimInfoId'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentQuantity'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentQuantityUnit'} hidden><Input></Input></Form.Item>
