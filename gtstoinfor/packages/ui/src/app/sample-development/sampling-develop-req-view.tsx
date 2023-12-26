@@ -262,7 +262,7 @@ import RolePermission from "../role-permissions";
         let item = new allocateMaterialItems(0,data.quantity,data.stockId,data.locationId,data.issuedQty,0,"","","");
         materailDataItems.push(item);
       }
-      const req = new Allocatematerial(dto.itemType,dto.sampleRequestid,dto.fabric_info_id,dto.m3ItemFabricId,0,0,0,dto.buyerId,totalQty,materailDataItems,dto.tobeProcured,dto.samplingBomId);
+      const req = new Allocatematerial(dto.itemType,dto.sampleRequestid,(dto.itemType === "FABRIC"?dto.fabric_info_id:dto.trim_info_id),(dto.itemType === "FABRIC"?dto.m3ItemFabricId:dto.trimCode),0,0,0,dto.buyerId,totalQty,materailDataItems,dto.tobeProcured,dto.samplingBomId);
       console.log(req);
       service.creatematerialAlloction(req).then(res =>{
         if(res.status){
@@ -749,7 +749,7 @@ import RolePermission from "../role-permissions";
         console.log(record);
         return  <Table
          dataSource={record.allocatedStock}
-          columns={tableColumns(record.totalRequirement,index,record.sampleRequestid,record.fabric_info_id)} 
+          columns={tableColumns(record.totalRequirement,index,record.sampleRequestid,record.itemType === "FABRIC"?record.fabric_info_id:record.trim_info_id)} 
           pagination={false}
            rowKey={record.stockId}/>;
       };
@@ -1015,6 +1015,7 @@ import RolePermission from "../role-permissions";
                     rowKey={record => record.fabric_info_id}
                     columns={Columns}
                     dataSource={item.fabric}
+                    className="custom-table-wrapper"
 
                     expandedRowRender={renderItems}
                     expandedRowKeys={expandedIndex}

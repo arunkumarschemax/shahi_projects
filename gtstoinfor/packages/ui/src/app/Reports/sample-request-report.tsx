@@ -443,19 +443,19 @@ const SampleRequestReport = () => {
 
     if(e.target.checked){
       
-      let checkItemType:boolean = true;
-      checkItemType = (selectedRowData.length > 0 ? ((selectedRowData.find((rec) => rec.itemType === rowData.itemType) != undefined) ? true: false) :true);
-      console.log(checkItemType)
-      if(!checkItemType){
-        samplingPO.setFieldsValue({[`checkStatus${index}`]:false})
-        AlertMessages.getErrorMessage('Generate PO for single Material Type. ')
-        setbtnEnable(false)
-      }
-      else{
+      // let checkItemType:boolean = true;
+      // checkItemType = (selectedRowData.length > 0 ? ((selectedRowData.find((rec) => rec.itemType === rowData.itemType) != undefined) ? true: false) :true);
+      // console.log(checkItemType)
+      // if(!checkItemType){
+      //   samplingPO.setFieldsValue({[`checkStatus${index}`]:false})
+      //   AlertMessages.getErrorMessage('Generate PO for single Material Type. ')
+      //   setbtnEnable(false)
+      // }
+      // else{
         let rowsData = [...selectedRowData,rowData];
         setSelectedRowData(rowsData)
         setbtnEnable(true)
-      }
+      // }
       console.log(data)
     }
     else{
