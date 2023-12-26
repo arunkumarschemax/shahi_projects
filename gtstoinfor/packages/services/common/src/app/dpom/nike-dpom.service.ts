@@ -35,6 +35,8 @@ import * as nodemailer from 'nodemailer';
 import * as winston from 'winston';
 import { AddressService } from '../address/address.service';
 import { DestinationReq } from '../address/destination-req.dto';
+import * as Excel from 'exceljs';
+
 
 @Injectable()
 export class DpomService {
@@ -2394,6 +2396,38 @@ export class DpomService {
         } else {
             return new CommonResponseModel(false, 0, 'Failed')
         }
+    }
+
+    async downloadPPMReportExcel(req?: PpmDateFilterRequest) {
+        const res = await this.getPPMData(req)
+        const workbook = new Excel.Workbook();
+        const sheet = workbook.addWorksheet('Sheet1');
+        if (res.data.length > 0) {
+            // Assuming the keys of the first object represent column headers
+            const { data } = res
+            const headers = Object.keys(data[0]);
+
+            // Add headers to the worksheet
+            sheet.addRow(headers);
+
+            // Add data to the worksheet
+            data.forEach(item => {
+                const row = [];
+                headers.forEach(header => {
+                    row.push(item[header] ? item[header] : "");
+                });
+                sheet.addRow(row);
+            });
+            const fileName = `data_${Date.now()}.xlsx`;
+            const filePath = `./${fileName}`; // Specify your desired file path
+
+            // Write the workbook to a file
+            await workbook.xlsx.writeFile(filePath);
+
+            return filePath;
+
+        }
+
     }
 
 }
