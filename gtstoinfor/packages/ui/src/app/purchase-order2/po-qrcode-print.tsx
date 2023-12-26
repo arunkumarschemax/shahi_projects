@@ -1,4 +1,4 @@
-import { RackIdReq, VendorIdReq } from "@project-management-system/shared-models";
+import { ItemTypeEnumDisplay, RackIdReq, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderservice, RackPositionService, RacksService } from "@project-management-system/shared-services";
 import QRCode from "react-qr-code";
 import { Alert, Button, Card, Col, Form, Input, Row, Select, message, Modal, } from 'antd'
@@ -90,7 +90,7 @@ getData(data.poNumber)
                   
                 ]}
               >
-                 <Select placeholder=" Select PO Number" >
+                 <Select placeholder=" Select PO Number" showSearch allowClear>
                   {data2.map((option) => (
                     <Option key={option.purchase_order_id} value={option.purchase_order_id}>
                       {option.po_number}
@@ -176,7 +176,7 @@ getData(data.poNumber)
                     <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:1}}>Invoice No : </p>
                     <p style={{textAlign: 'left',marginLeft:-100,fontSize:'10px',padding:1}}>{e.invoice_no}</p>
                     <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:1}}>Type : </p>
-                    <p style={{ textAlign: 'left',marginLeft:-100,fontSize:'10px',padding:1}}>{e.item_type}</p>
+                    <p style={{ textAlign: 'left',marginLeft:-100,fontSize:'10px',padding:1}}>{ItemTypeEnumDisplay.find((s)=> s.name === e.item_type)?.displayVal?ItemTypeEnumDisplay.find((s)=> s.name === e.item_type)?.displayVal:e.item_type}</p>
                     <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:1}}>Item : </p>
                     <p style={{textAlign: 'left',marginLeft:-100,fontSize:'10px',padding:1}}>{e.itemCode}</p>
 

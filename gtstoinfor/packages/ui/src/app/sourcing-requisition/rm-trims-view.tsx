@@ -369,6 +369,7 @@ export const RmTrimsView = () => {
     {
       title: "S No",
       key: "sno",
+      width:50,
       responsive: ["sm"],
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
@@ -383,6 +384,7 @@ export const RmTrimsView = () => {
     {
       title: "GRN Number",
       dataIndex: "grnNumber",
+      width:150,
       ...getColumnSearchProps("grnNumber"),
       sorter: (a, b) => a.grnNumber.localeCompare(b.stockType),
       sortDirections: ["descend", "ascend"],
@@ -390,6 +392,7 @@ export const RmTrimsView = () => {
     {
       title: "Buyer",
       dataIndex: "buyer",
+      width:100,
       ...getColumnSearchProps("buyer"),
       sorter: (a, b) => a.buyer.localeCompare(b.buyer),
       sortDirections: ["descend", "ascend"],
@@ -419,6 +422,7 @@ export const RmTrimsView = () => {
     {
       title: "Material Type",
       dataIndex: "itemType",
+      width:150,
       ...getColumnSearchProps("itemType"),
       sorter: (a, b) => a.itemType.localeCompare(b.itemType),
       sortDirections: ["descend", "ascend"],
@@ -440,10 +444,13 @@ export const RmTrimsView = () => {
     {
       title: <div style={{textAlign:"center"}}>Trim Params</div>,
       dataIndex: "trimParams",
+      width:250,
+
     },
     {
       title: "M3 Item",
       dataIndex: "m3Item",
+      width:250,
       ...getColumnSearchProps("m3Item"),
       sorter: (a, b) => a.m3Item.localeCompare(b.m3Item),
       sortDirections: ["descend", "ascend"],
@@ -456,6 +463,7 @@ export const RmTrimsView = () => {
     {
       title: "Location",
       dataIndex: "location",
+      width:100,
       ...getColumnSearchProps("location"),
 
     },
@@ -463,6 +471,7 @@ export const RmTrimsView = () => {
     {
       title: "Quantity",
       dataIndex: "qty",
+      width:50,
       render: (record) => (
         <span>
           {record.qty} + " " + {record.uom} 
@@ -600,7 +609,7 @@ export const RmTrimsView = () => {
       <Form form={form} layout={"vertical"} name="control-hooks" onFinish={onFinish}
       >
         <Row gutter={24}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="buyerId" label="Buyer" rules={[{ required: true, message: "Buyer is required" }]}>
                     <Select
                     showSearch
@@ -618,7 +627,7 @@ export const RmTrimsView = () => {
                     </Select>
                 </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="trimCategory" label="Trim Category" rules={[{ required: false, message: "Trim Category is required" }]}>
                     <Select 
                     showSearch 
@@ -639,7 +648,7 @@ export const RmTrimsView = () => {
             </Col>
             {mapData[0]?.structure === true ? (
               <>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                   <Form.Item
                     name="structure"
                     label="Structure"
@@ -663,7 +672,7 @@ export const RmTrimsView = () => {
             ) : (<></>)}
             {mapData[0]?.category == true ? (
             <>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="category" label="Category" rules={[{ required: false, message: "Category is required" }]}>
                     <Select 
                     showSearch 
@@ -685,7 +694,7 @@ export const RmTrimsView = () => {
             ) : (<></>)}
             {mapData[0]?.content === true ? (
               <>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="content" label="Content" rules={[{ required: false, message: "Content is required" }]}>
                     <Select
                     showSearch
@@ -707,7 +716,7 @@ export const RmTrimsView = () => {
             ) : (<></>)}
             {mapData[0]?.type === true ? (
               <>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="type" label="Type" rules={[{ required: false, message: "Type is required" }]}>
                     <Select 
                     showSearch 
@@ -729,7 +738,7 @@ export const RmTrimsView = () => {
             ) : (<></>)}
             {mapData[0]?.finish === true ? (
               <>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="finish" label="Finish" rules={[{ required: false, message: "Finish is required" }]}>
                     <Select 
                     showSearch 
@@ -751,7 +760,7 @@ export const RmTrimsView = () => {
             ) : (<></>)}
             {mapData[0]?.hole === true ? (
               <>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="hole" label="Hole" rules={[{ required: false, message: "Hole is required" }]}>
                     <Select
                     showSearch
@@ -773,7 +782,7 @@ export const RmTrimsView = () => {
             ) : (<></>)}
             {mapData[0]?.quality === true ? (
               <>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="qualityName" label="Quality" rules={[{ required: false, message: "Quality is required" }]}>
                     <Select 
                     showSearch 
@@ -795,7 +804,7 @@ export const RmTrimsView = () => {
             ) : (<></>)}
             {mapData[0]?.thickness === true ? (
               <>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="warehouse" label="Thickness" rules={[{ required: false, message: "Warehouse is required" }]}>
                     <Select 
                     showSearch 
@@ -817,7 +826,7 @@ export const RmTrimsView = () => {
             ) : (<></>)}
             {mapData[0]?.variety === true ? (
               <>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="variety" label="Variety" rules={[{ required: false, message: "Variety is required" }]}>
                     <Select 
                     showSearch 
@@ -839,7 +848,7 @@ export const RmTrimsView = () => {
             ) : (<></>)}
             {mapData[0]?.uom === true ? (
               <>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="uom" label="UOM" rules={[{ required: false, message: "UOM is required" }]}>
                     <Select
                     showSearch
@@ -861,7 +870,7 @@ export const RmTrimsView = () => {
             ) : (<></>)}
             {mapData[0]?.color === true ? (
               <>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="color" label="Color" rules={[{ required: false, message: "Color is required" }]}>
                     <Select
                     showSearch
@@ -883,7 +892,7 @@ export const RmTrimsView = () => {
             ) : (<></>)}
             {mapData[0]?.logo === true ? (
               <>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="logo" label="Logo" rules={[{ required: false, message: "Logo is required" }]}>
                     <Select
                     showSearch
@@ -901,7 +910,7 @@ export const RmTrimsView = () => {
             ) : (<></>)}
             {mapData[0]?.part === true ? (
               <>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8}} lg={{ span: 8}} xl={{ span: 4 }}>
                 <Form.Item name="part" label="Part" rules={[{ required: false, message: "Part is required" }]}>
                     <Select
                     showSearch
@@ -919,13 +928,16 @@ export const RmTrimsView = () => {
             ) : (<></>)}
         {/* </Row>
         <Row> */}
-            <Col span={6} style={{paddingTop:'23px'}}>
-                <Button type="primary" htmlType="submit">Get Stock</Button>
+                    <Row gutter={8}>
+
+        <Col span={24} >
+                <Button  style={{marginTop:20,marginLeft:40}} type="primary" htmlType="submit">Get Stock</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <Button htmlType="button" onClick={onReset}>Reset</Button>
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <Button type="primary" onClick={(e) => getItemsForOtherBuyers()}  >Check Other Buyers </Button>
             </Col>
+            </Row>
         </Row>
       </Form>
         
@@ -934,6 +946,7 @@ export const RmTrimsView = () => {
         dataSource={data.length > 0 ? data : []}
         columns={columns}
         size="small"
+        scroll={{x:1200,y:500}}
         pagination={{
           onChange(current) {
             setPage(current);
