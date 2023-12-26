@@ -40,11 +40,38 @@ export class StocksEntity extends CommonColumns {
     })
     locationId: number;
 
-    @Column('int',{
-        name: "quantity",
+    @Column({
+        type: "decimal", precision: 10, scale: 3,
+        name:'quantity',
+        nullable:true,
         default:0
+      })
+      quantity:number
+
+    @Column({
+    type: "decimal", precision: 10, scale: 3,
+    name:'allocatd_quantity',
+    nullable:true,
+    default:0
     })
-    quantity: number;
+    allocateQuanty:number
+
+    @Column({
+        type: "decimal", precision: 10, scale: 3,
+        name:'transfered_quantity',
+        nullable:true,
+        default:0
+        })
+        transferedQuantity:number
+
+    @Column({
+        type: "decimal", precision: 10, scale: 3,
+        name:'issued_quantity',
+        nullable:true,
+        default:0
+        })
+        issuedQuantity:number
+   
 
     @Column('int',{
         name: "style_id",
@@ -55,25 +82,6 @@ export class StocksEntity extends CommonColumns {
         name: "grn_item_id",
     })
     grnItemId: number;
-
-
-    @Column({
-        name: "allocatd_quantity",
-        default:0
-    })
-    allocateQuanty: number;
-
-    @Column({
-        name: "transfered_quantity",
-        default:0
-    })
-    transferedQuantity: number;
-
-    @Column({
-        name: "issued_quantity",
-        default:0
-    })
-    issuedQuantity: number;
 
     @Column({
         name: "stock_bar_code",
