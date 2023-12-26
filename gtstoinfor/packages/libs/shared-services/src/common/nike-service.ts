@@ -384,5 +384,9 @@ export class NikeService extends CommonAxiosService {
     async getPpmPlanningSeasonYearFactory(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getPpmPlanningSeasonYearFactory")
     }
+
+    async downloadPPMMArketingExcel(req?: PpmDateFilterRequest){
+        return this.axiosGetCall(this.dpomController + "/downloadPPMReportExcel")
+    }
 }
 
