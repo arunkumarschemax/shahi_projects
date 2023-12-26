@@ -90,11 +90,21 @@ export class CentricService {
           entity.Refrence = req.Refrence
           entity.paymentTermDescription = req.paymentTermDescription
           entity.specialInstructions = req.specialInstructions
+          entity.division = req.division
+          entity.incoterm = req.incoterm
+          entity.shipToAdd = req.shipToAdd
+          entity.manufacture = req.manufacture
+          entity.comptMaterial = req.comptMaterial
+
 
           entity.poLine = item.poLine
           entity.material = item.material
           entity.color = item.color
           entity.gender = item.gender
+          entity.shortDescription = item.shortDescription
+          entity.packMethod = item.packMethod
+          entity.vendorBookingFlag = item.vendorBookingFlag
+
 
           entity.size = variant.size
           entity.upc = variant.upc

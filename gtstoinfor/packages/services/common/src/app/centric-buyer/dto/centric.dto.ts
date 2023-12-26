@@ -9,6 +9,9 @@ export class CentricDto {
     poNumber: string
 
     @ApiProperty()
+    poDate: string
+
+    @ApiProperty()
     shipment: string
 
     @ApiProperty()
@@ -30,6 +33,23 @@ export class CentricDto {
     specialInstructions: string
 
     @ApiProperty()
+    division: string
+
+    @ApiProperty()
+    incoterm: string
+
+    @ApiProperty()
+    shipToAdd: string
+
+    @ApiProperty()
+    manufacture: string
+
+    @ApiProperty()
+    comptMaterial: string
+
+
+
+    @ApiProperty()
     poLine: number
 
     @ApiProperty()
@@ -41,10 +61,19 @@ export class CentricDto {
     @ApiProperty()
     gender: string
 
+    @ApiProperty()
+    shortDescription: string
+    
+    @ApiProperty()
+    packMethod: string
+    
+    @ApiProperty()
+    vendorBookingFlag: string
+
+
 
     @ApiProperty()
     size: string
-
 
     @ApiProperty()
     upc: string

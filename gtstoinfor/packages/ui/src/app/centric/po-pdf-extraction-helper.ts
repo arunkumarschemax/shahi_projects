@@ -66,6 +66,7 @@ export const extractDataFromPoPdf = async (pdf) => {
 
             }
             poData.poNumber = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX].str
+            poData.poDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX+1].str
             poData.shipment = firstPageContent[dateSentIndex + 4].str
             poData.season = firstPageContent[dateSentIndex + 13].str
             poData.portOfExport = firstPageContent[dateSentIndex + 2].str
@@ -74,6 +75,11 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.poPrint = firstPageContent[dateSentIndex + 7].str
             poData.paymentTermDescription = firstPageContent[dateSentIndex + 25].str
             poData.specialInstructions = firstPageContent[dateSentIndex + 27].str
+            poData.division = firstPageContent[dateSentIndex + 5].str
+            poData.incoterm = firstPageContent[dateSentIndex - 8].str+firstPageContent[dateSentIndex - 7].str+" "+firstPageContent[dateSentIndex - 6].str+firstPageContent[dateSentIndex - 5].str.replace(/\d+/g,"")
+            poData.shipToAdd = firstPageContent[dateSentIndex + 5].str
+            poData.manufacture = firstPageContent[dateSentIndex + 5].str
+            poData.comptMaterial = firstPageContent[dateSentIndex + 5].str
 
             // poData.revisionNo = firstPageContent[poNumberTextIndex - 10].str
             // poData.agent = firstPageContent[shipToAddEndIndex + 2].str
@@ -190,6 +196,11 @@ export const extractDataFromPoPdf = async (pdf) => {
                 }
             }
         }
+        // itemDetailsObj.shortDescription = filteredData[rec.itemIndex + 20].str;
+        itemDetailsObj.shortDescription = filteredData[rec.itemIndex + 20].str.replace(/Short Description:/g, '');
+        itemDetailsObj.vendorBookingFlag = filteredData[rec.itemIndex + 23].str.replace(/Vendor Booking Flag =/g, '');
+        itemDetailsObj.packMethod = filteredData[rec.itemIndex + 24].str.replace(/Pack Method:/g, '');
+
         // itemDetailsObj.contractualDeliveryDate = filteredData[rec.itemIndex + 12].str
         // itemDetailsObj.inboundPkg = filteredData[rec.itemIndex + 15].str
         // itemDetailsObj.incotermsPlace = filteredData[rec.itemIndex + 18].str
