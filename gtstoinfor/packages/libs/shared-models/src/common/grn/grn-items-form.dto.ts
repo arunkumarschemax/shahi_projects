@@ -69,7 +69,7 @@ export class GrnItemsFormDto {
     versionFlag?: number;
     poId?:number
     itemType?:ItemTypeEnum
-
+    description?:string
 
     constructor(
         poItemId: number,
@@ -137,7 +137,7 @@ export class GrnItemsFormDto {
         updatedAt?: Date,
         updatedUser?: string | null,
         versionFlag?: number,
-        poId?:number,itemType?:ItemTypeEnum
+        poId?:number,itemType?:ItemTypeEnum,description?:string
     ) {
         this.poItemId = poItemId;
         this.m3ItemCode = m3ItemCode;
@@ -206,6 +206,7 @@ export class GrnItemsFormDto {
         this.trimParams =trimParams
         this.poId = poId
         this.itemType = itemType
+        this.description = description
     }
 
 }
