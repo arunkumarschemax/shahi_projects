@@ -528,18 +528,18 @@ const segmentedOptions = options();
       },
       {
         title: "To Be Procured Quantity",
-        dataIndex: "quantity",
-        sorter: (a, b) => a.quantity.localeCompare(b.quantity),
+        dataIndex: "toBeProcured",
+        sorter: (a, b) => a.toBeProcured.localeCompare(b.toBeProcured),
         sortDirections: ["descend", "ascend"],
-        render: (text, record) => {
-          return (
-            <>
-              {record.quantity
-                ? `${record.quantity}`
-                : "-"}
-            </>
-          );
-        },
+        // render: (text, record) => {
+        //   return (
+        //     <>
+        //       {record.quantity
+        //         ? `${record.quantity}`
+        //         : "-"}
+        //     </>
+        //   );
+        // },
       },
       {
         title: "Remarks",
