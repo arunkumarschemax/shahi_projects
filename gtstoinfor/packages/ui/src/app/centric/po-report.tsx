@@ -702,7 +702,7 @@ import { Excel } from "antd-table-saveas-excel";
         state: { data: record },
       });
     };
-    const getSizeWiseHeaders = (data: OrderDataModel[]) => {
+    const getSizeWiseHeaders = (data) => {
       const sizeHeaders = new Set<string>();
       data?.forEach((rec) =>
         rec.sizeWiseData?.forEach((version) => {
@@ -713,7 +713,7 @@ import { Excel } from "antd-table-saveas-excel";
     };
   
   
-    const renderReport = (data: OrderDataModel[]) => {
+    const renderReport = (data) => {
       const sizeHeaders = getSizeWiseHeaders(data);
 
   
@@ -724,6 +724,17 @@ import { Excel } from "antd-table-saveas-excel";
           width: 50,
           render: (text, object, index) => (page - 1) * pageSize + (index + 1),
           fixed: "left",
+        },
+        {
+          title: "PO Number",
+          dataIndex: "poNumber",
+          width: 90,
+          sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+
+          fixed: "left",
+          // ...getColumnSearchProps('poNumber')
         },
         {
           title: "PO Date",
@@ -743,17 +754,7 @@ import { Excel } from "antd-table-saveas-excel";
           render: (text) => text ? text : "-"
 
         },
-        {
-          title: "PO Number",
-          dataIndex: "poNumber",
-          width: 90,
-          sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
-
-          // fixed: "left",
-          // ...getColumnSearchProps('poNumber')
-        },
+  
         {
             title: "PO Line Number",
             dataIndex: "poLine",
