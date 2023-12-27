@@ -147,8 +147,8 @@ export class GrnService {
                 let totalGrn = await this.grnRepo.query(data)
             // if (!isUpdate) {
                 if (CurrentMonth < 4) {
-                    fromDate = (CurrentYear);
-                    toDate = (CurrentYear + 1);
+                    fromDate = (CurrentYear-1);
+                    toDate = (CurrentYear);
                 } else {
                     fromDate = (CurrentYear);
                     toDate = (CurrentYear + 1);
