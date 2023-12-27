@@ -47,6 +47,7 @@ import PPKPOReport from "./centric/po-report"
 import CentricPdFInfoGrid from "./centric/pdf-file-grid"
 import CentricOrdersGrid from "./centric/order-data-grid"
 import CentricOrdersDetailView from "./centric/order-data-details-view"
+import CentricOrderAcceptanceGrid from "./centric/centric-order-acceptance-view"
 
 
 export const AppRoutes = () => {
@@ -197,6 +198,8 @@ export const AppRoutes = () => {
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
                    <Route path='order-data-info-grid' element={<CentricOrdersGrid />} />
                    <Route path='order-data-detail-view' element={<CentricOrdersDetailView />} />
+                   
+                   <Route path='centric-order-acceptance' element={<CentricOrderAcceptanceGrid />} />
 
                     
 

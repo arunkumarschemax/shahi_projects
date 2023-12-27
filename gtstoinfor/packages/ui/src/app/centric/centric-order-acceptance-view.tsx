@@ -168,6 +168,29 @@ const CentricOrderAcceptanceGrid = () => {
     })
   }
 
+
+  const processData = (tableData: CentricOrderAcceptanceRequest[]) => {
+    const dataTobeReturned = [];
+    const roleWiseMapData = new Map<string, CentricOrderAcceptanceRequest[]>();
+    tableData.forEach(rec => {
+      if (!roleWiseMapData.has(rec.poNumber)) {
+        roleWiseMapData.set(rec.poNumber, [rec]);
+      } else {
+        roleWiseMapData.get(rec.poNumber).push(rec);
+      }
+    });
+    for (const [role, roleData] of roleWiseMapData) {
+      roleData.forEach((element, index) => {
+        dataTobeReturned.push({
+          ...element,
+          rowSpan: index == 0 ? roleData.length : 0,
+          groupedIds: roleData.map(rec => rec.id)
+        });
+      });
+    }
+    return dataTobeReturned;
+  }
+
   const columns: any = [
     {
       title: "S.No",
@@ -179,10 +202,18 @@ const CentricOrderAcceptanceGrid = () => {
     {
       title: "PO Number",
       dataIndex: "poNumber",
-      width: 90,
+      width: 150,
       sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
       sortDirections: ["ascend", "descend"],
-      fixed: "left",
+      align:'center',
+      render: (text, record, index) => {
+        return {
+          children: text,
+          props: {
+            rowSpan: record.rowSpan,
+          },
+        };
+      }
       // ...getColumnSearchProps('purchaseOrderNumber')
     },
     {
@@ -412,13 +443,12 @@ const CentricOrderAcceptanceGrid = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {orderData.map((inc: any) => {
-                    return (
-                      <Option key={inc.poNumber} value={inc.poNumber}>
-                        {inc.poNumber}
+                  {Array.from(new Set(orderData?.map((inc: any) => inc.poNumber)))
+                    .map((poNumber: string) => (
+                      <Option key={poNumber} value={poNumber}>
+                        {poNumber}
                       </Option>
-                    );
-                  })}
+                    ))}
                 </Select>
               </Form.Item>
             </Col>
@@ -450,8 +480,10 @@ const CentricOrderAcceptanceGrid = () => {
             </Col>
           </Row>
         </Form>
-        <Table columns={columns} dataSource={orderData} scroll={{ x: 1500, y: 500 }} className="custom-table-wrapper"
+        <Table columns={columns} dataSource={processData(orderData)} scroll={{ x: 1500, y: 500 }} className="custom-table-wrapper"
           bordered
+          pagination ={false}
+          rowKey='id'
           size='small'
         />
       </Card>
@@ -461,3 +493,4 @@ const CentricOrderAcceptanceGrid = () => {
 
 
 export default CentricOrderAcceptanceGrid;
+
