@@ -190,7 +190,7 @@ export const AppRoutes = () => {
 
                 <Route path='/centric'>
                     <Route path='pdf-info' element={<CentricPdFInfoGrid />} />
-                    <Route path='ppk-po-report' element={<PPKPOReport />} />
+                    <Route path='solid-pack-PO-report' element={<PPKPOReport />} />
                     
 
                 </Route>

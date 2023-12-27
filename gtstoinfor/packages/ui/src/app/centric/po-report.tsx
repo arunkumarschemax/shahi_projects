@@ -341,16 +341,107 @@ import { Excel } from "antd-table-saveas-excel";
               ]
           });
       })
+      excelColumnsWH.push(
+        {
+            title: "PO Date",
+            dataIndex: "PODate",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.PODate.localeCompare(b.PODate),
+            sortDirections: ["ascend", "descend"],
+          },
+    
+        {
+            title: "Ex-factory Date",
+            dataIndex: "exFactoryDate",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
+            sortDirections: ["ascend", "descend"],
+          },
+        {
+            title: "X-Port Date",
+            dataIndex: "exPortDate",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.exPortDate.localeCompare(b.exPortDate),
+            sortDirections: ["ascend", "descend"],
+          },
+        {
+            title: "Delivery Date",
+            dataIndex: "deliveryDate",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
+            sortDirections: ["ascend", "descend"],
+          },
+
+        {
+            title: "Incoterm",
+            dataIndex: "incoterm",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
+            sortDirections: ["ascend", "descend"],
+          },
+
+        {
+            title: "Port Of Export",
+            dataIndex: "portOfExport",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
+            sortDirections: ["ascend", "descend"],
+          },
+
+        {
+            title: "Port of Entry Name",
+            dataIndex: "portOfEntry",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
+            sortDirections: ["ascend", "descend"],
+          },
+
+        {
+            title: "Payment Terms Description",
+            dataIndex: "paymentTermDescription",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
+            sortDirections: ["ascend", "descend"],
+          },
+
+        {
+            title: "Vendor Booking Flag",
+            dataIndex: "vendorFlag",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
+            sortDirections: ["ascend", "descend"],
+          },
+
+          {
+              title: "Ship to Address",
+              dataIndex: "shipToAddress",
+              align: "center",
+              width: 90,
+              sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+              sortDirections: ["ascend", "descend"],
+            },
+ 
+      
+      );
 
        
     
             excel
-              .addSheet(`Order Report`)
+              .addSheet(`solid pack PO report`)
               .addColumns(excelColumnsWH)
               .addDataSource(filterData, { str2num: true });
 
      
-        excel.saveAs("OrderReport.xlsx");
+        excel.saveAs("solid pack PO Report.xlsx");
       
     
 
