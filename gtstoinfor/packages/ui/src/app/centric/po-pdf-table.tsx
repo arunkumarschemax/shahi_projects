@@ -82,6 +82,9 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                             <th></th>
                             <th className='ta-b'>PO LINE</th>
                             <th className='ta-b'>MATERIAL</th>
+
+                            <th className='ta-b'>PPK UPC</th>
+
                             <th className='ta-b'>COLOR</th>
                             <th className='ta-b'>GENDER</th>
                             <th className='ta-b'>SHORT DESCRIPTION</th>
@@ -93,6 +96,9 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                             <td></td>
                             <td className='ta-b'>{i.poLine}</td>
                             <td className='ta-b'>{i.material}</td>
+
+                            <td className='ta-b'>{i.ppkupc}</td>
+
                             <td className='ta-b'>{i.color}</td>
                             <td className='ta-b'>{i.gender}</td>
                             <td className='ta-b'>{i.shortDescription}</td>
@@ -109,6 +115,9 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                             <th className='ta-b'>UNIT PRICE</th>
                             <th className='ta-b'>QTY</th>
                             <th className='ta-b'>AMOUNT</th> */}
+                            <th className='ta-b'>COMPT MATERIAL</th>
+                            <th className='ta-b'>RATIO</th>
+
 
                             <th className='ta-b'>SIZE</th>
                             <th className='ta-b'>UPC</th>
@@ -127,6 +136,10 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                     <td></td>
 
                                     {/* <td className='ta-b'>{j.uom}</td> */}
+                                    <td className='ta-b'>{j.comMaterial}</td>
+                                    <td className='ta-b'>{j.ratio}</td>
+
+
                                     <td className='ta-b'>{j.size}</td>
                                     <td className='ta-b'>{j.upc}</td>
                                     <td className='ta-b'>{j.label}</td>

@@ -24,12 +24,17 @@ export const UNWANTED_TEXT_4 = "CONDITIONS SET FORTH IN THE VENDOR COMPLIANCE PA
 export const UNWANTED_TEXT_5 = "By Purchase Agent: ___________________"
 export const UNWANTED_TEXT_6 = "4-25-15 JINGUMAE, SHIBUYA-KU, TOKYO, 150-0001, JP"
 export const UNWANTED_TEXT_7 = "CONDITIONS."
-export const UNWANTED_TEXT_8 = "Terms And Conditions:"
-export const UNWANTED_TEXT_9 = "*** End of Purchase Order ***"
-export const UNWANTED_TEXT_10 = "PackOne/SAP"
-export const UNWANTED_TEXT_11 = "A DIVISION OF RALPH LAUREN CORP"
-export const UNWANTED_TEXT_12 = "100 METRO BLVD, NUTLEY, NJ, 07110, US"
+export const UNWANTED_TEXT_8 = "Quantity"
+export const UNWANTED_TEXT_9 = "(USD)"
+export const UNWANTED_TEXT_10 = "(USD)"
+export const UNWANTED_TEXT_11 = "Date"
+export const UNWANTED_TEXT_12 = "(USD)"
 export const UNWANTED_TEXT_13 = "RALPH LAUREN CHILDRENSWEAR"
+// export const UNWANTED_TEXT_14 = "Quantity"
+// export const UNWANTED_TEXT_15 = "(USD)"
+// export const UNWANTED_TEXT_16 = "(USD)"
+// export const UNWANTED_TEXT_17 = "Date"
+// export const UNWANTED_TEXT_18 = "(USD)"
 export const PO_DOC_DATE_TXT = 'Season'
 export const PO_DOC_DATE_INDEX = 1
 // export const SEASONYEAR_INDEX = 2
@@ -41,7 +46,11 @@ export const PO_NUMBER_TEXT = 'Purchase Order Date'
 export const PO_NUMBER_INDEX = 1
 // export const SELLER_ADDRESS_START_TEXT = "SELLER:"
 // export const SELLER_ADDRESS_END_TEXT = "BUYER:"
-export const ITEM_VARIANT_START_TEXT = "Retail Price(USD)"
+export const ITEM_VARIANT_START_TEXT = "Retail Price"
+
+
+ // Jaswanth Chnages 2nd format//
+export const ITEM_TEXT_END_TEXT1= 'Eaches'
 
 
 

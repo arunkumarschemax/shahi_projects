@@ -11,5 +11,11 @@ export class CentricPoItemVariant {
     exPort:string;
     deliveryDate:string;
     retialPrice:string;
+
+
+    comMaterial:string;
+    ratio:string;
+
+
    
 }

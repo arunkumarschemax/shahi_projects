@@ -9,6 +9,8 @@ export class CentricPoItemDetails {
     shortDescription:string;
     packMethod:string;
     vendorBookingFlag:string;
+
+    ppkupc:string;
     // materialNo: string;
     // poItem: string;
     // season: string;
