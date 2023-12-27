@@ -3788,23 +3788,23 @@ export class OrdersService {
     }
 
     async getPhaseMonthExcelDataNew(req: YearReq): Promise<CommonResponseModel>{
-        const data2 = await this.ordersRepository.getDataNew(req)
+                const data2 = await this.ordersRepository.getDataNew(req)
         const dataMap = new Map<string, PhaseWiseReq >();
         const dataMap2 = new Map<string, PhaseWiseReq >();
-        for(const rec of data2){
-            if(!dataMap.has(rec.prod_plan_type)){
-                dataMap.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[]))
+                for(const rec of data2){
+                        if(!dataMap.has(rec.prod_plan_type)){
+                                dataMap.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[]))
             }
             const item=dataMap.get(rec.prod_plan_type).itemData
             if(rec.prod_plan_type != null){
                 if(req.tabName == 'ExFactory'){
-                    item.push(new itemData(rec.exfMonth,rec.exfPcs,rec.exfCoeff))
+                                        item.push(new itemData(rec.exfMonth,rec.exfPcs,rec.exfCoeff))
                 }
                 if(req.tabName === 'WareHouse' ){
-                    item.push(new itemData(rec.whMonth,rec.whPcs,rec.whCoeff))
+                                        item.push(new itemData(rec.whMonth,rec.whPcs,rec.whCoeff))
                 }
             }
-        }
+                    }
         const detailedarray: PhaseWiseReq[] = Array.from(dataMap.values())
         
         for(const rec of data2){
@@ -3861,6 +3861,33 @@ export class OrdersService {
         catch(error){
             throw error
         }
+    }
+
+    async getTotalvaluesofphase(phase:string,year:number):Promise<CommonResponseModel>{
+        try{
+            let prodPlan
+            if(phase === 'Ph1'){
+                prodPlan='ph1'
+            }
+            if(phase === 'Ph3(Add)' || phase === 'Ph3(Adj)' || phase === 'Ph3(Stk)'){
+                prodPlan='Ph3'
+            }
+            if(phase === 'Ph2'){
+                prodPlan ='Ph2'
+            }
+            const query='SELECT SUM(REPLACE(order_plan_qty,",","")) inPcsTotal,SUM(REPLACE(order_plan_qty_coeff,",","")) AS inCoefTOtal FROM orders WHERE YEAR='+year+' AND prod_plan_type NOT IN("STOP")  AND prod_plan_type LIKE "'+prodPlan+'"  AND file_id = (SELECT MAX(file_id) FROM orders) GROUP BY  CASE WHEN prod_plan_type LIKE "'+prodPlan+'" THEN "'+prodPlan+'" ELSE prod_plan_type END'
+
+            const result = await this.ordersRepository.query(query)
+            if(result){
+                return new CommonResponseModel(true,1,'data',result)
+            }else{
+                return new CommonResponseModel(false,0,'',[])
+            }
+            
+        }catch(err){
+            throw err
+        }
+       
     }
 
 }
