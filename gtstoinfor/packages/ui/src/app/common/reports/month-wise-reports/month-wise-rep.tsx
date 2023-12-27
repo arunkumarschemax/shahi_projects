@@ -242,8 +242,8 @@ export default function MonthWiseReportV2() {
     function getMonthWiseColumns() {
         const monthWiseColumns: { [key: string]: any }[] = [];
         Array.from(distinctMonths).forEach((month) => {
-            monthWiseColumns.push({ dataIndex: `${month}_inCoeffPcs`, width: '60px', render: (value: any) => value ? value : 0 });
-            monthWiseColumns.push({ dataIndex: `${month}_inPcs`, width: '50px', render: (value: any) => value ? value : 0 });
+            monthWiseColumns.push({ dataIndex: `${month}_inCoeffPcs`, width: '60px', render: (value: any) => value ? value.toLocaleString() : 0 });
+            monthWiseColumns.push({ dataIndex: `${month}_inPcs`, width: '50px', render: (value: any) => value ? value.toLocaleString() : 0 });
         });;
         return monthWiseColumns
 
@@ -251,8 +251,8 @@ export default function MonthWiseReportV2() {
     function getMonthWiseColumns2() {
         const monthWiseColumns: { [key: string]: any }[] = [];
         Array.from(phseDistinctMonths).forEach((month) => {
-            monthWiseColumns.push({ dataIndex: `${month}_coeffPcs`, width: '60px', render: (value: any) => value ? value : 0 });
-            monthWiseColumns.push({ dataIndex: `${month}_inPcs`, width: '50px', render: (value: any) => value ? value : 0 });
+            monthWiseColumns.push({ dataIndex: `${month}_coeffPcs`, width: '60px', render: (value: any) => value ? value.toLocaleString() : 0 });
+            monthWiseColumns.push({ dataIndex: `${month}_inPcs`, width: '50px', render: (value: any) => value ? value.toLocaleString() : 0 });
         });;
         return monthWiseColumns
 
@@ -309,11 +309,17 @@ export default function MonthWiseReportV2() {
         },
         {
             title:'Total InPcs',
-            dataIndex:'inPcsSum'
+            // dataIndex:'inPcsSum',
+            render: (text: any, record: any) =>{
+                return(<span>{record.inPcsSum?record.inPcsSum.toLocaleString():0}</span>)
+            }
         },
         {
             title:'Total InCoeff Pcs',
-            dataIndex:'inCoeffSum'
+            // dataIndex:'inCoeffSum',
+            render: (text: any, record: any) =>{
+                return(<span>{record.inCoeffSum?record.inCoeffSum.toLocaleString():0}</span>)
+            }
         }
     ]
 
