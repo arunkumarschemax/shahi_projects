@@ -156,4 +156,13 @@ export class RLOrdersController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
+
+    @Post('/readPOPdfBot')
+    async readPOPdfBot(): Promise<CommonResponseModel> {
+        try {
+            return this.rlOrdersService.readPOPdfBot();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
