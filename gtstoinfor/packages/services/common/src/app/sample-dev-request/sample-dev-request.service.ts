@@ -1391,17 +1391,25 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
 
     async allocatedLocationInfo(req:AllocatedLocationRequest){
       let checkStatus
+      let itemType
       if(req.action == 'Issued'){
         checkStatus = MaterialStatusEnum.READY_FOR_PRODUCTION
       }
       if(req.action == 'Approval'){
         checkStatus = MaterialStatusEnum.MATERIAL_ALLOCATED
       }
-      const data = `SELECT ma.sample_item_id AS sampleItemId,rp.rack_position_name AS location,position_Id AS id,item_type AS itemType,mai.quantity
+      
+      let data
+      data = `SELECT ma.sample_item_id AS sampleItemId,rp.rack_position_name AS location,position_Id AS id,item_type AS itemType,mai.quantity
       ,mai.allocate_quantity AS allocatedQty,mai.material_allocation_items_id as materialAllocationId  FROM material_allocation ma
       LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
       LEFT JOIN rack_position rp ON rp.position_Id = mai.location_id
        WHERE sample_item_id = ${req.sampleRequestItemId} and ma.status = '${checkStatus}'`
+       if(req.type == 'Fabric'){
+          data +=` and item_type = '${req.type}'`
+       }else{
+          data +=` and item_type != 'Fabric'`
+       }
        const res = await this.dataSource.query(data)
        if(res.length > 0){
          return new CommonResponseModel(true,1,'data',res)
