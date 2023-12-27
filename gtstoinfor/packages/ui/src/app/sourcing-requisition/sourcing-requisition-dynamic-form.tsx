@@ -324,6 +324,7 @@ export const SourcingRequisitionDynamicForm = () => {
     }
 
     const editForm = (rowData : any , index:any) =>{
+        console.log(rowData);
         setDefaultTrimFormData(rowData)
         setTrimIndexVal(index)
         setTrimBtnType("Update")
@@ -389,6 +390,7 @@ export const SourcingRequisitionDynamicForm = () => {
         if(defaultTrimFormData){
             trimForm.setFieldsValue({
                 trimType : defaultTrimFormData.trimType,
+                trimCategory : defaultTrimFormData.trimCategory,
                 trimCode : defaultTrimFormData.trimCode,
                 trimName : defaultTrimFormData.trimName,
                 size : defaultTrimFormData.size,
