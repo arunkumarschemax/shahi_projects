@@ -760,7 +760,7 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPpmProductCodeForOrderCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.productCode,dpom.id`)
-            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.customer_order IS NULL`)
+            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.customer_order IS NULL AND (dpom.co_line_status != 'Success' OR dpom.co_line_status IS NULL)`)
             .groupBy(`dpom.productCode`)
         return await query.getRawMany();
     }
@@ -768,15 +768,23 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPoLineforOrderCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.po_number,dpom.id`)
-            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.customer_order IS NULL`)
+            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.customer_order IS NULL AND (dpom.co_line_status != 'Success' OR dpom.co_line_status IS NULL)`)
             .groupBy(`dpom.po_number`)
+        return await query.getRawMany();
+    }
+
+    async getStyleNumberForOrderCreation(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.style_number,dpom.id`)
+            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.style_number IS NOT Null AND dpom.customer_order IS NULL AND (dpom.co_line_status != 'Success' OR dpom.co_line_status IS NULL)`)
+            .groupBy(`dpom.style_number`)
         return await query.getRawMany();
     }
 
     async getPpmPoLineForNikeOrder(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.po_and_line,dpom.id`)
-            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number ')
             .groupBy(`dpom.po_and_line`)
             .where(` od.column_name='total_item_qty' `)
         return await query.getRawMany();
@@ -928,10 +936,11 @@ export class DpomRepository extends Repository<DpomEntity> {
     async getPpmStyleNumberForFactory(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.style_number,dpom.id`)
-            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.style_number IS NOT Null`)
+            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.style_number IS NOT Null `)
             .groupBy(`dpom.style_number`)
         return await query.getRawMany();
     }
+
     async getPpmplanningSeasonCodeForFactory(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
             .select(` dpom.planning_season_code,dpom.id`)

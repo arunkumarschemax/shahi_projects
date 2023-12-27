@@ -123,6 +123,7 @@ export class DpomService {
                         "product.genderAgeDescription",
                         "product.styleNumber",
                         "poLine.productCode",
+                        "poLine.productName",
                         "product.colorDescription",
                         "poLine.destinationCountryCode",
                         "poLine.destinationCountryName",
@@ -292,10 +293,10 @@ export class DpomService {
         }
     }
 
-    // @Cron('*/5 * * * *')
+    // @Cron('*/3 * * * *')
     async createCOline(req: any): Promise<CommonResponseModel> {
-        const poDetails = await this.coLineRepository.getDataforCOLineCreation();
-        if (!poDetails.length) {
+        const po = await this.coLineRepository.getDataforCOLineCreation();
+        if (!po) {
             return new CommonResponseModel(false, 0, 'No CO-Line creation requests')
         }
         let driver = await new Builder().forBrowser(Browser.CHROME).build();
@@ -314,334 +315,334 @@ export class DpomService {
             await driver.switchTo().window(windowHandles[1]);
             const frame = await driver.findElement(By.id('mainFrame'));
             await driver.switchTo().frame(frame)
-            for (const po of poDetails) {
-                const coLine = new CoLineRequest();
-                let buyerValue1;
-                let buyerValue2;
-                let agent;
-                let buyerAddress;
-                let deliveryAddress;
-                let pkgTerms;
-                let paymentTerms;
-                if (po.buyer === 'Nike-U12') {
-                    const data = await this.dpomRepository.getDataForColine({ poNumber: po.buyer_po, lineNumber: po.line_item_no })
-                    const result = data[0].color_desc.split('/')[0]
-                    const firstTenChars = result.substring(0, 10);
-                    const lastFourDigits = data[0].style_number.slice(-4)
-                    const gacDate = new Date(data[0].gac); // Parse the GAC date
-                    // Calculate the date 7 days before the GAC date
-                    const sevenDaysBeforeGAC = new Date(gacDate);
-                    sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
-                    // Format the result as 'DD/MM/YYYY'
-                    const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
-                    coLine.buyerPo = data[0].po_number + '-' + data[0].po_line_item_number
-                    coLine.exFactoryDate = exFactoryDate
-                    coLine.salesPrice = data[0].salesPrice ? data[0].salesPrice : data[0].gross_price_fob
-                    coLine.currency = data[0].currency ? data[0].currency : 'USD'
-                    coLine.deliveryDate = moment(data[0].gac).format("DD/MM/YYYY")
-                    const destinationsArr: Destinations[] = []
-                    const destinations = new Destinations()
-                    destinations.name = data[0].destination_country
-                    const colorsArr: Colors[] = []
-                    const colors = new Colors()
-                    colors.name = firstTenChars + ' ' + lastFourDigits
-                    const sizesArr: Sizes[] = []
+            const coLine = new CoLineRequest();
+            let buyerValue1;
+            let buyerValue2;
+            let agent;
+            let buyerAddress;
+            let deliveryAddress;
+            let pkgTerms;
+            let paymentTerms;
+            if (po.buyer === 'Nike-U12') {
+                const data = await this.dpomRepository.getDataForColine({ poNumber: po.buyer_po, lineNumber: po.line_item_no })
+                const result = data[0].color_desc.split('/')[0]
+                const firstTenChars = result.substring(0, 10);
+                const lastFourDigits = data[0].style_number.slice(-4)
+                const gacDate = new Date(data[0].gac); // Parse the GAC date
+                // Calculate the date 7 days before the GAC date
+                const sevenDaysBeforeGAC = new Date(gacDate);
+                sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
+                // Format the result as 'DD/MM/YYYY'
+                const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
+                coLine.buyerPo = data[0].po_number + '-' + data[0].po_line_item_number
+                coLine.exFactoryDate = exFactoryDate
+                coLine.salesPrice = data[0].salesPrice ? data[0].salesPrice : data[0].gross_price_fob
+                coLine.currency = data[0].currency ? data[0].currency : 'USD'
+                coLine.deliveryDate = moment(data[0].gac).format("DD/MM/YYYY")
+                const destinationsArr: Destinations[] = []
+                const destinations = new Destinations()
+                destinations.name = data[0].destination_country
+                const colorsArr: Colors[] = []
+                const colors = new Colors()
+                colors.name = firstTenChars + ' ' + lastFourDigits
+                const sizesArr: Sizes[] = []
 
-                    for (let item of data) {
-                        const sizes = new Sizes()
-                        sizes.name = item.size_description
-                        sizes.qty = item.size_qty
-                        sizes.price = item.gross_price_fob
-                        sizesArr.push(sizes)
-                    }
-                    colors.sizes = sizesArr
-                    colorsArr.push(colors)
-                    destinations.colors = colorsArr
-                    destinationsArr.push(destinations)
-                    coLine.destinations = destinationsArr
-                    const req = new DestinationReq()
-                    req.destination = data[0].destination_country
-                    const addressResponse = await this.addressService.getAddressInfoByDestination(req);
-                    const addressData = addressResponse.data[0]
-                    buyerValue1 = "NKE-NIKE"
-                    buyerValue2 = "NIK00003-NIKE USA INC"
-                    agent = "NA-DIRECT CUSTOMER"
-                    buyerAddress = addressData ? addressData.buyerCode : 19
-                    deliveryAddress = addressData ? addressData.deliveryCode : 10
-                    pkgTerms = "BOX-BOXES"
-                    paymentTerms = "031-Trde Card45 Day"
-                } else if (po.buyer === 'Uniqlo-U12') {
-                    const req = { orderNumber: po.buyer_po }
-                    const response = await axios.post(`https://uniqlov2-backend.xpparel.com/api/orders/getTrimOrderDetails`, req);
-                    const coData = response.data.data;
-                    coLine.buyerPo = coData.buyerPo;
-                    const gacDate = new Date(coData.deliveryDate); // Parse the GAC date
-                    // Calculate the date 7 days before the GAC date
-                    const sevenDaysBeforeGAC = new Date(gacDate);
-                    sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
-                    // Format the result as 'DD/MM/YYYY'
-                    const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
-                    coLine.deliveryDate = moment(coData.deliveryDate).format('DD/MM/YYYY')
-                    coLine.exFactoryDate = exFactoryDate
-                    coLine.salesPrice = coData.salesPrice
-                    coLine.currency = coData.currency
-                    coLine.destinations = coData.destinations
-                    const request = { country: coData.destinations[0]?.name }
-                    const address = await axios.post(`https://uniqlov2-backend.xpparel.com/api/address/getAddressInfoByCountry`, request);
-                    const addressData = address.data.data[0];
-                    buyerAddress = addressData?.buyerAddress ? addressData?.buyerAddress : 71;
-                    deliveryAddress = addressData?.deliveryAddress
-                    buyerValue1 = "UNQ-UNIQLO"
-                    buyerValue2 = "UNI0003-UNIQLO CO LTD"
-                    agent = "-NA"
-                    pkgTerms = "STD-STD PACK"
-                    paymentTerms = "048-TT 15 DAYS"
+                for (let item of data) {
+                    const sizes = new Sizes()
+                    sizes.name = item.size_description
+                    sizes.qty = item.size_qty
+                    sizes.price = item.gross_price_fob
+                    sizesArr.push(sizes)
                 }
-                const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
-                const allApps = await apps.findElements(By.tagName('span'));
-                for (const app of allApps) {
-                    if ((await app.getAttribute('innerText')).includes('Style Orders')) {
-                        await driver.executeScript('arguments[0].click();', app);
-                        break;
-                    }
+                colors.sizes = sizesArr
+                colorsArr.push(colors)
+                destinations.colors = colorsArr
+                destinationsArr.push(destinations)
+                coLine.destinations = destinationsArr
+                const req = new DestinationReq()
+                req.destination = data[0].destination_country
+                const addressResponse = await this.addressService.getAddressInfoByDestination(req);
+                const addressData = addressResponse.data[0]
+                buyerValue1 = "NKE-NIKE"
+                buyerValue2 = "NIK00003-NIKE USA INC"
+                agent = "NA-DIRECT CUSTOMER"
+                buyerAddress = addressData ? addressData.buyerCode : 19
+                deliveryAddress = addressData ? addressData.deliveryCode : 10
+                pkgTerms = "BOX-BOXES"
+                paymentTerms = "031-Trde Card45 Day"
+            } else if (po.buyer === 'Uniqlo-U12') {
+                const req = { orderNumber: po.buyer_po }
+                const response = await axios.post(`https://uniqlov2-backend.xpparel.com/api/orders/getTrimOrderDetails`, req);
+                const coData = response.data.data;
+                coLine.buyerPo = coData.buyerPo;
+                const gacDate = new Date(coData.deliveryDate); // Parse the GAC date
+                // Calculate the date 7 days before the GAC date
+                const sevenDaysBeforeGAC = new Date(gacDate);
+                sevenDaysBeforeGAC.setDate(gacDate.getDate() - 7);
+                // Format the result as 'DD/MM/YYYY'
+                const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBeforeGAC)
+                coLine.deliveryDate = moment(coData.deliveryDate).format('DD/MM/YYYY')
+                coLine.exFactoryDate = exFactoryDate
+                coLine.salesPrice = coData.salesPrice
+                coLine.currency = coData.currency
+                coLine.destinations = coData.destinations
+                const request = { country: coData.destinations[0]?.name }
+                const address = await axios.post(`https://uniqlov2-backend.xpparel.com/api/address/getAddressInfoByCountry`, request);
+                const addressData = address.data.data[0];
+                buyerAddress = addressData?.buyerAddress ? addressData?.buyerAddress : 71;
+                deliveryAddress = addressData?.deliveryAddress
+                buyerValue1 = "UNQ-UNIQLO"
+                buyerValue2 = "UNI0003-UNIQLO CO LTD"
+                agent = "-NA"
+                pkgTerms = "STD-STD PACK"
+                paymentTerms = "048-TT 15 DAYS"
+            }
+            const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
+            const allApps = await apps.findElements(By.tagName('span'));
+            for (const app of allApps) {
+                if ((await app.getAttribute('innerText')).includes('Style Orders')) {
+                    await driver.executeScript('arguments[0].click();', app);
+                    break;
                 }
-                await driver.wait(until.elementLocated(By.id('styleid2H')))
-                await driver.findElement(By.id('styleid2H')).sendKeys(po.item_no);
-                await driver.sleep(10000)
-                await driver.wait(until.elementLocated(By.id('bgpset1')));
-                const dropdownElement1 = await driver.findElement(By.id('bgpset1'));
-                const dropdown1 = await driver.wait(until.elementIsVisible(dropdownElement1)).then(element => new Select(element))
-                await dropdown1.selectByValue(buyerValue1)
-                // await driver.executeScript(`arguments[0].value = '${buyerValue1}';`, buyerDropDown1)
-                await driver.sleep(10000)
-                await driver.wait(until.elementLocated(By.id('byr')));
-                const dropdownElement2 = await driver.findElement(By.id('byr'));
-                const dropdown2 = await driver.wait(until.elementIsVisible(dropdownElement2)).then(element => new Select(element))
-                await dropdown2.selectByValue(buyerValue2)
-                // await driver.executeScript(`arguments[0].value = '${buyerValue2}';`, dropdownElement2)
-                await driver.sleep(5000)
-                await driver.wait(until.elementLocated(By.id('CreateOrderID')))
-                await driver.sleep(3000)
-                await driver.findElement(By.id('CreateOrderID')).click();
-                await driver.wait(until.elementLocated(By.id('bpo')))
-                await driver.findElement(By.id('bpo')).clear();
-                await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
-                await driver.wait(until.elementLocated(By.id('agnt')));
-                const agentDropDown = await driver.findElement(By.id('agnt'));
-                await driver.executeScript(`arguments[0].value = '${agent}';`, agentDropDown)
-                await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
-                await driver.findElement(By.name('dojo.EXFACTORYDATE')).clear();
-                await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
-                await driver.wait(until.elementLocated(By.name('dojo.delydt')));
-                await driver.findElement(By.name('dojo.delydt')).clear();
-                await driver.findElement(By.name('dojo.delydt')).sendKeys(coLine.deliveryDate);
-                await driver.wait(until.elementLocated(By.name('byd')));
-                const dropdown = await driver.findElement(By.name('byd'));
-                const options = await dropdown.findElements(By.tagName('option'));
-                const optionValues = [];
-                for (const option of options) {
-                    const value = await option.getAttribute('value');
-                    optionValues.push(value);
-                }
-                const number = optionValues.find(value => {
-                    return Number(value.split('-')[0].trim()) == Number(buyerAddress)
-                });
-                await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
-                await driver.wait(until.elementLocated(By.xpath('//*[@id="cur"]')));
-                const curDropdown = await driver.findElement(By.xpath('//*[@id="cur"]'));
-                const cur = coLine.currency; // give the dynamic value here
-                await driver.executeScript(`arguments[0].value = '${cur}';`, curDropdown);
-                await driver.wait(until.elementLocated(By.xpath('//*[@id="price"]')));
-                await driver.findElement(By.xpath('//*[@id="price"]')).clear();
-                await driver.findElement(By.xpath('//*[@id="price"]')).sendKeys(coLine.salesPrice);
+            }
+            await driver.wait(until.elementLocated(By.id('styleid2H')))
+            await driver.findElement(By.id('styleid2H')).sendKeys(po.item_no);
+            await driver.sleep(10000)
+            await driver.wait(until.elementLocated(By.id('bgpset1')));
+            const dropdownElement1 = await driver.findElement(By.id('bgpset1'));
+            const dropdown1 = await driver.wait(until.elementIsVisible(dropdownElement1)).then(element => new Select(element))
+            await dropdown1.selectByValue(buyerValue1)
+            // await driver.executeScript(`arguments[0].value = '${buyerValue1}';`, buyerDropDown1)
+            await driver.sleep(10000)
+            await driver.wait(until.elementLocated(By.id('byr')));
+            const dropdownElement2 = await driver.findElement(By.id('byr'));
+            const dropdown2 = await driver.wait(until.elementIsVisible(dropdownElement2)).then(element => new Select(element))
+            await dropdown2.selectByValue(buyerValue2)
+            // await driver.executeScript(`arguments[0].value = '${buyerValue2}';`, dropdownElement2)
+            await driver.sleep(5000)
+            await driver.wait(until.elementLocated(By.id('CreateOrderID')))
+            await driver.sleep(3000)
+            await driver.findElement(By.id('CreateOrderID')).click();
+            await driver.wait(until.elementLocated(By.id('bpo')))
+            await driver.findElement(By.id('bpo')).clear();
+            await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
+            await driver.wait(until.elementLocated(By.id('agnt')));
+            const agentDropDown = await driver.findElement(By.id('agnt'));
+            await driver.executeScript(`arguments[0].value = '${agent}';`, agentDropDown)
+            await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
+            await driver.findElement(By.name('dojo.EXFACTORYDATE')).clear();
+            await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
+            await driver.wait(until.elementLocated(By.name('dojo.delydt')));
+            await driver.findElement(By.name('dojo.delydt')).clear();
+            await driver.findElement(By.name('dojo.delydt')).sendKeys(coLine.deliveryDate);
+            await driver.wait(until.elementLocated(By.name('byd')));
+            const dropdown = await driver.findElement(By.name('byd'));
+            const options = await dropdown.findElements(By.tagName('option'));
+            const optionValues = [];
+            for (const option of options) {
+                const value = await option.getAttribute('value');
+                optionValues.push(value);
+            }
+            const number = optionValues.find(value => {
+                return Number(value.split('-')[0].trim()) == Number(buyerAddress)
+            });
+            await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
+            await driver.wait(until.elementLocated(By.xpath('//*[@id="cur"]')));
+            const curDropdown = await driver.findElement(By.xpath('//*[@id="cur"]'));
+            const cur = coLine.currency; // give the dynamic value here
+            await driver.executeScript(`arguments[0].value = '${cur}';`, curDropdown);
+            await driver.wait(until.elementLocated(By.xpath('//*[@id="price"]')));
+            await driver.findElement(By.xpath('//*[@id="price"]')).clear();
+            await driver.findElement(By.xpath('//*[@id="price"]')).sendKeys(coLine.salesPrice);
 
-                await driver.wait(until.elementLocated(By.id('packtrm')));
-                const pkgTermsDropDown = await driver.findElement(By.id('packtrm'));
-                await driver.executeScript(`arguments[0].value = '${pkgTerms}';`, pkgTermsDropDown)
-                await driver.wait(until.elementLocated(By.id('ptr')));
-                const ptrDropDown = await driver.findElement(By.id('ptr'));
-                await driver.executeScript(`arguments[0].value = '${paymentTerms}';`, ptrDropDown)
-                await driver.sleep(10000)
-                for (let dest of coLine.destinations) {
-                    const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
-                    const colorsTabs = await colorsContainer.findElements(By.tagName('span'));
-                    for (const tab of colorsTabs) {
-                        if ((await tab.getAttribute('innerText')) == dest.name) {
-                            await driver.executeScript('arguments[0].click();', tab);
-                            for (let [colorIndex, color] of dest.colors.entries()) {
-                                for (let [sizeIndex, size] of color.sizes.entries()) {
-                                    if (colorIndex === 0) {
-                                        // Find all the labels in the second row.
-                                        await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
-                                        let labelElements: any[] = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
-                                        const fileteredElements: any[] = [];
-                                        for (const labelElement of labelElements) {
-                                            const ele = (await labelElement.getText())?.trim();
-                                            ele.length > 0 ? fileteredElements.push(labelElement) : '';
-                                        }
-                                        const destToTabIndexMapping = {
-                                            'UQAU': 4,
-                                            'UQEU': 5,
-                                            'UQJP': 2,
-                                            'UQIN': 6,  // common case for 'UQIN' in the original conditions
-                                            'UQMY': 3,
-                                            'UQSG': 2,
-                                            'FRPH': 4
-                                            // Add more mappings as needed
-                                        };
-                                        let tabIndex = destToTabIndexMapping[dest.name] || 1; // Default to 1 if no match
-                                        // Additional conditions for 'UQIN' with specific item numbers
-                                        if ((po.item_no === '691M' || po.item_no === '694M') && dest.name === 'UQIN') {
-                                            tabIndex = 4;
-                                        }
-                                        if (po.item_no === '102P' && dest.name === 'UQIN') {
-                                            tabIndex = 3;
-                                        }
-                                        const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
-                                        const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
-                                        await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
-                                        const dropdown = await driver.findElement(By.id(`bydline/${string}`));
-                                        const options = await dropdown.findElements(By.tagName('option'));
-                                        const optionValues = [];
-                                        for (const option of options) {
-                                            const value = await option.getAttribute('value');
-                                            optionValues.push(value);
-                                        }
-                                        const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
-                                        await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
-                                        // Find all the input fields in the first row.
-                                        const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
-                                        // Create a map of size labels to input fields.
-                                        const sizeToInputMap = {};
-                                        for (let i = 0; i < fileteredElements.length; i++) {
-                                            const label = (await fileteredElements[i].getText()).trim().toUpperCase().toString(); // Remove leading/trailing spaces
-                                            if (label.length)
-                                                sizeToInputMap[label] = inputElements[i];
-                                        }
-                                        const inputField = await sizeToInputMap[size.name.trim().toUpperCase().toString()];
-                                        if (inputField) {
-                                            // Clear the existing value (if any) and fill it with the new price.
-                                            await inputField.clear();
-                                            await inputField.sendKeys(size.price);
-                                        }
+            await driver.wait(until.elementLocated(By.id('packtrm')));
+            const pkgTermsDropDown = await driver.findElement(By.id('packtrm'));
+            await driver.executeScript(`arguments[0].value = '${pkgTerms}';`, pkgTermsDropDown)
+            await driver.wait(until.elementLocated(By.id('ptr')));
+            const ptrDropDown = await driver.findElement(By.id('ptr'));
+            await driver.executeScript(`arguments[0].value = '${paymentTerms}';`, ptrDropDown)
+            await driver.sleep(10000)
+            for (let dest of coLine.destinations) {
+                const colorsContainer = await driver.wait(until.elementLocated(By.xpath('//*[@id="COContainer"]')));
+                const colorsTabs = await colorsContainer.findElements(By.tagName('span'));
+                for (const tab of colorsTabs) {
+                    if ((await tab.getAttribute('innerText')) == dest.name) {
+                        await driver.executeScript('arguments[0].click();', tab);
+                        for (let [colorIndex, color] of dest.colors.entries()) {
+                            for (let [sizeIndex, size] of color.sizes.entries()) {
+                                if (colorIndex === 0) {
+                                    // Find all the labels in the second row.
+                                    await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
+                                    let labelElements: any[] = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
+                                    const fileteredElements: any[] = [];
+                                    for (const labelElement of labelElements) {
+                                        const ele = (await labelElement.getText())?.trim();
+                                        ele.length > 0 ? fileteredElements.push(labelElement) : '';
                                     }
-                                    const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
-                                    const input = await driver.wait(until.elementLocated(By.id(inputId)))
-                                    await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
+                                    const destToTabIndexMapping = {
+                                        'UQAU': 4,
+                                        'UQEU': 5,
+                                        'UQJP': 2,
+                                        'UQIN': 6,  // common case for 'UQIN' in the original conditions
+                                        'UQMY': 3,
+                                        'UQSG': 2,
+                                        'FRPH': 4
+                                        // Add more mappings as needed
+                                    };
+                                    let tabIndex = destToTabIndexMapping[dest.name] || 1; // Default to 1 if no match
+                                    // Additional conditions for 'UQIN' with specific item numbers
+                                    if ((po.item_no === '691M' || po.item_no === '694M') && dest.name === 'UQIN') {
+                                        tabIndex = 4;
+                                    }
+                                    if (po.item_no === '102P' && dest.name === 'UQIN') {
+                                        tabIndex = 3;
+                                    }
+                                    const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
+                                    const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
+                                    await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
+                                    const dropdown = await driver.findElement(By.id(`bydline/${string}`));
+                                    const options = await dropdown.findElements(By.tagName('option'));
+                                    const optionValues = [];
+                                    for (const option of options) {
+                                        const value = await option.getAttribute('value');
+                                        optionValues.push(value);
+                                    }
+                                    const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
+                                    await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
+                                    // Find all the input fields in the first row.
+                                    const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
+                                    // Create a map of size labels to input fields.
+                                    const sizeToInputMap = {};
+                                    for (let i = 0; i < fileteredElements.length; i++) {
+                                        const label = (await fileteredElements[i].getText()).trim().toUpperCase().toString(); // Remove leading/trailing spaces
+                                        if (label.length)
+                                            sizeToInputMap[label] = inputElements[i];
+                                    }
+                                    const inputField = await sizeToInputMap[size.name.trim().toUpperCase().toString()];
+                                    if (inputField) {
+                                        // Clear the existing value (if any) and fill it with the new price.
+                                        await inputField.clear();
+                                        await inputField.sendKeys(size.price);
+                                    }
                                 }
+                                const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
+                                const input = await driver.wait(until.elementLocated(By.id(inputId)))
+                                await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                             }
-                        } else if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
-                            await driver.executeScript('arguments[0].click();', tab);
-                            for (let [colorIndex, color] of dest.colors.entries()) {
-                                for (let [sizeIndex, size] of color.sizes.entries()) {
-                                    if (colorIndex === 0) {
-                                        // Find all the labels in the second row.
-                                        await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
-                                        let labelElements: any[] = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
-                                        const fileteredElements: any[] = [];
-                                        for (const labelElement of labelElements) {
-                                            const ele = (await labelElement.getText())?.trim();
-                                            ele.length > 0 ? fileteredElements.push(labelElement) : '';
-                                        }
-                                        let tabIndex = 1;
-                                        // const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
-                                        const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
-                                        await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
-                                        const dropdown = await driver.findElement(By.id(`bydline/${string}`));
-                                        const options = await dropdown.findElements(By.tagName('option'));
-                                        const optionValues = [];
-                                        for (const option of options) {
-                                            const value = await option.getAttribute('value');
-                                            optionValues.push(value);
-                                        }
-                                        const number = optionValues.find(value => {
-                                            return Number(value.split('-')[0].trim()) == Number(deliveryAddress)
-                                        });
-                                        await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
-                                        // Find all the input fields in the first row.
-                                        const inputElements = await driver.findElements(By.xpath("//tbody/tr[1]/td/div/input[@name='salespsizes']"));
-                                        // Create a map of size labels to input fields.
-                                        const sizeToInputMap = {};
-                                        for (let i = 0; i < fileteredElements.length; i++) {
-                                            const label = (await fileteredElements[i].getText()).trim().toUpperCase(); // Remove leading/trailing spaces
-                                            if (label.length)
-                                                sizeToInputMap[label] = inputElements[i];
-                                        }
-                                        const inputField = sizeToInputMap[size.name.trim().toUpperCase()];
-                                        if (inputField) {
-                                            // Clear the existing value (if any) and fill it with the new price.
-                                            await inputField.clear();
-                                            await inputField.sendKeys(size.price);
-                                        }
+                        }
+                    } else if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
+                        await driver.executeScript('arguments[0].click();', tab);
+                        for (let [colorIndex, color] of dest.colors.entries()) {
+                            for (let [sizeIndex, size] of color.sizes.entries()) {
+                                if (colorIndex === 0) {
+                                    // Find all the labels in the second row.
+                                    await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
+                                    let labelElements: any[] = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
+                                    const fileteredElements: any[] = [];
+                                    for (const labelElement of labelElements) {
+                                        const ele = (await labelElement.getText())?.trim();
+                                        ele.length > 0 ? fileteredElements.push(labelElement) : '';
                                     }
-                                    const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
-                                    await driver.wait(until.elementLocated(By.id(inputId)))
-                                    await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
+                                    let tabIndex = 1;
+                                    // const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
+                                    const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
+                                    await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
+                                    const dropdown = await driver.findElement(By.id(`bydline/${string}`));
+                                    const options = await dropdown.findElements(By.tagName('option'));
+                                    const optionValues = [];
+                                    for (const option of options) {
+                                        const value = await option.getAttribute('value');
+                                        optionValues.push(value);
+                                    }
+                                    const number = optionValues.find(value => {
+                                        return Number(value.split('-')[0].trim()) == Number(deliveryAddress)
+                                    });
+                                    await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
+                                    // Find all the input fields in the first row.
+                                    const inputElements = await driver.findElements(By.xpath("//tbody/tr[1]/td/div/input[@name='salespsizes']"));
+                                    // Create a map of size labels to input fields.
+                                    const sizeToInputMap = {};
+                                    for (let i = 0; i < fileteredElements.length; i++) {
+                                        const label = (await fileteredElements[i].getText()).trim().toUpperCase(); // Remove leading/trailing spaces
+                                        if (label.length)
+                                            sizeToInputMap[label] = inputElements[i];
+                                    }
+                                    const inputField = sizeToInputMap[size.name.trim().toUpperCase()];
+                                    if (inputField) {
+                                        // Clear the existing value (if any) and fill it with the new price.
+                                        await inputField.clear();
+                                        await inputField.sendKeys(size.price);
+                                    }
                                 }
+                                const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
+                                await driver.wait(until.elementLocated(By.id(inputId)))
+                                await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                             }
                         }
                     }
                 }
-                await driver.sleep(10000)
-                const element = await driver.findElement(By.id('OrderCreateID')).click();
-                await driver.wait(until.alertIsPresent(), 10000);
-                // Switch to the alert and accept it (click "OK")
+            }
+            await driver.sleep(10000)
+            const element = await driver.findElement(By.id('OrderCreateID')).click();
+            await driver.wait(until.alertIsPresent(), 10000);
+            // Switch to the alert and accept it (click "OK")
+            const alert = await driver.switchTo().alert();
+            await alert.accept();
+            if (await this.isAlertPresent(driver)) {
                 const alert = await driver.switchTo().alert();
+                const alertText = await alert.getText();
+                const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText });
                 await alert.accept();
-                if (await this.isAlertPresent(driver)) {
-                    const alert = await driver.switchTo().alert();
-                    const alertText = await alert.getText();
-                    const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText });
-                    await alert.accept();
+                await driver.sleep(5000)
+                await driver.navigate().refresh();
+                await driver.quit();
+            } else {
+                if (po.buyer == 'Uniqlo-U12') {
+                    await driver.sleep(10000)
+                    await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
+                    const coNoElement = await driver.findElement(By.xpath('//*[@id="orno"]'));
+                    const coNo = await coNoElement.getAttribute('value');
                     await driver.sleep(5000)
-                    await driver.navigate().refresh();
-                    await driver.quit();
-                } else {
-                    if (po.buyer == 'Uniqlo-U12') {
+                    const currentDate = new Date();
+                    const day = currentDate.getDate().toString().padStart(2, '0');
+                    const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
+                    const year = currentDate.getFullYear().toString().slice(-2);
+                    const currentDateFormatted = `${day}-${month}-${year}`;
+                    if (coNo) {
+                        const update = await this.coLineRepository.update({ buyerPo: po.buyer_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+                        const req = { orderNumber: po.buyer_po, itemNumber: po.item_no }
+                        const response = await axios.post(`https://uniqlov2-backend.xpparel.com/api/orders/updateOrderApprovalStatus`, req);
+                        // await driver.navigate().refresh();
                         await driver.sleep(10000)
-                        await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
-                        const coNoElement = await driver.findElement(By.xpath('//*[@id="orno"]'));
-                        const coNo = await coNoElement.getAttribute('value');
-                        await driver.sleep(5000)
-                        const currentDate = new Date();
-                        const day = currentDate.getDate().toString().padStart(2, '0');
-                        const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
-                        const year = currentDate.getFullYear().toString().slice(-2);
-                        const currentDateFormatted = `${day}-${month}-${year}`;
-                        if (coNo) {
-                            const update = await this.coLineRepository.update({ buyerPo: po.buyer_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
-                            const req = { orderNumber: po.buyer_po, itemNumber: po.item_no }
-                            const response = await axios.post(`https://uniqlov2-backend.xpparel.com/api/orders/updateOrderApprovalStatus`, req);
-                            // await driver.navigate().refresh();
-                            await driver.sleep(10000)
-                        } else {
-                            const update = await this.coLineRepository.update({ buyerPo: po.buyer_po }, { status: 'Failed' });
-                            // await driver.navigate().refresh();
-                            await driver.sleep(10000)
-                        }
                     } else {
-                        await driver.sleep(15000)
-                        await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[4]')));
-                        const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[last()]/td[7]`));
-                        const coNo = await coNoElement.getAttribute('innerText');
-                        const currentDate = new Date();
-                        const day = currentDate.getDate().toString().padStart(2, '0');
-                        const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
-                        const year = currentDate.getFullYear().toString().slice(-2);
-                        const currentDateFormatted = `${day}-${month}-${year}`;
-                        if (coNo) {
-                            const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
-                            await this.updateCOLineStatus({ poNumber: po.buyer_po, poLineItemNumber: po.line_item_no, status: 'Success' })
-                            // await driver.navigate().refresh();
-                            await driver.sleep(10000)
-                            driver.quit()
-                        } else {
-                            const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', isActive: false });
-                            await this.updateCOLineStatus({ poNumber: po.buyer_po, poLineItemNumber: po.line_item_no, status: 'Failed' })
-                            // await driver.navigate().refresh();
-                            await driver.sleep(10000)
-                            driver.quit()
-                        }
+                        const update = await this.coLineRepository.update({ buyerPo: po.buyer_po }, { status: 'Failed' });
+                        // await driver.navigate().refresh();
+                        await driver.sleep(10000)
+                    }
+                } else {
+                    await driver.sleep(15000)
+                    await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[4]')));
+                    const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[last()]/td[7]`));
+                    const coNo = await coNoElement.getAttribute('innerText');
+                    const currentDate = new Date();
+                    const day = currentDate.getDate().toString().padStart(2, '0');
+                    const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
+                    const year = currentDate.getFullYear().toString().slice(-2);
+                    const currentDateFormatted = `${day}-${month}-${year}`;
+                    if (coNo) {
+                        const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+                        await this.updateCOLineStatus({ poNumber: po.buyer_po, poLineItemNumber: po.line_item_no, status: 'Success' })
+                        // await driver.wait(until.elementLocated(By.xpath('//*[@id="widget_1935820440"]')))
+                        // await driver.findElement(By.xpath('//*[@id="widget_1935820440"]')).click()
+                        await driver.sleep(5000)
+                        // driver.quit()
+                    } else {
+                        const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', isActive: false });
+                        await this.updateCOLineStatus({ poNumber: po.buyer_po, poLineItemNumber: po.line_item_no, status: 'Failed' })
+                        // await driver.wait(until.elementLocated(By.xpath('//*[@id="widget_1935820440"]')))
+                        // await driver.findElement(By.xpath('//*[@id="widget_1935820440"]')).click()
+                        await driver.sleep(5000)
+                        // driver.quit()
                     }
                 }
             }
@@ -2367,6 +2368,15 @@ export class DpomService {
         else
             return new CommonResponseModel(false, 0, 'No data found');
     }
+
+    async getStyleNumberForOrderCreation(): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getStyleNumberForOrderCreation()
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
+    }
+
     async getPpmPlanningSeasonCodeFactory(): Promise<CommonResponseModel> {
         const data = await this.dpomRepository.getPpmplanningSeasonCodeForFactory()
         if (data.length > 0)

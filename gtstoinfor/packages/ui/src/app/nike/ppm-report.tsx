@@ -63,6 +63,9 @@ const PPMReport = () => {
   const customOrder = ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "XS-S", "S-S", "M-S", "L-S", "XL-S", "2XL-S", "3XL-S", "4XL-S", "XS-T", "S-T", "M-T", "L-T", "XS-T", "S-T", "M-T", "L-T", "XL-T", "2XL-T", "3XL-T", "4XL-T", "5XL-T", "STT", "MTT", "LTT", "XLTT", "2XLTT", "3XLTT", "S+", "M+", "L+", "Custm"];
   const sizeColumns = [
     {
+      title: 'Quantity', dataIndex: 'sizeQty'
+    },
+    {
       title: 'Gross FOB Price', dataIndex: 'grossFobPrice'
     },
     {
@@ -160,7 +163,7 @@ const PPMReport = () => {
 
   function handleHideSizeColuomns(value) {
     console.log(value, 'selected size column')
-    const selctedSizeTemp = value.map((v) => {return {title : v.children,dataIndex:v.value}})
+    const selctedSizeTemp = value.map((v) => { return { title: v.children, dataIndex: v.value } })
     setSelectedSizeColumns(selctedSizeTemp)
   }
   const handleCheckboxChange = (column, poAndLine) => {
@@ -1314,6 +1317,7 @@ const PPMReport = () => {
 
   const onReset = () => {
     form.resetFields()
+    setSelectedSizeColumns(sizeColumns);
     setGridData([])
     setFilterData([])
     setFilteredData([])
@@ -2582,54 +2586,54 @@ const PPMReport = () => {
   return (
     <>
       <Card title="PPM Marketing Report" headStyle={{ color: 'black', fontWeight: 'bold' }}>
-        <Card>
-        <Row gutter={24}>
-            <Col span={6}>
-              <Popconfirm onConfirm={e => { toggleHideChildren() }}
-                title={
-                  hideChildren
-                    ? 'Unhide Columns?'
-                    : 'Hide Columns?'
-                }
-              > Hide/Unhide Columns
-                <Switch size="default"
-                  className={hideChildren ? 'toggle-activated' : 'toggle-deactivated'}
-                  checkedChildren={<RightSquareOutlined type="check" />}
-                  unCheckedChildren={<RightSquareOutlined type="close" />}
-                  checked={hideChildren}
-                />
-              </Popconfirm>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
-              <Form.Item label="Size columns" name="sizeColumns">
-                <Select style={{width:'100%'}} allowClear showSearch placeholder='select isze columns' optionFilterProp="children"
-                  mode='multiple' onChange={(s,opt) => {handleHideSizeColuomns(opt)}}>
-                  {
-                    sizeColumns.map((s) => {
-                      return <Option key={s.dataIndex}  value={s.dataIndex}>{s.title}</Option>
-                    })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-           
-            {filteredData.length > 0 ? (
-              <Col span={1}>
-              <Button
-                type="default"
-                style={{ color: 'green' }}
-                icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="marketing-ppm-report.csv" data={csvData}>
-                  Export to CSV
-                </CSVLink></Button>
-              </Col>
-                ) : null} </Row>
-        </Card>
         <Form
           onFinish={getData}
           form={form}
           layout='vertical'>
+          <Card>
+            <Row gutter={24}>
+              <Col span={6}>
+                <Popconfirm onConfirm={e => { toggleHideChildren() }}
+                  title={
+                    hideChildren
+                      ? 'Unhide Columns?'
+                      : 'Hide Columns?'
+                  }
+                > Hide/Unhide Columns
+                  <Switch size="default"
+                    className={hideChildren ? 'toggle-activated' : 'toggle-deactivated'}
+                    checkedChildren={<RightSquareOutlined type="check" />}
+                    unCheckedChildren={<RightSquareOutlined type="close" />}
+                    checked={hideChildren}
+                  />
+                </Popconfirm>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
+                <Form.Item label="Size columns" name="sizeColumns">
+                  <Select style={{ width: '100%' }} allowClear showSearch placeholder='select isze columns' optionFilterProp="children"
+                    mode='multiple' onChange={(s, opt) => { handleHideSizeColuomns(opt) }}>
+                    {
+                      sizeColumns.map((s) => {
+                        return <Option key={s.dataIndex} value={s.dataIndex}>{s.title}</Option>
+                      })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
 
-          <Row gutter={24} style={{paddingTop:'10px'}}>
+              {filteredData.length > 0 ? (
+                <Col span={1}>
+                  <Button
+                    type="default"
+                    style={{ color: 'green' }}
+                    icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="marketing-ppm-report.csv" data={csvData}>
+                      Export to CSV
+                    </CSVLink></Button>
+                </Col>
+              ) : null} </Row>
+          </Card>
+
+          <Row gutter={24} style={{ paddingTop: '10px' }}>
 
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
               <Form.Item label="Last Modified Date" name="lastModifiedDate">

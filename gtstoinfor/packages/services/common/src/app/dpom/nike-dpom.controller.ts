@@ -955,6 +955,15 @@ export class DpomController {
         }
     }
 
+    @Post('/getStyleNumberForOrderCreation')
+    async getStyleNumberForOrderCreation(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getStyleNumberForOrderCreation();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
     // @Get('/downloadPPMReportExcel')
     // async downloadExcel(@Res() res: Response): Promise<void> {
     //     // Fetch data (replace this with your actual data retrieval logic)

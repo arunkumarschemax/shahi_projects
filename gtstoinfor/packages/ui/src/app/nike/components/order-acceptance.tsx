@@ -148,7 +148,7 @@ export function OrderAcceptance() {
     }
 
     const getStyleNumber = () => {
-        service.getPpmStyleNumberFactory().then(res => {
+        service.getStyleNumberForOrderCreation().then(res => {
             setStyleNumber(res.data)
         })
     }
