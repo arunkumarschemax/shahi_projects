@@ -145,6 +145,11 @@ export class PurchaseOrderEntity{
       nullable:true
     })
     totalAmount:string
+    @Column('int', {
+      name: 'ref_no',
+      nullable: false,
+    })
+    refNo: number
     
   // @OneToMany(type => PurchaseOrderFbricEntity, purchaseReqFabric => purchaseReqFabric.purchaseOrderEntity, { cascade: true })
   // poFabricInfo: PurchaseOrderFbricEntity[]
