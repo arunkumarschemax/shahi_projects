@@ -103,7 +103,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.paymentTermDescription = firstPageContent[paymentTermDescriptionIndex + 2].str
             // poData.specialInstructions = firstPageContent[specialInstructionsIndex + 1]?.str || '';
             if (typeof poData.specialInstructions === 'undefined') {
-                poData.specialInstructions = ''; 
+                poData.specialInstructions = '';
             }
             for (let i = specialInstructionsIndex + 1; i < firstPageContent.length; i++) {
                 if (firstPageContent[i]?.str.includes("PO History")) {
@@ -116,56 +116,66 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.division = firstPageContent[dateSentIndex + 5].str
             poData.incoterm = firstPageContent[dateSentIndex - 8].str + firstPageContent[dateSentIndex - 7].str + " " + firstPageContent[dateSentIndex - 6].str + firstPageContent[dateSentIndex - 5].str.replace(/\d+|\w+/g, "")
             // poData.shipToAdd = firstPageContent[dateSentIndex + 5].str 
-            poData.shipToAdd = firstPageContent[materialIndex + 48].str + " " + firstPageContent[materialIndex + 49].str + " " +
-                firstPageContent[materialIndex + 50].str + " " + firstPageContent[materialIndex + 51].str
+
+            // poData.shipToAdd = firstPageContent[materialIndex + 48].str + " " + firstPageContent[materialIndex + 49].str + " " +
+            //     firstPageContent[materialIndex + 50].str + " " + firstPageContent[materialIndex + 51].str
+            const shipToAddFirstIndex = firstPageContent[materialIndex + 48].str;
+            const replacingIndexFirstIndex = shipToAddFirstIndex.replace(/\d+$/, '');
+            let shipToAddData = replacingIndexFirstIndex + " " +
+                firstPageContent[materialIndex + 49].str + " " +
+                firstPageContent[materialIndex + 50].str + " " +
+                firstPageContent[materialIndex + 51].str;
+            shipToAddData += " " + firstPageContent[materialIndex + 52].str;
+            poData.shipToAdd = shipToAddData;
+
             poData.manufacture = firstPageContent[materialIndex + 36].str + " " + firstPageContent[materialIndex + 37].str + " " +
                 firstPageContent[materialIndex + 38].str + " " + firstPageContent[materialIndex + 39].str + " " + firstPageContent[materialIndex + 40].str
- 
-            let selleraddress = ''; 
-            for (let a = sellerStartIndex + 1; a < sellerEndIndex; a++) { 
-                selleraddress += firstPageContent[a].str + ',' 
-            }  
-            poData.sellerAddress = selleraddress 
-            let buyerAddress = '';  
-            for (let b = buyerAddStartIndex + 1; b < buyerAddEndIndex; b++) { 
-                if (b < buyerAddEndIndex - 1) 
-                    buyerAddress += firstPageContent[b].str + ',' 
-                else 
-                    buyerAddress += firstPageContent[b].str 
-            } 
-            poData.buyerAddress = buyerAddress; 
-            let shipToAddress = '' 
-            for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) { 
-                if (c < shipToAddEndIndex - 1) 
-                    shipToAddress += firstPageContent[c].str + ',' 
-                else 
-                    shipToAddress += firstPageContent[c].str 
-            } 
-            poData.shipToAddress = shipToAddress; 
-        } 
+
+            let selleraddress = '';
+            for (let a = sellerStartIndex + 1; a < sellerEndIndex; a++) {
+                selleraddress += firstPageContent[a].str + ','
+            }
+            poData.sellerAddress = selleraddress
+            let buyerAddress = '';
+            for (let b = buyerAddStartIndex + 1; b < buyerAddEndIndex; b++) {
+                if (b < buyerAddEndIndex - 1)
+                    buyerAddress += firstPageContent[b].str + ','
+                else
+                    buyerAddress += firstPageContent[b].str
+            }
+            poData.buyerAddress = buyerAddress;
+            let shipToAddress = ''
+            for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) {
+                if (c < shipToAddEndIndex - 1)
+                    shipToAddress += firstPageContent[c].str + ','
+                else
+                    shipToAddress += firstPageContent[c].str
+            }
+            poData.shipToAddress = shipToAddress;
+        }
         // po details parsing ends here  
         //------------------------------------------------------------------------------------------- 
         // data filtering satrts here 
         // filtering the pdf data i.e remove unnecessary data which is  not required for data parsing 
         let startFlag = false; // Initialize startFlag to false  
         let endFlag = false;   // Initialize endFlag to false 
-        const pageContent = textContent.items.filter((val, index) => { 
-            if (val.str == 'PO Line') { startFlag = true; } 
-            if (endFlag) { 
-                startFlag = false; 
-                endFlag = false; 
-            } 
-            if (val.str == "Total Eaches") { endFlag = true; } 
+        const pageContent = textContent.items.filter((val, index) => {
+            if (val.str == 'PO Line') { startFlag = true; }
+            if (endFlag) {
+                startFlag = false;
+                endFlag = false;
+            }
+            if (val.str == "Total Eaches") { endFlag = true; }
             // using NOR operation for filtering   
-            return !( 
-                EMP_STR_EXP.test(val.str)  
-                || val.str.includes(UNWANTED_TEXT_1) 
-                || val.str.includes(UNWANTED_TEXT_2) 
-                || val.str.includes(UNWANTED_TEXT_3) 
-                || val.str.includes(UNWANTED_TEXT_4) 
-                || val.str.includes(UNWANTED_TEXT_5) 
-                || val.str.includes(UNWANTED_TEXT_6) 
-                || val.str.includes(UNWANTED_TEXT_7) 
+            return !(
+                EMP_STR_EXP.test(val.str)
+                || val.str.includes(UNWANTED_TEXT_1)
+                || val.str.includes(UNWANTED_TEXT_2)
+                || val.str.includes(UNWANTED_TEXT_3)
+                || val.str.includes(UNWANTED_TEXT_4)
+                || val.str.includes(UNWANTED_TEXT_5)
+                || val.str.includes(UNWANTED_TEXT_6)
+                || val.str.includes(UNWANTED_TEXT_7)
                 // || val.str.includes(UNWANTED_TEXT_8)  
                 // || val.str.includes(UNWANTED_TEXT_9)  
                 // || val.str.includes(UNWANTED_TEXT_10)  
@@ -177,33 +187,33 @@ export const extractDataFromPoPdf = async (pdf) => {
                 // || val.str.includes(UNWANTED_TEXT_16)  
                 // || val.str.includes(UNWANTED_TEXT_17)  
                 // || val.str.includes(UNWANTED_TEXT_18)  
- 
-            ) 
-        }) 
-        filteredData.push(...pageContent) 
-    } 
+
+            )
+        })
+        filteredData.push(...pageContent)
+    }
     //------------------------------------------------------------------------------ 
-    console.log(filteredData, "filteredData") 
-    let prevItemIndex = 0 
-    let prevColorIndex = 0; 
-    let isSecondFormat = false; 
-    for (const [index, rec] of filteredData.entries()) { 
-        if (rec.str.match(ITEM_NO_EXP)) { 
-            prevItemIndex = index 
-        } 
-        if (rec.str.includes(ITEM_VARIANT_START_TEXT)) { 
-            itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index }) 
-        } 
-        if (rec.str.includes(FORMAT_SEPARATION_KEYWORD)) { 
-            isSecondFormat = true; 
-        } 
-   
-    } 
- 
-    console.log(itemsArr, 'AAAAAAAAA') 
- 
- /* 2nd format */
-    if (ITEM_TEXT_END_TEXT1 === "Per Pack" && isSecondFormat) { 
+    console.log(filteredData, "filteredData")
+    let prevItemIndex = 0
+    let prevColorIndex = 0;
+    let isSecondFormat = false;
+    for (const [index, rec] of filteredData.entries()) {
+        if (rec.str.match(ITEM_NO_EXP)) {
+            prevItemIndex = index
+        }
+        if (rec.str.includes(ITEM_VARIANT_START_TEXT)) {
+            itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
+        }
+        if (rec.str.includes(FORMAT_SEPARATION_KEYWORD)) {
+            isSecondFormat = true;
+        }
+
+    }
+
+    console.log(itemsArr, 'AAAAAAAAA')
+
+    /* 2nd format */
+    if (ITEM_TEXT_END_TEXT1 === "Per Pack" && isSecondFormat) {
         for (const rec of itemsArr) {
             let shipToEndIndex = 0;
             let itemTextEndIndex = 0;
@@ -356,11 +366,11 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemDetailsArr.push(itemDetailsObj)
         }
     }
-  
- /* 1st format */
+
+    /* 1st format */
     else if (ITEM_TEXT_END_TEXT === "Total Eaches") {
-        for (const rec of itemsArr) { 
-            let shipToEndIndex = 0; 
+        for (const rec of itemsArr) {
+            let shipToEndIndex = 0;
             let itemTextEndIndex = 0;
             let itemDetailsEndIndex = 0
             let itemVariantStartIndex
@@ -392,7 +402,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             if (!foundMens) {
                 for (let i = rec.itemIndex; i < filteredData.length; i++) {
                     const currentInfo = filteredData[i].str;
- 
+
                     if (currentInfo.includes("Mens" || "Womens")) {
                         itemDetailsObj.gender = currentInfo;
                         break;
@@ -402,7 +412,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             let shortDescriptionMatching;
             let vendorBookingFlagMatching;
             let packMethodMatching;
- 
+
             filteredData.forEach(item => {
                 if (/Short/.test(item.str)) {
                     shortDescriptionMatching = item;
@@ -479,10 +489,9 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemDetailsArr.push(itemDetailsObj)
         }
     }
- 
-    poData.CentricpoItemDetails = itemDetailsArr 
-    console.log(poData) 
-    return poData 
-}  
-  
-  
+
+    poData.CentricpoItemDetails = itemDetailsArr
+    console.log(poData)
+    return poData
+}
+
