@@ -203,7 +203,7 @@ export const LocationMapping = () => {
                     </span></p></Tooltip></>) : (<>{grnData.description}</>)}
                             </Descriptions.Item>
                             <Descriptions.Item label="Received Quantity" style={{ width: '33%' }}>
-                             {`${Number(grnData.acceptedQuantity)}(${grnData.uom})`}
+                             {(grnData.uom)?`${Number(grnData.acceptedQuantity)}(${grnData.uom})`:`${Number(grnData.acceptedQuantity)}`}
                             </Descriptions.Item>
                             {/* <Descriptions.Item label="Stock" style={{ width: '33%' }}>
                                 {grnData.quantity > 0 ? Number(grnData.quantity) : 0}
