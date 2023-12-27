@@ -94,7 +94,6 @@ export class CentricService {
           entity.incoterm = req.incoterm
           entity.shipToAdd = req.shipToAdd
           entity.manufacture = req.manufacture
-          entity.comptMaterial = req.comptMaterial
 
 
           entity.poLine = item.poLine
@@ -104,6 +103,7 @@ export class CentricService {
           entity.shortDescription = item.shortDescription
           entity.packMethod = item.packMethod
           entity.vendorBookingFlag = item.vendorBookingFlag
+          entity.ppkupc=item.ppkupc
 
 
           entity.size = variant.size
@@ -115,7 +115,8 @@ export class CentricService {
           entity.exPort = variant.exPort
           entity.deliveryDate = variant.deliveryDate
           entity.retialPrice = variant.retialPrice
-
+          entity.comptMaterial = variant.comptMaterial
+          entity.ratio=variant.ratio
 
           if (orderData) {
             const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {})

@@ -88,7 +88,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.incoterm = firstPageContent[dateSentIndex - 8].str + firstPageContent[dateSentIndex - 7].str + " " + firstPageContent[dateSentIndex - 6].str + firstPageContent[dateSentIndex - 5].str.replace(/\d+|\w+/g, "")
             poData.shipToAdd = firstPageContent[dateSentIndex + 5].str
             poData.manufacture = firstPageContent[dateSentIndex + 5].str
-            poData.comptMaterial = firstPageContent[dateSentIndex + 5].str
+            // poData.comptMaterial = firstPageContent[dateSentIndex + 5].str
 
             // poData.revisionNo = firstPageContent[poNumberTextIndex - 10].str
             // poData.agent = firstPageContent[shipToAddEndIndex + 2].str
@@ -171,192 +171,7 @@ export const extractDataFromPoPdf = async (pdf) => {
 
     console.log(itemsArr, 'AAAAAAAAA')
 
-    if (ITEM_TEXT_END_TEXT === "Total Eaches") {
-        for (const rec of itemsArr) {
-            let shipToEndIndex = 0;
-            let itemTextEndIndex = 0;
-            let itemDetailsEndIndex = 0
-            let itemVariantStartIndex
-            const itemDetailsObj = new CentricPoItemDetails();
-            console.log(rec.itemIndex, "iiiiiiiiiiiiii")
-            itemDetailsObj.poLine = filteredData[rec.itemIndex + 10].str
-            itemDetailsObj.material = filteredData[rec.itemIndex + 11].str
-            itemDetailsObj.color = filteredData[rec.itemIndex + 12].str;
-
-            for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
-                if (filteredData[i].str.includes("Mens")) {
-                    itemDetailsObj.color = itemDetailsObj.color.split("Mens")[0];
-                    break;
-                } else if (filteredData[i].str.includes("Womens")) {
-                    itemDetailsObj.color = itemDetailsObj.color.split("Womens")[0];
-                    break;
-                } else {
-                    itemDetailsObj.color += filteredData[i].str;
-                }
-            }            let foundMens = false;
-            for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
-                const currentInfo = filteredData[i].str;
-                if (currentInfo.includes("Mens" || "Womens")) {
-                    itemDetailsObj.gender = currentInfo;
-                    foundMens = true;
-                    break;
-                }
-            }
-            if (!foundMens) {
-                for (let i = rec.itemIndex; i < filteredData.length; i++) {
-                    const currentInfo = filteredData[i].str;
-
-                    if (currentInfo.includes("Mens" || "Womens")) {
-                        itemDetailsObj.gender = currentInfo;
-                        break;
-                    }
-                }
-            }
-            let shortDescriptionMatching;
-            let vendorBookingFlagMatching;
-            let packMethodMatching;
-
-            filteredData.forEach(item => {
-                if (/Short/.test(item.str)) {
-                    shortDescriptionMatching = item;
-                    return;
-                }
-            });
-
-            if (shortDescriptionMatching) {
-                itemDetailsObj.shortDescription = shortDescriptionMatching.str.replace(/Short Description: /g, "");
-            }
-
-            filteredData.forEach(item => {
-                if (/Vendor Booking Flag =/.test(item.str)) {
-                    vendorBookingFlagMatching = item;
-                    return;
-                }
-            });
-
-            if (vendorBookingFlagMatching) {
-                itemDetailsObj.vendorBookingFlag = vendorBookingFlagMatching.str.replace(/Vendor Booking Flag =/g, "");
-            }
-
-
-            filteredData.forEach(item => {
-                if (/Pack Method: /.test(item.str)) {
-                    packMethodMatching = item;
-                    return;
-                }
-            });
-
-            if (packMethodMatching) {
-                itemDetailsObj.packMethod = packMethodMatching.str.replace(/Pack Method: /g, "");
-            }
-
-            // itemDetailsObj.shortDescription = filteredData[rec.itemIndex + 20].str;
-            // itemDetailsObj.vendorBookingFlag = filteredData[rec.itemIndex + 23].str.replace(/Vendor Booking Flag =/g, '');
-            // itemDetailsObj.packMethod = filteredData[rec.itemIndex + 24].str.replace(/Pack Method:/g, '');
-
-            // itemDetailsObj.contractualDeliveryDate = filteredData[rec.itemIndex + 12].str
-            // itemDetailsObj.inboundPkg = filteredData[rec.itemIndex + 15].str
-            // itemDetailsObj.incotermsPlace = filteredData[rec.itemIndex + 18].str
-            // itemDetailsObj.handoverDate = filteredData[rec.itemIndex + 21].str
-            // itemDetailsObj.mfgProcess = filteredData[rec.itemIndex + 24].str
-            // itemDetailsObj.harbor = filteredData[rec.itemIndex + 27].str
-            // itemDetailsObj.shipMode = filteredData[rec.itemIndex + 34].str
-            // itemDetailsObj.model = filteredData[rec.itemIndex + 43].str
-            // itemDetailsObj.productType = filteredData[rec.itemIndex + 46].str
-            // itemDetailsObj.merchDivision = filteredData[rec.itemIndex + 49].str
-            // itemDetailsObj.colorDescription = filteredData[rec.colorIndex + 2].str
-            // itemDetailsObj.class = filteredData[rec.itemIndex + 56].str
-            // itemDetailsObj.conceptShortDesc = filteredData[rec.itemIndex + 59].str
-            // itemDetailsObj.fabricContent = filteredData[rec.itemIndex + 62].str
-            // itemDetailsObj.board = filteredData[rec.itemIndex + 65].str
-            // itemDetailsObj.fishWildlifeInd = filteredData[rec.itemIndex + 68].str
-            // itemDetailsObj.gender = filteredData[rec.itemIndex + 73].str
-            // itemDetailsObj.downFeatherInd = filteredData[rec.itemIndex + 76].str
-            // itemDetailsObj.fabrication = filteredData[rec.itemIndex + 79].str
-
-            itemTextEndIndex = rec.amountIndex
-            itemVariantStartIndex = itemTextEndIndex + 1
-
-            //-------------------------------------------------------------------------
-            // item varinat details parsing starts here
-            const itemVarinatsTextArr = []
-            let k = itemVariantStartIndex
-            while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
-                itemVarinatsTextArr.push(filteredData[k].str)
-                k++
-            }
-            console.log(itemVarinatsTextArr, 'VVVVVVVv')
-            const stringsWithLength13 = itemVarinatsTextArr.filter(value => typeof value === 'string' && value.length === 13 || value.length === 12);
-            const sizes = stringsWithLength13.length;
-            const count = itemVarinatsTextArr.length / sizes;
-            const itemVariantsArr: CentricPoItemVariant[] = []
-            for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
-                const itemVariantsObj = new CentricPoItemVariant();
-                itemVariantsObj.size = itemVarinatsTextArr[(count * l) + 0]
-                itemVariantsObj.upc = itemVarinatsTextArr[(count * l) + 1]
-                itemVariantsObj.label = itemVarinatsTextArr[(count * l) + 1]
-                itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count - 8]
-                itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) + count - 6]
-                itemVariantsObj.exFactory = itemVarinatsTextArr[(count * l) + count - 4]
-                itemVariantsObj.exPort = itemVarinatsTextArr[(count * l) + count - 3]
-                itemVariantsObj.deliveryDate = itemVarinatsTextArr[(count * l) + count - 2]
-                itemVariantsObj.retialPrice = itemVarinatsTextArr[(count * l) + count - 1]
-
-                itemVariantsObj.currency = itemVarinatsTextArr[(count * l) + count - 4]
-                itemVariantsObj.amount = itemVarinatsTextArr[(count * l) + count - 1]
-                console.log(itemVariantsObj)
-                itemVariantsArr.push(itemVariantsObj)
-            }
-            itemDetailsObj.CentricpoItemVariantDetails = itemVariantsArr
-            itemDetailsArr.push(itemDetailsObj)
-        }
-    }
-
-
-
-    // if (ITEM_TEXT_END_TEXT1 === "Eaches") {
-    //     // for (const rec of itemsArr) {
-    //     //     let shipToEndIndex = 0;
-    //     //     let itemTextEndIndex = 0;
-    //     //     let itemDetailsEndIndex = 0
-    //     //     let itemVariantStartIndex
-    //     //     const itemDetailsObj = new CentricPoItemDetails();
-    //     //     console.log(rec.itemIndex, "iiiiiiiiiiiiii")
-    //     //     itemDetailsObj.poLine = filteredData[rec.itemIndex + 8].str
-    //     //     itemDetailsObj.material = filteredData[rec.itemIndex + 9].str
-    //     //     itemDetailsObj.ppk = filteredData[rec.itemIndex + 10].str;
-    //     //     itemDetailsObj.color = filteredData[rec.itemIndex + 11].str;
-    //     //     for (let i = rec.itemIndex + 12; i < filteredData.length; i++) {
-    //     //         if (filteredData[i].str.includes("Mens")) {
-    //     //             itemDetailsObj.color = itemDetailsObj.color.split("Mens")[0];
-    //     //             break;
-    //     //         } else if (filteredData[i].str.includes("Womens")) {
-    //     //             itemDetailsObj.color = itemDetailsObj.color.split("Womens")[0];
-    //     //             break;
-    //     //         } else {
-    //     //             itemDetailsObj.color += filteredData[i].str;
-    //     //         }
-    //     //     }
-    //     //     let foundMens = false;
-    //     //     for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
-    //     //         const currentInfo = filteredData[i].str;
-    //     //         if (currentInfo.includes("Mens" || "Womens")) {
-    //     //             itemDetailsObj.gender = currentInfo;
-    //     //             foundMens = true;
-    //     //             break;
-    //     //         }
-    //     //     }
-    //     //     if (!foundMens) {
-    //     //         for (let i = rec.itemIndex; i < filteredData.length; i++) {
-    //     //             const currentInfo = filteredData[i].str;
-
-    //     //             if (currentInfo.includes("Mens" || "Womens")) {
-    //     //                 itemDetailsObj.gender = currentInfo;
-    //     //                 break;
-    //     //             }
-    //     //         }
-    //     //     }
-
+    // if (ITEM_TEXT_END_TEXT === "Total Eaches") {
     //     for (const rec of itemsArr) {
     //         let shipToEndIndex = 0;
     //         let itemTextEndIndex = 0;
@@ -364,12 +179,11 @@ export const extractDataFromPoPdf = async (pdf) => {
     //         let itemVariantStartIndex
     //         const itemDetailsObj = new CentricPoItemDetails();
     //         console.log(rec.itemIndex, "iiiiiiiiiiiiii")
-    //         itemDetailsObj.poLine = filteredData[rec.itemIndex + 11].str
-    //         itemDetailsObj.material = filteredData[rec.itemIndex + 12].str
-    //         itemDetailsObj.ppkupc = filteredData[rec.itemIndex + 13].str;
-    //         itemDetailsObj.color = filteredData[rec.itemIndex + 14].str;
+    //         itemDetailsObj.poLine = filteredData[rec.itemIndex + 10].str
+    //         itemDetailsObj.material = filteredData[rec.itemIndex + 11].str
+    //         itemDetailsObj.color = filteredData[rec.itemIndex + 12].str;
 
-    //         for (let i = rec.itemIndex + 15; i < filteredData.length; i++) {
+    //         for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
     //             if (filteredData[i].str.includes("Mens")) {
     //                 itemDetailsObj.color = itemDetailsObj.color.split("Mens")[0];
     //                 break;
@@ -379,9 +193,8 @@ export const extractDataFromPoPdf = async (pdf) => {
     //             } else {
     //                 itemDetailsObj.color += filteredData[i].str;
     //             }
-    //         }
-    //         let foundMens = false;
-    //         for (let i = rec.itemIndex + 16; i < filteredData.length; i++) {
+    //         }            let foundMens = false;
+    //         for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
     //             const currentInfo = filteredData[i].str;
     //             if (currentInfo.includes("Mens" || "Womens")) {
     //                 itemDetailsObj.gender = currentInfo;
@@ -437,6 +250,30 @@ export const extractDataFromPoPdf = async (pdf) => {
     //             itemDetailsObj.packMethod = packMethodMatching.str.replace(/Pack Method: /g, "");
     //         }
 
+    //         // itemDetailsObj.shortDescription = filteredData[rec.itemIndex + 20].str;
+    //         // itemDetailsObj.vendorBookingFlag = filteredData[rec.itemIndex + 23].str.replace(/Vendor Booking Flag =/g, '');
+    //         // itemDetailsObj.packMethod = filteredData[rec.itemIndex + 24].str.replace(/Pack Method:/g, '');
+
+    //         // itemDetailsObj.contractualDeliveryDate = filteredData[rec.itemIndex + 12].str
+    //         // itemDetailsObj.inboundPkg = filteredData[rec.itemIndex + 15].str
+    //         // itemDetailsObj.incotermsPlace = filteredData[rec.itemIndex + 18].str
+    //         // itemDetailsObj.handoverDate = filteredData[rec.itemIndex + 21].str
+    //         // itemDetailsObj.mfgProcess = filteredData[rec.itemIndex + 24].str
+    //         // itemDetailsObj.harbor = filteredData[rec.itemIndex + 27].str
+    //         // itemDetailsObj.shipMode = filteredData[rec.itemIndex + 34].str
+    //         // itemDetailsObj.model = filteredData[rec.itemIndex + 43].str
+    //         // itemDetailsObj.productType = filteredData[rec.itemIndex + 46].str
+    //         // itemDetailsObj.merchDivision = filteredData[rec.itemIndex + 49].str
+    //         // itemDetailsObj.colorDescription = filteredData[rec.colorIndex + 2].str
+    //         // itemDetailsObj.class = filteredData[rec.itemIndex + 56].str
+    //         // itemDetailsObj.conceptShortDesc = filteredData[rec.itemIndex + 59].str
+    //         // itemDetailsObj.fabricContent = filteredData[rec.itemIndex + 62].str
+    //         // itemDetailsObj.board = filteredData[rec.itemIndex + 65].str
+    //         // itemDetailsObj.fishWildlifeInd = filteredData[rec.itemIndex + 68].str
+    //         // itemDetailsObj.gender = filteredData[rec.itemIndex + 73].str
+    //         // itemDetailsObj.downFeatherInd = filteredData[rec.itemIndex + 76].str
+    //         // itemDetailsObj.fabrication = filteredData[rec.itemIndex + 79].str
+
     //         itemTextEndIndex = rec.amountIndex
     //         itemVariantStartIndex = itemTextEndIndex + 1
 
@@ -444,43 +281,26 @@ export const extractDataFromPoPdf = async (pdf) => {
     //         // item varinat details parsing starts here
     //         const itemVarinatsTextArr = []
     //         let k = itemVariantStartIndex
-    //         while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT1)) {
+    //         while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
     //             itemVarinatsTextArr.push(filteredData[k].str)
     //             k++
     //         }
     //         console.log(itemVarinatsTextArr, 'VVVVVVVv')
     //         const stringsWithLength13 = itemVarinatsTextArr.filter(value => typeof value === 'string' && value.length === 13 || value.length === 12);
-    //         console.log("stringsWithLength13", stringsWithLength13)
-    //         const regexPattern = /[0-9]{2}[A-Z]{5}\w+-\d+/;
-    //         const CompMaterialData = itemVarinatsTextArr.filter(value => regexPattern.test(value));
-    //         console.log("CompMaterialData", CompMaterialData);
     //         const sizes = stringsWithLength13.length;
     //         const count = itemVarinatsTextArr.length / sizes;
     //         const itemVariantsArr: CentricPoItemVariant[] = []
     //         for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
     //             const itemVariantsObj = new CentricPoItemVariant();
-    //             itemVariantsObj.comMaterial = CompMaterialData[l];
-    //             // itemVariantsObj.ratio = itemVarinatsTextArr[(count * l) + 3]
-    //             itemVariantsObj.upc = stringsWithLength13[l];
-    //             const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
-    //             if (upcIndex !== -1 && upcIndex > 0) {
-    //                 itemVariantsObj.ratio = itemVarinatsTextArr[upcIndex - 1];
-    //                 itemVariantsObj.size = itemVarinatsTextArr[upcIndex - 2];
-    //                 itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 1];
-    //                 itemVariantsObj.unitPrice = itemVarinatsTextArr[upcIndex + 3];
-    //                 itemVariantsObj.exFactory = itemVarinatsTextArr[upcIndex + 5];
-    //                 itemVariantsObj.exPort = itemVarinatsTextArr[upcIndex + 6];
-    //                 itemVariantsObj.deliveryDate = itemVarinatsTextArr[upcIndex + 7];
-    //                 itemVariantsObj.retialPrice = itemVarinatsTextArr[upcIndex + 8];
-
-    //             }
-    //             // itemVariantsObj.label = itemVarinatsTextArr[(count * l) + 1]
-    //             // itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + 5]
-    //             // itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) +  7]
-    //             // itemVariantsObj.exFactory = itemVarinatsTextArr[(count * l) + 9]
-    //             // itemVariantsObj.exPort = itemVarinatsTextArr[(count * l) + 10]
-    //             // itemVariantsObj.deliveryDate = itemVarinatsTextArr[(count * l) + 11]
-    //             // itemVariantsObj.retialPrice = itemVarinatsTextArr[(count * l) + 12]
+    //             itemVariantsObj.size = itemVarinatsTextArr[(count * l) + 0]
+    //             itemVariantsObj.upc = itemVarinatsTextArr[(count * l) + 1]
+    //             itemVariantsObj.label = itemVarinatsTextArr[(count * l) + 1]
+    //             itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count - 8]
+    //             itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) + count - 6]
+    //             itemVariantsObj.exFactory = itemVarinatsTextArr[(count * l) + count - 4]
+    //             itemVariantsObj.exPort = itemVarinatsTextArr[(count * l) + count - 3]
+    //             itemVariantsObj.deliveryDate = itemVarinatsTextArr[(count * l) + count - 2]
+    //             itemVariantsObj.retialPrice = itemVarinatsTextArr[(count * l) + count - 1]
 
     //             itemVariantsObj.currency = itemVarinatsTextArr[(count * l) + count - 4]
     //             itemVariantsObj.amount = itemVarinatsTextArr[(count * l) + count - 1]
@@ -491,6 +311,186 @@ export const extractDataFromPoPdf = async (pdf) => {
     //         itemDetailsArr.push(itemDetailsObj)
     //     }
     // }
+
+
+
+    if (ITEM_TEXT_END_TEXT1 === "Eaches") {
+        // for (const rec of itemsArr) {
+        //     let shipToEndIndex = 0;
+        //     let itemTextEndIndex = 0;
+        //     let itemDetailsEndIndex = 0
+        //     let itemVariantStartIndex
+        //     const itemDetailsObj = new CentricPoItemDetails();
+        //     console.log(rec.itemIndex, "iiiiiiiiiiiiii")
+        //     itemDetailsObj.poLine = filteredData[rec.itemIndex + 8].str
+        //     itemDetailsObj.material = filteredData[rec.itemIndex + 9].str
+        //     itemDetailsObj.ppk = filteredData[rec.itemIndex + 10].str;
+        //     itemDetailsObj.color = filteredData[rec.itemIndex + 11].str;
+        //     for (let i = rec.itemIndex + 12; i < filteredData.length; i++) {
+        //         if (filteredData[i].str.includes("Mens")) {
+        //             itemDetailsObj.color = itemDetailsObj.color.split("Mens")[0];
+        //             break;
+        //         } else if (filteredData[i].str.includes("Womens")) {
+        //             itemDetailsObj.color = itemDetailsObj.color.split("Womens")[0];
+        //             break;
+        //         } else {
+        //             itemDetailsObj.color += filteredData[i].str;
+        //         }
+        //     }
+        //     let foundMens = false;
+        //     for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
+        //         const currentInfo = filteredData[i].str;
+        //         if (currentInfo.includes("Mens" || "Womens")) {
+        //             itemDetailsObj.gender = currentInfo;
+        //             foundMens = true;
+        //             break;
+        //         }
+        //     }
+        //     if (!foundMens) {
+        //         for (let i = rec.itemIndex; i < filteredData.length; i++) {
+        //             const currentInfo = filteredData[i].str;
+
+        //             if (currentInfo.includes("Mens" || "Womens")) {
+        //                 itemDetailsObj.gender = currentInfo;
+        //                 break;
+        //             }
+        //         }
+        //     }
+
+        for (const rec of itemsArr) {
+            let shipToEndIndex = 0;
+            let itemTextEndIndex = 0;
+            let itemDetailsEndIndex = 0
+            let itemVariantStartIndex
+            const itemDetailsObj = new CentricPoItemDetails();
+            console.log(rec.itemIndex, "iiiiiiiiiiiiii")
+            itemDetailsObj.poLine = filteredData[rec.itemIndex + 11].str
+            itemDetailsObj.material = filteredData[rec.itemIndex + 12].str
+            itemDetailsObj.ppkupc = filteredData[rec.itemIndex + 13].str;
+            itemDetailsObj.color = filteredData[rec.itemIndex + 14].str;
+
+            for (let i = rec.itemIndex + 15; i < filteredData.length; i++) {
+                if (filteredData[i].str.includes("Mens")) {
+                    itemDetailsObj.color = itemDetailsObj.color.split("Mens")[0];
+                    break;
+                } else if (filteredData[i].str.includes("Womens")) {
+                    itemDetailsObj.color = itemDetailsObj.color.split("Womens")[0];
+                    break;
+                } else {
+                    itemDetailsObj.color += filteredData[i].str;
+                }
+            }
+            let foundMens = false;
+            for (let i = rec.itemIndex + 16; i < filteredData.length; i++) {
+                const currentInfo = filteredData[i].str;
+                if (currentInfo.includes("Mens" || "Womens")) {
+                    itemDetailsObj.gender = currentInfo;
+                    foundMens = true;
+                    break;
+                }
+            }
+            if (!foundMens) {
+                for (let i = rec.itemIndex; i < filteredData.length; i++) {
+                    const currentInfo = filteredData[i].str;
+
+                    if (currentInfo.includes("Mens" || "Womens")) {
+                        itemDetailsObj.gender = currentInfo;
+                        break;
+                    }
+                }
+            }
+            let shortDescriptionMatching;
+            let vendorBookingFlagMatching;
+            let packMethodMatching;
+
+            filteredData.forEach(item => {
+                if (/Short/.test(item.str)) {
+                    shortDescriptionMatching = item;
+                    return;
+                }
+            });
+
+            if (shortDescriptionMatching) {
+                itemDetailsObj.shortDescription = shortDescriptionMatching.str.replace(/Short Description: /g, "");
+            }
+
+            filteredData.forEach(item => {
+                if (/Vendor Booking Flag =/.test(item.str)) {
+                    vendorBookingFlagMatching = item;
+                    return;
+                }
+            });
+
+            if (vendorBookingFlagMatching) {
+                itemDetailsObj.vendorBookingFlag = vendorBookingFlagMatching.str.replace(/Vendor Booking Flag =/g, "");
+            }
+
+
+            filteredData.forEach(item => {
+                if (/Pack Method: /.test(item.str)) {
+                    packMethodMatching = item;
+                    return;
+                }
+            });
+
+            if (packMethodMatching) {
+                itemDetailsObj.packMethod = packMethodMatching.str.replace(/Pack Method: /g, "");
+            }
+
+            itemTextEndIndex = rec.amountIndex
+            itemVariantStartIndex = itemTextEndIndex + 1
+
+            //-------------------------------------------------------------------------
+            // item varinat details parsing starts here
+            const itemVarinatsTextArr = []
+            let k = itemVariantStartIndex
+            while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT1)) {
+                itemVarinatsTextArr.push(filteredData[k].str)
+                k++
+            }
+            console.log(itemVarinatsTextArr, 'VVVVVVVv')
+            const stringsWithLength13 = itemVarinatsTextArr.filter(value => typeof value === 'string' && value.length === 13 || value.length === 12);
+            console.log("stringsWithLength13", stringsWithLength13)
+            const regexPattern = /[0-9]{2}[A-Z]{5}\w+-\d+/;
+            const CompMaterialData = itemVarinatsTextArr.filter(value => regexPattern.test(value));
+            console.log("CompMaterialData", CompMaterialData);
+            const sizes = stringsWithLength13.length;
+            const count = itemVarinatsTextArr.length / sizes;
+            const itemVariantsArr: CentricPoItemVariant[] = []
+            for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
+                const itemVariantsObj = new CentricPoItemVariant();
+                itemVariantsObj.comptMaterial = CompMaterialData[l];
+                // itemVariantsObj.ratio = itemVarinatsTextArr[(count * l) + 3]
+                itemVariantsObj.upc = stringsWithLength13[l];
+                const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
+                if (upcIndex !== -1 && upcIndex > 0) {
+                    itemVariantsObj.ratio = itemVarinatsTextArr[upcIndex - 1];
+                    itemVariantsObj.size = itemVarinatsTextArr[upcIndex - 2];
+                    itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 1];
+                    itemVariantsObj.unitPrice = itemVarinatsTextArr[upcIndex + 3];
+                    itemVariantsObj.exFactory = itemVarinatsTextArr[upcIndex + 5];
+                    itemVariantsObj.exPort = itemVarinatsTextArr[upcIndex + 6];
+                    itemVariantsObj.deliveryDate = itemVarinatsTextArr[upcIndex + 7];
+                    itemVariantsObj.retialPrice = itemVarinatsTextArr[upcIndex + 8];
+
+                }
+                // itemVariantsObj.label = itemVarinatsTextArr[(count * l) + 1]
+                // itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + 5]
+                // itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) +  7]
+                // itemVariantsObj.exFactory = itemVarinatsTextArr[(count * l) + 9]
+                // itemVariantsObj.exPort = itemVarinatsTextArr[(count * l) + 10]
+                // itemVariantsObj.deliveryDate = itemVarinatsTextArr[(count * l) + 11]
+                // itemVariantsObj.retialPrice = itemVarinatsTextArr[(count * l) + 12]
+
+                itemVariantsObj.currency = itemVarinatsTextArr[(count * l) + count - 4]
+                itemVariantsObj.amount = itemVarinatsTextArr[(count * l) + count - 1]
+                console.log(itemVariantsObj)
+                itemVariantsArr.push(itemVariantsObj)
+            }
+            itemDetailsObj.CentricpoItemVariantDetails = itemVariantsArr
+            itemDetailsArr.push(itemDetailsObj)
+        }
+    }
     poData.CentricpoItemDetails = itemDetailsArr
     console.log(poData)
     return poData

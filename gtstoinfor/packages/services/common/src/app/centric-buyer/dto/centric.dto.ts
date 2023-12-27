@@ -44,8 +44,7 @@ export class CentricDto {
     @ApiProperty()
     manufacture: string
 
-    @ApiProperty()
-    comptMaterial: string
+
 
 
 
@@ -54,6 +53,9 @@ export class CentricDto {
 
     @ApiProperty()
     material: string
+
+    @ApiProperty()
+    ppkupc:string
 
     @ApiProperty()
     color: string
@@ -100,6 +102,12 @@ export class CentricDto {
 
     @ApiProperty()
     retialPrice: string
+
+    @ApiProperty()
+    comptMaterial: string
+
+    @ApiProperty()
+    ratio:string
 
 
     createdAt: string;

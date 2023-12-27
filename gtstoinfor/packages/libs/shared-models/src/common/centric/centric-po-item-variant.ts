@@ -13,7 +13,7 @@ export class CentricPoItemVariant {
     retialPrice:string;
 
 
-    comMaterial:string;
+    comptMaterial:string;
     ratio:string;
 
 

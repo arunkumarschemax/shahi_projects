@@ -14,11 +14,11 @@ export class CentricPoDetails {
     incoterm:string;
     shipToAdd:string;
     manufacture:string;
-    comptMaterial:string;
+    // comptMaterial:string;
 
 
     buyerAddress: string;
-    sellerAddress: String;
+    sellerAddress: string;
     revisionNo: string;
     agent: string;
     dateSent: string;

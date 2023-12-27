@@ -54,7 +54,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <th className='ta-b'>INCOTERM</th>
                     <th className='ta-b'>SHIP TO ADDRESS</th>
                     <th className='ta-b'>MANUFACTURE</th>
-                    <th className='ta-b'>COMPT MATERIAL</th>
+                    {/* <th className='ta-b'>COMPT MATERIAL</th> */}
 
 
                 </tr>
@@ -72,7 +72,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <td className='ta-b'>{pdfData?.incoterm}</td>
                     <td className='ta-b'>{pdfData?.shipToAdd}</td>
                     <td className='ta-b'>{pdfData?.manufacture}</td>
-                    <td className='ta-b'>{pdfData?.comptMaterial}</td>
+                    {/* <td className='ta-b'>{pdfData?.comptMaterial}</td> */}
                     
 
                 </tr>
@@ -136,7 +136,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                     <td></td>
 
                                     {/* <td className='ta-b'>{j.uom}</td> */}
-                                    <td className='ta-b'>{j.comMaterial}</td>
+                                    <td className='ta-b'>{j.comptMaterial}</td>
                                     <td className='ta-b'>{j.ratio}</td>
 
 

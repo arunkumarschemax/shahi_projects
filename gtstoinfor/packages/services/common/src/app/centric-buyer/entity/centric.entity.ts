@@ -73,11 +73,6 @@ export class CentricEntity {
     })
     manufacture: string
 
-    
-    @Column('varchar', {
-        name: "compt_material"
-    })
-    comptMaterial: string
 
 
     
@@ -93,6 +88,12 @@ export class CentricEntity {
 
     })
     material: string
+
+    @Column('varchar', {
+        name: "ppk_upc",
+        
+    })
+    ppkupc: string
 
     @Column('varchar', {
         name: "color",
@@ -179,6 +180,16 @@ export class CentricEntity {
     })
     retialPrice: string
 
+    @Column('varchar', {
+        name: "compt_material"
+    })
+    comptMaterial: string
+
+    
+    @Column('varchar', {
+        name: "ratio"
+    })
+    ratio: string
 
     @CreateDateColumn({
         name: "created_at",
