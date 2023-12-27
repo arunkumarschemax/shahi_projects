@@ -388,5 +388,9 @@ export class NikeService extends CommonAxiosService {
     async getStyleNumberForOrderCreation(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getStyleNumberForOrderCreation")
     }
+
+    async downloadPPMMArketingExcel(req?: PpmDateFilterRequest) {
+        return this.axiosGetCall(this.dpomController + "/downloadPPMReportExcel")
+    }
 }
 

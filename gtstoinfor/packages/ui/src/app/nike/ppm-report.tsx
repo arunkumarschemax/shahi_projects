@@ -1899,10 +1899,66 @@ const PPMReport = () => {
               width: 100,
               align: 'right',
               render: (text, record) => {
-                const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)
-                const sizeObj = sizeData[`${sc.dataIndex}`]
-                // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-                return sizeObj ? sizeObj : '-';
+                if (sc.dataIndex == 'diffOfPrice') {
+                  const shprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
+                  const buyerprice = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
+
+                  if (isNaN(shprice) || isNaN(buyerprice)) {
+                    return '-';
+                  } else {
+                    let diff = Number(shprice) - Number(buyerprice);
+                    return (diff).toFixed(2);
+                  }
+                } else if (sc.dataIndex == 'diffOfCurrency') {
+                  const currency1 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobCurrencyCode;
+                  const currency2 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobCurrencyCode;
+                  // Using the equality operator (strict equality)
+                  const areEqual = currency1 === currency2;
+                  if (areEqual) {
+                    return '-'
+                  } else {
+                    return 'Different'
+                  }
+                } else if (sc.dataIndex = 'diffOfLegalPOCOPrice') {
+                  const poCurrency = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
+                  const coCurrency = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
+                  // let diff = Number(Poprice) - Number(coprice)
+                  if (poCurrency && coCurrency !== null) {
+                    return poCurrency + ' ' + coCurrency
+                  }
+                  else {
+                    return "-"
+                  }
+
+                } else if (sc.dataIndex == 'diffOfLegalPOCOCurrency') {
+                  const currency1 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
+                  const currency2 = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
+                  // Using the equality operator (strict equality)
+                  const areEqual = currency1 === currency2;
+                  if (areEqual) {
+                    return '-'
+                  } else {
+                    return 'Different'
+                  }
+
+                } else if (sc.dataIndex == 'diffOfQty') {
+                  const PoQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
+                  const coQty = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
+                  let diff = Number(PoQty) - Number(coQty)
+                  if (Number(PoQty) && Number(coQty) !== null) {
+                    return diff
+                  }
+                  else {
+                    return "-"
+                  }
+                }
+                else {
+
+                  const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)
+                  const sizeObj = sizeData[`${sc.dataIndex}`]
+                  // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+                  return sizeObj ? sizeObj : '-';
+                }
               }
             }
           })
@@ -2586,6 +2642,49 @@ const PPMReport = () => {
   return (
     <>
       <Card title="PPM Marketing Report" headStyle={{ color: 'black', fontWeight: 'bold' }}>
+        <Card>
+          <Row gutter={24}>
+            <Col span={6}>
+              <Popconfirm onConfirm={e => { toggleHideChildren() }}
+                title={
+                  hideChildren
+                    ? 'Unhide Columns?'
+                    : 'Hide Columns?'
+                }
+              > Hide/Unhide Columns
+                <Switch size="default"
+                  className={hideChildren ? 'toggle-activated' : 'toggle-deactivated'}
+                  checkedChildren={<RightSquareOutlined type="check" />}
+                  unCheckedChildren={<RightSquareOutlined type="close" />}
+                  checked={hideChildren}
+                />
+              </Popconfirm>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
+              <Form.Item label="Size columns" name="sizeColumns">
+                <Select style={{ width: '100%' }} allowClear showSearch placeholder='select isze columns' optionFilterProp="children"
+                  mode='multiple' onChange={(s, opt) => { handleHideSizeColuomns(opt) }}>
+                  {
+                    sizeColumns.map((s) => {
+                      return <Option key={s.dataIndex} value={s.dataIndex}>{s.title}</Option>
+                    })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+
+            {filteredData.length > 0 ? (
+              <Col span={1}>
+                <Button
+                  type="default"
+                  style={{ color: 'green' }}
+                  icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="marketing-ppm-report.csv" data={csvData}>
+                    Export to CSV
+                  </CSVLink></Button>
+              </Col>
+            ) : null}
+          </Row>
+        </Card>
         <Form
           onFinish={getData}
           form={form}
@@ -2620,247 +2719,233 @@ const PPMReport = () => {
                   </Select>
                 </Form.Item>
               </Col>
+            </Row>
+            <Row gutter={24} style={{ paddingTop: '10px' }}>
 
-              {filteredData.length > 0 ? (
-                <Col span={1}>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
+                <Form.Item label="Last Modified Date" name="lastModifiedDate">
+                  <RangePicker />
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3.5 }} >
+                <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
+                  <Select
+                    showSearch
+                    placeholder="Select Line Status"
+                    optionFilterProp="children"
+                    allowClear mode='multiple'>
+                    <Option value="Accepted">ACCEPTED</Option>
+                    <Option value="Unaccepted">UNACCEPTED</Option>
+                    <Option value="Cancelled">CANCELLED</Option>
+                    <Option value="Closed">CLOSED</Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                <Form.Item name='docType' label='Doc Type' >
+                  <Select
+                    showSearch
+                    placeholder="Select Doc Type"
+                    optionFilterProp="children"
+                    allowClear
+                    mode='multiple'
+                  >
+                    {docType?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.doc_type_code}>{inc.doc_type_code}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
+                <Form.Item name='item' label='Item' >
+                  <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear mode='multiple'>
+                    {item?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
+                <Form.Item name='factory' label='Factory' >
+                  <Select
+                    showSearch
+                    placeholder="Select Factory"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {factory?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
+                <Form.Item label="Document Date" name="documentDate">
+                  <RangePicker />
+
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                <Form.Item name='poNumber' label='Purchase Order Number' >
+                  <Select
+                    showSearch
+                    placeholder="Select Po Number"
+                    optionFilterProp="children"
+                    allowClear
+                    mode='multiple'
+                  >
+                    {poNumber?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                <Form.Item name='poLineItemNumber' label='Po Line Item Number' >
+                  <Select
+                    showSearch
+                    placeholder="Select poLineItemNumber"
+                    optionFilterProp="children"
+                    allowClear
+                    mode='multiple'
+                  >
+                    {poLineItemNumber?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.po_line_item_number}>{inc.po_line_item_number}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                <Form.Item name='styleNumber' label='Style Number' >
+                  <Select
+                    showSearch
+                    placeholder="Select Style Number"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {styleNumber?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                <Form.Item name='productCode' label='Product Code' >
+                  <Select
+                    showSearch
+                    placeholder="Select Product Code"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {productCode?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                <Form.Item name='planningSeasonCode' label='Planning Season Code' >
+                  <Select
+                    showSearch
+                    placeholder="Select Planning Season Code"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {planSesCode?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                <Form.Item name='planningSeasonYear' label='Planning Season Year' >
+                  <Select
+                    showSearch
+                    placeholder="Select Planning Season Year"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {planSesYear?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                <Form.Item name='destinationCountry' label='Destination Country' >
+                  <Select
+                    showSearch
+                    placeholder="Select Destination Country"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {countryDestination?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.destination_country}>{inc.destination_country}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                <Form.Item name='geoCode' label='Geo Code' >
+                  <Select
+                    showSearch
+                    placeholder="Select Geo Code"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {geoCode?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
+                <Form.Item name='plant' label='Plant Code' >
+                  <Select
+                    showSearch
+                    placeholder="Select Plant Code"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {plantCode?.map((inc: any) => {
+                      return <Option key={inc.id} value={inc.plant}>{inc.plant}</Option>
+                    })
+                    }
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
+                <Form.Item label="GAC" name="gac">
+                  <RangePicker />
+                </Form.Item>
+              </Col>
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 10 }} style={{ padding: '15px' }}>
+                <Form.Item>
+                  <Button htmlType="submit"
+                    icon={<SearchOutlined />}
+                    type="primary">GET REPORT</Button>
                   <Button
-                    type="default"
-                    style={{ color: 'green' }}
-                    icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="marketing-ppm-report.csv" data={csvData}>
-                      Export to CSV
-                    </CSVLink></Button>
-                </Col>
-              ) : null} </Row>
+                    htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={onReset}
+                  >
+                    RESET
+                  </Button>
+                  {/* <Button style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={toggleHideChildren}>Hide Columns</Button> */}
+                </Form.Item>
+              </Col>
+            </Row>
           </Card>
-
-          <Row gutter={24} style={{ paddingTop: '10px' }}>
-
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
-              <Form.Item label="Last Modified Date" name="lastModifiedDate">
-                <RangePicker />
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3.5 }} >
-              <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
-                <Select
-                  showSearch
-                  placeholder="Select Line Status"
-                  optionFilterProp="children"
-                  allowClear mode='multiple'>
-                  <Option value="Accepted">ACCEPTED</Option>
-                  <Option value="Unaccepted">UNACCEPTED</Option>
-                  <Option value="Cancelled">CANCELLED</Option>
-                  <Option value="Closed">CLOSED</Option>
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-              <Form.Item name='docType' label='Doc Type' >
-                <Select
-                  showSearch
-                  placeholder="Select Doc Type"
-                  optionFilterProp="children"
-                  allowClear
-                  mode='multiple'
-                >
-                  {docType?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.doc_type_code}>{inc.doc_type_code}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
-              <Form.Item name='item' label='Item' >
-                <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear mode='multiple'>
-                  {item?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
-                  })}
-                </Select>
-              </Form.Item>
-            </Col>
-
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
-              <Form.Item name='factory' label='Factory' >
-                <Select
-                  showSearch
-                  placeholder="Select Factory"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {factory?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
-              <Form.Item label="Document Date" name="documentDate">
-                <RangePicker />
-
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-              <Form.Item name='poNumber' label='Purchase Order Number' >
-                <Select
-                  showSearch
-                  placeholder="Select Po Number"
-                  optionFilterProp="children"
-                  allowClear
-                  mode='multiple'
-                >
-                  {poNumber?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-              <Form.Item name='poLineItemNumber' label='Po Line Item Number' >
-                <Select
-                  showSearch
-                  placeholder="Select poLineItemNumber"
-                  optionFilterProp="children"
-                  allowClear
-                  mode='multiple'
-                >
-                  {poLineItemNumber?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.po_line_item_number}>{inc.po_line_item_number}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-              <Form.Item name='styleNumber' label='Style Number' >
-                <Select
-                  showSearch
-                  placeholder="Select Style Number"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {styleNumber?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-              <Form.Item name='productCode' label='Product Code' >
-                <Select
-                  showSearch
-                  placeholder="Select Product Code"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {productCode?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-              <Form.Item name='planningSeasonCode' label='Planning Season Code' >
-                <Select
-                  showSearch
-                  placeholder="Select Planning Season Code"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {planSesCode?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
-              <Form.Item name='planningSeasonYear' label='Planning Season Year' >
-                <Select
-                  showSearch
-                  placeholder="Select Planning Season Year"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {planSesYear?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-              <Form.Item name='destinationCountry' label='Destination Country' >
-                <Select
-                  showSearch
-                  placeholder="Select Destination Country"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {countryDestination?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.destination_country}>{inc.destination_country}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
-              <Form.Item name='geoCode' label='Geo Code' >
-                <Select
-                  showSearch
-                  placeholder="Select Geo Code"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {geoCode?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
-              <Form.Item name='plant' label='Plant Code' >
-                <Select
-                  showSearch
-                  placeholder="Select Plant Code"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {plantCode?.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.plant}>{inc.plant}</Option>
-                  })
-                  }
-                </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
-              <Form.Item label="GAC" name="gac">
-                <RangePicker />
-              </Form.Item>
-            </Col>
-            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}>
-              
-            </Col> */}
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 10 }} style={{ padding: '15px' }}>
-              <Form.Item>
-                <Button htmlType="submit"
-                  icon={<SearchOutlined />}
-                  type="primary">GET REPORT</Button>
-                <Button
-                  htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={onReset}
-                >
-                  RESET
-                </Button>
-                {/* <Button style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={toggleHideChildren}>Hide Columns</Button> */}
-              </Form.Item>
-            </Col>
-          </Row>
         </Form>
         <Row gutter={24} justify={'space-evenly'}>
           <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }}  >
