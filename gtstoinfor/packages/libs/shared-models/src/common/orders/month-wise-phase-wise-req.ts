@@ -23,13 +23,13 @@ export class itemData{
 export class PhaseWiseReq{
     phase:string
     itemData:itemData[]
-    inPcsTotal?:number
-    inCoeffTotal?:number
+    inPcsTotal?:any
+    inCoeffTotal?:any
     constructor(
         phase:string,
         itemData:itemData[],
-        inPcsTotal?:number,
-        inCoeffTotal?:number
+        inPcsTotal?:any,
+        inCoeffTotal?:any
     ){
         this.phase=phase
         this.itemData=itemData

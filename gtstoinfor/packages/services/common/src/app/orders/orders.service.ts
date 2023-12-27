@@ -3803,13 +3803,12 @@ export class OrdersService {
                 if(req.tabName == 'ExFactory'){
                     sumOfExfPcs += rec.exfPcs;
                     sumofCoeffpcs += rec.exfCoeff
-                                        item.push(new itemData(rec.exfMonth,rec.exfPcs,rec.exfCoeff))
+                    item.push(new itemData(rec.exfMonth,rec.exfPcs,rec.exfCoeff))
                 }
                 if(req.tabName === 'WareHouse' ){
                     sumOfExfPcs += rec.whPcs
                     sumofCoeffpcs += rec.whCoeff
-                    
-                                        item.push(new itemData(rec.whMonth,rec.whPcs,rec.whCoeff))
+                    item.push(new itemData(rec.whMonth,rec.whPcs,rec.whCoeff))
                 }
                 phaseWiseReq.inPcsTotal=sumOfExfPcs
                 phaseWiseReq.inCoeffTotal=sumofCoeffpcs
@@ -3817,22 +3816,38 @@ export class OrdersService {
             }
                     }
         const detailedarray: PhaseWiseReq[] = Array.from(dataMap.values())
+        let inPcsTotal =0
+        let InCoeffTotal =0
+        for(const rec of detailedarray){
+            inPcsTotal += rec.inPcsTotal
+            InCoeffTotal += rec.inCoeffTotal
+        }
+        // console.log(inPcsTotal,'$$$$$$$$$$$$$$$$$$$$$$$$$$')
+        // console.log(InCoeffTotal,'$$$$$$$$$$$$$$$$$$$$$$$$$$')
+
         
         for(const rec of data2){
-            console.log()
+            let inPcs =0
+            let coeffPcs=0
             if(!dataMap2.has(rec.prod_plan_type)){
-                dataMap2.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[]))
+                dataMap2.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[],0,0))
             }
+            const perReq = dataMap2.get(rec.prod_plan_type)
             const item=dataMap2.get(rec.prod_plan_type).itemData
+            inPcs=perReq.inPcsTotal
+                coeffPcs =perReq.inCoeffTotal
             if(rec.prod_plan_type != null){
+                
                 if(req.tabName == 'ExFactory'){
                     const perdata = await this.getPhasewiseSum('ExFactory',req.year,rec.month)
                     const inTotal = Number(perdata.data[0].inPer)
                     const inCoeffTotal =  Number(perdata.data[0].coeffPer)
-
                    const exper=Number(rec.exfPcs/(inTotal)*100).toFixed(0)+'%'
                    const exfcoefper=Number(rec.exfCoeff/(inCoeffTotal)*100).toFixed(0)+'%'
                     item.push(new itemData(rec.exfMonth,exper,exfcoefper))
+                    inPcs += rec.exfPcs
+                    coeffPcs += rec.exfCoeff
+
                 }
                 if(req.tabName === 'WareHouse' ){
                     const perdata = await this.getPhasewiseSum('WareHouse',req.year,rec.month)
@@ -3841,8 +3856,15 @@ export class OrdersService {
                     const whper =Number((rec.whPcs)/(InTotal)*100).toFixed(0)+'%'
                     const whcoefper=Number(rec.whCoeff/(inCoeffTotal)*100).toFixed(0)+'%'
                     item.push(new itemData(rec.whMonth,whper,whcoefper))
+                    inPcs +=  rec.whPcs
+                    coeffPcs += rec.whCoeff
                 }
+               
             }
+
+            perReq.inPcsTotal=Number(inPcs/inPcsTotal*100).toFixed(0)+'%'
+            perReq.inCoeffTotal=Number(coeffPcs/InCoeffTotal*100).toFixed(0)+'%'
+            dataMap2.set(rec.prod_plan_type,perReq );
         }
 
         const detaledArray2:PhaseWiseReq[] = Array.from(dataMap2.values())
@@ -3874,32 +3896,6 @@ export class OrdersService {
         }
     }
 
-    async getTotalvaluesofphase(phase:string,year:number):Promise<CommonResponseModel>{
-        try{
-            let prodPlan
-            if(phase === 'Ph1'){
-                prodPlan='ph1'
-            }
-            if(phase === 'Ph3(Add)' || phase === 'Ph3(Adj)' || phase === 'Ph3(Stk)'){
-                prodPlan='Ph3'
-            }
-            if(phase === 'Ph2'){
-                prodPlan ='Ph2'
-            }
-            const query='SELECT SUM(REPLACE(order_plan_qty,",","")) inPcsTotal,SUM(REPLACE(order_plan_qty_coeff,",","")) AS inCoefTOtal FROM orders WHERE YEAR='+year+' AND prod_plan_type NOT IN("STOP")  AND prod_plan_type LIKE "'+prodPlan+'"  AND file_id = (SELECT MAX(file_id) FROM orders) GROUP BY  CASE WHEN prod_plan_type LIKE "'+prodPlan+'" THEN "'+prodPlan+'" ELSE prod_plan_type END'
-
-            const result = await this.ordersRepository.query(query)
-            if(result){
-                return new CommonResponseModel(true,1,'data',result)
-            }else{
-                return new CommonResponseModel(false,0,'',[])
-            }
-            
-        }catch(err){
-            throw err
-        }
-       
-    }
 
 }
 
