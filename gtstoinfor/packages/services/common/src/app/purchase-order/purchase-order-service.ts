@@ -200,7 +200,7 @@ export class PurchaseOrderService {
             req.materialType = req.materialType.toLowerCase().includes('trim') ? 'Trim' : 'Fabric' 
             let query
             if (req.materialType === 'Fabric') {
-                query = `SELECT m.item_code AS m3itemCode,poi.m3_item_id as m3ItemCodeId,poi.po_quantity AS poQuantity,poi.quantity_uom_id AS quantityUomId,u.uom,poi.purchase_order_item_id as poItemId,
+                query = `SELECT m.item_code AS m3itemCode,poi.m3_item_id as m3ItemCodeId,poi.po_quantity AS poQuantity,poi.quantity_uom_id AS quantityUomId,u.uom,poi.purchase_order_item_id as poItemId,m.description,
                 poi.purchase_order_id AS purchaseOrderId,m.fabric_type AS m3ItemTypeId,ft.fabric_type_name AS m3ItemType,
                 poi.grn_quantity AS grnQuantity,poi.sample_item_id AS sampleItemId,poi.indent_item_id as indentItemId,b.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyer,s.style_id,s.style,poi.unit_price as unitPrice,poi.discount,t.tax_percentage as tax,t.tax_id as taxId,poi.transportation,poi.subjective_amount as subjectiveAmount,poi.po_item_status as poItemStatus,poi.colour_id as colourId,c.colour as colour, poi.item_type AS itemType `;
                 if(req.poAgainst == 'Indent'){
@@ -313,7 +313,7 @@ export class PurchaseOrderService {
             const grnItemsArr: GrnItemsFormDto[] = []
             for (const rec of modifiedRes) {
                 const receivedQty = rec.poQuantity - rec.grnQuantity
-                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer,rec?.sampleRequestId,rec?.indentId,receivedQty,receivedQty,rec.categoryId,rec.category,rec.colorId,rec.color,rec.contentId,rec.content,rec.finishId,rec.finish,rec.holeId,rec.hole,rec.logo,rec.part,rec.qualityId,rec.qualityName,rec.structureId,rec.structure,rec.thicknessId,rec.thickness,rec.typeId,rec.type,rec.UOMId,rec.UOM,rec.varietyId,rec.variety,rec.trimCategoryId,rec.trimCategory,rec.trimMappingId,rec.style_id,rec.trimParams,0,0,0,0,"",0,undefined,"",undefined,"",0,0,rec.itemType);
+                const grnItemsDto = new GrnItemsFormDto(rec.poItemId, rec.m3ItemCodeId, rec.m3itemCode, rec.m3ItemType, rec.m3ItemTypeId, rec.poItemStatus, rec.quantityUomId, rec.uom, rec.unitPrice, rec.discount, rec.tax, rec.transportation, rec.subjectiveAmount, rec.grnQuantity, rec.poQuantity, rec.colourId, rec.colour, rec.sampleItemId, rec.indentItemId,rec.buyerId,rec.buyer,rec?.sampleRequestId,rec?.indentId,receivedQty,receivedQty,rec.categoryId,rec.category,rec.colorId,rec.color,rec.contentId,rec.content,rec.finishId,rec.finish,rec.holeId,rec.hole,rec.logo,rec.part,rec.qualityId,rec.qualityName,rec.structureId,rec.structure,rec.thicknessId,rec.thickness,rec.typeId,rec.type,rec.UOMId,rec.UOM,rec.varietyId,rec.variety,rec.trimCategoryId,rec.trimCategory,rec.trimMappingId,rec.style_id,rec.trimParams,0,0,0,0,"",0,undefined,"",undefined,"",0,0,rec.itemType,rec.description);
                 grnItemsArr.push(grnItemsDto)
             }
             const poQuery = `select p.purchase_order_id as poId,p.po_material_type as poMaterialType,p.po_against as poAgainst,p.grn_quantity as grnQuantity from purchase_order p where p.purchase_order_id = ${req.poId}`
@@ -606,16 +606,29 @@ export class PurchaseOrderService {
     }
     async QrByPoId(req: VendorIdReq): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT grn.grn_id,p.purchase_order_id, gi.grn_item_id,gi.grn_item_no,grn.invoice_no,grn.item_type, IF(grn.item_type = "FABRIC",mit.description , 
-            mtr.description) AS itemCode FROM  purchase_order p 
+            let query = `SELECT grn.grn_id,p.purchase_order_id, gi.grn_item_id,gi.grn_item_no,grn.invoice_no,grn.item_type, IF(grn.item_type = "FABRIC",mit. item_code , 
+            mtr.trim_code) AS itemCode,tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part FROM  purchase_order p 
             LEFT JOIN grn ON grn.po_id = p.purchase_order_id
             LEFT JOIN grn_items gi ON gi.grn_id = grn.grn_id
             LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND grn.item_type = "FABRIC"
             LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND grn.item_type != "FABRIC"
+            LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = mtr.trim_mapping_id
             WHERE p.purchase_order_id = '${req.poId}'`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
-                return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
+                const modifiedRes = data.map(item => {
+                    const trueValues = Object.keys(item)
+                    .filter(key => ["structure", "category", "content", "type", "finish", "hole", "quality", "thickness", "variety", "uom", "color", "logo", "part"].includes(key) && item[key] === 1)
+                    .map(key => key.toUpperCase());
+    
+                    const concatenatedValues = trueValues.join('/');
+                    const label = trueValues.length > 0 ? "BUYER/TRIM TYPE/TRIM CATEGORY/":""
+
+                    const trimParams = label + concatenatedValues
+                    return { ...item, trimParams };
+                })
+            // if (data.length > 0) {
+                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", modifiedRes)
             } else {
                 return new CommonResponseModel(false, 1, "No data found", [])
             }

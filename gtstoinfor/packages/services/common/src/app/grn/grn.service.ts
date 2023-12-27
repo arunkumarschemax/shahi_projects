@@ -137,13 +137,13 @@ export class GrnService {
             let fromDate = 0;
             let toDate = 0;
             let itemType;
-            if(req.materialtype === "Fabric"){
+            if(req.itemType === "FABRIC"){
                 itemType = 'F';
             }
             else{
                 itemType = 'T';
             }
-            const data = 'select max(grn_id) as grnId from grn where item_type = "'+req.materialtype+'"';
+            const data = 'select max(ref_no) as grnId from grn where item_type = "'+req.itemType+'"';
                 let totalGrn = await this.grnRepo.query(data)
             // if (!isUpdate) {
                 if (CurrentMonth < 4) {
@@ -216,6 +216,7 @@ export class GrnService {
             grnEntity.invoiceNo = req.invoiceNo
             grnEntity.grnAmount = req.grnAmount
             grnEntity.grnQuantity = req.grnQuantity
+            grnEntity.refNo = Number(refNo);
             grnEntity.grnType  = Object.keys(GRNTypeEnum).find(key => GRNTypeEnum[key] === req.grnType) as any;
             // console.log(req,'===========')
             for (const item of req.grnItemInfo) {

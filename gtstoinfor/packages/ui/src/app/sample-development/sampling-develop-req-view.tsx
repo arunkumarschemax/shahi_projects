@@ -428,7 +428,7 @@ import RolePermission from "../role-permissions";
         },
       },
     ];
-    const tableColumns = (val,fabindex,sampleReqId,itemId) => {
+    const tableColumns = (val,fabindex,sampleReqId,itemId,colorId) => {
       if(val === undefined){
         AlertMessages.getWarningMessage("Please give required consumption. ");
       }
@@ -477,8 +477,8 @@ import RolePermission from "../role-permissions";
             return(
             <Form form={stockForm}>
               <Form.Item name={`allocatedQuantity${fabindex}-${index}`}>
-                    <InputNumber name={`allocatedQuantity${fabindex}-${index}`}
-                        onChange={(e) => setAllocatedQty(index,rowData, e, fabindex, sampleReqId,itemId)} 
+                    <InputNumber name={`allocatedQuantity${fabindex}-${index}`} min={0}
+                        onChange={(e) => setAllocatedQty(index,rowData, e, fabindex, sampleReqId,itemId,colorId)} 
                     />
               </Form.Item>
             </Form>
@@ -494,11 +494,14 @@ import RolePermission from "../role-permissions";
           align: "center",
           render: (text, rowData, index) => { 
             return (
-              <Checkbox 
+              <Form.Item name={`checkStatus${fabindex}-${index}`}>
+
+              <Checkbox  name = {`checkStatus${fabindex}-${index}`}
               onClick={checkboxonclick}
-              onChange={(e) => onCheck(rowData, index, e.target.checked,sampleReqId,itemId,fabindex)}
+              onChange={(e) => onCheck(rowData, index, e.target.checked,sampleReqId,itemId,fabindex,colorId)}
               // onClick={(e) =>onCheck(rowData,undefined)}
               />
+              </Form.Item>
             );
           },
         },
@@ -514,7 +517,7 @@ import RolePermission from "../role-permissions";
     const checkboxonclick =() =>{
       setChecked(true)
     }
-    const setAllocatedQty = (index, rowData, value, fabindex, sampleReqId, itemId) => {
+    const setAllocatedQty = (index, rowData, value, fabindex, sampleReqId, itemId, colorId) => {
       console.log(tableData);
       console.log(index);
       console.log(rowData);
@@ -522,6 +525,8 @@ import RolePermission from "../role-permissions";
       console.log(fabindex);
       console.log(sampleReqId);
       console.log(itemId);
+      console.log(colorId);
+
       if (value === 0 || value === null || value < 0 || value === undefined) {
         AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
       }
@@ -533,7 +538,7 @@ import RolePermission from "../role-permissions";
       let stockListData;
       if(rowData.itemType === "FABRIC"){
         itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.fabric
-        stockData = itemData?.find((f) => f.fabric_info_id === itemId);
+        stockData = itemData?.find((f) => f.fabric_info_id === itemId && f.colour_id === colorId);
         stockListData = stockData?.allocatedStock;
       }
       else{
@@ -595,17 +600,14 @@ import RolePermission from "../role-permissions";
 
       setLifeCycleStatus(LifeCycleStatusEnum.CLOSED);
     }
-    const onCheck = (rowData, index, isChecked,sampleReqId,itemId,fabindex) => {
+    const onCheck = (rowData, index, isChecked,sampleReqId,itemId,fabindex,colorId) => {
       if(isChecked){
-        if(Number(rowData.issuedQty) > 0)
-        {  
-          rowData.checkedStatus = 1;
           let itemData;
           let stockData;
           let stockListData;
           if(rowData.itemType === "FABRIC"){
             itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.fabric
-            stockData = itemData?.find((f) => f.fabric_info_id === itemId);
+            stockData = itemData?.find((f) => f.fabric_info_id === itemId && f.colour_id === colorId);
             stockListData = stockData?.allocatedStock;
           }
           else{
@@ -613,21 +615,41 @@ import RolePermission from "../role-permissions";
             stockData = itemData?.find((f) => f.trim_info_id === itemId);
             stockListData = stockData?.allocatedStock;
           }
-
+        if(Number(rowData.issuedQty) > 0)
+        {  
+          rowData.checkedStatus = 1;
           if(stockListData.find((e)=> e.checkedStatus === 1)){
             setAllocatedStock(stockData);
             setbtnEnable(true);
           }
         }
         else{
+          rowData.checkedStatus = 0;
           AlertMessages.getErrorMessage("Allocated Quantity should be greater than 0")
         }
       }
       else{
-        let stock = allocatedStock?.allocatedStock;
-        let stockRecord = stock.find((e)=> e.stockId === rowData.stockId)
-        stockRecord.checkedStatus = 0;
-        if(stock.find((e)=> e.checkedStatus === 1)){
+          let itemData;
+          let stockData;
+          let stockListData;
+          if(rowData.itemType === "FABRIC"){
+            itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.fabric
+            stockData = itemData?.find((f) => f.fabric_info_id === itemId && f.colour_id === colorId);
+            stockListData = stockData?.allocatedStock;
+          }
+          else{
+            itemData = tableData?.find((t) => t.sample_request_id === sampleReqId)?.trimData
+            stockData = itemData?.find((f) => f.trim_info_id === itemId);
+            stockListData = stockData?.allocatedStock;
+          }
+          console.log(itemData);
+          console.log(stockData);
+          console.log(stockListData);
+
+        // let stock = allocatedStock?.allocatedStock;
+        // let stockRecord = stock?.find((e)=> e.stockId === rowData.stockId)
+        stockListData.checkedStatus = 0;
+        if(stockListData?.find((e)=> e.checkedStatus === 1)?.length - 1 > 0){
           setbtnEnable(true);
         }
         else{
@@ -749,7 +771,7 @@ import RolePermission from "../role-permissions";
         console.log(record);
         return  <Table
          dataSource={record.allocatedStock}
-          columns={tableColumns(record.totalRequirement,index,record.sampleRequestid,record.itemType === "FABRIC"?record.fabric_info_id:record.trim_info_id)} 
+          columns={tableColumns(record.totalRequirement,index,record.sampleRequestid,(record.itemType).toUpperCase() === "FABRIC"?record.fabric_info_id:record.trim_info_id,record.colour_id)} 
           pagination={false}
            rowKey={record.stockId}/>;
       };

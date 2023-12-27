@@ -203,6 +203,9 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
             if(rowData?.uom){
                 rowData.quantityUom = rowData.uom
             }
+            if(rowData?.style){
+                rowData.styleId = rowData.style
+            }
             setInputDisable(true)
             fabricForm.setFieldsValue({ poQuantity: rowData.sampleQuantity })
             fabricForm.setFieldsValue({ unitPrice: defaultFabricFormData?.unitPrice})
@@ -214,7 +217,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
             fabricForm.setFieldsValue({ quantityUomId: rowData.quantityUomId })
             fabricForm.setFieldsValue({ quantityUom: rowData.uom })
-            fabricForm.setFieldsValue({ styleId: rowData.style })
+            fabricForm.setFieldsValue({ styleId: rowData.styleId })
             fabricForm.setFieldsValue({ taxPercentage: rowData?.taxPercentage })
             fabricForm.setFieldsValue({ description: rowData?.description })
         }
@@ -231,6 +234,9 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                 }
                 if(defaultFabricFormData?.uom){
                     defaultFabricFormData.quantityUom = defaultFabricFormData.uom
+                }
+                if(defaultFabricFormData?.style){
+                    defaultFabricFormData.styleId = defaultFabricFormData.style
                 }
                 fabricForm.setFieldsValue({ unitPrice: defaultFabricFormData?.unitPrice})
                 fabricForm.setFieldsValue({ discount: defaultFabricFormData?.discount })
@@ -253,7 +259,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                 itemCode:defaultFabricFormData.itemCode,
                 quantityUomId: defaultFabricFormData.quantityUomId,
                 quantityUom: defaultFabricFormData.quantityUom,
-                styleId: defaultFabricFormData.style,
+                styleId: defaultFabricFormData.styleId,
                 taxPercentage: defaultFabricFormData?.taxPercentage,
                 description: defaultFabricFormData?.description
 
@@ -496,6 +502,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
 
     const onFabricAdd = (values) => {
         console.log(values);
+        console.log(fabricTableData);
         values.materialType = defaultFabricFormData.materialType
         fabricForm.validateFields().then(() => {
             if (fabricIndexVal !== undefined) {
@@ -506,6 +513,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                 tableData = [...fabricTableData, values]
             }
             setFabricTableData(tableData)
+            console.log(tableData)
             props(tableData)
             fabricForm.resetFields()
             setUpdate(false)
