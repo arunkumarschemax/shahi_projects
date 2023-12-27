@@ -138,8 +138,9 @@ setRemarkModal(false)
             //   ...getColumnSearchProps('vendorName')
         },
         {
-          title: 'Description',
+          title: 'Item Description',
           dataIndex: "description",
+          width: '100px',
           align: 'left',
           render:(text,record) => {
             return(
@@ -153,6 +154,7 @@ setRemarkModal(false)
         },
         {
             title: 'Grn Quantity',
+            width: '100px',
             dataIndex: 'acceptedQuantity',
             align: 'left',
             sorter: (a, b) => a.acceptedQuantity - b.acceptedQuantity,
@@ -162,20 +164,22 @@ setRemarkModal(false)
               return val.acceptedQuantity ? `${val.acceptedQuantity}(${val.uom})` : text;
             },
         },
-        {
-            title: 'Location Mapped',
-            dataIndex: 'allocatedQty',
-            align: 'left',
-            sorter: (a, b) => a.allocatedQty - b.allocatedQty,
-            sortDirections: ['descend', 'ascend'],
-        },
-        {
-            title: 'Balance',
-            dataIndex: 'balance',
-            align: 'left',
-            sorter: (a, b) => a.balance - b.balance,
-            sortDirections: ['descend', 'ascend'],
-        },
+        // {
+        //     title: 'Location Mapped',
+        //     width: '100px',
+        //     dataIndex: 'allocatedQty',
+        //     align: 'left',
+        //     sorter: (a, b) => a.allocatedQty - b.allocatedQty,
+        //     sortDirections: ['descend', 'ascend'],
+        // },
+        // {
+        //     title: 'Balance',
+        //     dataIndex: 'balance',
+        //     width: '100px',
+        //     align: 'left',
+        //     sorter: (a, b) => a.balance - b.balance,
+        //     sortDirections: ['descend', 'ascend'],
+        // },
         {
             title: 'Allocate',
             // render:(record) =>{
