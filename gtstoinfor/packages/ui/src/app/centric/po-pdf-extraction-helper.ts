@@ -202,7 +202,7 @@ export const extractDataFromPoPdf = async (pdf) => {
  
     console.log(itemsArr, 'AAAAAAAAA') 
  
- 
+ /* 2nd format */
     if (ITEM_TEXT_END_TEXT1 === "Per Pack" && isSecondFormat) { 
         for (const rec of itemsArr) {
             let shipToEndIndex = 0;
@@ -357,7 +357,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         }
     }
   
- 
+ /* 1st format */
     else if (ITEM_TEXT_END_TEXT === "Total Eaches") {
         for (const rec of itemsArr) { 
             let shipToEndIndex = 0; 
