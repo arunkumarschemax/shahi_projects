@@ -1964,62 +1964,33 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
     }
   }
 
-  async getAllSampleRequestsInfo1(req?: sampleReqIdReq): Promise<CommonResponseModel> {    
-    try {
-      const data = await this.sampleRepo.find(
-      {relations:['sampleTrimInfo','sampleReqFabricInfo','sampleReqSizeInfo'],
-      where: { SampleRequestId: req.sampleReqId } 
-    }
-      );
-  
-      if (data.length>0 ) {
-        return new CommonResponseModel(true, 1, ' Data retrived successfully',data);
-      } else {
-        return new CommonResponseModel(false, 1, 'Something went wrong',[]);
-      }
-    } catch (err) {
-      throw err;
+  async getAllSampleRequestSizesInfo(req?: sampleReqIdReq): Promise<CommonResponseModel> {    
+    const sizeDta = `SELECT  GROUP_CONCAT(DISTINCT  CONCAT('sum(IF(s.size_id = ''',size_id,''', s.quantity, 0)) AS ',sizes)) AS size_name FROM size s WHERE sizes != '' 
+    AND size_id IN(SELECT DISTINCT size_id FROM sample_request_size_info WHERE sample_request_id=${req.sampleReqId}) ORDER BY  sizes`;
+    const res = await this.dataSource.query(sizeDta)
+    const sizesStr = res[0].size_name
+    console.log(sizesStr,'kkkkk')
+
+    console.log(req,'rehhhh')
+    const sampleDataQry = `SELECT sty.style,cl.colour,${sizesStr} FROM sample_request_size_info s 
+    left join sample_request sr on sr.sample_request_id = s.sample_request_id
+    left join colour cl on cl.colour_id = s.colour_id
+    left join style sty on sty.style_id = sr.style_id
+    WHERE s.sample_request_id=${req.sampleReqId} GROUP BY s.colour_id`
+    const finalres = await this.dataSource.query(sampleDataQry)
+    if(finalres.length > 0){
+      return new CommonResponseModel(true,1,'data retrived',finalres)
+    }else{
+      return new CommonResponseModel(false,0,'No data')
     }
   }
 
-  // async getAllSampleRequestsInfo(req?: sampleReqIdReq):Promise<CommonResponseModel>{
-  //   try{
-  //     const manager = this.dataSource;
-  //     const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,
-  //     st.style,pch.profit_control_head,mi.item_code,mt.item_code FROM sample_request s
-  //     LEFT JOIN brands b ON b.brand_id = s.brand_id
-  //     LEFT JOIN buyers bu ON bu.buyer_id = s.buyer_id
-  //     LEFT JOIN style st ON st.style_id = s.style_id
-  //     LEFT JOIN profit_control_head pch ON pch.profit_control_head_id =s.profit_control_head_id
-  //     LEFT JOIN sample_request_fabric_info srf ON srf.sample_request_id = s.sample_request_id
-  //     LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id = s.sample_request_id
-  //     LEFT JOIN sample_request_size_info srs ON srs.sample_request_id = s.sample_request_id
-  //     LEFT JOIN size si ON si.size_id = srs.size_id
-  //     LEFT JOIN colour c ON c.colour_id = srs.colour_id
-  //     LEFT JOIN m3_items mi ON mi.m3_items_Id = srf.fabric_info_id
-  //     LEFT JOIN m3_trims mt ON mt.m3_trim_Id = srt.trim_info_id
-  //     WHERE s.sample_request_id = ${req.sampleReqId}`
-  //     const rmData = await manager.query(rawQuery);
-  //     if(rmData){
-  //       for(const res of rawQuery){
-
-  //       }
-  //       return new CommonResponseModel(true,1,'data',rmData)
-  //     }else{
-  //       return new CommonResponseModel(false,0,'no data',[])
-
-  //     }
-
-  //   }catch(err){
-  //     throw err
-  //   }
-  // }
 
   async getAllSampleRequestsInfo(req?: sampleReqIdReq):Promise<CommonResponseModel>{
     try{
       const manager = this.dataSource;
       const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,si.size_id,
-      st.style,pch.profit_control_head,mi.item_code as fabCode,mt.item_code as trimCode,e.first_name,s.contact,s.status,
+      st.style,pch.profit_control_head,mi.item_code as fabCode,mt.description as trimCode,e.first_name,s.contact,s.status,srs.quantity,srf.total_requirement as fabtotal_requirement,srf.wastage as fabwastage,srf.consumption as fabconsumption,uf.uom as fabuom,srt.total_requirement as trimtotal_requirement,srt.wastage as trimwastage,srt.consumption as trimconsumption,ut.uom as trimuom,
       s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date FROM sample_request s
       LEFT JOIN brands b ON b.brand_id = s.brand_id
       LEFT JOIN buyers bu ON bu.buyer_id = s.buyer_id
@@ -2030,54 +2001,61 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
       LEFT JOIN sample_request_size_info srs ON srs.sample_request_id = s.sample_request_id
       LEFT JOIN size si ON si.size_id = srs.size_id
       LEFT JOIN colour c ON c.colour_id = srs.colour_id
-      LEFT JOIN m3_items mi ON mi.m3_items_Id = srf.fabric_info_id
-      LEFT JOIN m3_trims mt ON mt.m3_trim_Id = srt.trim_info_id
+      LEFT JOIN m3_items mi ON mi.m3_items_Id = srf.fabric_code
+      LEFT JOIN m3_trims mt ON mt.m3_trim_Id = srt.trim_code
       LEFT JOIN employee_details e ON e.employee_id = s.technician_id
-      WHERE s.sample_request_id = ${req.sampleReqId}`
-      // const info = await this.sampleRepo.find(
-      //   {relations:['sampleTrimInfo','sampleReqFabricInfo','sampleReqSizeInfo','style','buyer','brand'],
-      //   where: { SampleRequestId: req.sampleReqId } 
-      // }
-      //   );       
+      LEFT JOIN uom uf ON uf.id = srf.uom_id
+      LEFT JOIN uom ut ON ut.id = srt.uom_id
+      WHERE s.sample_request_id = ${req.sampleReqId}
+      GROUP BY colour,sizes`
+      
+   
         const info = await manager.query(rawQuery);
          const MapData = new Map<string,SampleRequestInfoModel>()
+        //  const fabData = new Map<string,any[]>()
+        //  const trimData = new Map<string,any[]>()
          let sizedata = new Map <number,SampleSizeInfoModel>()
 
         if(info.length > 0){
             for(const rec of info){
               if(!MapData.has(rec.requestNo)){
-                    MapData.set(rec.requestNo,new SampleRequestInfoModel(rec.request_no,rec.sample_request_id,rec.style,rec.brand_name,rec.buyer_name,rec.first_name,rec.status,rec.lifeCycleStatus,rec.contact,rec.profit_control_head,rec.expected_delivery_date,[],[],[]))
+                    MapData.set(rec.requestNo,new SampleRequestInfoModel(rec.request_no,rec.sample_request_id,rec.style,rec.brand_name,rec.buyer_name,rec.first_name,rec.status,rec.lifeCycleStatus,rec.contact,rec.profit_control_head,rec.expected_delivery_date,[],[]))
                 }
                
-                  if(!sizedata.has(rec.size_id)){
-                    sizedata.set(rec.size_id,new SampleSizeInfoModel(rec.size_id,rec.sizes,[]))
-                  }
+        //           if(!sizedata.has(rec.size_id)){
+        //             sizedata.set(rec.size_id,new SampleSizeInfoModel(rec.size_id,rec.sizes,[]))
+        //           }
                   
-        sizedata.get(rec.size_id).colours.push({ colour: rec.colour });
+        // sizedata.get(rec.size_id).colours.push({ colour: rec.colour ,quantity:rec.quantity});
+        const existingTrim = MapData.get(rec.requestNo).trimInfo.find(
+          (trimInfo) => trimInfo.trimCode === rec.trimCode
+      );
 
-                      // sizedata.get(rec.size_id).colours.push({colour:rec.colour})
- 
-                MapData.get(rec.requestNo).trimInfo.push({trimCode:rec.trimCode,type:rec.trim_type})
-                MapData.get(rec.requestNo).fabInfo.push({fabricCode:rec.fabCode})
+      if (!existingTrim) {
+          MapData.get(rec.requestNo).trimInfo.push({ 
+            trimCode: rec.trimCode, 
+            type: rec.trim_type ,
+            total:rec.trimtotal_requirement,
+          consumption:rec.trimconsumption,
+          wastage:rec.trimwastage,
+          uom:rec.trimuom
+          });
+      }
+      const existingFabric = MapData.get(rec.requestNo).fabInfo.find(
+        (fabInfo) => fabInfo.fabricCode === rec.fabCode
+    );
+
+    if (!existingFabric) {
+        MapData.get(rec.requestNo).fabInfo.push({ 
+          fabricCode: rec.fabCode,
+          total:rec.fabtotal_requirement,
+          consumption:rec.fabconsumption,
+          wastage:rec.fabwastage,
+          uom:rec.fabuom
+         });
+    }
 
             }
-            // const sizes : SampleSizeInfoModel[] = [];
-          //  const sizes : SampleSizeInfoModel[] = [];
-          //   sizedata.forEach((os => sizes.push(os)))
-
-          //   const infoData : SampleRequestInfoModel[] = []
-          //   MapData.forEach((rec) => infoData.push(rec))
-            
-      const sizes: SampleSizeInfoModel[] = [];
-      sizedata.forEach((e) => {
-        console.log(e,'pp');
-        
-        sizes.push(e);
-      });
-
-      MapData.forEach((rec) => {
-        rec.sizeinfo = sizes;
-      });
 
       const infoData: SampleRequestInfoModel[] = Array.from(MapData.values());
 

@@ -247,7 +247,7 @@ export class IndentService {
                 const style = item.style;
                 const indentDate = item.indentDate;
                 const expectedDate = item.expectedDate;
-                const status = item.status
+                 const status = item.STATUS
 
                 if (!result[requestNo]) {
                     result[requestNo] = {
@@ -262,10 +262,10 @@ export class IndentService {
                 result[requestNo].i_items.push({
                     requestNo: item?.requestNo,
                     fabricId: item.fabricId,
-                    materialtype: item.fabricType,
+                    materialtype: 'Fabric',
                     quantity: item.fbquantity,
                     color: item.color,
-                    status: item.status,
+                    status: item.STATUS,
                     m3Code: item.m3FabricCode,
 
 
@@ -278,7 +278,7 @@ export class IndentService {
                     quantity: item.quantity,
                     color: item.color,
                     m3Code: item.m3TrimCode,
-                    status: item.status,
+                   status: item.STATUS,
                 })
 
 

@@ -8,9 +8,9 @@ import { SampleDevelopmentService } from "packages/libs/shared-services/src/comm
 import React, { useEffect, useRef } from "react"
 import { useState } from "react"
 import Highlighter from "react-highlight-words"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import AlertMessages from "../common/common-functions/alert-messages"
-import { LifeCycleStatusDisplay, sampleReqIdReq } from "@project-management-system/shared-models"
+import { ItemTypeEnumDisplay, LifeCycleStatusDisplay, sampleReqIdReq } from "@project-management-system/shared-models"
 
 export const SampleReqDetailView = () =>{
     const searchInput = useRef(null);
@@ -23,17 +23,23 @@ export const SampleReqDetailView = () =>{
     const [filterData, setFilterData] = useState<any[]>([]);
     const [trimData, setTrimData] = useState<any[]>([]);
     const [fabData, setFabData] = useState<any[]>([]);
+    const [sizeData, setSizeData] = useState<any[]>([]);
+    const [colourData, setColourData] = useState<any[]>([]);
+    const location = useLocation()
+    
     useEffect(() => {
         getData()
       }, []);
 
     const getData =()=>{
-        const req = new sampleReqIdReq(1,undefined)
+        const req = new sampleReqIdReq(location.state,undefined)
         service.getAllSampleRequestsInfo(req).then((res) => {
             if (res.status) {
               setData(res.data);
-              setFabData(res.data.filter((e)=>e.fabricInfo))
-              setTrimData(res.data.filter((e)=>e.trimInfo))
+              console.log(res.data.filter((e)=>e.trimInfo));
+              
+              res.data.map((e)=>setFabData(e.fabInfo))
+              res.data.map((e)=>setTrimData(e.trimInfo))
 
               setFilterData(res.data);
             } else {
@@ -43,7 +49,14 @@ export const SampleReqDetailView = () =>{
             AlertMessages.getErrorMessage(err.message);
             setData([]);
           })
+          service.getAllSampleRequestSizesInfo(req).then((res)=>{
+            if(res.status) {
+              setColourData(res.data)
+            }
+          })
+
     }
+    
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({
           setSelectedKeys,
@@ -144,11 +157,48 @@ export const SampleReqDetailView = () =>{
         },
         {
           title: "Fabric Code",
-          dataIndex: "fabCode",
-        //   sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
-        //   sortDirections: ["descend", "ascend"],
-        //   ...getColumnSearchProps("requestNo"),
-        },    
+          dataIndex: "fabricCode",
+         }, 
+        {
+          title: "Total Requirment",
+          dataIndex: "total",
+          sorter: (a, b) => a.total.localeCompare(b.total),
+          sortDirections: ["descend", "ascend"],
+          render: (text, record) => {
+            return (
+              <>
+               {record.total ? `${record.total}(${record.uom})` : "Not Available"}
+              </>
+            );
+          },
+        },
+        {
+          title: "Consumption",
+          dataIndex: "consumption",
+          sorter: (a, b) => a.consumption.localeCompare(b.consumption),
+          sortDirections: ["descend", "ascend"],
+          render: (text, record) => {
+            
+              return (
+                <>
+                 {record.consumption ? `${record.consumption}(${record.uom})` : "Not Available"}
+                </>
+              );
+            },
+        },
+        {
+          title: "Wastage",
+          dataIndex: "wastage",
+          sorter: (a, b) => a.wastage.localeCompare(b.wastage),
+          sortDirections: ["descend", "ascend"],
+          render: (text, record) => {
+            return (
+              <>
+               {record.wastage ? `${record.wastage}(${record.uom})` : "Not Available"}
+              </>
+            );
+          },
+        },
         
       ];
       const trimColumns: any = [
@@ -168,14 +218,98 @@ export const SampleReqDetailView = () =>{
         },    
         {
             title: "Trim Type",
-            dataIndex: "trimType",
+            dataIndex: "type",
+            render: (text) => {
+              const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+              return EnumObj ? EnumObj.displayVal : text;
+            },
           //   sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
           //   sortDirections: ["descend", "ascend"],
           //   ...getColumnSearchProps("requestNo"),
-          },  
+          }, 
+          {
+            title: "Total Requirment",
+            dataIndex: "total",
+            sorter: (a, b) => a.total.localeCompare(b.total),
+            sortDirections: ["descend", "ascend"],
+            render: (text, record) => {
+              return (
+                <>
+                 {record.total ? `${record.total}(${record.uom})` : "Not Available"}
+                </>
+              );
+            },
+          },
+          {
+            title: "Consumption",
+            dataIndex: "consumption",
+            sorter: (a, b) => a.consumption.localeCompare(b.consumption),
+            sortDirections: ["descend", "ascend"],
+            render: (text, record) => {
+              
+                return (
+                  <>
+                   {record.consumption ? `${record.consumption}(${record.uom})` : "Not Available"}
+                  </>
+                );
+              },
+          },
+          {
+            title: "Wastage",
+            dataIndex: "wastage",
+            sorter: (a, b) => a.wastage.localeCompare(b.wastage),
+            sortDirections: ["descend", "ascend"],
+            render: (text, record) => {
+              return (
+                <>
+                 {record.wastage ? `${record.wastage}(${record.uom})` : "Not Available"}
+                </>
+              );
+            },
+          }, 
       ];
+
+     
+    const sizeColumns = colourData[0]?Object.keys(colourData[0]).map(param => ({
+      title: param,
+      dataIndex: param,
+      key:param,
+      render:(text,record) =>{
+          
+          // console.log(Object.keys(record).filter(item => item === param)[0])
+          const test = Object.keys(record).filter(item => item === param)[0]
+          // console.log(test)
+          // console.log(record[test])
+              return (<>{(param != 'colour' && param != 'style')?Number(record[test]):record[test]}</>)
+          // console.log(record.keys.filter(item => item == param))
+      }
+
+  })):[]
+    const columns:any[]  = [
+      {
+          title: 'S No',
+          key: 'sno',
+          width: '70px',
+          responsive: ['sm'],
+          render: (text, object, index) => (page-1) * 10 +(index+1)
+      },
+      {
+          title: 'Size Wise Quantity',
+          dataIndex: 'size',
+          width:"10%",
+          children :sizeColumns,
+          key:'size'
+        },
+        
+  ]
 return(
-    <Card>
+    <Card headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
+    title={'Sample Request Detail view'}
+    extra={
+      <span>
+        <Button onClick={() => navigate("/sample-development/sample-requests")}>Back</Button>
+      </span>
+    }>
         <Descriptions>
                 <DescriptionsItem label='PCH'>{data?.[0]?.pch}</DescriptionsItem>
                 <DescriptionsItem label='Buyer'>{data?.[0]?.buyer}</DescriptionsItem>
@@ -190,11 +324,12 @@ return(
                 <DescriptionsItem label='Life Cycle Status'>{data?.[0]?.lifeCycleStatus?LifeCycleStatusDisplay.find((e)=>e.name === data?.[0]?.lifeCycleStatus)?.displayVal:'-'}</DescriptionsItem>
                 <DescriptionsItem label='Status'>{data?.[0]?.status}</DescriptionsItem>
         </Descriptions>
-        {fabData.length < 0 && (
-        <Table columns={fabricColumns} dataSource={fabData}/>)}
-        {trimData.length < 0 && (
-        <Table columns={trimColumns} dataSource={trimData}/>)}
-        {/* <Table/> */}
+        {fabData.length > 0 && (
+        <Table columns={fabricColumns} dataSource={fabData} size="small"/>)}
+        {trimData.length > 0 && (
+        <Table columns={trimColumns} dataSource={trimData} size="small"/>)}
+        {colourData.length > 0 && (
+        <Table columns={columns} dataSource={colourData} size="small"rowKey={record => record.colour}/>)}
 
     </Card>
 )

@@ -12,7 +12,7 @@ export class SampleRequestInfoModel{
     lifeCycleStatus:string
     contact:string
     ETD:Date
-    sizeinfo?:SampleSizeInfoModel[]
+    // sizeinfo?:SampleSizeInfoModel[]
     fabInfo?:any[]
     trimInfo?:any[]
     
@@ -29,7 +29,7 @@ export class SampleRequestInfoModel{
         pch:string,
         ETD:Date,
         // conversion:'',
-        sizeinfo?:SampleSizeInfoModel[],
+        // sizeinfo?:SampleSizeInfoModel[],
         fabInfo?:any[],
         trimInfo?:any[]
     ){
@@ -37,7 +37,7 @@ export class SampleRequestInfoModel{
        this.buyer = buyer
        this.sampleRequestId = sampleRequestId
        this.sampleRequestNo = this.sampleRequestNo
-       this.sizeinfo = sizeinfo
+    //    this.sizeinfo = sizeinfo
        this.style = style
        this.trimInfo = trimInfo
        this.fabInfo = fabInfo
