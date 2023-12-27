@@ -88,7 +88,7 @@ export const AddressView = () => {
           .saveAs('Address.xlsx');
       }
     return(
-        <Card title='Address' extra={<Link to='/ralph-lauren/masters/address/address-excel-upload' >
+        <Card title='Address' extra={<Link to='/centric/masters/address/address-excel-upload' >
         <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
         </Link>}>
             <Row justify={'end'}>

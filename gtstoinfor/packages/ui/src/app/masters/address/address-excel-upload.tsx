@@ -109,7 +109,7 @@ export const AddressUpload = () => {
           }
       }
     return(
-        <Card title='Address' extra={<Link to='/ralph-lauren/masters/address/address-view' >
+        <Card title='Address' extra={<Link to='/centric/masters/address/address-view' >
         <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
         </Link>}>
             <Form>
