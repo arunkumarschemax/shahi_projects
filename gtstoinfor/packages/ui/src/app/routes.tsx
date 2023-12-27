@@ -45,6 +45,8 @@ import AddressUpload from "./masters/address/address-excel-upload"
 import PdfUpload from "./centric/pdf-upload"
 import PPKPOReport from "./centric/po-report"
 import CentricPdFInfoGrid from "./centric/pdf-file-grid"
+import CentricOrdersGrid from "./centric/order-data-grid"
+import CentricOrdersDetailView from "./centric/order-data-details-view"
 
 
 export const AppRoutes = () => {
@@ -193,6 +195,9 @@ export const AppRoutes = () => {
                     <Route path='solid-pack-PO-report' element={<PPKPOReport />} />
                     <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
+                   <Route path='order-data-info-grid' element={<CentricOrdersGrid />} />
+                   <Route path='order-data-detail-view' element={<CentricOrdersDetailView />} />
+
                     
 
                 </Route>
