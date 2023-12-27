@@ -9,6 +9,11 @@ export class CentricSizeWiseModel {
     color:string;
     ratio?:string;
     ppkUpc?:string;
+    label?:string;
+    exfactory?:string;
+    exportDate?:string;
+    deliveryDate?:string
+
 
 
    
@@ -23,6 +28,12 @@ export class CentricSizeWiseModel {
     color:string,
     ratio?:string,
     ppkUpc?:string,
+    label?:string,
+    exfactory?:string,
+    exportDate?:string,
+    deliveryDate?:string,
+    
+
    
     ) {
        
@@ -35,6 +46,10 @@ export class CentricSizeWiseModel {
         this.color = color
         this.ratio = ratio
         this.ppkUpc = ppkUpc
+        this.label = label
+        this.exfactory = exfactory
+        this.exportDate = exportDate
+        this.deliveryDate = deliveryDate
        
     };
 }
