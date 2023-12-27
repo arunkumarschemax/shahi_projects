@@ -3788,21 +3788,32 @@ export class OrdersService {
     }
 
     async getPhaseMonthExcelDataNew(req: YearReq): Promise<CommonResponseModel>{
-                const data2 = await this.ordersRepository.getDataNew(req)
+        const data2 = await this.ordersRepository.getDataNew(req)
         const dataMap = new Map<string, PhaseWiseReq >();
         const dataMap2 = new Map<string, PhaseWiseReq >();
                 for(const rec of data2){
                         if(!dataMap.has(rec.prod_plan_type)){
-                                dataMap.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[]))
-            }
+                             dataMap.set(rec.prod_plan_type, new PhaseWiseReq(rec.prod_plan_type,[],0,0))
+                                    }
+            const phaseWiseReq = dataMap.get(rec.prod_plan_type);
             const item=dataMap.get(rec.prod_plan_type).itemData
-            if(rec.prod_plan_type != null){
+            if(rec.prod_plan_type != null && phaseWiseReq){
+                let sumOfExfPcs = phaseWiseReq.inPcsTotal
+                let sumofCoeffpcs =phaseWiseReq.inCoeffTotal
                 if(req.tabName == 'ExFactory'){
+                    sumOfExfPcs += rec.exfPcs;
+                    sumofCoeffpcs += rec.exfCoeff
                                         item.push(new itemData(rec.exfMonth,rec.exfPcs,rec.exfCoeff))
                 }
                 if(req.tabName === 'WareHouse' ){
+                    sumOfExfPcs += rec.whPcs
+                    sumofCoeffpcs += rec.whCoeff
+                    
                                         item.push(new itemData(rec.whMonth,rec.whPcs,rec.whCoeff))
                 }
+                phaseWiseReq.inPcsTotal=sumOfExfPcs
+                phaseWiseReq.inCoeffTotal=sumofCoeffpcs
+                dataMap.set(rec.prod_plan_type,phaseWiseReq );
             }
                     }
         const detailedarray: PhaseWiseReq[] = Array.from(dataMap.values())

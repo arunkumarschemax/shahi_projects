@@ -130,12 +130,12 @@ export default function MonthWiseReportV2() {
         if(data.length){
             const flattenedArrTemp = []
             const monthHeadersSet = new Set<string>();
-            let inPcsSum =0
-            let inCoeffSum =0
             for(const rec of data){
                 const phaseType=rec.phase
                 const monthsArr: any = []
                 const monthWiseObj = {}
+                const inCoeffTotal=rec.inCoeffTotal
+                const inPcsTotal = rec.inPcsTotal
                 let itemRowSpan
                 for(const [monthIndex, month] of rec.itemData.entries()){
                      itemRowSpan = monthIndex == 0 ? rec.itemData.length : 0
@@ -143,9 +143,6 @@ export default function MonthWiseReportV2() {
                     monthWiseObj[`${monthname}_inPcs`] = month.inPcs
                     monthWiseObj[`${monthname}_coeffPcs`] =  month.coeffPcs
                     monthHeadersSet.add("" + monthname)
-                    inCoeffSum += parseFloat(month.coeffPcs) || 0;
-                    inPcsSum +=parseFloat(month.inPcs)
-
                 }
 
                 monthsArr.push(monthWiseObj)
@@ -153,8 +150,8 @@ export default function MonthWiseReportV2() {
                     itemRowSpan,
                     phaseType,
                     monthsArr,
-                    inCoeffSum,
-                    inPcsSum
+                    inCoeffTotal,
+                    inPcsTotal
                 }
                 flattenedArrTemp.push(obj)
             }
@@ -358,11 +355,21 @@ export default function MonthWiseReportV2() {
         },
         {
             title:'Total InPcs',
-            dataIndex:'inPcsSum'
+            // dataIndex:'inPcsTotal',
+            render:(text:any, record:any) =>{
+                return(
+                    <span>{record.inPcsTotal ?record.inPcsTotal.toLocaleString():0}</span>
+                )
+            }
         },
         {
             title:'Total InCoeff Pcs',
-            dataIndex:'inCoeffSum'
+            // dataIndex:'inCoeffTotal',
+            render:(text:any, record:any) =>{
+                return(
+                    <span>{record.inCoeffTotal ?record.inCoeffTotal.toLocaleString():0}</span>
+                )
+            }
         }
     ]
     // console.log(flattenedPahseData)
