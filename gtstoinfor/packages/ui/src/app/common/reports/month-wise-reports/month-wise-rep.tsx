@@ -147,6 +147,7 @@ export default function MonthWiseReportV2() {
                     inPcsSum +=parseFloat(month.inPcs)
 
                 }
+
                 monthsArr.push(monthWiseObj)
                 const obj ={
                     itemRowSpan,
@@ -157,6 +158,7 @@ export default function MonthWiseReportV2() {
                 }
                 flattenedArrTemp.push(obj)
             }
+            console.log(flattenedArrTemp)
             setFlattenedPhaseData(flattenedArrTemp)
             setPhaseDistinctMonths(Array.from(monthHeadersSet))
 
@@ -381,6 +383,35 @@ export default function MonthWiseReportV2() {
             "november",
             "december",
           ];
+          console.log(data)
+
+          return(
+            <>
+            <Table.Summary.Row>
+              <Table.Summary.Cell index={0}></Table.Summary.Cell>
+              <Table.Summary.Cell index={1}>Total</Table.Summary.Cell>
+              {/* <Table.Summary.Cell index={3}>
+                <div>
+                  <table className="custom-tbl">
+                  <thead>
+                        <tr>
+                        <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.proPlanType}px` }}></th>
+    {totalValues.map((val, index) => (
+      <th className="ant-table-cell" scope="col" style={{ width: `${(index % 2) ? colWidth.Pcs : colWidth.coeff}px`, textAlign: 'right' }}>
+        {val}
+      </th>
+    ))}
+    <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalPcs}px`, textAlign: 'right' }}>{totalPre.toLocaleString()}</th>
+    <th className="ant-table-cell" scope="col" style={{ width: `${colWidth.totalcoeff}px`, textAlign: 'right' }}>{totalLat.toLocaleString()}</th>
+    
+                        </tr>
+                        </thead>
+                      </table>
+                </div>
+              </Table.Summary.Cell> */}
+            </Table.Summary.Row>
+          </>
+          )
     }
 
 
@@ -458,7 +489,9 @@ export default function MonthWiseReportV2() {
                     </Col>
                 </Row>
                 <Row>
-                    <Table scroll={{ x: 'max-content', y: '1000px' }} bordered columns={columns} dataSource={flattenedReportData} pagination={false}/>
+                    <Table scroll={{ x: 'max-content', y: '1000px' }} bordered columns={columns} dataSource={flattenedReportData} pagination={false} 
+                    // summary={generateSummary}
+                    />
                     <Table scroll={{ x: 'max-content', y: '1000px' }} bordered columns={columns2} dataSource={flattenedPahseData}/>
                 </Row> 
             </Form>
