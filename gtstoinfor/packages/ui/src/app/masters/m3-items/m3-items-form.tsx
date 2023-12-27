@@ -495,7 +495,7 @@ const handleYarnUnitChange = (index, value) => {
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
-            <Form.Item name="yarnType" rules={[{ required: true, message : "Type is required" }]}>
+            <Form.Item name="yarnType" rules={[{ required: false, message : "Type is required" }]}>
               Yarn Type : <Radio.Group name="yarnType" style={{ marginTop: "25px" }} onChange={(e)=>yarnSelect(e?.target?.value)} onBlur={generateItemCode}>
                 <Radio value="Warp">Warp</Radio>
                 <Radio value="Weft">Weft</Radio>
