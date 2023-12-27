@@ -34,7 +34,7 @@ import { CentricModule } from './centric-buyer/centric.module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,CentricModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,CentricModule,AddressModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,

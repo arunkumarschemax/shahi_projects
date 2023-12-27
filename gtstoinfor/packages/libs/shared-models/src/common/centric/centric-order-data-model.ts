@@ -56,6 +56,7 @@ export class CentricOrderDataModel {
 
     sizeWiseData: CentricSizeWiseModel[]
     ratio?:number
+    ppkUpc?:string
 
     constructor(
         id: number,
@@ -113,7 +114,8 @@ export class CentricOrderDataModel {
         shipToAddress: string,
     
         sizeWiseData: CentricSizeWiseModel[],
-        ratio?:number
+        ratio?:number,
+        ppkUpc?:string
     ) {
         this.id = id
         this.poNumber = poNumber
@@ -149,6 +151,7 @@ export class CentricOrderDataModel {
         this.shipToAddress = shipToAddress
         this.sizeWiseData = sizeWiseData
         this.ratio = ratio
+        this.ppkUpc = ppkUpc
     }
 }
 

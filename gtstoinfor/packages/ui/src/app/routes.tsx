@@ -191,6 +191,8 @@ export const AppRoutes = () => {
                 <Route path='/centric'>
                     <Route path='pdf-info' element={<CentricPdFInfoGrid />} />
                     <Route path='solid-pack-PO-report' element={<PPKPOReport />} />
+                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
+                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
                     
 
                 </Route>
