@@ -138,7 +138,7 @@ setRemarkModal(false)
             //   ...getColumnSearchProps('vendorName')
         },
         {
-          title: 'Description',
+          title: 'Item Description',
           dataIndex: "description",
           width: '100px',
           align: 'left',
@@ -160,26 +160,31 @@ setRemarkModal(false)
             sorter: (a, b) => a.acceptedQuantity - b.acceptedQuantity,
             sortDirections: ['descend', 'ascend'],
             render: (text,val) => {
+              console.log(val)
+              let uomVal = ''
+              if(val.uom != null){
+                uomVal = `(${val.uom})`
+              }
 
-              return val.acceptedQuantity ? `${val.acceptedQuantity}(${val.uom})` : text;
+              return val.acceptedQuantity ? `${val.acceptedQuantity}${uomVal}` : text;
             },
         },
-        {
-            title: 'Location Mapped',
-            width: '100px',
-            dataIndex: 'allocatedQty',
-            align: 'left',
-            sorter: (a, b) => a.allocatedQty - b.allocatedQty,
-            sortDirections: ['descend', 'ascend'],
-        },
-        {
-            title: 'Balance',
-            dataIndex: 'balance',
-            width: '100px',
-            align: 'left',
-            sorter: (a, b) => a.balance - b.balance,
-            sortDirections: ['descend', 'ascend'],
-        },
+        // {
+        //     title: 'Location Mapped',
+        //     width: '100px',
+        //     dataIndex: 'allocatedQty',
+        //     align: 'left',
+        //     sorter: (a, b) => a.allocatedQty - b.allocatedQty,
+        //     sortDirections: ['descend', 'ascend'],
+        // },
+        // {
+        //     title: 'Balance',
+        //     dataIndex: 'balance',
+        //     width: '100px',
+        //     align: 'left',
+        //     sorter: (a, b) => a.balance - b.balance,
+        //     sortDirections: ['descend', 'ascend'],
+        // },
         {
             title: 'Allocate',
             // render:(record) =>{

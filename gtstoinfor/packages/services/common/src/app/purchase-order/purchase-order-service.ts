@@ -41,18 +41,22 @@ export class PurchaseOrderService {
             let fromDate = 0;
             let toDate = 0;
             let itemType;
+            let poItemType
+
             if(req.poMaterialType === "Fabric"){
                 itemType = 'F';
+                poItemType = req.poMaterialType
             }
             else{
                 itemType = 'T';
+                poItemType = 'Trim'
             }
-            const data = 'select max(purchase_order_id) as poId from purchase_order where po_material_type = "'+req.poMaterialType+'"';
+            const data = 'select  max(ref_no) as poId from purchase_order where po_material_type = "'+poItemType+'"';
                 let totalPO = await this.poRepo.query(data)
             // if (!isUpdate) {
                 if (CurrentMonth < 4) {
-                    fromDate = (CurrentYear);
-                    toDate = (CurrentYear + 1);
+                    fromDate = (CurrentYear-1);
+                    toDate = (CurrentYear);
                 } else {
                     fromDate = (CurrentYear);
                     toDate = (CurrentYear + 1);
@@ -96,12 +100,18 @@ export class PurchaseOrderService {
             poEntity.purchaseOrderDate = req.purchaseOrderDate
             poEntity.createdUser = req.createdUser
             poEntity.createdUser = req.createdUser
-            poEntity.poMaterialType = req.poMaterialType
+            if(req.poMaterialType === "Fabric"){
+                poItemType = req.poMaterialType;
+            }else{
+                poItemType = 'Trim';
+            }
+            poEntity.poMaterialType = poItemType
             poEntity.poAgainst = req.poAgainst
             poEntity.currencyId=req.currencyId
             poEntity.exchangeRate=req.exchangeRate
             poEntity.deliveryAddress=req.deliveryAddress
             poEntity.totalAmount=req.totalAmount
+            poEntity.refNo=Number(refNo)
             for(const item of req.poItemInfo){
                 console.log(item,'$$$$')
                 const pofabricEntity = new PurchaseOrderItemsEntity()

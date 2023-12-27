@@ -71,7 +71,7 @@ const GRNForm = () => {
 
       const values = form.getFieldsValue()
       console.log(values,'rrrr')
-      const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData?.poMaterialType, poItemData, 0, '',values.grnType, values.invoiceNo, poData?.poMaterialType, values.grnAmount,form.getFieldValue('invoiceDate').format('YYYY-MM-DD'));
+      const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData?.poMaterialType, poItemData, 0, '',values.grnType, values.invoiceNo, ((poData?.poMaterialType).toUpperCase() === "FABRIC"?(poData?.poMaterialType).toUpperCase():"Trim"), values.grnAmount,form.getFieldValue('invoiceDate').format('YYYY-MM-DD'));
       console.log(req);
       grnService.createGrn(req).then((res) => {
         if (res.status) {
@@ -214,7 +214,7 @@ const GRNForm = () => {
       title: <div style={{ textAlign: "center" }}>PO Qty</div>,
       dataIndex: 'poQuantity',
       align: "right",
-      render: (poQuantity, row) => `${poQuantity} ${row.uom}`,
+      render: (poQuantity, row) => row.uom?`${poQuantity} ${row.uom}`:`${poQuantity}`,
     },
     {
       title: <div style={{ textAlign: "center" }}>Previous Qty</div>,
@@ -353,18 +353,27 @@ const GRNForm = () => {
 
   function acceptedQuantityOnChange(e) {
     const poItemId = itemsForm.getFieldValue('poItemId')
+    const acceptedQty = itemsForm.getFieldValue('acceptedQuantity')
+    const recQty = itemsForm.getFieldValue('receivedQuantity')
+    console.log(recQty)
+    console.log(e)
+    if(acceptedQty > recQty){
+      AlertMessages.getErrorMessage('Accepted Qunatity should not exceed Received')
+      itemsForm.setFieldsValue({acceptedQuantity:null})
+    }else{
 
-    setPoItemData(prevData =>
-      prevData.map(item => {
-        if (item.poItemId === poItemId) {
-          return {
-            ...item,
-            acceptedQuantity: e.target.value,
-            rejectedQuantity: item.receivedQuantity - Number(e.target.value)
-          };
-        }
-        return item;
-      }))
+      setPoItemData(prevData =>
+        prevData.map(item => {
+          if (item.poItemId === poItemId) {
+            return {
+              ...item,
+              acceptedQuantity: e.target.value,
+              rejectedQuantity: item.receivedQuantity - Number(e.target.value)
+            };
+          }
+          return item;
+        }))
+    }
     
   }
 

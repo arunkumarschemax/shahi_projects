@@ -869,12 +869,12 @@ const getBase64 = (img, callback) => {
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
             <Form.Item
               name="remarks"
               label="Remarks"
             >
-            <TextArea rows={1} placeholder="Enter Remarks"/>
+            <TextArea rows={2} placeholder="Enter Remarks"/>
             </Form.Item>
           </Col>
         </Row>

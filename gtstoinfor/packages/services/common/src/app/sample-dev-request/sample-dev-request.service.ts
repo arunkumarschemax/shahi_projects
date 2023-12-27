@@ -1074,13 +1074,15 @@ export class SampleRequestService {
       //   return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
 
       //   }
-        let query1=`SELECT sb.sample_item_id AS sampleItemId,sb.sampling_bom_id AS samplingBomId,required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity, required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS sampleBalanceQuanty,sb.required_quantity AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,c.colour AS colourName, mi.item_code AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,(st.quantity-st.allocatd_quantity-st.issued_quantity) AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId FROM sampling_bom sb     
+        let query1=`SELECT sb.sample_item_id AS sampleItemId,sb.sampling_bom_id AS samplingBomId,required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity, required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS sampleBalanceQuanty,sb.required_quantity AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,IF(sb.item_type = "Fabric",c.colour,tc.colour) AS colourName, IF(sb.item_type = "Fabric", CONCAT(mi.item_code,'-',mi.description), mt.trim_code) AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,(st.quantity-st.allocatd_quantity-st.issued_quantity) AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId FROM sampling_bom sb     
         LEFT JOIN  sample_request_fabric_info srf ON srf.sample_request_id=sb.sample_item_id AND sb.item_type='Fabric' 
         LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id=sb.sample_item_id AND sb.item_type!='Fabric'
         LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id  
           LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND st.item_type = sb.item_type
-            LEFT JOIN m3_items mi ON mi.m3_items_Id=sb.m3_item_id  
-            LEFT JOIN colour c ON c.colour_id=sb.colour_id
+            LEFT JOIN m3_items mi ON mi.m3_items_Id=sb.m3_item_id and sb.item_type = "Fabric" 
+            LEFT JOIN m3_trims mt ON mt.m3_trim_Id=sb.m3_item_id and sb.item_type != "Fabric"
+            LEFT JOIN colour c ON c.colour_id=sb.colour_id and sb.item_type = "Fabric"
+            LEFT JOIN colour tc ON tc.colour_id=mt.color_id and sb.item_type != "Fabric"
             LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id
               LEFT JOIN style s ON s.style_id=sr.style_id left join brands bs on bs.brand_id=sr.brand_id 
               left join rack_position rp on rp.position_Id =sr.location_id  
@@ -1389,17 +1391,25 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
 
     async allocatedLocationInfo(req:AllocatedLocationRequest){
       let checkStatus
+      let itemType
       if(req.action == 'Issued'){
         checkStatus = MaterialStatusEnum.READY_FOR_PRODUCTION
       }
       if(req.action == 'Approval'){
         checkStatus = MaterialStatusEnum.MATERIAL_ALLOCATED
       }
-      const data = `SELECT ma.sample_item_id AS sampleItemId,rp.rack_position_name AS location,position_Id AS id,item_type AS itemType,mai.quantity
+      
+      let data
+      data = `SELECT ma.sample_item_id AS sampleItemId,rp.rack_position_name AS location,position_Id AS id,item_type AS itemType,mai.quantity
       ,mai.allocate_quantity AS allocatedQty,mai.material_allocation_items_id as materialAllocationId  FROM material_allocation ma
       LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
       LEFT JOIN rack_position rp ON rp.position_Id = mai.location_id
        WHERE sample_item_id = ${req.sampleRequestItemId} and ma.status = '${checkStatus}'`
+       if(req.type == 'Fabric'){
+          data +=` and item_type = '${req.type}'`
+       }else{
+          data +=` and item_type != 'Fabric'`
+       }
        const res = await this.dataSource.query(data)
        if(res.length > 0){
          return new CommonResponseModel(true,1,'data',res)
