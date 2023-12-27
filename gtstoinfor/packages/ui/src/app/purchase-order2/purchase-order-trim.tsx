@@ -158,21 +158,38 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         setDefaultTrimFormData(rowData)
         setTrimIndexVal(index)
         if(rowData.indentTrimId != undefined){
+            if(rowData?.trimUomId > 0){
+                rowData.quantityUomId = rowData.trimUomId
+                rowData.quantityUomName = rowData.trimUomName
+            }
         setInputDisable(true)
         trimForm.setFieldsValue({poQuantity:Number(rowData.indentQuantity) - Number(rowData.poQuantity)})
         trimForm.setFieldsValue({indentId:rowData.indentId})
         // trimForm.setFieldsValue({m3TrimCode:rowData.m3TrimCodeId})    
         trimForm.setFieldsValue({m3TrimCodeName:rowData.m3TrimCodeName})    
-        trimForm.setFieldsValue({indentQuantity:rowData.indentQuantity})    
+        trimForm.setFieldsValue({indentQuantity:rowData.indentQuantity})  
+        trimForm.setFieldsValue({ unitPrice: Number(rowData.unitPrice) > 0 ? Number(rowData.unitPrice):undefined })
+        trimForm.setFieldsValue({ discount:   Number(rowData.discount) > 0 ? Number(rowData.discount):null })
+        trimForm.setFieldsValue({ discountAmount: rowData.discountAmount })
+        trimForm.setFieldsValue({ tax: rowData.tax })
+        trimForm.setFieldsValue({ taxAmount: rowData.taxAmount })
+        trimForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
+        trimForm.setFieldsValue({ transportation: rowData.transportation })
         trimForm.setFieldsValue({indentCode:rowData.indentCode})
-        trimForm.setFieldsValue({indentTrmId:rowData.indentTrimId})
-        trimForm.setFieldsValue({quantityUomName:rowData?.quantityUnit})
-        trimForm.setFieldsValue({quantityUomId:rowData?.quantityUnitId,})
+        trimForm.setFieldsValue({indentTrimId:rowData.indentTrimId})
+        trimForm.setFieldsValue({quantityUomName:rowData?.quantityUomName})
+        trimForm.setFieldsValue({quantityUomId:rowData?.quantityUomId})
         trimForm.setFieldsValue({styleId: rowData?.styleId})
         trimForm.setFieldsValue({trimParams: rowData?.trimParams})
+        trimForm.setFieldsValue({taxPercentage: rowData?.taxPercentage})
+        
         // trimForm.setFieldsValue({poQuantity: rowData?.quantity})
         }
         if(rowData.sampleTrimInfoId != undefined){
+            if(defaultTrimFormData?.uomId > 0){
+                defaultTrimFormData.quantityUomId = defaultTrimFormData.uomId
+                defaultTrimFormData.quantityUomName = defaultTrimFormData.uomName
+            }
             trimForm.setFieldsValue({poQuantity:rowData.sampleOrderQuantity})
             trimForm.setFieldsValue({ unitPrice: rowData.unitPrice })
             trimForm.setFieldsValue({ discount: rowData.discount })
@@ -181,11 +198,13 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
             trimForm.setFieldsValue({ taxAmount: rowData.taxAmount })
             trimForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
             trimForm.setFieldsValue({ transportation: rowData.transportation })
-            trimForm.setFieldsValue({quantityUomName:rowData?.uomName})
-            trimForm.setFieldsValue({quantityUomId:rowData?.uomId,})
+            trimForm.setFieldsValue({quantityUomName:rowData?.quantityUomName})
+            trimForm.setFieldsValue({quantityUomId:rowData?.quantityUomId,})
             trimForm.setFieldsValue({styleId: rowData?.styleId})
             trimForm.setFieldsValue({trimParams: rowData?.trimParams})
             trimForm.setFieldsValue({styleId:rowData?.styleId,})
+            trimForm.setFieldsValue({taxPercentage: rowData?.taxPercentage})
+
         setInputDisable(true)
         }
    
@@ -222,6 +241,14 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
             title:'M3 Trim Code',
             dataIndex:'m3TrimCodeName',
             width:'100px'
+        },
+        {
+            title:'UOM',
+            dataIndex:'quantityUomName',
+            width:'100px',
+            render:(value,row)=>{
+                return<>{value ? value : row.trimUomName ? row.trimUomName:'NA' }</>
+            }
         },
         // {
         //     title:'Color',
@@ -314,6 +341,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
             dataIndex:'m3TrimCodeName',
             width:'100px'
         },
+        
         // {
         //     title:'Color',
         //     dataIndex:'colourName',
@@ -324,15 +352,20 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
             dataIndex:'sampleOrderQuantity',
         },
         {
+            title:'UOM',
+            dataIndex:'quantityUomName',
+            render:(value,row)=>{
+                console.log(row)
+                return <>{value?value:(row.uomName)?row.uomName:'NA'}</>
+            }
+            
+        },
+        {
             title:'Po Quantity',
             dataIndex:'poQuantity',
             
         },
-        // {
-        //     title:'Quantity UOM',
-        //     dataIndex:'uom',
-            
-        // },
+        
         {
             title: 'Unit Price',
             dataIndex: 'unitPrice',
@@ -419,6 +452,10 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         if(defaultTrimFormData){
             console.log(defaultTrimFormData)
            if (defaultTrimFormData.sampleReqId != undefined){
+            if(defaultTrimFormData?.uomId > 0){
+                defaultTrimFormData.quantityUomId = defaultTrimFormData.uomId
+                defaultTrimFormData.quantityUomName = defaultTrimFormData.uomName
+            }
                 trimForm.setFieldsValue({sampleReqId:defaultTrimFormData.sampleReqId,
                 poQuantity:defaultTrimFormData.sampleOrderQuantity,
                 sampleOrderQuantity:defaultTrimFormData.sampleOrderQuantity,
@@ -429,31 +466,47 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                 consumption : defaultTrimFormData.consumption,
                 m3TrimCode: defaultTrimFormData.m3TrimCode,
                 trimCodeName: defaultTrimFormData.trimCodeName,
-                quantityUomName:defaultTrimFormData.uomName,
-                quantityUomId:defaultTrimFormData.uomId,
+                quantityUomName:defaultTrimFormData.quantityUomName,
+                quantityUomId:defaultTrimFormData.quantityUomId,
                 m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
                 trimParams: defaultTrimFormData.trimParams,
-                styleId: defaultTrimFormData.styleId
+                styleId: defaultTrimFormData.styleId,
+                taxPercentage: defaultTrimFormData?.taxPercentage
             })
 
             }
             if(defaultTrimFormData.indentId != undefined){
+                if(defaultTrimFormData.trimUomId > 0){
+                    defaultTrimFormData.quantityUomId = defaultTrimFormData.trimUomId
+                    defaultTrimFormData.quantityUomName = defaultTrimFormData.trimUomName
+                }
+                trimForm.setFieldsValue({unitPrice: defaultTrimFormData.unitPrice > 0 ? Number(defaultTrimFormData.unitPrice):undefined})
+                trimForm.setFieldsValue({ discount: defaultTrimFormData.discount })
+                trimForm.setFieldsValue({ discountAmount: defaultTrimFormData.discountAmount })
+                trimForm.setFieldsValue({ tax: defaultTrimFormData.tax })
+                trimForm.setFieldsValue({ taxAmount: defaultTrimFormData.taxAmount })
+                trimForm.setFieldsValue({ subjectiveAmount: defaultTrimFormData.subjectiveAmount })
+                trimForm.setFieldsValue({ transportation: defaultTrimFormData.transportation })
+                trimForm.setFieldsValue({poQuantity:(defaultTrimFormData.poQuantity > 0) ?(Number(defaultTrimFormData.poQuantity)) : Number(defaultTrimFormData.indentQuantity) - Number(defaultTrimFormData.poQuantity)})
                 trimForm.setFieldsValue({
                     colourName: defaultTrimFormData.colourName,
                     colourId : defaultTrimFormData.colourId,
                     consumption : defaultTrimFormData.consumption,
                     m3TrimCode: defaultTrimFormData.m3TrimCode,
                     trimCodeName: defaultTrimFormData.trimCodeName,
-                    indentTrmId:defaultTrimFormData.indentTrimId,
+                    indentTrimId:defaultTrimFormData.indentTrimId,
                     indentQuantity:defaultTrimFormData.indentQuantity,
                     indentQuantityUnit:defaultTrimFormData.indentQuantityUnit,
-                    quantityUomId:defaultTrimFormData.quantityUnitId,
+                    quantityUomId:defaultTrimFormData.quantityUomId,
                     m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
                     indentCode:defaultTrimFormData.indentCode,
-                    quantityUomName:defaultTrimFormData.uom,
+                    quantityUomName:defaultTrimFormData.quantityUomName,
                     indentId:defaultTrimFormData.indentId,
                     styleId: defaultTrimFormData.styleId,
-                    trimParams: defaultTrimFormData.trimParams
+                    trimParams: defaultTrimFormData.trimParams,
+                    taxPercentage: defaultTrimFormData?.taxPercentage
+
+                    
                 })
             }
            
@@ -563,7 +616,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                    <Form.Item name='sampleReqId' hidden ><Input/></Form.Item>
                     <Form.Item name='indentId' hidden ><Input/></Form.Item>
                     <Form.Item name={'colourName'} hidden><Input></Input></Form.Item>
-                    <Form.Item name={'indentTrmId'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'indentTrimId'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'sampleTrimInfoId'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentQuantity'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentQuantityUnit'} hidden><Input></Input></Form.Item>

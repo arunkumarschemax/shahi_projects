@@ -114,6 +114,12 @@ export class GrnEntity {
   grnAmount: number
 
   @Column('int', {
+    name: 'ref_no',
+    nullable: false,
+  })
+  refNo: number
+
+  @Column('int', {
     name: 'grn_quantity',
     nullable: false,
   })

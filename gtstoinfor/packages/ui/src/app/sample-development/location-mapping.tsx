@@ -1,6 +1,6 @@
 import { LocationMappingReq, MaterialIssueIdreq, RackLocationStatusReq } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
-import { Card, Col, Descriptions, Input, Row, Table, Form, Select, InputNumber, Radio, Button, Modal, RadioChangeEvent } from 'antd'
+import { Card, Col, Descriptions, Input, Row, Table, Form, Select, InputNumber, Radio, Button, Modal, RadioChangeEvent, Tooltip } from 'antd'
 import { Option } from 'antd/es/mentions';
 import { ColumnProps } from 'antd/es/table';
 import React, { useEffect, useState } from 'react'
@@ -25,10 +25,11 @@ export const LocationMapping = () => {
     const [locationStatusValue, setValue] = useState<string>('Occupied');
     const [showQrSacn, setShowQrScan] = useState<boolean>(false);
     const [vendorName, setVendorName] = useState<string>("Hello")
-
+    const [remarkModal,setRemarkModal] = useState<boolean>(false)
+    const [remarks,setRemarks] = useState<string>('')
     useEffect(() => {
         if (grnData) {
-            form.setFieldsValue({quantity : grnData.balance, itemName:grnData.itemCode, itemId:grnData.itemId, colorId:grnData.colorId,grnType:grnData.itemType,sampleReqId:grnData.sampleReqId,sampleItemId:grnData.sampleItemId })
+            form.setFieldsValue({quantity : `${grnData.balance}`, itemName:grnData.itemCode, itemId:grnData.itemId, colorId:grnData.colorId,grnType:grnData.itemType,sampleReqId:grnData.sampleReqId,sampleItemId:grnData.sampleItemId })
             if (grnData.grnItemId) {
                 const id = grnData.grnItemId;
                 getOneItemAllocateDetailsData(id);
@@ -123,7 +124,13 @@ export const LocationMapping = () => {
             })
         }
     }
-
+    const handleTextClick = (remarks) => {
+        setRemarks(remarks)
+        setRemarkModal(true)
+      }
+      const onRemarksModalOk = () => {
+      setRemarkModal(false)
+      }
     const columnsSkelton: ColumnProps<any>[] = [
         {
             title: 'S No',
@@ -162,10 +169,10 @@ export const LocationMapping = () => {
             title:'Uom',
             dataIndex:'uom'
         },
-        {
-            title:'Yarn Count',
-            dataIndex:'yarn_count'
-        },
+        // {
+        //     title:'Yarn Count',
+        //     dataIndex:'yarn_count'
+        // },
         {
             title:'Accepted Qty',
             dataIndex:'accepted_quantity'
@@ -189,14 +196,20 @@ export const LocationMapping = () => {
                             <Descriptions.Item label="Buyer" style={{ width: '33%' }}>
                                 {grnData.buyerName}
                             </Descriptions.Item>
+                            <Descriptions.Item label="Description" style={{ width: '33%' }}>
+                                {/* {grnData.description} */}
+                                {grnData.description?.length > 30 ? (<><Tooltip title='Cilck to open full description'><p><span onClick={() => handleTextClick(grnData.description)} style={{ cursor: 'pointer' }}>
+                        {grnData.description.length > 30 ? `${grnData.description?.substring(0, 30)}....` : grnData.description}
+                    </span></p></Tooltip></>) : (<>{grnData.description}</>)}
+                            </Descriptions.Item>
                             <Descriptions.Item label="Received Quantity" style={{ width: '33%' }}>
-                                {Number(grnData.acceptedQuantity)}
+                             {`${Number(grnData.acceptedQuantity)}(${grnData.uom})`}
                             </Descriptions.Item>
                             {/* <Descriptions.Item label="Stock" style={{ width: '33%' }}>
                                 {grnData.quantity > 0 ? Number(grnData.quantity) : 0}
                             </Descriptions.Item> */}
                             <Descriptions.Item label="Location Mapping Quantity" style={{ width: '33%' }}>
-                                {grnData.balance}
+                            {`${grnData.balance}(${grnData.uom})`}
                             </Descriptions.Item>
                         </Descriptions>
                     </Col>
@@ -228,7 +241,7 @@ export const LocationMapping = () => {
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 10 }} lg={{ span: 10 }} xl={{ span: 8 }}>
                             <Form.Item name="itemName" label="Item" rules={[{ required: true, message: ' Item is required ' }]}>
-                                <Input.TextArea disabled={grnData} style={{fontWeight:'bold',color:'black'}}/>
+                                <Input.TextArea disabled={grnData} style={{fontWeight:'bold',color:'black'}} rows={3}/>
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -297,6 +310,11 @@ export const LocationMapping = () => {
                     // onChange={onChange}
                     bordered
                 /> : <></>}
+<Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{remarks}</p>
+                </Card>
+            </Modal>
             </Card>
         </div>
     )

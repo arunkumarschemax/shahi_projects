@@ -176,10 +176,12 @@ const getMappedTrims = (value, option) => {
 
     let updatedData
     if (field === 'trimCode' && e != undefined) {
-
+      console.log(m3Trims)
+      console.log(m3Trims.find((i) => i.m3TrimsId === e)?.uomId)
       updatedData = data.map((record) => {
         if (record.key === key) {
-          return { ...record, [field]: e };
+          props.form.setFieldValue(`uomId${key}`,(m3Trims.find((i) => i.m3TrimsId === e)?.uomId)!= undefined?m3Trims.find((i) => i.m3TrimsId === e)?.uomId:null);
+          return { ...record, [field]: e, ["uomId"]:(m3Trims.find((i) => i.m3TrimsId === e)?.uomId)!= undefined?m3Trims.find((i) => i.m3TrimsId === e)?.uomId:null };
         }
         return record;
       });
@@ -384,7 +386,7 @@ const getMappedTrims = (value, option) => {
         // defaultValue={uom.find((e) => e.uom === "PCS")?.uom}
         onChange={(e) => handleInputChange(e, record.key, 'uomId',record)}
         >
-            {uom.filter((e) => e.uomCategory === UomCategoryEnum.VOLUME)?.map(e => {
+            {uom?.map(e => {
               return(
                   <option key={e.uomId} value={e.uomId}>{e.uom}</option>
                   

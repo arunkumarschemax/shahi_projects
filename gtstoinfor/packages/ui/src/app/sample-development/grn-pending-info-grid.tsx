@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
-import { Button, Card, Col, Form, Row, Select, Table } from 'antd';
+import { Button, Card, Col, Form, Modal, Row, Select, Table, Tooltip } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { ExternalRefReq, GRNLocationPropsRequest, ItemTypeEnumDisplay } from '@project-management-system/shared-models';
+import { ExternalRefReq, GRNLocationPropsRequest, GRNTypeEnumDisplay, ItemTypeEnumDisplay } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
 import { UndoOutlined } from '@ant-design/icons';
 
@@ -18,7 +18,8 @@ export const GrnPendingInfoGrid = () => {
     const [locationData, setLocationData] = React.useState<GRNLocationPropsRequest>();
     const [form] = Form.useForm();
     const { Option } = Select;
-
+    const [remarkModal,setRemarkModal] = useState<boolean>(false)
+    const [remarks,setRemarks] = useState<string>('')
     const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
     console.log(externalRefNo,"req")
 
@@ -62,6 +63,13 @@ const getMaterial=()=>{
         setmaterial(res.data)
     })
 }
+const handleTextClick = (remarks) => {
+  setRemarks(remarks)
+  setRemarkModal(true)
+}
+const onRemarksModalOk = () => {
+setRemarkModal(false)
+}
     const sampleTypeColumns: ColumnsType<any> = [
         {
             title: 'S No',
@@ -75,7 +83,10 @@ const getMaterial=()=>{
           dataIndex: "grnType",
           align: 'left',
           sorter: (a, b) => a.grnType - b.grnType,
-
+          render: (text) => {
+            const EnumObj = GRNTypeEnumDisplay.find((item) => item.name === text);
+            return EnumObj ? EnumObj.displayVal : text;
+          },
             sortDirections: ['descend', 'ascend'],
           //   ...getColumnSearchProps('vendorName')
       },
@@ -127,26 +138,48 @@ const getMaterial=()=>{
             //   ...getColumnSearchProps('vendorName')
         },
         {
+          title: 'Item Description',
+          dataIndex: "description",
+          width: '100px',
+          align: 'left',
+          render:(text,record) => {
+            return(
+                <>
+                {record.description?.length > 30 ? (<><Tooltip title='Cilck to open full description'><p><span onClick={() => handleTextClick(record.description)} style={{ cursor: 'pointer' }}>
+                            {record.description.length > 30 ? `${record.description?.substring(0, 30)}....` : record.description}
+                        </span></p></Tooltip></>) : (<>{record.description}</>)}
+                </>
+            )
+        }
+        },
+        {
             title: 'Grn Quantity',
+            width: '100px',
             dataIndex: 'acceptedQuantity',
             align: 'left',
             sorter: (a, b) => a.acceptedQuantity - b.acceptedQuantity,
             sortDirections: ['descend', 'ascend'],
+            render: (text,val) => {
+
+              return val.acceptedQuantity ? `${val.acceptedQuantity}(${val.uom})` : text;
+            },
         },
-        {
-            title: 'Location Mapped',
-            dataIndex: 'allocatedQty',
-            align: 'left',
-            sorter: (a, b) => a.allocatedQty - b.allocatedQty,
-            sortDirections: ['descend', 'ascend'],
-        },
-        {
-            title: 'Balance',
-            dataIndex: 'balance',
-            align: 'left',
-            sorter: (a, b) => a.balance - b.balance,
-            sortDirections: ['descend', 'ascend'],
-        },
+        // {
+        //     title: 'Location Mapped',
+        //     width: '100px',
+        //     dataIndex: 'allocatedQty',
+        //     align: 'left',
+        //     sorter: (a, b) => a.allocatedQty - b.allocatedQty,
+        //     sortDirections: ['descend', 'ascend'],
+        // },
+        // {
+        //     title: 'Balance',
+        //     dataIndex: 'balance',
+        //     width: '100px',
+        //     align: 'left',
+        //     sorter: (a, b) => a.balance - b.balance,
+        //     sortDirections: ['descend', 'ascend'],
+        // },
         {
             title: 'Allocate',
             // render:(record) =>{
@@ -257,6 +290,7 @@ const getMaterial=()=>{
                         </Row>
                     </Form>
                 <Table
+                        scroll={{x:'max-content',y:500}}
                     rowKey={record => record.productId}
                     className="components-table-nested"
                     columns={sampleTypeColumns}
@@ -268,10 +302,15 @@ const getMaterial=()=>{
                         }
                     }}
                     onChange={onChange}
-                    scroll={{ x: 500 }}
+                    // scroll={{ x: 500 }}
                     // size='small'
                     bordered
                 />
+                    <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{remarks}</p>
+                </Card>
+            </Modal>
             </Card>
         </div>
     )

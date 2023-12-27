@@ -352,12 +352,10 @@ export const StockView = () => {
     {
       title: "Quantity",
       dataIndex: "qty",
-      render: (record) => (
-        <span>
-          {record.qty} + " " + {record.uom} 
-        </span>
-      ),
       ...getColumnSearchProps("qty"),
+      render: (text, record) => {
+        return (<span>{`${record.qty}(${record.uom})`}</span>)
+      }
       // sorter: (a, b) => a.itemQuantity - b.itemQuantity,
       // sortDirections: ['descend', 'ascend'],
     },

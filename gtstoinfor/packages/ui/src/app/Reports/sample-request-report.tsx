@@ -66,6 +66,15 @@ const SampleRequestReport = () => {
     if (form.getFieldValue("style") !== undefined) {
       req.styleId = form.getFieldValue("style");
     }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+      req.tab = "TRIM"
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      req.tab = "FABRIC"
+        }
+        if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+          req.tab = undefined
+            }
     req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     
     service.getSampleRequestReport(req).then((res) => {
@@ -434,19 +443,19 @@ const SampleRequestReport = () => {
 
     if(e.target.checked){
       
-      let checkItemType:boolean = true;
-      checkItemType = (selectedRowData.length > 0 ? ((selectedRowData.find((rec) => rec.itemType === rowData.itemType) != undefined) ? true: false) :true);
-      console.log(checkItemType)
-      if(!checkItemType){
-        samplingPO.setFieldsValue({[`checkStatus${index}`]:false})
-        AlertMessages.getErrorMessage('Generate PO for single Material Type. ')
-        setbtnEnable(false)
-      }
-      else{
+      // let checkItemType:boolean = true;
+      // checkItemType = (selectedRowData.length > 0 ? ((selectedRowData.find((rec) => rec.itemType === rowData.itemType) != undefined) ? true: false) :true);
+      // console.log(checkItemType)
+      // if(!checkItemType){
+      //   samplingPO.setFieldsValue({[`checkStatus${index}`]:false})
+      //   AlertMessages.getErrorMessage('Generate PO for single Material Type. ')
+      //   setbtnEnable(false)
+      // }
+      // else{
         let rowsData = [...selectedRowData,rowData];
         setSelectedRowData(rowsData)
         setbtnEnable(true)
-      }
+      // }
       console.log(data)
     }
     else{
