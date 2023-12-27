@@ -23,4 +23,8 @@ export class CentricService extends CommonAxiosService {
     async getPoNumber(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.centricOrdersController + "/getPoNumber")
     }
+
+    async coLineCreationReq(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.centricOrdersController + "/coLineCreationReq", req)
+    }
 }

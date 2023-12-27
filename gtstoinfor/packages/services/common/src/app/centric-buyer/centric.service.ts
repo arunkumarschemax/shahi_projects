@@ -11,6 +11,8 @@ import { PdfFileUploadEntity } from "../ralph-lauren/entities/pdf-file-upload.en
 import { CentricPdfFileUploadEntity } from "./entity/centric-pdf-file.entity";
 import { CentricPdfRepository } from "./repositories/pdf-repo";
 import { GenericTransactionManager } from "../../typeorm-transactions";
+import { CentricCOLineEntity } from "./entity/centric-co-line.entity";
+import { CentricCOLineRepository } from "./repositories/centric-co-line.repository";
 
 
 @Injectable()
@@ -25,7 +27,8 @@ export class CentricService {
   constructor(
     private Repo: CentricRepository,
     private dataSource: DataSource,
-    private pdfRepo: CentricPdfRepository
+    private pdfRepo: CentricPdfRepository,
+    private coLineRepo: CentricCOLineRepository
 
   ) { }
 
@@ -219,6 +222,28 @@ export class CentricService {
       }
     } catch (err) {
       throw err
+    }
+  }
+  async coLineCreationReq(req: any): Promise<CommonResponseModel> {
+    try {
+      if (req.itemNo == undefined || null) {
+        return new CommonResponseModel(false, 0, 'Please enter Item No')
+      }
+      const entity = new CentricCOLineEntity()
+      entity.buyer = req.buyer
+      entity.poNumber = req.poNumber;
+      entity.poLine = req.poLine;
+      entity.itemNo = req.itemNo
+      entity.status = 'Open';
+      entity.createdUser = 'Admin';
+      const save = await this.coLineRepo.save(entity);
+      if (save) {
+        return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
+      } else {
+        return new CommonResponseModel(false, 0, 'CO-Line request failed')
+      }
+    } catch (err) {
+      return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
     }
   }
 

@@ -91,7 +91,14 @@ async getPoNumber(): Promise<CommonResponseModel> {
         return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
     }
 }
-
+@Post('/coLineCreationReq')
+async coLineCreationReq(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+        return await this.Service.coLineCreationReq(req)
+    } catch (error) {
+        return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+    }
+}
 
  
 
