@@ -131,7 +131,7 @@ export class IndentService {
 
                     trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
                         trim.quantity, trim.trim_code, trim.description,
-                        trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity,trim.poQuantity,trimParams,trim.toBeProcured))
+                        trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity,trim.poQuantity,trimParams,trim.toBeProcured,trim.trimUomId,trim.trimUomName))
                     // console.log(trimModel);
 
                 }
@@ -164,7 +164,7 @@ export class IndentService {
                     const trimParams = label + concatenatedValues
                     trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
                         trim.quantity, trim.trim_code, trim.description,
-                        trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity,trim.poQuantity,trimParams,trim.toBeProcured))
+                        trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity,trim.poQuantity,trimParams,trim.toBeProcured,trim.trimUomId,trim.trimUomName))
                     // console.log(trimModel);
 
                 }
