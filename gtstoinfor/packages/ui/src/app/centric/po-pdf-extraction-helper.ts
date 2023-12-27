@@ -115,19 +115,32 @@ export const extractDataFromPoPdf = async (pdf) => {
             }
             poData.division = firstPageContent[dateSentIndex + 5].str
             poData.incoterm = firstPageContent[dateSentIndex - 8].str + firstPageContent[dateSentIndex - 7].str + " " + firstPageContent[dateSentIndex - 6].str + firstPageContent[dateSentIndex - 5].str.replace(/\d+|\w+/g, "")
-            // poData.shipToAdd = firstPageContent[dateSentIndex + 5].str 
 
+            // poData.shipToAdd = firstPageContent[dateSentIndex + 5].str 
             // poData.shipToAdd = firstPageContent[materialIndex + 48].str + " " + firstPageContent[materialIndex + 49].str + " " +
             //     firstPageContent[materialIndex + 50].str + " " + firstPageContent[materialIndex + 51].str
-            const shipToAddFirstIndex = firstPageContent[materialIndex + 48].str;
-            const replacingIndexFirstIndex = shipToAddFirstIndex.replace(/\d+$/, '');
-            let shipToAddData = replacingIndexFirstIndex + " " +
-                firstPageContent[materialIndex + 49].str + " " +
-                firstPageContent[materialIndex + 50].str + " " +
-                firstPageContent[materialIndex + 51].str;
-            shipToAddData += " " + firstPageContent[materialIndex + 52].str;
-            poData.shipToAdd = shipToAddData;
+            // const shipToAddFirstIndex = firstPageContent[materialIndex + 48].str;
+            // const replacingIndexFirstIndex = shipToAddFirstIndex.replace(/\d+$/, '');
+            // let shipToAddData = replacingIndexFirstIndex + " " +
+            //     firstPageContent[materialIndex + 49].str + " " +
+            //     firstPageContent[materialIndex + 50].str + " " +
+            //     firstPageContent[materialIndex + 51].str;
+            // shipToAddData += " " + firstPageContent[materialIndex + 52].str;
+            // poData.shipToAdd = shipToAddData;
 
+            const shipToAddIndexHasNumber = /^\d+$/.test(firstPageContent[materialIndex + 48]?.str);
+            if (shipToAddIndexHasNumber) {
+                poData.shipToAdd = firstPageContent[materialIndex + 49]?.str + " " +
+                                  firstPageContent[materialIndex + 50]?.str + " " +
+                                  firstPageContent[materialIndex + 51]?.str + " " +
+                                  firstPageContent[materialIndex + 52]?.str;
+            } else {
+                poData.shipToAdd = firstPageContent[materialIndex + 48]?.str + " " +
+                                  firstPageContent[materialIndex + 49]?.str + " " +
+                                  firstPageContent[materialIndex + 50]?.str + " " +
+                                  firstPageContent[materialIndex + 51]?.str;
+            }
+            
             poData.manufacture = firstPageContent[materialIndex + 36].str + " " + firstPageContent[materialIndex + 37].str + " " +
                 firstPageContent[materialIndex + 38].str + " " + firstPageContent[materialIndex + 39].str + " " + firstPageContent[materialIndex + 40].str
 
