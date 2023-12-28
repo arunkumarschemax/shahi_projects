@@ -247,68 +247,70 @@ export class RLOrdersService {
     }
   }
 
+
+
   async readPOPdfBot() {
     try {
-      const extractToPath = 'C:/Users/saipr/Downloads'
-      const zipFilePath = 'C:/Users/saipr/Downloads/Ralph Lauren PO Report (PDF) (1)'
+      const extractToPath = 'D:/extractPath';
+      const zipFilePath = 'D:/Ralph Lauren PO Report (PDF) (1).zip';
       const zip = new AdmZip(zipFilePath);
-      zip.extractAllTo(extractToPath, true)
+      zip.extractAllTo(extractToPath, true);
+      
       const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
+
       const page = await browser.newPage();
-      // Set screen size
-      await page.setViewport({ width: 1580, height: 1024 });
-      // Navigate the page to a URL
-      await page.goto('http://localhost:4200/#/login', {
-        timeout: 100000,
-        waitUntil: 'networkidle0', // Wait until there are no more network connections
-      });
+      await page.setViewport({ width: 1580, height: 900 });
+
+      setTimeout(async () => {
+        await page.goto('http://localhost:4200/', {
+          timeout: 100000,
+          waitUntil: 'networkidle0',
+        })
+      }, 1000);
+
       await page.waitForSelector('#login-form_username');
-      await page.type('#login-form_username', 'RL@gmail.com');
+      await page.type('#login-form_username', 'RLadmin@gmail.com');
 
       await page.waitForSelector('#login-form_password');
-      await page.type('#login-form_password', 'RL@shahi')
+      await page.type('#login-form_password', 'RLadmin');
+
       await page.click('button.ant-btn-primary');
-      // Wait for a while to see the result (you can adjust the wait time)
+      await page.waitForNavigation();
+
+      const directoryPath = 'D:/extractPath';
+      const sourceDirectory = 'D:/extractPath';
+      const destinationDirectory = 'D:/rl-read-files';
+
+      const files = fs.readdirSync(directoryPath);
+      if (files.length === 0) {
+        console.log('No files found In Directory Path');
+        await browser.close();
+      }
       setTimeout(async () => {
         await page.goto('http://localhost:4200/#/ralph-lauren/pdf-upload/', {
           timeout: 10000,
-          waitUntil: 'networkidle0', // Wait until there are no more network connections
-        }).then(async () => {
-          // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
-          const directoryPath = 'C:/Users/saipr/Downloads/Ralph Lauren PO Report (PDF)';
-          // Specify the source and destination directories
-          const sourceDirectory = 'C:/Users/saipr/Downloads/Ralph Lauren PO Report (PDF)';
-          const destinationDirectory = 'C:/Users/saipr/Downloads/Read';
-          const files = fs.readdirSync(directoryPath)
-          for (const file of files) {
-            await page.waitForSelector('input[type="file"]');
-            const fileInput = await page.$('input[type="file"]');
-            // Get the full path of the file
-            const filePath = path.join(directoryPath, file);
-            // Set the file path to be uploaded
-            await fileInput.uploadFile(filePath);
-            // await input.uploadFile(filePath);
-            await page.waitForTimeout(5000)
-            // Submit the form if needed
-            await page.waitForSelector('button.ant-btn-primary')
-            await page.click('button.ant-btn-primary');
-            // Check the status after submission
-            // const reset = await page.waitForSelector('button.ant-btn-default')
-            // if (reset) {
-            //     await page.click('button.ant-btn-default')
-            // } else {
-            const sourceFilePath = path.join(sourceDirectory, file);
-            const destinationFilePath = path.join(destinationDirectory, file);
-            fs.rename(sourceFilePath, destinationFilePath, (err) => {
-              if (err) {
-                return new CommonResponseModel(false, 0, '')
-              }
-            });
-            // }
+          waitUntil: 'networkidle0',
+        })
+      })
+      for (const file of files) {
+        await page.waitForSelector('input[type="file"]');
+        const fileInput = await page.$('input[type="file"]');
+        const filePath = path.join(directoryPath, file);
+        await fileInput.uploadFile(filePath);
+        await page.waitForTimeout(5000);
+
+        await page.waitForSelector('button.ant-btn-primary')
+        await page.click('button.ant-btn-primary');
+        await page.waitForTimeout(6000)
+
+        const sourceFilePath = path.join(directoryPath, file);
+        const destinationFilePath = path.join(destinationDirectory, file);
+        fs.rename(sourceFilePath, destinationFilePath, async (err) => {
+          if (err) {
+            return new CommonResponseModel(false, 0, '');
           }
-        });
-      }, 4000);
-      return new CommonResponseModel(true, 1, 'All PDFs submittedd successfully')
+        })
+      }
     } catch (error) {
       return new CommonResponseModel(false, 0, error)
     }
