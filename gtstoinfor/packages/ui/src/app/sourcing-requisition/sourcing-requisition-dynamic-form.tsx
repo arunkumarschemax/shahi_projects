@@ -560,6 +560,7 @@ export const SourcingRequisitionDynamicForm = () => {
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => (
                 <span>
                     <Tooltip placement="top" title='Edit'>
@@ -653,6 +654,7 @@ export const SourcingRequisitionDynamicForm = () => {
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => (
                 <span>
                     <Tooltip placement="top" title='Edit'>
