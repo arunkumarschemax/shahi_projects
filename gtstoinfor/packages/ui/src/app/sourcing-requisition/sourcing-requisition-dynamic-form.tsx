@@ -220,12 +220,16 @@ export const SourcingRequisitionDynamicForm = () => {
     }
 
     const getMappedTrims = (value, option) => {
+        console.log(value);
+        console.log(option);
+
         getM3TrimsTypes()
         setTrimCat(option?.name)
         const req = new TrimIdRequestDto(undefined,option?.name)
         paramsService.getMappedParamsByTrim(req).then((res) => {
           if (res.status) {
             setMapData(res.data)
+            trimForm.setFieldsValue({trimCategoryName:option?.children})
           }
         });
       }
@@ -391,6 +395,7 @@ export const SourcingRequisitionDynamicForm = () => {
             trimForm.setFieldsValue({
                 trimType : defaultTrimFormData.trimType,
                 trimCategory : defaultTrimFormData.trimCategory,
+                trimCategoryName:defaultTrimFormData.trimCategoryName,
                 trimCode : defaultTrimFormData.trimCode,
                 trimName : defaultTrimFormData.trimName,
                 size : defaultTrimFormData.size,
@@ -602,10 +607,10 @@ export const SourcingRequisitionDynamicForm = () => {
             return EnumObj ? EnumObj.displayVal : text;
           },
         },
-        // {
-        //   title: 'Trim Code',
-        //   dataIndex: 'trimCode',
-        // },
+        {
+          title: 'Trim Category',
+          dataIndex: 'trimCategoryName',
+        },
         {
             title: 'M3 Trim Code',
             dataIndex: 'trimName',
@@ -1328,6 +1333,9 @@ const onTrimChange = (val, option) => {
                                         <Input disabled />
                                     </Form.Item>
                                     <Form.Item name='trimName' style={{ display: 'none' }}>
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Form.Item name='trimCategoryName' style={{ display: 'none' }}>
                                         <Input disabled />
                                     </Form.Item>
                                     <Row gutter={8}>
