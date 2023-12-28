@@ -135,7 +135,7 @@ export const extractDataFromPoPdf = async (pdf) => {
     //------------------------------------------------------------------------------
     // console.log(filteredData)
 
-    // console.log(filteredData)
+    console.log(filteredData)
     for (const [index, rec] of filteredData.entries()) {
         // chech the item No pattern  using regex and push all matched items
         if (rec.str.match(ITEM_NO_EXP) && (rec.str.length === 5)) {
@@ -178,11 +178,11 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemTextIndex = rec.itemIndex + ITEM_SHIP_TO_INDEX
         }
         if (filteredData[itemTextIndex].str == 'ITEM TEXT') {
-            console.log('item text exists')
+            // console.log('item text exists')
             let itemText = ''
-            const itemTextSatrtIndex = itemTextIndex + 1
-            console.log(itemTextIndex, 'itemTextIndex')
-            console.log(itemTextSatrtIndex, 'itemTextSatrtIndex')
+            const itemTextSatrtIndex = itemTextIndex + 3
+            // console.log(itemTextIndex, 'itemTextIndex')
+            // console.log(itemTextSatrtIndex, 'itemTextSatrtIndex')
             // Find the index where the str is "__________________" and stop the loop there ,item text ends there
             let j = itemTextSatrtIndex;
             while (!filteredData[j].str.includes(ITEM_TEXT_END_TEXT)) {

@@ -5,18 +5,14 @@ import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message
 import { Excel } from 'antd-table-saveas-excel';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { ColumnsType } from 'antd/es/table';
-import moment from 'moment';
 import { CSVLink } from "react-csv";
 import React, { useEffect, useRef, useState } from 'react'
 import CountUp from 'react-countup';
 import Highlighter from 'react-highlight-words';
 import { Link, useNavigate } from 'react-router-dom';
-import { diffChars } from 'diff';
 import PoDetailedview from './reports/po-detailed-view';
-import { TreeNode } from 'antd/es/tree-select';
-// import { CustomColumn } from '../../components';
-import { summaryColumns } from './reports/summary-columns';
 const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
+
 
 const PPMReport = () => {
   const [form] = Form.useForm();
@@ -388,9 +384,9 @@ const PPMReport = () => {
               'Doc Type Description ': item.docTypeDesc,
               'Style Number': item.styleNumber,
               'Product Code': item.productCode,
+              'Product Name': item.productName ? item.productName : '-',
               'Colour Description': item.colorDesc,
               'Description With Fabric Content': item.fabricContent,
-              'Fabric Content as Per Washcare Label': '-',
               'Planning Season Code': item.planningSeasonCode,
               'Planning Season Year': item.planningSeasonYear,
               'CO': item.customerOrder,
@@ -417,7 +413,7 @@ const PPMReport = () => {
               'Ship To Customer Name': item.shipToCustomerName,
               'Ship to Address Legal PO': item.shipToAddressLegalPO,
               'Ship to Address DIA': item.shipToAddressDIA,
-              'Diff of Ship to Address': '-',
+              'Diff of Ship to Address': item.diffOfShipToAdd ? item.diffOfShipToAdd : '-',
               'CAB Code': item.CABCode,
               'Final Destination': '-',
               'MRGAC': item.MRGAC,
@@ -1518,21 +1514,7 @@ const PPMReport = () => {
             ) : rowData.actualUnit}
           </div>
         ),
-
       },
-      // {
-      //   title: 'Actual Unit',
-      //   dataIndex: 'actualUnit',
-      //   width: 70,
-      //   align: 'center',
-      //   render: (text, record) => {
-      //     if (!text || text.trim() === '') {
-      //       return '-';
-      //     } else {
-      //       return text;
-      //     }
-      //   }
-      // },
       {
         title: 'PCD',
         dataIndex: 'PCD',
@@ -1580,6 +1562,10 @@ const PPMReport = () => {
         dataIndex: 'productCode', width: 80,
       },
       {
+        title: 'Product Name',
+        dataIndex: 'productName', width: 80,
+      },
+      {
         title: 'Colour Description',
         dataIndex: 'colorDesc', width: 80,
       },
@@ -1588,24 +1574,12 @@ const PPMReport = () => {
         dataIndex: 'fabricContent', width: 85,
       },
       {
-        title: 'Fabric Content as Per Washcare Label',
-        dataIndex: '', width: 80,
-      },
-      {
         title: 'Planning Season Code',
         dataIndex: 'planningSeasonCode', width: 80,
       },
       {
         title: 'Planning Season Year',
-        dataIndex: 'planningSeasonYear', width: 80, align: 'center',
-        // render: (text, record) => {
-        //   if (!text || text.trim() === '') {
-        //     return '-';
-        //   } else {
-        //     return text;
-        //   }
-        // }
-
+        dataIndex: 'planningSeasonYear', width: 80, align: 'center'
       },
       {
         title: 'CO',
@@ -1704,83 +1678,31 @@ const PPMReport = () => {
       {
         title: 'Ship To Customer Name',
         dataIndex: 'shipToCustomerName', width: 80,
-        align: 'center',
-        // render: (text, record) => {
-        //   if (!text || text.trim() === '') {
-        //     return '-';
-        //   } else {
-        //     return text;
-        //   }
-        // },
+        align: 'center'
       },
       {
         title: 'Ship to Address Legal PO',
         dataIndex: 'shipToAddressLegalPO', width: 150,
-        align: 'center',
-        // render: (text, record) => {
-        //   if (!text || text.trim() === '') {
-        //     return '-';
-        //   } else {
-        //     return text;
-        //   }
-        // },
+        align: 'center'
       },
       {
         title: 'Ship to Address DIA',
         dataIndex: 'shipToAddressDIA', width: 150,
-        align: 'center',
-        // render: (text, record) => {
-        //   if (!text || text.trim() === '') {
-        //     return '-';
-        //   } else {
-        //     return text;
-        //   }
-        // },
+        align: 'center'
       },
       {
         title: 'Diff of Ship to Address',
-        dataIndex: '', width: 80,
-        align: 'center',
-        render: (_text, record) => {
-          const text1 = record.shipToAddressLegalPO
-          const text2 = record.shipToAddressDIA
-          if (text1 == null && text2 == null) {
-            return '-';
-          } else if (text1 == null) {
-            return text2
-          } else if (text2 == null) {
-            return text1
-          } else {
-            const normalizeText = (text) => text.toLowerCase().replace(/\s/g, '');
-            const normalizedText1 = normalizeText(text1);
-            const normalizedText2 = normalizeText(text2);
-            const differences = diffChars(normalizedText1, normalizedText2);
-            // Map the differences to display added and removed parts
-            const result = differences
-              .filter((part) => part.added || part.removed)
-              .map((part, index) => {
-                const style = part.added ? { backgroundColor: 'lightgreen' } : { backgroundColor: 'lightcoral' };
-                return (
-                  <span key={index} style={style}>
-                    {part.value}
-                  </span>
-                );
-              });
-            return result;
-          }
-        },
+        dataIndex: 'diffOfShipToAdd', width: 80,
+        align: 'center'
       },
       {
-        title: "CAB Code",
-        dataIndex: 'CABCode', width: 80,
+        title: "CAB Code", dataIndex: 'CABCode', width: 80,
       },
       {
-        title: 'Final Destination',
-        dataIndex: '', width: 80,
+        title: 'Final Destination', dataIndex: '', width: 80,
       },
       {
-        title: "MRGAC", width: 80,
-        dataIndex: 'MRGAC',
+        title: "MRGAC", width: 80, dataIndex: 'MRGAC',
       },
       {
         title: 'OGAC', dataIndex: 'OGAC', width: 80,
@@ -1804,43 +1726,16 @@ const PPMReport = () => {
         title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', width: 80
       },
       {
-        title: 'Shipping Type',
-        dataIndex: 'shippingType', width: 80,
-        // render: (text) => {
-        //   // Replace underscores (_) with spaces
-        //   const transformedText = text ? text.replace(/_/g, ' ') : '-';
-        //   return transformedText;
-        // },
+        title: 'Shipping Type', dataIndex: 'shippingType', width: 80
       },
       {
-        title: 'Planning Priority Number', width: 80, dataIndex: 'planningPriorityCode', align: 'center', className: 'centered-column',
-        // render: (text, record) => {
-        //   if (!text || text.trim() === '') {
-        //     return '-';
-        //   } else {
-        //     return text;
-        //   }
-        // },
+        title: 'Planning Priority Number', width: 80, dataIndex: 'planningPriorityCode', align: 'center', className: 'centered-column'
       },
       {
-        title: 'Planning Priority Description', width: 80, dataIndex: 'planningPriorityDesc',
-        // render: (text, record) => {
-        //   if (!text || text.trim() === '') {
-        //     return '-';
-        //   } else {
-        //     return text;
-        //   }
-        // },
+        title: 'Planning Priority Description', width: 80, dataIndex: 'planningPriorityDesc'
       },
       {
         title: 'Launch Code', dataIndex: 'launchCode', width: 80,
-        // render: (text, record) => {
-        //   if (!text || text.trim() === '') {
-        //     return '-';
-        //   } else {
-        //     return text;
-        //   }
-        // },
       },
       { title: 'Mode Of Transportation', dataIndex: 'modeOfTransportationCode', width: 90, },
       { title: 'In Co Terms', dataIndex: 'inCoTerms', width: 80, },
@@ -2314,18 +2209,10 @@ const PPMReport = () => {
 
     const getRowClassName = (record) => {
       let classNames = '';
-
-      if (record.displayName) {
-        classNames += 'colored-row ';
-      }
-
       if (!record.factory || !record.item) {
-        classNames += 'colored-factory-empty-row ';
-      } else if (record.factory.includes("_")) {
-        classNames += 'colored-row-withUnderscore ';
+        classNames = 'colored-factory-empty-row';
       }
-
-      return classNames.trim();
+      return classNames;
     };
 
     columns.push(
@@ -2438,7 +2325,6 @@ const PPMReport = () => {
 
     return (
       <>
-
         {filterData.length > 0 ? (
           <Table
             columns={columns}
@@ -2448,7 +2334,6 @@ const PPMReport = () => {
             //  pagination={false}
             pagination={{
               pageSize: 50,
-
               onChange(current, pageSize) {
                 setPage(current);
                 setPageSize(pageSize);
@@ -2456,6 +2341,7 @@ const PPMReport = () => {
             }}
             scroll={{ x: 'max-content', y: 450 }}
             bordered
+            rowClassName={getRowClassName}
           />
         ) : (<Table size='large' />
         )}
@@ -2464,75 +2350,10 @@ const PPMReport = () => {
 
   }
 
-  // const [searchedText, setSearchedText] = useState("");
-  // const [firstColumn, ...restColumns] = summaryColumns;
-  // const modifiedFirstColumn = {
-  //   ...firstColumn,
-  //   filteredValue: [String(searchedText).toLowerCase()],
-  //   onFilter: (value, record) => {
-  //     const aaa = new Set(Object.keys(record).map((key) => {
-  //       return String(record[key]).toLowerCase().includes(value.toLocaleString())
-  //     }))
-  //     if (aaa.size && aaa.has(true))
-  //       return true;
-  //     else
-  //       return false;
-  //   },
-  // };
-  // const packListPreviewColumnsWithFilter = [modifiedFirstColumn, ...restColumns];
-  // const [visibleColumns, setVisibleColumns] = useState(
-  //   packListPreviewColumnsWithFilter.filter((column) => column.isDefaultSelect == true).map(column => column.key)
-  // );
-  // const dynamicColumns = packListPreviewColumnsWithFilter.filter((column) => visibleColumns.includes(column.key));
-  // const handleColumnToggle = (checkedValues) => {
-  //   setVisibleColumns(checkedValues);
-  // };
-
-  // const columnChooserOptions = packListPreviewColumnsWithFilter.map((column) => ({
-  //   label: column.title,
-  //   value: column.key,
-  //   isDefaultSelect: column.isDefaultSelect
-  // }));
-
-
-  // const columnChooser = (
-  //   <>
-  //     <span style={{ marginRight: '8px' }}>Select columns to show:</span>
-
-  //     <TreeSelect
-  //       showSearch
-  //       treeCheckable
-  //       treeDefaultExpandAll
-  //       style={{ width: '200px' }}
-  //       value={visibleColumns}
-  //       onChange={handleColumnToggle}
-  //       dropdownStyle={{ maxHeight: 200, overflow: 'auto' }}
-  //       placeholder="Select Columns"
-  //       tagRender={() => <></>}
-  //     >
-  //       {columnChooserOptions.map((option) => (
-  //         <TreeNode key={option.value} value={option.value} title={option.label} disableCheckbox={option.isDefaultSelect} disabled={option.isDefaultSelect} />
-  //       ))}
-  //     </TreeSelect>
-  //   </>
-  // );
-
   const showModal1 = (record: any) => {
     setPoLineProp(record)
-
     setIsModalOpen1(true);
-    // DetailedView(record);
-    // console.log(poLineProp,"record")
   };
-  //  console.log(poLineProp,"record")
-
-  const DetailedView = (record: any) => {
-    poFilterData = filterData.filter((item: { poAndLine: any; }) => item.poAndLine == record)
-    // console.log(poFilterData)
-    // showModal1(record)
-    // navigate('/Reports/po-detailed-view', { state: { data: poFilterData } })
-  }
-
 
   return (
     <>
@@ -2571,9 +2392,18 @@ const PPMReport = () => {
                   </Select>
                 </Form.Item>
               </Col>
+              {filteredData.length > 0 ? (
+                <Col span={1}>
+                  <Button
+                    type="default"
+                    style={{ color: 'green' }}
+                    icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="marketing-ppm-report.csv" data={csvData}>
+                      Export to CSV
+                    </CSVLink></Button>
+                </Col>
+              ) : null}
             </Row>
             <Row gutter={24} style={{ paddingTop: '10px' }}>
-
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
                 <Form.Item label="Last Modified Date" name="lastModifiedDate">
                   <RangePicker />

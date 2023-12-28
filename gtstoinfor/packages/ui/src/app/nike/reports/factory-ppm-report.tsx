@@ -35,10 +35,6 @@ const FactoryPPMReport = () => {
     const [filterData, setFilterData] = useState([]);
     const [pageSize, setPageSize] = useState<number>(null);
     const [page, setPage] = React.useState(1);
-    const [expandedActualUnit, setExpandedActualUnit] = useState({});
-    const [expandedQuantityAllocation, setExpandedQuantityAllocation] = useState({});
-    const [textareaValuesActualUnit, setTextareaValuesActualUnit] = useState({});
-    const [textareaValuesQuantityAllocation, setTextareaValuesQuantityAllocation] = useState({});
     const [factory, setFactory] = useState<any>([]);
     const [poLine, setPoLine] = useState<any>([]);
     const [colorDesc, setColorDesc] = useState<any>([]);
@@ -148,46 +144,6 @@ const FactoryPPMReport = () => {
             }
         });
     };
-
-
-    const handleCheckboxChange = (column, poAndLine) => {
-        if (column === 'ActualUnit') {
-            setExpandedActualUnit((prevRows) => ({
-                ...prevRows,
-                [poAndLine]: !prevRows[poAndLine],
-            }));
-        } else if (column === 'QuantityAllocation') {
-            setExpandedQuantityAllocation((prevRows) => ({
-                ...prevRows,
-                [poAndLine]: !prevRows[poAndLine],
-            }));
-        }
-    };
-
-    const handleTextareaChange = (column, poAndLine, value) => {
-        if (column === 'ActualUnit') {
-            setTextareaValuesActualUnit((prevValues) => ({
-                ...prevValues,
-                [poAndLine]: value,
-            }));
-        } else if (column === 'QuantityAllocation') {
-            setTextareaValuesQuantityAllocation((prevValues) => ({
-                ...prevValues,
-                [poAndLine]: value,
-            }));
-        }
-    };
-
-
-    // const getFactoryStatus = (values: any) => {
-    //     service.getByFactoryStatus().then(res => {
-    //         if (res.status) {
-    //             setGridData(res.data)
-    //         } else {
-    //             setGridData([])
-    //         }
-    //     })
-    // }
 
     const resetHandler = () => {
         form.resetFields();
@@ -765,54 +721,6 @@ const FactoryPPMReport = () => {
                 }
                 // ...getColumnSearch('factory'),
             },
-            // {
-            //     title: 'Edit Unit Allocation',
-            //     dataIndex: '', width: 70,
-            //     align: "center",
-            //     render: (text, rowData) => (
-            //         <span>
-            //             <Form.Item>
-            //                 <Checkbox
-            //                     onChange={() => handleCheckboxChange('ActualUnit', rowData.poAndLine)}
-            //                     checked={expandedActualUnit[rowData.poAndLine] || false}
-            //                 />
-            //             </Form.Item>
-            //         </span>
-            //     ),
-            // },
-            // {
-            //     title: 'Text Area',
-            //     align: 'center', width: 165,
-            //     render: (text, rowData) => (
-            //         <div>
-            //             {expandedActualUnit[rowData.poAndLine] && (
-            //                 <div style={{ display: 'flex', alignItems: 'center' }}>
-            //                     <Input
-            //                         name='actualUnit'
-            //                         allowClear
-            //                         style={{ marginRight: '10px' }}
-            //                         placeholder="Enter text"
-            //                         value={textareaValuesActualUnit[rowData.poAndLine] || ''}
-            //                         onChange={(e) =>
-            //                             handleTextareaChange('ActualUnit', rowData.poAndLine, e.target.value)
-            //                         }
-            //                     />
-            //                     <Button
-            //                         type="primary"
-            //                         onClick={() => {
-            //                             updateColumns(rowData.poAndLine, textareaValuesActualUnit[rowData.poAndLine], '');
-            //                             handleCheckboxChange('ActualUnit', rowData.poAndLine);
-            //                             handleTextareaChange('ActualUnit', rowData.poAndLine, '');
-            //                         }}
-            //                     >
-            //                         Submit
-            //                     </Button>
-            //                 </div>
-            //             )}
-            //         </div>
-            //     ),
-
-            // },
             {
                 title: 'Actual Unit',
                 dataIndex: 'actualUnit',
@@ -1140,66 +1048,6 @@ const FactoryPPMReport = () => {
             },
             { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName', width: 70, },
 
-            // {
-            //     title: 'Quantity Allocation',
-            //     align: 'center', width: 70,
-            //     render: (text, rowData) => (
-            //         <span>
-            //             <Form.Item>
-            //                 <Checkbox
-            //                     onChange={() => handleCheckboxChange('QuantityAllocation', rowData.poAndLine)}
-            //                     checked={expandedQuantityAllocation[rowData.poAndLine] || false}
-            //                 />
-            //             </Form.Item>
-            //         </span>
-            //     ),
-            // },
-            // {
-            //     title: 'Text Area',
-            //     dataIndex: 'id', width: 165,
-            //     align: 'center',
-            //     render: (text, rowData) => (
-            //         <div>
-            //             {expandedQuantityAllocation[rowData.poAndLine] && (
-            //                 <div style={{ display: 'flex', alignItems: 'center' }}>
-            //                     <Input
-            //                         name='allocatedQuantity'
-            //                         allowClear
-            //                         style={{ marginRight: '10px' }}
-            //                         placeholder="Enter text"
-            //                         value={textareaValuesQuantityAllocation[rowData.poAndLine] || ''}
-            //                         onChange={(e) =>
-            //                             handleTextareaChange('QuantityAllocation', rowData.poAndLine, e.target.value)
-            //                         }
-            //                     />
-            //                     <Button
-            //                         type="primary"
-            //                         onClick={() => {
-            //                             updateColumns(rowData.poAndLine, '', textareaValuesQuantityAllocation[rowData.poAndLine]);
-            //                             handleCheckboxChange('QuantityAllocation', rowData.poAndLine);
-            //                             handleTextareaChange('QuantityAllocation', rowData.poAndLine, '');
-            //                         }}
-            //                     >
-            //                         Submit
-            //                     </Button>
-            //                 </div>
-            //             )}
-            //         </div>
-            //     ),
-
-            // },
-            // {
-            //     title: 'Reallocated Quantity',
-            //     dataIndex: 'allocatedQuantity', width: 75,
-            //     align: 'center',
-            //     render: (text, record) => {
-            //         if (!text || text.trim() === '') {
-            //             return '-';
-            //         } else {
-            //             return text;
-            //         }
-            //     }
-            // },
             {
                 title: 'Total Item Qty',
                 dataIndex: 'totalItemQty', width: 70,

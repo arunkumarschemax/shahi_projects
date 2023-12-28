@@ -5,53 +5,54 @@
 } */
 
 .colored-row {
-    background-color: #f5f6e0 ;
-    color:"white"
-  }
+  background-color: #f5f6e0;
+  color: "white"
+}
 
-.colored-factory-empty-row{
-  background-color: #fee8f0 ;
-  color:"white"
-  }
+.colored-factory-empty-row {
+  background-color: rgb(135, 135, 249);
+  color: "white"
+}
 
-  .custom-table-wrapper .ant-table-thead > tr > th {
-    background-color: lavender;
-  }
-  .card-header > .ant-card-head {
-    background-color: powderblue;
-    text-align: center;
-  }
+.custom-table-wrapper .ant-table-thead>tr>th {
+  background-color: lavender;
+}
 
-  /* .uncolored-row{
+.card-header>.ant-card-head {
+  background-color: powderblue;
+  text-align: center;
+}
+
+/* .uncolored-row{
     background-color: rgb(99, 65, 134);
     color:"black"
   } */
 
-  .centered-column {
-    text-align: right;
-  }
+.centered-column {
+  text-align: right;
+}
 
-  .right-column {
-    text-align: center;
-  }
+.right-column {
+  text-align: center;
+}
 
- /* Custom CSS to darken the borders of the Ant Design Table */
+/* Custom CSS to darken the borders of the Ant Design Table */
 /* .custom-table-wrapper .ant-table {
   border: 0.5px solid #333; /* Adjust the color and thickness as needed 
 } */
 
 /*Optional: Darken the header row's borders */
-.custom-table-wrapper .ant-table-thead > tr > th {
+.custom-table-wrapper .ant-table-thead>tr>th {
   border: 0.1px solid #464545;
 }
 
 /* Optional: Darken the cell borders */
-.custom-table-wrapper .ant-table-tbody > tr > td {
+.custom-table-wrapper .ant-table-tbody>tr>td {
   border: 0.1px solid #d6cdcd;
 }
 
 
-.table-header .ant-table-thead > tr > th {
+.table-header .ant-table-thead>tr>th {
   background-color: lavender;
 }
 
@@ -68,11 +69,3 @@
 .bold-label {
   font-weight: bold;
 }
-
-
-
-
-
-
-
-
