@@ -100,6 +100,12 @@ async coLineCreationReq(@Body() req: any): Promise<CommonResponseModel> {
     }
 }
 
+@Get('centric-Bot')
+    async centricBot(): Promise<any> {
+        return this.Service.centricBot();
+
+    }
+
  
 
 }
