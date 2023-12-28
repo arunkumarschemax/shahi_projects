@@ -2,6 +2,7 @@ import {
     BarcodeOutlined,
     CaretDownOutlined,
     CaretRightOutlined,
+    EyeOutlined,
     InfoCircleOutlined,
     PrinterOutlined,
     SearchOutlined,
@@ -343,7 +344,7 @@ import RolePermission from "../role-permissions";
         render: (text, record) => {
           return (
             <>
-              {(Number(record.resltantavaliblequantity) <= 0) ? <Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Need to Procure</b></Tag>:Number(record.resltantavaliblequantity) > 0 && record.status != BomStatusEnum.ALLOCATED ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag>:""}
+              {Number(record.tobeProcured) > 0 && record.status != BomStatusEnum.ALLOCATED && Number(record.resltantavaliblequantity) > 0 ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:(Number(record.resltantavaliblequantity) <=0 && record.status != BomStatusEnum.ALLOCATED) ? <Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Need to Procure</b></Tag>:record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag>:""}
             </>
           );
         },
@@ -422,7 +423,7 @@ import RolePermission from "../role-permissions";
         render: (text, record) => {
           return (
             <>
-              {(Number(record.resltantavaliblequantity) <= 0) ? <Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Need to Procure</b></Tag>:Number(record.resltantavaliblequantity) > 0 && record.status != BomStatusEnum.ALLOCATED ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag>:""}
+              {Number(record.tobeProcured) > 0 && record.status != BomStatusEnum.ALLOCATED && Number(record.resltantavaliblequantity) > 0 ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:(Number(record.resltantavaliblequantity) <= 0 && record.status != BomStatusEnum.ALLOCATED) ? <Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Need to Procure</b></Tag>:record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag>:""}
             </>
           );
         },
@@ -1001,6 +1002,19 @@ import RolePermission from "../role-permissions";
                 />
               }
               key={index}
+            extra={
+              <EyeOutlined
+              onClick={() => {
+
+                navigate('/sample-req-detail-view', { state: item.sample_request_id })
+
+                // setHideCancelButton(false);
+                // DetailView(rowData.SampleRequestId, false);
+              }}
+              style={{ color: "blue", fontSize: 20 ,padding:1}}
+            />
+             
+            }
             >
               <Space
                 direction="vertical"

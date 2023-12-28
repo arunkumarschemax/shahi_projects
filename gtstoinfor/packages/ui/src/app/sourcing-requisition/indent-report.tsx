@@ -112,25 +112,32 @@ export const IndentReport = () => {
     {
       title: "Indent Code",
       dataIndex: "requestNo",
-      width: '150px'
+      width: '150px',
+      sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
+      sortDirections: ["descend", "ascend"],
 
     },
 
     {
       title: "Style",
       dataIndex: "style",
-      width: '150px'
-
+      width: '150px',
+      sorter: (a, b) => a.style.localeCompare(b.style),
+      sortDirections: ["descend", "ascend"],
     },
     {
       title: "Indent Date",
       dataIndex: "indentDate",
+      sorter: (a, b) => a.indentDate.localeCompare(b.indentDate),
+      sortDirections: ["descend", "ascend"],
       width: '150px', render: (text, record) => { return record.indentDate !== null ? moment(record.indentDate).format('YYYY-MM-DD') : "" },
 
     },
     {
       title: "Expected Date",
       dataIndex: "expectedDate",
+      sorter: (a, b) => a.expectedDate.localeCompare(b.expectedDate),
+      sortDirections: ["descend", "ascend"],
       width: '150px',
       render: (text, record) => { return record.expectedDate !== null ? moment(record.expectedDate).format('YYYY-MM-DD') : "" },
 
@@ -157,50 +164,50 @@ export const IndentReport = () => {
         );
       }
     },
-    {
-      title: <div style={{ textAlign: 'center' }}>Material Code</div>,
-      dataIndex: "mi_items",
-      key: "mi_items",
-      align: 'center',
-      render: (mi_items, text) => {
-        renderCellData(text)
-        return (
-          <Table
-            dataSource={mi_items}
-            columns={[
-              {
-                dataIndex: "trimCode/m3FabricCode",
-                key: "trimCode/m3FabricCode", align: 'center',
-              },
+    // {
+    //   title: <div style={{ textAlign: 'center' }}>Material Code</div>,
+    //   dataIndex: "mi_items",
+    //   key: "mi_items",
+    //   align: 'center',
+    //   render: (mi_items, text) => {
+    //     renderCellData(text)
+    //     return (
+    //       <Table
+    //         dataSource={mi_items}
+    //         columns={[
+    //           {
+    //             dataIndex: "trimCode/m3FabricCode",
+    //             key: "trimCode/m3FabricCode", align: 'center',
+    //           },
 
-            ]}
-            pagination={false}
-          />
-        );
-      }
-    },
-    {
-      title: <div style={{ textAlign: 'center' }}>Colour</div>,
-      dataIndex: "i_items",
-      key: "i_items",
-      align: 'center',
-      render: (i_items, text) => {
-        renderCellData(text)
-        return (
-          <Table
-            dataSource={i_items}
-            columns={[
-              {
-                dataIndex: "color",
-                key: "color", align: 'center',
-              },
+    //         ]}
+    //         pagination={false}
+    //       />
+    //     );
+    //   }
+    // },
+    // {
+    //   title: <div style={{ textAlign: 'center' }}>Colour</div>,
+    //   dataIndex: "i_items",
+    //   key: "i_items",
+    //   align: 'center',
+    //   render: (i_items, text) => {
+    //     renderCellData(text)
+    //     return (
+    //       <Table
+    //         dataSource={i_items}
+    //         columns={[
+    //           {
+    //             dataIndex: "color",
+    //             key: "color", align: 'center',
+    //           },
 
-            ]}
-            pagination={false}
-          />
-        );
-      }
-    },
+    //         ]}
+    //         pagination={false}
+    //       />
+    //     );
+    //   }
+    // },
     {
       title: <div style={{ textAlign: 'center' }}>Quantity</div>,
       dataIndex: "i_items",
@@ -247,8 +254,25 @@ export const IndentReport = () => {
     },
     {
       title: "Status",
-      dataIndex: "status",
-      width: '150px'
+      dataIndex: "i_items",
+      key: "i_items",
+      align: 'center',
+      render: (i_items, text) => {
+        renderCellData(text)
+        return (
+          <Table
+            dataSource={i_items}
+            columns={[
+              {
+                dataIndex: "status",
+                key: "status", align: 'center',
+              },
+
+            ]}
+            pagination={false}
+          />
+        );
+      }
 
     },
 

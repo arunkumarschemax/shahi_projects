@@ -72,13 +72,13 @@ export class GrnService {
     async getAllPoDataToUPdateStatus(purchaseOrderId: number, materialType: string): Promise<CommonResponseModel> {
         try {
             const manager = this.dataSource;
-            let query = 'SELECT pt.grn_quantity AS ptGrnQuantity,pf.grn_quantity AS pfGrnQuantity,po_fabric_id AS poFabricId,po_trim_id AS poTrimId,po.purchase_order_id AS purchaseOrderId,po_number AS poNumber,po.status AS poStatus,fab_item_status AS fabItemStatus,trim_item_status AS trimItemStatus FROM purchase_order po LEFT JOIN purchase_order_fabric pf ON pf.purchase_order_id=po.purchase_order_id LEFT JOIN purchase_order_trim pt ON pt.purchase_order_id=po.purchase_order_id WHERE po.purchase_order_id=' + purchaseOrderId + ''
+            let query = 'SELECT pt.grn_quantity AS ptGrnQuantity,purchase_order_item_id AS poFabricId,po.purchase_order_id AS purchaseOrderId,po_number AS poNumber,po.status AS poStatus,po_item_status AS fabItemStatus FROM purchase_order po LEFT JOIN purchae_order_items pt ON pt.purchase_order_id=po.purchase_order_id WHERE po.purchase_order_id=' + purchaseOrderId + ''
             console.log(materialType,'materialTypematerialTypematerialType')
             if (materialType == 'Fabric') {
-                query = query + ' and fab_item_status in ("OPEN","PARTAILLY RECEIVED")'
+                query = query + ' and po_item_status in ("OPEN","PARTAILLY RECEIVED")'
             }
             else {
-                query = query + ' and trim_item_status in ("OPEN","PARTAILLY RECEIVED")'
+                query = query + ' and po_item_status in ("OPEN","PARTAILLY RECEIVED")'
             }
             const result = await manager.query(query)
             if (result) {
@@ -147,8 +147,8 @@ export class GrnService {
                 let totalGrn = await this.grnRepo.query(data)
             // if (!isUpdate) {
                 if (CurrentMonth < 4) {
-                    fromDate = (CurrentYear);
-                    toDate = (CurrentYear + 1);
+                    fromDate = (CurrentYear-1);
+                    toDate = (CurrentYear);
                 } else {
                     fromDate = (CurrentYear);
                     toDate = (CurrentYear + 1);
@@ -206,7 +206,7 @@ export class GrnService {
             } else {
                 mrnNumber = 'MRN/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + totalGrn[0].grnId.toString().padStart(3, 0) + ''
             }
-            await transactionalEntityManager.startTransaction();
+            // await transactionalEntityManager.startTransaction();
             const itemInfo = []
             const grnEntity = new GrnEntity()
             grnEntity.grnNumber = grnNumber
@@ -253,14 +253,18 @@ export class GrnService {
             // let save
             const save = await this.grnRepo.save(grnEntity)
             if (save) {
+                let totGrnQty = 0
                 for (const item of req.grnItemInfo) {
+                    totGrnQty = Number(totGrnQty+item.receivedQuantity)
                     if (item.m3ItemCode != null) {
                         const poQuantity = await this.poItemRepo.find({ where: { purchaseOrderItemId: item.poItemId } })
-                        if (Number(poQuantity[0].poQuantity) == Number(item.receivedQuantity)) {
-                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, {grnQuantity: () => `grn_quantity + ${item.acceptedQuantity}`, poitemStatus: PoItemEnum.RECEIVED })
+                        // console.log(poQuantity,'poQuantity')
+                        // console.log(item.receivedQuantity,'item.receivedQuantity')
+                        if (Number(poQuantity[0].poQuantity) == (Number(poQuantity[0].grnQuantity)+Number(item.receivedQuantity))) {
+                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, {grnQuantity: () => `grn_quantity + ${item.receivedQuantity}`, poitemStatus: PoItemEnum.RECEIVED })
                         }
                         else {
-                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { poitemStatus: PoItemEnum.PARTAILLY_RECEIVED, grnQuantity: () => `grn_quantity + ${item.acceptedQuantity}` })
+                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { poitemStatus: PoItemEnum.PARTAILLY_RECEIVED, grnQuantity: () => `grn_quantity + ${item.receivedQuantity}` })
                         }
                         console.log(req.materialtype,'req.materialtype')
                         if(req.grnType != GRNTypeEnum.SAMPLE_ORDER){
@@ -276,21 +280,21 @@ export class GrnService {
                 }
                 const poData = await this.getAllPoDataToUPdateStatus(req.poId, req.materialtype)
                 if (poData.data.length == 0) {
-                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.CLOSED,grnQuantity:req.grnQuantity })
+                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.CLOSED,grnQuantity: () => `grn_quantity + ${totGrnQty}` })
                 } else {
-                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.IN_PROGRESS,grnQuantity:req.grnQuantity })
+                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.IN_PROGRESS,grnQuantity: () => `grn_quantity + ${totGrnQty}` })
                 }
 
-                await transactionalEntityManager.completeTransaction();
+                // await transactionalEntityManager.completeTransaction();
                 return new CommonResponseModel(true, 1, 'Grn Created Sucessfully', save)
             } else {
-                await transactionalEntityManager.releaseTransaction();
+                // await transactionalEntityManager.releaseTransaction();
                 return new CommonResponseModel(false, 0, 'Something went wrong', [])
             }
 
         }
         catch (err) {
-            await transactionalEntityManager.releaseTransaction();
+            // await transactionalEntityManager.releaseTransaction();
             throw err
         }
     }
@@ -419,6 +423,21 @@ export class GrnService {
             }
         } catch (err) {
             throw (err)
+        }
+    }
+
+    async getGrnReportData():Promise<CommonResponseModel>{
+        try{
+            const query='SELECT mt.description AS m3TrimDesc,mt.trim_code AS m3TrimCode,mi.item_code AS m3ItemCode,mi.description AS m3ItemDescription,u.uom,s.style,g.invoice_no AS grnInvoiceNo,g.grn_number AS grnNumber,b.buyer_name AS buyerName,i.request_no AS indentNo,sr.request_no AS sampleReqNo,sr.life_cycle_status AS sampleLifeCycleStatus,poi.subjective_amount AS totalPoAmount,poi.tax AS tax,poi.discount AS poDiscount,poi.unit_price AS unitPrice,po.grn_quantity AS grnQuantity,poi.po_quantity AS poQuantity,poi.po_item_status AS poItemStatus,po_against AS poAgainst,po.po_number AS poNumber,po.status AS poStatus,gi.received_quantity AS receivedQuantity,gi.accepted_quantity AS acceptedQuantity,gi.rejected_quantity AS rejectedQuantity,gi.location_mapped_status AS locationMappedStatus,grn_item_amount AS grnItemAmount,grn_item_no AS grnItemNo,gi.item_type AS itemType FROM grn_items gi LEFT JOIN grn g ON g.grn_id=gi.grn_id LEFT JOIN purchase_order po ON po.purchase_order_id=gi.po_id LEFT JOIN purchae_order_items poi ON poi.purchase_order_item_id=gi.po_item_id  LEFT JOIN sample_request sr ON sr.sample_request_id=gi.sample_req_id LEFT JOIN indent i ON i.indent_id=gi.indent_id LEFT JOIN buyers b ON b.buyer_id=i.buyer_id LEFT JOIN style s ON s.style_id=gi.style_id LEFT JOIN uom u ON u.id=gi.uom_id LEFT JOIN m3_items mi ON mi.m3_items_Id=gi.m3_item_code_id AND gi.item_type IN ("FABRIC")  LEFT JOIN m3_trims mt ON mt.m3_trim_Id=gi.m3_item_code_id AND gi.item_type NOT IN("FABRIC")'
+            const result = await this.grnRepo.query(query)
+            if(result){
+                return new CommonResponseModel(true,1,'Data Retrived Sucessfully',result)
+            }else{
+                return new CommonResponseModel(false,0,'No Data Found',[])
+            }
+
+        }catch(err){
+            throw err
         }
     }
 }

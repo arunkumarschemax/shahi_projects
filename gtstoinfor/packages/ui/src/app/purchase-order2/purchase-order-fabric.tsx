@@ -573,7 +573,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         let baseValue=Number(unitPrice)*Number(quantity);
         const disc_per=fabricForm.getFieldValue('discount')
         if(disc_per!==''&&disc_per>0){
-            discAmnt=Math.round(baseValue*disc_per/100);
+            discAmnt=baseValue*disc_per/100;
             baseValue=Number(baseValue)-Number(discAmnt);
         }
         console.log('Tax Percentage')
@@ -660,7 +660,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='poQuantity' label='PO Quantity'
-                            rules={[{ required: true, message: 'Quantity of Fabric is required' }]}
+                            rules={[{ required: true, message: 'Quantity is required' }]}
                         >
                             <Input placeholder="Enter Quantity" onChange={(e) => quantiyOnchange(e.target.value)} />
                         </Form.Item>
@@ -678,14 +678,14 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                         <Form.Item name='unitPrice' label='Unit Price'
-                            rules={[{ required: true, message: 'unit price of Fabric is required' }]}
+                            rules={[{ required: true, message: 'unit price is required' }]}
                         >
                             <InputNumber style={{ width: '90px' }} placeholder="unit price" onChange={(e) => finalCalculation()} min={0}/>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{paddingLeft:'41px'}}>
                         <Form.Item name='discount' label='Discount'
-                            rules={[{ required: false, message: 'Discount of Fabric is required' }]}
+                            rules={[{ required: false, message: 'Discount is required' }]}
                         >
                             <InputNumber  placeholder="discount" onChange={(e) => finalCalculation()} min={0}/>
                         </Form.Item>
@@ -693,14 +693,14 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='discountAmount' label='Discount Amount'
-                            rules={[{ required: false, message: 'Discount of Fabric is required' }]}
+                            rules={[{ required: false, message: 'Discount is required' }]}
                         >
                             <Input disabled placeholder="discount amount" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='tax' label='Tax Percentage(%)'
-                            rules={[{ required: true, message: 'tax of Fabric is required' }]}
+                            rules={[{ required: true, message: 'tax%  is required' }]}
                         >
                              <Select
                                 placeholder="Select Tax"
@@ -721,21 +721,21 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='taxAmount' label='Tax Amount'
-                            rules={[{ required: true, message: 'Tax of Fabric is required' }]}
+                            rules={[{ required: true, message: 'Tax is required' }]}
                         >
                             <Input disabled placeholder="Tax amount" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='transportation' label='Transportation'
-                            rules={[{ required: false, message: 'Transportation of Fabric is required' }]}
+                            rules={[{ required: false, message: 'Transportation is required' }]}
                         >
                             <Input placeholder="Transportation" onChange={(e) => finalCalculation()} min={0} />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='subjectiveAmount' label='Subjective Amount'
-                            rules={[{ required: true, message: 'Subjective Amount of Fabric is required' }]}
+                            rules={[{ required: true, message: 'Subjective Amount is required' }]}
                         >
                             <Input disabled placeholder="Subjective amount" />
                         </Form.Item>

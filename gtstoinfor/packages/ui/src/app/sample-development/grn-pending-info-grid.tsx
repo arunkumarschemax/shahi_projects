@@ -51,9 +51,11 @@ export const GrnPendingInfoGrid = () => {
 
     
 const getgrn=()=>{
-    const  req = new ExternalRefReq(externalRefNo)     
-    locationService.getgrn(req).then((res)=>{
+    locationService.getgrn().then((res)=>{     
+      
+      if(res.status){ 
         setGrndata(res.data)
+      }
     })
 }
     
@@ -160,8 +162,13 @@ setRemarkModal(false)
             sorter: (a, b) => a.acceptedQuantity - b.acceptedQuantity,
             sortDirections: ['descend', 'ascend'],
             render: (text,val) => {
+              console.log(val)
+              let uomVal = ''
+              if(val.uom != null){
+                uomVal = `(${val.uom})`
+              }
 
-              return val.acceptedQuantity ? `${val.acceptedQuantity}(${val.uom})` : text;
+              return val.acceptedQuantity ? `${val.acceptedQuantity}${uomVal}` : text;
             },
         },
         // {
