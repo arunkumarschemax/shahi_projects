@@ -217,6 +217,7 @@ import PurchaseOrderQrCodePrint from "./purchase-order2/po-qrcode-print"
 import WeightForm from "./common/weight/weight-form"
 import WeightView from "./common/weight/weight-view"
 import SampleReqDetailView from "./sample-development/sample-dev-req-detail-view"
+import GrnReport from "./Reports/grn-report"
 
 
 
@@ -1106,6 +1107,8 @@ export const AppRoutes = () => {
                 <Route path='/report'>
                     <Route path='material-issue-report' element={<MaterialIssueReport />} />
                     <Route path='indent-report' element={<IndentReport />} />
+                    <Route path='grn-report' element={<GrnReport />} />
+
                     <Route path='bom-view' element={<BomIndentView />} />
 
 
