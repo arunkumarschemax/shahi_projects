@@ -12,6 +12,17 @@ export class SampleRequestInfoModel{
     lifeCycleStatus:string
     contact:string
     ETD:Date
+    extn:string
+    conversion: string
+    dmm:string
+    product:string
+    user:string
+    description:string
+    costRef:string
+    type:string
+    madeIn:string
+    remarks?:string
+    fileName?: string
     // sizeinfo?:SampleSizeInfoModel[]
     fabInfo?:any[]
     trimInfo?:any[]
@@ -28,6 +39,17 @@ export class SampleRequestInfoModel{
         contact:string,
         pch:string,
         ETD:Date,
+        extn:string,
+        conversion: string,
+        dmm:string,
+        product:string,
+        user:string,
+        description:string,
+        costRef:string,
+        type:string,
+        madeIn:string,
+        remarks?:string,
+        fileName?: string, 
         // conversion:'',
         // sizeinfo?:SampleSizeInfoModel[],
         fabInfo?:any[],
@@ -48,6 +70,17 @@ export class SampleRequestInfoModel{
        this.employee = employee
        this.pch = pch
        this.ETD = ETD
+       this.dmm = dmm
+       this.extn = extn
+       this.description = description
+       this.costRef = costRef
+       this.conversion = conversion
+       this.remarks = remarks
+       this.type = type
+       this.madeIn = madeIn
+       this.user = user
+       this.product = product
+       this.fileName = fileName
         }
 
 
