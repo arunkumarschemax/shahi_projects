@@ -79,7 +79,9 @@ export class CentricService {
         const match = item.poLine.match(/\d+/);
         console.log(match,"match");
         // Check if a match is found and convert it to an integer
-        const poLine = match ? parseInt(match[0], 10) : null;
+        // const poLine = match ? parseInt(match[0], 10) : null;
+         const poLine = match
+
         console.log(poLine,"poLine")
         for (const variant of item.CentricpoItemVariantDetails) {
           const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber ,poLine:poLine, size:variant.size} })
@@ -97,6 +99,7 @@ export class CentricService {
           entity.incoterm = req.incoterm
           entity.shipToAdd = req.shipToAdd
           entity.manufacture = req.manufacture
+          entity.poDate = req.poDate
 
 
           entity.poLine = item.poLine
