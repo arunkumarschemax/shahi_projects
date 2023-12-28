@@ -1,4 +1,4 @@
-import { CommonResponseModel, GrnDto, GrnReq, IndentDTO, SourcingRequisitionReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, GrnDto, GrnReq, IndentDTO, SourcingRequisitionReq, grnReportReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class GRNService extends CommonAxiosService {
@@ -34,7 +34,7 @@ export class GRNService extends CommonAxiosService {
   async getAllTrimStocks(): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getAllTrimStocks")
   }
-  async getGrnReportData(): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getGrnReportData")
+  async getGrnReportData(req?:grnReportReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getGrnReportData",req)
   }
 }

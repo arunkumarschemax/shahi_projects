@@ -1,5 +1,5 @@
 import { Injectable, Query } from '@nestjs/common';
-import { CommonResponseModel, CustomerOrderStatusEnum, GRNTypeEnum, GrnReq, PoItemEnum, PurchaseOrderStatus } from '@project-management-system/shared-models';
+import { CommonResponseModel, CustomerOrderStatusEnum, GRNTypeEnum, GrnReq, PoItemEnum, PurchaseOrderStatus, grnReportReq } from '@project-management-system/shared-models';
 import { GrnRepository } from './dto/grn-repository';
 import { GrnAdapter } from './dto/grn-adapter';
 import { GrnDto, PurchaseOrderReq } from './dto/grn-dto';
@@ -426,13 +426,88 @@ export class GrnService {
         }
     }
 
-    async getGrnReportData():Promise<CommonResponseModel>{
+    async getGrnReportData(req?:grnReportReq):Promise<CommonResponseModel>{
         try{
-            const query='SELECT mt.description AS m3TrimDesc,mt.trim_code AS m3TrimCode,mi.item_code AS m3ItemCode,mi.description AS m3ItemDescription,u.uom,s.style,g.invoice_no AS grnInvoiceNo,g.grn_number AS grnNumber,b.buyer_name AS buyerName,i.request_no AS indentNo,sr.request_no AS sampleReqNo,sr.life_cycle_status AS sampleLifeCycleStatus,poi.subjective_amount AS totalPoAmount,poi.tax AS tax,poi.discount AS poDiscount,poi.unit_price AS unitPrice,po.grn_quantity AS grnQuantity,poi.po_quantity AS poQuantity,poi.po_item_status AS poItemStatus,po_against AS poAgainst,po.po_number AS poNumber,po.status AS poStatus,gi.received_quantity AS receivedQuantity,gi.accepted_quantity AS acceptedQuantity,gi.rejected_quantity AS rejectedQuantity,gi.location_mapped_status AS locationMappedStatus,grn_item_amount AS grnItemAmount,grn_item_no AS grnItemNo,gi.item_type AS itemType FROM grn_items gi LEFT JOIN grn g ON g.grn_id=gi.grn_id LEFT JOIN purchase_order po ON po.purchase_order_id=gi.po_id LEFT JOIN purchae_order_items poi ON poi.purchase_order_item_id=gi.po_item_id  LEFT JOIN sample_request sr ON sr.sample_request_id=gi.sample_req_id LEFT JOIN indent i ON i.indent_id=gi.indent_id LEFT JOIN buyers b ON b.buyer_id=i.buyer_id LEFT JOIN style s ON s.style_id=gi.style_id LEFT JOIN uom u ON u.id=gi.uom_id LEFT JOIN m3_items mi ON mi.m3_items_Id=gi.m3_item_code_id AND gi.item_type IN ("FABRIC")  LEFT JOIN m3_trims mt ON mt.m3_trim_Id=gi.m3_item_code_id AND gi.item_type NOT IN("FABRIC")'
+            let query='SELECT mt.description AS m3TrimDesc,mt.trim_code AS m3TrimCode,mi.item_code AS m3ItemCode,mi.description AS m3ItemDescription,u.uom,s.style,g.invoice_no AS grnInvoiceNo,g.grn_number AS grnNumber,b.buyer_name AS buyerName,i.request_no AS indentNo,sr.request_no AS sampleReqNo,sr.life_cycle_status AS sampleLifeCycleStatus,poi.subjective_amount AS totalPoAmount,poi.tax AS tax,poi.discount AS poDiscount,poi.unit_price AS unitPrice,po.grn_quantity AS grnQuantity,poi.po_quantity AS poQuantity,poi.po_item_status AS poItemStatus,po_against AS poAgainst,po.po_number AS poNumber,po.status AS poStatus,gi.received_quantity AS receivedQuantity,gi.accepted_quantity AS acceptedQuantity,gi.rejected_quantity AS rejectedQuantity,gi.location_mapped_status AS locationMappedStatus,grn_item_amount AS grnItemAmount,grn_item_no AS grnItemNo,gi.item_type AS itemType FROM grn_items gi LEFT JOIN grn g ON g.grn_id=gi.grn_id LEFT JOIN purchase_order po ON po.purchase_order_id=gi.po_id LEFT JOIN purchae_order_items poi ON poi.purchase_order_item_id=gi.po_item_id  LEFT JOIN sample_request sr ON sr.sample_request_id=gi.sample_req_id LEFT JOIN indent i ON i.indent_id=gi.indent_id LEFT JOIN buyers b ON b.buyer_id=i.buyer_id LEFT JOIN style s ON s.style_id=gi.style_id LEFT JOIN uom u ON u.id=gi.uom_id LEFT JOIN m3_items mi ON mi.m3_items_Id=gi.m3_item_code_id AND gi.item_type IN ("FABRIC")  LEFT JOIN m3_trims mt ON mt.m3_trim_Id=gi.m3_item_code_id AND gi.item_type NOT IN("FABRIC") where grn_item_id>0'
+            if(req.poId != undefined){
+                query=query+' and po.purchase_order_id ="'+req.poId+'"'
+            }
+            if(req.poStatus != undefined){
+                query=query+' and po.status="'+req.poStatus+'"'
+            }
+            if(req.grnDate != undefined){
+                query=query+' and g.grn_date="'+req.grnDate+'"'
+            }
+            else{
+                query=query
+            }
             const result = await this.grnRepo.query(query)
             if(result){
                 return new CommonResponseModel(true,1,'Data Retrived Sucessfully',result)
             }else{
+                return new CommonResponseModel(false,0,'No Data Found',[])
+            }
+
+        }catch(err){
+            throw err
+        }
+    }
+
+    async getGrnReportDataNew():Promise<CommonResponseModel>{
+        try{
+            const query='SELECT mt.description AS m3TrimDesc,mt.trim_code AS m3TrimCode,mi.item_code AS m3ItemCode,mi.description AS m3ItemDescription,u.uom,s.style,g.invoice_no AS grnInvoiceNo,g.grn_number AS grnNumber,b.buyer_name AS buyerName,i.request_no AS indentNo,sr.request_no AS sampleReqNo,sr.life_cycle_status AS sampleLifeCycleStatus,poi.subjective_amount AS totalPoAmount,poi.tax AS tax,poi.discount AS poDiscount,poi.unit_price AS unitPrice,po.grn_quantity AS grnQuantity,poi.po_quantity AS poQuantity,poi.po_item_status AS poItemStatus,po_against AS poAgainst,po.po_number AS poNumber,po.status AS poStatus,gi.received_quantity AS receivedQuantity,gi.accepted_quantity AS acceptedQuantity,gi.rejected_quantity AS rejectedQuantity,gi.location_mapped_status AS locationMappedStatus,grn_item_amount AS grnItemAmount,grn_item_no AS grnItemNo,gi.item_type AS itemType FROM grn_items gi LEFT JOIN grn g ON g.grn_id=gi.grn_id LEFT JOIN purchase_order po ON po.purchase_order_id=gi.po_id LEFT JOIN purchae_order_items poi ON poi.purchase_order_item_id=gi.po_item_id  LEFT JOIN sample_request sr ON sr.sample_request_id=gi.sample_req_id LEFT JOIN indent i ON i.indent_id=gi.indent_id LEFT JOIN buyers b ON b.buyer_id=i.buyer_id LEFT JOIN style s ON s.style_id=gi.style_id LEFT JOIN uom u ON u.id=gi.uom_id LEFT JOIN m3_items mi ON mi.m3_items_Id=gi.m3_item_code_id AND gi.item_type IN ("FABRIC")  LEFT JOIN m3_trims mt ON mt.m3_trim_Id=gi.m3_item_code_id AND gi.item_type NOT IN("FABRIC")'
+            const result = await this.grnRepo.query(query)
+            if(result.length >0){
+                const groupData=result.reduce((rec,item) =>{
+                    const grnNumber=item.grnNumber;
+                    const style=item.style
+                    const poNumber=item.poNumber
+                    const grnItemNo=item.grnItemNo
+                    const indentNo=item.indentNo
+                    const sampleReqNo=item.sampleReqNo
+                    const buyerName=item.buyerName
+                    const poAgainst=item.poAgainst
+                    if(!rec[grnNumber]){
+                        rec[grnNumber] ={
+                             grnNumber:grnNumber,
+                             style:style,
+                             poNumber:poNumber,
+                             grnItemNo:grnItemNo,
+                             indentNo:indentNo,
+                             sampleReqNo:sampleReqNo,
+                             buyerName:buyerName,  
+                             poAgainst:poAgainst,
+                             item:[]                  
+                            }
+                      }
+                      rec[grnNumber].item.push({
+                        grnNumber:item.grnNumber,
+                        itemType:'FABRIC',
+                        poQuantity:item.poQuantity,
+                        receivedQuantity:item.receivedQuantity,
+                        acceptedQuantity:item.acceptedQuantity,
+                        rejectedQuantity:item.rejectedQuantity,
+                        locationMappedStatus:item.locationMappedStatus,
+                        m3ItemCode:item.m3ItemCode,
+                        m3ItemDescription:item.m3ItemDescription
+                      });
+                      rec[grnNumber].item.push({
+                        grnNumber:item.grnNumber,
+                        itemType:item.itemType,
+                        poQuantity:item.poQuantity,
+                        receivedQuantity:item.receivedQuantity,
+                        acceptedQuantity:item.acceptedQuantity,
+                        rejectedQuantity:item.rejectedQuantity,
+                        locationMappedStatus:item.locationMappedStatus,
+                        m3ItemCode:item.m3TrimCode,
+                        m3ItemDescription:item.m3TrimDesc
+                      });
+                     return rec
+                }, {})
+                return new CommonResponseModel(true,1,'Data Retrived Sucessfully',Object.values(groupData))
+            }
+            
+            else{
                 return new CommonResponseModel(false,0,'No Data Found',[])
             }
 

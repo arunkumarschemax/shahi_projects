@@ -1,7 +1,9 @@
-import { PurchaseOrderStatus } from '@project-management-system/shared-models';
+import { PurchaseOrderStatus, grnReportReq } from '@project-management-system/shared-models';
 import { GRNService, PurchaseOrderservice } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Statistic, Table } from 'antd'
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Statistic, Table, message } from 'antd'
+import moment from 'moment';
 import React, { useEffect, useState } from 'react'
+import dayjs from 'dayjs';
 
  const GrnReport =() =>{
     const [form] =Form.useForm();
@@ -14,12 +16,13 @@ import React, { useEffect, useState } from 'react'
     const poService = new PurchaseOrderservice()
 
 
-    const getGrnReportData = () =>{
-        grnService.getGrnReportData().then(res =>{
+    const getGrnReportData = (poStatus:string,ponum:number,grnDate:string) =>{
+        grnService.getGrnReportData({poStatus:poStatus,poId:ponum,grnDate:grnDate}).then(res =>{
             if(res.status){
                 setgrnData(res.data)
             }else{
                 setgrnData([])
+                message.info(res.internalMessage)
             }
         })
     }
@@ -34,8 +37,9 @@ import React, { useEffect, useState } from 'react'
     }
 
     useEffect(() =>{
-        getGrnReportData()
+        getGrnReportData(undefined,undefined,undefined)
         getPoNumber()
+
     },[])
 
     const columns:any =[
@@ -113,12 +117,97 @@ import React, { useEffect, useState } from 'react'
             sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
             sortDirections: ["descend", "ascend"],
       
+          },          
+          {
+            title: "Fabric Item",
+            dataIndex: "m3ItemDescription",
+            width:'110px',
+            sorter: (a, b) => a.m3ItemDescription.localeCompare(b.m3ItemDescription),
+            sortDirections: ["descend", "ascend"],
+      
+          },
+          {
+            title: "Trim Item",
+            dataIndex: "m3TrimDesc",
+            width:'110px',
+            sorter: (a, b) => a.m3TrimDesc.localeCompare(b.m3TrimDesc),
+            sortDirections: ["descend", "ascend"],
+      
+          },
+          {
+            title: "UOM",
+            dataIndex: "uom",
+            width:'110px',
+            sorter: (a, b) => a.uom.localeCompare(b.uom),
+            sortDirections: ["descend", "ascend"],
+      
+          },
+          {
+            title: "Unit price",
+            dataIndex: "unitPrice",
+            width:'110px',
+            sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
+            sortDirections: ["descend", "ascend"],
+      
+          },
+          {
+            title: "Total price",
+            dataIndex: "totalPoAmount",
+            width:'110px',
+            sorter: (a, b) => a.totalPoAmount.localeCompare(b.totalPoAmount),
+            sortDirections: ["descend", "ascend"],
+      
+          },
+          {
+            title: "Required Quantity",
+            dataIndex: "poQuantity",
+            width:'110px',
+            sorter: (a, b) => a.poQuantity.localeCompare(b.poQuantity),
+            sortDirections: ["descend", "ascend"],
+      
+          },
+          
+          {
+            title: "Recived Quantity",
+            dataIndex: "receivedQuantity",
+            width:'110px',
+            sorter: (a, b) => a.poQuantity.localeCompare(b.receivedQuantity),
+            sortDirections: ["descend", "ascend"],
+      
+          },
+          {
+            title: "Rejected Quantity",
+            dataIndex: "rejectedQuantity",
+            width:'110px',
+            sorter: (a, b) => a.poQuantity.localeCompare(b.rejectedQuantity),
+            sortDirections: ["descend", "ascend"],
+      
+          },
+          {
+            title: "Po Status",
+            dataIndex: "poStatus",
+            width:'110px',
+            sorter: (a, b) => a.poQuantity.localeCompare(b.rejectedQuantity),
+            sortDirections: ["descend", "ascend"],
+      
           },
     ]
+    const getData =() =>{
+           const ponum =form.getFieldValue('poNumber') !=undefined ?form.getFieldValue('poNumber'):undefined
+        const poStatus =form.getFieldValue('poStatus') !=undefined ?form.getFieldValue('poStatus'):undefined
+        const grnDate =form.getFieldValue('grnDate') !=undefined ?form.getFieldValue('grnDate').format("YYYY-MM-DD"):undefined
+        getGrnReportData(poStatus,ponum,grnDate)
+
+    }
+    const onReset =() =>{
+        getGrnReportData(undefined,undefined,undefined)
+        form.resetFields()
+    }
     return(
-        <Form form={form} layout='vertical'>
+        <div>
+                   
         <Card title={'Grn Report'}>
-           
+        <Form form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col span={4}>
                         <Form.Item name='poNumber' label='Po Number'>
@@ -146,13 +235,13 @@ import React, { useEffect, useState } from 'react'
                         </Form.Item>
                     </Col>
                     <Col span={4} style={{paddingTop:'20px'}}>
-                       <Button type='primary'>{'Search'}</Button>
+                       <Button type='primary' onClick={getData}>{'Search'}</Button>
                     </Col>
                     <Col span={4}  style={{paddingTop:'20px'}} >
-                       <Button >{'Reset'}</Button>
+                       <Button onClick={onReset} >{'Reset'}</Button>
                     </Col>
                 </Row>
-                <Card>
+                </Form>
                 <Table 
                     columns={columns}
                     dataSource={grnData}
@@ -162,14 +251,11 @@ import React, { useEffect, useState } from 'react'
                           setPage(current);
                         }
                       }}
-                    //   scroll={{x:true}}
+                      scroll={{x:true}}
                     />
-                </Card>
-                 
-
-             
         </Card>
-        </Form>
+        </div>
+
 
     )
 }
