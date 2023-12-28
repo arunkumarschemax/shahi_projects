@@ -35,6 +35,7 @@ const TrimsForm = (props:TrimsFormProps) => {
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const [stockForm] = Form.useForm();
   const [keyUpdate, setKeyUpdate] = useState<number>(1);
+  // const [uomStatus, setUomStatus] = useState<boolean>(false);
 
  const {Option}=Select
 
@@ -49,7 +50,8 @@ const TrimsForm = (props:TrimsFormProps) => {
           key: count,
           colourId:element.colour,
           totalCount: qtyy,
-          wastage:2
+          wastage:2,
+          uomStatus:false
         };
         props.form.setFieldValue([`wastage${count}`],2)
         setData([...data, newRow]);
@@ -104,11 +106,18 @@ const getM3TrimsTypes = (value: number) => {
   })
 }
 
-const getMappedTrims = (value, option) => {
+const getMappedTrims = (value, row) => {
   getM3TrimsTypes(value)
-  const req = new TrimIdRequestDto(undefined,option?.name)
+  const req = new TrimIdRequestDto(undefined,value)
   paramsService.getMappedParamsByTrim(req).then((res) => {
     if (res.status) {
+      let updatedData = data.map((record) => {
+        if (record.key === row.key) {
+          return { ...record, ["uomStatus"]: res.data[0].uom };
+        }
+        return record;
+      });
+      setData(updatedData)
       setMapData(res.data)
     }
   });
@@ -180,6 +189,7 @@ const getMappedTrims = (value, option) => {
       console.log(m3Trims.find((i) => i.m3TrimsId === e)?.uomId)
       updatedData = data.map((record) => {
         if (record.key === key) {
+          // setUomStatus(true)
           props.form.setFieldValue(`uomId${key}`,(m3Trims.find((i) => i.m3TrimsId === e)?.uomId)!= undefined?m3Trims.find((i) => i.m3TrimsId === e)?.uomId:null);
           return { ...record, [field]: e, ["uomId"]:(m3Trims.find((i) => i.m3TrimsId === e)?.uomId)!= undefined?m3Trims.find((i) => i.m3TrimsId === e)?.uomId:null };
         }
@@ -321,7 +331,7 @@ const getMappedTrims = (value, option) => {
           showSearch
           optionFilterProp="children"
           placeholder="Select Trim Category"
-          onSelect={getMappedTrims}
+          onSelect={(e) => getMappedTrims(e,record)}
          >
           {trimData?.map((e) => {
             return (
@@ -383,6 +393,7 @@ const getMappedTrims = (value, option) => {
         showSearch
         optionFilterProp="children"
         placeholder="Select UOM" 
+        disabled={record.uomStatus}
         // defaultValue={uom.find((e) => e.uom === "PCS")?.uom}
         onChange={(e) => handleInputChange(e, record.key, 'uomId',record)}
         >
