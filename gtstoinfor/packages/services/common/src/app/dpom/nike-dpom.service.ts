@@ -295,7 +295,7 @@ export class DpomService {
         }
     }
 
-    // @Cron('*/3 * * * *')
+    // @Cron('*/2 * * * *')
     async createCOline(req: any): Promise<CommonResponseModel> {
         const po = await this.coLineRepository.getDataforCOLineCreation();
         if (!po) {
@@ -326,6 +326,7 @@ export class DpomService {
             let pkgTerms;
             let paymentTerms;
             if (po.buyer === 'Nike-U12') {
+                const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Inprogress' });
                 const data = await this.dpomRepository.getDataForColine({ poNumber: po.buyer_po, lineNumber: po.line_item_no })
                 const result = data[0].color_desc.split('/')[0]
                 const firstTenChars = result.substring(0, 10);
@@ -409,21 +410,20 @@ export class DpomService {
             }
             await driver.wait(until.elementLocated(By.id('styleid2H')))
             await driver.findElement(By.id('styleid2H')).sendKeys(po.item_no);
-            await driver.sleep(10000)
-            await driver.wait(until.elementLocated(By.id('bgpset1')));
-            const dropdownElement1 = await driver.findElement(By.id('bgpset1'));
-            const dropdown1 = await driver.wait(until.elementIsVisible(dropdownElement1)).then(element => new Select(element))
-            await dropdown1.selectByValue(buyerValue1)
-            // await driver.executeScript(`arguments[0].value = '${buyerValue1}';`, buyerDropDown1)
-            await driver.sleep(10000)
-            await driver.wait(until.elementLocated(By.id('byr')));
-            const dropdownElement2 = await driver.findElement(By.id('byr'));
-            const dropdown2 = await driver.wait(until.elementIsVisible(dropdownElement2)).then(element => new Select(element))
-            await dropdown2.selectByValue(buyerValue2)
-            // await driver.executeScript(`arguments[0].value = '${buyerValue2}';`, dropdownElement2)
+            // await driver.sleep(10000)
+            // await driver.wait(until.elementLocated(By.id('bgpset1')));
+            // const dropdownElement1 = await driver.findElement(By.id('bgpset1'));
+            // const dropdown1 = await driver.wait(until.elementIsVisible(dropdownElement1)).then(element => new Select(element))
+            // await dropdown1.selectByValue(buyerValue1)
+            // // await driver.executeScript(`arguments[0].value = '${buyerValue1}';`, buyerDropDown1)
+            // await driver.sleep(10000)
+            // await driver.wait(until.elementLocated(By.id('byr')));
+            // const dropdownElement2 = await driver.findElement(By.id('byr'));
+            // const dropdown2 = await driver.wait(until.elementIsVisible(dropdownElement2)).then(element => new Select(element))
+            // await dropdown2.selectByValue(buyerValue2)
+            // // await driver.executeScript(`arguments[0].value = '${buyerValue2}';`, dropdownElement2)
             await driver.sleep(5000)
             await driver.wait(until.elementLocated(By.id('CreateOrderID')))
-            await driver.sleep(3000)
             await driver.findElement(By.id('CreateOrderID')).click();
             await driver.wait(until.elementLocated(By.id('bpo')))
             await driver.findElement(By.id('bpo')).clear();
@@ -456,7 +456,6 @@ export class DpomService {
             await driver.wait(until.elementLocated(By.xpath('//*[@id="price"]')));
             await driver.findElement(By.xpath('//*[@id="price"]')).clear();
             await driver.findElement(By.xpath('//*[@id="price"]')).sendKeys(coLine.salesPrice);
-
             await driver.wait(until.elementLocated(By.id('packtrm')));
             const pkgTermsDropDown = await driver.findElement(By.id('packtrm'));
             await driver.executeScript(`arguments[0].value = '${pkgTerms}';`, pkgTermsDropDown)
@@ -498,6 +497,9 @@ export class DpomService {
                                     }
                                     if (po.item_no === '102P' && dest.name === 'UQIN') {
                                         tabIndex = 3;
+                                    }
+                                    if (po.item_no === '891O' && dest.name === 'UQAU') {
+                                        tabIndex = 5;
                                     }
                                     const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
                                     const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
@@ -584,7 +586,7 @@ export class DpomService {
                     }
                 }
             }
-            await driver.sleep(10000)
+            await driver.sleep(5000)
             const element = await driver.findElement(By.id('OrderCreateID')).click();
             await driver.wait(until.alertIsPresent(), 10000);
             // Switch to the alert and accept it (click "OK")
@@ -622,7 +624,7 @@ export class DpomService {
                         await driver.sleep(10000)
                     }
                 } else {
-                    await driver.sleep(15000)
+                    await driver.sleep(10000)
                     await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[4]')));
                     const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[last()]/td[7]`));
                     const coNo = await coNoElement.getAttribute('innerText');
@@ -636,14 +638,14 @@ export class DpomService {
                         await this.updateCOLineStatus({ poNumber: po.buyer_po, poLineItemNumber: po.line_item_no, status: 'Success' })
                         // await driver.wait(until.elementLocated(By.xpath('//*[@id="widget_1935820440"]')))
                         // await driver.findElement(By.xpath('//*[@id="widget_1935820440"]')).click()
-                        await driver.sleep(5000)
+                        await driver.sleep(2000)
                         // driver.quit()
                     } else {
                         const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', isActive: false });
                         await this.updateCOLineStatus({ poNumber: po.buyer_po, poLineItemNumber: po.line_item_no, status: 'Failed' })
                         // await driver.wait(until.elementLocated(By.xpath('//*[@id="widget_1935820440"]')))
                         // await driver.findElement(By.xpath('//*[@id="widget_1935820440"]')).click()
-                        await driver.sleep(5000)
+                        await driver.sleep(2000)
                         // driver.quit()
                     }
                 }
@@ -651,6 +653,7 @@ export class DpomService {
             return new CommonResponseModel(true, 1, `COline created successfully`)
         } catch (err) {
             console.log(err, 'error');
+            const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', isActive: false });
             return new CommonResponseModel(false, 0, err)
         }
         finally {
@@ -686,7 +689,7 @@ export class DpomService {
         return sendMail
     }
 
-    @Cron('0 4 * * *')
+    // @Cron('0 4 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
         try {
@@ -828,7 +831,7 @@ export class DpomService {
         }
     }
 
-    @Cron('30 6 * * *')
+    // @Cron('30 6 * * *')
     async syncCRMData(): Promise<CommonResponseModel> {
         // const transactionManager = new GenericTransactionManager(this.dataSource)
         const getBuyerPOs = await this.dpomRepository.getBuyerPOs()
