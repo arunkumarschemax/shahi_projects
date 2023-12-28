@@ -603,7 +603,7 @@ export class PurchaseOrderService {
     }
     async getAllPos(): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT p.purchase_order_id,p.po_number FROM  purchase_order p`
+            let query = `SELECT p.purchase_order_id,p.po_number FROM  grn g LEFT JOIN purchase_order p ON p.purchase_order_id = g.po_id GROUP BY g.po_id`
             const data = await this.dataSource.query(query)
             if (data.length > 0) {
                 return new CommonResponseModel(true, 0, "PO Numbers retrieved successfully", data)
