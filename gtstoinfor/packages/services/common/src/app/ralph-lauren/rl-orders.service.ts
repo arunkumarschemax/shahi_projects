@@ -282,11 +282,10 @@ export class RLOrdersService {
       const destinationDirectory = 'D:/rl-read-files';
 
       const files = fs.readdirSync(directoryPath);
-      if (files.length === 0) {
-        console.log('No files found In Directory Path');
-        // await browser.close();
-        return new CommonResponseModel(false, 0,"")
-      }
+        if (files.length === 0) {
+        return new CommonResponseModel(false, 0, "No Files Found");
+        }
+      
       setTimeout(async () => {
         await page.goto('http://localhost:4200/#/ralph-lauren/pdf-upload/', {
           timeout: 10000,
