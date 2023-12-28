@@ -2,14 +2,18 @@ import { PurchaseOrderStatus, grnReportReq } from '@project-management-system/sh
 import { GRNService, PurchaseOrderservice } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Statistic, Table, message } from 'antd'
 import moment from 'moment';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import dayjs from 'dayjs';
+import Highlighter from 'react-highlight-words';
+import { SearchOutlined } from '@ant-design/icons';
 
  const GrnReport =() =>{
     const [form] =Form.useForm();
     const [grnData, setgrnData] = useState<any[]>([])
     const [poData, setPoData] = useState<any[]>([])
-
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const searchInput = useRef(null);
+    const [searchText, setSearchText] = useState('');
     const [page,setPage] = useState<number>(1);
     const {Option} = Select
     const grnService = new GRNService()
@@ -42,6 +46,73 @@ import dayjs from 'dayjs';
 
     },[])
 
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+      confirm();
+      setSearchText(selectedKeys[0]);
+      setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+      clearFilters();
+      setSearchText('');
+  };
+
+    const getColumnSearchProps = (dataIndex: string) => ({
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+          <div style={{ padding: 8 }}>
+              <Input
+                  ref={searchInput}
+                  placeholder={`Search ${dataIndex}`}
+                  value={selectedKeys[0]}
+                  onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                  onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                  style={{ width: 188, marginBottom: 8, display: 'block' }}
+              />
+              <Button
+                  type="primary"
+                  onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                  icon={<SearchOutlined />}
+                  size="small"
+                  style={{ width: 90, marginRight: 8 }}
+              >
+                  Search
+              </Button>
+              <Button size="small" style={{ width: 90 }}
+                  onClick={() => {
+                      handleReset(clearFilters)
+                      setSearchedColumn(dataIndex);
+                      confirm({ closeDropdown: true });
+                  }}>
+                  Reset
+              </Button>
+          </div>
+      ),
+      filterIcon: filtered => (
+          <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+      ),
+      onFilter: (value, record) =>
+          record[dataIndex]
+              ? record[dataIndex]
+                  .toString()
+                  .toLowerCase()
+                  .includes(value.toLowerCase())
+              : false,
+      onFilterDropdownVisibleChange: visible => {
+          if (visible) { setTimeout(() => searchInput.current.select()); }
+      },
+      render: text =>
+          text ? (
+              searchedColumn === dataIndex ? (
+                  <Highlighter
+                      highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                      searchWords={[searchText]}
+                      autoEscape
+                      textToHighlight={text.toString()}
+                  />
+              ) : text
+          )
+              : null
+  })
+
     const columns:any =[
         {
             title: 'S No',
@@ -61,6 +132,8 @@ import dayjs from 'dayjs';
                 rowSpan: record.rowSpan,
             }),
             fixed: 'left',
+            ...getColumnSearchProps('grnNumber')
+
           },
           {
             title: "Grn Item Number",
@@ -69,6 +142,8 @@ import dayjs from 'dayjs';
                 rowSpan: record.rowSpan,
             }),
             fixed: 'left',
+            ...getColumnSearchProps('grnItemNo')
+
           },
           {
             title: "Style",
@@ -77,6 +152,8 @@ import dayjs from 'dayjs';
                 rowSpan: record.rowSpan,
             }),
             fixed: 'left',
+            ...getColumnSearchProps('style')
+
         },
           {
               title: "Po Number",
@@ -85,6 +162,8 @@ import dayjs from 'dayjs';
                   rowSpan: record.rowSpan,
               }),
               fixed: 'left',
+            ...getColumnSearchProps('poNumber')
+
           },
           {
             title: "Grn Aginst",
@@ -93,6 +172,8 @@ import dayjs from 'dayjs';
                 rowSpan: record.rowSpan,
             }),
             fixed: 'left',
+            ...getColumnSearchProps('poAgainst')
+
           },
           {
             title: "Indent Number",
@@ -101,6 +182,8 @@ import dayjs from 'dayjs';
                 rowSpan: record.rowSpan,
             }),
             fixed: 'left',
+            ...getColumnSearchProps('indentNo')
+
           },
           {
             title: "Sample Order",
@@ -109,6 +192,8 @@ import dayjs from 'dayjs';
                 rowSpan: record.rowSpan,
             }),
             fixed: 'left',
+            ...getColumnSearchProps('sampleReqNo')
+
           },
           {
             title: "Item Type",
@@ -116,6 +201,8 @@ import dayjs from 'dayjs';
             width:'110px',
             sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
             sortDirections: ["descend", "ascend"],
+            ...getColumnSearchProps('itemType')
+
       
           },          
           {
@@ -124,6 +211,8 @@ import dayjs from 'dayjs';
             width:'110px',
             sorter: (a, b) => a.m3ItemDescription.localeCompare(b.m3ItemDescription),
             sortDirections: ["descend", "ascend"],
+            ...getColumnSearchProps('m3ItemDescription')
+
       
           },
           {
@@ -132,7 +221,8 @@ import dayjs from 'dayjs';
             width:'110px',
             sorter: (a, b) => a.m3TrimDesc.localeCompare(b.m3TrimDesc),
             sortDirections: ["descend", "ascend"],
-      
+            ...getColumnSearchProps('m3TrimDesc')
+
           },
           {
             title: "UOM",
@@ -140,6 +230,8 @@ import dayjs from 'dayjs';
             width:'110px',
             sorter: (a, b) => a.uom.localeCompare(b.uom),
             sortDirections: ["descend", "ascend"],
+            ...getColumnSearchProps('uom')
+
       
           },
           {
@@ -148,6 +240,8 @@ import dayjs from 'dayjs';
             width:'110px',
             sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
             sortDirections: ["descend", "ascend"],
+            ...getColumnSearchProps('unitPrice')
+
       
           },
           {
@@ -156,6 +250,8 @@ import dayjs from 'dayjs';
             width:'110px',
             sorter: (a, b) => a.totalPoAmount.localeCompare(b.totalPoAmount),
             sortDirections: ["descend", "ascend"],
+            ...getColumnSearchProps('totalPoAmount')
+
       
           },
           {
@@ -164,6 +260,8 @@ import dayjs from 'dayjs';
             width:'110px',
             sorter: (a, b) => a.poQuantity.localeCompare(b.poQuantity),
             sortDirections: ["descend", "ascend"],
+            ...getColumnSearchProps('poQuantity')
+
       
           },
           
@@ -173,6 +271,8 @@ import dayjs from 'dayjs';
             width:'110px',
             sorter: (a, b) => a.poQuantity.localeCompare(b.receivedQuantity),
             sortDirections: ["descend", "ascend"],
+            ...getColumnSearchProps('receivedQuantity')
+
       
           },
           {
@@ -181,6 +281,7 @@ import dayjs from 'dayjs';
             width:'110px',
             sorter: (a, b) => a.poQuantity.localeCompare(b.rejectedQuantity),
             sortDirections: ["descend", "ascend"],
+            ...getColumnSearchProps('rejectedQuantity')
       
           },
           {
@@ -189,6 +290,8 @@ import dayjs from 'dayjs';
             width:'110px',
             sorter: (a, b) => a.poQuantity.localeCompare(b.rejectedQuantity),
             sortDirections: ["descend", "ascend"],
+            ...getColumnSearchProps('poStatus')
+
       
           },
     ]
