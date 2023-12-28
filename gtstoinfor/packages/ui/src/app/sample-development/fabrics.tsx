@@ -37,6 +37,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   const colorService = new ColourService()
   const buyerDestinationService = new BuyerDestinationService()
   const [keyUpdate, setKeyUpdate] = useState<number>(1);
+  const [onchangeData, setOnchangeData] = useState<any[]>([]); 
 
   const { IAMClientAuthContext } = useIAMClientState();
   // const [form] =props.form.useForm();
@@ -54,7 +55,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         console.log(qtyy)
         const newRow = {
           key: count,
-          colourId:element.colour,
+          colourId:0,
           totalCount: qtyy,
           wastage:2
         };
@@ -101,14 +102,21 @@ const FabricsForm = (props:FabricsFormProps) => {
   const handleInputChange = async (e, key, field, additionalValue,record) => {
     console.log(e);
     console.log(field);
-
-    console.log(data);
     console.log(key);
+
+    console.log(record);
+    console.log(data);
+
+    let isDuplicate 
+    let fieldName
+
+    
 
     let updatedData;
   
     if (field === 'fabricCode' && e != undefined) {
-
+      fieldName = "fabricId"
+      isDuplicate =  onchangeData.find((r) => r.colourId === record.colourId && r.fabricCode === e);
       updatedData = data.map((record) => {
         if (record.key === key) {
           return { ...record, [field]: e };
@@ -168,13 +176,14 @@ const FabricsForm = (props:FabricsFormProps) => {
     }
     
     else if(field === 'colourId'){
+      fieldName = "colourId"
+      isDuplicate =  onchangeData.find((r) => r.colourId === e && r.fabricCode === record.fabricCode);
       console.log(props.sizeDetails);
       console.log(props.sizeDetails.find((s) => s.colour === e));
       let wastg =props.form.getFieldValue(`wastage${key}`) != undefined ?props.form.getFieldValue(`wastage${key}`) : 2;
       if(props.sizeDetails.find((s) => s.colour === e)?.colour > 0){
         updatedData = data.map((record) => {
           if (record.key === key) {
-            
             let totalSizeCountForSize = props.sizeDetails.find((s) => s.colour === e)?.sizeInfo;
             console.log(totalSizeCountForSize);
             let qtyy = 0;
@@ -214,8 +223,23 @@ const FabricsForm = (props:FabricsFormProps) => {
         return record;
       });
     }
+    if(isDuplicate?.fabricCode > 0)
+    {
+      AlertMessages.getErrorMessage("Duplicate Entries not allowed. ")
+      props.form.setFieldValue(`${fieldName}${key}`,null)
+      props.form.validateFields().then(fab => {
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      
+    }
+    else{
+      console.log("jj")
+    }
     
     setData(updatedData);
+    setOnchangeData(updatedData)
     props.data(updatedData);
 
   };
@@ -277,6 +301,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     }
     else{
       setData(updatedData);
+      setOnchangeData(updatedData)
       props.data(updatedData)
     }
    
@@ -345,6 +370,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             placeholder="Select Fabric Code"
             onChange={(e) => handleInputChange(e, record.key, 'fabricCode',0, record)}
           >
+          <Option name={`fabricId${record.key}`} key={0} value={0}>Please Select Fabric</Option>
             {fabricCodeData?.map(item => {
               return <Option name={`fabricId${record.key}`} key={item.m3ItemsId} valu={item.m3ItemsId}>{item.itemCode+ "-"+ item.description}</Option>;
             })}

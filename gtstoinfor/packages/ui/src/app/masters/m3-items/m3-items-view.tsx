@@ -262,7 +262,8 @@ const stockService = new StockService();
         width: 50,
         align:"center",
         responsive: ['sm'],
-        render: (text, object, index) => (page - 1) * 50 + (index + 1)
+        render: (text, object, index) => (page - 1) * 50 + (index + 1),
+        fixed:'left'
       },
         {
             title: "Buyer",
@@ -270,6 +271,7 @@ const stockService = new StockService();
             ...getColumnSearchProps('buyerName'),
             sorter: (a, b) => a.buyerName.length - b.buyerName.length,
            sortDirections: ['descend', 'ascend'],
+           fixed:'left'
         },
         {
             title: "Item Code",
@@ -277,7 +279,7 @@ const stockService = new StockService();
             ...getColumnSearchProps('itemCode'),
             sorter: (a, b) => a.itemCode.length - b.itemCode.length,
            sortDirections: ['descend', 'ascend'],
-            
+            fixed:'left'
 
         },
         {
@@ -399,6 +401,14 @@ const stockService = new StockService();
             dataIndex: "description",
             sorter: (a, b) => a.description.length - b.description.length,
             sortDirections: ['descend', 'ascend'],
+            // width:'250px',
+            render: text => (
+              <Tooltip title={text}>
+                <span style={{ display: 'inline-block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {text.length > 35 ? `${text.substring(0, 35)}...` : text}
+                </span>
+              </Tooltip>
+            ),
         },
     ]
 
@@ -698,7 +708,7 @@ const stockService = new StockService();
           {/* <Card> */}
           <Table columns={Columns}
           dataSource={itemGroup}
-          // scroll={{x:true,y:500}}
+          scroll={{x:'max-content'}}
            pagination={{
             pageSize:50,
             onChange(current) {

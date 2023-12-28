@@ -100,7 +100,7 @@ export class StocksService {
     }
 
     async getStockReport(): Promise<CommonResponseModel> {
-        const data = `select b.buyer_name AS buyerName,IF(stocks.item_type='fabric',it.description,tr.trim_code) AS m3ItemCode,item_type AS itemType,
+        const data = `select b.buyer_name AS buyerName,IF(stocks.item_type='fabric',it.description,tr.trim_code) AS m3ItemCode,it.item_type AS itemType,
         r.rack_position_name AS location,stocks.quantity FROM stocks stocks
         LEFT JOIN buyers b ON b.buyer_id = stocks.buyer_id
         LEFT JOIN m3_items it ON it.buyer_id = stocks.buyer_id AND stocks.item_type='fabric'
@@ -154,7 +154,7 @@ export class StocksService {
 
     async getAllStockReportData(request?: StockFilterRequest): Promise<CommonResponseModel> {
         try {
-            let data = `select b.buyer_name AS buyerName,IF(stocks.item_type='fabric',it.description,tr.trim_code) AS m3ItemCode,item_type AS itemType,
+            let data = `select b.buyer_name AS buyerName,IF(stocks.item_type='fabric',it.description,tr.trim_code) AS m3ItemCode,stocks.item_type AS itemType,
             r.rack_position_name AS location,stocks.quantity FROM stocks stocks
             LEFT JOIN buyers b ON b.buyer_id = stocks.buyer_id
             LEFT JOIN m3_items it ON it.buyer_id = stocks.buyer_id AND stocks.item_type='fabric'

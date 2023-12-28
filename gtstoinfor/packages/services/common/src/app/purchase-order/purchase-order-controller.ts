@@ -84,6 +84,7 @@ export class PurchaseOrderController {
   }
 
   @Post('/QrByPoId')
+  @ApiBody({type:VendorIdReq})
   async QrByPoId(@Body() req?: any ): Promise<CommonResponseModel> {
     try {
       

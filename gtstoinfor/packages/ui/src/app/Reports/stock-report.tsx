@@ -21,6 +21,7 @@ const StockReport = () => {
     const [key, setKey] = useState();
     const { IAMClientAuthContext } = useIAMClientState();
     const [isBuyer, setIsBuyer] = useState(false);
+    const page = 1;
 
 
 
@@ -28,10 +29,10 @@ const StockReport = () => {
 
     useEffect(() => {
         getData();
-        getAllItemCode();
-        getAllItemType();
-        getAllLocation();
-        getAllPlant();
+        // getAllItemCode();
+        // getAllItemType();
+        // getAllLocation();
+        // getAllPlant();
         getAllStockReportData();
         const userrefNo = IAMClientAuthContext.user?.externalRefNo
         if(userrefNo){
@@ -41,7 +42,9 @@ const StockReport = () => {
       }, []);
 
     const getData = () => {
+      
         service.getStockReport().then(res => {
+          
             if(res.status){
                 setData(res.data);
         
@@ -116,6 +119,18 @@ const StockReport = () => {
    
 
     const Columns:any=[
+      {
+        title: 'S No',
+        key: 'sno',
+        width: '70px',
+        style: { background: 'red' },
+        responsive: ['sm'],
+        render: (text, object, index) => (page - 1) * 10 + (index + 1),
+        onCell: (record: any) => ({
+          rowSpan: record.rowSpan,
+        }),
+        fixed: 'left',
+      },
         {
             title:"Buyer",
             dataIndex:"buyerName"
@@ -132,7 +147,8 @@ const StockReport = () => {
       },
         {
             title:"M3 Item",
-            dataIndex:"m3ItemCode"
+            dataIndex:"m3ItemCode",
+            width:250
         },
         {
             title:"Location",
@@ -342,7 +358,7 @@ const StockReport = () => {
           </Row><br></br> */}
         <Card >
         <Table columns={Columns}  pagination={{pageSize:50}}
-        dataSource={filterData}
+        dataSource={stockData}
         className="custom-table-wrapper"
             /> 
         </Card>

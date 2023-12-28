@@ -340,6 +340,13 @@ const GRNForm = () => {
 
 
   function receivedQuantityOnChange(e) {
+    const acceptedQty = itemsForm.getFieldValue('acceptedQuantity')
+    const recQty = itemsForm.getFieldValue('receivedQuantity')
+    console.log(e)
+    if(Number(acceptedQty) > Number(recQty)){
+      AlertMessages.getErrorMessage('Accepted Qunatity should not exceed Received')
+      itemsForm.setFieldsValue({acceptedQuantity:null})
+    }
     const poItemId = itemsForm.getFieldValue('poItemId')
     setPoItemData(prevData =>
       prevData.map(item => {
@@ -358,9 +365,8 @@ const GRNForm = () => {
     const poItemId = itemsForm.getFieldValue('poItemId')
     const acceptedQty = itemsForm.getFieldValue('acceptedQuantity')
     const recQty = itemsForm.getFieldValue('receivedQuantity')
-    console.log(recQty)
     console.log(e)
-    if(acceptedQty > recQty){
+    if(Number(acceptedQty) > Number(recQty)){
       AlertMessages.getErrorMessage('Accepted Qunatity should not exceed Received')
       itemsForm.setFieldsValue({acceptedQuantity:null})
     }else{
