@@ -19,12 +19,15 @@ export const DiaPdfDataExtractor = async (pdf) => {
     }
 
     let poNumberIndex;
+    let finalDestIndex
     let cabCodeIndex;
     let shipToStartIndex;
     let shipToEndIndex
     for (const [index, rec] of filteredData.entries()) {
         if (rec.str.includes("Delivery Instructions:")) {
             poNumberIndex = index
+        } if (rec.str.includes("Final Destination:")) {
+            finalDestIndex = index
         }
         if (rec.str.includes("CAB Code:")) {
             cabCodeIndex = index
@@ -37,6 +40,7 @@ export const DiaPdfDataExtractor = async (pdf) => {
         }
     }
 
+    diaPDF.finalDestination = filteredData[finalDestIndex + 1].str
     diaPDF.cabCode = filteredData[cabCodeIndex + 1].str
     const deliveryInstructionsStr = filteredData[poNumberIndex].str.split(":")[1];
     diaPDF.poNumber = deliveryInstructionsStr.split("-")[0].replace(/ /g, '')

@@ -129,6 +129,11 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
                             <Input />
                         </Form.Item>
                     </Col>
+                    <Col span={4}>
+                        <Form.Item name={'finalDestination'} label='Final Destination'>
+                            <Input />
+                        </Form.Item>
+                    </Col>
                     <Col span={8}>
                         <Form.Item name={'shipToAddress'} label='Ship to address'>
                             <Input.TextArea rows={4} />
