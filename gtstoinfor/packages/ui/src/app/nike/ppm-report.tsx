@@ -190,7 +190,7 @@ const PPMReport = () => {
     //     }));
     // }
   };
-  const updateColumns = (poAndLine, actualUnit, allocatedQuantity) => {
+  const updateColumns = (poAndLine, actualUnit, _allocatedQuantity) => {
     const req: FactoryUpdateRequest = {
       poAndLine: poAndLine,
     };
@@ -1282,7 +1282,7 @@ const PPMReport = () => {
           setFilteredData([]);
         }
       })
-      .catch(err => {
+      .catch(_err => {
       }).finally(() => {
         setTableLoading(false)
       });
@@ -1438,7 +1438,7 @@ const PPMReport = () => {
   const renderReport = (data: MarketingReportModel[]) => {
     const sizeHeaders = getSizeWiseHeaders(data);
     const sizeWiseMap = getMap(data);
-    function renderSizeWiseColumns(record, version) {
+    function renderSizeWiseColumns(_record, _version) {
 
     }
     const columns: any = [
@@ -1450,7 +1450,7 @@ const PPMReport = () => {
         title: "Po+Line",
         dataIndex: 'poAndLine',
         fixed: 'left',
-        render: (text, record) => {
+        render: (_text, record) => {
           return <>
             <Button type='link' onClick={() => { showModal1(record) }}>{record.poAndLine}</Button>
           </>
@@ -1475,7 +1475,7 @@ const PPMReport = () => {
         title: 'Edit Unit Allocation',
         dataIndex: '', width: 70,
         align: "center",
-        render: (text, rowData) => (
+        render: (_text, rowData) => (
           <span>
             <Form.Item>
               <Checkbox
@@ -1490,7 +1490,7 @@ const PPMReport = () => {
         title: 'Actual Unit',
         dataIndex: 'actualUnit',
         align: 'center', width: 160,
-        render: (text, rowData) => (
+        render: (_text, rowData) => (
           <div>
             {expandedActualUnit[rowData.poAndLine] ? (
               <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -1741,7 +1741,7 @@ const PPMReport = () => {
         title: 'Diff of Ship to Address',
         dataIndex: '', width: 80,
         align: 'center',
-        render: (text, record) => {
+        render: (_text, record) => {
           const text1 = record.shipToAddressLegalPO
           const text2 = record.shipToAddressDIA
           if (text1 == null && text2 == null) {
@@ -1851,7 +1851,7 @@ const PPMReport = () => {
         title: 'Total Item Qty',
         dataIndex: 'totalItemQty', width: 80,
         align: 'right',
-        render: (text, record) => {
+        render: (text, _record) => {
           if (!text || text.trim() === '') {
             return '-';
           } else {
@@ -1894,7 +1894,7 @@ const PPMReport = () => {
               key: '',
               width: 100,
               align: 'right',
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version);
 
                 return sizeData ? sizeData[`${sc.dataIndex}`] : '-'
@@ -1933,7 +1933,7 @@ const PPMReport = () => {
               key: '',
               width: 60,
               align: 'right',
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.sizeQty
                 // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
                 return sizeData ? sizeData : '-';
@@ -1951,7 +1951,7 @@ const PPMReport = () => {
               dataIndex: 'grossFobPrice',
               width: 70,
               align: 'right',
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobPrice;
                 return sizeData ? sizeData : '-'
               }
@@ -1967,7 +1967,7 @@ const PPMReport = () => {
               ),
               dataIndex: 'grossFobCurrencyCode',
               width: 70,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.grossFobCurrencyCode;
                 return sizeData ? sizeData : '-'
               }
@@ -1984,7 +1984,7 @@ const PPMReport = () => {
               dataIndex: 'buyerGrossFobPrice',
               align: 'right',
               width: 70,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobPrice;
                 return sizeData ? sizeData : '-'
               }
@@ -2000,7 +2000,7 @@ const PPMReport = () => {
               ),
               dataIndex: 'buyerGrossFobCurrencyCode',
               align: 'right', width: 90,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.buyerGrossFobCurrencyCode;
                 return sizeData ? sizeData : '-'
               }
@@ -2017,7 +2017,7 @@ const PPMReport = () => {
               dataIndex: 'fobPriceDiff',
               align: 'center',
               width: 50,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.fobPriceDiff;
                 return sizeData ? sizeData : '-'
               }
@@ -2033,7 +2033,7 @@ const PPMReport = () => {
               ),
               dataIndex: 'fobCurrencyDiff',
               width: 90,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.fobCurrencyDiff;
                 return sizeData ? sizeData : '-'
               }
@@ -2050,7 +2050,7 @@ const PPMReport = () => {
               dataIndex: 'netIncludingDisc',
               align: 'center',
               width: 70,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.netIncludingDisc;
                 return sizeData ? sizeData : '-'
               }
@@ -2066,7 +2066,7 @@ const PPMReport = () => {
               ),
               dataIndex: 'netIncludingDiscCurrencyCode',
               width: 70,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.netIncludingDiscCurrencyCode;
                 return sizeData ? sizeData : '-'
               }
@@ -2083,7 +2083,7 @@ const PPMReport = () => {
               dataIndex: 'trConetIncludingDisc',
               align: 'right',
               width: 70,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.trConetIncludingDisc;
                 return sizeData ? sizeData : '-'
               }
@@ -2099,7 +2099,7 @@ const PPMReport = () => {
               dataIndex: 'trConetIncludingDiscCurrencyCode',
               className: sizeClass ? 'odd-version' : 'even-version',
               width: 70,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.trConetIncludingDiscCurrencyCode;
                 return sizeData ? sizeData : '-'
               }
@@ -2117,7 +2117,7 @@ const PPMReport = () => {
               dataIndex: 'legalPoPrice',
               align: 'right',
               width: 60,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoPrice;
                 return sizeData ? sizeData : '-'
               }
@@ -2133,7 +2133,7 @@ const PPMReport = () => {
               ),
               dataIndex: 'legalPoCurrencyCode',
               width: 60,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoCurrencyCode;
                 return sizeData ? sizeData : '-'
               }
@@ -2150,7 +2150,7 @@ const PPMReport = () => {
               dataIndex: 'coPrice',
               align: 'right',
               width: 60,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPrice;
                 return sizeData ? sizeData : '-'
               }
@@ -2166,7 +2166,7 @@ const PPMReport = () => {
               ),
               dataIndex: 'coPriceCurrencyCode',
               width: 65,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.coPriceCurrencyCode;
                 return sizeData ? sizeData : '-'
               }
@@ -2183,7 +2183,7 @@ const PPMReport = () => {
               dataIndex: 'diffOfLegalPOCOPrice',
               align: 'center',
               width: 70,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.diffOfLegalPOCOPrice;
                 return sizeData ? sizeData : '-'
               }
@@ -2200,7 +2200,7 @@ const PPMReport = () => {
               dataIndex: 'diffOfLegalPOCOCurrency',
               align: 'center',
               width: 70,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.diffOfLegalPOCOCurrency;
                 return sizeData ? sizeData : '-'
               }
@@ -2216,7 +2216,7 @@ const PPMReport = () => {
               ),
               dataIndex: 'CRMCoQty',
               width: 60, align: 'right',
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.CRMCoQty;
                 return sizeData ? sizeData : '-'
               }
@@ -2233,7 +2233,7 @@ const PPMReport = () => {
               dataIndex: 'legalPoQty',
               align: 'right',
               width: 60,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.legalPoQty;
                 return sizeData ? sizeData : '-'
               }
@@ -2250,7 +2250,7 @@ const PPMReport = () => {
               dataIndex: 'diffOfQty',
               align: 'right',
               width: 60,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.diffOfQty;
                 return sizeData ? sizeData : '-'
               }
@@ -2267,7 +2267,7 @@ const PPMReport = () => {
               dataIndex: 'allowedExcessShipQty',
               align: 'right',
               width: 70,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.allowedExcessShipQty;
                 return sizeData ? sizeData : '-'
               }
@@ -2284,7 +2284,7 @@ const PPMReport = () => {
               dataIndex: 'actualShippedQty',
               align: 'right',
               width: 70,
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.actualShippedQty;
                 return sizeData ? sizeData : '-'
               }
@@ -2302,7 +2302,7 @@ const PPMReport = () => {
               align: 'right',
               width: 70,
               dataIndex: 'actualShipPer',
-              render: (text, record) => {
+              render: (_text, record) => {
                 const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(version)?.actualShipPer;
                 return sizeData ? sizeData : '-'
               }
@@ -2333,7 +2333,7 @@ const PPMReport = () => {
         title: 'VAS - Size',
         dataIndex: 'VASSize',
         width: 80,
-        render: (text, record) => {
+        render: (text, _record) => {
           if (!text || text.trim() === '') {
             return '-';
           } else {
@@ -2344,7 +2344,7 @@ const PPMReport = () => {
       {
         title: 'Item Vas Text',
         dataIndex: 'itemVasText', width: 80,
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <>
               {record.itemVasText?.length > 30 ? (<><Tooltip title='Cilck to open full itemVasText'><p><span onClick={() => handleTextClick(record.itemVasText)} style={{ cursor: 'pointer' }}>
@@ -2357,7 +2357,7 @@ const PPMReport = () => {
       {
         title: 'Item Vas Text in PDF PO',
         dataIndex: 'itemVasTextPDF', width: 80,
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <>
               {record.itemVasTextPDF?.length > 30 ? (<><Tooltip title='Cilck to open full itemVasTextPDF'><p><span onClick={() => handleTextClick(record.itemVasTextPDF)} style={{ cursor: 'pointer' }}>
@@ -2370,7 +2370,7 @@ const PPMReport = () => {
       {
         title: 'Diff of Item Vas Text',
         dataIndex: '', width: 80,
-        render: (text, record) => {
+        render: (_text, record) => {
           if (record.itemVasText == null || record.itemVasTextPDF == null) {
             return '-';
           } else {
@@ -2406,7 +2406,7 @@ const PPMReport = () => {
       {
         title: 'Item Text',
         dataIndex: 'itemText', width: 80,
-        render: (text, record) => {
+        render: (_text, record) => {
           return (
             <>
               {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
@@ -2419,7 +2419,7 @@ const PPMReport = () => {
       {
         title: 'Hanger PO',
         dataIndex: 'hanger', width: 80,
-        render: (text, record) => {
+        render: (text: string, record: { itemVasText: any; }) => {
           if (!text || text.trim() === '') {
             return '-';
           } else {
@@ -2517,7 +2517,7 @@ const PPMReport = () => {
   //   </>
   // );
 
-  const showModal1 = (record) => {
+  const showModal1 = (record: any) => {
     setPoLineProp(record)
 
     setIsModalOpen1(true);
@@ -2527,7 +2527,7 @@ const PPMReport = () => {
   //  console.log(poLineProp,"record")
 
   const DetailedView = (record: any) => {
-    poFilterData = filterData.filter(item => item.poAndLine == record)
+    poFilterData = filterData.filter((item: { poAndLine: any; }) => item.poAndLine == record)
     // console.log(poFilterData)
     // showModal1(record)
     // navigate('/Reports/po-detailed-view', { state: { data: poFilterData } })
@@ -2544,7 +2544,7 @@ const PPMReport = () => {
           <Card>
             <Row gutter={24}>
               <Col span={6}>
-                <Popconfirm onConfirm={e => { toggleHideChildren() }}
+                <Popconfirm onConfirm={_e => { toggleHideChildren() }}
                   title={
                     hideChildren
                       ? 'Unhide Columns?'
@@ -2562,7 +2562,7 @@ const PPMReport = () => {
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
                 <Form.Item label="Size columns" name="sizeColumns">
                   <Select style={{ width: '100%' }} allowClear showSearch placeholder='select isze columns' optionFilterProp="children"
-                    mode='multiple' onChange={(s, opt) => { handleHideSizeColuomns(opt) }}>
+                    mode='multiple' onChange={(_s, opt) => { handleHideSizeColuomns(opt) }}>
                     {
                       sizeColumns.map((s) => {
                         return <Option key={s.dataIndex} value={s.dataIndex}>{s.title}</Option>
