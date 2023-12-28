@@ -217,6 +217,7 @@ import PurchaseOrderQrCodePrint from "./purchase-order2/po-qrcode-print"
 import WeightForm from "./common/weight/weight-form"
 import WeightView from "./common/weight/weight-view"
 import SampleReqDetailView from "./sample-development/sample-dev-req-detail-view"
+import PurchaseOrderReport from "./Reports/purchase-order-report"
 
 
 
@@ -842,6 +843,8 @@ export const AppRoutes = () => {
 
                 <Route path='material-issue-report' element={<MaterialIssueReport />} />
                 <Route path='indent-report' element={<IndentReport />} />
+                <Route path='purchase-order-report' element={<PurchaseOrderReport />} />
+
 
                 {/* </Route> */}
                 <Route path='/stock-view' element={<StockView />} />

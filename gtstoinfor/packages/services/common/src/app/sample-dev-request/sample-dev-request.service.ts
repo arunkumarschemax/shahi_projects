@@ -1870,6 +1870,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
     GROUP BY rack_position_name`;
       
       const fabricInfo = await this.dataSource.query(fabricInfoQry)
+     console.log(fabricInfoQry,"Fabricccccccccccccccccccccccccccccc");
      
       let trimInfoQry = `SELECT sr.request_no AS requestNo,
 br.brand_name AS brandName,
@@ -1893,6 +1894,7 @@ WHERE  sr.sample_request_id= '${req.requestNo}' AND  ma.item_type != 'fabric'
 GROUP BY rack_position_name`;
 
 const trimInfo = await this.dataSource.query(trimInfoQry)
+console.log(trimInfoQry,"Trimssssssssssssssssssss");
 
 const combineData = [...fabricInfo, ...trimInfo]
 return new CommonResponseModel(true,1,'data retreived',combineData)
