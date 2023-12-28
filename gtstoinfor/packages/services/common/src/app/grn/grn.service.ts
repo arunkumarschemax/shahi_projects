@@ -72,13 +72,13 @@ export class GrnService {
     async getAllPoDataToUPdateStatus(purchaseOrderId: number, materialType: string): Promise<CommonResponseModel> {
         try {
             const manager = this.dataSource;
-            let query = 'SELECT pt.grn_quantity AS ptGrnQuantity,pf.grn_quantity AS pfGrnQuantity,po_fabric_id AS poFabricId,po_trim_id AS poTrimId,po.purchase_order_id AS purchaseOrderId,po_number AS poNumber,po.status AS poStatus,fab_item_status AS fabItemStatus,trim_item_status AS trimItemStatus FROM purchase_order po LEFT JOIN purchase_order_fabric pf ON pf.purchase_order_id=po.purchase_order_id LEFT JOIN purchase_order_trim pt ON pt.purchase_order_id=po.purchase_order_id WHERE po.purchase_order_id=' + purchaseOrderId + ''
+            let query = 'SELECT pt.grn_quantity AS ptGrnQuantity,purchase_order_item_id AS poFabricId,po.purchase_order_id AS purchaseOrderId,po_number AS poNumber,po.status AS poStatus,po_item_status AS fabItemStatus FROM purchase_order po LEFT JOIN purchae_order_items pt ON pt.purchase_order_id=po.purchase_order_id WHERE po.purchase_order_id=' + purchaseOrderId + ''
             console.log(materialType,'materialTypematerialTypematerialType')
             if (materialType == 'Fabric') {
-                query = query + ' and fab_item_status in ("OPEN","PARTAILLY RECEIVED")'
+                query = query + ' and po_item_status in ("OPEN","PARTAILLY RECEIVED")'
             }
             else {
-                query = query + ' and trim_item_status in ("OPEN","PARTAILLY RECEIVED")'
+                query = query + ' and po_item_status in ("OPEN","PARTAILLY RECEIVED")'
             }
             const result = await manager.query(query)
             if (result) {
@@ -201,7 +201,7 @@ export class GrnService {
             } else {
                 mrnNumber = 'MRN/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + totalGrn[0].grnId.toString().padStart(3, 0) + ''
             }
-            await transactionalEntityManager.startTransaction();
+            // await transactionalEntityManager.startTransaction();
             const itemInfo = []
             const grnEntity = new GrnEntity()
             grnEntity.grnNumber = grnNumber
@@ -248,14 +248,18 @@ export class GrnService {
             // let save
             const save = await this.grnRepo.save(grnEntity)
             if (save) {
+                let totGrnQty = 0
                 for (const item of req.grnItemInfo) {
+                    totGrnQty = Number(totGrnQty+item.receivedQuantity)
                     if (item.m3ItemCode != null) {
                         const poQuantity = await this.poItemRepo.find({ where: { purchaseOrderItemId: item.poItemId } })
-                        if (Number(poQuantity[0].poQuantity) == Number(item.receivedQuantity)) {
-                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, {grnQuantity: () => `grn_quantity + ${item.acceptedQuantity}`, poitemStatus: PoItemEnum.RECEIVED })
+                        // console.log(poQuantity,'poQuantity')
+                        // console.log(item.receivedQuantity,'item.receivedQuantity')
+                        if (Number(poQuantity[0].poQuantity) == (Number(poQuantity[0].grnQuantity)+Number(item.receivedQuantity))) {
+                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, {grnQuantity: () => `grn_quantity + ${item.receivedQuantity}`, poitemStatus: PoItemEnum.RECEIVED })
                         }
                         else {
-                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { poitemStatus: PoItemEnum.PARTAILLY_RECEIVED, grnQuantity: () => `grn_quantity + ${item.acceptedQuantity}` })
+                            await this.poItemRepo.update({ purchaseOrderItemId: item.poItemId }, { poitemStatus: PoItemEnum.PARTAILLY_RECEIVED, grnQuantity: () => `grn_quantity + ${item.receivedQuantity}` })
                         }
                         console.log(req.materialtype,'req.materialtype')
                         if(req.grnType != GRNTypeEnum.SAMPLE_ORDER){
@@ -271,21 +275,21 @@ export class GrnService {
                 }
                 const poData = await this.getAllPoDataToUPdateStatus(req.poId, req.materialtype)
                 if (poData.data.length == 0) {
-                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.CLOSED,grnQuantity:req.grnQuantity })
+                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.CLOSED,grnQuantity: () => `grn_quantity + ${totGrnQty}` })
                 } else {
-                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.IN_PROGRESS,grnQuantity:req.grnQuantity })
+                    await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.IN_PROGRESS,grnQuantity: () => `grn_quantity + ${totGrnQty}` })
                 }
 
-                await transactionalEntityManager.completeTransaction();
+                // await transactionalEntityManager.completeTransaction();
                 return new CommonResponseModel(true, 1, 'Grn Created Sucessfully', save)
             } else {
-                await transactionalEntityManager.releaseTransaction();
+                // await transactionalEntityManager.releaseTransaction();
                 return new CommonResponseModel(false, 0, 'Something went wrong', [])
             }
 
         }
         catch (err) {
-            await transactionalEntityManager.releaseTransaction();
+            // await transactionalEntityManager.releaseTransaction();
             throw err
         }
     }

@@ -529,5 +529,14 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
-  
+  @Post('/getAllSampleRequestSizesInfo')
+  @ApiBody({ type: sampleReqIdReq })
+  async getAllSampleRequestSizesInfo(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAllSampleRequestSizesInfo(req)
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
 }

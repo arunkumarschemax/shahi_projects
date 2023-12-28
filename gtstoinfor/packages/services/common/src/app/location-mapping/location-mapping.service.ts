@@ -158,35 +158,21 @@ export class LocationMappingService {
 
     
     
-    async getgrn(req?:ExternalRefReq): Promise<CommonResponseModel> {
+    async getgrn(): Promise<CommonResponseModel> {
         try {
             
             let query = `SELECT DISTINCT
-            IF(g.item_type = "FABRIC", mit.item_code, mtr.trim_code) AS itemCode, g.grn_number AS grnNumber
+             g.grn_number AS grnNumber
             FROM grn_items gi
             LEFT JOIN grn g ON g.grn_id = gi.grn_id 
-            LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
-            LEFT JOIN m3_items mit ON mit.m3_items_id = gi.m3_item_code_id AND g.item_type = "FABRIC"
-            LEFT JOIN m3_trims mtr ON mtr.m3_trim_Id = gi.m3_item_code_id AND g.item_type != "FABRIC"
-            LEFT JOIN stock_log st ON st.grn_item_id = gi.grn_item_id
-            LEFT JOIN buyers idfb ON idfb.buyer_id = gi.buyer_id
-            LEFT JOIN style sty ON sty.style_id = g.style_id
-            LEFT JOIN uom u ON u.id = gi.uom_id
+         
             WHERE gi.location_mapped_status != 'COMPLETED' 
             `
-            let param :any={}
-    if(req){
-      if (req?.externalRefNo != undefined){
-        query += ` AND idfb.external_ref_number = '${req.externalRefNo}'`
-      }
-    
-   
-    }
-    query += ` GROUP BY g.grn_number`
-    
-            const res = await AppDataSource.query(query,param);
-            if (res) {
-                return new CommonResponseModel(true, 1111, "Data retrived Succesufully", res);
+            const data = await this.dataSource.query(query)
+            if(data.length >0){
+                return new CommonResponseModel(true, 0, "GRN's retrieved successfully", data)
+            }else {
+                return new CommonResponseModel(false, 1, "No data found", [])
             }
 
         } catch (error) {

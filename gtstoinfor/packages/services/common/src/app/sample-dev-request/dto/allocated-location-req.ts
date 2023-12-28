@@ -7,4 +7,6 @@ export class AllocatedLocationRequest {
      sampleRequestItemId: number;
      @ApiProperty()
      action: string;
+     @ApiProperty()
+     type?: string;
 }

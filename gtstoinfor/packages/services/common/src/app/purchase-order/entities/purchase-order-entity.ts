@@ -99,7 +99,8 @@ export class PurchaseOrderEntity{
     
     @Column('int',{
       name:'grn_quantity',
-      nullable:true
+      nullable:true,
+      default:0
     })
     grnQuantity:number
 

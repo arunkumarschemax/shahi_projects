@@ -573,7 +573,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         let baseValue=Number(unitPrice)*Number(quantity);
         const disc_per=fabricForm.getFieldValue('discount')
         if(disc_per!==''&&disc_per>0){
-            discAmnt=Math.round(baseValue*disc_per/100);
+            discAmnt=baseValue*disc_per/100;
             baseValue=Number(baseValue)-Number(discAmnt);
         }
         console.log('Tax Percentage')
