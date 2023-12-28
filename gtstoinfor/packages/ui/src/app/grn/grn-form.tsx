@@ -104,6 +104,8 @@ const GRNForm = () => {
     poService.getAllPONumbers(req).then((res) => {
       if (res.status) {
         setPoNoData(res.data)
+      }else{
+        setPoNoData([])
       }
     })
   }
@@ -196,6 +198,7 @@ const GRNForm = () => {
       // fixed: 'left',
       dataIndex: 'm3ItemCode',
     },
+    poData?.poMaterialType == 'Fabric'?
     {
       title: <div style={{ textAlign: "center" }}> Description</div>,
       // fixed: 'left',
@@ -209,7 +212,7 @@ const GRNForm = () => {
             </>
         )
     }
-    },
+    }:{},
     {
       title: <div style={{ textAlign: "center" }}>PO Qty</div>,
       dataIndex: 'poQuantity',
