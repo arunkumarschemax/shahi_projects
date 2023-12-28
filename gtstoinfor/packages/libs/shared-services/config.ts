@@ -1,5 +1,6 @@
 export const config = {
-    APP_PROJECT_MANAGEMENT_URL: "http://165.22.220.143:9002/api",
+    //APP_PROJECT_MANAGEMENT_URL: "http://165.22.220.143:9002/api",
+    APP_PROJECT_MANAGEMENT_URL: "https://orders-backend.shahiapps.in/api",
     whatsapp_redirection_url: 'http://dev.schemaxtech.in/#',
     whatsapp_notification_url: 'http://206.189.138.212:3000',
     whatsapp_broadcast_url: 'http://206.189.138.212:3232/api',
