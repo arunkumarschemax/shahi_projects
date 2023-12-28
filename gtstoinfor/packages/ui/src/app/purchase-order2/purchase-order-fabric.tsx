@@ -172,10 +172,14 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         setDefaultFabricFormData(rowData)
         console.log(rowData)
         if (rowData.indentFabricId != undefined) {
+            if(rowData?.colorId > 0){
+                rowData.colourId = rowData.colorId
+            }
+            
             setInputDisable(true)
             console.log("**********************************************************************")
             fabricForm.setFieldsValue({ poQuantity: Number(rowData.indentQuantity) - Number(rowData.poQuantity) })
-            fabricForm.setFieldsValue({ unitPrice: rowData.unitPrice })
+            fabricForm.setFieldsValue({ unitPrice: defaultFabricFormData?.unitPrice})
             fabricForm.setFieldsValue({ discount: rowData.discount })
             fabricForm.setFieldsValue({ discountAmount: rowData.discountAmount })
             fabricForm.setFieldsValue({ tax: rowData.tax })
@@ -184,27 +188,38 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
             fabricForm.setFieldsValue({ quantityUomId: rowData.quantityUomId })
             fabricForm.setFieldsValue({ quantityUom: rowData.quantityUom })
-            fabricForm.setFieldsValue({ colourId: rowData.colorId })
+            fabricForm.setFieldsValue({ colourId: rowData.colourId })
             fabricForm.setFieldsValue({ m3FabricCode: rowData.m3FabricCode })
+            fabricForm.setFieldsValue({ itemCode: rowData.itemCode })
             fabricForm.setFieldsValue({ styleId: rowData.styleId })
-
+            fabricForm.setFieldsValue({ taxPercentage: rowData?.taxPercentage })
+            fabricForm.setFieldsValue({ fabricCode: rowData?.fabricCode })
 
         }
         if (rowData.samplereFabId != undefined) {
+            if(rowData?.uom_id > 0){
+                rowData.quantityUomId = rowData.uom_id
+            }
+            if(rowData?.uom){
+                rowData.quantityUom = rowData.uom
+            }
+            if(rowData?.style){
+                rowData.styleId = rowData.style
+            }
             setInputDisable(true)
             fabricForm.setFieldsValue({ poQuantity: rowData.sampleQuantity })
-            fabricForm.setFieldsValue({ unitPrice: rowData.unitPrice })
+            fabricForm.setFieldsValue({ unitPrice: defaultFabricFormData?.unitPrice})
             fabricForm.setFieldsValue({ discount: rowData.discount })
             fabricForm.setFieldsValue({ discountAmount: rowData.discountAmount })
             fabricForm.setFieldsValue({ tax: rowData.tax })
             fabricForm.setFieldsValue({ taxAmount: rowData.taxAmount })
             fabricForm.setFieldsValue({ subjectiveAmount: rowData.subjectiveAmount })
             fabricForm.setFieldsValue({ transportation: rowData.transportation })
-            fabricForm.setFieldsValue({ quantityUomId: rowData.uom_id })
+            fabricForm.setFieldsValue({ quantityUomId: rowData.quantityUomId })
             fabricForm.setFieldsValue({ quantityUom: rowData.uom })
-            fabricForm.setFieldsValue({ styleId: rowData.style })
-
-
+            fabricForm.setFieldsValue({ styleId: rowData.styleId })
+            fabricForm.setFieldsValue({ taxPercentage: rowData?.taxPercentage })
+            fabricForm.setFieldsValue({ description: rowData?.description })
         }
         setFabricIndexVal(index)
     }
@@ -214,6 +229,23 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         if (defaultFabricFormData) {
             console.log(defaultFabricFormData)
             if(defaultFabricFormData.sampleReqId != undefined){
+                if(defaultFabricFormData?.uom_id > 0){
+                    defaultFabricFormData.quantityUomId = defaultFabricFormData.uom_id
+                }
+                if(defaultFabricFormData?.uom){
+                    defaultFabricFormData.quantityUom = defaultFabricFormData.uom
+                }
+                if(defaultFabricFormData?.style){
+                    defaultFabricFormData.styleId = defaultFabricFormData.style
+                }
+                fabricForm.setFieldsValue({ unitPrice: defaultFabricFormData?.unitPrice})
+                fabricForm.setFieldsValue({ discount: defaultFabricFormData?.discount })
+                fabricForm.setFieldsValue({ discountAmount: defaultFabricFormData?.discountAmount })
+                fabricForm.setFieldsValue({ tax: defaultFabricFormData?.tax })
+                fabricForm.setFieldsValue({ taxAmount: defaultFabricFormData?.taxAmount })
+                fabricForm.setFieldsValue({ subjectiveAmount: defaultFabricFormData?.subjectiveAmount })
+                fabricForm.setFieldsValue({ transportation: defaultFabricFormData?.transportation })
+                // trimForm.setFieldsValue({poQuantity:(defaultFabricFormData.poQuantity > 0) ?(Number(defaultFabricFormData.poQuantity)) : Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity)})
                 fabricForm.setFieldsValue({
                     poQuantity: defaultFabricFormData.sampleQuantity,
                     sampleReqId:defaultFabricFormData.sampleReqId,
@@ -225,16 +257,30 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                  colorName: defaultFabricFormData.colorName,
                 shahiFabricCode: defaultFabricFormData.shahiFabricCode,
                 itemCode:defaultFabricFormData.itemCode,
-                quantityUomId: defaultFabricFormData.uom_id,
+                quantityUomId: defaultFabricFormData.quantityUomId,
                 quantityUom: defaultFabricFormData.quantityUom,
-                styleId: defaultFabricFormData.style
+                styleId: defaultFabricFormData.styleId,
+                taxPercentage: defaultFabricFormData?.taxPercentage,
+                description: defaultFabricFormData?.description
+
+
                 })
             }
             if(defaultFabricFormData.indentId != undefined){
+                if(defaultFabricFormData?.colorId > 0){
+                    defaultFabricFormData.colourId = defaultFabricFormData.colorId
+                }
+                
+                fabricForm.setFieldsValue({ unitPrice: defaultFabricFormData?.unitPrice })
+                fabricForm.setFieldsValue({ discount: defaultFabricFormData?.discount })
+                fabricForm.setFieldsValue({ discountAmount: defaultFabricFormData?.discountAmount })
+                fabricForm.setFieldsValue({ subjectiveAmount: defaultFabricFormData?.subjectiveAmount })
+                fabricForm.setFieldsValue({ transportation: defaultFabricFormData?.transportation })
+                fabricForm.setFieldsValue({poQuantity:(defaultFabricFormData.poQuantity > 0) ?(Number(defaultFabricFormData.poQuantity)) : Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity)})
                 fabricForm.setFieldsValue({
-                    poQuantity: Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity),
+                    // poQuantity: Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity),
                     m3FabricCode: defaultFabricFormData.m3FabricCode,
-                    colourId: defaultFabricFormData.colorId,
+                    colourId: defaultFabricFormData.colourId,
                     colorName: defaultFabricFormData.colorName,
                     tax: defaultFabricFormData.tax,
                     taxAmount: defaultFabricFormData.taxAmount,
@@ -246,6 +292,9 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     quantityUom: defaultFabricFormData.quantityUom,
                     indentCode: defaultFabricFormData.indentCode,
                     indentId:defaultFabricFormData.indentId,
+                    taxPercentage: defaultFabricFormData?.taxPercentage,
+                    fabricCode: defaultFabricFormData?.fabricCode
+
                     // styleId: defaultFabricFormData.style
                 })
             }
@@ -385,7 +434,10 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         },
         {
             title: 'UOM',
-            dataIndex: 'uom',
+            dataIndex: 'quantityUom',
+            render:(text,row)=>{
+                return <>{row.uom ? row.uom : text}</>
+            }
         },
         {
             title: 'Unit Price',
@@ -450,6 +502,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
 
     const onFabricAdd = (values) => {
         console.log(values);
+        console.log(fabricTableData);
         values.materialType = defaultFabricFormData.materialType
         fabricForm.validateFields().then(() => {
             if (fabricIndexVal !== undefined) {
@@ -460,6 +513,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                 tableData = [...fabricTableData, values]
             }
             setFabricTableData(tableData)
+            console.log(tableData)
             props(tableData)
             fabricForm.resetFields()
             setUpdate(false)
@@ -519,7 +573,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         let baseValue=Number(unitPrice)*Number(quantity);
         const disc_per=fabricForm.getFieldValue('discount')
         if(disc_per!==''&&disc_per>0){
-            discAmnt=Math.round(baseValue*disc_per/100);
+            discAmnt=baseValue*disc_per/100;
             baseValue=Number(baseValue)-Number(discAmnt);
         }
         console.log('Tax Percentage')
@@ -562,6 +616,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     <Form.Item name='indentQuantity' hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentFabricId'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'itemCode'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'description'} hidden><Input></Input></Form.Item>
+                    <Form.Item name={'fabricCode'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'quantityUom'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentCode'} hidden><Input></Input></Form.Item>
                     <Form.Item name={'samplereFabId'} hidden><Input></Input></Form.Item>
@@ -604,7 +660,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='poQuantity' label='PO Quantity'
-                            rules={[{ required: true, message: 'Quantity of Fabric is required' }]}
+                            rules={[{ required: true, message: 'Quantity is required' }]}
                         >
                             <Input placeholder="Enter Quantity" onChange={(e) => quantiyOnchange(e.target.value)} />
                         </Form.Item>
@@ -622,14 +678,14 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                         <Form.Item name='unitPrice' label='Unit Price'
-                            rules={[{ required: true, message: 'unit price of Fabric is required' }]}
+                            rules={[{ required: true, message: 'unit price is required' }]}
                         >
                             <InputNumber style={{ width: '90px' }} placeholder="unit price" onChange={(e) => finalCalculation()} min={0}/>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{paddingLeft:'41px'}}>
                         <Form.Item name='discount' label='Discount'
-                            rules={[{ required: false, message: 'Discount of Fabric is required' }]}
+                            rules={[{ required: false, message: 'Discount is required' }]}
                         >
                             <InputNumber  placeholder="discount" onChange={(e) => finalCalculation()} min={0}/>
                         </Form.Item>
@@ -637,14 +693,14 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='discountAmount' label='Discount Amount'
-                            rules={[{ required: false, message: 'Discount of Fabric is required' }]}
+                            rules={[{ required: false, message: 'Discount is required' }]}
                         >
                             <Input disabled placeholder="discount amount" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='tax' label='Tax Percentage(%)'
-                            rules={[{ required: true, message: 'tax of Fabric is required' }]}
+                            rules={[{ required: true, message: 'tax%  is required' }]}
                         >
                              <Select
                                 placeholder="Select Tax"
@@ -665,21 +721,21 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='taxAmount' label='Tax Amount'
-                            rules={[{ required: true, message: 'Tax of Fabric is required' }]}
+                            rules={[{ required: true, message: 'Tax is required' }]}
                         >
                             <Input disabled placeholder="Tax amount" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='transportation' label='Transportation'
-                            rules={[{ required: false, message: 'Transportation of Fabric is required' }]}
+                            rules={[{ required: false, message: 'Transportation is required' }]}
                         >
                             <Input placeholder="Transportation" onChange={(e) => finalCalculation()} min={0} />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='subjectiveAmount' label='Subjective Amount'
-                            rules={[{ required: true, message: 'Subjective Amount of Fabric is required' }]}
+                            rules={[{ required: true, message: 'Subjective Amount is required' }]}
                         >
                             <Input disabled placeholder="Subjective amount" />
                         </Form.Item>

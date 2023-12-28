@@ -7,3 +7,8 @@ ALTER TABLE `shahi_crm`.`operation_inventory` ADD COLUMN `sample_req_id` INT NOT
 ALTER TABLE `shahi_crm`.`operation_inventory` ADD COLUMN `reporter` INT NOT NULL AFTER `size_id`, ADD COLUMN `supervisor` INT NOT NULL AFTER `reporter`; 22/12/2023
 
 ALTER TABLE `shahi_crm`.`operation_tracking` ADD COLUMN `reporter` INT NOT NULL AFTER `size_id`, ADD COLUMN `supervisor` INT NOT NULL AFTER `reporter`; ; 22/12/2023
+
+build alter queries
+ALTER TABLE `shahi_crm`.`purchase_order` ADD COLUMN `ref_no` INT NOT NULL AFTER `total_amount`;27/12/2023
+
+ALTER TABLE `shahi_crm`.`purchase_order` CHANGE `grn_quantity` `grn_quantity` VARCHAR(255) CHARSET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '0' NULL; 28/12/2023

@@ -168,7 +168,7 @@ getData(data.poNumber)
    margin: 0; /* Reset default margin */
  }`}</style>
                         </div>
-                        <div style={{ textAlign: 'left', fontSize: "15px", marginLeft: 10,}}>
+                        <div style={{ textAlign: 'left', fontSize: "12px", marginLeft: 10,width:'50%'}}>
                           {`${e?.grn_item_no}`}
                         </div>
                         </div>
@@ -177,9 +177,12 @@ getData(data.poNumber)
                     <p style={{textAlign: 'left',marginLeft:-100,fontSize:'10px',padding:1}}>{e.invoice_no}</p>
                     <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:1}}>Type : </p>
                     <p style={{ textAlign: 'left',marginLeft:-100,fontSize:'10px',padding:1}}>{ItemTypeEnumDisplay.find((s)=> s.name === e.item_type)?.displayVal?ItemTypeEnumDisplay.find((s)=> s.name === e.item_type)?.displayVal:e.item_type}</p>
+                    {e.item_type !== 'FABRIC'?(
+                    <><p style={{ color: 'green', textAlign: 'left', marginLeft: -100, padding: 1 }}>Params : </p><p style={{ textAlign: 'left', marginLeft: -100, fontSize: '10px', padding: 1 }}>{e.trimParams}</p></>
+                    ):''}
                     <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:1}}>Item : </p>
                     <p style={{textAlign: 'left',marginLeft:-100,fontSize:'10px',padding:1}}>{e.itemCode}</p>
-
+                   
                     </div>
                       </div>
                       </h4>

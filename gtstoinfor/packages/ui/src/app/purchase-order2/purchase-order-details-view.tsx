@@ -105,7 +105,7 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       key: 'PO Quantity',
       dataIndex: 'po_quantity',
       render: (text, record) => {
-        return (<span>{`${record.po_quantity}`}</span>)
+        return (<span>{`${record.po_quantity} ${record.uom!=null?`(${record.uom})`:""}`}</span>)
       }
     },
     {

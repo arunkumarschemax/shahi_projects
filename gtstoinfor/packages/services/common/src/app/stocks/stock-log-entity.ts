@@ -46,9 +46,12 @@ export class StockLogEntity{
     locationId: number;
 
     @Column({
-        name: "quantity",
-    })
-    quantity: number;
+        type: "decimal", precision: 10, scale: 3,
+        name:'quantity',
+        nullable:true,
+        default:0
+      })
+      quantity:number
     
     @Column({
         name: "grn_item_id",
