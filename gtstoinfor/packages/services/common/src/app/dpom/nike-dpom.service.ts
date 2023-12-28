@@ -690,7 +690,7 @@ export class DpomService {
         return sendMail
     }
 
-    // @Cron('0 4 * * *')
+    @Cron('0 4 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
         try {
@@ -832,7 +832,7 @@ export class DpomService {
         }
     }
 
-    // @Cron('30 6 * * *')
+    @Cron('30 6 * * *')
     async syncCRMData(): Promise<CommonResponseModel> {
         // const transactionManager = new GenericTransactionManager(this.dataSource)
         const getBuyerPOs = await this.dpomRepository.getBuyerPOs()
@@ -847,11 +847,20 @@ export class DpomService {
                     // const CRMData3 = await this.getCRMOrderDetails3(styleNo);
                     if (CRMData2.status) {
                         for (const data1 of CRMData1.data) {
-                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY, actualShippedQty: data1.inv_QTY })
+                            let ocrStatus
+                            const dateString = data1.auditdate;
+                            const inputDate = new Date(dateString);
+                            const currentDate = new Date();
+                            if (inputDate < currentDate) {
+                                ocrStatus = 'Closed'
+                            } else {
+                                ocrStatus = 'Open'
+                            }
+                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY, actualShippedQty: data1.inv_QTY, ocrAuditDate: data1.auditdate, ocrStatus: ocrStatus })
                             if (updateOrder.affected) {
                                 continue;
                             } else {
-                                await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.pcd })
+                                await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.pcd, ocrAuditDate: data1.auditdate, ocrStatus: ocrStatus })
                                 continue;
                                 // await transactionManager.releaseTransaction()
                                 // return new CommonResponseModel(false, 0, 'CRM data sync failed')
@@ -859,11 +868,20 @@ export class DpomService {
                         }
                     } else {
                         for (const data1 of CRMData1.data) {
-                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, coPrice: data1.price, coPriceCurrency: data1.currency, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY, actualShippedQty: data1.inv_QTY })
+                            let ocrStatus
+                            const dateString = data1.auditdate;
+                            const inputDate = new Date(dateString);
+                            const currentDate = new Date();
+                            if (inputDate < currentDate) {
+                                ocrStatus = 'Closed'
+                            } else {
+                                ocrStatus = 'Open'
+                            }
+                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, coPrice: data1.price, coPriceCurrency: data1.currency, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY, actualShippedQty: data1.inv_QTY, ocrAuditDate: data1.auditdate, ocrStatus: ocrStatus })
                             if (updateOrder.affected) {
                                 continue;
                             } else {
-                                await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, coPrice: data1.price, coPriceCurrency: data1.currency, styleDesc: '', commission: data1.commission, PCD: data1.pcd })
+                                await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, coPrice: data1.price, coPriceCurrency: data1.currency, styleDesc: '', commission: data1.commission, PCD: data1.pcd, ocrAuditDate: data1.auditdate, ocrStatus: ocrStatus })
                                 continue;
                                 // await transactionManager.releaseTransaction()
                                 // return new CommonResponseModel(false, 0, 'CRM data sync failed')
@@ -891,7 +909,7 @@ export class DpomService {
             if (orderDetails.length > 0) {
                 for (const detail of orderDetails) {
                     const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: detail.purchaseOrderNumber, poLineItemNumber: detail.poLineItemNumber, scheduleLineItemNumber: detail.scheduleLineItemNumber }, {
-                        shipToAddressDIA: req.shipToAddress, CABCode: req.cabCode
+                        shipToAddressDIA: req.shipToAddress, CABCode: req.cabCode, finalDestination: req.finalDestination
                     })
                     if (!updateOrder.affected) {
                         await transactionManager.releaseTransaction();
@@ -2292,7 +2310,7 @@ export class DpomService {
                     const directoryPath = 'D:/Nike PDF/Nike-PDF PO';
                     // Specify the source and destination directories
                     const sourceDirectory = 'D:/Nike PDF/Nike-PDF PO';
-                    const destinationDirectory = 'D:/Nike PDF/Read';
+                    const destinationDirectory = 'D:/Nike PDF/PO PDF-Read';
                     const files = fs.readdirSync(directoryPath)
                     for (const file of files) {
                         await page.waitForSelector('input[type="file"]');
@@ -2355,7 +2373,7 @@ export class DpomService {
                     const directoryPath = 'D:/Nike PDF/Nike-DIA';
                     // Specify the source and destination directories
                     const sourceDirectory = 'D:/Nike PDF/Nike-DIA';
-                    const destinationDirectory = 'D:/Nike PDF/Read';
+                    const destinationDirectory = 'D:/Nike PDF/DIA-Read';
                     const files = fs.readdirSync(directoryPath)
                     for (const file of files) {
                         await page.waitForSelector('input[type="file"]');

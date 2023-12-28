@@ -421,12 +421,26 @@ export class DpomEntity {
     })
     geoCode: string;
 
-    // @Column("varchar", {
-    //     name: "exFactoryExpDate",
-    //     length: 10,
-    //     nullable: true
-    // })
-    // exFactoryExpDate: string;
+    @Column("varchar", {
+        name: "final_destination",
+        length: 50,
+        nullable: true
+    })
+    finalDestination: string;
+
+    @Column("varchar", {
+        name: "ocr_audit_date",
+        length: 30,
+        nullable: true
+    })
+    ocrAuditDate: string;
+
+    @Column("varchar", {
+        name: "ocr_status",
+        length: 10,
+        nullable: true
+    })
+    ocrStatus: string;
 
     //PDF Data
     @Column('varchar', {

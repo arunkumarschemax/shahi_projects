@@ -1,8 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger"
 
-export class DiaPDFDto{
+export class DiaPDFDto {
     @ApiProperty()
     shipToAddress: string
+    @ApiProperty()
+    finalDestination: string;
     @ApiProperty()
     cabCode: string
     @ApiProperty()
