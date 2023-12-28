@@ -394,9 +394,9 @@ export class DpomController {
     }
 
     @Post('/getVasTextChangeData')
-    async getVasTextChangeData(): Promise<CommonResponseModel> {
+    async getVasTextChangeData(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.dpomService.getVasTextChangeData();
+            return this.dpomService.getVasTextChangeData(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

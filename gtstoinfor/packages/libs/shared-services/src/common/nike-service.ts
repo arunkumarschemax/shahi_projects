@@ -150,8 +150,8 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/getShippingTypeChangeData")
     }
 
-    async getVasTextChangeData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/getVasTextChangeData")
+    async getVasTextChangeData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getVasTextChangeData", req)
     }
 
     async getShipToCustomerChangeData(): Promise<CommonResponseModel> {

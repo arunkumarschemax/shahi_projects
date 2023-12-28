@@ -843,7 +843,7 @@ export class DpomService {
                     // const CRMData3 = await this.getCRMOrderDetails3(styleNo);
                     if (CRMData2.status) {
                         for (const data1 of CRMData1.data) {
-                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY })
+                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY, actualShippedQty: data1.inv_QTY })
                             if (updateOrder.affected) {
                                 continue;
                             } else {
@@ -855,7 +855,7 @@ export class DpomService {
                         }
                     } else {
                         for (const data1 of CRMData1.data) {
-                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, coPrice: data1.price, coPriceCurrency: data1.currency, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY })
+                            const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, coPrice: data1.price, coPriceCurrency: data1.currency, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY, actualShippedQty: data1.inv_QTY })
                             if (updateOrder.affected) {
                                 continue;
                             } else {
@@ -1458,8 +1458,8 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
-    async getVasTextChangeData(): Promise<CommonResponseModel> {
-        const data = await this.dpomRepository.getVasTextChangeData()
+    async getVasTextChangeData(req: any): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getVasTextChangeData(req)
         if (data.length > 0)
             return new CommonResponseModel(true, 1, 'data retrived', data)
         else
@@ -1627,7 +1627,55 @@ export class DpomService {
                     rec.po_and_line, new MarketingReportModel(moment(rec.last_modified_date).format('MM/DD/YYYY'), rec.item ? (rec.item).substring(0, 4) : null, rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, coFinalAppDate, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac, 'YYYY-MM-DD').format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, itemVasText, rec.item_vas_pdf, rec.item_text, formattedPCD, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, rec.fabric_content, [])
                 )
             }
-            sizeDateMap.get(rec.po_and_line).sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.shahi_confirmed_gross_price, rec.shahi_confirmed_gross_price_currency_code, rec.ne_inc_disc, rec.net_inc_disc_currency_code, rec.trading_net_inc_disc, rec.trading_net_currency_code, rec.legal_po_price, rec.legal_po_currency, rec.co_price, rec.co_price_currency, rec.crm_co_qty, rec.legal_po_qty, rec.actual_shipped_qty));
+            let fobPriceDiff;
+            if (isNaN(rec.gross_price_fob) || isNaN(rec.shahi_confirmed_gross_price)) {
+                fobPriceDiff = null
+            } else {
+                fobPriceDiff = (Number(rec.gross_price_fob) - Number(rec.shahi_confirmed_gross_price)).toFixed(2)
+            }
+            let fobCurrencyDiff;
+            if (rec.fob_currency_code == rec.shahi_confirmed_gross_price) {
+                fobCurrencyDiff = 'Same'
+            } else {
+                fobCurrencyDiff = 'Different'
+            }
+            let diffOfLegalPOCOPrice;
+            if (isNaN(rec.legal_po_price) || isNaN(rec.co_price)) {
+                diffOfLegalPOCOPrice = null
+            } else {
+                diffOfLegalPOCOPrice = (Number(rec.legal_po_price) - Number(rec.co_price)).toFixed(2)
+            }
+            let diffOfLegalPOCOCurrency;
+            if (rec.legal_po_currency && rec.co_price_currency) {
+                if (rec.legal_po_currency && rec.co_price_currency) {
+                    diffOfLegalPOCOCurrency = 'Same'
+                } else {
+                    diffOfLegalPOCOCurrency = 'Different'
+                }
+            } else {
+                diffOfLegalPOCOCurrency = null
+            }
+            let diffOfQty;
+            if (isNaN(rec.crm_co_qty) || isNaN(rec.legal_po_qty)) {
+                diffOfQty = null
+            } else {
+                diffOfQty = Number(rec.crm_co_qty) - Number(rec.legal_po_qty)
+            }
+            let allowedExcessShipQty;
+            if (rec.shippingType === 'DIRECT') {
+                allowedExcessShipQty = 0;
+            } else {
+                const result = 0.03 * Number(rec.size_qty);
+                allowedExcessShipQty = result.toFixed(0);
+            }
+            let actualShipPer;
+            if (rec.actual_shipped_qty) {
+                const div = Number(rec.actual_shipped_qty) / Number(rec.size_qty);
+                actualShipPer = Number(div * 100).toFixed(0) + ' ' + '%';
+            } else {
+                actualShipPer = 0 + ' ' + '%';
+            }
+            sizeDateMap.get(rec.po_and_line).sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.shahi_confirmed_gross_price, rec.shahi_confirmed_gross_price_currency_code, fobPriceDiff, fobCurrencyDiff, rec.ne_inc_disc, rec.net_inc_disc_currency_code, rec.trading_net_inc_disc, rec.trading_net_currency_code, rec.legal_po_price, rec.legal_po_currency, rec.co_price, rec.co_price_currency, diffOfLegalPOCOPrice, diffOfLegalPOCOCurrency, rec.crm_co_qty, rec.legal_po_qty, diffOfQty, allowedExcessShipQty, rec.actual_shipped_qty, actualShipPer));
 
         }
         const dataModelArray: MarketingReportModel[] = [];

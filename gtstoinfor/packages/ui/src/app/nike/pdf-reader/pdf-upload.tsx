@@ -44,8 +44,6 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
     const [diaPDFValues, setDiaPDFValues] = useState<DiaPDFModel>()
     const [resultProps, setResultProps] = useState<ResultPropsModel>()
     const [poPdfData, setPoPdfData] = useState<any>()
-
-
     const [diaPDfForm] = Form.useForm()
     const nikeDpomService = new NikeService();
     const adobeAcrobatApi = new AdobeAcrobatApiService()
@@ -75,7 +73,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
     async function extractDiaDocumentData(pdf: any, pdfText: any) {
         const data: DiaPDFModel = await DiaPdfDataExtractor(pdf)
-        if (data.cabCode.length > 5) {
+        if (data.cabCode.includes('Account Contact')) {
             data.cabCode = null
         }
         setDiaPDFValues(data)

@@ -161,6 +161,7 @@ export function OrderAcceptance() {
 
     const onReset = () => {
         form.resetFields()
+        setItemNoValues({})
         getOrderAcceptanceData()
     }
 
@@ -269,33 +270,6 @@ export function OrderAcceptance() {
                 dataIndex: 'documentDate', width: 80,
                 render: (text) => moment(text).format('MM/DD/YYYY'),
             },
-            // {
-            //     title: 'Aging',
-            //     dataIndex: '', width: 80, align: 'right',
-            //     render: (text, record) => {
-            //         const documentDate = moment(record.document_date);
-
-            //         const today = moment();
-            //         const aging = today.diff(documentDate, 'days');
-            //         return aging;
-            //     },
-            //     sorter: (a, b) => {
-            //         const aAging = moment(a['documentDate']);
-            //         const bAging = moment(b['documentDate']);
-
-            //         if (!aAging.isValid() && !bAging.isValid()) {
-            //             return 0;
-            //         } else if (!aAging.isValid()) {
-            //             return 1;
-            //         } else if (!bAging.isValid()) {
-            //             return -1;
-            //         }
-
-            //         return aAging.diff(bAging, 'days');
-            //     },
-
-            //     // sortOrder: null
-            // },
             {
                 title: 'Product Code',
                 dataIndex: 'productCode', width: 80,
@@ -312,22 +286,6 @@ export function OrderAcceptance() {
                 title: 'Destination Country Name',
                 dataIndex: 'destinationCountry', width: 75,
             },
-            // {
-            //     title: 'Item',
-            //     dataIndex: 'item', align: 'center', width: 70,
-            //     render: (text, record) => {
-            //         if (!text || text.trim() === '') {
-            //             return '-';
-            //         } else {
-            //             const firstFourDigits = text.substring(0, 4);
-            //             return firstFourDigits;
-            //         }
-            //     },
-            // },
-            // {
-            //     title: 'CO No', width: 70,
-            //     dataIndex: 'customerOrder',
-            // },
             {
                 title: 'MRGAC', dataIndex: 'MRGAC', className: "right-column", width: 70, render: (text, record) => {
                     return record.MRGAC ? moment(record.MRGAC).format('MM/DD/YYYY') : '-';
@@ -358,98 +316,6 @@ export function OrderAcceptance() {
                 dataIndex: 'categoryDesc',
                 width: 80,
             },
-            // {
-            //     title: 'Total Order Quantity',
-            //     dataIndex: 'totalItemQty',
-            //     width: 80,
-            //     align: 'right',
-            //     render: (text, record) => {
-            //         return record.totalItemQty_OLD ? (
-            //             <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${record.totalItemQty_OLD} Revised Date:  ${record.totalItemQty_NEW} Difference :  `}>
-            //                 {record.totalItemQty_OLD < record.totalItemQty_NEW ? (
-            //                     <span style={{ color: 'green' }}>
-            //                         {Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-            //                     </span>
-            //                 ) : (
-            //                     ''
-            //                 )}
-            //                 {record.totalItemQty_OLD > record.totalItemQty_NEW ? (
-            //                     <span style={{ color: 'red' }}>
-            //                         {Number(record.totalItemQty_NEW).toLocaleString('en-IN', { maximumFractionDigits: 0 })}
-            //                     </span>
-            //                 ) : (
-            //                     ''
-            //                 )}
-            //                 &nbsp;&nbsp;
-            //                 <span>
-            //                     {record.totalItemQty_OLD < record.totalItemQty_NEW ? (
-            //                         <ArrowUpOutlined style={{ color: 'green' }} />
-            //                     ) : (
-            //                         <ArrowDownOutlined style={{ color: 'red' }} />
-            //                     )}
-            //                 </span>
-            //             </Tooltip>
-            //         ) : (
-            //             Number(record.total_item_qty).toLocaleString('en-IN', { maximumFractionDigits: 0 })
-            //         );
-            //     }
-            // }
-            // ,
-            // {
-            //     title: 'MRGAC',
-            //     dataIndex: 'mrgac', width: 80,
-            //     render: (text, record) => {
-            //         return (record.MRGAC_OLD ?
-            //             (
-            //                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.MRGAC_OLD).format('MM/DD/YYYY')} Revised Date:  ${moment(record.MRGAC_NEW).format('MM/DD/YYYY')} Difference : ${Math.floor((new Date(moment(record.MRGAC_NEW).format('MM/DD/YYYY')).getTime() - new Date(moment(record.MRGAC_NEW).format('MM/DD/YYYY')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
-            //                     {moment(record.MRGAC_OLD).format('MM/DD/YYYY') < moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'green' }}>{moment(record.MRGAC_NEW).format('MM/DD/YYYY')}</span> : ''}
-            //                     {moment(record.MRGAC_OLD).format('MM/DD/YYYY') > moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'red' }}>{moment(record.MRGAC_NEW).format('MM/DD/YYYY')}</span> : ''}
-            //                     &nbsp;&nbsp;
-            //                     <span>
-            //                         {moment(record.MRGAC_OLD).format('MM/DD/YYYY') < moment(record.MRGAC_NEW).format('MM/DD/YYYY') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
-            //                     </span>
-            //                 </Tooltip>
-            //             ) : (record.mrgac ? record.mrgac : '-'))
-            //     }
-            // },
-            // {
-            //     title: 'GAC',
-            //     dataIndex: 'gac', width: 80,
-            //     render: (text, record) => {
-            //         return (record.GAC_OLD ?
-            //             (
-            //                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '160px' }} title={`Previous Date:  ${moment(record.GAC_OLD).format('MM/DD/YYYY')} Revised Date:  ${moment(record.GAC_NEW).format('MM/DD/YYYY')}Difference : ${Math.floor((new Date(moment(record.GAC_NEW).format('MM/DD/YYYY')).getTime() - new Date(moment(record.GAC_NEW).format('MM/DD/YYYY')).getTime()) / (1000 * 60 * 60 * 24)) + 1}  Days  `}>
-            //                     {moment(record.GAC_OLD).format('MM/DD/YYYY') < moment(record.GAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'green' }}>{moment(record.GAC_NEW).format('MM/DD/YYYY')}</span> : ''}
-            //                     {moment(record.GAC_OLD).format('MM/DD/YYYY') > moment(record.GAC_NEW).format('MM/DD/YYYY') ? <span style={{ color: 'red' }}>{moment(record.GAC_NEW).format('MM/DD/YYYY')}</span> : ''}
-            //                     &nbsp;&nbsp;
-            //                     <span>
-            //                         {moment(record.GAC_OLD).format('MM/DD/YYYY') < moment(record.GAC_NEW).format('MM/DD/YYYY') ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
-            //                     </span>
-            //                 </Tooltip>
-            //             ) : record.gac)
-            //     }
-            // },
-            // {
-            //     title: 'Gross Price', align: 'right',
-            //     dataIndex: 'gross_price_fob', width: 80,
-            //     render: (text, record) => {
-            //         return (record.grossPriceFOB_OLD ?
-            //             (
-            //                 <Tooltip overlayStyle={{ font: 'bold', maxWidth: '140px' }} title={`Previous Price:  ${record.grossPriceFOB_OLD} Revised Price:  ${record.grossPriceFOB_NEW} Difference : ${(parseFloat(record.grossPriceFOB_NEW) - parseFloat(record.grossPriceFOB_OLD)).toFixed(2)} `}>
-            //                     {record.grossPriceFOB_OLD < record.grossPriceFOB_NEW ? <span style={{ color: 'green' }}>{record.grossPriceFOB_NEW}</span> : ''}
-            //                     {record.grossPriceFOB_OLD > record.grossPriceFOB_NEW ? <span style={{ color: 'red' }}>{record.grossPriceFOB_NEW}</span> : ''}
-            //                     &nbsp;&nbsp;
-            //                     <span>
-            //                         {record.grossPriceFOB_OLD < record.grossPriceFOB_NEW ? <ArrowUpOutlined style={{ color: 'green' }} /> : <ArrowDownOutlined style={{ color: 'red' }} />}
-            //                     </span>
-            //                 </Tooltip>
-            //             ) : record.gross_price_fob)
-            //     }
-            // },
-            // {
-            //     title: 'Gross Price Currency',
-            //     dataIndex: 'fob_currency_code', width: 80,
-            // },
             {
                 title: 'Shipping Type',
                 dataIndex: 'shippingType', width: 80, render: (text) => {
