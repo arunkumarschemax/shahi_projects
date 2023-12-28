@@ -1982,10 +1982,9 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
     console.log(sizesStr,'kkkkk')
 
     console.log(req,'rehhhh')
-    const sampleDataQry = `SELECT sty.style,cl.colour,${sizesStr} FROM sample_request_size_info s 
+    const sampleDataQry = `SELECT cl.colour,${sizesStr} FROM sample_request_size_info s 
     left join sample_request sr on sr.sample_request_id = s.sample_request_id
     left join colour cl on cl.colour_id = s.colour_id
-    left join style sty on sty.style_id = sr.style_id
     WHERE s.sample_request_id=${req.sampleReqId} GROUP BY s.colour_id`
     const finalres = await this.dataSource.query(sampleDataQry)
     if(finalres.length > 0){
@@ -2021,8 +2020,7 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
    
         const info = await manager.query(rawQuery);
          const MapData = new Map<string,SampleRequestInfoModel>()
-        //  const fabData = new Map<string,any[]>()
-        //  const trimData = new Map<string,any[]>()
+       
          let sizedata = new Map <number,SampleSizeInfoModel>()
 
         if(info.length > 0){
@@ -2031,11 +2029,6 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
                     MapData.set(rec.requestNo,new SampleRequestInfoModel(rec.request_no,rec.sample_request_id,rec.style,rec.brand_name,rec.buyer_name,rec.first_name,rec.status,rec.lifeCycleStatus,rec.contact,rec.profit_control_head,rec.expected_delivery_date,[],[]))
                 }
                
-        //           if(!sizedata.has(rec.size_id)){
-        //             sizedata.set(rec.size_id,new SampleSizeInfoModel(rec.size_id,rec.sizes,[]))
-        //           }
-                  
-        // sizedata.get(rec.size_id).colours.push({ colour: rec.colour ,quantity:rec.quantity});
         const existingTrim = MapData.get(rec.requestNo).trimInfo.find(
           (trimInfo) => trimInfo.trimCode === rec.trimCode
       );

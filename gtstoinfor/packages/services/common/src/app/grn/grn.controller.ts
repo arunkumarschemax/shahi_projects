@@ -76,4 +76,12 @@ export class GrnController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+  @Post('/getGrnReportData')
+  async getGrnReportData(): Promise<CommonResponseModel> {
+    try {
+      return await this.grnService.getGrnReportData();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
 }
