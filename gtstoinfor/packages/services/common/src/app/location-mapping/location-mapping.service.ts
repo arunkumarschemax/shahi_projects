@@ -158,7 +158,7 @@ export class LocationMappingService {
 
     
     
-    async getgrn(): Promise<CommonResponseModel> {
+    async getgrn(req?:any): Promise<CommonResponseModel> {
         try {
             
             let query = `SELECT DISTINCT
