@@ -2,6 +2,7 @@ import {
     BarcodeOutlined,
     CaretDownOutlined,
     CaretRightOutlined,
+    EyeOutlined,
     InfoCircleOutlined,
     PrinterOutlined,
     SearchOutlined,
@@ -1001,6 +1002,19 @@ import RolePermission from "../role-permissions";
                 />
               }
               key={index}
+            extra={
+              <EyeOutlined
+              onClick={() => {
+
+                navigate('/sample-req-detail-view', { state: item.sample_request_id })
+
+                // setHideCancelButton(false);
+                // DetailView(rowData.SampleRequestId, false);
+              }}
+              style={{ color: "blue", fontSize: 20 ,padding:1}}
+            />
+             
+            }
             >
               <Space
                 direction="vertical"
