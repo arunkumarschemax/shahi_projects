@@ -157,8 +157,8 @@ const getMappedTrims = (value, row) => {
 
   const getStockDetails = (record,e) => {
     
-    console.log(record);
-    console.log(e);
+    // console.log(record);
+    // console.log(e);
 
     record.trimCode = e;
     let req = new buyerandM3ItemIdReq(props.buyerId,e,record.trimType);
@@ -177,16 +177,20 @@ const getMappedTrims = (value, row) => {
   }
   
   const handleInputChange = async (e, key, field, record) => {
-    console.log("*********************************************")
-    console.log(e)
-    console.log(key)
-    console.log(field)
+    // console.log("*********************************************")
+    // console.log(e)
+    // console.log(key)
+    // console.log(field)
+    let isDuplicate 
 
 
     let updatedData
     if (field === 'trimCode' && e != undefined) {
-      console.log(m3Trims)
-      console.log(m3Trims.find((i) => i.m3TrimsId === e)?.uomId)
+      console.log(data);
+      isDuplicate =  data.find((r) => r.trimCode === e);
+      console.log(isDuplicate);
+      // console.log(m3Trims)
+      // console.log(m3Trims.find((i) => i.m3TrimsId === e)?.uomId)
       updatedData = data.map((record) => {
         if (record.key === key) {
           // setUomStatus(true)
@@ -198,8 +202,8 @@ const getMappedTrims = (value, row) => {
       await getStockDetails(record,e)
     } 
     else if(field === "allocatedStock"){
-      console.log(record.key);
-        console.log(key);
+      // console.log(record.key);
+        // console.log(key);
 
       updatedData = data.map((record) => {
         if (record.key === key) {
@@ -218,11 +222,11 @@ const getMappedTrims = (value, row) => {
               qtyy = Number(qtyy)+Number(qty.quantity);
             })
           });
-          console.log(qtyy);
+          // console.log(qtyy);
           let consumptionCal = Number(qtyy) * Number(e);
           let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
-          console.log(consumptionCal);
-          console.log(withPer);
+          // console.log(consumptionCal);
+          // console.log(withPer);
          props.form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
@@ -239,11 +243,11 @@ const getMappedTrims = (value, row) => {
               qtyy = Number(qtyy)+Number(qty.quantity);
             })
           });
-          console.log(qtyy);
+          // console.log(qtyy);
           let consumptionCal = Number(qtyy) * Number(cons);
           let withPer = (Number(consumptionCal) * Number(e))/ 100;
-          console.log(consumptionCal);
-          console.log(withPer);
+          // console.log(consumptionCal);
+          // console.log(withPer);
          props.form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
           return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
         }
@@ -251,6 +255,28 @@ const getMappedTrims = (value, row) => {
       });
     }
     
+    // else if(field === "trimCategory"){
+    //   console.log(data);
+    //   isDuplicate =  data.find((r) => r.trimCode === record.trimCode && r.trimCategory === e && r.trimType === record.trimType);
+    //   console.log(isDuplicate);
+    //   updatedData = data.map((record) => {
+    //     if (record.key === key) {
+    //       return { ...record, [field]: e };
+    //     }
+    //     return record;
+    //   });
+    // }
+    // else if(field === "trimType"){
+    //   console.log(data);
+    //   isDuplicate =  data.find((r) => r.trimCode === record.trimCode && r.trimCategory === record.trimCategory && r.trimType === e);
+    //   console.log(isDuplicate);
+    //   updatedData = data.map((record) => {
+    //     if (record.key === key) {
+    //       return { ...record, [field]: e };
+    //     }
+    //     return record;
+    //   });
+    // }
     else{
       updatedData = data.map((record) => {
         if (record.key === key) {
@@ -259,18 +285,34 @@ const getMappedTrims = (value, row) => {
         return record;
       });
     }
+
+    console.log(isDuplicate);
+    if(isDuplicate?.trimCode > 0)
+    {
+      AlertMessages.getErrorMessage("Duplicate Entries not allowed. ")
+      props.form.setFieldValue(`trimCode${key}`,0)
+      props.form.validateFields().then(trim => {
+      })
+      .catch((err) => {
+        // console.log(err);
+      })
+      
+    }
+    else{
+      // console.log("jj")
+    }
     
     setData(updatedData);
-    // console.log(updatedData)
+    console.log(updatedData)
     props.data(updatedData)
     
   };
 
   const handleDelete = (key) => {
-    console.log(key);
-    console.log(data);
+    // console.log(key);
+    // console.log(data);
     const updatedData = data.filter((record) => record.key !== key);
-    console.log(updatedData);
+    // console.log(updatedData);
     if(updatedData.length === 0){
       setData([]);
       props.data([])
@@ -308,6 +350,7 @@ const getMappedTrims = (value, row) => {
           placeholder="Select Trim Type"
           onSelect={getTrimCategory}
          >
+          <Option name={`trimType${record.key}`} key={0} value={0}>Please Select TrimType</Option>
           {Object.values(ItemTypeEnumDisplay).filter((val) => val.displayVal !== ItemTypeEnum.FABRIC).map((val) => (
             <Option key={val.name} value={val.name}>
               {val.displayVal}
@@ -333,6 +376,7 @@ const getMappedTrims = (value, row) => {
           placeholder="Select Trim Category"
           onSelect={(e) => getMappedTrims(e,record)}
          >
+          <Option name={`trimCategory${record.key}`} key={0} value={0}>Please Select Trim Category</Option>
           {trimData?.map((e) => {
             return (
             <Option key={e.trimCategory} value={e.trimCategoryId} name={e.trimMappingId}>
@@ -359,6 +403,7 @@ const getMappedTrims = (value, row) => {
             optionFilterProp="children"
             placeholder="Select Trim Code"
           >
+            <Option name={`trimCode${record.key}`} key={0} value={0}>Please Select Trim Code</Option>
             {m3Trims.map(item => {
               return <Option key={item.m3TrimsId} value={item.m3TrimsId}>{item.trimCode}</Option>;
             })}
@@ -459,30 +504,30 @@ const getMappedTrims = (value, row) => {
   ];
 
   const setAllocatedQty = (index, rowData, value, total,fabIndex) => {
-    console.log(fabIndex)
-    console.log(total);
-    console.log(index);
-    console.log(data);
-    console.log(rowData);
+    // console.log(fabIndex)
+    // console.log(total);
+    // console.log(index);
+    // console.log(data);
+    // console.log(rowData);
     rowData.issuedQty = value
     const newData = data.find((record,index) => index === fabIndex)?.allocatedStock;
     // const newData = [...stockData];
-    console.log(newData);
+    // console.log(newData);
     let stockRecord = newData.find((s) => s.stockId === rowData.stockId);
     stockRecord.issuedQty = value;
     const sum = newData.reduce((accumulator, object) => {
-      console.log(accumulator);
-      console.log(object.issuedQty);
+      // console.log(accumulator);
+      // console.log(object.issuedQty);
       return accumulator + (object.issuedQty != undefined ? Number(object.issuedQty) : 0);
     }, 0);
-    console.log(sum);
+    // console.log(sum);
     if(Number(sum) > Number(total)){
       AlertMessages.getErrorMessage('Issued Quantity should not exceed total required. ')
       stockForm.setFieldValue(`allocatedQuantity${fabIndex}-${index}`,0)
     }
     // newData[index].issuedQty = value;
-    // console.log(newData[index]);
-    // console.log(newData)
+    console.log(newData[index]);
+    console.log(newData)
     // setStockData(newData);
     if (value === 0 || value === null || value < 0 || value === undefined) {
       AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
@@ -501,7 +546,7 @@ const tableColumns = (val,fabindex) => {
   if(val === undefined){
     AlertMessages.getWarningMessage("Please give required consumption. ");
   }
-  console.log(val);
+  // console.log(val);
 
   const renderColumnForFabric: any =[
     {
@@ -598,7 +643,7 @@ const tableColumns = (val,fabindex) => {
       }
     }
     else{
-      console.log("")
+      // console.log("")
     }
     
   };
