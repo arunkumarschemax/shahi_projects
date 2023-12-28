@@ -2016,8 +2016,7 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
       LEFT JOIN employee_details e ON e.employee_id = s.technician_id
       LEFT JOIN uom uf ON uf.id = srf.uom_id
       LEFT JOIN uom ut ON ut.id = srt.uom_id
-      WHERE s.sample_request_id = ${req.sampleReqId}
-      GROUP BY colour,sizes`
+      WHERE s.sample_request_id = ${req.sampleReqId}`
       
    
         const info = await manager.query(rawQuery);
