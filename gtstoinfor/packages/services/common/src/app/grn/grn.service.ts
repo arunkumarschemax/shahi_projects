@@ -186,14 +186,19 @@ export class GrnService {
             //     grnNumber = 'GRN/'+ FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
             // }
 
-            let grnItemNumber
             const data1 = 'select max(grn_item_id) as grnItemId from grn_items'
-            const maxItemId = await this.grnRepo.query(data1)
-            if (maxItemId[0].grnItemId == null) {
-                grnItemNumber = 'GRNI'+ req.materialtype + '/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + '001' + ''
-            } else {
-                grnItemNumber = 'GRNI'+ req.materialtype + '/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + maxItemId[0].grnItemId.toString().padStart(3, 0) + ''
-            }
+            const maxItemId = await this.dataSource.query(data1)
+            let itemVal = maxItemId[0].grnItemId + 1;
+            let itemNo = itemVal + "";
+            while(itemNo.length < 4) itemNo= "0" + itemNo;
+            let grnItemNumber = 'GRNI'+ req.materialtype + '/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + itemNo
+
+
+            // if (maxItemId[0].grnItemId == null) {
+            //     grnItemNumber = 'GRNI'+ req.materialtype + '/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + '0001' + ''
+            // } else {
+            //     grnItemNumber = 'GRNI'+ req.materialtype + '/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + maxItemId[0].grnItemId.toString().padStart(3, 0) + ''
+            // }
 
             let mrnNumber
             if (totalGrn[0].grnId == null) {
