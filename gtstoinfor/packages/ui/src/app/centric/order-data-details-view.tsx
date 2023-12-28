@@ -19,27 +19,9 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
 
 
-useEffect(() => {
-    // getorderData();
-  }, []);
-
-//   const getorderData = () => {
-//     const req = new PoOrderFilter(location?.state?.data?.poNumber);
-//     req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
-//     service.getorderDataByPoNumber(req).then((res) => {
-//       if (res.status) {
-//         setOrderData(res.data);
-//       } else {
-//         message.error(res.internalMessage)
-//       }
-//     });
-//   };
-
-
-//  console.log(location?.state?.data,"yyyyyyyyyyyyy")
-//  console.log(location?.state?.data?.sizeWiseData,"yyyyhhhyyyyyyyyy")
-
-
+// useEffect(() => {
+//     // getorderData();
+//   }, []);
 
 
     const columns: any = [

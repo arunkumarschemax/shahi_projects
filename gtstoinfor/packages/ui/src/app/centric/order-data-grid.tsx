@@ -204,6 +204,8 @@ import {
           sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
           sortDirections: ["ascend", "descend"],
           fixed: "left",
+          render: (text) => text ? text : "-"
+
           // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
@@ -212,6 +214,18 @@ import {
           width: 90,
           sorter: (a, b) => a.poLine.localeCompare(b.poLine),
           sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+
+          // ...getColumnSearchProps('purchaseOrderNumber')
+        },
+        {
+          title: "PO Date",
+          dataIndex: "PODate",
+          width: 90,
+          sorter: (a, b) => a.PODate.localeCompare(b.PODate),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+
           // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
@@ -220,6 +234,8 @@ import {
           width: 90,
           sorter: (a, b) => a.material.localeCompare(b.material),
           sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+
           // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
@@ -228,6 +244,8 @@ import {
           width: 90,
           sorter: (a, b) => a.season.localeCompare(b.season),
           sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+
           // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
@@ -236,6 +254,8 @@ import {
             width: 90,
             sorter: (a, b) => a.color.localeCompare(b.color),
             sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+
             // ...getColumnSearchProps('purchaseOrderNumber')
           },
 
@@ -245,6 +265,8 @@ import {
             width: 90,
             sorter: (a, b) => a.gender.localeCompare(b.gender),
             sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+
             // ...getColumnSearchProps('purchaseOrderNumber')
           },
        
@@ -255,6 +277,8 @@ import {
           width: 90,
           sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
           sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+
         },
         {
           title: "Incoterm",
@@ -263,6 +287,8 @@ import {
           width: 90,
           sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
           sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+
         },
         {
             title: "Address",
@@ -270,6 +296,8 @@ import {
             width: 90,
             sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
             sortDirections: ["ascend", "descend"],
+           render: (text) => text ? text : "-"
+
             // ...getColumnSearchProps('purchaseOrderNumber')
           },
        
