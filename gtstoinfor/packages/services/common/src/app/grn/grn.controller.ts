@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Body, Controller, Post, Req } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
-import { CommonResponseModel, GrnReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, GrnReq, grnReportReq } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
 import { GrnService } from "./grn.service";
 import { GrnDto, PurchaseOrderReq } from "./dto/grn-dto";
@@ -77,9 +77,25 @@ export class GrnController {
     }
   }
   @Post('/getGrnReportData')
-  async getGrnReportData(): Promise<CommonResponseModel> {
+  async getGrnReportData(@Body() req?:any): Promise<CommonResponseModel> {
     try {
-      return await this.grnService.getGrnReportData();
+      return await this.grnService.getGrnReportData(req);
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+  @Post('/getSampleRequestnoGainstGrn')
+  async getSampleRequestnoGainstGrn(): Promise<CommonResponseModel> {
+    try {
+      return await this.grnService.getSampleRequestnoGainstGrn();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+  @Post('/getIndentGainstGrn')
+  async getIndentGainstGrn(): Promise<CommonResponseModel> {
+    try {
+      return await this.grnService.getIndentGainstGrn();
     } catch (error) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }

@@ -22,22 +22,25 @@ export class StocksRepository extends Repository<StocksEntity> {
 
     async getAllItemType(): Promise<any> {
         const query = await this.createQueryBuilder('stocks')
-            .select(`stocks.item_type_id as item_type_id`)
-            .where(`stocks.item_type_id is not null`)
-            .orderBy(`stocks.item_type_id`)
+            .select(`stocks.item_type as itemtype`)
+            .where(`stocks.item_type is not null`)
+            .orderBy(`stocks.item_type`)
             const data=await query.getRawMany()
         return data;
     }
 
     async getAllLocation(): Promise<any> {
-        const query = await this.createQueryBuilder('stocks')
-            .select(`stocks.location_id as location_id`)
-            .where(`stocks.location_id is not null`)
-            .orderBy(`stocks.location_id`)
-            const data=await query.getRawMany()
+        const query = await this.createQueryBuilder('s')
+            .select(`r.rack_position_name AS location,s.location_id`)
+            .leftJoin('rack_position', 'r', 'r.position_Id = s.location_id')
+            .where(`r.rack_position_name is not null`)
+            .orderBy(`r.rack_position_name`)
+            .groupBy('r.rack_position_name')
+    
+        const data = await query.getRawMany();
         return data;
     }
-
+    
     async getAllPlant(): Promise<any> {
         const query = await this.createQueryBuilder('stocks')
             .select(`stocks.plant_id as plant_id`)
@@ -48,10 +51,13 @@ export class StocksRepository extends Repository<StocksEntity> {
     }
 
     async getAllStockReportData(req: StockFilterRequest) {
+        console.log("Repo........................................................");
+        
         let query = this.createQueryBuilder('stocks')
             .select(`b.buyer_name AS buyerName, 
             m3_item_code AS m3ItemCode,item_type_id AS itemType,
-            location_id AS location, plant_id AS plant left join buyers b on b.buyer_id = stocks.buyer_id
+            location_id AS location, plant_id AS plant
+             left join buyers b on b.buyer_id = stocks.buyer_id
             left join m3_items it on it.buyer_id = stocks.buyer_id
             `)
 
