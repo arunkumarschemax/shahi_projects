@@ -22,11 +22,11 @@ export class CentricCOLineEntity {
     })
     poNumber: string;
 
-    @Column('int', {
+    @Column('varchar', {
         nullable: true,
         name: "po_line",
     })
-    poLine: number;
+    poLine: string;
 
     
     @Column('varchar', {

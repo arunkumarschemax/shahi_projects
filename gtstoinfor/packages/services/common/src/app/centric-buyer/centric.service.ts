@@ -15,6 +15,12 @@ import { CentricCOLineEntity } from "./entity/centric-co-line.entity";
 import { CentricCOLineRepository } from "./repositories/centric-co-line.repository";
 
 
+import * as puppeteer from 'puppeteer';
+import * as fs from 'fs';
+import * as path from 'path';
+import { Interval } from "@nestjs/schedule";
+
+
 @Injectable()
 export class CentricService {
 
@@ -79,8 +85,10 @@ export class CentricService {
         const match = item.poLine.match(/\d+/);
         console.log(match, "match");
         // Check if a match is found and convert it to an integer
-        const poLine = match ? parseInt(match[0], 10) : null;
-        console.log(poLine, "poLine")
+        // const poLine = match ? parseInt(match[0], 10) : null;
+         const poLine = match
+
+        console.log(poLine,"poLine")
         for (const variant of item.CentricpoItemVariantDetails) {
           const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
           console.log(orderData, "orderData")
@@ -97,6 +105,7 @@ export class CentricService {
           entity.incoterm = req.incoterm
           entity.shipToAdd = req.shipToAdd
           entity.manufacture = req.manufacture
+          entity.poDate = req.poDate
 
 
           entity.poLine = item.poLine
@@ -303,6 +312,70 @@ export class CentricService {
       return new CommonResponseModel(false, 0, 'failed', e);
     }
   }
+
+
+  //  @Interval(20000)
+  // async handleAutomaticCron() {
+  //   try {
+  //     await this.centricBot();
+  //   } catch (error) {
+  //     console.error('Error', error);
+  //   }
+  // }
+
+  async centricBot() {
+    try {
+      const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
+
+      const page = await browser.newPage();
+      await page.setViewport({ width: 1580, height: 900 });
+
+      setTimeout(async () => {
+        await page.goto('http://localhost:4200/', {
+          timeout: 100000,
+          waitUntil: 'networkidle0',
+        })
+      }, 1000);
+
+      await page.waitForSelector('#login-form_username');
+      await page.type('#login-form_username', 'RLadmin@gmail.com');
+
+      await page.waitForSelector('#login-form_password');
+      await page.type('#login-form_password', 'RLadmin');
+
+      await page.click('button.ant-btn-primary');
+      await page.waitForNavigation();
+
+      const directoryPath = 'F:/centric-buyers-unread-files/';
+      const destinationDirectory = 'F:/centric-buyers-read-files/';
+
+      const files = fs.readdirSync(directoryPath);
+      if (files.length === 0) {
+       return new CommonResponseModel(false,0,"No Files Found")
+      }
+      for (const file of files) {
+          await page.waitForSelector('input[type="file"]');
+          const fileInput = await page.$('input[type="file"]');
+          const filePath = path.join(directoryPath, file);
+          await fileInput.uploadFile(filePath);
+          await page.waitForTimeout(2000);
+
+          await page.waitForSelector('button.ant-btn-primary')
+          await page.click('button.ant-btn-primary');
+          await page.waitForTimeout(2000)
+
+        const sourceFilePath = path.join(directoryPath, file);
+        const destinationFilePath = path.join(destinationDirectory, file);
+        fs.rename(sourceFilePath, destinationFilePath, async(err) => {
+          if (err) {
+            return new CommonResponseModel(false, 0, '');
+        }})
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, error)
+    }
+  }
+
 
 
 }
