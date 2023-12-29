@@ -1,7 +1,7 @@
 import { DownloadOutlined, FilePdfOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { ItemTypeEnumDisplay, PoReq, PurchaseStatusEnum, SampleFilterRequest, StockFilterRequest, StocksDto } from '@project-management-system/shared-models';
 import { PurchaseOrderservice, StockService } from '@project-management-system/shared-services';
-import { Button, Card, Col, Form, Input, Row, Select, Space, Statistic, Table } from 'antd'
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Space, Statistic, Table } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { Excel } from 'antd-table-saveas-excel';
 import { useIAMClientState } from "../common/iam-client-react";
@@ -29,7 +29,7 @@ const PurchaseOrderReport = () => {
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const searchInput = useRef<any>(null);
-
+    const { RangePicker } = DatePicker;
 
     
 
@@ -44,6 +44,18 @@ const PurchaseOrderReport = () => {
       if(form.getFieldValue('po_number') !== undefined){
         req.poId=form.getFieldValue('po_number')
   
+      }
+      if (form.getFieldValue('poDate') !== undefined) {
+        req.PoFromDate = (form.getFieldValue('poDate')[0]).format('YYYY-MM-DD')
+      }
+      if (form.getFieldValue('poDate') !== undefined) {
+      req.PoToDate = (form.getFieldValue('poDate')[1]).format('YYYY-MM-DD')
+      }
+       if (form.getFieldValue('etdDate') !== undefined) {
+        req.ETDfromDate = (form.getFieldValue('etdDate')[0]).format('YYYY-MM-DD')
+      }
+      if (form.getFieldValue('etdDate') !== undefined) {
+      req.ETDtoDate = (form.getFieldValue('etdDate')[1]).format('YYYY-MM-DD')
       }
         service.getPodetails(req).then(res => {
           
@@ -401,7 +413,7 @@ const onFinish = () => {
               </Select>
             </Form.Item>   
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+          {/* <Col xs={24} sm={12} md={8} lg={6} xl={6}>
             <Form.Item name="fabricCode" label="Fabric Code">
               <Select
                 showSearch
@@ -432,9 +444,18 @@ const onFinish = () => {
                 ))}
               </Select>
             </Form.Item>   
-          </Col>
+          </Col> */}
          
-          
+         <Col span={6}>
+            <Form.Item label="Po Date" name="poDate">
+              <RangePicker />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item label="Expected Date	" name="etdDate">
+              <RangePicker />
+            </Form.Item>
+          </Col>
           <Col xs={12} sm={6} md={4} lg={3} xl={2}>
             <Form.Item>
               <Button

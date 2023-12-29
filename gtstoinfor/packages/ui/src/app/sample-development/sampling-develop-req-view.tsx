@@ -695,6 +695,8 @@ import RolePermission from "../role-permissions";
   };
 
     const showModal = (rowData) => {
+      console.log(rowData,'ppppppppppppp');
+      
       setIsModalOpen(true);
       setRow(rowData)
     };

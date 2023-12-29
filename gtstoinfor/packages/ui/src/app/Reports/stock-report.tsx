@@ -96,7 +96,6 @@ const StockReport = () => {
         }
         
         service.getAllStockReportData(req).then((res) => {
-          console.log(req,'77777777777777')
           if (res.data) {
             setStockData(res.data);
             setFilterData(res.data)
@@ -170,21 +169,21 @@ const StockReport = () => {
       .split("-")
       .join("/");
 
-  if (key === 'pop'){
+  // if (key === 'pop'){
     const excel = new Excel();
   excel
     .addSheet('Stock-report')
     .addColumns(Columns)
-    .addDataSource(filterData, { str2num: true })
+    .addDataSource(stockData, { str2num: true })
     .saveAs(`Stock-report-${currentDate}.xlsx`);
-  } else {
-    const excel = new Excel();
-    excel
-      .addSheet('Stock-report')
-      .addColumns(Columns)
-      .addDataSource(filterData, { str2num: true })
-      .saveAs(`Stock-report-${currentDate}.xlsx`);
-  }
+  // } else {
+  //   const excel = new Excel();
+  //   excel
+  //     .addSheet('Stock-report')
+  //     .addColumns(Columns)
+  //     .addDataSource(stockData, { str2num: true })
+  //     .saveAs(`Stock-report-${currentDate}.xlsx`);
+  // }
   
 }
 
@@ -294,7 +293,7 @@ const StockReport = () => {
                 allowClear
               >
                 {location.map((qc: any) => (
-                  <Select.Option key={qc.location} value={qc.location}>
+                  <Select.Option key={qc.location_id} value={qc.location_id}>
                     {qc.location}
                   </Select.Option>
                 ))}
