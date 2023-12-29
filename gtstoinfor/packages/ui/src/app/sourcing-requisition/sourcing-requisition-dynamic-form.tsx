@@ -560,6 +560,7 @@ export const SourcingRequisitionDynamicForm = () => {
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => (
                 <span>
                     <Tooltip placement="top" title='Edit'>
@@ -653,6 +654,7 @@ export const SourcingRequisitionDynamicForm = () => {
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => (
                 <span>
                     <Tooltip placement="top" title='Edit'>
@@ -1467,7 +1469,7 @@ const onTrimChange = (val, option) => {
                                                 </Select>
                                             </Form.Item>
                                         </Col>
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
                                             <Form.Item 
                                                 name="quantity"
                                                 label="Quantity"
@@ -1483,7 +1485,7 @@ const onTrimChange = (val, option) => {
 
                                                     },
                                                 ]}>
-                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'80px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}>
+                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'170px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}>
                                                     <Select showSearch allowClear optionFilterProp="children" placeholder="Enter uom">
                                                     {uom?.map(e => {
                                                         return (

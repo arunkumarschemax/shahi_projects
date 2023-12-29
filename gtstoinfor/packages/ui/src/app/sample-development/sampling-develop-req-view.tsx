@@ -263,7 +263,7 @@ import RolePermission from "../role-permissions";
         let item = new allocateMaterialItems(0,data.quantity,data.stockId,data.locationId,data.issuedQty,0,"","","");
         materailDataItems.push(item);
       }
-      const req = new Allocatematerial(dto.itemType,dto.sampleRequestid,(dto.itemType === "FABRIC"?dto.fabric_info_id:dto.trim_info_id),(dto.itemType === "FABRIC"?dto.m3ItemFabricId:dto.trimCode),0,0,0,dto.buyerId,totalQty,materailDataItems,dto.tobeProcured,dto.samplingBomId);
+      const req = new Allocatematerial((dto.itemType).toUpperCase(),dto.sampleRequestid,((dto.itemType).toUpperCase() === "FABRIC"?dto.fabric_info_id:dto.trim_info_id),((dto.itemType).toUpperCase() === "FABRIC"?dto.m3ItemFabricId:dto.trimCode),0,0,0,dto.buyerId,totalQty,materailDataItems,dto.tobeProcured,dto.samplingBomId);
       console.log(req);
       service.creatematerialAlloction(req).then(res =>{
         if(res.status){
@@ -616,6 +616,10 @@ import RolePermission from "../role-permissions";
             stockData = itemData?.find((f) => f.trim_info_id === itemId);
             stockListData = stockData?.allocatedStock;
           }
+          console.log(itemData);
+          console.log(stockData);
+          console.log(stockListData);
+
         if(Number(rowData.issuedQty) > 0)
         {  
           rowData.checkedStatus = 1;
