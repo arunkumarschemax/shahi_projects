@@ -1,3 +1,4 @@
+import { StatusEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity('orders')
@@ -225,5 +226,17 @@ export class CentricEntity {
         default: 1
     })
     isActive: boolean;
+
+      
+    // @Column('enum', {
+    //     name: "status"
+    // })
+    // status: StatusEnum
+    @Column({
+        type: 'enum',
+        enum: StatusEnum, // Specify the enum type
+        name: 'status',
+      })
+      status: StatusEnum;
 
 }

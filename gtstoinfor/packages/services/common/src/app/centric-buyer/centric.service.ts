@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CentricEntity } from "./entity/centric.entity";
 import { CentricDto } from "./dto/centric.dto";
-import { CentricOrderDataModel, CentricSizeWiseModel, CommonResponseModel, PoOrderFilter } from "@project-management-system/shared-models";
+import { CentricOrderDataModel, CentricSizeWiseModel, CommonResponseModel, PoOrderFilter, StatusEnum, centricCoLineRequest } from "@project-management-system/shared-models";
 import { Repository } from "typeorm/repository/Repository";
 import { CentricRepository } from "./repositories/centric.repo";
 import { DataSource } from "typeorm/data-source/DataSource";
@@ -77,12 +77,12 @@ export class CentricService {
       // await transactionManager.startTransaction()
       for (const item of req.CentricpoItemDetails) {
         const match = item.poLine.match(/\d+/);
-        console.log(match,"match");
+        console.log(match, "match");
         // Check if a match is found and convert it to an integer
         const poLine = match ? parseInt(match[0], 10) : null;
-        console.log(poLine,"poLine")
+        console.log(poLine, "poLine")
         for (const variant of item.CentricpoItemVariantDetails) {
-          const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber ,poLine:poLine, size:variant.size} })
+          const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
           console.log(orderData, "orderData")
           const entity = new CentricEntity();
           entity.poNumber = req.poNumber
@@ -106,7 +106,7 @@ export class CentricService {
           entity.shortDescription = item.shortDescription
           entity.packMethod = item.packMethod
           entity.vendorBookingFlag = item.vendorBookingFlag
-          entity.ppkupc=item.ppkupc
+          entity.ppkupc = item.ppkupc
 
 
           entity.size = variant.size
@@ -119,7 +119,7 @@ export class CentricService {
           entity.deliveryDate = variant.deliveryDate
           entity.retialPrice = variant.retialPrice
           entity.comptMaterial = variant.comptMaterial
-          entity.ratio=variant.ratio
+          entity.ratio = variant.ratio
 
           if (orderData) {
             const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {})
@@ -176,7 +176,7 @@ export class CentricService {
     }
   }
 
-  
+
   async getorderData(req?: PoOrderFilter): Promise<CommonResponseModel> {
     try {
       const details = await this.Repo.getorderData(req);
@@ -186,17 +186,17 @@ export class CentricService {
       const sizeDateMap = new Map<string, CentricOrderDataModel>();
       for (const rec of details) {
         // console.log(rec,"rrrrrrrrr")
-        if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) { 
+        if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number}`,
-            new CentricOrderDataModel(rec.id,rec.po_number,rec.shipment,rec.season,rec.division,rec.manufacture,rec.port_of_export,rec.port_of_entry,rec.refrence,rec.pack_method,rec.payment_term_description,rec.incoterm,rec.special_instructions,rec.po_line,rec.material,rec.compt_material,rec.color,rec.gender,rec.short_description,rec.size,rec.upc,rec.retial_price,rec.unit_price,rec.label,rec.quantity,rec.vendor_booking_flag,rec.exfactory,rec.export,rec.delivery_date,rec.retial_price,rec.po_date,rec.ship_to_add,[],null,rec.ppk_upc)
+            new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc)
           );
 
           // console.log(sizeDateMap,)
         }
         const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number}`).sizeWiseData;
         if (rec.size !== null) {
-          sizeWiseData.push(new CentricSizeWiseModel(rec.size,rec.unit_price,rec.quantity,rec.special_instructions,rec.upc,rec.retial_price,rec.color,rec.ratio,rec.ppk_upc,rec.label,rec.exfactory,rec.export,rec.delivery_date));
+          sizeWiseData.push(new CentricSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.special_instructions, rec.upc, rec.retial_price, rec.color, rec.ratio, rec.ppk_upc, rec.label, rec.exfactory, rec.export, rec.delivery_date));
         }
       }
       const dataModelArray: CentricOrderDataModel[] = Array.from(sizeDateMap.values());
@@ -206,12 +206,12 @@ export class CentricService {
 
 
     } catch (e) {
-      console.log(e,"errrrrrrrrr")
+      console.log(e, "errrrrrrrrr")
       return new CommonResponseModel(false, 0, 'failed', e);
     }
   }
 
-  
+
   async getPdfFileInfo(): Promise<CommonResponseModel> {
     try {
       const data = await this.pdfRepo.find()
@@ -228,22 +228,79 @@ export class CentricService {
     try {
       if (req.itemNo == undefined || null) {
         return new CommonResponseModel(false, 0, 'Please enter Item No')
+      };
+      // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
+      
+      
+      const records = await this.Repo.find({ where: { poNumber: req.poNumber } });
+      const empty = [];
+      for (const rec of records) {
+        const entity = new CentricCOLineEntity()
+        entity.buyer = req.buyer
+        entity.poNumber = req.poNumber;
+        entity.poLine = rec.poLine;
+        entity.itemNo = req.itemNo
+        entity.status = 'Open';
+        entity.createdUser = 'Admin';
+        empty.push(entity)
       }
-      const entity = new CentricCOLineEntity()
-      entity.buyer = req.buyer
-      entity.poNumber = req.poNumber;
-      entity.poLine = req.poLine;
-      entity.itemNo = req.itemNo
-      entity.status = 'Open';
-      entity.createdUser = 'Admin';
-      const save = await this.coLineRepo.save(entity);
+      const save = await this.coLineRepo.save(empty);
+      
+
       if (save) {
+        const update = await this.Repo.update(
+          { poNumber: req.poNumber }, // Conditions for updating
+          { status: StatusEnum.ACCEPTED } // Data to update
+        );
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
       } else {
         return new CommonResponseModel(false, 0, 'CO-Line request failed')
       }
     } catch (err) {
       return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
+    }
+  }
+
+  async getCentricCoLine(req?: centricCoLineRequest): Promise<CommonResponseModel> {
+    const data = await this.coLineRepo.getCentricCoLineData(req)
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
+
+
+  async getCentricorderData(req?: PoOrderFilter): Promise<CommonResponseModel> {
+    try {
+      const details = await this.Repo.getCentricorderData(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+      }
+      const sizeDateMap = new Map<string, CentricOrderDataModel>();
+      for (const rec of details) {
+        // console.log(rec,"rrrrrrrrr")
+        if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
+          sizeDateMap.set(
+            `${rec.po_line},${rec.po_number}`,
+            new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc,rec.status)
+          );
+
+          // console.log(sizeDateMap,)
+        }
+        const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number}`).sizeWiseData;
+        if (rec.size !== null) {
+          sizeWiseData.push(new CentricSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.special_instructions, rec.upc, rec.retial_price, rec.color, rec.ratio, rec.ppk_upc, rec.label, rec.exfactory, rec.export, rec.delivery_date));
+        }
+      }
+      const dataModelArray: CentricOrderDataModel[] = Array.from(sizeDateMap.values());
+      // console.log(dataModelArray,"kkkk")
+      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+      // return new CommonResponseModel(true, 1, 'data retrieved', details);
+
+
+    } catch (e) {
+      console.log(e, "errrrrrrrrr")
+      return new CommonResponseModel(false, 0, 'failed', e);
     }
   }
 
