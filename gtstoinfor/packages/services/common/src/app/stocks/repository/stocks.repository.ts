@@ -30,11 +30,12 @@ export class StocksRepository extends Repository<StocksEntity> {
     }
 
     async getAllLocation(): Promise<any> {
-        const query = await this.createQueryBuilder('stocks')
-            .select(`r.rack_position_name AS location`)
-            .leftJoin('rack_position', 'r', 'r.position_Id = stocks.location_id')
+        const query = await this.createQueryBuilder('s')
+            .select(`r.rack_position_name AS location,s.location_id`)
+            .leftJoin('rack_position', 'r', 'r.position_Id = s.location_id')
             .where(`r.rack_position_name is not null`)
-            .orderBy(`r.rack_position_name`);
+            .orderBy(`r.rack_position_name`)
+            .groupBy('r.rack_position_name')
     
         const data = await query.getRawMany();
         return data;

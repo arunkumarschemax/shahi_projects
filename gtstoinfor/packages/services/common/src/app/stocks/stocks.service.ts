@@ -152,21 +152,31 @@ export class StocksService {
 
 
 
-    async getAllStockReportData(request?: StockFilterRequest): Promise<CommonResponseModel> {
+    async getAllStockReportData(req?: StockFilterRequest): Promise<CommonResponseModel> {
+        console.log(req,'pppppppppp');
+        
         try {
             let data = `select b.buyer_name AS buyerName,IF(stocks.item_type='fabric',it.description,tr.trim_code) AS m3ItemCode,stocks.item_type AS itemType,
             r.rack_position_name AS location,stocks.quantity FROM stocks stocks
             LEFT JOIN buyers b ON b.buyer_id = stocks.buyer_id
             LEFT JOIN m3_items it ON it.buyer_id = stocks.buyer_id AND stocks.item_type='fabric'
             LEFT JOIN m3_trims tr ON tr.m3_trim_Id=stocks.m3_item AND stocks.item_type!='fabric'
-            LEFT JOIN rack_position r ON r.position_Id=stocks.location_id`
+            LEFT JOIN rack_position r ON r.position_Id=stocks.location_id where 1=1`
+            if(req?.extRefNo){
+                data = data+` and b.external_ref_number = '${req.extRefNo}'`
+            }
+            if (req?.itemType) {
+                data= data+` and stocks.item_type LIKE '%${req.itemType}%'`
+            }
+            if (req?.location !== undefined) {
+                data +=` and location_id ='${req.location}'`
+            }
             const details = await this.stocksRepository.query(data)
+
             if (details.length > 0) {
                 return new CommonResponseModel(true, 0, 'All stocks Requests retrieved successfully', details)
             } 
-            if(request?.extRefNo){
-                data = data+` where b.external_ref_number = '${request.extRefNo}'`
-            }else {
+            else {
                 return new CommonResponseModel(false, 1, 'No data found', [])
             }
         } catch (err) {
