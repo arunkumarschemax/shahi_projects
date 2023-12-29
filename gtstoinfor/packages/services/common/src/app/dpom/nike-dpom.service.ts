@@ -1693,7 +1693,7 @@ export class DpomService {
                 allowedExcessShipQty = 0;
             } else {
                 const result = 0.03 * Number(rec.size_qty);
-                allowedExcessShipQty = Math.floor(result)
+                allowedExcessShipQty = Math.trunc(result)
             }
             let actualShipPer;
             if (rec.actual_shipped_qty) {
