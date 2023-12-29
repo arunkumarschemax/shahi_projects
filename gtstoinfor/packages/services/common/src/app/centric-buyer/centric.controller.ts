@@ -99,6 +99,25 @@ async coLineCreationReq(@Body() req: any): Promise<CommonResponseModel> {
         return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
     }
 }
+@Post('/getCentricCoLine')
+async getCentricCoLine(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+        return await this.Service.getCentricCoLine(req);
+    } catch (err) {
+        return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+    }
+}
+
+@Post('/getCentricorderData')
+@ApiBody({ type: PoOrderFilter })
+async getCentricorderData(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+        // console.log(req,"con")
+        return await this.Service.getCentricorderData(req);
+    } catch (err) {
+        return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+    }
+}
 
 @Get('centric-Bot')
     async centricBot(): Promise<any> {

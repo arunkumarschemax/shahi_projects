@@ -1,166 +1,104 @@
-import { Button, Card, Col, DatePicker, Form, Input, InputRef, Modal, Popconfirm, Row, Select, Space, Table, Tag, Tooltip, Typography, message } from 'antd';
-import { useEffect, useRef, useState, } from 'react';
-import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { IExcelColumn } from 'antd-table-saveas-excel/app';
-import { Excel } from 'antd-table-saveas-excel';
-import { CentricService, RLOrdersService } from '@project-management-system/shared-services';
-import moment from 'moment';
-import Highlighter from 'react-highlight-words';
-import { ColumnType } from 'antd/es/table';
-import { FilterConfirmProps } from 'antd/es/table/interface';
-import { useNavigate } from 'react-router-dom';
-import { CentricOrderAcceptanceRequest, OrderAcceptanceRequest, PoOrderFilter } from '@project-management-system/shared-models';
-import { useIAMClientState } from '../nike/iam-client-react';
 
+import {
+  Button,
+  Card,
+  Col,
+  Form,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Table,
+  Tooltip,
+  message,
+} from "antd";
+import { useEffect, useRef, useState } from "react";
+import {
+  CentricService,
+  NikeService,
+  RLOrdersService,
+} from "@project-management-system/shared-services";
+import React from "react";
+import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import Highlighter from "react-highlight-words";
+import { useNavigate } from "react-router-dom";
+import {
+  CentricOrderAcceptanceRequest,
+  OrderDataModel,
+  PoOrderFilter,
+} from "@project-management-system/shared-models";
+import { ColumnsType } from "antd/es/table";
+import { useIAMClientState } from "../nike/iam-client-react";
+import { Excel } from "antd-table-saveas-excel";
 
-const CentricOrderAcceptanceGrid = () => {
-  const [page, setPage] = useState<number>(1)
-  const [pageSize, setPageSize] = useState<number>(10)
-  const [gridData, setGridData] = useState<any[]>([]);
-  const [filteredData, setFilteredData] = useState<any[]>([])
-  const [selectedEstimatedFromDate, setSelectedEstimatedFromDate] = useState(undefined);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export function CentricOrderAcceptanceGrid() {
+  const service = new CentricService();
+  const navigate = useNavigate();
+  const searchInput = useRef(null);
+  const [orderData, setOrderData] = useState<any>([]);
+  const [poLine, setPoLine] = useState<any>([]);
+  const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = useState(1);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const [poNumber, setPoNumber] = useState([]);
   const [form] = Form.useForm();
   const { Option } = Select;
-  const { RangePicker } = DatePicker;
-  const [searchText, setSearchText] = useState("");
-  const searchInput = useRef<InputRef>(null);
-  const [searchedColumn, setSearchedColumn] = useState("");
-  const [item, setItem] = useState<any[]>([]);
-  let navigate = useNavigate()
-  const service = new CentricService();
-  const [orderData, setOrderData] = useState<any>([]);
+  const [isModalOpen1, setIsModalOpen1] = useState(false);
+  const [filterData, setFilterData] = useState([]);
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
-
-
-  const { Text } = Typography
+  const [itemNoValues, setItemNoValues] = useState({});
 
   useEffect(() => {
-    getorderData();
+    getCentricorderData();
+    getPoNumber()
   }, []);
 
-  const getorderData = () => {
+
+  const getCentricorderData = () => {
     const req = new PoOrderFilter();
+
     if (form.getFieldValue("poNumber") !== undefined) {
       req.poNumber = form.getFieldValue("poNumber");
     }
     req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
 
-    service.getorderData(req).then((res) => {
+    service.getCentricorderData(req).then((res) => {
       if (res.status) {
         setOrderData(res.data);
+        setFilterData(res.data);
       }
     });
   };
 
+  const getPoNumber = () => {
+    service.getPoNumber().then((res) => {
+      if (res.status) {
+        setPoNumber(res.data);
 
-  const onReset = () => {
-    form.resetFields();
-    setSelectedEstimatedFromDate(undefined);
-    // getData();
-  }
-
-  const handleItemNoChange = (value, record) => {
-    record.itemNumber = value
-  };
-
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-  const handleReset = (clearFilters: () => void) => {
-    clearFilters();
-    setSearchText("");
-  };
-  const handleSearch = (
-    selectedKeys: string[],
-    confirm: (param?: FilterConfirmProps) => void,
-    dataIndex: string
-  ) => {
-    confirm();
-    setSearchText(selectedKeys[0]);
-    setSearchedColumn(dataIndex);
-  };
-  const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-          onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-          style={{ marginBottom: 8, display: 'block' }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => {
-              handleReset(clearFilters)
-              setSearchedColumn(dataIndex)
-              confirm({ closeDropdown: true })
-            }
-            }
-            size="small"
-            style={{ width: 90 }}
-          >
-            Reset
-          </Button>
-
-        </Space>
-      </div>
-    ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
-    ),
-    onFilter: (value, record) =>
-      record[dataIndex] ? record[dataIndex]
-        .toString()
-        .toLowerCase()
-        .includes((value as string).toLowerCase()) : false,
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
       }
-    },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ''}
-        />
-      ) : (
-        text
-      ),
-  });
+    });
+  };
+  const handleItemNoChange = (value, record) => {
+    setItemNoValues((prevValues) => ({
+      ...prevValues,
+      [record.key]: value,
+
+    }));
+  };
+  
 
   const createCOLine = (record) => {
     console.log(record)
     const req = new CentricOrderAcceptanceRequest();
     req.poNumber = record.poNumber
     req.poLine = record.poLine
-    req.itemNo = record.itemNumber
+    req.itemNo = itemNoValues[record.key]
     req.buyer = 'Centric'
     service.coLineCreationReq(req).then((res) => {
       if (res.status) {
-        // getOrderAcceptanceData()
+        getCentricorderData()
+        setItemNoValues('')
         message.success(res.internalMessage)
       } else (
         message.error(res.internalMessage)
@@ -168,263 +106,738 @@ const CentricOrderAcceptanceGrid = () => {
     })
   }
 
-
   const processData = (tableData: CentricOrderAcceptanceRequest[]) => {
     const dataTobeReturned = [];
     const roleWiseMapData = new Map<string, CentricOrderAcceptanceRequest[]>();
+
     tableData.forEach(rec => {
-      if (!roleWiseMapData.has(rec.poNumber)) {
-        roleWiseMapData.set(rec.poNumber, [rec]);
+      const key = `${rec.poNumber}_${rec.itemNo}`;
+
+      if (!roleWiseMapData.has(key)) {
+        roleWiseMapData.set(key, [rec]);
       } else {
-        roleWiseMapData.get(rec.poNumber).push(rec);
+        roleWiseMapData.get(key).push(rec);
       }
     });
-    for (const [role, roleData] of roleWiseMapData) {
+
+    for (const [, roleData] of roleWiseMapData) {
       roleData.forEach((element, index) => {
         dataTobeReturned.push({
           ...element,
-          rowSpan: index == 0 ? roleData.length : 0,
+          rowSpan: index === 0 ? roleData.length : 0,
           groupedIds: roleData.map(rec => rec.id)
         });
       });
     }
+
     return dataTobeReturned;
+  };
+
+
+
+
+
+  const isActionButtonEnabled = (record) => {
+    return itemNoValues[record.key] && itemNoValues[record.key].trim() !== "";
   }
 
-  const columns: any = [
-    {
-      title: "S.No",
-      key: "sno",
-      width: 50,
-      render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-      fixed: "left",
-    },
-    {
-      title: "PO Number",
-      dataIndex: "poNumber",
-      width: 150,
-      sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-      sortDirections: ["ascend", "descend"],
-      align:'center',
-      render: (text, record, index) => {
-        return {
-          children: text,
-          props: {
-            rowSpan: record.rowSpan,
-          },
-        };
+  const onReset = () => {
+    form.resetFields();
+    getCentricorderData();
+  };
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+
+  // const showModal1 = (record) => {
+  //   setPoNumber(record);
+  //   setIsModalOpen1(true);
+  // };
+
+  // const cancelHandle = () => {
+  //   setIsModalOpen1(false);
+  // };
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          size="small"
+          style={{ width: 90 }}
+          onClick={() => {
+            handleReset(clearFilters);
+            setSearchedColumn(dataIndex);
+            confirm({ closeDropdown: true });
+          }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        type="search"
+        style={{ color: filtered ? "#1890ff" : undefined }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase())
+        : false,
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current.select());
       }
-      // ...getColumnSearchProps('purchaseOrderNumber')
     },
-    {
-      title: "PO Item",
-      dataIndex: "poLine",
-      width: 90,
-      sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-      sortDirections: ["ascend", "descend"],
-      // ...getColumnSearchProps('purchaseOrderNumber')
-    },
-    {
-      title: "Material Number",
-      dataIndex: "material",
-      width: 90,
-      sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
-      sortDirections: ["ascend", "descend"],
-      // ...getColumnSearchProps('purchaseOrderNumber')
-    },
-    {
-      title: "Season Code",
-      dataIndex: "season",
-      width: 90,
-      sorter: (a, b) => a.season.localeCompare(b.season),
-      sortDirections: ["ascend", "descend"],
-      // ...getColumnSearchProps('purchaseOrderNumber')
-    },
-    {
-      title: "Address",
-      dataIndex: "shipToAddress",
-      width: 90,
-      sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-      sortDirections: ["ascend", "descend"],
-      // ...getColumnSearchProps('purchaseOrderNumber')
-    },
-    {
-      title: "Shipment Method",
-      dataIndex: "shipmentMethod",
-      align: "center",
-      width: 90,
-      sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
-      sortDirections: ["ascend", "descend"],
-    },
-    {
-      title: "Division",
-      dataIndex: "division",
-      align: "center",
-      width: 90,
-      sorter: (a, b) => a.division.localeCompare(b.division),
-      sortDirections: ["ascend", "descend"],
-    },
-    {
-      title: "Port Of Entry",
-      dataIndex: "portOfEntry",
-      align: "center",
-      width: 90,
-      sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
-      sortDirections: ["ascend", "descend"],
-    },
-    {
-      title: "Incoterm",
-      dataIndex: "incoterm",
-      align: "center",
-      width: 90,
-      sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
-      sortDirections: ["ascend", "descend"],
-    },
-    //   {
-    //     title: "Color",
-    //     dataIndex: "color",
-    //     align: "center",
-    //     width: 90,
-    //     sorter: (a, b) => a.color.localeCompare(b.color),
-    //     sortDirections: ["ascend", "descend"],
-    //   },
-    {
-      title: "Pack Method",
-      dataIndex: "packMethod",
-      align: "center",
-      width: 90,
-      sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
-      sortDirections: ["ascend", "descend"],
-    },
-    {
-      title: "Item No",
-      dataIndex: "itemNo",
-      width: 150,
-      render: (text, record) => {
-        // if(record.answered_status != 'Accepted'){
+    render: (text) =>
+      text ? (
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text.toString()}
+          />
+        ) : (
+          text
+        )
+      ) : null,
+  });
 
-        return (
-          <Form>
-            <Form.Item>
-              <Input
-                placeholder="Enter Item No"
-                onChange={(e) => handleItemNoChange(e.target.value, record)}
-              />
-            </Form.Item>
-          </Form>
-        );
-        // }else{
-        //     return <>{record.buyer_item_number?record.buyer_item_number:'-'}</>
-        // }
+  const setMoreData = (record) => {
+    navigate("/ralph-lauren/order-data-detail-view", {
+      state: { data: record },
+    });
+  };
+  const getSizeWiseHeaders = (data) => {
+    const sizeHeaders = new Set<string>();
+    data?.forEach((rec) =>
+      rec.sizeWiseData?.forEach((version) => {
+        sizeHeaders.add("" + version.size);
+      })
+    );
+    return Array.from(sizeHeaders);
+  };
+
+
+  const renderReport = (data) => {
+    const sizeHeaders = getSizeWiseHeaders(data);
+
+
+    const columns: ColumnsType<any> = [
+      {
+        title: "S.No",
+        key: "sno",
+        width: 50,
+        render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+        fixed: "left",
       },
-    },
-    {
-      title: "Action",
-      dataIndex: "action",
-      width: 100,
-      fixed: 'right',
-      render: (value, record) => {
-        // const isEnabled = isActionButtonEnabled(record);
-        return (
-          <Button  // disabled={!isEnabled} disabled= {record.answered_status !== 'Accepted' ? false : true}
-            onClick={() => createCOLine(record)}
-          >Accept</Button>
-        );
+      {
+        title: "PO Number",
+        dataIndex: "poNumber",
+        width: 90,
+        sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+        sortDirections: ["ascend", "descend"],
+        // render: (text) => text ? text : "-",
+        render: (text, record, index) => {
+          return {
+            children: text,
+            props: {
+              rowSpan: record.rowSpan,
+            },
+          };
+        },
+
+        fixed: "left",
+        // ...getColumnSearchProps('poNumber')
       },
-    },
-  ];
+      {
+        title: "PO Line Number",
+        dataIndex: "poLine",
+        width: 90,
+        sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-",
+        fixed: "left",
+      },
+      {
+        title: "PO Date",
+        dataIndex: "PODate",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => a.PODate.localeCompare(b.PODate),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Shipment Method",
+        dataIndex: "shipmentMethod",
+        width: 90,
+        sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
 
-  //   const handleExport = (e: any) => {
-  //     e.preventDefault();
+      },
 
-  //     const currentDate = new Date()
-  //       .toISOString()
-  //       .slice(0, 10)
-  //       .split("-")
-  //       .join("/");
-
-  //     let exportingColumns: IExcelColumn[] = []
-  //     let i = 1;
-
-  //     exportingColumns = [
-  //       // { title: '#', dataIndex: 'id' ,render: (value, record, index) => {
-  //       //     return index + 1; 
-  //       //   }},
-  //       // { title: 'Trim Order Id', dataIndex: 'trim_order_id' },
-  //       { title: 'Order No', dataIndex: 'order_no' },
-  //       { title: 'Year', dataIndex: 'year' },
-  //       { title: 'Revision No', dataIndex: 'revision_no' },
-  //       { title: 'Planning ssn', dataIndex: 'planning_ssn' },
-  //       { title: 'Global Business Unit', dataIndex: 'global_business_unit' },
-  //       { title: 'Business Unit', dataIndex: 'business_unit' },
-  //       // { title: 'Item Brand', dataIndex: 'item_brand' },
-  //       { title: 'Department', dataIndex: 'department' },
-  //       { title: 'Revised Date', dataIndex: 'revised_date' },
-  //       { title: 'Document Status', dataIndex: 'document_status' },
-  //       { title: 'Status', dataIndex: 'answered_status' },
-  //       { title: 'Vendor Person InCharge', dataIndex: 'vendor_person_incharge' },
-  //       { title: 'Decision Date', dataIndex: 'decision_date' },
-  //       { title: 'Payment Terms', dataIndex: 'payment_terms' },
-  //       { title: 'Eta Wh', dataIndex: 'eta_wh' },
-  //       { title: 'Approver', dataIndex: 'approver' },
-  //       { title: 'Approval Date', dataIndex: 'approval_date' },
-  //       { title: 'Order Conditions', dataIndex: 'order_conditions' },
-  //       { title: 'Remarks', dataIndex: 'remark' },
-  //       { title: 'Raw Material Code', dataIndex: 'raw_material_code' },
-  //       { title: 'Supplier Raw Material Code', dataIndex: 'supplier_raw_material_code' },
-  //       { title: 'Supplier Raw Material', dataIndex: 'supplier_raw_material' },
-  //       // { title: 'Vendor Code', dataIndex: 'vendor_code' },
-  //       // { title: 'Vendor ', dataIndex: 'vendor' },
-  //       { title: 'Management Factory Code  ', dataIndex: 'management_factory_code' },
-  //       { title: 'Management Factory ', dataIndex: 'management_factory' },
-  //       { title: 'Branch Factory Code ', dataIndex: 'branch_factory_code' },
-  //       { title: 'Branch Factory ', dataIndex: 'branch_factory' },
-  //       { title: 'Order Plan Number ', dataIndex: 'order_plan_number' },
-  //       { title: 'Item Code ', dataIndex: 'item_code' },
-  //       { title: 'Item  ', dataIndex: 'item' },
-  //       { title: 'Representative Sample Code ', dataIndex: 'representative_sample_code' },
-  //       { title: 'Representative Sample', dataIndex: 'representative_Sample' },
-  //       { title: 'Color Code', dataIndex: 'color_code' },
-  //       { title: 'Color', dataIndex: 'color' },
-  //       { title: 'Pattern Dimension Code', dataIndex: 'pattern_dimension_code' },
-  //       { title: 'Size Code', dataIndex: 'size_code' },
-  //       { title: 'Size ', dataIndex: 'size' },
-  //       { title: 'Order Quantity Pcs', dataIndex: 'order_qty_pcs' },
-  //       { title: 'Arrangement By', dataIndex: 'arrangement_by' },
-  //       { title: 'Trim Description', dataIndex: 'trim_description' },
-  //       { title: 'Trim Item No', dataIndex: 'trim_item_no' },
-  //       { title: 'Trim Supplier', dataIndex: 'trim_supplier' },
-  //       { title: 'Status', dataIndex: 'answered_status' },
+      {
+        title: "Material",
+        dataIndex: "material",
+        width: 90,
+        sorter: (a, b) => a.material.localeCompare(b.material),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "PPK UPC",
+        dataIndex: "ppkUpc",
+        width: 90,
+        sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Color",
+        dataIndex: "color",
+        width: 90,
+        sorter: (a, b) => a.color.localeCompare(b.color),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Gender",
+        dataIndex: "gender",
+        width: 90,
+        sorter: (a, b) => a.gender.localeCompare(b.gender),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Short Description",
+        dataIndex: "shortDescription",
+        width: 90,
+        sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Pack Method",
+        dataIndex: "packMethod",
+        width: 90,
+        sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Vendor Booking Flag",
+        dataIndex: "vendorFlag",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
 
 
-  //       // { title: 'Currency', dataIndex: 'currency' },
-  //       // { title: 'Cost', dataIndex: 'cost' },
-  //     ]
-  //     const excel = new Excel();
-  //     excel.addSheet("Sheet1");
-  //     excel.addRow();
-  //     excel.addColumns(exportingColumns);
-  //     excel.addDataSource(gridData);
-  //     excel.saveAs(`Order Acceptance-Report-${currentDate}.xlsx`);
-  //   };
+      {
+        title: "Season",
+        dataIndex: "season",
+        width: 90,
+        sorter: (a, b) => a.season.localeCompare(b.season),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Port Of Export",
+        dataIndex: "portOfExport",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Port of Entry Name",
+        dataIndex: "portOfEntry",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
 
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-  }
+      {
+        title: "Reference",
+        dataIndex: "reference",
+        width: 90,
+        sorter: (a, b) => a.reference.localeCompare(b.reference),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Payment Terms Description",
+        dataIndex: "paymentTermDescription",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+
+      {
+        title: "Special Instructions",
+        dataIndex: "specialInstructions",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+
+
+
+      {
+        title: "Division",
+        dataIndex: "division",
+        width: 90,
+        sorter: (a, b) => a.division.localeCompare(b.division),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Manufacture",
+        dataIndex: "manufacture",
+        width: 90,
+        sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+
+      {
+        title: "Compt.Material",
+        dataIndex: "comptMaterial",
+        width: 110,
+        sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+
+
+
+
+
+    ];
+
+    sizeHeaders?.forEach(version => {
+      columns.push({
+        title: version,
+        dataIndex: version,
+        key: version,
+        width: 70,
+        align: 'center',
+        children: [
+          {
+            title: 'Ratio',
+            dataIndex: '',
+            key: '',
+            width: 70,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.ratio) ? (sizeData?.ratio) : "-"
+
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'UPC',
+            dataIndex: '',
+            key: '',
+            width: 70,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
+                  // const formattedQty = (sizeData?.amount)
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'label',
+            dataIndex: '',
+            key: '',
+            width: 70,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.label) ? (sizeData?.label) : "-"
+                  // const formattedQty = (sizeData?.amount)
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+
+          {
+            title: 'FOB Price',
+            dataIndex: '',
+            key: '',
+            width: 70,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.fobPrice) ? (sizeData?.fobPrice) : "-"
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Tot PO Qty in PC',
+            dataIndex: '',
+            key: '',
+            width: 70,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.totalQuantity) ? (sizeData?.totalQuantity) : "-"
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+
+
+
+          {
+            title: 'Retail Price(USD) ',
+            dataIndex: '',
+            key: '',
+            width: 70,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) : "-"
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Ex-factory Date ',
+            dataIndex: '',
+            key: '',
+            width: 70,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.exfactory) ? (sizeData?.exfactory) : '-'
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Export Date ',
+            dataIndex: '',
+            key: '',
+            width: 70,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.exportDate) ? (sizeData?.exportDate) : "-"
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Delivery Date',
+            dataIndex: '',
+            key: '',
+            width: 70,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) : "-"
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+        ]
+      });
+    })
+
+    columns.push(
+
+      {
+        title: "Incoterm",
+        dataIndex: "incoterm",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
+        sortDirections: ["ascend", "descend"],
+      },
+
+
+
+      {
+        title: "Ship to Address",
+        dataIndex: "shipToAddress",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+        sortDirections: ["ascend", "descend"],
+      },
+      {
+        title: "Status",
+        dataIndex: "status",
+        align: "center",
+        width: 90,
+        render: (text, record, index) => {
+          return {
+            children: text,
+            props: {
+              rowSpan: record.rowSpan,
+            },
+          };
+        }
+      },
+      {
+        title: "Item No",
+        dataIndex: "itemNo",
+        width: 150,
+        render: (text, record) => {
+          return {
+            children: (
+              <Form>
+                <Form.Item>
+                  <Input
+                    placeholder="Enter Item No"
+                    onChange={(e) => handleItemNoChange(e.target.value, record)}
+                    disabled={record.status == 'ACCEPTED' ? true : false}
+                  />
+                </Form.Item>
+              </Form>
+            ),
+            props: {
+              rowSpan: record.rowSpan,
+            },
+          };
+        },
+      },
+
+      {
+        title: "Action",
+        dataIndex: "action",
+        width: 100,
+        fixed: 'right',
+        render: (text, record) => {
+          const isEnabled = isActionButtonEnabled(record)
+          return {
+            children: (
+              <Button
+                onClick={() => createCOLine(record)} disabled={record.status == 'ACCEPTED' ? true : !isEnabled}
+              >
+                Accept
+              </Button>
+            ),
+            props: {
+              rowSpan: record.rowSpan,
+            },
+          };
+        },
+      },
+
+
+
+    );
+
+    const getRowClassName = (record) => {
+      if (record.displayName) {
+        return "colored-row";
+      }
+      return "";
+    };
+
+    return (
+      <>
+        {/* {filterData.length > 0 ? ( */}
+        <Table
+          // loading={tableLoading}
+          columns={columns}
+          dataSource={processData(filterData)}
+          size="small"
+          // pagination={false}
+          pagination={{
+            pageSize: 50,
+            onChange(current, pageSize) {
+              setPage(current);
+              setPageSize(pageSize);
+            },
+          }}
+          className="custom-table-wrapper"
+          scroll={{ x: "max-content", y: 450 }}
+          rowClassName={getRowClassName}
+          bordered
+        />
+        {/* ) : (
+          <Table size="large" />
+        )} */}
+      </>
+    );
+  };
 
   return (
-    <div>
-      <Card
-        title="Order Acceptance"
-        extra={filteredData.length > 0 ? (<Button
-          type="default"
-          style={{ color: 'green' }}
-          //   onClick={handleExport}
-          icon={<FileExcelFilled />}>Download Excel</Button>) : null}>
-
-
+    <>
+      <Card title="Order Acceptance" headStyle={{ fontWeight: "bold" }}>
         <Form
-          onFinish={getorderData}
+          onFinish={getCentricorderData}
           form={form}
         // layout='vertical'
         >
@@ -443,15 +856,40 @@ const CentricOrderAcceptanceGrid = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {Array.from(new Set(orderData?.map((inc: any) => inc.poNumber)))
-                    .map((poNumber: string) => (
-                      <Option key={poNumber} value={poNumber}>
-                        {poNumber}
+                  {poNumber.map((inc: any) => {
+                    return (
+                      <Option key={inc.po_number} value={inc.po_number}>
+                        {inc.po_number}
                       </Option>
-                    ))}
+                    );
+                  })}
                 </Select>
               </Form.Item>
             </Col>
+            {/* <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 4 }}
+              lg={{ span: 4 }}
+              xl={{ span: 6 }}
+            >
+              <Form.Item name="poLine" label="PO Line">
+                <Select
+                  showSearch
+                  placeholder="Select PO Line"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {orderData.map((inc: any) => {
+                    return (
+                      <Option key={inc.poLine} value={inc.poLine}>
+                        {inc.poLine}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </Col> */}
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -480,17 +918,24 @@ const CentricOrderAcceptanceGrid = () => {
             </Col>
           </Row>
         </Form>
-        <Table columns={columns} dataSource={processData(orderData)} scroll={{ x: 1500, y: 500 }} className="custom-table-wrapper"
-          bordered
-          pagination ={false}
-          rowKey='id'
-          size='small'
-        />
+        {/* <Table
+                    columns={columns}
+                    dataSource={orderData}
+                    bordered
+                    className="custom-table-wrapper"
+                    pagination={{
+                        pageSize: 50,
+                        onChange(current, pageSize) {
+                            setPage(current);
+                            setPageSize(pageSize);
+                        },
+                    }}
+                    scroll={{ x: 'max-content', y: 450 }}
+                >
+                </Table> */}
+        {renderReport(filterData)}
       </Card>
-    </div>
-  )
+    </>
+  );
 }
-
-
 export default CentricOrderAcceptanceGrid;
-

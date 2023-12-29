@@ -34,7 +34,18 @@ export class CentricRepository extends Repository<CentricEntity> {
     }
 
 
-    
+    async getCentricorderData(req?:PoOrderFilter): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`*`)
+            if(req.poNumber !== undefined){
+                query.andWhere(`o.po_number ='${req.poNumber}'`) 
+            }
+            if(req.externalRefNo != undefined){
+                query.andWhere(` o.buyer = "${req.externalRefNo}"`)
+            }
+        return await query.getRawMany()
+    }
+
 
 
 }
