@@ -673,10 +673,10 @@ export class PurchaseOrderService {
             PoType += ` AND p.expected_delivery_date between '${req.ETDfromDate}' and '${req.ETDtoDate}'`;
         }
         if(req.poId){
-            PoType += ` AND p.purchase_order_id =${req.poId}`
+            PoType += ` AND p.purchase_order_id ='${req.poId}'`
         }
         if(req.poAgainst){
-            PoType += ` AND p.po_against =${req.poAgainst}`
+            PoType += ` AND p.po_against ='${req.poAgainst}'`
         }
         const Res = await this.dataSource.query(PoType)
        
