@@ -367,7 +367,7 @@ return(
                 <DescriptionsItem label='Epected Delivery Date'>{data?.[0]?.ETD?data?.[0]?.ETD:'-'}</DescriptionsItem>
                 <DescriptionsItem label='Made In'>{data?.[0]?.madeIn?data?.[0]?.madeIn:'-'}</DescriptionsItem>
                 <DescriptionsItem label='Life Cycle Status'>{data?.[0]?.lifeCycleStatus?LifeCycleStatusDisplay.find((e)=>e.name === data?.[0]?.lifeCycleStatus)?.displayVal:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Status'>{data?.[0]?.status?data?.[0]?.status:'-'}</DescriptionsItem>
+                {/* <DescriptionsItem label='Status'>{data?.[0]?.status?data?.[0]?.status:'-'}</DescriptionsItem> */}
                 <Descriptions.Item label="Remarks" style={{ width: '33%' }}>
                                 {data?.[0]?.remarks?.length > 30 ? (<><Tooltip title='Cilck to open full remarks'><p><span onClick={() => handleTextClick(data?.[0]?.remarks)} style={{ cursor: 'pointer' }}>
                         {data?.[0]?.remarks.length > 30 ? `${data?.[0]?.remarks?.substring(0, 30)}....` : data?.[0]?.remarks}
