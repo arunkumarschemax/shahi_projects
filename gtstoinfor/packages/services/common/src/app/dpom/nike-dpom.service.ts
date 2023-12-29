@@ -1572,10 +1572,10 @@ export class DpomService {
         const newText = req.newText;
 
         const lines1 = oldText?.trim().split(/\n\s*\n/).slice(0, 5);
-        const text1 = lines1?.join('').toLowerCase();
+        const text1 = lines1?.join('').toLowerCase().replace(/\d+/g, '');
 
         const lines2 = newText?.trim().split(/\n\s*\n/).slice(0, 5);
-        const text2 = lines2?.join('').toLowerCase();
+        const text2 = lines2?.join('').toLowerCase().replace(/\d+/g, '');
 
         const dmp = new diff_match_patch();
         const diff = dmp.diff_main(text1, text2);
@@ -1586,12 +1586,12 @@ export class DpomService {
         for (const [op, text] of diff) {
             if (op === diff_match_patch.DIFF_INSERT) {
                 if (text.trim() !== '') {
-                    output += `${commonContext}${text} `;
+                    output += `${text} `;
                     commonContext = ''; // Reset common context after inserting difference
                 }
             } else if (op === diff_match_patch.DIFF_DELETE) {
                 if (text.trim() !== '') {
-                    output += `${commonContext} ${text}`; // Include space in common context
+                    output += `${text}`; // Include space in common context
                     commonContext = ''; // Reset common context after deleting difference
                 }
             } else {
