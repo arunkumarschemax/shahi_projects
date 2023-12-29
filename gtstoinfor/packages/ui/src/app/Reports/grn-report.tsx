@@ -11,6 +11,8 @@ import { SearchOutlined } from '@ant-design/icons';
     const [form] =Form.useForm();
     const [grnData, setgrnData] = useState<any[]>([])
     const [poData, setPoData] = useState<any[]>([])
+    const [sampleOrder, setSampleOrder] = useState<any[]>([])
+    const [indentData, setIndentData] = useState<any[]>([])
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef(null);
     const [searchText, setSearchText] = useState('');
@@ -20,8 +22,8 @@ import { SearchOutlined } from '@ant-design/icons';
     const poService = new PurchaseOrderservice()
 
 
-    const getGrnReportData = (poStatus:string,ponum:number,grnDate:string) =>{
-        grnService.getGrnReportData({poStatus:poStatus,poId:ponum,grnDate:grnDate}).then(res =>{
+    const getGrnReportData = (poStatus:string,ponum:number,grnDate:string,sampleOrderId:number,indentId:number) =>{
+        grnService.getGrnReportData({poStatus:poStatus,poId:ponum,grnDate:grnDate,sampleOrderId:sampleOrderId,indentId:indentId}).then(res =>{
             if(res.status){
                 setgrnData(res.data)
             }else{
@@ -39,10 +41,30 @@ import { SearchOutlined } from '@ant-design/icons';
             }
         })
     }
+    const getSampleorder =() =>{
+      grnService.getSampleRequestnoGainstGrn().then(res =>{
+        if(res.status){
+          setSampleOrder(res.data)
+        }else{
+          setSampleOrder([])
+        }
+      })
+    }
+    const getIndent =() =>{
+      grnService.getIndentGainstGrn().then(res =>{
+        if(res.status){
+          setIndentData(res.data)
+        }else{
+          setIndentData([])
+        }
+      })
+    }
 
     useEffect(() =>{
-        getGrnReportData(undefined,undefined,undefined)
+        getGrnReportData(undefined,undefined,undefined,undefined,undefined)
         getPoNumber()
+        getIndent()
+        getSampleorder()
 
     },[])
 
@@ -284,11 +306,14 @@ import { SearchOutlined } from '@ant-design/icons';
            const ponum =form.getFieldValue('poNumber') !=undefined ?form.getFieldValue('poNumber'):undefined
         const poStatus =form.getFieldValue('poStatus') !=undefined ?form.getFieldValue('poStatus'):undefined
         const grnDate =form.getFieldValue('grnDate') !=undefined ?form.getFieldValue('grnDate').format("YYYY-MM-DD"):undefined
-        getGrnReportData(poStatus,ponum,grnDate)
+        const sampleOrderId =form.getFieldValue('sampleId') !=undefined ?form.getFieldValue('sampleId'):undefined
+        const indentId =form.getFieldValue('indentId') !=undefined ?form.getFieldValue('indentId'):undefined
+
+        getGrnReportData(poStatus,ponum,grnDate,sampleOrderId,indentId)
 
     }
     const onReset =() =>{
-        getGrnReportData(undefined,undefined,undefined)
+        getGrnReportData(undefined,undefined,undefined,undefined,undefined)
         form.resetFields()
     }
     return(
@@ -299,9 +324,27 @@ import { SearchOutlined } from '@ant-design/icons';
                 <Row gutter={24}>
                     <Col span={4}>
                         <Form.Item name='poNumber' label='Po Number'>
-                            <Select>
+                            <Select placeholder='Po Number'>
                                 {poData.map(e =>{
                                     return(<Option key={e.purchase_order_id} value={e.purchase_order_id}>{e.po_number}</Option>)
+                                })}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={4}>
+                        <Form.Item name='sampleId' label='Sample Order'>
+                            <Select placeholder='Sample Order'>
+                                {sampleOrder.map(e =>{
+                                    return(<Option key={e.sampleReqId} value={e.sampleReqId}>{e.requestNo}</Option>)
+                                })}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col span={4}>
+                        <Form.Item name='indentId' label='Indent Number'>
+                            <Select placeholder='Indent No'>
+                                {indentData.map(e =>{
+                                    return(<Option key={e.indentId} value={e.indentId}>{e.indentNo}</Option>)
                                 })}
                             </Select>
                         </Form.Item>
@@ -324,9 +367,9 @@ import { SearchOutlined } from '@ant-design/icons';
                     </Col>
                     <Col span={4} style={{paddingTop:'20px'}}>
                        <Button type='primary' onClick={getData}>{'Search'}</Button>
-                    </Col>
-                    <Col span={4}  style={{paddingTop:'20px'}} >
-                       <Button onClick={onReset} >{'Reset'}</Button>
+                    {/* </Col> */}
+                    {/* <Col span={4}  style={{paddingTop:'20px'}} > */}
+                       <Button onClick={onReset} style={{marginLeft:'10px'}}>{'Reset'}</Button>
                     </Col>
                 </Row>
                 </Form>

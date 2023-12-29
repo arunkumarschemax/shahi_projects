@@ -37,4 +37,11 @@ export class GRNService extends CommonAxiosService {
   async getGrnReportData(req?:grnReportReq): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getGrnReportData",req)
   }
+  async getSampleRequestnoGainstGrn(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getSampleRequestnoGainstGrn")
+  }
+  async getIndentGainstGrn(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getIndentGainstGrn")
+  }
+
 }

@@ -84,4 +84,20 @@ export class GrnController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
     }
   }
+  @Post('/getSampleRequestnoGainstGrn')
+  async getSampleRequestnoGainstGrn(): Promise<CommonResponseModel> {
+    try {
+      return await this.grnService.getSampleRequestnoGainstGrn();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
+  @Post('/getIndentGainstGrn')
+  async getIndentGainstGrn(): Promise<CommonResponseModel> {
+    try {
+      return await this.grnService.getIndentGainstGrn();
+    } catch (error) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
+    }
+  }
 }

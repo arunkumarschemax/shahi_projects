@@ -442,6 +442,12 @@ export class GrnService {
             if(req.grnDate != undefined){
                 query=query+' and g.grn_date="'+req.grnDate+'"'
             }
+            if(req.sampleOrderId != undefined){
+                query=query+' and gi.sample_req_id ='+req.sampleOrderId+''
+            }
+            if(req.indentId != undefined){
+                query=query+' and gi.indent_id='+req.indentId+''
+            }
             else{
                 query=query
             }
@@ -516,6 +522,37 @@ export class GrnService {
             }
 
         }catch(err){
+            throw err
+        }
+    }
+
+    async getSampleRequestnoGainstGrn():Promise<CommonResponseModel>{
+        try{
+            const query='SELECT sample_req_id AS sampleReqId,request_no AS requestNo  FROM grn_items gi LEFT JOIN sample_request sr ON sr.sample_request_id=gi.sample_req_id WHERE gi.sample_req_id IS NOT NULL GROUP BY gi.sample_req_id'
+            const result = await this.grnRepo.query(query)
+            if(result){
+                return new CommonResponseModel(true,1,'data',result)
+            }else{
+                return new CommonResponseModel(true,1,'data',[])
+
+            }
+        }
+        catch(err){
+            throw err
+        }
+    }
+    async getIndentGainstGrn():Promise<CommonResponseModel>{
+        try{
+            const query=' SELECT gi.indent_id as indentId,request_no AS indentNo FROM grn_items gi   LEFT JOIN indent i ON i.indent_id=gi.indent_id WHERE gi.indent_id IS NOT NULL  GROUP BY gi.indent_id'
+            const result = await this.grnRepo.query(query)
+            if(result){
+                return new CommonResponseModel(true,1,'data',result)
+            }else{
+                return new CommonResponseModel(true,1,'data',[])
+
+            }
+        }
+        catch(err){
             throw err
         }
     }
