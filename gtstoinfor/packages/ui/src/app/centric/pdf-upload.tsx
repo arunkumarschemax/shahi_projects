@@ -39,7 +39,7 @@ const pdfIndexes = {
 }
 
 
-const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
+const CentricPdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
     const [fileList, setFileList] = useState<UploadFile[]>([]);
     const [diaPDFValues, setDiaPDFValues] = useState<DiaPDFModel>()
@@ -190,4 +190,4 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
     )
 }
 
-export default PdfUpload;
+export default CentricPdfUpload;

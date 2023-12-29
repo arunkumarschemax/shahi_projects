@@ -48,6 +48,7 @@ import CentricPdFInfoGrid from "./centric/pdf-file-grid"
 import CentricOrdersGrid from "./centric/order-data-grid"
 import CentricOrdersDetailView from "./centric/order-data-details-view"
 import CentricOrderAcceptanceGrid from "./centric/centric-order-acceptance-view"
+import CentricPdfUpload from "./centric/pdf-upload"
 
 
 export const AppRoutes = () => {
@@ -200,6 +201,8 @@ export const AppRoutes = () => {
                    <Route path='order-data-detail-view' element={<CentricOrdersDetailView />} />
                    
                    <Route path='centric-order-acceptance' element={<CentricOrderAcceptanceGrid />} />
+                   <Route path='centric-pdf-upload' element={<CentricPdfUpload />} />
+
 
                     
 
