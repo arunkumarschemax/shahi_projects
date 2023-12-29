@@ -1,7 +1,7 @@
-import { DownloadOutlined, FilePdfOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, DownloadOutlined, FilePdfOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { ItemTypeEnumDisplay, PoReq, PurchaseStatusEnum, SampleFilterRequest, StockFilterRequest, StocksDto } from '@project-management-system/shared-models';
 import { PurchaseOrderservice, StockService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Space, Statistic, Table } from 'antd'
+import { Button, Card, Checkbox, Col, DatePicker, Form, Input, Row, Select, Space, Statistic, Table, Tag } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { Excel } from 'antd-table-saveas-excel';
 import { useIAMClientState } from "../common/iam-client-react";
@@ -191,28 +191,43 @@ const Columns:any=[
       
       
   },
-    {
-        title:"Po Against",
-        dataIndex:"po_against",
-        width:130,
-        filters: [
-          // {
-          //   text: 'Area',
-          //   value: 'Area',
-          // },
-          {
-            text: 'Indent',
-            value: 'Indent',
-          },
-          {
-            text: 'sample order',
-            value: 'sample order',
-          },
-         
-        ],
-        onFilter: (value,record) =>{ return record.po_against === value}
-
-    },
+  {
+    title: "Po Against",
+    dataIndex: "po_against",
+    width: 130,
+    render: (po_against, rowData) => (
+      <>
+        {po_against ? po_against : '-'}
+      </>
+    ),
+    onFilter: (value, record) => record.po_against === value,
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+        <Checkbox
+          checked={selectedKeys.includes('Indent')}
+          onChange={() => setSelectedKeys(selectedKeys.includes('Indent') ? [] : ['Indent'])}
+        >
+          <span style={{ color: 'green' }}>Indent</span>
+        </Checkbox>
+        <Checkbox
+          checked={selectedKeys.includes('Sample Order')}
+          onChange={() => setSelectedKeys(selectedKeys.includes('Sample Order') ? [] : ['Sample Order'])}
+        >
+          <span style={{ color: 'red' }}>Sample Order</span>
+        </Checkbox>
+        <div className="custom-filter-dropdown-btns">
+          <Button onClick={() => clearFilters()} className="custom-reset-button">
+            Reset
+          </Button>
+          <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+            OK
+          </Button>
+        </div>
+      </div>
+    ),
+    filterMultiple: false,
+  },
+  
     {
         title:"Item Code",
         dataIndex:"item_code",
@@ -248,8 +263,10 @@ const Columns:any=[
   {
     title:"Expected DeliveryDate",
     dataIndex:"expected_delivery_date",
-    width:150
-,
+    width:150,
+    sorter: (a, b) => a.expected_delivery_date.localeCompare(b.expected_delivery_date),
+    sortDirections: ["descend", "ascend"],
+
     render: (_, record) => {
       return record.expected_delivery_date
         ? moment(record.expected_delivery_date).format("YYYY-MM-DD")
@@ -260,7 +277,8 @@ const Columns:any=[
   title:"Purchase OrderDate",
   dataIndex:"purchase_order_date",
   width:130,
-
+  sorter: (a, b) => a.purchase_order_date.localeCompare(b.purchase_order_date),
+  sortDirections: ["descend", "ascend"],
   render: (_, record) => {
     return record.purchase_order_date
       ? moment(record.purchase_order_date).format("YYYY-MM-DD")
@@ -271,7 +289,9 @@ const Columns:any=[
 {
 title:"Total Amount",
 dataIndex:"total_amount",
-width:130
+width:130,
+sorter: (a, b) => a.total_amount.localeCompare(b.total_amount),
+sortDirections: ["descend", "ascend"],
 
 },
 {
