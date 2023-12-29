@@ -126,5 +126,22 @@ async getCentricorderData(@Body() req: any): Promise<CommonResponseModel> {
     }
 
  
+@Post('/getItem')
+async getItem(): Promise<CommonResponseModel> {
+    try {
+        return this.Service.getItem();
+    } catch (err) {
+        return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+    }
+}
+
+@Post('/getCoPoNumber')
+async getCoPoNumber(): Promise<CommonResponseModel> {
+    try {
+        return this.Service.getCoPoNumber();
+    } catch (err) {
+        return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+    }
+}
 
 }

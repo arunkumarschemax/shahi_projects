@@ -79,6 +79,8 @@ export function CentricOrderAcceptanceGrid() {
       }
     });
   };
+
+  
   const handleItemNoChange = (value, record) => {
     setItemNoValues((prevValues) => ({
       ...prevValues,
@@ -739,6 +741,7 @@ export function CentricOrderAcceptanceGrid() {
         dataIndex: "status",
         align: "center",
         width: 90,
+        fixed:'right',
         render: (text, record, index) => {
           return {
             children: text,
@@ -752,6 +755,7 @@ export function CentricOrderAcceptanceGrid() {
         title: "Item No",
         dataIndex: "itemNo",
         width: 150,
+        fixed:'right',
         render: (text, record) => {
           return {
             children: (

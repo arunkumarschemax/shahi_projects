@@ -16,7 +16,6 @@ const CentriColineView = () => {
     const service = new CentricService()
     const [data, setData] = useState<any[]>([]);
     const [buyer, setBuyer] = useState<any>([]);
-    const [orderNumber, setOrderNumber] = useState<any>([]);
     const [item, setItem] = useState<any>([]);
     const [form] = Form.useForm();
     const { Option } = Select;
@@ -24,34 +23,30 @@ const CentriColineView = () => {
 
      useEffect(() => {
         getData()
-    //     BuyerPo()
-    //     getItem()
-    //     OrderNumber()
+        BuyerPo()
+         getItem()
+   
      }, [])
 
+     
 
 
-    // const BuyerPo = () => {
-    //     service.getBuyerPo().then(res => {
-    //         if (res.status) {
-    //             setBuyer(res.data)
-    //         }
-    //     })
-    // }
-    // const getItem = () => {
-    //     service.getColineItem().then(res => {
-    //         if (res.status) {
-    //             setItem(res.data)
-    //         }
-    //     })
-    // }
-    // const OrderNumber = () => {
-    //     service.getColineOrderNo().then(res => {
-    //         if (res.status) {
-    //             setOrderNumber(res.data)
-    //         }
-    //     })
-    // }
+
+    const BuyerPo = () => {
+        service.getCoPoNumber().then(res => {
+            if (res.status) {
+                setBuyer(res.data)
+            }
+        })
+    }
+    const getItem = () => {
+        service.getItem().then(res => {
+            if (res.status) {
+                setItem(res.data)
+            }
+        })
+    }
+  
     const getData = () => {
         const req = new centricCoLineRequest();
 
@@ -61,9 +56,7 @@ const CentriColineView = () => {
         if (form.getFieldValue('item') !== undefined) {
             req.itemNo = form.getFieldValue('item');
         }
-        if (form.getFieldValue('orderNo') !== undefined) {
-            req.poLine = form.getFieldValue('orderNo');
-        }
+        
         service.getCentricCoLine(req).then(res => {
             if (res.status) {
                 setData(res.data)
@@ -79,7 +72,7 @@ const CentriColineView = () => {
 
     const resetHandler = () => {
         form.resetFields();
-        //getData();
+        getData();
 
     }
 
@@ -219,7 +212,7 @@ const CentriColineView = () => {
                 onClick={handleExport}
                 icon={<FileExcelFilled />}>Download Excel</Button> : null}>
             <Form 
-            // onFinish={getData} 
+             onFinish={getData} 
             form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
@@ -232,7 +225,7 @@ const CentriColineView = () => {
                             >
                                 {
                                     buyer.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.buyer_po}>{inc.buyer_po}</Option>
+                                        return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                                     })
                                 }
                             </Select>
@@ -254,22 +247,7 @@ const CentriColineView = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='orderNo' label='CO Number' >
-                            <Select
-                                showSearch
-                                placeholder="Select Order Number"
-                                optionFilterProp="children"
-                                allowClear
-                            >
-                                {
-                                    orderNumber.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.order_no}>{inc.order_no}</Option>
-                                    })
-                                }
-                            </Select>
-                        </Form.Item>
-                    </Col>
+                    
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                         <Form.Item>
                             <Button htmlType="submit" icon={<SearchOutlined />} type="primary">SEARCH</Button>
