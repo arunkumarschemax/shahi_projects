@@ -48,7 +48,7 @@ export class CentricEntity {
     })
     paymentTermDescription: string
 
-    @Column('varchar', {
+    @Column('text', {
         name: "special_instructions"
     })
     specialInstructions: string
@@ -58,18 +58,18 @@ export class CentricEntity {
     })
     division: string
 
-    @Column('varchar', {
+    @Column('text', {
         name: "incoterm"
     })
     incoterm: string
 
-    @Column('varchar', {
+    @Column('text', {
         name: "ship_to_add"
     })
     shipToAdd: string
 
     
-    @Column('varchar', {
+    @Column('text', {
         name: "manufacture"
     })
     manufacture: string
