@@ -323,7 +323,7 @@ export class CentricService {
   //   }
   // }
 
-  @Cron(CronExpression.EVERY_10_MINUTES)
+  // @Cron(CronExpression.EVERY_10_MINUTES)
   async centricBot() {
     try {
       const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
