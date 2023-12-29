@@ -123,152 +123,111 @@ import { SearchOutlined } from '@ant-design/icons';
             onCell: (record: any) => ({
               rowSpan: record.rowSpan,
             }),
-            fixed: 'left',
+          },
+          {
+            title: "Grn Date",
+            dataIndex: "grndate",
+            width:'200px',
+            render:(_,record) =>{
+              return(record.grndate?moment(record.grndate).format("YYYY-MM-DD"):'-')
+            }
+        
           },
           {
             title: "Grn Number",
             dataIndex: "grnNumber",
-            onCell: (record: any) => ({
-                rowSpan: record.rowSpan,
-            }),
-            fixed: 'left',
-            ...getColumnSearchProps('grnNumber')
-
+            width:'300px',
+            ...getColumnSearchProps('grnNumber'),
+        
           },
           {
             title: "Grn Item Number",
             dataIndex: "grnItemNo",
-            onCell: (record: any) => ({
-                rowSpan: record.rowSpan,
-            }),
-            fixed: 'left',
+            width:'200px',          
             ...getColumnSearchProps('grnItemNo')
 
           },
           {
             title: "Style",
             dataIndex: "style",
-            onCell: (record: any) => ({
-                rowSpan: record.rowSpan,
-            }),
-            fixed: 'left',
+            width:'200px',
             ...getColumnSearchProps('style')
 
         },
           {
               title: "Po Number",
               dataIndex: "poNumber",
-              onCell: (record: any) => ({
-                  rowSpan: record.rowSpan,
-              }),
-              fixed: 'left',
+             width:'500px',
             ...getColumnSearchProps('poNumber')
 
           },
           {
-            title: "Grn Aginst",
+            title: "Grn Type",
             dataIndex: "poAgainst",
-            onCell: (record: any) => ({
-                rowSpan: record.rowSpan,
-            }),
-            fixed: 'left',
             ...getColumnSearchProps('poAgainst')
 
           },
           {
             title: "Indent Number",
             dataIndex: "indentNo",
-            onCell: (record: any) => ({
-                rowSpan: record.rowSpan,
-            }),
-            fixed: 'left',
+            width:'200px',
             ...getColumnSearchProps('indentNo')
 
           },
           {
             title: "Sample Order",
             dataIndex: "sampleReqNo",
-            onCell: (record: any) => ({
-                rowSpan: record.rowSpan,
-            }),
-            fixed: 'left',
             ...getColumnSearchProps('sampleReqNo')
 
           },
           {
             title: "Item Type",
             dataIndex: "itemType",
-            width:'110px',
+            width:'300px',
             sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
             sortDirections: ["descend", "ascend"],
             ...getColumnSearchProps('itemType')
 
       
-          },          
+          },   
+          // {
+          //   title: "Fabric Item",
+          //   dataIndex: "m3ItemDescription",
+          //   width:'110px',
+          //   sorter: (a, b) => a.m3ItemDescription.localeCompare(b.m3ItemDescription),
+          //   sortDirections: ["descend", "ascend"],
+          //   ...getColumnSearchProps('m3ItemDescription')
+          // },       
           {
-            title: "Fabric Item",
-            dataIndex: "m3ItemDescription",
-            width:'110px',
-            sorter: (a, b) => a.m3ItemDescription.localeCompare(b.m3ItemDescription),
-            sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('m3ItemDescription')
-
-      
+            title: "Item",
+            // dataIndex: "m3ItemDescription",
+            // width:'110px',
+            render:(_,record) =>{
+             return (record.m3ItemDescription != null ?record.m3ItemDescription:record.m3TrimDesc)
+            },
           },
-          {
-            title: "Trim Item",
-            dataIndex: "m3TrimDesc",
-            width:'110px',
-            sorter: (a, b) => a.m3TrimDesc.localeCompare(b.m3TrimDesc),
-            sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('m3TrimDesc')
+          // {
+          //   title: "Trim Item",
+          //   dataIndex: "m3TrimDesc",
+          //   width:'110px',
+          //   sorter: (a, b) => a.m3TrimDesc.localeCompare(b.m3TrimDesc),
+          //   sortDirections: ["descend", "ascend"],
+          //   ...getColumnSearchProps('m3TrimDesc')
 
-          },
-          {
-            title: "UOM",
-            dataIndex: "uom",
-            width:'110px',
-            sorter: (a, b) => a.uom.localeCompare(b.uom),
-            sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('uom')
-
-      
-          },
-          {
-            title: "Unit price",
-            dataIndex: "unitPrice",
-            width:'110px',
-            sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
-            sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('unitPrice')
-
-      
-          },
-          {
-            title: "Total price",
-            dataIndex: "totalPoAmount",
-            width:'110px',
-            sorter: (a, b) => a.totalPoAmount.localeCompare(b.totalPoAmount),
-            sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('totalPoAmount')
-
-      
-          },
+          // },
           {
             title: "Required Quantity",
             dataIndex: "poQuantity",
-            width:'110px',
-            sorter: (a, b) => a.poQuantity.localeCompare(b.poQuantity),
-            sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('poQuantity')
+            ...getColumnSearchProps('poQuantity'),
+            render:(_,record)=>{
+              return(record.poQuantity?record.poQuantity+'-'+record.uom:'-')
+            }
 
-      
           },
-          
           {
             title: "Recived Quantity",
             dataIndex: "receivedQuantity",
-            width:'110px',
+            // width:'110px',
             sorter: (a, b) => a.poQuantity.localeCompare(b.receivedQuantity),
             sortDirections: ["descend", "ascend"],
             ...getColumnSearchProps('receivedQuantity')
@@ -279,19 +238,45 @@ import { SearchOutlined } from '@ant-design/icons';
             title: "Rejected Quantity",
             dataIndex: "rejectedQuantity",
             width:'110px',
-            sorter: (a, b) => a.poQuantity.localeCompare(b.rejectedQuantity),
-            sortDirections: ["descend", "ascend"],
+            // sorter: (a, b) => a.poQuantity.localeCompare(b.rejectedQuantity),
+            // sortDirections: ["descend", "ascend"],
             ...getColumnSearchProps('rejectedQuantity')
       
           },
           {
+            title: "Unit price",
+            dataIndex: "unitPrice",
+            // width:'110px',
+            sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
+            sortDirections: ["descend", "ascend"],
+            ...getColumnSearchProps('unitPrice')
+
+      
+          },
+          {
+            title: "Grn Amount",
+            dataIndex: "totalPoAmount",
+            // width:'110px',
+            sorter: (a, b) => a.totalPoAmount.localeCompare(b.totalPoAmount),
+            sortDirections: ["descend", "ascend"],
+            ...getColumnSearchProps('totalPoAmount')
+          },
+          {
+            title: "Location Mapping Status",
+            dataIndex: "locationMappedStatus",
+            // width:'110px',
+            sorter: (a, b) => a.locationMappedStatus.localeCompare(b.locationMappedStatus),
+            sortDirections: ["descend", "ascend"],
+            ...getColumnSearchProps('locationMappedStatus')
+          },
+        
+          {
             title: "Po Status",
             dataIndex: "poStatus",
-            width:'110px',
+            // width:'110px',
             sorter: (a, b) => a.poQuantity.localeCompare(b.rejectedQuantity),
             sortDirections: ["descend", "ascend"],
             ...getColumnSearchProps('poStatus')
-
       
           },
     ]
@@ -309,7 +294,7 @@ import { SearchOutlined } from '@ant-design/icons';
     return(
         <div>
                    
-        <Card title={'Grn Report'}>
+        <Card title={'Grn Report'}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
         <Form form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col span={4}>
