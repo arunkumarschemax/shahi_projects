@@ -411,17 +411,17 @@ export class DpomService {
             }
             await driver.wait(until.elementLocated(By.id('styleid2H')))
             await driver.findElement(By.id('styleid2H')).sendKeys(po.item_no);
-            // await driver.sleep(10000)
-            // await driver.wait(until.elementLocated(By.id('bgpset1')));
-            // const dropdownElement1 = await driver.findElement(By.id('bgpset1'));
-            // const dropdown1 = await driver.wait(until.elementIsVisible(dropdownElement1)).then(element => new Select(element))
-            // await dropdown1.selectByValue(buyerValue1)
+            await driver.sleep(10000)
+            await driver.wait(until.elementLocated(By.id('bgpset1')));
+            const dropdownElement1 = await driver.findElement(By.id('bgpset1'));
+            const dropdown1 = await driver.wait(until.elementIsVisible(dropdownElement1)).then(element => new Select(element))
+            await dropdown1.selectByValue(buyerValue1)
             // // await driver.executeScript(`arguments[0].value = '${buyerValue1}';`, buyerDropDown1)
-            // await driver.sleep(10000)
-            // await driver.wait(until.elementLocated(By.id('byr')));
-            // const dropdownElement2 = await driver.findElement(By.id('byr'));
-            // const dropdown2 = await driver.wait(until.elementIsVisible(dropdownElement2)).then(element => new Select(element))
-            // await dropdown2.selectByValue(buyerValue2)
+            await driver.sleep(10000)
+            await driver.wait(until.elementLocated(By.id('byr')));
+            const dropdownElement2 = await driver.findElement(By.id('byr'));
+            const dropdown2 = await driver.wait(until.elementIsVisible(dropdownElement2)).then(element => new Select(element))
+            await dropdown2.selectByValue(buyerValue2)
             // // await driver.executeScript(`arguments[0].value = '${buyerValue2}';`, dropdownElement2)
             await driver.sleep(5000)
             await driver.wait(until.elementLocated(By.id('CreateOrderID')))
@@ -501,6 +501,9 @@ export class DpomService {
                                     }
                                     if (po.item_no === '891O' && dest.name === 'UQAU') {
                                         tabIndex = 5;
+                                    }
+                                    if (po.item_no === '891O' && dest.name === 'UQEU') {
+                                        tabIndex = 4;
                                     }
                                     const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
                                     const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
@@ -851,7 +854,7 @@ export class DpomService {
                             const dateString = data1.auditdate;
                             const inputDate = new Date(dateString);
                             const currentDate = new Date();
-                            if (inputDate < currentDate) {
+                            if (data1.auditdate != null && inputDate < currentDate) {
                                 ocrStatus = 'Closed'
                             } else {
                                 ocrStatus = 'Open'
@@ -1644,7 +1647,7 @@ export class DpomService {
             }
             if (!sizeDateMap.has(rec.po_and_line)) {
                 sizeDateMap.set(
-                    rec.po_and_line, new MarketingReportModel(moment(rec.last_modified_date).format('MM/DD/YYYY'), rec.item ? (rec.item).substring(0, 4) : null, rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, coFinalAppDate, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac, 'YYYY-MM-DD').format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, itemVasText, rec.item_vas_pdf, rec.item_text, formattedPCD, rec.ship_to_address_legal_po, rec.ship_to_address_dia, diffOfShipToAdd, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, rec.fabric_content, [])
+                    rec.po_and_line, new MarketingReportModel(moment(rec.last_modified_date).format('MM/DD/YYYY'), rec.item ? (rec.item).substring(0, 4) : null, rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, coFinalAppDate, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac, 'YYYY-MM-DD').format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, itemVasText, rec.item_vas_pdf, rec.item_text, formattedPCD, rec.ship_to_address_legal_po, rec.ship_to_address_dia, diffOfShipToAdd, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, rec.fabric_content, rec.final_destination, [])
                 )
             }
             let fobPriceDiff;
@@ -1654,7 +1657,7 @@ export class DpomService {
                 fobPriceDiff = (Number(rec.gross_price_fob) - Number(rec.shahi_confirmed_gross_price)).toFixed(2)
             }
             let fobCurrencyDiff;
-            if (rec.fob_currency_code == rec.shahi_confirmed_gross_price) {
+            if (rec.fob_currency_code == rec.shahi_confirmed_gross_price_currency_code) {
                 fobCurrencyDiff = 'Same'
             } else {
                 fobCurrencyDiff = 'Different'

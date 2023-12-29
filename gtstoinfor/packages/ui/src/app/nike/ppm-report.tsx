@@ -413,9 +413,9 @@ const PPMReport = () => {
               'Ship To Customer Name': item.shipToCustomerName,
               'Ship to Address Legal PO': item.shipToAddressLegalPO,
               'Ship to Address DIA': item.shipToAddressDIA,
-              'Diff of Ship to Address': item.diffOfShipToAdd ? item.diffOfShipToAdd : '-',
+              'Diff of Ship to Address': item.diffOfShipToAdd,
               'CAB Code': item.CABCode,
-              'Final Destination': '-',
+              'Final Destination': item.finalDestination,
               'MRGAC': item.MRGAC,
               'OGAC': item.OGAC,
               'GAC': item.GAC,
@@ -1699,7 +1699,7 @@ const PPMReport = () => {
         title: "CAB Code", dataIndex: 'CABCode', width: 80,
       },
       {
-        title: 'Final Destination', dataIndex: '', width: 80,
+        title: 'Final Destination', dataIndex: 'finalDestination', width: 80,
       },
       {
         title: "MRGAC", width: 80, dataIndex: 'MRGAC',
