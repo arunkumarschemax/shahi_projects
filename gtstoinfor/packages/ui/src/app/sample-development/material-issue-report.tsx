@@ -4,7 +4,7 @@ import { Button, Card, Col, Form, Row, Select, Table } from 'antd';
 import { useEffect, useState } from 'react';
 import './marerial.css';
 import moment from 'moment';
-import { RequestNoDto } from '@project-management-system/shared-models';
+import { AllocationReportReq, ItemTypeEnumDisplay, RequestNoDto } from '@project-management-system/shared-models';
 
 
 const { Option } = Select;
@@ -13,71 +13,49 @@ const MaterialIssueReport = () => {
   const service = new MaterialIssueService();
   const [data, setData] = useState<[]>([]);
   const [req, setReq] = useState<[]>([]);
-  const [consmption, setConsmption] = useState<RequestNoDto[]>([]);
-  const [formRef] = Form.useForm();
+  const [racks, setRacks] = useState<any[]>([]);
   const page = 1;
 
 
   useEffect(() => {
     getAllMaterial();
-    getmatirialDropDown();
+    getRacks()
+    getReqNo()
   }, []);
 
-  const getAllMaterial = (req?: RequestNoDto) => {
-    if (formRef.getFieldValue('consumption') !== undefined) {
-      req.consumption = formRef.getFieldValue('consumption')
+  const getAllMaterial = () => {
+    const req = new AllocationReportReq()
+    if (form.getFieldValue('requestNo') !== undefined) {
+      req.requestNo = form.getFieldValue('requestNo')
     }
-
-    service.getAllMaterialIssues(req).then((res) => {
+    if (form.getFieldValue('rackPosition') !== undefined) {
+      req.rackPosition = form.getFieldValue('rackPosition')
+    }
+    service.getMaterialAllocationReport(req).then((res) => {
       if (res.status) {
         setData(res.data);
       }
     });
   };
-//   const onSearch = () => {
-//     let filterData = []
-//     if(materialForm.getFieldValue('style') !== undefined){
-//         const styleId = materialForm.getFieldValue('consumption')
-//         filterData = data.filter((e) => e.styleId === consumption)
-//     } 
-//     setReq(filterData)
-// }
-  // const getAllMaterial = () => {
-  //   service.getAllMaterialIssues().then(res => {
-  //     if (res.status) {
-  //       setData(res.data);
 
-  //     }
-  //   })
-  // };
   const resetHandler = () => {
-    formRef.resetFields();
+    form.resetFields();
     getAllMaterial();
 
 }
 
-  const onSearch = () => {
-    formRef.validateFields().then((values) => {
-      getAllMaterial(values);
-    });
-  };
-
-  const renderCellData = (data) => {
-    return data ? data : "-";
+  const getRacks = () => {
+    service.getRackPositions().then(res => {
+      if (res.status) {
+        setRacks(res.data)
+      }
+    }).catch(err => console.log(err))
   }
 
-
-
-  // const onRequestChange = (value) => {
-  //   const consumption = req.filter((rec) => rec.consumption === value);
-  //   setConsmption(consumption);
-  // }
-
-  const getmatirialDropDown = () => {
-    service.getMaterialIssue().then(res => {
+  const getReqNo = () => {
+    service.getSampleReq().then(res => {
       if (res.status) {
-        setConsmption(res.data);
-        console.log(res.data ,'rrrrrrrrrrrrrrr')
+        setReq(res.data)
       }
     }).catch(err => console.log(err))
   }
@@ -88,229 +66,90 @@ const MaterialIssueReport = () => {
     {
       title: 'S No',
       key: 'sno',
-      width: '70px',
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
-      onCell: (record: any) => ({
-        rowSpan: record.rowSpan,
-      }),
-      fixed: 'left',
+      // onCell: (record: any) => ({
+      //   rowSpan: record.rowSpan,
+      // }),
     },
     {
-      title: "Consumption Code",
-      dataIndex: "consumptionCode",
+      title: "Buyer",
+      dataIndex: "buyerName",
       width: '150px'
-
     },
     {
-      title: "M3 Style No ",
-      dataIndex: "m3StyleNo"
-
+      title: "Request No",
+      dataIndex: "requestNo",
+      width: '150px',
     },
     {
-      title: "Sample Type ",
-      dataIndex: "sampleType"
-
-    },
-    {
-      title: "Pch",
-      dataIndex: "pch"
-
-    },
-    {
-      title: "Location ",
-      dataIndex: "location"
-
-    },
-    {
-      title: " Style  ",
-      dataIndex: "style"
-
-    },
-    {
-      title: "Buyer ",
-      dataIndex: "buyername"
-
-    },
-    {
-      title: "IssuedDate ",
-      dataIndex: "issue_date",
-      render: (text, record) => {
-        return record.deliveryDate !== null ?
-          moment(record.deliveryDate).format('YYYY-MM-DD') : ""
+      title: "Material Type",
+      dataIndex: "itemType",
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
       },
 
     },
-
-
     {
-      title: <div style={{ textAlign: 'center' }}>Material Type</div>,
-      dataIndex: "mi_items",
-      key: "mi_items",
-      align: 'center',
-      width: '250',
-      render: (mi_items, text) => {
-        renderCellData(text)
-        return (
-          <Table
-            dataSource={mi_items}
-            columns={[
-              {
-                dataIndex: "productName",
-                key: "productName", align: 'center',
-
-              },
-
-            ]}
-            pagination={false}
-          />
-        );
-      }
+      title: "Rack Position",
+      dataIndex: "rackPosition"
     },
     {
-      title: <div style={{ textAlign: 'center' }}>Material Code</div>,
-      dataIndex: "mi_items",
-      key: "mi_items",
-      align: 'center',
-      render: (mi_items, text) => {
-        renderCellData(text)
-        return (
-          <Table
-            dataSource={mi_items}
-            columns={[
-              {
-                dataIndex: "materialcode",
-                key: "materialcode", align: 'center',
-              },
-            ]}
-            pagination={false}
-          />
-        );
-      }
+      title: "Allocated Qty",
+      dataIndex: "allocateQty"
     },
     {
-      title: <div style={{ textAlign: 'center' }}>Colour</div>,
-      dataIndex: "mi_items",
-      key: "mi_items",
-      align: 'center',
-      render: (mi_items, text) => {
-        renderCellData(text)
-        return (
-          <Table
-            dataSource={mi_items}
-            columns={[
-              {
-                dataIndex: "color",
-                key: "color", align: 'center',
-              },
-            ]}
-            pagination={false}
-          />
-        );
-      }
-    },
-    {
-      title: <div style={{ textAlign: 'center' }}>Consumption</div>,
-      dataIndex: "mi_items",
-      key: "mi_items",
-      align: 'center',
-      render: (mi_items, text) => {
-        renderCellData(text)
-        return (
-          <Table
-            dataSource={mi_items}
-            columns={[
-              {
-                dataIndex: "consumption",
-                key: "consumption", align: 'center',
-              },
-            ]}
-            pagination={false}
-          />
-        );
-      }
-    },
-    {
-      title: <div style={{ textAlign: 'center' }}>Issued Quantity</div>,
-      dataIndex: "mi_items",
-      key: "mi_items",
-      align: 'center',
-      render: (mi_items, text) => {
-        renderCellData(text)
-        return (
-          <Table
-            dataSource={mi_items}
-            columns={[
-              {
-                dataIndex: "issuedQuantity",
-                key: "issuedQuantity", align: 'center',
-              },
-            ]}
-            pagination={false}
-          />
-        );
-      }
-    },
-    {
-      title: <div style={{ textAlign: 'center' }}>Status</div>,
-      dataIndex: "mi_items",
-      key: "mi_items",
-      align: 'center',
-      render: (mi_items, text) => {
-        renderCellData(text)
-        return (
-          <Table
-            dataSource={mi_items}
-            columns={[
-              {
-                dataIndex: "status",
-                key: "status", align: 'center',
-              },
-            ]}
-            pagination={false}
-          />
-        );
-      }
+      title: "Consumption",
+      dataIndex: "combinedConsumption"
     },
     {
       title: "Status ",
-      dataIndex: "status"
-
+      dataIndex: "status",
     },
   ]
 
 
   return (
     <>
-
-
-
       <Card title="Material Issue Report"  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
         <div>
-          <Form form={formRef}>
+          <Form form={form} layout='vertical' onFinish={getAllMaterial}>
             <Row gutter={16}>
               <Col span={6}>
-                <Form.Item name='consumption' label='Consumption Code'
+                <Form.Item name='requestNo' label='Request No'
                   style={{ marginBottom: '10px' }}>
-                  <Select placeholder='Select Consumption Code' 
+                  <Select 
+                  placeholder='Select Request No' 
                    optionFilterProp="children"
                    allowClear
                    showSearch >
-                  {consmption?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.consumptionCode}>{inc.consumptionCode}</Option>
-                                    })
-                                }
+                  {req?.map((inc: any) => {
+                    return <Option key={inc.requestId} value={inc.requestNo}>{inc.requestNo}</Option>
+                  })}
                   </Select>
                 </Form.Item>
               </Col>
-              <Col span={8}>
-                <Form.Item style={{ marginBottom: '10px' }}>
+              <Col span={6}>
+                <Form.Item name='rackPosition' label='Rack Position'
+                  style={{ marginBottom: '10px' }}>
+                  <Select 
+                  placeholder='Select Rack Position' 
+                   optionFilterProp="children"
+                   allowClear
+                   showSearch >
+                  {racks?.map((inc: any) => {
+                    return <Option key={inc.positionId} value={inc.rackPosition}>{inc.rackPosition}</Option>
+                  })}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item style={{ marginTop: '22px' }}>
                   <Button
                     htmlType='submit'
                     type="primary"
                     style={{ width: '80px', marginRight: "10px" }}
-                    onClick={onSearch}
-                    
                   >Submit</Button>
                   <Button htmlType='reset' danger style={{ width: '80px' }} onClick={resetHandler}>Reset</Button>
                 </Form.Item>
@@ -318,7 +157,7 @@ const MaterialIssueReport = () => {
             </Row>
           </Form>
 
-          <Table columns={Columns} dataSource={data} scroll={{ x: 1500 }} />
+          <Table columns={Columns} dataSource={data} />
         </div>
       </Card>
     </>

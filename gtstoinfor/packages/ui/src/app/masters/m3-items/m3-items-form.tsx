@@ -442,7 +442,7 @@ const handleYarnUnitChange = (index, value) => {
               <Input placeholder="Enter Weight" allowClear onChange={(e)=>onWeightChange(e?.target?.value)} onBlur={generateItemCode}/>
               </Form.Item>
               <Form.Item name='weightUomId'>
-                <Select allowClear placeholder="Select Unit" onChange={onWeightUom} onBlur={generateItemCode}>
+                <Select allowClear placeholder="Select Unit" onChange={onWeightUom} onBlur={generateItemCode} style={{width:'180px'}}>
                   {weightUomData.map((e) => (
                     <Option key={e.id} value={e.id} name={e.uom}>
                       {e.uom}
@@ -460,7 +460,7 @@ const handleYarnUnitChange = (index, value) => {
                   <Input placeholder="Enter Width" allowClear onChange={(e)=>onWidthChange(e?.target?.value)}/>
                   </Form.Item>
                   <Form.Item name='widthUomId'>
-                  <Select  allowClear placeholder="Select Unit" onChange={onWidthUomChange}>
+                  <Select  allowClear placeholder="Select Unit" onChange={onWidthUomChange} style={{width:'120px'}}>
                     {uom.map((e) => {
                       return (
                       <Option key={e.uomId} value={e.uomId}>
@@ -552,6 +552,7 @@ const handleYarnUnitChange = (index, value) => {
                                 allowClear
                                 onChange={(e) => handleCountNumChange(index, e.target.value)}
                                 onBlur={generateItemCode}
+                                style={{width:'90px'}}
                                 />
                                 <Typography.Text style={{ margin: '0 8px' }}>/</Typography.Text>
                                 <Input
@@ -559,12 +560,14 @@ const handleYarnUnitChange = (index, value) => {
                                   allowClear
                                   onChange={(e) => handleYarnCountChange(index, e.target.value)}
                                   onBlur={generateItemCode}
+                                  style={{width:'90px'}}
                                 />
                                 <Select
                                   allowClear
                                   placeholder="Unit"
                                   onChange={(value) => handleYarnUnitChange(index, value)}
                                   onBlur={generateItemCode}
+                                  style={{width:'180px'}}
                                 >
                                   {yarnUom.map((e) => (
                                     <Option key={e.id} value={e.id}>
@@ -618,6 +621,7 @@ const handleYarnUnitChange = (index, value) => {
                                   placeholder="Select Content"
                                   onChange={(value) => onContentChange(index, value)}
                                   onBlur={generateItemCode}
+                                  style={{width: '150px'}}
                                 >
                                   {contentData.map((e) => (
                                     <Option key={e.contentId} value={e.contentId}>
@@ -629,6 +633,7 @@ const handleYarnUnitChange = (index, value) => {
                                 placeholder="Enter %"
                                 allowClear
                                 onChange={(e) => onPercentChange(index, e.target.value)}
+                                style={{width:'150px'}}
                               />
                               {fields.length > 1 && (
                                 <MinusOutlined
