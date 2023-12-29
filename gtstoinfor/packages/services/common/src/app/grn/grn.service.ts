@@ -302,12 +302,14 @@ export class GrnService {
         try {
             const manager = this.dataSource;
             let query = `SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,DATE(g.invoice_date) AS invoiceDate,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
-            g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber,gi.buyer_id AS buyerId,g.location_mapped_status as locationMapStatus
+            g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber,gi.buyer_id AS buyerId,g.location_mapped_status as locationMapStatus,IF(g.grn_type = 'INDENT',idn.request_no,sr.request_no) AS grnAgainst
             FROM grn g
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             left join grn_items gi on gi.grn_id = g.grn_id
             left join buyers b on b.buyer_id = gi.buyer_id
+            LEFT JOIN sample_request sr on sr.sample_request_id = gi.sample_req_id and g.grn_type = 'SAMPLE_ORDER'
+            LEFT JOIN indent idn on idn.indent_id = gi.indent_id and g.grn_type = 'INDENT'
             where 1=1`
             if (req?.grnId) {
                 query = query + ` AND g.grn_id=${req.grnId}`
@@ -367,13 +369,15 @@ export class GrnService {
         try {
             // console.log(req,'--------------')
             let query = `SELECT g.grn_number AS grnNumber,gi.received_quantity AS receivedQty,gi.accepted_quantity AS acceptedQty,gi.rejected_quantity  AS rejectedQty,u.uom,
-            gi.conversion_quantity  AS conversionQty,uom.uom AS convertedUom,gi.location_mapped_status AS locMapStatus,gi.remarks,gi.m3_item_code_id AS m3ItemCodeId,CONCAT(m3.item_code,'-',m3.description) AS itemCode,gi.buyer_id AS buyerId, CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName
+            gi.conversion_quantity  AS conversionQty,uom.uom AS convertedUom,gi.location_mapped_status AS locMapStatus,gi.remarks,gi.m3_item_code_id AS m3ItemCodeId,CONCAT(m3.item_code,'-',m3.description) AS itemCode,gi.buyer_id AS buyerId, CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName,IF(g.grn_type = 'INDENT',idn.request_no,sr.request_no) AS grnAgainst
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             LEFT JOIN uom u ON u.id = gi.uom_id
             LEFT JOIN uom uom ON uom.id = gi.conversion_uom_id
-            LEFT JOIN buyers b ON b.buyer_id = gi.buyer_id `
+            LEFT JOIN buyers b ON b.buyer_id = gi.buyer_id 
+            LEFT JOIN sample_request sr on sr.sample_request_id = gi.sample_req_id and g.grn_type = 'SAMPLE_ORDER'
+            LEFT JOIN indent idn on idn.indent_id = gi.indent_id and g.grn_type = 'INDENT' `
             if (req.itemType === 'Fabric') {
                 query = query + ` LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
             }

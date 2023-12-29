@@ -30,8 +30,8 @@ const StockReport = () => {
     useEffect(() => {
         getData();
         // getAllItemCode();
-        // getAllItemType();
-        // getAllLocation();
+        getAllItemType();
+        getAllLocation();
         // getAllPlant();
         getAllStockReportData();
         const userrefNo = IAMClientAuthContext.user?.externalRefNo
@@ -87,18 +87,14 @@ const StockReport = () => {
       const getAllStockReportData = () => {
         const req = new StockFilterRequest()
         req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
-        if (form.getFieldValue('m3ItemCode') !== undefined) {
-          req.m3ItemCode = form.getFieldValue('m3ItemCode')
-        }
+      
         if (form.getFieldValue('itemType') !== undefined) {
           req.itemType = form.getFieldValue('itemType')
         }
         if (form.getFieldValue('location') !== undefined) {
           req.location = form.getFieldValue('location')
         }
-        if (form.getFieldValue('plant') !== undefined) {
-          req.plant = form.getFieldValue('plant')
-        }
+        
         service.getAllStockReportData(req).then((res) => {
           console.log(req,'77777777777777')
           if (res.data) {
@@ -249,11 +245,11 @@ const StockReport = () => {
         }
   
         >
-        {/* <Form form={form} 
+      <Form form={form} 
         onFinish={onFinish}
         >
         <Row gutter={24}>
-          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+          {/* <Col xs={24} sm={12} md={8} lg={6} xl={6}>
             <Form.Item name="m3ItemCode" label="Item Code">
               <Select
                 showSearch
@@ -268,7 +264,7 @@ const StockReport = () => {
                 ))}
               </Select>
             </Form.Item>   
-          </Col>
+          </Col> */}
           <Col xs={24} sm={12} md={8} lg={6} xl={6}>
             <Form.Item name="itemType" label="Item Type">
               <Select
@@ -277,10 +273,14 @@ const StockReport = () => {
                 optionFilterProp="children"
                 allowClear
               >
-                {itemType.map((qc: any) => (
+                {/* {itemType.map((qc: any) => (
                   <Select.Option key={qc.item_type_id} value={qc.item_type_id}>
                     {qc.item_type_id}
                   </Select.Option>
+                ))} */}
+
+                {Object.values(ItemTypeEnumDisplay).map((val)=>(
+                  <Select.Option key={val.name} value={val.name}>{val.displayVal}</Select.Option>
                 ))}
               </Select>
             </Form.Item>   
@@ -294,14 +294,14 @@ const StockReport = () => {
                 allowClear
               >
                 {location.map((qc: any) => (
-                  <Select.Option key={qc.location_id} value={qc.location_id}>
-                    {qc.location_id}
+                  <Select.Option key={qc.location} value={qc.location}>
+                    {qc.location}
                   </Select.Option>
                 ))}
               </Select>
             </Form.Item>   
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+          {/* <Col xs={24} sm={12} md={8} lg={6} xl={6}>
             <Form.Item name="plant" label="Plant">
               <Select
                 showSearch
@@ -316,7 +316,7 @@ const StockReport = () => {
                 ))}
               </Select>
             </Form.Item>   
-          </Col>
+          </Col> */}
           <Col xs={12} sm={6} md={4} lg={3} xl={2}>
             <Form.Item>
               <Button
@@ -338,24 +338,24 @@ const StockReport = () => {
               >
                 Reset
               </Button>
-            </Form.Item>
+            </Form.Item> 
           </Col>
           </Row>
-          </Form> */}
- {/* <Row gutter={40} justify={'space-evenly'}>
+          </Form> 
+ <Row gutter={40} justify={'space-evenly'}>
             <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38, backgroundColor: '#A5F5D7'}}
              title={"Total Item Code:" +data.filter(el => el.m3ItemCode).length}>
               </Card> </Col>
               <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#E6D2F0'}}
-              title={"Item Type:"+data.filter(el => el.item_type_id).length}>
+              title={"Item Type:"+data.filter(el => el.itemType).length}>
               </Card> </Col>
               <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#E6DC7B'}}
-              title={"Location:"+data.filter(el => el.location_id).length}>
+              title={"Location:"+data.filter(el => el.location).length}>
               </Card> </Col>
-              <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#A4A3A4'}}
+              {/* <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#A4A3A4'}}
               title={"Plant:"+data.filter(el => el.plant_id).length}>
-              </Card> </Col>
-          </Row><br></br> */}
+              </Card> </Col> */}
+          </Row><br></br>
         <Card >
         <Table columns={Columns}  pagination={{pageSize:50}}
         dataSource={stockData}

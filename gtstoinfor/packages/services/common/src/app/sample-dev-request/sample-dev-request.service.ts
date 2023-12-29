@@ -1870,6 +1870,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
     GROUP BY rack_position_name`;
       
       const fabricInfo = await this.dataSource.query(fabricInfoQry)
+     console.log(fabricInfoQry,"Fabricccccccccccccccccccccccccccccc");
      
       let trimInfoQry = `SELECT sr.request_no AS requestNo,
 br.brand_name AS brandName,
@@ -1893,6 +1894,7 @@ WHERE  sr.sample_request_id= '${req.requestNo}' AND  ma.item_type != 'fabric'
 GROUP BY rack_position_name`;
 
 const trimInfo = await this.dataSource.query(trimInfoQry)
+console.log(trimInfoQry,"Trimssssssssssssssssssss");
 
 const combineData = [...fabricInfo, ...trimInfo]
 return new CommonResponseModel(true,1,'data retreived',combineData)
@@ -1998,8 +2000,8 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
   async getAllSampleRequestsInfo(req?: sampleReqIdReq):Promise<CommonResponseModel>{
     try{
       const manager = this.dataSource;
-      const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,si.size_id,
-      st.style,pch.profit_control_head,mi.item_code as fabCode,mt.description as trimCode,e.first_name,s.contact,s.status,srs.quantity,srf.total_requirement as fabtotal_requirement,srf.wastage as fabwastage,srf.consumption as fabconsumption,uf.uom as fabuom,srt.total_requirement as trimtotal_requirement,srt.wastage as trimwastage,srt.consumption as trimconsumption,ut.uom as trimuom,
+      const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,si.size_id,s.extension,s.cost_ref,s.description,s.dmm_id,s.user,s.type,s.product,s.made_in,s.remarks,s.file_name,srt.remarks AS trim_remarks,srf.remarks AS fab_remarks ,s.sam_value,
+      st.style,pch.profit_control_head,mi.item_code as fabCode,mt.description as trimCode,e.first_name,s.contact,s.status,srs.quantity,srf.total_requirement as fabtotal_requirement,srf.wastage as fabwastage,srf.consumption as fabconsumption,uf.uom as fabuom,srt.total_requirement as trimtotal_requirement,srt.wastage as trimwastage,srt.consumption as trimconsumption,ut.uom as trimuom,cf.colour as fabcolour,ca.category,ed.first_name as dmm,
       s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date FROM sample_request s
       LEFT JOIN brands b ON b.brand_id = s.brand_id
       LEFT JOIN buyers bu ON bu.buyer_id = s.buyer_id
@@ -2015,6 +2017,9 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
       LEFT JOIN employee_details e ON e.employee_id = s.technician_id
       LEFT JOIN uom uf ON uf.id = srf.uom_id
       LEFT JOIN uom ut ON ut.id = srt.uom_id
+      LEFT JOIN employee_details ed ON ed.employee_id = s.dmm_id
+      LEFT JOIN colour cf ON cf.colour_id = srf.colour_id
+      LEFT JOIN category ca ON ca.category_id = mt.category_id
       WHERE s.sample_request_id = ${req.sampleReqId}`
       
    
@@ -2026,7 +2031,7 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
         if(info.length > 0){
             for(const rec of info){
               if(!MapData.has(rec.requestNo)){
-                    MapData.set(rec.requestNo,new SampleRequestInfoModel(rec.request_no,rec.sample_request_id,rec.style,rec.brand_name,rec.buyer_name,rec.first_name,rec.status,rec.lifeCycleStatus,rec.contact,rec.profit_control_head,rec.expected_delivery_date,[],[]))
+                    MapData.set(rec.requestNo,new SampleRequestInfoModel(rec.request_no,rec.sample_request_id,rec.style,rec.brand_name,rec.buyer_name,rec.first_name,rec.status,rec.lifeCycleStatus,rec.contact,rec.profit_control_head,rec.expected_delivery_date,rec.extension,rec.conversion,rec.dmm,rec.product,rec.user,rec.description,rec.cost_ref,rec.type,rec.made_in,rec.remarks,rec.file_name,[],[]))
                 }
                
         const existingTrim = MapData.get(rec.requestNo).trimInfo.find(
@@ -2040,7 +2045,9 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
             total:rec.trimtotal_requirement,
           consumption:rec.trimconsumption,
           wastage:rec.trimwastage,
-          uom:rec.trimuom
+          uom:rec.trimuom,
+            category : rec.category,
+            remarks:rec.trim_remarks
           });
       }
       const existingFabric = MapData.get(rec.requestNo).fabInfo.find(
@@ -2053,7 +2060,9 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
           total:rec.fabtotal_requirement,
           consumption:rec.fabconsumption,
           wastage:rec.fabwastage,
-          uom:rec.fabuom
+          uom:rec.fabuom,
+          remarks:rec.fab_remarks,
+          colour :rec.fabcolour
          });
     }
 
