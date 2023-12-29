@@ -168,7 +168,6 @@ export const extractDataFromPoPdf = async (pdf) => {
             shipToEndIndex = rec.itemIndex + ITEM_SHIP_TO_INDEXES[ITEM_SHIP_TO_INDEXES.length - 1]
             isShipToTextExist = true
         }
-
         //------------------------------------------------------------------
         // check if item text exists
 
@@ -177,6 +176,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         } else {
             itemTextIndex = rec.itemIndex + ITEM_SHIP_TO_INDEX
         }
+
         if (filteredData[itemTextIndex].str == 'ITEM TEXT') {
             // console.log('item text exists')
             let itemText = ''
@@ -196,14 +196,8 @@ export const extractDataFromPoPdf = async (pdf) => {
         //    --------------------------------------------------
         // check if vas text exists
 
-
         //     vas text logic comes here
-
-
-
         //    --------------------------------------------------
-
-
         if (itemTextEndIndex) {
             itemVariantStartIndex = itemTextEndIndex + 1
         } else if (shipToEndIndex) {
@@ -242,7 +236,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsArr.push(itemDetailsObj)
     }
     poData.poItemDetails = itemDetailsArr
-    // console.log(poData)
+    console.log(poData)
     return poData
 }
 

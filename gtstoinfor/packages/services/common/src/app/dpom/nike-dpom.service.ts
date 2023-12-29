@@ -1569,13 +1569,12 @@ export class DpomService {
 
     async getDifferentialData(req: any): Promise<string> {
         const oldText = req.oldText;
-
         const newText = req.newText;
 
-        const lines1 = oldText?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+        const lines1 = oldText?.trim().split(/\n\s*\n/).slice(0, 5);
         const text1 = lines1?.join('').toLowerCase();
 
-        const lines2 = newText?.trim().split(/\n\s*\n/).slice(0, 5); // Split text into lines and take the first 5
+        const lines2 = newText?.trim().split(/\n\s*\n/).slice(0, 5);
         const text2 = lines2?.join('').toLowerCase();
 
         const dmp = new diff_match_patch();
@@ -1583,18 +1582,23 @@ export class DpomService {
         dmp.diff_cleanupSemantic(diff);
 
         let output = '';
+        let commonContext = ''; // To store common context around differences
         for (const [op, text] of diff) {
             if (op === diff_match_patch.DIFF_INSERT) {
                 if (text.trim() !== '') {
-                    output += `${text} `;
+                    output += `${commonContext}${text} `;
+                    commonContext = ''; // Reset common context after inserting difference
                 }
             } else if (op === diff_match_patch.DIFF_DELETE) {
                 if (text.trim() !== '') {
-                    output += `${text}`;
+                    output += `${commonContext} ${text}`; // Include space in common context
+                    commonContext = ''; // Reset common context after deleting difference
                 }
+            } else {
+                commonContext += `${text} `;
             }
         }
-        return output ? output.trim() : '-';
+        return output ? output.replace(/"/g, '').trim() : '-';
     }
 
     async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
@@ -1641,13 +1645,13 @@ export class DpomService {
             if (rec.ship_to_address_legal_po && rec.ship_to_address_dia) {
                 diffOfShipToAdd = await this.getDifferentialData({ oldText: rec.ship_to_address_legal_po, newText: rec.ship_to_address_dia })
             } else if (rec.ship_to_address_legal_po) {
-                diffOfShipToAdd = rec.ship_to_address_legal_po
+                diffOfShipToAdd = rec.ship_to_address_legal_po?.replace(/"/g, '')
             } else if (rec.ship_to_address_dia) {
-                diffOfShipToAdd = rec.ship_to_address_dia
+                diffOfShipToAdd = rec.ship_to_address_dia?.replace(/"/g, '')
             }
             if (!sizeDateMap.has(rec.po_and_line)) {
                 sizeDateMap.set(
-                    rec.po_and_line, new MarketingReportModel(moment(rec.last_modified_date).format('MM/DD/YYYY'), rec.item ? (rec.item).substring(0, 4) : null, rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, coFinalAppDate, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac, 'YYYY-MM-DD').format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, itemVasText, rec.item_vas_pdf, rec.item_text, formattedPCD, rec.ship_to_address_legal_po, rec.ship_to_address_dia, diffOfShipToAdd, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, rec.fabric_content, rec.final_destination, [])
+                    rec.po_and_line, new MarketingReportModel(moment(rec.last_modified_date).format('MM/DD/YYYY'), rec.item ? (rec.item).substring(0, 4) : null, rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, coFinalAppDate, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac, 'YYYY-MM-DD').format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, itemVasText, rec.item_vas_pdf, rec.item_text, formattedPCD, rec.ship_to_address_legal_po?.replace(/"/g, ''), rec.ship_to_address_dia?.replace(/"/g, ''), diffOfShipToAdd, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.hanger, rec.fabric_content, rec.final_destination, [])
                 )
             }
             let fobPriceDiff;
@@ -1689,7 +1693,7 @@ export class DpomService {
                 allowedExcessShipQty = 0;
             } else {
                 const result = 0.03 * Number(rec.size_qty);
-                allowedExcessShipQty = result.toFixed(0);
+                allowedExcessShipQty = Math.floor(result)
             }
             let actualShipPer;
             if (rec.actual_shipped_qty) {
@@ -1699,7 +1703,6 @@ export class DpomService {
                 actualShipPer = 0 + ' ' + '%';
             }
             sizeDateMap.get(rec.po_and_line).sizeWiseData.push(new MarketingReportSizeModel(rec.size_description, rec.size_qty, rec.gross_price_fob, rec.fob_currency_code, rec.shahi_confirmed_gross_price, rec.shahi_confirmed_gross_price_currency_code, fobPriceDiff, fobCurrencyDiff, rec.ne_inc_disc, rec.net_inc_disc_currency_code, rec.trading_net_inc_disc, rec.trading_net_currency_code, rec.legal_po_price, rec.legal_po_currency, rec.co_price, rec.co_price_currency, diffOfLegalPOCOPrice, diffOfLegalPOCOCurrency, rec.crm_co_qty, rec.legal_po_qty, diffOfQty, allowedExcessShipQty, rec.actual_shipped_qty, actualShipPer));
-
         }
         const dataModelArray: MarketingReportModel[] = [];
         sizeDateMap.forEach(sizeData => dataModelArray.push(sizeData));

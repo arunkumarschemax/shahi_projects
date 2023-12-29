@@ -381,7 +381,7 @@ const PPMReport = () => {
               'Trading Co PO Number': item.tradingCoPoNumber,
               'DPOM Line Item Status': item.DPOMLineItemStatus,
               'Doc Type': item.docTypeCode,
-              'Doc Type Description ': item.docTypeDesc,
+              'Doc Type Description': item.docTypeDesc,
               'Style Number': item.styleNumber,
               'Product Code': item.productCode,
               'Product Name': item.productName ? item.productName : '-',
@@ -400,7 +400,7 @@ const PPMReport = () => {
               'Global Category Core Focus Description': item.gccFocusDesc,
               'Gender Age': item.genderAgeCode,
               'Gender Age Description': item.genderAgeDesc,
-              'Destination Country Code ': item.destinationCountryCode,
+              'Destination Country Code': item.destinationCountryCode,
               'Destination Country Name': item.destinationCountry,
               'Geo Code': item.geoCode,
               'Plant Code': item.plant,
@@ -1266,7 +1266,7 @@ const PPMReport = () => {
               'Item Vas Text': item.itemVasText,
               'Item Vas Text in PDF PO': item.itemVasTextPDF,
               'Diff of Item Vas Text': '-',
-              'Item Text': item.itemText,
+              'Item VAS Text': item.itemText,
               'Hanger Po': item.hanger,
               'Change Register': item.displayName
             });
@@ -1283,6 +1283,8 @@ const PPMReport = () => {
         setTableLoading(false)
       });
   };
+
+  console.log(csvData);
 
   // const handleExport = (e: any) => {
   //   e.preventDefault();
@@ -2291,7 +2293,7 @@ const PPMReport = () => {
         },
       },
       {
-        title: 'Item Text',
+        title: 'Item VAS Text',
         dataIndex: 'itemText', width: 80,
         render: (_text, record) => {
           return (
