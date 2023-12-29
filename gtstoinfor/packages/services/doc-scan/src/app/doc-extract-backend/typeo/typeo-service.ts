@@ -205,15 +205,16 @@ export class ScanService {
     };
   }
 
-  @Interval(20000)
-  async handleAutomaticCron() {
-    try {
-      await this.automatic();
-    } catch (error) {
-      console.error('Error', error);
-    }
-  }
+  // @Interval(20000)
+  // async handleAutomaticCron() {
+  //   try {
+  //     await this.automatic();
+  //   } catch (error) {
+  //     console.error('Error', error);
+  //   }
+  // }
 
+  // @Cron(CronExpression.EVERY_DAY_AT_10AM)
   async automatic() {
     try {
       const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
@@ -242,9 +243,9 @@ export class ScanService {
 
       const files = fs.readdirSync(directoryPath);
       if (files.length === 0) {
-        console.log('No files found');
-        await browser.close();
-        // return new CommonResponseModel(false, 0, 'No files found');
+        // console.log('No files found');
+        // await browser.close();
+        return new CommonResponseModel(false, 0, 'No files found');
       }
       console.log(files, "files");
       for (const file of files) {
