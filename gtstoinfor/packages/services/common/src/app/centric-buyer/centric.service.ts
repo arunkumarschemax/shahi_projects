@@ -18,7 +18,7 @@ import { CentricCOLineRepository } from "./repositories/centric-co-line.reposito
 import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
 import * as path from 'path';
-import { Interval } from "@nestjs/schedule";
+import { Cron, CronExpression, Interval } from "@nestjs/schedule";
 
 
 @Injectable()
@@ -323,6 +323,7 @@ export class CentricService {
   //   }
   // }
 
+  @Cron(CronExpression.EVERY_10_MINUTES)
   async centricBot() {
     try {
       const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
@@ -351,6 +352,7 @@ export class CentricService {
 
       const files = fs.readdirSync(directoryPath);
       if (files.length === 0) {
+        
        return new CommonResponseModel(false,0,"No Files Found")
       }
       for (const file of files) {
@@ -375,6 +377,7 @@ export class CentricService {
       return new CommonResponseModel(false, 0, error)
     }
   }
+  
   async getItem(): Promise<CommonResponseModel> {
     try {
       const data = await this.coLineRepo.getItem()
