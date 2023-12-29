@@ -740,7 +740,7 @@ export class DpomService {
                     }
                 }
                 // Diverted PO's
-                const itemText = orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails : null;
+                const itemText = orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails.join(',') : null;
                 const search = 'diverted to'
                 const present = itemText?.includes(search)
                 const matches = [];
