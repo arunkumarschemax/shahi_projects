@@ -1266,7 +1266,7 @@ const PPMReport = () => {
               'Item Vas Text': item.itemVasText,
               'Item Vas Text in PDF PO': item.itemVasTextPDF,
               'Diff of Item Vas Text': '-',
-              'Item VAS Text': item.itemText,
+              'Item Text': item.itemText,
               'Hanger Po': item.hanger,
               'Change Register': item.displayName
             });
@@ -2293,7 +2293,7 @@ const PPMReport = () => {
         },
       },
       {
-        title: 'Item VAS Text',
+        title: 'Item Text',
         dataIndex: 'itemText', width: 80,
         render: (_text, record) => {
           return (

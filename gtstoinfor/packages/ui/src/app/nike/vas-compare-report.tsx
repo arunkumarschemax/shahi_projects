@@ -69,21 +69,33 @@ const VASChangesCompareGrid = () => {
 
     const exportExcel = () => {
         const excel = new Excel();
-        if (filteredQtyData.length > 0) {
+        if (filterData.length > 0) {
             excel
                 .addSheet('VAS Text Revised PO')
                 .addColumns(data1)
-                .addDataSource(filteredQtyData, { str2num: true })
+                .addDataSource(filterData, { str2num: true })
         }
         excel.saveAs('VasRevised.xlsx');
     }
 
-    const data1 = [
-
+    let data1: IExcelColumn[] = []
+    data1 = [
+        {
+            title: 'PO Number',
+            dataIndex: 'purchaseOrderNumber',
+        },
+        {
+            title: 'PO Line Item No',
+            dataIndex: 'poLineItemNumber',
+        },
+        {
+            title: 'Schedule Line Item No',
+            dataIndex: 'scheduleLineItemNumber',
+        },
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at',
-            render: (text) => moment(text).format('MM/DD/YYYY')
+            render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
             title: 'Item',
@@ -93,118 +105,61 @@ const VASChangesCompareGrid = () => {
             title: 'Factory',
             dataIndex: 'factory',
         },
-        // {
-        //     title: 'Document Date',
-        //     dataIndex: 'document_date'
-        // },
         {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-        },
-        {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number',
-        },
-        {
-            title: 'Total Item Quantity',
-            dataIndex: 'totalItemQty',
+            title: 'Style Number',
+            dataIndex: 'styleNumber',
         },
         {
             title: 'Product Code',
             dataIndex: 'productCode',
         },
         {
+            title: 'Color Description',
+            dataIndex: 'colorDesc',
+        },
+        {
             title: 'OGAC',
-            dataIndex: 'OGAC', render: (text) => moment(text).format('MM/DD/YYYY')
-
+            dataIndex: 'OGAC',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
             title: 'GAC',
-            dataIndex: 'GAC', render: (text) => moment(text).format('MM/DD/YYYY')
-
+            dataIndex: 'GAC',
+            render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
-            title: 'Change from Direct Ship Sales Order Number',
-            dataIndex: 'change_from_direct_ship_sales_order_number'
+            title: 'Destination Country',
+            dataIndex: 'destinationCountry',
         },
         {
-            title: 'Change from Direct Ship Sales Order Item',
-            dataIndex: 'change_from_direct_ship_sales_order_item'
+            title: 'Item Vas Text',
+            dataIndex: 'itemVasText',
+            // render:(text,record) => {
+            //     return(
+            //         <>
+            //         {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+            //                     {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
+            //                 </span></p></Tooltip></>) : (<>{record.itemText}</>)}
+            //         </>
+            //     )
+            // }
         },
-        {
-            title: 'Change to Direct Ship Sales Order Number',
-            dataIndex: 'change_to_direct_ship_sales_order_number'
-        },
-        {
-            title: 'Change to Direct Ship Sales Order Item',
-            dataIndex: 'change_to_direct_ship_sales_order_item'
-        },
-        {
-            title: 'Change from Item Vas Text',
-            dataIndex: 'change_from_item_vas_text'
-        },
-        {
-            title: 'Change to Item Vas Text',
-            dataIndex: 'change_to_item_vas_text'
-        },
-        {
-            title: 'Item VAS PDF PO',
-            dataIndex: 'item_vas_pdf_po'
-        },
-        {
-            title: 'DIFFERENCE IN ITEM VAS TEXT ',
-            dataIndex: 'item_vas_pdf_po',
-
-        },
-
-        {
-            title: 'Schedule Line Item No',
-            dataIndex: 'schedule_line_item_number',
-        },
-        {
-            title: 'Previous Order Quantity Pieces', width: 80,
-            dataIndex: 'old_val',
-        },
-        {
-            title: 'Revised Order Quantity Pieces',
-            dataIndex: 'new_val',
-            render: (text, record) => (
-                <span  {...record.new_val}>
-                    <>
-                        {Number(record.old_val) === Number(record.new_val) ? <span style={{ color: '' }}>{Number(record.new_val).toLocaleString('en-IN', {
-                            maximumFractionDigits: 0
-                        })}</span> : ''}
-                        {Number(record.old_val) < Number(record.new_val) ? <span style={{ color: 'green' }}>{Number(record.new_val).toLocaleString('en-IN', {
-                            maximumFractionDigits: 0
-                        })}</span> : ''}
-                        {Number(record.old_val) > Number(record.new_val) ? <span style={{ color: 'red' }}>{Number(record.new_val).toLocaleString('en-IN', {
-                            maximumFractionDigits: 0
-                        })}</span> : ''}
-                    </>
-                </span>
-            )
-        },
-        {
-            title: 'Difference',
-            dataIndex: 'Diff',
-
-            render: (text, record) => (
-                < >
-                    {Number(record.Diff) === 0 ? '-' : ''}
-                    {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })} </span> : ''}
-                    {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
-                        maximumFractionDigits: 0
-                    })} </span> : ''}
-                </>
-            )
-        },
-
-        {
-            title: 'Order Status', width: 80,
-            dataIndex: 'dpom_item_line_status',
-        }
+        // {
+        //     title: 'Difference',
+        //     dataIndex: 'Diff',
+        //     align: 'right',
+        //     render: (text, record) => (
+        //         < >
+        //             {Number(record.Diff) === 0 ? '-' : ''}
+        //             {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
+        //                 maximumFractionDigits: 0
+        //             })} </span> : ''}
+        //             {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
+        //                 maximumFractionDigits: 0
+        //             })} </span> : ''}
+        //         </>
+        //     )
+        // }
     ]
 
     let exportingColumns: IExcelColumn[] = []
@@ -665,7 +620,7 @@ const VASChangesCompareGrid = () => {
 
         columns.push(
             {
-                title: 'Item Text',
+                title: 'Item VAS Text',
                 dataIndex: 'itemVasText',
                 width: 220,
                 align: 'center',
@@ -680,6 +635,7 @@ const VASChangesCompareGrid = () => {
                 }
             }
         )
+
         return (
             <>
                 {filterData.length > 0 ? (
