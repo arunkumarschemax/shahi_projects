@@ -362,7 +362,7 @@ export class CentricService {
 
           await page.waitForSelector('button.ant-btn-primary')
           await page.click('button.ant-btn-primary');
-          await page.waitForTimeout(2000)
+          await page.waitForTimeout(6000)
 
         const sourceFilePath = path.join(directoryPath, file);
         const destinationFilePath = path.join(destinationDirectory, file);
