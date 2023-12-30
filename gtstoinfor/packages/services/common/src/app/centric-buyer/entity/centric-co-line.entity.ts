@@ -28,7 +28,6 @@ export class CentricCOLineEntity {
     })
     poLine: string;
 
-    
     @Column('varchar', {
         nullable: true,
         name: "item_no",
@@ -36,14 +35,19 @@ export class CentricCOLineEntity {
     })
     itemNo: string;
 
-   
-
     @Column('varchar', {
         nullable: true,
         name: "co_date",
         length: 10
     })
     coDate: string;
+
+    @Column('varchar', {
+        nullable: true,
+        name: "co_number",
+        length: 10
+    })
+    coNumber: string;
 
     @Column('varchar', {
         nullable: true,
