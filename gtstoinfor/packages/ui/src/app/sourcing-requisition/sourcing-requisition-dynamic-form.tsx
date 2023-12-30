@@ -14,7 +14,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 import M3Items from "../masters/m3-items/m3-items-form";
 import { useIAMClientState } from "../common/iam-client-react";
 import RolePermission from "../role-permissions";
-
+import './sourcing-view.css';
 
 const {Option} = Select;
 
@@ -655,6 +655,13 @@ export const SourcingRequisitionDynamicForm = () => {
         {
           title: 'Remarks',
           dataIndex: 'remarks',
+          render: (remarks, row) => (
+            // <Tooltip title={row.remarks} placement="top" arrowPointAtCenter>
+              <span className="fabCode">
+                {`${row.remarks}`}
+              </span>
+            // </Tooltip>
+          ),
         },
         {
             title: "Action",
