@@ -4,7 +4,6 @@ export class CentricPoItemVariant {
     upc: string;
     label:string;
     unitPrice: string;
-    currency: string;
     quantity: string;
     amount: string;
     exFactory:string;
