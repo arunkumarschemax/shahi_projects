@@ -72,6 +72,9 @@ export class CentricDto {
     @ApiProperty()
     vendorBookingFlag: string
 
+    @ApiProperty()
+    currency: string
+
 
 
     @ApiProperty()

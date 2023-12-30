@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CentricEntity } from "./entity/centric.entity";
 import { CentricDto } from "./dto/centric.dto";
-import { CentricOrderDataModel, CentricSizeWiseModel, CommonResponseModel, PoOrderFilter, StatusEnum, centricCoLineRequest } from "@project-management-system/shared-models";
+import { CentricOrderDataModel, CentricSizeWiseModel, CoLinereqModel, Color, CommonResponseModel, DestinationModel, PoOrderFilter, SizeModel, StatusEnum, centricCoLineRequest } from "@project-management-system/shared-models";
 import { Repository } from "typeorm/repository/Repository";
 import { CentricRepository } from "./repositories/centric.repo";
 import { DataSource } from "typeorm/data-source/DataSource";
@@ -19,6 +19,7 @@ import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
 import * as path from 'path';
 import { Cron, CronExpression, Interval } from "@nestjs/schedule";
+import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
 
 
 @Injectable()
@@ -116,7 +117,7 @@ export class CentricService {
           entity.packMethod = item.packMethod
           entity.vendorBookingFlag = item.vendorBookingFlag
           entity.ppkupc = item.ppkupc
-
+          entity.currency = item.currency
 
           entity.size = variant.size
           entity.upc = variant.upc
@@ -397,6 +398,64 @@ export class CentricService {
       return new CommonResponseModel(true, 1, 'data retrived', data)
     else
       return new CommonResponseModel(false, 0, 'No data found');
+  }
+
+
+  async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
+    try {
+      const data = await this.Repo.find({ where: { poNumber: req.poNumber } })
+      //  const data = await this.repo.find()
+      let destinationMap = new Map<string, DestinationModel>();
+      // po -> destination -> color -> sizes
+      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+      const poMap = new Map<string, CentricEntity>();
+      data.forEach(rec => {
+        poMap.set(rec.poNumber, rec)
+        const destCountry = rec.shipment.slice(-2).trim();
+        // const parts = rec.shipment.split(',')
+        // const destAdd = parts[0].trim();
+        // const dest = destAdd + ',' + destCountry;
+        const dest = rec.shipment
+        if (!destinationColSizesMap.has(rec.poNumber)) {
+          destinationColSizesMap.set(rec.poNumber, new Map<string, Map<string, []>>());
+        }
+        if (!destinationColSizesMap.get(rec.poNumber).has(dest)) {
+          destinationColSizesMap.get(rec.poNumber).set(dest, new Map<string, []>());
+        }
+        if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(rec.color)) {
+          destinationColSizesMap.get(rec.poNumber).get(dest).set(rec.color, []);
+        }
+        destinationColSizesMap.get(rec.poNumber).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+      });
+      const coData = []
+      destinationColSizesMap.forEach((destColorSize, poNumber) => {
+        const desArray = []
+        destColorSize.forEach((colorSizes, dest) => {
+          const ColArray = []
+          colorSizes.forEach((sizes, color) => {
+            const sizeArray = []
+            sizes.forEach((size) => {
+              const sizeObj = new SizeModel(size.size, size.quantity, size.price);
+              sizeArray.push(sizeObj)
+            })
+            const col = new Color(color, sizeArray);
+            ColArray.push(col)
+          });
+          const des = new DestinationModel(dest, ColArray);
+          desArray.push(des)
+        });
+        const poInfo = poMap.get(poNumber)
+        const co = new CoLinereqModel(poInfo.poNumber, poInfo.poLine, poInfo.unitPrice, "USD", poInfo.deliveryDate, desArray);
+        coData.push(co)
+      });
+      if (coData) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
+    } catch (err) {
+      throw err
+    }
   }
 
 

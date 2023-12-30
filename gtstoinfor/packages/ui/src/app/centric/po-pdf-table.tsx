@@ -90,6 +90,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                             <th className='ta-b'>SHORT DESCRIPTION</th>
                             <th className='ta-b'>PACK METHOD</th>
                             <th className='ta-b'>VENDOR BOOKING FLAG</th>
+                            <th className='ta-b'>CURRENCY</th>
 
                         </tr>
                         <tr className='ta-b'>
@@ -104,6 +105,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                             <td className='ta-b'>{i.shortDescription}</td>
                             <td className='ta-b'>{i.packMethod}</td>
                             <td className='ta-b'>{i.vendorBookingFlag}</td>
+                            <td className='ta-b'>{i.currency}</td>
 
                         </tr>
                         <tr className='ta-b'>

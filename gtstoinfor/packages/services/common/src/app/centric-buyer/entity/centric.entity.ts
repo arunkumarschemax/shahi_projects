@@ -238,4 +238,9 @@ export class CentricEntity {
       })
       status: StatusEnum;
 
+      @Column('varchar', {
+        name: "currency",
+    })
+    currency: string;
+
 }

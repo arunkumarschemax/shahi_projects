@@ -11,6 +11,7 @@ export class CentricPoItemDetails {
     vendorBookingFlag:string;
 
     ppkupc:string;
+    currency:string;
     // materialNo: string;
     // poItem: string;
     // season: string;

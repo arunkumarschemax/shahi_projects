@@ -131,16 +131,16 @@ export const extractDataFromPoPdf = async (pdf) => {
             const shipToAddIndexHasNumber = /^\d+$/.test(firstPageContent[materialIndex + 48]?.str);
             if (shipToAddIndexHasNumber) {
                 poData.shipToAdd = firstPageContent[materialIndex + 49]?.str + " " +
-                                  firstPageContent[materialIndex + 50]?.str + " " +
-                                  firstPageContent[materialIndex + 51]?.str + " " +
-                                  firstPageContent[materialIndex + 52]?.str;
+                    firstPageContent[materialIndex + 50]?.str + " " +
+                    firstPageContent[materialIndex + 51]?.str + " " +
+                    firstPageContent[materialIndex + 52]?.str;
             } else {
                 poData.shipToAdd = firstPageContent[materialIndex + 48]?.str + " " +
-                                  firstPageContent[materialIndex + 49]?.str + " " +
-                                  firstPageContent[materialIndex + 50]?.str + " " +
-                                  firstPageContent[materialIndex + 51]?.str;
+                    firstPageContent[materialIndex + 49]?.str + " " +
+                    firstPageContent[materialIndex + 50]?.str + " " +
+                    firstPageContent[materialIndex + 51]?.str;
             }
-            
+
             poData.manufacture = firstPageContent[materialIndex + 36].str + " " + firstPageContent[materialIndex + 37].str + " " +
                 firstPageContent[materialIndex + 38].str + " " + firstPageContent[materialIndex + 39].str + " " + firstPageContent[materialIndex + 40].str
 
@@ -225,6 +225,7 @@ export const extractDataFromPoPdf = async (pdf) => {
 
     console.log(itemsArr, 'AAAAAAAAA')
 
+
     /* 2nd format */
     if (ITEM_TEXT_END_TEXT1 === "Per Pack" && isSecondFormat) {
         for (const rec of itemsArr) {
@@ -238,6 +239,11 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemDetailsObj.material = filteredData[rec.itemIndex + 12].str
             itemDetailsObj.ppkupc = filteredData[rec.itemIndex + 13].str;
             itemDetailsObj.color = filteredData[rec.itemIndex + 14].str;
+            // itemDetailsObj.currency = filteredData[]
+            const poLineIndex = filteredData.findIndex((item, index) => index >= rec.itemIndex + 11);
+            if (poLineIndex !== -1) {
+                itemDetailsObj.currency = filteredData[poLineIndex - 1].str.replace(/Cost\(/g,'').replace(/\)/g,''); 
+            }
 
             for (let i = rec.itemIndex + 15; i < filteredData.length; i++) {
                 if (filteredData[i].str.includes("Mens")) {
@@ -370,7 +376,6 @@ export const extractDataFromPoPdf = async (pdf) => {
                 // itemVariantsObj.deliveryDate = itemVarinatsTextArr[(count * l) + 11]
                 // itemVariantsObj.retialPrice = itemVarinatsTextArr[(count * l) + 12]
 
-                itemVariantsObj.currency = itemVarinatsTextArr[(count * l) + count - 4]
                 itemVariantsObj.amount = itemVarinatsTextArr[(count * l) + count - 1]
                 console.log(itemVariantsObj)
                 itemVariantsArr.push(itemVariantsObj)
@@ -392,6 +397,11 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemDetailsObj.poLine = filteredData[rec.itemIndex + 10].str
             itemDetailsObj.material = filteredData[rec.itemIndex + 11].str
             itemDetailsObj.color = filteredData[rec.itemIndex + 12].str;
+
+            const poLineIndex = filteredData.findIndex((item, index) => index >= rec.itemIndex + 10);
+            if (poLineIndex !== -1) {
+                itemDetailsObj.currency = filteredData[poLineIndex - 1].str.replace(/Cost\(/g,'').replace(/\)/g,''); 
+            }
 
             for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
                 if (filteredData[i].str.includes("Mens")) {
@@ -493,7 +503,6 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemVariantsObj.deliveryDate = itemVarinatsTextArr[(count * l) + count - 2]
                 itemVariantsObj.retialPrice = itemVarinatsTextArr[(count * l) + count - 1]
 
-                itemVariantsObj.currency = itemVarinatsTextArr[(count * l) + count - 4]
                 itemVariantsObj.amount = itemVarinatsTextArr[(count * l) + count - 1]
                 console.log(itemVariantsObj)
                 itemVariantsArr.push(itemVariantsObj)
