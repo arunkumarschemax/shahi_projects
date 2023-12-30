@@ -858,13 +858,13 @@ import RolePermission from "../role-permissions";
       <Card
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         title="Sample Requests"
-        // extra={
-        //   <Link to="/sample-development/sample-development-form">
-        //     <span style={{ color: "white" }}>
-        //       <Button type={"primary"}>New </Button>{" "}
-        //     </span>
-        //   </Link>
-        // }
+        extra={
+          <Link to="/sample-development/sample-development-form">
+            <span style={{ color: "white" }}>
+              <Button type={"primary"}>New </Button>{" "}
+            </span>
+          </Link>
+        }
       >
         <Form form={sourcingForm} onFinish={getAll} layout="vertical">
           <Row gutter={8}>
