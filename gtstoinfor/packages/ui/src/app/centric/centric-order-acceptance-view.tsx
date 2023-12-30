@@ -822,14 +822,14 @@ export function CentricOrderAcceptanceGrid() {
           columns={columns}
           dataSource={processData(filterData)}
           size="small"
-          // pagination={false}
-          pagination={{
-            pageSize: 50,
-            onChange(current, pageSize) {
-              setPage(current);
-              setPageSize(pageSize);
-            },
-          }}
+          pagination={false}
+          // pagination={{
+          //   pageSize: 50,
+          //   onChange(current, pageSize) {
+          //     setPage(current);
+          //     setPageSize(pageSize);
+          //   },
+          // }}
           className="custom-table-wrapper"
           scroll={{ x: "max-content", y: 450 }}
           rowClassName={getRowClassName}
