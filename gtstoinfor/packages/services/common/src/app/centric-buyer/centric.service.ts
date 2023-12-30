@@ -410,13 +410,13 @@ export class CentricService {
       const poMap = new Map<string, CentricEntity>();
       data.forEach(rec => {
         poMap.set(`${rec.poLine},${rec.poNumber}`, rec)
-        const destCountry = rec.shipToAdd.slice(-13).trim();
+        // const destCountry = rec.shipToAdd.slice(-13).trim();
         // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
 
-        // const parts = rec.shipToAdd.split(',')
-        // const destAdd = parts[0].trim();
-         const dest = destCountry;
-        // const dest = rec.shipToAdd
+        const parts = rec.shipToAdd.split(',')
+         const destAdd = parts[2].trim();
+         const dest = destAdd;
+         
         if (!destinationColSizesMap.has(`${rec.poLine},${rec.poNumber}`)) {
           destinationColSizesMap.set(`${rec.poLine},${rec.poNumber}`, new Map<string, Map<string, []>>());
         }
