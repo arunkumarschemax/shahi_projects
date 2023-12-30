@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Req } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { MaterialIssueService } from "./material-issue.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialIssueResponseModel, ResponesNoDropDownRes, RequestNoDto, MaterialReportsResponse } from "@project-management-system/shared-models";
+import { CommonResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialIssueResponseModel, ResponesNoDropDownRes, RequestNoDto, MaterialReportsResponse, AllocationReportReq } from "@project-management-system/shared-models";
 import { MaterialIssueDto } from "./dto/material-issue-dto";
 import { MaterialIssueLogDto } from "./dto/material-issue-log-dto";
 
@@ -100,6 +100,34 @@ export class MaterialIssueController {
         console.log(req,"contt")
         try {
             return await this.issueService.createMaterialIssueLog(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getMaterialAllocationReport')
+    @ApiBody({type:AllocationReportReq})
+    async getMaterialAllocationReport(@Body() req?:any): Promise<CommonResponseModel> {
+        try {
+            return await this.issueService.getMaterialAllocationReport(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getSampleReq')
+    async getSampleReq(): Promise<CommonResponseModel> {
+        try {
+            return await this.issueService.getSampleReq()
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getRackPositions')
+    async getRackPositions(): Promise<CommonResponseModel> {
+        try {
+            return await this.issueService.getRackPositions()
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
         }

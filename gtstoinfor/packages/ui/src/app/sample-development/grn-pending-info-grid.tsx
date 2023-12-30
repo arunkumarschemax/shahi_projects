@@ -51,9 +51,11 @@ export const GrnPendingInfoGrid = () => {
 
     
 const getgrn=()=>{
-    const  req = new ExternalRefReq(externalRefNo)     
-    locationService.getgrn(req).then((res)=>{
+    locationService.getgrn().then((res)=>{     
+      
+      if(res.status){ 
         setGrndata(res.data)
+      }
     })
 }
     
@@ -191,6 +193,7 @@ setRemarkModal(false)
             //     console.log(record,"rowdata")
             //     return('')
             // }
+            fixed:'right',
             render: (rowData) => (
                 
                 <span>

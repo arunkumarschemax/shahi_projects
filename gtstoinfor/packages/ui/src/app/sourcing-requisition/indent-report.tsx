@@ -112,6 +112,7 @@ export const IndentReport = () => {
     {
       title: "Indent Code",
       dataIndex: "requestNo",
+      fixed: 'left',
       width: '150px',
       sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
       sortDirections: ["descend", "ascend"],
@@ -151,6 +152,9 @@ export const IndentReport = () => {
         renderCellData(text)
         return (
           <Table
+          size='small'
+          bordered={false}
+            showHeader={false}
             dataSource={i_items}
             columns={[
               {
@@ -216,7 +220,9 @@ export const IndentReport = () => {
       render: (i_items, text) => {
         renderCellData(text)
         return (
-          <Table
+          <Table  size='small'
+          bordered={false}
+            showHeader={false}
             dataSource={i_items}
             columns={[
               {
@@ -238,7 +244,9 @@ export const IndentReport = () => {
       render: (i_items, text) => {
         renderCellData(text)
         return (
-          <Table
+          <Table  size='small'
+          bordered={false}
+            showHeader={false}
             dataSource={i_items}
             columns={[
               {
@@ -260,7 +268,9 @@ export const IndentReport = () => {
       render: (i_items, text) => {
         renderCellData(text)
         return (
-          <Table
+          <Table size='small'
+          bordered={false}
+            showHeader={false}
             dataSource={i_items}
             columns={[
               {
@@ -314,7 +324,8 @@ export const IndentReport = () => {
             </Col>
           </Row>
         </Form>
-        <Table columns={columns} dataSource={data} bordered />
+        <Table size='small' scroll={{x:'max-content',y:500}}
+            columns={columns} dataSource={data} bordered />
       </Card>
     </div>
 

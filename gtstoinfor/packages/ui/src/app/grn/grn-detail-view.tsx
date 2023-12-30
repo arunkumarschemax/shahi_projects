@@ -178,6 +178,12 @@ import QRCode from "react-qr-code";
           <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{ItemTypeEnumDisplay.find((e) => e.name === (stateData?.data?.[0]?.itemType).toUpperCase())?.displayVal ?? stateData?.data?.[0]?.itemType}</Descriptions.Item>
           {/* <Descriptions.Item label='Item Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{ItemTypeEnumDisplay.find((e)=> e.name === stateData?.data?.[0]?.itemType)?.displayVal}</Descriptions.Item> */}
           <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{GRNTypeEnumDisplay.find((e) => e.name === stateData?.data?.[0]?.grnType)?.displayVal ?? '-'}</Descriptions.Item>
+          {
+            stateData?.data?.[0]?.grnType === "INDENT" ? 
+            <Descriptions.Item label='Indent No' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnAgainst != null?stateData?.data?.[0]?.grnAgainst:'-'}</Descriptions.Item>
+            :
+            <Descriptions.Item label='Sample Order No' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnAgainst!= null?stateData?.data?.[0]?.grnAgainst:'-'}</Descriptions.Item>
+          }
           {/* <Descriptions.Item label='GRN Type' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.grnType?stateData?.data?.[0]?.grnType:'-'}</Descriptions.Item> */}
           <Descriptions.Item label='Status' labelStyle={{color:'black',fontWeight:'bolder'}}>{stateData?.data?.[0]?.status?stateData?.data?.[0]?.status:'-'}</Descriptions.Item>
         </Descriptions>

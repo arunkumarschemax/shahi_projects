@@ -409,9 +409,21 @@ const getBase64 = (img, callback) => {
   };
   const handleFabricsDataUpdate = (updatedData) => {
     console.log(updatedData)
-    console.log(fabricsData)
-      setData((prevData) => ({ ...prevData, fabricsData: updatedData }));
-      setFabricsData(updatedData);
+    console.log(updatedData.find((e) => e.colourId === 0));
+    console.log(sizeData)
+    if(updatedData.filter((e) => e.colourId === 0).length === 0){
+      const distictFabColors = [...new Set(updatedData.map(x => x.colourId))]
+      const distictSizeColors = [...new Set(sizeData.map(x => x.colour))]
+      console.log(distictFabColors)
+      console.log(distictSizeColors)
+      let res = distictSizeColors.filter(val => !distictFabColors.includes(val));
+      console.log(res);
+      if(res.length > 0){
+        AlertMessages.getWarningMessage("Fabric is missing for Color. ")
+      }
+    }
+    setData((prevData) => ({ ...prevData, fabricsData: updatedData }));
+    setFabricsData(updatedData);
   };
 
   const handleTrimsDataUpdate = (updatedData) => {

@@ -1,5 +1,5 @@
 import { Injectable, Query } from '@nestjs/common';
-import { CommonResponseModel, CustomerOrderStatusEnum, GRNTypeEnum, GrnReq, PoItemEnum, PurchaseOrderStatus } from '@project-management-system/shared-models';
+import { CommonResponseModel, CustomerOrderStatusEnum, GRNTypeEnum, GrnReq, PoItemEnum, PurchaseOrderStatus, grnReportReq } from '@project-management-system/shared-models';
 import { GrnRepository } from './dto/grn-repository';
 import { GrnAdapter } from './dto/grn-adapter';
 import { GrnDto, PurchaseOrderReq } from './dto/grn-dto';
@@ -186,14 +186,19 @@ export class GrnService {
             //     grnNumber = 'GRN/'+ FromYear + '-' + ToYear + '/' + maxId[0].grnId.toString().padStart(3, 0) + ''
             // }
 
-            let grnItemNumber
             const data1 = 'select max(grn_item_id) as grnItemId from grn_items'
-            const maxItemId = await this.grnRepo.query(data1)
-            if (maxItemId[0].grnItemId == null) {
-                grnItemNumber = 'GRNI'+ req.materialtype + '/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + '001' + ''
-            } else {
-                grnItemNumber = 'GRNI'+ req.materialtype + '/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + maxItemId[0].grnItemId.toString().padStart(3, 0) + ''
-            }
+            const maxItemId = await this.dataSource.query(data1)
+            let itemVal = maxItemId[0].grnItemId + 1;
+            let itemNo = itemVal + "";
+            while(itemNo.length < 4) itemNo= "0" + itemNo;
+            let grnItemNumber = 'GRNI'+ req.materialtype + '/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + itemNo
+
+
+            // if (maxItemId[0].grnItemId == null) {
+            //     grnItemNumber = 'GRNI'+ req.materialtype + '/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + '0001' + ''
+            // } else {
+            //     grnItemNumber = 'GRNI'+ req.materialtype + '/' + (fromDate.toString().substr(-2)) + '-' + (toDate.toString().substr(-2)) + '/' + maxItemId[0].grnItemId.toString().padStart(3, 0) + ''
+            // }
 
             let mrnNumber
             if (totalGrn[0].grnId == null) {
@@ -297,12 +302,14 @@ export class GrnService {
         try {
             const manager = this.dataSource;
             let query = `SELECT g.grn_id AS grnId,g.grn_number AS grnNo,DATE(g.grn_date) AS grnDate,DATE(g.invoice_date) AS invoiceDate,g.status,g.item_type AS itemType,g.grn_type AS grnType,g.invoice_no AS invoiceNo,
-            g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber,gi.buyer_id AS buyerId,g.location_mapped_status as locationMapStatus
+            g.vendor_id AS vendorId, CONCAT(v.vendor_name,'-',v.vendor_code) AS vendor,g.po_id AS poId,po.po_number AS poNumber,gi.buyer_id AS buyerId,g.location_mapped_status as locationMapStatus,IF(g.grn_type = 'INDENT',idn.request_no,sr.request_no) AS grnAgainst
             FROM grn g
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             left join grn_items gi on gi.grn_id = g.grn_id
             left join buyers b on b.buyer_id = gi.buyer_id
+            LEFT JOIN sample_request sr on sr.sample_request_id = gi.sample_req_id and g.grn_type = 'SAMPLE_ORDER'
+            LEFT JOIN indent idn on idn.indent_id = gi.indent_id and g.grn_type = 'INDENT'
             where 1=1`
             if (req?.grnId) {
                 query = query + ` AND g.grn_id=${req.grnId}`
@@ -362,13 +369,15 @@ export class GrnService {
         try {
             // console.log(req,'--------------')
             let query = `SELECT g.grn_number AS grnNumber,gi.received_quantity AS receivedQty,gi.accepted_quantity AS acceptedQty,gi.rejected_quantity  AS rejectedQty,u.uom,
-            gi.conversion_quantity  AS conversionQty,uom.uom AS convertedUom,gi.location_mapped_status AS locMapStatus,gi.remarks,gi.m3_item_code_id AS m3ItemCodeId,CONCAT(m3.item_code,'-',m3.description) AS itemCode,gi.buyer_id AS buyerId, CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName
+            gi.conversion_quantity  AS conversionQty,uom.uom AS convertedUom,gi.location_mapped_status AS locMapStatus,gi.remarks,gi.m3_item_code_id AS m3ItemCodeId,CONCAT(m3.item_code,'-',m3.description) AS itemCode,gi.buyer_id AS buyerId, CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName,IF(g.grn_type = 'INDENT',idn.request_no,sr.request_no) AS grnAgainst
             FROM grn_items gi LEFT JOIN grn g ON g.grn_id = gi.grn_id
             LEFT JOIN purchase_order po ON po.purchase_order_id = g.po_id
             LEFT JOIN vendors v ON v.vendor_id = g.vendor_id
             LEFT JOIN uom u ON u.id = gi.uom_id
             LEFT JOIN uom uom ON uom.id = gi.conversion_uom_id
-            LEFT JOIN buyers b ON b.buyer_id = gi.buyer_id `
+            LEFT JOIN buyers b ON b.buyer_id = gi.buyer_id 
+            LEFT JOIN sample_request sr on sr.sample_request_id = gi.sample_req_id and g.grn_type = 'SAMPLE_ORDER'
+            LEFT JOIN indent idn on idn.indent_id = gi.indent_id and g.grn_type = 'INDENT' `
             if (req.itemType === 'Fabric') {
                 query = query + ` LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
             }
@@ -418,6 +427,133 @@ export class GrnService {
             }
         } catch (err) {
             throw (err)
+        }
+    }
+
+    async getGrnReportData(req?:grnReportReq):Promise<CommonResponseModel>{
+        try{
+            let query='SELECT date(g.grn_date) as grndate,mt.description AS m3TrimDesc,mt.trim_code AS m3TrimCode,mi.item_code AS m3ItemCode,mi.description AS m3ItemDescription,u.uom,s.style,g.invoice_no AS grnInvoiceNo,g.grn_number AS grnNumber,b.buyer_name AS buyerName,i.request_no AS indentNo,sr.request_no AS sampleReqNo,sr.life_cycle_status AS sampleLifeCycleStatus,poi.subjective_amount AS totalPoAmount,poi.tax AS tax,poi.discount AS poDiscount,poi.unit_price AS unitPrice,po.grn_quantity AS grnQuantity,poi.po_quantity AS poQuantity,poi.po_item_status AS poItemStatus,po_against AS poAgainst,po.po_number AS poNumber,po.status AS poStatus,gi.received_quantity AS receivedQuantity,gi.accepted_quantity AS acceptedQuantity,gi.rejected_quantity AS rejectedQuantity,gi.location_mapped_status AS locationMappedStatus,grn_item_amount AS grnItemAmount,grn_item_no AS grnItemNo,gi.item_type AS itemType FROM grn_items gi LEFT JOIN grn g ON g.grn_id=gi.grn_id LEFT JOIN purchase_order po ON po.purchase_order_id=gi.po_id LEFT JOIN purchae_order_items poi ON poi.purchase_order_item_id=gi.po_item_id  LEFT JOIN sample_request sr ON sr.sample_request_id=gi.sample_req_id LEFT JOIN indent i ON i.indent_id=gi.indent_id LEFT JOIN buyers b ON b.buyer_id=i.buyer_id LEFT JOIN style s ON s.style_id=gi.style_id LEFT JOIN uom u ON u.id=gi.uom_id LEFT JOIN m3_items mi ON mi.m3_items_Id=gi.m3_item_code_id AND gi.item_type IN ("FABRIC")  LEFT JOIN m3_trims mt ON mt.m3_trim_Id=gi.m3_item_code_id AND gi.item_type NOT IN("FABRIC") where grn_item_id>0'
+            if(req.poId != undefined){
+                query=query+' and po.purchase_order_id ="'+req.poId+'"'
+            }
+            if(req.poStatus != undefined){
+                query=query+' and po.status="'+req.poStatus+'"'
+            }
+            if(req.grnDate != undefined){
+                query=query+' and g.grn_date="'+req.grnDate+'"'
+            }
+            if(req.sampleOrderId != undefined){
+                query=query+' and gi.sample_req_id ='+req.sampleOrderId+''
+            }
+            if(req.indentId != undefined){
+                query=query+' and gi.indent_id='+req.indentId+''
+            }
+            else{
+                query=query
+            }
+            const result = await this.grnRepo.query(query)
+            if(result){
+                return new CommonResponseModel(true,1,'Data Retrived Sucessfully',result)
+            }else{
+                return new CommonResponseModel(false,0,'No Data Found',[])
+            }
+
+        }catch(err){
+            throw err
+        }
+    }
+
+    async getGrnReportDataNew():Promise<CommonResponseModel>{
+        try{
+            const query='SELECT mt.description AS m3TrimDesc,mt.trim_code AS m3TrimCode,mi.item_code AS m3ItemCode,mi.description AS m3ItemDescription,u.uom,s.style,g.invoice_no AS grnInvoiceNo,g.grn_number AS grnNumber,b.buyer_name AS buyerName,i.request_no AS indentNo,sr.request_no AS sampleReqNo,sr.life_cycle_status AS sampleLifeCycleStatus,poi.subjective_amount AS totalPoAmount,poi.tax AS tax,poi.discount AS poDiscount,poi.unit_price AS unitPrice,po.grn_quantity AS grnQuantity,poi.po_quantity AS poQuantity,poi.po_item_status AS poItemStatus,po_against AS poAgainst,po.po_number AS poNumber,po.status AS poStatus,gi.received_quantity AS receivedQuantity,gi.accepted_quantity AS acceptedQuantity,gi.rejected_quantity AS rejectedQuantity,gi.location_mapped_status AS locationMappedStatus,grn_item_amount AS grnItemAmount,grn_item_no AS grnItemNo,gi.item_type AS itemType FROM grn_items gi LEFT JOIN grn g ON g.grn_id=gi.grn_id LEFT JOIN purchase_order po ON po.purchase_order_id=gi.po_id LEFT JOIN purchae_order_items poi ON poi.purchase_order_item_id=gi.po_item_id  LEFT JOIN sample_request sr ON sr.sample_request_id=gi.sample_req_id LEFT JOIN indent i ON i.indent_id=gi.indent_id LEFT JOIN buyers b ON b.buyer_id=i.buyer_id LEFT JOIN style s ON s.style_id=gi.style_id LEFT JOIN uom u ON u.id=gi.uom_id LEFT JOIN m3_items mi ON mi.m3_items_Id=gi.m3_item_code_id AND gi.item_type IN ("FABRIC")  LEFT JOIN m3_trims mt ON mt.m3_trim_Id=gi.m3_item_code_id AND gi.item_type NOT IN("FABRIC")'
+            const result = await this.grnRepo.query(query)
+            if(result.length >0){
+                const groupData=result.reduce((rec,item) =>{
+                    const grnNumber=item.grnNumber;
+                    const style=item.style
+                    const poNumber=item.poNumber
+                    const grnItemNo=item.grnItemNo
+                    const indentNo=item.indentNo
+                    const sampleReqNo=item.sampleReqNo
+                    const buyerName=item.buyerName
+                    const poAgainst=item.poAgainst
+                    if(!rec[grnNumber]){
+                        rec[grnNumber] ={
+                             grnNumber:grnNumber,
+                             style:style,
+                             poNumber:poNumber,
+                             grnItemNo:grnItemNo,
+                             indentNo:indentNo,
+                             sampleReqNo:sampleReqNo,
+                             buyerName:buyerName,  
+                             poAgainst:poAgainst,
+                             item:[]                  
+                            }
+                      }
+                      rec[grnNumber].item.push({
+                        grnNumber:item.grnNumber,
+                        itemType:'FABRIC',
+                        poQuantity:item.poQuantity,
+                        receivedQuantity:item.receivedQuantity,
+                        acceptedQuantity:item.acceptedQuantity,
+                        rejectedQuantity:item.rejectedQuantity,
+                        locationMappedStatus:item.locationMappedStatus,
+                        m3ItemCode:item.m3ItemCode,
+                        m3ItemDescription:item.m3ItemDescription
+                      });
+                      rec[grnNumber].item.push({
+                        grnNumber:item.grnNumber,
+                        itemType:item.itemType,
+                        poQuantity:item.poQuantity,
+                        receivedQuantity:item.receivedQuantity,
+                        acceptedQuantity:item.acceptedQuantity,
+                        rejectedQuantity:item.rejectedQuantity,
+                        locationMappedStatus:item.locationMappedStatus,
+                        m3ItemCode:item.m3TrimCode,
+                        m3ItemDescription:item.m3TrimDesc
+                      });
+                     return rec
+                }, {})
+                return new CommonResponseModel(true,1,'Data Retrived Sucessfully',Object.values(groupData))
+            }
+            
+            else{
+                return new CommonResponseModel(false,0,'No Data Found',[])
+            }
+
+        }catch(err){
+            throw err
+        }
+    }
+
+    async getSampleRequestnoGainstGrn():Promise<CommonResponseModel>{
+        try{
+            const query='SELECT sample_req_id AS sampleReqId,request_no AS requestNo  FROM grn_items gi LEFT JOIN sample_request sr ON sr.sample_request_id=gi.sample_req_id WHERE gi.sample_req_id IS NOT NULL GROUP BY gi.sample_req_id'
+            const result = await this.grnRepo.query(query)
+            if(result){
+                return new CommonResponseModel(true,1,'data',result)
+            }else{
+                return new CommonResponseModel(true,1,'data',[])
+
+            }
+        }
+        catch(err){
+            throw err
+        }
+    }
+    async getIndentGainstGrn():Promise<CommonResponseModel>{
+        try{
+            const query=' SELECT gi.indent_id as indentId,request_no AS indentNo FROM grn_items gi   LEFT JOIN indent i ON i.indent_id=gi.indent_id WHERE gi.indent_id IS NOT NULL  GROUP BY gi.indent_id'
+            const result = await this.grnRepo.query(query)
+            if(result){
+                return new CommonResponseModel(true,1,'data',result)
+            }else{
+                return new CommonResponseModel(true,1,'data',[])
+
+            }
+        }
+        catch(err){
+            throw err
         }
     }
 }

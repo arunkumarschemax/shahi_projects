@@ -399,6 +399,7 @@ Service.getAllPurchaseOrderData(req).then(res=>{
       title: 'Action',
       dataIndex: 'requestNumber',
       align: "center",
+      fixed:'right',
       width: '30px',
       render: (text, rowData, index) => (
         <span>

@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
 import { DataSource, Repository } from "typeorm";
 import { PurchaseOrderEntity } from "./entities/purchase-order-entity";
-import { CommonResponseModel,CustomerOrderStatusEnum,GrnItemsFormDto, ItemTypeEnum, LifeCycleStatusEnum, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
+import { CommonResponseModel,CustomerOrderStatusEnum,GrnItemsFormDto, ItemTypeEnum, LifeCycleStatusEnum, PoReq, PurchaseStatusEnum, PurchaseViewDto, StatusEnum, VendorIdReq } from "@project-management-system/shared-models";
 import { PurchaseOrderDto } from "./dto/purchase-order-dto";
 import { PurchaseOrderFbricEntity } from "./entities/purchase-order-fabric-entity";
 import { PurchaseOrderTrimEntity } from "./entities/purchase-order-trim-entity";
@@ -647,4 +647,61 @@ export class PurchaseOrderService {
         }
     }
 
+    async getPodetails(req?:PoReq):Promise<CommonResponseModel>{
+        let PoType = `SELECT p.po_number,p.expected_delivery_date,p.purchase_order_date,p.po_against,p.po_material_type,p.status,p.total_amount,
+        poi.po_item_status,v.vendor_name,cur.currency_name,f.name AS factory,t.tax_name,u.uom,poi.po_quantity,poi.grn_quantity,
+        IF(p.po_against = 'Sample Order',s.expected_delivery_date,i.indent_date) AS DATE,
+        IF(p.po_against = 'Sample Order',s.request_no,i.request_no) AS request_no,
+        IF(p.po_material_type ='FABRIC',mi.item_code,mt.description) AS item_code
+        FROM purchase_order p
+        LEFT JOIN purchae_order_items poi ON poi.purchase_order_id = p.purchase_order_id 
+        LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id = poi.sample_item_id
+        LEFT JOIN sample_request s ON s.sample_request_id = srf.sample_request_id
+        LEFT JOIN factory f ON f.id = p.delivery_address 
+        LEFT JOIN currencies cur ON cur.currency_id=p.currency_id  
+        LEFT JOIN vendors v ON v.vendor_id = p.vendor_id 
+        LEFT JOIN taxes t ON t.tax_id = poi.tax
+        LEFT JOIN m3_trims mt ON mt.m3_trim_Id = poi.m3_item_id  AND  p.po_material_type !='FABRIC'
+        LEFT JOIN uom u ON u.id = poi.quantity_uom_id
+        LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id 
+        LEFT JOIN indent i ON i.indent_id = ii.indent_id 
+        LEFT JOIN m3_items mi ON mi.m3_items_Id = poi.m3_item_id  AND  p.po_material_type ='FABRIC' where 1 =1`
+        console.log(req,'00000000000');
+        
+        if (req.PoFromDate) {
+            PoType += ` AND p.purchase_order_date between '${req.PoFromDate}'  and '${req.PoToDate}'`;
+        }
+          if (req.ETDfromDate) {
+            PoType += ` AND p.expected_delivery_date between '${req.ETDfromDate}' and '${req.ETDtoDate}'`;
+        }
+        if(req.poId){
+            PoType += ` AND p.purchase_order_id ='${req.poId}'`
+        }
+        if(req.poAgainst){
+            PoType += ` AND p.po_against ='${req.poAgainst}'`
+        }
+        const Res = await this.dataSource.query(PoType)
+       
+        if(Res.length > 0){
+            // PoDetails.fabricInfo = podatares
+            // PoDetails.trimInfo = poTrimdatares
+            return new CommonResponseModel(true,1,'data retreived',Res)
+        }else{
+            return new CommonResponseModel(false,0,'No data')
+        }
+        return 
+    }
+    async getPoNum():Promise<CommonResponseModel>{
+        let PoType = `SELECT p.po_number FROM purchase_order p `
+        const Res = await this.dataSource.query(PoType)
+       
+        if(Res.length > 0){
+            // PoDetails.fabricInfo = podatares
+            // PoDetails.trimInfo = poTrimdatares
+            return new CommonResponseModel(true,1,'data retreived',Res)
+        }else{
+            return new CommonResponseModel(false,0,'No data')
+        }
+        return 
+    }
 }

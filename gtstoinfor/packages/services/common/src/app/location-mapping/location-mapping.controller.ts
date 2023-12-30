@@ -26,7 +26,7 @@ export class LocationMappingController {
         
      
         try {
-            return this.service.getgrn(req);
+            return this.service.getgrn();
         } catch (error) {
             return error;
         }
