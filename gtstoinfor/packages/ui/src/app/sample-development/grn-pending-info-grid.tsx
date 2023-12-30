@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
-import { Button, Card, Col, Form, Modal, Row, Select, Table, Tooltip } from 'antd';
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { ExternalRefReq, GRNLocationPropsRequest, GRNTypeEnumDisplay, ItemTypeEnumDisplay } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
-import { UndoOutlined } from '@ant-design/icons';
+import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
 
 export const GrnPendingInfoGrid = () => {
 
@@ -22,7 +23,9 @@ export const GrnPendingInfoGrid = () => {
     const [remarks,setRemarks] = useState<string>('')
     const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
     console.log(externalRefNo,"req")
-
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
+    const searchInput = useRef(null);
 
     const navigate = useNavigate();
 
@@ -72,7 +75,99 @@ const handleTextClick = (remarks) => {
 const onRemarksModalOk = () => {
 setRemarkModal(false)
 }
-    const sampleTypeColumns: ColumnsType<any> = [
+
+  
+const getColumnSearchProps = (dataIndex: string) => ({
+  filterDropdown: ({
+    setSelectedKeys,
+    selectedKeys,
+    confirm,
+    clearFilters,
+  }) => (
+    <div style={{ padding: 8 }}>
+      <Input
+        ref={searchInput}
+        placeholder={`Search ${dataIndex}`}
+        value={selectedKeys[0]}
+        onChange={(e) =>
+          setSelectedKeys(e.target.value ? [e.target.value] : [])
+        }
+        onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        style={{ width: 188, marginBottom: 8, display: "block" }}
+      />
+      <Button
+        type="primary"
+        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+        icon={<SearchOutlined />}
+        size="small"
+        style={{ width: 90, marginRight: 8 }}
+      >
+        Search
+      </Button>
+      <Button
+        size="small"
+        style={{ width: 90 }}
+        onClick={() => {
+          handleReset(clearFilters);
+          setSearchedColumn(dataIndex);
+          confirm({ closeDropdown: true });
+        }}
+      >
+        Reset
+      </Button>
+    </div>
+  ),
+  filterIcon: (filtered) => (
+    <SearchOutlined
+      type="search"
+      style={{ color: filtered ? "#1890ff" : undefined }}
+    />
+  ),
+  onFilter: (value, record) =>
+    record[dataIndex]
+      ? record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase())
+      : false,
+  onFilterDropdownVisibleChange: (visible) => {
+    if (visible) {
+      setTimeout(() => searchInput.current.select());
+    }
+  },
+  render: (text) =>
+    text ? (
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text.toString()}
+        />
+      ) : (
+        text
+      )
+    ) : null,
+});
+
+/**
+ *
+ * @param selectedKeys
+ * @param confirm
+ * @param dataIndex
+ */
+function handleSearch(selectedKeys, confirm, dataIndex) {
+  confirm();
+  setSearchText(selectedKeys[0]);
+  setSearchedColumn(dataIndex);
+}
+
+function handleReset(clearFilters) {
+  clearFilters();
+  setSearchText("");
+}
+
+    const sampleTypeColumns: any = [
         {
             title: 'S No',
             key: 'sno',
@@ -90,39 +185,37 @@ setRemarkModal(false)
             return EnumObj ? EnumObj.displayVal : text;
           },
             sortDirections: ['descend', 'ascend'],
-          //   ...getColumnSearchProps('vendorName')
       },
         {
             title: 'GRN Number',
             dataIndex: "grnNumber",
             align: 'left',
             sorter: (a, b) => a.grnNumber - b.grnNumber,
-
               sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
         },
+        
         {
             title: 'Vendor',
             dataIndex: "vendor_name",
             align: 'left',
             sorter: (a, b) => a.vendor_name - b.vendor_name,
-
               sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
+            ...getColumnSearchProps('vendor_name')
         },
         {
             title: 'Buyer',
             dataIndex: "buyerName",
             align: 'left',
-            sorter: (a, b) => a.buyerName - b.buyerName,
-
-              sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
+            width:70,
+            // sorter: (a, b) => a.buyerName - b.buyerName,
+            //   sortDirections: ['descend', 'ascend'],
+            ...getColumnSearchProps('buyerName')
         },
         {
             title: 'Material Type',
             dataIndex: "materialType",
             align: 'left',
+            width:70,
             sorter: (a, b) => a.materialType - b.materialType,
             render: (text) => {
               const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
@@ -137,7 +230,7 @@ setRemarkModal(false)
             align: 'left',
             sorter: (a, b) => a.itemCode - b.itemCode,
               sortDirections: ['descend', 'ascend'],
-            //   ...getColumnSearchProps('vendorName')
+            ...getColumnSearchProps('itemCode')
         },
         {
           title: 'Item Description',
@@ -261,7 +354,7 @@ setRemarkModal(false)
                             <Form.Item name="grnNo" label=" GRN number ">
                    <Select
                    showSearch
-                   placeholder="Select MaterialType "
+                   placeholder="Select GRN number "
                    optionFilterProp="children"
                    allowClear>
                     {grndata.map((qc: any) => (

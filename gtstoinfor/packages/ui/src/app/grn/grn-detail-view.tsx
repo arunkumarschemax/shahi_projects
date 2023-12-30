@@ -33,7 +33,9 @@ import QRCode from "react-qr-code";
   }, []); 
   useEffect(() => {
     console.log(stateData)
-  }, [stateData]); 
+  }, [stateData]);
+  console.log(stateData,'pppp');
+  
 
     const getAllData = () => {
       const grnId = stateData?.data?.[0]?.grnId;
@@ -56,6 +58,8 @@ import QRCode from "react-qr-code";
       setBarcode(m3Code);
       setBarcodeInfo(info);
       setBarcodeModal(true);
+      console.log(m3Code,'oooooooooooooooo');
+      
     };
 
     const onBarcodeModalCancel = () => {
@@ -207,6 +211,7 @@ import QRCode from "react-qr-code";
       >
         <div style={{ textAlign: "center" }}>
           <QRCode value={barcode} height={30} width={0.8}/>
+          <p>{barcode}</p>
           {/* <PrinterOutlined onClick={handlePrint}/> */}
         </div>
       </Modal>
