@@ -9,3 +9,4 @@ export * from './requestno.dto';
 export * from './get-matireal-reports.dto';
 export * from './material-reports-res';
 export * from './material-issue-log-req'
+export * from './allocation-report-req'

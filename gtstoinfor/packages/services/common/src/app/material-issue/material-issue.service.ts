@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel, OperationTrackingDto, OperationInventoryDto, OperationInventoryResponseModel, TrackingEnum, MaterialIssueResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialFabricEnum, ResponesNoDropDownRes, RequestNoDto, MaterialIssueReportsDto, MaterialReportsResponse, BuyerIdReq, ExternalRefReq, buyerReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, StyleRequest, OperationSequenceModel, OperationSequenceRequest, OperationSequenceResponse, OperationsInfoRequest, OperationTrackingResponseModel, OperationTrackingDto, OperationInventoryDto, OperationInventoryResponseModel, TrackingEnum, MaterialIssueResponseModel, MaterialIssueRequest, MaterialIssueIdreq, MaterialFabricEnum, ResponesNoDropDownRes, RequestNoDto, MaterialIssueReportsDto, MaterialReportsResponse, BuyerIdReq, ExternalRefReq, buyerReq, AllocationReportReq } from "@project-management-system/shared-models";
 import { Item } from "../items/item-entity";
 import { OperationGroups } from "../operation-groups/operation-groups.entity";
 import { Operations } from "../operations/operation.entity";
@@ -378,6 +378,105 @@ export class MaterialIssueService {
             }
         } catch (err) {
             throw (err)
+        }
+    }
+
+    async getSampleReq():Promise<CommonResponseModel>{
+        try{
+            let query = `Select sr.request_no AS requestNo,sr.sample_request_id as requestId
+            From material_allocation ma 
+            LEFT JOIN sample_request sr ON sr.sample_request_id = ma.sample_order_id
+            GROUP BY sr.request_no
+            ORDER BY sr.request_no`
+            const data = await this.dataSource.query(query)
+            if (data.length>0) {
+                return new CommonResponseModel(true, 1, 'Data retrieved successfully', data)
+            }
+            else {
+                return new CommonResponseModel(false, 0, 'No data found', [])
+            }
+        }catch(err){
+            throw(err)
+        }
+    }
+
+    async getMaterialAllocationReport(req?: AllocationReportReq):Promise<CommonResponseModel>{
+        try{
+            let query = `SELECT ma.material_allocation_id,mai.material_allocation_items_id,ma.item_type AS itemType,ma.status,srfi.consumption as fabConsumption,
+            srti.consumption as trimConsumption,sr.request_no AS requestNo,b.buyer_name AS buyerName,mai.quantity,SUM(mai.allocate_quantity) AS allocateQty,
+            CASE WHEN ma.item_type = 'FABRIC' THEN srfi.consumption ELSE srti.consumption END AS combinedConsumption,rp.rack_position_name AS rackPosition
+            FROM material_allocation ma
+            LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
+            LEFT JOIN sample_request sr ON sr.sample_request_id = ma.sample_order_id
+            LEFT JOIN sample_request_fabric_info srfi ON srfi.fabric_info_id = ma.sample_item_id AND ma.item_type = 'FABRIC'
+            LEFT JOIN sample_request_trim_info srti ON srti.trim_info_id = ma.sample_item_id AND ma.item_type != 'FABRIC'
+            LEFT JOIN buyers b ON b.buyer_id = ma.buyer_id
+            LEFT JOIN stocks s ON s.id = mai.stock_id
+            LEFT JOIN rack_position rp ON rp.position_id = mai.location_id
+            WHERE 1=1`
+            if(req.requestNo){
+                query += ` AND sr.request_no = '${req.requestNo}'`
+            }
+            if(req.rackPosition){
+                query += ` AND rp.rack_position_name = '${req.rackPosition}'`
+            }
+            query += ` GROUP BY ma.sample_order_id,ma.item_type`
+
+            const data = await this.dataSource.query(query)
+            if(data.length > 0){
+                // const groupData = data.reduce((result,item)=>{
+                //     const buyerName = item?.buyerName
+                //     const requestNo = item?.requestNo
+                //     const allocateQty = item?.allocateQty
+                //     const status = item?.status
+
+                //     if(!result[requestNo]){
+                //         result[requestNo]={
+                //             requestNo : requestNo,
+                //             buyerName : buyerName,
+                //             allocateQty : allocateQty,
+                //             status: status,
+                //             subData:[],
+                //         }
+                //     }
+                //     result[requestNo].subData.push({
+                //         requestNo: item?.requestNo,
+                //         itemType: 'Fabric',
+                //         consumption: item?.fabConsumption,
+                //     })
+                //     result[requestNo].subData.push({
+                //         requestNo: item?.requestNo,
+                //         itemType: item?.itemType != 'Fabric',
+                //         consumption: item?.trimConsumption
+                //     })
+                //     return result
+                // },{})
+                return new CommonResponseModel(true,1,'Data retrieved successfully',data)
+            }else{
+                return new CommonResponseModel(false,0,'No data found',[])
+            }
+        }catch(err){
+            throw(err)
+        }
+    }
+
+    async getRackPositions():Promise<CommonResponseModel>{
+        try{
+            let query = `Select rp.rack_position_name AS rackPosition,rp.position_id as positionId
+            From material_allocation ma 
+            LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
+            LEFT JOIN rack_position rp ON rp.position_id = mai.location_id
+            GROUP BY rp.rack_position_name
+            ORDER BY rp.rack_position_name`
+            const data = await this.dataSource.query(query)
+            if (data.length>0) {
+                return new CommonResponseModel(true, 1, 'Data retrieved successfully', data)
+            }
+            else {
+                return new CommonResponseModel(false, 0, 'No data found', [])
+            }
+        }catch(err){
+            throw(err)
         }
     }
 

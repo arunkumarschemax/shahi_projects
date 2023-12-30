@@ -311,6 +311,7 @@ import RolePermission from "../role-permissions";
         title: <div style={{textAlign:'center'}}>Action</div>,
         dataIndex: 'action',
         align:"center",
+        fixed:'right',
         render: (text, rowData) => {
           
           return(
