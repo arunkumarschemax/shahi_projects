@@ -189,7 +189,7 @@ export function CentricOrderAcceptanceGrid() {
           onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
           icon={<SearchOutlined />}
           size="small"
-          style={{ width: 90, marginRight: 8 }}
+          style={{  marginRight: 8 }}
         >
           Search
         </Button>
@@ -270,7 +270,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "PO Number",
         dataIndex: "poNumber",
-        width: 90,
+        width:90,
         sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
         sortDirections: ["ascend", "descend"],
         // render: (text) => text ? text : "-",
@@ -289,7 +289,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "PO Line Number",
         dataIndex: "poLine",
-        width: 90,
+        width:90,
         sorter: (a, b) => a.poLine.localeCompare(b.poLine),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-",
@@ -299,7 +299,7 @@ export function CentricOrderAcceptanceGrid() {
         title: "PO Date",
         dataIndex: "PODate",
         align: "center",
-        width: 90,
+        
         sorter: (a, b) => a.PODate.localeCompare(b.PODate),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -307,7 +307,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Shipment Method",
         dataIndex: "shipmentMethod",
-        width: 90,
+        width:90,
         sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -317,7 +317,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Material",
         dataIndex: "material",
-        width: 90,
+        
         sorter: (a, b) => a.material.localeCompare(b.material),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -325,7 +325,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "PPK UPC",
         dataIndex: "ppkUpc",
-        width: 90,
+        
         sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -333,7 +333,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Color",
         dataIndex: "color",
-        width: 90,
+        
         sorter: (a, b) => a.color.localeCompare(b.color),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -341,7 +341,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Gender",
         dataIndex: "gender",
-        width: 90,
+        width:90,
         sorter: (a, b) => a.gender.localeCompare(b.gender),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -349,7 +349,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Short Description",
         dataIndex: "shortDescription",
-        width: 90,
+        
         sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -357,7 +357,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Pack Method",
         dataIndex: "packMethod",
-        width: 90,
+        
         sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -366,7 +366,7 @@ export function CentricOrderAcceptanceGrid() {
         title: "Vendor Booking Flag",
         dataIndex: "vendorFlag",
         align: "center",
-        width: 90,
+        width:90,
         sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -376,7 +376,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Season",
         dataIndex: "season",
-        width: 90,
+        width:90,
         sorter: (a, b) => a.season.localeCompare(b.season),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -385,7 +385,7 @@ export function CentricOrderAcceptanceGrid() {
         title: "Port Of Export",
         dataIndex: "portOfExport",
         align: "center",
-        width: 90,
+        
         sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -394,7 +394,7 @@ export function CentricOrderAcceptanceGrid() {
         title: "Port of Entry Name",
         dataIndex: "portOfEntry",
         align: "center",
-        width: 90,
+        
         sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -403,7 +403,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Reference",
         dataIndex: "reference",
-        width: 90,
+        width:90,
         sorter: (a, b) => a.reference.localeCompare(b.reference),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -412,7 +412,7 @@ export function CentricOrderAcceptanceGrid() {
         title: "Payment Terms Description",
         dataIndex: "paymentTermDescription",
         align: "center",
-        width: 90,
+        
         sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -422,7 +422,7 @@ export function CentricOrderAcceptanceGrid() {
         title: "Special Instructions",
         dataIndex: "specialInstructions",
         align: "center",
-        width: 90,
+        
         sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -433,7 +433,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Division",
         dataIndex: "division",
-        width: 90,
+        
         sorter: (a, b) => a.division.localeCompare(b.division),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -441,7 +441,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Manufacture",
         dataIndex: "manufacture",
-        width: 90,
+        
         sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -721,7 +721,7 @@ export function CentricOrderAcceptanceGrid() {
         title: "Incoterm",
         dataIndex: "incoterm",
         align: "center",
-        width: 90,
+        
         sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
         sortDirections: ["ascend", "descend"],
       },
@@ -732,7 +732,7 @@ export function CentricOrderAcceptanceGrid() {
         title: "Ship to Address",
         dataIndex: "shipToAddress",
         align: "center",
-        width: 90,
+        
         sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
         sortDirections: ["ascend", "descend"],
       },
@@ -740,21 +740,23 @@ export function CentricOrderAcceptanceGrid() {
         title: "Status",
         dataIndex: "status",
         align: "center",
-        width: 90,
-        fixed:'right',
+        width: "80px",
+        fixed: "right",
         render: (text, record, index) => {
           return {
-            children: text,
+            children: <div style={{ position: "relative", top: "-7px" }}>{text}</div>,
             props: {
               rowSpan: record.rowSpan,
             },
           };
-        }
+        },
       },
+      
       {
         title: "Item No",
         dataIndex: "itemNo",
-        width: 150,
+        width: 100,
+        align: "center",
         fixed:'right',
         render: (text, record) => {
           return {
@@ -762,6 +764,7 @@ export function CentricOrderAcceptanceGrid() {
               <Form>
                 <Form.Item>
                   <Input
+                  style={{width:'95px'}}
                     placeholder="Enter Item No"
                     onChange={(e) => handleItemNoChange(e.target.value, record)}
                     disabled={record.status == 'ACCEPTED' ? true : false}
@@ -779,13 +782,15 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Action",
         dataIndex: "action",
-        width: 100,
+        width: 80,
+        align: "center",
         fixed: 'right',
         render: (text, record) => {
           const isEnabled = isActionButtonEnabled(record)
           return {
             children: (
               <Button
+              style={{position:"relative",top:"-7.5px"}}
                 onClick={() => createCOLine(record)} disabled={record.status == 'ACCEPTED' ? true : !isEnabled}
               >
                 Accept
