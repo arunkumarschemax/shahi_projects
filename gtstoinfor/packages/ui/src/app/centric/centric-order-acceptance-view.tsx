@@ -290,8 +290,8 @@ export function CentricOrderAcceptanceGrid() {
         title: "PO Line Number",
         dataIndex: "poLine",
         width:90,
-        sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-",
         fixed: "left",
       },
@@ -318,32 +318,32 @@ export function CentricOrderAcceptanceGrid() {
         title: "Material",
         dataIndex: "material",
         
-        sorter: (a, b) => a.material.localeCompare(b.material),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.material.localeCompare(b.material),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
       {
         title: "PPK UPC",
         dataIndex: "ppkUpc",
         
-        sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
       {
         title: "Color",
         dataIndex: "color",
         
-        sorter: (a, b) => a.color.localeCompare(b.color),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.color.localeCompare(b.color),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
       {
         title: "Gender",
         dataIndex: "gender",
         width:90,
-        sorter: (a, b) => a.gender.localeCompare(b.gender),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.gender.localeCompare(b.gender),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
       {
