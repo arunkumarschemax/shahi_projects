@@ -322,7 +322,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         {
             title: 'M3 Fabric Code',
             dataIndex: 'itemCode',
-            width: '170px',
+            // width: '170px',
             render:(text,row)=>{
                 console.log(row)
                 return <>{`${row.fabricCode}-${row.itemCode}`}</>
@@ -367,6 +367,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => {
                 console.log(rowData)
                 return (<span>
@@ -414,7 +415,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         {
             title: 'M3 Fabric Code',
             dataIndex: 'itemCode',
-            width: '170px',
+            // width: '170px',
             render:(text,row)=>{
                 console.log(row)
                 return <>{`${row.itemCode}-${row.description}`}</>
@@ -747,7 +748,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     }
                 </Row>
                 <Row>
-                    {fabricTableVisible && <Table columns={tableColumns} dataSource={fabricTableData}
+                    {fabricTableVisible && <Table columns={tableColumns} dataSource={fabricTableData}  scroll={{x:true}} size="small"  bordered
                     />
                     }
 
