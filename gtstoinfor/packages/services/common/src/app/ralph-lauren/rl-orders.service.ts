@@ -255,7 +255,7 @@ export class RLOrdersService {
       const zipFilePath = 'D:/Ralph Lauren PO Report (PDF) (1).zip';
       const zip = new AdmZip(zipFilePath);
       zip.extractAllTo(extractToPath, true);
-      
+
       const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
 
       const page = await browser.newPage();
@@ -282,10 +282,10 @@ export class RLOrdersService {
       const destinationDirectory = 'D:/rl-read-files';
 
       const files = fs.readdirSync(directoryPath);
-        if (files.length === 0) {
+      if (files.length === 0) {
         return new CommonResponseModel(false, 0, "No Files Found");
-        }
-      
+      }
+
       setTimeout(async () => {
         await page.goto('http://localhost:4200/#/ralph-lauren/pdf-upload/', {
           timeout: 10000,
@@ -367,7 +367,7 @@ export class RLOrdersService {
           coLine.currency = coData.currency
           coLine.destinations = coData.destinations
           const parts = coData.destinations[0]?.name.split(',');
-          const request = { country: parts[0].trim() }
+          const request = { country: parts[1].trim() }
           const address = await this.addressService.getAddressInfoByCountry(request);
           const addressData = address.data[0];
           buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 25;
@@ -488,6 +488,53 @@ export class RLOrdersService {
                     }
                   }
                   const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
+                  const input = await driver.wait(until.elementLocated(By.id(inputId)))
+                  await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
+                }
+              }
+            } else if ((await tab.getAttribute('innerText')) == 'US') {
+              await driver.executeScript('arguments[0].click();', tab);
+              for (let [colorIndex, color] of dest.colors.entries()) {
+                for (let [sizeIndex, size] of color.sizes.entries()) {
+                  if (colorIndex === 0) {
+                    // Find all the labels in the second row.
+                    await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
+                    let labelElements: any[] = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
+                    const fileteredElements: any[] = [];
+                    for (const labelElement of labelElements) {
+                      const ele = (await labelElement.getText())?.trim();
+                      ele.length > 0 ? fileteredElements.push(labelElement) : '';
+                    }
+                    let tabIndex = 1; // Default to 1 if no match
+                    const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
+                    const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
+                    await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
+                    const dropdown = await driver.findElement(By.id(`bydline/${string}`));
+                    const options = await dropdown.findElements(By.tagName('option'));
+                    const optionValues = [];
+                    for (const option of options) {
+                      const value = await option.getAttribute('value');
+                      optionValues.push(value);
+                    }
+                    const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
+                    await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
+                    // Find all the input fields in the first row.
+                    const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
+                    // Create a map of size labels to input fields.
+                    const sizeToInputMap = {};
+                    for (let i = 0; i < fileteredElements.length; i++) {
+                      const label = (await fileteredElements[i].getText()).trim().toUpperCase().toString(); // Remove leading/trailing spaces
+                      if (label.length)
+                        sizeToInputMap[label] = inputElements[i];
+                    }
+                    const inputField = await sizeToInputMap[size.name.trim().toUpperCase().toString()];
+                    if (inputField) {
+                      // Clear the existing value (if any) and fill it with the new price.
+                      await inputField.clear();
+                      await inputField.sendKeys(size.price);
+                    }
+                  }
+                  const inputId = `${size.name}:${color.name}:US`.replace(/\*/g, '');
                   const input = await driver.wait(until.elementLocated(By.id(inputId)))
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
