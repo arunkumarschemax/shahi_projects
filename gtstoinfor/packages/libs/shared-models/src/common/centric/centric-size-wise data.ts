@@ -13,6 +13,7 @@ export class CentricSizeWiseModel {
     exfactory?:string;
     exportDate?:string;
     deliveryDate?:string
+    currency?:string
 
 
 
@@ -32,6 +33,7 @@ export class CentricSizeWiseModel {
     exfactory?:string,
     exportDate?:string,
     deliveryDate?:string,
+    currency?:string
     
 
    
@@ -50,6 +52,7 @@ export class CentricSizeWiseModel {
         this.exfactory = exfactory
         this.exportDate = exportDate
         this.deliveryDate = deliveryDate
+        this.currency = currency
        
     };
 }
