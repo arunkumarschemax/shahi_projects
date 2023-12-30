@@ -1,11 +1,11 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, Segmented, Select, Space, Table, Tag, Tooltip, Upload, UploadProps, message, Modal } from "antd"
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, Segmented, Select, Space, Table, Tag, Tooltip, Upload, UploadProps, message, Modal, Typography } from "antd"
 import { ColumnProps } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react"
 import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, M3TrimsService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, TrimParamsMappingService, TrimService, UomService, VendorsService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { EditOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
 import { BuyerIdReq, BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, M3MastersCategoryReq, M3TrimType, M3trimsDTO, MenusAndScopesEnum, SourcingRequisitionReq, StyleIdReq, TrimIdRequestDto, UomCategoryEnum, buyerReq } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
@@ -72,6 +72,8 @@ export const SourcingRequisitionDynamicForm = () => {
     const [fabricfilelist, setFabricfilelist] = useState<any>([]);
     const [isUpdateimg, setisUpdateImg]=useState('')
     const [imageUrl, setImageUrl] = useState('');
+    const [trimImgaUrl, setTrimImgageUrl] = useState('');
+
     const [trimfilelist, setTrimfilelist] = useState<any>([]);
     const [btnType, setBtnType] = useState<any>("Add");
     const [trimBtnType, setTrimBtnType] = useState<any>("Add");
@@ -88,6 +90,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const [trimCat, setTrimCat] = useState<any[]>([]);
     const paramsService = new TrimParamsMappingService()
     const [mapData, setMapData] = useState<any[]>([])
+    const [modal, setModal] = useState('')
 
 
 
@@ -354,7 +357,8 @@ export const SourcingRequisitionDynamicForm = () => {
 
     useEffect(() => {
         if(defaultFabricFormData){
-            console.log(defaultFabricFormData)
+            // console.log(defaultFabricFormData)
+            // console.log(defaultFabricFormData.fabricUpload.fileList[0].name)
             fabricForm.setFieldsValue({
                 content: defaultFabricFormData.content,
                 fabricType: defaultFabricFormData.fabricType,
@@ -382,7 +386,8 @@ export const SourcingRequisitionDynamicForm = () => {
                 buyer  : defaultFabricFormData.buyer,
                 xlNo  : defaultFabricFormData.xlNo,
                 quantity  : defaultFabricFormData.quantity,
-                quantityUnit: defaultFabricFormData.quantityUnit
+                quantityUnit: defaultFabricFormData.quantityUnit,
+                fabricUpload:defaultFabricFormData.fabricUpload.fileList[0].name
 
             })
         }
@@ -686,6 +691,7 @@ export const SourcingRequisitionDynamicForm = () => {
 
 
     const onFabricAdd = (values) => {
+        console.log(values)
         fabricForm.validateFields().then(() => {
             if(values.color || values.newColor){
 
@@ -708,6 +714,8 @@ export const SourcingRequisitionDynamicForm = () => {
                 }
                 setFabricTableData(tableData)
                 fabricForm.resetFields()
+                setFabricfilelist([])
+                console.log(fabricTableData,'fabric table data')
                 setFabricTableVisible(true)
                 setBtnType("Add")
             }else{
@@ -730,6 +738,7 @@ export const SourcingRequisitionDynamicForm = () => {
         }
         setTrimsTableData(trimTableInfo)
         trimForm.resetFields()
+        setTrimfilelist([])
         setTrimTableVisible(true)
         console.log(values,'namaste')
         setTrimBtnType("Add")
@@ -800,6 +809,7 @@ const onTrimChange = (val, option) => {
         setTrimsTableData([])
         setTrimTableVisible(false)
         setImageUrl('');
+        setTrimImgageUrl('')
         setFabricfilelist([]);
         setTrimfilelist([])
     
@@ -873,7 +883,8 @@ const onTrimChange = (val, option) => {
         multiple: false,
         onRemove: file => {
           setTrimfilelist([]);
-          setImageUrl('');
+        //   setImageUrl('');
+        setTrimImgageUrl('')
         },
         beforeUpload: (file: any) => {
           if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
@@ -889,7 +900,8 @@ const onTrimChange = (val, option) => {
             } else {
                 setTrimfilelist([...trimfilelist,file]);
               getBase64(file, imageUrl =>
-                setImageUrl(imageUrl)
+                // setImageUrl(imageUrl)
+                setTrimImgageUrl(imageUrl)
               );
               return false;
             }
@@ -960,6 +972,21 @@ const onTrimChange = (val, option) => {
         }));
       };
   const segmentedOptions = options();
+
+
+const onFabriView =() =>{
+    setModal('fileUpload')
+    setVisibleModel(true)
+    
+}
+
+const onTrimView = () =>{
+    setModal('trimUpload')
+    setVisibleModel(true)
+}
+
+
+
     return(
         <><Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
             <Form form={sourcingForm} layout="vertical">
@@ -1138,7 +1165,9 @@ const onTrimChange = (val, option) => {
         </Form.Item>
         </Col> */}
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 12 }}>
-                                            <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
+                                            <Form.Item name='m3FabricCode' label='M3 Fabric Code' 
+                                            // rules={[{ required: true, message: 'M3 Code is required' }]}
+                                            >
                                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
                                                 dropdownMatchSelectWidth={false}
                                                     >
@@ -1282,19 +1311,34 @@ const onTrimChange = (val, option) => {
                                                 </Select>
                                             </Form.Item>
                                         </Col> */}
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
-                                            <Form.Item name="fabricUpload" label='Fabric Upload'
-                                            >
-                                                <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                                            <Form.Item name="fabricUpload" label='Fabric Upload' initialValue={defaultFabricFormData ? defaultFabricFormData.fabricUpload.fileList[0].name:''}>
+                                                {/* <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
 
                                                     <div>
                                                         {loading ? <LoadingOutlined /> : <PlusOutlined />}
                                                         <div style={{ marginTop: 8 }}>Upload Fabric</div>
                                                     </div>
-                                                </Upload>
+                                                </Upload> */}
+                                                  <Upload
+                                                  style={{ width: '100%' }} 
+                                                    {...uploadFabricProps}
+                                                    accept=".jpeg,.pdf,.png,.jpg"
+                                                    >
+                                                    <Button
+                                                        style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                                                        icon={<UploadOutlined />}
+                                                        disabled={fabricfilelist.length == 1? true:false}
+                                                    >
+                                                        Choose File
+                                                    </Button>
+                                                    </Upload>
+                                                    {fabricfilelist.length ==1?
+                                                    <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
+                                                    
                                             </Form.Item>
                                         </Col>
-                                        {
+                                        {/* {
                                         imageUrl && (
                                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
                                             <Card style={{ height: '250px' }}>
@@ -1309,7 +1353,7 @@ const onTrimChange = (val, option) => {
                                                 </Form.Item>
                                             </Card>
                                             </Col>
-                                        )}
+                                        )} */}
                                     </Row>
                                     <Row justify={'end'}>
                                         <Button type='primary' htmlType="submit">{btnType}</Button>
@@ -1536,13 +1580,28 @@ const onTrimChange = (val, option) => {
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                                             <Form.Item name="trimUpload" label='Trim Upload'
                                             >
-                                                <Upload {...uploadTrimProps} style={{ width: '100%' }} listType="picture-card">
+                                                {/* <Upload {...uploadTrimProps} style={{ width: '100%' }} listType="picture-card">
 
                                                     <div>
                                                         {loading ? <LoadingOutlined /> : <PlusOutlined />}
                                                         <div style={{ marginTop: 8 }}>Upload Trim</div>
                                                     </div>
-                                                </Upload>
+                                                </Upload> */}
+                                                  <Upload
+                                                  style={{ width: '100%' }} 
+                                                    {...uploadTrimProps}
+                                                    accept=".jpeg,.pdf,.png,.jpg"
+                                                    >
+                                                    <Button
+                                                        style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                                                        icon={<UploadOutlined />}
+                                                        disabled={trimfilelist.length == 1? true:false}
+                                                    >
+                                                        Choose File
+                                                    </Button>
+                                                    </Upload>
+                                                    {trimfilelist.length ==1?
+                                                    <Button icon={<EyeOutlined/>} onClick={onTrimView}></Button>:<></>}
                                             </Form.Item>
                                         </Col>
                                     </Row>
@@ -1572,7 +1631,7 @@ const onTrimChange = (val, option) => {
         <Modal
             className='rm-'
             key={'modal' + Date.now()}
-            width={'80%'}
+            width={'50%'}
             style={{ top: 30, alignContent: 'right' }}
             visible={visibleModel}
             title={<React.Fragment>
@@ -1580,9 +1639,36 @@ const onTrimChange = (val, option) => {
             onCancel={handleCancel}
             footer={[]}
         >
+            {modal == 'fileUpload' ?<>
+            <Card style={{ height: '250px' }}>
+                                                <Form.Item>
+                                                <img
+                                                    src={imageUrl}
+                                                    alt="Preview"
+                                                    height={'200px'}
+                                                    width={'500px'}
+                                                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                                                />
+                                                </Form.Item>
+                                            </Card>
+               </>:modal == 'trimUpload' ?<>
+               <Card style={{ height: '250px' }}>
+                                                <Form.Item>
+                                                <img
+                                                    src={trimImgaUrl}
+                                                    alt="Preview"
+                                                    height={'200px'}
+                                                    width={'500px'}
+                                                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                                                />
+                                                </Form.Item>
+                                            </Card>
+               </>:
             <M3Items />
-
-            </Modal></>
+            }
+            </Modal>
+           
+            </>
     )
 }
 export default SourcingRequisitionDynamicForm
