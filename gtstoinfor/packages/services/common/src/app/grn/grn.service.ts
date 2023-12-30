@@ -378,10 +378,10 @@ export class GrnService {
             LEFT JOIN buyers b ON b.buyer_id = gi.buyer_id 
             LEFT JOIN sample_request sr on sr.sample_request_id = gi.sample_req_id and g.grn_type = 'SAMPLE_ORDER'
             LEFT JOIN indent idn on idn.indent_id = gi.indent_id and g.grn_type = 'INDENT' `
-            if (req.itemType === 'Fabric') {
+            if (req.itemType === 'FABRIC') {
                 query = query + ` LEFT JOIN m3_items m3 ON m3.m3_items_id = gi.m3_item_code_id`
             }
-            if (req.itemType !== 'Fabric') {
+            if (req.itemType !== 'FABRIC') {
                 query = query + ` LEFT JOIN m3_trims m3 ON m3.m3_trim_id = gi.m3_item_code_id`
             }
             if (req?.grnId) {

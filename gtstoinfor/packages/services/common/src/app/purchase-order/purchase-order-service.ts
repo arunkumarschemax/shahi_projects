@@ -666,7 +666,6 @@ export class PurchaseOrderService {
         LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id 
         LEFT JOIN indent i ON i.indent_id = ii.indent_id 
         LEFT JOIN m3_items mi ON mi.m3_items_Id = poi.m3_item_id  AND  p.po_material_type ='FABRIC' where 1 =1`
-        console.log(req,'00000000000');
         
         if (req.PoFromDate) {
             PoType += ` AND p.purchase_order_date between '${req.PoFromDate}'  and '${req.PoToDate}'`;

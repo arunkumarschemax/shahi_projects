@@ -565,7 +565,7 @@ const getBase64 = (img, callback) => {
                 {
                   required:true,
                   pattern: /^[0-9a-zA-Z]*$/,
-                  message: `Only numbers are accepted`,
+                  message: `User Name is Required`,
                 },
               ]}
             >
@@ -647,7 +647,7 @@ const getBase64 = (img, callback) => {
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='expectedCloseDate' label='Expected Close Date' rules={[{required:true,message:'expectedCloseDate is required'}]}>
+                    <Form.Item name='expectedCloseDate' label='Expected Close Date' rules={[{required:true,message:'Expected Close Date is required'}]}>
                     <DatePicker style={{ width: '93%', marginLeft: 5 }}  disabledDate={disabledDate}/>
                     </Form.Item>
               </Col>
@@ -664,24 +664,24 @@ const getBase64 = (img, callback) => {
                 },
               ]}
             >
-              <Input placeholder="Enter Cost" />
+              <Input placeholder="Enter Cost Ref" />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }} >
             <Form.Item
               name="description"
               label="Description"
-              rules={[
-                {
-                  required: false,
-                },
-                {
-                  pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
-                  message: `Don't Allow Spaces`,
-                },
-              ]}
+              // rules={[
+              //   {
+              //     required: false,
+              //   },
+              //   {
+              //     pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
+              //     message: `Don't Allow Spaces`,
+              //   },
+              // ]}
             >
-              <TextArea rows={1} placeholder="Enter Description" />
+              <TextArea rows={2} placeholder="Enter Description" />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
@@ -691,7 +691,7 @@ const getBase64 = (img, callback) => {
 
                   <div>
                       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-                      <div style={{ marginTop: 8 }}>Upload Fabric</div>
+                      <div style={{ marginTop: 8 }}>Upload Garment</div>
                   </div>
               </Upload>
           </Form.Item>
@@ -766,7 +766,7 @@ const getBase64 = (img, callback) => {
             <Form.Item
               name="dmmId"
               label="DMM"
-              rules={[{ required: true, message: "" }]}
+              rules={[{ required: true, message: "Please Select DMM" }]}
             >
               <Select
                 allowClear
@@ -788,7 +788,7 @@ const getBase64 = (img, callback) => {
             <Form.Item
               name="technicianId"
               label="Technician"
-              rules={[{ required: true, message: "" }]}
+              rules={[{ required: true, message: "Please Select Technician" }]}
             >
               <Select
                 allowClear
@@ -810,7 +810,7 @@ const getBase64 = (img, callback) => {
             <Form.Item
               name="productId"
               label="Product"
-              rules={[{ required: false, message: "" }]}
+              rules={[{ required: true, message: "Please Select Product" }]}
             >
               <Select
                 allowClear
