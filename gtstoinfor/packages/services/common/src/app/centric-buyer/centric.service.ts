@@ -404,28 +404,29 @@ export class CentricService {
   async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
       const data = await this.Repo.find({ where: { poNumber: req.poNumber } })
-      //  const data = await this.repo.find()
       let destinationMap = new Map<string, DestinationModel>();
       // po -> destination -> color -> sizes
       const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
       const poMap = new Map<string, CentricEntity>();
       data.forEach(rec => {
-        poMap.set(rec.poNumber, rec)
-        const destCountry = rec.shipment.slice(-2).trim();
-        // const parts = rec.shipment.split(',')
+        poMap.set(`${rec.poLine},${rec.poNumber}`, rec)
+        const destCountry = rec.shipToAdd.slice(-13).trim();
+        // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
+
+        // const parts = rec.shipToAdd.split(',')
         // const destAdd = parts[0].trim();
-        // const dest = destAdd + ',' + destCountry;
-        const dest = rec.shipment
-        if (!destinationColSizesMap.has(rec.poNumber)) {
-          destinationColSizesMap.set(rec.poNumber, new Map<string, Map<string, []>>());
+         const dest = destCountry;
+        // const dest = rec.shipToAdd
+        if (!destinationColSizesMap.has(`${rec.poLine},${rec.poNumber}`)) {
+          destinationColSizesMap.set(`${rec.poLine},${rec.poNumber}`, new Map<string, Map<string, []>>());
         }
-        if (!destinationColSizesMap.get(rec.poNumber).has(dest)) {
-          destinationColSizesMap.get(rec.poNumber).set(dest, new Map<string, []>());
+        if (!destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).has(dest)) {
+          destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).set(dest, new Map<string, []>());
         }
-        if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(rec.color)) {
-          destinationColSizesMap.get(rec.poNumber).get(dest).set(rec.color, []);
+        if (!destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).get(dest).has(rec.color)) {
+          destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).get(dest).set(rec.color, []);
         }
-        destinationColSizesMap.get(rec.poNumber).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+        destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
       });
       const coData = []
       destinationColSizesMap.forEach((destColorSize, poNumber) => {
@@ -445,7 +446,7 @@ export class CentricService {
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new CoLinereqModel(poInfo.poNumber, poInfo.poLine, poInfo.unitPrice, "USD", poInfo.deliveryDate, desArray);
+        const co = new CoLinereqModel(poInfo.poNumber, poInfo.poLine, poInfo.unitPrice, poInfo.currency, poInfo.deliveryDate, desArray);
         coData.push(co)
       });
       if (coData) {
@@ -457,6 +458,8 @@ export class CentricService {
       throw err
     }
   }
+
+ 
 
 
 }
