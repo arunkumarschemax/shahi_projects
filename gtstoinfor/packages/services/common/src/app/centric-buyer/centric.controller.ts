@@ -7,6 +7,7 @@ import { CentricService } from "./centric.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from 'multer'
 import { PoOrderFilter } from "@project-management-system/shared-models";
+import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
 
 
 @ApiTags("/centric")
@@ -139,6 +140,16 @@ async getItem(): Promise<CommonResponseModel> {
 async getCoPoNumber(): Promise<CommonResponseModel> {
     try {
         return this.Service.getCoPoNumber();
+    } catch (err) {
+        return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+    }
+}
+
+@Post('/getOrderdataForCOline')
+@ApiBody({ type: OrderDetailsReq })
+async getOrderdataForCOline(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+        return this.Service.getOrderdataForCOline(req);
     } catch (err) {
         return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
     }
