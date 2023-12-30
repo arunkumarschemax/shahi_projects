@@ -854,6 +854,7 @@ const test = (val, row) =>{
           <CaretRightOutlined rotate={isActive ? 90 : 0} />
         )}
         accordion
+        onChange={()=>setTabName('Fabric')}
         
       >
         {tableData.map((item: any, index: any) => (

@@ -1,7 +1,7 @@
 import { DownloadOutlined, FilePdfOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { ItemTypeEnumDisplay, PoReq, SampleFilterRequest, StockFilterRequest, StocksDto } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, PoReq, PurchaseStatusEnum, SampleFilterRequest, StockFilterRequest, StocksDto } from '@project-management-system/shared-models';
 import { PurchaseOrderservice, StockService } from '@project-management-system/shared-services';
-import { Button, Card, Col, Form, Input, Row, Select, Space, Statistic, Table } from 'antd'
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Space, Statistic, Table } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import { Excel } from 'antd-table-saveas-excel';
 import { useIAMClientState } from "../common/iam-client-react";
@@ -29,7 +29,7 @@ const PurchaseOrderReport = () => {
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const searchInput = useRef<any>(null);
-
+    const { RangePicker } = DatePicker;
 
     
 
@@ -44,6 +44,18 @@ const PurchaseOrderReport = () => {
       if(form.getFieldValue('po_number') !== undefined){
         req.poId=form.getFieldValue('po_number')
   
+      }
+      if (form.getFieldValue('poDate') !== undefined) {
+        req.PoFromDate = (form.getFieldValue('poDate')[0]).format('YYYY-MM-DD')
+      }
+      if (form.getFieldValue('poDate') !== undefined) {
+      req.PoToDate = (form.getFieldValue('poDate')[1]).format('YYYY-MM-DD')
+      }
+       if (form.getFieldValue('etdDate') !== undefined) {
+        req.ETDfromDate = (form.getFieldValue('etdDate')[0]).format('YYYY-MM-DD')
+      }
+      if (form.getFieldValue('etdDate') !== undefined) {
+      req.ETDtoDate = (form.getFieldValue('etdDate')[1]).format('YYYY-MM-DD')
       }
         service.getPodetails(req).then(res => {
           
@@ -164,7 +176,9 @@ const Columns:any=[
         title:"Po No",
         dataIndex:"po_number",
         width:130,
-        fixed:'left'
+        fixed:'left',
+        sorter: (a, b) => a.po_number.localeCompare(b.po_number),
+        sortDirections: ["descend", "ascend"],
 
 
         
@@ -174,18 +188,37 @@ const Columns:any=[
       dataIndex:"po_material_type",
       width:100,
       ...getColumnSearchProps("po_material_type"),
-
+      
       
   },
     {
         title:"Po Against",
         dataIndex:"po_against",
-        width:130
+        width:130,
+        filters: [
+          // {
+          //   text: 'Area',
+          //   value: 'Area',
+          // },
+          {
+            text: 'Indent',
+            value: 'Indent',
+          },
+          {
+            text: 'sample order',
+            value: 'sample order',
+          },
+         
+        ],
+        onFilter: (value,record) =>{ return record.po_against === value}
+
     },
     {
         title:"Item Code",
         dataIndex:"item_code",
-        width:270
+        width:270,
+        sorter: (a, b) => a.item_code.localeCompare(b.item_code),
+        sortDirections: ["descend", "ascend"],
 
         
     },
@@ -199,8 +232,16 @@ const Columns:any=[
          },
     {
       title:"Currency",
-      dataIndex:"currency_name",
-      ...getColumnSearchProps("currency_name"),
+    
+      dataIndex: "currency_name-total_amount",
+      render: (_, record) => {
+        return (
+          <span>
+            {record.currency_name}-{record.total_amount}
+          </span>
+        );
+      },
+      // ...getColumnSearchProps("currency_name-total_amount"),
       width:100
 
   },
@@ -256,23 +297,37 @@ width:100
 
 },
 {
-title:"Uom",
-dataIndex:"uom",
-...getColumnSearchProps("uom"),
-width:80
-
-
-},
-{
 title:"Po Quantity",
-dataIndex:"po_quantity",
-width:100
+dataIndex:"uom-po_quantity",
+// ...getColumnSearchProps("uom")
+render: (_, record) => {
+  return (
+    <span>
+      {record.uom}-{record.po_quantity}
+    </span>
+  );
+},
+width:120
+
 
 },
+// {
+// title:"Po Quantity",
+// dataIndex:"po_quantity",
+// width:100
+
+// },
 {
 title:"Grn Quantity",
-dataIndex:"grn_quantity",
-width:100
+dataIndex:"uom-grn_quantity",
+render: (_, record) => {
+  return (
+    <span>
+      {record.uom}-{record.grn_quantity}
+    </span>
+  );
+},
+width:120
 
 
 },
@@ -358,7 +413,7 @@ const onFinish = () => {
               </Select>
             </Form.Item>   
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+          {/* <Col xs={24} sm={12} md={8} lg={6} xl={6}>
             <Form.Item name="fabricCode" label="Fabric Code">
               <Select
                 showSearch
@@ -389,9 +444,18 @@ const onFinish = () => {
                 ))}
               </Select>
             </Form.Item>   
-          </Col>
+          </Col> */}
          
-          
+         <Col span={6}>
+            <Form.Item label="Po Date" name="poDate">
+              <RangePicker />
+            </Form.Item>
+          </Col>
+          <Col span={6}>
+            <Form.Item label="Expected Date	" name="etdDate">
+              <RangePicker />
+            </Form.Item>
+          </Col>
           <Col xs={12} sm={6} md={4} lg={3} xl={2}>
             <Form.Item>
               <Button
@@ -417,16 +481,24 @@ const onFinish = () => {
           </Col>
           </Row>
           </Form> 
- <Row gutter={40} justify={'space-evenly'}>
+          <Row  justify={'space-evenly'}>
          
-              <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#E6D2F0'}}
-              title={" Total Item Type:"+data.filter(el => el.item_code).length}>
-              </Card> </Col>
-              <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#E6DC7B'}}
-              title={"Status:"+data.filter(el => el.status).length}>
-              </Card> </Col>
-              <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#A4A3A4'}}
-              title={"Total Pos:"+data.filter(el => el.po_number).length}>
+            <Col className="gutter-row" xs={24} sm={24} md={5} lg={5} xl={{ span: 3 }}>
+            <Card  size="small" title={'OPEN :' + data.filter(r => r.status == PurchaseStatusEnum.OPEN).length} style={{ height: '35px', width: 150, backgroundColor: '#d4e09b', borderRadius: 3 }}></Card>
+            
+          </Col>
+          <Col className="gutter-row" xs={24} sm={24} md={5} lg={5} xl={{ span: 3 }}>
+            <Card size="small" title={'INPROGRESS  : ' + data.filter(r => r.status === PurchaseStatusEnum.INPROGRESS).length} style={{ height: '35px', width: 150, marginBottom: '8', backgroundColor: '#f6f4d2', borderRadius: 3 }}></Card>
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
+            <Card size="small" title={'CLOSED : ' + data.filter(r => r.status === PurchaseStatusEnum.CLOSED).length} style={{ height: '35px', width: 150, backgroundColor: '#cbdfbd', marginBottom: '2px', borderRadius: 3 }}></Card>
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}>
+            <Card size="small" title={'CANCLED : ' + data.filter(r => r.status === PurchaseStatusEnum.CANCELLED).length} style={{ height: '35px', backgroundColor: '#ffd6ba', marginBottom: '2px', borderRadius: 3 }}></Card>
+          </Col>
+             
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }}><Card style={{textAlign: 'left', width: 150, height: '35px',  backgroundColor: '#A4A3A4'}}
+              title={"Total Pos:"+ponum.length}>
               </Card> </Col>
           </Row><br></br>
         <Card >

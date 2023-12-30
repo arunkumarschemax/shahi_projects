@@ -1866,14 +1866,12 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
      LEFT JOIN m3_items mi ON mi.m3_items_Id = ma.m3_item_id
      LEFT JOIN colour c ON c.colour_id = sf.colour_id
      LEFT JOIN rack_position l ON l.position_Id = mai.location_id
-    WHERE  sr.sample_request_id= '${req.requestNo}' AND ma.item_type = 'fabric'
+    WHERE  sr.sample_request_id= '${req.requestNo}' AND ma.item_type = 'FABRIC'
     GROUP BY rack_position_name`;
       
       const fabricInfo = await this.dataSource.query(fabricInfoQry)
-     console.log(fabricInfoQry,"Fabricccccccccccccccccccccccccccccc");
-     
       let trimInfoQry = `SELECT sr.request_no AS requestNo,
-br.brand_name AS brandName,
+      br.brand_name AS brandName,
 b.buyer_name AS buyerName,
 s.style,
 ma.item_type AS itemType,
@@ -1888,13 +1886,12 @@ FROM sample_request sr
  LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_request_id
  LEFT JOIN material_allocation ma ON ma.sample_item_id = st.trim_info_id
  LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
- LEFT JOIN m3_items mi ON mi.m3_items_Id = ma.m3_item_id
+ LEFT JOIN m3_trims mi ON mi.m3_trim_Id = ma.m3_item_id
  LEFT JOIN rack_position l ON l.position_Id = mai.location_id
-WHERE  sr.sample_request_id= '${req.requestNo}' AND  ma.item_type != 'fabric'
+WHERE  sr.sample_request_id= '${req.requestNo}' AND  ma.item_type != 'FABRIC'
 GROUP BY rack_position_name`;
 
 const trimInfo = await this.dataSource.query(trimInfoQry)
-console.log(trimInfoQry,"Trimssssssssssssssssssss");
 
 const combineData = [...fabricInfo, ...trimInfo]
 return new CommonResponseModel(true,1,'data retreived',combineData)

@@ -1,5 +1,5 @@
 
-import { CommonResponseModel, FileIdReq, MaterialIssueDto, MaterialIssueLogrequest, MaterialIssueRequest, RequestNoDto, SaveOrderDto } from "@project-management-system/shared-models"
+import { AllocationReportReq, CommonResponseModel, FileIdReq, MaterialIssueDto, MaterialIssueLogrequest, MaterialIssueRequest, RequestNoDto, SaveOrderDto } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import axios from "axios";
 
@@ -24,6 +24,18 @@ export class MaterialIssueService extends CommonAxiosService {
 
   async createMaterialIssueLog(req: MaterialIssueLogrequest): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.issueController + "/createMaterialIssueLog", req)
+  }
+
+  async getMaterialAllocationReport(req?: AllocationReportReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.issueController + "/getMaterialAllocationReport",req)
+  }
+
+  async getSampleReq(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.issueController + "/getSampleReq")
+  }
+
+  async getRackPositions(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.issueController + "/getRackPositions")
   }
  
 }

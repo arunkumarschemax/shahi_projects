@@ -19,6 +19,7 @@ import {
     AllocatedLocationReq,
     AllocationApprovalReq,
     BuyerRefNoRequest,
+    ItemTypeEnumDisplay,
     RequestNoReq,
     requestNoReq,
 } from "@project-management-system/shared-models";
@@ -69,9 +70,10 @@ export const PickListPrint = (props: PickListPrintProps) => {
         req.requestNo = props.reqNo
         await service.getPickListInfo(req).then((res) => {
             if (res.data) {
-                setFabricStockData(res.data.filter((e) => e.itemType === 'fabric'));
+                
+                setFabricStockData(res.data.filter((e) => e.itemType === 'FABRIC'));
 
-                setTrimStockData(res.data.filter((e) => e.itemType != 'fabric'));
+                setTrimStockData(res.data.filter((e) => e.itemType != 'FABRIC'));
                 setShowTabe(true)
             } else {
                 setFabricStockData([]);
