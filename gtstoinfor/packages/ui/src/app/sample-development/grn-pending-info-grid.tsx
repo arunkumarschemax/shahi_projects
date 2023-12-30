@@ -193,6 +193,7 @@ setRemarkModal(false)
             //     console.log(record,"rowdata")
             //     return('')
             // }
+            fixed:'right',
             render: (rowData) => (
                 
                 <span>
