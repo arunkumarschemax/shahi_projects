@@ -194,8 +194,9 @@ const getMappedTrims = (value, row) => {
       updatedData = data.map((record) => {
         if (record.key === key) {
           // setUomStatus(true)
+          // handleInputChange((m3Trims.find((i) => i.m3TrimsId === e)?.uomId)!= undefined?m3Trims.find((i) => i.m3TrimsId === e)?.uomId:null,key,"uomId",record);
           props.form.setFieldValue(`uomId${key}`,(m3Trims.find((i) => i.m3TrimsId === e)?.uomId)!= undefined?m3Trims.find((i) => i.m3TrimsId === e)?.uomId:null);
-          return { ...record, [field]: e, ["uomId"]:(m3Trims.find((i) => i.m3TrimsId === e)?.uomId)!= undefined?m3Trims.find((i) => i.m3TrimsId === e)?.uomId:null };
+          return { ...record, [field]: e };
         }
         return record;
       });
@@ -430,7 +431,7 @@ const getMappedTrims = (value, row) => {
       dataIndex: 'Uom',
       width:"14%",
       render: (_, record) => (
-        <Form.Item name={`uomId${record.key}`} rules={[{ required: true, message: 'Missing UOM' }]}>
+        <Form.Item name={`uomId${record.key}`} rules={[{ required: false, message: 'Missing UOM' }]}>
         <Select
         value={record.uomId}
         style={{width:"100%"}}
@@ -438,7 +439,7 @@ const getMappedTrims = (value, row) => {
         showSearch
         optionFilterProp="children"
         placeholder="Select UOM" 
-        disabled={record.uomStatus}
+        disabled={true}
         // defaultValue={uom.find((e) => e.uom === "PCS")?.uom}
         onChange={(e) => handleInputChange(e, record.key, 'uomId',record)}
         >

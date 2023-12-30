@@ -282,8 +282,22 @@ const getBase64 = (img, callback) => {
   const onFinish = (val) =>{
     sizeForm.validateFields().then(size => {
       fabricForm.validateFields().then(fab => {
+        console.log(fab)
+        // console.log(updatedData.find((e) => e.colourId === 0));
+        // console.log(sizeData)
+        // if(updatedData.filter((e) => e.colourId === 0).length === 0){
+        //   const distictFabColors = [...new Set(updatedData.map(x => x.colourId))]
+        //   const distictSizeColors = [...new Set(sizeData.map(x => x.colour))]
+        //   console.log(distictFabColors)
+        //   console.log(distictSizeColors)
+        //   let res = distictSizeColors.filter(val => !distictFabColors.includes(val));
+        //   console.log(res);
+        //   if(res.length > 0){
+        //     AlertMessages.getWarningMessage("Fabric is missing for Color. ")
+        //   }
+        // }
         trimForm.validateFields().then(trim => {
-          // console.log(data);
+          console.log(data);
           if(data != undefined){
             // console.log('hoii')
             // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
@@ -408,20 +422,6 @@ const getBase64 = (img, callback) => {
     fileList: fileList,
   };
   const handleFabricsDataUpdate = (updatedData) => {
-    console.log(updatedData)
-    console.log(updatedData.find((e) => e.colourId === 0));
-    console.log(sizeData)
-    if(updatedData.filter((e) => e.colourId === 0).length === 0){
-      const distictFabColors = [...new Set(updatedData.map(x => x.colourId))]
-      const distictSizeColors = [...new Set(sizeData.map(x => x.colour))]
-      console.log(distictFabColors)
-      console.log(distictSizeColors)
-      let res = distictSizeColors.filter(val => !distictFabColors.includes(val));
-      console.log(res);
-      if(res.length > 0){
-        AlertMessages.getWarningMessage("Fabric is missing for Color. ")
-      }
-    }
     setData((prevData) => ({ ...prevData, fabricsData: updatedData }));
     setFabricsData(updatedData);
   };

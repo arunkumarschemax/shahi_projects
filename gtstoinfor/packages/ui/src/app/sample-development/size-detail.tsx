@@ -54,6 +54,7 @@ const SizeDetail = ({props,buyerId,form}) => {
   const handleAddRow = () => {
     const newRow = {
       key: count,
+      sizeInfo: []
     };
     setData([...data, newRow]);
     setCount(count + 1);
@@ -62,51 +63,70 @@ const SizeDetail = ({props,buyerId,form}) => {
    const handleInputChange = (colourId, sizeId, quantity,recordKey,name) => {
     console.log(recordKey)
     console.log(onchangeData)
+    console.log(data)
     console.log(colourId)
     console.log(form.getFieldsValue())
-    let isDuplicate = onchangeData.find((r) => r.colour === colourId);
+    let isDuplicate = data.find((r) => r.colorId === colourId && r.key != recordKey);
     console.log(isDuplicate);
     console.log(isDuplicate?.colour);
+    let updatedData;
 
-    if(isDuplicate?.colour > 0 && name === "colorId")
+    if(isDuplicate?.colorId > 0 && name === "colorId")
     {
+      console.log(updatedData);
       AlertMessages.getErrorMessage("Duplicate Colors not allowed. ")
       form.setFieldValue(`colorId${recordKey}`,null)
-      form.validateFields().then(size => {
-      })
-      .catch((err) => {
-        console.log(err);
-      })
+      updatedData = data.map((record) => {
+        console.log(record);
+        if (record.key === recordKey) {
+          return { ...record, [`colorId`]:null };
+        }
+        return record
+        
+      });
+      // form.validateFields().then(size => {
+      // })
+      // .catch((err) => {
+      //   console.log(err);
+      // })
       
     }
     else{
-      let newData = [...onchangeData];
-      const updatedData = data.map((record) => {
-        if (record.key === recordKey) {
-          let existingEntry = newData.find((entry) => entry.colour === colourId);
-          if (!existingEntry) {
-            existingEntry = {
-              colour: colourId,
-              sizeInfo: [],
-            };
-            newData.push(existingEntry);
+      if(name === "colorId"){
+
+        updatedData = data.map((record) => {
+          console.log(record);
+          if (record.key === recordKey) {
+            return { ...record, [`colorId`]:colourId };
           }
-          if (quantity !== 0) {
-            let sizeInfoEntry = existingEntry.sizeInfo.find((info) => info.sizeId === sizeId);
+          return record
+          
+        });
+      }
+      else if(name === "quantity" && quantity > 0){
+        updatedData = data.map((record) => {
+          console.log(record);
+          if (record.key === recordKey) {
+            let sizeData = record.sizeInfo;
+            let sizeInfoEntry = record.sizeInfo.find((info) => info.sizeId === sizeId);
             if (!sizeInfoEntry) {
               sizeInfoEntry = {
                 sizeId: sizeId,
                 quantity: quantity,
               };
-              existingEntry.sizeInfo.push(sizeInfoEntry);
+              sizeData.push(sizeInfoEntry)
             } else {
               sizeInfoEntry.quantity = quantity;
             }
+            return { ...record, [`sizeInfo`]:sizeData };
           }
-        }
-        setOnchangeData(newData); 
-        props(newData)
-      });
+          return record
+          
+        });
+      }
+      setOnchangeData(updatedData); 
+      setData(updatedData); 
+      props(updatedData)
     }
     };
 
@@ -157,7 +177,7 @@ const SizeDetail = ({props,buyerId,form}) => {
                 )
               }
               type='number'
-              min={0}
+              min={1}
               placeholder='quantity'
             >
             </Input>
@@ -181,7 +201,7 @@ const SizeDetail = ({props,buyerId,form}) => {
       dataIndex: 'colourId',
       width:"25%",
       render: (_, record) => (
-        <Form.Item name={`colorId${record.key}`} rules={[{ required: true, message: 'Missing Color' }]}>
+        <Form.Item name={`colorId${record.key}`} rules={[{ required: true, message: 'Missing Color',  }]}>
         <Select
           style={{width:"100%"}}
           allowClear
@@ -190,7 +210,7 @@ const SizeDetail = ({props,buyerId,form}) => {
           placeholder="Select Color"
           onChange={(value) => handleInputChange(value, 0, 0, record.key,'colorId')}
         >
-          <Option name={`colorId${record.key}`} key={0} value={null}>Please Select Color</Option>
+          {/* <Option name={`colorId${record.key}`} key={0} value={0}>Please Select Color</Option> */}
           {color.map((e) => {
                   return (
                     <Option name={`colorId${record.key}`} key={e.colourId} value={e.colourId}>
@@ -219,7 +239,7 @@ const SizeDetail = ({props,buyerId,form}) => {
   ];
 
 
-  const shouldShowSummary = data.length > 0;
+  // const shouldShowSummary = data.length > 0;
 
   // const summary = () => shouldShowSummary ? (
   //   <Table.Summary.Row>

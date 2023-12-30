@@ -46,6 +46,7 @@ import { AllLocationRequest } from './dto/location-req';
 import { RackPositionEntity } from '../rm_locations/rack-position.entity';
 import { OrderQuantityRequset } from './dto/order-quantity-request';
 import { MaterialAllocationItemsDTO } from './dto/material-allocation-items-dto';
+import { M3TrimsEntity } from '../m3-trims/m3-trims.entity';
 
 
 
@@ -257,7 +258,7 @@ export class SampleRequestService {
       for (const size of req.sizeData) {
         for (const sizedetails of size.sizeInfo) {
           const sizeEntity = new SampleReqSizeEntity()
-          sizeEntity.colourId = size.colour
+          sizeEntity.colourId = size.colorId
           sizeEntity.sizeId = sizedetails.sizeId
           sizeEntity.quantity = sizedetails.quantity
           sampleSizeInfo.push(sizeEntity)
@@ -281,9 +282,13 @@ export class SampleRequestService {
       sampleReqEntity.sampleReqFabricInfo = sampleFabricInfo;
       let indentTrimInfo : TrimInfoReq[] = [];
       for (const trimObj of req.trimInfo) {
+        let m3Data : M3TrimsEntity
+        if(trimObj.uomStatus){
+          m3Data = await manager.getRepository(M3TrimsEntity).findOne({where:{m3TrimId:trimObj.trimCode}});
+        }
         const trimEntity = new SampleRequestTriminfoEntity()
         trimEntity.trimCode = trimObj.trimCode
-        trimEntity.uomId = trimObj.uomId
+        trimEntity.uomId = m3Data?.uomId != null ? m3Data?.uomId:null;
         trimEntity.consumption = trimObj.consumption
         trimEntity.trimType = trimObj.trimType
         trimEntity.remarks = trimObj.remarks
