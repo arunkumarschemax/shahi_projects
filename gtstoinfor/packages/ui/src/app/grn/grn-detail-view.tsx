@@ -118,16 +118,16 @@ import QRCode from "react-qr-code";
         align:"right",
         render: (text, record) => (text > 0 ? `${text} ${record.uom || ''}` : '0')
       },
-      {
-        title: <div style={{textAlign:"center"}}>Conversion Qty</div>,
-        dataIndex: "conversionQty",
-        align:"right",
-        render: (text, record) => {
-          const uom = record.uom || '';
+      // {
+      //   title: <div style={{textAlign:"center"}}>Conversion Qty</div>,
+      //   dataIndex: "conversionQty",
+      //   align:"right",
+      //   render: (text, record) => {
+      //     const uom = record.uom || '';
       
-          return text !== 0 && text !== null ? `${text} ${uom}` : '-';
-        },
-      },
+      //     return text !== 0 && text !== null ? `${text} ${uom}` : '-';
+      //   },
+      // },
       {
         title: <div style={{textAlign:"center"}}>Location Mapped</div>,
         dataIndex: "locMapStatus",

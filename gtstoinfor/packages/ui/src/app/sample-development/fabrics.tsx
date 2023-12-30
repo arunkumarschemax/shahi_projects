@@ -398,6 +398,8 @@ const FabricsForm = (props:FabricsFormProps) => {
       title: 'Color',
       dataIndex: 'color',
       width:"25%",
+      align:'center',
+
       render: (_, record) => (
         <>
         <Form.Item name={`colorId${record.key}`}
@@ -430,6 +432,8 @@ const FabricsForm = (props:FabricsFormProps) => {
       title: 'Consumption',
       dataIndex: 'consumption',
       width:"17%",
+      align:'center',
+
       render: (_, record) => (
         <Form.Item name={`consumption${record.key}`}
         rules={[{ required: true, message: 'Missing Consumption' }]}
@@ -467,6 +471,8 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title:"UOM",
       dataIndex: 'UomId',
+      align:'center',
+
       width:"13%",
       render: (_, record) => (
         <Form.Item name={`uomId${record.key}`}
@@ -496,6 +502,8 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Wastage %',
       dataIndex: 'wastage',
+      align:'center',
+
       width:"17%",
       render: (_, record) => (
       <Form.Item name={`wastage${record.key}`} initialValue={2} 
@@ -512,6 +520,8 @@ const FabricsForm = (props:FabricsFormProps) => {
       title: 'Total Requirement',
       dataIndex: 'totalRequirement',
       width:"15%",
+      align:'center',
+
       render: (_, record) => (
       <Form.Item name={`totalRequirement${record.key}`} 
       rules={[{ required: true, message: 'Missing Total Requirement' }]}
@@ -526,6 +536,8 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Remarks',
       dataIndex: 'remarks',
+      align:'center',
+
       width:"50%",
       render: (_, record) => (
       <Form.Item name={`remarks${record.key}`}>
@@ -540,6 +552,8 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Action',
       dataIndex: 'action',
+      align:'center',
+
       width:"10%",
       fixed:'right',
       render: (_, record) => (

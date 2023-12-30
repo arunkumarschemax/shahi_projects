@@ -75,7 +75,8 @@ const GRNForm = () => {
       console.log(req);
       grnService.createGrn(req).then((res) => {
         if (res.status) {
-          AlertMessages.getSuccessMessage(res.internalMessage);
+          // AlertMessages.getSuccessMessage(res.internalMessage);
+          message.success(`GRN No ${res?.data?.grnNumber} Created Successfully`)
           navigate('/grn-view')
         } else {
           AlertMessages.getErrorMessage(res.internalMessage);

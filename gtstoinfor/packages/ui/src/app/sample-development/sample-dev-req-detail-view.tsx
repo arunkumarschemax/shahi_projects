@@ -364,7 +364,8 @@ return(
                 <DescriptionsItem label='Type'>{data?.[0]?.type?data?.[0]?.type:'-'}</DescriptionsItem>
                 <DescriptionsItem label='DMM'>{data?.[0]?.dmm?data?.[0]?.dmm:'-'}</DescriptionsItem>
                 <DescriptionsItem label='Contact No'>{data?.[0]?.contact?data?.[0]?.contact:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Epected Delivery Date'>{data?.[0]?.ETD?data?.[0]?.ETD:'-'}</DescriptionsItem>
+                <DescriptionsItem label='Expected Delivery Date'>{data?.[0]?.ETD ? new Date(data?.[0]?.ETD).toLocaleDateString('en-US') : '-'}
+                                   </DescriptionsItem>
                 <DescriptionsItem label='Made In'>{data?.[0]?.madeIn?data?.[0]?.madeIn:'-'}</DescriptionsItem>
                 <DescriptionsItem label='Life Cycle Status'>{data?.[0]?.lifeCycleStatus?LifeCycleStatusDisplay.find((e)=>e.name === data?.[0]?.lifeCycleStatus)?.displayVal:'-'}</DescriptionsItem>
                 <DescriptionsItem label='Status'>{data?.[0]?.status?data?.[0]?.status:'-'}</DescriptionsItem>

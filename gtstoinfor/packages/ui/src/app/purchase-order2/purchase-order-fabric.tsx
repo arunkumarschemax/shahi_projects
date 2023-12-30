@@ -684,7 +684,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{paddingLeft:'41px'}}>
-                        <Form.Item name='discount' label='Discount'
+                        <Form.Item name='discount' label='Discount(%)'
                             rules={[{ required: false, message: 'Discount is required' }]}
                         >
                             <InputNumber  placeholder="discount" onChange={(e) => finalCalculation()} min={0}/>
