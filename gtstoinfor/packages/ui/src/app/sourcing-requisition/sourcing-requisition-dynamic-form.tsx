@@ -654,7 +654,14 @@ export const SourcingRequisitionDynamicForm = () => {
           title: 'Quantity',
           dataIndex: 'quantity',
         render:(_,record)=>{
-            return(record.quantity+'-'+record.uomName)
+            let uomoftrim
+            if(record.uomName){
+                uomoftrim = `-${record.uomName}` 
+            }else{
+                uomoftrim = '' 
+            }
+            // return <>{`${record.quantity}${record.uomName ? record.uomName:}`}</>
+            return(record.quantity+uomoftrim)
         }
 
         },
@@ -816,6 +823,8 @@ const onTrimChange = (val, option) => {
     const selectedTrim = option?.children || ''; // Ensure a fallback value
     setTrimCode(selectedTrim);
     trimForm.setFieldsValue({trimName:selectedTrim})
+    trimForm.setFieldsValue({quantityUnit:option.trimUomId})
+    trimForm.setFieldsValue({uomName:option.trimUomName})
 }
 
     const onReset = () => {
@@ -1493,7 +1502,7 @@ const onTrimUomOnchange =(value, option) =>{
                                                     {renderTrimCodeOptions()}
                                                     {m3Trims.map((e) => {
                                                         return (
-                                                            <Option key={e.m3TrimsId} value={e.m3TrimsId}>
+                                                            <Option key={e.m3TrimsId} value={e.m3TrimsId} trimUomId={e.uomId} trimUomName={e.uom}>
                                                                 {e.trimCode}
                                                             </Option>
                                                         );
@@ -1561,8 +1570,8 @@ const onTrimUomOnchange =(value, option) =>{
 
                                                     },
                                                 ]}>
-                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'170px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}>
-                                                    <Select showSearch allowClear optionFilterProp="children" placeholder="Unit"
+                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'170px', height:"10px"}} rules={[{ required: false, message: 'Unit is required' }]}>
+                                                    <Select showSearch allowClear disabled optionFilterProp="children" placeholder="Unit"
                                                    onChange={onTrimUomOnchange} 
                                                     >
                                                     {uom?.map(e => {
