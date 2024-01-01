@@ -357,7 +357,7 @@ export const SourcingRequisitionDynamicForm = () => {
 
     useEffect(() => {
         if(defaultFabricFormData){
-            // console.log(defaultFabricFormData)
+            console.log(defaultFabricFormData)
             // console.log(defaultFabricFormData.fabricUpload.fileList[0].name)
             fabricForm.setFieldsValue({
                 content: defaultFabricFormData.content,
@@ -387,7 +387,8 @@ export const SourcingRequisitionDynamicForm = () => {
                 xlNo  : defaultFabricFormData.xlNo,
                 quantity  : defaultFabricFormData.quantity,
                 quantityUnit: defaultFabricFormData.quantityUnit,
-                fabricUpload:defaultFabricFormData.fabricUpload.fileList[0].name
+                // fabricUpload:defaultFabricFormData.fabricUpload.fileList[0].name,
+                uomName:defaultFabricFormData.uomName
 
             })
         }
@@ -397,6 +398,7 @@ export const SourcingRequisitionDynamicForm = () => {
 
     useEffect(()=>{
         if(defaultTrimFormData){
+            console.log(defaultTrimFormData)
             trimForm.setFieldsValue({
                 trimType : defaultTrimFormData.trimType,
                 trimCategory : defaultTrimFormData.trimCategory,
@@ -411,7 +413,8 @@ export const SourcingRequisitionDynamicForm = () => {
                 m3TrimCode: defaultTrimFormData.m3TrimCode,
                 description : defaultTrimFormData.description,
                 remarks : defaultTrimFormData.remarks,
-                quantityUnit: defaultTrimFormData.quantityUnit
+                quantityUnit: defaultTrimFormData.quantityUnit,
+                uomName:defaultTrimFormData.uomName
             })
         }
     },[defaultTrimFormData])
@@ -560,7 +563,11 @@ export const SourcingRequisitionDynamicForm = () => {
         },
          {
             title:'Quantity',
-            dataIndex:'quantity'
+            // dataIndex:'quantity',
+            render:(_,record) =>{
+                console.log(record)
+                return (record.quantity+'-'+record.uomName)
+            }
         },
         {
             title: "Action",
@@ -645,7 +652,11 @@ export const SourcingRequisitionDynamicForm = () => {
         },
         {
           title: 'Quantity',
-          dataIndex: 'quantity',
+        //   dataIndex: 'quantity',
+        render:(_,record)=>{
+            return(record.quantity+'-'+record?.uomName?record.uomName:'')
+        }
+
         },
        
         // {
@@ -985,6 +996,12 @@ const onTrimView = () =>{
     setVisibleModel(true)
 }
 
+const uomOnchange =(value, option) =>{
+    fabricForm.setFieldsValue({uomName:option.name})
+}
+const onTrimUomOnchange =(value, option) =>{
+    trimForm.setFieldsValue({uomName:option.name})
+}
 
 
     return(
@@ -1291,13 +1308,19 @@ const onTrimView = () =>{
                                         </Col>
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                                             <Form.Item name='quantity' label='Quantity' rules={[{ required: true, message: 'Quantity is required' }]}>
-                                                <Input type="number" placeholder="Enter Quantity" addonAfter={ <Form.Item name='quantityUnit' style={{width:'90px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}><Select showSearch allowClear optionFilterProp="children" placeholder='Unit' >
+                                                <Input type="number" placeholder="Enter Quantity" addonAfter={ <Form.Item name='quantityUnit' style={{width:'90px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}><Select showSearch allowClear 
+                                                optionFilterProp="children" placeholder='Unit'
+                                                onChange={uomOnchange}
+                                                 >
                                                     {uom.filter((e)=> e.uomCategory === UomCategoryEnum.LENGTH)?.map(e => {
                                                         return (
-                                                            <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                                            <Option name={e.uom} key={e.uomId} value={e.uomId}>{e.uom}</Option>
                                                         );
                                                     })}
                                                 </Select></Form.Item>} />
+                                            </Form.Item>
+                                            <Form.Item name={'uomName'} hidden>
+                                            <Input />
                                             </Form.Item>
                                         </Col>
                                         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{ marginTop: '2%' }}>
@@ -1312,7 +1335,9 @@ const onTrimView = () =>{
                                             </Form.Item>
                                         </Col> */}
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                                            <Form.Item name="fabricUpload" label='Fabric Upload' initialValue={defaultFabricFormData ? defaultFabricFormData.fabricUpload.fileList[0].name:''}>
+                                            <Form.Item name="fabricUpload" label='Fabric Upload'
+                                            //  initialValue={defaultFabricFormData ? defaultFabricFormData.fabricUpload.fileList[0].name:''}
+                                             >
                                                 {/* <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
 
                                                     <div>
@@ -1525,18 +1550,23 @@ const onTrimView = () =>{
                                                     },
                                                     {
                                                         pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                                                        message: `Should contain only alphabets.`,
+                                                        message: `Should contain only Numbers.`,
 
                                                     },
                                                 ]}>
                                                 <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'170px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}>
-                                                    <Select showSearch allowClear optionFilterProp="children" placeholder="Enter uom">
+                                                    <Select showSearch allowClear optionFilterProp="children" placeholder="Unit"
+                                                   onChange={onTrimUomOnchange} 
+                                                    >
                                                     {uom?.map(e => {
                                                         return (
-                                                            <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                                            <Option name={e.uom} key={e.uomId} value={e.uomId}>{e.uom}</Option>
                                                         );
                                                     })}
                                                 </Select></Form.Item>}/>
+                                            </Form.Item>
+                                            <Form.Item name={'uomName'} hidden>
+                                                <Input/>
                                             </Form.Item>
                                         </Col>
                                         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{ marginTop: '2%' }}>

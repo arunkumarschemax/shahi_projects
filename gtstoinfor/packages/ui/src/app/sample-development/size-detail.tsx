@@ -212,6 +212,7 @@ const SizeDetail = ({props,buyerId,form}) => {
       title: 'Action',
       dataIndex: 'action',
       fixed:'right',
+      width:'10%',
       render: (_, record) => (
         <Button htmlType='submit' onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
       ),

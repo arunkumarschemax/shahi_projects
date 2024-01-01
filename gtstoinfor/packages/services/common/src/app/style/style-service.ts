@@ -3,7 +3,7 @@ import { StyleRepository } from './dto/style-repo';
 import { AllStyleResponseModel, CommonResponseModel, SampleFilterRequest, StyleAgainstPchDto, StyleIdReq, UploadResponse, buyerReq } from '@project-management-system/shared-models';
 import { Style } from './dto/style-entity';
 import { StyleReq } from './dto/style-dto';
-import { DataSource } from 'typeorm';
+import { DataSource, Raw } from 'typeorm';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { BuyerRequest } from './dto/buyer.request';
 
@@ -16,11 +16,37 @@ export class StyleService{
         private styleRepo:StyleRepository
     ){}
 
+    async findDuplicate(style: string): Promise<Style> {
+        // tslint:disable-next-line: typedef
+        const res = await this.styleRepo.findOne({
+          where: {style: Raw(alias => `style = '${style}'`)},
+        });
+        if (res) {
+          return res;
+        } else {
+          return null;
+        }
+      }
+
     async creteStyle(req:StyleReq ,isUpdate: boolean):Promise<AllStyleResponseModel>{
         console.log(req,'serve')
         try{
+       
             const style= new Style()
-            
+            if (!isUpdate) {
+                const entity = await this.findDuplicate(req.style);
+                if (entity) {
+                  throw new AllStyleResponseModel(false,11104, 'Style already exists',[]);
+                }
+              }
+              else{
+                const entity = await this.findDuplicate(req.style);
+                if (entity) {
+                  if(entity.styleId!=req.styleId) {
+                    throw new AllStyleResponseModel(false,11104, 'reason already exists',[]);      
+                }
+                }
+              }
             style.style=req.style
             style.locationId=req.locationId
             style.pch=req.pch
