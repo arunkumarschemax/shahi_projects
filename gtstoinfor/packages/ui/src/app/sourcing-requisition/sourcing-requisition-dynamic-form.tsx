@@ -69,6 +69,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const [trimM3Code,setTrimM3Code] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(false);
     const [visibleModel, setVisibleModel] = useState<boolean>(false);
+    const [isColorRequired, setIsColorRequired] = useState<boolean>(true);
     const [fabricfilelist, setFabricfilelist] = useState<any>([]);
     const [isUpdateimg, setisUpdateImg]=useState('')
     const [imageUrl, setImageUrl] = useState('');
@@ -325,6 +326,11 @@ export const SourcingRequisitionDynamicForm = () => {
 
     const setEditForm = (rowData: any, index: any) => {
         console.log(rowData);
+        if(rowData.newColor){
+            setIsColorRequired(false)
+        }else{
+            setIsColorRequired(true)
+        }
         setDefaultFabricFormData(rowData)
         setFabricIndexVal(index)
         setBtnType("Update")
@@ -738,6 +744,7 @@ export const SourcingRequisitionDynamicForm = () => {
                     tableData = [...fabricTableData,values]
                 }
                 setFabricTableData(tableData)
+                setIsColorRequired(true)
                 fabricForm.resetFields()
                 setFabricfilelist([])
                 console.log(fabricTableData,'fabric table data')
@@ -773,6 +780,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const onFabricColorChange = (val,option) => {
         setFabricColor(option?.name)
         fabricForm.setFieldsValue({colorName: option?.name})
+        fabricForm.setFieldsValue({newColor: null})
     }
 
     const onPCHChange = (val,option) => {
@@ -1019,6 +1027,15 @@ const onTrimUomOnchange =(value, option) =>{
     trimForm.setFieldsValue({uomName:option.name})
 }
 
+const handleColor = (val) => {
+    console.log(val.target.value)
+    setIsColorRequired(false)
+    fabricForm.setFieldsValue({color: null})
+    if(val.target.value == null || val.target.value == '' || val.target.value == undefined){
+        setIsColorRequired(true)
+    }
+}
+
 
     return(
         <><Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
@@ -1222,7 +1239,7 @@ const onTrimUomOnchange =(value, option) =>{
                                     {/* <h1 style={{ color: '#6b54bf', fontSize: '15px', textAlign: 'left' }}>ITEM DETAILS</h1>
                                     <Row gutter={8}> */}
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                                            <Form.Item name='color' label='Color' rules={[{ required: false, message: 'Color is required' }]}>
+                                            <Form.Item name='color' label='Color' rules={[{ required: isColorRequired, message: 'Color is required' }]}>
                                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select Color' onChange={onFabricColorChange}>
                                                     {color.map(e => {
                                                         return (
@@ -1235,7 +1252,7 @@ const onTrimUomOnchange =(value, option) =>{
                                         </Col>
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                                             <Form.Item name='newColor' label='New Color(If not in the list)' rules={[{ required: false, message: 'color is required' }]}>
-                                                <Input placeholder="Enter Color" />
+                                                <Input placeholder="Enter Color" onChange={handleColor}/>
                                             </Form.Item>
                                         </Col>
                                         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
