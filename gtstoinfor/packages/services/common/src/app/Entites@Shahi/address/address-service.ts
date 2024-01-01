@@ -63,8 +63,8 @@ export class AddressService {
                     const result = match ? parseInt(match[0], 10) : null;
                     const result1 = match1 ? parseInt(match1[0], 10) : null;
                     const addObj = new AddressEntity()
-                    addObj.billTo = data.BILLTO
-                    addObj.shipTo = data.SHIPTO
+                    // addObj.billTo = data.BILLTO
+                    // addObj.shipTo = data.SHIPTO
                     addObj.buyerAddress = data.BUYERADDCRM
                     addObj.deliveryAddress = data.DELIVERYADDCRM
                     addObj.buyerCode = result
@@ -79,8 +79,8 @@ export class AddressService {
                     }
                 } else if (data.BillTo != null) {
                     const addObj = new AddressEntity()
-                    addObj.billTo = data.BillTo
-                    addObj.shipTo = data.ShipTo
+                    // addObj.billTo = data.BillTo
+                    // addObj.shipTo = data.ShipTo
                     addObj.buyerAddress = data.BuyerAddress
                     addObj.deliveryAddress = data.DeliveryAddress
                     addObj.buyerCode = data.BuyerCode
@@ -127,7 +127,7 @@ export class AddressService {
         try {
             const info = await this.repo.findOne({
                 where: {
-                    shipTo: Like(`%${req.country}%`) // Assuming you want to find records where address includes the given string
+                    destination: Like(`%${req.country}%`) // Assuming you want to find records where address includes the given string
                 }
             })
             if (info) {
