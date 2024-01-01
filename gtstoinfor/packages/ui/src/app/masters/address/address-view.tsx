@@ -34,14 +34,14 @@ export const AddressView = () => {
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1))
         },
-        {
-            title:'Bill To',
-            dataIndex:'billTo',
-        },
+        // {
+        //     title:'Bill To',
+        //     dataIndex:'billTo',
+        // },
         {
             title:'Buyer Code',
             dataIndex:'buyerCode',
-            width:"60px",
+            // width:"60px",
         },
         {
             title:'Buyer Address',
@@ -49,11 +49,11 @@ export const AddressView = () => {
             // align:'right'
         },
        
-        {
-            title:'Ship To',
-            dataIndex:'shipTo',
-            // align:'right'
-        },
+        // {
+        //     title:'Ship To',
+        //     dataIndex:'shipTo',
+        //     // align:'right'
+        // },
         {
             title:'Delivery Code',
             dataIndex:'deliveryCode',
