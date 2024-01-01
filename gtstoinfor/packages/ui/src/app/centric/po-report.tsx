@@ -27,6 +27,7 @@ import {
   import { ColumnsType } from "antd/es/table";
   import { useIAMClientState } from "../nike/iam-client-react";
 import { Excel } from "antd-table-saveas-excel";
+import RangePicker from "rc-picker/lib/RangePicker";
   
   export function PPKPOReport() {
     const service = new CentricService();
@@ -1255,6 +1256,7 @@ import { Excel } from "antd-table-saveas-excel";
     return (
       <>
         <Card title="PO Report" headStyle={{ fontWeight: "bold" }} 
+        
           extra={
             <Button
               type="default"
@@ -1268,7 +1270,7 @@ import { Excel } from "antd-table-saveas-excel";
           <Form
             onFinish={getorderData}
             form={form}
-            // layout='vertical'
+            layout='vertical'
           >
             <Row gutter={24}>
               <Col
@@ -1276,7 +1278,7 @@ import { Excel } from "antd-table-saveas-excel";
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
                 lg={{ span: 4 }}
-                xl={{ span: 6 }}
+                xl={{ span: 4 }}
               >
                 <Form.Item name="poNumber" label="PO Number">
                   <Select
@@ -1295,30 +1297,17 @@ import { Excel } from "antd-table-saveas-excel";
                   </Select>
                 </Form.Item>
               </Col>
-              {/* <Col
+              <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
                 lg={{ span: 4 }}
-                xl={{ span: 6 }}
+                xl={{ span: 4 }}
               >
-                <Form.Item name="poLine" label="PO Line">
-                  <Select
-                    showSearch
-                    placeholder="Select PO Line"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {orderData.map((inc: any) => {
-                      return (
-                        <Option key={inc.poLine} value={inc.poLine}>
-                          {inc.poLine}
-                        </Option>
-                      );
-                    })}
-                  </Select>
+               <Form.Item label="CO Date" name="coDate">
+                  {/* <RangePicker /> */}
                 </Form.Item>
-              </Col> */}
+              </Col>
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
@@ -1335,7 +1324,7 @@ import { Excel } from "antd-table-saveas-excel";
                     SEARCH
                   </Button>
                   <Button
-                    style={{ marginLeft: 8 }}
+                    style={{ marginLeft: 8 ,marginTop:20}}
                     htmlType="submit"
                     type="primary"
                     onClick={onReset}
