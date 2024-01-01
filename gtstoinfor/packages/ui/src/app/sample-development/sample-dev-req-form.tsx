@@ -1,4 +1,4 @@
-import { LoadingOutlined, PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { EyeOutlined, LoadingOutlined, PlusOutlined, UploadOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
 import { BuyerRefNoRequest, DepartmentReq,SampleDevelopmentRequest, StyleIdReq } from "@project-management-system/shared-models";
 import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
@@ -75,6 +75,8 @@ export const SampleDevForm = () => {
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [modal, setModal] = useState('')
+
 
   useEffect(() => {
     console.log(sizeForm.getFieldsValue())
@@ -282,8 +284,22 @@ const getBase64 = (img, callback) => {
   const onFinish = (val) =>{
     sizeForm.validateFields().then(size => {
       fabricForm.validateFields().then(fab => {
+        console.log(fab)
+        // console.log(updatedData.find((e) => e.colourId === 0));
+        // console.log(sizeData)
+        // if(updatedData.filter((e) => e.colourId === 0).length === 0){
+        //   const distictFabColors = [...new Set(updatedData.map(x => x.colourId))]
+        //   const distictSizeColors = [...new Set(sizeData.map(x => x.colour))]
+        //   console.log(distictFabColors)
+        //   console.log(distictSizeColors)
+        //   let res = distictSizeColors.filter(val => !distictFabColors.includes(val));
+        //   console.log(res);
+        //   if(res.length > 0){
+        //     AlertMessages.getWarningMessage("Fabric is missing for Color. ")
+        //   }
+        // }
         trimForm.validateFields().then(trim => {
-          // console.log(data);
+          console.log(data);
           if(data != undefined){
             // console.log('hoii')
             // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
@@ -408,20 +424,6 @@ const getBase64 = (img, callback) => {
     fileList: fileList,
   };
   const handleFabricsDataUpdate = (updatedData) => {
-    console.log(updatedData)
-    console.log(updatedData.find((e) => e.colourId === 0));
-    console.log(sizeData)
-    if(updatedData.filter((e) => e.colourId === 0).length === 0){
-      const distictFabColors = [...new Set(updatedData.map(x => x.colourId))]
-      const distictSizeColors = [...new Set(sizeData.map(x => x.colour))]
-      console.log(distictFabColors)
-      console.log(distictSizeColors)
-      let res = distictSizeColors.filter(val => !distictFabColors.includes(val));
-      console.log(res);
-      if(res.length > 0){
-        AlertMessages.getWarningMessage("Fabric is missing for Color. ")
-      }
-    }
     setData((prevData) => ({ ...prevData, fabricsData: updatedData }));
     setFabricsData(updatedData);
   };
@@ -435,6 +437,13 @@ const getBase64 = (img, callback) => {
     // console.log(current.valueOf(), 'current');
      return current.valueOf() < Date.now();
  };
+
+ const onFabriView =() =>{
+  setModal('fileUpload')
+  setPreviewVisible(true)
+  
+}
+
   return (
     <Card title='Sample Development Request' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  
     extra={ JSON.parse(localStorage.getItem('currentUser'))?.user.roles != "samplinguser" ?
@@ -687,13 +696,28 @@ const getBase64 = (img, callback) => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
           >
             <Form.Item name="image" label='Attach File' >
-              <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
+              {/* <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
 
                   <div>
                       {loading ? <LoadingOutlined /> : <PlusOutlined />}
                       <div style={{ marginTop: 8 }}>Upload Garment</div>
                   </div>
-              </Upload>
+              </Upload> */}
+              <Upload
+                                                  style={{ width: '100%' }} 
+                                                    {...uploadFabricProps}
+                                                    accept=".jpeg,.pdf,.png,.jpg"
+                                                    >
+                                                    <Button
+                                                        style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                                                        icon={<UploadOutlined />}
+                                                        disabled={fileList.length == 1? true:false}
+                                                    >
+                                                        Upload Fabric
+                                                    </Button>
+                                                    </Upload>
+                                                    {fileList.length ==1?
+                                                    <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
           </Form.Item>
           </Col>
           
@@ -940,7 +964,20 @@ const getBase64 = (img, callback) => {
           footer={null}
           onCancel={() => setPreviewVisible(false)}
         >
-          <img alt="example" style={{ width: "100%" }} src={previewImage} />
+          {modal == 'fileUpload' ?<>
+            <Card style={{ height: '250px' }}>
+                                                <Form.Item>
+                                                <img
+                                                    src={imageUrl}
+                                                    alt="Preview"
+                                                    height={'200px'}
+                                                    width={'500px'}
+                                                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                                                />
+                                                </Form.Item>
+                                            </Card>
+               </>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
+         
         </Modal>
       </Form>
     </Card>

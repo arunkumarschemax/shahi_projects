@@ -23,9 +23,11 @@ export class SampleRequestInfoModel{
     madeIn:string
     remarks?:string
     fileName?: string
+    sam?:string
     // sizeinfo?:SampleSizeInfoModel[]
     fabInfo?:any[]
     trimInfo?:any[]
+    location?:string
     
     constructor(
         sampleRequestNo: string,
@@ -49,11 +51,14 @@ export class SampleRequestInfoModel{
         type:string,
         madeIn:string,
         remarks?:string,
-        fileName?: string, 
+        fileName?: string,
+        sam?:string ,
         // conversion:'',
         // sizeinfo?:SampleSizeInfoModel[],
         fabInfo?:any[],
-        trimInfo?:any[]
+        trimInfo?:any[],
+        location?:string,
+
     ){
        this.brand = brand
        this.buyer = buyer
@@ -81,6 +86,8 @@ export class SampleRequestInfoModel{
        this.user = user
        this.product = product
        this.fileName = fileName
+       this.sam = sam   
+       this.location =location
         }
 
 

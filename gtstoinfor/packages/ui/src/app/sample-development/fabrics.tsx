@@ -140,7 +140,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         if (record.key === key) {
           console.log(e);
           console.log(record.totalCount);
-          let totalSizeCountForSize = props.sizeDetails.find((s) => s.colour ===props.form.getFieldValue(`colorId${key}`))?.sizeInfo;
+          let totalSizeCountForSize = props.sizeDetails.find((s) => s.colorId ===props.form.getFieldValue(`colorId${key}`))?.sizeInfo;
           console.log(totalSizeCountForSize);
           let qtyy = 0;
           totalSizeCountForSize?.forEach(qty => {
@@ -179,12 +179,12 @@ const FabricsForm = (props:FabricsFormProps) => {
       fieldName = "colourId"
       isDuplicate =  onchangeData.find((r) => r.colourId === e && r.fabricCode === record.fabricCode);
       console.log(props.sizeDetails);
-      console.log(props.sizeDetails.find((s) => s.colour === e));
+      console.log(props.sizeDetails.find((s) => s.colorId === e));
       let wastg =props.form.getFieldValue(`wastage${key}`) != undefined ?props.form.getFieldValue(`wastage${key}`) : 2;
-      if(props.sizeDetails.find((s) => s.colour === e)?.colour > 0){
+      if(props.sizeDetails.find((s) => s.colorId === e)?.colorId > 0){
         updatedData = data.map((record) => {
           if (record.key === key) {
-            let totalSizeCountForSize = props.sizeDetails.find((s) => s.colour === e)?.sizeInfo;
+            let totalSizeCountForSize = props.sizeDetails.find((s) => s.colorId === e)?.sizeInfo;
             console.log(totalSizeCountForSize);
             let qtyy = 0;
             totalSizeCountForSize?.forEach(qty => {
