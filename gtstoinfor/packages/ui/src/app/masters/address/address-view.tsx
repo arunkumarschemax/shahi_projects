@@ -34,48 +34,67 @@ export const AddressView = () => {
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1))
         },
-        // {
-        //     title:'Bill To',
-        //     dataIndex:'billTo',
-        // },
+        {
+            title:'Destination',
+            dataIndex:'destination',
+            sorter: (a, b) => a.destination.localeCompare(b.destination),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-"
+        },
         {
             title:'Buyer Code',
             dataIndex:'buyerCode',
-            // width:"60px",
+            // sorter: (a, b) => a.buyerCode.localeCompare(b.buyerCode),
+            // sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-"
+         
         },
         {
             title:'Buyer Address',
             dataIndex:'buyerAddress',
-            // align:'right'
+            sorter: (a, b) => a.buyerAddress.localeCompare(b.buyerAddress),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-"
+            
+           
         },
        
-        // {
-        //     title:'Ship To',
-        //     dataIndex:'shipTo',
-        //     // align:'right'
-        // },
         {
             title:'Delivery Code',
             dataIndex:'deliveryCode',
-            // align:'right'
+            // sorter: (a, b) => a.deliveryCode.localeCompare(b.deliveryCode),
+            // sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-"
+          
         },
         {
             title:'Delivery Address',
             dataIndex:'deliveryAddress',
-            // align:'right'
+            sorter: (a, b) => a.deliveryAddress.localeCompare(b.deliveryAddress),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-"
+            
         },
     ]
 
     let i = 1;
+    let rowIndex = 1;
     const exceldata = [
-        { title: 'S No', dataIndex: 'sNo', render: (text:any, object:any, index:any) => { return i++; } },
-        
-        // { title: 'Bill To', dataIndex: 'billTo',render:(text:any,record:any) => {return record.billTo ? record.billTo : '-'} },
-        { title: 'Buyer Code', dataIndex: 'buyerCode',render:(text:any,record:any) => {return record.buyerCode ? record.buyerCode : '-'} },
-        { title: 'Buyer Address', dataIndex: 'buyerAddress',render:(text:any,record:any) => {return record.buyerAddress ? record.buyerAddress : '-'} },
-        // { title: 'Ship To', dataIndex: 'shipTo',render:(text:any,record:any) => {return record.shipTo ? record.shipTo : '-'} },
-        { title: 'Delivery Code', dataIndex: 'deliveryCode',render:(text:any,record:any) => {return record.deliveryCode ? record.deliveryCode : '-'} },
-        { title: 'Delivery Address', dataIndex: 'deliveryAddress',render:(text:any,record:any) => {return record.deliveryAddress ? record.deliveryAddress : '-'} }
+        { title: 'S No', dataIndex: 'sNo', render: (text, object, index) => { 
+            if(index == data.length) { 
+              return null;
+            } else { 
+              return rowIndex++; 
+            } 
+          },
+          width: 60, 
+         
+        }, 
+        { title: 'Destination', dataIndex: 'destination',width: 100,render:(text:any,record:any) => {return record.destination ? record.destination : '-'} },  
+        { title: 'Buyer Code', dataIndex: 'buyerCode',width: 100,render:(text:any,record:any) => {return record.buyerCode ? record.buyerCode : '-'} },
+        { title: 'Buyer Address', dataIndex: 'buyerAddress',width: 300,render:(text:any,record:any) => {return record.buyerAddress ? record.buyerAddress : '-'} },
+        { title: 'Delivery Code', dataIndex: 'deliveryCode',width: 100,render:(text:any,record:any) => {return record.deliveryCode ? record.deliveryCode : '-'} },
+        { title: 'Delivery Address', dataIndex: 'deliveryAddress',width: 800,render:(text:any,record:any) => {return record.deliveryAddress ? record.deliveryAddress : '-'} }
 
     ]
 
