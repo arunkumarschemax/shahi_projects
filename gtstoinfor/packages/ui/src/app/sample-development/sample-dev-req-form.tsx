@@ -834,7 +834,7 @@ const getBase64 = (img, callback) => {
             <Form.Item
               name="productId"
               label="Product"
-              rules={[{ required: true, message: "Please Select Product" }]}
+              rules={[{ required: false, message: "Please Select Product" }]}
             >
               <Select
                 allowClear
