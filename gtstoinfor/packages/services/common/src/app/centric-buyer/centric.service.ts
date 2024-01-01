@@ -17,6 +17,7 @@ const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
 import * as path from 'path';
+const moment = require('moment');
 import { Cron, CronExpression, Interval } from "@nestjs/schedule";
 import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
 import { AddressService } from "../Entites@Shahi/address/address-service";
@@ -304,28 +305,21 @@ export class CentricService {
           console.log(response.data[0])
           const coData = response.data[0];
           coLine.buyerPo = coData.buyerPo;
-          const months = [
-            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-            'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-          ];
-          const [day, monthAbbrev, year] = coData.deliveryDate.split('-');
-          const month = (months.indexOf(monthAbbrev) + 1).toString().padStart(2, '0');
-          coLine.deliveryDate = `${day}/${month}/${year}`
-          // Create a Date object using the extracted components
-          const inputDate = new Date(year, Number(month) - 1, day)
+          const inputDate = new Date(coData.deliveryDate)
           // Calculate the date 7 days before the GAC date
           const sevenDaysBefore = new Date(inputDate);
           sevenDaysBefore.setDate(inputDate.getDate() - 7);
-          const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBefore)
+          const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBefore);
+          coLine.deliveryDate = moment(coData.deliveryDate).format("DD/MM/YYYY")
           coLine.exFactoryDate = exFactoryDate
           coLine.salesPrice = coData.salesPrice
           coLine.currency = coData.currency
           coLine.destinations = coData.destinations
-          const parts = coData.destinations[0]?.name.split(',');
-          const request = { country: parts[1].trim() }
-          const address = await this.addressService.getAddressInfoByCountry(request);
+          const request = coData.destinations[0]?.name;
+          const address = await this.addressService.getAddressInfoByCountry({ country: request });
           const addressData = address.data[0];
-          buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 25;
+          console.log(addressData)
+          buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 12;
           deliveryAddress = addressData?.deliveryCode
           buyerValue1 = "FIN-FINISHED GOODS - KY"
           buyerValue2 = "CEN00002-CENTRIC BRANDS LLC"
@@ -536,9 +530,9 @@ export class CentricService {
       console.log(err, 'error');
       return new CommonResponseModel(false, 0, err)
     }
-    // finally {
-    //     driver.quit()
-    // }
+    finally {
+      driver.quit()
+    }
   }
 
   async isAlertPresent(driver) {
