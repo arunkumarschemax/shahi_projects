@@ -107,6 +107,7 @@ export class CentricService {
           entity.shipToAdd = req.shipToAdd
           entity.manufacture = req.manufacture
           entity.poDate = req.poDate
+          entity.buyerAddress = req.buyerAddress
 
 
           entity.poLine = item.poLine

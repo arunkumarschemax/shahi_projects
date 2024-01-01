@@ -44,6 +44,9 @@ export class CentricDto {
     @ApiProperty()
     manufacture: string
 
+    @ApiProperty()
+    buyerAddress: string
+
 
 
 
