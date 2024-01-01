@@ -291,7 +291,7 @@ const getMappedTrims = (value, row) => {
     if(isDuplicate?.trimCode > 0)
     {
       AlertMessages.getErrorMessage("Duplicate Entries not allowed. ")
-      props.form.setFieldValue(`trimCode${key}`,0)
+      props.form.setFieldValue(`trimCode${key}`,undefined)
       props.form.validateFields().then(trim => {
       })
       .catch((err) => {
@@ -353,7 +353,7 @@ const getMappedTrims = (value, row) => {
           placeholder="Select Trim Type"
           onSelect={getTrimCategory}
          >
-          <Option name={`trimType${record.key}`} key={0} value={0}>Please Select TrimType</Option>
+          {/* <Option name={`trimType${record.key}`} key={0} value={0}>Please Select TrimType</Option> */}
           {Object.values(ItemTypeEnumDisplay).filter((val) => val.displayVal !== ItemTypeEnum.FABRIC).map((val) => (
             <Option key={val.name} value={val.name}>
               {val.displayVal}
@@ -380,7 +380,7 @@ const getMappedTrims = (value, row) => {
           placeholder="Select Trim Category"
           onSelect={(e) => getMappedTrims(e,record)}
          >
-          <Option name={`trimCategory${record.key}`} key={0} value={0}>Please Select Trim Category</Option>
+          {/* <Option name={`trimCategory${record.key}`} key={0} value={0}>Please Select Trim Category</Option> */}
           {trimData?.map((e) => {
             return (
             <Option key={e.trimCategory} value={e.trimCategoryId} name={e.trimMappingId}>
@@ -408,7 +408,7 @@ const getMappedTrims = (value, row) => {
             optionFilterProp="children"
             placeholder="Select Trim Code"
           >
-            <Option name={`trimCode${record.key}`} key={0} value={0}>Please Select Trim Code</Option>
+            {/* <Option name={`trimCode${record.key}`} key={0} value={0}>Please Select Trim Code</Option> */}
             {m3Trims.map(item => {
               return <Option key={item.m3TrimsId} value={item.m3TrimsId}>{item.trimCode}</Option>;
             })}
