@@ -276,33 +276,41 @@ import RolePermission from "../role-permissions";
     const Columns: any = [
   
       {
-        title: "S No",
+        title: <div style={{ textAlign: 'center' }}>S No</div>,
         key: "sno",
         // width: '70px',buyerId:rowData.buyerId
         responsive: ["sm"],
         render: (text, object, index) => (page - 1) * 10 + (index + 1),
+        align:'center',
       },
       {
-        title: "M3 Fabric Code",
+        title: <div style={{ textAlign: 'center' }}>M3 Fabric Code</div>,
         dataIndex: "item_code",
         ...getColumnSearchProps("item_code"),
+        align:'center',
+
       },
       {
-        title: "Color",
+                title: <div style={{ textAlign: 'center' }}>Color</div>,
         dataIndex: "colour",
         ...getColumnSearchProps("colour"),
+        align:'center',
+
       },
       {
-        title: "Required Quantity",
+                title: <div style={{ textAlign: 'center' }}>Required Quantity</div>,
         dataIndex: "totalRequirement",
         sorter: (a, b) => a.totalRequirement.localeCompare(b.totalRequirement),
         sortDirections: ["descend", "ascend"],
+        align:'right',
+
       },
       {
-        title: "Available Quantity",
+                title: <div style={{ textAlign: 'center' }}>Available Quantity</div>,
         dataIndex: "resltantavaliblequantity",
-        sorter: (a, b) => a.resltantavaliblequantity.localeCompare(b.resltantavaliblequantity),
-        sortDirections: ["descend", "ascend"],
+        // sorter: (a, b) => a.resltantavaliblequantity.localeCompare(b.resltantavaliblequantity),
+        // sortDirections: ["descend", "ascend"],
+        align:'right',
         render: (text, record) => {
           // let consumedQty = 0
           // if(record.fabric_consumption > 0){
@@ -319,15 +327,18 @@ import RolePermission from "../role-permissions";
           },
       },
       {
-        title: "Allocated Quantity",
+                title: <div style={{ textAlign: 'center' }}>Allocated Quantity</div>,
         dataIndex: "receivedQty",
         sorter: (a, b) => a.receivedQty.localeCompare(b.receivedQty),
         sortDirections: ["descend", "ascend"],
+        align:'right',
+
       },
       {
-        title: "To Be Procured",
+                title: <div style={{ textAlign: 'center' }}>To Be Procured</div>,
         dataIndex: "tobeProcured",
         sorter: (a, b) => a.tobeProcured.localeCompare(b.tobeProcured),
+        align:'right',
         render: (text, record) => {
           return (
             <>
@@ -339,8 +350,10 @@ import RolePermission from "../role-permissions";
         },
       },
       {
-        title: "Status",
+                title: <div style={{ textAlign: 'center' }}>Status</div>,
         dataIndex: "status",
+        align:'center',
+        fixed:'right',
         render: (text, record) => {
           return (
             <>
@@ -353,20 +366,23 @@ import RolePermission from "../role-permissions";
   
     const columnsSkelton: any = [
       {
-        title: "S No",
+                title: <div style={{ textAlign: 'center' }}>S No</div>,
         key: "sno",
         width: "70px",
+        align:'center',
         responsive: ["sm"],
         render: (text, object, index) => (page - 1) * 10 + (index + 1),
       },
       {
-        title: "M3 Trim Code",
+      title: <div style={{ textAlign: 'center' }}>M3 Trim Code</div>,
+        align:'center',
         dataIndex: "trim_code",
         ...getColumnSearchProps("trim_code"),
       },
       {
-        title: "Trim Type",
+        title: <div style={{ textAlign: 'center' }}>Trim Type</div>,
         dataIndex: "trimType",
+        align:'center',
         ...getColumnSearchProps("trimType"),
         render: (text) => {
           const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
@@ -374,16 +390,18 @@ import RolePermission from "../role-permissions";
         },
       },
       {
-        title: "Required Quantity",
+                title: <div style={{ textAlign: 'center' }}>Required Quantity</div>,
         dataIndex: "totalRequirement",
+        align:'right',
         sorter: (a, b) => a.totalRequirement.localeCompare(b.totalRequirement),
         sortDirections: ["descend", "ascend"],
       },
       {
-        title: "Available Quantity",
+        title: <div style={{ textAlign: 'center' }}>Available Quantity</div>,
         dataIndex: "availabeQuantity",
-        sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
-        sortDirections: ["descend", "ascend"],
+        align:'right',
+        // sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
+        // sortDirections: ["descend", "ascend"],
         render: (text, record) => {
           let consumedQty = 0
           // if(record.trim_consumption > 0){
@@ -398,14 +416,16 @@ import RolePermission from "../role-permissions";
           },
       },
       {
-        title: "Allocated Quantity",
+                title: <div style={{ textAlign: 'center' }}>Allocated Quantity</div>,
         dataIndex: "receivedQty",
+        align:'right',
         sorter: (a, b) => a.receivedQty.localeCompare(b.receivedQty),
         sortDirections: ["descend", "ascend"],
       },
       {
-        title: "To Be Procured",
+                title: <div style={{ textAlign: 'center' }}>To Be Procured</div>,
         dataIndex: "tobeProcured",
+        align:'right',
         sorter: (a, b) => a.tobeProcured.localeCompare(b.tobeProcured),
         render: (text, record) => {
           return (
@@ -418,8 +438,10 @@ import RolePermission from "../role-permissions";
         },
       },
       {
-        title: "Status",
+                title: <div style={{ textAlign: 'center' }}>Status</div>,
         dataIndex: "status",
+        align:'center',
+        fixed:'right',
         render: (text, record) => {
           return (
             <>
@@ -436,44 +458,49 @@ import RolePermission from "../role-permissions";
       console.log(val);
       const renderColumnForFabric: any =[
         {
-          title: "S No",
+        title: <div style={{ textAlign: 'center' }}>S No</div>,
           key: "sno",
           width: "100px",
           responsive: ["sm"],
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
         },
         {
-          title: "Grn Number",
+        title: <div style={{ textAlign: 'center' }}>Grn Number</div>,
           key:'grnNumber',
           dataIndex: "grnNumber",
           width: "150px",
+          align: "center",
 
         },
         {
-          title: "Grn Date",
+        title: <div style={{ textAlign: 'center' }}>Grn Date</div>,
           key:'grnDate',
           dataIndex:"grnDate",
           render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
           width: "150px",
+          align: "center",
 
         },
         {
-          title: "Location",
+        title: <div style={{ textAlign: 'center' }}>Location</div>,
           key:'location',
-
+          align: "center",
           dataIndex: "location",
           width:'80px',
         },
       
         {
-          title: "Available Quantity",
+        title: <div style={{ textAlign: 'center' }}>Available Quantity</div>,
           width: "150px",
           dataIndex: "quantity",
+          align: "right",
+
         },
       
         {
-          title: "Allocated Quantity",
+        title: <div style={{ textAlign: 'center' }}>Allocated Quantity</div>,
           width:'200px',
+          align: "right",
           render: (text, rowData, index) => { 
             return(
             <Form form={stockForm}>
@@ -831,13 +858,13 @@ import RolePermission from "../role-permissions";
       <Card
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         title="Sample Requests"
-        // extra={
-        //   <Link to="/sample-development/sample-development-form">
-        //     <span style={{ color: "white" }}>
-        //       <Button type={"primary"}>New </Button>{" "}
-        //     </span>
-        //   </Link>
-        // }
+        extra={
+          <Link to="/sample-development/sample-development-form">
+            <span style={{ color: "white" }}>
+              <Button type={"primary"}>New </Button>{" "}
+            </span>
+          </Link>
+        }
       >
         <Form form={sourcingForm} onFinish={getAll} layout="vertical">
           <Row gutter={8}>
@@ -1053,6 +1080,7 @@ import RolePermission from "../role-permissions";
                   {tabName === "Fabric" ? (
 
                     <Table
+                    scroll={{ x: "max-content" }}
                     key={keyUpdate}
                     rowKey={record => record.fabric_info_id}
                     columns={Columns}
@@ -1072,7 +1100,9 @@ import RolePermission from "../role-permissions";
                     // expandIconColumnIndex={7}
                     // bordered
                     pagination={false}
-                    style={{ width: '100%' }} />
+                    style={{ width: '100%' }}
+                     />
+                    
                     
                     // <>
                     //   <Table

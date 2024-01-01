@@ -290,6 +290,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => (
                 <span>
                     <Tooltip placement="top" title='Edit'>
@@ -699,7 +700,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                         </Form.Item>
                     </Col>
                     <Col span={4}>
-                        <Form.Item name='discount' label='Discount'
+                        <Form.Item name='discount' label='Discount(%)'
                             rules={[{ required: false, message: 'Discount is required' }]}
                         >
                             <Input type="number" placeholder="discount" onChange={(e) => finalCalculation()} />

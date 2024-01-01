@@ -322,7 +322,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         {
             title: 'M3 Fabric Code',
             dataIndex: 'itemCode',
-            width: '170px',
+            // width: '170px',
             render:(text,row)=>{
                 console.log(row)
                 return <>{`${row.fabricCode}-${row.itemCode}`}</>
@@ -367,6 +367,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => {
                 console.log(rowData)
                 return (<span>
@@ -414,7 +415,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         {
             title: 'M3 Fabric Code',
             dataIndex: 'itemCode',
-            width: '170px',
+            // width: '170px',
             render:(text,row)=>{
                 console.log(row)
                 return <>{`${row.itemCode}-${row.description}`}</>
@@ -684,7 +685,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{paddingLeft:'41px'}}>
-                        <Form.Item name='discount' label='Discount'
+                        <Form.Item name='discount' label='Discount(%)'
                             rules={[{ required: false, message: 'Discount is required' }]}
                         >
                             <InputNumber  placeholder="discount" onChange={(e) => finalCalculation()} min={0}/>
@@ -747,7 +748,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     }
                 </Row>
                 <Row>
-                    {fabricTableVisible && <Table columns={tableColumns} dataSource={fabricTableData}
+                    {fabricTableVisible && <Table columns={tableColumns} dataSource={fabricTableData}  scroll={{x:true}} size="small"  bordered
                     />
                     }
 

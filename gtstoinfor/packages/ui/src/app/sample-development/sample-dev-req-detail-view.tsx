@@ -150,19 +150,22 @@ export const SampleReqDetailView = () =>{
 
       const fabricColumns: any = [
         {
-          title: "S No",
+                  title: <div style={{ textAlign: 'center' }}>S No</div>,
           key: "sno",
           width: "70px",
           responsive: ["sm"],
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
         },
         {
-          title: "Fabric Code",
+                  title: <div style={{ textAlign: 'center' }}>Fabric Code</div>,
           dataIndex: "fabricCode",
+          align:'center',
+
          }, 
         {
-          title: "Total Requirment",
+                  title: <div style={{ textAlign: 'center' }}>Total Requirment</div>,
           dataIndex: "total",
+          align:'right',
           sorter: (a, b) => a.total.localeCompare(b.total),
           sortDirections: ["descend", "ascend"],
           render: (text, record) => {
@@ -174,8 +177,9 @@ export const SampleReqDetailView = () =>{
           },
         },
         {
-          title: "Consumption",
+                  title: <div style={{ textAlign: 'center' }}>Consumption</div>,
           dataIndex: "consumption",
+          align:'right',
           sorter: (a, b) => a.consumption.localeCompare(b.consumption),
           sortDirections: ["descend", "ascend"],
           render: (text, record) => {
@@ -188,20 +192,21 @@ export const SampleReqDetailView = () =>{
             },
         },
         {
-          title: "Wastage",
+                  title: <div style={{ textAlign: 'center' }}>Wastage</div>,
           dataIndex: "wastage",
+          align:'right',
           sorter: (a, b) => a.wastage.localeCompare(b.wastage),
           sortDirections: ["descend", "ascend"],
           render: (text, record) => {
             return (
               <>
-               {record.wastage ? `${record.wastage}(${record.uom})` : "Not Available"}
+               {record.wastage ? `${record.wastage}%` : "Not Available"}
               </>
             );
           },
         },
         {
-          title: <div style={{ textAlign: "center" }}>Remarks</div>,
+                  title: <div style={{ textAlign: 'center' }}>Remarks</div>,
           // fixed: 'left',
           dataIndex: 'remarks',
           render:(text,record) => {
@@ -224,27 +229,29 @@ export const SampleReqDetailView = () =>{
       }
       const trimColumns: any = [
         {
-          title: "S No",
+                  title: <div style={{ textAlign: 'center' }}>S No</div>,
           key: "sno",
           width: "70px",
           responsive: ["sm"],
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
         },
         {
-          title: "Trim Code",
+                  title: <div style={{ textAlign: 'center' }}>Trim Code</div>,
           dataIndex: "trimCode",
+          align:'center',
+
         //   sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
         //   sortDirections: ["descend", "ascend"],
         //   ...getColumnSearchProps("requestNo"),
         }, 
         {
-          title: "Trim Category",
+                  title: <div style={{ textAlign: 'center' }}>Trim Category</div>,
           dataIndex: "category",
           
         }, 
 
         {
-            title: "Trim Type",
+                    title: <div style={{ textAlign: 'center' }}>Trim Type</div>,
             dataIndex: "type",
             render: (text) => {
               const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
@@ -255,9 +262,10 @@ export const SampleReqDetailView = () =>{
           //   ...getColumnSearchProps("requestNo"),
           }, 
           {
-            title: "Total Requirment",
+                    title: <div style={{ textAlign: 'center' }}>Total Requirment</div>,
             dataIndex: "total",
             sorter: (a, b) => a.total.localeCompare(b.total),
+            align:'right',
             sortDirections: ["descend", "ascend"],
             render: (text, record) => {
               return (
@@ -268,10 +276,11 @@ export const SampleReqDetailView = () =>{
             },
           },
           {
-            title: "Consumption",
+                    title: <div style={{ textAlign: 'center' }}>Consumption</div>,
             dataIndex: "consumption",
             sorter: (a, b) => a.consumption.localeCompare(b.consumption),
             sortDirections: ["descend", "ascend"],
+            align:'right',
             render: (text, record) => {
               
                 return (
@@ -282,22 +291,24 @@ export const SampleReqDetailView = () =>{
               },
           },
           {
-            title: "Wastage",
-            dataIndex: "wastage",
+                    title: <div style={{ textAlign: 'center' }}>Wastage</div>,
+            dataIndex: "wastage",           
+             align:'right',
             sorter: (a, b) => a.wastage.localeCompare(b.wastage),
             sortDirections: ["descend", "ascend"],
             render: (text, record) => {
               return (
                 <>
-                 {record.wastage ? `${record.wastage}(${record.uom})` : "Not Available"}
+                 {record.wastage ? `${record.wastage}%` : "Not Available"}
                 </>
               );
             },
           },
           {
-            title: <div style={{ textAlign: "center" }}>Remarks</div>,
+                    title: <div style={{ textAlign: 'center' }}>Remarks</div>,
             // fixed: 'left',
             dataIndex: 'remarks',
+            align:'center',
             render:(text,record) => {
               return(
                   <>
@@ -312,7 +323,8 @@ export const SampleReqDetailView = () =>{
 
      
     const sizeColumns = colourData[0]?Object.keys(colourData[0]).map(param => ({
-      title: param,
+              title: <div style={{ textAlign: 'center' }}>{param}</div>,
+              align:'center',
       dataIndex: param,
       key:param,
       render:(text,record) =>{
@@ -328,14 +340,14 @@ export const SampleReqDetailView = () =>{
   })):[]
     const columns:any[]  = [
       {
-          title: 'S No',
+                  title: <div style={{ textAlign: 'center' }}>S No</div>,
           key: 'sno',
           width: '70px',
           responsive: ['sm'],
           render: (text, object, index) => (page-1) * 10 +(index+1)
       },
       {
-          title: 'Size Wise Quantity',
+                  title: <div style={{ textAlign: 'center' }}>Size Wise Quantity</div>,
           dataIndex: 'size',
           width:"10%",
           children :sizeColumns,
@@ -352,34 +364,37 @@ return(
       </span>
     }>
         <Descriptions>
-                <DescriptionsItem label='PCH'>{data?.[0]?.pch?data?.[0]?.pch:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Buyer'>{data?.[0]?.buyer?data?.[0]?.buyer:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Style'>{data?.[0]?.style?data?.[0]?.style:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Technician'>{data?.[0]?.employee?data?.[0]?.employee:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Brand'>{data?.[0]?.brand?data?.[0]?.brand:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Extn'>{data?.[0]?.etn?data?.[0]?.etn:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Conversion'>{data?.[0]?.conversion?data?.[0]?.conversion:'-'}</DescriptionsItem>
-                <DescriptionsItem label='sam'>{data?.[0]?.sam?data?.[0]?.sam:'-'}</DescriptionsItem>
-                <DescriptionsItem label='product'>{data?.[0]?.product?data?.[0]?.product:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Type'>{data?.[0]?.type?data?.[0]?.type:'-'}</DescriptionsItem>
-                <DescriptionsItem label='DMM'>{data?.[0]?.dmm?data?.[0]?.dmm:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Contact No'>{data?.[0]?.contact?data?.[0]?.contact:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Epected Delivery Date'>{data?.[0]?.ETD?data?.[0]?.ETD:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Made In'>{data?.[0]?.madeIn?data?.[0]?.madeIn:'-'}</DescriptionsItem>
-                <DescriptionsItem label='Life Cycle Status'>{data?.[0]?.lifeCycleStatus?LifeCycleStatusDisplay.find((e)=>e.name === data?.[0]?.lifeCycleStatus)?.displayVal:'-'}</DescriptionsItem>
-                {/* <DescriptionsItem label='Status'>{data?.[0]?.status?data?.[0]?.status:'-'}</DescriptionsItem> */}
-                <Descriptions.Item label="Remarks" style={{ width: '33%' }}>
-                                {data?.[0]?.remarks?.length > 30 ? (<><Tooltip title='Cilck to open full remarks'><p><span onClick={() => handleTextClick(data?.[0]?.remarks)} style={{ cursor: 'pointer' }}>
-                        {data?.[0]?.remarks.length > 30 ? `${data?.[0]?.remarks?.substring(0, 30)}....` : data?.[0]?.remarks}
-                    </span></p></Tooltip></>) : (<>{data?.[0]?.remarks}</>)}
-                            </Descriptions.Item>                
-                            <DescriptionsItem label='User'>{data?.[0]?.user?data?.[0]?.user:'-'}</DescriptionsItem>
-                <Descriptions.Item label="Description" style={{ width: '33%' }}>
+        <DescriptionsItem label='Location'>{data?.[0]?.location?data?.[0]?.location:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Buyer'>{data?.[0]?.buyer?data?.[0]?.buyer:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Style'>{data?.[0]?.style?data?.[0]?.style:'-'}</DescriptionsItem>
+        <DescriptionsItem label='PCH'>{data?.[0]?.pch?data?.[0]?.pch:'-'}</DescriptionsItem>
+        <DescriptionsItem label='User'>{data?.[0]?.user?data?.[0]?.user:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Brand'>{data?.[0]?.brand?data?.[0]?.brand:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Epected Delivery Date'>{data?.[0]?.ETD?data?.[0]?.ETD:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Cost Ref'>{data?.[0]?.costRef?data?.[0]?.costRef:'-'}</DescriptionsItem>
+        <Descriptions.Item label="Description" style={{ width: '33%' }}>
                                 {/* {grnData.description} */}
                                 {data?.[0]?.description?.length > 30 ? (<><Tooltip title='Cilck to open full description'><p><span onClick={() => handleTextClick(data?.[0]?.description)} style={{ cursor: 'pointer' }}>
                         {data?.[0]?.description.length > 30 ? `${data?.[0]?.description?.substring(0, 30)}....` : data?.[0]?.description}
                     </span></p></Tooltip></>) : (<>{data?.[0]?.description?data?.[0]?.description:'-'}</>)}
-                            </Descriptions.Item>
+        </Descriptions.Item>
+        <DescriptionsItem label='Contact No'>{data?.[0]?.contact?data?.[0]?.contact:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Extn'>{data?.[0]?.extn?data?.[0]?.extn:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Sam'>{data?.[0]?.sam?data?.[0]?.sam:'-'}</DescriptionsItem>
+        <DescriptionsItem label='DMM'>{data?.[0]?.dmm?data?.[0]?.dmm:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Technician'>{data?.[0]?.employee?data?.[0]?.employee:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Product'>{data?.[0]?.product?data?.[0]?.product:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Type'>{data?.[0]?.type?data?.[0]?.type:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Conversion'>{data?.[0]?.conversion?data?.[0]?.conversion:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Made In'>{data?.[0]?.madeIn?data?.[0]?.madeIn:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Life Cycle Status'>{data?.[0]?.lifeCycleStatus?LifeCycleStatusDisplay.find((e)=>e.name === data?.[0]?.lifeCycleStatus)?.displayVal:'-'}</DescriptionsItem>
+                {/* <DescriptionsItem label='Status'>{data?.[0]?.status?data?.[0]?.status:'-'}</DescriptionsItem> */}
+        <Descriptions.Item label="Remarks" style={{ width: '33%' }}>
+                                {data?.[0]?.remarks?.length > 30 ? (<><Tooltip title='Cilck to open full remarks'><p><span onClick={() => handleTextClick(data?.[0]?.remarks)} style={{ cursor: 'pointer' }}>
+                        {data?.[0]?.remarks.length > 30 ? `${data?.[0]?.remarks?.substring(0, 30)}....` : data?.[0]?.remarks}
+                    </span></p></Tooltip></>) : (<>{data?.[0]?.remarks?data?.[0]?.remarks:'-'}</>)}
+         </Descriptions.Item>                
+             
         </Descriptions>
         {colourData.length > 0 && (
         <Table columns={columns} dataSource={colourData} size="small"rowKey={record => record.colour}/>)}
