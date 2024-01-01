@@ -200,14 +200,14 @@ export class CentricService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number}`,
-            new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc,rec.status,rec.currency)
+            new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status, rec.currency)
           );
 
           // console.log(sizeDateMap,)
         }
         const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number}`).sizeWiseData;
         if (rec.size !== null) {
-          sizeWiseData.push(new CentricSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.special_instructions, rec.upc, rec.retial_price, rec.color, rec.ratio, rec.ppk_upc, rec.label, rec.exfactory, rec.export, rec.delivery_date,rec.currency));
+          sizeWiseData.push(new CentricSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.special_instructions, rec.upc, rec.retial_price, rec.color, rec.ratio, rec.ppk_upc, rec.label, rec.exfactory, rec.export, rec.delivery_date, rec.currency));
         }
       }
       const dataModelArray: CentricOrderDataModel[] = Array.from(sizeDateMap.values());
@@ -299,8 +299,9 @@ export class CentricService {
         let deliveryAddress;
         let pkgTerms;
         let paymentTerms;
-        if (po.buyer === 'RL-U12') {
+        if (po.buyer === 'Centric') {
           const response = await this.getOrderdataForCOline({ poNumber: po.buyer_po })
+          console.log(response.data[0])
           const coData = response.data[0];
           coLine.buyerPo = coData.buyerPo;
           const months = [
@@ -326,11 +327,11 @@ export class CentricService {
           const addressData = address.data[0];
           buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 25;
           deliveryAddress = addressData?.deliveryCode
-          buyerValue1 = "RAL-RALPH LAUREN"
-          buyerValue2 = "RAL00001-RALPH LAUREN CORPORATION"
-          agent = "-NA"
-          pkgTerms = "STD-STD PACK"
-          paymentTerms = "048-TT 15 DAYS"
+          buyerValue1 = "FIN-FINISHED GOODS - KY"
+          buyerValue2 = "CEN00002-CENTRIC BRANDS LLC"
+          agent = "NA-DIRECT CUSTOMER"
+          pkgTerms = "BOX-BOXES"
+          paymentTerms = "081-TT 90 DAYS"
         }
         const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
         const allApps = await apps.findElements(By.tagName('span'));
