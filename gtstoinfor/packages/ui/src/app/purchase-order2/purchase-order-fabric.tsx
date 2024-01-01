@@ -668,7 +668,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ marginTop: '2%' }}>
                         <Form.Item name='quantityUomId' rules={[{ required: true, message: 'Quantity unit is required' }]}>
-                            <Select showSearch allowClear optionFilterProp="children" placeholder='Unit' onChange={finalCalculation}>
+                            <Select showSearch allowClear disabled optionFilterProp="children" placeholder='Unit' onChange={finalCalculation}>
                                 {uom.map(e => {
                                     return (
                                         <Option key={e.uomId} value={e.uomId} name={e.uom}>{e.uom}</Option>

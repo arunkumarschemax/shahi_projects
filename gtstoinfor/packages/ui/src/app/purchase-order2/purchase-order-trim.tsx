@@ -679,7 +679,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                             }
                         ]}>
                             <Input type="number" placeholder="PoQuantity" addonAfter={<Form.Item name='quantityUomId' style={{width:'90px', height:"10px"}} rules={[{required:false,message:'Quantity unit is required'}]} >
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'
+                        <Select showSearch allowClear disabled optionFilterProp="children" placeholder='Unit'
                         onChange={finalCalculation}
                         >
                             {uom.map(e => {
