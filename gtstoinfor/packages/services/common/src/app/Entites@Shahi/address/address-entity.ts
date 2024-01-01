@@ -7,12 +7,20 @@ export class AddressEntity {
     })
     addressId: number
 
-    @Column("text",{
-        name:'bill_to',
-        nullable:false,
-        
+    @Column('varchar', {
+       
+    
+        name: 'destination'
     })
-    billTo: string
+    destination: string 
+
+
+    // @Column("text",{
+    //     name:'bill_to',
+    //     nullable:false,
+        
+    // })
+    // billTo: string
 
     
     @Column("text",{
@@ -42,12 +50,12 @@ export class AddressEntity {
     })
     deliveryCode: number
 
-    @Column("text",{
-        name:'ship_to',
-        nullable:false,
+    // @Column("text",{
+    //     name:'ship_to',
+    //     nullable:false,
         
-    })
-    shipTo: string
+    // })
+    // shipTo: string
 
 
     @Column({
