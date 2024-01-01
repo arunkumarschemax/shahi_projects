@@ -109,6 +109,7 @@ export class CentricService {
           entity.shipToAdd = req.shipToAdd
           entity.manufacture = req.manufacture
           entity.poDate = req.poDate
+          entity.buyerAddress = req.buyerAddress
 
 
           entity.poLine = item.poLine
@@ -193,7 +194,7 @@ export class CentricService {
     try {
       const details = await this.Repo.getorderData(req);
       if (details.length === 0) {
-        return new CommonResponseModel(false, 0, 'data not found');
+        return new CommonResponseModel(false, 0, 'No Data found');
       }
       const sizeDateMap = new Map<string, CentricOrderDataModel>();
       for (const rec of details) {
@@ -638,7 +639,7 @@ export class CentricService {
 
         await page.waitForSelector('button.ant-btn-primary')
         await page.click('button.ant-btn-primary');
-        await page.waitForTimeout(6000)
+        await page.waitForTimeout(10000)
 
         const sourceFilePath = path.join(directoryPath, file);
         const destinationFilePath = path.join(destinationDirectory, file);
@@ -732,7 +733,19 @@ export class CentricService {
       throw err
     }
   }
-
+ 
+  async getseasonData(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.Repo.getDistinctSeasons()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
 
 
 

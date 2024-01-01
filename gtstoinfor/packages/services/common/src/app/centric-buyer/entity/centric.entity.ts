@@ -74,6 +74,11 @@ export class CentricEntity {
     })
     manufacture: string
 
+    @Column('text', {
+        name: "buyer_address"
+    })
+    buyerAddress: string
+
 
 
     
