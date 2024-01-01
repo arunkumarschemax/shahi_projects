@@ -121,7 +121,7 @@ export const AddressUpload = () => {
                     setLoading(true);
                     if(res.status){
                         AlertMessages.getSuccessMessage(res.internalMessage)
-                        navigate("/masters/address-view")
+                        navigate("/centric/masters/address/address-view")
 
                     } else{
                         AlertMessages.getErrorMessage(res.internalMessage)
