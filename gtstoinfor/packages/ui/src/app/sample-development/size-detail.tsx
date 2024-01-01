@@ -130,7 +130,7 @@ const SizeDetail = ({props,buyerId,form}) => {
   const sizeColumns = sizeData.map(size => ({
     title: size.size,
     dataIndex: size.size,
-    align:'right',
+    align:'center',
     render:(_, record) =>{
       // console.log(record)
       return (
@@ -173,17 +173,15 @@ const SizeDetail = ({props,buyerId,form}) => {
     {
       title: 'S.No',
       dataIndex: 'sNo',
-      width:"20px",
       fixed:'left',
       align:'center',
-
+width:'10%',
       render: (_, record, index) => index + 1,
     },
     {
       title: 'Color',
       dataIndex: 'colourId',
       align:'center',
-      width:"20px",
       render: (_, record) => (
         <Form.Item name={`colorId${record.key}`} rules={[{ required: true, message: 'Missing Color' }]}>
         <Select
@@ -209,18 +207,16 @@ const SizeDetail = ({props,buyerId,form}) => {
     {
       title: 'Quantity by Size',
       dataIndex: 'size',
-      align:'center',
 
-      width:"20px",
       children :sizeColumns,
     },
     {
       title: 'Action',
       dataIndex: 'action',
-      align:'center',
 
       fixed:'right',
-      width:"20px",      render: (_, record) => (
+    
+       render: (_, record) => (
         <Button htmlType='submit' onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
       ),
     },
