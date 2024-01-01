@@ -116,17 +116,18 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.division = firstPageContent[dateSentIndex + 5].str
             poData.incoterm = firstPageContent[dateSentIndex - 8].str + firstPageContent[dateSentIndex - 7].str + " " + firstPageContent[dateSentIndex - 6].str + firstPageContent[dateSentIndex - 5].str.replace(/\d+|\w+/g, "")
 
-            // poData.shipToAdd = firstPageContent[dateSentIndex + 5].str 
-            // poData.shipToAdd = firstPageContent[materialIndex + 48].str + " " + firstPageContent[materialIndex + 49].str + " " +
-            //     firstPageContent[materialIndex + 50].str + " " + firstPageContent[materialIndex + 51].str
-            // const shipToAddFirstIndex = firstPageContent[materialIndex + 48].str;
-            // const replacingIndexFirstIndex = shipToAddFirstIndex.replace(/\d+$/, '');
-            // let shipToAddData = replacingIndexFirstIndex + " " +
-            //     firstPageContent[materialIndex + 49].str + " " +
-            //     firstPageContent[materialIndex + 50].str + " " +
-            //     firstPageContent[materialIndex + 51].str;
-            // shipToAddData += " " + firstPageContent[materialIndex + 52].str;
-            // poData.shipToAdd = shipToAddData;
+            let buyerAddressStartingIndex = "";
+            let currentIndex = materialIndex;
+            while (currentIndex < firstPageContent.length) {
+                const currentId = firstPageContent[currentIndex]?.str;
+                if (currentId && currentId.trim() === 'C') {
+                    break;
+                }
+                buyerAddressStartingIndex += (currentId ? currentId + " " : "");
+                currentIndex++;
+            }
+            poData.buyerAddress = buyerAddressStartingIndex.trim();
+
 
             const shipToAddIndexHasNumber = /^\d+$/.test(firstPageContent[materialIndex + 48]?.str);
             if (shipToAddIndexHasNumber) {
@@ -149,14 +150,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 selleraddress += firstPageContent[a].str + ','
             }
             poData.sellerAddress = selleraddress
-            let buyerAddress = '';
-            for (let b = buyerAddStartIndex + 1; b < buyerAddEndIndex; b++) {
-                if (b < buyerAddEndIndex - 1)
-                    buyerAddress += firstPageContent[b].str + ','
-                else
-                    buyerAddress += firstPageContent[b].str
-            }
-            poData.buyerAddress = buyerAddress;
+
             let shipToAddress = ''
             for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) {
                 if (c < shipToAddEndIndex - 1)
@@ -166,6 +160,23 @@ export const extractDataFromPoPdf = async (pdf) => {
             }
             poData.shipToAddress = shipToAddress;
         }
+
+        // const buyerAddressHasNumber = /C/.test(firstPageContent[materialIndex + 0]?.str);
+        // if (buyerAddressHasNumber) {
+        //     poData.buyerAddress =
+        //         firstPageContent[materialIndex + 1]?.str + " " +
+        //         firstPageContent[materialIndex + 2]?.str + " " +
+        //         firstPageContent[materialIndex + 3]?.str + " " +
+        //         firstPageContent[materialIndex + 4]?.str + " " +
+        //         firstPageContent[materialIndex + 5]?.str;
+        // } else {
+        //     poData.buyerAddress = firstPageContent[materialIndex + 0]?.str + " " +
+        //         firstPageContent[materialIndex + 1]?.str + " " +
+        //         firstPageContent[materialIndex + 2]?.str + " " +
+        //         firstPageContent[materialIndex + 3]?.str + " " +
+        //         firstPageContent[materialIndex + 4]?.str;
+        // }
+
         // po details parsing ends here  
         //------------------------------------------------------------------------------------------- 
         // data filtering satrts here 
@@ -242,7 +253,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             // itemDetailsObj.currency = filteredData[]
             const poLineIndex = filteredData.findIndex((item, index) => index >= rec.itemIndex + 11);
             if (poLineIndex !== -1) {
-                itemDetailsObj.currency = filteredData[poLineIndex - 1].str.replace(/Cost\(/g,'').replace(/\)/g,''); 
+                itemDetailsObj.currency = filteredData[poLineIndex - 1].str.replace(/Cost\(/g, '').replace(/\)/g, '');
             }
 
             for (let i = rec.itemIndex + 15; i < filteredData.length; i++) {
@@ -400,7 +411,7 @@ export const extractDataFromPoPdf = async (pdf) => {
 
             const poLineIndex = filteredData.findIndex((item, index) => index >= rec.itemIndex + 10);
             if (poLineIndex !== -1) {
-                itemDetailsObj.currency = filteredData[poLineIndex - 1].str.replace(/Cost\(/g,'').replace(/\)/g,''); 
+                itemDetailsObj.currency = filteredData[poLineIndex - 1].str.replace(/Cost\(/g, '').replace(/\)/g, '');
             }
 
             for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
