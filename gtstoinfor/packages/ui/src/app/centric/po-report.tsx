@@ -85,6 +85,7 @@ import { Excel } from "antd-table-saveas-excel";
             { 
               title: "#", 
               // dataIndex: "sno", 
+              width:50,
               render: (text, object, index) => { 
                 if(index == orderData.length) { 
                   return null;
@@ -134,7 +135,7 @@ import { Excel } from "antd-table-saveas-excel";
               {
                 title: "Material",
                 dataIndex: "material",
-                width: 90,
+                width: 150,
                 sorter: (a, b) => a.material.localeCompare(b.material),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-"
@@ -142,7 +143,7 @@ import { Excel } from "antd-table-saveas-excel";
               {
                 title: "PPK UPC",
                 dataIndex: "ppkUpc",
-                width: 90,
+                width: 150,
                 sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-"
@@ -150,7 +151,7 @@ import { Excel } from "antd-table-saveas-excel";
               {
                 title: "Color",
                 dataIndex: "color",
-                width: 90,
+                width: 150,
                 sorter: (a, b) => a.color.localeCompare(b.color),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-"
@@ -158,7 +159,7 @@ import { Excel } from "antd-table-saveas-excel";
               {
                 title: "Gender",
                 dataIndex: "gender",
-                width: 90,
+                width: 150,
                 sorter: (a, b) => a.gender.localeCompare(b.gender),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-"
@@ -166,7 +167,7 @@ import { Excel } from "antd-table-saveas-excel";
               {
                 title: "Short Description",
                 dataIndex: "shortDescription",
-                width: 90,
+                width: 200,
                 sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-"
@@ -174,7 +175,7 @@ import { Excel } from "antd-table-saveas-excel";
               {
                 title: "Pack Method",
                 dataIndex: "packMethod",
-                width: 90,
+                width: 200,
                 sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-"
@@ -202,7 +203,7 @@ import { Excel } from "antd-table-saveas-excel";
                 title: "Port Of Export",
                 dataIndex: "portOfExport",
                 align: "center",
-                width: 90,
+                width: 200,
                 sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-"
@@ -211,7 +212,7 @@ import { Excel } from "antd-table-saveas-excel";
                 title: "Port of Entry Name",
                 dataIndex: "portOfEntry",
                 align: "center",
-                width: 90,
+                width: 200,
                 sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-"
@@ -229,7 +230,7 @@ import { Excel } from "antd-table-saveas-excel";
                 title: "Payment Terms Description",
                 dataIndex: "paymentTermDescription",
                 align: "center",
-                width: 90,
+                width: 200,
                 sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-"
@@ -239,7 +240,7 @@ import { Excel } from "antd-table-saveas-excel";
                 title: "Special Instructions",
                 dataIndex: "specialInstructions",
                 align: "center",
-                width: 90,
+                width: 900,
                 sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-"
@@ -250,7 +251,7 @@ import { Excel } from "antd-table-saveas-excel";
             {
               title: "Division",
               dataIndex: "division",
-              width: 90,
+              width: 200,
               sorter: (a, b) => a.division.localeCompare(b.division),
               sortDirections: ["ascend", "descend"],
               render: (text) => text ? text : "-"
@@ -258,7 +259,7 @@ import { Excel } from "antd-table-saveas-excel";
             {
               title: "Manufacture",
               dataIndex: "manufacture",
-              width: 90,
+              width: 900,
               sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
               sortDirections: ["ascend", "descend"],
               render: (text) => text ? text : "-"
@@ -267,7 +268,7 @@ import { Excel } from "antd-table-saveas-excel";
             {
               title: "Compt.Material",
               dataIndex: "comptMaterial",
-              width: 110,
+              width: 150,
               sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
               sortDirections: ["ascend", "descend"],
               render: (text) => text ? text : "-"
@@ -321,7 +322,7 @@ import { Excel } from "antd-table-saveas-excel";
                   title: 'UPC',
                   dataIndex: '',
                   key: '',
-                  width: 70,
+                  width: 150,
                   className: "center",
                   render: (text, record) => {
                       const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -457,7 +458,7 @@ import { Excel } from "antd-table-saveas-excel";
                   title: 'Ex-factory Date ',
                   dataIndex: '',
                   key: '',
-                  width: 70,
+                  width: 150,
                   className: "center",
                   render: (text, record) => {
                       const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -483,7 +484,7 @@ import { Excel } from "antd-table-saveas-excel";
                 title: 'Export Date ',
                 dataIndex: '',
                 key: '',
-                width: 70,
+                width: 150,
                 className: "center",
                 render: (text, record) => {
                     const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -509,7 +510,7 @@ import { Excel } from "antd-table-saveas-excel";
               title: 'Delivery Date',
               dataIndex: '',
               key: '',
-              width: 70,
+              width: 150,
               className: "center",
               render: (text, record) => {
                   const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -539,7 +540,7 @@ import { Excel } from "antd-table-saveas-excel";
           title: "Incoterm",
           dataIndex: "incoterm",
           align: "center",
-          width: 90,
+          width: 500,
           sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
           sortDirections: ["ascend", "descend"],
         },
@@ -550,7 +551,7 @@ import { Excel } from "antd-table-saveas-excel";
             title: "Ship to Address",
             dataIndex: "shipToAddress",
             align: "center",
-            width: 90,
+            width: 800,
             sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
             sortDirections: ["ascend", "descend"],
           },
@@ -560,12 +561,12 @@ import { Excel } from "antd-table-saveas-excel";
        
     
             excel
-              .addSheet(`solid pack PO report`)
+              .addSheet(`PO report`)
               .addColumns(excelColumnsWH)
               .addDataSource(filterData, { str2num: true });
 
      
-        excel.saveAs("solid pack PO Report.xlsx");
+        excel.saveAs("PO Report.xlsx");
       
     
 
@@ -1087,7 +1088,7 @@ import { Excel } from "antd-table-saveas-excel";
                   title: 'Ex-factory Date ',
                   dataIndex: '',
                   key: '',
-                  width: 70,
+                  width: 100,
                   className: "center",
                   render: (text, record) => {
                       const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -1113,7 +1114,7 @@ import { Excel } from "antd-table-saveas-excel";
                 title: 'Export Date ',
                 dataIndex: '',
                 key: '',
-                width: 70,
+                width: 100,
                 className: "center",
                 render: (text, record) => {
                     const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -1139,7 +1140,7 @@ import { Excel } from "antd-table-saveas-excel";
               title: 'Delivery Date',
               dataIndex: '',
               key: '',
-              width: 70,
+              width: 100,
               className: "center",
               render: (text, record) => {
                   const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -1197,7 +1198,7 @@ import { Excel } from "antd-table-saveas-excel";
             title: "Incoterm",
             dataIndex: "incoterm",
             align: "center",
-            width: 90,
+            width: 200,
             sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
             sortDirections: ["ascend", "descend"],
           },
@@ -1208,7 +1209,7 @@ import { Excel } from "antd-table-saveas-excel";
               title: "Ship to Address",
               dataIndex: "shipToAddress",
               align: "center",
-              width: 90,
+              width: 200,
               sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
               sortDirections: ["ascend", "descend"],
             },
