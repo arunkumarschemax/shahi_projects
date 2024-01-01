@@ -652,9 +652,9 @@ export const SourcingRequisitionDynamicForm = () => {
         },
         {
           title: 'Quantity',
-        //   dataIndex: 'quantity',
+          dataIndex: 'quantity',
         render:(_,record)=>{
-            return(record.quantity+'-'+record?.uomName?record.uomName:'')
+            return(record.quantity+'-'+record.uomName)
         }
 
         },
@@ -758,7 +758,7 @@ export const SourcingRequisitionDynamicForm = () => {
         trimForm.resetFields()
         setTrimfilelist([])
         setTrimTableVisible(true)
-        console.log(values,'namaste')
+        console.log(trimTableInfo,'namaste')
         setTrimBtnType("Add")
     }
 
