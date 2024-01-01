@@ -46,6 +46,7 @@ import { AllLocationRequest } from './dto/location-req';
 import { RackPositionEntity } from '../rm_locations/rack-position.entity';
 import { OrderQuantityRequset } from './dto/order-quantity-request';
 import { MaterialAllocationItemsDTO } from './dto/material-allocation-items-dto';
+import { M3TrimsEntity } from '../m3-trims/m3-trims.entity';
 
 
 
@@ -257,7 +258,7 @@ export class SampleRequestService {
       for (const size of req.sizeData) {
         for (const sizedetails of size.sizeInfo) {
           const sizeEntity = new SampleReqSizeEntity()
-          sizeEntity.colourId = size.colour
+          sizeEntity.colourId = size.colorId
           sizeEntity.sizeId = sizedetails.sizeId
           sizeEntity.quantity = sizedetails.quantity
           sampleSizeInfo.push(sizeEntity)
@@ -281,9 +282,13 @@ export class SampleRequestService {
       sampleReqEntity.sampleReqFabricInfo = sampleFabricInfo;
       let indentTrimInfo : TrimInfoReq[] = [];
       for (const trimObj of req.trimInfo) {
+        let m3Data : M3TrimsEntity
+        if(trimObj.uomStatus){
+          m3Data = await manager.getRepository(M3TrimsEntity).findOne({where:{m3TrimId:trimObj.trimCode}});
+        }
         const trimEntity = new SampleRequestTriminfoEntity()
         trimEntity.trimCode = trimObj.trimCode
-        trimEntity.uomId = trimObj.uomId
+        trimEntity.uomId = m3Data?.uomId != null ? m3Data?.uomId:null;
         trimEntity.consumption = trimObj.consumption
         trimEntity.trimType = trimObj.trimType
         trimEntity.remarks = trimObj.remarks
@@ -1997,9 +2002,9 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
   async getAllSampleRequestsInfo(req?: sampleReqIdReq):Promise<CommonResponseModel>{
     try{
       const manager = this.dataSource;
-      const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,si.size_id,s.extension,s.cost_ref,s.description,s.dmm_id,s.user,s.type,s.product,s.made_in,s.remarks,s.file_name,srt.remarks AS trim_remarks,srf.remarks AS fab_remarks ,s.sam_value,
+      const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,si.size_id,s.extension,s.cost_ref,s.description,s.dmm_id,s.user,s.type,lt.liscence_type AS product,m.country_name as made_in,s.remarks,s.file_name,srt.remarks AS trim_remarks,srf.remarks AS fab_remarks ,s.sam_value,
       st.style,pch.profit_control_head,mi.item_code as fabCode,mt.description as trimCode,e.first_name,s.contact,s.status,srs.quantity,srf.total_requirement as fabtotal_requirement,srf.wastage as fabwastage,srf.consumption as fabconsumption,uf.uom as fabuom,srt.total_requirement as trimtotal_requirement,srt.wastage as trimwastage,srt.consumption as trimconsumption,ut.uom as trimuom,cf.colour as fabcolour,ca.category,ed.first_name as dmm,
-      s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date FROM sample_request s
+      s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date,rp.rack_position_name AS location FROM sample_request s
       LEFT JOIN brands b ON b.brand_id = s.brand_id
       LEFT JOIN buyers bu ON bu.buyer_id = s.buyer_id
       LEFT JOIN style st ON st.style_id = s.style_id
@@ -2016,7 +2021,10 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
       LEFT JOIN uom ut ON ut.id = srt.uom_id
       LEFT JOIN employee_details ed ON ed.employee_id = s.dmm_id
       LEFT JOIN colour cf ON cf.colour_id = srf.colour_id
+      LEFT JOIN countries m ON m.country_id = s.made_in
       LEFT JOIN category ca ON ca.category_id = mt.category_id
+      LEFT JOIN liscence_type lt ON lt.liscence_type_id = s.product
+      LEFT JOIN rack_position rp ON rp.position_Id = s.location_id
       WHERE s.sample_request_id = ${req.sampleReqId}`
       
    
@@ -2028,7 +2036,7 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
         if(info.length > 0){
             for(const rec of info){
               if(!MapData.has(rec.requestNo)){
-                    MapData.set(rec.requestNo,new SampleRequestInfoModel(rec.request_no,rec.sample_request_id,rec.style,rec.brand_name,rec.buyer_name,rec.first_name,rec.status,rec.lifeCycleStatus,rec.contact,rec.profit_control_head,rec.expected_delivery_date,rec.extension,rec.conversion,rec.dmm,rec.product,rec.user,rec.description,rec.cost_ref,rec.type,rec.made_in,rec.remarks,rec.file_name,[],[]))
+                    MapData.set(rec.requestNo,new SampleRequestInfoModel(rec.request_no,rec.sample_request_id,rec.style,rec.brand_name,rec.buyer_name,rec.first_name,rec.status,rec.lifeCycleStatus,rec.contact,rec.profit_control_head,rec.expected_delivery_date,rec.extension,rec.conversion,rec.dmm,rec.product,rec.user,rec.description,rec.cost_ref,rec.type,rec.made_in,rec.remarks,rec.file_name,rec.sam_value,[],[],rec.location))
                 }
                
         const existingTrim = MapData.get(rec.requestNo).trimInfo.find(

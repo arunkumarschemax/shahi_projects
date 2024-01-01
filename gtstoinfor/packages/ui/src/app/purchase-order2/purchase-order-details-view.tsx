@@ -121,6 +121,8 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       title: 'Unit Price',
       key: 'Unit Price',
       dataIndex: 'unit_price',
+      render: (text,val) => {
+        return (`${text}(${val.currencyName?val.currencyName:'-'})`) }
     },
     {
       title: 'Discount %',
