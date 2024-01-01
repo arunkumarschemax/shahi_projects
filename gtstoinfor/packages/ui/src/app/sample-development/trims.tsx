@@ -333,7 +333,6 @@ const getMappedTrims = (value, row) => {
       title: 'S.No',
       dataIndex: 'sNo',
       width:"10%",
-      align:'center',
 
       render: (_, record, index) => index + 1,
     },
@@ -341,7 +340,6 @@ const getMappedTrims = (value, row) => {
       title: 'Trim Type',
       dataIndex: 'trimType',
       width:"20%",
-      align:'center',
 
       render: (_, record) => (
         <Form.Item name={`trimType${record.key}`} rules={[{ required: true, message: 'Missing Trim Type' }]}>
@@ -369,7 +367,6 @@ const getMappedTrims = (value, row) => {
       title: 'Trim Category',
       dataIndex: 'trimCategory',
       width:"20%",
-      align:'center',
 
       render: (_, record) => (
         <Form.Item name={`trimCategory${record.key}`} rules={[{ required: true, message: 'Missing Trim Category' }]}> 
@@ -398,7 +395,6 @@ const getMappedTrims = (value, row) => {
       title: 'Trim Code',
       dataIndex: 'trimCode',
       width:"100%",
-      align:'center',
 
       render: (_, record) => (
         <><Form.Item name={`allocatedStock${record.key}`} style={{display:'none'}}><Input name={`allocatedStock${record.key}`} style={{display:'none'}}/></Form.Item>
@@ -425,8 +421,7 @@ const getMappedTrims = (value, row) => {
       title: 'Consumption',
       dataIndex: 'consumption',
       width:"16%",
-      align:'center',
-
+          
       render: (_, record) => (
         <Form.Item name={`consumption${record.key}`} rules={[{ required: true, message: 'Missing Consumption' }]}>
         <InputNumber placeholder="Consumption" min={1}
@@ -440,7 +435,6 @@ const getMappedTrims = (value, row) => {
       title:"UOM",
       dataIndex: 'Uom',
       width:"14%",
-      align:'center',
 
       render: (_, record) => (
         <Form.Item name={`uomId${record.key}`} rules={[{ required: false, message: 'Missing UOM' }]}>
@@ -469,7 +463,6 @@ const getMappedTrims = (value, row) => {
       title: 'Wastage %',
       dataIndex: 'wastage',
       width:"15%",
-      align:'center',
 
       render: (_, record) => (
       <Form.Item name={`wastage${record.key}`} rules={[{ required: true, message: 'Missing Wastage' }]}>
@@ -484,7 +477,6 @@ const getMappedTrims = (value, row) => {
       title: 'Total Requirement',
       dataIndex: 'totalRequirement',
       width:"15%",
-      align:'center',
 
       render: (_, record) => (
       <Form.Item name={`totalRequirement${record.key}`} rules={[{ required: true, message: 'Missing total requirement' }]}>
@@ -499,7 +491,6 @@ const getMappedTrims = (value, row) => {
       title: 'Remarks',
       dataIndex: 'remarks',
       width:"50%",
-      align:'center',
 
       render: (_, record) => (
         <Form.Item name={`remarks${record.key}`}>

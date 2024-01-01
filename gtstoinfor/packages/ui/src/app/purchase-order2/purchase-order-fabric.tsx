@@ -592,8 +592,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         const totalAmount=Number(taxAmount)+Number(baseValue)+Number(transportation)
         fabricForm.setFieldsValue({taxAmount:Number(taxAmount).toFixed(2)})
         fabricForm.setFieldsValue({discountAmount:Number(discAmnt).toFixed(2)})
-        fabricForm.setFieldsValue({subjectiveAmount:Number(totalAmount).toFixed(2)})
-        fabricForm.setFieldsValue({ taxAmount: taxAmount })
+        fabricForm.setFieldsValue({subjectiveAmount:totalAmount>0?Number(totalAmount).toFixed(2):0})
+        // fabricForm.setFieldsValue({ taxAmount: taxAmount })
        
         setTaxAmountVisible(false)        
     }

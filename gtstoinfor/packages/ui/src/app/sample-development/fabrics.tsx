@@ -398,7 +398,6 @@ const FabricsForm = (props:FabricsFormProps) => {
       title: 'Color',
       dataIndex: 'color',
       width:"25%",
-      align:'center',
 
       render: (_, record) => (
         <>
@@ -432,7 +431,6 @@ const FabricsForm = (props:FabricsFormProps) => {
       title: 'Consumption',
       dataIndex: 'consumption',
       width:"17%",
-      align:'center',
 
       render: (_, record) => (
         <Form.Item name={`consumption${record.key}`}
@@ -471,7 +469,6 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title:"UOM",
       dataIndex: 'UomId',
-      align:'center',
 
       width:"13%",
       render: (_, record) => (
@@ -502,7 +499,6 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Wastage %',
       dataIndex: 'wastage',
-      align:'center',
 
       width:"17%",
       render: (_, record) => (
@@ -520,7 +516,6 @@ const FabricsForm = (props:FabricsFormProps) => {
       title: 'Total Requirement',
       dataIndex: 'totalRequirement',
       width:"15%",
-      align:'center',
 
       render: (_, record) => (
       <Form.Item name={`totalRequirement${record.key}`} 
@@ -536,7 +531,6 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Remarks',
       dataIndex: 'remarks',
-      align:'center',
 
       width:"50%",
       render: (_, record) => (
@@ -552,7 +546,6 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Action',
       dataIndex: 'action',
-      align:'center',
 
       width:"10%",
       fixed:'right',
