@@ -75,7 +75,7 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
            
         },
         {
-            title: 'fob Price',
+            title: 'Unit Price',
             dataIndex: 'fobPrice',
             // width: 60,
             // align:"center",
