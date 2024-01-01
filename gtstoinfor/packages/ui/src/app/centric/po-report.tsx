@@ -2,6 +2,7 @@ import {
     Button,
     Card,
     Col,
+    DatePicker,
     Form,
     Input,
     Modal,
@@ -21,6 +22,7 @@ import {
   import Highlighter from "react-highlight-words";
   import { useNavigate } from "react-router-dom";
   import {
+    AlertMessages,
     OrderDataModel,
     PoOrderFilter,
   } from "@project-management-system/shared-models";
@@ -40,15 +42,18 @@ import RangePicker from "rc-picker/lib/RangePicker";
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const [poNumber, setPoNumber] = useState([]);
+    const [seasonData, setSeasonData] = useState([]);
     const [form] = Form.useForm();
     const { Option } = Select;
     const [isModalOpen1, setIsModalOpen1] = useState(false);
     const [filterData, setFilterData] = useState([]);
     const { IAMClientAuthContext, dispatch } = useIAMClientState();
+    const { RangePicker } = DatePicker;
   
     useEffect(() => {
       getorderData();
-      getPoNumber()
+      getPoNumber();
+      getseasonData()
     }, []);
 
   
@@ -58,15 +63,37 @@ import RangePicker from "rc-picker/lib/RangePicker";
       if (form.getFieldValue("poNumber") !== undefined) {
         req.poNumber = form.getFieldValue("poNumber");
       } 
+      if (form.getFieldValue('poDate') !== undefined) {
+        req.poDateStartDate = (form.getFieldValue('poDate')[0]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('poDate') !== undefined) {
+        req.poDateEndDate = (form.getFieldValue('poDate')[1]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('deliveryDate') !== undefined) {
+        req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('deliveryDate') !== undefined) {
+        req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue("season") !== undefined) {
+        req.season = form.getFieldValue("season");
+      }
      req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
   
       service.getorderData(req).then((res) => {
         if (res.status) {
           setOrderData(res.data);
           setFilterData(res.data);
+        } else {
+          setOrderData([]);
+          setFilterData([])
+          AlertMessages.getErrorMessage(res.internalMessage);
         }
+      }).catch((err) => {
+        console.log(err.message);
       });
-    };
+  };
+    
 
     const getPoNumber = () => {
       service.getPoNumber().then((res) => {
@@ -76,6 +103,15 @@ import RangePicker from "rc-picker/lib/RangePicker";
         }
       });
     };
+    
+    const getseasonData = () => {
+      service.getseasonData().then((res) => {
+        if (res.status) {
+          setSeasonData(res.data);
+        
+        }
+      });
+    }
     
   const exportExcel = () => {
     const excel = new Excel();
@@ -1283,7 +1319,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 <Form.Item name="poNumber" label="PO Number">
                   <Select
                     showSearch
-                    placeholder="Select PO number"
+                    placeholder="Select PO Number"
                     optionFilterProp="children"
                     allowClear
                   >
@@ -1304,10 +1340,47 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-               <Form.Item label="CO Date" name="coDate">
-                  {/* <RangePicker /> */}
+               <Form.Item label="PO Date" name="poDate">
+                  <RangePicker />
                 </Form.Item>
               </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Delivery Date" name="deliveryDate">
+                  <RangePicker />
+                </Form.Item>
+              </Col>
+
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Season" name="season">
+               <Select
+                    showSearch
+                    placeholder="Select Season"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                    {seasonData.map((inc: any) => {
+                      return (
+                        <Option key={inc.season} value={inc.season}>
+                          {inc.season}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+              
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
@@ -1334,6 +1407,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
                   </Button>
                 </Form.Item>
               </Col>
+              
             </Row>
           </Form>
           {/* <Table

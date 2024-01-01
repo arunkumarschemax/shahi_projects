@@ -193,7 +193,7 @@ export class CentricService {
     try {
       const details = await this.Repo.getorderData(req);
       if (details.length === 0) {
-        return new CommonResponseModel(false, 0, 'data not found');
+        return new CommonResponseModel(false, 0, 'No Data found');
       }
       const sizeDateMap = new Map<string, CentricOrderDataModel>();
       for (const rec of details) {
@@ -739,7 +739,19 @@ export class CentricService {
       throw err
     }
   }
-
+ 
+  async getseasonData(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.Repo.getDistinctSeasons()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
 
 
 
