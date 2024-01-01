@@ -34,14 +34,14 @@ export const AddressView = () => {
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1))
         },
-        {
-            title:'Bill To',
-            dataIndex:'billTo',
-        },
+        // {
+        //     title:'Bill To',
+        //     dataIndex:'billTo',
+        // },
         {
             title:'Buyer Code',
             dataIndex:'buyerCode',
-            width:"60px",
+            // width:"60px",
         },
         {
             title:'Buyer Address',
@@ -49,11 +49,11 @@ export const AddressView = () => {
             // align:'right'
         },
        
-        {
-            title:'Ship To',
-            dataIndex:'shipTo',
-            // align:'right'
-        },
+        // {
+        //     title:'Ship To',
+        //     dataIndex:'shipTo',
+        //     // align:'right'
+        // },
         {
             title:'Delivery Code',
             dataIndex:'deliveryCode',
@@ -68,12 +68,12 @@ export const AddressView = () => {
 
     let i = 1;
     const exceldata = [
-        // { title: 'S No', dataIndex: 'sNo', render: (text:any, object:any, index:any) => { return i++; } },
+        { title: 'S No', dataIndex: 'sNo', render: (text:any, object:any, index:any) => { return i++; } },
         
-        { title: 'Bill To', dataIndex: 'billTo',render:(text:any,record:any) => {return record.billTo ? record.billTo : '-'} },
+        // { title: 'Bill To', dataIndex: 'billTo',render:(text:any,record:any) => {return record.billTo ? record.billTo : '-'} },
         { title: 'Buyer Code', dataIndex: 'buyerCode',render:(text:any,record:any) => {return record.buyerCode ? record.buyerCode : '-'} },
         { title: 'Buyer Address', dataIndex: 'buyerAddress',render:(text:any,record:any) => {return record.buyerAddress ? record.buyerAddress : '-'} },
-        { title: 'Ship To', dataIndex: 'shipTo',render:(text:any,record:any) => {return record.shipTo ? record.shipTo : '-'} },
+        // { title: 'Ship To', dataIndex: 'shipTo',render:(text:any,record:any) => {return record.shipTo ? record.shipTo : '-'} },
         { title: 'Delivery Code', dataIndex: 'deliveryCode',render:(text:any,record:any) => {return record.deliveryCode ? record.deliveryCode : '-'} },
         { title: 'Delivery Address', dataIndex: 'deliveryAddress',render:(text:any,record:any) => {return record.deliveryAddress ? record.deliveryAddress : '-'} }
 

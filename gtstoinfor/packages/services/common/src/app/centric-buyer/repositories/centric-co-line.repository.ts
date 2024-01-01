@@ -25,7 +25,7 @@ export class CentricCOLineRepository extends Repository<CentricCOLineEntity> {
         if (req.poLine !== undefined) {
             query.andWhere(`co.po_line ='${req.poLine}'`)
         }
-        
+
         return await query.getRawMany();
     }
 
@@ -51,5 +51,11 @@ export class CentricCOLineRepository extends Repository<CentricCOLineEntity> {
         return await query.getRawMany();
     }
 
-
+    async getDataforCOLineCreation(): Promise<any[]> {
+        const query = this.createQueryBuilder('co')
+            .select(`co.id, co.po_number, co.po_line, co.item_no, co.buyer`)
+            .where(` status != 'Success' AND status != 'Inprogress' AND is_active = true`)
+            .orderBy(` created_at`, 'ASC')
+        return await query.getRawMany();
+    }
 }

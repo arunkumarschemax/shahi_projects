@@ -58,6 +58,7 @@ export class CentricOrderDataModel {
     ratio?:number
     ppkUpc?:string
     status?:string
+    currency?:string
 
     constructor(
         id: number,
@@ -117,7 +118,8 @@ export class CentricOrderDataModel {
         sizeWiseData: CentricSizeWiseModel[],
         ratio?:number,
         ppkUpc?:string,
-        status?:string
+        status?:string,
+        currency?:string
     ) {
         this.id = id
         this.poNumber = poNumber
@@ -155,6 +157,7 @@ export class CentricOrderDataModel {
         this.ratio = ratio
         this.ppkUpc = ppkUpc
         this.status = status
+        this.currency = currency
     }
 }
 
