@@ -121,6 +121,7 @@ export class CentricService {
           entity.vendorBookingFlag = item.vendorBookingFlag
           entity.ppkupc = item.ppkupc
           entity.currency = item.currency
+          entity.totalQuantity = item.totalQuantity
 
           entity.size = variant.size
           entity.upc = variant.upc
@@ -614,13 +615,20 @@ export class CentricService {
       }, 1000);
 
       await page.waitForSelector('#login-form_username');
-      await page.type('#login-form_username', 'RLadmin@gmail.com');
+      await page.type('#login-form_username', 'centriclzod@gmail.com');
 
       await page.waitForSelector('#login-form_password');
-      await page.type('#login-form_password', 'RLadmin');
+      await page.type('#login-form_password', 'centriclzod');
 
       await page.click('button.ant-btn-primary');
       await page.waitForNavigation();
+
+      setTimeout(async () => {
+      await page.goto('http://localhost:4200/#/centric/centric-pdf-upload/',{
+        timeout: 100000,
+        waitUntil: 'networkidle0'
+      })
+    }, 1000);
 
       const directoryPath = 'F:/centric-buyers-unread-files/';
       const destinationDirectory = 'F:/centric-buyers-read-files/';

@@ -61,6 +61,7 @@ export const ITEM_VARIANT_START_TEXT = "Retail Price"
  // Jaswanth Chnages 2nd format// 
 export const ITEM_TEXT_END_TEXT1= 'Per Pack' 
 export const FORMAT_SEPARATION_KEYWORD = 'Compt. Material' 
+export const TOTAL_QUANTITY='Total Cost'
 
 
 

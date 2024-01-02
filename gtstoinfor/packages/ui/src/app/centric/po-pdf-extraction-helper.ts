@@ -250,7 +250,20 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemDetailsObj.material = filteredData[rec.itemIndex + 12].str
             itemDetailsObj.ppkupc = filteredData[rec.itemIndex + 13].str;
             itemDetailsObj.color = filteredData[rec.itemIndex + 14].str;
-            // itemDetailsObj.currency = filteredData[]
+            
+            let totalQuantityIndex;
+            for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
+                const currentInfo = filteredData[i].str;
+
+                if (currentInfo.includes("Mens") || currentInfo.includes("Womens")) {
+                    totalQuantityIndex = i + 3; 
+                    break;
+                }
+            }
+            if (totalQuantityIndex !== -1 && totalQuantityIndex < filteredData.length) {
+                itemDetailsObj.totalQuantity = filteredData[totalQuantityIndex].str;
+            }
+
             const poLineIndex = filteredData.findIndex((item, index) => index >= rec.itemIndex + 11);
             if (poLineIndex !== -1) {
                 itemDetailsObj.currency = filteredData[poLineIndex - 1].str.replace(/Cost\(/g, '').replace(/\)/g, '');
@@ -409,6 +422,17 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemDetailsObj.material = filteredData[rec.itemIndex + 11].str
             itemDetailsObj.color = filteredData[rec.itemIndex + 12].str;
 
+            // let shortDescriptionIndex;
+            // for (let i = 0; i < filteredData.length; i++) {
+            //     if (filteredData[i].str.includes('Short Description')) {
+            //         shortDescriptionIndex = i;
+            //         break;
+            //     }
+            // }
+            // if (shortDescriptionIndex> 0) {
+            //     itemDetailsObj.totalQuantity = filteredData[shortDescriptionIndex - 1].str;
+            // }
+
             const poLineIndex = filteredData.findIndex((item, index) => index >= rec.itemIndex + 10);
             if (poLineIndex !== -1) {
                 itemDetailsObj.currency = filteredData[poLineIndex - 1].str.replace(/Cost\(/g, '').replace(/\)/g, '');
@@ -443,6 +467,20 @@ export const extractDataFromPoPdf = async (pdf) => {
                     }
                 }
             }
+
+            let totalQuantityIndex;
+            for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
+                const currentInfo = filteredData[i].str;
+
+                if (currentInfo.includes("Mens") || currentInfo.includes("Womens")) {
+                    totalQuantityIndex = i + 3; 
+                    break;
+                }
+            }
+            if (totalQuantityIndex !== -1 && totalQuantityIndex < filteredData.length) {
+                itemDetailsObj.totalQuantity = filteredData[totalQuantityIndex].str;
+            }
+
             let shortDescriptionMatching;
             let vendorBookingFlagMatching;
             let packMethodMatching;
@@ -457,6 +495,39 @@ export const extractDataFromPoPdf = async (pdf) => {
             if (shortDescriptionMatching) {
                 itemDetailsObj.shortDescription = shortDescriptionMatching.str.replace(/Short Description: /g, "");
             }
+
+            // const totalCostIndex = filteredData.findIndex(item => /Total Eaches/.test(item.str));
+            // if (totalCostIndex) {
+            //     itemDetailsObj.totalQuantity = filteredData[totalCostIndex + 1].str;
+            // }
+
+
+            // for (let i = 1; i < filteredData.length; i++) {
+            //     if (/Short/.test(filteredData[i].str)) {
+            //         shortDescriptionMatching = filteredData[i];
+            //         const totalQuantityIndex = i - 1;
+            //         if (totalQuantityIndex >= 0) {
+            //             itemDetailsObj.shortDescription = shortDescriptionMatching.str.replace(/Short Description: /g, "");
+            //             itemDetailsObj.totalQuantity = filteredData[totalQuantityIndex].str;
+            //             break;
+            //         }
+            //     }
+            // }
+
+            // let shortDescriptionIndex = -1;
+            // for (let i = 0; i < filteredData.length; i++) {
+            //     if (filteredData[i].str.includes('Short Description')) {
+            //         shortDescriptionIndex = i;
+            //         break;
+            //     }
+            // }
+
+            // if (shortDescriptionIndex !== -1) {
+            //     const totalQuantityIndex = shortDescriptionIndex - 1;
+            //     if (totalQuantityIndex >= 0 && totalQuantityIndex < filteredData.length) {
+            //         itemDetailsObj.totalQuantity = filteredData[totalQuantityIndex].str;
+            //     }
+            // }
 
             filteredData.forEach(item => {
                 if (/Vendor Booking Flag =/.test(item.str)) {
