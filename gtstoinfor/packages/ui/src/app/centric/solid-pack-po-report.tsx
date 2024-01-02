@@ -49,6 +49,12 @@ import RangePicker from "rc-picker/lib/RangePicker";
     const [filterData, setFilterData] = useState([]);
     const { IAMClientAuthContext, dispatch } = useIAMClientState();
     const { RangePicker } = DatePicker;
+    const [poDateDis, setPoDateDis] = useState<boolean>(true);
+    // const [delverDateDis, setDelverDateDis] = useState<boolean>(true);
+    const [onChangeData, setonChangeData] = useState({});
+
+
+
   
     useEffect(() => {
       getorderData();
@@ -63,18 +69,46 @@ import RangePicker from "rc-picker/lib/RangePicker";
       if (form.getFieldValue("poNumber") !== undefined) {
         req.poNumber = form.getFieldValue("poNumber");
       } 
-      if (form.getFieldValue('poDate') !== undefined) {
-        req.poDateStartDate = (form.getFieldValue('poDate')[0]).format('YYYY-MM-DD');
+      
+      if(onChangeData === "po_date"){
+         
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.poDateStartDate = (form.getFieldValue('range_date')[0]).format('YYYY-MM-DD');
+        }
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.poDateEndDate = (form.getFieldValue('range_date')[1]).format('YYYY-MM-DD');
+        }
+      } else if (onChangeData === "delivery_date"){
+          
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.deliveryDateStartDate = (form.getFieldValue('range_date')[0]).format('YYYY-MM-DD');
+        }
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.deliveryDateEndDate = (form.getFieldValue('range_date')[1]).format('YYYY-MM-DD');
+        }
+      } else if (onChangeData === "export"){
+
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.exportDateStartDate = (form.getFieldValue('range_date')[0]).format('YYYY-MM-DD');
+        }
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.exportDateEndDate = (form.getFieldValue('range_date')[1]).format('YYYY-MM-DD');
+        }
+
+      } else if(onChangeData === "exfactory"){
+
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.exfactoryDateStartDate = (form.getFieldValue('range_date')[0]).format('YYYY-MM-DD');
+        }
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.exfactoryDateEndDate = (form.getFieldValue('range_date')[1]).format('YYYY-MM-DD');
+        }
+
       }
-      if (form.getFieldValue('poDate') !== undefined) {
-        req.poDateEndDate = (form.getFieldValue('poDate')[1]).format('YYYY-MM-DD');
-      }
-      if (form.getFieldValue('deliveryDate') !== undefined) {
-        req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
-      }
-      if (form.getFieldValue('deliveryDate') !== undefined) {
-        req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
-      }
+
+    
+
+     
       if (form.getFieldValue("season") !== undefined) {
         req.season = form.getFieldValue("season");
       }
@@ -115,6 +149,10 @@ import RangePicker from "rc-picker/lib/RangePicker";
     
   const exportExcel = () => {
     const excel = new Excel();
+
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
 
           let rowIndex = 1;
           const excelColumnsWH: any[] = [];
@@ -598,12 +636,12 @@ import RangePicker from "rc-picker/lib/RangePicker";
        
     
             excel
-              .addSheet(`PO report`)
+              .addSheet(`Solid Pack PO Report ${formattedDate}`)
               .addColumns(excelColumnsWH)
               .addDataSource(filterData, { str2num: true });
 
      
-        excel.saveAs("Solid Pack PO Report.xlsx");
+        excel.saveAs(`Solid Pack PO Report ${formattedDate}.xlsx`);
       
     
 
@@ -641,6 +679,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
 
     const onReset = () => {
       form.resetFields();
+      form.setFieldsValue({"test":null})
       getorderData();
     };
   
@@ -755,7 +794,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
       const sizeHeaders = getSizeWiseHeaders(data);
 
   
-      const columns: ColumnsType<any> = [
+      const columns: any = [
         {
           title: "S.No",
           key: "sno",
@@ -789,7 +828,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
           width: 90,
           sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('shipmentMethod')
 
         },
   
@@ -799,16 +839,18 @@ import RangePicker from "rc-picker/lib/RangePicker";
             width: 90,
             sorter: (a, b) => a.poLine.localeCompare(b.poLine),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('poLine')
             // fixed: "left",
           },
           {
             title: "Material",
             dataIndex: "material",
-            width: 90,
+            width: 150,
             sorter: (a, b) => a.material.localeCompare(b.material),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('material')
           },
           // {
           //   title: "PPK UPC",
@@ -824,7 +866,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
             width: 90,
             sorter: (a, b) => a.color.localeCompare(b.color),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('color')
           },
           {
             title: "Gender",
@@ -832,23 +875,26 @@ import RangePicker from "rc-picker/lib/RangePicker";
             width: 90,
             sorter: (a, b) => a.gender.localeCompare(b.gender),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('gender')
           },
           {
             title: "Short Description",
             dataIndex: "shortDescription",
-            width: 90,
+            width: 130,
             sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('shortDescription')
           },
           {
             title: "Pack Method",
             dataIndex: "packMethod",
-            width: 90,
+            width: 130,
             sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('packMethod')
           },
           {
             title: "Vendor Booking Flag",
@@ -876,7 +922,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
             width: 90,
             sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('portOfExport')
           },
           {
             title: "Port of Entry Name",
@@ -885,7 +932,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
             width: 90,
             sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('portOfEntry')
           },
               
           {
@@ -894,26 +942,29 @@ import RangePicker from "rc-picker/lib/RangePicker";
             width: 90,
             sorter: (a, b) => a.reference.localeCompare(b.reference),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('reference')
           },
           {
             title: "Payment Terms Description",
             dataIndex: "paymentTermDescription",
             align: "center",
-            width: 90,
+            width: 150,
             sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('paymentTermDescription')
           },
 
           {
             title: "Special Instructions",
             dataIndex: "specialInstructions",
             align: "center",
-            width: 90,
+            width: 500,
             sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('specialInstructions')
           },
 
          
@@ -921,18 +972,20 @@ import RangePicker from "rc-picker/lib/RangePicker";
         {
           title: "Division",
           dataIndex: "division",
-          width: 90,
+          width: 150,
           sorter: (a, b) => a.division.localeCompare(b.division),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('division')
         },
         {
           title: "Manufacture",
           dataIndex: "manufacture",
-          width: 90,
+          width: 500,
           sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('manufacture')
         },
        
         {
@@ -941,7 +994,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
           width: 110,
           sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('comptMaterial')
         },
        
   
@@ -1235,9 +1289,10 @@ import RangePicker from "rc-picker/lib/RangePicker";
             title: "Incoterm",
             dataIndex: "incoterm",
             align: "center",
-            width: 200,
+            width: 400,
             sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
             sortDirections: ["ascend", "descend"],
+            ...getColumnSearchProps('incoterm')
           },
 
      
@@ -1246,9 +1301,10 @@ import RangePicker from "rc-picker/lib/RangePicker";
               title: "Ship to Address",
               dataIndex: "shipToAddress",
               align: "center",
-              width: 200,
+              width: 400,
               sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
               sortDirections: ["ascend", "descend"],
+              ...getColumnSearchProps('shipToAddress')
             },
  
     
@@ -1288,8 +1344,23 @@ import RangePicker from "rc-picker/lib/RangePicker";
         </>
       );
     };
+    
+
   
-    return (
+
+    const onDateChange = (value:any) =>{
+      console.log(value)
+      setonChangeData(value)
+      if(value){
+        setPoDateDis(false)
+        form
+      } else {
+        setPoDateDis(true)
+      }
+
+    }
+
+    return(
       <>
         <Card title="Solid Pack PO Report" headStyle={{ fontWeight: "bold" }} 
         
@@ -1333,6 +1404,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
                   </Select>
                 </Form.Item>
               </Col>
+             
+
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
@@ -1340,10 +1413,11 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-               <Form.Item label="PO Date" name="poDate">
-                  <RangePicker />
+               <Form.Item label="Season" name="season">
+                  <Input placeholder="Enter Season" />
                 </Form.Item>
               </Col>
+              
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
@@ -1351,8 +1425,19 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-               <Form.Item label="Delivery Date" name="deliveryDate">
-                  <RangePicker />
+               <Form.Item label="Date" name="test">
+               <Select
+                    showSearch
+                    placeholder="Select Date"
+                    optionFilterProp="children"
+                    allowClear
+                    onChange={onDateChange}
+                  >
+                <Option value ="po_date">PO Date</Option>
+                <Option value ="delivery_date">Delivery Date</Option>
+                <Option value ="export">Export Date</Option>
+                <Option value ="exfactory">Ex Factory Date</Option>
+                  </Select>
                 </Form.Item>
               </Col>
 
@@ -1363,23 +1448,21 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-               <Form.Item label="Season" name="season">
-               <Select
-                    showSearch
-                    placeholder="Select Season"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {seasonData.map((inc: any) => {
-                      return (
-                        <Option key={inc.season} value={inc.season}>
-                          {inc.season}
-                        </Option>
-                      );
-                    })}
-                  </Select>
+               <Form.Item label="Range" name="range_date" hidden={poDateDis} >
+                  <RangePicker  />
                 </Form.Item>
               </Col>
+              {/* <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Delivery Date" name="deliveryDate" hidden={delverDateDis}>
+                  <RangePicker  />
+                </Form.Item>
+              </Col> */}
               
               <Col
                 xs={{ span: 24 }}

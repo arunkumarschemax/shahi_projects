@@ -116,6 +116,12 @@ export function CentricPdFInfoGrid() {
                 : null
     })
 
+    const setMoreData = (record) => {
+        // navigate("/centric/po-pdf-table", {
+        //   state: { data: record },
+        // });
+      };
+
 
     const columns: any = [
         {
@@ -162,6 +168,20 @@ export function CentricPdFInfoGrid() {
             
             
         },
+          
+        {
+            title: "Action",
+            dataIndex: "action",
+            align: "center",
+            width: 120,
+            render: (value, record) => (
+              <>
+                <Button 
+                onClick={() => setMoreData(record)}
+                >More Info</Button>
+              </>
+            ),
+          }
 
 
     ]
