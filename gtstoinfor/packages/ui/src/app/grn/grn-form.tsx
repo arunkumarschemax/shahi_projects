@@ -714,7 +714,7 @@ const GRNForm = () => {
           </Row>
 
           <Row>
-            <Table scroll={{ x: 'max-content' }} columns={filteredColumns} dataSource={poItemData} bordered pagination={false} />
+            <Table scroll={{ x: 'max-content' }} columns={filteredColumns} dataSource={poItemData?.filter(item=>Number(item.grnQuantity)!=Number(item.poQuantity))} bordered pagination={false} />
           </Row>
         </Card>
 
