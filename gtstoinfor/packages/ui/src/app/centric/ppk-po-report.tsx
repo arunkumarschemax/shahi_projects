@@ -115,6 +115,9 @@ import { Excel } from "antd-table-saveas-excel";
   const exportExcel = () => {
     const excel = new Excel();
 
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
           let rowIndex = 1;
           const excelColumnsWH: any[] = [];
           excelColumnsWH.push(
@@ -597,12 +600,12 @@ import { Excel } from "antd-table-saveas-excel";
        
     
             excel
-              .addSheet(`PO report`)
+              .addSheet(`PPK PO Report (${formattedDate})`)
               .addColumns(excelColumnsWH)
               .addDataSource(filterData, { str2num: true });
 
      
-        excel.saveAs("PPK PO Report.xlsx");
+        excel.saveAs(`PPK PO Report ${formattedDate}.xlsx`);
       
     
 
@@ -754,7 +757,7 @@ import { Excel } from "antd-table-saveas-excel";
       const sizeHeaders = getSizeWiseHeaders(data);
 
   
-      const columns: ColumnsType<any> = [
+      const columns: any = [
         {
           title: "S.No",
           key: "sno",
@@ -788,7 +791,8 @@ import { Excel } from "antd-table-saveas-excel";
           width: 90,
           sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('shipmentMethod')
 
         },
   
@@ -798,24 +802,27 @@ import { Excel } from "antd-table-saveas-excel";
             width: 90,
             sorter: (a, b) => a.poLine.localeCompare(b.poLine),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('poLine')
             // fixed: "left",
           },
           {
             title: "Material",
             dataIndex: "material",
-            width: 90,
+            width: 150,
             sorter: (a, b) => a.material.localeCompare(b.material),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('material')
           },
           {
             title: "PPK UPC",
             dataIndex: "ppkUpc",
-            width: 90,
+            width: 110,
             sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('ppkUpc')
           },
           {
             title: "Color",
@@ -823,7 +830,9 @@ import { Excel } from "antd-table-saveas-excel";
             width: 90,
             sorter: (a, b) => a.color.localeCompare(b.color),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('color')
+            
           },
           {
             title: "Gender",
@@ -831,23 +840,27 @@ import { Excel } from "antd-table-saveas-excel";
             width: 90,
             sorter: (a, b) => a.gender.localeCompare(b.gender),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('gender')
+
           },
           {
             title: "Short Description",
             dataIndex: "shortDescription",
-            width: 90,
+            width:130,
             sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('shortDescription')
           },
           {
             title: "Pack Method",
             dataIndex: "packMethod",
-            width: 90,
+            width: 130,
             sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('packMethod')
           },
           {
             title: "Vendor Booking Flag",
@@ -875,7 +888,9 @@ import { Excel } from "antd-table-saveas-excel";
             width: 90,
             sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('portOfExport')
+
           },
           {
             title: "Port of Entry Name",
@@ -884,7 +899,9 @@ import { Excel } from "antd-table-saveas-excel";
             width: 90,
             sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('portOfEntry')
+
           },
               
           {
@@ -893,26 +910,32 @@ import { Excel } from "antd-table-saveas-excel";
             width: 90,
             sorter: (a, b) => a.reference.localeCompare(b.reference),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('reference')
+
           },
           {
             title: "Payment Terms Description",
             dataIndex: "paymentTermDescription",
             align: "center",
-            width: 90,
+            width: 150,
             sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('paymentTermDescription')
+
           },
 
           {
             title: "Special Instructions",
             dataIndex: "specialInstructions",
             align: "center",
-            width: 90,
+            width: 500,
             sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('specialInstructions')
+
           },
 
          
@@ -920,27 +943,33 @@ import { Excel } from "antd-table-saveas-excel";
         {
           title: "Division",
           dataIndex: "division",
-          width: 90,
+          width: 150,
           sorter: (a, b) => a.division.localeCompare(b.division),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('division')
+          
         },
         {
           title: "Manufacture",
           dataIndex: "manufacture",
-          width: 90,
+          width: 500,
           sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('manufacture')
+
         },
        
         {
           title: "Compt.Material",
           dataIndex: "comptMaterial",
-          width: 110,
+          width: 150,
           sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('comptMaterial')
+
         },
        
   
@@ -1234,9 +1263,11 @@ import { Excel } from "antd-table-saveas-excel";
             title: "Incoterm",
             dataIndex: "incoterm",
             align: "center",
-            width: 200,
+            width: 400,
             sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
             sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('incoterm')
+
           },
 
      
@@ -1245,9 +1276,11 @@ import { Excel } from "antd-table-saveas-excel";
               title: "Ship to Address",
               dataIndex: "shipToAddress",
               align: "center",
-              width: 200,
+              width: 400,
               sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
               sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('shipToAddress')
+
             },
  
     
@@ -1363,7 +1396,7 @@ import { Excel } from "antd-table-saveas-excel";
                 xl={{ span: 4 }}
               >
                <Form.Item label="Season" name="season">
-               <Select
+               {/* <Select
                     showSearch
                     placeholder="Select Season"
                     optionFilterProp="children"
@@ -1376,7 +1409,8 @@ import { Excel } from "antd-table-saveas-excel";
                         </Option>
                       );
                     })}
-                  </Select>
+                  </Select> */}
+                  <Input placeholder="Enter Seasons"/>
                 </Form.Item>
               </Col>
               

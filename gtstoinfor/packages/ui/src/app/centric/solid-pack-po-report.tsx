@@ -116,6 +116,10 @@ import RangePicker from "rc-picker/lib/RangePicker";
   const exportExcel = () => {
     const excel = new Excel();
 
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+
           let rowIndex = 1;
           const excelColumnsWH: any[] = [];
           excelColumnsWH.push(
@@ -598,12 +602,12 @@ import RangePicker from "rc-picker/lib/RangePicker";
        
     
             excel
-              .addSheet(`PO report`)
+              .addSheet(`Solid Pack PO Report ${formattedDate}`)
               .addColumns(excelColumnsWH)
               .addDataSource(filterData, { str2num: true });
 
      
-        excel.saveAs("Solid Pack PO Report.xlsx");
+        excel.saveAs(`Solid Pack PO Report ${formattedDate}.xlsx`);
       
     
 
@@ -755,7 +759,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
       const sizeHeaders = getSizeWiseHeaders(data);
 
   
-      const columns: ColumnsType<any> = [
+      const columns: any = [
         {
           title: "S.No",
           key: "sno",
@@ -789,7 +793,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
           width: 90,
           sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('shipmentMethod')
 
         },
   
@@ -805,10 +810,11 @@ import RangePicker from "rc-picker/lib/RangePicker";
           {
             title: "Material",
             dataIndex: "material",
-            width: 90,
+            width: 150,
             sorter: (a, b) => a.material.localeCompare(b.material),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('material')
           },
           // {
           //   title: "PPK UPC",
@@ -824,7 +830,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
             width: 90,
             sorter: (a, b) => a.color.localeCompare(b.color),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('color')
           },
           {
             title: "Gender",
@@ -832,23 +839,26 @@ import RangePicker from "rc-picker/lib/RangePicker";
             width: 90,
             sorter: (a, b) => a.gender.localeCompare(b.gender),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('gender')
           },
           {
             title: "Short Description",
             dataIndex: "shortDescription",
-            width: 90,
+            width: 130,
             sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('shortDescription')
           },
           {
             title: "Pack Method",
             dataIndex: "packMethod",
-            width: 90,
+            width: 130,
             sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('packMethod')
           },
           {
             title: "Vendor Booking Flag",
@@ -876,7 +886,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
             width: 90,
             sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('portOfExport')
           },
           {
             title: "Port of Entry Name",
@@ -885,7 +896,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
             width: 90,
             sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('portOfEntry')
           },
               
           {
@@ -894,26 +906,29 @@ import RangePicker from "rc-picker/lib/RangePicker";
             width: 90,
             sorter: (a, b) => a.reference.localeCompare(b.reference),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('reference')
           },
           {
             title: "Payment Terms Description",
             dataIndex: "paymentTermDescription",
             align: "center",
-            width: 90,
+            width: 150,
             sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('paymentTermDescription')
           },
 
           {
             title: "Special Instructions",
             dataIndex: "specialInstructions",
             align: "center",
-            width: 90,
+            width: 500,
             sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('specialInstructions')
           },
 
          
@@ -921,18 +936,20 @@ import RangePicker from "rc-picker/lib/RangePicker";
         {
           title: "Division",
           dataIndex: "division",
-          width: 90,
+          width: 150,
           sorter: (a, b) => a.division.localeCompare(b.division),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('division')
         },
         {
           title: "Manufacture",
           dataIndex: "manufacture",
-          width: 90,
+          width: 500,
           sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('manufacture')
         },
        
         {
@@ -941,7 +958,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
           width: 110,
           sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('comptMaterial')
         },
        
   
@@ -1235,9 +1253,10 @@ import RangePicker from "rc-picker/lib/RangePicker";
             title: "Incoterm",
             dataIndex: "incoterm",
             align: "center",
-            width: 200,
+            width: 400,
             sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
             sortDirections: ["ascend", "descend"],
+            ...getColumnSearchProps('incoterm')
           },
 
      
@@ -1246,9 +1265,10 @@ import RangePicker from "rc-picker/lib/RangePicker";
               title: "Ship to Address",
               dataIndex: "shipToAddress",
               align: "center",
-              width: 200,
+              width: 400,
               sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
               sortDirections: ["ascend", "descend"],
+              ...getColumnSearchProps('shipToAddress')
             },
  
     
@@ -1364,7 +1384,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 xl={{ span: 4 }}
               >
                <Form.Item label="Season" name="season">
-               <Select
+               {/* <Select
                     showSearch
                     placeholder="Select Season"
                     optionFilterProp="children"
@@ -1377,7 +1397,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
                         </Option>
                       );
                     })}
-                  </Select>
+                  </Select> */}
+                  <Input placeholder="Enter Season" />
                 </Form.Item>
               </Col>
               
