@@ -448,6 +448,9 @@ export class GrnService {
             if(req.indentId != undefined){
                 query=query+' and gi.indent_id='+req.indentId+''
             }
+            if(req.tab!= undefined){
+                query += ` AND gi.item_type LIKE '%${req.tab}%'`
+            }
             else{
                 query=query
             }

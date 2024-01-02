@@ -1,9 +1,10 @@
-import { IndentRequestDto } from '@project-management-system/shared-models';
+import { IndentRequestDto, ItemTypeEnumDisplay, MenusAndScopesEnum } from '@project-management-system/shared-models';
 import { IndentService } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Row, Select, Table } from 'antd';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useIAMClientState } from '../common/iam-client-react';
+import RolePermission from '../role-permissions';
 const { Option } = Select;
 
 export const IndentReport = () => {
@@ -25,7 +26,12 @@ export const IndentReport = () => {
       // form.setFieldsValue()
     }
   }, []);
-
+  const checkAccess = (buttonParam) => {  
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Reports,MenusAndScopesEnum.SubMenus['Indent Report'],buttonParam)
+     console.log(buttonParam,accessValue,'access');
+    
+    return accessValue
+  }
   const getIndentData = () => {
     const req =  new IndentRequestDto()
 
@@ -45,6 +51,16 @@ export const IndentReport = () => {
       const indentDate = form.getFieldValue('indentDate')
       // filterData = data.filter((e) => e.requestNo === indentDate)
     }
+    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      req.tab= 'FABRIC'
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+      req.tab= 'TRIM'
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      req.tab= 'both'
+    }
+    console.log(req,'pppppppppppp');
     service.getIndentData(req).then((res) => {
       if (res.status) {
         setData(res.data);
@@ -159,7 +175,13 @@ export const IndentReport = () => {
             columns={[
               {
                 dataIndex: "materialtype",
-                key: "materialtype", align: 'center',
+                key: "materialtype", 
+                align: 'center',
+                render: (text) => {
+                  const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+                  return EnumObj ? EnumObj.displayVal : text?text:'-';
+                },
+    
               },
 
             ]}

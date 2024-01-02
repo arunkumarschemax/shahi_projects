@@ -10,7 +10,8 @@ export const MenusAndScopesEnum ={
         'Product Structure' :'Product Structure',
         'User Management':'User Management',
         'Procurment':'Procurment',
-        'Operation Tracking':'Operation Tracking'
+        'Operation Tracking':'Operation Tracking',
+        'Reports':'Reports'
         
     },
     SubMenus:{
@@ -22,7 +23,13 @@ export const MenusAndScopesEnum ={
         'Allocation Approval' : 'Allocation Approval',
         'Purchase Order' : 'Purchase Order',
         'Grn':"Grn",
-        'Sample Material Status' :'Sample Material Status'
+        'Sample Material Status' :'Sample Material Status',
+        'Indent Report' : 'Indent Report',
+        'Purchase Order Report' : 'Purchase Order Report',
+        'Grn Report' : 'Grn Report',
+        'Stock Report' : 'Stock Report',
+        'Material Issue Report' : 'Indent Report',
+
         // 'Attributes' : 'Attributes',
         // 'Buyers' : 'Buyers',
         // 'Buyers Destination' : 'Buyers Destination',
