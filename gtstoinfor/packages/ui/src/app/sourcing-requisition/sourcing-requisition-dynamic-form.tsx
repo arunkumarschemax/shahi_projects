@@ -679,10 +679,10 @@ export const SourcingRequisitionDynamicForm = () => {
         {
           title: 'Remarks',
           dataIndex: 'remarks',
-          render: (remarks, row) => (
+          render: (text, row) => (
             // <Tooltip title={row.remarks} placement="top" arrowPointAtCenter>
               <span className="fabCode">
-                {`${row.remarks}`}
+                {row.remarks != undefined ? `${row.remarks}`: ""}
               </span>
             // </Tooltip>
           ),
