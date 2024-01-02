@@ -979,10 +979,16 @@ export class DpomService {
                         } else {
                             price = 0;
                         }
+                        let shipToAddress;
+                        if (req.shipToAddress == 'See Detail Below,') {
+                            shipToAddress = item.shipToAddress
+                        } else {
+                            shipToAddress = req.shipToAddress
+                        }
                         const poDetails = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: req.poNumber, poLineItemNumber: parseInt(item.itemNo, 10), sizeDescription: size.size } })
                         if (poDetails) {
                             const updateOrder = await transactionManager.getRepository(DpomEntity).update({ purchaseOrderNumber: req.poNumber, poLineItemNumber: parseInt(item.itemNo, 10), sizeDescription: size.size }, {
-                                shipToAddressLegalPO: req.shipToAddress, legalPoQty: Number(size.qunatity), legalPoPrice: price, legalPoCurrency: req.currency, itemVasPDF: itemText, divertedToPos: matches.join(',')
+                                shipToAddressLegalPO: shipToAddress, legalPoQty: Number(size.qunatity), legalPoPrice: price, legalPoCurrency: req.currency, itemVasPDF: itemText, divertedToPos: matches.join(',')
                             })
                             if (!updateOrder.affected) {
                                 await transactionManager.releaseTransaction();

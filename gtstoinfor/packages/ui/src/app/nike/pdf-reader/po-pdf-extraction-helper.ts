@@ -41,7 +41,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             let shipToCount = 0
             let firstShipToFlag = false
 
-            // console.log(firstPageContent)
+            console.log(firstPageContent)
             for (const [ind, ele] of firstPageContent.entries()) {
                 if (ele.str.includes(PO_DOC_DATE_TXT)) {
                     poDocDateIndex = ind
@@ -163,24 +163,38 @@ export const extractDataFromPoPdf = async (pdf) => {
 
         if (filteredData[rec.itemIndex + ITEM_SHIP_TO_INDEX].str == ITEM_SHIP_TO_TEXT) {
             let shipToText = ''
-            ITEM_SHIP_TO_INDEXES.forEach((val) => shipToText = shipToText + filteredData[rec.itemIndex + val].str + ',')
+            console.log(rec.itemIndex + ITEM_SHIP_TO_INDEX + 1, 'GGGGGGGGG')
+            for (let i = (rec.itemIndex + ITEM_SHIP_TO_INDEX + 1); i < i + 10; i++) {
+                if (filteredData[i].str.includes('ITEM TEXT') || filteredData[i].str.includes(ITEM_TEXT_END_TEXT)) {
+                    shipToEndIndex = i - 1
+                    break;
+                } else {
+                    shipToText = shipToText + filteredData[i].str + ','
+                }
+            }
             itemDetailsObj.shipToAddress = shipToText
-            shipToEndIndex = rec.itemIndex + ITEM_SHIP_TO_INDEXES[ITEM_SHIP_TO_INDEXES.length - 1]
+            // shipToEndIndex = rec.itemIndex + ITEM_SHIP_TO_INDEXES[ITEM_SHIP_TO_INDEXES.length - 1]
             isShipToTextExist = true
         }
         //------------------------------------------------------------------
         // check if item text exists
-
+        console.log(shipToEndIndex, 'IIIIIIIII')
         if (isShipToTextExist) {
-            itemTextIndex = rec.itemIndex + ITEM_TEXT_INDEX
+            itemTextIndex = shipToEndIndex + 1
         } else {
             itemTextIndex = rec.itemIndex + ITEM_SHIP_TO_INDEX
         }
-
+        console.log(itemTextIndex)
         if (filteredData[itemTextIndex].str == 'ITEM TEXT') {
             // console.log('item text exists')
             let itemText = ''
-            const itemTextSatrtIndex = itemTextIndex + 3
+            let itemTextSatrtIndex;
+            if (filteredData[itemTextIndex + 2].str.includes('SALES ORDER')) {
+                itemTextSatrtIndex = itemTextIndex + 3
+            }
+            else {
+                itemTextSatrtIndex = itemTextIndex + 1
+            }
             // console.log(itemTextIndex, 'itemTextIndex')
             // console.log(itemTextSatrtIndex, 'itemTextSatrtIndex')
             // Find the index where the str is "__________________" and stop the loop there ,item text ends there
@@ -190,7 +204,10 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemTextEndIndex = j;
                 j++;
             }
-            itemDetailsObj.itemVasText = itemText
+            if (itemText.includes('Supply') || itemText.includes('EA diverted') || itemText.includes('OGAC/GAC'))
+                itemDetailsObj.itemVasText = null;
+            else
+                itemDetailsObj.itemVasText = itemText
         }
 
         //    --------------------------------------------------
@@ -211,6 +228,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         // item varinat details parsing starts here
         const itemVarinatsTextArr = []
         let k = itemVariantStartIndex + 1
+        console.log(k, 'KKKKKKKKK')
         while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
             itemVarinatsTextArr.push(filteredData[k].str)
             k++
