@@ -69,6 +69,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const [trimM3Code,setTrimM3Code] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(false);
     const [visibleModel, setVisibleModel] = useState<boolean>(false);
+    const [isColorRequired, setIsColorRequired] = useState<boolean>(true);
     const [fabricfilelist, setFabricfilelist] = useState<any>([]);
     const [isUpdateimg, setisUpdateImg]=useState('')
     const [imageUrl, setImageUrl] = useState('');
@@ -325,6 +326,11 @@ export const SourcingRequisitionDynamicForm = () => {
 
     const setEditForm = (rowData: any, index: any) => {
         console.log(rowData);
+        if(rowData.newColor){
+            setIsColorRequired(false)
+        }else{
+            setIsColorRequired(true)
+        }
         setDefaultFabricFormData(rowData)
         setFabricIndexVal(index)
         setBtnType("Update")
@@ -654,7 +660,14 @@ export const SourcingRequisitionDynamicForm = () => {
           title: 'Quantity',
           dataIndex: 'quantity',
         render:(_,record)=>{
-            return(record.quantity+'-'+record.uomName)
+            let uomoftrim
+            if(record.uomName){
+                uomoftrim = `-${record.uomName}` 
+            }else{
+                uomoftrim = '' 
+            }
+            // return <>{`${record.quantity}${record.uomName ? record.uomName:}`}</>
+            return(record.quantity+uomoftrim)
         }
 
         },
@@ -731,6 +744,7 @@ export const SourcingRequisitionDynamicForm = () => {
                     tableData = [...fabricTableData,values]
                 }
                 setFabricTableData(tableData)
+                setIsColorRequired(true)
                 fabricForm.resetFields()
                 setFabricfilelist([])
                 console.log(fabricTableData,'fabric table data')
@@ -766,6 +780,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const onFabricColorChange = (val,option) => {
         setFabricColor(option?.name)
         fabricForm.setFieldsValue({colorName: option?.name})
+        fabricForm.setFieldsValue({newColor: null})
     }
 
     const onPCHChange = (val,option) => {
@@ -816,6 +831,8 @@ const onTrimChange = (val, option) => {
     const selectedTrim = option?.children || ''; // Ensure a fallback value
     setTrimCode(selectedTrim);
     trimForm.setFieldsValue({trimName:selectedTrim})
+    trimForm.setFieldsValue({quantityUnit:option.trimUomId})
+    trimForm.setFieldsValue({uomName:option.trimUomName})
 }
 
     const onReset = () => {
@@ -1008,6 +1025,15 @@ const uomOnchange =(value, option) =>{
 }
 const onTrimUomOnchange =(value, option) =>{
     trimForm.setFieldsValue({uomName:option.name})
+}
+
+const handleColor = (val) => {
+    console.log(val.target.value)
+    setIsColorRequired(false)
+    fabricForm.setFieldsValue({color: null})
+    if(val.target.value == null || val.target.value == '' || val.target.value == undefined){
+        setIsColorRequired(true)
+    }
 }
 
 
@@ -1221,7 +1247,7 @@ const onTrimUomOnchange =(value, option) =>{
                                     {/* <h1 style={{ color: '#6b54bf', fontSize: '15px', textAlign: 'left' }}>ITEM DETAILS</h1>
                                     <Row gutter={8}> */}
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                                            <Form.Item name='color' label='Color' rules={[{ required: false, message: 'Color is required' }]}>
+                                            <Form.Item name='color' label='Color' rules={[{ required: isColorRequired, message: 'Color is required' }]}>
                                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select Color' onChange={onFabricColorChange}>
                                                     {color.map(e => {
                                                         return (
@@ -1234,7 +1260,7 @@ const onTrimUomOnchange =(value, option) =>{
                                         </Col>
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                                             <Form.Item name='newColor' label='New Color(If not in the list)' rules={[{ required: false, message: 'color is required' }]}>
-                                                <Input placeholder="Enter Color" />
+                                                <Input placeholder="Enter Color" onChange={handleColor}/>
                                             </Form.Item>
                                         </Col>
                                         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -1501,7 +1527,7 @@ const onTrimUomOnchange =(value, option) =>{
                                                     {renderTrimCodeOptions()}
                                                     {m3Trims.map((e) => {
                                                         return (
-                                                            <Option key={e.m3TrimsId} value={e.m3TrimsId}>
+                                                            <Option key={e.m3TrimsId} value={e.m3TrimsId} trimUomId={e.uomId} trimUomName={e.uom}>
                                                                 {e.trimCode}
                                                             </Option>
                                                         );
@@ -1569,8 +1595,8 @@ const onTrimUomOnchange =(value, option) =>{
 
                                                     },
                                                 ]}>
-                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'170px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}>
-                                                    <Select showSearch allowClear optionFilterProp="children" placeholder="Unit"
+                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'170px', height:"10px"}} rules={[{ required: false, message: 'Unit is required' }]}>
+                                                    <Select showSearch allowClear disabled optionFilterProp="children" placeholder="Unit"
                                                    onChange={onTrimUomOnchange} 
                                                     >
                                                     {uom?.map(e => {

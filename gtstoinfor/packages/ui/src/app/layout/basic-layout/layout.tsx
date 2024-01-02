@@ -111,6 +111,7 @@ export default function BasicLayout() {
       
     const logOut = () => {
         logout(dispatch);
+        navigate("/", { replace: true });
     }
     
     const {

@@ -205,7 +205,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       }
       else{
         AlertMessages.getErrorMessage("Fabric color is not in size details")
-       props.form.setFieldValue(`colorId${key}`,0)
+       props.form.setFieldValue(`colorId${key}`,undefined)
         updatedData = data.map((record) => {
           // if (record.key === key) {
           //   return { ...record, [field]: e };
@@ -370,7 +370,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             placeholder="Select Fabric Code"
             onChange={(e) => handleInputChange(e, record.key, 'fabricCode',0, record)}
           >
-          <Option name={`fabricId${record.key}`} key={0} value={0}>Please Select Fabric</Option>
+          {/* <Option name={`fabricId${record.key}`} key={0} value={0}>Please Select Fabric</Option> */}
             {fabricCodeData?.map(item => {
               return <Option name={`fabricId${record.key}`} key={item.m3ItemsId} valu={item.m3ItemsId}>{item.itemCode+ "-"+ item.description}</Option>;
             })}
@@ -413,7 +413,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             optionFilterProp="children"
             placeholder="Select Color"
           >
-          <Option name={`colorId${record.key}`} key={0} value={0}>Please Select Color</Option>
+          {/* <Option name={`colorId${record.key}`} key={0} value={0}>Please Select Color</Option> */}
             {color.map((e) => {
               return (
                 <Option name={`colorId${record.key}`} key={e.colourId} value={e.colourId}>
