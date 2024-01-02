@@ -25,7 +25,7 @@ export const LoginComponent = () => {
             } 
             else {
                 // navigate("/nike-dashboard", { replace: true });
-                navigate("/ralph-lauren/order-data-info-grid", { replace: true });
+                navigate("/centric/masters/address/address-view", { replace: true });
             }
             return true;
         } catch (error: any) {
