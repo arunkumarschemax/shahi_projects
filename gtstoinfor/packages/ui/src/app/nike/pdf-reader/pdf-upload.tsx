@@ -150,7 +150,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
             nikeDpomService.saveDIAPDFData(formValues).then((res) => {
                 if (res.status) {
                     onReset()
-                    alert(res.internalMessage)
+                    // alert(res.internalMessage)
                     message.success(res.internalMessage)
                 } else {
                     message.error(res.internalMessage)
@@ -160,7 +160,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
             nikeDpomService.saveLegalPOPDFData(poPdfData).then((res) => {
                 if (res.status) {
                     onReset()
-                    alert(res.internalMessage)
+                    // alert(res.internalMessage)
                     message.success(res.internalMessage)
                 } else {
                     message.error(res.internalMessage)
