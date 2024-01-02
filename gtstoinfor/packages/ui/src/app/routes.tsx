@@ -43,13 +43,14 @@ import ColineView from "./ralph-lauren/co-line-view"
 import AddressView from "./masters/address/address-view"
 import AddressUpload from "./masters/address/address-excel-upload"
 import PdfUpload from "./centric/pdf-upload"
-import PPKPOReport from "./centric/po-report"
+import PPKPOReport from "./centric/ppk-po-report"
 import CentricPdFInfoGrid from "./centric/pdf-file-grid"
 import CentricOrdersGrid from "./centric/order-data-grid"
 import CentricOrdersDetailView from "./centric/order-data-details-view"
 import CentricOrderAcceptanceGrid from "./centric/centric-order-acceptance-view"
 import CentricPdfUpload from "./centric/pdf-upload"
 import CentriColineView from "./centric/centric-co-line-view"
+import SolidPOReport from "./centric/solid-pack-po-report"
 
 
 export const AppRoutes = () => {
@@ -195,7 +196,7 @@ export const AppRoutes = () => {
 
                 <Route path='/centric'>
                     <Route path='pdf-info' element={<CentricPdFInfoGrid />} />
-                    <Route path='PO-report' element={<PPKPOReport />} />
+                    <Route path='ppk-po-report' element={<PPKPOReport />} />
                     <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
                    <Route path='order-data-info-grid' element={<CentricOrdersGrid />} />
@@ -205,6 +206,7 @@ export const AppRoutes = () => {
                    <Route path='centric-pdf-upload' element={<CentricPdfUpload />} />
 
                    <Route path='centric-co-line-view' element={<CentriColineView />} />
+                   <Route path='solid-pack-po-report' element={<SolidPOReport />} />
 
                     
 
