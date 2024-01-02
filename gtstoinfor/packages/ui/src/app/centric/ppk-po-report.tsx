@@ -48,6 +48,9 @@ import { Excel } from "antd-table-saveas-excel";
     const [filterData, setFilterData] = useState([]);
     const { IAMClientAuthContext, dispatch } = useIAMClientState();
     const { RangePicker } = DatePicker;
+    const [poDateDis, setPoDateDis] = useState<boolean>(true);
+    // const [delverDateDis, setDelverDateDis] = useState<boolean>(true);
+    const [onChangeData, setonChangeData] = useState({});
   
     useEffect(() => {
       getorderData();
@@ -56,43 +59,108 @@ import { Excel } from "antd-table-saveas-excel";
     }, []);
 
   
-    const getorderData = () => {
-      const req = new PoOrderFilter();
+  //   const getorderData = () => {
+  //     const req = new PoOrderFilter();
   
-      if (form.getFieldValue("poNumber") !== undefined) {
-        req.poNumber = form.getFieldValue("poNumber");
-      } 
-      if (form.getFieldValue('poDate') !== undefined) {
-        req.poDateStartDate = (form.getFieldValue('poDate')[0]).format('YYYY-MM-DD');
-      }
-      if (form.getFieldValue('poDate') !== undefined) {
-        req.poDateEndDate = (form.getFieldValue('poDate')[1]).format('YYYY-MM-DD');
-      }
-      if (form.getFieldValue('deliveryDate') !== undefined) {
-        req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
-      }
-      if (form.getFieldValue('deliveryDate') !== undefined) {
-        req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
-      }
-      if (form.getFieldValue("season") !== undefined) {
-        req.season = form.getFieldValue("season");
-      }
-     req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+  //     if (form.getFieldValue("poNumber") !== undefined) {
+  //       req.poNumber = form.getFieldValue("poNumber");
+  //     } 
+  //     if (form.getFieldValue('poDate') !== undefined) {
+  //       req.poDateStartDate = (form.getFieldValue('poDate')[0]).format('YYYY-MM-DD');
+  //     }
+  //     if (form.getFieldValue('poDate') !== undefined) {
+  //       req.poDateEndDate = (form.getFieldValue('poDate')[1]).format('YYYY-MM-DD');
+  //     }
+  //     if (form.getFieldValue('deliveryDate') !== undefined) {
+  //       req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
+  //     }
+  //     if (form.getFieldValue('deliveryDate') !== undefined) {
+  //       req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
+  //     }
+  //     if (form.getFieldValue("season") !== undefined) {
+  //       req.season = form.getFieldValue("season");
+  //     }
+  //    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
   
-      service.getorderData(req).then((res) => {
-        if (res.status) {
-          setOrderData(res.data);
-          setFilterData(res.data);
-        } else {
-          setOrderData([]);
-          setFilterData([])
-          AlertMessages.getErrorMessage(res.internalMessage);
-        }
-      }).catch((err) => {
-        console.log(err.message);
-      });
-  };
+  //     service.getorderData(req).then((res) => {
+  //       if (res.status) {
+  //         setOrderData(res.data);
+  //         setFilterData(res.data);
+  //       } else {
+  //         setOrderData([]);
+  //         setFilterData([])
+  //         AlertMessages.getErrorMessage(res.internalMessage);
+  //       }
+  //     }).catch((err) => {
+  //       console.log(err.message);
+  //     });
+  // };
     
+  const getorderData = () => {
+    const req = new PoOrderFilter();
+
+    if (form.getFieldValue("poNumber") !== undefined) {
+      req.poNumber = form.getFieldValue("poNumber");
+    } 
+    
+    if(onChangeData === "po_date"){
+       
+      if (form.getFieldValue('range_date') !== undefined) {
+        req.poDateStartDate = (form.getFieldValue('range_date')[0]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('range_date') !== undefined) {
+        req.poDateEndDate = (form.getFieldValue('range_date')[1]).format('YYYY-MM-DD');
+      }
+    } else if (onChangeData === "delivery_date"){
+        
+      if (form.getFieldValue('range_date') !== undefined) {
+        req.deliveryDateStartDate = (form.getFieldValue('range_date')[0]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('range_date') !== undefined) {
+        req.deliveryDateEndDate = (form.getFieldValue('range_date')[1]).format('YYYY-MM-DD');
+      }
+    } else if (onChangeData === "export"){
+
+      if (form.getFieldValue('range_date') !== undefined) {
+        req.exportDateStartDate = (form.getFieldValue('range_date')[0]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('range_date') !== undefined) {
+        req.exportDateEndDate = (form.getFieldValue('range_date')[1]).format('YYYY-MM-DD');
+      }
+
+    } else if(onChangeData === "exfactory"){
+
+      if (form.getFieldValue('range_date') !== undefined) {
+        req.exfactoryDateStartDate = (form.getFieldValue('range_date')[0]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('range_date') !== undefined) {
+        req.exfactoryDateEndDate = (form.getFieldValue('range_date')[1]).format('YYYY-MM-DD');
+      }
+
+    }
+
+  
+
+   
+    if (form.getFieldValue("season") !== undefined) {
+      req.season = form.getFieldValue("season");
+    }
+   req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+
+    service.getorderData(req).then((res) => {
+      if (res.status) {
+        setOrderData(res.data);
+        setFilterData(res.data);
+      } else {
+        setOrderData([]);
+        setFilterData([])
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch((err) => {
+      console.log(err.message);
+    });
+};
+  
 
     const getPoNumber = () => {
       service.getPoNumber().then((res) => {
@@ -183,9 +251,15 @@ import { Excel } from "antd-table-saveas-excel";
                 title: "PPK UPC",
                 dataIndex: "ppkUpc",
                 width: 150,
-                sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
+                sorter: (a, b) => (a.ppkUpc || '').localeCompare(b.ppkUpc || ''),
                 sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                render: (text, record) => {
+                  const formattedValue = record?.ppkUpc ? record.ppkUpc.toString() : '-';
+              
+                  return (
+                    <span>{formattedValue}</span>
+                  );
+                }
               },
               {
                 title: "Color",
@@ -737,11 +811,11 @@ import { Excel } from "antd-table-saveas-excel";
         ) : null,
     });
   
-    const setMoreData = (record) => {
-      navigate("/ralph-lauren/order-data-detail-view", {
-        state: { data: record },
-      });
-    };
+    // const setMoreData = (record) => {
+    //   navigate("/ralph-lauren/order-data-detail-view", {
+    //     state: { data: record },
+    //   });
+    // };
     const getSizeWiseHeaders = (data) => {
       const sizeHeaders = new Set<string>();
       data?.forEach((rec) =>
@@ -1320,6 +1394,18 @@ import { Excel } from "antd-table-saveas-excel";
         </>
       );
     };
+
+    const onDateChange = (value:any) =>{
+      console.log(value)
+      setonChangeData(value)
+      if(value){
+        setPoDateDis(false)
+        form
+      } else {
+        setPoDateDis(true)
+      }
+
+    }
   
     return (
       <>
@@ -1372,10 +1458,11 @@ import { Excel } from "antd-table-saveas-excel";
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-               <Form.Item label="PO Date" name="poDate">
-                  <RangePicker />
+               <Form.Item label="Season" name="season">
+                  <Input placeholder="Enter Season" />
                 </Form.Item>
               </Col>
+              
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
@@ -1383,8 +1470,19 @@ import { Excel } from "antd-table-saveas-excel";
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-               <Form.Item label="Delivery Date" name="deliveryDate">
-                  <RangePicker />
+               <Form.Item label="Date" name="test">
+               <Select
+                    showSearch
+                    placeholder="Select Date"
+                    optionFilterProp="children"
+                    allowClear
+                    onChange={onDateChange}
+                  >
+                <Option value ="po_date">PO Date</Option>
+                <Option value ="delivery_date">Delivery Date</Option>
+                <Option value ="export">Export Date</Option>
+                <Option value ="exfactory">Ex Factory Date</Option>
+                  </Select>
                 </Form.Item>
               </Col>
 
@@ -1395,22 +1493,8 @@ import { Excel } from "antd-table-saveas-excel";
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-               <Form.Item label="Season" name="season">
-               {/* <Select
-                    showSearch
-                    placeholder="Select Season"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {seasonData.map((inc: any) => {
-                      return (
-                        <Option key={inc.season} value={inc.season}>
-                          {inc.season}
-                        </Option>
-                      );
-                    })}
-                  </Select> */}
-                  <Input placeholder="Enter Seasons"/>
+               <Form.Item label="Range" name="range_date" hidden={poDateDis} >
+                  <RangePicker  />
                 </Form.Item>
               </Col>
               
