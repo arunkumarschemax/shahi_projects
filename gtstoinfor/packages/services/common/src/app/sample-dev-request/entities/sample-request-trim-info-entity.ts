@@ -10,7 +10,7 @@ export class SampleRequestTriminfoEntity {
 
     @Column('int', {
         name: 'uom_id',
-        nullable: false
+        nullable: true
     })
     uomId: number
 
