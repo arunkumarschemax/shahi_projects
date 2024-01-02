@@ -120,6 +120,7 @@ export class CentricService {
           entity.vendorBookingFlag = item.vendorBookingFlag
           entity.ppkupc = item.ppkupc
           entity.currency = item.currency
+          entity.totalQuantity = item.totalQuantity
 
           entity.size = variant.size
           entity.upc = variant.upc

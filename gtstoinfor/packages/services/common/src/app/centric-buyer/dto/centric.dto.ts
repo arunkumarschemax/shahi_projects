@@ -78,6 +78,9 @@ export class CentricDto {
     @ApiProperty()
     currency: string
 
+    @ApiProperty()
+    totalQuantity: string
+
 
 
     @ApiProperty()

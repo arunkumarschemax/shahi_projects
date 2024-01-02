@@ -129,6 +129,12 @@ export class CentricEntity {
     })
     vendorBookingFlag: string
 
+    @Column('varchar', {
+        name: "total_quantity",
+        
+    })
+    totalQuantity: string
+
 
 
 
