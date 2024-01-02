@@ -1,4 +1,4 @@
-import { PurchaseOrderStatus, grnReportReq } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, MenusAndScopesEnum, PurchaseOrderStatus, grnReportReq } from '@project-management-system/shared-models';
 import { GRNService, PurchaseOrderservice } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Statistic, Table, message } from 'antd'
 import moment from 'moment';
@@ -6,6 +6,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import dayjs from 'dayjs';
 import Highlighter from 'react-highlight-words';
 import { SearchOutlined } from '@ant-design/icons';
+import { RolePermission } from '../role-permissions';
 
  const GrnReport =() =>{
     const [form] =Form.useForm();
@@ -20,10 +21,48 @@ import { SearchOutlined } from '@ant-design/icons';
     const {Option} = Select
     const grnService = new GRNService()
     const poService = new PurchaseOrderservice()
+    useEffect(() =>{
+      getGrnReportData()
+      getPoNumber()
+      getIndent()
+      getSampleorder()
 
-
-    const getGrnReportData = (poStatus:string,ponum:number,grnDate:string,sampleOrderId:number,indentId:number) =>{
-        grnService.getGrnReportData({poStatus:poStatus,poId:ponum,grnDate:grnDate,sampleOrderId:sampleOrderId,indentId:indentId}).then(res =>{
+  },[])
+    const checkAccess = (buttonParam) => {  
+      const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Reports,MenusAndScopesEnum.SubMenus['Purchase Order Report'],buttonParam)
+     
+      return accessValue
+    }
+    const getGrnReportData = () =>{
+      const req = new grnReportReq()
+      if(form.getFieldValue('grnDate') !=undefined){
+        req.grnDate =  form.getFieldValue('grnDate').format("YYYY-MM-DD")
+      }
+      if(form.getFieldValue('indentId') !=undefined ){
+        req.indentId =form.getFieldValue('indentId')
+      }
+      if(form.getFieldValue('poNumber') !=undefined){
+        req.poId=form.getFieldValue('poNumber')
+      }
+      if(form.getFieldValue('poStatus') !=undefined){
+        req.poStatus =form.getFieldValue('poStatus')
+      }
+      if(form.getFieldValue('sampleId') !=undefined){
+        req.sampleOrderId = form.getFieldValue('sampleId') 
+      }
+      if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+        req.tab= 'FABRIC'
+      }
+      if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+        req.tab= 'TRIM'
+      }
+      if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+        req.tab = undefined
+          }
+       
+        grnService.getGrnReportData(req).then(res =>{
+          console.log(req,'pppppppppppp');
+          
             if(res.status){
                 setgrnData(res.data)
             }else{
@@ -60,13 +99,7 @@ import { SearchOutlined } from '@ant-design/icons';
       })
     }
 
-    useEffect(() =>{
-        getGrnReportData(undefined,undefined,undefined,undefined,undefined)
-        getPoNumber()
-        getIndent()
-        getSampleorder()
-
-    },[])
+   
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
       confirm();
@@ -208,7 +241,11 @@ import { SearchOutlined } from '@ant-design/icons';
             width:'300px',
             sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
             sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('itemType')
+            // ...getColumnSearchProps('itemType'),
+            render: (text) => {
+              const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+              return EnumObj ? EnumObj.displayVal : text;
+            },
 
       
           },   
@@ -302,25 +339,16 @@ import { SearchOutlined } from '@ant-design/icons';
       
           },
     ]
-    const getData =() =>{
-           const ponum =form.getFieldValue('poNumber') !=undefined ?form.getFieldValue('poNumber'):undefined
-        const poStatus =form.getFieldValue('poStatus') !=undefined ?form.getFieldValue('poStatus'):undefined
-        const grnDate =form.getFieldValue('grnDate') !=undefined ?form.getFieldValue('grnDate').format("YYYY-MM-DD"):undefined
-        const sampleOrderId =form.getFieldValue('sampleId') !=undefined ?form.getFieldValue('sampleId'):undefined
-        const indentId =form.getFieldValue('indentId') !=undefined ?form.getFieldValue('indentId'):undefined
-
-        getGrnReportData(poStatus,ponum,grnDate,sampleOrderId,indentId)
-
-    }
+    
     const onReset =() =>{
-        getGrnReportData(undefined,undefined,undefined,undefined,undefined)
+        getGrnReportData()
         form.resetFields()
     }
     return(
         <div>
                    
         <Card title={'Grn Report'}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
-        <Form form={form} layout='vertical'>
+        <Form form={form} layout='vertical' onFinish={getGrnReportData}>
                 <Row gutter={24}>
                     <Col span={4}>
                         <Form.Item name='poNumber' label='Po Number'>
@@ -366,7 +394,7 @@ import { SearchOutlined } from '@ant-design/icons';
                         </Form.Item>
                     </Col>
                     <Col span={4} style={{paddingTop:'20px'}}>
-                       <Button type='primary' onClick={getData}>{'Search'}</Button>
+                       <Button type='primary' htmlType='submit'>{'Search'}</Button>
                     {/* </Col> */}
                     {/* <Col span={4}  style={{paddingTop:'20px'}} > */}
                        <Button onClick={onReset} style={{marginLeft:'10px'}}>{'Reset'}</Button>

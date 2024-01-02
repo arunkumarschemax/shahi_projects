@@ -259,6 +259,30 @@ export class IndentService {
                         i_items: [],
                     };
                 }
+                if(req.tab!=undefined){
+                    result[requestNo].i_items.push({
+                        requestNo: item?.requestNo,
+                        fabricId: item.fabricId,
+                        materialtype: 'Fabric',
+                        quantity: item.fbquantity,
+                        color: item.color,
+                        status: item.STATUS,
+                        m3Code: item.m3FabricCode,
+    
+    
+                    }); 
+                    result[requestNo].i_items.push({
+                        requestNo: item?.requestNo,
+                        itrims_id: item.itrims_id,
+                        materialtype: item.trimType,
+                        trimCode: item.trimCode,
+                        quantity: item.quantity,
+                        color: item.color,
+                        m3Code: item.m3TrimCode,
+                       status: item.STATUS,
+                    }) 
+                }
+                if(req.tab!=undefined && req.tab === 'FABRIC'){
                 result[requestNo].i_items.push({
                     requestNo: item?.requestNo,
                     fabricId: item.fabricId,
@@ -270,6 +294,9 @@ export class IndentService {
 
 
                 });
+            }
+                if(req.tab!=undefined && req.tab === 'TRIM'){
+
                 result[requestNo].i_items.push({
                     requestNo: item?.requestNo,
                     itrims_id: item.itrims_id,
@@ -280,6 +307,7 @@ export class IndentService {
                     m3Code: item.m3TrimCode,
                    status: item.STATUS,
                 })
+            }
 
 
                 return result;

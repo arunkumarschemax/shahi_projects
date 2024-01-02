@@ -1,5 +1,5 @@
 import { CheckCircleOutlined, CloseCircleOutlined, DownloadOutlined, FilePdfOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { ItemTypeEnumDisplay, PoReq, PurchaseStatusEnum, SampleFilterRequest, StockFilterRequest, StocksDto } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, MenusAndScopesEnum, PoReq, PurchaseStatusEnum, SampleFilterRequest, StockFilterRequest, StocksDto } from '@project-management-system/shared-models';
 import { PurchaseOrderservice, StockService } from '@project-management-system/shared-services';
 import { Button, Card, Checkbox, Col, DatePicker, Form, Input, Row, Select, Space, Statistic, Table, Tag } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
@@ -9,6 +9,7 @@ import Highlighter from 'react-highlight-words';
 import { FilterConfirmProps,ColumnType } from 'antd/es/table/interface';
 import moment from 'moment';
 import { Content } from 'antd/es/layout/layout';
+import RolePermission from '../role-permissions';
 
 
 const PurchaseOrderReport = () => {
@@ -37,7 +38,11 @@ const PurchaseOrderReport = () => {
         getData();
         getPoNum();
       }, []);
-
+      const checkAccess = (buttonParam) => {  
+        const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Reports,MenusAndScopesEnum.SubMenus['Purchase Order Report'],buttonParam)
+       
+        return accessValue
+      }
     const getData = () => {
 
       const req= new PoReq()
@@ -57,6 +62,15 @@ const PurchaseOrderReport = () => {
       if (form.getFieldValue('etdDate') !== undefined) {
       req.ETDtoDate = (form.getFieldValue('etdDate')[1]).format('YYYY-MM-DD')
       }
+      if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+        req.tab= 'FABRIC'
+      }
+      if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+        req.tab= 'TRIM'
+      }
+      if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+        req.tab = undefined
+          }
         service.getPodetails(req).then(res => {
           
             if(res){
@@ -188,6 +202,11 @@ const Columns:any=[
       dataIndex:"po_material_type",
       width:100,
       ...getColumnSearchProps("po_material_type"),
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },
+
       
       
   },
@@ -426,7 +445,7 @@ const onFinish = () => {
                 allowClear
               >
                 {ponum.map((qc: any) => (
-                  <Select.Option key={qc.po_number} value={qc.po_number}>
+                  <Select.Option key={qc.purchase_order_id} value={qc.purchase_order_id}>
                     {qc.po_number}
                   </Select.Option>
                 ))}
