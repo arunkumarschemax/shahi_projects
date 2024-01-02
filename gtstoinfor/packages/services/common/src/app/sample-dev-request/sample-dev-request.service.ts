@@ -1080,11 +1080,11 @@ export class SampleRequestService {
       //   return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
 
       //   }
-        let query1=`SELECT sb.sample_item_id AS sampleItemId,sb.sampling_bom_id AS samplingBomId,required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity, required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS sampleBalanceQuanty,sb.required_quantity AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,IF(sb.item_type = "Fabric",c.colour,tc.colour) AS colourName, IF(sb.item_type = "Fabric", CONCAT(mi.item_code,'-',mi.description), mt.trim_code) AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,(st.quantity-st.allocatd_quantity-st.issued_quantity) AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId FROM sampling_bom sb     
+        let query1=`SELECT sb.sample_item_id AS sampleItemId,sb.sampling_bom_id AS samplingBomId,required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity, required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS sampleBalanceQuanty,sb.required_quantity AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,IF(sb.item_type = "Fabric",c.colour,tc.colour) AS colourName, IF(sb.item_type = "Fabric", CONCAT(mi.item_code,'-',mi.description), mt.trim_code) AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,(st.quantity-st.allocatd_quantity-st.transfered_quantity) AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId FROM sampling_bom sb     
         LEFT JOIN  sample_request_fabric_info srf ON srf.sample_request_id=sb.sample_item_id AND sb.item_type='Fabric' 
         LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id=sb.sample_item_id AND sb.item_type!='Fabric'
         LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id  
-          LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND st.item_type = sb.item_type
+          LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND st.item_type = sb.item_type and st.grn_type = "INDENT"
             LEFT JOIN m3_items mi ON mi.m3_items_Id=sb.m3_item_id and sb.item_type = "Fabric" 
             LEFT JOIN m3_trims mt ON mt.m3_trim_Id=sb.m3_item_id and sb.item_type != "Fabric"
             LEFT JOIN colour c ON c.colour_id=sb.colour_id and sb.item_type = "Fabric"
@@ -1092,7 +1092,7 @@ export class SampleRequestService {
             LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id
               LEFT JOIN style s ON s.style_id=sr.style_id left join brands bs on bs.brand_id=sr.brand_id 
               left join rack_position rp on rp.position_Id =sr.location_id  
-              LEFT JOIN purchae_order_items poi ON poi.sample_item_id =sb.sample_item_id WHERE (required_quantity-received_quantity-IF((st.quantity-st.allocatd_quantity-st.issued_quantity) IS NULL, 0, (st.quantity-st.allocatd_quantity-st.issued_quantity))-IF(po_quantity IS NOT NULL,po_quantity,0)) >0`
+              LEFT JOIN purchae_order_items poi ON poi.sample_item_id =sb.sample_item_id WHERE (required_quantity-received_quantity-IF((st.quantity-st.allocatd_quantity-st.transfered_quantity) IS NULL, 0, (st.quantity-st.allocatd_quantity-st.transfered_quantity))-IF(po_quantity IS NOT NULL,po_quantity,0)) >0`
         if(req.extRefNo){
           query1 = query1+ ` and b.external_ref_number = '${req.extRefNo}'`
         }
