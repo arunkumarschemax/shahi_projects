@@ -79,6 +79,12 @@ export class CentricEntity {
     })
     buyerAddress: string
 
+    
+    @Column('text', {
+        name: "file_data"
+    })
+    fileData: string
+
 
 
     

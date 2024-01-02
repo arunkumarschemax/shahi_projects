@@ -38,6 +38,12 @@ export class CentricPdfFileUploadEntity {
     })
     fileType: string 
 
+    @Column("text", {
+        nullable: false,
+        name: "file_data",
+    })
+    fileData: string 
+
 
 
     @CreateDateColumn({

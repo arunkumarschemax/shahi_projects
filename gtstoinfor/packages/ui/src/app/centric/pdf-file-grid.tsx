@@ -125,14 +125,14 @@ export function CentricPdFInfoGrid() {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
             fixed: 'left'
         },
-        // {
-        //     title: 'PO Number',
-        //     dataIndex: 'poNumber',
-        //     width:70 ,
-        //     sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-        //     sortDirections: ["ascend", "descend"],
-        //     ...getColumnSearchProps('purchaseOrderNumber')
-        // },
+        {
+            title: 'PO Number',
+            dataIndex: 'poNumber',
+            width:70 ,
+            sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+            sortDirections: ["ascend", "descend"],
+            ...getColumnSearchProps('poNumber')
+        },
         {
             title: 'File Name',
             dataIndex: 'pdfFileName',
