@@ -205,7 +205,7 @@ export class AddressService {
         try {
             const info = await this.repo.findOne({
                 where: {
-                    destination: Like(`%${req.country}%`) // Assuming you want to find records where address includes the given string
+                    deliveryAddress: Like(`%${req.country}%`) // Assuming you want to find records where address includes the given string
                 }
             })
             if (info) {
