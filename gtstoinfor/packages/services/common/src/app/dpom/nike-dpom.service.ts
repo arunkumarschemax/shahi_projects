@@ -2339,17 +2339,17 @@ export class DpomService {
                         await page.waitForSelector('button.ant-btn-primary')
                         await page.click('button.ant-btn-primary');
                         // Check the status after submission
-                        // const reset = await page.waitForSelector('button.ant-btn-default')
+                        // const reset = await page.waitForSelector('//*[@id="root"]/section/section/main/div/div[2]/div/div[2]/div/div/div/button')
                         // if (reset) {
-                        //     await page.click('button.ant-btn-default')
+                        //     await page.click('//*[@id="root"]/section/section/main/div/div[2]/div/div[2]/div/div/div/button')
                         // } else {
-                        const sourceFilePath = path.join(sourceDirectory, file);
-                        const destinationFilePath = path.join(destinationDirectory, file);
-                        fs.rename(sourceFilePath, destinationFilePath, (err) => {
-                            if (err) {
-                                return new CommonResponseModel(false, 0, '')
-                            }
-                        });
+                            const sourceFilePath = path.join(sourceDirectory, file);
+                            const destinationFilePath = path.join(destinationDirectory, file);
+                            fs.rename(sourceFilePath, destinationFilePath, (err) => {
+                                if (err) {
+                                    return new CommonResponseModel(false, 0, '')
+                                }
+                            });
                         // }
                     }
                 });
