@@ -31,6 +31,13 @@ export class CentricRepository extends Repository<CentricEntity> {
             if(req.season !== undefined){
                 query.andWhere(`o.season ='${req.season}'`) 
             }
+            if (req.exfactoryDateStartDate !== undefined) {
+                query.andWhere(`Date(o.exfactory) BETWEEN '${req.exfactoryDateStartDate}' AND '${req.exfactoryDateEndDate}'`)
+            }
+            if (req.exportDateStartDate !== undefined) {
+                query.andWhere(`Date(o.export) BETWEEN '${req.exportDateStartDate}' AND '${req.exportDateEndDate}'`)
+            }
+            
           
         return await query.getRawMany()
     }
