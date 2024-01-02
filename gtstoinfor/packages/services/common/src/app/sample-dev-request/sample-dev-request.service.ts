@@ -500,12 +500,13 @@ export class SampleRequestService {
         console.log(fabFlag.has(true) +"-"+ trimFlag.has(true))
         console.log(fabFlag.has(false) +"-"+ trimFlag.has(false))
 
-        if(fabFlag.has(false) || trimFlag.has(false)){
-        //   let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})
-        //     if(updateSampleRequestStatus.affected === 0){
+        if(!fabFlag.has(false) || !trimFlag.has(false)){
+          let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})
+          console.log(updateSampleRequestStatus)
+            if(updateSampleRequestStatus.affected === 0){
               await manager.releaseTransaction();
               return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
-        //     }
+            }
         }
       }
       else{
