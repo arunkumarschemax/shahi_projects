@@ -165,4 +165,14 @@ export class CentricController {
         }
     }
 
+    
+    @Post('/getseasonData')
+    async getseasonData(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getseasonData();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
 }

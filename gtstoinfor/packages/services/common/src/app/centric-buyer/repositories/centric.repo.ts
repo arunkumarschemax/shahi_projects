@@ -22,6 +22,16 @@ export class CentricRepository extends Repository<CentricEntity> {
             if(req.externalRefNo != undefined){
                 query.andWhere(` o.buyer = "${req.externalRefNo}"`)
             }
+            if (req.poDateStartDate !== undefined) {
+                query.andWhere(`Date(o.po_date) BETWEEN '${req.poDateStartDate}' AND '${req.poDateEndDate}'`)
+            }
+            if (req.deliveryDateStartDate !== undefined) {
+                query.andWhere(`Date(o.delivery_date) BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+            }
+            if(req.season !== undefined){
+                query.andWhere(`o.season ='${req.season}'`) 
+            }
+          
         return await query.getRawMany()
     }
 
@@ -43,6 +53,13 @@ export class CentricRepository extends Repository<CentricEntity> {
             if(req.externalRefNo != undefined){
                 query.andWhere(` o.buyer = "${req.externalRefNo}"`)
             }
+        return await query.getRawMany()
+    }
+
+    async getDistinctSeasons(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`DISTINCT season`)
+        
         return await query.getRawMany()
     }
 

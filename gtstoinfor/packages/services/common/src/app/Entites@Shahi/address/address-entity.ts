@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
-@Entity('address') 
+@Entity('address')
 export class AddressEntity {
     @PrimaryGeneratedColumn('increment', {
         name: 'address_id',
@@ -8,52 +8,50 @@ export class AddressEntity {
     addressId: number
 
     @Column('varchar', {
-       
-    
         name: 'destination'
     })
-    destination: string 
+    destination: string
 
 
     // @Column("text",{
     //     name:'bill_to',
     //     nullable:false,
-        
+
     // })
     // billTo: string
 
-    
-    @Column("text",{
-        name:'buyer_address',
-        nullable:false,
-        
+
+    @Column("text", {
+        name: 'buyer_address',
+        nullable: false,
+
     })
     buyerAddress: string
 
-    @Column('int',{
-        name:'buyer_code',
-        nullable:false,
-       
+    @Column('int', {
+        name: 'buyer_code',
+        nullable: false,
+
     })
     buyerCode: number
 
-    @Column('text',{
-        name:'delivery_address',
-        nullable:false,
+    @Column('text', {
+        name: 'delivery_address',
+        nullable: false,
     })
     deliveryAddress: string
 
-    @Column('int',{
-        name:'delivery_code',
-        nullable:false,
-       
+    @Column('int', {
+        name: 'delivery_code',
+        nullable: false,
+
     })
     deliveryCode: number
 
     // @Column("text",{
     //     name:'ship_to',
     //     nullable:false,
-        
+
     // })
     // shipTo: string
 
@@ -61,7 +59,7 @@ export class AddressEntity {
     @Column({
         nullable: false,
         name: "is_active",
-        default:1
+        default: 1
     })
     isActive: boolean;
 
@@ -95,5 +93,5 @@ export class AddressEntity {
     })
     versionFlag: number;
 
-    
+
 }
