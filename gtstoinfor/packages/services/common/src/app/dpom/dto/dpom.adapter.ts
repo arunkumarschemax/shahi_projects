@@ -19,6 +19,7 @@ export class DpomAdapter {
         entity.genderAgeDesc = dto.genderAgeDesc
         entity.styleNumber = dto.styleNumber
         entity.productCode = dto.productCode
+        entity.productName = dto.productName
         entity.colorDesc = dto.colorDesc
         entity.destinationCountryCode = dto.destinationCountryCode
         entity.destinationCountry = dto.destinationCountry

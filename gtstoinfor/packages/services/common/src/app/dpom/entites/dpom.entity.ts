@@ -94,6 +94,13 @@ export class DpomEntity {
     productCode: string;
 
     @Column("varchar", {
+        name: "product_Name",
+        length: 50,
+        nullable: true
+    })
+    productName: string;
+
+    @Column("varchar", {
         name: "color_desc",
         length: 50,
         nullable: true
@@ -172,7 +179,7 @@ export class DpomEntity {
 
     @Column("varchar", {
         name: "ship_to_customer_name",
-        length: 30,
+        length: 50,
         nullable: true
     })
     shipToCustomerName: string;
