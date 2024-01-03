@@ -325,6 +325,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "PPK UPC",
         dataIndex: "ppkUpc",
+        width:100,
         
         // sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
         // sortDirections: ["ascend", "descend"],

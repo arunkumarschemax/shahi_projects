@@ -117,9 +117,9 @@ export function CentricPdFInfoGrid() {
     })
 
     const setMoreData = (record) => {
-        // navigate("/centric/po-pdf-table", {
+         navigate("/centric/pdf-info-detail-view", {
         //   state: { data: record },
-        // });
+        });
       };
 
 
