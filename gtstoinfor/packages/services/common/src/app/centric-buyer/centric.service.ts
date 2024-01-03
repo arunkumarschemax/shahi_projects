@@ -135,6 +135,49 @@ export class CentricService {
           entity.comptMaterial = variant.comptMaterial
           entity.ratio = variant.ratio
 
+          const fileData = {
+            poNumber: entity.poNumber,
+            poDate: entity.poDate,
+            shipment: entity.shipment,
+            season: entity.season,
+            portOfExport: entity.portOfExport,
+            portOfEntry: entity.portOfEntry,
+            Refrence: entity.Refrence,
+            paymentTermDescription: entity.paymentTermDescription,
+            specialInstructions: entity.specialInstructions,
+            division: entity.division,
+            incoterm: entity.incoterm,
+            shipToAdd: entity.shipToAdd,
+            manufacture: entity.manufacture,
+            buyerAddress: entity.buyerAddress,
+        
+            CentricpoItemDetails: [{
+                poLine: item.poLine,
+                material: item.material,
+                color: item.color,
+                gender: item.gender,
+                shortDescription: item.shortDescription,
+                packMethod: item.packMethod,
+                vendorBookingFlag: item.vendorBookingFlag,
+                currency: item.currency,
+                totalQuantity: item.totalQuantity,
+                CentricpoItemVariantDetails: item.CentricpoItemVariantDetails.map(variant => ({
+                    size: variant.size,
+                    upc: variant.upc,
+                    label: variant.label,
+                    unitPrice: variant.unitPrice,
+                    quantity: variant.quantity,
+                    exFactory: variant.exFactory,
+                    exPort: variant.exPort,
+                    deliveryDate: variant.deliveryDate,
+                    retialPrice: variant.retialPrice,
+                }))
+            }]
+        };
+        
+        entity.fileData = JSON.stringify(fileData);
+        console.log(entity.fileData, "dfdfdfdfdfdfffffff");
+
           if (orderData) {
             const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {})
             if (!update.affected) {
@@ -156,26 +199,54 @@ export class CentricService {
     }
   }
 
+  async updatePath(req: CentricDto, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
+    console.log(poNumber, "pppppioooooo");
+    console.log(req, "reqqqqqqqqq");
 
-  async updatePath(filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
-
-    const entity = new CentricPdfFileUploadEntity()
+    // const poNumberFromFileName = filename.replace(/\D/g, "");
+    const poNumberFromFileName = filename.replace(/\(+.+/g, "").replace(/\D/g, "");
+    const entity = new CentricPdfFileUploadEntity();
+    entity.poNumber = poNumberFromFileName;
     entity.pdfFileName = filename;
     entity.filePath = filePath;
-    entity.fileType = mimetype
-    const file = await this.pdfRepo.findOne({ where: { pdfFileName: filePath } })
+    entity.fileType = mimetype;
+    entity.fileData = JSON.stringify(req)
+    console.log(entity.fileData, "fileData")
+
+    const file = await this.pdfRepo.findOne({ where: { pdfFileName: filePath } });
     if (file) {
-      return new CommonResponseModel(false, 0, 'File with same name already uploaded');
+      return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
     } else {
-      const save = await this.pdfRepo.save(entity)
+      const save = await this.pdfRepo.save(entity);
       if (save) {
-        return new CommonResponseModel(true, 1, 'uploaded successfully', save);
-      }
-      else {
-        return new CommonResponseModel(false, 0, 'uploaded failed');
+        return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
+      } else {
+        return new CommonResponseModel(false, 0, 'Uploaded failed');
       }
     }
   }
+
+
+  // async updatePath(poNumber:string,filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
+  //   console.log(poNumber,"pppppioooooo")
+  //   const entity = new CentricPdfFileUploadEntity()
+  //   entity.poNumber=poNumber;
+  //   entity.pdfFileName = filename;
+  //   entity.filePath = filePath;
+  //   entity.fileType = mimetype
+  //   const file = await this.pdfRepo.findOne({ where: { pdfFileName: filePath } })
+  //   if (file) {
+  //     return new CommonResponseModel(false, 0, 'File with same name already uploaded');
+  //   } else {
+  //     const save = await this.pdfRepo.save(entity)
+  //     if (save) {
+  //       return new CommonResponseModel(true, 1, 'uploaded successfully', save);
+  //     }
+  //     else {
+  //       return new CommonResponseModel(false, 0, 'uploaded failed');
+  //     }
+  //   }
+  // }
 
   async getPoNumber(): Promise<CommonResponseModel> {
     try {
@@ -624,11 +695,11 @@ export class CentricService {
       await page.waitForNavigation();
 
       setTimeout(async () => {
-      await page.goto('http://localhost:4200/#/centric/centric-pdf-upload/',{
-        timeout: 100000,
-        waitUntil: 'networkidle0'
-      })
-    }, 1000);
+        await page.goto('http://localhost:4200/#/centric/centric-pdf-upload/', {
+          timeout: 100000,
+          waitUntil: 'networkidle0'
+        })
+      }, 1000);
 
       const directoryPath = 'F:/centric-buyers-unread-files/';
       const destinationDirectory = 'F:/centric-buyers-read-files/';
@@ -741,7 +812,7 @@ export class CentricService {
       throw err
     }
   }
- 
+
   async getseasonData(): Promise<CommonResponseModel> {
     try {
       const data = await this.Repo.getDistinctSeasons()

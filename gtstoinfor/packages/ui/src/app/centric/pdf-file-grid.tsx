@@ -116,6 +116,12 @@ export function CentricPdFInfoGrid() {
                 : null
     })
 
+    const setMoreData = (record) => {
+         navigate("/centric/pdf-info-detail-view", {
+        //   state: { data: record },
+        });
+      };
+
 
     const columns: any = [
         {
@@ -125,14 +131,14 @@ export function CentricPdFInfoGrid() {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
             fixed: 'left'
         },
-        // {
-        //     title: 'PO Number',
-        //     dataIndex: 'poNumber',
-        //     width:70 ,
-        //     sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-        //     sortDirections: ["ascend", "descend"],
-        //     ...getColumnSearchProps('purchaseOrderNumber')
-        // },
+        {
+            title: 'PO Number',
+            dataIndex: 'poNumber',
+            width:70 ,
+            sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+            sortDirections: ["ascend", "descend"],
+            ...getColumnSearchProps('poNumber')
+        },
         {
             title: 'File Name',
             dataIndex: 'pdfFileName',
@@ -162,6 +168,20 @@ export function CentricPdFInfoGrid() {
             
             
         },
+          
+        {
+            title: "Action",
+            dataIndex: "action",
+            align: "center",
+            width: 120,
+            render: (value, record) => (
+              <>
+                <Button 
+                onClick={() => setMoreData(record)}
+                >More Info</Button>
+              </>
+            ),
+          }
 
 
     ]

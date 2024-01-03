@@ -16,7 +16,7 @@ const service = new RLOrdersService();
 const [orderData, setOrderData] = useState<any>([]);
 const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
-
+console.log(location?.state?.data)
 
 
 // useEffect(() => {
@@ -85,7 +85,7 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
            
         },
         {
-            title: 'Total Quantity',
+            title: 'Quantity',
             dataIndex: 'totalQuantity',
             // width: 60,
             // align:"center",
@@ -141,10 +141,10 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
    
 
     const getTotalAmountAndQuantity = () => {
-        const total = orderData.reduce(
+        const total = location?.state?.data?.sizeWiseData.reduce(
           (accumulator, item) => {
-            accumulator.amount += parseFloat(item.amount) || 0;
-            accumulator.quantity += parseInt(item.quantity, 10) || 0;
+            // accumulator.amount += parseFloat(item.totalQuantity ) || 0;
+            accumulator.quantity += parseInt(item.totalQuantity, 10) || 0;
             return accumulator;
           },
           { amount: 0, quantity: 0 }
@@ -162,7 +162,7 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
 
     return (
-        <Card title="Order Detail View"
+        <Card title="Order Details"
         extra ={<Link to='/centric/order-data-info-grid' ><Button className='panel_button' >View </Button></Link>}
         >
         <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }} >
@@ -202,61 +202,37 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
                             setPageSize(pageSize);
                         },
                         }}
-                        // scroll={{ y: 450 }}
-                        // summary={() => (
-                        // <>
-                        //     <Table.Summary.Row className="tableFooter">
+                        scroll={{ y: 450 }}
+                        summary={() => (
+                        <>
+                            <Table.Summary.Row className="tableFooter">
                                 
-                        //             <Table.Summary.Cell index={1} colSpan={5}>
-                        //             <span style={{ marginLeft:600 }}>
-                        //                 <b>PO Line Total</b>
-                        //             </span>
+                                    <Table.Summary.Cell index={1} colSpan={5}>
+                                    <span style={{marginLeft:500}}>
+                                        <b>Total   :</b>
+                                    </span>
                                 
-                        //             </Table.Summary.Cell>
-                        //             <Table.Summary.Cell index={1} colSpan={1}>
-                        //             <span>
-                        //                 <b>{Number(totalQuantity)}</b>
-                        //             </span>
-                        //             </Table.Summary.Cell>
-                        //             <Table.Summary.Cell index={1} colSpan={1}>
-                        //             <span>
-                        //                 <b>{Number(totalAmount)} {location?.state?.data?.currency} </b>
-                        //             </span>
-                        //             </Table.Summary.Cell>
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    {/* <span>
+                                        <b>{Number(totalQuantity)}</b>
+                                    </span> */}
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    <span>
+                                        <b>{Number(totalQuantity)}  </b>
+                                    </span>
+                                    </Table.Summary.Cell>
                                     
 
-                        //             <Table.Summary.Cell index={1} colSpan={1}>
-                        //             <span style={{ textAlign: "end" }}>
-                        //             </span>
-                        //             </Table.Summary.Cell>
-                        //         </Table.Summary.Row>
-                        //         <Table.Summary.Row className="tableFooter">
-                                
-                        //             <Table.Summary.Cell index={1} colSpan={5}>
-                        //             <span style={{ marginLeft:600 }}>
-                        //                 <b>Purchase Order Total</b>
-                        //             </span>
-                                
-                        //             </Table.Summary.Cell>
-                        //             <Table.Summary.Cell index={1} colSpan={1}>
-                        //             <span>
-                        //                 <b>{Number(totalQuantity)}</b>
-                        //             </span>
-                        //             </Table.Summary.Cell>
-                        //             <Table.Summary.Cell index={1} colSpan={1}>
-                        //             <span>
-                        //                 <b>{Number(totalAmount)} {location?.state?.data?.currency} </b>
-                        //             </span>
-                        //             </Table.Summary.Cell>
-                                    
-
-                        //             <Table.Summary.Cell index={1} colSpan={1}>
-                        //             <span style={{ textAlign: "end" }}>
-                        //             </span>
-                        //             </Table.Summary.Cell>
-                        //         </Table.Summary.Row>
-                        // </>
-                        // )}
+                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    <span style={{ textAlign: "end" }}>
+                                    </span>
+                                    </Table.Summary.Cell>
+                                </Table.Summary.Row>
+                       
+                        </>
+                        )}
                     ></Table>
 
         

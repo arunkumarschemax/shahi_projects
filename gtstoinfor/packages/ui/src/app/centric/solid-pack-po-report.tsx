@@ -49,6 +49,12 @@ import RangePicker from "rc-picker/lib/RangePicker";
     const [filterData, setFilterData] = useState([]);
     const { IAMClientAuthContext, dispatch } = useIAMClientState();
     const { RangePicker } = DatePicker;
+    const [poDateDis, setPoDateDis] = useState<boolean>(true);
+    // const [delverDateDis, setDelverDateDis] = useState<boolean>(true);
+    const [onChangeData, setonChangeData] = useState({});
+
+
+
   
     useEffect(() => {
       getorderData();
@@ -63,18 +69,46 @@ import RangePicker from "rc-picker/lib/RangePicker";
       if (form.getFieldValue("poNumber") !== undefined) {
         req.poNumber = form.getFieldValue("poNumber");
       } 
-      if (form.getFieldValue('poDate') !== undefined) {
-        req.poDateStartDate = (form.getFieldValue('poDate')[0]).format('YYYY-MM-DD');
+      
+      if(onChangeData === "po_date"){
+         
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.poDateStartDate = (form.getFieldValue('range_date')[0]).format('YYYY-MM-DD');
+        }
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.poDateEndDate = (form.getFieldValue('range_date')[1]).format('YYYY-MM-DD');
+        }
+      } else if (onChangeData === "delivery_date"){
+          
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.deliveryDateStartDate = (form.getFieldValue('range_date')[0]).format('YYYY-MM-DD');
+        }
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.deliveryDateEndDate = (form.getFieldValue('range_date')[1]).format('YYYY-MM-DD');
+        }
+      } else if (onChangeData === "export"){
+
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.exportDateStartDate = (form.getFieldValue('range_date')[0]).format('YYYY-MM-DD');
+        }
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.exportDateEndDate = (form.getFieldValue('range_date')[1]).format('YYYY-MM-DD');
+        }
+
+      } else if(onChangeData === "exfactory"){
+
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.exfactoryDateStartDate = (form.getFieldValue('range_date')[0]).format('YYYY-MM-DD');
+        }
+        if (form.getFieldValue('range_date') !== undefined) {
+          req.exfactoryDateEndDate = (form.getFieldValue('range_date')[1]).format('YYYY-MM-DD');
+        }
+
       }
-      if (form.getFieldValue('poDate') !== undefined) {
-        req.poDateEndDate = (form.getFieldValue('poDate')[1]).format('YYYY-MM-DD');
-      }
-      if (form.getFieldValue('deliveryDate') !== undefined) {
-        req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
-      }
-      if (form.getFieldValue('deliveryDate') !== undefined) {
-        req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
-      }
+
+    
+
+     
       if (form.getFieldValue("season") !== undefined) {
         req.season = form.getFieldValue("season");
       }
@@ -645,6 +679,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
 
     const onReset = () => {
       form.resetFields();
+      form.setFieldsValue({"test":null})
       getorderData();
     };
   
@@ -804,7 +839,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
             width: 90,
             sorter: (a, b) => a.poLine.localeCompare(b.poLine),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('poLine')
             // fixed: "left",
           },
           {
@@ -1308,8 +1344,23 @@ import RangePicker from "rc-picker/lib/RangePicker";
         </>
       );
     };
+    
+
   
-    return (
+
+    const onDateChange = (value:any) =>{
+      console.log(value)
+      setonChangeData(value)
+      if(value){
+        setPoDateDis(false)
+        form
+      } else {
+        setPoDateDis(true)
+      }
+
+    }
+
+    return(
       <>
         <Card title="Solid Pack PO Report" headStyle={{ fontWeight: "bold" }} 
         
@@ -1353,6 +1404,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
                   </Select>
                 </Form.Item>
               </Col>
+             
+
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
@@ -1360,10 +1413,11 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-               <Form.Item label="PO Date" name="poDate">
-                  <RangePicker />
+               <Form.Item label="Season" name="season">
+                  <Input placeholder="Enter Season" />
                 </Form.Item>
               </Col>
+              
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
@@ -1371,8 +1425,19 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-               <Form.Item label="Delivery Date" name="deliveryDate">
-                  <RangePicker />
+               <Form.Item label="Date" name="test">
+               <Select
+                    showSearch
+                    placeholder="Select Date"
+                    optionFilterProp="children"
+                    allowClear
+                    onChange={onDateChange}
+                  >
+                <Option value ="po_date">PO Date</Option>
+                <Option value ="delivery_date">Delivery Date</Option>
+                <Option value ="export">Export Date</Option>
+                <Option value ="exfactory">Ex Factory Date</Option>
+                  </Select>
                 </Form.Item>
               </Col>
 
@@ -1383,24 +1448,21 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-               <Form.Item label="Season" name="season">
-               {/* <Select
-                    showSearch
-                    placeholder="Select Season"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {seasonData.map((inc: any) => {
-                      return (
-                        <Option key={inc.season} value={inc.season}>
-                          {inc.season}
-                        </Option>
-                      );
-                    })}
-                  </Select> */}
-                  <Input placeholder="Enter Season" />
+               <Form.Item label="Range" name="range_date" hidden={poDateDis} >
+                  <RangePicker  />
                 </Form.Item>
               </Col>
+              {/* <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Delivery Date" name="deliveryDate" hidden={delverDateDis}>
+                  <RangePicker  />
+                </Form.Item>
+              </Col> */}
               
               <Col
                 xs={{ span: 24 }}

@@ -2,6 +2,7 @@ import {
     Button,
     Card,
     Col,
+    DatePicker,
     Form,
     Input,
     Modal,
@@ -21,6 +22,7 @@ import {
   import Highlighter from "react-highlight-words";
   import { useNavigate } from "react-router-dom";
   import {
+    AlertMessages,
     OrderDataModel,
     PoOrderFilter,
   } from "@project-management-system/shared-models";
@@ -43,6 +45,7 @@ import {
     const [isModalOpen1, setIsModalOpen1] = useState(false);
     const [filterData, setFilterData] = useState([]);
     const { IAMClientAuthContext, dispatch } = useIAMClientState();
+    const { RangePicker } = DatePicker;
   
     useEffect(() => {
       getorderData();
@@ -56,14 +59,27 @@ import {
       if (form.getFieldValue("poNumber") !== undefined) {
         req.poNumber = form.getFieldValue("poNumber");
       } 
+
+      if (form.getFieldValue('podate') !== undefined) {
+        req.poDateStartDate = (form.getFieldValue('podate')[0]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('podate') !== undefined) {
+        req.poDateEndDate = (form.getFieldValue('podate')[1]).format('YYYY-MM-DD');
+      }
      req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
   
-      service.getorderData(req).then((res) => {
-        if (res.status) {
-          setOrderData(res.data);
-          setFilterData(res.data);
-        }
-      });
+     service.getorderData(req).then((res) => {
+      if (res.status) {
+        setOrderData(res.data);
+        setFilterData(res.data);
+      } else {
+        setOrderData([]);
+        setFilterData([])
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch((err) => {
+      console.log(err.message);
+    });
     };
 
     const getPoNumber = () => {
@@ -184,12 +200,14 @@ import {
       );
       return Array.from(sizeHeaders);
     };
+
+    console.log(form.getFieldValue('podate'))
   
     const renderReport = (data) => {
       const sizeHeaders = getSizeWiseHeaders(data);
     
   
-      const columns: ColumnsType<any> = [
+      const columns: any = [
         {
           title: "S.No",
           key: "sno",
@@ -204,9 +222,9 @@ import {
           sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
           sortDirections: ["ascend", "descend"],
           fixed: "left",
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
 
-          // ...getColumnSearchProps('purchaseOrderNumber')
+          ...getColumnSearchProps('poNumber')
         },
         {
           title: "PO Line",
@@ -214,9 +232,9 @@ import {
           width: 90,
           sorter: (a, b) => a.poLine.localeCompare(b.poLine),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('poLine')
 
-          // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
           title: "PO Date",
@@ -224,19 +242,19 @@ import {
           width: 90,
           sorter: (a, b) => a.PODate.localeCompare(b.PODate),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('PODate')
 
           // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
           title: "Material",
           dataIndex: "material",
-          width: 90,
+          width: 130,
           sorter: (a, b) => a.material.localeCompare(b.material),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
-
-          // ...getColumnSearchProps('purchaseOrderNumber')
+          render: (text) => text ? text : "-",
+         ...getColumnSearchProps('material')
         },
         {
           title: "Season",
@@ -244,19 +262,19 @@ import {
           width: 90,
           sorter: (a, b) => a.season.localeCompare(b.season),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
 
-          // ...getColumnSearchProps('purchaseOrderNumber')
+          ...getColumnSearchProps('season')
         },
         {
             title: "Color",
             dataIndex: "color",
-            width: 90,
+            width: 110,
             sorter: (a, b) => a.color.localeCompare(b.color),
             sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
 
-            // ...getColumnSearchProps('purchaseOrderNumber')
+            ...getColumnSearchProps('color')
           },
 
           {
@@ -265,41 +283,23 @@ import {
             width: 90,
             sorter: (a, b) => a.gender.localeCompare(b.gender),
             sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
 
-            // ...getColumnSearchProps('purchaseOrderNumber')
+            ...getColumnSearchProps('gender')
           },
        
         {
           title: "Payment Terms Description",
           dataIndex: "paymentTermDescription",
           align: "center",
-          width: 90,
+          width: 200,
           sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('paymentTermDescription') 
 
         },
-        {
-          title: "Incoterm",
-          dataIndex: "incoterm",
-          align: "center",
-          width: 90,
-          sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
-
-        },
-        {
-            title: "Address",
-            dataIndex: "shipToAddress",
-            width: 90,
-            sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-            sortDirections: ["ascend", "descend"],
-           render: (text) => text ? text : "-"
-
-            // ...getColumnSearchProps('purchaseOrderNumber')
-          },
+       
        
       
        
@@ -317,7 +317,7 @@ import {
                     title: 'Ratio',
                     dataIndex: '',
                     key: '',
-                    width: 70,
+                    width: 90,
                     className: "center",
                     render: (text, record) => {
                         const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -344,7 +344,7 @@ import {
                     title: 'UPC',
                     dataIndex: '',
                     key: '',
-                    width: 70,
+                    width: 100,
                     className: "center",
                     render: (text, record) => {
                         const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -371,7 +371,7 @@ import {
                   title: 'Label',
                   dataIndex: '',
                   key: '',
-                  width: 70,
+                  width: 90,
                   className: "center",
                   render: (text, record) => {
                       const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -480,7 +480,7 @@ import {
                     title: 'Ex-factory Date ',
                     dataIndex: '',
                     key: '',
-                    width: 70,
+                    width: 100,
                     className: "center",
                     render: (text, record) => {
                         const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -506,7 +506,7 @@ import {
                   title: 'Export Date ',
                   dataIndex: '',
                   key: '',
-                  width: 70,
+                  width: 100,
                   className: "center",
                   render: (text, record) => {
                       const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -532,7 +532,7 @@ import {
                 title: 'Delivery Date',
                 dataIndex: '',
                 key: '',
-                width: 70,
+                width: 100,
                 className: "center",
                 render: (text, record) => {
                     const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -560,7 +560,28 @@ import {
       })
   
       columns.push(
-          
+        {
+          title: "Incoterm",
+          dataIndex: "incoterm",
+          align: "center",
+          width: 500,
+          sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('incoterm') 
+
+
+        },
+        {
+            title: "Address",
+            dataIndex: "shipToAddress",
+            width: 600,
+            sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+            sortDirections: ["ascend", "descend"],
+           render: (text) => text ? text : "-",
+
+            ...getColumnSearchProps('shipToAddress')
+          },
           
           {
         title: "Action",
@@ -612,11 +633,11 @@ import {
   
     return (
       <>
-        <Card title="Order info " headStyle={{ fontWeight: "bold" }}>
+        <Card title="Order Info " headStyle={{ fontWeight: "bold" }}>
           <Form
             onFinish={getorderData}
             form={form}
-            // layout='vertical'
+            layout='vertical'
           >
             <Row gutter={24}>
               <Col
@@ -624,7 +645,7 @@ import {
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
                 lg={{ span: 4 }}
-                xl={{ span: 6 }}
+                xl={{ span: 4 }}
               >
                 <Form.Item name="poNumber" label="PO Number">
                   <Select
@@ -646,11 +667,22 @@ import {
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="PO Date" name="podate"  >
+                  <RangePicker  />
+                </Form.Item>
+              </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
                 md={{ span: 5 }}
                 lg={{ span: 5 }}
                 xl={{ span: 4 }}
               >
-                <Form.Item>
+                <Form.Item style={{marginTop:20}}>
                   <Button
                     htmlType="submit"
                     icon={<SearchOutlined />}
