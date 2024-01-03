@@ -875,6 +875,43 @@ const onTrimChange = (val, option) => {
         reader.readAsDataURL(img);
       }
 
+    // const uploadFabricProps: UploadProps = {
+    //     // alert();
+    //     multiple: false,
+    //     onRemove: file => {
+    //       setFabricfilelist([]);
+    //       setImageUrl('');
+    //     },
+    //     beforeUpload: (file: any) => {
+    //       if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+    //         AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+    //         // return true;
+    //       }
+    //       var reader = new FileReader();
+    //       reader.readAsArrayBuffer(file);
+    //       reader.onload = data => {
+    //         if (fabricfilelist.length == 1) {
+    //           AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+    //           return true;
+    //         } else {
+    //             setFabricfilelist([...fabricfilelist,file]);
+    //           getBase64(file, imageUrl =>
+    //             setImageUrl(imageUrl)
+    //           );
+    //           return false;
+    //         }
+    //       }
+    //     },
+    //     progress: {
+    //       strokeColor: {
+    //         '0%': '#108ee9',
+    //         '100%': '#87d068',
+    //       },
+    //       strokeWidth: 3,
+    //       format: percent => `${parseFloat(percent.toFixed(2))}%`,
+    //     },
+    //     fileList: fabricfilelist,
+    //   };
     const uploadFabricProps: UploadProps = {
         // alert();
         multiple: false,
@@ -885,11 +922,11 @@ const onTrimChange = (val, option) => {
         beforeUpload: (file: any) => {
           if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
             AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
-            // return true;
+            return false;
           }
-          var reader = new FileReader();
-          reader.readAsArrayBuffer(file);
-          reader.onload = data => {
+        //   var reader = new FileReader();
+        //   reader.readAsArrayBuffer(file);
+        //   reader.onload = data => {
             if (fabricfilelist.length == 1) {
               AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
               return true;
@@ -899,7 +936,7 @@ const onTrimChange = (val, option) => {
                 setImageUrl(imageUrl)
               );
               return false;
-            }
+            // }
           }
         },
         progress: {
@@ -913,7 +950,47 @@ const onTrimChange = (val, option) => {
         fileList: fabricfilelist,
       };
 
-      const uploadTrimProps: UploadProps = {
+    //   const uploadTrimProps: UploadProps = {
+    //     // alert();
+    //     multiple: false,
+    //     onRemove: file => {
+    //       setTrimfilelist([]);
+    //     //   setImageUrl('');
+    //     setTrimImgageUrl('')
+    //     },
+    //     beforeUpload: (file: any) => {
+    //       if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+    //         AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+    //         // return true;
+    //       }
+    //       var reader = new FileReader();
+    //       reader.readAsArrayBuffer(file);
+    //       reader.onload = data => {
+    //         if (trimfilelist.length == 1) {
+    //           AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+    //           return true;
+    //         } else {
+    //             setTrimfilelist([...trimfilelist,file]);
+    //           getBase64(file, imageUrl =>
+    //             // setImageUrl(imageUrl)
+    //             setTrimImgageUrl(imageUrl)
+    //           );
+    //           return false;
+    //         }
+    //       }
+    //     },
+    //     progress: {
+    //       strokeColor: {
+    //         '0%': '#108ee9',
+    //         '100%': '#87d068',
+    //       },
+    //       strokeWidth: 3,
+    //       format: percent => `${parseFloat(percent.toFixed(2))}%`,
+    //     },
+    //     fileList: trimfilelist,
+    //   };
+
+    const uploadTrimProps: UploadProps = {
         // alert();
         multiple: false,
         onRemove: file => {
@@ -926,9 +1003,9 @@ const onTrimChange = (val, option) => {
             AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
             // return true;
           }
-          var reader = new FileReader();
-          reader.readAsArrayBuffer(file);
-          reader.onload = data => {
+        //   var reader = new FileReader();
+        //   reader.readAsArrayBuffer(file);
+        //   reader.onload = data => {
             if (trimfilelist.length == 1) {
               AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
               return true;
@@ -940,7 +1017,7 @@ const onTrimChange = (val, option) => {
               );
               return false;
             }
-          }
+        //   }
         },
         progress: {
           strokeColor: {
@@ -952,7 +1029,6 @@ const onTrimChange = (val, option) => {
         },
         fileList: trimfilelist,
       };
-
 
       
   const handleCancel = () => {
