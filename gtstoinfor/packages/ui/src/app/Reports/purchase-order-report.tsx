@@ -199,9 +199,9 @@ const Columns:any=[
     },
     {
       title:"Material Type",
-      dataIndex:"po_material_type",
+      dataIndex:"item_type",
       width:100,
-      ...getColumnSearchProps("po_material_type"),
+      ...getColumnSearchProps("item_type"),
       render: (text) => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
         return EnumObj ? EnumObj.displayVal : text;

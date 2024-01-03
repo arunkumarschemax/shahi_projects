@@ -648,7 +648,7 @@ export class PurchaseOrderService {
     }
 
     async getPodetails(req?:PoReq):Promise<CommonResponseModel>{
-        let PoType = `SELECT p.po_number,p.expected_delivery_date,p.purchase_order_date,p.po_against,p.po_material_type,p.status,p.total_amount,
+        let PoType = `SELECT p.po_number,p.expected_delivery_date,p.purchase_order_date,p.po_against,poi.item_type,p.status,p.total_amount,
         poi.po_item_status,v.vendor_name,cur.currency_name,f.name AS factory,t.tax_name,u.uom,poi.po_quantity,poi.grn_quantity,
         IF(p.po_against = 'Sample Order',s.expected_delivery_date,i.indent_date) AS DATE,
         IF(p.po_against = 'Sample Order',s.request_no,i.request_no) AS request_no,

@@ -1873,7 +1873,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
      LEFT JOIN colour c ON c.colour_id = sf.colour_id
      LEFT JOIN rack_position l ON l.position_Id = mai.location_id
     WHERE  sr.sample_request_id= '${req.requestNo}' AND ma.item_type = 'FABRIC'
-  `;
+    order by mi.item_code`;
       
       const fabricInfo = await this.dataSource.query(fabricInfoQry)
       let trimInfoQry = `SELECT sr.request_no AS requestNo,
@@ -1895,7 +1895,7 @@ FROM sample_request sr
  LEFT JOIN m3_trims mi ON mi.m3_trim_Id = ma.m3_item_id
  LEFT JOIN rack_position l ON l.position_Id = mai.location_id
 WHERE  sr.sample_request_id= '${req.requestNo}' AND  ma.item_type != 'FABRIC'
-`;
+order by mi.trim_code`;
 
 const trimInfo = await this.dataSource.query(trimInfoQry)
 
