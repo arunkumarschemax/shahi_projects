@@ -386,6 +386,44 @@ const getBase64 = (img, callback) => {
       setProcessData(updatedData);
   };
 
+  // const uploadFabricProps: UploadProps = {
+  //   // alert();
+  //   multiple: false,
+  //   onRemove: file => {
+  //     setFileList([]);
+  //     setImageUrl('');
+  //   },
+  //   beforeUpload: (file: any) => {
+  //     if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+  //       AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+  //       // return true;
+  //     }
+  //     var reader = new FileReader();
+  //     reader.readAsArrayBuffer(file);
+  //     reader.onload = data => {
+  //       if (fileList.length == 1) {
+  //         AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+  //         return true;
+  //       } else {
+  //           setFileList([...fileList,file]);
+  //         getBase64(file, imageUrl =>
+  //           setImageUrl(imageUrl)
+  //         );
+  //         return false;
+  //       }
+  //     }
+  //   },
+  //   progress: {
+  //     strokeColor: {
+  //       '0%': '#108ee9',
+  //       '100%': '#87d068',
+  //     },
+  //     strokeWidth: 3,
+  //     format: percent => `${parseFloat(percent.toFixed(2))}%`,
+  //   },
+  //   fileList: fileList,
+  // };
+
   const uploadFabricProps: UploadProps = {
     // alert();
     multiple: false,
@@ -396,11 +434,11 @@ const getBase64 = (img, callback) => {
     beforeUpload: (file: any) => {
       if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
         AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
-        // return true;
+        return true;
       }
-      var reader = new FileReader();
-      reader.readAsArrayBuffer(file);
-      reader.onload = data => {
+      // var reader = new FileReader();
+      // reader.readAsArrayBuffer(file);
+      // reader.onload = data => {
         if (fileList.length == 1) {
           AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
           return true;
@@ -411,7 +449,7 @@ const getBase64 = (img, callback) => {
           );
           return false;
         }
-      }
+      // }
     },
     progress: {
       strokeColor: {
@@ -423,6 +461,7 @@ const getBase64 = (img, callback) => {
     },
     fileList: fileList,
   };
+  
   const handleFabricsDataUpdate = (updatedData) => {
     setData((prevData) => ({ ...prevData, fabricsData: updatedData }));
     setFabricsData(updatedData);
