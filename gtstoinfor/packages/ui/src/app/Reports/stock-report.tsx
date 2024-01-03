@@ -1,10 +1,14 @@
-import { DownloadOutlined, FilePdfOutlined, UndoOutlined } from '@ant-design/icons';
+import { DownloadOutlined, FilePdfOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { ItemTypeEnumDisplay, SampleFilterRequest, StockFilterRequest, StocksDto } from '@project-management-system/shared-models';
 import { StockService } from '@project-management-system/shared-services';
-import { Button, Card, Col, Form, Row, Select, Statistic, Table } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Button, Card, Col, Form, Input, Row, Select, Space, Statistic, Table } from 'antd'
+import React, { useEffect, useRef, useState } from 'react'
 import { Excel } from 'antd-table-saveas-excel';
 import { useIAMClientState } from "../common/iam-client-react";
+import Highlighter from 'react-highlight-words';
+import { ColumnType } from 'antd/es/table';
+import { FilterConfirmProps } from 'antd/es/table/interface';
+import moment from 'moment';
 
 
 const StockReport = () => {
@@ -21,8 +25,10 @@ const StockReport = () => {
     const [key, setKey] = useState();
     const { IAMClientAuthContext } = useIAMClientState();
     const [isBuyer, setIsBuyer] = useState(false);
-    const page = 1;
-
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
+    const searchInput = useRef<any>(null);
+    const [page,setPage] = useState<number>(1);
 
 
     
@@ -43,7 +49,7 @@ const StockReport = () => {
 
     const getData = () => {
       
-        service.getStockReport().then(res => {
+        service.getAllStockReportData().then(res => {
           
             if(res.status){
                 setData(res.data);
@@ -111,8 +117,83 @@ const StockReport = () => {
         form.resetFields();
         getAllStockReportData();
       };
-   
+    
+const handleSearch = (
+  selectedKeys: string[],
+  confirm: (param?: FilterConfirmProps) => void,
+  dataIndex: string
+) => {
+  confirm();
+  setSearchText(selectedKeys[0]);
+  setSearchedColumn(dataIndex);
+};
 
+const handleReset = (clearFilters: () => void) => {
+  clearFilters();
+  setSearchText("");
+};
+      const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+          <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+            <Input
+              ref={searchInput}
+              placeholder={`Search ${dataIndex}`}
+              value={selectedKeys[0]}
+              onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+              onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+              style={{ marginBottom: 8, display: 'block' }}
+            />
+            <Space>
+              <Button
+                type="primary"
+                onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90 }}
+              >
+                Search
+              </Button>
+              <Button
+                onClick={() =>{
+                  handleReset(clearFilters)
+                  setSearchedColumn(dataIndex)
+                  confirm({closeDropdown:true})
+                }
+                   }
+                size="small"
+                style={{ width: 90 }}
+              >
+                Reset
+              </Button>
+             
+            </Space>
+          </div>
+        ),
+        filterIcon: (filtered: boolean) => (
+          <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+        ),
+        onFilter: (value, record) =>
+          record[dataIndex] ?record[dataIndex]     
+             .toString()
+            .toLowerCase()
+            .includes((value as string).toLowerCase()):false,
+        onFilterDropdownOpenChange: (visible) => {
+          if (visible) {
+            setTimeout(() => searchInput.current?.select(), 100);
+          }
+        },
+        render: (text) =>
+          searchedColumn === dataIndex ? (
+            <Highlighter
+              highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+              searchWords={[searchText]}
+              autoEscape
+              textToHighlight={text ? text.toString() : ''}
+            />
+          ) : (
+            text
+          ),
+      });
     const Columns:any=[
       {
         title: 'S No',
@@ -128,12 +209,17 @@ const StockReport = () => {
       },
         {
             title:"Buyer",
-            dataIndex:"buyerName"
-            
+            width: '100px',
+            dataIndex:"buyerName",
+            ...getColumnSearchProps("buyerName"),
         },
         {
-          title:"Material Type",
-          dataIndex:"itemType",
+          title:"Item Type",
+          dataIndex:"item_type",
+          width: '150px',
+
+          sorter: (a, b) => a.item_type.localeCompare(b.item_type),
+          sortDirections: ["descend", "ascend"],
           render: (text) => {
             const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
             return EnumObj ? EnumObj.displayVal : text;
@@ -141,20 +227,63 @@ const StockReport = () => {
           
       },
         {
-            title:"M3 Item",
+            title:" Item Code",
             dataIndex:"m3ItemCode",
+            ...getColumnSearchProps("m3ItemCode"),
+
+            sorter: (a, b) => a.m3ItemCode.localeCompare(b.m3ItemCode),
+            sortDirections: ["descend", "ascend"],
             width:250
         },
         {
             title:"Location",
-            dataIndex:"location"
-            
+            dataIndex:"location",
+            width: '150px',
+
+            sorter: (a, b) => a.location.localeCompare(b.location),
+            sortDirections: ["descend", "ascend"],
         },
         {
-          title:"Quantity",
-          dataIndex:"quantity"
+          title:"Available Quantity",
+          dataIndex:"available_qty-uom",
+          width: '120px',
+          sorter: (a, b) => a.available_qty.localeCompare(b.available_qty),
+          sortDirections: ["descend", "ascend"],
+          render:(_,record)=>{
+            return (
+              <span>
+                {record.available_qty}-{record.uom}
+              </span>
+            );
+          }
           
       },
+      {
+        title: 'Aging',
+        dataIndex: 'grn_date',
+        width: '20px',
+        align: 'right',
+        sorter: (a, b) => a.grn_date.localeCompare(b.grn_date),
+        sortDirections: ["descend", "ascend"],
+        render: (text, record) => {
+          const grnDate = moment(record.grn_date);
+          const currentDate = moment();
+          const daysDifference = currentDate.diff(grnDate, 'days');
+      
+          const age = {
+            children: daysDifference,
+            props: {
+              style: {
+                background: daysDifference > 0 ? '#3BC744' : '#FF0000',
+                color: 'black',
+              },
+            },
+          };
+      
+          return age;
+        },
+      }
+      
         
     ]
     const onChange =(key)=>{
@@ -346,18 +475,22 @@ const StockReport = () => {
              title={"Total Item Code:" +data.filter(el => el.m3ItemCode).length}>
               </Card> </Col>
               <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#E6D2F0'}}
-              title={"Item Type:"+data.filter(el => el.itemType).length}>
+              title={"Total Item Type:"+data.filter(el => el.item_type).length}>
               </Card> </Col>
               <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#E6DC7B'}}
-              title={"Location:"+data.filter(el => el.location).length}>
+              title={"Total Location:"+data.filter(el => el.location).length}>
               </Card> </Col>
               {/* <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#A4A3A4'}}
               title={"Plant:"+data.filter(el => el.plant_id).length}>
               </Card> </Col> */}
           </Row><br></br>
         <Card >
-        <Table columns={Columns}  pagination={{pageSize:50}}
-        dataSource={stockData}
+        <Table columns={Columns}  
+  pagination={{
+    onChange(current) {
+      setPage(current);
+    }
+  }}        dataSource={stockData}
         className="custom-table-wrapper"
             /> 
         </Card>
