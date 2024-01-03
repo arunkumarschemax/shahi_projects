@@ -1,4 +1,3 @@
-
 import {
   Button,
   Card,
@@ -81,33 +80,41 @@ export function CentricOrderAcceptanceGrid() {
   };
 
   
-  const handleItemNoChange = (value, record) => {
+  const handleItemNoChange = (value, record, index) => {
+    const formValues = form.getFieldsValue();
+    const itemNoValue = formValues[index]?.itemNo;
+  
+    //console.log("Item No from form:", itemNoValue);
+  
     setItemNoValues((prevValues) => ({
       ...prevValues,
-      [record.key]: value,
-
+      [index]: value,
     }));
   };
-  
+ 
 
-  const createCOLine = (record) => {
-    console.log(record)
+  const createCOLine = (record,index) => {
+    const formValues = form.getFieldsValue();
+    const itemNoValue = formValues[index]?.itemNo;
+   // console.log(record);
     const req = new CentricOrderAcceptanceRequest();
-    req.poNumber = record.poNumber
-    req.poLine = record.poLine
-    req.itemNo = itemNoValues[record.key]
-    req.buyer = 'Centric'
+    req.poNumber = record.poNumber;
+    req.poLine = record.poLine;
+    req.itemNo = itemNoValue; 
+    req.buyer = 'Centric';
+  
+   // console.log("Request Payload:", req);
+  
     service.coLineCreationReq(req).then((res) => {
       if (res.status) {
-        getCentricorderData()
-        setItemNoValues('')
-        message.success(res.internalMessage)
-      } else (
-        message.error(res.internalMessage)
-      )
-    })
-  }
-
+        getCentricorderData();
+        setItemNoValues({}); 
+        message.success(res.internalMessage);
+      } else {
+        message.error(res.internalMessage);
+      }
+    });
+  };
   const processData = (tableData: CentricOrderAcceptanceRequest[]) => {
     const dataTobeReturned = [];
     const roleWiseMapData = new Map<string, CentricOrderAcceptanceRequest[]>();
@@ -139,10 +146,12 @@ export function CentricOrderAcceptanceGrid() {
 
 
 
-  const isActionButtonEnabled = (record) => {
-    return itemNoValues[record.key] && itemNoValues[record.key].trim() !== "";
-  }
-
+  const isActionButtonEnabled = (index) => {
+    return (
+      itemNoValues[index] &&
+      itemNoValues[index].trim() !== ""
+    );
+  };
   const onReset = () => {
     form.resetFields();
     getCentricorderData();
@@ -308,8 +317,8 @@ export function CentricOrderAcceptanceGrid() {
         title: "Shipment Method",
         dataIndex: "shipmentMethod",
         width:90,
-        sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
 
       },
@@ -325,6 +334,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "PPK UPC",
         dataIndex: "ppkUpc",
+        width:90,
         
         // sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
         // sortDirections: ["ascend", "descend"],
@@ -358,8 +368,8 @@ export function CentricOrderAcceptanceGrid() {
         title: "Pack Method",
         dataIndex: "packMethod",
         
-        sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
       {
@@ -367,8 +377,8 @@ export function CentricOrderAcceptanceGrid() {
         dataIndex: "vendorFlag",
         align: "center",
         width:90,
-        sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
 
@@ -377,17 +387,18 @@ export function CentricOrderAcceptanceGrid() {
         title: "Season",
         dataIndex: "season",
         width:90,
-        sorter: (a, b) => a.season.localeCompare(b.season),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.season.localeCompare(b.season),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
       {
         title: "Port Of Export",
         dataIndex: "portOfExport",
         align: "center",
+        width:90,
         
-        sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
       {
@@ -395,8 +406,8 @@ export function CentricOrderAcceptanceGrid() {
         dataIndex: "portOfEntry",
         align: "center",
         
-        sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
 
@@ -404,8 +415,8 @@ export function CentricOrderAcceptanceGrid() {
         title: "Reference",
         dataIndex: "reference",
         width:90,
-        sorter: (a, b) => a.reference.localeCompare(b.reference),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.reference.localeCompare(b.reference),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
       {
@@ -413,8 +424,8 @@ export function CentricOrderAcceptanceGrid() {
         dataIndex: "paymentTermDescription",
         align: "center",
         
-        sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
 
@@ -423,8 +434,8 @@ export function CentricOrderAcceptanceGrid() {
         dataIndex: "specialInstructions",
         align: "center",
         
-        sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
 
@@ -434,16 +445,16 @@ export function CentricOrderAcceptanceGrid() {
         title: "Division",
         dataIndex: "division",
         
-        sorter: (a, b) => a.division.localeCompare(b.division),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.division.localeCompare(b.division),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
       {
         title: "Manufacture",
         dataIndex: "manufacture",
         
-        sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
 
@@ -451,8 +462,8 @@ export function CentricOrderAcceptanceGrid() {
         title: "Compt.Material",
         dataIndex: "comptMaterial",
         width: 110,
-        sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
+        // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
 
@@ -758,19 +769,19 @@ export function CentricOrderAcceptanceGrid() {
         width: 100,
         align: "center",
         fixed:'right',
-        render: (text, record) => {
+        render: (text, record,index) => {
           return {
             children: (
-              <Form>
-                <Form.Item>
+            
+                <Form.Item name={[index,'itemNo']}>
                   <Input
                   style={{width:'95px'}}
                     placeholder="Enter Item No"
-                    onChange={(e) => handleItemNoChange(e.target.value, record)}
+                    onChange={(e) => handleItemNoChange(e.target.value, record,index)}
                     disabled={record.status == 'ACCEPTED' ? true : false}
                   />
                 </Form.Item>
-              </Form>
+             
             ),
             props: {
               rowSpan: record.rowSpan,
@@ -785,13 +796,14 @@ export function CentricOrderAcceptanceGrid() {
         width: 80,
         align: "center",
         fixed: 'right',
-        render: (text, record) => {
-          const isEnabled = isActionButtonEnabled(record)
+        render: (text, record, index) => {
+          const isEnabled = isActionButtonEnabled(index);
           return {
             children: (
               <Button
-              style={{position:"relative",top:"-7.5px"}}
-                onClick={() => createCOLine(record)} disabled={record.status == 'ACCEPTED' ? true : !isEnabled}
+                style={{ position: "relative", top: "-7.5px" }}
+                onClick={() => createCOLine(record,index)}
+                disabled={record.status === 'ACCEPTED' ? true : !isEnabled}
               >
                 Accept
               </Button>
@@ -802,7 +814,6 @@ export function CentricOrderAcceptanceGrid() {
           };
         },
       },
-
 
 
     );
@@ -817,6 +828,7 @@ export function CentricOrderAcceptanceGrid() {
     return (
       <>
         {/* {filterData.length > 0 ? ( */}
+        <Form form={form}>
         <Table
           // loading={tableLoading}
           columns={columns}
@@ -835,6 +847,7 @@ export function CentricOrderAcceptanceGrid() {
           rowClassName={getRowClassName}
           bordered
         />
+        </Form>
         {/* ) : (
           <Table size="large" />
         )} */}
