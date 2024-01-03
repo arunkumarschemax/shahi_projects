@@ -220,7 +220,7 @@ export class DpomService {
     async getCRMOrderDetails1(buyerPO: string): Promise<any> {
         const headers = { 'Cache-Control': 'no-cache', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate, br', 'AUTH_API_KEY': '$2a$10$UzaZDcs2ih0MpW12ozjvi.KgUrJyhdxR.Z64oVIwGbz8WmBL.JhDy' }
         try {
-            const response = await axios.get(`https://businesscard.shahi.co.in/ShahiApi/api/nikeCo/getNikeCoDetails?poNo=${buyerPO}`, { headers });
+            const response = await axios.get(`https://paperless.shahi.co.in:8443/ShahiApi/api/nikeCo/getNikeCoDetails?poNo=${buyerPO}`, { headers });
             // Extract the relevant data from the response and return it
             const responseData = response.data;
             if (responseData.length > 0) {
@@ -238,7 +238,7 @@ export class DpomService {
     async getCRMOrderDetails2(coNumber: string): Promise<any> {
         const headers = { 'Cache-Control': 'no-cache', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate, br', 'AUTH_API_KEY': '$2a$10$UzaZDcs2ih0MpW12ozjvi.KgUrJyhdxR.Z64oVIwGbz8WmBL.JhDy' }
         try {
-            const response = await axios.get(`https://businesscard.shahi.co.in/ShahiApi/api/nikeCo/getNikeInvDetails?coNo=${coNumber}`, { headers });
+            const response = await axios.get(`https://paperless.shahi.co.in:8443/ShahiApi/api/nikeCo/getNikeInvDetails?coNo=${coNumber}`, { headers });
 
             // Extract the relevant data from the response and return it
             const responseData = response.data;
@@ -257,7 +257,7 @@ export class DpomService {
     async getCRMOrderDetails3(styleCode: string): Promise<any> {
         const headers = { 'Cache-Control': 'no-cache', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate, br', 'AUTH_API_KEY': '$2a$10$UzaZDcs2ih0MpW12ozjvi.KgUrJyhdxR.Z64oVIwGbz8WmBL.JhDy' }
         try {
-            const response = await axios.get(`https://businesscard.shahi.co.in/ShahiApi/api/nikeCo/getNikeFabricDetails?styleCode=${styleCode}`, { headers });
+            const response = await axios.get(`https://paperless.shahi.co.in:8443/ShahiApi/api/nikeCo/getNikeFabricDetails?styleCode=${styleCode}`, { headers });
 
             // Extract the relevant data from the response and return it
             const responseData = response.data;
@@ -2324,11 +2324,12 @@ export class DpomService {
             // Wait for a while to see the result (you can adjust the wait time)
             setTimeout(async () => {
                 await page.goto('http://localhost:4200/#/nike/pdf-upload/', {
-                    timeout: 10000,
+                    timeout: 15000,
                     waitUntil: 'networkidle0', // Wait until there are no more network connections
                 }).then(async () => {
                     // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
                     const directoryPath = 'C:/Users/saipr/Downloads/PO-PDF';
+                    console.log(directoryPath)
                     // Specify the source and destination directories
                     const sourceDirectory = 'C:/Users/saipr/Downloads/PO-PDF';
                     const destinationDirectory = 'C:/Users/saipr/Downloads/PO-PDF READ';
@@ -2360,7 +2361,7 @@ export class DpomService {
                         // }
                     }
                 });
-            }, 4000);
+            }, 10000);
             return new CommonResponseModel(true, 1, 'All PDFs submittedd successfully')
         } catch (error) {
             return new CommonResponseModel(false, 0, error)
