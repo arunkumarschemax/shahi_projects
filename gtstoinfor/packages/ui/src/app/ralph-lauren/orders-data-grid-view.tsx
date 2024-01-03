@@ -213,7 +213,7 @@ export function RLOrdersGrid() {
         title: "PO Item",
         dataIndex: "poItem",
         width: 90,
-        sorter: (a, b) => a.poItem.localeCompare(b.poItem),
+        // sorter: (a, b) => a.poItem.localeCompare(b.poItem),
         sortDirections: ["ascend", "descend"],
          ...getColumnSearchProps('poItem'),
          render: (text) => text ? text : "-"
@@ -275,7 +275,7 @@ export function RLOrdersGrid() {
         dataIndex: "supplier",
         align: "center",
         width: 90,
-        sorter: (a, b) => a.supplier.localeCompare(b.supplier),
+        // sorter: (a, b) => a.supplier.localeCompare(b.supplier),
         sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps('supplier'),
         render: (text) => text ? text : "-"
@@ -286,7 +286,7 @@ export function RLOrdersGrid() {
         dataIndex: "revisionNo",
         align: "center",
         width: 90,
-        sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
+        // sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
         sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps('revisionNo'),
         render: (text) => text ? text : "-"
@@ -502,8 +502,9 @@ export function RLOrdersGrid() {
             dataIndex: "totalQty",
             align: "center",
             width: 90,
-            sorter: (a, b) => a.totalQty.localeCompare(b.totalQty),
+            // sorter: (a, b) => a.totalQty.localeCompare(b.totalQty),
             sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-"
           },
         {
             title: "Total Amount",
