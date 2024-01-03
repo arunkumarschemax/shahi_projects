@@ -2,6 +2,7 @@ import {
     Button,
     Card,
     Col,
+    DatePicker,
     Form,
     Input,
     Modal,
@@ -21,6 +22,7 @@ import {
   import Highlighter from "react-highlight-words";
   import { useNavigate } from "react-router-dom";
   import {
+    AlertMessages,
     OrderDataModel,
     PoOrderFilter,
   } from "@project-management-system/shared-models";
@@ -43,6 +45,7 @@ import {
     const [isModalOpen1, setIsModalOpen1] = useState(false);
     const [filterData, setFilterData] = useState([]);
     const { IAMClientAuthContext, dispatch } = useIAMClientState();
+    const { RangePicker } = DatePicker;
   
     useEffect(() => {
       getorderData();
@@ -56,14 +59,27 @@ import {
       if (form.getFieldValue("poNumber") !== undefined) {
         req.poNumber = form.getFieldValue("poNumber");
       } 
+
+      if (form.getFieldValue('podate') !== undefined) {
+        req.poDateStartDate = (form.getFieldValue('podate')[0]).format('YYYY-MM-DD');
+      }
+      if (form.getFieldValue('podate') !== undefined) {
+        req.poDateEndDate = (form.getFieldValue('podate')[1]).format('YYYY-MM-DD');
+      }
      req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
   
-      service.getorderData(req).then((res) => {
-        if (res.status) {
-          setOrderData(res.data);
-          setFilterData(res.data);
-        }
-      });
+     service.getorderData(req).then((res) => {
+      if (res.status) {
+        setOrderData(res.data);
+        setFilterData(res.data);
+      } else {
+        setOrderData([]);
+        setFilterData([])
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch((err) => {
+      console.log(err.message);
+    });
     };
 
     const getPoNumber = () => {
@@ -184,6 +200,8 @@ import {
       );
       return Array.from(sizeHeaders);
     };
+
+    console.log(form.getFieldValue('podate'))
   
     const renderReport = (data) => {
       const sizeHeaders = getSizeWiseHeaders(data);
@@ -281,28 +299,7 @@ import {
           ...getColumnSearchProps('paymentTermDescription') 
 
         },
-        {
-          title: "Incoterm",
-          dataIndex: "incoterm",
-          align: "center",
-          width: 500,
-          sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-          ...getColumnSearchProps('incoterm') 
-
-
-        },
-        {
-            title: "Address",
-            dataIndex: "shipToAddress",
-            width: 600,
-            sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-            sortDirections: ["ascend", "descend"],
-           render: (text) => text ? text : "-",
-
-            ...getColumnSearchProps('shipToAddress')
-          },
+       
        
       
        
@@ -563,7 +560,28 @@ import {
       })
   
       columns.push(
-          
+        {
+          title: "Incoterm",
+          dataIndex: "incoterm",
+          align: "center",
+          width: 500,
+          sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('incoterm') 
+
+
+        },
+        {
+            title: "Address",
+            dataIndex: "shipToAddress",
+            width: 600,
+            sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+            sortDirections: ["ascend", "descend"],
+           render: (text) => text ? text : "-",
+
+            ...getColumnSearchProps('shipToAddress')
+          },
           
           {
         title: "Action",
@@ -615,11 +633,11 @@ import {
   
     return (
       <>
-        <Card title="Order info " headStyle={{ fontWeight: "bold" }}>
+        <Card title="Order Info " headStyle={{ fontWeight: "bold" }}>
           <Form
             onFinish={getorderData}
             form={form}
-            // layout='vertical'
+            layout='vertical'
           >
             <Row gutter={24}>
               <Col
@@ -627,7 +645,7 @@ import {
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
                 lg={{ span: 4 }}
-                xl={{ span: 6 }}
+                xl={{ span: 4 }}
               >
                 <Form.Item name="poNumber" label="PO Number">
                   <Select
@@ -649,11 +667,22 @@ import {
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="PO Date" name="podate"  >
+                  <RangePicker  />
+                </Form.Item>
+              </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
                 md={{ span: 5 }}
                 lg={{ span: 5 }}
                 xl={{ span: 4 }}
               >
-                <Form.Item>
+                <Form.Item style={{marginTop:20}}>
                   <Button
                     htmlType="submit"
                     icon={<SearchOutlined />}
