@@ -179,11 +179,12 @@ const OrderAcceptanceGrid = () => {
     {
       title: "PO Number",
       dataIndex: "poNumber",
-      width: 90,
+      width: 130,
       sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
       sortDirections: ["ascend", "descend"],
       fixed: "left",
-      // ...getColumnSearchProps('purchaseOrderNumber')
+      ...getColumnSearchProps('poNumber'),
+      render: (text) => text ? text : "-"
     },
     {
       title: "PO Item",
@@ -191,47 +192,59 @@ const OrderAcceptanceGrid = () => {
       width: 90,
       sorter: (a, b) => a.poItem.localeCompare(b.poItem),
       sortDirections: ["ascend", "descend"],
-      // ...getColumnSearchProps('purchaseOrderNumber')
+      ...getColumnSearchProps('poItem'),
+      render: (text) => text ? text : "-"
+
     },
     {
       title: "Material Number",
       dataIndex: "materialNo",
-      width: 90,
+      width: 150,
       sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
       sortDirections: ["ascend", "descend"],
-      // ...getColumnSearchProps('purchaseOrderNumber')
+      ...getColumnSearchProps('materialNo'),
+      render: (text) => text ? text : "-"
     },
     {
       title: "Season Code",
       dataIndex: "seasonCode",
-      width: 90,
+      width: 130,
       sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
       sortDirections: ["ascend", "descend"],
-      // ...getColumnSearchProps('purchaseOrderNumber')
+      ...getColumnSearchProps('seasonCode'),
+      render: (text) => text ? text : "-",
+      
     },
     {
       title: "Address",
       dataIndex: "shipToAddress",
-      width: 90,
+      width: 600,
       sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
       sortDirections: ["ascend", "descend"],
-      // ...getColumnSearchProps('purchaseOrderNumber')
+      ...getColumnSearchProps('shipToAddress'),
+      render: (text) => text ? text : "-"
     },
     {
       title: "Agent",
       dataIndex: "agent",
       align: "center",
-      width: 90,
+      width: 400,
       sorter: (a, b) => a.agent.localeCompare(b.agent),
       sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps('agent'),
+      render: (text) => text ? text : "-"
+
     },
     {
       title: "Purchase Group",
       dataIndex: "purchaseGroup",
       align: "center",
-      width: 90,
+      width: 200,
       sorter: (a, b) => a.purchaseGroup.localeCompare(b.purchaseGroup),
       sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps('purchaseGroup'),
+      render: (text) => text ? text : "-"
+
     },
     {
       title: "Supplier",
@@ -240,6 +253,9 @@ const OrderAcceptanceGrid = () => {
       width: 90,
       sorter: (a, b) => a.supplier.localeCompare(b.supplier),
       sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps('supplier'),
+      render: (text) => text ? text : "-"
+
     },
     {
       title: "Revision No",
@@ -248,6 +264,9 @@ const OrderAcceptanceGrid = () => {
       width: 90,
       sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
       sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps('revisionNo'),
+      render: (text) => text ? text : "-"
+
     },
     //   {
     //     title: "Color",
@@ -264,6 +283,7 @@ const OrderAcceptanceGrid = () => {
       width: 90,
       sorter: (a, b) => a.status.localeCompare(b.status),
       sortDirections: ["ascend", "descend"],
+      render: (text) => text ? text : "-"
     },
     {
       title: "Item No",
@@ -425,20 +445,32 @@ const OrderAcceptanceGrid = () => {
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 5 }}
-              lg={{ span: 5 }}
+              md={{ span: 8 }}
+              lg={{ span: 8 }}
               xl={{ span: 4 }}
             >
               <Form.Item>
                 <Button
+                  style={{ marginLeft: 50 }}
                   htmlType="submit"
                   icon={<SearchOutlined />}
                   type="primary"
                 >
                   SEARCH
                 </Button>
+              </Form.Item>
+            </Col>
+
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 5 }}
+              lg={{ span: 5 }}
+              xl={{ span: 4 }}
+            >
+              <Form.Item>
                 <Button
-                  style={{ marginLeft: 8 }}
+                  // style={{ marginLeft: 8 }}
                   htmlType="submit"
                   type="primary"
                   onClick={onReset}

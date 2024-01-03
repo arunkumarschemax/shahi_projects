@@ -125,29 +125,32 @@ export function PdFInfoGrid() {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
             fixed: 'left'
         },
-        {
-            title: 'PO Number',
-            dataIndex: 'poNumber',
-            width:70 ,
-            sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-            sortDirections: ["ascend", "descend"],
-            ...getColumnSearchProps('purchaseOrderNumber')
-        },
+        // {
+        //     title: 'PO Number',
+        //     dataIndex: 'poNumber',
+        //     width:70 ,
+        //     sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+        //     sortDirections: ["ascend", "descend"],
+         //    render: (text) => text ? text : "-"
+        //     ...getColumnSearchProps('poNumber')
+        // },
         {
             title: 'File Name',
             dataIndex: 'pdfFileName',
-            width: 90,
+            width: 300,
             sorter: (a, b) => a.pdfFileName.localeCompare(b.pdfFileName),
             sortDirections: ["ascend", "descend"],
-            // ...getColumnSearchProps('purchaseOrderNumber')
+            render: (text) => text ? text : "-",
+             ...getColumnSearchProps('pdfFileName')
         },
         {
             title: 'File Type',
             dataIndex: 'fileType',
-            width: 90,
+            width: 30,
             sorter: (a, b) => a.fileType.localeCompare(b.fileType),
             sortDirections: ["ascend", "descend"],
-            // ...getColumnSearchProps('purchaseOrderNumber')
+            render: (text) => text ? text : "-"
+            // ...getColumnSearchProps('fileType')
         },
         {
             title: 'Uploaded Date',

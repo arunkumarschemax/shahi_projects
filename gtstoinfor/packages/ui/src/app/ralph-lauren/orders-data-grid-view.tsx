@@ -190,7 +190,7 @@ export function RLOrdersGrid() {
     const sizeHeaders = getSizeWiseHeaders(data);
     const sizeWiseMap = getMap(data);
 
-    const columns: ColumnsType<any> = [
+    const columns: any = [
       {
         title: "S.No",
         key: "sno",
@@ -205,7 +205,8 @@ export function RLOrdersGrid() {
         sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
         sortDirections: ["ascend", "descend"],
         fixed: "left",
-        // ...getColumnSearchProps('purchaseOrderNumber')
+         ...getColumnSearchProps('poNumber'),
+         render: (text) => text ? text : "-"
       },
       {
         title: "PO Item",
@@ -213,47 +214,60 @@ export function RLOrdersGrid() {
         width: 90,
         sorter: (a, b) => a.poItem.localeCompare(b.poItem),
         sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('purchaseOrderNumber')
+         ...getColumnSearchProps('poItem'),
+         render: (text) => text ? text : "-"
       },
       {
         title: "Material Number",
         dataIndex: "materialNo",
-        width: 90,
+        width: 110,
         sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
         sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('purchaseOrderNumber')
+        ...getColumnSearchProps('materialNo'),
+        render: (text) => text ? text : "-"
       },
       {
         title: "Season Code",
         dataIndex: "seasonCode",
-        width: 90,
+        width: 110,
         sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
         sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('purchaseOrderNumber')
+        ...getColumnSearchProps('seasonCode'),
+        render: (text) => text ? text : "-"
+
       },
       {
         title: "Address",
         dataIndex: "shipToAddress",
-        width: 90,
+        width: 500,
         sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
         sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('purchaseOrderNumber')
+        ...getColumnSearchProps('shipToAddress'),
+        render: (text) => text ? text : "-"
+
       },
       {
         title: "Agent",
         dataIndex: "agent",
         align: "center",
-        width: 90,
+        width: 300,
         sorter: (a, b) => a.agent.localeCompare(b.agent),
         sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps('agent'),
+        render: (text) => text ? text : "-"
+
       },
+      
       {
         title: "Purchase Group",
         dataIndex: "purchaseGroup",
         align: "center",
-        width: 90,
+        width: 150,
         sorter: (a, b) => a.purchaseGroup.localeCompare(b.purchaseGroup),
         sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps('purchaseGroup'),
+        render: (text) => text ? text : "-"
+
       },
       {
         title: "Supplier",
@@ -262,6 +276,9 @@ export function RLOrdersGrid() {
         width: 90,
         sorter: (a, b) => a.supplier.localeCompare(b.supplier),
         sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps('supplier'),
+        render: (text) => text ? text : "-"
+
       },
       {
         title: "Revision No",
@@ -270,14 +287,18 @@ export function RLOrdersGrid() {
         width: 90,
         sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
         sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps('revisionNo'),
+        render: (text) => text ? text : "-"
+
       },
       {
         title: "Color",
         dataIndex: "color",
         align: "center",
-        width: 90,
+        width: 110,
         sorter: (a, b) => a.color.localeCompare(b.color),
         sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
       },
      
     ];
@@ -294,7 +315,7 @@ export function RLOrdersGrid() {
                     title: 'UPC/EAN',
                     dataIndex: '',
                     key: '',
-                    width: 70,
+                    width: 100,
                     className: "center",
                     render: (text, record) => {
                         const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -347,7 +368,7 @@ export function RLOrdersGrid() {
                     title: 'Customer Selling Price',
                     dataIndex: '',
                     key: '',
-                    width: 70,
+                    width: 100,
                     className: "center",
                     render: (text, record) => {
                         const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -373,7 +394,7 @@ export function RLOrdersGrid() {
                     title: 'Price',
                     dataIndex: '',
                     key: '',
-                    width: 70,
+                    width: 100,
                     className: "center",
                     render: (text, record) => {
                         const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -395,7 +416,7 @@ export function RLOrdersGrid() {
                     title: 'Quantity',
                     dataIndex: '',
                     key: '',
-                    width: 70,
+                    width: 100,
                     className: "center",
                     render: (text, record) => {
                         const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -421,7 +442,7 @@ export function RLOrdersGrid() {
                     title: 'Amount',
                     dataIndex: '',
                     key: '',
-                    width: 70,
+                    width: 100,
                     className: "center",
                     render: (text, record) => {
                         const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -515,6 +536,7 @@ export function RLOrdersGrid() {
             width: 90,
             sorter: (a, b) => a.status.localeCompare(b.status),
             sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-"
           },
         {
       title: "Action",
@@ -566,7 +588,7 @@ export function RLOrdersGrid() {
 
   return (
     <>
-      <Card title="Order " headStyle={{ fontWeight: "bold" }}>
+      <Card title="Order Info" headStyle={{ fontWeight: "bold" }}>
         <Form
           onFinish={getorderData}
           form={form}
@@ -600,20 +622,32 @@ export function RLOrdersGrid() {
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 5 }}
-              lg={{ span: 5 }}
+              md={{ span: 8 }}
+              lg={{ span: 8 }}
               xl={{ span: 4 }}
             >
               <Form.Item>
                 <Button
+                  style={{ marginLeft: 50 }}
                   htmlType="submit"
                   icon={<SearchOutlined />}
                   type="primary"
                 >
                   SEARCH
                 </Button>
+              </Form.Item>
+            </Col>
+
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 5 }}
+              lg={{ span: 5 }}
+              xl={{ span: 4 }}
+            >
+              <Form.Item>
                 <Button
-                  style={{ marginLeft: 8 }}
+                  // style={{ marginLeft: 8 }}
                   htmlType="submit"
                   type="primary"
                   onClick={onReset}
