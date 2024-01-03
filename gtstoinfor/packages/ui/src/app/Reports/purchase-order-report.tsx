@@ -206,7 +206,43 @@ const Columns:any=[
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
         return EnumObj ? EnumObj.displayVal : text;
       },
-
+      // render: (po_material_type, rowData) => (
+      //   <>
+      //     {po_material_type ? po_material_type : '-'}
+      //   </>
+      // ),
+      // onFilter: (value, record) => record.po_material_type === value,
+      // filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      //   <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+      //     <Checkbox
+      //       checked={selectedKeys.includes('FABRIC')}
+      //       onChange={() => setSelectedKeys(selectedKeys.includes('FABRIC') ? [] : ['FABRIC'])}
+      //     >
+      //       <span style={{ color: 'green' }}>FABRIC</span>
+      //     </Checkbox>
+      //     <Checkbox
+      //       checked={selectedKeys.includes('SEWING TRIM')}
+      //       onChange={() => setSelectedKeys(selectedKeys.includes('SEWING TRIM') ? [] : ['SEWING TRIM'])}
+      //     >
+      //       <span style={{ color: 'red' }}>SEWING TRIM</span>
+      //     </Checkbox>
+      //     <Checkbox
+      //       checked={selectedKeys.includes('PACKING TRIM')}
+      //       onChange={() => setSelectedKeys(selectedKeys.includes('PACKING TRIM') ? [] : ['PACKING TRIM'])}
+      //     >
+      //       <span style={{ color: 'green' }}>PACKING TRIM</span>
+      //     </Checkbox>
+      //     <div className="custom-filter-dropdown-btns">
+      //       <Button onClick={() => clearFilters()} className="custom-reset-button">
+      //         Reset
+      //       </Button>
+      //       <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+      //         OK
+      //       </Button>
+      //     </div>
+      //   </div>
+      // ),
+      // filterMultiple: false,
       
       
   },
@@ -379,7 +415,8 @@ width:170
 },
   {
     title:"Status",
-    dataIndex:"status"
+    dataIndex:"status",
+    fixed:'right'
     
 },
     
