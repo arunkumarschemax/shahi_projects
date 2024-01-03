@@ -52,7 +52,6 @@ export function PoPrint(props: PoPrintProps) {
     //     document.body.innerHTML = oldPage;
         
     // }
-
     const printOrder = () => {
       const printableElements = document.getElementById('printme').innerHTML;
       const orderHTML = `
@@ -77,11 +76,12 @@ export function PoPrint(props: PoPrintProps) {
       const oldPage = document.body.innerHTML;
       document.body.innerHTML = orderHTML;
     
-      // Use window.print() after setting the style
       window.print();
     
       document.body.innerHTML = oldPage;
     };
+    
+    
     
     
     
@@ -131,7 +131,7 @@ export function PoPrint(props: PoPrintProps) {
                 <body id='printme'>
                   <div>
               <Row>
-                 <div style={{  padding: '20px',height:'300px', width: '300px' }}>
+                 <div style={{  padding: '20px',height:'300px', width: '280px' }}>
              <h1 style={{ textAlign: 'start', fontSize:'17px',fontFamily: 'Fancy', marginRight:'30px',lineHeight: '2', marginBottom: '20px' }}>{'"Say flat NO to Wrong Practices"'}</h1>
              <h2 style={{ textAlign: 'start', fontSize:'12px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Last Updated By :</h2>
              <h2 style={{ textAlign: 'start', fontSize:'12px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Vendor Name : {`${poData[0]?.vendor_name}`}</h2>
@@ -152,7 +152,7 @@ export function PoPrint(props: PoPrintProps) {
             </div>
                     
                     
-                    <div style={{  padding: '20px',height:'300px', width: '300px' }}>
+                    <div style={{  padding: '20px',height:'300px', width: '280px' }}>
                     <h1 style={{ textAlign: 'center',marginTop:'-10px', padding: "20px" ,fontSize:"17px",fontFamily:'Century Schoolbook'}}>{'Shahi Exports Pvt.Ltd. Sy.No.13,14 AND 15 Sarjapura Main Road, Bellandur Gate Bengaluru Urban, KARNATAKA (KA) Pin Code:560103'}</h1>
                     <h1 style={{ textAlign: 'center' ,marginTop:'-30px',fontSize:"12px",fontFamily:'Century Schoolbook',color: 'blue'}}>{'GSTIN : 29AAJCS1175L1ZU'}</h1>
                     <h1 style={{ textAlign: 'center' ,marginTop:'-10px',fontSize:"12px",fontFamily:'Century Schoolbook',color: 'blue', textDecoration: 'underline' }}>{'Inter State'}</h1>
@@ -177,7 +177,7 @@ export function PoPrint(props: PoPrintProps) {
                     </div>
 
 
-                    <div style={{  padding: '20px',height:'300px', width: '300px',marginLeft:'50px' }}>
+                    <div style={{  padding: '20px',height:'300px', width: '280px',marginLeft:'50px' }}>
                     <h1  style={{ textAlign: 'end',fontSize:'17px', fontFamily: 'Fancy', lineHeight: '2', marginBottom: '20px'  }}>{'"Say a big NO to Child Labour"'}</h1>
                     <h1  style={{ textAlign: 'end', fontSize:'10pX',fontFamily: 'Candra', marginRight:'-18px',lineHeight: '1', marginBottom: '10px',marginTop:'-10px'  }}>{'DISPATCH  INSTRUCTION  TO  BE  STRICTLY FOLLOWED'}</h1>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginLeft: '50px' }}>

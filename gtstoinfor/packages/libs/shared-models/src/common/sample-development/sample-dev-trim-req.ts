@@ -9,6 +9,8 @@ export class SampleTrimReq {
     trimInfoId?: number
     colourId?:number
     uomId?:number
+    uomStatus?:boolean
+
 
     constructor(
         trimType:string,
@@ -19,7 +21,7 @@ export class SampleTrimReq {
         remarks: string,
         allocatedStock: any[],
         trimInfoId?: number,
-       colourId?:number,uomId?:number
+       colourId?:number,uomId?:number,uomStatus?:boolean
 
     ) {
         this.trimType=trimType
@@ -32,6 +34,7 @@ export class SampleTrimReq {
         this.allocatedStock=allocatedStock
         this.colourId=colourId
         this.uomId=uomId
+        this.uomStatus=uomStatus
     }
 
 }

@@ -366,6 +366,7 @@ const segmentedOptions = options();
         title: <div style={{textAlign:"center"}}>M3 Fabric Code</div>,
         dataIndex: "m3FabricCode",
         ...getColumnSearchProps("m3FabricCode"),
+        align:'left',
         render: (m3FabricCode, row) => (
           <Tooltip title={row.description} placement="top" arrowPointAtCenter>
             <span className="fabCode">
@@ -377,11 +378,13 @@ const segmentedOptions = options();
       {
         title: "Color",
         dataIndex: "color",
+        align:'left',
         ...getColumnSearchProps("color"),
       },
       {
         title: "Season",
         dataIndex: "season",
+        align:'left',
       },
       // {
       //   title: "Supplier",
@@ -402,6 +405,7 @@ const segmentedOptions = options();
       {
         title: "XL No",
         dataIndex: "xlNo",
+        align:'right',
       },
       // {
       //   title: "Indent Raised",
@@ -410,6 +414,7 @@ const segmentedOptions = options();
       {
         title: "Indent Raised",
         dataIndex: "quantity",
+        align:'right',
         sorter: (a, b) => a.quantity.localeCompare(b.quantity),
         sortDirections: ["descend", "ascend"],
         render: (text, record) => {
@@ -425,10 +430,12 @@ const segmentedOptions = options();
       {
         title: "PO Raised",
         dataIndex: "poQty",
+        align:'right',
       },
       {
         title: "To Be Procured Quantity",
         dataIndex: "toBeProcured",
+        align:'right',
         sorter: (a, b) => a.toBeProcured.localeCompare(b.toBeProcured),
         sortDirections: ["descend", "ascend"],
       },
@@ -522,6 +529,7 @@ const onRemarksModalOk = () => {
         title: "Trim Type",
         dataIndex: "materialType",
         ...getColumnSearchProps("materialType"),
+        align:'left',
         render: (text) => {
           const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
           return EnumObj ? EnumObj.displayVal : text;
@@ -530,11 +538,13 @@ const onRemarksModalOk = () => {
       {
         title: "M3 Trim Code",
         dataIndex: "m3TrimCodeName",
+        align:'left',
         ...getColumnSearchProps("m3TrimCodeName"),
       },
       {
         title: "Indent Raised",
         dataIndex: "quantity",
+        align:'left',
         render: (text, record) => {
           return (
             <>
@@ -548,11 +558,13 @@ const onRemarksModalOk = () => {
       {
         title: "PO Raised",
         dataIndex: "poQty",
+        align:'right',
         ...getColumnSearchProps("poQty"),
       },
       {
         title: "To Be Procured Quantity",
         dataIndex: "toBeProcured",
+        align:'right',
         sorter: (a, b) => a.toBeProcured.localeCompare(b.toBeProcured),
         sortDirections: ["descend", "ascend"],
         // render: (text, record) => {
@@ -568,6 +580,7 @@ const onRemarksModalOk = () => {
       {
         title: "Remarks",
         dataIndex: "remarks",
+        align:'left',
         render:(text,record) => {
           return(
               <>
@@ -854,6 +867,7 @@ const test = (val, row) =>{
           <CaretRightOutlined rotate={isActive ? 90 : 0} />
         )}
         accordion
+        // onChange={()=>setTabName('Fabric')}
         
       >
         {tableData.map((item: any, index: any) => (

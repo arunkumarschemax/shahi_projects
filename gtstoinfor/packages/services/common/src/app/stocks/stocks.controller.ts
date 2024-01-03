@@ -28,12 +28,20 @@ export class StocksController {
         }
     }
 
-    @Post('getStockReport')
-  async getStockReport(): Promise<CommonResponseModel> {
-    const data=await this.stocksService.getStockReport()
-    return  data
-}
+//     @Post('/getStockReport')
+//   async getStockReport(): Promise<CommonResponseModel> {
+//     const data=await this.stocksService.getStockReport()
+//     return  data
+// }
 
+@Post('/getStockReport')
+async getStockReport(): Promise<CommonResponseModel> {
+  try {
+    return await this.stocksService.getStockReport();
+  } catch (error) {
+    return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+  }
+}
 @Post('/getAllItemCode')
 async getAllItemCode(): Promise<CommonResponseModel> {
   try {

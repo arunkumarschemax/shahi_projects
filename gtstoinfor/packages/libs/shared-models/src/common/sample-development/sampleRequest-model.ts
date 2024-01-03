@@ -12,9 +12,22 @@ export class SampleRequestInfoModel{
     lifeCycleStatus:string
     contact:string
     ETD:Date
-    sizeinfo?:SampleSizeInfoModel[]
+    extn:string
+    conversion: string
+    dmm:string
+    product:string
+    user:string
+    description:string
+    costRef:string
+    type:string
+    madeIn:string
+    remarks?:string
+    fileName?: string
+    sam?:string
+    // sizeinfo?:SampleSizeInfoModel[]
     fabInfo?:any[]
     trimInfo?:any[]
+    location?:string
     
     constructor(
         sampleRequestNo: string,
@@ -28,16 +41,30 @@ export class SampleRequestInfoModel{
         contact:string,
         pch:string,
         ETD:Date,
+        extn:string,
+        conversion: string,
+        dmm:string,
+        product:string,
+        user:string,
+        description:string,
+        costRef:string,
+        type:string,
+        madeIn:string,
+        remarks?:string,
+        fileName?: string,
+        sam?:string ,
         // conversion:'',
-        sizeinfo?:SampleSizeInfoModel[],
+        // sizeinfo?:SampleSizeInfoModel[],
         fabInfo?:any[],
-        trimInfo?:any[]
+        trimInfo?:any[],
+        location?:string,
+
     ){
        this.brand = brand
        this.buyer = buyer
        this.sampleRequestId = sampleRequestId
        this.sampleRequestNo = this.sampleRequestNo
-       this.sizeinfo = sizeinfo
+    //    this.sizeinfo = sizeinfo
        this.style = style
        this.trimInfo = trimInfo
        this.fabInfo = fabInfo
@@ -48,6 +75,19 @@ export class SampleRequestInfoModel{
        this.employee = employee
        this.pch = pch
        this.ETD = ETD
+       this.dmm = dmm
+       this.extn = extn
+       this.description = description
+       this.costRef = costRef
+       this.conversion = conversion
+       this.remarks = remarks
+       this.type = type
+       this.madeIn = madeIn
+       this.user = user
+       this.product = product
+       this.fileName = fileName
+       this.sam = sam   
+       this.location =location
         }
 
 

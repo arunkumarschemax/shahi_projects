@@ -9,6 +9,9 @@ import { IndentTrimsEntity } from '../indent-trims-entity';
 import { Buyers } from '../../buyers/buyers.entity';
 import { FabricType } from '../../fabric-types/fabric-type.entity';
 import { IndentRequestDto } from '@project-management-system/shared-models';
+import { M3ItemsEntity } from '../../m3-items/m3-items.entity';
+import { M3TrimsEntity } from '../../m3-trims/m3-trims.entity';
+import { UomEntity } from '../../uom/uom-entity';
 
 @Injectable()
 export class IndentRepository extends Repository<Indent> {
@@ -20,14 +23,18 @@ export class IndentRepository extends Repository<Indent> {
     async getIndentData(req?: IndentRequestDto) {
 
         let query = this.createQueryBuilder(`i`)
-            .select(`i.indent_id AS indentId,i.request_no As requestNo ,s.style AS style, i.indent_date AS indentDate, i.expected_date AS expectedDate ,i.status AS status,it.trim_type AS trimType,it.trim_code AS trimCode,it.quantity AS quantity,it.m3_trim_code AS m3TrimCode,ifa.ifabric_id AS fabricId, ifa.m3_fabric_code AS m3FabricCode,ifa.quantity AS fbquantity,c.colour AS color`)
+            .select(`i.indent_id AS indentId,i.request_no AS requestNo ,s.style AS style, i.indent_date AS indentDate, i.expected_date AS expectedDate ,
+            i.status AS STATUS,it.trim_type AS trimType,it.trim_code AS trimCode,it.quantity AS quantity,mt.trim_code AS m3TrimCode,
+            ifa.ifabric_id AS fabricId, mi.item_code AS m3FabricCode,ifa.quantity AS fbquantity,c.colour AS color,uf.uom AS fabUom,ut.uom AS trimUom`)
             .leftJoin(IndentFabricEntity, 'ifa', 'ifa.indent_id = i.indent_id')
             .leftJoin(IndentTrimsEntity, 'it', 'it.indent_id = i.indent_id')
-            .leftJoin(Colour, 'c', 'c.colour_id = it.color')
-            .leftJoin(Style, 's', ' s.style_id =  .style')
+            .leftJoin(M3ItemsEntity,'mi','mi.m3_items_Id = ifa.m3_fabric_code')
+            .leftJoin(Colour, 'c', 'c.colour_id = mi.color_id')
+            .leftJoin(Style, 's', ' s.style_id =  i.style')
           .leftJoin (Buyers, 'b' , 'b.buyer_id = i.buyer_id')
-
-
+          .leftJoin(M3TrimsEntity,'mt','mt.m3_trim_Id = it.trim_code')
+            .leftJoin(UomEntity,'uf','uf.`id` = mi.`uom_id`')
+            .leftJoin(UomEntity,'ut','ut.`id` = mt.`uom_id`')
             if (req.requestNo) {
                 query.where(`i.request_no = '${req.requestNo}'`)
             }
@@ -38,6 +45,9 @@ export class IndentRepository extends Repository<Indent> {
             if (req.confirmStartDate) {
                 query.andWhere(`Date(indent_date) BETWEEN '${req.confirmStartDate}' AND '${req.confirmEndDate}'`)
             }
+            if (req.expectedStartDate) {
+                query.andWhere(`Date(expected_date) BETWEEN '${req.expectedStartDate}' AND '${req.expectedEndDate}'`)
+            }
         
        
         // if (req.confirmStartDate !== undefined) {
@@ -47,7 +57,7 @@ export class IndentRepository extends Repository<Indent> {
         //     });
         // }
         
-        query.groupBy(`i.indent_id`)
+        // query.groupBy(`i.indent_id`)
         console.log(query.getQuery(), "queryquery")
         return await query.getRawMany()
     }

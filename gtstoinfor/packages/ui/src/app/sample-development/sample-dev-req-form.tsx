@@ -1,4 +1,4 @@
-import { LoadingOutlined, PlusOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { EyeOutlined, LoadingOutlined, PlusOutlined, UploadOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
 import { BuyerRefNoRequest, DepartmentReq,SampleDevelopmentRequest, StyleIdReq } from "@project-management-system/shared-models";
 import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
@@ -75,6 +75,8 @@ export const SampleDevForm = () => {
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
+  const [modal, setModal] = useState('')
+
 
   useEffect(() => {
     console.log(sizeForm.getFieldsValue())
@@ -282,8 +284,22 @@ const getBase64 = (img, callback) => {
   const onFinish = (val) =>{
     sizeForm.validateFields().then(size => {
       fabricForm.validateFields().then(fab => {
+        console.log(fab)
+        // console.log(updatedData.find((e) => e.colourId === 0));
+        // console.log(sizeData)
+        // if(updatedData.filter((e) => e.colourId === 0).length === 0){
+        //   const distictFabColors = [...new Set(updatedData.map(x => x.colourId))]
+        //   const distictSizeColors = [...new Set(sizeData.map(x => x.colour))]
+        //   console.log(distictFabColors)
+        //   console.log(distictSizeColors)
+        //   let res = distictSizeColors.filter(val => !distictFabColors.includes(val));
+        //   console.log(res);
+        //   if(res.length > 0){
+        //     AlertMessages.getWarningMessage("Fabric is missing for Color. ")
+        //   }
+        // }
         trimForm.validateFields().then(trim => {
-          // console.log(data);
+          console.log(data);
           if(data != undefined){
             // console.log('hoii')
             // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
@@ -370,6 +386,44 @@ const getBase64 = (img, callback) => {
       setProcessData(updatedData);
   };
 
+  // const uploadFabricProps: UploadProps = {
+  //   // alert();
+  //   multiple: false,
+  //   onRemove: file => {
+  //     setFileList([]);
+  //     setImageUrl('');
+  //   },
+  //   beforeUpload: (file: any) => {
+  //     if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+  //       AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+  //       // return true;
+  //     }
+  //     var reader = new FileReader();
+  //     reader.readAsArrayBuffer(file);
+  //     reader.onload = data => {
+  //       if (fileList.length == 1) {
+  //         AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+  //         return true;
+  //       } else {
+  //           setFileList([...fileList,file]);
+  //         getBase64(file, imageUrl =>
+  //           setImageUrl(imageUrl)
+  //         );
+  //         return false;
+  //       }
+  //     }
+  //   },
+  //   progress: {
+  //     strokeColor: {
+  //       '0%': '#108ee9',
+  //       '100%': '#87d068',
+  //     },
+  //     strokeWidth: 3,
+  //     format: percent => `${parseFloat(percent.toFixed(2))}%`,
+  //   },
+  //   fileList: fileList,
+  // };
+
   const uploadFabricProps: UploadProps = {
     // alert();
     multiple: false,
@@ -380,11 +434,11 @@ const getBase64 = (img, callback) => {
     beforeUpload: (file: any) => {
       if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
         AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
-        // return true;
+        return true;
       }
-      var reader = new FileReader();
-      reader.readAsArrayBuffer(file);
-      reader.onload = data => {
+      // var reader = new FileReader();
+      // reader.readAsArrayBuffer(file);
+      // reader.onload = data => {
         if (fileList.length == 1) {
           AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
           return true;
@@ -395,7 +449,7 @@ const getBase64 = (img, callback) => {
           );
           return false;
         }
-      }
+      // }
     },
     progress: {
       strokeColor: {
@@ -407,11 +461,10 @@ const getBase64 = (img, callback) => {
     },
     fileList: fileList,
   };
+  
   const handleFabricsDataUpdate = (updatedData) => {
-    console.log(updatedData)
-    console.log(fabricsData)
-      setData((prevData) => ({ ...prevData, fabricsData: updatedData }));
-      setFabricsData(updatedData);
+    setData((prevData) => ({ ...prevData, fabricsData: updatedData }));
+    setFabricsData(updatedData);
   };
 
   const handleTrimsDataUpdate = (updatedData) => {
@@ -423,6 +476,13 @@ const getBase64 = (img, callback) => {
     // console.log(current.valueOf(), 'current');
      return current.valueOf() < Date.now();
  };
+
+ const onFabriView =() =>{
+  setModal('fileUpload')
+  setPreviewVisible(true)
+  
+}
+
   return (
     <Card title='Sample Development Request' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  
     extra={ JSON.parse(localStorage.getItem('currentUser'))?.user.roles != "samplinguser" ?
@@ -553,7 +613,7 @@ const getBase64 = (img, callback) => {
                 {
                   required:true,
                   pattern: /^[0-9a-zA-Z]*$/,
-                  message: `Only numbers are accepted`,
+                  message: `User Name is Required`,
                 },
               ]}
             >
@@ -635,7 +695,7 @@ const getBase64 = (img, callback) => {
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='expectedCloseDate' label='Expected Close Date' rules={[{required:true,message:'expectedCloseDate is required'}]}>
+                    <Form.Item name='expectedCloseDate' label='Expected Close Date' rules={[{required:true,message:'Expected Close Date is required'}]}>
                     <DatePicker style={{ width: '93%', marginLeft: 5 }}  disabledDate={disabledDate}/>
                     </Form.Item>
               </Col>
@@ -652,36 +712,51 @@ const getBase64 = (img, callback) => {
                 },
               ]}
             >
-              <Input placeholder="Enter Cost" />
+              <Input placeholder="Enter Cost Ref" />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }} >
             <Form.Item
               name="description"
               label="Description"
-              rules={[
-                {
-                  required: false,
-                },
-                {
-                  pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
-                  message: `Don't Allow Spaces`,
-                },
-              ]}
+              // rules={[
+              //   {
+              //     required: false,
+              //   },
+              //   {
+              //     pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
+              //     message: `Don't Allow Spaces`,
+              //   },
+              // ]}
             >
-              <TextArea rows={1} placeholder="Enter Description" />
+              <TextArea rows={2} placeholder="Enter Description" />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
           >
             <Form.Item name="image" label='Attach File' >
-              <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
+              {/* <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
 
                   <div>
                       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-                      <div style={{ marginTop: 8 }}>Upload Fabric</div>
+                      <div style={{ marginTop: 8 }}>Upload Garment</div>
                   </div>
-              </Upload>
+              </Upload> */}
+              <Upload
+                                                  style={{ width: '100%' }} 
+                                                    {...uploadFabricProps}
+                                                    accept=".jpeg,.pdf,.png,.jpg"
+                                                    >
+                                                    <Button
+                                                        style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                                                        icon={<UploadOutlined />}
+                                                        disabled={fileList.length == 1? true:false}
+                                                    >
+                                                        Upload Fabric
+                                                    </Button>
+                                                    </Upload>
+                                                    {fileList.length ==1?
+                                                    <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
           </Form.Item>
           </Col>
           
@@ -754,7 +829,7 @@ const getBase64 = (img, callback) => {
             <Form.Item
               name="dmmId"
               label="DMM"
-              rules={[{ required: true, message: "" }]}
+              rules={[{ required: true, message: "Please Select DMM" }]}
             >
               <Select
                 allowClear
@@ -776,7 +851,7 @@ const getBase64 = (img, callback) => {
             <Form.Item
               name="technicianId"
               label="Technician"
-              rules={[{ required: true, message: "" }]}
+              rules={[{ required: true, message: "Please Select Technician" }]}
             >
               <Select
                 allowClear
@@ -798,7 +873,7 @@ const getBase64 = (img, callback) => {
             <Form.Item
               name="productId"
               label="Product"
-              rules={[{ required: false, message: "" }]}
+              // rules={[{ required: true, message: "Please Select Product" }]}
             >
               <Select
                 allowClear
@@ -869,12 +944,12 @@ const getBase64 = (img, callback) => {
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
             <Form.Item
               name="remarks"
               label="Remarks"
             >
-            <TextArea rows={1} placeholder="Enter Remarks"/>
+            <TextArea rows={2} placeholder="Enter Remarks"/>
             </Form.Item>
           </Col>
         </Row>
@@ -928,7 +1003,20 @@ const getBase64 = (img, callback) => {
           footer={null}
           onCancel={() => setPreviewVisible(false)}
         >
-          <img alt="example" style={{ width: "100%" }} src={previewImage} />
+          {modal == 'fileUpload' ?<>
+            <Card style={{ height: '250px' }}>
+                                                <Form.Item>
+                                                <img
+                                                    src={imageUrl}
+                                                    alt="Preview"
+                                                    height={'200px'}
+                                                    width={'500px'}
+                                                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                                                />
+                                                </Form.Item>
+                                            </Card>
+               </>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
+         
         </Modal>
       </Form>
     </Card>

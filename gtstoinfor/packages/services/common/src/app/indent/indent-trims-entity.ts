@@ -37,7 +37,7 @@ export class IndentTrimsEntity {
         quantity: number
     @Column('int',{
         name:'quantity_unit',
-        nullable: false,
+        nullable: true,
         })
         quantityUnit: number;
    

@@ -75,7 +75,8 @@ const GRNForm = () => {
       console.log(req);
       grnService.createGrn(req).then((res) => {
         if (res.status) {
-          AlertMessages.getSuccessMessage(res.internalMessage);
+          // AlertMessages.getSuccessMessage(res.internalMessage);
+          message.success(`GRN No ${res?.data?.grnNumber} Created Successfully`)
           navigate('/grn-view')
         } else {
           AlertMessages.getErrorMessage(res.internalMessage);
@@ -104,6 +105,8 @@ const GRNForm = () => {
     poService.getAllPONumbers(req).then((res) => {
       if (res.status) {
         setPoNoData(res.data)
+      }else{
+        setPoNoData([])
       }
     })
   }
@@ -196,6 +199,7 @@ const GRNForm = () => {
       // fixed: 'left',
       dataIndex: 'm3ItemCode',
     },
+    poData?.poMaterialType == 'Fabric'?
     {
       title: <div style={{ textAlign: "center" }}> Description</div>,
       // fixed: 'left',
@@ -209,12 +213,12 @@ const GRNForm = () => {
             </>
         )
     }
-    },
+    }:{},
     {
       title: <div style={{ textAlign: "center" }}>PO Qty</div>,
       dataIndex: 'poQuantity',
       align: "right",
-      render: (poQuantity, row) => `${poQuantity} ${row.uom}`,
+      render: (poQuantity, row) => row.uom?`${poQuantity} ${row.uom}`:`${poQuantity}`,
     },
     {
       title: <div style={{ textAlign: "center" }}>Previous Qty</div>,
@@ -337,6 +341,13 @@ const GRNForm = () => {
 
 
   function receivedQuantityOnChange(e) {
+    const acceptedQty = itemsForm.getFieldValue('acceptedQuantity')
+    const recQty = itemsForm.getFieldValue('receivedQuantity')
+    console.log(e)
+    if(Number(acceptedQty) > Number(recQty)){
+      AlertMessages.getErrorMessage('Accepted Qunatity should not exceed Received')
+      itemsForm.setFieldsValue({acceptedQuantity:null})
+    }
     const poItemId = itemsForm.getFieldValue('poItemId')
     setPoItemData(prevData =>
       prevData.map(item => {
@@ -353,18 +364,26 @@ const GRNForm = () => {
 
   function acceptedQuantityOnChange(e) {
     const poItemId = itemsForm.getFieldValue('poItemId')
+    const acceptedQty = itemsForm.getFieldValue('acceptedQuantity')
+    const recQty = itemsForm.getFieldValue('receivedQuantity')
+    console.log(e)
+    if(Number(acceptedQty) > Number(recQty)){
+      AlertMessages.getErrorMessage('Accepted Qunatity should not exceed Received')
+      itemsForm.setFieldsValue({acceptedQuantity:null})
+    }else{
 
-    setPoItemData(prevData =>
-      prevData.map(item => {
-        if (item.poItemId === poItemId) {
-          return {
-            ...item,
-            acceptedQuantity: e.target.value,
-            rejectedQuantity: item.receivedQuantity - Number(e.target.value)
-          };
-        }
-        return item;
-      }))
+      setPoItemData(prevData =>
+        prevData.map(item => {
+          if (item.poItemId === poItemId) {
+            return {
+              ...item,
+              acceptedQuantity: e.target.value,
+              rejectedQuantity: item.receivedQuantity - Number(e.target.value)
+            };
+          }
+          return item;
+        }))
+    }
     
   }
 
@@ -695,7 +714,7 @@ const GRNForm = () => {
           </Row>
 
           <Row>
-            <Table scroll={{ x: 'max-content' }} columns={filteredColumns} dataSource={poItemData} bordered pagination={false} />
+            <Table scroll={{ x: 'max-content' }} columns={filteredColumns} dataSource={poItemData?.filter(item=>Number(item.grnQuantity)!=Number(item.poQuantity))} bordered pagination={false} />
           </Row>
         </Card>
 

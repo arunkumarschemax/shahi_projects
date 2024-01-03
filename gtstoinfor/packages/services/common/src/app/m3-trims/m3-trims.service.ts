@@ -45,7 +45,7 @@ export class M3TrimsService {
   async getM3TrimsByBuyer(req: BuyerIdReq): Promise<CommonResponseModel> {
     try{
       console.log(req)
-      let query = `Select m3.m3_trim_Id as m3TrimsId,m3.trim_code AS trimCode,m3.trim_type AS trimType, uom_id AS uomId, u.uom AS uom from m3_trims m3 left join uom u on u.id = m3.uom_id where m3.m3_trim_Id>0`
+      let query = `Select m3.m3_trim_Id as m3TrimsId,m3.trim_code AS trimCode,m3.trim_type AS trimType, uom_id AS uomId, u.uom AS uom, c.colour_id AS colorId, c.colour AS colorName from m3_trims m3 left join uom u on u.id = m3.uom_id left join colour c on c.colour_id = m3.color_id where m3.m3_trim_Id>0`
       if (req?.buyerId) {
         query = query + ` AND m3.buyer_id=${req.buyerId}`
       }

@@ -1,19 +1,19 @@
 export class SizeInfo {
     // sizeId : number
-    colour : number
+    colorId : number
     sizeInfo:sizeInfo[]
     // quantity : number
 
     constructor(
         // sizeId:number,
-         colour:number,
+         colorId:number,
          sizeInfo:sizeInfo[]
 
         //   quantity:number
          ){
 
         // this.sizeId = sizeId
-        this.colour = colour
+        this.colorId = colorId
         this.sizeInfo=sizeInfo
         // this.quantity = quantity
     }

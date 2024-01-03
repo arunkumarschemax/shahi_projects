@@ -2,6 +2,7 @@ import {
     BarcodeOutlined,
     CaretDownOutlined,
     CaretRightOutlined,
+    EyeOutlined,
     InfoCircleOutlined,
     PrinterOutlined,
     SearchOutlined,
@@ -262,7 +263,7 @@ import RolePermission from "../role-permissions";
         let item = new allocateMaterialItems(0,data.quantity,data.stockId,data.locationId,data.issuedQty,0,"","","");
         materailDataItems.push(item);
       }
-      const req = new Allocatematerial(dto.itemType,dto.sampleRequestid,(dto.itemType === "FABRIC"?dto.fabric_info_id:dto.trim_info_id),(dto.itemType === "FABRIC"?dto.m3ItemFabricId:dto.trimCode),0,0,0,dto.buyerId,totalQty,materailDataItems,dto.tobeProcured,dto.samplingBomId);
+      const req = new Allocatematerial((dto.itemType).toUpperCase(),dto.sampleRequestid,((dto.itemType).toUpperCase() === "FABRIC"?dto.fabric_info_id:dto.trim_info_id),((dto.itemType).toUpperCase() === "FABRIC"?dto.m3ItemFabricId:dto.trimCode),0,0,0,dto.buyerId,totalQty,materailDataItems,dto.tobeProcured,dto.samplingBomId);
       console.log(req);
       service.creatematerialAlloction(req).then(res =>{
         if(res.status){
@@ -275,33 +276,41 @@ import RolePermission from "../role-permissions";
     const Columns: any = [
   
       {
-        title: "S No",
+        title: <div style={{ textAlign: 'center' }}>S No</div>,
         key: "sno",
         // width: '70px',buyerId:rowData.buyerId
         responsive: ["sm"],
         render: (text, object, index) => (page - 1) * 10 + (index + 1),
+        align:'center',
       },
       {
-        title: "M3 Fabric Code",
+        title: <div style={{ textAlign: 'center' }}>M3 Fabric Code</div>,
         dataIndex: "item_code",
         ...getColumnSearchProps("item_code"),
+        align:'center',
+
       },
       {
-        title: "Color",
+                title: <div style={{ textAlign: 'center' }}>Color</div>,
         dataIndex: "colour",
         ...getColumnSearchProps("colour"),
+        align:'center',
+
       },
       {
-        title: "Required Quantity",
+                title: <div style={{ textAlign: 'center' }}>Required Quantity</div>,
         dataIndex: "totalRequirement",
         sorter: (a, b) => a.totalRequirement.localeCompare(b.totalRequirement),
         sortDirections: ["descend", "ascend"],
+        align:'right',
+
       },
       {
-        title: "Available Quantity",
+                title: <div style={{ textAlign: 'center' }}>Available Quantity</div>,
         dataIndex: "resltantavaliblequantity",
-        sorter: (a, b) => a.resltantavaliblequantity.localeCompare(b.resltantavaliblequantity),
-        sortDirections: ["descend", "ascend"],
+        // sorter: (a, b) => a.resltantavaliblequantity.localeCompare(b.resltantavaliblequantity),
+        // sortDirections: ["descend", "ascend"],
+        align:'right',
         render: (text, record) => {
           // let consumedQty = 0
           // if(record.fabric_consumption > 0){
@@ -318,15 +327,18 @@ import RolePermission from "../role-permissions";
           },
       },
       {
-        title: "Allocated Quantity",
+                title: <div style={{ textAlign: 'center' }}>Allocated Quantity</div>,
         dataIndex: "receivedQty",
         sorter: (a, b) => a.receivedQty.localeCompare(b.receivedQty),
         sortDirections: ["descend", "ascend"],
+        align:'right',
+
       },
       {
-        title: "To Be Procured",
+                title: <div style={{ textAlign: 'center' }}>To Be Procured</div>,
         dataIndex: "tobeProcured",
         sorter: (a, b) => a.tobeProcured.localeCompare(b.tobeProcured),
+        align:'right',
         render: (text, record) => {
           return (
             <>
@@ -338,12 +350,14 @@ import RolePermission from "../role-permissions";
         },
       },
       {
-        title: "Status",
+                title: <div style={{ textAlign: 'center' }}>Status</div>,
         dataIndex: "status",
+        align:'center',
+        fixed:'right',
         render: (text, record) => {
           return (
             <>
-              {(Number(record.resltantavaliblequantity) <= 0) ? <Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Need to Procure</b></Tag>:Number(record.resltantavaliblequantity) > 0 && record.status != BomStatusEnum.ALLOCATED ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag>:""}
+              {Number(record.tobeProcured) > 0 && record.status != BomStatusEnum.ALLOCATED && Number(record.resltantavaliblequantity) > 0 ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:(Number(record.resltantavaliblequantity) <=0 && record.status != BomStatusEnum.ALLOCATED) ? <Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Need to Procure</b></Tag>:record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag>:""}
             </>
           );
         },
@@ -352,20 +366,23 @@ import RolePermission from "../role-permissions";
   
     const columnsSkelton: any = [
       {
-        title: "S No",
+                title: <div style={{ textAlign: 'center' }}>S No</div>,
         key: "sno",
         width: "70px",
+        align:'center',
         responsive: ["sm"],
         render: (text, object, index) => (page - 1) * 10 + (index + 1),
       },
       {
-        title: "M3 Trim Code",
+      title: <div style={{ textAlign: 'center' }}>M3 Trim Code</div>,
+        align:'center',
         dataIndex: "trim_code",
         ...getColumnSearchProps("trim_code"),
       },
       {
-        title: "Trim Type",
+        title: <div style={{ textAlign: 'center' }}>Trim Type</div>,
         dataIndex: "trimType",
+        align:'center',
         ...getColumnSearchProps("trimType"),
         render: (text) => {
           const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
@@ -373,16 +390,18 @@ import RolePermission from "../role-permissions";
         },
       },
       {
-        title: "Required Quantity",
+                title: <div style={{ textAlign: 'center' }}>Required Quantity</div>,
         dataIndex: "totalRequirement",
+        align:'right',
         sorter: (a, b) => a.totalRequirement.localeCompare(b.totalRequirement),
         sortDirections: ["descend", "ascend"],
       },
       {
-        title: "Available Quantity",
+        title: <div style={{ textAlign: 'center' }}>Available Quantity</div>,
         dataIndex: "availabeQuantity",
-        sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
-        sortDirections: ["descend", "ascend"],
+        align:'right',
+        // sorter: (a, b) => a.availabeQuantity.localeCompare(b.availabeQuantity),
+        // sortDirections: ["descend", "ascend"],
         render: (text, record) => {
           let consumedQty = 0
           // if(record.trim_consumption > 0){
@@ -397,14 +416,16 @@ import RolePermission from "../role-permissions";
           },
       },
       {
-        title: "Allocated Quantity",
+                title: <div style={{ textAlign: 'center' }}>Allocated Quantity</div>,
         dataIndex: "receivedQty",
+        align:'right',
         sorter: (a, b) => a.receivedQty.localeCompare(b.receivedQty),
         sortDirections: ["descend", "ascend"],
       },
       {
-        title: "To Be Procured",
+                title: <div style={{ textAlign: 'center' }}>To Be Procured</div>,
         dataIndex: "tobeProcured",
+        align:'right',
         sorter: (a, b) => a.tobeProcured.localeCompare(b.tobeProcured),
         render: (text, record) => {
           return (
@@ -417,12 +438,14 @@ import RolePermission from "../role-permissions";
         },
       },
       {
-        title: "Status",
+                title: <div style={{ textAlign: 'center' }}>Status</div>,
         dataIndex: "status",
+        align:'center',
+        fixed:'right',
         render: (text, record) => {
           return (
             <>
-              {(Number(record.resltantavaliblequantity) <= 0) ? <Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Need to Procure</b></Tag>:Number(record.resltantavaliblequantity) > 0 && record.status != BomStatusEnum.ALLOCATED ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag>:""}
+              {Number(record.tobeProcured) > 0 && record.status != BomStatusEnum.ALLOCATED && Number(record.resltantavaliblequantity) > 0 ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:(Number(record.resltantavaliblequantity) <= 0 && record.status != BomStatusEnum.ALLOCATED) ? <Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Need to Procure</b></Tag>:record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag>:""}
             </>
           );
         },
@@ -435,44 +458,49 @@ import RolePermission from "../role-permissions";
       console.log(val);
       const renderColumnForFabric: any =[
         {
-          title: "S No",
+        title: <div style={{ textAlign: 'center' }}>S No</div>,
           key: "sno",
           width: "100px",
           responsive: ["sm"],
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
         },
         {
-          title: "Grn Number",
+        title: <div style={{ textAlign: 'center' }}>Grn Number</div>,
           key:'grnNumber',
           dataIndex: "grnNumber",
           width: "150px",
+          align: "center",
 
         },
         {
-          title: "Grn Date",
+        title: <div style={{ textAlign: 'center' }}>Grn Date</div>,
           key:'grnDate',
           dataIndex:"grnDate",
           render:(grnDate)=>moment(grnDate).format("YYYY-MM-DD"),
           width: "150px",
+          align: "center",
 
         },
         {
-          title: "Location",
+        title: <div style={{ textAlign: 'center' }}>Location</div>,
           key:'location',
-
+          align: "center",
           dataIndex: "location",
           width:'80px',
         },
       
         {
-          title: "Available Quantity",
+        title: <div style={{ textAlign: 'center' }}>Available Quantity</div>,
           width: "150px",
           dataIndex: "quantity",
+          align: "right",
+
         },
       
         {
-          title: "Allocated Quantity",
+        title: <div style={{ textAlign: 'center' }}>Allocated Quantity</div>,
           width:'200px',
+          align: "right",
           render: (text, rowData, index) => { 
             return(
             <Form form={stockForm}>
@@ -615,6 +643,10 @@ import RolePermission from "../role-permissions";
             stockData = itemData?.find((f) => f.trim_info_id === itemId);
             stockListData = stockData?.allocatedStock;
           }
+          console.log(itemData);
+          console.log(stockData);
+          console.log(stockListData);
+
         if(Number(rowData.issuedQty) > 0)
         {  
           rowData.checkedStatus = 1;
@@ -690,6 +722,8 @@ import RolePermission from "../role-permissions";
   };
 
     const showModal = (rowData) => {
+      console.log(rowData,'ppppppppppppp');
+      
       setIsModalOpen(true);
       setRow(rowData)
     };
@@ -824,13 +858,14 @@ import RolePermission from "../role-permissions";
       <Card
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         title="Sample Requests"
-        // extra={
-        //   <Link to="/sample-development/sample-development-form">
-        //     <span style={{ color: "white" }}>
-        //       <Button type={"primary"}>New </Button>{" "}
-        //     </span>
-        //   </Link>
-        // }
+        extra={
+          checkAccess(MenusAndScopesEnum.Scopes.New)?
+          <Link to="/sample-development/sample-development-form">
+            <span style={{ color: "white" }}>
+              <Button type={"primary"}>New </Button>{" "}
+            </span>
+          </Link>:""
+        }
       >
         <Form form={sourcingForm} onFinish={getAll} layout="vertical">
           <Row gutter={8}>
@@ -1001,6 +1036,19 @@ import RolePermission from "../role-permissions";
                 />
               }
               key={index}
+            extra={
+              <EyeOutlined
+              onClick={() => {
+
+                navigate('/sample-req-detail-view', { state: item.sample_request_id })
+
+                // setHideCancelButton(false);
+                // DetailView(rowData.SampleRequestId, false);
+              }}
+              style={{ color: "blue", fontSize: 20 ,padding:1}}
+            />
+             
+            }
             >
               <Space
                 direction="vertical"
@@ -1033,6 +1081,7 @@ import RolePermission from "../role-permissions";
                   {tabName === "Fabric" ? (
 
                     <Table
+                    scroll={{ x: "max-content" }}
                     key={keyUpdate}
                     rowKey={record => record.fabric_info_id}
                     columns={Columns}
@@ -1052,7 +1101,9 @@ import RolePermission from "../role-permissions";
                     // expandIconColumnIndex={7}
                     // bordered
                     pagination={false}
-                    style={{ width: '100%' }} />
+                    style={{ width: '100%' }}
+                     />
+                    
                     
                     // <>
                     //   <Table

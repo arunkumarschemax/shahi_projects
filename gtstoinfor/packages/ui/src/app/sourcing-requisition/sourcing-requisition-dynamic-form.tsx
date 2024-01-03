@@ -1,11 +1,11 @@
-import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, Segmented, Select, Space, Table, Tag, Tooltip, Upload, UploadProps, message, Modal } from "antd"
+import { Button, Card, Col, DatePicker, Divider, Form, Input, Popconfirm, Row, Segmented, Select, Space, Table, Tag, Tooltip, Upload, UploadProps, message, Modal, Typography } from "antd"
 import { ColumnProps } from "antd/es/table";
 import React, { useEffect } from "react";
 import { useState } from "react"
 import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, M3TrimsService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, TrimParamsMappingService, TrimService, UomService, VendorsService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { EditOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
 import { BuyerIdReq, BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, M3MastersCategoryReq, M3TrimType, M3trimsDTO, MenusAndScopesEnum, SourcingRequisitionReq, StyleIdReq, TrimIdRequestDto, UomCategoryEnum, buyerReq } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
@@ -14,7 +14,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 import M3Items from "../masters/m3-items/m3-items-form";
 import { useIAMClientState } from "../common/iam-client-react";
 import RolePermission from "../role-permissions";
-
+import './sourcing-view.css';
 
 const {Option} = Select;
 
@@ -69,9 +69,12 @@ export const SourcingRequisitionDynamicForm = () => {
     const [trimM3Code,setTrimM3Code] = useState<any[]>([])
     const [loading, setLoading] = useState<boolean>(false);
     const [visibleModel, setVisibleModel] = useState<boolean>(false);
+    const [isColorRequired, setIsColorRequired] = useState<boolean>(true);
     const [fabricfilelist, setFabricfilelist] = useState<any>([]);
     const [isUpdateimg, setisUpdateImg]=useState('')
     const [imageUrl, setImageUrl] = useState('');
+    const [trimImgaUrl, setTrimImgageUrl] = useState('');
+
     const [trimfilelist, setTrimfilelist] = useState<any>([]);
     const [btnType, setBtnType] = useState<any>("Add");
     const [trimBtnType, setTrimBtnType] = useState<any>("Add");
@@ -88,6 +91,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const [trimCat, setTrimCat] = useState<any[]>([]);
     const paramsService = new TrimParamsMappingService()
     const [mapData, setMapData] = useState<any[]>([])
+    const [modal, setModal] = useState('')
 
 
 
@@ -220,12 +224,16 @@ export const SourcingRequisitionDynamicForm = () => {
     }
 
     const getMappedTrims = (value, option) => {
+        console.log(value);
+        console.log(option);
+
         getM3TrimsTypes()
         setTrimCat(option?.name)
         const req = new TrimIdRequestDto(undefined,option?.name)
         paramsService.getMappedParamsByTrim(req).then((res) => {
           if (res.status) {
             setMapData(res.data)
+            trimForm.setFieldsValue({trimCategoryName:option?.children})
           }
         });
       }
@@ -318,6 +326,11 @@ export const SourcingRequisitionDynamicForm = () => {
 
     const setEditForm = (rowData: any, index: any) => {
         console.log(rowData);
+        if(rowData.newColor){
+            setIsColorRequired(false)
+        }else{
+            setIsColorRequired(true)
+        }
         setDefaultFabricFormData(rowData)
         setFabricIndexVal(index)
         setBtnType("Update")
@@ -351,6 +364,7 @@ export const SourcingRequisitionDynamicForm = () => {
     useEffect(() => {
         if(defaultFabricFormData){
             console.log(defaultFabricFormData)
+            // console.log(defaultFabricFormData.fabricUpload.fileList[0].name)
             fabricForm.setFieldsValue({
                 content: defaultFabricFormData.content,
                 fabricType: defaultFabricFormData.fabricType,
@@ -378,7 +392,9 @@ export const SourcingRequisitionDynamicForm = () => {
                 buyer  : defaultFabricFormData.buyer,
                 xlNo  : defaultFabricFormData.xlNo,
                 quantity  : defaultFabricFormData.quantity,
-                quantityUnit: defaultFabricFormData.quantityUnit
+                quantityUnit: defaultFabricFormData.quantityUnit,
+                // fabricUpload:defaultFabricFormData.fabricUpload.fileList[0].name,
+                uomName:defaultFabricFormData.uomName
 
             })
         }
@@ -388,9 +404,11 @@ export const SourcingRequisitionDynamicForm = () => {
 
     useEffect(()=>{
         if(defaultTrimFormData){
+            console.log(defaultTrimFormData)
             trimForm.setFieldsValue({
                 trimType : defaultTrimFormData.trimType,
                 trimCategory : defaultTrimFormData.trimCategory,
+                trimCategoryName:defaultTrimFormData.trimCategoryName,
                 trimCode : defaultTrimFormData.trimCode,
                 trimName : defaultTrimFormData.trimName,
                 size : defaultTrimFormData.size,
@@ -401,7 +419,8 @@ export const SourcingRequisitionDynamicForm = () => {
                 m3TrimCode: defaultTrimFormData.m3TrimCode,
                 description : defaultTrimFormData.description,
                 remarks : defaultTrimFormData.remarks,
-                quantityUnit: defaultTrimFormData.quantityUnit
+                quantityUnit: defaultTrimFormData.quantityUnit,
+                uomName:defaultTrimFormData.uomName
             })
         }
     },[defaultTrimFormData])
@@ -550,11 +569,16 @@ export const SourcingRequisitionDynamicForm = () => {
         },
          {
             title:'Quantity',
-            dataIndex:'quantity'
+            // dataIndex:'quantity',
+            render:(_,record) =>{
+                console.log(record)
+                return (record.quantity+'-'+record.uomName)
+            }
         },
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => (
                 <span>
                     <Tooltip placement="top" title='Edit'>
@@ -602,10 +626,10 @@ export const SourcingRequisitionDynamicForm = () => {
             return EnumObj ? EnumObj.displayVal : text;
           },
         },
-        // {
-        //   title: 'Trim Code',
-        //   dataIndex: 'trimCode',
-        // },
+        {
+          title: 'Trim Category',
+          dataIndex: 'trimCategoryName',
+        },
         {
             title: 'M3 Trim Code',
             dataIndex: 'trimName',
@@ -635,6 +659,17 @@ export const SourcingRequisitionDynamicForm = () => {
         {
           title: 'Quantity',
           dataIndex: 'quantity',
+        render:(_,record)=>{
+            let uomoftrim
+            if(record.uomName){
+                uomoftrim = `-${record.uomName}` 
+            }else{
+                uomoftrim = '' 
+            }
+            // return <>{`${record.quantity}${record.uomName ? record.uomName:}`}</>
+            return(record.quantity+uomoftrim)
+        }
+
         },
        
         // {
@@ -644,10 +679,18 @@ export const SourcingRequisitionDynamicForm = () => {
         {
           title: 'Remarks',
           dataIndex: 'remarks',
+          render: (text, row) => (
+            // <Tooltip title={row.remarks} placement="top" arrowPointAtCenter>
+              <span className="fabCode">
+                {row.remarks != undefined ? `${row.remarks}`: ""}
+              </span>
+            // </Tooltip>
+          ),
         },
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => (
                 <span>
                     <Tooltip placement="top" title='Edit'>
@@ -679,6 +722,7 @@ export const SourcingRequisitionDynamicForm = () => {
 
 
     const onFabricAdd = (values) => {
+        console.log(values)
         fabricForm.validateFields().then(() => {
             if(values.color || values.newColor){
 
@@ -700,7 +744,10 @@ export const SourcingRequisitionDynamicForm = () => {
                     tableData = [...fabricTableData,values]
                 }
                 setFabricTableData(tableData)
+                setIsColorRequired(true)
                 fabricForm.resetFields()
+                setFabricfilelist([])
+                console.log(fabricTableData,'fabric table data')
                 setFabricTableVisible(true)
                 setBtnType("Add")
             }else{
@@ -723,8 +770,9 @@ export const SourcingRequisitionDynamicForm = () => {
         }
         setTrimsTableData(trimTableInfo)
         trimForm.resetFields()
+        setTrimfilelist([])
         setTrimTableVisible(true)
-        console.log(values,'namaste')
+        console.log(trimTableInfo,'namaste')
         setTrimBtnType("Add")
     }
 
@@ -732,6 +780,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const onFabricColorChange = (val,option) => {
         setFabricColor(option?.name)
         fabricForm.setFieldsValue({colorName: option?.name})
+        fabricForm.setFieldsValue({newColor: null})
     }
 
     const onPCHChange = (val,option) => {
@@ -782,6 +831,8 @@ const onTrimChange = (val, option) => {
     const selectedTrim = option?.children || ''; // Ensure a fallback value
     setTrimCode(selectedTrim);
     trimForm.setFieldsValue({trimName:selectedTrim})
+    trimForm.setFieldsValue({quantityUnit:option.trimUomId})
+    trimForm.setFieldsValue({uomName:option.trimUomName})
 }
 
     const onReset = () => {
@@ -793,6 +844,7 @@ const onTrimChange = (val, option) => {
         setTrimsTableData([])
         setTrimTableVisible(false)
         setImageUrl('');
+        setTrimImgageUrl('')
         setFabricfilelist([]);
         setTrimfilelist([])
     
@@ -823,6 +875,43 @@ const onTrimChange = (val, option) => {
         reader.readAsDataURL(img);
       }
 
+    // const uploadFabricProps: UploadProps = {
+    //     // alert();
+    //     multiple: false,
+    //     onRemove: file => {
+    //       setFabricfilelist([]);
+    //       setImageUrl('');
+    //     },
+    //     beforeUpload: (file: any) => {
+    //       if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+    //         AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+    //         // return true;
+    //       }
+    //       var reader = new FileReader();
+    //       reader.readAsArrayBuffer(file);
+    //       reader.onload = data => {
+    //         if (fabricfilelist.length == 1) {
+    //           AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+    //           return true;
+    //         } else {
+    //             setFabricfilelist([...fabricfilelist,file]);
+    //           getBase64(file, imageUrl =>
+    //             setImageUrl(imageUrl)
+    //           );
+    //           return false;
+    //         }
+    //       }
+    //     },
+    //     progress: {
+    //       strokeColor: {
+    //         '0%': '#108ee9',
+    //         '100%': '#87d068',
+    //       },
+    //       strokeWidth: 3,
+    //       format: percent => `${parseFloat(percent.toFixed(2))}%`,
+    //     },
+    //     fileList: fabricfilelist,
+    //   };
     const uploadFabricProps: UploadProps = {
         // alert();
         multiple: false,
@@ -833,11 +922,11 @@ const onTrimChange = (val, option) => {
         beforeUpload: (file: any) => {
           if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
             AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
-            // return true;
+            return false;
           }
-          var reader = new FileReader();
-          reader.readAsArrayBuffer(file);
-          reader.onload = data => {
+        //   var reader = new FileReader();
+        //   reader.readAsArrayBuffer(file);
+        //   reader.onload = data => {
             if (fabricfilelist.length == 1) {
               AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
               return true;
@@ -847,7 +936,7 @@ const onTrimChange = (val, option) => {
                 setImageUrl(imageUrl)
               );
               return false;
-            }
+            // }
           }
         },
         progress: {
@@ -861,32 +950,74 @@ const onTrimChange = (val, option) => {
         fileList: fabricfilelist,
       };
 
-      const uploadTrimProps: UploadProps = {
+    //   const uploadTrimProps: UploadProps = {
+    //     // alert();
+    //     multiple: false,
+    //     onRemove: file => {
+    //       setTrimfilelist([]);
+    //     //   setImageUrl('');
+    //     setTrimImgageUrl('')
+    //     },
+    //     beforeUpload: (file: any) => {
+    //       if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+    //         AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+    //         // return true;
+    //       }
+    //       var reader = new FileReader();
+    //       reader.readAsArrayBuffer(file);
+    //       reader.onload = data => {
+    //         if (trimfilelist.length == 1) {
+    //           AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+    //           return true;
+    //         } else {
+    //             setTrimfilelist([...trimfilelist,file]);
+    //           getBase64(file, imageUrl =>
+    //             // setImageUrl(imageUrl)
+    //             setTrimImgageUrl(imageUrl)
+    //           );
+    //           return false;
+    //         }
+    //       }
+    //     },
+    //     progress: {
+    //       strokeColor: {
+    //         '0%': '#108ee9',
+    //         '100%': '#87d068',
+    //       },
+    //       strokeWidth: 3,
+    //       format: percent => `${parseFloat(percent.toFixed(2))}%`,
+    //     },
+    //     fileList: trimfilelist,
+    //   };
+
+    const uploadTrimProps: UploadProps = {
         // alert();
         multiple: false,
         onRemove: file => {
           setTrimfilelist([]);
-          setImageUrl('');
+        //   setImageUrl('');
+        setTrimImgageUrl('')
         },
         beforeUpload: (file: any) => {
           if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
             AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
             // return true;
           }
-          var reader = new FileReader();
-          reader.readAsArrayBuffer(file);
-          reader.onload = data => {
+        //   var reader = new FileReader();
+        //   reader.readAsArrayBuffer(file);
+        //   reader.onload = data => {
             if (trimfilelist.length == 1) {
               AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
               return true;
             } else {
                 setTrimfilelist([...trimfilelist,file]);
               getBase64(file, imageUrl =>
-                setImageUrl(imageUrl)
+                // setImageUrl(imageUrl)
+                setTrimImgageUrl(imageUrl)
               );
               return false;
             }
-          }
+        //   }
         },
         progress: {
           strokeColor: {
@@ -898,7 +1029,6 @@ const onTrimChange = (val, option) => {
         },
         fileList: trimfilelist,
       };
-
 
       
   const handleCancel = () => {
@@ -953,6 +1083,36 @@ const onTrimChange = (val, option) => {
         }));
       };
   const segmentedOptions = options();
+
+
+const onFabriView =() =>{
+    setModal('fileUpload')
+    setVisibleModel(true)
+    
+}
+
+const onTrimView = () =>{
+    setModal('trimUpload')
+    setVisibleModel(true)
+}
+
+const uomOnchange =(value, option) =>{
+    fabricForm.setFieldsValue({uomName:option.name})
+}
+const onTrimUomOnchange =(value, option) =>{
+    trimForm.setFieldsValue({uomName:option.name})
+}
+
+const handleColor = (val) => {
+    console.log(val.target.value)
+    setIsColorRequired(false)
+    fabricForm.setFieldsValue({color: null})
+    if(val.target.value == null || val.target.value == '' || val.target.value == undefined){
+        setIsColorRequired(true)
+    }
+}
+
+
     return(
         <><Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
             <Form form={sourcingForm} layout="vertical">
@@ -1130,14 +1290,24 @@ const onTrimChange = (val, option) => {
             <Input placeholder="Enter Shrinkage"/>
         </Form.Item>
         </Col> */}
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 12 }}>
-                                            <Form.Item name='m3FabricCode' label='M3 Fabric Code' rules={[{ required: true, message: 'M3 Code is required' }]}>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 8 }}>
+                                            <Form.Item name='m3FabricCode' label='M3 Fabric Code' 
+                                            // rules={[{ required: true, message: 'M3 Code is required' }]}
+                                            >
                                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
                                                 dropdownMatchSelectWidth={false}
+                                                  style={{ width: "100%" }}
                                                     >
                                                     {fabricM3Code.map(e => {
                                                         return (
-                                                            <Option key={e.m3ItemsId} value={e.m3ItemsId}>{e.itemCode} - {e.description}</Option>
+
+                                                            <Option key={e.m3ItemsId} value={e.m3ItemsId}>
+                                                               <Tooltip title={e.description}>
+                                                               <span>
+                                                                {e.itemCode} - {e.description}
+                                                                </span>
+                                                                </Tooltip> 
+                                                                </Option>
                                                         );
                                                     })}
                                                 </Select>
@@ -1153,7 +1323,7 @@ const onTrimChange = (val, option) => {
                                     {/* <h1 style={{ color: '#6b54bf', fontSize: '15px', textAlign: 'left' }}>ITEM DETAILS</h1>
                                     <Row gutter={8}> */}
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                                            <Form.Item name='color' label='Color' rules={[{ required: false, message: 'Color is required' }]}>
+                                            <Form.Item name='color' label='Color' rules={[{ required: isColorRequired, message: 'Color is required' }]}>
                                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select Color' onChange={onFabricColorChange}>
                                                     {color.map(e => {
                                                         return (
@@ -1166,7 +1336,7 @@ const onTrimChange = (val, option) => {
                                         </Col>
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                                             <Form.Item name='newColor' label='New Color(If not in the list)' rules={[{ required: false, message: 'color is required' }]}>
-                                                <Input placeholder="Enter Color" />
+                                                <Input placeholder="Enter Color" onChange={handleColor}/>
                                             </Form.Item>
                                         </Col>
                                         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
@@ -1255,13 +1425,19 @@ const onTrimChange = (val, option) => {
                                         </Col>
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }}>
                                             <Form.Item name='quantity' label='Quantity' rules={[{ required: true, message: 'Quantity is required' }]}>
-                                                <Input type="number" placeholder="Enter Quantity" addonAfter={ <Form.Item name='quantityUnit' style={{width:'90px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}><Select showSearch allowClear optionFilterProp="children" placeholder='Unit' >
+                                                <Input type="number" placeholder="Enter Quantity" addonAfter={ <Form.Item name='quantityUnit' style={{width:'90px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}><Select showSearch allowClear 
+                                                optionFilterProp="children" placeholder='Unit'
+                                                onChange={uomOnchange}
+                                                 >
                                                     {uom.filter((e)=> e.uomCategory === UomCategoryEnum.LENGTH)?.map(e => {
                                                         return (
-                                                            <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                                            <Option name={e.uom} key={e.uomId} value={e.uomId}>{e.uom}</Option>
                                                         );
                                                     })}
                                                 </Select></Form.Item>} />
+                                            </Form.Item>
+                                            <Form.Item name={'uomName'} hidden>
+                                            <Input />
                                             </Form.Item>
                                         </Col>
                                         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{ marginTop: '2%' }}>
@@ -1275,19 +1451,36 @@ const onTrimChange = (val, option) => {
                                                 </Select>
                                             </Form.Item>
                                         </Col> */}
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                                             <Form.Item name="fabricUpload" label='Fabric Upload'
-                                            >
-                                                <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
+                                            //  initialValue={defaultFabricFormData ? defaultFabricFormData.fabricUpload.fileList[0].name:''}
+                                             >
+                                                {/* <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
 
                                                     <div>
                                                         {loading ? <LoadingOutlined /> : <PlusOutlined />}
                                                         <div style={{ marginTop: 8 }}>Upload Fabric</div>
                                                     </div>
-                                                </Upload>
+                                                </Upload> */}
+                                                  <Upload
+                                                  style={{ width: '100%' }} 
+                                                    {...uploadFabricProps}
+                                                    accept=".jpeg,.pdf,.png,.jpg"
+                                                    >
+                                                    <Button
+                                                        style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                                                        icon={<UploadOutlined />}
+                                                        disabled={fabricfilelist.length == 1? true:false}
+                                                    >
+                                                        Choose File
+                                                    </Button>
+                                                    </Upload>
+                                                    {fabricfilelist.length ==1?
+                                                    <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
+                                                    
                                             </Form.Item>
                                         </Col>
-                                        {
+                                        {/* {
                                         imageUrl && (
                                             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 12 }}>
                                             <Card style={{ height: '250px' }}>
@@ -1302,7 +1495,7 @@ const onTrimChange = (val, option) => {
                                                 </Form.Item>
                                             </Card>
                                             </Col>
-                                        )}
+                                        )} */}
                                     </Row>
                                     <Row justify={'end'}>
                                         <Button type='primary' htmlType="submit">{btnType}</Button>
@@ -1328,6 +1521,9 @@ const onTrimChange = (val, option) => {
                                         <Input disabled />
                                     </Form.Item>
                                     <Form.Item name='trimName' style={{ display: 'none' }}>
+                                        <Input disabled />
+                                    </Form.Item>
+                                    <Form.Item name='trimCategoryName' style={{ display: 'none' }}>
                                         <Input disabled />
                                     </Form.Item>
                                     <Row gutter={8}>
@@ -1407,7 +1603,7 @@ const onTrimChange = (val, option) => {
                                                     {renderTrimCodeOptions()}
                                                     {m3Trims.map((e) => {
                                                         return (
-                                                            <Option key={e.m3TrimsId} value={e.m3TrimsId}>
+                                                            <Option key={e.m3TrimsId} value={e.m3TrimsId} trimUomId={e.uomId} trimUomName={e.uom}>
                                                                 {e.trimCode}
                                                             </Option>
                                                         );
@@ -1459,7 +1655,7 @@ const onTrimChange = (val, option) => {
                                                 </Select>
                                             </Form.Item>
                                         </Col>
-                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
+                                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
                                             <Form.Item 
                                                 name="quantity"
                                                 label="Quantity"
@@ -1471,18 +1667,23 @@ const onTrimChange = (val, option) => {
                                                     },
                                                     {
                                                         pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z0-9-/\\_@ ]*$/,
-                                                        message: `Should contain only alphabets.`,
+                                                        message: `Should contain only Numbers.`,
 
                                                     },
                                                 ]}>
-                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'80px', height:"10px"}} rules={[{ required: true, message: 'Unit is required' }]}>
-                                                    <Select showSearch allowClear optionFilterProp="children" placeholder="Enter uom">
+                                                <Input type="number"  min={1} placeholder="Enter Quantity" addonAfter={<Form.Item name='quantityUnit' style={{width:'170px', height:"10px"}} rules={[{ required: false, message: 'Unit is required' }]}>
+                                                    <Select showSearch allowClear disabled optionFilterProp="children" placeholder="Unit"
+                                                   onChange={onTrimUomOnchange} 
+                                                    >
                                                     {uom?.map(e => {
                                                         return (
-                                                            <Option key={e.uomId} value={e.uomId}>{e.uom}</Option>
+                                                            <Option name={e.uom} key={e.uomId} value={e.uomId}>{e.uom}</Option>
                                                         );
                                                     })}
                                                 </Select></Form.Item>}/>
+                                            </Form.Item>
+                                            <Form.Item name={'uomName'} hidden>
+                                                <Input/>
                                             </Form.Item>
                                         </Col>
                                         {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 2 }} style={{ marginTop: '2%' }}>
@@ -1526,13 +1727,28 @@ const onTrimChange = (val, option) => {
                                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 4 }}>
                                             <Form.Item name="trimUpload" label='Trim Upload'
                                             >
-                                                <Upload {...uploadTrimProps} style={{ width: '100%' }} listType="picture-card">
+                                                {/* <Upload {...uploadTrimProps} style={{ width: '100%' }} listType="picture-card">
 
                                                     <div>
                                                         {loading ? <LoadingOutlined /> : <PlusOutlined />}
                                                         <div style={{ marginTop: 8 }}>Upload Trim</div>
                                                     </div>
-                                                </Upload>
+                                                </Upload> */}
+                                                  <Upload
+                                                  style={{ width: '100%' }} 
+                                                    {...uploadTrimProps}
+                                                    accept=".jpeg,.pdf,.png,.jpg"
+                                                    >
+                                                    <Button
+                                                        style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                                                        icon={<UploadOutlined />}
+                                                        disabled={trimfilelist.length == 1? true:false}
+                                                    >
+                                                        Choose File
+                                                    </Button>
+                                                    </Upload>
+                                                    {trimfilelist.length ==1?
+                                                    <Button icon={<EyeOutlined/>} onClick={onTrimView}></Button>:<></>}
                                             </Form.Item>
                                         </Col>
                                     </Row>
@@ -1562,7 +1778,7 @@ const onTrimChange = (val, option) => {
         <Modal
             className='rm-'
             key={'modal' + Date.now()}
-            width={'80%'}
+            width={'50%'}
             style={{ top: 30, alignContent: 'right' }}
             visible={visibleModel}
             title={<React.Fragment>
@@ -1570,9 +1786,36 @@ const onTrimChange = (val, option) => {
             onCancel={handleCancel}
             footer={[]}
         >
+            {modal == 'fileUpload' ?<>
+            <Card style={{ height: '250px' }}>
+                                                <Form.Item>
+                                                <img
+                                                    src={imageUrl}
+                                                    alt="Preview"
+                                                    height={'200px'}
+                                                    width={'500px'}
+                                                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                                                />
+                                                </Form.Item>
+                                            </Card>
+               </>:modal == 'trimUpload' ?<>
+               <Card style={{ height: '250px' }}>
+                                                <Form.Item>
+                                                <img
+                                                    src={trimImgaUrl}
+                                                    alt="Preview"
+                                                    height={'200px'}
+                                                    width={'500px'}
+                                                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                                                />
+                                                </Form.Item>
+                                            </Card>
+               </>:
             <M3Items />
-
-            </Modal></>
+            }
+            </Modal>
+           
+            </>
     )
 }
 export default SourcingRequisitionDynamicForm

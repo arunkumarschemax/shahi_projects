@@ -37,6 +37,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   const colorService = new ColourService()
   const buyerDestinationService = new BuyerDestinationService()
   const [keyUpdate, setKeyUpdate] = useState<number>(1);
+  const [onchangeData, setOnchangeData] = useState<any[]>([]); 
 
   const { IAMClientAuthContext } = useIAMClientState();
   // const [form] =props.form.useForm();
@@ -54,7 +55,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         console.log(qtyy)
         const newRow = {
           key: count,
-          colourId:element.colour,
+          colourId:0,
           totalCount: qtyy,
           wastage:2
         };
@@ -101,14 +102,21 @@ const FabricsForm = (props:FabricsFormProps) => {
   const handleInputChange = async (e, key, field, additionalValue,record) => {
     console.log(e);
     console.log(field);
-
-    console.log(data);
     console.log(key);
+
+    console.log(record);
+    console.log(data);
+
+    let isDuplicate 
+    let fieldName
+
+    
 
     let updatedData;
   
     if (field === 'fabricCode' && e != undefined) {
-
+      fieldName = "fabricId"
+      isDuplicate =  onchangeData.find((r) => r.colourId === record.colourId && r.fabricCode === e);
       updatedData = data.map((record) => {
         if (record.key === key) {
           return { ...record, [field]: e };
@@ -132,7 +140,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         if (record.key === key) {
           console.log(e);
           console.log(record.totalCount);
-          let totalSizeCountForSize = props.sizeDetails.find((s) => s.colour ===props.form.getFieldValue(`colorId${key}`))?.sizeInfo;
+          let totalSizeCountForSize = props.sizeDetails.find((s) => s.colorId ===props.form.getFieldValue(`colorId${key}`))?.sizeInfo;
           console.log(totalSizeCountForSize);
           let qtyy = 0;
           totalSizeCountForSize?.forEach(qty => {
@@ -168,14 +176,15 @@ const FabricsForm = (props:FabricsFormProps) => {
     }
     
     else if(field === 'colourId'){
+      fieldName = "colourId"
+      isDuplicate =  onchangeData.find((r) => r.colourId === e && r.fabricCode === record.fabricCode);
       console.log(props.sizeDetails);
-      console.log(props.sizeDetails.find((s) => s.colour === e));
+      console.log(props.sizeDetails.find((s) => s.colorId === e));
       let wastg =props.form.getFieldValue(`wastage${key}`) != undefined ?props.form.getFieldValue(`wastage${key}`) : 2;
-      if(props.sizeDetails.find((s) => s.colour === e)?.colour > 0){
+      if(props.sizeDetails.find((s) => s.colorId === e)?.colorId > 0){
         updatedData = data.map((record) => {
           if (record.key === key) {
-            
-            let totalSizeCountForSize = props.sizeDetails.find((s) => s.colour === e)?.sizeInfo;
+            let totalSizeCountForSize = props.sizeDetails.find((s) => s.colorId === e)?.sizeInfo;
             console.log(totalSizeCountForSize);
             let qtyy = 0;
             totalSizeCountForSize?.forEach(qty => {
@@ -196,7 +205,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       }
       else{
         AlertMessages.getErrorMessage("Fabric color is not in size details")
-       props.form.setFieldValue(`colorId${key}`,0)
+       props.form.setFieldValue(`colorId${key}`,undefined)
         updatedData = data.map((record) => {
           // if (record.key === key) {
           //   return { ...record, [field]: e };
@@ -214,8 +223,23 @@ const FabricsForm = (props:FabricsFormProps) => {
         return record;
       });
     }
+    if(isDuplicate?.fabricCode > 0)
+    {
+      AlertMessages.getErrorMessage("Duplicate Entries not allowed. ")
+      props.form.setFieldValue(`${fieldName}${key}`,null)
+      props.form.validateFields().then(fab => {
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      
+    }
+    else{
+      console.log("jj")
+    }
     
     setData(updatedData);
+    setOnchangeData(updatedData)
     props.data(updatedData);
 
   };
@@ -277,6 +301,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     }
     else{
       setData(updatedData);
+      setOnchangeData(updatedData)
       props.data(updatedData)
     }
    
@@ -345,6 +370,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             placeholder="Select Fabric Code"
             onChange={(e) => handleInputChange(e, record.key, 'fabricCode',0, record)}
           >
+          {/* <Option name={`fabricId${record.key}`} key={0} value={0}>Please Select Fabric</Option> */}
             {fabricCodeData?.map(item => {
               return <Option name={`fabricId${record.key}`} key={item.m3ItemsId} valu={item.m3ItemsId}>{item.itemCode+ "-"+ item.description}</Option>;
             })}
@@ -372,6 +398,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       title: 'Color',
       dataIndex: 'color',
       width:"25%",
+
       render: (_, record) => (
         <>
         <Form.Item name={`colorId${record.key}`}
@@ -386,7 +413,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             optionFilterProp="children"
             placeholder="Select Color"
           >
-          <Option name={`colorId${record.key}`} key={0} value={0}>Please Select Color</Option>
+          {/* <Option name={`colorId${record.key}`} key={0} value={0}>Please Select Color</Option> */}
             {color.map((e) => {
               return (
                 <Option name={`colorId${record.key}`} key={e.colourId} value={e.colourId}>
@@ -404,6 +431,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       title: 'Consumption',
       dataIndex: 'consumption',
       width:"17%",
+
       render: (_, record) => (
         <Form.Item name={`consumption${record.key}`}
         rules={[{ required: true, message: 'Missing Consumption' }]}
@@ -441,6 +469,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title:"UOM",
       dataIndex: 'UomId',
+
       width:"13%",
       render: (_, record) => (
         <Form.Item name={`uomId${record.key}`}
@@ -470,6 +499,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Wastage %',
       dataIndex: 'wastage',
+
       width:"17%",
       render: (_, record) => (
       <Form.Item name={`wastage${record.key}`} initialValue={2} 
@@ -486,6 +516,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       title: 'Total Requirement',
       dataIndex: 'totalRequirement',
       width:"15%",
+
       render: (_, record) => (
       <Form.Item name={`totalRequirement${record.key}`} 
       rules={[{ required: true, message: 'Missing Total Requirement' }]}
@@ -500,6 +531,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Remarks',
       dataIndex: 'remarks',
+
       width:"50%",
       render: (_, record) => (
       <Form.Item name={`remarks${record.key}`}>
@@ -514,6 +546,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     {
       title: 'Action',
       dataIndex: 'action',
+
       width:"10%",
       fixed:'right',
       render: (_, record) => (

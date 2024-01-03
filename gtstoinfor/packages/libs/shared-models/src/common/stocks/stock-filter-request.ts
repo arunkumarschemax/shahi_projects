@@ -2,11 +2,11 @@
 
 export class StockFilterRequest{
     m3ItemCode?:string;
-    itemType?: number
+    itemType?: string 
     location?: number
     plant?: number
     extRefNo?:string;
-    constructor( m3ItemCode?:string, itemType?: number, location?: number, plant?: number){
+    constructor( m3ItemCode?:string, itemType?: string, location?: number, plant?: number){
         this.m3ItemCode = m3ItemCode;
         this.itemType = itemType
         this.location = location

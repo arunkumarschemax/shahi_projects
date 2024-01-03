@@ -1,10 +1,14 @@
-import { DownloadOutlined, FilePdfOutlined, UndoOutlined } from '@ant-design/icons';
+import { DownloadOutlined, FilePdfOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { ItemTypeEnumDisplay, SampleFilterRequest, StockFilterRequest, StocksDto } from '@project-management-system/shared-models';
 import { StockService } from '@project-management-system/shared-services';
-import { Button, Card, Col, Form, Row, Select, Statistic, Table } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { Button, Card, Col, Form, Input, Row, Select, Space, Statistic, Table } from 'antd'
+import React, { useEffect, useRef, useState } from 'react'
 import { Excel } from 'antd-table-saveas-excel';
 import { useIAMClientState } from "../common/iam-client-react";
+import Highlighter from 'react-highlight-words';
+import { ColumnType } from 'antd/es/table';
+import { FilterConfirmProps } from 'antd/es/table/interface';
+import moment from 'moment';
 
 
 const StockReport = () => {
@@ -21,17 +25,20 @@ const StockReport = () => {
     const [key, setKey] = useState();
     const { IAMClientAuthContext } = useIAMClientState();
     const [isBuyer, setIsBuyer] = useState(false);
-
+    const [searchText, setSearchText] = useState("");
+    const [searchedColumn, setSearchedColumn] = useState("");
+    const searchInput = useRef<any>(null);
+    const [page,setPage] = useState<number>(1);
 
 
     
 
     useEffect(() => {
         getData();
-        getAllItemCode();
+        // getAllItemCode();
         getAllItemType();
         getAllLocation();
-        getAllPlant();
+        // getAllPlant();
         getAllStockReportData();
         const userrefNo = IAMClientAuthContext.user?.externalRefNo
         if(userrefNo){
@@ -41,7 +48,9 @@ const StockReport = () => {
       }, []);
 
     const getData = () => {
-        service.getStockReport().then(res => {
+      
+        service.getAllStockReportData().then(res => {
+          
             if(res.status){
                 setData(res.data);
         
@@ -84,20 +93,15 @@ const StockReport = () => {
       const getAllStockReportData = () => {
         const req = new StockFilterRequest()
         req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
-        if (form.getFieldValue('m3ItemCode') !== undefined) {
-          req.m3ItemCode = form.getFieldValue('m3ItemCode')
-        }
+      
         if (form.getFieldValue('itemType') !== undefined) {
           req.itemType = form.getFieldValue('itemType')
         }
         if (form.getFieldValue('location') !== undefined) {
           req.location = form.getFieldValue('location')
         }
-        if (form.getFieldValue('plant') !== undefined) {
-          req.plant = form.getFieldValue('plant')
-        }
+        
         service.getAllStockReportData(req).then((res) => {
-          console.log(req,'77777777777777')
           if (res.data) {
             setStockData(res.data);
             setFilterData(res.data)
@@ -113,17 +117,109 @@ const StockReport = () => {
         form.resetFields();
         getAllStockReportData();
       };
-   
+    
+const handleSearch = (
+  selectedKeys: string[],
+  confirm: (param?: FilterConfirmProps) => void,
+  dataIndex: string
+) => {
+  confirm();
+  setSearchText(selectedKeys[0]);
+  setSearchedColumn(dataIndex);
+};
 
+const handleReset = (clearFilters: () => void) => {
+  clearFilters();
+  setSearchText("");
+};
+      const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+          <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+            <Input
+              ref={searchInput}
+              placeholder={`Search ${dataIndex}`}
+              value={selectedKeys[0]}
+              onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+              onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+              style={{ marginBottom: 8, display: 'block' }}
+            />
+            <Space>
+              <Button
+                type="primary"
+                onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90 }}
+              >
+                Search
+              </Button>
+              <Button
+                onClick={() =>{
+                  handleReset(clearFilters)
+                  setSearchedColumn(dataIndex)
+                  confirm({closeDropdown:true})
+                }
+                   }
+                size="small"
+                style={{ width: 90 }}
+              >
+                Reset
+              </Button>
+             
+            </Space>
+          </div>
+        ),
+        filterIcon: (filtered: boolean) => (
+          <SearchOutlined style={{ color: filtered ? '#1677ff' : undefined }} />
+        ),
+        onFilter: (value, record) =>
+          record[dataIndex] ?record[dataIndex]     
+             .toString()
+            .toLowerCase()
+            .includes((value as string).toLowerCase()):false,
+        onFilterDropdownOpenChange: (visible) => {
+          if (visible) {
+            setTimeout(() => searchInput.current?.select(), 100);
+          }
+        },
+        render: (text) =>
+          searchedColumn === dataIndex ? (
+            <Highlighter
+              highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+              searchWords={[searchText]}
+              autoEscape
+              textToHighlight={text ? text.toString() : ''}
+            />
+          ) : (
+            text
+          ),
+      });
     const Columns:any=[
+      {
+        title: 'S No',
+        key: 'sno',
+        width: '70px',
+        style: { background: 'red' },
+        responsive: ['sm'],
+        render: (text, object, index) => (page - 1) * 10 + (index + 1),
+        onCell: (record: any) => ({
+          rowSpan: record.rowSpan,
+        }),
+        fixed: 'left',
+      },
         {
             title:"Buyer",
-            dataIndex:"buyerName"
-            
+            width: '100px',
+            dataIndex:"buyerName",
+            ...getColumnSearchProps("buyerName"),
         },
         {
-          title:"Material Type",
-          dataIndex:"itemType",
+          title:"Item Type",
+          dataIndex:"item_type",
+          width: '150px',
+
+          sorter: (a, b) => a.item_type.localeCompare(b.item_type),
+          sortDirections: ["descend", "ascend"],
           render: (text) => {
             const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
             return EnumObj ? EnumObj.displayVal : text;
@@ -131,19 +227,63 @@ const StockReport = () => {
           
       },
         {
-            title:"M3 Item",
-            dataIndex:"m3ItemCode"
+            title:" Item Code",
+            dataIndex:"m3ItemCode",
+            ...getColumnSearchProps("m3ItemCode"),
+
+            sorter: (a, b) => a.m3ItemCode.localeCompare(b.m3ItemCode),
+            sortDirections: ["descend", "ascend"],
+            width:250
         },
         {
             title:"Location",
-            dataIndex:"location"
-            
+            dataIndex:"location",
+            width: '150px',
+
+            sorter: (a, b) => a.location.localeCompare(b.location),
+            sortDirections: ["descend", "ascend"],
         },
         {
-          title:"Quantity",
-          dataIndex:"quantity"
+          title:"Available Quantity",
+          dataIndex:"available_qty-uom",
+          width: '120px',
+          sorter: (a, b) => a.available_qty.localeCompare(b.available_qty),
+          sortDirections: ["descend", "ascend"],
+          render:(_,record)=>{
+            return (
+              <span>
+                {record.available_qty}-{record.uom}
+              </span>
+            );
+          }
           
       },
+      {
+        title: 'Aging',
+        dataIndex: 'grn_date',
+        width: '20px',
+        align: 'right',
+        sorter: (a, b) => a.grn_date.localeCompare(b.grn_date),
+        sortDirections: ["descend", "ascend"],
+        render: (text, record) => {
+          const grnDate = moment(record.grn_date);
+          const currentDate = moment();
+          const daysDifference = currentDate.diff(grnDate, 'days');
+      
+          const age = {
+            children: daysDifference,
+            props: {
+              style: {
+                background: daysDifference > 0 ? '#3BC744' : '#FF0000',
+                color: 'black',
+              },
+            },
+          };
+      
+          return age;
+        },
+      }
+      
         
     ]
     const onChange =(key)=>{
@@ -158,21 +298,21 @@ const StockReport = () => {
       .split("-")
       .join("/");
 
-  if (key === 'pop'){
+  // if (key === 'pop'){
     const excel = new Excel();
   excel
     .addSheet('Stock-report')
     .addColumns(Columns)
-    .addDataSource(filterData, { str2num: true })
+    .addDataSource(stockData, { str2num: true })
     .saveAs(`Stock-report-${currentDate}.xlsx`);
-  } else {
-    const excel = new Excel();
-    excel
-      .addSheet('Stock-report')
-      .addColumns(Columns)
-      .addDataSource(filterData, { str2num: true })
-      .saveAs(`Stock-report-${currentDate}.xlsx`);
-  }
+  // } else {
+  //   const excel = new Excel();
+  //   excel
+  //     .addSheet('Stock-report')
+  //     .addColumns(Columns)
+  //     .addDataSource(stockData, { str2num: true })
+  //     .saveAs(`Stock-report-${currentDate}.xlsx`);
+  // }
   
 }
 
@@ -233,11 +373,11 @@ const StockReport = () => {
         }
   
         >
-        {/* <Form form={form} 
+      <Form form={form} 
         onFinish={onFinish}
         >
         <Row gutter={24}>
-          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+          {/* <Col xs={24} sm={12} md={8} lg={6} xl={6}>
             <Form.Item name="m3ItemCode" label="Item Code">
               <Select
                 showSearch
@@ -252,7 +392,7 @@ const StockReport = () => {
                 ))}
               </Select>
             </Form.Item>   
-          </Col>
+          </Col> */}
           <Col xs={24} sm={12} md={8} lg={6} xl={6}>
             <Form.Item name="itemType" label="Item Type">
               <Select
@@ -261,10 +401,14 @@ const StockReport = () => {
                 optionFilterProp="children"
                 allowClear
               >
-                {itemType.map((qc: any) => (
+                {/* {itemType.map((qc: any) => (
                   <Select.Option key={qc.item_type_id} value={qc.item_type_id}>
                     {qc.item_type_id}
                   </Select.Option>
+                ))} */}
+
+                {Object.values(ItemTypeEnumDisplay).map((val)=>(
+                  <Select.Option key={val.name} value={val.name}>{val.displayVal}</Select.Option>
                 ))}
               </Select>
             </Form.Item>   
@@ -279,13 +423,13 @@ const StockReport = () => {
               >
                 {location.map((qc: any) => (
                   <Select.Option key={qc.location_id} value={qc.location_id}>
-                    {qc.location_id}
+                    {qc.location}
                   </Select.Option>
                 ))}
               </Select>
             </Form.Item>   
           </Col>
-          <Col xs={24} sm={12} md={8} lg={6} xl={6}>
+          {/* <Col xs={24} sm={12} md={8} lg={6} xl={6}>
             <Form.Item name="plant" label="Plant">
               <Select
                 showSearch
@@ -300,7 +444,7 @@ const StockReport = () => {
                 ))}
               </Select>
             </Form.Item>   
-          </Col>
+          </Col> */}
           <Col xs={12} sm={6} md={4} lg={3} xl={2}>
             <Form.Item>
               <Button
@@ -322,27 +466,31 @@ const StockReport = () => {
               >
                 Reset
               </Button>
-            </Form.Item>
+            </Form.Item> 
           </Col>
           </Row>
-          </Form> */}
- {/* <Row gutter={40} justify={'space-evenly'}>
+          </Form> 
+ <Row gutter={40} justify={'space-evenly'}>
             <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38, backgroundColor: '#A5F5D7'}}
              title={"Total Item Code:" +data.filter(el => el.m3ItemCode).length}>
               </Card> </Col>
               <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#E6D2F0'}}
-              title={"Item Type:"+data.filter(el => el.item_type_id).length}>
+              title={"Total Item Type:"+data.filter(el => el.item_type).length}>
               </Card> </Col>
               <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#E6DC7B'}}
-              title={"Location:"+data.filter(el => el.location_id).length}>
+              title={"Total Location:"+data.filter(el => el.location).length}>
               </Card> </Col>
-              <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#A4A3A4'}}
+              {/* <Col span={4}><Card style={{textAlign: 'left', width: 200, height: 38,  backgroundColor: '#A4A3A4'}}
               title={"Plant:"+data.filter(el => el.plant_id).length}>
-              </Card> </Col>
-          </Row><br></br> */}
+              </Card> </Col> */}
+          </Row><br></br>
         <Card >
-        <Table columns={Columns}  pagination={{pageSize:50}}
-        dataSource={filterData}
+        <Table columns={Columns}  
+  pagination={{
+    onChange(current) {
+      setPage(current);
+    }
+  }}        dataSource={stockData}
         className="custom-table-wrapper"
             /> 
         </Card>

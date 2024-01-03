@@ -322,7 +322,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         {
             title: 'M3 Fabric Code',
             dataIndex: 'itemCode',
-            width: '170px',
+            // width: '170px',
             render:(text,row)=>{
                 console.log(row)
                 return <>{`${row.fabricCode}-${row.itemCode}`}</>
@@ -367,6 +367,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => {
                 console.log(rowData)
                 return (<span>
@@ -414,7 +415,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         {
             title: 'M3 Fabric Code',
             dataIndex: 'itemCode',
-            width: '170px',
+            // width: '170px',
             render:(text,row)=>{
                 console.log(row)
                 return <>{`${row.itemCode}-${row.description}`}</>
@@ -573,7 +574,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         let baseValue=Number(unitPrice)*Number(quantity);
         const disc_per=fabricForm.getFieldValue('discount')
         if(disc_per!==''&&disc_per>0){
-            discAmnt=Math.round(baseValue*disc_per/100);
+            discAmnt=baseValue*disc_per/100;
             baseValue=Number(baseValue)-Number(discAmnt);
         }
         console.log('Tax Percentage')
@@ -591,8 +592,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         const totalAmount=Number(taxAmount)+Number(baseValue)+Number(transportation)
         fabricForm.setFieldsValue({taxAmount:Number(taxAmount).toFixed(2)})
         fabricForm.setFieldsValue({discountAmount:Number(discAmnt).toFixed(2)})
-        fabricForm.setFieldsValue({subjectiveAmount:Number(totalAmount).toFixed(2)})
-        fabricForm.setFieldsValue({ taxAmount: taxAmount })
+        fabricForm.setFieldsValue({subjectiveAmount:totalAmount>0?Number(totalAmount).toFixed(2):0})
+        // fabricForm.setFieldsValue({ taxAmount: taxAmount })
        
         setTaxAmountVisible(false)        
     }
@@ -660,14 +661,14 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='poQuantity' label='PO Quantity'
-                            rules={[{ required: true, message: 'Quantity of Fabric is required' }]}
+                            rules={[{ required: true, message: 'Quantity is required' }]}
                         >
                             <Input placeholder="Enter Quantity" onChange={(e) => quantiyOnchange(e.target.value)} />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{ marginTop: '2%' }}>
                         <Form.Item name='quantityUomId' rules={[{ required: true, message: 'Quantity unit is required' }]}>
-                            <Select showSearch allowClear optionFilterProp="children" placeholder='Unit' onChange={finalCalculation}>
+                            <Select showSearch allowClear disabled optionFilterProp="children" placeholder='Unit' onChange={finalCalculation}>
                                 {uom.map(e => {
                                     return (
                                         <Option key={e.uomId} value={e.uomId} name={e.uom}>{e.uom}</Option>
@@ -678,14 +679,14 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
                         <Form.Item name='unitPrice' label='Unit Price'
-                            rules={[{ required: true, message: 'unit price of Fabric is required' }]}
+                            rules={[{ required: true, message: 'unit price is required' }]}
                         >
                             <InputNumber style={{ width: '90px' }} placeholder="unit price" onChange={(e) => finalCalculation()} min={0}/>
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} style={{paddingLeft:'41px'}}>
-                        <Form.Item name='discount' label='Discount'
-                            rules={[{ required: false, message: 'Discount of Fabric is required' }]}
+                        <Form.Item name='discount' label='Discount(%)'
+                            rules={[{ required: false, message: 'Discount is required' }]}
                         >
                             <InputNumber  placeholder="discount" onChange={(e) => finalCalculation()} min={0}/>
                         </Form.Item>
@@ -693,14 +694,14 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='discountAmount' label='Discount Amount'
-                            rules={[{ required: false, message: 'Discount of Fabric is required' }]}
+                            rules={[{ required: false, message: 'Discount is required' }]}
                         >
                             <Input disabled placeholder="discount amount" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='tax' label='Tax Percentage(%)'
-                            rules={[{ required: true, message: 'tax of Fabric is required' }]}
+                            rules={[{ required: true, message: 'tax%  is required' }]}
                         >
                              <Select
                                 placeholder="Select Tax"
@@ -721,21 +722,21 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='taxAmount' label='Tax Amount'
-                            rules={[{ required: true, message: 'Tax of Fabric is required' }]}
+                            rules={[{ required: true, message: 'Tax is required' }]}
                         >
                             <Input disabled placeholder="Tax amount" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='transportation' label='Transportation'
-                            rules={[{ required: false, message: 'Transportation of Fabric is required' }]}
+                            rules={[{ required: false, message: 'Transportation is required' }]}
                         >
                             <Input placeholder="Transportation" onChange={(e) => finalCalculation()} min={0} />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='subjectiveAmount' label='Subjective Amount'
-                            rules={[{ required: true, message: 'Subjective Amount of Fabric is required' }]}
+                            rules={[{ required: true, message: 'Subjective Amount is required' }]}
                         >
                             <Input disabled placeholder="Subjective amount" />
                         </Form.Item>
@@ -747,7 +748,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                     }
                 </Row>
                 <Row>
-                    {fabricTableVisible && <Table columns={tableColumns} dataSource={fabricTableData}
+                    {fabricTableVisible && <Table columns={tableColumns} dataSource={fabricTableData}  scroll={{x:true}} size="small"  bordered
                     />
                     }
 

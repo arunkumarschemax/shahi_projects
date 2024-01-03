@@ -177,7 +177,7 @@ getData(data.poNumber)
                     <p style={{textAlign: 'left',marginLeft:-100,fontSize:'10px',padding:1}}>{e.invoice_no}</p>
                     <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:1}}>Type : </p>
                     <p style={{ textAlign: 'left',marginLeft:-100,fontSize:'10px',padding:1}}>{ItemTypeEnumDisplay.find((s)=> s.name === e.item_type)?.displayVal?ItemTypeEnumDisplay.find((s)=> s.name === e.item_type)?.displayVal:e.item_type}</p>
-                    {e.item_type != 'Fabric'?(
+                    {e.item_type !== 'FABRIC'?(
                     <><p style={{ color: 'green', textAlign: 'left', marginLeft: -100, padding: 1 }}>Params : </p><p style={{ textAlign: 'left', marginLeft: -100, fontSize: '10px', padding: 1 }}>{e.trimParams}</p></>
                     ):''}
                     <p style={{ color: 'green',textAlign: 'left',marginLeft:-100,padding:1}}>Item : </p>

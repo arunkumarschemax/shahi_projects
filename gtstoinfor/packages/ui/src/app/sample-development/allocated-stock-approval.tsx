@@ -54,7 +54,8 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
     }
   }, [props.screen]);
 
-  const allocatedLocationInfo = (value) => {
+
+  const allocatedLocationInfo = (value,type) => {
     const req = new AllocatedLocationReq();
     req.sampleRequestItemId = value;
     if(props?.screen === 'Issued'){
@@ -62,8 +63,10 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
     }else{
       req.action = 'Approval'
     }
+    req.type = type
     service.allocatedLocationInfo(req).then((res) => {
       if (res.status) {
+        // setChildData(res.data)
         setChildData((prev) => {
           return { ...prev, [value]: res.data };
         });
@@ -316,7 +319,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
     console.log(record)
     return (
       <Table
-        rowKey={(record) => record.sampleFabricId? record.sampleFabricId: record.sampleTrimInfoId}
+        rowKey={(rec) => rec.materialAllocationId}
         columns={childColumns}
         dataSource={record.type == 'Fabric' ? childData[record.sampleFabricId] : childData[record.sampleTrimInfoId]}
       ></Table>
@@ -326,7 +329,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
   const expandTrimTabel = (record) => {
     return (
       <Table
-        rowKey={(record) => record.sampleTrimInfoId}
+        // rowKey={(record) => record.sampleTrimInfoId}
         columns={childColumns}
         dataSource={childData[record.sampleReqTrimId]}
       ></Table>
@@ -417,7 +420,7 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
         {/* <Tabs defaultActiveKey="1">
           <TabPane tab="Fabric Details" key="1"> */}
         {showTabe ? <><Table
-          rowKey={(record) => record.sampleFabricId}
+          rowKey={(record) => record.itemCode}
           columns={fabColumns}
           dataSource={fabricStockData}
           pagination={{
@@ -430,9 +433,9 @@ export const AllocatedStockApproval = (props: AllocatedStockApprovalProps) => {
             onExpand(expanded, record) {
               if(record.type == 'Fabric'){
                 console.log(record)
-                allocatedLocationInfo(record.sampleFabricId);
+                allocatedLocationInfo(record.sampleFabricId,record.type);
               }else{
-                allocatedLocationInfo(record.sampleTrimInfoId);
+                allocatedLocationInfo(record.sampleTrimInfoId,record.type);
               }
             },
             rowExpandable: (record) => record.name !== "Not Expandable",

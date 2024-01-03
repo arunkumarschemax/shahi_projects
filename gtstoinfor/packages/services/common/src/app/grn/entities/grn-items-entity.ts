@@ -159,7 +159,7 @@ export class GrnItemsEntity {
         name: 'grn_item_no',
         nullable: false
     })
-    grnItemNo: number
+    grnItemNo: string
 
     @Column('int', {
         name: 'po_id',

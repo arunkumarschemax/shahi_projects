@@ -239,15 +239,13 @@ export class IndentService {
 
     async getIndentData(req: IndentRequestDto): Promise<CommonResponseModel> {
         const data = await this.indentRepo.getIndentData(req);
-        console.log(data, '555555555555555');
-
         if (data.length > 0) {
             const groupedData = data.reduce((result, item) => {
                 const requestNo = item?.requestNo;
                 const style = item.style;
                 const indentDate = item.indentDate;
                 const expectedDate = item.expectedDate;
-                const status = item.status
+                 const status = item.STATUS
 
                 if (!result[requestNo]) {
                     result[requestNo] = {
@@ -259,17 +257,49 @@ export class IndentService {
                         i_items: [],
                     };
                 }
+                if(req.tab === 'both'){
+                    if(item.fabricId !== null){
+                    result[requestNo].i_items.push({
+                        requestNo: item?.requestNo,
+                        fabricId: item.fabricId,
+                        materialtype: 'Fabric',
+                        quantity: item.fbquantity,
+                        color: item.color,
+                        status: item.STATUS,
+                        m3Code: item.m3FabricCode,
+                        uom:item.fabUom
+    
+                    }); 
+                }
+                    if(item.trimType !== null){
+                    result[requestNo].i_items.push({
+                        requestNo: item?.requestNo,
+                        itrims_id: item.itrims_id,
+                        materialtype: item.trimType,
+                        trimCode: item.trimCode,
+                        quantity: item.quantity,
+                        color: item.color,
+                        m3Code: item.m3TrimCode,
+                       status: item.STATUS,
+                       uom:item.trimUom
+                    }) 
+                }
+                }
+                if(req.tab!=undefined && req.tab === 'FABRIC' && item.fabricId !== null){
                 result[requestNo].i_items.push({
                     requestNo: item?.requestNo,
                     fabricId: item.fabricId,
-                    materialtype: item.fabricType,
+                    materialtype: 'Fabric',
                     quantity: item.fbquantity,
                     color: item.color,
-                    status: item.status,
+                    status: item.STATUS,
                     m3Code: item.m3FabricCode,
-
+                    uom:item.fabUom
 
                 });
+            }
+                if(req.tab!=undefined && req.tab === 'TRIM' && item.trimType !== null){
+
                 result[requestNo].i_items.push({
                     requestNo: item?.requestNo,
                     itrims_id: item.itrims_id,
@@ -278,8 +308,11 @@ export class IndentService {
                     quantity: item.quantity,
                     color: item.color,
                     m3Code: item.m3TrimCode,
-                    status: item.status,
+                   status: item.STATUS,
+                   uom:item.trimUom
+
                 })
+            }
 
 
                 return result;

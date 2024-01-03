@@ -276,7 +276,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .leftJoin(SamplingbomEntity, 'sb', 'sb.m3_item_id= srfi.fabric_code and sb.sample_request_id = srfi.sample_request_id and sb.colour_id = srfi.colour_id')
             // .leftJoin(RmCreationEntity, 'rm', ' rm.rm_item_id=srfi.fabric_code ')
             .leftJoin(M3ItemsEntity,'m3items','m3items.m3_items_Id  = srfi.fabric_code')
-            .leftJoin(StocksEntity,'st','st.m3_item=srfi.fabric_code and st.item_type = "fabric" and st.buyer_id=sr.buyer_id')
+            .leftJoin(StocksEntity,'st','st.m3_item=srfi.fabric_code and st.item_type = "fabric" and st.buyer_id=sr.buyer_id and grn_type = "INDENT"')
             .leftJoin(Colour,'c','c.colour_id=srfi.colour_id')
             .where(`srfi.sample_request_id = "${sampleId}"`)
             .groupBy(`srfi.fabric_info_id`)
@@ -300,11 +300,11 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
     async sampleTrimData(sampleId: string) {
         const query = await this.dataSource.createQueryBuilder(SampleRequestTriminfoEntity, 'stri')
-            .addSelect(`(stri.total_requirement - IF(sb.received_quantity IS NULL, 0, sb.received_quantity)) AS tobeProcured, IF(sb.received_quantity IS NULL, 0, sb.received_quantity) AS receivedQty,(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,stri.sample_request_id,mt.trim_type as trimType,sum(st.quantity-allocatd_quantity-transfered_quantity) as availabeQuantity,stri.trim_info_id,stri.consumption AS trim_consumption,stri.total_requirement ,stri.sample_request_id AS trim_sample_request_id,stri.remarks AS tri_remarks,mt.trim_code AS trim_item_code,mt.trim_code AS m3trimcode, sr.buyer_id as buyerId, stri.trim_code as trimCode, sb.status AS status,stri.trim_info_id AS trimInfoId,sb.sampling_bom_id AS samplingBomId, sb.required_quantity`)
+            .addSelect(`(stri.total_requirement - IF(sb.received_quantity IS NULL, 0, sb.received_quantity)) AS tobeProcured, IF(sb.received_quantity IS NULL, 0, sb.received_quantity) AS receivedQty,(IF(sum(st.quantity) IS Null, 0, sum(st.quantity))- IF(sum(st.allocatd_quantity) IS Null, 0, sum(st.allocatd_quantity))) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,stri.sample_request_id,mt.trim_type as trimType,sum(st.quantity-allocatd_quantity-transfered_quantity) as availabeQuantity,stri.trim_info_id,stri.consumption AS trim_consumption,stri.total_requirement ,stri.sample_request_id AS trim_sample_request_id,stri.remarks AS tri_remarks,mt.trim_code AS trim_item_code,mt.trim_code AS m3trimcode, sr.buyer_id as buyerId, stri.trim_code as trimCode, sb.status AS status,stri.trim_info_id AS trimInfoId,sb.sampling_bom_id AS samplingBomId, sb.required_quantity`)
             .leftJoin(SampleRequest, 'sr', 'sr.sample_request_id= stri.sample_request_id ')
             .leftJoin(SamplingbomEntity, 'sb', 'sb.m3_item_id= stri.trim_code and sb.sample_request_id = stri.sample_request_id')
             .leftJoin(M3TrimsEntity, 'mt', 'mt.m3_trim_id=stri.trim_code ')
-            .leftJoin(StocksEntity,'st','st.m3_item=stri.trim_code and sr.buyer_id=st.buyer_id')
+            .leftJoin(StocksEntity,'st','st.m3_item=stri.trim_code and sr.buyer_id=st.buyer_id and grn_type = "INDENT"')
             .leftJoin(GrnItemsEntity,'gi','gi.grn_item_id=st.grn_item_id')
             .leftJoin(GrnEntity,'g','g.grn_id=gi.grn_id and g.grn_type = "INDENT"')
             .where(`stri.sample_request_id = "${sampleId}"`)
@@ -317,7 +317,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
                 let reqq = new buyerandM3ItemIdReq(recc.buyerId,recc.trimCode,recc.trimType)
                 let stockdata = await this.sampleService.getAvailbelQuantityAginstBuyerAnditem(reqq)
                 let data = {
-                    trim_info_id: recc.trim_info_id,trim_item_code:recc.trim_item_code, trim_description: recc.trim_description, trim_consumption: recc.trim_consumption, tri_remarks: recc.tri_remarks, trim_sample_request_id: recc.trim_sample_request_id,trim_code:recc.m3trimcode,availabeQuantity:recc.availabeQuantity,trimType:recc.trimType,sample_request_idmt:recc.sample_request_id,resltantavaliblequantity:recc.resltantavaliblequantity,consumedQty:recc.consumedQty,buyerId:recc.buyerId,trimCode:recc.trimCode,status:recc.status,itemType:recc.trimType,sampleRequestid:recc.trim_sample_request_id,sampleItemId:recc.trimInfoIdm,totalRequirement:recc.required_quantity,receivedQty:recc.receivedQty,allocatedStock:stockdata.data,samplingBomId:recc.samplingBomId
+                    trim_info_id: recc.trim_info_id,trim_item_code:recc.trim_item_code, trim_description: recc.trim_description, trim_consumption: recc.trim_consumption, tri_remarks: recc.tri_remarks, trim_sample_request_id: recc.trim_sample_request_id,trim_code:recc.m3trimcode,availabeQuantity:recc.availabeQuantity,trimType:recc.trimType,sample_request_idmt:recc.sample_request_id,resltantavaliblequantity:recc.resltantavaliblequantity,consumedQty:recc.consumedQty,buyerId:recc.buyerId,trimCode:recc.trimCode,status:recc.status,itemType:recc.trimType,sampleRequestid:recc.trim_sample_request_id,sampleItemId:recc.trimInfoIdm,totalRequirement:recc.required_quantity,receivedQty:recc.receivedQty,allocatedStock:stockdata.data,samplingBomId:recc.samplingBomId,tobeProcured:recc.tobeProcured
                 }
                 respnse.push(data);
             }

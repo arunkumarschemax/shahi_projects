@@ -262,7 +262,7 @@ import RolePermission from "../role-permissions";
       {
         title: <div style={{textAlign:"center"}}>Item Type</div>,
         dataIndex: 'itemType',
-        // ...getColumnSearchProps("itemType"),
+        ...getColumnSearchProps("itemType"),
         render: (text) => {
           const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
           return EnumObj ? EnumObj.displayVal : text;
@@ -311,6 +311,7 @@ import RolePermission from "../role-permissions";
         title: <div style={{textAlign:'center'}}>Action</div>,
         dataIndex: 'action',
         align:"center",
+        fixed:'right',
         render: (text, rowData) => {
           
           return(

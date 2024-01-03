@@ -290,6 +290,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => (
                 <span>
                     <Tooltip placement="top" title='Edit'>
@@ -678,7 +679,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                             }
                         ]}>
                             <Input type="number" placeholder="PoQuantity" addonAfter={<Form.Item name='quantityUomId' style={{width:'90px', height:"10px"}} rules={[{required:false,message:'Quantity unit is required'}]} >
-                        <Select showSearch allowClear optionFilterProp="children" placeholder='Unit'
+                        <Select showSearch allowClear disabled optionFilterProp="children" placeholder='Unit'
                         onChange={finalCalculation}
                         >
                             {uom.map(e => {
@@ -693,28 +694,28 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                         
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='unitPrice' label='Unit Price'
-                            rules={[{ required: true, message: 'unit price of Fabric is required' }]}
+                            rules={[{ required: true, message: 'unit price is required' }]}
                         >
                             <Input type="number" placeholder="unit price" onChange={(e) => finalCalculation()} />
                         </Form.Item>
                     </Col>
                     <Col span={4}>
-                        <Form.Item name='discount' label='Discount'
-                            rules={[{ required: false, message: 'Discount of Fabric is required' }]}
+                        <Form.Item name='discount' label='Discount(%)'
+                            rules={[{ required: false, message: 'Discount is required' }]}
                         >
                             <Input type="number" placeholder="discount" onChange={(e) => finalCalculation()} />
                         </Form.Item>
                     </Col>
                     <Col span={4}>
                         <Form.Item name='discountAmount' label='Discount Amount'
-                            rules={[{ required: false, message: 'Discount of Fabric is required' }]}
+                            rules={[{ required: false, message: 'Discount is required' }]}
                         >
                             <Input type = "number" disabled placeholder="discount amount" />
                         </Form.Item>
                     </Col>
                     <Col span={4}>
                         <Form.Item name='tax' label='Tax Percentage(%)'
-                            rules={[{ required: true, message: 'tax of Fabric is required' }]}
+                            rules={[{ required: true, message: 'tax% is required' }]}
                         >
                             <Select
                                 placeholder="Select Tax"
@@ -733,21 +734,21 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='taxAmount' label='Tax Amount'
-                            rules={[{ required: true, message: 'Tax of Fabric is required' }]}
+                            rules={[{ required: true, message: 'Tax is required' }]}
                         >
                             <Input disabled placeholder="Tax amount" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='transportation' label='Transportation'
-                            rules={[{ required: false, message: 'Transportation of Fabric is required' }]}
+                            rules={[{ required: false, message: 'Transportation is required' }]}
                         >
                             <Input onChange={e=>finalCalculation()} placeholder="Transportation" />
                         </Form.Item>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='subjectiveAmount' label='Subjective Amount'
-                            rules={[{ required: true, message: 'Subjective Amount of Fabric is required' }]}
+                            rules={[{ required: true, message: 'Subjective Amount is required' }]}
                         >
                             <Input disabled placeholder="Subjective amount" />
                         </Form.Item>
