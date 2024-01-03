@@ -672,7 +672,26 @@ import {
                 xl={{ span: 4 }}
               >
                <Form.Item label="PO Date" name="podate"  >
-                  <RangePicker  />
+                  <RangePicker style={{width:180}}   />
+                </Form.Item>
+              </Col>
+              <Row>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 5 }}
+                lg={{ span: 5 }}
+                xl={{ span: 4 }}
+              >
+                <Form.Item style={{marginTop:20,marginLeft:60}}>
+                  <Button
+                    htmlType="submit"
+                    icon={<SearchOutlined />}
+                    type="primary"
+                  >
+                    SEARCH
+                  </Button>
+                
                 </Form.Item>
               </Col>
               <Col
@@ -684,14 +703,7 @@ import {
               >
                 <Form.Item style={{marginTop:20}}>
                   <Button
-                    htmlType="submit"
-                    icon={<SearchOutlined />}
-                    type="primary"
-                  >
-                    SEARCH
-                  </Button>
-                  <Button
-                    style={{ marginLeft: 8 }}
+                    style={{ marginLeft: 120 }}
                     htmlType="submit"
                     type="primary"
                     onClick={onReset}
@@ -701,6 +713,7 @@ import {
                   </Button>
                 </Form.Item>
               </Col>
+              </Row>
             </Row>
           </Form>
           {/* <Table
