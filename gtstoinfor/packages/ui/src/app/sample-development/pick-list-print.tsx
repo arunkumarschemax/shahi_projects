@@ -192,7 +192,7 @@ export const PickListPrint = (props: PickListPrintProps) => {
                             ) : ("")}
                              {trimStockData && trimStockData.length > 0 ? (
                                 <>                                    
-                                <h3 style={{ fontFamily: 'initial',textAlign:'left' ,marginBottom:-5}}>&#129525;Trim</h3>
+                                <h3 style={{ fontFamily: 'initial',textAlign:'left',marginBottom:-5}}>&#129525;Trim</h3>
                                     <hr></hr>
                                     <div style={{ flexDirection: "row", display: "flex" }}>
                                     {/* <p style={{ fontSize: 15, flex: 1,fontWeight:'bolder' }}>Qr Code</p> */}
@@ -218,9 +218,10 @@ export const PickListPrint = (props: PickListPrintProps) => {
                                 </a>
                               
                                 </p> */}
-                                                <p style={{ fontSize: 15, flex: 1 }}>{e.itemCode? e.itemCode :'-'}</p>
-                                                <p style={{ fontSize: 15, flex: 1 }}>{e.consumption ? e.consumption : '-'}</p>
-                                                            <p style={{ fontSize: 15, flex: 1,display:'flex',flexDirection:'column',}}>
+<p style={{ fontSize: 15, flex: 1, wordBreak: 'break-all', maxWidth: 180 }}>
+    {e.itemCode ? e.itemCode : '-'}
+</p>                                                <p style={{ fontSize: 15, flex: 1,marginLeft:10 }}>{e.consumption ? e.consumption : '-'}</p>
+                                                <p style={{ fontSize: 15, flex: 1,display:'flex',flexDirection:'column',}}>
                                <a> <QRCode
                                 
                                     size={256}
