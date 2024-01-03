@@ -189,7 +189,7 @@ import {
       const sizeHeaders = getSizeWiseHeaders(data);
     
   
-      const columns: ColumnsType<any> = [
+      const columns: any = [
         {
           title: "S.No",
           key: "sno",
@@ -204,9 +204,9 @@ import {
           sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
           sortDirections: ["ascend", "descend"],
           fixed: "left",
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
 
-          // ...getColumnSearchProps('purchaseOrderNumber')
+          ...getColumnSearchProps('poNumber')
         },
         {
           title: "PO Line",
@@ -214,9 +214,9 @@ import {
           width: 90,
           sorter: (a, b) => a.poLine.localeCompare(b.poLine),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('poLine')
 
-          // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
           title: "PO Date",
@@ -224,19 +224,19 @@ import {
           width: 90,
           sorter: (a, b) => a.PODate.localeCompare(b.PODate),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('PODate')
 
           // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
           title: "Material",
           dataIndex: "material",
-          width: 90,
+          width: 130,
           sorter: (a, b) => a.material.localeCompare(b.material),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
-
-          // ...getColumnSearchProps('purchaseOrderNumber')
+          render: (text) => text ? text : "-",
+         ...getColumnSearchProps('material')
         },
         {
           title: "Season",
@@ -244,19 +244,19 @@ import {
           width: 90,
           sorter: (a, b) => a.season.localeCompare(b.season),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
 
-          // ...getColumnSearchProps('purchaseOrderNumber')
+          ...getColumnSearchProps('season')
         },
         {
             title: "Color",
             dataIndex: "color",
-            width: 90,
+            width: 110,
             sorter: (a, b) => a.color.localeCompare(b.color),
             sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
 
-            // ...getColumnSearchProps('purchaseOrderNumber')
+            ...getColumnSearchProps('color')
           },
 
           {
@@ -265,40 +265,43 @@ import {
             width: 90,
             sorter: (a, b) => a.gender.localeCompare(b.gender),
             sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
 
-            // ...getColumnSearchProps('purchaseOrderNumber')
+            ...getColumnSearchProps('gender')
           },
        
         {
           title: "Payment Terms Description",
           dataIndex: "paymentTermDescription",
           align: "center",
-          width: 90,
+          width: 200,
           sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('paymentTermDescription') 
 
         },
         {
           title: "Incoterm",
           dataIndex: "incoterm",
           align: "center",
-          width: 90,
+          width: 500,
           sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('incoterm') 
+
 
         },
         {
             title: "Address",
             dataIndex: "shipToAddress",
-            width: 90,
+            width: 600,
             sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
             sortDirections: ["ascend", "descend"],
-           render: (text) => text ? text : "-"
+           render: (text) => text ? text : "-",
 
-            // ...getColumnSearchProps('purchaseOrderNumber')
+            ...getColumnSearchProps('shipToAddress')
           },
        
       
@@ -317,7 +320,7 @@ import {
                     title: 'Ratio',
                     dataIndex: '',
                     key: '',
-                    width: 70,
+                    width: 90,
                     className: "center",
                     render: (text, record) => {
                         const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -344,7 +347,7 @@ import {
                     title: 'UPC',
                     dataIndex: '',
                     key: '',
-                    width: 70,
+                    width: 100,
                     className: "center",
                     render: (text, record) => {
                         const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -371,7 +374,7 @@ import {
                   title: 'Label',
                   dataIndex: '',
                   key: '',
-                  width: 70,
+                  width: 90,
                   className: "center",
                   render: (text, record) => {
                       const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -480,7 +483,7 @@ import {
                     title: 'Ex-factory Date ',
                     dataIndex: '',
                     key: '',
-                    width: 70,
+                    width: 100,
                     className: "center",
                     render: (text, record) => {
                         const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -506,7 +509,7 @@ import {
                   title: 'Export Date ',
                   dataIndex: '',
                   key: '',
-                  width: 70,
+                  width: 100,
                   className: "center",
                   render: (text, record) => {
                       const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -532,7 +535,7 @@ import {
                 title: 'Delivery Date',
                 dataIndex: '',
                 key: '',
-                width: 70,
+                width: 100,
                 className: "center",
                 render: (text, record) => {
                     const sizeData = record.sizeWiseData.find(item => item.size === version);

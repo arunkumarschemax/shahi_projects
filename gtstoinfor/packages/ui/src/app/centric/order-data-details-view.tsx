@@ -162,7 +162,7 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
 
     return (
-        <Card title="Order Detail View"
+        <Card title="Order Details"
         extra ={<Link to='/centric/order-data-info-grid' ><Button className='panel_button' >View </Button></Link>}
         >
         <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }} >
