@@ -183,14 +183,14 @@ const OrderAcceptanceGrid = () => {
       sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
       sortDirections: ["ascend", "descend"],
       fixed: "left",
-      ...getColumnSearchProps('poNumber'),
+      // ...getColumnSearchProps('poNumber'),
       render: (text) => text ? text : "-"
     },
     {
       title: "PO Item",
       dataIndex: "poItem",
       width: 90,
-      sorter: (a, b) => a.poItem.localeCompare(b.poItem),
+      // sorter: (a, b) => a.poItem.localeCompare(b.poItem),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps('poItem'),
       render: (text) => text ? text : "-"
@@ -251,7 +251,7 @@ const OrderAcceptanceGrid = () => {
       dataIndex: "supplier",
       align: "center",
       width: 90,
-      sorter: (a, b) => a.supplier.localeCompare(b.supplier),
+      // sorter: (a, b) => a.supplier.localeCompare(b.supplier),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps('supplier'),
       render: (text) => text ? text : "-"
@@ -262,7 +262,7 @@ const OrderAcceptanceGrid = () => {
       dataIndex: "revisionNo",
       align: "center",
       width: 90,
-      sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
+      // sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps('revisionNo'),
       render: (text) => text ? text : "-"

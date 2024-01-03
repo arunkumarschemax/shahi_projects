@@ -28,7 +28,7 @@ const ColineView = () => {
         OrderNumber()
     }, [])
 
-
+  console.log(orderNumber,"ooooooo")
 
     const BuyerPo = () => {
         service.getBuyerPo().then(res => {
@@ -216,10 +216,10 @@ const ColineView = () => {
             <Form onFinish={getData} form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='buyerPo' label='Buyer Po' >
+                        <Form.Item name='buyerPo' label='Buyer PO' >
                             <Select
                                 showSearch
-                                placeholder="Select Buyer Po"
+                                placeholder="Select Buyer PO"
                                 optionFilterProp="children"
                                 allowClear
                             >
@@ -251,13 +251,13 @@ const ColineView = () => {
                         <Form.Item name='orderNo' label='CO Number' >
                             <Select
                                 showSearch
-                                placeholder="Select Order Number"
+                                placeholder="Select CO Number"
                                 optionFilterProp="children"
                                 allowClear
                             >
                                 {
                                     orderNumber.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.order_no}>{inc.order_no}</Option>
+                                        return <Option key={inc.id} value={inc.co_number}>{inc.co_number}</Option>
                                     })
                                 }
                             </Select>
