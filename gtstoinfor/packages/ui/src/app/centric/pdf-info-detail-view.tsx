@@ -5,32 +5,20 @@ import './pdf-reader.css'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
-// export interface IPoPdfTableProps {
-//     data: LegalPoDetails
-// }
+
 
 const PdfInfoDetailView = (
-    // props: IPoPdfTableProps
+   
     ) =>{
-    const { state } = useLocation();
+
     const [pdfData, setPdfData] = useState<any>();
     const navigate = useNavigate();
+     const location = useLocation()
+    // console.log(location?.state?.data?.fileData,"ooooooooo")
+    const parsedData = JSON.parse(location?.state?.data?.fileData)
+    console.log(parsedData,"kkkkkkkkkkk")
 
 
-    // useEffect(() => {
-    //     if (props.data) {
-    //         setPdfData(props.data)
-    //     }
-    // }, [props.data])
-
-    useEffect(() => {
-        if (state?.data) {
-            const parsedData = JSON.parse(state.data)
-            // console.log(parsedData)
-            setPdfData(parsedData)
-            // setUpdateKey(prevState => prevState+1)
-        }
-    }, [state?.data])
 
     const setMoreData = () => {
         navigate('/centric/pdf-info')
@@ -62,25 +50,25 @@ const PdfInfoDetailView = (
 
                 </tr>
                 <tr className='ta-b'>
-                    <td className='ta-b'>{pdfData?.poNumber}</td>
-                    <td className='ta-b'>{pdfData?.poDate}</td>
-                    <td className='ta-b'>{pdfData?.shipment}</td>
-                    <td className='ta-b'>{pdfData?.season}</td>
-                    <td className='ta-b'>{pdfData?.portOfExport}</td>
-                    <td className='ta-b'>{pdfData?.portOfEntry}</td>
-                    <td className='ta-b'>{pdfData?.Refrence}</td>
-                    <td className='ta-b'>{pdfData?.paymentTermDescription}</td>
-                    <td className='ta-b'>{pdfData?.specialInstructions}</td>
-                    <td className='ta-b'>{pdfData?.division}</td>
-                    <td className='ta-b'>{pdfData?.incoterm}</td>
-                    <td className='ta-b'>{pdfData?.shipToAdd}</td>
-                    <td className='ta-b'>{pdfData?.manufacture}</td>
-                    <td className='ta-b'>{pdfData?.buyerAddress}</td>
+                    <td className='ta-b'>{parsedData?.poNumber ? parsedData?.poNumber :"-" }</td>
+                    <td className='ta-b'>{parsedData?.poDate ? parsedData?.poDate :"-"}</td>
+                    <td className='ta-b'>{parsedData?.shipment ?  parsedData?.shipment :"-"}</td>
+                    <td className='ta-b'>{parsedData?.season ? parsedData?.season :"-" }</td>
+                    <td className='ta-b'>{parsedData?.portOfExport ? parsedData?.portOfExport :"-" }</td>
+                    <td className='ta-b'>{parsedData?.portOfEntry ? parsedData?.portOfEntry :"-" }</td>
+                    <td className='ta-b'>{parsedData?.Refrence ? parsedData?.Refrence :"-"}</td>
+                    <td className='ta-b'>{parsedData?.paymentTermDescription ? parsedData?.paymentTermDescription:"-" }</td>
+                    <td className='ta-b'>{parsedData?.specialInstructions ? parsedData?.specialInstructions :"-"}</td>
+                    <td className='ta-b'>{parsedData?.division ? parsedData?.division :"-"}</td>
+                    <td className='ta-b'>{parsedData?.incoterm ? parsedData?.incoterm :"-" }</td>
+                    <td className='ta-b'>{parsedData?.shipToAdd ? parsedData?.shipToAdd :"-"}</td>
+                    <td className='ta-b'>{parsedData?.manufacture ? parsedData?.manufacture :"-"}</td>
+                    <td className='ta-b'>{parsedData?.buyerAddress ? parsedData?.buyerAddress :"-"}</td>
                     {/* <td className='ta-b'>{pdfData?.comptMaterial}</td> */}
                     
 
                 </tr>
-                {pdfData?.CentricpoItemDetails?.map((i) => {
+                {parsedData?.CentricpoItemDetails?.map((i) => {
                     return <>
                         <tr className='ta-b'>
                             <th></th>
@@ -100,18 +88,18 @@ const PdfInfoDetailView = (
                         </tr>
                         <tr className='ta-b'>
                             <td></td>
-                            <td className='ta-b'>{i.poLine}</td>
-                            <td className='ta-b'>{i.material}</td>
+                            <td className='ta-b'>{i.poLine ? i.poLine:"-"   }</td>
+                            <td className='ta-b'>{i.material ? i.material:"-"} </td>
 
-                            <td className='ta-b'>{i.ppkupc}</td>
+                            <td className='ta-b'>{i.ppkupc ? i.ppkupc :"-"}</td>
 
-                            <td className='ta-b'>{i.color}</td>
-                            <td className='ta-b'>{i.gender}</td>
-                            <td className='ta-b'>{i.shortDescription}</td>
-                            <td className='ta-b'>{i.packMethod}</td>
-                            <td className='ta-b'>{i.vendorBookingFlag}</td>
-                            <td className='ta-b'>{i.currency}</td>
-                            <td className='ta-b'>{i.totalQuantity}</td>
+                            <td className='ta-b'>{i.color ?i.color :"-"}</td>
+                            <td className='ta-b'>{i.gender?i.gender :"-"}</td>
+                            <td className='ta-b'>{i.shortDescription ? i.shortDescription  :"-"}</td>
+                            <td className='ta-b'>{i.packMethod ? i.packMethod :"-"}</td>
+                            <td className='ta-b'>{i.vendorBookingFlag ? i.vendorBookingFlag :"-"}</td>
+                            <td className='ta-b'>{i.currency ? i.currency :"-"}</td>
+                            <td className='ta-b'>{i.totalQuantity ? i.totalQuantity :"-"}</td>
 
                         </tr>
                         <tr className='ta-b'>
@@ -144,19 +132,19 @@ const PdfInfoDetailView = (
                                     <td></td>
 
                                     {/* <td className='ta-b'>{j.uom}</td> */}
-                                    <td className='ta-b'>{j.comptMaterial}</td>
-                                    <td className='ta-b'>{j.ratio}</td>
+                                    <td className='ta-b'>{j.comptMaterial ? j.comptMaterial:"-"}</td>
+                                    <td className='ta-b'>{j.ratio ? j.ratio: "-"}</td>
 
 
-                                    <td className='ta-b'>{j.size}</td>
-                                    <td className='ta-b'>{j.upc}</td>
-                                    <td className='ta-b'>{j.label}</td>
-                                    <td className='ta-b'>{j.quantity}</td>
-                                    <td className='ta-b'>{j.unitPrice}</td>
-                                    <td className='ta-b'>{j.exFactory}</td>
-                                    <td className='ta-b'>{j.exPort}</td>
-                                    <td className='ta-b'>{j.deliveryDate}</td>
-                                    <td className='ta-b'>{j.retialPrice}</td>
+                                    <td className='ta-b'>{j.size ? j.size: "-"}</td>
+                                    <td className='ta-b'>{j.upc ? j.upc : "-"}</td>
+                                    <td className='ta-b'>{j.label ? j.label:"-"}</td>
+                                    <td className='ta-b'>{j.quantity ? j.quantity:"-"}</td>
+                                    <td className='ta-b'>{j.unitPrice ? j.unitPrice:"-"}</td>
+                                    <td className='ta-b'>{j.exFactory ? j.exFactory:"-"}</td>
+                                    <td className='ta-b'>{j.exPort ? j.exPort : "-"}</td>
+                                    <td className='ta-b'>{j.deliveryDate ? j.deliveryDate:"-"}</td>
+                                    <td className='ta-b'>{j.retialPrice ? j.retialPrice : "-"}</td>
                                     {/* <td className='ta-b'>{j.amount}</td> */}
                                 </tr>
                             })
