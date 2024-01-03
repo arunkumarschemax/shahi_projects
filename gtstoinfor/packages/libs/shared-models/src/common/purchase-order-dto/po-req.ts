@@ -6,8 +6,9 @@ export class PoReq{
     ETDtoDate?:Date
     PoFromDate?:Date
     PoToDate?:Date
+    tab?:string
     constructor( poId?:Number,materialType?: string,poAgainst?: string,ETDtoDate?:Date,ETDfromDate?:Date,PoFromDate?:Date,
-        PoToDate?:Date){
+        PoToDate?:Date,tab?:string){
         this.poId = poId
         this.materialType = materialType
         this.poAgainst = poAgainst
@@ -15,5 +16,6 @@ export class PoReq{
         this.PoFromDate = PoFromDate
         this.PoToDate = PoToDate
         this.ETDtoDate =ETDtoDate
+        this.tab = tab
     }
 }

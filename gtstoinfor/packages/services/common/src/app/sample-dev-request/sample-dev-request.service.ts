@@ -500,12 +500,13 @@ export class SampleRequestService {
         console.log(fabFlag.has(true) +"-"+ trimFlag.has(true))
         console.log(fabFlag.has(false) +"-"+ trimFlag.has(false))
 
-        if(fabFlag.has(false) || trimFlag.has(false)){
-        //   let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})
-        //     if(updateSampleRequestStatus.affected === 0){
+        if(!fabFlag.has(false) || !trimFlag.has(false)){
+          let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})
+          console.log(updateSampleRequestStatus)
+            if(updateSampleRequestStatus.affected === 0){
               await manager.releaseTransaction();
               return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
-        //     }
+            }
         }
       }
       else{
@@ -1872,7 +1873,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
      LEFT JOIN colour c ON c.colour_id = sf.colour_id
      LEFT JOIN rack_position l ON l.position_Id = mai.location_id
     WHERE  sr.sample_request_id= '${req.requestNo}' AND ma.item_type = 'FABRIC'
-    GROUP BY rack_position_name`;
+  `;
       
       const fabricInfo = await this.dataSource.query(fabricInfoQry)
       let trimInfoQry = `SELECT sr.request_no AS requestNo,
@@ -1883,7 +1884,7 @@ ma.item_type AS itemType,
 st.total_requirement AS consumption,
 mai.allocate_quantity AS allocateQty,
 l.rack_position_name AS location,
-mi.item_code AS itemCode
+mi.trim_code AS itemCode
 FROM sample_request sr 
  LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
  LEFT JOIN style s ON s.style_id = sr.style_id
@@ -1894,7 +1895,7 @@ FROM sample_request sr
  LEFT JOIN m3_trims mi ON mi.m3_trim_Id = ma.m3_item_id
  LEFT JOIN rack_position l ON l.position_Id = mai.location_id
 WHERE  sr.sample_request_id= '${req.requestNo}' AND  ma.item_type != 'FABRIC'
-GROUP BY rack_position_name`;
+`;
 
 const trimInfo = await this.dataSource.query(trimInfoQry)
 

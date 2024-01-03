@@ -679,6 +679,9 @@ export class PurchaseOrderService {
         if(req.poAgainst){
             PoType += ` AND p.po_against ='${req.poAgainst}'`
         }
+        if(req.tab!= undefined){
+            PoType += ` AND p.po_material_type LIKE '%${req.tab}%'`
+        }
         const Res = await this.dataSource.query(PoType)
        
         if(Res.length > 0){
@@ -691,7 +694,7 @@ export class PurchaseOrderService {
         return 
     }
     async getPoNum():Promise<CommonResponseModel>{
-        let PoType = `SELECT p.po_number FROM purchase_order p `
+        let PoType = `SELECT p.po_number,p.purchase_order_id FROM purchase_order p `
         const Res = await this.dataSource.query(PoType)
        
         if(Res.length > 0){

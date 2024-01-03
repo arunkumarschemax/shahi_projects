@@ -859,11 +859,12 @@ import RolePermission from "../role-permissions";
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         title="Sample Requests"
         extra={
+          checkAccess(MenusAndScopesEnum.Scopes.New)?
           <Link to="/sample-development/sample-development-form">
             <span style={{ color: "white" }}>
               <Button type={"primary"}>New </Button>{" "}
             </span>
-          </Link>
+          </Link>:""
         }
       >
         <Form form={sourcingForm} onFinish={getAll} layout="vertical">

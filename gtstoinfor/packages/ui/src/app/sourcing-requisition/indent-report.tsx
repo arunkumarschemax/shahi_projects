@@ -1,9 +1,13 @@
-import { IndentRequestDto } from '@project-management-system/shared-models';
+import { IndentRequestDto, ItemTypeEnumDisplay, MenusAndScopesEnum } from '@project-management-system/shared-models';
 import { IndentService } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Row, Select, Table } from 'antd';
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table } from 'antd';
 import moment from 'moment';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useIAMClientState } from '../common/iam-client-react';
+import RolePermission from '../role-permissions';
+import { SearchOutlined } from '@ant-design/icons';
+import Highlighter from 'react-highlight-words';
+import React from 'react';
 const { Option } = Select;
 
 export const IndentReport = () => {
@@ -13,9 +17,13 @@ export const IndentReport = () => {
   const [date, setDate] = useState<any[]>([]);
   const { RangePicker } = DatePicker;
   const [form] = Form.useForm();
-  const page = 1;
   const { IAMClientAuthContext } = useIAMClientState();
   const [isBuyer, setIsBuyer] = useState(false);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
+  const [page, setPage] = React.useState(1);
+
   useEffect(() => {
     getIndentData();
     getAll();
@@ -25,7 +33,12 @@ export const IndentReport = () => {
       // form.setFieldsValue()
     }
   }, []);
-
+  const checkAccess = (buttonParam) => {  
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Reports,MenusAndScopesEnum.SubMenus['Indent Report'],buttonParam)
+     console.log(buttonParam,accessValue,'access');
+    
+    return accessValue
+  }
   const getIndentData = () => {
     const req =  new IndentRequestDto()
 
@@ -33,17 +46,27 @@ export const IndentReport = () => {
      req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     if (form.getFieldValue('requestNo') !== undefined) {
       req.requestNo = form.getFieldValue('requestNo')
-    } if (form.getFieldValue('indentDate') !== undefined) {
+    } 
+    if (form.getFieldValue('indentDate') !== undefined) {
       req.confirmStartDate = (form.getFieldValue('indentDate')[0]).format('YYYY-MM-DD');
     }
     if (form.getFieldValue('indentDate') !== undefined) {
       req.confirmEndDate = (form.getFieldValue('indentDate')[1]).format('YYYY-MM-DD');
     }
-    
-    
-    if (form.getFieldValue('indentDate') !== undefined) {
-      const indentDate = form.getFieldValue('indentDate')
-      // filterData = data.filter((e) => e.requestNo === indentDate)
+        if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      req.tab= 'FABRIC'
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+      req.tab= 'TRIM'
+    }
+    if(checkAccess(MenusAndScopesEnum.Scopes.trimTab) && checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      req.tab= 'both'
+    }
+    if (form.getFieldValue('expectedDate') !== undefined) {
+      req.expectedStartDate = (form.getFieldValue('expectedDate')[0]).format('YYYY-MM-DD');
+    }
+    if (form.getFieldValue('expectedDate') !== undefined) {
+      req.expectedEndDate = (form.getFieldValue('expectedDate')[1]).format('YYYY-MM-DD');
     }
     service.getIndentData(req).then((res) => {
       if (res.status) {
@@ -70,6 +93,87 @@ export const IndentReport = () => {
     getIndentData();
 
   }
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+  const getColumnSearchProps = (dataIndex: string) => ({
+      filterDropdown: ({
+        setSelectedKeys,
+        selectedKeys,
+        confirm,
+        clearFilters,
+      }) => (
+        <div style={{ padding: 8 }}>
+          <Input
+            ref={searchInput}
+            placeholder={`Search ${dataIndex}`}
+            value={selectedKeys[0]}
+            onChange={(e) =>
+              setSelectedKeys(e.target.value ? [e.target.value] : [])
+            }
+            onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            style={{ width: 188, marginBottom: 8, display: "block" }}
+          />
+          <Button
+            type="primary"
+            onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90, marginRight: 8 }}
+          >
+            Search
+          </Button>
+          <Button
+            size="small"
+            style={{ width: 90 }}
+            onClick={() => {
+              handleReset(clearFilters);
+              setSearchedColumn(dataIndex);
+              confirm({ closeDropdown: true });
+            }}
+          >
+            Reset
+          </Button>
+        </div>
+      ),
+      filterIcon: (filtered) => (
+        <SearchOutlined
+          type="search"
+          style={{ color: filtered ? "#1890ff" : undefined }}
+        />
+      ),
+      onFilter: (value, record) =>
+        record[dataIndex]
+          ? record[dataIndex]
+              .toString()
+              .toLowerCase()
+              .includes(value.toLowerCase())
+          : false,
+      onFilterDropdownVisibleChange: (visible) => {
+        if (visible) {
+          setTimeout(() => searchInput.current.select());
+        }
+      },
+      render: (text) =>
+        text ? (
+          searchedColumn === dataIndex ? (
+            <Highlighter
+              highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+              searchWords={[searchText]}
+              autoEscape
+              textToHighlight={text.toString()}
+            />
+          ) : (
+            text
+          )
+        ) : null,
+    });
   const getAll = () => {
     service.getIndentDropDown().then(res => {
       if (res.status) {
@@ -125,6 +229,7 @@ export const IndentReport = () => {
       width: '150px',
       sorter: (a, b) => a.style.localeCompare(b.style),
       sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("style"),
     },
     {
       title: "Indent Date",
@@ -159,7 +264,13 @@ export const IndentReport = () => {
             columns={[
               {
                 dataIndex: "materialtype",
-                key: "materialtype", align: 'center',
+                key: "materialtype", 
+                align: 'center',
+                render: (text) => {
+                  const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+                  return EnumObj ? EnumObj.displayVal : text?text:'-';
+                },
+    
               },
 
             ]}
@@ -228,6 +339,9 @@ export const IndentReport = () => {
               {
                 dataIndex: "quantity",
                 key: "quantity", align: 'center',
+                render:(_,record) =>{
+                  return (`${record.quantity}-${record.uom}`)
+                 },
               },
 
             ]}
@@ -261,10 +375,34 @@ export const IndentReport = () => {
       }
     },
     {
+      title: 'Aging',
+      dataIndex: 'expectedDate',
+      width: '50px',
+      fixed: 'right',
+      align: 'right',
+      render: (text, record) => {
+        const daysDifference = moment(record.expectedDate).diff(moment(), 'days');
+        
+        const age = {
+          children: daysDifference,
+          props: {
+            style: {
+              background: daysDifference > 0 ? '#3BC744' : '#FF0000',
+              color: 'black',
+            },
+          },
+        };
+        
+        return age;
+      },
+    },
+    
+    {
       title: "Status",
       dataIndex: "i_items",
       key: "i_items",
       align: 'center',
+      fixed:'right',
       render: (i_items, text) => {
         renderCellData(text)
         return (
@@ -275,7 +413,8 @@ export const IndentReport = () => {
             columns={[
               {
                 dataIndex: "status",
-                key: "status", align: 'center',
+                key: "status", 
+                align: 'left',
               },
 
             ]}
@@ -289,7 +428,7 @@ export const IndentReport = () => {
   ]
   return (
     <div>
-      <Card title="Indent Report" >
+      <Card title="Indent Report"     headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
         <Form form={form}>
           <Row gutter={16}>
             <Col span={6}>
@@ -310,6 +449,12 @@ export const IndentReport = () => {
               <RangePicker />
             </Form.Item>
             </Col>
+            <Col span={6}>
+             
+                <Form.Item label="Expected Date" name="expectedDate">
+              <RangePicker />
+            </Form.Item>
+            </Col>
             <Col span={8}>
               <Form.Item style={{ marginBottom: '10px' }}>
                 <Button
@@ -325,7 +470,12 @@ export const IndentReport = () => {
           </Row>
         </Form>
         <Table size='small' scroll={{x:'max-content',y:500}}
-            columns={columns} dataSource={data} bordered />
+            columns={columns} dataSource={data} bordered  pagination={{
+              pageSize:50,
+             onChange(current) {
+                setPage(current);
+              }
+            }} />
       </Card>
     </div>
 
@@ -335,3 +485,4 @@ export const IndentReport = () => {
 }
 
 export default IndentReport;
+
