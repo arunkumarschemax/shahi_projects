@@ -80,7 +80,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.agent = firstPageContent[shipToAddEndIndex + 2].str
             poData.purchaseGroup = firstPageContent[dateSentIndex + 2].str
             poData.orderType = firstPageContent[dateSentIndex + 3].str
-            poData.paymentCategory = firstPageContent[dateSentIndex + 4].str
+            poData.paymentCategory = "USD";
             poData.plant = firstPageContent[dateSentIndex + 5].str
             poData.mfgOrigin = firstPageContent[dateSentIndex + 6].str
             poData.poPrint = firstPageContent[dateSentIndex + 7].str
@@ -167,7 +167,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         let itemVariantStartIndex
         const itemDetailsObj = new PoItemDetails();
         itemDetailsObj.materialNo = filteredData[rec.itemIndex + 2].str
-        itemDetailsObj.poItem = filteredData[rec.itemIndex + 3].str
+        itemDetailsObj.poItem = filteredData[rec.itemIndex + 3].str.replace(/PO Item #/g,"");
         itemDetailsObj.season = filteredData[rec.itemIndex + 6].str
         itemDetailsObj.incoterms = filteredData[rec.itemIndex + 9].str
         itemDetailsObj.contractualDeliveryDate = filteredData[rec.itemIndex + 12].str
