@@ -561,6 +561,20 @@ import {
   
       columns.push(
         {
+          title: "Total Quantity",
+          dataIndex: "",
+          align: "right",
+          width: 90,
+          render: (text, record) => {
+            let sum = 0;
+            record.sizeWiseData.forEach((r) => {
+              // Convert to number before summing
+              sum += parseFloat(r.totalQuantity) || 0;
+            });
+            return sum;
+          },
+        },
+        {
           title: "Incoterm",
           dataIndex: "incoterm",
           align: "center",
