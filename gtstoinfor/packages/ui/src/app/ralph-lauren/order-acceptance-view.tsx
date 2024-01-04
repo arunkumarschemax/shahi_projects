@@ -31,6 +31,7 @@ const OrderAcceptanceGrid = () => {
   const service = new RLOrdersService();
   const [orderData, setOrderData] = useState<any>([]);
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
+  const [itemNoValues, setItemNoValues] = useState({});
 
 
   const { Text } = Typography
@@ -60,9 +61,24 @@ const OrderAcceptanceGrid = () => {
     // getData();
   }
 
-  const handleItemNoChange = (value, record) => {
-    record.itemNumber = value
+  const isActionButtonEnabled = (index) => {
+    return (
+      itemNoValues[index] &&
+      itemNoValues[index].trim() !== ""
+    );
   };
+  const handleItemNoChange = (value, record, index) => {
+    const formValues = form.getFieldsValue();
+    const itemNoValue = formValues[index]?.itemNo;
+  
+    console.log("Item No from form:", itemNoValue);
+  
+    setItemNoValues((prevValues) => ({
+      ...prevValues,
+      [index]: value,
+    }));
+  };
+ 
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -151,22 +167,48 @@ const OrderAcceptanceGrid = () => {
       ),
   });
 
-  const createCOLine = (record) => {
-    console.log(record)
+  // const createCOLine = (record,index) => {
+  //   const formValues = form.getFieldsValue();
+  //   const itemNoValue = formValues[index]?.itemNo;
+  //   console.log(record)
+  //   const req = new OrderAcceptanceRequest();
+  //   req.purchaseOrderNumber = record.poNumber
+  //   req.poLineItemNumber = record.poItem
+  //   req.itemNo = itemNoValue
+  //   req.buyer = 'RL-U12'
+  //   service.coLineCreationReq(req).then((res) => {
+  //     if (res.status) {
+  //       getorderData();
+  //       setItemNoValues(''); // Set itemNoValues to an empty object
+  //       message.success(res.internalMessage);
+  //     } else {
+  //       message.error(res.internalMessage);
+  //     }
+  //   });
+  // }
+
+  const createCOLine = (record, index) => {
+    const formValues = form.getFieldsValue();
+    const itemNoValue = formValues[index]?.itemNo;
+    console.log(record);
+    
     const req = new OrderAcceptanceRequest();
-    req.purchaseOrderNumber = record.poNumber
-    req.poLineItemNumber = record.poItem
-    req.itemNo = record.itemNumber
-    req.buyer = 'RL-U12'
+    req.purchaseOrderNumber = record.poNumber;
+    req.poLineItemNumber = record.poItem;
+    req.itemNo = itemNoValue;
+    req.buyer = 'RL-U12';
+    
     service.coLineCreationReq(req).then((res) => {
       if (res.status) {
-        // getOrderAcceptanceData()
-        message.success(res.internalMessage)
-      } else (
-        message.error(res.internalMessage)
-      )
-    })
-  }
+        getorderData();
+        // Reset the form field related to the "Item No" input
+        form.setFieldsValue({ [index]: { itemNo: undefined } });
+        message.success(res.internalMessage);
+      } else {
+        message.error(res.internalMessage);
+      }
+    });
+  };
 
   const columns: any = [
     {
@@ -183,14 +225,14 @@ const OrderAcceptanceGrid = () => {
       sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
       sortDirections: ["ascend", "descend"],
       fixed: "left",
-      ...getColumnSearchProps('poNumber'),
+      // ...getColumnSearchProps('poNumber'),
       render: (text) => text ? text : "-"
     },
     {
       title: "PO Item",
       dataIndex: "poItem",
       width: 90,
-      sorter: (a, b) => a.poItem.localeCompare(b.poItem),
+      // sorter: (a, b) => a.poItem.localeCompare(b.poItem),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps('poItem'),
       render: (text) => text ? text : "-"
@@ -251,7 +293,7 @@ const OrderAcceptanceGrid = () => {
       dataIndex: "supplier",
       align: "center",
       width: 90,
-      sorter: (a, b) => a.supplier.localeCompare(b.supplier),
+      // sorter: (a, b) => a.supplier.localeCompare(b.supplier),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps('supplier'),
       render: (text) => text ? text : "-"
@@ -262,7 +304,7 @@ const OrderAcceptanceGrid = () => {
       dataIndex: "revisionNo",
       align: "center",
       width: 90,
-      sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
+      // sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps('revisionNo'),
       render: (text) => text ? text : "-"
@@ -285,26 +327,22 @@ const OrderAcceptanceGrid = () => {
       sortDirections: ["ascend", "descend"],
       render: (text) => text ? text : "-"
     },
+  
     {
       title: "Item No",
       dataIndex: "itemNo",
       width: 150,
-      render: (text, record) => {
-        // if(record.answered_status != 'Accepted'){
-
+      render: (text, record, index) => {
         return (
-          <Form>
-            <Form.Item>
-              <Input
-                placeholder="Enter Item No"
-                onChange={(e) => handleItemNoChange(e.target.value, record)}
-              />
-            </Form.Item>
-          </Form>
+          <Form.Item name={[index, 'itemNo']}>
+            
+            <Input
+              placeholder="Enter Item No"
+              onChange={(e) => handleItemNoChange(e.target.value, record, index)}
+              disabled={record.itemStatus == 'ACCEPTED' ? true : false}
+            />
+          </Form.Item>
         );
-        // }else{
-        //     return <>{record.buyer_item_number?record.buyer_item_number:'-'}</>
-        // }
       },
     },
     {
@@ -312,12 +350,16 @@ const OrderAcceptanceGrid = () => {
       dataIndex: "action",
       width: 100,
       fixed: 'right',
-      render: (value, record) => {
-        // const isEnabled = isActionButtonEnabled(record);
+      render: (value, record, index) => {
+        const isEnabled = isActionButtonEnabled(index);
         return (
-          <Button  // disabled={!isEnabled} disabled= {record.answered_status !== 'Accepted' ? false : true}
-            onClick={() => createCOLine(record)}
-          >Accept</Button>
+          <Button
+            style={{ position: "relative", top: "-7.5px" }}
+            onClick={() => createCOLine(record, index)}
+            disabled={record.itemStatus === 'ACCEPTED' ? true : !isEnabled}
+          >
+            Accept
+          </Button>
         );
       },
     },
@@ -482,10 +524,13 @@ const OrderAcceptanceGrid = () => {
             </Col>
           </Row>
         </Form>
+        <Form form={form}>
         <Table columns={columns} dataSource={orderData} scroll={{ x: 1500, y: 500 }} className="custom-table-wrapper"
+        
           bordered
           size='small'
         />
+         </Form>
       </Card>
     </div>
   )

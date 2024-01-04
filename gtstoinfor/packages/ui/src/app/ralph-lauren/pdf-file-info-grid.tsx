@@ -147,7 +147,7 @@ export function PdFInfoGrid() {
             title: 'File Type',
             dataIndex: 'fileType',
             width: 30,
-            sorter: (a, b) => a.fileType.localeCompare(b.fileType),
+            // sorter: (a, b) => a.fileType.localeCompare(b.fileType),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-"
             // ...getColumnSearchProps('fileType')
