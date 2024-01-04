@@ -150,6 +150,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemsArr.push({ itemNo: rec.str, itemIndex: index })
         }
     }
+    
     for (const rec of itemsArr) {
         let shipToEndIndex = 0;
         let itemTextEndIndex = 0;
@@ -163,6 +164,11 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsObj.mode = filteredData[rec.itemIndex + ITEM_MODE_INDEX].str
         itemDetailsObj.acceptanceDate = filteredData[rec.itemIndex + ITEM_ACCEPTANCEDATE_INDEX].str
         itemDetailsEndIndex = rec.itemIndex + ITEM_ACCEPTANCEDATE_INDEX + 1
+
+        const deliveryDate = itemDetailsObj.deliveryDate;
+        if (deliveryDate === '00.00.0000') {
+            continue; 
+        }
         //-------------------------------------------------------------
         // check if ship to data exists
         let isShipToTextExist = false
@@ -248,22 +254,59 @@ export const extractDataFromPoPdf = async (pdf) => {
             k++
         }
         const itemVariantsArr: PoItemVariantDto[] = []
+      
+
         for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / 6); l++) {
             const itemVariantsObj = new PoItemVariantDto();
-            itemVariantsObj.uom = itemVarinatsTextArr[(6 * l) + 0]
-            itemVariantsObj.unitPrice = itemVarinatsTextArr[(6 * l) + 1] + ' ' + itemVarinatsTextArr[(6 * l) + 2]
-            itemVariantsObj.size = itemVarinatsTextArr[(6 * l) + 3]
-            const numberWithComma = itemVarinatsTextArr[(6 * l) + 4]
+            itemVariantsObj.uom = itemVarinatsTextArr[(6 * l) + 0];
+        
+            const unitPriceWithCurrency = itemVarinatsTextArr[(6 * l) + 1] + ' ' + itemVarinatsTextArr[(6 * l) + 2];
+            const usdIndex = unitPriceWithCurrency.indexOf('USD');
+        
+            if (usdIndex !== -1) {
+                const afterUsd = unitPriceWithCurrency.substring(usdIndex + 3).trim();
+                if (afterUsd !== '') {
+                    itemVariantsObj.unitPrice = unitPriceWithCurrency.substring(0, usdIndex + 3);
+                    itemVariantsObj.size = afterUsd;
+                } else {
+                    itemVariantsObj.uom = itemVarinatsTextArr[(6 * l) + 0];
+                    itemVariantsObj.unitPrice = itemVarinatsTextArr[(6 * l) + 1] + ' ' + itemVarinatsTextArr[(6 * l) + 2];
+                    itemVariantsObj.size = itemVarinatsTextArr[(6 * l) + 3];
+                    const numberWithComma = itemVarinatsTextArr[(6 * l) + 4];
+                    let numberWithoutComma;
+        
+                    if (numberWithComma.includes(',')) {
+                        numberWithoutComma = numberWithComma.replace(/,/g, '');
+                    } else {
+                        numberWithoutComma = numberWithComma;
+                    }
+        
+                    itemVariantsObj.qunatity = numberWithoutComma;
+                    itemVariantsObj.amount = itemVarinatsTextArr[(6 * l) + 5];
+                    console.log(itemVariantsObj);
+                    itemVariantsArr.push(itemVariantsObj);
+                    continue;
+                }
+            } else {
+                itemVariantsObj.unitPrice = unitPriceWithCurrency;
+                itemVariantsObj.size = '';
+            }
+        
+            const numberWithComma = itemVarinatsTextArr[(6 * l) + 3];
             let numberWithoutComma;
-            if (numberWithComma.includes(','))
-                numberWithoutComma = numberWithComma.replace(/,/g, '')
-            else
-                numberWithoutComma = numberWithComma
-            itemVariantsObj.qunatity = numberWithoutComma
-            itemVariantsObj.amount = itemVarinatsTextArr[(6 * l) + 5]
-            console.log(itemVariantsObj)
-            itemVariantsArr.push(itemVariantsObj)
+        
+            if (numberWithComma.includes(',')) {
+                numberWithoutComma = numberWithComma.replace(/,/g, '');
+            } else {
+                numberWithoutComma = numberWithComma;
+            }
+        
+            itemVariantsObj.qunatity = numberWithoutComma;
+            itemVariantsObj.amount = itemVarinatsTextArr[(6 * l) + 5];
+            console.log(itemVariantsObj);
+            itemVariantsArr.push(itemVariantsObj);
         }
+        
         itemDetailsObj.poItemVariantDetails = itemVariantsArr
         itemDetailsArr.push(itemDetailsObj)
     }
@@ -272,3 +315,54 @@ export const extractDataFromPoPdf = async (pdf) => {
     return poData
 }
 
+
+  /* working pdf format */
+        // for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / 6); l++) {
+        //     const itemVariantsObj = new PoItemVariantDto();
+        //     itemVariantsObj.uom = itemVarinatsTextArr[(6 * l) + 0]
+        //     itemVariantsObj.unitPrice = itemVarinatsTextArr[(6 * l) + 1] + ' ' + itemVarinatsTextArr[(6 * l) + 2]
+        //     itemVariantsObj.size = itemVarinatsTextArr[(6 * l) + 3]
+        //     const numberWithComma = itemVarinatsTextArr[(6 * l) + 4]
+        //     let numberWithoutComma;
+        //     if (numberWithComma.includes(','))
+        //         numberWithoutComma = numberWithComma.replace(/,/g, '')
+        //     else
+        //         numberWithoutComma = numberWithComma
+        //     itemVariantsObj.qunatity = numberWithoutComma
+        //     itemVariantsObj.amount = itemVarinatsTextArr[(6 * l) + 5]
+        //     console.log(itemVariantsObj)
+        //     itemVariantsArr.push(itemVariantsObj)
+        // }
+
+
+  /* no value format */
+        // for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / 6); l++) {
+        //     const itemVariantsObj = new PoItemVariantDto();
+        //     itemVariantsObj.uom = itemVarinatsTextArr[(6 * l) + 0];
+        
+        //     const unitPriceWithCurrency = itemVarinatsTextArr[(6 * l) + 1] + ' ' + itemVarinatsTextArr[(6 * l) + 2];
+        //     const usdIndex = unitPriceWithCurrency.indexOf('USD');
+            
+        //     if (usdIndex !== -1) {
+        //         itemVariantsObj.unitPrice = unitPriceWithCurrency.substring(0, usdIndex + 3); // Including 'USD'
+        //         itemVariantsObj.size = unitPriceWithCurrency.substring(usdIndex + 4).trim(); // Extracting data after 'USD' as size
+        //     } else {
+        //         itemVariantsObj.unitPrice = unitPriceWithCurrency;
+        //         itemVariantsObj.size = '';
+        //     }
+        
+        //     const numberWithComma = itemVarinatsTextArr[(6 * l) + 3];
+        //     let numberWithoutComma;
+        
+        //     if (numberWithComma.includes(',')) {
+        //         numberWithoutComma = numberWithComma.replace(/,/g, '');
+        //     } else {
+        //         numberWithoutComma = numberWithComma;
+        //     }
+        
+        //     itemVariantsObj.qunatity = numberWithoutComma;
+        //     itemVariantsObj.amount = itemVarinatsTextArr[(6 * l) + 5];
+        
+        //     console.log(itemVariantsObj);
+        //     itemVariantsArr.push(itemVariantsObj);
+        // }
