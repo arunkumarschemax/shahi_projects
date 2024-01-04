@@ -270,17 +270,17 @@ export function RLOrdersGrid() {
         render: (text) => text ? text : "-"
 
       },
-      {
-        title: "Supplier",
-        dataIndex: "supplier",
-        align: "center",
-        width: 90,
-        // sorter: (a, b) => a.supplier.localeCompare(b.supplier),
-        sortDirections: ["ascend", "descend"],
-        ...getColumnSearchProps('supplier'),
-        render: (text) => text ? text : "-"
+      // {
+      //   title: "Supplier",
+      //   dataIndex: "supplier",
+      //   align: "center",
+      //   width: 90,
+      //   // sorter: (a, b) => a.supplier.localeCompare(b.supplier),
+      //   sortDirections: ["ascend", "descend"],
+      //   ...getColumnSearchProps('supplier'),
+      //   render: (text) => text ? text : "-"
 
-      },
+      // },
       {
         title: "Revision No",
         dataIndex: "revisionNo",
@@ -676,16 +676,16 @@ export function RLOrdersGrid() {
               render: (text) => text ? text : "-"
       
             },
-            {
-              title: "Supplier",
-              dataIndex: "supplier",
-              align: "center",
-              width: 90,
-              sorter: (a, b) => a.supplier.localeCompare(b.supplier),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
+            // {
+            //   title: "Supplier",
+            //   dataIndex: "supplier",
+            //   align: "center",
+            //   width: 90,
+            //   sorter: (a, b) => a.supplier.localeCompare(b.supplier),
+            //   sortDirections: ["ascend", "descend"],
+            //   render: (text) => text ? text : "-"
       
-            },
+            // },
             {
               title: "Revision No",
               dataIndex: "revisionNo",
@@ -958,7 +958,7 @@ export function RLOrdersGrid() {
             excel
               .addSheet(`Order Info (${formattedDate})`)
               .addColumns(excelColumnsWH)
-              .addDataSource(filterData, { str2num: true });
+              .addDataSource(filterData, { str2num: true },);
 
      
         excel.saveAs(`Order Info (${formattedDate}).xlsx`);

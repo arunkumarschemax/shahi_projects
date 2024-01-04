@@ -397,6 +397,7 @@ useEffect(() => {
             // align:"center",
             // width: 60,
             sorter: (a, b) => a.size.localeCompare(b.size),
+            render: (text) => text ? text : "-",
             sortDirections: ["ascend", "descend"],
         },
         {
@@ -406,6 +407,7 @@ useEffect(() => {
             // width: 60,
             sorter: (a, b) => a.upc_ean.localeCompare(b.upc_ean),
             sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-"
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
@@ -415,6 +417,7 @@ useEffect(() => {
             // align:"center",
             sorter: (a, b) => a.msrp_price.localeCompare(b.msrp_price),
             sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-"
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
@@ -496,7 +499,7 @@ useEffect(() => {
         <Descriptions.Item label='PO Number' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.poNumber ? location?.state?.data?.poNumber : "--"}</Descriptions.Item>
         <Descriptions.Item label='PO Item' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.poItem ? location?.state?.data?.poItem :"--"}</Descriptions.Item>
         <Descriptions.Item label='Purchase Group' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.purchaseGroup ? location?.state?.data?.purchaseGroup :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Supplier' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.supplier ? location?.state?.data?.supplier :"--" }</Descriptions.Item>
+       {/* <Descriptions.Item label='Supplier' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.supplier ? location?.state?.data?.supplier :"--" }</Descriptions.Item> */}
         <Descriptions.Item label='Revision Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.revisionNo ? location?.state?.data?.revisionNo :"--"}</Descriptions.Item>
         <Descriptions.Item label='Season Code'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.seasonCode ? location?.state?.data?.seasonCode :"--"}</Descriptions.Item>
         <Descriptions.Item label='Board Code'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.boardCode ? location?.state?.data?.boardCode :"--"}</Descriptions.Item>
