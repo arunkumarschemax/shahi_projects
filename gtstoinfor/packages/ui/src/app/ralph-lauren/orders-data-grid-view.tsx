@@ -225,7 +225,7 @@ export function RLOrdersGrid() {
         sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
         sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps('materialNo'),
-        render: (text) => text ? text : "-"
+        render: (text) => text.toString() ? text : "-"
       },
       {
         title: "Season Code",
@@ -650,10 +650,13 @@ export function RLOrdersGrid() {
       {
         title: "Material Number",
         dataIndex: "materialNo",
-        width: 300,
-        sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
-        sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        key: "materialNo",
+        width: 100,
+        // sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
+        // sortDirections: ["ascend", "descend"],
+        render: (text) => {
+          return text.toString()
+        }
       },
       {
         title: "Season Code",
@@ -972,12 +975,14 @@ export function RLOrdersGrid() {
 
     );
 
-
+    // console.log(excelColumnsWH,"oooooooooooo");
+    
 
     excel
       .addSheet(`Order Info (${formattedDate})`)
       .addColumns(excelColumnsWH)
       .addDataSource(filterData, { str2num: true },);
+      
 
 
     excel.saveAs(`Order Info (${formattedDate}).xlsx`);
