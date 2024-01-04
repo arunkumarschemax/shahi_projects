@@ -208,10 +208,11 @@ export const extractDataFromPoPdf = async (pdf) => {
             // console.log('item text exists')
             let itemText = ''
             let itemTextSatrtIndex;
-            if (filteredData[itemTextIndex + 2].str.includes('SALES ORDER')) {
+            if(filteredData[itemTextIndex + 1].str == ITEM_TEXT_END_TEXT){
+                itemTextSatrtIndex = itemTextIndex
+            } else if (filteredData[itemTextIndex + 2].str.includes('SALES ORDER')) {
                 itemTextSatrtIndex = itemTextIndex + 3
-            }
-            else {
+            } else {
                 itemTextSatrtIndex = itemTextIndex + 1
             }
             // console.log(itemTextIndex, 'itemTextIndex')
@@ -224,7 +225,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 j++;
 
             }
-            if (itemText.includes('Supply') || itemText.includes('EA diverted') || itemText.includes('OGAC/GAC'))
+            if (itemText.includes('Supply') || itemText.includes('EA diverted') || itemText.includes('OGAC/GAC') || itemText.includes('ITEM TEXT,'))
                 itemDetailsObj.itemVasText = null;
             else
                 itemDetailsObj.itemVasText = itemText
