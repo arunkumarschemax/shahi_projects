@@ -223,7 +223,6 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemText += filteredData[j].str + ',';
                 itemTextEndIndex = j;
                 j++;
-
             }
             if (itemText.includes('Supply') || itemText.includes('EA diverted') || itemText.includes('OGAC/GAC') || itemText.includes('ITEM TEXT,'))
                 itemDetailsObj.itemVasText = null;

@@ -836,7 +836,7 @@ export class DpomService {
         }
     }
 
-    @Cron('30 6 * * *')
+    @Cron('00 7 * * *')
     async syncCRMData(): Promise<CommonResponseModel> {
         // const transactionManager = new GenericTransactionManager(this.dataSource)
         const getBuyerPOs = await this.dpomRepository.getBuyerPOs()
@@ -852,13 +852,17 @@ export class DpomService {
                     if (CRMData2.status) {
                         for (const data1 of CRMData1.data) {
                             let ocrStatus
-                            const dateString = data1.auditdate;
-                            const inputDate = new Date(dateString);
-                            const currentDate = new Date();
-                            if (data1.auditdate != null && inputDate < currentDate) {
-                                ocrStatus = 'Closed'
+                            if (data1.auditdate != null) {
+                                const dateString = data1.auditdate;
+                                const inputDate = new Date(dateString);
+                                const currentDate = new Date();
+                                if (inputDate < currentDate) {
+                                    ocrStatus = 'Closed'
+                                } else {
+                                    ocrStatus = null
+                                }
                             } else {
-                                ocrStatus = 'Open'
+                                ocrStatus = null
                             }
                             const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, planNo: CRMData2?.data[0].plan_NUMB, coPrice: data1.price, coPriceCurrency: data1.currency, paymentTerm: CRMData2?.data[0].pay_TERM_DESC, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY, actualShippedQty: data1.inv_QTY, ocrAuditDate: data1.auditdate, ocrStatus: ocrStatus })
                             if (updateOrder.affected) {
