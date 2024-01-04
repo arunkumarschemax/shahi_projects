@@ -633,7 +633,7 @@ export function RLOrdersGrid() {
       {
         title: "PO Number",
         dataIndex: "poNumber",
-        width: 90,
+        width: 130,
         sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
         sortDirections: ["ascend", "descend"],
         fixed: "left",
@@ -651,7 +651,7 @@ export function RLOrdersGrid() {
         title: "Material Number",
         dataIndex: "materialNo",
         key: "materialNo",
-        width: 100,
+        width: 130,
         // sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
         // sortDirections: ["ascend", "descend"],
         render: (text) => {
@@ -680,7 +680,7 @@ export function RLOrdersGrid() {
         title: "Agent",
         dataIndex: "agent",
         align: "center",
-        width: 600,
+        width: 400,
         sorter: (a, b) => a.agent.localeCompare(b.agent),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -749,7 +749,7 @@ export function RLOrdersGrid() {
             title: 'UPC/EAN',
             dataIndex: '',
             key: '',
-            width: 100,
+            width: 130,
             className: "center",
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -981,7 +981,7 @@ export function RLOrdersGrid() {
     excel
       .addSheet(`Order Info (${formattedDate})`)
       .addColumns(excelColumnsWH)
-      .addDataSource(filterData, { str2num: true },);
+      .addDataSource(filterData, { str2num: false },);
       
 
 
