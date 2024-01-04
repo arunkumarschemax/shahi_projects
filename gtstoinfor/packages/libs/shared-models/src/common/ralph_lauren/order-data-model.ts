@@ -66,6 +66,7 @@ export class OrderDataModel {
   
     upcEan: string;
     sizeWiseData: OrderSizeWiseModel[]
+    itemStatus?:string;
 
     constructor(
         
@@ -101,7 +102,8 @@ export class OrderDataModel {
     currency: string,
     quantity: number,
    upcEan: string,
-  sizeWiseData: OrderSizeWiseModel[]
+  sizeWiseData: OrderSizeWiseModel[],
+  itemStatus?:string,
         ) {
             this.id = id
             this.poNumber = poNumber
@@ -138,6 +140,7 @@ export class OrderDataModel {
             this.quantity = quantity
             this.upcEan = upcEan
             this.sizeWiseData = sizeWiseData
+            this.itemStatus=itemStatus
         }
 }
 

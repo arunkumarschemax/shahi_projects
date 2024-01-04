@@ -1,3 +1,4 @@
+import {  ItemStatusEnum } from "packages/libs/shared-models/src/Enum/item-status.enum";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity('orders_data')
@@ -251,5 +252,13 @@ export class RLOrdersEntity {
         default: 1
     })
     isActive: boolean;
+
+    @Column({
+        type: 'enum',
+        enum: ItemStatusEnum, 
+        name: 'item_status',
+      })
+      itemStatus: ItemStatusEnum;
+
 
 }
