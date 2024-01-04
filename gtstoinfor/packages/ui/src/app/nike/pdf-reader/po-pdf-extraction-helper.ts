@@ -82,11 +82,11 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.currency = firstPageContent[poDocDateIndex + CURR_INDEX].str
             poData.incoterms = firstPageContent[poDocDateIndex + INCOTERMS_INDEX[0]].str + ' ' + firstPageContent[poDocDateIndex + INCOTERMS_INDEX[1]].str
             poData.factoryLocation = firstPageContent[poDocDateIndex + FACTORYLOCATION_INDEX].str
-            // if (firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX].str.match(/^\d{10}$/)) {
-            poNumber = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX].str
-            // } else {
-            //     poNumber = firstPageContent[poNumberTextIndex + 2].str
-            // }
+            if (firstPageContent[poNumberTextIndex + 2].str.match(/^\d{10}$/) || firstPageContent[poNumberTextIndex + 2].str.match(/^\d{10}\s*\/\s*\d{10}$/)) {
+                poNumber = firstPageContent[poNumberTextIndex + 2].str
+            } else {
+                poNumber = firstPageContent[poNumberTextIndex + 3].str
+            }
             poData.poNumber = poNumber
             // console.log(poData.poNumber)
             if (poData.poNumber.includes('/')) {
