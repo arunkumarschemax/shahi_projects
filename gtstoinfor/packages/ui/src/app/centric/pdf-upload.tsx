@@ -111,6 +111,7 @@ const CentricPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                     fileList.forEach((file: any) => {
                         formData.append('file', file);
                         formData.append('PoNumber', poPdfData?.poNumber);
+                        formData.append('jsonData',JSON.stringify(poPdfData))
                     })
                     console.log(formData, "form")
                     centricService.fileUpload(formData).then((res) => {

@@ -199,7 +199,7 @@ export class CentricService {
     }
   }
 
-  async updatePath(req: CentricDto, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
+  async updatePath(req: any, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
     console.log(poNumber, "pppppioooooo");
     console.log(req, "reqqqqqqqqq");
 
@@ -210,7 +210,7 @@ export class CentricService {
     entity.pdfFileName = filename;
     entity.filePath = filePath;
     entity.fileType = mimetype;
-    entity.fileData = JSON.stringify(req)
+    entity.fileData = req;
     console.log(entity.fileData, "fileData")
 
     const file = await this.pdfRepo.findOne({ where: { pdfFileName: filePath } });

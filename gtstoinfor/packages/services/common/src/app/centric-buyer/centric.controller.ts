@@ -53,10 +53,10 @@ export class CentricController {
         },
     }))
 
-    async fileUpload(@UploadedFile() file, poNumber: string): Promise<CommonResponseModel> {
-        console.log(poNumber, "poNumber")
+    async fileUpload(@UploadedFile() file, @Body() req:any): Promise<CommonResponseModel> {
+
         try {
-            return await this.Service.updatePath(file.req,poNumber, file.path, file.filename, file.mimetype)
+            return await this.Service.updatePath(req.jsonData,req.poNumber, file.path, file.filename, file.mimetype)
         } catch (error) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, error);
         }
