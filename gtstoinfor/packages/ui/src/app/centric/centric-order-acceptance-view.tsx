@@ -109,6 +109,7 @@ export function CentricOrderAcceptanceGrid() {
       if (res.status) {
         getCentricorderData();
         setItemNoValues({}); 
+        form.setFieldsValue({ [index]: { itemNo: undefined } });
         message.success(res.internalMessage);
       } else {
         message.error(res.internalMessage);
