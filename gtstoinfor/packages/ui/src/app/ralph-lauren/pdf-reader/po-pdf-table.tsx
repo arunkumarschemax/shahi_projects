@@ -47,7 +47,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <th className='ta-b'>DIVISION BY GROUP</th>
                     <th className='ta-b'>CURR</th>
                     <th className='ta-b'>INCOTERMS</th> */}
-                    <th className='ta-b'>FACTORY LOCATION</th>
+                    <th className='ta-b'>SHIP TO ADDRESS</th>
                 </tr>
                 <tr className='ta-b'>
                     <td className='ta-b'>{pdfData?.poNumber}</td>
