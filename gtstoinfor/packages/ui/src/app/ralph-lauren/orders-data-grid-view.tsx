@@ -54,8 +54,8 @@ export function RLOrdersGrid() {
 
     if (form.getFieldValue("poNumber") !== undefined) {
       req.poNumber = form.getFieldValue("poNumber");
-    } 
-   req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    }
+    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
 
     service.getorderData(req).then((res) => {
       if (res.status) {
@@ -136,9 +136,9 @@ export function RLOrdersGrid() {
     onFilter: (value, record) =>
       record[dataIndex]
         ? record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes(value.toLowerCase())
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase())
         : false,
     onFilterDropdownVisibleChange: (visible) => {
       if (visible) {
@@ -206,8 +206,8 @@ export function RLOrdersGrid() {
         sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
         sortDirections: ["ascend", "descend"],
         fixed: "left",
-         ...getColumnSearchProps('poNumber'),
-         render: (text) => text ? text : "-"
+        ...getColumnSearchProps('poNumber'),
+        render: (text) => text ? text : "-"
       },
       {
         title: "PO Item",
@@ -215,8 +215,8 @@ export function RLOrdersGrid() {
         width: 90,
         // sorter: (a, b) => a.poItem.localeCompare(b.poItem),
         sortDirections: ["ascend", "descend"],
-         ...getColumnSearchProps('poItem'),
-         render: (text) => text ? text : "-"
+        ...getColumnSearchProps('poItem'),
+        render: (text) => text ? text : "-"
       },
       {
         title: "Material Number",
@@ -258,7 +258,7 @@ export function RLOrdersGrid() {
         render: (text) => text ? text : "-"
 
       },
-      
+
       {
         title: "Purchase Group",
         dataIndex: "purchaseGroup",
@@ -301,256 +301,274 @@ export function RLOrdersGrid() {
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
-     
+
     ];
 
     sizeHeaders?.forEach(version => {
-        columns.push({
-            title: version,
-            dataIndex: version,
-            key: version,
+      columns.push({
+        title: version,
+        dataIndex: version,
+        key: version,
+        width: 70,
+        align: 'center',
+        children: [
+          {
+            title: 'UPC/EAN',
+            dataIndex: '',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.upcEan)
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+
+          {
+            title: 'MSRP',
+            dataIndex: '',
+            key: '',
             width: 70,
-            align: 'center',
-            children: [
-                {
-                    title: 'UPC/EAN',
-                    dataIndex: '',
-                    key: '',
-                    width: 100,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                        console.log()
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = (sizeData?.upcEan)
-                                return (
-                                    formattedQty
-                                );
-                            } else {
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.msrpPrice)
+                  return (
+                    formattedQty
+                  );
+                } else {
 
-                                return (
-                                    '-'
-                                );
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                
-                {
-                    title: 'MSRP',
-                    dataIndex: '',
-                    key: '',
-                    width: 70,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                        console.log()
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = (sizeData?.msrpPrice)
-                                return (
-                                    formattedQty
-                                );
-                            } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Customer Selling Price',
+            dataIndex: '',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.csprice)
+                  return (
+                    formattedQty
+                  );
+                } else {
 
-                                return (
-                                    '-'
-                                );
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                {
-                    title: 'Customer Selling Price',
-                    dataIndex: '',
-                    key: '',
-                    width: 100,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                        console.log()
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = (sizeData?.csprice)
-                                return (
-                                    formattedQty
-                                );
-                            } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Price',
+            dataIndex: '',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
 
-                                return (
-                                    '-'
-                                );
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                {
-                    title: 'Price',
-                    dataIndex: '',
-                    key: '',
-                    width: 100,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = `${sizeData.price} ${sizeData.currency}`;
-                                return formattedQty;
-                            } else {
-                                return '-';
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                
-                {
-                    title: 'Quantity',
-                    dataIndex: '',
-                    key: '',
-                    width: 100,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                        console.log()
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = (sizeData?.quantity)
-                                return (
-                                    formattedQty
-                                );
-                            } else {
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = `${sizeData.price} ${sizeData.currency}`;
+                  return formattedQty;
+                } else {
+                  return '-';
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
 
-                                return (
-                                    '-'
-                                );
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                {
-                    title: 'Amount',
-                    dataIndex: '',
-                    key: '',
-                    width: 100,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                        console.log()
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = `${sizeData.amount} ${sizeData.currency}`;
-                                // const formattedQty = (sizeData?.amount)
-                                return (
-                                    formattedQty
-                                );
-                            } else {
+          {
+            title: 'Quantity',
+            dataIndex: '',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.quantity)
+                  return (
+                    formattedQty
+                  );
+                } else {
 
-                                return (
-                                    '-'
-                                );
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                // {
-                //     title: 'Total Amount',
-                //     dataIndex: '',
-                //     key: '',
-                //     width: 70,
-                //     className: "center",
-                //     render: (text, record) => {
-                //         const sizeData = record.sizeWiseData.find(item => item.size === version);
-                //         console.log()
-                //         if (sizeData) {
-                //             if (sizeData.size !== null) {
-                //                 const formattedQty = (sizeData?.totalAmount)
-                //                 return (
-                //                     formattedQty
-                //                 );
-                //             } else {
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Amount',
+            dataIndex: '',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = `${sizeData.amount} ${sizeData.currency}`;
+                  // const formattedQty = (sizeData?.amount)
+                  return (
+                    formattedQty
+                  );
+                } else {
 
-                //                 return (
-                //                     '-'
-                //                 );
-                //             }
-                //         } else {
-                //             return '-';
-                //         }
-                //     }
-                // },
-            ]
-        });
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          // {
+          //     title: 'Total Amount',
+          //     dataIndex: '',
+          //     key: '',
+          //     width: 70,
+          //     className: "center",
+          //     render: (text, record) => {
+          //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //         console.log()
+          //         if (sizeData) {
+          //             if (sizeData.size !== null) {
+          //                 const formattedQty = (sizeData?.totalAmount)
+          //                 return (
+          //                     formattedQty
+          //                 );
+          //             } else {
+
+          //                 return (
+          //                     '-'
+          //                 );
+          //             }
+          //         } else {
+          //             return '-';
+          //         }
+          //     }
+          // },
+        ]
+      });
     })
 
     columns.push(
-        {
-            title: "Total Quantity",
-            dataIndex: "totalQty",
-            align: "center",
-            width: 90,
-            // sorter: (a, b) => a.totalQty.localeCompare(b.totalQty),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
-          },
-        {
-            title: "Total Amount",
-            dataIndex: "totalAmount",
-            align: "center",
-            width: 90,
-            sorter: (a, b) => a.totalAmount.localeCompare(b.totalAmount),
-            sortDirections: ["ascend", "descend"],
-            render: (text, record) => {
-                if (record) {
-                    if (record) {
-                        const totalAmt = `${record.totalAmount} ${record.currency}`;
-                        return (
-                            totalAmt
-                        );
-                    } else {
+      {
+        title: "Total Quantity",
+        dataIndex: "",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => {
+          const sumA = a.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.quantity) || 0, 0);
+          const sumB = b.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.quantity) || 0, 0);
+      
+          return sumA - sumB;
+        },
+        sortDirections: ["ascend", "descend"],
+        render: (text, record) => {
+          let sum = 0;
+          record.sizeWiseData.forEach((r) => {
+            // Convert to number before summing
+            sum += parseFloat(r.quantity) || 0;
+          });
+      
+          return sum;
+        },
+      },
+      
+      {
+        title: "Total Amount",
+        dataIndex: "",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => {
+          const sumA = a.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.amount) || 0, 0);
+          const sumB = b.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.amount) || 0, 0);
+      
+          return sumA - sumB;
+        },
+        render: (text, record) => {
+          let sum = 0;
+          record.sizeWiseData.forEach((r) => {
+            // Convert to number before summing
+            sum += parseFloat(r.amount) || 0;
+          });
+          // return sum.toLocaleString("en-IN") ;
+          const formattedSum = sum.toFixed(2);
+          const currency = record.currency  // Default to USD if currency is not available
 
-                        return (
-                            '-'
-                        );
-                    }
-                } else {
-                    return '-';
-                }
-            }
-          },
-        {
-            title: "Status",
-            dataIndex: "status",
-            align: "center",
-            width: 90,
-            sorter: (a, b) => a.status.localeCompare(b.status),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
-          },
-        {
-      title: "Action",
-      dataIndex: "action",
-      align: "center",
-      width: 120,
-      render: (value, record) => (
-        <>
-          <Button onClick={() => setMoreData(record)}>More Info</Button>
-        </>
-      ),
-    }
+          return (
+            <>
+              <span>{formattedSum} {currency}</span>
+              
+            </>
+          );
+        },
+      },
+      {
+        title: "Status",
+        dataIndex: "status",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => a.status.localeCompare(b.status),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Action",
+        dataIndex: "action",
+        align: "center",
+        width: 120,
+        render: (value, record) => (
+          <>
+            <Button onClick={() => setMoreData(record)}>More Info</Button>
+          </>
+        ),
+      }
     );
 
     const getRowClassName = (record) => {
@@ -589,7 +607,7 @@ export function RLOrdersGrid() {
   };
 
 
-    
+
   const exportExcel = () => {
     const excel = new Excel();
 
@@ -597,376 +615,377 @@ export function RLOrdersGrid() {
     const formattedDate = currentDate.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
 
 
-          let rowIndex = 1;
-          const excelColumnsWH: any[] = [];
-          excelColumnsWH.push(
-            { 
-              title: "#", 
-              // dataIndex: "sno", 
-              width:50,
-              render: (text, object, index) => { 
-                if(index == orderData.length) { 
-                  return null;
-                } else { 
-                  return rowIndex++; 
-                } 
-              }
-            },
-            {
-              title: "PO Number",
-              dataIndex: "poNumber",
-              width: 90,
-              sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-              sortDirections: ["ascend", "descend"],
-              fixed: "left",
-               render: (text) => text ? text : "-"
-            },
-            {
-              title: "PO Item",
-              dataIndex: "poItem",
-              width: 90,
-              sorter: (a, b) => a.poItem.localeCompare(b.poItem),
-              sortDirections: ["ascend", "descend"],
-               render: (text) => text ? text : "-"
-            },
-            {
-              title: "Material Number",
-              dataIndex: "materialNo",
-              width: 300,
-              sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-            },
-            {
-              title: "Season Code",
-              dataIndex: "seasonCode",
-              width: 110,
-              sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-      
-            },
-            {
-              title: "Address",
-              dataIndex: "shipToAddress",
-              width: 800,
-              sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-      
-            },
-            {
-              title: "Agent",
-              dataIndex: "agent",
-              align: "center",
-              width: 600,
-              sorter: (a, b) => a.agent.localeCompare(b.agent),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-      
-            },
-            
-            {
-              title: "Purchase Group",
-              dataIndex: "purchaseGroup",
-              align: "center",
-              width: 150,
-              sorter: (a, b) => a.purchaseGroup.localeCompare(b.purchaseGroup),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-      
-            },
-            // {
-            //   title: "Supplier",
-            //   dataIndex: "supplier",
-            //   align: "center",
-            //   width: 90,
-            //   sorter: (a, b) => a.supplier.localeCompare(b.supplier),
-            //   sortDirections: ["ascend", "descend"],
-            //   render: (text) => text ? text : "-"
-      
-            // },
-            {
-              title: "Revision No",
-              dataIndex: "revisionNo",
-              align: "center",
-              width: 90,
-              sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-      
-            },
-            {
-              title: "Color",
-              dataIndex: "color",
-              align: "center",
-              width: 110,
-              sorter: (a, b) => a.color.localeCompare(b.color),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-            },
-           
-            
-          );
-          const sizeHeaders = new Set<string>();
-          orderData?.forEach((rec) =>
-          rec.sizeWiseData?.forEach((version) => {
-            sizeHeaders.add("" + version.size);
-          })
-        );
-         
-
-        sizeHeaders?.forEach(version => {
-          excelColumnsWH.push({
-              title: version,
-              dataIndex: version,
-              key: version,
-              width: 200,
-              align: 'center',
-              children: [
-                {
-                    title: 'UPC/EAN',
-                    dataIndex: '',
-                    key: '',
-                    width: 100,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                        console.log()
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = (sizeData?.upcEan)
-                                return (
-                                    formattedQty
-                                );
-                            } else {
-
-                                return (
-                                    '-'
-                                );
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                
-                {
-                    title: 'MSRP',
-                    dataIndex: '',
-                    key: '',
-                    width: 70,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                        console.log()
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = (sizeData?.msrpPrice)
-                                return (
-                                    formattedQty
-                                );
-                            } else {
-
-                                return (
-                                    '-'
-                                );
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                {
-                    title: 'Customer Selling Price',
-                    dataIndex: '',
-                    key: '',
-                    width: 100,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                        console.log()
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = (sizeData?.csprice)
-                                return (
-                                    formattedQty
-                                );
-                            } else {
-
-                                return (
-                                    '-'
-                                );
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                {
-                    title: 'Price',
-                    dataIndex: '',
-                    key: '',
-                    width: 100,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = `${sizeData.price} ${sizeData.currency}`;
-                                return formattedQty;
-                            } else {
-                                return '-';
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                
-                {
-                    title: 'Quantity',
-                    dataIndex: '',
-                    key: '',
-                    width: 100,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                        console.log()
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = (sizeData?.quantity)
-                                return (
-                                    formattedQty
-                                );
-                            } else {
-
-                                return (
-                                    '-'
-                                );
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                {
-                    title: 'Amount',
-                    dataIndex: '',
-                    key: '',
-                    width: 100,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                        console.log()
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = `${sizeData.amount} ${sizeData.currency}`;
-                                // const formattedQty = (sizeData?.amount)
-                                return (
-                                    formattedQty
-                                );
-                            } else {
-
-                                return (
-                                    '-'
-                                );
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                // {
-                //     title: 'Total Amount',
-                //     dataIndex: '',
-                //     key: '',
-                //     width: 70,
-                //     className: "center",
-                //     render: (text, record) => {
-                //         const sizeData = record.sizeWiseData.find(item => item.size === version);
-                //         console.log()
-                //         if (sizeData) {
-                //             if (sizeData.size !== null) {
-                //                 const formattedQty = (sizeData?.totalAmount)
-                //                 return (
-                //                     formattedQty
-                //                 );
-                //             } else {
-
-                //                 return (
-                //                     '-'
-                //                 );
-                //             }
-                //         } else {
-                //             return '-';
-                //         }
-                //     }
-                // },
-            ]
-          });
-      })
-      excelColumnsWH.push(
-        {
-          title: "Total Quantity",
-          dataIndex: "totalQty",
-          align: "center",
-          width: 90,
-          sorter: (a, b) => a.totalQty.localeCompare(b.totalQty),
-          sortDirections: ["ascend", "descend"],
-        },
+    let rowIndex = 1;
+    const excelColumnsWH: any[] = [];
+    excelColumnsWH.push(
       {
-          title: "Total Amount",
-          dataIndex: "totalAmount",
-          align: "center",
-          width: 90,
-          sorter: (a, b) => a.totalAmount.localeCompare(b.totalAmount),
-          sortDirections: ["ascend", "descend"],
-          render: (text, record) => {
-              if (record) {
-                  if (record) {
-                      const totalAmt = `${record.totalAmount} ${record.currency}`;
-                      return (
-                          totalAmt
-                      );
-                  } else {
-
-                      return (
-                          '-'
-                      );
-                  }
-              } else {
-                  return '-';
-              }
+        title: "#",
+        // dataIndex: "sno", 
+        width: 50,
+        render: (text, object, index) => {
+          if (index == orderData.length) {
+            return null;
+          } else {
+            return rowIndex++;
           }
-        },
+        }
+      },
       {
-          title: "Status",
-          dataIndex: "status",
-          align: "center",
-          width: 90,
-          sorter: (a, b) => a.status.localeCompare(b.status),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
+        title: "PO Number",
+        dataIndex: "poNumber",
+        width: 90,
+        sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+        sortDirections: ["ascend", "descend"],
+        fixed: "left",
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "PO Item",
+        dataIndex: "poItem",
+        width: 90,
+        sorter: (a, b) => a.poItem.localeCompare(b.poItem),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Material Number",
+        dataIndex: "materialNo",
+        width: 300,
+        sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Season Code",
+        dataIndex: "seasonCode",
+        width: 110,
+        sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+
+      },
+      {
+        title: "Address",
+        dataIndex: "shipToAddress",
+        width: 800,
+        sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+
+      },
+      {
+        title: "Agent",
+        dataIndex: "agent",
+        align: "center",
+        width: 600,
+        sorter: (a, b) => a.agent.localeCompare(b.agent),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+
+      },
+
+      {
+        title: "Purchase Group",
+        dataIndex: "purchaseGroup",
+        align: "center",
+        width: 150,
+        sorter: (a, b) => a.purchaseGroup.localeCompare(b.purchaseGroup),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+
+      },
+      // {
+      //   title: "Supplier",
+      //   dataIndex: "supplier",
+      //   align: "center",
+      //   width: 90,
+      //   sorter: (a, b) => a.supplier.localeCompare(b.supplier),
+      //   sortDirections: ["ascend", "descend"],
+      //   render: (text) => text ? text : "-"
+
+      // },
+      {
+        title: "Revision No",
+        dataIndex: "revisionNo",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+
+      },
+      {
+        title: "Color",
+        dataIndex: "color",
+        align: "center",
+        width: 110,
+        sorter: (a, b) => a.color.localeCompare(b.color),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+
+
+    );
+    const sizeHeaders = new Set<string>();
+    orderData?.forEach((rec) =>
+      rec.sizeWiseData?.forEach((version) => {
+        sizeHeaders.add("" + version.size);
+      })
+    );
+
+
+    sizeHeaders?.forEach(version => {
+      excelColumnsWH.push({
+        title: version,
+        dataIndex: version,
+        key: version,
+        width: 200,
+        align: 'center',
+        children: [
+          {
+            title: 'UPC/EAN',
+            dataIndex: '',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.upcEan)
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+
+          {
+            title: 'MSRP',
+            dataIndex: '',
+            key: '',
+            width: 70,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.msrpPrice)
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Customer Selling Price',
+            dataIndex: '',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.csprice)
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Price',
+            dataIndex: '',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = `${sizeData.price} ${sizeData.currency}`;
+                  return formattedQty;
+                } else {
+                  return '-';
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+
+          {
+            title: 'Quantity',
+            dataIndex: '',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = (sizeData?.quantity)
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          {
+            title: 'Amount',
+            dataIndex: '',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text, record) => {
+              const sizeData = record.sizeWiseData.find(item => item.size === version);
+              console.log()
+              if (sizeData) {
+                if (sizeData.size !== null) {
+                  const formattedQty = `${sizeData.amount} ${sizeData.currency}`;
+                  // const formattedQty = (sizeData?.amount)
+                  return (
+                    formattedQty
+                  );
+                } else {
+
+                  return (
+                    '-'
+                  );
+                }
+              } else {
+                return '-';
+              }
+            }
+          },
+          // {
+          //     title: 'Total Amount',
+          //     dataIndex: '',
+          //     key: '',
+          //     width: 70,
+          //     className: "center",
+          //     render: (text, record) => {
+          //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //         console.log()
+          //         if (sizeData) {
+          //             if (sizeData.size !== null) {
+          //                 const formattedQty = (sizeData?.totalAmount)
+          //                 return (
+          //                     formattedQty
+          //                 );
+          //             } else {
+
+          //                 return (
+          //                     '-'
+          //                 );
+          //             }
+          //         } else {
+          //             return '-';
+          //         }
+          //     }
+          // },
+        ]
+      });
+    })
+    excelColumnsWH.push(
+      {
+        title: "Total Quantity",
+        dataIndex: "",
+        align: "center",
+        width: 90,
+        render: (text, record) => {
+          let sum = 0;
+          record.sizeWiseData.forEach((r) => {
+            // Convert to number before summing
+            sum += parseFloat(r.quantity) || 0;
+          });
+      
+          return sum;
         },
-     
-      );
+      },
+      
+      {
+        title: "Total Amount",
+        dataIndex: "",
+        align: "center",
+        width: 130,
+        render: (text, record) => {
+          let sum = 0;
+          const currency = record.currency 
+          record.sizeWiseData.forEach((r) => {
+            // Convert to number before summing
+            sum += parseFloat(r.amount) || 0;
+          });
+          return  `${sum.toFixed(2)}  ${currency} `;
+
 
        
-    
-            excel
-              .addSheet(`Order Info (${formattedDate})`)
-              .addColumns(excelColumnsWH)
-              .addDataSource(filterData, { str2num: true },);
+        },
+      },
+      {
+        title: "Status",
+        dataIndex: "status",
+        align: "center",
+        width: 90,
+        sorter: (a, b) => a.status.localeCompare(b.status),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
 
-     
-        excel.saveAs(`Order Info (${formattedDate}).xlsx`);
-      
+    );
 
 
 
- 
+    excel
+      .addSheet(`Order Info (${formattedDate})`)
+      .addColumns(excelColumnsWH)
+      .addDataSource(filterData, { str2num: true },);
+
+
+    excel.saveAs(`Order Info (${formattedDate}).xlsx`);
+
+
+
+
+
   }
 
   return (
@@ -980,7 +999,7 @@ export function RLOrdersGrid() {
         <Form
           onFinish={getorderData}
           form={form}
-          // layout='vertical'
+        // layout='vertical'
         >
           <Row gutter={24}>
             <Col
