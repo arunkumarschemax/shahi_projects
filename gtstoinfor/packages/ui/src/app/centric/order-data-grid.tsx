@@ -201,7 +201,7 @@ import {
       return Array.from(sizeHeaders);
     };
 
-    console.log(form.getFieldValue('podate'))
+    // console.log(form.getFieldValue('podate'))
   
     const renderReport = (data) => {
       const sizeHeaders = getSizeWiseHeaders(data);
