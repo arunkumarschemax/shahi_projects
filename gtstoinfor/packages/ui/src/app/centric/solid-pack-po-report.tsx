@@ -612,6 +612,21 @@ import RangePicker from "rc-picker/lib/RangePicker";
       })
       excelColumnsWH.push(
         {
+          title: "Total Quantity",
+          dataIndex: "",
+          align: "right",
+          width: 90,
+          render: (text, record) => {
+            let sum = 0;
+            record.sizeWiseData.forEach((r) => {
+              // Convert to number before summing
+              sum += parseFloat(r.totalQuantity) || 0;
+            });
+            return sum;
+          },
+        },
+       
+        {
           title: "Incoterm",
           dataIndex: "incoterm",
           align: "center",
@@ -638,7 +653,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
             excel
               .addSheet(`Solid Pack PO Report ${formattedDate}`)
               .addColumns(excelColumnsWH)
-              .addDataSource(filterData, { str2num: true });
+              .addDataSource(filterData, { str2num: false });
 
      
         excel.saveAs(`Solid Pack PO Report ${formattedDate}.xlsx`);
@@ -992,8 +1007,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
           title: "Compt.Material",
           dataIndex: "comptMaterial",
           width: 110,
-          sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
-          sortDirections: ["ascend", "descend"],
+          // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
+          // sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
           ...getColumnSearchProps('comptMaterial')
         },
@@ -1284,6 +1299,21 @@ import RangePicker from "rc-picker/lib/RangePicker";
         //     sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
         //     sortDirections: ["ascend", "descend"],
         //   },
+          {
+          title: "Total Quantity",
+          dataIndex: "",
+          align: "right",
+          width: 90,
+          render: (text, record) => {
+            let sum = 0;
+            record.sizeWiseData.forEach((r) => {
+              // Convert to number before summing
+              sum += parseFloat(r.totalQuantity) || 0;
+            });
+            return sum;
+          },
+        },
+       
 
         {
             title: "Incoterm",

@@ -353,7 +353,7 @@ import { Excel } from "antd-table-saveas-excel";
                 title: "Special Instructions",
                 dataIndex: "specialInstructions",
                 align: "center",
-                width: 900,
+                width: 500,
                 sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-"
@@ -650,6 +650,21 @@ import { Excel } from "antd-table-saveas-excel";
       })
       excelColumnsWH.push(
         {
+          title: "Total Quantity",
+          dataIndex: "",
+          align: "right",
+          width: 90,
+          render: (text, record) => {
+            let sum = 0;
+            record.sizeWiseData.forEach((r) => {
+              // Convert to number before summing
+              sum += parseFloat(r.totalQuantity) || 0;
+            });
+            return sum;
+          },
+        },
+       
+        {
           title: "Incoterm",
           dataIndex: "incoterm",
           align: "center",
@@ -676,7 +691,7 @@ import { Excel } from "antd-table-saveas-excel";
             excel
               .addSheet(`PPK PO Report (${formattedDate})`)
               .addColumns(excelColumnsWH)
-              .addDataSource(filterData, { str2num: true });
+              .addDataSource(filterData, { str2num: false });
 
      
         excel.saveAs(`PPK PO Report ${formattedDate}.xlsx`);
@@ -1039,8 +1054,8 @@ import { Excel } from "antd-table-saveas-excel";
           title: "Compt.Material",
           dataIndex: "comptMaterial",
           width: 150,
-          sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
-          sortDirections: ["ascend", "descend"],
+          // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
+          // sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
           ...getColumnSearchProps('comptMaterial')
 
@@ -1332,7 +1347,21 @@ import { Excel } from "antd-table-saveas-excel";
         //     sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
         //     sortDirections: ["ascend", "descend"],
         //   },
-
+        {
+          title: "Total Quantity",
+          dataIndex: "",
+          align: "right",
+          width: 90,
+          render: (text, record) => {
+            let sum = 0;
+            record.sizeWiseData.forEach((r) => {
+              // Convert to number before summing
+              sum += parseFloat(r.totalQuantity) || 0;
+            });
+            return sum;
+          },
+        },
+       
         {
             title: "Incoterm",
             dataIndex: "incoterm",
