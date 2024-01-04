@@ -118,7 +118,7 @@ export function CentricPdFInfoGrid() {
 
     const setMoreData = (record) => {
          navigate("/centric/pdf-info-detail-view", {
-        //   state: { data: record },
+          state: { data: record },
         });
       };
 

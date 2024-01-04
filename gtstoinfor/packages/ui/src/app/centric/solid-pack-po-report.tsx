@@ -1449,7 +1449,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 xl={{ span: 4 }}
               >
                <Form.Item label="Range" name="range_date" hidden={poDateDis} >
-                  <RangePicker  />
+                  <RangePicker style={{width:180}}  />
                 </Form.Item>
               </Col>
               {/* <Col
@@ -1463,7 +1463,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
                   <RangePicker  />
                 </Form.Item>
               </Col> */}
-              
+              <Row>
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
@@ -1473,14 +1473,27 @@ import RangePicker from "rc-picker/lib/RangePicker";
               >
                 <Form.Item>
                   <Button
+                   style={{marginTop:20,marginLeft:40}}
+
                     htmlType="submit"
                     icon={<SearchOutlined />}
                     type="primary"
                   >
                     SEARCH
                   </Button>
+
+                </Form.Item>
+              </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 5 }}
+                lg={{ span: 5 }}
+                xl={{ span: 4 }}
+              >
+                <Form.Item>
                   <Button
-                    style={{ marginLeft: 8 ,marginTop:20}}
+                     style={{marginTop:20,marginLeft:100}}
                     htmlType="submit"
                     type="primary"
                     onClick={onReset}
@@ -1490,7 +1503,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
                   </Button>
                 </Form.Item>
               </Col>
-              
+              </Row>
             </Row>
           </Form>
           {/* <Table
