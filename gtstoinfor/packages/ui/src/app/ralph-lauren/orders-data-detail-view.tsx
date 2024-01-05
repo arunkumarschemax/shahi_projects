@@ -519,14 +519,15 @@ useEffect(() => {
                         columns={columns}
                         dataSource={orderData}
                         className="custom-table-wrapper"
-                        pagination={{
-                        pageSize: 50,
-                        onChange(current, pageSize) {
-                            setPage(current);
-                            setPageSize(pageSize);
-                        },
-                        }}
+                        // pagination={{
+                        // pageSize: 50,
+                        // onChange(current, pageSize) {
+                        //     setPage(current);
+                        //     setPageSize(pageSize);
+                        // },
+                        // }}
                         // scroll={{ y: 450 }}
+                        pagination={false}
                         summary={() => (
                         <>
                             <Table.Summary.Row className="tableFooter">

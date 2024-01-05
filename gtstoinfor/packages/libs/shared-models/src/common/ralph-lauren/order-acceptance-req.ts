@@ -3,4 +3,6 @@ export class OrderAcceptanceRequest {
     poLineItemNumber: number;
     itemNo: string;
     buyer: string;
+    createdUser?:string
+    
 }
