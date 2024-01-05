@@ -126,6 +126,33 @@ const ColineView = () => {
                 }
             },
             {
+                title: 'Raised User',
+                dataIndex: 'created_user',
+                render: (text, record) => {
+                    return (record.created_user ? (record.created_user) : '-')
+                },
+                
+              
+            },
+            {
+                title: 'Raised Date',
+                dataIndex: 'created_at',
+                render: (text, record) => {
+                    return (record.created_at ? (moment(record.created_at).format('MM/DD/YYYY HH:mm')) : '-')
+                },
+               
+            },
+    
+            {
+                title: 'CO Created Date',
+                dataIndex: 'updated_at',
+                render: (text, record) => {
+                    return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
+                },
+              
+    
+            },
+            {
                 title: 'Status',
                 dataIndex: 'status',
                 render: (text, record) => {
