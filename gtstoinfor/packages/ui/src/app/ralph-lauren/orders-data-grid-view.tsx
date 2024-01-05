@@ -221,7 +221,7 @@ export function RLOrdersGrid() {
         sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
         sortDirections: ["ascend", "descend"],
         fixed: "left",
-        ...getColumnSearchProps('poNumber'),
+        // ...getColumnSearchProps('poNumber'),
         render: (text) => text ? text : "-"
       },
       {
