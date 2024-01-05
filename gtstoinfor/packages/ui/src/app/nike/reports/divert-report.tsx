@@ -146,8 +146,8 @@ const DivertReport = () => {
     const data = [
         { title: 'S No', dataIndex: 'sNo', render: (text, object, index) => { return i++; } },
         {
-            title: 'Old Request Date', dataIndex: ['oldPo', 'DocumentDate'], render: (text, record) => {
-                const date = record.oldPo.DocumentDate;
+            title: 'Old Request Date', dataIndex: ['oldPo', 'itemText'], render: (text, record) => {
+                const date = record.oldPo.itemText;
                 return date ? moment(date).format('MM/DD/YYYY') : '-';
             }
         },
@@ -236,7 +236,6 @@ const DivertReport = () => {
                 return record.newpo.ngac ? moment(record.newpo.ngac).format('MM/DD/YYYY') : "-";
             }
         },
-
         {
             title: 'No of Days to GAC', dataIndex: 'unit', render: (text, record) => {
                 if (record.oldPo.dpomCreatedDates && record.newpo.nogac) {
@@ -376,10 +375,21 @@ const DivertReport = () => {
 
                 {
                     title: "Request Date",
-                    dataIndex: "DocumentDate",
+                    dataIndex: "",
                     width: 70,
                     render: (text, record) => {
-                        return record.oldPo.DocumentDate ? moment(record.oldPo.DocumentDate).format('MM/DD/YYYY') : "-";
+                        const inputText = record.oldPo.itemText
+                        console.log(inputText)
+                        const pattern = record.newpo.npoNumber + ' / ' + record.newpo.npoLine;
+                        console.log(pattern)
+                        const regex = new RegExp(`${pattern} at (\\d{2}/\\d{2}/\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4}) \\d{2}:\\d{2}:\\d{2}`, 'g');
+                        let match;
+                        let dateAfterPattern
+                        while ((match = regex.exec(inputText)) !== null) {
+                            dateAfterPattern = match[1];
+                        }
+                        console.log(dateAfterPattern)
+                        return dateAfterPattern ? moment(dateAfterPattern).format('MM/DD/YYYY') : "-";
                     }
                 },
                 {
@@ -421,7 +431,6 @@ const DivertReport = () => {
                     // sorter: (a, b) => a.oldPo.poNumber?.localeCompare(b.oldPo.poNumber),
                     // sortDirections: ["descend", "ascend"]
                     , width: 70,
-
                 },
                 {
                     title: 'Old Po Line',
@@ -429,16 +438,14 @@ const DivertReport = () => {
                     // sorter: (a, b) => a.oldPo.poLine - b.oldPo.poLine,
                     // sortDirections: ["descend", "ascend"],
                     , width: 70,
-
                 },
                 {
                     title: 'Old Qantity',
-                    dataIndex: ['oldPo', 'oldQty'],
+                    dataIndex: ['oldPo', 'oldVal'],
                     width: 70, align: 'right', render: (text, record) => {
-                        const oldQty = Number(record.oldPo.oldQty)
-                        return oldQty ? oldQty : '-'
+                        const oldVal = Number(record.oldPo.oldVal)
+                        return oldVal ? oldVal : '-'
                     }
-
                 },
                 {
                     title: 'Balance Qty',
@@ -463,7 +470,6 @@ const DivertReport = () => {
                     width: 70, render: (text) => {
                         // Replace underscores (_) with spaces
                         const transformedText = text ? text.replace(/_/g, ' ') : '-';
-
                         return transformedText;
                     },
                 },
@@ -536,11 +542,11 @@ const DivertReport = () => {
                     title: "No of Days to GAC",
                     align: 'right', width: 70,
                     render: (text, record) => {
-                        if (record.oldPo.dpomCreatedDates && record.newpo.nogac) {
-                            const dpomCreatedDate = moment(record.oldPo.dpomCreatedDates);
+                        if (record.newpo.nogac) {
+                            const dpomCreatedDate = moment();
                             const nogacDate = moment(record.newpo.nogac);
                             const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
-                            return daysDifference + ' days';
+                            return (daysDifference + 1) + ' days';
                         } else {
                             return "-";
                         }
@@ -548,12 +554,12 @@ const DivertReport = () => {
                 },
                 {
                     title: "To item",
-                    dataIndex: ['newpo', 'item'], align: 'center', width: 70, render: (text) => (text !== null ? text : '-')
+                    dataIndex: ['newpo', 'item'], align: 'center', width: 70, render: (text, record) => (record.newpo.item ? record.newpo.item : record.oldPo.item)
 
                 },
                 {
                     title: "Unit",
-                    dataIndex: ['newpo', 'factory'], width: 70, align: 'center', render: (text) => (text !== null ? text : '-')
+                    dataIndex: ['newpo', 'factory'], width: 70, align: 'center', render: (text, record) => (record.newpo.factory ? record.newpo.factory : record.oldPo.factory)
 
                 },
 

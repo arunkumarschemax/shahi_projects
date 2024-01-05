@@ -212,22 +212,31 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemTextSatrtIndex = itemTextIndex
             } else if (filteredData[itemTextIndex + 2].str.includes('SALES ORDER')) {
                 itemTextSatrtIndex = itemTextIndex + 3
+                let j = itemTextSatrtIndex;
+                while (!(filteredData[j].str == (ITEM_TEXT_END_TEXT))) {
+                    itemText += filteredData[j].str + ',';
+                    itemTextEndIndex = j;
+                    j++;
+                }
+                itemDetailsObj.itemVasText = itemText
             } else {
                 itemTextSatrtIndex = itemTextIndex + 1
+                let j = itemTextSatrtIndex;
+                while (!(filteredData[j].str == (ITEM_TEXT_END_TEXT))) {
+                    itemText += filteredData[j].str + ',';
+                    itemTextEndIndex = j;
+                    j++;
+                }
+                itemDetailsObj.itemVasText = null;
             }
             // console.log(itemTextIndex, 'itemTextIndex')
             // console.log(itemTextSatrtIndex, 'itemTextSatrtIndex')
             // Find the index where the str is "__________________" and stop the loop there ,item text ends there
-            let j = itemTextSatrtIndex;
-            while (!(filteredData[j].str == (ITEM_TEXT_END_TEXT))) {
-                itemText += filteredData[j].str + ',';
-                itemTextEndIndex = j;
-                j++;
-            }
-            if (itemText.includes('Supply') || itemText.includes('EA diverted') || itemText.includes('OGAC/GAC') || itemText.includes('ITEM TEXT,'))
-                itemDetailsObj.itemVasText = null;
-            else
-                itemDetailsObj.itemVasText = itemText
+
+            // if (itemText.includes('Supply') || itemText.includes('EA diverted') || itemText.includes('OGAC/GAC') || itemText.includes('ITEM TEXT,') || itemText.includes('Item Text,')){
+            //     itemDetailsObj.itemVasText = null;
+            // } else {
+            // }
         }
 
         //    --------------------------------------------------

@@ -1,6 +1,6 @@
 
 export class OldDivertModel {
-    
+
     oItem: string;
     oPlant: string;
     oProductCode: string;
@@ -10,17 +10,19 @@ export class OldDivertModel {
     oPurchaseOrderNumber: string;
     oPoLineItemNumber: number;
     oTotalItemQty: string;
-    oShipmentType:string;
+    oShipmentType: string;
     oOGAC: string;
     oGAC: string;
     oInventorySegmentCode: string;
     oItemVasText: string;
-    factory?:string;
-    oFOBPrice?:string;
-    otradingCoNetIncDis?:string;
+    oItemText: string;
+    oldVal: string;
+    factory?: string;
+    oFOBPrice?: string;
+    otradingCoNetIncDis?: string;
     // oNetIncDis?:string;
 
-  
+
     constructor(
         oItem: string,
         oPlant: string,
@@ -31,34 +33,33 @@ export class OldDivertModel {
         oPurchaseOrderNumber: string,
         oPoLineItemNumber: number,
         oTotalItemQty: string,
-        oShipmentType:string,
+        oShipmentType: string,
         oOGAC: string,
         oGAC: string,
         oInventorySegmentCode: string,
-        oItemVasText: string,factory?:string,oFOBPrice?:string,otradingCoNetIncDis?:string,oNetIncDis?:string,
+        oItemVasText: string, oItemText: string, oldVal: string, factory?: string, oFOBPrice?: string, otradingCoNetIncDis?: string, oNetIncDis?: string,
 
-        ) {
+    ) {
 
         this.oItem = oItem
         this.oPlant = oPlant
         this.oProductCode = oProductCode
-        this.oFactory=oFactory
+        this.oFactory = oFactory
         this.oLineItemStatus = oLineItemStatus
         this.oDocumentDate = oDocumentDate
         this.oPurchaseOrderNumber = oPurchaseOrderNumber
         this.oPoLineItemNumber = oPoLineItemNumber
         this.oTotalItemQty = oTotalItemQty
-       this.oShipmentType = oShipmentType
+        this.oShipmentType = oShipmentType
         this.oOGAC = oOGAC
         this.oGAC = oGAC
         this.oInventorySegmentCode = oInventorySegmentCode
         this.oItemVasText = oItemVasText
+        this.oItemText = oItemText
         this.factory = factory
         this.oFOBPrice = oFOBPrice
-        this.otradingCoNetIncDis= otradingCoNetIncDis
+        this.otradingCoNetIncDis = otradingCoNetIncDis
+        this.oldVal = oldVal
         // this.oNetIncDis= oNetIncDis
-
- 
-        
     };
 }
