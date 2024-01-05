@@ -269,7 +269,7 @@ export function CentricOrderAcceptanceGrid() {
     const sizeHeaders = getSizeWiseHeaders(data);
 
 
-    const columns: ColumnsType<any> = [
+    const columns: any = [
       {
         title: "S.No",
         key: "sno",
@@ -320,7 +320,8 @@ export function CentricOrderAcceptanceGrid() {
         width:90,
         // sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
         // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        render: (text) => text ? text : "-",
+         ...getColumnSearchProps('shipmentMethod')
 
       },
 
@@ -330,7 +331,9 @@ export function CentricOrderAcceptanceGrid() {
         
         // sorter: (a, b) => a.material.localeCompare(b.material),
         // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        render: (text) => text ? text : "-",
+        ...getColumnSearchProps('material')
+
       },
       {
         title: "PPK UPC",
@@ -339,7 +342,10 @@ export function CentricOrderAcceptanceGrid() {
         
         // sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
         // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        render: (text) => text ? text : "-",
+        ...getColumnSearchProps('ppkUpc')
+  
+
       },
       {
         title: "Color",
@@ -347,7 +353,9 @@ export function CentricOrderAcceptanceGrid() {
         
         // sorter: (a, b) => a.color.localeCompare(b.color),
         // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        render: (text) => text ? text : "-",
+        ...getColumnSearchProps('color')
+
       },
       {
         title: "Gender",
@@ -355,7 +363,9 @@ export function CentricOrderAcceptanceGrid() {
         width:90,
         // sorter: (a, b) => a.gender.localeCompare(b.gender),
         // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        render: (text) => text ? text : "-",
+        ...getColumnSearchProps('gender')
+
       },
       {
         title: "Short Description",
@@ -363,7 +373,8 @@ export function CentricOrderAcceptanceGrid() {
         
         sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
         sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        render: (text) => text ? text : "-",
+        ...getColumnSearchProps('shortDescription')
       },
       {
         title: "Pack Method",
@@ -371,7 +382,10 @@ export function CentricOrderAcceptanceGrid() {
         
         // sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
         // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        render: (text) => text ? text : "-",
+        ...getColumnSearchProps('packMethod')
+
+
       },
       {
         title: "Vendor Booking Flag",
@@ -380,7 +394,8 @@ export function CentricOrderAcceptanceGrid() {
         width:90,
         // sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
         // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        render: (text) => text ? text : "-",
+        ...getColumnSearchProps('vendorFlag')
       },
 
 
@@ -390,7 +405,10 @@ export function CentricOrderAcceptanceGrid() {
         width:90,
         // sorter: (a, b) => a.season.localeCompare(b.season),
         // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        render: (text) => text ? text : "-",
+        ...getColumnSearchProps('season')
+
+
       },
       {
         title: "Port Of Export",
@@ -424,6 +442,7 @@ export function CentricOrderAcceptanceGrid() {
         title: "Payment Terms Description",
         dataIndex: "paymentTermDescription",
         align: "center",
+        width:180,
         
         // sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
         // sortDirections: ["ascend", "descend"],
@@ -434,6 +453,7 @@ export function CentricOrderAcceptanceGrid() {
         title: "Special Instructions",
         dataIndex: "specialInstructions",
         align: "center",
+        width:180,
         
         // sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
         // sortDirections: ["ascend", "descend"],
@@ -445,6 +465,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Division",
         dataIndex: "division",
+        width:130,
         
         // sorter: (a, b) => a.division.localeCompare(b.division),
         // sortDirections: ["ascend", "descend"],
@@ -806,7 +827,7 @@ export function CentricOrderAcceptanceGrid() {
                 onClick={() => createCOLine(record,index)}
                 disabled={record.status === 'ACCEPTED' ? true : !isEnabled}
               >
-                Accept
+               {record.status === 'ACCEPTED' ? "Accepted" : "Accept"}
               </Button>
             ),
             props: {
