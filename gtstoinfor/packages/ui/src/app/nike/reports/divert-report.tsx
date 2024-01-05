@@ -813,7 +813,7 @@ const DivertReport = () => {
                         //     },
                         // }}
                         pagination={false}
-                        scroll={{ x: 'max-content', y: 600 }}
+                        scroll={{ x: 'max-content', y: 500 }}
                         bordered
                         size='small'
                     // expandedRowRender={(record) => record.additionalData} 
