@@ -24,10 +24,10 @@ class ResultPropsModel {
 }
 
 const pdfFilesValidationObject = [
-    {
-        pdfName: 'PO PDF',
-        pdfKeyText: 'RALPH'
-    },
+    // {
+    //     pdfName: 'PO PDF',
+    //     pdfKeyText: 'RALPH'
+    // },
     {
         pdfName: 'PO PDF',
         pdfKeyText: 'Centric'
