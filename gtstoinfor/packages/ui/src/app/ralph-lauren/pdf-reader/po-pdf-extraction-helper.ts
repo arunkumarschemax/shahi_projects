@@ -181,7 +181,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsObj.productType = filteredData[rec.itemIndex + 46].str
         itemDetailsObj.merchDivision = filteredData[rec.itemIndex + 49].str
         itemDetailsObj.colorDescription = filteredData[rec.colorIndex + 2].str
-        itemDetailsObj.class = filteredData[rec.itemIndex + 56].str
+        itemDetailsObj.class = filteredData[rec.itemIndex + 58].str
         itemDetailsObj.conceptShortDesc = filteredData[rec.itemIndex + 59].str
         itemDetailsObj.fabricContent = filteredData[rec.itemIndex + 62].str
         itemDetailsObj.board = filteredData[rec.itemIndex + 65].str
