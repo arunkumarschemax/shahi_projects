@@ -39,6 +39,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
         <Card>
             {/* <div><Button style={{ backgroundColor: '#29397d', color: 'white' }} onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div> */}
             <br />
+             <div className="table-container">           
             <table className='ta-b' style={{ width: '100%' }} >
                 <tr className='ta-b'>
                     <th className='ta-b'>PO NUMBER</th>
@@ -163,6 +164,8 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                 })
                 }
             </table>
+            </div> 
+        
         </Card>
     )
 }

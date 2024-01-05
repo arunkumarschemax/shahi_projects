@@ -5,3 +5,7 @@
     width: fit-content;
     text-align: start;
 }
+
+.table-container {
+    overflow-x: auto; /* Add horizontal scroll if needed */
+}
