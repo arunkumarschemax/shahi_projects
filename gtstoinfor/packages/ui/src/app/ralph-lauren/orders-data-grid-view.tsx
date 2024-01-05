@@ -20,6 +20,7 @@ import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
 import {
+  AlertMessages,
   OrderDataModel,
   PoOrderFilter,
 } from "@project-management-system/shared-models";
@@ -55,14 +56,28 @@ export function RLOrdersGrid() {
     if (form.getFieldValue("poNumber") !== undefined) {
       req.poNumber = form.getFieldValue("poNumber");
     }
+    if (form.getFieldValue("season") !== undefined) {
+      req.season = form.getFieldValue("season");
+    }
+    if (form.getFieldValue("material") !== undefined) {
+      req.material = form.getFieldValue("material");
+    }
     req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
 
     service.getorderData(req).then((res) => {
       if (res.status) {
         setOrderData(res.data);
         setFilterData(res.data);
+      } else {
+        setOrderData([]);
+        setFilterData([]);
+        AlertMessages.getErrorMessage(res.internalMessage);
       }
-    });
+    }).catch(err => {
+       setOrderData([]);
+        setFilterData([]);
+       AlertMessages.getErrorMessage(err.message);
+     })
   };
   const onReset = () => {
     form.resetFields();
@@ -1034,13 +1049,36 @@ export function RLOrdersGrid() {
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
+              md={{ span: 4 }}
+              lg={{ span: 4 }}
+              xl={{ span: 6 }}
+            >
+              <Form.Item name="material" label="Material Number">
+               <Input  placeholder="Material Number"/>
+              </Form.Item>
+            </Col>
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 4 }}
+              lg={{ span: 4 }}
+              xl={{ span: 6 }}
+            >
+              <Form.Item name="season" label="Season Code">
+               <Input  placeholder="Enter Season"/>
+              </Form.Item>
+            </Col>
+            <Row>
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
               md={{ span: 8 }}
               lg={{ span: 8 }}
               xl={{ span: 4 }}
             >
               <Form.Item>
                 <Button
-                  style={{ marginLeft: 50 }}
+                  style={{ marginLeft: 20 }}
                   htmlType="submit"
                   icon={<SearchOutlined />}
                   type="primary"
@@ -1059,7 +1097,7 @@ export function RLOrdersGrid() {
             >
               <Form.Item>
                 <Button
-                  // style={{ marginLeft: 8 }}
+                  style={{ marginLeft: 70 }}
                   htmlType="submit"
                   type="primary"
                   onClick={onReset}
@@ -1069,6 +1107,7 @@ export function RLOrdersGrid() {
                 </Button>
               </Form.Item>
             </Col>
+            </Row>
           </Row>
         </Form>
         {/* <Table

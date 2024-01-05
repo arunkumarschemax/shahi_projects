@@ -21,6 +21,12 @@ export class RLOrdersRepository extends Repository<RLOrdersEntity> {
             if(req.externalRefNo != undefined){
                 query.andWhere(` o.buyer = "${req.externalRefNo}"`)
             }
+            if(req.season != undefined){
+                query.andWhere(` o.season_code = "${req.season}"`)
+            }
+            if(req.material != undefined){
+                query.andWhere(` o.material_no = "${req.material}"`)
+            }
         return await query.getRawMany()
     }
 
