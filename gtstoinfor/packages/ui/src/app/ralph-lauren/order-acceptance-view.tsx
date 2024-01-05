@@ -209,7 +209,7 @@ const OrderAcceptanceGrid = () => {
       if (res.status) {
         getorderData();
         // Reset the form field related to the "Item No" input
-        form.setFieldsValue({ [index]: { itemNo: undefined } });
+        // form.setFieldsValue({ [index]: { itemNo: undefined } });
         message.success(res.internalMessage);
       } else {
         message.error(res.internalMessage);
