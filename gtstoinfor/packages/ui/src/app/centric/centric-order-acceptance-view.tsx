@@ -934,6 +934,7 @@ export function CentricOrderAcceptanceGrid() {
                 </Select>
               </Form.Item>
             </Col> */}
+            <Row>
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -948,18 +949,25 @@ export function CentricOrderAcceptanceGrid() {
                   type="primary"
                 >
                   SEARCH
+           
                 </Button>
-                <Button
-                  style={{ marginLeft: 8 }}
+              </Form.Item>
+            </Col>
+            <Col>
+            <Form.Item>
+            <Button
+            style={{marginLeft:60}}
                   htmlType="submit"
                   type="primary"
                   onClick={onReset}
                   icon={<UndoOutlined />}
                 >
                   Reset
-                </Button>
-              </Form.Item>
-            </Col>
+                  </Button>
+                  </Form.Item>
+
+                  </Col>
+                  </Row>
           </Row>
         </Form>
         {/* <Table
