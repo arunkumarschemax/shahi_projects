@@ -264,25 +264,51 @@ const OrderAcceptanceGrid = () => {
       render: (text) => text ? text : "-",
       
     },
+    // {
+    //   title: "Address",
+    //   dataIndex: "shipToAddress",
+    //   width: 600,
+    //   sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+    //   sortDirections: ["ascend", "descend"],
+    //   ...getColumnSearchProps('shipToAddress'),
+    //   render: (text) => text ? text : "-"
+    // },
     {
       title: "Address",
       dataIndex: "shipToAddress",
-      width: 600,
+      width: 200,
       sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps('shipToAddress'),
-      render: (text) => text ? text : "-"
+      render: (text) => (
+        <Tooltip title={text || "-"}>
+          {text ? `${text.substring(0, 20)}...` : "-"}
+        </Tooltip>
+      ),
     },
+    // {
+    //   title: "Agent",
+    //   dataIndex: "agent",
+    //   align: "center",
+    //   width: 400,
+    //   sorter: (a, b) => a.agent.localeCompare(b.agent),
+    //   sortDirections: ["ascend", "descend"],
+    //   ...getColumnSearchProps('agent'),
+    //   render: (text) => text ? text : "-"
+
+    // },
     {
       title: "Agent",
       dataIndex: "agent",
-      align: "center",
-      width: 400,
+      width: 200,
       sorter: (a, b) => a.agent.localeCompare(b.agent),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps('agent'),
-      render: (text) => text ? text : "-"
-
+      render: (text) => (
+        <Tooltip title={text || "-"}>
+          {text ? `${text.substring(0, 20)}...` : "-"}
+        </Tooltip>
+      ),
     },
     {
       title: "Purchase Group",
