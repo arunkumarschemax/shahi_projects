@@ -586,6 +586,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .leftJoin(FobEntity, 'fob', `fob.color_code = SUBSTRING_INDEX(dpom.product_code, '-', -1) AND fob.style_number = dpom.style_number AND fob.size_description = dpom.size_description AND fob.planning_season_code = dpom.planning_season_code`)
             .leftJoin(FabricContent, 'fc', `fc.style = dpom.style_number`)
             .groupBy(`dpom.id`)
+            .where(`dpom.ocr_status IS NULL`)
         // .groupBy(`dpom.po_number AND dpom.po_line_item_number AND dpom.size_description`)
         if (req.lastModifedStartDate !== undefined) {
             query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)

@@ -1613,7 +1613,6 @@ export class DpomService {
     }
 
     async getPPMData(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
-
         const details = await this.dpomRepository.getMarketingPpmData(req);
         if (details.length === 0) {
             return new CommonResponseModel(false, 0, 'data not found')
