@@ -118,12 +118,14 @@ export const AddressView = () => {
         {
             title: 'S No',
             key: 'sno',
+            align:"center",
             width:"60px",
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1))
         },
         {
-            title:'Destination',
+            // title:'Destination',
+            title:<div style={{textAlign:"center"}}>Destination</div>,
             dataIndex:'destination',
             sorter: (a, b) => a.destination.localeCompare(b.destination),
             sortDirections: ["ascend", "descend"],
@@ -133,6 +135,8 @@ export const AddressView = () => {
         {
             title: 'Buyer Code',
             dataIndex: 'buyerCode',
+            width:130,
+            align:"center",
             sorter: (a, b) => {
                 const codeA = (a.buyerCode || "").toString();
                 const codeB = (b.buyerCode || "").toString();
@@ -143,7 +147,9 @@ export const AddressView = () => {
             ...getColumnSearchProps('buyerCode')
         },
         {
-            title:'Buyer Address',
+            // title:'Buyer Address',
+            title:<div style={{textAlign:"center"}}>Buyer Address</div>,
+            width:200,
             dataIndex:'buyerAddress',
             sorter: (a, b) => a.buyerAddress.localeCompare(b.buyerAddress),
             sortDirections: ["ascend", "descend"],
@@ -154,8 +160,10 @@ export const AddressView = () => {
            
         },
         {
-            title: 'Delivery Code',
+            title: 'Delivery Code',  
             dataIndex: 'deliveryCode',
+            width:130,
+            align:"center",
             sorter: (a, b) => {
                 const codeA = (a.deliveryCode || "").toString();
                 const codeB = (b.deliveryCode || "").toString();
@@ -166,7 +174,8 @@ export const AddressView = () => {
             ...getColumnSearchProps('deliveryCode')
         },
         {
-            title:'Delivery Address',
+            // title:'Delivery Address',
+            title:<div style={{textAlign:"center"}}>Delivery Address</div>,
             dataIndex:'deliveryAddress',
             sorter: (a, b) => a.deliveryAddress.localeCompare(b.deliveryAddress),
             sortDirections: ["ascend", "descend"],
