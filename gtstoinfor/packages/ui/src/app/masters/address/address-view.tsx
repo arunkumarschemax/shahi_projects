@@ -1,9 +1,10 @@
-import { FileExcelFilled } from "@ant-design/icons";
+import { FileExcelFilled, SearchOutlined } from "@ant-design/icons";
 import { AddressService } from "@project-management-system/shared-services";
-import { Button, Card, Row, Table } from "antd"
+import { Button, Card, Input, Row, Table } from "antd"
 import { Excel } from "antd-table-saveas-excel";
 import { ColumnProps } from "antd/es/table"
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Highlighter from "react-highlight-words";
 import { Link } from "react-router-dom";
 
 export const AddressView = () => {
@@ -12,6 +13,9 @@ export const AddressView = () => {
     const [pageSize, setPageSize] = useState<number>(10);
     const service = new AddressService()
     const [data,setData] = useState<any[]>([])
+    const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
+  const searchInput = useRef(null);
 
     useEffect(() => {
         getInfo()
@@ -24,6 +28,90 @@ export const AddressView = () => {
             }
         })
     }
+
+    const handleSearch = (selectedKeys, confirm, dataIndex) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+      };
+      const handleReset = (clearFilters) => {
+        clearFilters();
+        setSearchText("");
+      };
+    
+   ;
+      const getColumnSearchProps = (dataIndex: string) => ({
+        filterDropdown: ({
+          setSelectedKeys,
+          selectedKeys,
+          confirm,
+          clearFilters,
+        }) => (
+          <div style={{ padding: 8 }}>
+            <Input
+              ref={searchInput}
+              placeholder={`Search ${dataIndex}`}
+              value={selectedKeys[0]}
+              onChange={(e) =>
+                setSelectedKeys(e.target.value ? [e.target.value] : [])
+              }
+              onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+              style={{ width: 188, marginBottom: 8, display: "block" }}
+            />
+            <Button
+              type="primary"
+              onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+              icon={<SearchOutlined />}
+              size="small"
+              style={{ width: 90, marginRight: 8 }}
+            >
+              Search
+            </Button>
+            <Button
+              size="small"
+              style={{ width: 90 }}
+              onClick={() => {
+                handleReset(clearFilters);
+                setSearchedColumn(dataIndex);
+                confirm({ closeDropdown: true });
+              }}
+            >
+              Reset
+            </Button>
+          </div>
+        ),
+        filterIcon: (filtered) => (
+          <SearchOutlined
+            type="search"
+            style={{ color: filtered ? "#1890ff" : undefined }}
+          />
+        ),
+        onFilter: (value, record) =>
+          record[dataIndex]
+            ? record[dataIndex]
+                .toString()
+                .toLowerCase()
+                .includes(value.toLowerCase())
+            : false,
+        onFilterDropdownVisibleChange: (visible) => {
+          if (visible) {
+            setTimeout(() => searchInput.current.select());
+          }
+        },
+        render: (text) =>
+          text ? (
+            searchedColumn === dataIndex ? (
+              <Highlighter
+                highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+                searchWords={[searchText]}
+                autoEscape
+                textToHighlight={text.toString()}
+              />
+            ) : (
+              text
+            )
+          ) : null,
+      });
   
 
     const columns : any[] = [
@@ -39,40 +127,52 @@ export const AddressView = () => {
             dataIndex:'destination',
             sorter: (a, b) => a.destination.localeCompare(b.destination),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('destination')
         },
         {
-            title:'Buyer Code',
-            dataIndex:'buyerCode',
-            // sorter: (a, b) => a.buyerCode.localeCompare(b.buyerCode),
-            // sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
-         
+            title: 'Buyer Code',
+            dataIndex: 'buyerCode',
+            sorter: (a, b) => {
+                const codeA = (a.buyerCode || "").toString();
+                const codeB = (b.buyerCode || "").toString();
+                return codeA.localeCompare(codeB);
+            },
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('buyerCode')
         },
         {
             title:'Buyer Address',
             dataIndex:'buyerAddress',
             sorter: (a, b) => a.buyerAddress.localeCompare(b.buyerAddress),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('buyerAddress')
+
             
            
         },
-       
         {
-            title:'Delivery Code',
-            dataIndex:'deliveryCode',
-            // sorter: (a, b) => a.deliveryCode.localeCompare(b.deliveryCode),
-            // sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
-          
+            title: 'Delivery Code',
+            dataIndex: 'deliveryCode',
+            sorter: (a, b) => {
+                const codeA = (a.deliveryCode || "").toString();
+                const codeB = (b.deliveryCode || "").toString();
+                return codeA.localeCompare(codeB);
+            },
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('deliveryCode')
         },
         {
             title:'Delivery Address',
             dataIndex:'deliveryAddress',
             sorter: (a, b) => a.deliveryAddress.localeCompare(b.deliveryAddress),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('deliveryAddress')
+
             
         },
     ]
