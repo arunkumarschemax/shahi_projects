@@ -8,6 +8,7 @@ import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react";
 import { Excel } from "antd-table-saveas-excel";
 import { RLOrdersService } from "@project-management-system/shared-services";
+import moment from "moment";
 
 const ColineView = () => {
     const [page, setPage] = useState<number>(1);
@@ -137,7 +138,9 @@ const ColineView = () => {
                 render: (text, record) => {
                     return (record.error_msg ? (record.error_msg) : '-')
                 }
-            }
+            },
+            
+
         ]
 
         const excel = new Excel();
@@ -160,21 +163,28 @@ const ColineView = () => {
             dataIndex: 'buyer_po',
             render: (text, record) => {
                 return (record.buyer_po ? (record.buyer_po) : '-')
-            }
+            },
+            sorter: (a, b) => a.buyer_po.localeCompare(b.buyer_po),
+            sortDirections: ["ascend", "descend"],
 
         },
         {
             title: 'Line Item',
-            dataIndex: 'line_item_no', render: (text, record) => {
+            dataIndex: 'line_item_no', 
+            render: (text, record) => {
                 return (record.line_item_no ? (record.line_item_no) : '-')
-            }
+            },
+            sorter: (a, b) => a.line_item_no.localeCompare(b.line_item_no),
+            sortDirections: ["ascend", "descend"],
         },
         {
             title: 'Item No',
             dataIndex: 'item_no',
             render: (text, record) => {
                 return (record.item_no ? (record.item_no) : '-')
-            }
+            },
+            sorter: (a, b) => a.item_no.localeCompare(b.item_no),
+            sortDirections: ["ascend", "descend"],
         },
         {
             title: 'CO Date',
@@ -188,7 +198,38 @@ const ColineView = () => {
             dataIndex: 'co_number',
             render: (text, record) => {
                 return (record.co_number ? (record.co_number) : '-')
-            }
+            },
+            // sorter: (a, b) => a.co_number.localeCompare(b.co_number),
+            // sortDirections: ["ascend", "descend"],
+        },
+        {
+            title: 'Raised User',
+            dataIndex: 'created_user',
+            render: (text, record) => {
+                return (record.created_user ? (record.created_user) : '-')
+            },
+            sorter: (a, b) => a.created_user.localeCompare(b.created_user),
+            sortDirections: ["ascend", "descend"],
+        },
+        {
+            title: 'Raised Date',
+            dataIndex: 'created_at',
+            render: (text, record) => {
+                return (record.created_at ? (moment(record.created_at).format('MM/DD/YYYY HH:mm')) : '-')
+            },
+            sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+            sortDirections: ["ascend", "descend"],
+        },
+
+        {
+            title: 'CO Created Date',
+            dataIndex: 'updated_at',
+            render: (text, record) => {
+                return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
+            },
+            sorter: (a, b) => a.updated_at.localeCompare(b.updated_at),
+            sortDirections: ["ascend", "descend"],
+
         },
         {
             title: 'Status',
@@ -280,9 +321,10 @@ const ColineView = () => {
                         className="custom-table-wrapper"
                         scroll={{ x: 'max-content' }}
                         pagination={{
+                            pageSize: 50,
                             onChange(current, pageSize) {
                                 setPage(current);
-                                setPageSize(pageSize)
+                                setPageSize(pageSize);
                             },
                         }}
                     />)

@@ -16,7 +16,7 @@ export class COLineRepository extends Repository<COLineEntity> {
 
     async getCoLineData(req: coLineRequest): Promise<any[]> {
         const query = this.createQueryBuilder('co')
-            .select(`co.id,co.buyer_po,co.line_item_no,co.co_date, co.co_number, co.item_no, co.status, co.error_msg, co.created_at,co.version_flag,co.is_active`)
+            .select(`co.id,co.buyer_po,co.line_item_no,co.co_date, co.co_number, co.item_no, co.status, co.error_msg, co.created_at,co.version_flag,co.is_active,co.created_user,co.updated_user,co.updated_at`)
         if (req.buyerPo !== undefined) {
             query.andWhere(`co.buyer_po ='${req.buyerPo}'`)
         }

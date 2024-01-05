@@ -192,7 +192,7 @@ const OrderAcceptanceGrid = () => {
   //     }
   //   });
   // }
-
+  const user = JSON.parse(localStorage.getItem("currentUser")).user.userName
   const createCOLine = (record, index) => {
     const formValues = form.getFieldsValue();
     const itemNoValue = formValues[index]?.itemNo;
@@ -203,6 +203,7 @@ const OrderAcceptanceGrid = () => {
     req.poLineItemNumber = record.poItem;
     req.itemNo = itemNoValue;
     req.buyer = 'RL-U12';
+    req.createdUser = user
     
     service.coLineCreationReq(req).then((res) => {
       if (res.status) {

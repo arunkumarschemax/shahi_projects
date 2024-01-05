@@ -203,7 +203,7 @@ export class RLOrdersService {
       entity.lineItemNo = req.poLineItemNumber;
       entity.itemNo = req.itemNo
       entity.status = 'Open';
-      entity.createdUser = 'Admin';
+      entity.createdUser = req.createdUser;
       const save = await this.coLineRepo.save(entity);
       if (save) {
         const update =await this.rlOrdersRepo.update({
