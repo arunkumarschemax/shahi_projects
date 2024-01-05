@@ -224,7 +224,7 @@ import {
           fixed: "left",
           render: (text) => text ? text : "-",
 
-          ...getColumnSearchProps('poNumber')
+          // ...getColumnSearchProps('poNumber')
         },
         {
           title: "PO Line",
