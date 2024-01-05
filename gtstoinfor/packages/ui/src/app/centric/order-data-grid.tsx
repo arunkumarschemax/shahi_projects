@@ -574,28 +574,54 @@ import {
             return sum;
           },
         },
+        // {
+        //   title: "Incoterm",
+        //   dataIndex: "incoterm",
+        //   align: "center",
+        //   width: 500,
+        //   sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
+        //   sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
+        //   ...getColumnSearchProps('incoterm') 
+
+
+        // },
         {
           title: "Incoterm",
           dataIndex: "incoterm",
-          align: "center",
-          width: 500,
+          width: 150,
           sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-          ...getColumnSearchProps('incoterm') 
-
-
+          ...getColumnSearchProps('incoterm'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
         },
-        {
-            title: "Address",
-            dataIndex: "shipToAddress",
-            width: 600,
-            sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-            sortDirections: ["ascend", "descend"],
-           render: (text) => text ? text : "-",
+        // {
+        //     title: "Address",
+        //     dataIndex: "shipToAddress",
+        //     width: 600,
+        //     sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+        //     sortDirections: ["ascend", "descend"],
+        //    render: (text) => text ? text : "-",
 
-            ...getColumnSearchProps('shipToAddress')
-          },
+        //     ...getColumnSearchProps('shipToAddress')
+        //   },
+        {
+          title: "Address",
+          dataIndex: "shipToAddress",
+          width: 150,
+          sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('shipToAddress'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+        },
           
           {
         title: "Action",

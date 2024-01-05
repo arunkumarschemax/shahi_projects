@@ -985,7 +985,7 @@ import { Excel } from "antd-table-saveas-excel";
             title: "Port of Entry Name",
             dataIndex: "portOfEntry",
             align: "center",
-            width: 90,
+            width: 200,
             sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
@@ -1019,7 +1019,7 @@ import { Excel } from "antd-table-saveas-excel";
             title: "Special Instructions",
             dataIndex: "specialInstructions",
             align: "center",
-            width: 500,
+            width: 200,
             sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
@@ -1039,15 +1039,28 @@ import { Excel } from "antd-table-saveas-excel";
           ...getColumnSearchProps('division')
           
         },
+        // {
+        //   title: "Manufacture",
+        //   dataIndex: "manufacture",
+        //   width: 500,
+        //   sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
+        //   sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
+        //   ...getColumnSearchProps('manufacture')
+
+        // },
         {
           title: "Manufacture",
           dataIndex: "manufacture",
-          width: 500,
+          width: 150,
           sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-          ...getColumnSearchProps('manufacture')
-
+          ...getColumnSearchProps('manufacture'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
         },
        
         {
@@ -1362,29 +1375,55 @@ import { Excel } from "antd-table-saveas-excel";
           },
         },
        
-        {
-            title: "Incoterm",
-            dataIndex: "incoterm",
-            align: "center",
-            width: 400,
-            sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
-            sortDirections: ["ascend", "descend"],
-          ...getColumnSearchProps('incoterm')
+        // {
+        //     title: "Incoterm",
+        //     dataIndex: "incoterm",
+        //     align: "center",
+        //     width: 400,
+        //     sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
+        //     sortDirections: ["ascend", "descend"],
+        //   ...getColumnSearchProps('incoterm')
 
-          },
+        //   },
+        {
+          title: "Incoterm",
+          dataIndex: "incoterm",
+          width: 150,
+          sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('incoterm'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+        },
 
      
 
-          {
-              title: "Ship to Address",
-              dataIndex: "shipToAddress",
-              align: "center",
-              width: 400,
-              sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-              sortDirections: ["ascend", "descend"],
-          ...getColumnSearchProps('shipToAddress')
+          // {
+          //     title: "Ship to Address",
+          //     dataIndex: "shipToAddress",
+          //     align: "center",
+          //     width: 400,
+          //     sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+          //     sortDirections: ["ascend", "descend"],
+          // ...getColumnSearchProps('shipToAddress')
 
-            },
+          //   },
+          {
+            title: "Ship to Address",
+            dataIndex: "shipToAddress",
+            width: 150,
+            sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+            sortDirections: ["ascend", "descend"],
+            ...getColumnSearchProps('shipToAddress'),
+            render: (text) => (
+              <Tooltip title={text || "-"}>
+                {text ? `${text.substring(0, 20)}...` : "-"}
+              </Tooltip>
+            ),
+          },
  
     
       );

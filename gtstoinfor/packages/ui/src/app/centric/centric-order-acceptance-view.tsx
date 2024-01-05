@@ -110,7 +110,7 @@ export function CentricOrderAcceptanceGrid() {
       if (res.status) {
         getCentricorderData();
         setItemNoValues({}); 
-        form.setFieldsValue({ [index]: { itemNo: undefined } });
+        // form.setFieldsValue({ [index]: { itemNo: undefined } });
         message.success(res.internalMessage);
       } else {
         message.error(res.internalMessage);
@@ -304,7 +304,7 @@ export function CentricOrderAcceptanceGrid() {
         // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
         // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-",
-        fixed: "left",
+        
       },
       {
         title: "PO Date",
@@ -472,13 +472,26 @@ export function CentricOrderAcceptanceGrid() {
         // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
       },
+      // {
+      //   title: "Manufacture",
+      //   dataIndex: "manufacture",
+        
+      //   // sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
+      //   // sortDirections: ["ascend", "descend"],
+      //   render: (text) => text ? text : "-"
+      // },
       {
         title: "Manufacture",
         dataIndex: "manufacture",
-        
-        // sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
-        // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        width: 150,
+        sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
+        sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps('manufacture'),
+        render: (text) => (
+          <Tooltip title={text || "-"}>
+            {text ? `${text.substring(0, 20)}...` : "-"}
+          </Tooltip>
+        ),
       },
 
       {
@@ -751,24 +764,50 @@ export function CentricOrderAcceptanceGrid() {
 
     columns.push(
 
+      // {
+      //   title: "Incoterm",
+      //   dataIndex: "incoterm",
+      //   align: "center",
+        
+      //   sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
+      //   sortDirections: ["ascend", "descend"],
+      // },
       {
         title: "Incoterm",
         dataIndex: "incoterm",
-        align: "center",
-        
+        width: 150,
         sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
         sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps('incoterm'),
+        render: (text) => (
+          <Tooltip title={text || "-"}>
+            {text ? `${text.substring(0, 20)}...` : "-"}
+          </Tooltip>
+        ),
       },
 
 
 
-      {
-        title: "Ship to Address",
-        dataIndex: "shipToAddress",
-        align: "center",
+      // {
+      //   title: "Ship to Address",
+      //   dataIndex: "shipToAddress",
+      //   align: "center",
         
+      //   sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+      //   sortDirections: ["ascend", "descend"],
+      // },
+      {
+        title: "Address",
+        dataIndex: "shipToAddress",
+        width: 150,
         sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
         sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps('shipToAddress'),
+        render: (text) => (
+          <Tooltip title={text || "-"}>
+            {text ? `${text.substring(0, 20)}...` : "-"}
+          </Tooltip>
+        ),
       },
       {
         title: "Status",

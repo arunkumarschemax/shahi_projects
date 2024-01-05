@@ -158,21 +158,28 @@ const CentriColineView = () => {
             dataIndex: 'po_number',
             render: (text, record) => {
                 return (record.po_number ? (record.po_number) : '-')
-            }
+            },
+              sorter: (a, b) => a.po_number.localeCompare(b.po_number),
+           sortDirections: ["ascend", "descend"],
 
         },
         {
             title: 'Line Item',
             dataIndex: 'po_line', render: (text, record) => {
                 return (record.po_line ? (record.po_line) : '-')
-            }
+            },
+            sorter: (a, b) => a.po_line.localeCompare(b.po_line),
+            sortDirections: ["ascend", "descend"],
         },
         {
             title: 'Item No',
             dataIndex: 'item_no',
             render: (text, record) => {
                 return (record.item_no ? (record.item_no) : '-')
-            }
+            },
+            sorter: (a, b) => a.item_no.localeCompare(b.item_no),
+            sortDirections: ["ascend", "descend"],
+
         },
         {
             title: 'CO Date',
@@ -265,9 +272,10 @@ const CentriColineView = () => {
                         className="custom-table-wrapper"
                         scroll={{ x: 'max-content' }}
                         pagination={{
+                            pageSize: 50,
                             onChange(current, pageSize) {
                                 setPage(current);
-                                setPageSize(pageSize)
+                                setPageSize(pageSize);
                             },
                         }}
                     />)
