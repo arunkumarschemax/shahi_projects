@@ -134,15 +134,28 @@ export function PdFInfoGrid() {
             render: (text) => text ? text : "-",
             ...getColumnSearchProps('poNumber')
         },
+        // {
+        //     title: 'File Name',
+        //     dataIndex: 'pdfFileName',
+        //     width: 300,
+        //     sorter: (a, b) => a.pdfFileName.localeCompare(b.pdfFileName),
+        //     sortDirections: ["ascend", "descend"],
+        //     render: (text) => text ? text : "-",
+        //      ...getColumnSearchProps('pdfFileName')
+        // },
         {
-            title: 'File Name',
-            dataIndex: 'pdfFileName',
-            width: 300,
+            title: "File Name",
+            dataIndex: "pdfFileName",
+            width: 150,
             sorter: (a, b) => a.pdfFileName.localeCompare(b.pdfFileName),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-",
-             ...getColumnSearchProps('pdfFileName')
-        },
+            ...getColumnSearchProps('pdfFileName'),
+            render: (text) => (
+              <Tooltip title={text || "-"}>
+                {text ? `${text.substring(0, 20)}...` : "-"}
+              </Tooltip>
+            ),
+          },
         {
             title: 'File Type',
             dataIndex: 'fileType',
