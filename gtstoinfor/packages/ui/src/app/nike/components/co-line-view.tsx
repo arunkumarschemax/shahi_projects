@@ -389,7 +389,6 @@ const ColineView = () => {
                     //             totalDifference += Number(difference)
                     //         }
                     //     })
-
                     //     return (
                     //         <>
                     //             <Table.Summary.Row className="tableFooter">
