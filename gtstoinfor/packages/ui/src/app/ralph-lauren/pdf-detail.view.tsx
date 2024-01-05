@@ -9,35 +9,22 @@ export interface IPoPdfTableProps {
     data: LegalPoDetails
 }
 
-export default function PoPdfTable(props: IPoPdfTableProps) {
+export default function PdfDetailViewTable(props: IPoPdfTableProps) {
     const { state } = useLocation();
     const [pdfData, setPdfData] = useState<any>();
     const navigate = useNavigate();
 
+    console.log(state?.data?.fileData,"uuu")
+    const parsedData = JSON.parse(state?.data?.fileData)
 
-    useEffect(() => {
-        if (props.data) {
-            setPdfData(props.data)
-        }
-    }, [props.data])
+    const setMoreData = () => {
+        navigate('/ralph-lauren/pdf-info')
 
-    useEffect(() => {
-        if (state?.data) {
-            const parsedData = JSON.parse(state.data)
-            // console.log(parsedData)
-            setPdfData(parsedData)
-            // setUpdateKey(prevState => prevState+1)
-        }
-    }, [state?.data])
-
-    // const setMoreData = () => {
-    //     navigate('/nike/pdf-file-info-grid')
-
-    // }
+    }
 
     return (
         <Card>
-            {/* <div><Button style={{ backgroundColor: '#29397d', color: 'white' }} onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div> */}
+            <div><Button style={{ backgroundColor: '#29397d', color: 'white' }} onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div>
             <br />
             <table className='ta-b' style={{ width: '100%' }} >
                 <tr className='ta-b'>
@@ -50,15 +37,15 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <th className='ta-b'>SHIP TO ADDRESS</th>
                 </tr>
                 <tr className='ta-b'>
-                    <td className='ta-b'>{pdfData?.poNumber}</td>
-                    <td className='ta-b'>{pdfData?.poPrint}</td>
+                    <td className='ta-b'>{parsedData?.poNumber}</td>
+                    <td className='ta-b'>{parsedData?.poPrint}</td>
                     {/* <td className='ta-b'>{pdfData?.seasonYear}</td>
                     <td className='ta-b'>{pdfData?.divisionBuyGroup}</td>
                     <td className='ta-b'>{pdfData?.paymentCategory}</td>
                     <td className='ta-b'>{pdfData?.incoterms}</td> */}
                     <td className='ta-b'>{pdfData?.shipToAddress}</td>
                 </tr>
-                {pdfData?.poItemDetails?.map((i) => {
+                {parsedData?.poItemDetails?.map((i) => {
                     return <>
                         <tr className='ta-b'>
                             <th></th>

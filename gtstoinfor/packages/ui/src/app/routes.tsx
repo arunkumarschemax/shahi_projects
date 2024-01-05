@@ -7,7 +7,7 @@ import UserCreationForm from "./user-management/users/users-form"
 import UsersView from "./user-management/users/users-view"
 import FactoriesView from "./masters/factories/factories-view"
 import FactoriesForm from "./masters/factories/factories-form"
-import { FabricContentdto, FactoryDto, Fobdto } from "@project-management-system/shared-models"
+import { FabricContentdto, FactoryDto, Fobdto, LegalPoDetails } from "@project-management-system/shared-models"
 import OrdersCompareGrid from "./nike/nike-orders-compare"
 import PoFileImport from "./nike/reports/po-file-import"
 import PPMReport from "./nike/ppm-report"
@@ -42,6 +42,7 @@ import PdfUpload from "./ralph-lauren/pdf-reader/pdf-upload"
 import ColineView from "./ralph-lauren/co-line-view"
 import AddressView from "./masters/address/address-view"
 import AddressUpload from "./masters/address/address-excel-upload"
+import PdfDetailViewTable from "./ralph-lauren/pdf-detail.view"
 
 
 export const AppRoutes = () => {
@@ -182,6 +183,9 @@ export const AppRoutes = () => {
                     <Route path='co-line-view' element={<ColineView />} />
                     <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
+                   <Route path='pdf-detail-view' element={<PdfDetailViewTable data={new LegalPoDetails}/>} />
+
+
 
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />

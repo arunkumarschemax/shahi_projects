@@ -162,13 +162,31 @@ export function PdFInfoGrid() {
             render: (text, record) => {
                 return record.createdAt ? moment(record.createdAt).format('MM/DD/YYYY') : '-'
             }
+
+            
             
             
         },
+        {
+            title: "Action",
+            dataIndex: "action",
+            align: "center",
+            width: 120,
+            render: (value, record) => (
+              <>
+                <Button onClick={() => setMoreData(record)}>More Info</Button>
+              </>
+            ),
+          }
 
 
     ]
 
+    const setMoreData = (record) => {
+        navigate("/ralph-lauren/pdf-detail-view", {
+          state: { data: record },
+        });
+      };
     return (
         <>
             <Card title="PDF Info" headStyle={{ fontWeight: 'bold' }}>
