@@ -586,6 +586,13 @@ const OrderAcceptanceGrid = () => {
         
           bordered
           size='small'
+          pagination={{
+            pageSize: 50,
+            onChange(current, pageSize) {
+              setPage(current);
+              setPageSize(pageSize);
+            },
+          }}
         />
          </Form>
       </Card>
