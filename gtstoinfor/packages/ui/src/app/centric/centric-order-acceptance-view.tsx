@@ -69,7 +69,8 @@ export function CentricOrderAcceptanceGrid() {
       }
     });
   };
-
+  
+  console.log(form.getFieldValue("poNumber"),"uuuuu")
   const getPoNumber = () => {
     service.getPoNumber().then((res) => {
       if (res.status) {
@@ -947,6 +948,7 @@ export function CentricOrderAcceptanceGrid() {
                   htmlType="submit"
                   icon={<SearchOutlined />}
                   type="primary"
+                  onClick={getCentricorderData}
                 >
                   SEARCH
            
