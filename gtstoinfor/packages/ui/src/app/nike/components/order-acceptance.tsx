@@ -1,10 +1,11 @@
 import { ArrowDownOutlined, ArrowUpOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { DpomApproveRequest, FactoryReportModel, PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
-import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, Tooltip, message } from "antd";
+import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Statistic, Table, Tooltip, message } from "antd";
 import moment from "moment";
 import React, { useRef } from "react";
 import { useEffect, useState } from "react";
+import CountUp from "react-countup";
 import Highlighter from 'react-highlight-words';
 
 export function OrderAcceptance() {
@@ -24,7 +25,8 @@ export function OrderAcceptance() {
     const [styleNumber, setStyleNumber] = useState<any>([]);
     const [planSesCode, setPlanSesCode] = useState<any>([]);
     const [planSesYear, setPlanSesYear] = useState<any>([]);
-
+    const [tableLoading, setTableLoading] = useState<boolean>(false)
+    const formatter = (value: number) => <CountUp end={value} separator="," />;
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();
@@ -407,6 +409,8 @@ export function OrderAcceptance() {
         );
     }
 
+    const totalItemQty = data?.map(i => i.totalItemQty)
+    const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
 
     return (
         <>
@@ -505,6 +509,20 @@ export function OrderAcceptance() {
                         </Col>
                     </Row>
                 </Form>
+                <Row gutter={24} justify={'space-evenly'}>
+                    <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }}  >
+                        <b> <Statistic loading={tableLoading} title="Total Order Qty:" style={{ color: 'white' }} value={count} formatter={formatter} /></b></Card>
+                    </Col>
+                    <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
+                        <b><Statistic loading={tableLoading} title="Total PO's:" value={data.length} formatter={formatter} />
+                        </b> </Card> </Col>
+                    <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#A5F5D7', height: 100, alignItems: 'center' }}>
+                        <b><Statistic loading={tableLoading} title="Accepted PO's:" value={data.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
+                        </b></Card></Col>
+                    <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
+                        <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={data.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
+                        </b></Card> </Col>
+                </Row><br></br>
                 <Card>
                     {renderReport(filterData.length > 0 ? filterData : data)}
                 </Card>
