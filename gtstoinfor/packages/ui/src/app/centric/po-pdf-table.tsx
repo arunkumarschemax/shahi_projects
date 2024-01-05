@@ -30,14 +30,14 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
         }
     }, [state?.data])
 
-    const setMoreData = () => {
-        navigate('/ralph-lauren/pdf-upload')
+    // const setMoreData = () => {
+    //     navigate('/ralph-lauren/pdf-upload')
 
-    }
+    // }
 
     return (
         <Card>
-            <div><Button style={{ backgroundColor: '#29397d', color: 'white' }} onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div>
+            {/* <div><Button style={{ backgroundColor: '#29397d', color: 'white' }} onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div> */}
             <br />
             <table className='ta-b' style={{ width: '100%' }} >
                 <tr className='ta-b'>
