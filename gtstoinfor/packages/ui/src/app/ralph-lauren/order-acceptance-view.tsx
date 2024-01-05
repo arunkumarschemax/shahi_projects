@@ -53,7 +53,7 @@ const OrderAcceptanceGrid = () => {
     }
     req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
 
-    service.getorderData(req).then((res) => {
+    service.getorderDataforAcceptance(req).then((res) => {
       if (res.status) {
         setOrderData(res.data);
       }
@@ -209,7 +209,7 @@ const OrderAcceptanceGrid = () => {
       if (res.status) {
         getorderData();
         // Reset the form field related to the "Item No" input
-        // form.setFieldsValue({ [index]: { itemNo: undefined } });
+        form.setFieldsValue({ [index]: { itemNo: undefined } });
         message.success(res.internalMessage);
       } else {
         message.error(res.internalMessage);

@@ -123,6 +123,32 @@ export class RLOrdersService {
     }
   }
 
+  async getorderDataforAcceptance(req?: PoOrderFilter): Promise<CommonResponseModel> {
+    try {
+      const details = await this.rlOrdersRepo.getorderDataforAcceptance(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+      }
+      const sizeDateMap = new Map<string, OrderDataModel>();
+      for (const rec of details) {
+        if (!sizeDateMap.has(rec.po_number)) {
+          sizeDateMap.set(
+            rec.po_number,
+            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [],rec.item_status)
+          );
+        }
+        const sizeWiseData = sizeDateMap.get(rec.po_number).sizeWiseData;
+        if (rec.size !== null) {
+          sizeWiseData.push(new OrderSizeWiseModel(rec.size, rec.total_qty, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean));
+        }
+      }
+      const dataModelArray: OrderDataModel[] = Array.from(sizeDateMap.values());
+      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    } catch (e) {
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
+
   async getorderDataByPoNumber(req: PoOrderFilter): Promise<CommonResponseModel> {
     try {
       const data = await this.rlOrdersRepo.getorderDataByPoNumber(req)
