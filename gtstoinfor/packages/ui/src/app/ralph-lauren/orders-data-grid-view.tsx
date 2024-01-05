@@ -314,7 +314,8 @@ export function RLOrdersGrid() {
         width: 110,
         sorter: (a, b) => a.color.localeCompare(b.color),
         sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        render: (text) => text ? text : "-",
+        ...getColumnSearchProps('color'),
       },
 
     ];
