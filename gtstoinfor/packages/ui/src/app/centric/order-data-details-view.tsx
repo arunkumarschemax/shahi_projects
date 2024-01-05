@@ -195,20 +195,21 @@ console.log(location?.state?.data)
                         columns={columns}
                         dataSource={location?.state?.data?.sizeWiseData}
                         className="custom-table-wrapper"
-                        pagination={{
-                        pageSize: 50,
-                        onChange(current, pageSize) {
-                            setPage(current);
-                            setPageSize(pageSize);
-                        },
-                        }}
+                        // pagination={{
+                        // pageSize: 50,
+                        // onChange(current, pageSize) {
+                        //     setPage(current);
+                        //     setPageSize(pageSize);
+                        // },
+                        // }}
+                        pagination={false}
                         scroll={{ y: 450 }}
                         summary={() => (
                         <>
                             <Table.Summary.Row className="tableFooter">
                                 
                                     <Table.Summary.Cell index={1} colSpan={5}>
-                                    <span style={{marginLeft:500}}>
+                                    <span style={{marginLeft:400}}>
                                         <b>Total   :</b>
                                     </span>
                                 
