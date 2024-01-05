@@ -37,6 +37,7 @@ import { AddressService } from '../address/address.service';
 import { DestinationReq } from '../address/destination-req.dto';
 import * as Excel from 'exceljs';
 import { diff_match_patch } from 'diff-match-patch'
+import { ItemNoDtos } from './dto/co-item-no.dto';
 
 
 @Injectable()
@@ -290,7 +291,7 @@ export class DpomService {
         entity.createdUser = 'Admin';
         const save = await this.coLineRepository.save(entity);
         if (save) {
-            await this.updateCOLineStatus({ poNumber: req.purchaseOrderNumber, poLineItemNumber: req.poLineItemNumber, status: 'Open' })
+            await this.updateCOLineStatus({ poNumber: req.purchaseOrderNumber, poLineItemNumber: req.poLineItemNumber,status: 'Open'})
             return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
         } else {
             return new CommonResponseModel(false, 1, 'CO-Line request failed')
@@ -2533,6 +2534,59 @@ export class DpomService {
         }
 
     }
+
+
+    // async updateItemNo(req: ItemNoDtos): Promise<CommonResponseModel> {
+    //     console.log(req,"reqq")
+    //     try {
+    //         const update=await this.coLineRepository.update({
+    //             where:{{id:req.id}{itemNo:req.itemNo}}
+    //         })
+    //     //   const update = await this.coLineRepository.save(entities);
+    //       if (update) {
+    //         return new CommonResponseModel(true, 1, "ItemNo Update SucessFully");
+    //       } else {
+    //         return new CommonResponseModel(false, 0, "Item No Something went wrong", []);
+    //       }
+    //     } catch (error) {
+    //       return error;
+    //     }
+    //   }
+
+    async updateItemNo(req: ItemNoDtos): Promise<CommonResponseModel> {
+        console.log(req, "reqq");
+        try {
+            const update = await this.coLineRepository.update(
+                { id: Number(req.id) },
+                { itemNo: req.itemNo }
+            );
+    
+            if (update) {
+                return new CommonResponseModel(true, 1, "ItemNo Update Successfully");
+            } else {
+                return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+            }
+        } catch (error) {
+            return new CommonResponseModel(false, 0, "Error occurred while updating ItemNo", error);
+        }
+    }
+
+    
+    async deleteCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
+        console.log(req, "reqq");
+        try {
+            const deletedItem = await this.coLineRepository.delete({ id: Number(req.id) });
+    
+            if (deletedItem && deletedItem.affected) {
+                return new CommonResponseModel(true, 1, "ItemNo Deleted Successfully");
+            } else {
+                return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+            }
+        } catch (error) {
+            return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
+        }
+    }
+    
 
 }
 

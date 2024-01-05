@@ -994,5 +994,24 @@ export class DpomController {
         }
 
     }
+
+    @Post('/updateItemNo')
+    async updateItemNo(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.updateItemNo(req);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    @Post('/deleteCoLine')
+    async deleteCoLine(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.deleteCoLine(req);
+        } catch (error) {
+            return error;
+        }
+    }
+
 }
 

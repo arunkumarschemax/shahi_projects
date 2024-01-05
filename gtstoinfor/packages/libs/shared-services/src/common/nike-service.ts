@@ -1,4 +1,4 @@
-import { CommonResponseModel, DiaPDFModel, DpomApproveRequest, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { CommonResponseModel, DiaPDFModel, DpomApproveRequest, ItemNoDto, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -391,6 +391,14 @@ export class NikeService extends CommonAxiosService {
 
     async downloadPPMMArketingExcel(req?: PpmDateFilterRequest) {
         return this.axiosGetCall(this.dpomController + "/downloadPPMReportExcel")
+    }
+
+    async updateItemNo(payload?:ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/updateItemNo",payload)
+    }
+
+    async deleteCoLine(payload?:ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/deleteCoLine",payload)
     }
 }
 
