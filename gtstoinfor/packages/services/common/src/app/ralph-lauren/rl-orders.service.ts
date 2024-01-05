@@ -630,7 +630,7 @@ export class RLOrdersService {
       return new CommonResponseModel(false, 0, 'No data found');
   }
 
-  async updatePath(poNumber:string,filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
+  async updatePath(req: any,poNumber:string,filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
     const entity = new PdfFileUploadEntity();
     const match = filename.match(/(\d+)_v/); 
     const poNumberFromFileName = match ? match[1] : null;
@@ -638,6 +638,10 @@ export class RLOrdersService {
     entity.pdfFileName = filename;
     entity.filePath = filePath;
     entity.fileType = mimetype;
+    entity.fileData = JSON.stringify(req)
+    entity.fileData = req;
+    console.log(entity.fileData, "fileData")
+
     const file = await this.pdfrepo.findOne({ where: { pdfFileName: filePath } })
     if (file) {
       return new CommonResponseModel(false, 0, 'File with same name already uploaded');

@@ -38,6 +38,13 @@ export class PdfFileUploadEntity {
     })
     fileType: string 
 
+       
+    @Column("text", {
+        nullable: false,
+        name: "file_data",
+    })
+    fileData: string; 
+
 
 
     @CreateDateColumn({

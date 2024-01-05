@@ -140,9 +140,9 @@ export class RLOrdersController {
         },
     }))
 
-    async fileUpload(@UploadedFile() file, poNumber: string): Promise<CommonResponseModel> {
+    async fileUpload(@UploadedFile() file,@Body() req:any, poNumber: string): Promise<CommonResponseModel> {
         try {
-            return await this.rlOrdersService.updatePath(poNumber,file.path, file.filename, file.mimetype)
+            return await this.rlOrdersService.updatePath(req.jsonData,poNumber,file.path, file.filename, file.mimetype)
         } catch (error) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
         }
