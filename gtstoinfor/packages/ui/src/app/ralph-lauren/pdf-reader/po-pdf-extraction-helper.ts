@@ -167,7 +167,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         let itemVariantStartIndex
         const itemDetailsObj = new PoItemDetails();
         itemDetailsObj.materialNo = filteredData[rec.itemIndex + 2].str
-        itemDetailsObj.poItem = filteredData[rec.itemIndex + 3].str.replace(/PO Item #/g,"");
+        itemDetailsObj.poItem = filteredData[rec.itemIndex + 3].str.replace(/PO Item #/g, "");
         itemDetailsObj.season = filteredData[rec.itemIndex + 6].str
         itemDetailsObj.incoterms = filteredData[rec.itemIndex + 9].str
         itemDetailsObj.contractualDeliveryDate = filteredData[rec.itemIndex + 12].str
@@ -181,8 +181,8 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsObj.productType = filteredData[rec.itemIndex + 46].str
         itemDetailsObj.merchDivision = filteredData[rec.itemIndex + 49].str
         itemDetailsObj.colorDescription = filteredData[rec.colorIndex + 2].str
-        itemDetailsObj.class = filteredData[rec.itemIndex + 58].str
-        itemDetailsObj.conceptShortDesc = filteredData[rec.itemIndex + 59].str
+        itemDetailsObj.class = filteredData[rec.itemIndex + 56].str
+        itemDetailsObj.conceptShortDesc = filteredData[rec.itemIndex + 59].str.replace(':', '').replace("Fabric Content", '') + " " + filteredData[rec.itemIndex + 58].str.replace(':', '').replace('Fabric Content', '');
         itemDetailsObj.fabricContent = filteredData[rec.itemIndex + 62].str
         itemDetailsObj.board = filteredData[rec.itemIndex + 65].str
         itemDetailsObj.fishWildlifeInd = filteredData[rec.itemIndex + 68].str
