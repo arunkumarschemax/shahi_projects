@@ -304,7 +304,34 @@ export function CentricOrderAcceptanceGrid() {
         // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
         // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-",
+         fixed: "left",
         
+      },
+      {
+        title: 'Delivery Date',
+        dataIndex: '',
+        key: '',
+        width: 90,
+        className: "center",
+        render: (text, record) => {
+          const sizeData = record.sizeWiseData.find(item => item.size);
+          console.log()
+          if (sizeData) {
+            if (sizeData.size !== null) {
+              const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) : "-"
+              return (
+                formattedQty
+              );
+            } else {
+
+              return (
+                '-'
+              );
+            }
+          } else {
+            return '-';
+          }
+        }
       },
       {
         title: "PO Date",
@@ -454,11 +481,14 @@ export function CentricOrderAcceptanceGrid() {
         title: "Special Instructions",
         dataIndex: "specialInstructions",
         align: "center",
-        width:180,
-        
-        // sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
-        // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
+        width: 180,
+        render: (text) => (
+          <>
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          </>
+        )
       },
 
 
