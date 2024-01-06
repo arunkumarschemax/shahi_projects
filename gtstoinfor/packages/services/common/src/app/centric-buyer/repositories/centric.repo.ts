@@ -60,6 +60,7 @@ export class CentricRepository extends Repository<CentricEntity> {
             if(req.externalRefNo != undefined){
                 query.andWhere(` o.buyer = "${req.externalRefNo}"`)
             }
+            query.andWhere(`o.status = 'OPEN'`);
         return await query.getRawMany()
     }
 
