@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { Excel } from "antd-table-saveas-excel";
 import { CentricService } from "@project-management-system/shared-services";
 import { centricCoLineRequest } from "packages/libs/shared-models/src/common/centric/centric-coLine.req";
+import moment from "moment";
 
 const CentriColineView = () => {
     const [page, setPage] = useState<number>(1);
@@ -194,6 +195,33 @@ const CentriColineView = () => {
             render: (text, record) => {
                 return (record.co_number ? (record.co_number) : '-')
             }
+        },
+        {
+            title: 'Raised User',
+            dataIndex: 'created_user',
+            render: (text, record) => {
+                return (record.created_user ? (record.created_user) : '-')
+            },
+            
+          
+        },
+        {
+            title: 'Raised Date',
+            dataIndex: 'created_at',
+            render: (text, record) => {
+                return (record.created_at ? (moment(record.created_at).format('MM/DD/YYYY HH:mm')) : '-')
+            },
+           
+        },
+
+        {
+            title: 'CO Created Date',
+            dataIndex: 'updated_at',
+            render: (text, record) => {
+                return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
+            },
+          
+
         },
         {
             title: 'Status',

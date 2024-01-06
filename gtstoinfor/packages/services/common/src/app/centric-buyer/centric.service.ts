@@ -325,7 +325,7 @@ export class CentricService {
         entity.poLine = rec.poLine;
         entity.itemNo = req.itemNo
         entity.status = 'Open';
-        entity.createdUser = 'Admin';
+        entity.createdUser = req.createdUser;
         empty.push(entity)
       }
       const save = await this.coLineRepo.save(empty);
