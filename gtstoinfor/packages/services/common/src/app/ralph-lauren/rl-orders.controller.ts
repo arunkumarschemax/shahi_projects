@@ -176,4 +176,14 @@ export class RLOrdersController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    
+    // @Post('/getTradeLinkButtonBot')
+    // async getTradeLinkButtonBot(): Promise<CommonResponseModel> {
+    //     try {
+    //         return this.rlOrdersService.getTradeLinkButtonBot();
+    //     } catch (err) {
+    //         return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+    //     }
+    // }
 }

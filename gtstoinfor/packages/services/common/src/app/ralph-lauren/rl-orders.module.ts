@@ -13,6 +13,7 @@ import { COLineRepository } from './repositories/co-line.repository';
 import { AddressService } from '../Entites@Shahi/address/address-service';
 import { AddressRepository } from '../Entites@Shahi/address/address.repo';
 import { AddressEntity } from '../Entites@Shahi/address/address-entity';
+import { tradeEntity } from './entities/trade-link.entity';
 
 
 @Module({
@@ -22,7 +23,8 @@ import { AddressEntity } from '../Entites@Shahi/address/address-entity';
             PdfFileUploadEntity,
             RLOrdersEntity,
             COLineEntity,
-            AddressEntity
+            AddressEntity,
+            tradeEntity,
         ])],
     controllers: [RLOrdersController],
     providers: [RLOrdersService, PdfFileUploadRepository, RLOrdersRepository, COLineRepository, ApplicationExceptionHandler, AddressRepository, AddressService]
