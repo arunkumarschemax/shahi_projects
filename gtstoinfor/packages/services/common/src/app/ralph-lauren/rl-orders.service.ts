@@ -73,18 +73,16 @@ export class RLOrdersService {
           entity.status = 'Revised'
           entity.upcEan = variant.upc
           if (orderData) {
-            console.log("uuuuuuu")
+            // console.log("uuuuuuu")
             const update = await transactionManager.getRepository(RLOrdersEntity).update({ poNumber: req.poNumber, poItem: poItem, size: variant.size }, { revisionNo: req.revisionNo, agent: req.agent, amount: variant.amount, price: variant.unitPrice, currency: variant.currency, materialNo: item.materialNo, shipToAddress: req.shipToAddress })
 
               
             
-            let po = parseInt(lastPoVersionObject[0].poVersion) + 1
-            // let po = parseInt(order.poVersion) + 1;
-
-            console.log(po,"uhhh")
+            let po = parseInt(lastPoVersionObject[0]?.poVersion) + 1
+      
 
             const entitys = new RLOrderschildEntity()
-            console.log(req,"pppkkkk")
+  
             entitys.agent = req.agent
             entitys.amount = variant.amount
             entitys.boardCode = item.board
@@ -107,6 +105,7 @@ export class RLOrdersService {
             entitys.status = 'Revised'
             entitys.upcEan = variant.upc
             entitys.poVersion = po.toString()
+            // entitys.orderId = saved.id
               
               const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
          
