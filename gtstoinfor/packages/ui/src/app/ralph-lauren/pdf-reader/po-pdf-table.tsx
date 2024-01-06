@@ -76,7 +76,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                             <td></td>
                             <td className='ta-b'>{i.poItem}</td>
                             <td className='ta-b'>{i.materialNo}</td>
-                            <td className='ta-b'>{i.class}</td>
+                            <td className='ta-b'>{i.conceptShortDesc}</td>
                             <td className='ta-b'>{i.contractualDeliveryDate}</td>
                             <td className='ta-b'>{i.shipMode}</td>
                             <td className='ta-b'>{i.handoverDate}</td>

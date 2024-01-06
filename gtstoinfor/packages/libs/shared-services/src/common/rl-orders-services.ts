@@ -50,4 +50,15 @@ export class RLOrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.rlordersController + "/fileUpload", formData)
     }
 
+    // async getTradeLinkButtonBot(): Promise<CommonResponseModel> {
+    //     return this.axiosPostCall(this.rlordersController + "/getTradeLinkButtonBot")
+    // }
+
+    async getTradeLinkPdf(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.rlordersController + "/getTradeLinkPdf")
+    }
+
+    async readPOPdfBot(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.rlordersController + "/readPOPdfBot")
+    }
 }

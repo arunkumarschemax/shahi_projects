@@ -15,6 +15,7 @@ import { AddressRepository } from '../Entites@Shahi/address/address.repo';
 import { AddressEntity } from '../Entites@Shahi/address/address-entity';
 import { RLOrderschildEntity } from './entities/rl-orders-child.entity';
 import { RLOrdersChildRepository } from './repositories/rl-orders-child.repo';
+import { tradeEntity } from './entities/trade-link.entity';
 
 
 @Module({
@@ -25,7 +26,8 @@ import { RLOrdersChildRepository } from './repositories/rl-orders-child.repo';
             RLOrdersEntity,
             COLineEntity,
             AddressEntity,
-            RLOrderschildEntity
+            RLOrderschildEntity,
+            tradeEntity,
         ])],
     controllers: [RLOrdersController],
     providers: [RLOrdersService, PdfFileUploadRepository, RLOrdersRepository, COLineRepository, ApplicationExceptionHandler, AddressRepository, AddressService,RLOrdersChildRepository]

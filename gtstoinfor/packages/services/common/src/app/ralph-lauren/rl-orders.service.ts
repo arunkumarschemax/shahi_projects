@@ -187,7 +187,7 @@ export class RLOrdersService {
         if (!sizeDateMap.has(rec.po_number)) {
           sizeDateMap.set(
             rec.po_number,
-            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [],rec.item_status)
+            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [], rec.item_status)
           );
         }
         const sizeWiseData = sizeDateMap.get(rec.po_number).sizeWiseData;
@@ -213,7 +213,7 @@ export class RLOrdersService {
         if (!sizeDateMap.has(rec.po_number)) {
           sizeDateMap.set(
             rec.po_number,
-            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [],rec.item_status)
+            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [], rec.item_status)
           );
         }
         const sizeWiseData = sizeDateMap.get(rec.po_number).sizeWiseData;
@@ -311,9 +311,9 @@ export class RLOrdersService {
       entity.createdUser = req.createdUser;
       const save = await this.coLineRepo.save(entity);
       if (save) {
-        const update =await this.rlOrdersRepo.update({
-          poNumber:req.purchaseOrderNumber
-        },{itemStatus:ItemStatusEnum.ACCEPTED})
+        const update = await this.rlOrdersRepo.update({
+          poNumber: req.purchaseOrderNumber
+        }, { itemStatus: ItemStatusEnum.ACCEPTED })
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
       } else {
         return new CommonResponseModel(false, 0, 'CO-Line request failed')
@@ -349,13 +349,34 @@ export class RLOrdersService {
       await driver.findElement(By.xpath('//*[@id="ui-id-14"]/div[4]/div[4]/button')).click();
       await driver.wait(until.elementLocated(By.xpath('//*[@id="frmMasterInt"]/div[1]/div[2]/div[2]/div[2]/div[3]')))
       await driver.findElement(By.xpath('//*[@id="frmMasterInt"]/div[1]/div[2]/div[2]/div[2]/div[3]')).click();
+      
     } catch (err) {
       console.log(err, 'error');
       return new CommonResponseModel(false, 0, err)
     }
   }
 
+  // async getTradeLinkButtonBot() {
+  //   try {
+  //     const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
+  //     const page = await browser.newPage();
+  //     await page.setViewport({ width: 1580, height: 900 });
 
+  //     await page.goto('http://localhost:9002/api#/default/RLOrdersController_getTradeLinkPdf', {
+  //       timeout: 100000,
+  //       waitUntil: 'networkidle0',
+  //     });
+
+  //     await page.waitForSelector('.opblock-section .try-out__btn', { visible: true });
+  //     await page.click('.opblock-section .try-out__btn');
+
+  //     await page.waitForSelector('.btn.execute.opblock-control__btn', { visible: true });
+  //     await page.click('.btn.execute.opblock-control__btn');
+
+  //   } catch (error) {
+  //     return new CommonResponseModel(false, 0, error);
+  //   }
+  // }
 
   async readPOPdfBot() {
     try {
@@ -735,9 +756,9 @@ export class RLOrdersService {
       return new CommonResponseModel(false, 0, 'No data found');
   }
 
-  async updatePath(req: any,poNumber:string,filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
+  async updatePath(req: any, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
     const entity = new PdfFileUploadEntity();
-    const match = filename.match(/(\d+)_v/); 
+    const match = filename.match(/(\d+)_v/);
     const poNumberFromFileName = match ? match[1] : null;
     entity.poNumber = poNumberFromFileName;
     entity.pdfFileName = filename;
