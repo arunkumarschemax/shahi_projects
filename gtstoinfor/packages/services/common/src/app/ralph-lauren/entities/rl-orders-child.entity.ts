@@ -1,13 +1,12 @@
 import {  ItemStatusEnum } from "packages/libs/shared-models/src/Enum/item-status.enum";
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
-import { RLOrderschildEntity } from "./rl-orders-child.entity";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
-@Entity('orders_data')
-export class RLOrdersEntity {
+@Entity('orders_data_child')
+export class RLOrderschildEntity {
     @PrimaryGeneratedColumn('increment', {
-        name: "id",
+        name: "orders_child_id",
     })
-    id: number;
+    ordersChildId: number;
 
     @Column("varchar", {
         name: "po_number",
@@ -248,20 +247,25 @@ export class RLOrdersEntity {
     versionFlag: number;
 
     @Column({
-        nullable: false,
-        name: "is_active",
-        default: 1
-    })
-    isActive: boolean;
-
-    @Column({
         type: 'enum',
         enum: ItemStatusEnum, 
         name: 'item_status',
       })
       itemStatus: ItemStatusEnum;
 
-  
+      @Column("varchar", {
+        nullable: true,
+        length: 25,
+        name: "po_version",
+        default: 1
+    })
+    poVersion: string | null;
+
+    @Column('int', {
+        name: 'order_id'
+    })
+    orderId: number
+
 
 
 }

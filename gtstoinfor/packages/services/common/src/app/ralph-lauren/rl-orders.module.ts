@@ -13,6 +13,8 @@ import { COLineRepository } from './repositories/co-line.repository';
 import { AddressService } from '../Entites@Shahi/address/address-service';
 import { AddressRepository } from '../Entites@Shahi/address/address.repo';
 import { AddressEntity } from '../Entites@Shahi/address/address-entity';
+import { RLOrderschildEntity } from './entities/rl-orders-child.entity';
+import { RLOrdersChildRepository } from './repositories/rl-orders-child.repo';
 
 
 @Module({
@@ -22,9 +24,10 @@ import { AddressEntity } from '../Entites@Shahi/address/address-entity';
             PdfFileUploadEntity,
             RLOrdersEntity,
             COLineEntity,
-            AddressEntity
+            AddressEntity,
+            RLOrderschildEntity
         ])],
     controllers: [RLOrdersController],
-    providers: [RLOrdersService, PdfFileUploadRepository, RLOrdersRepository, COLineRepository, ApplicationExceptionHandler, AddressRepository, AddressService]
+    providers: [RLOrdersService, PdfFileUploadRepository, RLOrdersRepository, COLineRepository, ApplicationExceptionHandler, AddressRepository, AddressService,RLOrdersChildRepository]
 })
 export class RLOrdersModule { }

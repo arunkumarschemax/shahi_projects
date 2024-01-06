@@ -14,6 +14,8 @@ import { PdfFileUploadEntity } from "./entities/pdf-file-upload.entity";
 import { AddressService } from "../Entites@Shahi/address/address-service";
 import puppeteer from "puppeteer";
 import * as AdmZip from 'adm-zip';
+import { RLOrderschildEntity } from "./entities/rl-orders-child.entity";
+import { RLOrdersChildRepository } from "./repositories/rl-orders-child.repo";
 const fs = require('fs');
 const path = require('path')
 
@@ -24,7 +26,9 @@ export class RLOrdersService {
     private pdfrepo: PdfFileUploadRepository,
     private coLineRepo: COLineRepository,
     private dataSource: DataSource,
-    private addressService: AddressService
+    private addressService: AddressService,
+    private orderChildRepo: RLOrdersChildRepository
+
 
   ) { }
 
@@ -39,6 +43,12 @@ export class RLOrdersService {
         const poItem = match ? parseInt(match[0], 10) : null;
         for (const variant of item.poItemVariantDetails) {
           const orderData = await this.rlOrdersRepo.findOne({ where: { poNumber: req.poNumber, poItem: poItem, size: variant.size } })
+          const order = await this.orderChildRepo.find({ where: { poNumber: req.poNumber} })
+          //  console.log(order,"test")
+           const lastPoVersionObject = order.slice(-1);
+
+           // Now 'lastPoVersionObject' contains the last object of the 'poVersion' array.
+          //  console.log(lastPoVersionObject[0].poVersion,"7777777777");
 
           const entity = new RLOrdersEntity()
           entity.agent = req.agent
@@ -63,13 +73,82 @@ export class RLOrdersService {
           entity.status = 'Revised'
           entity.upcEan = variant.upc
           if (orderData) {
+            console.log("uuuuuuu")
             const update = await transactionManager.getRepository(RLOrdersEntity).update({ poNumber: req.poNumber, poItem: poItem, size: variant.size }, { revisionNo: req.revisionNo, agent: req.agent, amount: variant.amount, price: variant.unitPrice, currency: variant.currency, materialNo: item.materialNo, shipToAddress: req.shipToAddress })
-            if (!update.affected) {
+
+              
+            
+            let po = parseInt(lastPoVersionObject[0].poVersion) + 1
+            // let po = parseInt(order.poVersion) + 1;
+
+            console.log(po,"uhhh")
+
+            const entitys = new RLOrderschildEntity()
+            console.log(req,"pppkkkk")
+            entitys.agent = req.agent
+            entitys.amount = variant.amount
+            entitys.boardCode = item.board
+            entitys.buyer = 'RL' 
+            entitys.color = item.colorDescription
+            entitys.currency = variant.currency
+            entitys.materialNo = item.materialNo
+            entitys.poItem = poItem
+            entitys.poNumber = req.poNumber
+            entitys.poUploadDate = req.poIssue
+            entitys.price = variant.unitPrice
+            entitys.purchaseGroup = req.purchaseGroup
+            entitys.quantity = variant.quantity
+            entitys.revisionNo = req.revisionNo
+            entitys.seasonCode = item.season
+            entitys.handoverDate = item.handoverDate
+            entitys.shipToAddress = req.shipToAddress
+            entitys.billToAddress = req.buyerAddress
+            entitys.size = variant.size
+            entitys.status = 'Revised'
+            entitys.upcEan = variant.upc
+            entitys.poVersion = po.toString()
+              
+              const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
+         
+
+            if (!update.affected 
+              // && !updated.affected 
+              ) {
               throw new Error('Update failed');
             }
+             
+             
           } else {
             saved = await transactionManager.getRepository(RLOrdersEntity).save(entity)
-            // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
+
+            const entitys = new RLOrderschildEntity()
+          entitys.agent = req.agent
+          entitys.amount = variant.amount
+          entitys.boardCode = item.board
+          entitys.buyer = 'RL' 
+          entitys.color = item.colorDescription
+          entitys.currency = variant.currency
+          entitys.materialNo = item.materialNo
+          entitys.poItem = poItem
+          entitys.poNumber = req.poNumber
+          entitys.poUploadDate = req.poIssue
+          entitys.price = variant.unitPrice
+          entitys.purchaseGroup = req.purchaseGroup
+          entitys.quantity = variant.quantity
+          entitys.revisionNo = req.revisionNo
+          entitys.seasonCode = item.season
+          entitys.handoverDate = item.handoverDate
+          entitys.shipToAddress = req.shipToAddress
+          entitys.billToAddress = req.buyerAddress
+          entitys.size = variant.size
+          entitys.status = 'Revised'
+          entitys.upcEan = variant.upc
+          entitys.orderId = saved.id
+            
+            const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
+            
+             
+
             if (!saved) {
               throw new Error('Save failed')
             }
