@@ -491,15 +491,24 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         }
     ]
 
+    // const deleteData = (index: any) => {
+    //     tableData = [...fabricTableData]
+    //     tableData.splice(index, 1)
+    //     props(tableData)
+    //     setFabricTableData(tableData)
+    //     if (tableData.length == 0) {
+    //         setFabricTableVisible(false)
+    //     }
+    // }
+
     const deleteData = (index: any) => {
-        tableData = [...fabricTableData]
-        tableData.splice(index, 1)
-        props(tableData)
-        setFabricTableData(tableData)
-        if (tableData.length == 0) {
-            setFabricTableVisible(false)
-        }
-    }
+        setFabricTableData((prevData) => {
+            const newData = [...prevData];
+            newData.splice(index, 1);
+            return newData;
+        });
+    };
+
 
     const onFabricAdd = (values) => {
         console.log(values);

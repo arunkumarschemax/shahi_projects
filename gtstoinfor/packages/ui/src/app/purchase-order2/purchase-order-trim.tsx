@@ -47,7 +47,6 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
 
     useEffect(() =>{
         if(indentId.length != 0){
-            console.log(itemData)
             setTableColumns([...columns])
             // indentTrimData(indentId)
             setTrimtableVisible(true)
@@ -74,6 +73,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
             trimForm.setFieldsValue({m3TrimCode:data.data.m3TrimCode})
         }
     },[data])
+
 
     const getTax = () => {
         taxService.getAllActiveTaxes().then((res) => {
@@ -210,15 +210,29 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
    
     }
 
-    const deleteData = (index:any) => {
-        tableData = [...trimTableData]
-        tableData.splice(index,1)
-        props(tableData)
-        setTrimTableData(tableData)
-        if (tableData.length == 0) {
-            setTrimtableVisible(false)
-        }
-        }
+    // const deleteData = (index:any,rowData) => {
+    //     console.log(trimTableData)
+    //     console.log(rowData)
+    //     }
+
+    // const deleteData = (index:any) => {
+    //     console.log(trimTableData)
+    //     tableData = [...trimTableData]
+    //     tableData.splice(index,1)
+    //     // props(tableData)
+    //     setTrimTableData(tableData)
+    //     // if (tableData.length == 0) {
+    //     //     setTrimtableVisible(false)
+    //     // }
+    //     }
+
+        const deleteData = (index: any) => {
+            setTrimTableData((prevData) => {
+                const newData = [...prevData];
+                newData.splice(index, 1);
+                return newData;
+            });
+        };
 
     const columns  =[
         {
@@ -577,17 +591,12 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
             discAmnt=Math.round(baseValue*disc_per/100);
             baseValue=Number(baseValue)-Number(discAmnt);
         }
-        console.log('Tax Percentage')
-        console.log(taxPer)
-        console.log(baseValue)
         if(taxPer!=0){
             taxAmount=(baseValue*taxPer/100)
         }else{
             taxAmount=0
         }
         
-        console.log('TaxAmount + base+transport');
-        console.log(taxAmount+' B '+baseValue+' T '+transportation)
        
         const totalAmount=Number(taxAmount)+Number(baseValue)+Number(transportation)
         trimForm.setFieldsValue({taxAmount:Number(taxAmount).toFixed(2)})
@@ -598,12 +607,10 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         // setTaxAmountVisible(false)        
     }
     const priceCalculation = async (value, option) => {        
-        console.log(option.name)
         const percent=Number(option.name)
         
         let status= await setTaxPer(Number(option.name));
         trimForm.setFieldsValue({ taxPercentage: option?.name ? option.type + '- ' + option?.name : '' })
-        // console.log(taxPer)
        
     }
     useEffect(() =>{
