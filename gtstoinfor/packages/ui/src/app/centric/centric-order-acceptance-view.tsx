@@ -103,6 +103,7 @@ export function CentricOrderAcceptanceGrid() {
     req.poLine = record.poLine;
     req.itemNo = itemNoValue; 
     req.buyer = 'Centric';
+    req.deliveryDate=record.deliveryDate;
   
    // console.log("Request Payload:", req);
   
@@ -122,7 +123,7 @@ export function CentricOrderAcceptanceGrid() {
     const roleWiseMapData = new Map<string, CentricOrderAcceptanceRequest[]>();
 
     tableData.forEach(rec => {
-      const key = `${rec.poNumber}_${rec.itemNo}`;
+      const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}`;
 
       if (!roleWiseMapData.has(key)) {
         roleWiseMapData.set(key, [rec]);
@@ -309,7 +310,7 @@ export function CentricOrderAcceptanceGrid() {
       },
       {
         title: 'Delivery Date',
-        dataIndex: '',
+        dataIndex: 'deliveryDate',
         key: '',
         width: 90,
         className: "center",

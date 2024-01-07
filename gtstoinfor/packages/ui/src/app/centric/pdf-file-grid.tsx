@@ -24,6 +24,20 @@ export function CentricPdFInfoGrid() {
     const [isModalOpen1, setIsModalOpen1] = useState(false);
 
 
+    // const handleDownload = (record) => {
+    //     console.log('Downloading file:', record.pdfFileName);
+    
+    //     const downloadLink = document.createElement('a');
+        
+      
+    //     downloadLink.href = `gtstoinfor/upload-files/${record.pdfFileName}`;
+        
+    //     downloadLink.download = record.pdfFileName;
+    
+    //     console.log('Download link:', downloadLink);
+    
+    //     downloadLink.click();
+    // };
     useEffect(() => {
         getPdfFileInfo()
     }, [])
@@ -179,6 +193,7 @@ export function CentricPdFInfoGrid() {
                 <Button 
                 onClick={() => setMoreData(record)}
                 >More Info</Button>
+                 {/* <Button onClick={() => handleDownload(record)}>Download</Button> */}
               </>
             ),
           }

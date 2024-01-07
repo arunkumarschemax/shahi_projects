@@ -21,6 +21,11 @@ export class CentricCOLineEntity {
         length: 15
     })
     poNumber: string;
+    
+    @Column('varchar', {
+        name: "delivery_date"
+    })
+    deliveryDate: string
 
     @Column('varchar', {
         nullable: true,

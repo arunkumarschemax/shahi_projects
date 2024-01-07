@@ -97,6 +97,13 @@ const CentriColineView = () => {
                 }
             },
             {
+                title: 'Delivery Date',
+                dataIndex: 'delivery_date',
+                render: (text, record) => {
+                    return (record.delivery_date ? (record.delivery_date) : '-')
+                }
+            },
+            {
                 title: 'Line Item',
                 dataIndex: 'po_line', render: (text, record) => {
                     return (record.po_line ? (record.po_line) : '-')
@@ -173,6 +180,13 @@ const CentriColineView = () => {
             sortDirections: ["ascend", "descend"],
         },
         {
+            title: 'Delivery Date',
+            dataIndex: 'delivery_date',
+            render: (text, record) => {
+                return (record.delivery_date? (record.delivery_date): '-')
+            }
+        },
+        {
             title: 'Item No',
             dataIndex: 'item_no',
             render: (text, record) => {
@@ -207,9 +221,9 @@ const CentriColineView = () => {
         },
         {
             title: 'Raised Date',
-            dataIndex: 'created_at',
+            dataIndex: 'raised_date',
             render: (text, record) => {
-                return (record.created_at ? (moment(record.created_at).format('MM/DD/YYYY HH:mm')) : '-')
+                return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')) : '-')
             },
            
         },
