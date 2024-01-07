@@ -43,9 +43,9 @@ export class RLOrdersService {
         const poItem = match ? parseInt(match[0], 10) : null;
         for (const variant of item.poItemVariantDetails) {
           const orderData = await this.rlOrdersRepo.findOne({ where: { poNumber: req.poNumber, poItem: poItem, size: variant.size } })
-          const order = await this.orderChildRepo.find({ where: { poNumber: req.poNumber} })
+          const order = await this.orderChildRepo.findOne({ where: { poNumber: req.poNumber},order:{poVersion:'DESC'} })
           //  console.log(order,"test")
-           const lastPoVersionObject = order.slice(-1);
+          //  const lastPoVersionObject = order.slice(-1);
 
            // Now 'lastPoVersionObject' contains the last object of the 'poVersion' array.
           //  console.log(lastPoVersionObject[0].poVersion,"7777777777");
@@ -78,7 +78,7 @@ export class RLOrdersService {
 
               
             
-            let po = parseInt(lastPoVersionObject[0]?.poVersion) + 1
+            let po = parseInt(order?.poVersion) + 1
       
 
             const entitys = new RLOrderschildEntity()
@@ -105,7 +105,7 @@ export class RLOrdersService {
             entitys.status = 'Revised'
             entitys.upcEan = variant.upc
             entitys.poVersion = po.toString()
-            // entitys.orderId = saved.id
+            entitys.orderId = orderData.id
               
               const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
          
