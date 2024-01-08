@@ -1,62 +1,105 @@
 import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Table, Tabs, Tooltip, Typography, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane"
-import { OrdersService } from "@project-management-system/shared-services"
+import { OrdersService, RLOrdersService } from "@project-management-system/shared-services"
 import React, { useEffect, useState } from "react"
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons"
+import AlertMessages from "../common/common-functions/alert-messages"
+import moment from "moment"
+import { Excel } from "antd-table-saveas-excel"
+import { PoOrderFilter } from "@project-management-system/shared-models"
 
 
 
 export const OrderComparisionReport = () => {
   const [form] = Form.useForm();
-  const [form1] = Form.useForm();
-  const { Option } = Select;
   const [page, setPage] = useState<number>(1);
-
-  const [selected, setSelected] = useState('ExFactory')
-  const [data, setData] = useState<any[]>([]);
-  const [phase, setPhase] = useState<any[]>([]);
-  const [phaseExcel, setPhaseExcel] = useState<any[]>([]);
-  const [year, setYear] = useState<any[]>([]);
-  const [tab, setTab] = useState<number | null>(null);
-  const service = new OrdersService();
-  const [filteredData, setFilteredData] = useState<any[]>([]);
-  const [excelsData, setExcelData] = useState<any[]>([]);
-  const [dates, setDates] = useState<any[]>([]);
-  const [file1, setfile1] = useState<number>();
-  const [file2, setfile2] = useState<number>();
+ const service = new RLOrdersService();
   const { Text } = Typography;
   const [pageSize, setPageSize] = useState(10);
-  const startIndex = (page - 1) * pageSize;
-  const endIndex = startIndex + pageSize;
-  const currentPageData = data.slice(startIndex, endIndex);
-  const [items, setItems] = useState<any[]>([]);
+  const [filterData, setFilterData] = useState([]);
+  const [orderData, setOrderData] = useState<any>([]);
+  const [poNumberData, setPoNumberData] = useState<any>([]);
+
+  const { Option } = Select;
+
+  useEffect(() => {
+    getordercomparationData();
+    getPoNumber();
+  }, []);
   
-  const getSizeWiseHeaders = (data) => {
-    const sizeHeaders = new Set<string>();
-    data?.forEach((rec) =>
-      rec.sizeWiseData?.forEach((version) => {
-        sizeHeaders.add("" + version.size);
-      })
-    );
-    return Array.from(sizeHeaders);
-  };
-  const getMap = (data) => {
-    const sizeWiseMap = new Map<string, Map<string, number>>();
-    data?.forEach((rec) => {
-      if (!sizeWiseMap.has(rec.poNumber)) {
-        sizeWiseMap.set(rec.poNumber, new Map<string, number>());
+  const getordercomparationData = () => {
+    const req = new PoOrderFilter();
+
+    if (form.getFieldValue("poNumber") !== undefined) {
+      req.poNumber = form.getFieldValue("poNumber");
+    }
+  
+
+    service.getordercomparationData(req).then((res) => {
+      if (res.status) {
+        setOrderData(res.data);
+        setFilterData(res.data);
+      } else {
+        setOrderData([]);
+        setFilterData([]);
+        AlertMessages.getErrorMessage(res.internalMessage);
       }
-      rec.sizeWiseData?.forEach((version) => {
-        sizeWiseMap.get(rec.poNumber).set(" " + version.size, version.TotalQty);
-      });
-    });
-    return sizeWiseMap;
+    }).catch(err => {
+       setOrderData([]);
+        setFilterData([]);
+       AlertMessages.getErrorMessage(err.message);
+     })
   };
+
+  const getPoNumber = () => {
+
+    service.getPoNumber().then((res) => {
+      if (res.status) {
+        setPoNumberData(res.data);
+      
+      } else {
+        setPoNumberData([]);
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+       setPoNumberData([]);
+       AlertMessages.getErrorMessage(err.message);
+     })
+  };
+
+  const onReset = () => {
+    form.resetFields();
+    getordercomparationData();
+  };
+
+
+  
+  // const getSizeWiseHeaders = (data) => {
+  //   const sizeHeaders = new Set<string>();
+  //   data?.forEach((rec) =>
+  //     rec.sizeWiseData?.forEach((version) => {
+  //       sizeHeaders.add("" + version.size);
+  //     })
+  //   );
+  //   return Array.from(sizeHeaders);
+  // };
+  // const getMap = (data) => {
+  //   const sizeWiseMap = new Map<string, Map<string, number>>();
+  //   data?.forEach((rec) => {
+  //     if (!sizeWiseMap.has(rec.poNumber)) {
+  //       sizeWiseMap.set(rec.poNumber, new Map<string, number>());
+  //     }
+  //     rec.sizeWiseData?.forEach((version) => {
+  //       sizeWiseMap.get(rec.poNumber).set(" " + version.size, version.TotalQty);
+  //     });
+  //   });
+  //   return sizeWiseMap;
+  // };
 
  
   const renderReport = (data) => {
-    const sizeHeaders = getSizeWiseHeaders(data);
-    const sizeWiseMap = getMap(data);
+    // const sizeHeaders = getSizeWiseHeaders(data);
+    // const sizeWiseMap = getMap(data);
 
     const columns: any = [
       {
@@ -76,362 +119,285 @@ export const OrderComparisionReport = () => {
         // ...getColumnSearchProps('poNumber'),
         render: (text) => text ? text : "-"
       },
+ 
       {
         title: "PO Item",
         dataIndex: "poItem",
         width: 90,
-        // sorter: (a, b) => a.poItem.localeCompare(b.poItem),
-        sortDirections: ["ascend", "descend"],
+        sorter: (a, b) => {
+          const codeA = (a.poItem || "").toString();
+          const codeB = (b.poItem || "").toString();
+          return codeA.localeCompare(codeB);
+      },
+      sortDirections: ["ascend", "descend"],
         // ...getColumnSearchProps('poItem'),
         render: (text) => text ? text : "-"
       },
       {
-        title: "Material Number",
-        dataIndex: "materialNo",
-        width: 110,
-        sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
-        sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('materialNo'),
-        render: (text) => text.toString() ? text : "-"
-      },
-      {
-        title: "Season Code",
-        dataIndex: "seasonCode",
-        width: 110,
-        sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
-        sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('seasonCode'),
-        render: (text) => text ? text : "-"
-
-      },
-      // {
-      //   title: "Address",
-      //   dataIndex: "shipToAddress",
-      //   width: 500,
-      //   sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-      //   sortDirections: ["ascend", "descend"],
-      //   ...getColumnSearchProps('shipToAddress'),
-      //   render: (text) => text ? text : "-"
-
-      // },
-
-      {
-        title: "Address",
-        dataIndex: "shipToAddress",
-        width: 200,
-        sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-        sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('shipToAddress'),
-        render: (text) => (
-          <Tooltip title={text || "-"}>
-            {text ? `${text.substring(0, 20)}...` : "-"}
-          </Tooltip>
-        ),
-      },
-      // {
-      //   title: "Agent",
-      //   dataIndex: "agent",
-      //   align: "center",
-      //   width: 300,
-      //   sorter: (a, b) => a.agent.localeCompare(b.agent),
-      //   sortDirections: ["ascend", "descend"],
-      //   ...getColumnSearchProps('agent'),
-      //   render: (text) => text ? text : "-"
-
-      // },
-      {
-        title: "Agent",
-        dataIndex: "agent",
-        width: 200,
-        sorter: (a, b) => a.agent.localeCompare(b.agent),
-        sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('agent'),
-        render: (text) => (
-          <Tooltip title={text || "-"}>
-            {text ? `${text.substring(0, 20)}...` : "-"}
-          </Tooltip>
-        ),
-      },
-
-      {
-        title: "Purchase Group",
-        dataIndex: "purchaseGroup",
-        align: "center",
-        width: 150,
-        sorter: (a, b) => a.purchaseGroup.localeCompare(b.purchaseGroup),
-        sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('purchaseGroup'),
-        render: (text) => text ? text : "-"
-
-      },
-    
-      {
-        title: "Revision No",
-        dataIndex: "revisionNo",
-        align: "center",
+        title: "Size",
+        dataIndex: "size",
         width: 90,
-        // sorter: (a, b) => a.revisionNo.localeCompare(b.revisionNo),
+        sorter: (a, b) => a.size.localeCompare(b.size),
         sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('revisionNo'),
+        // ...getColumnSearchProps('poItem'),
         render: (text) => text ? text : "-"
-
+      },
+      
+      {
+        title: "Price",
+        dataIndex: "",
+        width: 90,
+        children: [
+                {
+                  title: 'Old Value',
+                  dataIndex: 'oldPrice',
+                  key: '',
+                  width: 100,
+                  className: "center",
+                  render: (text) => text ? text : "-"
+                 
+                },
+                {
+                  title: 'New Value',
+                  dataIndex: 'newPrice',
+                  key: '',
+                  width: 100,
+                  className: "center",
+                  render: (text) => text ? text : "-"
+          
+                },
+        ]
+     
       },
       {
-        title: "Color",
-        dataIndex: "color",
-        align: "center",
-        width: 110,
-        sorter: (a, b) => a.color.localeCompare(b.color),
+        title: "Quantity",
+        dataIndex: "",
+        width: 90,
+        sorter: (a, b) => a.size.localeCompare(b.size),
         sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-",
-        // ...getColumnSearchProps('color'),
+        children: [
+          {
+            title: 'Old Value',
+            dataIndex: 'oldQuantity',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text) => text ? text : "-"
+           
+          },
+          {
+            title: 'New Value',
+            dataIndex: 'oldQuantity',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text) => text ? text : "-"
+    
+          },
+  ]
       },
+      {
+        title: "Delivery Date",
+        dataIndex: "",
+        width: 90,
+        sorter: (a, b) => a.size.localeCompare(b.size),
+        sortDirections: ["ascend", "descend"],
+        children: [
+          {
+            title: 'Old Value',
+            dataIndex: 'oldDeliveryDate',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
+           
+          },
+          {
+            title: 'New Value ',
+            dataIndex: 'newDelieveryDate',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
+            // (moment(rec.last_modified_date).format('MM/DD/YYYY')
+    
+          },
+  ]
+        
+      },
+     
+     
 
     ];
 
-    sizeHeaders?.forEach(version => {
-      columns.push({
-        title: version,
-        dataIndex: version,
-        key: version,
-        width: 70,
-        align: 'center',
-        children: [
-          {
-            title: 'UPC/EAN',
-            dataIndex: '',
-            key: '',
-            width: 100,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.upcEan)
-                  return (
-                    formattedQty
-                  );
-                } else {
+    // sizeHeaders?.forEach(version => {
+    //   columns.push({
+    //     title: version,
+    //     dataIndex: version,
+    //     key: version,
+    //     width: 70,
+    //     align: 'center',
+    //     children: [
+    //       {
+    //         title: 'UPC/EAN',
+    //         dataIndex: '',
+    //         key: '',
+    //         width: 100,
+    //         className: "center",
+    //         render: (text, record) => {
+    //           const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //           console.log()
+    //           if (sizeData) {
+    //             if (sizeData.size !== null) {
+    //               const formattedQty = (sizeData?.upcEan)
+    //               return (
+    //                 formattedQty
+    //               );
+    //             } else {
 
-                  return (
-                    '-'
-                  );
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
+    //               return (
+    //                 '-'
+    //               );
+    //             }
+    //           } else {
+    //             return '-';
+    //           }
+    //         }
+    //       },
 
-          {
-            title: 'MSRP',
-            dataIndex: '',
-            key: '',
-            width: 70,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.msrpPrice)
-                  return (
-                    formattedQty
-                  );
-                } else {
+    //       {
+    //         title: 'MSRP',
+    //         dataIndex: '',
+    //         key: '',
+    //         width: 70,
+    //         className: "center",
+    //         render: (text, record) => {
+    //           const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //           console.log()
+    //           if (sizeData) {
+    //             if (sizeData.size !== null) {
+    //               const formattedQty = (sizeData?.msrpPrice)
+    //               return (
+    //                 formattedQty
+    //               );
+    //             } else {
 
-                  return (
-                    '-'
-                  );
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
-          {
-            title: 'Customer Selling Price',
-            dataIndex: '',
-            key: '',
-            width: 100,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.csprice)
-                  return (
-                    formattedQty
-                  );
-                } else {
+    //               return (
+    //                 '-'
+    //               );
+    //             }
+    //           } else {
+    //             return '-';
+    //           }
+    //         }
+    //       },
+    //       {
+    //         title: 'Customer Selling Price',
+    //         dataIndex: '',
+    //         key: '',
+    //         width: 100,
+    //         className: "center",
+    //         render: (text, record) => {
+    //           const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //           console.log()
+    //           if (sizeData) {
+    //             if (sizeData.size !== null) {
+    //               const formattedQty = (sizeData?.csprice)
+    //               return (
+    //                 formattedQty
+    //               );
+    //             } else {
 
-                  return (
-                    '-'
-                  );
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
-          {
-            title: 'Price',
-            dataIndex: '',
-            key: '',
-            width: 100,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //               return (
+    //                 '-'
+    //               );
+    //             }
+    //           } else {
+    //             return '-';
+    //           }
+    //         }
+    //       },
+    //       {
+    //         title: 'Price',
+    //         dataIndex: '',
+    //         key: '',
+    //         width: 100,
+    //         className: "center",
+    //         render: (text, record) => {
+    //           const sizeData = record.sizeWiseData.find(item => item.size === version);
 
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = `${sizeData.price} ${sizeData.currency}`;
-                  return formattedQty;
-                } else {
-                  return '-';
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
+    //           if (sizeData) {
+    //             if (sizeData.size !== null) {
+    //               const formattedQty = `${sizeData.price} ${sizeData.currency}`;
+    //               return formattedQty;
+    //             } else {
+    //               return '-';
+    //             }
+    //           } else {
+    //             return '-';
+    //           }
+    //         }
+    //       },
 
-          {
-            title: 'Quantity',
-            dataIndex: '',
-            key: '',
-            width: 100,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.quantity)
-                  return (
-                    formattedQty
-                  );
-                } else {
+    //       {
+    //         title: 'Quantity',
+    //         dataIndex: '',
+    //         key: '',
+    //         width: 100,
+    //         className: "center",
+    //         render: (text, record) => {
+    //           const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //           console.log()
+    //           if (sizeData) {
+    //             if (sizeData.size !== null) {
+    //               const formattedQty = (sizeData?.quantity)
+    //               return (
+    //                 formattedQty
+    //               );
+    //             } else {
 
-                  return (
-                    '-'
-                  );
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
-          {
-            title: 'Amount',
-            dataIndex: '',
-            key: '',
-            width: 100,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = `${sizeData.amount} ${sizeData.currency}`;
-                  // const formattedQty = (sizeData?.amount)
-                  return (
-                    formattedQty
-                  );
-                } else {
+    //               return (
+    //                 '-'
+    //               );
+    //             }
+    //           } else {
+    //             return '-';
+    //           }
+    //         }
+    //       },
+    //       {
+    //         title: 'Amount',
+    //         dataIndex: '',
+    //         key: '',
+    //         width: 100,
+    //         className: "center",
+    //         render: (text, record) => {
+    //           const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //           console.log()
+    //           if (sizeData) {
+    //             if (sizeData.size !== null) {
+    //               const formattedQty = `${sizeData.amount} ${sizeData.currency}`;
+    //               // const formattedQty = (sizeData?.amount)
+    //               return (
+    //                 formattedQty
+    //               );
+    //             } else {
 
-                  return (
-                    '-'
-                  );
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
+    //               return (
+    //                 '-'
+    //               );
+    //             }
+    //           } else {
+    //             return '-';
+    //           }
+    //         }
+    //       },
          
-        ]
-      });
-    })
+    //     ]
+    //   });
+    // })
 
-    columns.push(
-      {
-        title: "Total Quantity",
-        dataIndex: "",
-        align: "center",
-        width: 90,
-        sorter: (a, b) => {
-          const sumA = a.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.quantity) || 0, 0);
-          const sumB = b.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.quantity) || 0, 0);
-      
-          return sumA - sumB;
-        },
-        sortDirections: ["ascend", "descend"],
-        render: (text, record) => {
-          let sum = 0;
-          record.sizeWiseData.forEach((r) => {
-            // Convert to number before summing
-            sum += parseFloat(r.quantity) || 0;
-          });
-      
-          return sum;
-        },
-      },
-      
-      {
-        title: "Total Amount",
-        dataIndex: "",
-        align: "center",
-        width: 90,
-        sorter: (a, b) => {
-          const sumA = a.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.amount) || 0, 0);
-          const sumB = b.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.amount) || 0, 0);
-      
-          return sumA - sumB;
-        },
-        render: (text, record) => {
-          let sum = 0;
-          record.sizeWiseData.forEach((r) => {
-            // Convert to number before summing
-            sum += parseFloat(r.amount) || 0;
-          });
-          // return sum.toLocaleString("en-IN") ;
-          const formattedSum = sum.toFixed(2);
-          const currency = record.currency  // Default to USD if currency is not available
-
-          return (
-            <>
-              <span>{formattedSum} {currency}</span>
-              
-            </>
-          );
-        },
-      },
-      {
-        title: "Status",
-        dataIndex: "status",
-        align: "center",
-        width: 90,
-        sorter: (a, b) => a.status.localeCompare(b.status),
-        sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
-      },
-      {
-        title: "Action",
-        dataIndex: "action",
-        align: "center",
-        width: 120,
-        render: (value, record) => (
-          <>
-            <Button 
-            // onClick={() => setMoreData(record)}
-            >More Info</Button>
-          </>
-        ),
-      }
-    );
+   
 
     const getRowClassName = (record) => {
       if (record.displayName) {
@@ -446,7 +412,7 @@ export const OrderComparisionReport = () => {
           <Table
             // loading={tableLoading}
             columns={columns}
-            // dataSource={filterData}
+            dataSource={filterData}
             size="small"
             // pagination={false}
             pagination={{
@@ -466,6 +432,140 @@ export const OrderComparisionReport = () => {
     );
   };
 
+  const exportExcel = () => {
+    const excel = new Excel();
+
+    const currentDate = new Date();
+    const formattedDate = currentDate.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+
+
+    let rowIndex = 1;
+    const excelColumnsWH: any[] = [];
+    excelColumnsWH.push(
+      {
+        title: "#",
+        // dataIndex: "sno", 
+        width: 50,
+        render: (text, object, index) => {
+          if (index == orderData.length) {
+            return null;
+          } else {
+            return rowIndex++;
+          }
+        }
+      },
+      {
+        title: "PO Number",
+        dataIndex: "poNumber",
+        width: 90,
+        render: (text) => text ? text : "-"
+      },
+ 
+      {
+        title: "PO Item",
+        dataIndex: "poItem",
+        width: 90,
+        render: (text) => text ? text : "-"
+      },
+      {
+        title: "Size",
+        dataIndex: "size",
+        width: 90,
+        render: (text) => text ? text : "-"
+      },
+      
+      {
+        title: "Price",
+        dataIndex: "",
+        width: 90,
+        children: [
+                {
+                  title: 'Old Value',
+                  dataIndex: 'oldPrice',
+                  key: '',
+                  width: 100,
+                  render: (text) => text ? text : "-"
+                 
+                },
+                {
+                  title: 'New Value',
+                  dataIndex: 'newPrice',
+                  key: '',
+                  width: 100,
+                  render: (text) => text ? text : "-"
+          
+                },
+        ]
+     
+      },
+      {
+        title: "Quantity",
+        dataIndex: "",
+        width: 90,
+        children: [
+          {
+            title: 'Old Value',
+            dataIndex: 'oldQuantity',
+            key: '',
+            width: 100,
+            render: (text) => text ? text : "-"
+           
+          },
+          {
+            title: 'New Value',
+            dataIndex: 'oldQuantity',
+            key: '',
+            width: 100,
+            render: (text) => text ? text : "-"
+    
+          },
+  ]
+      },
+      {
+        title: "Delivery Date",
+        dataIndex: "",
+        width: 90,
+        children: [
+          {
+            title: 'Old Value',
+            dataIndex: 'oldDeliveryDate',
+            key: '',
+            width: 100,
+            render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
+           
+          },
+          {
+            title: 'New Value ',
+            dataIndex: 'newDelieveryDate',
+            key: '',
+            width: 100,
+            render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
+    
+          },
+  ]
+        
+      },
+    
+
+    );
+  
+
+   
+   
+    
+
+    excel
+      .addSheet(`Order Comparsion Report (${formattedDate})`)
+      .addColumns(excelColumnsWH)
+      .addDataSource(filterData, { str2num: false },);
+      
+
+
+    excel.saveAs(`Order Comparsion Report (${formattedDate}).xlsx`);
+
+
+  }
+
   
 
   return (
@@ -474,10 +574,10 @@ export const OrderComparisionReport = () => {
         extra={<Button
           type="default"
           style={{ color: 'green' }}
-        //   onClick={exportExcel}
+          onClick={exportExcel}
           icon={<FileExcelFilled />}>Download Excel</Button>}>
         <Form
-        //   onFinish={getorderData}
+        onFinish={getordercomparationData}
           form={form}
         // layout='vertical'
         >
@@ -496,38 +596,17 @@ export const OrderComparisionReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {/* {orderData.map((inc: any) => {
+                  {poNumberData.map((inc: any) => {
                     return (
-                      <Option key={inc.poNumber} value={inc.poNumber}>
-                        {inc.poNumber}
+                      <Option key={inc.po_number} value={inc.po_number}>
+                        {inc.po_number}
                       </Option>
                     );
-                  })} */}
+                  })}
                 </Select>
               </Form.Item>
             </Col>
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 6 }}
-            >
-              <Form.Item name="material" label="Material Number">
-               <Input  placeholder="Material Number"/>
-              </Form.Item>
-            </Col>
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 6 }}
-            >
-              <Form.Item name="season" label="Season Code">
-               <Input  placeholder="Enter Season"/>
-              </Form.Item>
-            </Col>
+            
             <Row>
             <Col
               xs={{ span: 24 }}
@@ -560,7 +639,7 @@ export const OrderComparisionReport = () => {
                   style={{ marginLeft: 70 }}
                   htmlType="submit"
                   type="primary"
-                //   onClick={onReset}
+                  onClick={onReset}
                   icon={<UndoOutlined />}
                 >
                   Reset
@@ -585,7 +664,7 @@ export const OrderComparisionReport = () => {
                     scroll={{ x: 'max-content', y: 450 }}
                 >
                 </Table> */}
-        {/* {renderReport(filterData)} */}
+        {renderReport(filterData)}
       </Card>
     </>
   );

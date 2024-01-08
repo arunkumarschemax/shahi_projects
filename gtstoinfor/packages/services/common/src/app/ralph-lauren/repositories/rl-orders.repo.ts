@@ -62,5 +62,22 @@ export class RLOrdersRepository extends Repository<RLOrdersEntity> {
         return await query.getRawMany()
     }
 
+    async getordercomparationData(req?:PoOrderFilter): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`*`)
+            if(req.poNumber !== undefined){
+                query.andWhere(`o.po_number ='${req.poNumber}'`) 
+            }
+          
+        return await query.getRawMany()
+    }
+    async getpoNumber(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`distinct po_number`); // Corrected the typo here
+    
+        return await query.getRawMany();
+    }
+
+
 
 }

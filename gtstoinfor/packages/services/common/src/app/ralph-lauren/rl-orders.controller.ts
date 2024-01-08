@@ -196,10 +196,19 @@ export class RLOrdersController {
     //     }
     // }
 
-    @Post('/getordercomparationData')
-    async getordercomparationData(): Promise<CommonResponseModel> {
+    @Post('/getPoNumber')
+    async getPoNumber(): Promise<CommonResponseModel> {
         try {
-            return await this.rlOrdersService.getordercomparationData();
+            return await this.rlOrdersService.getPoNumber();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getordercomparationData')
+    async getordercomparationData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.rlOrdersService.getordercomparationData(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
