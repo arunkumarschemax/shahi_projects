@@ -187,12 +187,12 @@ export class RLOrdersController {
     //     }
     // }
 
-    @Post('/updateDownloadStatus')
-    async updateDownloadStatus(@Body() req: any): Promise<CommonResponseModel> {
-        try {
-            return await this.rlOrdersService.updateDownloadStatus(req);
-        } catch (error) {
-            return error;
-        }
-    }
+    // @Post('/updateDownloadStatus')
+    // async updateDownloadStatus(@Body() req: any): Promise<CommonResponseModel> {
+    //     try {
+    //         return await this.rlOrdersService.updateDownloadStatus(req);
+    //     } catch (error) {
+    //         return error;
+    //     }
+    // }
 }

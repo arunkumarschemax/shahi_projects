@@ -6,7 +6,7 @@ export class tradeDto {
     id: number;
 
     @ApiProperty()
-    name: string
+    pdfFileName: string
 
     createdAt: string;
 

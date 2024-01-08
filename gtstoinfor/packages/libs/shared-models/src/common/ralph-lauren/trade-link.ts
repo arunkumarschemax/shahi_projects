@@ -1,4 +1,4 @@
 export class tradeLinkDto {
 
-    name: string;
+    pdfFileName: string;
 }

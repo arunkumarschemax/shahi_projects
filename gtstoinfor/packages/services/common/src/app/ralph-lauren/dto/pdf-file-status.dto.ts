@@ -6,6 +6,6 @@ export class StatusDto {
     @ApiProperty()
     id: number;
 
-    @ApiProperty()
-    status: StatusTypeEnum
+    // @ApiProperty()
+    // status: StatusTypeEnum
 }

@@ -117,45 +117,45 @@ export function PdFInfoGrid() {
                 : null
     })
 
-    const updateDownloadStatus = async (value, record) => {
-        try {
-            const res = await service.updateDownloadStatus({ id: record.id, status: value });
-            if (res.status) {
-                message.success(res.internalMessage);
-                return true;
-            } else {
-                message.error(res.internalMessage);
-                return false;
-            }
-        } catch (error) {
-            console.error("Error occurred while Updating Status:", error);
-            return false;
-        }
-    };
+    // const updateDownloadStatus = async (value, record) => {
+    //     try {
+    //         const res = await service.updateDownloadStatus({ id: record.id, status: value });
+    //         if (res.status) {
+    //             message.success(res.internalMessage);
+    //             return true;
+    //         } else {
+    //             message.error(res.internalMessage);
+    //             return false;
+    //         }
+    //     } catch (error) {
+    //         console.error("Error occurred while Updating Status:", error);
+    //         return false;
+    //     }
+    // };
     
-const isDownloadOnchange = async (value, record) => { 
-    const statusUpdated = await updateDownloadStatus(value, record);
-    if (statusUpdated) {
-        const updatedPdfData = pdfData.filter(item => item.id !== record.id);
-        setPdfData(updatedPdfData); 
-    }
-};
+// const isDownloadOnchange = async (value, record) => { 
+//     const statusUpdated = await updateDownloadStatus(value, record);
+//     if (statusUpdated) {
+//         const updatedPdfData = pdfData.filter(item => item.id !== record.id);
+//         setPdfData(updatedPdfData); 
+//     }
+// };
 
 
-const handleCancel = async (record) => { 
-    const value = record.status === 'CANCELLED' ? 'NOT CANCELLED' : 'CANCELLED';
-    const statusUpdated = await updateDownloadStatus(value, record);
-    if (statusUpdated) {
-        const updatedPdfData = pdfData.map(item => {
-            if (item.id === record.id) {
-                return { ...item, status: value };
-            }
-            return item;
-        });
-        setPdfData(updatedPdfData); 
-        getPdfFileInfo();
-    }
-};
+// const handleCancel = async (record) => { 
+//     const value = record.status === 'CANCELLED' ? 'NOT CANCELLED' : 'CANCELLED';
+//     const statusUpdated = await updateDownloadStatus(value, record);
+//     if (statusUpdated) {
+//         const updatedPdfData = pdfData.map(item => {
+//             if (item.id === record.id) {
+//                 return { ...item, status: value };
+//             }
+//             return item;
+//         });
+//         setPdfData(updatedPdfData); 
+//         getPdfFileInfo();
+//     }
+// };
 
     const columns: any = [
         {
@@ -232,17 +232,17 @@ const handleCancel = async (record) => {
               </>
             ),
           },
-          {
-            title: "Status",
-            dataIndex: "status",
-            align: "center",
-            width:120,
-            render: (value, record) => {
-                    return (
-                        <Button type="primary" danger onClick={() => handleCancel(record)}>Cancel</Button>
-                    );
-            },
-        },
+        //   {
+        //     title: "Status",
+        //     dataIndex: "status",
+        //     align: "center",
+        //     width:120,
+        //     render: (value, record) => {
+        //             return (
+        //                 <Button type="primary" danger onClick={() => handleCancel(record)}>Cancel</Button>
+        //             );
+        //     },
+        // },
         
     ]
 

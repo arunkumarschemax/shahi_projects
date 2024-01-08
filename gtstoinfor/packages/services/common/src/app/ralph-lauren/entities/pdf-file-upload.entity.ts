@@ -46,11 +46,11 @@ export class PdfFileUploadEntity {
     })
     fileData: string; 
 
-    @Column("enum", {
-        enum:StatusTypeEnum,
-        name: "status",
-    })
-    status: StatusTypeEnum; 
+    // @Column("enum", {
+    //     enum:StatusTypeEnum,
+    //     name: "status",
+    // })
+    // status: StatusTypeEnum; 
 
 
 

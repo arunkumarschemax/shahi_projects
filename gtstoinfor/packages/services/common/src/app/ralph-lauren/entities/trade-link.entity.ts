@@ -9,9 +9,9 @@ export class tradeEntity {
     id: number;
 
     @Column("varchar", {
-        name: "name",
+        name: "pdf_file_name",
     })
-    name: string
+    pdfFileName: string
 
 
     @CreateDateColumn({

@@ -167,7 +167,8 @@ export class RLOrdersService {
   async getPdfFileInfo(): Promise<CommonResponseModel> {
     // eslint-disable-next-line no-useless-catch
     try {
-      const data = await this.pdfrepo.find({ where: { status: StatusTypeEnum.NOT_CANCELLED } });
+      const data = await this.pdfrepo.find()
+      // const data = await this.pdfrepo.find({ where: { status: StatusTypeEnum.NOT_CANCELLED } });
       if (data) {
         return new CommonResponseModel(true, 1, 'data retrieved Successfully', data);
       } else {
@@ -784,31 +785,31 @@ export class RLOrdersService {
     }
   }
 
-  async updateDownloadStatus(
-    req: StatusDto
-  ): Promise<CommonResponseModel> {
-    try {
-      const update = await this.pdfrepo.update(
-        { id: req.id },
-        { status: req.status }
-      );
-      if (update.affected > 0) {
-        return new CommonResponseModel(
-          true,
-          1,
-          "Status Updated SuccessFully"
-        );
-      } else {
-        return new CommonResponseModel(
-          false,
-          0,
-          "Something went wrong",
-          []
-        );
-      }   } catch (error) {
-        return error;
-      }
-    }
+  // async updateDownloadStatus(
+  //   req: StatusDto
+  // ): Promise<CommonResponseModel> {
+  //   try {
+  //     const update = await this.pdfrepo.update(
+  //       { id: req.id },
+  //       { status: req.status }
+  //     );
+  //     if (update.affected > 0) {
+  //       return new CommonResponseModel(
+  //         true,
+  //         1,
+  //         "Status Updated SuccessFully"
+  //       );
+  //     } else {
+  //       return new CommonResponseModel(
+  //         false,
+  //         0,
+  //         "Something went wrong",
+  //         []
+  //       );
+  //     }   } catch (error) {
+  //       return error;
+  //     }
+  //   }
 
 }
 
