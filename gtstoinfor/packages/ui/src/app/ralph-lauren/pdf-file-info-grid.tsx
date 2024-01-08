@@ -1,11 +1,13 @@
-import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip } from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tag, Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { NikeService, RLOrdersService } from "@project-management-system/shared-services";
 import React from "react";
-import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import { ArrowDownOutlined, FilePdfOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import AlertMessages from "../common/common-functions/alert-messages";
+import { config } from "packages/libs/shared-services/config";
 
 
 export function PdFInfoGrid() {
@@ -188,9 +190,25 @@ export function PdFInfoGrid() {
             render: (value, record) => (
               <>
                 <Button onClick={() => setMoreData(record)}>More Info</Button>
+                <Tooltip title="PDF download">
+                <Button icon={<FilePdfOutlined onClick={()=>download(record.filePath)}/>} >{value}</Button>
+                </Tooltip>
+      
+      
               </>
             ),
-          }
+          },
+
+        //   {
+        //     title: 'download',
+        //     dataIndex: 'pdfFileName',
+        //     render: (value,rowData) => (
+        //       rowData.fileName!=null?
+        //       <>
+        //      <Tag icon={<ArrowDownOutlined onClick={()=>download(rowData.filePath)}/>} >{value}</Tag>
+        //       </>:''
+        //     ),
+        //   }
 
 
     ]
@@ -200,6 +218,33 @@ export function PdFInfoGrid() {
           state: { data: record },
         });
       };
+
+      const download = (filePath) => {
+        console.log(filePath);
+        // : FilenameDto[]
+        
+        if (filePath) {
+          filePath = filePath.split(",");
+          for (const res of filePath) {
+            if(res){
+              console.log(res);
+              setTimeout(() => {
+                const response = {
+                  file: config.file_upload_path+'/'+ `${res}`,
+                };
+      
+                window.open(response.file);
+      
+              }, 100);
+            }
+          }
+        }
+        else {
+          AlertMessages.getErrorMessage("Please upload file. ");
+    
+        }
+      }
+      
     return (
         <>
             <Card title="PDF Info" headStyle={{ fontWeight: 'bold' }}>
