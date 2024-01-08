@@ -283,7 +283,7 @@ export class RLOrdersService {
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price, poInfo.currency, poInfo.handoverDate, desArray);
+        const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price, poInfo.currency, poInfo.handoverDate,poInfo.materialNo, desArray);
         coData.push(co)
       });
       if (coData) {
