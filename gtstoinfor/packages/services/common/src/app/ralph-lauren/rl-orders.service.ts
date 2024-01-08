@@ -790,7 +790,7 @@ export class RLOrdersService {
   // ): Promise<CommonResponseModel> {
   //   try {
   //     const update = await this.pdfrepo.update(
-  //       { id: req.id },
+  //       { id: req.id }, 
   //       { status: req.status }
   //     );
   //     if (update.affected > 0) {
@@ -810,6 +810,26 @@ export class RLOrdersService {
   //       return error;
   //     }
   //   }
+
+  async getordercomparationData(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.rlOrdersRepo.find()
+      
+     
+      
+      
+      if (data) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', data);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+
+
 
 }
 
