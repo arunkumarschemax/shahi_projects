@@ -2,10 +2,11 @@ import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip } fr
 import { useEffect, useRef, useState } from "react";
 import { CentricService, NikeService, RLOrdersService } from "@project-management-system/shared-services";
 import React from "react";
-import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import { FilePdfOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import { AlertMessages } from "packages/libs/shared-models/src/common/supplier/alert-messages";
 
 
 export function CentricPdFInfoGrid() {
@@ -193,13 +194,41 @@ export function CentricPdFInfoGrid() {
                 <Button 
                 onClick={() => setMoreData(record)}
                 >More Info</Button>
-                 {/* <Button onClick={() => handleDownload(record)}>Download</Button> */}
+                 <Tooltip title="PDF download">
+                <Button icon={<FilePdfOutlined onClick={()=>download(record.filePath)}/>} >{value}</Button>
+                </Tooltip>
               </>
             ),
           }
 
 
     ]
+
+    const download = (filePath) => {
+        console.log(filePath);
+        // : FilenameDto[]
+        
+        if (filePath) {
+          filePath = filePath.split(",");
+          for (const res of filePath) {
+            if(res){
+              console.log(res);
+              setTimeout(() => {
+                const response = {
+                  file: `config.file_upload_path+'/'+ ${res}`,
+                };
+      
+                window.open(response.file);
+      
+              }, 100);
+            }
+          }
+        }
+        else {
+          AlertMessages.getErrorMessage("Please upload file. ");
+    
+        }
+      }
 
     return (
         <>
