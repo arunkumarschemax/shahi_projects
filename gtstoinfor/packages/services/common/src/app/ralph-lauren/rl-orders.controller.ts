@@ -195,4 +195,13 @@ export class RLOrdersController {
     //         return error;
     //     }
     // }
+
+    @Post('/getordercomparationData')
+    async getordercomparationData(): Promise<CommonResponseModel> {
+        try {
+            return await this.rlOrdersService.getordercomparationData();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
