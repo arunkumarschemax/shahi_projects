@@ -4,14 +4,16 @@ export class CoLineModel {
     salesPrice: string;
     currency: string;
     deliveryDate: any;
+    styleNo:any;
     destinations: Destination[]
 
-    constructor(buyerPo: string, itemNumber: number, salesPrice: string, currency: string, deliveryDate: any, destinations: Destination[]) {
+    constructor(buyerPo: string, itemNumber: number, salesPrice: string, currency: string, deliveryDate: any, styleNo:any, destinations: Destination[]) {
         this.buyerPo = buyerPo
         this.itemNumber = itemNumber
         this.salesPrice = salesPrice
         this.currency = currency
         this.deliveryDate = deliveryDate
+        this.styleNo = styleNo
         this.destinations = destinations
     }
 }
