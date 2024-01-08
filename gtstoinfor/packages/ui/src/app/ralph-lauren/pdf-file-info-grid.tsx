@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tag, Tooltip } from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tag, Tooltip, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { NikeService, RLOrdersService } from "@project-management-system/shared-services";
 import React from "react";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { config } from "packages/libs/shared-services/config";
+import { StatusTypeEnum } from "@project-management-system/shared-models";
 
 
 export function PdFInfoGrid() {
@@ -118,6 +119,45 @@ export function PdFInfoGrid() {
                 : null
     })
 
+    const updateDownloadStatus = async (value, record) => {
+        try {
+            const res = await service.updateDownloadStatus({ id: record.id, status: value });
+            if (res.status) {
+                message.success(res.internalMessage);
+                return true;
+            } else {
+                message.error(res.internalMessage);
+                return false;
+            }
+        } catch (error) {
+            console.error("Error occurred while Updating Status:", error);
+            return false;
+        }
+    };
+    
+const isDownloadOnchange = async (value, record) => { 
+    const statusUpdated = await updateDownloadStatus(value, record);
+    if (statusUpdated) {
+        const updatedPdfData = pdfData.filter(item => item.id !== record.id);
+        setPdfData(updatedPdfData); 
+    }
+};
+
+
+const handleCancel = async (record) => { 
+    const value = record.status === 'CANCELLED' ? 'NOT CANCELLED' : 'CANCELLED';
+    const statusUpdated = await updateDownloadStatus(value, record);
+    if (statusUpdated) {
+        const updatedPdfData = pdfData.map(item => {
+            if (item.id === record.id) {
+                return { ...item, status: value };
+            }
+            return item;
+        });
+        setPdfData(updatedPdfData); 
+        getPdfFileInfo();
+    }
+};
 
     const columns: any = [
         {
@@ -162,6 +202,7 @@ export function PdFInfoGrid() {
             title: 'File Type',
             dataIndex: 'fileType',
             width: 30,
+            align: 'center',
             // sorter: (a, b) => a.fileType.localeCompare(b.fileType),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-"
@@ -189,7 +230,7 @@ export function PdFInfoGrid() {
             width: 120,
             render: (value, record) => (
               <>
-                <Button onClick={() => setMoreData(record)}>More Info</Button>
+                <Button type="primary" onClick={() => setMoreData(record)}>More Info</Button>
                 <Tooltip title="PDF download">
                 <Button icon={<FilePdfOutlined onClick={()=>download(record.filePath)}/>} >{value}</Button>
                 </Tooltip>
@@ -244,6 +285,7 @@ export function PdFInfoGrid() {
     
         }
       }
+      
       
     return (
         <>

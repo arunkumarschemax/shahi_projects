@@ -1,4 +1,4 @@
-import { CommonResponseModel, FileIdReq, OrderAcceptanceRequest, PoOrderFilter, SaveOrderDto } from "@project-management-system/shared-models"
+import { CommonResponseModel, FileIdReq, OrderAcceptanceRequest, PoOrderFilter, SaveOrderDto, StatusSharedDto } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import { AxiosInstance } from "../axios-instance";
 
@@ -61,4 +61,8 @@ export class RLOrdersService extends CommonAxiosService {
     async readPOPdfBot(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.rlordersController + "/readPOPdfBot")
     }
+
+    async updateDownloadStatus(payload:StatusSharedDto):Promise<CommonResponseModel>{
+        return this.axiosPostCall(this.rlordersController + "/updateDownloadStatus", payload)
+      }
 }

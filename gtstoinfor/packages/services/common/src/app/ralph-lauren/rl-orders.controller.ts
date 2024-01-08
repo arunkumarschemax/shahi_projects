@@ -151,9 +151,9 @@ export class RLOrdersController {
         },
     }))
 
-    async fileUpload(@UploadedFile() file,@Body() req:any, poNumber: string): Promise<CommonResponseModel> {
+    async fileUpload(@UploadedFile() file, @Body() req: any, poNumber: string): Promise<CommonResponseModel> {
         try {
-            return await this.rlOrdersService.updatePath(req.jsonData,poNumber,file.path, file.filename, file.mimetype)
+            return await this.rlOrdersService.updatePath(req.jsonData, poNumber, file.path, file.filename, file.mimetype)
         } catch (error) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
         }
@@ -177,7 +177,7 @@ export class RLOrdersController {
         }
     }
 
-    
+
     // @Post('/getTradeLinkButtonBot')
     // async getTradeLinkButtonBot(): Promise<CommonResponseModel> {
     //     try {
@@ -186,4 +186,13 @@ export class RLOrdersController {
     //         return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
     //     }
     // }
+
+    @Post('/updateDownloadStatus')
+    async updateDownloadStatus(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.rlOrdersService.updateDownloadStatus(req);
+        } catch (error) {
+            return error;
+        }
+    }
 }
