@@ -44,11 +44,11 @@ export class RLOrdersService {
         const poItem = match ? parseInt(match[0], 10) : null;
         for (const variant of item.poItemVariantDetails) {
           const orderData = await this.rlOrdersRepo.findOne({ where: { poNumber: req.poNumber, poItem: poItem, size: variant.size } })
-          const order = await this.orderChildRepo.findOne({ where: { poNumber: req.poNumber},order:{poVersion:'DESC'} })
+          const order = await this.orderChildRepo.findOne({ where: { poNumber: req.poNumber }, order: { poVersion: 'DESC' } })
           //  console.log(order,"test")
           //  const lastPoVersionObject = order.slice(-1);
 
-           // Now 'lastPoVersionObject' contains the last object of the 'poVersion' array.
+          // Now 'lastPoVersionObject' contains the last object of the 'poVersion' array.
           //  console.log(lastPoVersionObject[0].poVersion,"7777777777");
 
           const entity = new RLOrdersEntity()
@@ -77,17 +77,17 @@ export class RLOrdersService {
             // console.log("uuuuuuu")
             const update = await transactionManager.getRepository(RLOrdersEntity).update({ poNumber: req.poNumber, poItem: poItem, size: variant.size }, { revisionNo: req.revisionNo, agent: req.agent, amount: variant.amount, price: variant.unitPrice, currency: variant.currency, materialNo: item.materialNo, shipToAddress: req.shipToAddress })
 
-              
-            
+
+
             let po = parseInt(order?.poVersion) + 1
-      
+
 
             const entitys = new RLOrderschildEntity()
-  
+
             entitys.agent = req.agent
             entitys.amount = variant.amount
             entitys.boardCode = item.board
-            entitys.buyer = 'RL' 
+            entitys.buyer = 'RL'
             entitys.color = item.colorDescription
             entitys.currency = variant.currency
             entitys.materialNo = item.materialNo
@@ -107,47 +107,47 @@ export class RLOrdersService {
             entitys.upcEan = variant.upc
             entitys.poVersion = po.toString()
             entitys.orderId = orderData.id
-              
-              const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
-         
 
-            if (!update.affected 
+            const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
+
+
+            if (!update.affected
               // && !updated.affected 
-              ) {
+            ) {
               throw new Error('Update failed');
             }
-             
-             
+
+
           } else {
             saved = await transactionManager.getRepository(RLOrdersEntity).save(entity)
 
             const entitys = new RLOrderschildEntity()
-          entitys.agent = req.agent
-          entitys.amount = variant.amount
-          entitys.boardCode = item.board
-          entitys.buyer = 'RL' 
-          entitys.color = item.colorDescription
-          entitys.currency = variant.currency
-          entitys.materialNo = item.materialNo
-          entitys.poItem = poItem
-          entitys.poNumber = req.poNumber
-          entitys.poUploadDate = req.poIssue
-          entitys.price = variant.unitPrice
-          entitys.purchaseGroup = req.purchaseGroup
-          entitys.quantity = variant.quantity
-          entitys.revisionNo = req.revisionNo
-          entitys.seasonCode = item.season
-          entitys.handoverDate = item.handoverDate
-          entitys.shipToAddress = req.shipToAddress
-          entitys.billToAddress = req.buyerAddress
-          entitys.size = variant.size
-          entitys.status = 'Revised'
-          entitys.upcEan = variant.upc
-          entitys.orderId = saved.id
-            
+            entitys.agent = req.agent
+            entitys.amount = variant.amount
+            entitys.boardCode = item.board
+            entitys.buyer = 'RL'
+            entitys.color = item.colorDescription
+            entitys.currency = variant.currency
+            entitys.materialNo = item.materialNo
+            entitys.poItem = poItem
+            entitys.poNumber = req.poNumber
+            entitys.poUploadDate = req.poIssue
+            entitys.price = variant.unitPrice
+            entitys.purchaseGroup = req.purchaseGroup
+            entitys.quantity = variant.quantity
+            entitys.revisionNo = req.revisionNo
+            entitys.seasonCode = item.season
+            entitys.handoverDate = item.handoverDate
+            entitys.shipToAddress = req.shipToAddress
+            entitys.billToAddress = req.buyerAddress
+            entitys.size = variant.size
+            entitys.status = 'Revised'
+            entitys.upcEan = variant.upc
+            entitys.orderId = saved.id
+
             const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
-            
-             
+
+
 
             if (!saved) {
               throw new Error('Save failed')
@@ -178,7 +178,7 @@ export class RLOrdersService {
       throw err;
     }
   }
-  
+
   async getorderData(req?: PoOrderFilter): Promise<CommonResponseModel> {
     try {
       const details = await this.rlOrdersRepo.getorderData(req);
@@ -287,7 +287,7 @@ export class RLOrdersService {
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price, poInfo.currency, poInfo.handoverDate,poInfo.materialNo, desArray);
+        const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price, poInfo.currency, poInfo.handoverDate, poInfo.materialNo, desArray);
         coData.push(co)
       });
       if (coData) {
@@ -352,7 +352,7 @@ export class RLOrdersService {
       await driver.findElement(By.xpath('//*[@id="ui-id-14"]/div[4]/div[4]/button')).click();
       await driver.wait(until.elementLocated(By.xpath('//*[@id="frmMasterInt"]/div[1]/div[2]/div[2]/div[2]/div[3]')))
       await driver.findElement(By.xpath('//*[@id="frmMasterInt"]/div[1]/div[2]/div[2]/div[2]/div[3]')).click();
-      
+
     } catch (err) {
       console.log(err, 'error');
       return new CommonResponseModel(false, 0, err)
@@ -477,9 +477,11 @@ export class RLOrdersService {
         let deliveryAddress;
         let pkgTerms;
         let paymentTerms;
+        let styleNo;
         if (po.buyer === 'RL-U12') {
           const response = await this.getOrderDetails({ poNumber: po.buyer_po })
           const coData = response.data[0];
+          console.log(coData)
           coLine.buyerPo = coData.buyerPo;
           const months = [
             'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
@@ -502,6 +504,7 @@ export class RLOrdersService {
           const request = { country: parts[1].trim() }
           const address = await this.addressService.getAddressInfoByCountry(request);
           const addressData = address.data[0];
+          styleNo = coData.styleNo
           buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 25;
           deliveryAddress = addressData?.deliveryCode
           buyerValue1 = "RAL-RALPH LAUREN"
@@ -537,6 +540,10 @@ export class RLOrdersService {
         await driver.wait(until.elementLocated(By.id('bpo')))
         await driver.findElement(By.id('bpo')).clear();
         await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
+        await driver.wait(until.elementLocated(By.id('bus')))
+        await driver.findElement(By.id('bus')).clear();
+        await driver.findElement(By.id('bus')).sendKeys(styleNo);
+        //*[@id="form1"]/table/tbody/tr/td/table/tbody/tr[4]/td/table/tbody/tr/td/table/tbody/tr[5]/td[5]
         await driver.wait(until.elementLocated(By.id('agnt')));
         const agentDropDown = await driver.findElement(By.id('agnt'));
         await driver.executeScript(`arguments[0].value = '${agent}';`, agentDropDown)
@@ -689,9 +696,11 @@ export class RLOrdersService {
           await driver.navigate().refresh();
           await driver.quit();
         } else {
-          await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
-          const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[last()]/td[7]`));
-          const coNo = await coNoElement.getAttribute('innerText');
+          await driver.sleep(10000)
+          await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
+          const coNoElement = await driver.findElement(By.xpath('//*[@id="orno"]'));
+          const coNo = await coNoElement.getAttribute('value');
+          await driver.sleep(5000)
           const currentDate = new Date();
           const day = currentDate.getDate().toString().padStart(2, '0');
           const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
