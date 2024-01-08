@@ -44,6 +44,7 @@ import AddressView from "./masters/address/address-view"
 import AddressUpload from "./masters/address/address-excel-upload"
 import PdfDetailViewTable from "./ralph-lauren/pdf-detail.view"
 import TradeLinkView from "./ralph-lauren/pdf-reader/trade-link-view"
+import OrderComparisionReport from "./ralph-lauren/order-comparsion-report"
 
 
 export const AppRoutes = () => {
@@ -186,6 +187,7 @@ export const AppRoutes = () => {
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
                    <Route path='pdf-detail-view' element={<PdfDetailViewTable data={new LegalPoDetails}/>} />
                    <Route path='trade-link-view' element={<TradeLinkView />} />
+                   <Route path = 'orders-comparsion-report' element={<OrderComparisionReport />} />
                    
 
 
