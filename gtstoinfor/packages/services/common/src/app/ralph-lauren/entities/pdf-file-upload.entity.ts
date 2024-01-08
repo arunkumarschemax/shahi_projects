@@ -1,3 +1,4 @@
+import { StatusTypeEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity('pdf_file_upload')
@@ -44,6 +45,12 @@ export class PdfFileUploadEntity {
         name: "file_data",
     })
     fileData: string; 
+
+    @Column("enum", {
+        enum:StatusTypeEnum,
+        name: "status",
+    })
+    status: StatusTypeEnum; 
 
 
 

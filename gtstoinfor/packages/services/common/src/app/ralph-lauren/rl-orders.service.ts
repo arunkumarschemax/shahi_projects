@@ -1,7 +1,7 @@
 
 import { Injectable } from "@nestjs/common";
 import { RLOrdersRepository } from "./repositories/rl-orders.repo";
-import { CoLineModel, Color, CoLineRequest, Destination, Colors, CommonResponseModel, Destinations, OrderDataModel, OrderSizeWiseModel, PoOrderFilter, Sizes, coLineRequest, Size, ItemStatusEnum } from "@project-management-system/shared-models";
+import { CoLineModel, Color, CoLineRequest, Destination, Colors, CommonResponseModel, Destinations, OrderDataModel, OrderSizeWiseModel, PoOrderFilter, Sizes, coLineRequest, Size, ItemStatusEnum, StatusTypeEnum } from "@project-management-system/shared-models";
 import { DataSource } from "typeorm";
 import { PdfFileUploadRepository } from "./repositories/pdf-file.repo";
 import { OrderDetailsReq } from "./dto/order-details-req";
@@ -16,6 +16,7 @@ import puppeteer from "puppeteer";
 import * as AdmZip from 'adm-zip';
 import { RLOrderschildEntity } from "./entities/rl-orders-child.entity";
 import { RLOrdersChildRepository } from "./repositories/rl-orders-child.repo";
+import { StatusDto } from "./dto/pdf-file-status.dto";
 const fs = require('fs');
 const path = require('path')
 
@@ -162,19 +163,21 @@ export class RLOrdersService {
     }
   }
 
+
   async getPdfFileInfo(): Promise<CommonResponseModel> {
+    // eslint-disable-next-line no-useless-catch
     try {
-      const data = await this.pdfrepo.find()
+      const data = await this.pdfrepo.find({ where: { status: StatusTypeEnum.NOT_CANCELLED } });
       if (data) {
-        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+        return new CommonResponseModel(true, 1, 'data retrieved Successfully', data);
       } else {
-        return new CommonResponseModel(false, 0, 'No Data Found', [])
+        return new CommonResponseModel(false, 0, 'No Data Found', []);
       }
     } catch (err) {
-      throw err
+      throw err;
     }
   }
-
+  
   async getorderData(req?: PoOrderFilter): Promise<CommonResponseModel> {
     try {
       const details = await this.rlOrdersRepo.getorderData(req);
@@ -780,6 +783,32 @@ export class RLOrdersService {
       }
     }
   }
+
+  async updateDownloadStatus(
+    req: StatusDto
+  ): Promise<CommonResponseModel> {
+    try {
+      const update = await this.pdfrepo.update(
+        { id: req.id },
+        { status: req.status }
+      );
+      if (update.affected > 0) {
+        return new CommonResponseModel(
+          true,
+          1,
+          "Status Updated SuccessFully"
+        );
+      } else {
+        return new CommonResponseModel(
+          false,
+          0,
+          "Something went wrong",
+          []
+        );
+      }   } catch (error) {
+        return error;
+      }
+    }
 
 }
 

@@ -11,3 +11,4 @@ export * from './Enum/report-type.enum';
 export * from './common/nike/po-qty-data.dto'
 export * from './Enum/pdf-file-types.enum'
 export * from './Enum/item-status.enum'
+export * from './Enum/pdf-file-info-status.enum'
