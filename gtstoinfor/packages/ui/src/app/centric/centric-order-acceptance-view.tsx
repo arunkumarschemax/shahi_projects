@@ -111,7 +111,7 @@ export function CentricOrderAcceptanceGrid() {
       if (res.status) {
         getCentricorderData();
         setItemNoValues({}); 
-        // form.setFieldsValue({ [index]: { itemNo: undefined } });
+        form.setFieldsValue({ [index]: { itemNo: undefined } });
         message.success(res.internalMessage);
       } else {
         message.error(res.internalMessage);
@@ -715,7 +715,7 @@ export function CentricOrderAcceptanceGrid() {
             title: 'Ex-factory Date ',
             dataIndex: '',
             key: '',
-            width: 70,
+            width: 100,
             className: "center",
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -741,7 +741,7 @@ export function CentricOrderAcceptanceGrid() {
             title: 'Export Date ',
             dataIndex: '',
             key: '',
-            width: 70,
+            width: 100,
             className: "center",
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -767,7 +767,7 @@ export function CentricOrderAcceptanceGrid() {
             title: 'Delivery Date',
             dataIndex: '',
             key: '',
-            width: 70,
+            width: 100,
             className: "center",
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.size === version);

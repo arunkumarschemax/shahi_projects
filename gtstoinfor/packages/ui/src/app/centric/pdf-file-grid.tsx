@@ -203,7 +203,7 @@ export function CentricPdFInfoGrid() {
 
     return (
         <>
-            <Card title="PDF Info" headStyle={{ fontWeight: 'bold' }}>
+            <Card title="Orders History" headStyle={{ fontWeight: 'bold' }}>
                 {/* <Form
             // onFinish={getOrderAcceptanceData}
             form={form}

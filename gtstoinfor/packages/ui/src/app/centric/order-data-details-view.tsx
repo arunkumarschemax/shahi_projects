@@ -209,7 +209,7 @@ console.log(location?.state?.data)
                             <Table.Summary.Row className="tableFooter">
                                 
                                     <Table.Summary.Cell index={1} colSpan={5}>
-                                    <span style={{marginLeft:400}}>
+                                    <span style={{marginLeft:300}}>
                                         <b>Total   :</b>
                                     </span>
                                 
