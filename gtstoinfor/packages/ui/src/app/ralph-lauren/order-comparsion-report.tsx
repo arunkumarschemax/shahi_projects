@@ -1,12 +1,13 @@
 import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Table, Tabs, Tooltip, Typography, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane"
 import { OrdersService, RLOrdersService } from "@project-management-system/shared-services"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons"
 import AlertMessages from "../common/common-functions/alert-messages"
 import moment from "moment"
 import { Excel } from "antd-table-saveas-excel"
 import { PoOrderFilter } from "@project-management-system/shared-models"
+import Highlighter from "react-highlight-words"
 
 
 
@@ -19,6 +20,9 @@ export const OrderComparisionReport = () => {
   const [filterData, setFilterData] = useState([]);
   const [orderData, setOrderData] = useState<any>([]);
   const [poNumberData, setPoNumberData] = useState<any>([]);
+  const searchInput = useRef(null);
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
 
   const { Option } = Select;
 
@@ -71,6 +75,89 @@ export const OrderComparisionReport = () => {
     form.resetFields();
     getordercomparationData();
   };
+
+  const handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+  const handleReset = (clearFilters) => {
+    clearFilters();
+    setSearchText("");
+  };
+
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+    }) => (
+      <div style={{ padding: 8 }}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          style={{ width: 188, marginBottom: 8, display: "block" }}
+        />
+        <Button
+          type="primary"
+          onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+          icon={<SearchOutlined />}
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          Search
+        </Button>
+        <Button
+          size="small"
+          style={{ width: 90 }}
+          onClick={() => {
+            handleReset(clearFilters);
+            setSearchedColumn(dataIndex);
+            confirm({ closeDropdown: true });
+          }}
+        >
+          Reset
+        </Button>
+      </div>
+    ),
+    filterIcon: (filtered) => (
+      <SearchOutlined
+        type="search"
+        style={{ color: filtered ? "#1890ff" : undefined }}
+      />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        ? record[dataIndex]
+          .toString()
+          .toLowerCase()
+          .includes(value.toLowerCase())
+        : false,
+    onFilterDropdownVisibleChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current.select());
+      }
+    },
+    render: (text) =>
+      text ? (
+        searchedColumn === dataIndex ? (
+          <Highlighter
+            highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+            searchWords={[searchText]}
+            autoEscape
+            textToHighlight={text.toString()}
+          />
+        ) : (
+          text
+        )
+      ) : null,
+  });
 
 
   
@@ -130,7 +217,7 @@ export const OrderComparisionReport = () => {
           return codeA.localeCompare(codeB);
       },
       sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('poItem'),
+        ...getColumnSearchProps('poItem'),
         render: (text) => text ? text : "-"
       },
       {
@@ -139,7 +226,7 @@ export const OrderComparisionReport = () => {
         width: 90,
         sorter: (a, b) => a.size.localeCompare(b.size),
         sortDirections: ["ascend", "descend"],
-        // ...getColumnSearchProps('poItem'),
+        ...getColumnSearchProps('size'),
         render: (text) => text ? text : "-"
       },
       
