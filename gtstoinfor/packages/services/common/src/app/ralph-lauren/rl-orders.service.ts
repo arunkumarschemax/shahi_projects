@@ -1,7 +1,7 @@
 
 import { Injectable } from "@nestjs/common";
 import { RLOrdersRepository } from "./repositories/rl-orders.repo";
-import { CoLineModel, Color, CoLineRequest, Destination, Colors, CommonResponseModel, Destinations, OrderDataModel, OrderSizeWiseModel, PoOrderFilter, Sizes, coLineRequest, Size, ItemStatusEnum, StatusTypeEnum } from "@project-management-system/shared-models";
+import { CoLineModel, Color, CoLineRequest, Destination, Colors, CommonResponseModel, Destinations, OrderDataModel, OrderSizeWiseModel, PoOrderFilter, Sizes, coLineRequest, Size, ItemStatusEnum, StatusTypeEnum, CompareModel } from "@project-management-system/shared-models";
 import { DataSource } from "typeorm";
 import { PdfFileUploadRepository } from "./repositories/pdf-file.repo";
 import { OrderDetailsReq } from "./dto/order-details-req";
@@ -801,15 +801,50 @@ export class RLOrdersService {
   //     }
   //   }
 
-  async getordercomparationData(): Promise<CommonResponseModel> {
+  async getPoNumber(): Promise<CommonResponseModel> {
+    const data = await this.rlOrdersRepo.getpoNumber()
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
+
+
+  async getordercomparationData(req?: any): Promise<CommonResponseModel> {
     try {
-      const data = await this.rlOrdersRepo.find()
-
-
-
-
-      if (data) {
-        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', data);
+      const Originaldata = await this.rlOrdersRepo.getordercomparationData(req)
+      const compareModel: CompareModel[] = []
+      for (const rec of Originaldata) {
+        const childData = await this.orderChildRepo.find({
+          where: {
+            poNumber: rec.po_number, poItem: rec.po_item, size: rec.size
+          }, order: { ordersChildId: 'DESC' }, take: 1, skip: 1
+        })
+        if (childData.length > 0) {
+          const oldData = childData[0];
+          // Check for changes in values
+          if (
+            oldData.price !== rec.price ||
+            oldData.handoverDate !== rec.handover_date ||
+            oldData.quantity !== rec.quantity
+          ) {
+            // Only push if there are changes
+            compareModel.push(new CompareModel(
+              rec.po_number,
+              rec.po_item,
+              rec.size,
+              oldData.price,
+              rec.price,
+              oldData.handoverDate,
+              rec.handover_date,
+              oldData.quantity,
+              rec.quantity
+            ));
+          }
+        }
+      }
+      if (compareModel) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
       } else {
         return new CommonResponseModel(false, 0, 'No data found');
       }

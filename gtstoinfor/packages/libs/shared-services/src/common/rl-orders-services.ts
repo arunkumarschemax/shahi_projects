@@ -65,4 +65,11 @@ export class RLOrdersService extends CommonAxiosService {
     async updateDownloadStatus(payload: StatusSharedDto): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.rlordersController + "/updateDownloadStatus", payload)
     }
+
+    async getordercomparationData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.rlordersController + "/getordercomparationData", req)
+    }
+    async getPoNumber(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.rlordersController + "/getPoNumber",)
+    }
 }
