@@ -31,7 +31,7 @@ const VASChangesCompareGrid = () => {
 
 
     useEffect(() => {
-        getQtyChangeData()
+        getVasTextChangeData()
         getPoLine()
     }, [])
 
@@ -41,7 +41,7 @@ const VASChangesCompareGrid = () => {
         })
     }
 
-    const getQtyChangeData = () => {
+    const getVasTextChangeData = () => {
         const req = new nikeFilterRequest();
         if (form.getFieldValue('poandLine') !== undefined) {
             req.poandLine = form.getFieldValue('poandLine');
@@ -701,32 +701,7 @@ const VASChangesCompareGrid = () => {
             key: '1',
             label: <b style={{ color: '#25CB2D' }}>VAS Text Revised PO's : {filteredQtyData?.length} </b>,
             children: [renderReport(filterData)],
-        },
-        // {
-        //     key: '2',
-        //     label: <b>Ship to customer Revised PO's : {unitChangeData?.length}</b>,
-        //     children: <Table className="custom-table-wrapper" bordered dataSource={unitChangeData} columns={columns4} />,
-        // },
-        // {
-        //     key: '3',
-        //     label: <b style={{ color: '#65A1FD' }}>Inventory Segment Code Revised PO's : {itemChangeData?.length}</b>,
-        //     children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns1} />,
-        // },
-        // {
-        //     key: '4',
-        //     label: <b>Direct Ship SO No Revised PO's : {poStatusData?.length}</b>,
-        //     children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns2} />,
-        // },
-        // {
-        //     key: '5',
-        //     label: <b style={{ color: '#F39292' }}>Destination Country Revised PO's : {poStatusData?.length}</b>,
-        //     children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns2} />,
-        // }
-        // {
-        //     key: '2',
-        //     label: <b>Product Code Revised : {productCodeChaneData?.length}</b>,
-        //     children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} pagination={false} scroll={{ x: 1800, y: 450}} />,
-        // },
+        }
     ];
 
     const onReset = () => {
@@ -734,7 +709,7 @@ const VASChangesCompareGrid = () => {
         setSelectedEstimatedFromDate(undefined);
         setSelectedEstimatedToDate(undefined);
         // getContractDateChangeData()
-        getQtyChangeData()
+        getVasTextChangeData()
         // getWharehouseDateChangeData()
     }
 

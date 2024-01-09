@@ -50,7 +50,6 @@ const ShipmentChangesCompareGrid = () => {
             setQtyData(res.data)
             setFilteredQtyData(res.data)
         })
-        console.log(filteredQtyData, "filteredQtyData")
     }
 
     const getMRGACChangeData = () => {
