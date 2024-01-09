@@ -1118,7 +1118,7 @@ export class OrdersService {
         const format = '%'
         let total = ``
         monthsList.forEach((rec, index) => {
-            console.log(index,'indexxxxxxxxxxxxxxxxxxxx')
+            console.log(index, 'indexxxxxxxxxxxxxxxxxxxx')
             qtyQuery.push(`SUM(CASE WHEN MONTH(STR_TO_DATE(${req.qtyLocation}, '%m-%d')) = ${index + 1} THEN REPLACE(order_plan_qty,',','') ELSE 0 END) AS ${rec}`)
             total += `SUM(${rec}) AS ${rec},`
         })
@@ -2875,13 +2875,13 @@ export class OrdersService {
                 let dtoData: SaveOrderDto;
                 if (updatedObj.Order_Plan_Number !== null) {
                     if (uploadType == 'Manual') {
-                        updatedObj.whDate = updatedObj.WH ?  moment(updatedObj.WH).add(1, 'days').format('YYYY-MM-DD') : null
-                        updatedObj.exfDate =updatedObj.EXF ?  moment(updatedObj.EXF).add(1, 'days').format('YYYY-MM-DD') : null
-                        updatedObj.WH =updatedObj.WH ? moment(updatedObj.WH).add(1, 'days').format('MM-DD') : null
-                        updatedObj.EXF = updatedObj.EXF ?  moment(updatedObj.EXF).add(1, 'days').format('MM-DD') : null
-                        
+                        updatedObj.whDate = updatedObj.WH ? moment(updatedObj.WH).add(1, 'days').format('YYYY-MM-DD') : null
+                        updatedObj.exfDate = updatedObj.EXF ? moment(updatedObj.EXF).add(1, 'days').format('YYYY-MM-DD') : null
+                        updatedObj.WH = updatedObj.WH ? moment(updatedObj.WH).add(1, 'days').format('MM-DD') : null
+                        updatedObj.EXF = updatedObj.EXF ? moment(updatedObj.EXF).add(1, 'days').format('MM-DD') : null
+
                     }
-                    dtoData = new SaveOrderDto(null, updatedObj.Year, updatedObj.Planning_Ssn, updatedObj.Biz, updatedObj.Core_Category, updatedObj.Planning_Sum, updatedObj.Coeff, updatedObj.Publish_Flag_for_Factory, updatedObj.Order_Plan_Number, (updatedObj.Order_Plan_Qty).toString().replace(/,/g, ''), (updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g, ''), updatedObj.Prod_Plan_Type, updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null, updatedObj.EXF_ETD, updatedObj.ETD_WH, updatedObj.Sample, updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD') : null, id, null, 'bidhun',null,null,updatedObj.whDate ? moment(updatedObj.whDate).format('YYYY-MM-DD') : null,updatedObj.exfDate ? moment(updatedObj.exfDate).format('YYYY-MM-DD') : null)
+                    dtoData = new SaveOrderDto(null, updatedObj.Year, updatedObj.Planning_Ssn, updatedObj.Biz, updatedObj.Core_Category, updatedObj.Planning_Sum, updatedObj.Coeff, updatedObj.Publish_Flag_for_Factory, updatedObj.Order_Plan_Number, (updatedObj.Order_Plan_Qty).toString().replace(/,/g, ''), (updatedObj.Order_Plan_QtyCoeff)?.toString().replace(/,/g, ''), updatedObj.Prod_Plan_Type, updatedObj.WH ? moment(updatedObj.WH).format('MM-DD') : null, updatedObj.EXF_ETD, updatedObj.ETD_WH, updatedObj.Sample, updatedObj.EXF ? moment(updatedObj.EXF).format('MM-DD') : null, id, null, 'bidhun', null, null, updatedObj.whDate ? moment(updatedObj.whDate).format('YYYY-MM-DD') : null, updatedObj.exfDate ? moment(updatedObj.exfDate).format('YYYY-MM-DD') : null)
                     let newDate
                     if (dtoData.exf == null && dtoData.publishFlagForFactory !== 'NotPub') {
                         let inputDate = dtoData.wh ? moment(dtoData.wh).format('MM-DD') : null;
@@ -2920,7 +2920,7 @@ export class OrdersService {
                     dtoData.version = version
                     if (details) {
                         const updateOrder = await transactionManager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber }, {
-                            year: dtoData.year, planningSsn: dtoData.planningSsn, biz: dtoData.biz, coreCategory: dtoData.coreCategory, planningSum: dtoData.planningSum, coeff: dtoData.coeff, publishFlagForFactory: dtoData.publishFlagForFactory, orderPlanQty: dtoData.orderPlanQty, orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff, prodPlanType: dtoData.prodPlanType, wh: dtoData.wh, exfEtd: dtoData.exfEtd, etdWh: dtoData.etdWh, sample: dtoData.sample, version: dtoData.version, fileId: dtoData.fileId, updatedUser: dtoData.createdUser, exf: dtoData.exf,whDate:dtoData.whDate,exfDate:dtoData.exfDate
+                            year: dtoData.year, planningSsn: dtoData.planningSsn, biz: dtoData.biz, coreCategory: dtoData.coreCategory, planningSum: dtoData.planningSum, coeff: dtoData.coeff, publishFlagForFactory: dtoData.publishFlagForFactory, orderPlanQty: dtoData.orderPlanQty, orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff, prodPlanType: dtoData.prodPlanType, wh: dtoData.wh, exfEtd: dtoData.exfEtd, etdWh: dtoData.etdWh, sample: dtoData.sample, version: dtoData.version, fileId: dtoData.fileId, updatedUser: dtoData.createdUser, exf: dtoData.exf, whDate: dtoData.whDate, exfDate: dtoData.exfDate
                         })
                         if (!updateOrder.affected) {
                             await transactionManager.releaseTransaction();
@@ -2931,10 +2931,10 @@ export class OrdersService {
                         const convertedExcelEntity: Partial<OrdersChildEntity> = this.ordersChildAdapter.convertDtoToEntity(dtoData, id, details.productionPlanId, 10, dtoData.exf);
                         const saveExcelEntity: OrdersChildEntity = await transactionManager.getRepository(OrdersChildEntity).save(convertedExcelEntity);
                         if (saveExcelEntity) {
-                            console.log(details,'------')
+                            console.log(details, '------')
                             //difference insertion to order diff table
                             const existingDataKeys = Object.keys(details)
-                            console.log(existingDataKeys,'---existingDataKeys---')
+                            console.log(existingDataKeys, '---existingDataKeys---')
                             const currentDataKeys = Object.keys(dtoData)
                             for (const existingDataKey of existingDataKeys) {
                                 if (details[existingDataKey] != dtoData[existingDataKey] && existingDataKey != 'createdAt' && existingDataKey != 'updatedAt' && existingDataKey != 'version' && existingDataKey != '' && existingDataKey != 'orderStatus' && existingDataKey != 'createdUser' && existingDataKey != 'updatedUser' && existingDataKey != 'fileId' && existingDataKey != 'month' && existingDataKey != 'productionPlanId') {
@@ -3120,12 +3120,12 @@ export class OrdersService {
         }
     }
 
-    @Cron('10 7,15 * * *')
+    @Cron('3 7,15 * * *')
     async trimOrdersReadCell(): Promise<CommonResponseModel> {
         try {
             let filesArray = []
             const fs = require('fs');
-            const files = fs.readdirSync('F:/Trim-Orders');
+            const files = fs.readdirSync('D:/Trim-Orders');
             const uplodedFiles = await this.getUplodedFilesInfo()
             const difference = files.filter((element) => !uplodedFiles.data.includes(element))
             if (difference.length == 0) {
@@ -3134,7 +3134,7 @@ export class OrdersService {
             } else {
                 for (const filerec of difference) {
                     const filename = filerec
-                    const filepath = 'F:/Trim-Orders/' + filerec
+                    const filepath = 'D:/Trim-Orders/' + filerec
                     const promiseA = () => new Promise((resolve, reject) => {
                         xlsxFile(filepath, { getSheets: true }).then((sheets: any[]) => {
                             resolve(sheets)
@@ -3273,11 +3273,11 @@ export class OrdersService {
         // const driver = await new Builder().forBrowser('chrome').setChromeOptions(chromeOptions).build();
         try {
             await driver.get('https://spl.fastretailing.com/app/spl/login');
-            await driver.sleep(5000)
+            await driver.sleep(10000)
             await driver.findElement(By.id('a-textfield-0')).sendKeys('SwathiG');
             await driver.findElement(By.id('a-textfield-1')).sendKeys('beyIMjX#');
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-login/form/div/div[2]/div[1]/button')).click();
-            await driver.sleep(5000)
+            await driver.sleep(10000)
             await driver.wait(until.elementLocated(By.xpath('/html/body/app-root/o-main/app-portal/div/o-header/o-menu/div/div')));
             await driver.findElement(By.xpath('/html/body/app-root/o-main/app-portal/div/o-header/o-menu/div/div')).click();
             await driver.sleep(5000)
@@ -3307,6 +3307,13 @@ export class OrdersService {
             await driver.wait(until.elementLocated(By.xpath('/html/body/o-component-host/o-dialog/div[3]/button')));
             await driver.findElement(By.xpath('/html/body/o-component-host/o-dialog/div[3]/button')).click();
             await driver.sleep(5000)
+            await driver.wait(until.elementLocated(By.xpath('/html/body/app-root/o-main/app-materialpo/o-header/o-menu/div/div')));
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/o-header/o-menu/div/div')).click();
+            await driver.sleep(5000)
+            await driver.wait(until.elementLocated(By.xpath('/html/body/app-root/o-main/app-materialpo/o-header/o-menu/div/form/table/tbody[7]/tr[5]/td[1]/a/span')));
+            await driver.findElement(By.xpath('/html/body/app-root/o-main/app-materialpo/o-header/o-menu/div/form/table/tbody[7]/tr[5]/td[1]/a/span')).click();
+            await driver.sleep(5000)
+            // await driver.quit();
             return new CommonResponseModel(true, 1, 'Trim Orders Downloaded Successfully')
         } catch (err) {
             return new CommonResponseModel(false, 0, err)
@@ -3315,46 +3322,41 @@ export class OrdersService {
         }
     }
 
-
-    
     async seasonWiseReportData(req?: SeasonWiseRequest): Promise<CommonResponseModel> {
-       try{
-        let qtyLocationDate
-        if(req.qtyLocation == 'exf'){
-            qtyLocationDate='exf_date'
-        }
-        if(req.qtyLocation == 'wh'){
-            qtyLocationDate='wh_date'
-        }
-
-        const query=' SELECT  planning_sum AS itemName,planning_ssn AS plannedSeason,YEAR,CONCAT(MONTHNAME('+qtyLocationDate+'),"-",YEAR('+qtyLocationDate+')) AS MONTHNAME,SUM(REPLACE(order_plan_qty,","," ")) AS totalQuantity FROM orders WHERE file_id = (SELECT MAX(file_id) FROM orders) AND YEAR="'+req.year+'" and  planning_ssn ="'+req.season+'" GROUP BY MONTH('+qtyLocationDate+'),planning_sum'
-
-        const data = await this.ordersRepository.query(query)
-        console.log(data,'$$$$$$$$$$$$$$$$$$$$$$')
-        const sizeDataMap = new Map<string, sesaonWisereportModel>();
-        for(const rec of data){
-            if(!sizeDataMap.has(rec.itemName)){
-                sizeDataMap.set(rec.itemName, new sesaonWisereportModel(rec.itemName,rec.YEAR,rec.plannedSeason,[]))
+        try {
+            let qtyLocationDate
+            if (req.qtyLocation == 'exf') {
+                qtyLocationDate = 'exf_date'
             }
-            const monthData=sizeDataMap.get(rec.itemName).MonthItemData
-            if(rec.itemName != null){
-                monthData.push(new MonthItemData(rec.MONTHNAME,rec.totalQuantity))
+            if (req.qtyLocation == 'wh') {
+                qtyLocationDate = 'wh_date'
             }
-        }
-        const detailedarray :sesaonWisereportModel[]= Array.from(sizeDataMap.values());
-        console.log(detailedarray,'$$$$$$$$$$$$$$$$$$$$$$$$$$$')
-      
-        if(detailedarray){
-            return new CommonResponseModel(true,1,'data retrived sucessfully',detailedarray)
-        }else{
-            return new CommonResponseModel(true,1,'data retrived sucessfully',[])
 
-        }
+            const query = ' SELECT  planning_sum AS itemName,planning_ssn AS plannedSeason,YEAR,CONCAT(MONTHNAME(' + qtyLocationDate + '),"-",YEAR(' + qtyLocationDate + ')) AS MONTHNAME,SUM(REPLACE(order_plan_qty,","," ")) AS totalQuantity FROM orders WHERE file_id = (SELECT MAX(file_id) FROM orders) AND YEAR="' + req.year + '" and  planning_ssn ="' + req.season + '" GROUP BY MONTH(' + qtyLocationDate + '),planning_sum'
 
-    }catch(err){
-        throw err
+            const data = await this.ordersRepository.query(query)
+            console.log(data, '$$$$$$$$$$$$$$$$$$$$$$')
+            const sizeDataMap = new Map<string, sesaonWisereportModel>();
+            for (const rec of data) {
+                if (!sizeDataMap.has(rec.itemName)) {
+                    sizeDataMap.set(rec.itemName, new sesaonWisereportModel(rec.itemName, rec.YEAR, rec.plannedSeason, []))
+                }
+                const monthData = sizeDataMap.get(rec.itemName).MonthItemData
+                if (rec.itemName != null) {
+                    monthData.push(new MonthItemData(rec.MONTHNAME, rec.totalQuantity))
+                }
+            }
+            const detailedarray: sesaonWisereportModel[] = Array.from(sizeDataMap.values());
+            console.log(detailedarray, '$$$$$$$$$$$$$$$$$$$$$$$$$$$')
+
+            if (detailedarray) {
+                return new CommonResponseModel(true, 1, 'data retrived sucessfully', detailedarray)
+            } else {
+                return new CommonResponseModel(true, 1, 'data retrived sucessfully', [])
+            }
+        } catch (err) {
+            throw err
+        }
     }
-
-}
 }
 
