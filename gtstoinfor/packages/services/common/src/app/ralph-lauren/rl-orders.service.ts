@@ -1,7 +1,7 @@
 
 import { Injectable } from "@nestjs/common";
 import { RLOrdersRepository } from "./repositories/rl-orders.repo";
-import { CoLineModel, Color, CoLineRequest, Destination, Colors, CommonResponseModel, Destinations, OrderDataModel, OrderSizeWiseModel, PoOrderFilter, Sizes, coLineRequest, Size, ItemStatusEnum, StatusTypeEnum, CompareModel } from "@project-management-system/shared-models";
+import { CoLineModel, Color, CoLineRequest, Destination, Colors, CommonResponseModel, Destinations, OrderDataModel, OrderSizeWiseModel, PoOrderFilter, Sizes, coLineRequest, Size, ItemStatusEnum, StatusTypeEnum, CompareModel, OrderRevertModel } from "@project-management-system/shared-models";
 import { DataSource } from "typeorm";
 import { PdfFileUploadRepository } from "./repositories/pdf-file.repo";
 import { OrderDetailsReq } from "./dto/order-details-req";
@@ -17,6 +17,9 @@ import * as AdmZip from 'adm-zip';
 import { RLOrderschildEntity } from "./entities/rl-orders-child.entity";
 import { RLOrdersChildRepository } from "./repositories/rl-orders-child.repo";
 import { StatusDto } from "./dto/pdf-file-status.dto";
+import { OrdersChildEntity } from "../orders/entities/orders-child.entity";
+import { OrdersEntity } from "../orders/entities/orders.entity";
+import { FileUploadEntity } from "../orders/entities/upload-file.entity";
 const fs = require('fs');
 const path = require('path')
 
@@ -877,6 +880,82 @@ export class RLOrdersService {
       throw err
     }
   }
+
+  async revertProjectionFileData(req: OrderRevertModel): Promise<CommonResponseModel> {
+    console.log(req,"ooojjjj")
+        if (req) {
+      
+            const latestFileId = await this.pdfrepo.update({ id: req.pdfId, poNumber: req.poNumber }, { isActive: false });
+
+            if (!latestFileId.affected) {
+                return new CommonResponseModel(false, 0, 'Something went wrong in File update')
+            } 
+            // else{
+            //   return new CommonResponseModel(true, 0, 'File update')
+
+            // }
+        }
+        if (req) {
+      
+            const childData = await this.orderChildRepo.find({ where:{ poNumber:req.poNumber}, order: {ordersChildId: 'DESC'}, take: 1, skip: 1})
+            console.log(childData,"kkk")
+            const deleteChildData = await this.orderChildRepo.delete({ poNumber: childData[0].poNumber,poVersion: childData[0].poVersion })
+            const deleteOrdersData = await this.rlOrdersRepo.delete({ poNumber: childData[0].poNumber, versionFlag: 1 })
+            
+
+        }
+    
+    
+        // const updatedData = await manager.getRepository(OrdersChildEntity).find({
+        //     select: ['fileId'],
+        //     order: { id: 'DESC' }, take: 1
+        // })
+
+        const updatedData = await this.orderChildRepo.find({ where:{
+          poNumber:req.poNumber
+        }, order: {ordersChildId: 'DESC'}, take: 1, skip: 1})
+        
+        const flag = new Set()
+        let data = []
+        if (updatedData.length > 0) {
+            // data = await manager.getRepository(OrdersChildEntity).find({ where: { fileId: updatedData[0]?.fileId } })
+            data = await this.orderChildRepo.find({ where: { ordersChildId: updatedData[0]?.ordersChildId } })
+            // this.ordersChildRepo.find({
+            //     where: { fileId: updatedData[0]?.fileId },
+            //     // relations: ['orders']
+            // })
+        } else {
+            flag.add(true)
+        }
+
+        if (data.length > 0) {
+
+            for (const dtoData of data) {
+                // const prodPlanId = new OrdersEntity();
+                // prodPlanId.productionPlanId = dtoData.orders.productionPlanId
+                // const updateOrder = await manager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber }, {
+                //     year: dtoData.year, planningSsn: dtoData.planningSsn, biz: dtoData.biz, coreCategory: dtoData.coreCategory, planningSum: dtoData.planningSum, coeff: dtoData.coeff, publishFlagForFactory: dtoData.publishFlagForFactory, orderPlanQty: dtoData.orderPlanQty, orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff, prodPlanType: dtoData.prodPlanType, wh: dtoData.wh, exfEtd: dtoData.exfEtd, etdWh: dtoData.etdWh, sample: dtoData.sample, version: dtoData.version, fileId: dtoData.fileId, updatedUser: dtoData.createdUser
+                // })
+
+                // if (updateOrder.affected) {
+                //     flag.add(true)
+                // } else {
+                //     flag.add(false)
+                //     // await manager.releaseTransaction()
+                //     return new CommonResponseModel(false, 0, 'Something went wrong in order update', updateOrder)
+                // }
+            }
+        } else {
+            flag.add(true)
+        }
+        if (flag.has(true)) {
+            // await manager.completeTransaction()
+            return new CommonResponseModel(true, 1, 'File Reverted Successfully')
+        } else {
+            // await manager.releaseTransaction()
+            return new CommonResponseModel(false, 0, 'failed to revert file data')
+        }
+    }
 
 
 

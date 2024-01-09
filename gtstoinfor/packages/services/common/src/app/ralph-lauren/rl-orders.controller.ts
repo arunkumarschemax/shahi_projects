@@ -213,4 +213,13 @@ export class RLOrdersController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/revertProjectionFileData')
+    async revertProjectionFileData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.rlOrdersService.revertProjectionFileData(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
