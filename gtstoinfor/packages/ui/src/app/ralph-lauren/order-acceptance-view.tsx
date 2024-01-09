@@ -64,7 +64,7 @@ const OrderAcceptanceGrid = () => {
   const onReset = () => {
     form.resetFields();
     setSelectedEstimatedFromDate(undefined);
-    // getData();
+    getorderData();
   }
 
   const isActionButtonEnabled = (index) => {
@@ -77,7 +77,7 @@ const OrderAcceptanceGrid = () => {
     const formValues = form.getFieldsValue();
     const itemNoValue = formValues[index]?.itemNo;
   
-    console.log("Item No from form:", itemNoValue);
+    // console.log("Item No from form:", itemNoValue);
   
     setItemNoValues((prevValues) => ({
       ...prevValues,
@@ -209,7 +209,7 @@ const OrderAcceptanceGrid = () => {
       if (res.status) {
         getorderData();
         // Reset the form field related to the "Item No" input
-        form.setFieldsValue({ [index]: { itemNo: undefined } });
+        // form.setFieldsValue({ [index]: { itemNo: undefined } });
         message.success(res.internalMessage);
       } else {
         message.error(res.internalMessage);
@@ -261,6 +261,26 @@ const OrderAcceptanceGrid = () => {
       sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps('seasonCode'),
+      render: (text) => text ? text : "-",
+      
+    },
+    {
+      title: "Color",
+      dataIndex: "color",
+      width: 130,
+      sorter: (a, b) => a.color.localeCompare(b.color),
+      sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps('color'),
+      render: (text) => text ? text : "-",
+      
+    },
+    {
+      title: "Price",
+      dataIndex: "price",
+      width: 130,
+      sorter: (a, b) => a.price.localeCompare(b.price),
+      sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps('price'),
       render: (text) => text ? text : "-",
       
     },
@@ -321,17 +341,17 @@ const OrderAcceptanceGrid = () => {
       render: (text) => text ? text : "-"
 
     },
-    {
-      title: "Supplier",
-      dataIndex: "supplier",
-      align: "center",
-      width: 90,
-      // sorter: (a, b) => a.supplier.localeCompare(b.supplier),
-      sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps('supplier'),
-      render: (text) => text ? text : "-"
+    // {
+    //   title: "Supplier",
+    //   dataIndex: "supplier",
+    //   align: "center",
+    //   width: 90,
+    //   // sorter: (a, b) => a.supplier.localeCompare(b.supplier),
+    //   sortDirections: ["ascend", "descend"],
+    //   ...getColumnSearchProps('supplier'),
+    //   render: (text) => text ? text : "-"
 
-    },
+    // },
     {
       title: "Revision No",
       dataIndex: "revisionNo",
@@ -341,6 +361,39 @@ const OrderAcceptanceGrid = () => {
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps('revisionNo'),
       render: (text) => text ? text : "-"
+
+    },
+    {
+      title: "Total Quantity",
+      dataIndex: "",
+      align: "center",
+      width: 90,
+      sorter: (a, b) => {
+        const sumA = a.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.quantity) || 0, 0);
+        const sumB = b.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.quantity) || 0, 0);
+    
+        return sumA - sumB;
+      },
+      sortDirections: ["ascend", "descend"],
+      render: (text, record) => {
+        let sum = 0;
+        record.sizeWiseData.forEach((r) => {
+          // Convert to number before summing
+          sum += parseFloat(r.quantity) || 0;
+        });
+    
+        return sum;
+      },
+    },
+    {
+      title: "Delivery Date",
+      dataIndex: "handOverDate",
+      align: "center",
+      width: 90,
+       sorter: (a, b) => a.handOverDate.localeCompare(b.handOverDate),
+      sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps('revisionNo'),
+      render: (text) => text ? moment(text).format("DD-MM-YYYY") : "-"
 
     },
     //   {
@@ -360,11 +413,34 @@ const OrderAcceptanceGrid = () => {
       sortDirections: ["ascend", "descend"],
       render: (text) => text ? text : "-"
     },
+
+    {
+      title: "Item status",
+      dataIndex: "itemStatus",
+      align: "center",
+      width: 90,
+      sorter: (a, b) => a.itemStatus.localeCompare(b.itemStatus),
+      sortDirections: ["ascend", "descend"],
+      render: (text) => text ? text : "-",
+      filters: [
+        {
+          text: 'OPEN',
+          value: 'OPEN',
+        },
+        {
+          text: 'INPROGRESS',
+          value: 'INPROGRESS',
+        },
   
+      ],
+      onFilter: (value,record) =>{ return record.itemStatus === value}
+    },
+
     {
       title: "Item No",
       dataIndex: "itemNo",
       width: 150,
+      align:"center",
       render: (text, record, index) => {
         return (
           <Form.Item name={[index, 'itemNo']}>
@@ -372,12 +448,15 @@ const OrderAcceptanceGrid = () => {
             <Input
               placeholder="Enter Item No"
               onChange={(e) => handleItemNoChange(e.target.value, record, index)}
-              disabled={record.itemStatus == 'ACCEPTED' ? true : false}
+              disabled={record.itemStatus == 'INPROGRESS' ? true : false}
             />
           </Form.Item>
         );
       },
     },
+  
+    
+    
     {
       title: "Action",
       dataIndex: "action",
@@ -389,7 +468,7 @@ const OrderAcceptanceGrid = () => {
           <Button
             style={{ position: "relative", top: "-7.5px" }}
             onClick={() => createCOLine(record, index)}
-            disabled={record.itemStatus === 'ACCEPTED' ? true : !isEnabled}
+            disabled={record.itemStatus === 'INPROGRESS' ? true : !isEnabled}
           >
             {record.itemStatus === 'ACCEPTED' ? 'Accepted' : 'Accept'}
           </Button>
@@ -553,6 +632,7 @@ const OrderAcceptanceGrid = () => {
                   htmlType="submit"
                   icon={<SearchOutlined />}
                   type="primary"
+                  onClick={getorderData}
                 >
                   SEARCH
                 </Button>

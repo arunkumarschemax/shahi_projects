@@ -27,6 +27,7 @@ import {
 import { ColumnsType } from "antd/es/table";
 import { useIAMClientState } from "../nike/iam-client-react";
 import { Excel } from "antd-table-saveas-excel";
+import moment from "moment";
 
 export function RLOrdersGrid() {
   const service = new RLOrdersService();
@@ -593,6 +594,17 @@ export function RLOrdersGrid() {
         },
       },
       {
+        title: "Delivery Date",
+        dataIndex: "handOverDate",
+        align: "center",
+        width: 90,
+         sorter: (a, b) => a.handOverDate.localeCompare(b.handOverDate),
+        sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps('revisionNo'),
+        render: (text) => text ? moment(text).format("DD-MM-YYYY") : "-"
+  
+      },
+      {
         title: "Status",
         dataIndex: "status",
         align: "center",
@@ -1005,6 +1017,14 @@ export function RLOrdersGrid() {
 
        
         },
+      },
+      {
+        title: "Delivery Date",
+        dataIndex: "handOverDate",
+        align: "center",
+        width: 90,
+        render: (text) => text ? moment(text).format("DD-MM-YYYY") : "-"
+  
       },
       {
         title: "Status",

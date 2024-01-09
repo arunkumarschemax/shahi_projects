@@ -146,7 +146,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
     }
 
     return (
-        <Card title='Upload PDF'>
+        <Card title='Order Upload '>
             {resultProps === undefined &&
                 <Row gutter={24} >
                     <Col span={24}>
