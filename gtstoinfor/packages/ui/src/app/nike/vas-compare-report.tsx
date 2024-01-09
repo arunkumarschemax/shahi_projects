@@ -638,7 +638,7 @@ const VASChangesCompareGrid = () => {
 
         return (
             <>
-                {filterData.length > 0 ? (
+                {filterData?.length > 0 ? (
                     <Table
                         columns={columns}
                         dataSource={filterData}

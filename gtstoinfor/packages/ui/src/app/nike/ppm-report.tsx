@@ -1306,6 +1306,12 @@ const PPMReport = () => {
   const totalItemQty = filterData?.map(i => i.totalItemQty)
   const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
 
+  // Calculate the overall sum of actualShippedQty across all models
+  const overallSumOfActualShippedQty = filterData?.reduce((acc, model) => {
+    const sum = model.sizeWiseData.reduce((innerAcc, sizeData) => innerAcc + sizeData.actualShippedQty, 0);
+    return acc + sum;
+  }, 0);
+
   const onReset = () => {
     form.resetFields()
     setSelectedSizeColumns(sizeColumns);
@@ -2616,10 +2622,10 @@ const PPMReport = () => {
             <b> <Statistic loading={tableLoading} title="Total Order Qty:" style={{ color: 'white' }} value={count} formatter={formatter} /></b></Card>
           </Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#CBADF7', height: 100, alignItems: 'center' }}>
-            <b><Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
+            <b><Statistic loading={tableLoading} title="Total Shipped:" value={overallSumOfActualShippedQty} formatter={formatter} />
             </b></Card></Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#A1EBB5', height: 100, alignItems: 'center' }} >
-            <b><Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
+            <b><Statistic loading={tableLoading} title="Balance to ship:" value={count - overallSumOfActualShippedQty} formatter={formatter} />
             </b></Card></Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />

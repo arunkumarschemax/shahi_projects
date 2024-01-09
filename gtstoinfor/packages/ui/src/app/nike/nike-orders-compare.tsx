@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Table, Tabs, TabsProps, Tag, Tooltip, Typography } from 'antd';
 import { NikeService } from '@project-management-system/shared-services';
-import { ArrowDownOutlined, ArrowUpOutlined, DownOutlined, FileExcelFilled, SearchOutlined, UndoOutlined, UpOutlined } from '@ant-design/icons';
+import { DownOutlined, FileExcelFilled, SearchOutlined, UpOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
@@ -11,7 +11,7 @@ import { TotalQuantityChangeModel, nikeFilterRequest } from '@project-management
 const OrdersCompareGrid = () => {
 
     const service = new NikeService()
-    const [poStatusData, setPOStatusData] = useState([])
+    // const [poStatusData, setPOStatusData] = useState([])
     const [qtyData, setQtyData] = useState([])
     const [itemChangeData, setItemChangeData] = useState([])
     const [filteredPOStatusData, setFilteredPOStatusData] = useState([])
@@ -30,7 +30,6 @@ const OrdersCompareGrid = () => {
     const [productCodeChaneData, setProductCodeChangeData] = useState([])
     const [itemTextChaneData, setItemTextChangeData] = useState([])
     const [filterData, setFilterData] = useState<any>([])
-
     const [remarkModal, setRemarkModal] = useState<boolean>(false)
     const [itemText, setRemarks] = useState<string>('')
     const [modeOTransportChaneData, setmodeOfTransportChangeData] = useState([])
@@ -38,7 +37,7 @@ const OrdersCompareGrid = () => {
 
 
     useEffect(() => {
-        poLineItemStatusChange()
+        // poLineItemStatusChange()
         getQtyChangeData()
         getUnitChangeData()
         getItemChangeData()
@@ -79,12 +78,12 @@ const OrdersCompareGrid = () => {
         })
     }
 
-    const poLineItemStatusChange = () => {
-        service.poLineItemStatusChange().then((res) => {
-            setPOStatusData(res.data)
-            setFilteredPOStatusData(res.data)
-        })
-    }
+    // const poLineItemStatusChange = () => {
+    //     service.poLineItemStatusChange().then((res) => {
+    //         setPOStatusData(res.data)
+    //         setFilteredPOStatusData(res.data)
+    //     })
+    // }
 
     const PriceAndCurrencyChangeFob = () => {
         const req = new nikeFilterRequest();
@@ -155,12 +154,12 @@ const OrdersCompareGrid = () => {
                 .addDataSource(itemChangeData, { str2num: true });
         }
 
-        if (poStatusData && poStatusData.length > 0) {
-            excel
-                .addSheet('PO Line Item Status Change')
-                .addColumns(data3)
-                .addDataSource(poStatusData, { str2num: true });
-        }
+        // if (poStatusData && poStatusData.length > 0) {
+        //     excel
+        //         .addSheet('PO Line Item Status Change')
+        //         .addColumns(data3)
+        //         .addDataSource(poStatusData, { str2num: true });
+        // }
 
         if (priceChaneData && priceChaneData.length > 0) {
             excel
@@ -778,6 +777,7 @@ const OrdersCompareGrid = () => {
         //     render: (value) => <Tag color={value == 'NEW' ? 'green' : 'green-inverse'} >{value}</Tag>
         // }
     ];
+
     const columns2: any = [
         {
             title: 'S No',
@@ -1005,7 +1005,6 @@ const OrdersCompareGrid = () => {
             dataIndex: 'documentDate',
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
-
         {
             title: 'OGAC',
             dataIndex: 'ogac',
@@ -1033,7 +1032,6 @@ const OrdersCompareGrid = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
             fixed: 'left'
         },
-
         {
             title: 'Report Generate Date',
             dataIndex: 'created_at', width: 70,
@@ -1097,10 +1095,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Change to Factory',
             dataIndex: 'change_to_factory', width: 70,
-        },
-
-
-
+        }
     ];
 
     const columns5: any = [
@@ -1108,7 +1103,6 @@ const OrdersCompareGrid = () => {
             title: 'S No',
             key: 'sno',
             width: 60,
-
             render: (text, object, index) => (page - 1) * pageSize + (index + 1)
         },
         {
@@ -1240,7 +1234,8 @@ const OrdersCompareGrid = () => {
             title: 'Document Date',
             dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY'), width: 80
-        }, {
+        },
+        {
             title: 'PO Number',
             dataIndex: 'po_number',
             width: 80
@@ -1311,7 +1306,6 @@ const OrdersCompareGrid = () => {
         {
             title: 'PO Number',
             dataIndex: 'po_number', width: 70,
-
         },
         {
             title: 'PO Line Item No', width: 70,
@@ -1333,7 +1327,6 @@ const OrdersCompareGrid = () => {
                     return firstFourDigits;
                 }
             },
-            // ('item')
         },
         {
             title: 'Factory',
@@ -1346,13 +1339,10 @@ const OrdersCompareGrid = () => {
                     return firstFourDigits;
                 }
             },
-
         },
-
         {
             title: 'Product Code',
             dataIndex: 'product_code', width: 70,
-            //('')
         },
         {
             title: 'GAC',
@@ -1366,12 +1356,10 @@ const OrdersCompareGrid = () => {
         {
             title: 'Size Description',
             dataIndex: 'size_description', width: 80, align: 'center'
-            // ('size_description')
         },
         {
             title: 'Schedule Line Item No',
             dataIndex: 'schedule_line_item_number', width: 80, align: 'center'
-            // ('schedule_line_item_number')
         },
         {
             title: 'Previous Line Item Status',
@@ -1403,31 +1391,31 @@ const OrdersCompareGrid = () => {
         }
     }
 
-    const getFilterdData = () => {
-        let orderStatus = form.getFieldValue('orderStatus');
-        let startDate = selectedEstimatedFromDate;
-        let endDate = selectedEstimatedToDate;
-        let filteredItemChangeData = itemChangeData;
-        let filteredQtyData = qtyData
-        let filteredPOStatusData = poStatusData
-        if (orderStatus) {
-            filteredItemChangeData = itemChangeData.filter(record => record.order_status === orderStatus);
-            filteredQtyData = filteredQtyData.filter(record => record.order_status === orderStatus)
-            filteredPOStatusData = poStatusData.filter(record => record.order_status === orderStatus)
-            setItemChangeData(filteredItemChangeData);
-            setFilteredQtyData(filteredQtyData)
-            setFilteredPOStatusData(filteredPOStatusData)
-        }
-        if (startDate && endDate) {
-            console.log(filteredQtyData)
-            filteredItemChangeData = itemChangeData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
-            filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
-            filteredPOStatusData = poStatusData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
-            setItemChangeData(filteredItemChangeData);
-            setFilteredQtyData(filteredQtyData)
-            setFilteredPOStatusData(filteredPOStatusData)
-        }
-    }
+    // const getFilterdData = () => {
+    //     let orderStatus = form.getFieldValue('orderStatus');
+    //     let startDate = selectedEstimatedFromDate;
+    //     let endDate = selectedEstimatedToDate;
+    //     let filteredItemChangeData = itemChangeData;
+    //     let filteredQtyData = qtyData
+    //     let filteredPOStatusData = poStatusData
+    //     if (orderStatus) {
+    //         filteredItemChangeData = itemChangeData.filter(record => record.order_status === orderStatus);
+    //         filteredQtyData = filteredQtyData.filter(record => record.order_status === orderStatus)
+    //         filteredPOStatusData = poStatusData.filter(record => record.order_status === orderStatus)
+    //         setItemChangeData(filteredItemChangeData);
+    //         setFilteredQtyData(filteredQtyData)
+    //         setFilteredPOStatusData(filteredPOStatusData)
+    //     }
+    //     if (startDate && endDate) {
+    //         console.log(filteredQtyData)
+    //         filteredItemChangeData = itemChangeData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
+    //         filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
+    //         filteredPOStatusData = poStatusData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
+    //         setItemChangeData(filteredItemChangeData);
+    //         setFilteredQtyData(filteredQtyData)
+    //         setFilteredPOStatusData(filteredPOStatusData)
+    //     }
+    // }
 
     const getSizeWiseHeaders = (data: TotalQuantityChangeModel[]) => {
         const sizeHeaders = new Set<string>();
@@ -1879,13 +1867,13 @@ const OrdersCompareGrid = () => {
             label: <b style={{ color: '#29D6DE' }}>Item Changed PO's : {itemChangeData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={itemChangeData} columns={columns1} pagination={false} scroll={{ x: 'max-content', y: 450 }} />,
         },
+        // {
+        //     key: '4',
+        //     label: <b>PO Line Item Status Revised PO's : {poStatusData?.length}</b>,
+        //     children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns7} pagination={false} scroll={{ x: 'max-content', y: 450 }} />,
+        // },
         {
             key: '4',
-            label: <b>PO Line Item Status Revised PO's : {poStatusData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={poStatusData} columns={columns7} pagination={false} scroll={{ x: 'max-content', y: 450 }} />,
-        },
-        {
-            key: '5',
             label: <b style={{ color: '#B229DE' }}>Price & currency change in FOB : {priceChaneData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={priceChaneData} pagination={{
                 pageSize: 50,
@@ -1896,7 +1884,7 @@ const OrdersCompareGrid = () => {
             }} columns={columns2} scroll={{ x: 'max-content', y: 500 }} />,
         },
         {
-            key: '6',
+            key: '5',
             label: <b>Country & Coustomer & Plant Revised : {productCodeChaneData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={productCodeChaneData} columns={columns6} pagination={false} scroll={{ x: 2000, y: 450 }} />,
         },
@@ -1906,7 +1894,7 @@ const OrdersCompareGrid = () => {
         //     children: <Table className="custom-table-wrapper" bordered dataSource={modeOTransportChaneData} columns={columns3} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
         // },
         {
-            key: '7',
+            key: '6',
             label: <b style={{ color: '#DEAD29' }}>Item Text changed PO's : {itemTextChaneData?.length}</b>,
             children: <Table className="custom-table-wrapper" bordered dataSource={itemTextChaneData} columns={columns5} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
         }
@@ -1963,7 +1951,7 @@ const OrdersCompareGrid = () => {
                     </Col>
                 </Row>
             </Form> */}
-            {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
+            {filteredQtyData || unitChangeData || itemChangeData ? <>
                 <Tabs type='card' items={items} />
             </> : <></>}
             <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
