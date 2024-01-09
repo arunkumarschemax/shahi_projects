@@ -83,7 +83,17 @@ export const extractDataFromPoPdf = async (pdf) => {
             poData.paymentCategory = "USD";
             poData.plant = firstPageContent[dateSentIndex + 5].str
             poData.mfgOrigin = firstPageContent[dateSentIndex + 6].str
-            poData.poPrint = firstPageContent[dateSentIndex + 7].str
+            // poData.poPrint = firstPageContent[dateSentIndex + 7].str
+            let poPrintExtracted = '';
+            const poPrintIndex = dateSentIndex + 7;
+            const poPrintNextIndexData = firstPageContent[poPrintIndex + 1].str; 
+            const match = firstPageContent[poPrintIndex].str.match(/\d+-[A-Za-z]{3}-\d+/);
+            if (match) {
+                poPrintExtracted += match[0];
+            } else {
+                poPrintExtracted += poPrintNextIndexData;
+            }
+            poData.poPrint = poPrintExtracted;
             poData.poIssue = firstPageContent[dateSentIndex + 8].str
             poData.poContact = firstPageContent[dateSentIndex + 9].str
             poData.dateSent = firstPageContent[dateSentIndex + 10].str
@@ -100,14 +110,27 @@ export const extractDataFromPoPdf = async (pdf) => {
                     buyerAddress += firstPageContent[b].str
             }
             poData.buyerAddress = buyerAddress;
-            let shipToAddress = ''
+
+            // let shipToAddress = ''
+            // for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) {
+            //     if (c < shipToAddEndIndex - 1)
+            //         shipToAddress += firstPageContent[c].str + ','
+            //     else
+            //         shipToAddress += firstPageContent[c].str
+            // }
+            // poData.shipToAddress = shipToAddress;
+
+            let shipToAddress = '';
             for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) {
-                if (c < shipToAddEndIndex - 1)
-                    shipToAddress += firstPageContent[c].str + ','
-                else
-                    shipToAddress += firstPageContent[c].str
+                if (firstPageContent[c].str.match(/[0-9]{10}-[0-9]{4}/)) {
+                    shipToAddress += firstPageContent[c].str;
+                    break;
+                } else {
+                    shipToAddress += firstPageContent[c].str + ',';
+                }
             }
-            poData.shipToAddress = shipToAddress;
+            poData.shipToAddress = shipToAddress.replace(/[0-9]{10}-[0-9]{4}/g, "");
+
         }
         // po details parsing ends here
         //-------------------------------------------------------------------------------------------
@@ -173,16 +196,40 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsObj.contractualDeliveryDate = filteredData[rec.itemIndex + 12].str
         itemDetailsObj.inboundPkg = filteredData[rec.itemIndex + 15].str
         itemDetailsObj.incotermsPlace = filteredData[rec.itemIndex + 18].str
-        itemDetailsObj.handoverDate = filteredData[rec.itemIndex + 21].str
+        
+        // itemDetailsObj.handoverDate = filteredData[rec.itemIndex + 21].str
+        const handoverDateIndex = filteredData.findIndex((data, index) => index > rec.itemIndex && data.str === 'Handover Date');
+        if (handoverDateIndex !== -1) {
+            itemDetailsObj.handoverDate = filteredData[handoverDateIndex + 2].str;
+        } else {
+            itemDetailsObj.handoverDate = '';
+        }
+        
         itemDetailsObj.mfgProcess = filteredData[rec.itemIndex + 24].str
         itemDetailsObj.harbor = filteredData[rec.itemIndex + 27].str
-        itemDetailsObj.shipMode = filteredData[rec.itemIndex + 34].str
+
+        // itemDetailsObj.shipMode = filteredData[rec.itemIndex + 34].str
+        const shipModeIndex = filteredData.findIndex((data, index) => index > rec.itemIndex && data.str === 'Ship Mode');
+        if (shipModeIndex !== -1) {
+            itemDetailsObj.shipMode = filteredData[shipModeIndex + 2].str;
+        } else {
+            itemDetailsObj.shipMode = '';
+        }
+
         itemDetailsObj.model = filteredData[rec.itemIndex + 43].str
         itemDetailsObj.productType = filteredData[rec.itemIndex + 46].str
         itemDetailsObj.merchDivision = filteredData[rec.itemIndex + 49].str
         itemDetailsObj.colorDescription = filteredData[rec.colorIndex + 2].str
         itemDetailsObj.class = filteredData[rec.itemIndex + 56].str
-        itemDetailsObj.conceptShortDesc = filteredData[rec.itemIndex + 59].str.replace(':', '').replace("Fabric Content", '') + " " + filteredData[rec.itemIndex + 58].str.replace(':', '').replace('Fabric Content', '');
+
+        // itemDetailsObj.conceptShortDesc = filteredData[rec.itemIndex + 59].str
+        const conceptShortDescIndex = filteredData.findIndex((data, index) => index > rec.itemIndex && data.str === 'Concept Short desc');
+        if (conceptShortDescIndex !== -1) {
+            itemDetailsObj.conceptShortDesc = filteredData[conceptShortDescIndex + 2].str;
+        } else {
+            itemDetailsObj.conceptShortDesc = '';
+        }
+
         itemDetailsObj.fabricContent = filteredData[rec.itemIndex + 62].str
         itemDetailsObj.board = filteredData[rec.itemIndex + 65].str
         itemDetailsObj.fishWildlifeInd = filteredData[rec.itemIndex + 68].str
