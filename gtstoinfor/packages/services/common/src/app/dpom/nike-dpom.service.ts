@@ -75,7 +75,7 @@ export class DpomService {
     });
 
     async getOctaToken() {
-        const payload = { 'grant_type': 'password', 'scope': 'iam.okta.factoryaffiliations.read iam.okta.factorygroups.read openid legacy_username email', 'username': 'prakash.iyengar@shahi.co.in', 'password': 'Production@1234' }
+        const payload = { 'grant_type': 'password', 'scope': 'iam.okta.factoryaffiliations.read iam.okta.factorygroups.read openid legacy_username email', 'username': 'prakash.iyengar@shahi.co.in', 'password': 'January@123' }
         const headers = {
             'Authorization': 'Basic TklLRS5HU00uREgtQVBJOnVyNjNiZjR1cEIya1FKdUkxaEV6bEdYa3Z5Rjg1WHNFVE0zR0lZY3ROSDVYeVM1YU9KVDJpNVNkaWNyTUk1Nk0=', 'Cookie': 'JSESSIONID=09FD9CE633210E9561E3E8583203D2CD', 'Cache-Control': 'no-cache', 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate, br'
         }
@@ -329,6 +329,7 @@ export class DpomService {
             let deliveryAddress;
             let pkgTerms;
             let paymentTerms;
+            let styleNo;
             if (po.buyer === 'Nike-U12') {
                 const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Inprogress' });
                 const data = await this.dpomRepository.getDataForColine({ poNumber: po.buyer_po, lineNumber: po.line_item_no })
@@ -346,6 +347,7 @@ export class DpomService {
                 coLine.salesPrice = data[0].salesPrice ? data[0].salesPrice : data[0].gross_price_fob
                 coLine.currency = data[0].currency ? data[0].currency : 'USD'
                 coLine.deliveryDate = moment(data[0].gac).format("DD/MM/YYYY")
+                styleNo = data[0].style_number
                 const destinationsArr: Destinations[] = []
                 const destinations = new Destinations()
                 destinations.name = data[0].destination_country
