@@ -117,6 +117,13 @@ const CentriColineView = () => {
                 }
             },
             {
+                title: 'Material',
+                dataIndex: 'material',
+                render: (text, record) => {
+                    return (record.material ? (record.material) : '-')
+                }
+            },
+            {
                 title: 'CO Date',
                 dataIndex: 'co_date',
                 render: (text, record) => {
@@ -184,6 +191,13 @@ const CentriColineView = () => {
             dataIndex: 'delivery_date',
             render: (text, record) => {
                 return (record.delivery_date? (record.delivery_date): '-')
+            }
+        },
+        {
+            title: 'Material',
+            dataIndex: 'material',
+            render: (text, record) => {
+                return (record.material? (record.material): '-')
             }
         },
         {

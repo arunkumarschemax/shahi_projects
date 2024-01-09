@@ -316,7 +316,7 @@ export class CentricService {
         return new CommonResponseModel(false, 0, 'Please enter Item No')
       };
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
-      const records = await this.Repo.find({ where: { poNumber: req.poNumber,deliveryDate:req.deliveryDate } });
+      const records = await this.Repo.find({ where: { poNumber: req.poNumber,deliveryDate:req.deliveryDate,material: req.material } });
       const empty = [];
       for (const rec of records) {
         const entity = new CentricCOLineEntity()
@@ -325,7 +325,8 @@ export class CentricService {
         entity.poLine = rec.poLine;
         entity.itemNo =  req?.itemNo;
         entity.status = 'Open';
-        entity.deliveryDate=rec.deliveryDate
+        entity.deliveryDate=rec.deliveryDate;
+        entity.material=rec.material
         entity.createdUser = req.createdUser;
         empty.push(entity)
       }
@@ -334,7 +335,7 @@ export class CentricService {
 
       if (save) {
         const update = await this.Repo.update(
-          { poNumber: req.poNumber, deliveryDate:req.deliveryDate }, // Conditions for updating
+          { poNumber: req.poNumber, deliveryDate:req.deliveryDate,material:req.material }, // Conditions for updating
           { status: StatusEnum.ACCEPTED } // Data to update
         );
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)

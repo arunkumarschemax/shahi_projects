@@ -4,5 +4,6 @@ export class CentricOrderAcceptanceRequest {
     poLine: number;
     itemNo: string;
     buyer: string;
-    deliveryDate:String;
+    deliveryDate:string;
+    material:string
 }

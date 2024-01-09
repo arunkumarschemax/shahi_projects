@@ -104,6 +104,8 @@ export function CentricOrderAcceptanceGrid() {
     req.itemNo = itemNoValue; 
     req.buyer = 'Centric';
     req.deliveryDate=record.deliveryDate;
+   req.material=record.material;
+
   
    // console.log("Request Payload:", req);
   
@@ -123,7 +125,7 @@ export function CentricOrderAcceptanceGrid() {
     const roleWiseMapData = new Map<string, CentricOrderAcceptanceRequest[]>();
 
     tableData.forEach(rec => {
-      const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}`;
+      const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}_${rec.material}`;
 
       if (!roleWiseMapData.has(key)) {
         roleWiseMapData.set(key, [rec]);
@@ -335,6 +337,16 @@ export function CentricOrderAcceptanceGrid() {
         }
       },
       {
+        title: "Material",
+        dataIndex: "material",
+        
+        // sorter: (a, b) => a.material.localeCompare(b.material),
+        // sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-",
+       // ...getColumnSearchProps('material')
+
+      },
+      {
         title: "PO Date",
         dataIndex: "PODate",
         align: "center",
@@ -354,16 +366,7 @@ export function CentricOrderAcceptanceGrid() {
 
       },
 
-      {
-        title: "Material",
-        dataIndex: "material",
-        
-        // sorter: (a, b) => a.material.localeCompare(b.material),
-        // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-",
-        ...getColumnSearchProps('material')
-
-      },
+      
       {
         title: "PPK UPC",
         dataIndex: "ppkUpc",

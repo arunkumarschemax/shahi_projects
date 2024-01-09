@@ -28,6 +28,11 @@ export class CentricCOLineEntity {
     deliveryDate: string
 
     @Column('varchar', {
+        name: "material"
+    })
+    material: string
+
+    @Column('varchar', {
         nullable: true,
         name: "po_line",
     })
