@@ -7,6 +7,7 @@ import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { AlertMessages } from "packages/libs/shared-models/src/common/supplier/alert-messages";
+import { config } from "packages/libs/shared-services/config";
 
 
 export function CentricPdFInfoGrid() {
@@ -215,7 +216,7 @@ export function CentricPdFInfoGrid() {
               console.log(res);
               setTimeout(() => {
                 const response = {
-                  file: `config.file_upload_path+'/'+ ${res}`,
+                  file: config.file_upload_path+'/'+ `${res}`,
                 };
       
                 window.open(response.file);
