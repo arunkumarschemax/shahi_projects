@@ -173,8 +173,8 @@ export const OrderComparisionReport = () => {
         title: "Quantity",
         dataIndex: "",
         width: 90,
-        sorter: (a, b) => a.size.localeCompare(b.size),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.size.localeCompare(b.size),
+        // sortDirections: ["ascend", "descend"],
         children: [
           {
             title: 'Old Value',
@@ -200,8 +200,8 @@ export const OrderComparisionReport = () => {
         title: "Delivery Date",
         dataIndex: "",
         width: 90,
-        sorter: (a, b) => a.size.localeCompare(b.size),
-        sortDirections: ["ascend", "descend"],
+        // sorter: (a, b) => a.size.localeCompare(b.size),
+        // sortDirections: ["ascend", "descend"],
         children: [
           {
             title: 'Old Value',

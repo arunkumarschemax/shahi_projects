@@ -841,14 +841,29 @@ export class RLOrdersService {
         }, order: {ordersChildId: 'DESC'}, take: 1, skip: 1})
         
 
-        if(childData.length > 0){
-          
-           
-          compareModel.push(new CompareModel(rec.po_number,rec.po_item, rec.size,childData[0].price, rec.price,childData[0].handoverDate,rec.handover_date,childData[0].quantity, rec.quantity));
-         
-        
-
-        }
+        if (childData.length > 0) {
+          const oldData = childData[0];
+      
+          // Check for changes in values
+          if (
+              oldData.price !== rec.price ||
+              oldData.handoverDate !== rec.handover_date ||
+              oldData.quantity !== rec.quantity
+          ) {
+              // Only push if there are changes
+              compareModel.push(new CompareModel(
+                  rec.po_number,
+                  rec.po_item,
+                  rec.size,
+                  oldData.price,
+                  rec.price,
+                  oldData.handoverDate,
+                  rec.handover_date,
+                  oldData.quantity,
+                  rec.quantity
+              ));
+          }
+      }
         
       } 
       
