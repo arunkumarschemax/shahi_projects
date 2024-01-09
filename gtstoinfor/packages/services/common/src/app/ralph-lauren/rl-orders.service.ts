@@ -48,11 +48,6 @@ export class RLOrdersService {
         for (const variant of item.poItemVariantDetails) {
           const orderData = await this.rlOrdersRepo.findOne({ where: { poNumber: req.poNumber, poItem: poItem, size: variant.size } })
           const order = await this.orderChildRepo.findOne({ where: { poNumber: req.poNumber }, order: { poVersion: 'DESC' } })
-          //  console.log(order,"test")
-          //  const lastPoVersionObject = order.slice(-1);
-
-          // Now 'lastPoVersionObject' contains the last object of the 'poVersion' array.
-          //  console.log(lastPoVersionObject[0].poVersion,"7777777777");
 
           const entity = new RLOrdersEntity()
           entity.agent = req.agent
@@ -74,19 +69,14 @@ export class RLOrdersService {
           entity.shipToAddress = req.shipToAddress
           entity.billToAddress = req.buyerAddress
           entity.size = variant.size
-          entity.status = 'Revised'
+          entity.status = req.revisionNo == 1 ? 'New' : 'Revised'
           entity.upcEan = variant.upc
           if (orderData) {
-            // console.log("uuuuuuu")
             const update = await transactionManager.getRepository(RLOrdersEntity).update({ poNumber: req.poNumber, poItem: poItem, size: variant.size }, { revisionNo: req.revisionNo, agent: req.agent, amount: variant.amount, price: variant.unitPrice, currency: variant.currency, materialNo: item.materialNo, shipToAddress: req.shipToAddress })
-
-
 
             let po = parseInt(order?.poVersion) + 1
 
-
             const entitys = new RLOrderschildEntity()
-
             entitys.agent = req.agent
             entitys.amount = variant.amount
             entitys.boardCode = item.board
@@ -106,21 +96,15 @@ export class RLOrdersService {
             entitys.shipToAddress = req.shipToAddress
             entitys.billToAddress = req.buyerAddress
             entitys.size = variant.size
-            entitys.status = 'Revised'
+            entitys.status = req.revisionNo == 1 ? 'New' : 'Revised'
             entitys.upcEan = variant.upc
             entitys.poVersion = po.toString()
             entitys.orderId = orderData.id
 
             const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
-
-
-            if (!update.affected
-              // && !updated.affected 
-            ) {
+            if (!update.affected) {
               throw new Error('Update failed');
             }
-
-
           } else {
             saved = await transactionManager.getRepository(RLOrdersEntity).save(entity)
 
@@ -144,14 +128,11 @@ export class RLOrdersService {
             entitys.shipToAddress = req.shipToAddress
             entitys.billToAddress = req.buyerAddress
             entitys.size = variant.size
-            entitys.status = 'Revised'
+            entitys.status = req.revisionNo == 1 ? 'New' : 'Revised'
             entitys.upcEan = variant.upc
             entitys.orderId = saved.id
 
             const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
-
-
-
             if (!saved) {
               throw new Error('Save failed')
             }
@@ -832,45 +813,39 @@ export class RLOrdersService {
   }
 
 
-  async getordercomparationData(req?:any): Promise<CommonResponseModel> {
+  async getordercomparationData(req?: any): Promise<CommonResponseModel> {
     try {
       const Originaldata = await this.rlOrdersRepo.getordercomparationData(req)
-
-      const compareModel  : CompareModel [] = []
-
-      for (const rec of Originaldata){
-        const childData = await this.orderChildRepo.find({ where:{
-          poNumber:rec.po_number,poItem: rec.po_item, size: rec.size
-        }, order: {ordersChildId: 'DESC'}, take: 1, skip: 1})
-        
-
+      const compareModel: CompareModel[] = []
+      for (const rec of Originaldata) {
+        const childData = await this.orderChildRepo.find({
+          where: {
+            poNumber: rec.po_number, poItem: rec.po_item, size: rec.size
+          }, order: { ordersChildId: 'DESC' }, take: 1, skip: 1
+        })
         if (childData.length > 0) {
           const oldData = childData[0];
-      
           // Check for changes in values
           if (
-              oldData.price !== rec.price ||
-              oldData.handoverDate !== rec.handover_date ||
-              oldData.quantity !== rec.quantity
+            oldData.price !== rec.price ||
+            oldData.handoverDate !== rec.handover_date ||
+            oldData.quantity !== rec.quantity
           ) {
-              // Only push if there are changes
-              compareModel.push(new CompareModel(
-                  rec.po_number,
-                  rec.po_item,
-                  rec.size,
-                  oldData.price,
-                  rec.price,
-                  oldData.handoverDate,
-                  rec.handover_date,
-                  oldData.quantity,
-                  rec.quantity
-              ));
+            // Only push if there are changes
+            compareModel.push(new CompareModel(
+              rec.po_number,
+              rec.po_item,
+              rec.size,
+              oldData.price,
+              rec.price,
+              oldData.handoverDate,
+              rec.handover_date,
+              oldData.quantity,
+              rec.quantity
+            ));
           }
+        }
       }
-        
-      } 
-      
-      
       if (compareModel) {
         return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
       } else {
