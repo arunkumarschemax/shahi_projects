@@ -175,7 +175,7 @@ export function FileRevert() {
             render: (text, record, index) => {
                 // const isFirstRecord = index === 0 && page === 1;
                 // console.log(index,successRecordIndex,'---')
-                const isFirstRecord = record.fileId === successRecord.fileId
+                const isFirstRecord = record?.fileId === successRecord?.fileId
                 return (
                     <>
                         {isFirstRecord && (

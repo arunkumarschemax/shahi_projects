@@ -47,6 +47,7 @@ export const MonthWiseReport = () => {
   const { Text } = Typography;
 
   useEffect(() => {
+    console.log(selected,tab)
     getData(selected, tab);
     getTabs();
   }, []);
@@ -2247,6 +2248,7 @@ export const MonthWiseReport = () => {
       </>
     );
   };
+  
   return (
     <>
       <Card>

@@ -34,6 +34,8 @@ import ColineView from "./excel-import/co-line-info"
 import AddressUpload from "./masters/address/address-excel-upload"
 import AddressView from "./masters/address/address-view"
 import SeasonWiseReportData from "./common/reports/season-wise-data"
+import MonthWiseReportNew from "./common/reports/month-wise-reports/month-wise-report-new"
+import MonthWiseReportV2 from "./common/reports/month-wise-reports/month-wise-rep"
 // import ExcelImport from "./excel-import/excel-import"
 
 
@@ -77,6 +79,10 @@ export const AppRoutesNew = () => {
                 <Route>
                     <Route path='/ware-house-comparision' key='/ware-house-comparision' element={<WareHouseComparision />} />
                     <Route path='/month-wise-report' key='/month-wise-report' element={<MonthWiseReport />} />
+                    <Route path='/new-month-wise-report' key='/new-month-wise-report' element={<MonthWiseReportNew />} />
+                    
+                    <Route path='/new-month-wise-report-v2' key='/new-month-wise-report-v2' element={<MonthWiseReportV2 />} />
+
                     <Route path='/month-wise-comparision-report' key='/month-wise-comparision-report' element={<MonthWiseComparisionReport />} />
 
                     <Route path='/ware-house-report' key='/ware-house-report' element={<WarehouseReport />} />
@@ -86,8 +92,8 @@ export const AppRoutesNew = () => {
                 </Route>
                 <Route path='/dashboard' key='/dashboard' element={<Dashboard />} />
                 <Route path='/ex-factory-report' key='/ex-factory-report' element={<ExFactoryReport />} />
-                <Route path='/season-wise-report' key='/season-wise-report' element={<SeasonWiseReport />} />
-                <Route path='/season-wise-reportData' key='/season-wise-reportData' element={<SeasonWiseReportData />} />
+                <Route path='/season-wise-report' key='/season-wise-report' element={<SeasonWiseReportData />} />
+                {/* <Route path='/season-wise-reportData' key='/season-wise-reportData' element={<SeasonWiseReport />} /> */}
 
                 <Route path='/ex-factory-report-with-comparision' key='/ex-factory-report-with-comparision' element={<ExFactoryReportWithComparision />} />
                 <Route path='/403' key='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

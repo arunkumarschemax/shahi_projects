@@ -171,6 +171,33 @@ export class OrdersRepository extends Repository<OrdersEntity> {
 
 
 
+
+
+
+
+    async getMonthWiseReportDataNew(req:YearReq): Promise<any[]>{
+       
+        let query='SELECT MONTH(exf_date),planning_ssn,YEAR, planning_sum,prod_plan_type,file_id,CONCAT(MONTHNAME(wh_date),YEAR(wh_date)) AS whMonthName,CONCAT(MONTHNAME(exf_date),YEAR(exf_date)) AS exfMonthName,ROUND(SUM(CASE WHEN MONTH(exf_date) THEN REPLACE(order_plan_qty,",","") ELSE 0 END)) AS exfPcs,ROUND(SUM(CASE WHEN MONTH(wh_date) THEN REPLACE(order_plan_qty,",","") ELSE 0 END)) AS whPcs,ROUND(SUM(CASE WHEN MONTH(wh_date) THEN REPLACE(order_plan_qty_coeff,",","") ELSE 0 END)) AS whCoeff, ROUND(SUM(CASE WHEN MONTH(exf_date) THEN REPLACE(order_plan_qty_coeff,",","") ELSE 0 END)) AS exfCoeff FROM orders WHERE file_id = (SELECT MAX(file_id) FROM orders) AND YEAR ="'+req.year+'" AND prod_plan_type != "STOP" '
+        if(req.tabName === 'ExFactory'){
+            if(req.itemName != undefined){
+                query=query+' and planning_sum="'+req.itemName+'" GROUP BY MONTH(exf_date),year(exf_date),planning_sum,prod_plan_type  ORDER BY MONTH(exf_date),planning_sum'
+            }else{
+                query=query+' GROUP BY MONTH(exf_date),year(exf_date),planning_sum,prod_plan_type  ORDER BY MONTH(exf_date),planning_sum'
+            }
+        }
+        if(req.tabName === 'WareHouse'){
+            if(req.itemName != undefined){
+                query=query+' and planning_sum="'+req.itemName+'" GROUP BY MONTH(wh_date),year(wh_date),planning_sum,prod_plan_type  ORDER BY MONTH(wh_date),planning_sum'
+            }
+            query=query+' GROUP BY MONTH(wh_date),year(wh_date),planning_sum,prod_plan_type  ORDER BY MONTH(wh_date),planning_sum'
+        }
+        const result = await this.query(query)
+        return result
+    }
+
+
+
+
 async getdata(req: YearReq): Promise<any[]> {
     const query = 
     `  SELECT  YEAR,file_id,
@@ -463,5 +490,19 @@ async getYearDropdown():Promise<any>{
     .orderBy(`o.year`)
     return await query.getRawMany()
 }
+
+async getDataNew(req:YearReq):Promise<any[]>{
+    let query
+    if(req.tabName === 'ExFactory'){
+        query='SELECT month(exf_date) as month,planning_sum, YEAR,file_id,CASE WHEN prod_plan_type LIKE "%Ph3%" THEN "Ph3" WHEN prod_plan_type LIKE "%Ph2%" THEN "Ph2" WHEN prod_plan_type LIKE "%Ph1%" THEN "Ph1" ELSE prod_plan_type END AS prod_plan_type,CONCAT(MONTHNAME(exf_date),YEAR(exf_date)) AS exfMonth,ROUND(SUM(CASE WHEN MONTH(exf_date) THEN REPLACE(order_plan_qty,",","") ELSE 0 END)) AS exfPcs,ROUND(SUM(CASE WHEN MONTH(exf_date) THEN REPLACE(order_plan_qty_coeff,",","") ELSE 0 END)) AS exfCoeff FROM orders WHERE exf_date IS NOT NULL AND YEAR = "'+req.year+'" AND file_id = (SELECT MAX(file_id) FROM orders)  AND prod_plan_type !="STOP"  GROUP BY  CASE WHEN prod_plan_type LIKE "%Ph3%" THEN "Ph3" WHEN prod_plan_type LIKE "%Ph2%" THEN "Ph2"  WHEN prod_plan_type LIKE "%Ph1%" THEN "Ph1"  ELSE prod_plan_type  END,MONTH(exf_date),year(exf_date) '
+    }
+    if(req.tabName === 'WareHouse'){
+        query='SELECT month(wh_date) as month,planning_sum, YEAR,file_id,CASE WHEN prod_plan_type LIKE "%Ph3%" THEN "Ph3" WHEN prod_plan_type LIKE "%Ph2%" THEN "Ph2" WHEN prod_plan_type LIKE "%Ph1%" THEN "Ph1" ELSE prod_plan_type END AS prod_plan_type,CONCAT(MONTHNAME(wh_date),YEAR(wh_date)) AS whMonth,ROUND(SUM(CASE WHEN MONTH(wh_date) THEN REPLACE(order_plan_qty,",","") ELSE 0 END)) AS whPcs,ROUND(SUM(CASE WHEN MONTH(wh_date) THEN REPLACE(order_plan_qty_coeff,",","") ELSE 0 END)) AS whCoeff FROM orders WHERE wh_date IS NOT NULL AND YEAR = "'+req.year+'" AND file_id = (SELECT MAX(file_id) FROM orders)  AND prod_plan_type !="STOP"  GROUP BY  CASE WHEN prod_plan_type LIKE "%Ph3%" THEN "Ph3" WHEN prod_plan_type LIKE "%Ph2%" THEN "Ph2"  WHEN prod_plan_type LIKE "%Ph1%" THEN "Ph1"  ELSE prod_plan_type  END,MONTH(wh_date),year(wh_date) '
+    }
+    const result = await this.query(query)
+    return result
+
+}
+
 
 } 

@@ -1,4 +1,4 @@
-import { MonthWiseDto } from "./month-wise.dto";
+import { MonthWiseDto, NewMonthWiseDto } from "./month-wise.dto";
 
 export class ItemDataDto {
     itemName: string;
@@ -12,3 +12,27 @@ export class ItemDataDto {
          this.latestDate = latestDate
      };
  }
+
+
+
+ export class NewitemDataDto{
+    itemName:string
+    latestDate?:any
+    previousDate?:any
+    monthWiseData?:NewMonthWiseDto[]
+    constructor(
+        itemName:string,
+        monthWiseData?:NewMonthWiseDto[],
+        latestDate?:any,
+        previousDate?:any
+    ){
+        this.itemName=itemName
+        this.monthWiseData=monthWiseData
+        this.latestDate=latestDate
+        this.previousDate=previousDate
+    }
+
+ }
+
+
+
