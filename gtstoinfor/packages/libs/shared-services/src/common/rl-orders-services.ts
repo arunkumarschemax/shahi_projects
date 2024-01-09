@@ -62,7 +62,7 @@ export class RLOrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.rlordersController + "/readPOPdfBot")
     }
 
-    async updateDownloadStatus(payload:StatusSharedDto):Promise<CommonResponseModel>{
+    async updateDownloadStatus(payload: StatusSharedDto): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.rlordersController + "/updateDownloadStatus", payload)
-      }
+    }
 }

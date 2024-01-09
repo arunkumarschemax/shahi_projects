@@ -45,11 +45,6 @@ export class RLOrdersService {
         for (const variant of item.poItemVariantDetails) {
           const orderData = await this.rlOrdersRepo.findOne({ where: { poNumber: req.poNumber, poItem: poItem, size: variant.size } })
           const order = await this.orderChildRepo.findOne({ where: { poNumber: req.poNumber }, order: { poVersion: 'DESC' } })
-          //  console.log(order,"test")
-          //  const lastPoVersionObject = order.slice(-1);
-
-          // Now 'lastPoVersionObject' contains the last object of the 'poVersion' array.
-          //  console.log(lastPoVersionObject[0].poVersion,"7777777777");
 
           const entity = new RLOrdersEntity()
           entity.agent = req.agent
@@ -71,19 +66,14 @@ export class RLOrdersService {
           entity.shipToAddress = req.shipToAddress
           entity.billToAddress = req.buyerAddress
           entity.size = variant.size
-          entity.status = 'Revised'
+          entity.status = req.revisionNo == 1 ? 'New' : 'Revised'
           entity.upcEan = variant.upc
           if (orderData) {
-            // console.log("uuuuuuu")
             const update = await transactionManager.getRepository(RLOrdersEntity).update({ poNumber: req.poNumber, poItem: poItem, size: variant.size }, { revisionNo: req.revisionNo, agent: req.agent, amount: variant.amount, price: variant.unitPrice, currency: variant.currency, materialNo: item.materialNo, shipToAddress: req.shipToAddress })
-
-
 
             let po = parseInt(order?.poVersion) + 1
 
-
             const entitys = new RLOrderschildEntity()
-
             entitys.agent = req.agent
             entitys.amount = variant.amount
             entitys.boardCode = item.board
@@ -103,21 +93,15 @@ export class RLOrdersService {
             entitys.shipToAddress = req.shipToAddress
             entitys.billToAddress = req.buyerAddress
             entitys.size = variant.size
-            entitys.status = 'Revised'
+            entitys.status = req.revisionNo == 1 ? 'New' : 'Revised'
             entitys.upcEan = variant.upc
             entitys.poVersion = po.toString()
             entitys.orderId = orderData.id
 
             const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
-
-
-            if (!update.affected
-              // && !updated.affected 
-            ) {
+            if (!update.affected) {
               throw new Error('Update failed');
             }
-
-
           } else {
             saved = await transactionManager.getRepository(RLOrdersEntity).save(entity)
 
@@ -141,14 +125,11 @@ export class RLOrdersService {
             entitys.shipToAddress = req.shipToAddress
             entitys.billToAddress = req.buyerAddress
             entitys.size = variant.size
-            entitys.status = 'Revised'
+            entitys.status = req.revisionNo == 1 ? 'New' : 'Revised'
             entitys.upcEan = variant.upc
             entitys.orderId = saved.id
 
             const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
-
-
-
             if (!saved) {
               throw new Error('Save failed')
             }
@@ -823,10 +804,10 @@ export class RLOrdersService {
   async getordercomparationData(): Promise<CommonResponseModel> {
     try {
       const data = await this.rlOrdersRepo.find()
-      
-     
-      
-      
+
+
+
+
       if (data) {
         return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', data);
       } else {
