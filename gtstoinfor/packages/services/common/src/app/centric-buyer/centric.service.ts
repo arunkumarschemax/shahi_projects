@@ -21,16 +21,11 @@ const moment = require('moment');
 import { Cron, CronExpression, Interval } from "@nestjs/schedule";
 import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
 import { AddressService } from "../Entites@Shahi/address/address-service";
+import { In } from "typeorm";
 
 
 @Injectable()
 export class CentricService {
-
-  //   constructor(
-  //     @InjectRepository(CentricEntity)
-  //     private repository: Repository<CentricEntity>,
-
-  //   ) { }
 
   constructor(
     private Repo: CentricRepository,
@@ -41,45 +36,7 @@ export class CentricService {
 
   ) { }
 
-  // async saveCentricOrder(req: CentricDto): Promise<CommonResponseModel> {
-  //   console.log(req,"req")
-
-  //   const entity = new CentricEntity(); 
-  //   entity.poNumber = req.poNumber
-  //         entity.shipment = req.shipment
-  //         entity.season = req.season
-  //         entity.portOfExport = req.portOfExport
-  //         entity.portOfEntry = req.portOfEntry
-  //         entity.Refrence = req.Refrence
-  //         entity.paymentTermDescription = req.paymentTermDescription
-  //         entity.specialInstructions = req.specialInstructions
-
-  //         entity.poLine = req.poLine
-  //         entity.material =req.material
-  //         entity.color = req.color
-  //         entity.gender = req.gender
-
-  //         entity.size = req.size
-  //         entity.upc = req.upc
-  //         entity.label = req.label
-  //         entity.quantity = req.quantity
-  //         entity.unitPrice = req.unitPrice
-  //         entity.exFactory = req.exFactory
-  //         entity.exPort = req.exPort
-  //         entity.deliveryDate = req.deliveryDate
-  //         entity.retialPrice = req.retialPrice
-
-  //   await this.Repo.save(entity);
-
-  //   const internalMessage: string = req.poLine
-  //     ? "Created Successfully"
-  //     : "Created Successfully";
-
-  //   return new CommonResponseModel(true, 48896, internalMessage);
-  // }
-
   async saveCentricOrder(req: any): Promise<CommonResponseModel> {
-    console.log(req, "reqqqqqqqqqqqqq")
     // const transactionManager = new GenericTransactionManager(this.dataSource)
     try {
       let saved
@@ -150,33 +107,33 @@ export class CentricService {
             shipToAdd: entity.shipToAdd,
             manufacture: entity.manufacture,
             buyerAddress: entity.buyerAddress,
-        
+
             CentricpoItemDetails: [{
-                poLine: item.poLine,
-                material: item.material,
-                color: item.color,
-                gender: item.gender,
-                shortDescription: item.shortDescription,
-                packMethod: item.packMethod,
-                vendorBookingFlag: item.vendorBookingFlag,
-                currency: item.currency,
-                totalQuantity: item.totalQuantity,
-                CentricpoItemVariantDetails: item.CentricpoItemVariantDetails.map(variant => ({
-                    size: variant.size,
-                    upc: variant.upc,
-                    label: variant.label,
-                    unitPrice: variant.unitPrice,
-                    quantity: variant.quantity,
-                    exFactory: variant.exFactory,
-                    exPort: variant.exPort,
-                    deliveryDate: variant.deliveryDate,
-                    retialPrice: variant.retialPrice,
-                }))
+              poLine: item.poLine,
+              material: item.material,
+              color: item.color,
+              gender: item.gender,
+              shortDescription: item.shortDescription,
+              packMethod: item.packMethod,
+              vendorBookingFlag: item.vendorBookingFlag,
+              currency: item.currency,
+              totalQuantity: item.totalQuantity,
+              CentricpoItemVariantDetails: item.CentricpoItemVariantDetails.map(variant => ({
+                size: variant.size,
+                upc: variant.upc,
+                label: variant.label,
+                unitPrice: variant.unitPrice,
+                quantity: variant.quantity,
+                exFactory: variant.exFactory,
+                exPort: variant.exPort,
+                deliveryDate: variant.deliveryDate,
+                retialPrice: variant.retialPrice,
+              }))
             }]
-        };
-        
-        entity.fileData = JSON.stringify(fileData);
-        console.log(entity.fileData, "dfdfdfdfdfdfffffff");
+          };
+
+          entity.fileData = JSON.stringify(fileData);
+          console.log(entity.fileData, "dfdfdfdfdfdfffffff");
 
           if (orderData) {
             const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {})
@@ -200,9 +157,6 @@ export class CentricService {
   }
 
   async updatePath(req: any, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
-    console.log(poNumber, "pppppioooooo");
-    console.log(req, "reqqqqqqqqq");
-
     // const poNumberFromFileName = filename.replace(/\D/g, "");
     const poNumberFromFileName = filename.replace(/\(+.+/g, "").replace(/\D/g, "");
     const entity = new CentricPdfFileUploadEntity();
@@ -211,7 +165,6 @@ export class CentricService {
     entity.filePath = filePath;
     entity.fileType = mimetype;
     entity.fileData = req;
-    console.log(entity.fileData, "fileData")
 
     const file = await this.pdfRepo.findOne({ where: { pdfFileName: filePath } });
     if (file) {
@@ -288,10 +241,7 @@ export class CentricService {
       // console.log(dataModelArray,"kkkk")
       return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
       // return new CommonResponseModel(true, 1, 'data retrieved', details);
-
-
     } catch (e) {
-      console.log(e, "errrrrrrrrr")
       return new CommonResponseModel(false, 0, 'failed', e);
     }
   }
@@ -306,7 +256,7 @@ export class CentricService {
         return new CommonResponseModel(false, 0, 'No Data Found', [])
       }
     } catch (err) {
-      throw err
+      return new CommonResponseModel(false, 0, err)
     }
   }
 
@@ -316,26 +266,24 @@ export class CentricService {
         return new CommonResponseModel(false, 0, 'Please enter Item No')
       };
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
-      const records = await this.Repo.find({ where: { poNumber: req.poNumber,deliveryDate:req.deliveryDate,material: req.material } });
+      const records = await this.Repo.find({ where: { poNumber: req.poNumber, deliveryDate: req.deliveryDate, material: req.material } });
+      const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
       const empty = [];
-      for (const rec of records) {
-        const entity = new CentricCOLineEntity()
-        entity.buyer = req.buyer
-        entity.poNumber = req.poNumber;
-        entity.poLine = rec.poLine;
-        entity.itemNo =  req?.itemNo;
-        entity.status = 'Open';
-        entity.deliveryDate=rec.deliveryDate;
-        entity.material=rec.material
-        entity.createdUser = req.createdUser;
-        empty.push(entity)
-      }
+      const entity = new CentricCOLineEntity()
+      entity.buyer = req.buyer
+      entity.poNumber = req.poNumber;
+      entity.poLine = uniquePoLines.join(',');
+      entity.itemNo = req?.itemNo;
+      entity.status = 'Open';
+      entity.deliveryDate = req.deliveryDate;
+      entity.material = req.material
+      entity.createdUser = req.createdUser;
+      empty.push(entity)
       const save = await this.coLineRepo.save(empty);
-
 
       if (save) {
         const update = await this.Repo.update(
-          { poNumber: req.poNumber, deliveryDate:req.deliveryDate,material:req.material }, // Conditions for updating
+          { poNumber: req.poNumber, deliveryDate: req.deliveryDate, material: req.material }, // Conditions for updating
           { status: StatusEnum.ACCEPTED } // Data to update
         );
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
@@ -376,7 +324,7 @@ export class CentricService {
         let pkgTerms;
         let paymentTerms;
         if (po.buyer === 'Centric') {
-          const response = await this.getOrderdataForCOline({ poNumber: po.buyer_po })
+          const response = await this.getOrderdataForCOline({ poNumber: po.buyer_po, poLine: po.po_line })
           console.log(response.data[0])
           const coData = response.data[0];
           coLine.buyerPo = coData.buyerPo;
@@ -759,30 +707,28 @@ export class CentricService {
 
   async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
-      const data = await this.Repo.find({ where: { poNumber: req.poNumber } })
+      const poLineValues = req.poLine.split(',')
+      const data = await this.Repo.find({ where: { poNumber: req.poNumber, poLine: In(poLineValues) } })
       let destinationMap = new Map<string, DestinationModel>();
       // po -> destination -> color -> sizes
       const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
       const poMap = new Map<string, CentricEntity>();
       data.forEach(rec => {
-        poMap.set(`${rec.poLine},${rec.poNumber}`, rec)
-        // const destCountry = rec.shipToAdd.slice(-13).trim();
-        // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
-
+        poMap.set(`${rec.poNumber}`, rec)
         const parts = rec.shipToAdd.split(',')
         const destAdd = parts[2].trim();
         const dest = destAdd;
 
-        if (!destinationColSizesMap.has(`${rec.poLine},${rec.poNumber}`)) {
-          destinationColSizesMap.set(`${rec.poLine},${rec.poNumber}`, new Map<string, Map<string, []>>());
+        if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
+          destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
         }
-        if (!destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).has(dest)) {
-          destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).set(dest, new Map<string, []>());
+        if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
+          destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
         }
-        if (!destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).get(dest).has(rec.color)) {
-          destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).get(dest).set(rec.color, []);
+        if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(rec.color)) {
+          destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(rec.color, []);
         }
-        destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+        destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
       });
       const coData = []
       destinationColSizesMap.forEach((destColorSize, poNumber) => {
@@ -802,7 +748,7 @@ export class CentricService {
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new CoLinereqModel(poInfo.poNumber, poInfo.poLine, poInfo.unitPrice, poInfo.currency, poInfo.deliveryDate, desArray);
+        const co = new CoLinereqModel(poInfo.poNumber, null, poInfo.unitPrice, poInfo.currency, poInfo.deliveryDate, desArray);
         coData.push(co)
       });
       if (coData) {
