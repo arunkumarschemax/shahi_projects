@@ -124,8 +124,8 @@ export function M3TrimsReqFile(props:M3Trimprps) {
 
   const onReset = () => {
     form.resetFields();
-    props.close(null)
     props.formValues(undefined)
+    props.close(null)
   };
 
 

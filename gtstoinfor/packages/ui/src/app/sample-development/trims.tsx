@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance, Modal } from 'antd';
+import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { M3TrimsService, SampleDevelopmentService, TrimParamsMappingService, UomService } from '@project-management-system/shared-services';
 import { ItemTypeEnumDisplay, ItemTypeEnum, M3TrimType, BuyerIdReq, TrimIdRequestDto, buyerandM3ItemIdReq, UomCategoryEnum, M3TrimFilterReq } from '@project-management-system/shared-models';
 import moment from 'moment';
 import AlertMessages from '../common/common-functions/alert-messages';
+import M3TrimsReqFile from '../sourcing-requisition/m3-trims-req.file';
 
 export interface TrimsFormProps {
   data: any;
@@ -36,6 +37,9 @@ const TrimsForm = (props:TrimsFormProps) => {
   const [stockForm] = Form.useForm();
   const [keyUpdate, setKeyUpdate] = useState<number>(1);
   // const [uomStatus, setUomStatus] = useState<boolean>(false);
+  const [visibleModel, setVisibleModel] = useState<boolean>(false);
+  const [searchVisible, setSearchVisible] = useState<boolean>(false)
+  const [trimCatId, setTrimCatId] = useState<number>(undefined)
 
  const {Option}=Select
 
@@ -99,18 +103,39 @@ const TrimsForm = (props:TrimsFormProps) => {
     })
 }
 
-const getM3TrimsTypes = (value: number) => {
+const getM3TrimsTypes = (value: number,request) => {
+  console.log(request)
+  let req = new M3TrimFilterReq()
+  req.buyerId=props.buyerId
+  req.trimType=itemType
+  req.trimCategory=value?value:trimCatId
+  if(request != undefined){
+    req.categoryId=request.categoryId
+    req.contentId=request.contentId
+    req.finishId=request.finishId
+    req.holeId=request.holeId
+    req.hsnCode=request.hsnCode
+    req.m3Code=request.m3Code
+    req.typeId=request.typeId
+    req.trimMapId=request.trimMapId
+  }
+
+  console.log(req)
   // const reqq = new BuyerIdReq(props.buyerId,itemType,value)
-  const req = new M3TrimFilterReq(props.buyerId,value,itemType,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined)
+  //  req = new M3TrimFilterReq(props.buyerId,value,itemType,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined)
   service.getM3TrimsByBuyer(req).then(res => {
       if(res.status) {
           setM3Trims(res.data)
+      }else{
+        setM3Trims([])
+        message.info('No Data Found')
       }
   })
 }
 
 const getMappedTrims = (value, row) => {
-  getM3TrimsTypes(value)
+  setSearchVisible(true)
+  getM3TrimsTypes(value,undefined)
   const req = new TrimIdRequestDto(undefined,value)
   paramsService.getMappedParamsByTrim(req).then((res) => {
     if (res.status) {
@@ -178,16 +203,17 @@ const getMappedTrims = (value, row) => {
       }
     })
   }
-  
+  // console.log(trimCatId)
   const handleInputChange = async (e, key, field, record) => {
     // console.log("*********************************************")
     // console.log(e)
     // console.log(key)
     // console.log(field)
     let isDuplicate 
-
-
     let updatedData
+    if(field == 'trimCategory'){
+      setTrimCatId(e)
+    }
     if (field === 'trimCode' && e != undefined) {
       console.log(data);
       isDuplicate =  data.find((r) => r.trimCode === e);
@@ -410,6 +436,9 @@ const getMappedTrims = (value, row) => {
             showSearch
             optionFilterProp="children"
             placeholder="Select Trim Code"
+            suffixIcon={searchVisible == true?<SearchOutlined
+            onClick={trimFilterFormVisible}
+             style={{ fontSize: '28px', marginLeft: '-7px' }} />:<></>}
           >
             {/* <Option name={`trimCode${record.key}`} key={0} value={0}>Please Select Trim Code</Option> */}
             {m3Trims.map(item => {
@@ -671,7 +700,25 @@ const tableColumns = (val,fabindex) => {
         pagination={false}
          />;
   };
-
+  const handleCancel = () => {
+    setVisibleModel(false);
+  };
+  const closeModel = () =>{
+    setVisibleModel(false)
+  }
+  const trimFilterFormVisible =()=>{
+     setVisibleModel(true)
+  }
+  const handleTrimFilterData =(trimFilterData) =>{
+    console.log(trimFilterData)
+    let req
+    if(trimFilterData != undefined){
+      req = new M3TrimFilterReq(undefined,undefined,undefined,trimFilterData[0].categoryId,trimFilterData[0].contentId,trimFilterData[0].finishId,trimFilterData[0].holeId,trimFilterData[0].hsnCode,trimFilterData[0].m3Code,trimFilterData[0].typeId,trimFilterData[0].trimMapId) 
+      getM3TrimsTypes(undefined,req)
+    }else{
+      getM3TrimsTypes(undefined,undefined)
+    }
+  }
   return (
     <div>
       <Form form={props.form}>
@@ -691,7 +738,24 @@ const tableColumns = (val,fabindex) => {
         bordered
       />
       </Form>
+      <Modal
+            className='rm-'
+            // key={'modal' + Date.now()}
+            width={'70%'}
+            style={{ top: 30, alignContent: 'right' }}
+            visible={visibleModel}
+            title={<React.Fragment>
+            </React.Fragment>}
+            onCancel={handleCancel}
+            footer={[]}
+        >
+         <>
+               <M3TrimsReqFile trimCategoryId={trimCatId} close={closeModel} formValues={handleTrimFilterData}/>
+               </>:
+         
+            </Modal>
     </div>
+    
   );
 };
 
