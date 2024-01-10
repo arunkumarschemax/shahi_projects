@@ -142,6 +142,7 @@ const FabricsForm = (props:FabricsFormProps) => {
           setFabricCodeData(res.data)
         }
         else{
+          setFabricCodeData([])
             message.info('No M3 Fabric Data Found')
         }
     })
@@ -433,6 +434,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             suffixIcon={<SearchOutlined
               onClick={m3FabricFilters}
                style={{ fontSize: '28px', marginLeft: '-7px' }} />}
+               dropdownMatchSelectWidth={false}
           >
           {/* <Option name={`fabricId${record.key}`} key={0} value={0}>Please Select Fabric</Option> */}
             {fabricCodeData?.map(item => {
