@@ -7,7 +7,7 @@ const { Dragger } = Upload;
 import { Document, pdfjs } from 'react-pdf';
 
 import { DiaPDFModel, LegalPoPdfModel } from '@project-management-system/shared-models';
-import { AdobeAcrobatApiService, CentricService, NikeService, RLOrdersService } from '@project-management-system/shared-services';
+import { AdobeAcrobatApiService, CentricService, HbService, NikeService, RLOrdersService } from '@project-management-system/shared-services';
 import { extractDataFromPoPdf } from './hb-po-pdf-extraction-helper';
 import PoPdfTable from './hb-po-pdf-table';
 // import PoPdfTable from './po-pdf-table';
@@ -50,7 +50,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
 
     const [diaPDfForm] = Form.useForm()
-    const centricService = new CentricService();
+    const HbServices = new HbService();
     const adobeAcrobatApi = new AdobeAcrobatApiService()
 
     const uploadProps: UploadProps = {
@@ -105,7 +105,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
     }
 
     const savePdfFields = () => {
-        centricService.saveCentricOrder(poPdfData).then((res) => {
+        HbServices.saveHbOrdersData(poPdfData).then((res) => {
             if (res.status) {
                 onReset()
                 if (fileList) {
@@ -116,7 +116,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                         formData.append('jsonData',JSON.stringify(poPdfData))
                     })
                     console.log(formData, "form")
-                    centricService.fileUpload(formData).then((res) => {
+                    HbServices.fileUpload(formData).then((res) => {
                         if (res.status) {
                             message.success(res.internalMessage)
                         }
