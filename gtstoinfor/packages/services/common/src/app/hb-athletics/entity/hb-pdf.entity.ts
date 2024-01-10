@@ -10,9 +10,9 @@ export class HbPdfFileInfoEntity {
     @Column("varchar", {
         nullable: false,
         length: 50,
-        name: "po_number",
+        name: "cust_po",
     })
-    poNumber: string 
+    custPo: string 
 
     
     @Column("varchar", {

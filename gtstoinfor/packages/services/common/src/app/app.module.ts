@@ -28,7 +28,7 @@ import { HbModule } from './hb-athletics/hb-athletic.module';
       password: appConfig.database.password,
       database: appConfig.database.dbName,
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
       logging: true,
       extra: {
         connectionLimit: 20
