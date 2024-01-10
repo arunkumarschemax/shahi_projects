@@ -1,4 +1,3 @@
-import { StatusEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity('orders')
@@ -9,204 +8,45 @@ export class HbOrdersEntity {
     id: number;
 
     @Column("varchar", {
-        name: "po_number",
+        name: "cust_po",
     })
-    poNumber: string
+    custPo: string
 
     @Column("varchar", {
-        name: "po_date",
+        name: "exit_factory_date",
     })
-    poDate: string
-
-    @Column('varchar', {
-        name: "shipment"
-    })
-    shipment: string
-
-    @Column('text', {
-        name: "season"
-    })
-    season: string
-
-    @Column('text', {
-        name: "port_of_export"
-    })
-    portOfExport: string
+    exitFactoryDate: string
 
     @Column("varchar", {
-        name: "port_of_entry",
-    })
-    portOfEntry: string
-
-    @Column("varchar", {
-        name: "refrence",
-    })
-    Refrence: string
-
-    @Column("varchar", {
-        name: "payment_term_description",
-    })
-    paymentTermDescription: string
-
-    @Column('text', {
-        name: "special_instructions"
-    })
-    specialInstructions: string
-
-    @Column('varchar', {
-        name: "division"
-    })
-    division: string
-
-    @Column('text', {
-        name: "incoterm"
-    })
-    incoterm: string
-
-    @Column('text', {
-        name: "ship_to_add"
+        name: "ship_to_add",
     })
     shipToAdd: string
 
-    
-    @Column('text', {
-        name: "manufacture"
+    @Column("varchar", {
+        name: "style",
     })
-    manufacture: string
+    style: string
 
-    @Column('text', {
-        name: "buyer_address"
-    })
-    buyerAddress: string
-
-    
-    @Column('text', {
-        name: "file_data"
-    })
-    fileData: string
-
-
-
-    
-
-    @Column('varchar', {
-        name: "po_line",
-    })
-    poLine: string;
-
-    @Column('varchar', {
-        name: "material",
-
-    })
-    material: string
-
-    @Column('varchar', {
-        name: "ppk_upc",
-        
-    })
-    ppkupc: string
-
-    @Column('varchar', {
+    @Column("varchar", {
         name: "color",
     })
     color: string
 
-    @Column('varchar', {
-        name: "gender",
-        
-    })
-    gender: string
-
-    @Column('varchar', {
-        name: "short_description",
-        
-    })
-    shortDescription: string
-
-    @Column('varchar', {
-        name: "pack_method",
-        
-    })
-    packMethod: string
-
-    @Column('varchar', {
-        name: "vendor_booking_flag",
-        
-    })
-    vendorBookingFlag: string
-
-    @Column('varchar', {
-        name: "total_quantity",
-        
-    })
-    totalQuantity: string
-
-
-
-
-    @Column('varchar', {
+    @Column("varchar", {
         name: "size",
-        
     })
     size: string
 
-    @Column('varchar', {
-        name: "upc",
-        
-    })
-    upc: string
-
-    @Column('varchar', {
-        name: "label",
-        
-    })
-    label: string
-
-    
-    @Column('varchar', {
+    @Column("varchar", {
         name: "quantity",
-        
     })
     quantity: string
 
-    @Column('varchar', {
+    @Column("varchar", {
         name: "unit_price",
-        
     })
     unitPrice: string
 
-    @Column('varchar', {
-        name: "exfactory",
-        
-    })
-    exFactory: string
-
-    @Column('varchar', {
-        name: "export",
-            })
-    exPort: string
-
-    @Column('varchar', {
-        name: "delivery_date"
-    })
-    deliveryDate: string
-
-    @Column('varchar', {
-        name: "retial_price",
-        
-    })
-    retialPrice: string
-
-    @Column('varchar', {
-        name: "compt_material"
-    })
-    comptMaterial: string
-
-    
-    @Column('varchar', {
-        name: "ratio"
-    })
-    ratio: string
 
     @CreateDateColumn({
         name: "created_at",
@@ -242,22 +82,5 @@ export class HbOrdersEntity {
         default: 1
     })
     isActive: boolean;
-
-      
-    // @Column('enum', {
-    //     name: "status"
-    // })
-    // status: StatusEnum
-    @Column({
-        type: 'enum',
-        enum: StatusEnum, // Specify the enum type
-        name: 'status',
-      })
-      status: StatusEnum;
-
-      @Column('varchar', {
-        name: "currency",
-    })
-    currency: string;
 
 }

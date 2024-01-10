@@ -32,7 +32,7 @@ const pdfFilesValidationObject = [
     // },
     {
         pdfName: 'PO PDF',
-        pdfKeyText: 'Centric'
+        pdfKeyText: 'HB Athletic Inc'
     }
 ]
 
