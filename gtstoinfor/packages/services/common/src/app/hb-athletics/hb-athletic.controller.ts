@@ -9,7 +9,7 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { diskStorage } from 'multer'
 
 
-@ApiTags("/hb_athletics")
+@ApiTags("/hb-athletics")
 @Controller("/hb-athletics-orders")
 export class HbController {
 
@@ -58,6 +58,15 @@ export class HbController {
             return await this.Service.updatePath(req.jsonData,req.custPo, file.path, file.filename, file.mimetype)
         } catch (error) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+
+    @Post('/getPdfFileInfo')
+    async getPdfFileInfo(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getPdfFileInfo();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
     }
 

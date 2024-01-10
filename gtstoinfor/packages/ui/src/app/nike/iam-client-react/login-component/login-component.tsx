@@ -25,7 +25,7 @@ export const LoginComponent = () => {
             } 
             else {
                 // navigate("/nike-dashboard", { replace: true });
-                navigate("/centric/masters/address/address-view", { replace: true });
+                navigate("/hb-athletics/masters/address/address-view", { replace: true });
             }
             return true;
         } catch (error: any) {
