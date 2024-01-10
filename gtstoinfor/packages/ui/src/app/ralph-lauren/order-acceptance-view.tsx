@@ -251,7 +251,7 @@ const OrderAcceptanceGrid = () => {
       width: 150,
       sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
       sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps('materialNo'),
+      // ...getColumnSearchProps('materialNo'),
       render: (text) => text ? text : "-"
     },
     {
@@ -260,7 +260,7 @@ const OrderAcceptanceGrid = () => {
       width: 130,
       sorter: (a, b) => a.materialNo.localeCompare(b.materialNo),
       sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps('seasonCode'),
+      // ...getColumnSearchProps('seasonCode'),
       render: (text) => text ? text : "-",
       
     },
@@ -337,7 +337,7 @@ const OrderAcceptanceGrid = () => {
       width: 200,
       sorter: (a, b) => a.purchaseGroup.localeCompare(b.purchaseGroup),
       sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps('purchaseGroup'),
+      // ...getColumnSearchProps('purchaseGroup'),
       render: (text) => text ? text : "-"
 
     },
@@ -383,7 +383,9 @@ const OrderAcceptanceGrid = () => {
         });
     
         return sum;
+        
       },
+      
     },
     {
       title: "Delivery Date",
@@ -392,7 +394,7 @@ const OrderAcceptanceGrid = () => {
       width: 90,
        sorter: (a, b) => a.handOverDate.localeCompare(b.handOverDate),
       sortDirections: ["ascend", "descend"],
-      ...getColumnSearchProps('revisionNo'),
+      ...getColumnSearchProps('handOverDate'),
       render: (text) => text ? moment(text).format("DD-MM-YYYY") : "-"
 
     },
@@ -411,7 +413,20 @@ const OrderAcceptanceGrid = () => {
       width: 90,
       sorter: (a, b) => a.status.localeCompare(b.status),
       sortDirections: ["ascend", "descend"],
-      render: (text) => text ? text : "-"
+      render: (text) => text ? text : "-",
+      filters: [
+        {
+          text: 'New',
+          value: 'New',
+        },
+        {
+          text: 'Revised',
+          value: 'Revised',
+        },
+  
+      ],
+      onFilter: (value,record) =>{ return record.status.toLowerCase() === value.toLowerCase()}
+ 
     },
 
     {
@@ -433,7 +448,7 @@ const OrderAcceptanceGrid = () => {
         },
   
       ],
-      onFilter: (value,record) =>{ return record.itemStatus === value}
+      onFilter: (value,record) =>{ return record.itemStatus.toLowerCase() === value.toLowerCase()}
     },
 
     {
@@ -615,7 +630,7 @@ const OrderAcceptanceGrid = () => {
               xl={{ span: 6 }}
             >
               <Form.Item name="season" label="Season Code">
-               <Input  placeholder="Enter Season"/>
+               <Input  placeholder="Enter Season" allowClear ={true}/>
               </Form.Item>
             </Col>
             <Row>
