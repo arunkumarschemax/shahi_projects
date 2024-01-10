@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance, Modal } from 'antd';
+import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { BuyerDestinationService, ColourService, M3ItemsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
 import { UomCategoryEnum, buyerandM3ItemIdReq, m3FabricFiltersReq } from '@project-management-system/shared-models';
@@ -10,6 +10,7 @@ import { useIAMClientState } from "../common/iam-client-react";
 import moment from 'moment';
 import { StockDetailsInfo } from '../sourcing-requisition/stock-details-info';
 import FormItem from 'antd/es/form/FormItem';
+import M3FabricFilters from '../sourcing-requisition/m3-items-fabric-req-file';
 
 export interface FabricsFormProps {
   data: any;
@@ -37,7 +38,10 @@ const FabricsForm = (props:FabricsFormProps) => {
   const colorService = new ColourService()
   const buyerDestinationService = new BuyerDestinationService()
   const [keyUpdate, setKeyUpdate] = useState<number>(1);
-  const [onchangeData, setOnchangeData] = useState<any[]>([]); 
+  const [onchangeData, setOnchangeData] = useState<any[]>([]);
+  const [modal, setModal] = useState('')
+  const [visibleModel, setVisibleModel] = useState<boolean>(false);
+
 
   const { IAMClientAuthContext } = useIAMClientState();
   // const [form] =props.form.useForm();
@@ -67,6 +71,18 @@ const FabricsForm = (props:FabricsFormProps) => {
     }
     
   };
+
+
+  
+
+  const m3FabricFilters = () =>{
+    setModal('fabricFilter')
+    setVisibleModel(true)
+    }
+
+    const handleCancel = () => {
+      setVisibleModel(false);
+    };
 
   useEffect(() =>{
     if(props.buyerId != null){
@@ -99,6 +115,50 @@ const FabricsForm = (props:FabricsFormProps) => {
   //   props(updatedData);
   // };
 
+  const getM3FabricStyleCodes = (buyer,request) => {
+    console.log(request)
+     req= new m3FabricFiltersReq() 
+     req.buyerId=buyer
+     if(request != undefined){
+     req.fabricTypeId=request.fabricTypeId
+     req.content=request.content
+     req.epiConstruction=request.epiConstruction
+     req.ppiConstruction=request.ppiConstruction
+     req.finishId=request.finishId
+     req.hsnCode=request.hsnCode
+     req.m3Code=request.m3Code
+     req.shrinkage=request.shrinkage
+     req.weaveId=request.weaveId
+     req.weightUnit=request.weightUnit
+     req.widthUnit=request.widthUnit
+     req.yarnType=request.yarnType
+     req.weightValue=request.weightValue
+     req.widthValue=request.widthValue
+     }
+
+    
+    m3ItemsService.getM3FabricsByBuyer(req).then(res => {
+        if(res.status){
+          setFabricCodeData(res.data)
+        }
+        else{
+            message.info('No M3 Fabric Data Found')
+        }
+    })
+}
+  let req
+  const handleFabricsfilterData = (data) => {
+    console.log(data)
+    if(data != undefined){
+        req = new m3FabricFiltersReq(sourcingForm.getFieldValue('buyer'),data[0].fabricTypeId,data[0].weaveId,data[0].weightUnit,data[0].epiConstruction,data[0].ppiConstruction,data[0].yarnType,data[0].widthUnit,data[0].finishId,data[0].shrinkage,data[0].hsnCode,data[0].content,data[0].weightValue,data[0].widthValue,data[0].m3Code)
+        console.log(req)
+        getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),req)
+    }else{
+         getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),undefined)
+
+    }
+  };
+
   const handleInputChange = async (e, key, field, additionalValue,record) => {
     console.log(e);
     console.log(field);
@@ -109,7 +169,6 @@ const FabricsForm = (props:FabricsFormProps) => {
 
     let isDuplicate 
     let fieldName
-
     
 
     let updatedData;
@@ -371,6 +430,9 @@ const FabricsForm = (props:FabricsFormProps) => {
             optionFilterProp="children"
             placeholder="Select Fabric Code"
             onChange={(e) => handleInputChange(e, record.key, 'fabricCode',0, record)}
+            suffixIcon={<SearchOutlined
+              onClick={m3FabricFilters}
+               style={{ fontSize: '28px', marginLeft: '-7px' }} />}
           >
           {/* <Option name={`fabricId${record.key}`} key={0} value={0}>Please Select Fabric</Option> */}
             {fabricCodeData?.map(item => {
@@ -717,6 +779,19 @@ const FabricsForm = (props:FabricsFormProps) => {
       />
       </Form>
 
+      <Modal
+            className='rm-'
+            // key={'modal' + Date.now()}
+            width={'70%'}
+            style={{ top: 30, alignContent: 'right' }}
+            visible={visibleModel}
+            title={<React.Fragment>
+            </React.Fragment>}
+            onCancel={handleCancel}
+            footer={[]}
+        >
+          <M3FabricFilters formValues={handleFabricsfilterData} close={handleCancel}/>
+        </Modal>
     </div>
   );
 };
