@@ -2,7 +2,7 @@ import { CommonResponseModel } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 
 export class HbService extends CommonAxiosService {
-    private hbOrdersController = "/hb-athletic-orders"
+    private hbOrdersController = "/hb-athletics-orders"
 
 
     async saveHbOrdersData(req: any): Promise<CommonResponseModel> {

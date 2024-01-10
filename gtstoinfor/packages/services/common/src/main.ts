@@ -20,7 +20,7 @@ async function bootstrap() {
     .setVersion('0.0')
     // .setBasePath(`${ptsConfigs.swagger.basePath}`)
     .addBearerAuth()
-    .addTag('ms')
+    .addTag('HB Athletic')
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
