@@ -17,4 +17,8 @@ export class HbService extends CommonAxiosService {
         return this.axiosPostCall(this.hbOrdersController + "/getPdfFileInfo")
     }
 
+    async getHborderData(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.hbOrdersController + "/getHborderData",req)
+    }
+
 }

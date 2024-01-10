@@ -3,7 +3,7 @@ import { Controller, Post, Body, UseInterceptors, UploadedFile } from "@nestjs/c
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiTags, ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { HbDto } from "./dto/hb.dto";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, HbPoOrderFilter } from "@project-management-system/shared-models";
 import { HbService } from "./hb-athletic.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { diskStorage } from 'multer'
@@ -65,6 +65,17 @@ export class HbController {
     async getPdfFileInfo(): Promise<CommonResponseModel> {
         try {
             return this.Service.getPdfFileInfo();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getHborderData')
+    @ApiBody({ type: HbPoOrderFilter })
+    async getHborderData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            // console.log(req,"con")
+            return await this.Service.getHborderData(req);
         } catch (err) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }

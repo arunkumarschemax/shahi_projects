@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { HbOrdersRepository } from "./repositories/hb-orders.repo";
 import { HbPdfRepo } from "./repositories/hb-pdf.repo";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel } from "@project-management-system/shared-models";
 import { HbOrdersEntity } from "./entity/hb-orders.entity";
 import { HbPdfFileInfoEntity } from "./entity/hb-pdf.entity";
 
@@ -151,7 +151,39 @@ export class HbService {
   }
 
 
+ async getHborderData(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
+    try {
+      const details = await this.HbOrdersRepo.getHborderData(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+      }
+      const sizeDateMap = new Map<string, HbOrderDataModel>();
+      for (const rec of details) {
+        // console.log(rec,"rrrrrrrrr")
+        if (!sizeDateMap.has(`${rec.style},${rec.cust_po}`)) {
+          sizeDateMap.set(
+            `${rec.style},${rec.cust_po}`,
+            new HbOrderDataModel(rec.id, rec.cust_po,rec.style,rec.color,rec.size,rec.exit_factory_date,rec.ship_to_add,[],rec.quantity,rec.unit_price)
+          );
 
+          // console.log(sizeDateMap,)
+        }
+        const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.cust_po}`).sizeWiseData;
+        if (rec.size !== null) {
+          sizeWiseData.push(new HbSizeWiseModel(rec.size, rec.unit_price, rec.quantity,));
+        }
+      }
+      const dataModelArray: HbOrderDataModel[] = Array.from(sizeDateMap.values());
+      // console.log(dataModelArray,"kkkk")
+      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+      // return new CommonResponseModel(true, 1, 'data retrieved', details);
+
+
+    } catch (e) {
+      console.log(e, "errrrrrrrrr")
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
 
 
 }

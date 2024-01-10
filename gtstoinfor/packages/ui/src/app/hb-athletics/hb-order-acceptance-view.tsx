@@ -14,6 +14,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import {
   CentricService,
+  HbService,
   NikeService,
   RLOrdersService,
 } from "@project-management-system/shared-services";
@@ -32,7 +33,7 @@ import { useIAMClientState } from "../nike/iam-client-react";
 import { Excel } from "antd-table-saveas-excel";
 
 export function HbOrderAcceptanceGrid() {
-  const service = new CentricService();
+  const service = new HbService();
   const navigate = useNavigate();
   const searchInput = useRef(null);
   const [orderData, setOrderData] = useState<any>([]);
@@ -63,7 +64,7 @@ export function HbOrderAcceptanceGrid() {
     }
     req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
 
-    service.getCentricorderData(req).then((res) => {
+    service.getHborderData(req).then((res) => {
       if (res.status) {
         setOrderData(res.data);
         setFilterData(res.data);
@@ -73,12 +74,12 @@ export function HbOrderAcceptanceGrid() {
 
   console.log(form.getFieldValue("poNumber"), "uuuuu")
   const getPoNumber = () => {
-    service.getPoNumber().then((res) => {
-      if (res.status) {
-        setPoNumber(res.data);
+    // service.getPoNumber().then((res) => {
+    //   if (res.status) {
+    //     setPoNumber(res.data);
 
-      }
-    });
+    //   }
+    // });
   };
 
 
@@ -110,16 +111,16 @@ export function HbOrderAcceptanceGrid() {
 
     // console.log("Request Payload:", req);
 
-    service.coLineCreationReq(req).then((res) => {
-      if (res.status) {
-        getCentricorderData();
-        setItemNoValues({});
-        form.setFieldsValue({ [index]: { itemNo: undefined } });
-        message.success(res.internalMessage);
-      } else {
-        message.error(res.internalMessage);
-      }
-    });
+    // service.coLineCreationReq(req).then((res) => {
+    //   if (res.status) {
+    //     getCentricorderData();
+    //     setItemNoValues({});
+    //     form.setFieldsValue({ [index]: { itemNo: undefined } });
+    //     message.success(res.internalMessage);
+    //   } else {
+    //     message.error(res.internalMessage);
+    //   }
+    // });
   };
   const processData = (tableData: HbOrderAcceptanceRequest[]) => {
     const dataTobeReturned = [];
