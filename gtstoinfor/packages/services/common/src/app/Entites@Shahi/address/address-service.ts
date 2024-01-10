@@ -155,7 +155,7 @@ export class AddressService {
             }
             for (const data of convertedData) {
                 // let dtoData
-                if (data) {
+                if (data.delivery_address) {
                     // dtoData = new AddressReq(data.Country,data.delivary_address,data.Buyeraddress,'admin')
                     const addObj = new AddressEntity()
                     // addObj.destination = data.destination
@@ -163,6 +163,22 @@ export class AddressService {
                     addObj.buyerAddress = data.buyer_address
                     addObj.buyerCode = data.buyer_code
                     addObj.deliveryCode = data.delivery_code
+                    const addSave = await transactionManager.getRepository(AddressEntity).save(addObj)
+                    if (addSave) {
+                        flag.add(true)
+                    } else {
+                        flag.add(false)
+                        await transactionManager.releaseTransaction();
+                        break;
+                    }
+                } else if (data.BuyerAddress) {
+                    const addObj = new AddressEntity()
+                    // addObj.billTo = data.BillTo
+                    // addObj.shipTo = data.ShipTo
+                    addObj.buyerAddress = data.BuyerAddress
+                    addObj.deliveryAddress = data.DeliveryAddress
+                    addObj.buyerCode = data.BuyerCode
+                    addObj.deliveryCode = data.DeliveryCode
                     const addSave = await transactionManager.getRepository(AddressEntity).save(addObj)
                     if (addSave) {
                         flag.add(true)
