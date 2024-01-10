@@ -13,6 +13,7 @@ import { AppDataSource } from './app-datasource';
 import { RLOrdersModule } from './ralph-lauren/rl-orders.module';
 import { AddressModule } from './Entites@Shahi/address/address-module';
 import { CentricModule } from './centric-buyer/centric.module';
+import { HbModule } from './hb-athletics/hb-athletic.module';
 
 
 @Module({
@@ -27,14 +28,14 @@ import { CentricModule } from './centric-buyer/centric.module';
       password: appConfig.database.password,
       database: appConfig.database.dbName,
       autoLoadEntities: true,
-      synchronize: false,
+      synchronize: true,
       logging: true,
       extra: {
         connectionLimit: 20
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,CentricModule,AddressModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,AddressModule,HbModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
