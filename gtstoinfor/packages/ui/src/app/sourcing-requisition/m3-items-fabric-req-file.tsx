@@ -141,7 +141,7 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
         setWeightData(weight);
         setWidthData(width);
         setUom(res.data);
-        form.setFieldValue('widthUomId',res?.data[2].uomId)
+        // form.setFieldValue('widthUomId',res?.data[2].uomId)
       }
     });
   };
@@ -165,7 +165,7 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
 
 
   const onFinish = (val) => {
-    const req = new m3FabricFiltersReq(undefined,val.fabricTypeId,val.weaveId,val.weightUomId,val.epiConstruction,val.ppiConstruction,yarnType,val.widthUomId,val.finishId,val.shrinkage,val.hsnCode,val.content,val.weightValue,val.widthValue)
+    const req = new m3FabricFiltersReq(undefined,val.fabricTypeId,val.weaveId,val.weightUomId,val.epiConstruction,val.ppiConstruction,yarnType,val.widthUomId,val.finishId,val.shrinkage,val.hsnCode,val.content,val.weightValue,val.widthValue,val.m3Code)
      props.formValues([req])
      props.close(null)
      };

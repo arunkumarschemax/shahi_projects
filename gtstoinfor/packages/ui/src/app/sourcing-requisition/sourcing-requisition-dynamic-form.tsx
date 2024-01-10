@@ -1360,9 +1360,9 @@ const handleFabricsfilterData = (data) => {
                                                  placeholder='Select M3 Code'
                                                 dropdownMatchSelectWidth={false}
                                                   style={{ width: "100%" }}
-                                        suffixIcon={<SearchOutlined
+                                        suffixIcon={sourcingForm.getFieldValue('buyer') != undefined ?<SearchOutlined
                                             onClick={m3FabricFilters}
-                                            style={{ fontSize: '28px', marginLeft: '-7px' }} />}
+                                            style={{ fontSize: '28px', marginLeft: '-7px' }} />:<></>}
                                                     >
                                                     {fabricM3Code.map(e => {
                                                         return (
