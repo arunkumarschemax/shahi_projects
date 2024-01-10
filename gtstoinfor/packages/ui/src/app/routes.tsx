@@ -52,6 +52,7 @@ import CentricPdfUpload from "./centric/pdf-upload"
 import CentriColineView from "./centric/centric-co-line-view"
 import SolidPOReport from "./centric/solid-pack-po-report"
 import PdfInfoDetailView from "./centric/pdf-info-detail-view"
+import HbPdfUpload from "./hb-athletics/hb-pdf-upload"
 
 
 export const AppRoutes = () => {
@@ -213,6 +214,10 @@ export const AppRoutes = () => {
 
                     
 
+                </Route>
+
+                <Route path='/hb-athletics'>
+                   <Route path='hb-pdf-upload' element={<HbPdfUpload />} />
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
