@@ -59,7 +59,7 @@ export const ITEM_VARIANT_START_TEXT = "Globe-Tex Ref #"
 
 
  // Jaswanth Chnages 2nd format// 
-export const ITEM_TEXT_END_TEXT1= 'Printed 11/9/2023 at 10:35:49 AM by tsoto@globe-tex.com' 
+export const ITEM_TEXT_END_TEXT1= 'Amount' 
 export const FORMAT_SEPARATION_KEYWORD = 'Compt. Material' 
 export const TOTAL_QUANTITY='Total Cost'
 
