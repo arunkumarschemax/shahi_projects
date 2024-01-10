@@ -103,7 +103,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             }
             const shipToAdd = shipToAddressIndex.trim();
             poData.shipToAdd = shipToAdd;
-           
+
         }
 
         // po details parsing ends here  
@@ -151,14 +151,12 @@ export const extractDataFromPoPdf = async (pdf) => {
     let prevColorIndex = 0;
     let isSecondFormat = false;
     for (const [index, rec] of filteredData.entries()) {
+        
         if (rec.str.match(ITEM_NO_EXP)) {
             prevItemIndex = index
         }
         if (rec.str.includes(ITEM_VARIANT_START_TEXT)) {
             itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
-        }
-        if (rec.str.includes(FORMAT_SEPARATION_KEYWORD)) {
-            isSecondFormat = true;
         }
 
     }
@@ -168,19 +166,20 @@ export const extractDataFromPoPdf = async (pdf) => {
 
     /* 2nd format */
     // if (ITEM_TEXT_END_TEXT1 === "Per Pack" && isSecondFormat) {
+    // const regexPattern = /(Women's|Mens's),\s+\d+/; 
     for (const rec of itemsArr) {
         let shipToEndIndex = 0;
         let itemTextEndIndex = 0;
-        let itemDetailsEndIndex = 0
-        let itemVariantStartIndex
+        let itemDetailsEndIndex = 0;
+        let itemVariantStartIndex;
         const itemDetailsObj = new HbPoItemDetails();
-        console.log(rec.itemIndex, "iiiiiiiiiiiiii")
-        
-        itemDetailsObj.style = filteredData[rec.itemIndex + 1].str
-        itemDetailsObj.color = filteredData[rec.itemIndex + 12].str.replace(/^\d{2}|-.*$/g, '')
-        
-        itemTextEndIndex = rec.amountIndex
-        itemVariantStartIndex = itemTextEndIndex + 1
+        console.log(rec.itemIndex, "iiiiiiiiiiiiii");
+
+        itemDetailsObj.style = filteredData[rec.itemIndex - 4].str;
+        itemDetailsObj.color = filteredData[rec.itemIndex - 1].str;
+
+        itemTextEndIndex = rec.amountIndex;
+        itemVariantStartIndex = itemTextEndIndex + 1;
 
         //------------------------------------------------------------------------- 
         // item varinat details parsing starts here 
@@ -192,43 +191,20 @@ export const extractDataFromPoPdf = async (pdf) => {
         }
         console.log(itemVarinatsTextArr, 'VVVVVVVv')
         const stringsWithLength13 = itemVarinatsTextArr.filter(value => typeof value === 'string' && value.length === 6);
-        console.log("stringsWithLength13", stringsWithLength13)
-        const regexPattern = /[0-9]{6}/;
-        const CompMaterialData = itemVarinatsTextArr.filter(value => regexPattern.test(value));
-        console.log("CompMaterialData", CompMaterialData);
+        console.log("stringsWithLength13", stringsWithLength13);
         const sizes = stringsWithLength13.length;
         const count = itemVarinatsTextArr.length / sizes;
         const itemVariantsArr: CentricPoItemVariant[] = []
         for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
             const itemVariantsObj = new CentricPoItemVariant();
-            itemVariantsObj.comptMaterial = CompMaterialData[l];
-            itemVariantsObj.upc = stringsWithLength13[l];
-            const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
-            if (upcIndex !== -1 && upcIndex < itemVarinatsTextArr.length - 1) {
-                const nextIndexValue = itemVarinatsTextArr[upcIndex + 1];
 
-                itemVariantsObj.ratio = itemVarinatsTextArr[upcIndex - 1];
-                itemVariantsObj.size = itemVarinatsTextArr[upcIndex - 2];
-                itemVariantsObj.quantity = nextIndexValue;
-                itemVariantsObj.label = "-";
-                itemVariantsObj.unitPrice = itemVarinatsTextArr[upcIndex + 3];
-                itemVariantsObj.exFactory = itemVarinatsTextArr[upcIndex + 5];
-                itemVariantsObj.exPort = itemVarinatsTextArr[upcIndex + 6];
-                itemVariantsObj.deliveryDate = itemVarinatsTextArr[upcIndex + 7];
-                itemVariantsObj.retialPrice = itemVarinatsTextArr[upcIndex + 8];
-            }
-            // itemVariantsObj.label = itemVarinatsTextArr[(count * l) + 1]
-            // itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + 5]
-            // itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) +  7]
-            // itemVariantsObj.exFactory = itemVarinatsTextArr[(count * l) + 9]
-            // itemVariantsObj.exPort = itemVarinatsTextArr[(count * l) + 10]
-            // itemVariantsObj.deliveryDate = itemVarinatsTextArr[(count * l) + 11]
-            // itemVariantsObj.retialPrice = itemVarinatsTextArr[(count * l) + 12]
-
-            itemVariantsObj.amount = itemVarinatsTextArr[(count * l) + count - 1]
+            itemVariantsObj.size = itemVarinatsTextArr[(count * l) + count - 1]
+            itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count - 1]
+            itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) + count - 1]
             console.log(itemVariantsObj)
             itemVariantsArr.push(itemVariantsObj)
         }
+
         itemDetailsObj.CentricpoItemVariantDetails = itemVariantsArr
         itemDetailsArr.push(itemDetailsObj)
         // }
