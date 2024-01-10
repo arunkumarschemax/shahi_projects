@@ -199,8 +199,8 @@ export const AppRoutes = () => {
                 <Route path='/centric'>
                     <Route path='pdf-info' element={<CentricPdFInfoGrid />} />
                     <Route path='ppk-po-report' element={<PPKPOReport />} />
-                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
-                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
+                    {/* <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
+                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} /> */}
                    <Route path='order-data-info-grid' element={<CentricOrdersGrid />} />
                    <Route path='order-data-detail-view' element={<CentricOrdersDetailView />} />
                    
@@ -218,6 +218,8 @@ export const AppRoutes = () => {
 
                 <Route path='/hb-athletics'>
                    <Route path='hb-pdf-upload' element={<HbPdfUpload />} />
+                   <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
+                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />

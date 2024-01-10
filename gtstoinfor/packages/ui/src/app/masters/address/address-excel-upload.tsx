@@ -101,11 +101,13 @@ export const AddressUpload = () => {
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     
         // Specify the desired column names in the headers array
-        const headers = ['s_no', 'destination', 'buyer_code',"buyer_address","delivery_code","delivery_address"];
+        // const headers = ['s_no', 'destination', 'buyer_code',"buyer_address","delivery_code","delivery_address"];
+        const headers = [ "delivery_code","delivery_address",'buyer_code','buyer_address']
+
     
         // Pass the headers array to the sheet_to_json function
         const json = XLSX.utils.sheet_to_json(worksheet, { header: headers });
-        json.splice(0, 2);
+        json.splice(0, 3);
         setData(json);
       };
     
@@ -121,7 +123,7 @@ export const AddressUpload = () => {
                     setLoading(true);
                     if(res.status){
                         AlertMessages.getSuccessMessage(res.internalMessage)
-                        navigate("/centric/masters/address/address-view")
+                        navigate("/hb-athletics/masters/address/address-view")
 
                     } else{
                         AlertMessages.getErrorMessage(res.internalMessage)
@@ -135,7 +137,7 @@ export const AddressUpload = () => {
           }
       }
     return(
-        <Card title='Address' extra={<Link to='/centric/masters/address/address-view' >
+        <Card title='Address' extra={<Link to='/hb-athletics/masters/address/address-view' >
         <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
         </Link>}>
             <Form>
