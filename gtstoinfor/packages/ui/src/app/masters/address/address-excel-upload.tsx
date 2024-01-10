@@ -123,7 +123,7 @@ export const AddressUpload = () => {
                     setLoading(true);
                     if(res.status){
                         AlertMessages.getSuccessMessage(res.internalMessage)
-                        navigate("/centric/masters/address/address-view")
+                        navigate("/hb-athletics/masters/address/address-view")
 
                     } else{
                         AlertMessages.getErrorMessage(res.internalMessage)
@@ -137,7 +137,7 @@ export const AddressUpload = () => {
           }
       }
     return(
-        <Card title='Address' extra={<Link to='/centric/masters/address/address-view' >
+        <Card title='Address' extra={<Link to='/hb-athletics/masters/address/address-view' >
         <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
         </Link>}>
             <Form>
