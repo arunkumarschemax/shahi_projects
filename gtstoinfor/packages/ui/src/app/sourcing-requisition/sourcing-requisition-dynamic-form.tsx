@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { DeleteOutlined, EditOutlined, EyeOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined, SearchOutlined, UploadOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
-import { BuyerIdReq, BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, M3MastersCategoryReq, M3TrimType, M3trimsDTO, MenusAndScopesEnum, SourcingRequisitionReq, StyleIdReq, TrimIdRequestDto, UomCategoryEnum, buyerReq, m3FabricFiltersReq } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, M3MastersCategoryReq, M3TrimFilterReq, M3TrimType, M3trimsDTO, MenusAndScopesEnum, SourcingRequisitionReq, StyleIdReq, TrimIdRequestDto, UomCategoryEnum, buyerReq, m3FabricFiltersReq } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -94,7 +94,8 @@ export const SourcingRequisitionDynamicForm = () => {
     const paramsService = new TrimParamsMappingService()
     const [mapData, setMapData] = useState<any[]>([])
     const [modal, setModal] = useState('')
-    const [m3FilterVal, setM3FilterVal] = useState<any[]>([])
+    // const [trimFilterData, setTrimFilterData] = useState<any[]>([])
+
 
 
 
@@ -143,9 +144,8 @@ export const SourcingRequisitionDynamicForm = () => {
         })
     }
 
-    const getM3TrimsTypes = () => {
-        const req = new BuyerIdReq(sourcingForm.getFieldValue('buyer'),trimForm.getFieldValue('trimType'),trimForm.getFieldValue('trimCategory'))
-        m3Service.getM3TrimsByBuyer(req).then(res => {
+    const getM3TrimsTypes = (request) => {
+        m3Service.getM3TrimsByBuyer(request).then(res => {
             if(res.status) {
                 setM3Trims(res.data)
             }
@@ -220,16 +220,17 @@ export const SourcingRequisitionDynamicForm = () => {
         const req = new M3TrimType(value,sourcingForm.getFieldValue('buyer'))
         m3Service.getAllTrimCategories(req).then((res)=>{
             if(res.status){
+                console.log(res.data)
                 setTrimData(res.data)
             }
         })
     }
 
     const getMappedTrims = (value, option) => {
-        console.log(value);
-        console.log(option);
-
-        getM3TrimsTypes()
+        // console.log(value);
+        // console.log(option);
+      const  request = new M3TrimFilterReq(sourcingForm.getFieldValue('buyer'),trimForm.getFieldValue('trimCategory'),trimForm.getFieldValue('trimType'),undefined,undefined,undefined,undefined,undefined,undefined,undefined)
+        getM3TrimsTypes(request)
         setTrimCat(option?.name)
         const req = new TrimIdRequestDto(undefined,option?.name)
         paramsService.getMappedParamsByTrim(req).then((res) => {
@@ -1162,6 +1163,15 @@ const handleFabricsfilterData = (data) => {
      setVisibleModel(true)
   }
   
+  const handleTrimFilterData =(trimFilterData) =>{
+    let req
+    if(trimFilterData == undefined){
+        req = new M3TrimFilterReq(sourcingForm.getFieldValue('buyer'),trimForm.getFieldValue('trimCategory'),trimForm.getFieldValue('trimType'),undefined,undefined,undefined,undefined,undefined,undefined,undefined)
+    }else{
+        req = new M3TrimFilterReq(sourcingForm.getFieldValue('buyer'),trimForm.getFieldValue('trimCategory'),trimForm.getFieldValue('trimType'),trimFilterData[0].categoryId,trimFilterData[0].contentId,trimFilterData[0].finishId,trimFilterData[0].holeId,trimFilterData[0].hsnCode,trimFilterData[0].m3Code,trimFilterData[0].typeId,trimFilterData[0].trimMapId) 
+    }
+  getM3TrimsTypes(req)
+  }
 
     return(
         <><Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
@@ -1653,6 +1663,9 @@ const handleFabricsfilterData = (data) => {
                                                     optionFilterProp="children"
                                                     placeholder={renderTrimCodeOptions()[0]?.props.children}
                                                     onChange={onTrimChange}
+                                                    suffixIcon={trimForm.getFieldValue('trimCategory') != undefined?<SearchOutlined
+                                                        onClick={trimFilterFormVisible}
+                                                         style={{ fontSize: '28px', marginLeft: '-7px' }} />:<></>}
                                                 >
                                                     {renderTrimCodeOptions()}
                                                     {m3Trims.map((e) => {
@@ -1867,7 +1880,7 @@ const handleFabricsfilterData = (data) => {
                </>:modal == 'fabricFilter' ?<>
                <M3FabricFilters formValues={handleFabricsfilterData} close={closeModel}/>
                </>:modal == 'trimFilter' ?<>
-               <M3TrimsReqFile />
+               <M3TrimsReqFile trimCategoryId={trimForm.getFieldValue('trimCategory')} close={closeModel} formValues={handleTrimFilterData}/>
                </>:
             <M3Items />
             }

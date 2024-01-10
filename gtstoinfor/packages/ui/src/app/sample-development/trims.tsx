@@ -3,7 +3,7 @@ import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Chec
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { M3TrimsService, SampleDevelopmentService, TrimParamsMappingService, UomService } from '@project-management-system/shared-services';
-import { ItemTypeEnumDisplay, ItemTypeEnum, M3TrimType, BuyerIdReq, TrimIdRequestDto, buyerandM3ItemIdReq, UomCategoryEnum } from '@project-management-system/shared-models';
+import { ItemTypeEnumDisplay, ItemTypeEnum, M3TrimType, BuyerIdReq, TrimIdRequestDto, buyerandM3ItemIdReq, UomCategoryEnum, M3TrimFilterReq } from '@project-management-system/shared-models';
 import moment from 'moment';
 import AlertMessages from '../common/common-functions/alert-messages';
 
@@ -77,7 +77,9 @@ const TrimsForm = (props:TrimsFormProps) => {
     })
   }
   const getTrimTypes = (buyerId) =>{
-    service.getM3TrimsByBuyer({buyerId:buyerId}).then(res =>{
+    const req = new M3TrimFilterReq(buyerId,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined)
+    
+    service.getM3TrimsByBuyer(req).then(res =>{
       if(res.status){
         setTrimtype(res.data)
       }else{
@@ -98,7 +100,8 @@ const TrimsForm = (props:TrimsFormProps) => {
 }
 
 const getM3TrimsTypes = (value: number) => {
-  const req = new BuyerIdReq(props.buyerId,itemType,value)
+  // const reqq = new BuyerIdReq(props.buyerId,itemType,value)
+  const req = new M3TrimFilterReq(props.buyerId,value,itemType,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined)
   service.getM3TrimsByBuyer(req).then(res => {
       if(res.status) {
           setM3Trims(res.data)

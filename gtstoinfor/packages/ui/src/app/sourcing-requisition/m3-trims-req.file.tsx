@@ -2,15 +2,21 @@ import {BuyersService,CategoryService,ColourService,ContentService,FabricStructu
 import { Button, Card, Col, Form, Input, Row, Select, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto } from "@project-management-system/shared-models";
+import { ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3TrimFilterReq, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
 import AlertMessages from "../common/common-functions/alert-messages";
 
 const { TextArea } = Input;
 const { Option } = Select;
 
+export interface M3Trimprps{
+  trimCategoryId:number
+ close: (value: any) => void;
+ formValues:any
+}
 
-export function M3TrimsReqFile() {
+
+export function M3TrimsReqFile(props:M3Trimprps) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const categoryService = new CategoryService();
@@ -31,6 +37,24 @@ export function M3TrimsReqFile() {
   const [mapData, setMapData] = useState<any[]>([])
   const [mapDataId, setMapDataId] = useState<any[]>([])
 
+
+  useEffect(() =>{
+    if(props.trimCategoryId != undefined){
+      getMappedTrims(props.trimCategoryId)
+    }
+  },[props.trimCategoryId])
+
+  const getMappedTrims = (value) => {
+    const req = new TrimIdRequestDto(value)
+    paramsService.getMappedParamsByTrim(req).then((res) => {
+      if (res.status) {
+        setMapData(res.data)
+        form.setFieldsValue({trimMappingId:res.data[0].trimMappingId})
+        setMapDataId(res.data[0]?.trimMappingId)
+      }
+    });
+  }
+
   useEffect(() => {
     if (mapData[0]?.category === true) {
       getCategories();
@@ -47,7 +71,6 @@ export function M3TrimsReqFile() {
     if (mapData[0]?.hole === true) {
       getHoles();
     }
-    getTrims();
   }, [mapData]);
 
   const getCategories = () => {
@@ -92,88 +115,30 @@ export function M3TrimsReqFile() {
 
 
 
-  const getTrims = () => {
-    trimService.getAllTrim().then((res) => {
-      if (res.status) {
-        setTrimData(res.data);
-      }
-    });
-  };
-
-
-
-
-
-  const getMappedTrims = (value) => {
-    const req = new TrimIdRequestDto(value)
-    paramsService.getMappedParamsByTrim(req).then((res) => {
-      if (res.status) {
-        console.log(res.data[0])
-        setMapData(res.data)
-        form.setFieldsValue({trimMappingId:res.data[0].trimMappingId})
-        setMapDataId(res.data[0]?.trimMappingId)
-        console.log(res.data[0]?.trimMappingId,'============')
-      }
-    });
-  }
-
   const onFinish = (value) => {
-    // console.log(form.getFieldValue('m3Code'),'8888888888')
-    const req = new M3trimsDTO(0,value.buyerId,"",value.categoryId,value.colorId,value.contentId,value.finishId,value.holeId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.typeId,value.uomId,value.varietyId,value.trimCategoryId,form.getFieldValue("trimMappingId"),form.getFieldValue("buyerCode"),value.trimType,value.description,"",'',value.m3Code,value.hsnCode)
-    console.log(req,'---------------------')
-    m3TrimService.createM3Trims(req).then((res) => {
-      if (res.status) {
-        AlertMessages.getSuccessMessage(res.internalMessage);
-        navigate('/trim-master/m3-trim-items/m3-trim-items-view')
-        onReset()
-      } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    })
+    console.log(value)
+    const req= new M3TrimFilterReq(undefined,undefined,undefined,value.categoryId,value.contentId,value.finishId,value.holeId,value.hsnCode,value.m3Code,value.typeId)
+    props.formValues([req])
+    props.close(null)
   };
 
   const onReset = () => {
     form.resetFields();
+    props.close(null)
+    props.formValues(undefined)
   };
-
-
-  const trimOnChange = (val) =>{
-    getMappedTrims(val)
-  }
 
 
 
   return (
     <Card 
-    title={<span>M3 Items</span>}
+    title={<span>M3 Trim Items</span>}
       style={{ textAlign: "left" }}
       headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
-      extra={<Link to='/trim-master/m3-trim-items/m3-trim-items-view' >
-      <span style={{color:'white'}} ><Button type={'primary'} >View </Button> </span>
-      </Link>}
     >
       <Form form={form} layout={"vertical"} name="control-hooks" onFinish={onFinish}
       >
         <Row gutter={24}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="trimCategoryId" label="Trim Category" rules={[{ required: true, message: "Trim Category is required" }]}>
-                    <Select 
-                    showSearch 
-                    allowClear 
-                    optionFilterProp="children"
-                    placeholder="Select Trim Category"
-                    onChange={trimOnChange}
-                    >
-                        {trimData.map((e) => {
-                            return (
-                            <Option key={e.trimId} value={e.trimId}>
-                                {e.trimCategory}
-                            </Option>
-                            );
-                        })}
-                    </Select>
-                </Form.Item>
-            </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name="m3Code" label="M3 Code" >
                     <Input placeholder="Enter M3 Code"/>
@@ -187,13 +152,12 @@ export function M3TrimsReqFile() {
             {mapData[0]?.category == true ? (
             <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="categoryId" label="Category" rules={[{ required: true, message: "Category is required" }]}>
+                <Form.Item name="categoryId" label="Category">
                     <Select 
                     showSearch 
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Category"
-                    // onChange={generateItemCode}
                     >
                         {categoryData.map((e) => {
                             return (
@@ -210,13 +174,12 @@ export function M3TrimsReqFile() {
             {mapData[0]?.content === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="contentId" label="Content" rules={[{ required: true, message: "Content is required" }]}>
+                <Form.Item name="contentId" label="Content" >
                     <Select
                     showSearch
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Content"
-                    // onChange={generateItemCode}
                     >
                         {contentData.map((e) => {
                             return (
@@ -233,13 +196,12 @@ export function M3TrimsReqFile() {
             {mapData[0]?.type === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="typeId" label="Type" rules={[{ required: true, message: "Type is required" }]}>
+                <Form.Item name="typeId" label="Type" >
                     <Select 
                     showSearch 
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Type"
-                    // onChange={generateItemCode}
                     >
                         {typeData.map((e) => {
                             return (
@@ -262,13 +224,12 @@ export function M3TrimsReqFile() {
             {mapData[0]?.finish === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="finishId" label="Finish" rules={[{ required: true, message: "Finish is required" }]}>
+                <Form.Item name="finishId" label="Finish">
                     <Select 
                     showSearch 
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Finish"
-                    // onChange={generateItemCode}
                     >
                         {finishData.map((e) => {
                             return (
@@ -285,13 +246,12 @@ export function M3TrimsReqFile() {
             {mapData[0]?.hole === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="holeId" label="Hole" rules={[{ required: true, message: "Hole is required" }]}>
+                <Form.Item name="holeId" label="Hole" >
                     <Select
                     showSearch
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Hole"
-                    // onChange={generateItemCode}
                     >
                         {holeData.map((e) => {
                             return (
