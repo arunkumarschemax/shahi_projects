@@ -109,26 +109,47 @@ export class M3ItemsService {
       }
       if(req.fabricTypeId != undefined){
         query=query+' and fabric_type='+req.fabricTypeId+''
-      }if(req.weaveId != undefined){
+      }
+      if(req.weaveId != undefined){
         query=query+' and weave='+req.weaveId+''
-      }if(req.epiConstruction != undefined){
+      }
+      if(req.epiConstruction != undefined){
         query=query+' and epi_construction="'+req.epiConstruction+'"'
-      }if(req.ppiConstruction != undefined){
-        query=query=' and ppi_construction='+req.ppiConstruction+''
-      }if(req.yarnType != '' && req.yarnType != undefined){
+      }
+      if(req.ppiConstruction != undefined){
+        query=query+' and ppi_construction="'+req.ppiConstruction+'"'
+      }
+      if(req.yarnType != '' && req.yarnType != undefined){
         query=query+' and yarn_type="'+req.yarnType+'"'
-      }if(req.finishId != undefined){
+      }
+      if(req.finishId != undefined){
         query=query+' and finish='+req.finishId+''
-      }if(req.shrinkage != undefined){
+      }
+      if(req.shrinkage != undefined){
         query=query+' and shrinkage="'+req.shrinkage+'"'
-      }if(req.m3Code != undefined){
+      }
+      if(req.m3Code != undefined){
         query=query+' and m3_code="'+req.m3Code+'"'
-      }if(req.content != undefined){
+      }
+      if(req.content != undefined){
         query=query+' and content_id='+req.content+''
-      }if(req.hsnCode != undefined){
+      }
+      if(req.hsnCode != undefined){
         query=query+' and hsn_code="'+req.hsnCode+'"'
       }
-
+      if(req.weightUnit != undefined){
+        query=query+' and weight_unit='+req.weightUnit+''
+      }
+      if(req.weightValue != undefined){
+        query=query+' and weight="'+req.weightValue+'"'
+      }
+      if(req.widthUnit != undefined){
+        query=query+' and width_unit='+req.widthUnit+''
+      }
+      if(req.widthValue != undefined){
+        query=query+' and width="'+req.widthValue+'"'
+      }
+      
       const data = await this.datasource.query(query);
       // console.log(data)
       if(data.length > 0){

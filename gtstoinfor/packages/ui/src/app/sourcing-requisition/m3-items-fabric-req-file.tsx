@@ -165,7 +165,6 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
 
 
   const onFinish = (val) => {
-    // alert()
     const req = new m3FabricFiltersReq(undefined,val.fabricTypeId,val.weaveId,val.weightUomId,val.epiConstruction,val.ppiConstruction,yarnType,val.widthUomId,val.finishId,val.shrinkage,val.hsnCode,val.content,val.weightValue,val.widthValue)
      props.formValues([req])
      props.close(null)
@@ -177,8 +176,9 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
     form.resetFields();
     setYarn(undefined)
     props.formValues(undefined)
-    props.close(null)
+    // props.close(null)
   };
+
 
   const yarnSelect = (val) =>{
     setYarnRadio(true)
@@ -229,12 +229,12 @@ const onFabricTpe = (val) =>{
             <Form.Item label="Weight" name="weightId">
             <Space.Compact>
               <Form.Item name='weightValue'>
-              <Input placeholder="Enter Weight" allowClear 
+              <Input placeholder="Enter Weight" 
             //   onChange={(e)=>onWeightChange(e?.target?.value)} 
              />
               </Form.Item>
               <Form.Item name='weightUomId'>
-                <Select allowClear placeholder="Select Unit" 
+                <Select  placeholder="Select Unit" 
                 // onChange={onWeightUom} onBlur={generateItemCode}
                  style={{width:'180px'}}>
                   {weightUomData.map((e) => (
@@ -251,12 +251,12 @@ const onFabricTpe = (val) =>{
               <Form.Item label="Width" name="widthValue"  >
                 <Space.Compact>
                   <Form.Item name="width">
-                  <Input placeholder="Enter Width" allowClear 
+                  <Input placeholder="Enter Width"  
                 //   onChange={(e)=>onWidthChange(e?.target?.value)}
                   />
                   </Form.Item>
                   <Form.Item name='widthUomId'>
-                  <Select  allowClear placeholder="Select Unit"
+                  <Select   placeholder="Select Unit"
                 //    onChange={onWidthUomChange} style={{width:'120px'}}
                    >
                     {uom.map((e) => {
@@ -274,12 +274,12 @@ const onFabricTpe = (val) =>{
               <Form.Item label="Construction" name="construction">
                 <Space.Compact>
                   <Form.Item name='epiConstruction'>
-                  <Input placeholder="Enter EPI" allowClear 
+                  <Input placeholder="Enter EPI"  
                 //   onChange={(e) => epiChange(e?.target?.value)}
                   />
                   </Form.Item>
                   <Form.Item name='ppiConstruction'>
-                  <Input placeholder="Enter PPI" allowClear 
+                  <Input placeholder="Enter PPI"  
                 //   onChange={(e) => ppiChange(e?.target?.value)}
                   />
                   </Form.Item>
@@ -308,7 +308,7 @@ const onFabricTpe = (val) =>{
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label=" Finish" name="finishId"
               >
-                <Select  allowClear placeholder="Select Unit">
+                <Select   placeholder="Select Unit">
                     {fabricFinish.map((e) => {
                       return (
                       <Option key={e.fabricFinishTypeId} value={e.fabricFinishTypeId}>
@@ -325,7 +325,7 @@ const onFabricTpe = (val) =>{
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label=" Content" name="content" >
-                <Select  allowClear placeholder="Select Content" style={{width: '150px'}}>
+                <Select   placeholder="Select Content" style={{width: '150px'}}>
                         {contentData.map((e) => (
                                     <Option key={e.contentId} value={e.contentId}>
                                       {e.content}
