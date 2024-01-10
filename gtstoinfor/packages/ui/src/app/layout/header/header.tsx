@@ -90,7 +90,7 @@ export const CommonHeader = (props: IProps) => {
         </Col>
         <Col span={4}></Col>
         <Col span={8}>
-          <span style={{ alignSelf: 'center', fontSize: 28, color: 'darkblue' }}><b>{'CENTRIC - ORDER MANAGEMENT & TRACKING'}</b></span>
+          <span style={{ alignSelf: 'center', fontSize: 28, color: 'darkblue' }}><b>{'HB Athletic - ORDER MANAGEMENT & TRACKING'}</b></span>
           {/* <Select  onSelect={(e) => {navigate('/'+e)}} className='header-search' showSearch  allowClear style={{width:'100%',marginBottom:'60px'}}  placeholder='search for forms and views' options={options} suffixIcon={<SearchOutlined style={{color:colorPrimary}}/>} /> */}
         </Col>
         <Col span={7} style={{ textAlign: 'right' }}>
