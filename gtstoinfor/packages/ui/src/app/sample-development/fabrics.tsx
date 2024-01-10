@@ -3,7 +3,7 @@ import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Chec
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { BuyerDestinationService, ColourService, M3ItemsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
-import { UomCategoryEnum, buyerandM3ItemIdReq } from '@project-management-system/shared-models';
+import { UomCategoryEnum, buyerandM3ItemIdReq, m3FabricFiltersReq } from '@project-management-system/shared-models';
 import { updateLocale } from 'moment';
 import AlertMessages from '../common/common-functions/alert-messages';
 import { useIAMClientState } from "../common/iam-client-react";
@@ -270,7 +270,9 @@ const FabricsForm = (props:FabricsFormProps) => {
 
   const fabricCode = (buyerId) =>{
     console.log(buyerId)
-    m3ItemsService.getM3FabricsByBuyer({buyerId:buyerId}).then(res =>{
+    const req= new m3FabricFiltersReq()
+    req.buyerId=buyerId
+    m3ItemsService.getM3FabricsByBuyer(req).then(res =>{
       console.log(res)
       if(res.status){
         setFabricCodeData(res.data)

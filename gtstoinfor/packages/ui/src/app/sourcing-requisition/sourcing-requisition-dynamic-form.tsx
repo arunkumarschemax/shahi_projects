@@ -5,9 +5,9 @@ import { useState } from "react"
 import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, M3TrimsService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, TrimParamsMappingService, TrimService, UomService, VendorsService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { DeleteOutlined, EditOutlined, EyeOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined, SearchOutlined, UploadOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
-import { BuyerIdReq, BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, M3MastersCategoryReq, M3TrimType, M3trimsDTO, MenusAndScopesEnum, SourcingRequisitionReq, StyleIdReq, TrimIdRequestDto, UomCategoryEnum, buyerReq } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, M3MastersCategoryReq, M3TrimType, M3trimsDTO, MenusAndScopesEnum, SourcingRequisitionReq, StyleIdReq, TrimIdRequestDto, UomCategoryEnum, buyerReq, m3FabricFiltersReq } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -15,6 +15,8 @@ import M3Items from "../masters/m3-items/m3-items-form";
 import { useIAMClientState } from "../common/iam-client-react";
 import RolePermission from "../role-permissions";
 import './sourcing-view.css';
+import M3FabricFilters from "./m3-items-fabric-req-file";
+import M3TrimsReqFile from "./m3-trims-req.file";
 
 const {Option} = Select;
 
@@ -92,7 +94,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const paramsService = new TrimParamsMappingService()
     const [mapData, setMapData] = useState<any[]>([])
     const [modal, setModal] = useState('')
-
+    const [m3FilterVal, setM3FilterVal] = useState<any[]>([])
 
 
 
@@ -303,10 +305,34 @@ export const SourcingRequisitionDynamicForm = () => {
             }
         })
     }
-    const getM3FabricStyleCodes = (buyer) => {
-        m3ItemsService.getM3FabricsByBuyer({buyerId:buyer}).then(res => {
+    const getM3FabricStyleCodes = (buyer,request) => {
+        console.log(request)
+         req= new m3FabricFiltersReq() 
+         req.buyerId=buyer
+         if(request != undefined){
+         req.fabricTypeId=request.fabricTypeId
+         req.content=request.content
+         req.epiConstruction=request.epiConstruction
+         req.ppiConstruction=request.ppiConstruction
+         req.finishId=request.finishId
+         req.hsnCode=request.hsnCode
+         req.m3Code=request.m3Code
+         req.shrinkage=request.shrinkage
+         req.weaveId=request.weaveId
+         req.weightUnit=request.weightUnit
+         req.widthUnit=request.widthUnit
+         req.yarnType=request.yarnType
+         req.weightValue=request.weightValue
+         req.widthValue=request.widthValue
+         }
+
+        
+        m3ItemsService.getM3FabricsByBuyer(req).then(res => {
             if(res.status){
                 setFabricM3Code(res.data)
+            }
+            else{
+                message.info('No M3 Fabric Data Found')
             }
         })
     }
@@ -798,7 +824,7 @@ export const SourcingRequisitionDynamicForm = () => {
         fabricForm.setFieldsValue({buyerName:option})
         getStyle(val);
         // getM3TrimsTypes(val);
-        getM3FabricStyleCodes(val)
+        getM3FabricStyleCodes(val,req)
         setFabricTableData([])
         setFabricTableVisible(false)
     }
@@ -1111,7 +1137,31 @@ const handleColor = (val) => {
         setIsColorRequired(true)
     }
 }
+const m3FabricFilters = () =>{
+setModal('fabricFilter')
+setVisibleModel(true)
+}
+let req
+const handleFabricsfilterData = (data) => {
+    console.log(data)
+    if(data != undefined){
+        req = new m3FabricFiltersReq(sourcingForm.getFieldValue('buyer'),data[0].fabricTypeId,data[0].weaveId,data[0].weightUnit,data[0].epiConstruction,data[0].ppiConstruction,data[0].yarnType,data[0].widthUnit,data[0].finishId,data[0].shrinkage,data[0].hsnCode,data[0].content,data[0].weightValue,data[0].widthValue,data[0].m3Code)
+        console.log(req)
+       getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),req)
+    }else{
+        getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),undefined)
 
+    }
+  };
+  const closeModel = () =>{
+    setVisibleModel(false)
+  }
+
+  const trimFilterFormVisible =()=>{
+    setModal('trimFilter')
+     setVisibleModel(true)
+  }
+  
 
     return(
         <><Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
@@ -1297,6 +1347,10 @@ const handleColor = (val) => {
                                                 <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
                                                 dropdownMatchSelectWidth={false}
                                                   style={{ width: "100%" }}
+                        suffixIcon={<SearchOutlined
+                             onClick={m3FabricFilters}
+                              style={{ fontSize: '28px', marginLeft: '-7px' }} />}
+                                            
                                                     >
                                                     {fabricM3Code.map(e => {
                                                         return (
@@ -1777,8 +1831,8 @@ const handleColor = (val) => {
         </Card>
         <Modal
             className='rm-'
-            key={'modal' + Date.now()}
-            width={'50%'}
+            // key={'modal' + Date.now()}
+            width={'70%'}
             style={{ top: 30, alignContent: 'right' }}
             visible={visibleModel}
             title={<React.Fragment>
@@ -1810,6 +1864,10 @@ const handleColor = (val) => {
                                                 />
                                                 </Form.Item>
                                             </Card>
+               </>:modal == 'fabricFilter' ?<>
+               <M3FabricFilters formValues={handleFabricsfilterData} close={closeModel}/>
+               </>:modal == 'trimFilter' ?<>
+               <M3TrimsReqFile />
                </>:
             <M3Items />
             }
