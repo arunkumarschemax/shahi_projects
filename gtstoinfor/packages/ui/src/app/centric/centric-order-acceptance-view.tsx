@@ -652,13 +652,37 @@ export function CentricOrderAcceptanceGrid() {
           </Tooltip>
         ),
       },
+
+      // {
+      //   title: "Item status",
+      //   dataIndex: "status",
+      //   align: "center",
+      //   width: 90,
+      //   render: (text) => text ? text : "-",
+      //   filters: [
+      //     {
+      //       text: 'OPEN',
+      //       value: 'OPEN',
+      //     },
+      //     {
+      //       text: 'INPROGRESS',
+      //       value: 'INPROGRESS',
+      //     },
+    
+      //   ],
+      //   onFilter: (value,record) =>{ return record.status.toLowerCase() === value.toLowerCase()}
+      // },
+  
+
+
+
       {
-        title: "Status",
+        title: "Item status",
         dataIndex: "status",
         align: "center",
-        width: "80px",
-        fixed: "right",
-        render: (text, record, index) => {
+        fixed: 'right',
+        width: 90,
+        render: (text, record) => {
           return {
             children: <div style={{ position: "relative", top: "-7px" }}>{text}</div>,
             props: {
@@ -666,7 +690,21 @@ export function CentricOrderAcceptanceGrid() {
             },
           };
         },
+        filters: [
+          {
+            text: 'OPEN',
+            value: 'OPEN',
+          },
+          {
+            text: 'INPROGRESS',
+            value: 'INPROGRESS',
+          },
+        ],
+        onFilter: (value, record) => record.status.toLowerCase() === value.toLowerCase(),
       },
+      
+      
+      
       {
         title: "Item No",
         dataIndex: "itemNo",
