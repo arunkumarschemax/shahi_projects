@@ -343,6 +343,7 @@ export class HbService {
 
   async hbCoLineCreationReq(req: any): Promise<CommonResponseModel> {
     try {
+     // console.log(req,'req')
       if (req.itemNo == undefined || null) {
         return new CommonResponseModel(false, 0, 'Please enter Item No')
       };
@@ -350,6 +351,7 @@ export class HbService {
       const records = await this.HbOrdersRepo.find({ where: { custPo: req.custPo,exitFactoryDate:req.exitFactoryDate } });
       const empty = [];
       for (const rec of records) {
+        //console.log(rec,'reccccccccc')
         const entity = new HbCOLineEntity()
         entity.buyer = req.buyer
         entity.custPo = req.custPo;
@@ -357,11 +359,13 @@ export class HbService {
         entity.itemNo =  req?.itemNo;
         entity.status = 'Open';
         entity.exitFactoryDate=rec.exitFactoryDate;
-        entity.createdUser = req.createdUser;
+        entity.createdUser = 'admin';
         empty.push(entity)
       }
+     // console.log(empty,'emptyyyyy')
       const save = await this.hbCoLineRepo.save(empty);
 
+      
 
       if (save) {
         const update = await this.HbOrdersRepo.update(
@@ -373,6 +377,7 @@ export class HbService {
         return new CommonResponseModel(false, 0, 'CO-Line request failed')
       }
     } catch (err) {
+    //  console.log(err,',,,,,,,,,,,,,,,')
       return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
     }
   }
