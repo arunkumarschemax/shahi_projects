@@ -170,6 +170,27 @@ export function HbPdFInfoGrid() {
             
             
         },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            align: 'center',
+            width: 80,
+            filters: [
+                {
+                  text: 'SUCCESS',
+                  value: 'SUCCESS',
+                },
+                {
+                  text: 'FAILED',
+                  value: 'FAILED',
+                },
+          
+              ],
+              onFilter: (value,record) =>{ return record.status.toLowerCase() === value.toLowerCase();}
+        
+     
+            
+        },
           
         {
             title: "Action",
