@@ -65,11 +65,11 @@ import { Excel } from "antd-table-saveas-excel";
       if (form.getFieldValue("poNumber") !== undefined) {
         req.custPo = form.getFieldValue("poNumber");
       }
-      if (form.getFieldValue('podate') !== undefined) {
-        req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
+      if (form.getFieldValue('deliveryDate') !== undefined) {
+        req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('DD-MM-YYYY');
       }
-      if (form.getFieldValue('podate') !== undefined) {
-        req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
+      if (form.getFieldValue('deliveryDate') !== undefined) {
+        req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('DD-MM-YYYY');
       }
       
       if (form.getFieldValue("style") !== undefined) {
@@ -81,7 +81,7 @@ import { Excel } from "antd-table-saveas-excel";
 
 
   
-     service.getHborderData(req).then((res) => {
+     service.getHborderDataForInfo(req).then((res) => {
       if (res.status) {
         setOrderData(res.data);
         setFilterData(res.data);
@@ -1114,7 +1114,7 @@ import { Excel } from "antd-table-saveas-excel";
                 xl={{ span: 4 }}
               >
                <Form.Item label="Style" name="style"  >
-                  <Input placeholder="Enter Style "  />
+                  <Input placeholder="Enter Style " allowClear />
                 </Form.Item>
               </Col>
               <Col
@@ -1125,7 +1125,7 @@ import { Excel } from "antd-table-saveas-excel";
                 xl={{ span: 4 }}
               >
                <Form.Item label="Color" name="color"  >
-                  <Input placeholder="Enter Color "  />
+                  <Input placeholder="Enter Color "  allowClear />
                 </Form.Item>
               </Col>
               <Col

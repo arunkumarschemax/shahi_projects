@@ -348,6 +348,7 @@ export class HbService {
 
   async hbCoLineCreationReq(req: any): Promise<CommonResponseModel> {
     try {
+     // console.log(req,'req')
       if (req.itemNo == undefined || null) {
         return new CommonResponseModel(false, 0, 'Please enter Item No')
       };
@@ -355,6 +356,7 @@ export class HbService {
       const records = await this.HbOrdersRepo.find({ where: { custPo: req.custPo,exitFactoryDate:req.exitFactoryDate } });
       const empty = [];
       for (const rec of records) {
+        //console.log(rec,'reccccccccc')
         const entity = new HbCOLineEntity()
         entity.buyer = req.buyer
         entity.custPo = req.custPo;
@@ -362,11 +364,13 @@ export class HbService {
         entity.itemNo =  req?.itemNo;
         entity.status = 'Open';
         entity.exitFactoryDate=rec.exitFactoryDate;
-        entity.createdUser = req.createdUser;
+        entity.createdUser = 'admin';
         empty.push(entity)
       }
+     // console.log(empty,'emptyyyyy')
       const save = await this.hbCoLineRepo.save(empty);
 
+      
 
       if (save) {
         const update = await this.HbOrdersRepo.update(
@@ -378,9 +382,46 @@ export class HbService {
         return new CommonResponseModel(false, 0, 'CO-Line request failed')
       }
     } catch (err) {
+    //  console.log(err,',,,,,,,,,,,,,,,')
       return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
     }
   }
+
+  async getHborderDataForInfo(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
+    console.log(req,"servvv")
+    try {
+      const details = await this.HbOrdersRepo.getHborderDataForInfo(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+      }
+      const sizeDateMap = new Map<string, HbOrderDataModel>();
+      for (const rec of details) {
+        // console.log(rec,"rrrrrrrrr")
+        if (!sizeDateMap.has(`${rec.style},${rec.cust_po},${rec.exit_factory_date}`)) {
+          sizeDateMap.set(
+            `${rec.style},${rec.cust_po},${rec.exit_factory_date}`,
+            new HbOrderDataModel(rec.id, rec.cust_po,rec.style,rec.color,rec.size,rec.exit_factory_date,rec.ship_to_add,[],rec.quantity,rec.unit_price)
+          );
+
+          // console.log(sizeDateMap,)
+        }
+        const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.cust_po},${rec.exit_factory_date}`).sizeWiseData;
+        if (rec.size !== null) {
+          sizeWiseData.push(new HbSizeWiseModel(rec.size, rec.unit_price, rec.quantity,rec.color));
+        }
+      }
+      const dataModelArray: HbOrderDataModel[] = Array.from(sizeDateMap.values());
+      // console.log(dataModelArray,"kkkk")
+      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+      // return new CommonResponseModel(true, 1, 'data retrieved', details);
+
+
+    } catch (e) {
+      console.log(e, "errrrrrrrrr")
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
+ 
 
 
  

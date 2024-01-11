@@ -130,4 +130,15 @@ export class HbController {
         }
     }
 
+    @Post('/getHborderDataForInfo')
+    @ApiBody({ type: HbPoOrderFilter })
+    async getHborderDataForInfo(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            // console.log(req,"con")
+            return await this.Service.getHborderDataForInfo(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
 }

@@ -29,7 +29,7 @@ console.log(location?.state?.data)
             title: "S.No",
             key: "sno",
             align:"center",
-             width: 200,
+             width: 100,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
             // fixed: 'left'
         },
@@ -39,7 +39,7 @@ console.log(location?.state?.data)
             title:"Size",
             dataIndex: 'size',
             align:"center",
-            width: 200,
+            width: 150,
             sorter: (a, b) => a.size.localeCompare(b.size),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-"
@@ -50,7 +50,7 @@ console.log(location?.state?.data)
             title: <div style={{textAlign:"center"}}>Unit Price</div>,
 
             dataIndex: 'unitPrice',
-            width: 200,
+            width: 150,
             // align:"center",
             sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
             sortDirections: ["ascend", "descend"],
@@ -87,8 +87,8 @@ console.log(location?.state?.data)
         );
     
         return {
-          totalAmount: total.amount.toFixed(2),
           totalQuantity: total.quantity,
+          totalAmount: total.quantity * location?.state?.data?.sizeWiseData[0]?.unitPrice || 0,
         };
       };
      
@@ -134,8 +134,8 @@ console.log(location?.state?.data)
     
                                 <Table.Summary.Row className="tableFooter">
                                     <Table.Summary.Cell index={0} colSpan={3}>
-                                    <span style={{ textAlign: 'right', paddingRight: 8,marginLeft:400}}>
-                                        <b>Total:</b>
+                                    <span style={{ textAlign: 'right', paddingRight: 8,marginLeft:500}}>
+                                        <b>Total Quantity  :</b>
                                     </span>
                                     </Table.Summary.Cell>
                                     <Table.Summary.Cell index={1} colSpan={1}>
@@ -143,6 +143,20 @@ console.log(location?.state?.data)
                                         <b>{totalQuantity}</b>
                                     </span>
                                     </Table.Summary.Cell>
+                                    
+                                </Table.Summary.Row>
+                                <Table.Summary.Row className="tableFooter">
+                                    <Table.Summary.Cell index={0} colSpan={3}>
+                                    <span style={{ textAlign: 'right', paddingRight: 8,marginLeft:500}}>
+                                        <b>Total Amount  :</b>
+                                    </span>
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    <span>
+                                        <b>{totalAmount}</b>
+                                    </span>
+                                    </Table.Summary.Cell>
+                                    
                                 </Table.Summary.Row>
     
                        
