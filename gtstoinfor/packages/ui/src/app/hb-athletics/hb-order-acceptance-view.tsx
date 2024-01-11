@@ -4,7 +4,6 @@ import {
   Col,
   Form,
   Input,
-  Modal,
   Row,
   Select,
   Table,
@@ -13,24 +12,18 @@ import {
 } from "antd";
 import { useEffect, useRef, useState } from "react";
 import {
-  CentricService,
   HbService,
-  NikeService,
-  RLOrdersService,
 } from "@project-management-system/shared-services";
 import React from "react";
-import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import {SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
 import {
   
   HbOrderAcceptanceRequest,
-  OrderDataModel,
-  PoOrderFilter,
+  HbPoOrderFilter,
 } from "@project-management-system/shared-models";
-import { ColumnsType } from "antd/es/table";
 import { useIAMClientState } from "../nike/iam-client-react";
-import { Excel } from "antd-table-saveas-excel";
 
 export function HbOrderAcceptanceGrid() {
   const service = new HbService();
@@ -42,7 +35,7 @@ export function HbOrderAcceptanceGrid() {
   const [pageSize, setPageSize] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [poNumber, setPoNumber] = useState([]);
+  const [custPo, setcustPo] = useState([]);
   const [form] = Form.useForm();
   const { Option } = Select;
   const [isModalOpen1, setIsModalOpen1] = useState(false);
@@ -51,18 +44,18 @@ export function HbOrderAcceptanceGrid() {
   const [itemNoValues, setItemNoValues] = useState({});
 
   useEffect(() => {
-    getCentricorderData();
-    getPoNumber()
+    getHborderData();
+    getHbPoNumber()
   }, []);
 
 
-  const getCentricorderData = () => {
-    const req = new PoOrderFilter();
+  const getHborderData = () => {
+    const req = new HbPoOrderFilter();
 
-    if (form.getFieldValue("poNumber") !== undefined) {
-      req.poNumber = form.getFieldValue("poNumber");
+    if (form.getFieldValue("custPo") !== undefined) {
+      req.custPo = form.getFieldValue("custPo");
     }
-    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
+   // req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
 
     service.getHborderData(req).then((res) => {
       if (res.status) {
@@ -72,14 +65,14 @@ export function HbOrderAcceptanceGrid() {
     });
   };
 
-  console.log(form.getFieldValue("poNumber"), "uuuuu")
-  const getPoNumber = () => {
-    // service.getPoNumber().then((res) => {
-    //   if (res.status) {
-    //     setPoNumber(res.data);
+  console.log(form.getFieldValue("custPo"), "uuuuu")
+  const getHbPoNumber = () => {
+    service.getHbPoNumber().then((res) => {
+      if (res.status) {
+        setcustPo(res.data);
 
-    //   }
-    // });
+      }
+    });
   };
 
 
@@ -109,18 +102,18 @@ export function HbOrderAcceptanceGrid() {
    
 
 
-    // console.log("Request Payload:", req);
+    console.log("Request Payload:", req);
 
-    // service.coLineCreationReq(req).then((res) => {
-    //   if (res.status) {
-    //     getCentricorderData();
-    //     setItemNoValues({});
-    //     form.setFieldsValue({ [index]: { itemNo: undefined } });
-    //     message.success(res.internalMessage);
-    //   } else {
-    //     message.error(res.internalMessage);
-    //   }
-    // });
+    service.hbCoLineCreationReq(req).then((res) => {
+      if (res.status) {
+        getHborderData();
+        setItemNoValues({});
+        form.setFieldsValue({ [index]: { itemNo: undefined } });
+        message.success(res.internalMessage);
+      } else {
+        message.error(res.internalMessage);
+      }
+    });
   };
   const processData = (tableData: HbOrderAcceptanceRequest[]) => {
     const dataTobeReturned = [];
@@ -161,7 +154,7 @@ export function HbOrderAcceptanceGrid() {
   };
   const onReset = () => {
     form.resetFields();
-    getCentricorderData();
+    getHborderData();
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -289,7 +282,7 @@ export function HbOrderAcceptanceGrid() {
         width: 90,
        // sorter: (a, b) => a.custPo.localeCompare(b.custPo),
      //   sortDirections: ["ascend", "descend"],
-        // render: (text) => text ? text : "-",
+       // render: (text) => text ? text : "-",
         render: (text, record, index) => {
           return {
             children: text,
@@ -303,8 +296,18 @@ export function HbOrderAcceptanceGrid() {
         // ...getColumnSearchProps('poNumber')
       },
       {
-        title: "STYLE",
+        title: "Style",
         dataIndex: "style",
+        width: 90,
+        // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+        // sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-",
+        fixed: "left",
+
+      },
+      {
+        title: "Color",
+        dataIndex: "color",
         width: 90,
         // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
         // sortDirections: ["ascend", "descend"],
@@ -323,16 +326,7 @@ export function HbOrderAcceptanceGrid() {
         // ...getColumnSearchProps('material')
 
       },
-      {
-        title: "Color",
-        dataIndex: "color",
-
-        // sorter: (a, b) => a.color.localeCompare(b.color),
-        // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-",
-     //   ...getColumnSearchProps('color')
-
-      },
+     
 
     ];
 
@@ -344,6 +338,33 @@ export function HbOrderAcceptanceGrid() {
         width: 70,
         align: 'center',
         children: [
+          // {
+          //   title: 'COLOR',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 70,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     console.log()
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.color) ? (sizeData?.color) : "-"
+
+          //         return (
+          //           formattedQty
+          //         );
+          //       } else {
+
+          //         return (
+          //           '-'
+          //         );
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
           {
             title: 'QUANTITY',
             dataIndex: '',
@@ -535,7 +556,7 @@ export function HbOrderAcceptanceGrid() {
     <>
       <Card title="Order Acceptance" headStyle={{ fontWeight: "bold" }}>
         <Form
-          onFinish={getCentricorderData}
+          onFinish={getHborderData}
           form={form}
         // layout='vertical'
         >
@@ -547,17 +568,17 @@ export function HbOrderAcceptanceGrid() {
               lg={{ span: 4 }}
               xl={{ span: 6 }}
             >
-              <Form.Item name="poNumber" label="BUYER PO Number">
+              <Form.Item name="custPo" label="Buyer po number">
                 <Select
                   showSearch
-                  placeholder="Select PO number"
+                  placeholder="Select buyer po number"
                   optionFilterProp="children"
                   allowClear
                 >
-                  {poNumber.map((inc: any) => {
+                  {custPo.map((inc: any) => {
                     return (
-                      <Option key={inc.po_number} value={inc.po_number}>
-                        {inc.po_number}
+                      <Option key={inc.cust_po} value={inc.cust_po}>
+                        {inc.cust_po}
                       </Option>
                     );
                   })}
@@ -601,7 +622,7 @@ export function HbOrderAcceptanceGrid() {
                     htmlType="submit"
                     icon={<SearchOutlined />}
                     type="primary"
-                    onClick={getCentricorderData}
+                    onClick={getHborderData}
                   >
                     SEARCH
 

@@ -81,4 +81,22 @@ export class HbController {
         }
     }
 
+    @Post('/getHbPoNumber')
+    async getHbPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getHbPoNumber();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/hbCoLineCreationReq')
+    async hbCoLineCreationReq(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.hbCoLineCreationReq(req)
+        } catch (error) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
 }

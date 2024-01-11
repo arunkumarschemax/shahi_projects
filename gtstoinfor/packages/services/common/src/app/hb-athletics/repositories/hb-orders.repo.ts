@@ -28,4 +28,10 @@ export class HbOrdersRepository extends Repository<HbOrdersEntity> {
         return await query.getRawMany()
     }
 
+    async getDistinctHBPoNumbers(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`DISTINCT cust_po`)
+        
+        return await query.getRawMany()
+    }
 }

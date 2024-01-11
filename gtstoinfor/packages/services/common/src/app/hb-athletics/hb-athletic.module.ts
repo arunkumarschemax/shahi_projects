@@ -11,6 +11,8 @@ import { HbOrdersRepository } from "./repositories/hb-orders.repo";
 import { HbController } from "./hb-athletic.controller";
 import { HbPdfRepo } from "./repositories/hb-pdf.repo";
 import { HbPdfFileInfoEntity } from "./entity/hb-pdf.entity";
+import { HbCOLineRepository } from "./repositories/hb-co-line.repository";
+import { HbCOLineEntity } from "./entity/hb-co-line.entity";
 
 
 
@@ -18,9 +20,9 @@ import { HbPdfFileInfoEntity } from "./entity/hb-pdf.entity";
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-     AddressEntity,HbOrdersEntity,HbPdfFileInfoEntity
+     AddressEntity,HbOrdersEntity,HbPdfFileInfoEntity,HbCOLineEntity
     ])],
   controllers: [HbController],
-  providers: [AddressRepository, AddressService, HbService, HbOrdersRepository, ApplicationExceptionHandler, HbPdfRepo]
+  providers: [AddressRepository, AddressService, HbService, HbOrdersRepository, ApplicationExceptionHandler, HbPdfRepo, HbCOLineRepository]
 })
 export class HbModule { }

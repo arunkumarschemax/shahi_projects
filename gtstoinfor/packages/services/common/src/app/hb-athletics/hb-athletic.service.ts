@@ -4,6 +4,8 @@ import { HbPdfRepo } from "./repositories/hb-pdf.repo";
 import { CommonResponseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel } from "@project-management-system/shared-models";
 import { HbOrdersEntity } from "./entity/hb-orders.entity";
 import { HbPdfFileInfoEntity } from "./entity/hb-pdf.entity";
+import { HbCOLineEntity } from "./entity/hb-co-line.entity";
+import { HbCOLineRepository } from "./repositories/hb-co-line.repository";
 
 @Injectable()
 export class HbService {
@@ -11,6 +13,7 @@ export class HbService {
   constructor(
     private HbOrdersRepo: HbOrdersRepository,
     private HbPdfRepo: HbPdfRepo,
+    private hbCoLineRepo:HbCOLineRepository,
 
   ) { }
 
@@ -160,17 +163,17 @@ export class HbService {
       const sizeDateMap = new Map<string, HbOrderDataModel>();
       for (const rec of details) {
         // console.log(rec,"rrrrrrrrr")
-        if (!sizeDateMap.has(`${rec.style},${rec.cust_po}`)) {
+        if (!sizeDateMap.has(`${rec.style},${rec.cust_po},${rec.color},${rec.exit_factory_date}`)) {
           sizeDateMap.set(
-            `${rec.style},${rec.cust_po}`,
+            `${rec.style},${rec.cust_po},${rec.color},${rec.exit_factory_date}`,
             new HbOrderDataModel(rec.id, rec.cust_po,rec.style,rec.color,rec.size,rec.exit_factory_date,rec.ship_to_add,[],rec.quantity,rec.unit_price)
           );
 
           // console.log(sizeDateMap,)
         }
-        const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.cust_po}`).sizeWiseData;
+        const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.cust_po},${rec.color},${rec.exit_factory_date}`).sizeWiseData;
         if (rec.size !== null) {
-          sizeWiseData.push(new HbSizeWiseModel(rec.size, rec.unit_price, rec.quantity,));
+          sizeWiseData.push(new HbSizeWiseModel(rec.size, rec.unit_price, rec.quantity,rec.color));
         }
       }
       const dataModelArray: HbOrderDataModel[] = Array.from(sizeDateMap.values());
@@ -182,6 +185,56 @@ export class HbService {
     } catch (e) {
       console.log(e, "errrrrrrrrr")
       return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
+
+
+  async getHbPoNumber(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.HbOrdersRepo.getDistinctHBPoNumbers()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async hbCoLineCreationReq(req: any): Promise<CommonResponseModel> {
+    try {
+      if (req.itemNo == undefined || null) {
+        return new CommonResponseModel(false, 0, 'Please enter Item No')
+      };
+      // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
+      const records = await this.HbOrdersRepo.find({ where: { custPo: req.custPo,exitFactoryDate:req.exitFactoryDate } });
+      const empty = [];
+      for (const rec of records) {
+        const entity = new HbCOLineEntity()
+        entity.buyer = req.buyer
+        entity.custPo = req.custPo;
+        entity.style = rec.style;
+        entity.itemNo =  req?.itemNo;
+        entity.status = 'Open';
+        entity.exitFactoryDate=rec.exitFactoryDate;
+        entity.createdUser = req.createdUser;
+        empty.push(entity)
+      }
+      const save = await this.hbCoLineRepo.save(empty);
+
+
+      if (save) {
+        // const update = await this.Repo.update(
+        //   { poNumber: req.poNumber, deliveryDate:req.deliveryDate,material:req.material }, // Conditions for updating
+        //   { status: StatusEnum.ACCEPTED } // Data to update
+        // );
+        return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
+      } else {
+        return new CommonResponseModel(false, 0, 'CO-Line request failed')
+      }
+    } catch (err) {
+      return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
     }
   }
 
