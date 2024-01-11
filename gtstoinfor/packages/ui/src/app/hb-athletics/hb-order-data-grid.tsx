@@ -826,7 +826,9 @@ import { Excel } from "antd-table-saveas-excel";
         },
        
         {
-          title: "Address",
+          // title: "Address",
+          title: <div style={{textAlign:"center"}}>Address</div>,
+
           dataIndex: "shipToAdd",
           width: 150,
          sorter: (a, b) => a.shipToAdd.localeCompare(b.shipToAdd),
