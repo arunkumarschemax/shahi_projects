@@ -77,4 +77,11 @@ export class HbPdfFileInfoEntity {
     })
     isActive: boolean;
 
+    @Column("varchar", {
+
+        length: 40,
+        name: "status",
+    })
+    status: string ;
+
 }

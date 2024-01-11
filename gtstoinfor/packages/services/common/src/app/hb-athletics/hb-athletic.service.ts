@@ -143,6 +143,7 @@ export class HbService {
     entity.filePath = filePath;
     entity.fileType = mimetype;
     entity.fileData = req;
+    entity.status = "SUCCESS"
     // console.log(entity.fileData, "fileData")
 
     const file = await this.HbPdfRepo.findOne({ where: { pdfFileName: filePath } });
