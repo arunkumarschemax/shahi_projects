@@ -49,7 +49,7 @@ export class HbOrdersRepository extends Repository<HbOrdersEntity> {
                 query.andWhere(`o.color ='${req.color}'`) 
             }
             if (req.deliveryDateStartDate !== undefined) {
-                query.andWhere(`Date(o.exit_factory_date) BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+                query.andWhere(`(o.exit_factory_date) BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
             }
           
         return await query.getRawMany()

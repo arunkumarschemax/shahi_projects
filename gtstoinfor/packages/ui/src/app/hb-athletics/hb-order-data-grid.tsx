@@ -733,7 +733,7 @@ import { Excel } from "antd-table-saveas-excel";
           width: 130,
           sorter: (a, b) => a.exitFactoryDate.localeCompare(b.exitFactoryDate),
           sortDirections: ["ascend", "descend"],
-          render: (text) => text ? moment(text).format("DD-MM-YYYY") : "-",
+          render: (text) => text ? text : "-",
           // ...getColumnSearchProps('material')
   
         },
@@ -944,7 +944,7 @@ import { Excel } from "antd-table-saveas-excel";
                 title: "Delivery Date",
                 dataIndex: "exitFactoryDate",
                 width: 130,
-                render: (text) => text ? moment(text).format("DD-MM-YYYY") : "-",
+                render: (text) => text ? text : "-",
             
         
               },
