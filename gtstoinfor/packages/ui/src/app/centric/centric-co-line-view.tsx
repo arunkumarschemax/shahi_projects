@@ -22,16 +22,11 @@ const CentriColineView = () => {
     const { Option } = Select;
 
 
-     useEffect(() => {
+    useEffect(() => {
         getData()
         BuyerPo()
-         getItem()
-   
-     }, [])
-
-     
-
-
+        getItem()
+    }, [])
 
     const BuyerPo = () => {
         service.getCoPoNumber().then(res => {
@@ -40,6 +35,7 @@ const CentriColineView = () => {
             }
         })
     }
+
     const getItem = () => {
         service.getItem().then(res => {
             if (res.status) {
@@ -47,7 +43,7 @@ const CentriColineView = () => {
             }
         })
     }
-  
+
     const getData = () => {
         const req = new centricCoLineRequest();
 
@@ -57,7 +53,7 @@ const CentriColineView = () => {
         if (form.getFieldValue('item') !== undefined) {
             req.itemNo = form.getFieldValue('item');
         }
-        
+
         service.getCentricCoLine(req).then(res => {
             if (res.status) {
                 setData(res.data)
@@ -174,8 +170,8 @@ const CentriColineView = () => {
             render: (text, record) => {
                 return (record.po_number ? (record.po_number) : '-')
             },
-              sorter: (a, b) => a.po_number.localeCompare(b.po_number),
-           sortDirections: ["ascend", "descend"],
+            sorter: (a, b) => a.po_number.localeCompare(b.po_number),
+            sortDirections: ["ascend", "descend"],
 
         },
         {
@@ -190,14 +186,14 @@ const CentriColineView = () => {
             title: 'Delivery Date',
             dataIndex: 'delivery_date',
             render: (text, record) => {
-                return (record.delivery_date? (record.delivery_date): '-')
+                return (record.delivery_date ? (record.delivery_date) : '-')
             }
         },
         {
             title: 'Material',
             dataIndex: 'material',
             render: (text, record) => {
-                return (record.material? (record.material): '-')
+                return (record.material ? (record.material) : '-')
             }
         },
         {
@@ -230,8 +226,8 @@ const CentriColineView = () => {
             render: (text, record) => {
                 return (record.created_user ? (record.created_user) : '-')
             },
-            
-          
+
+
         },
         {
             title: 'Raised Date',
@@ -239,7 +235,7 @@ const CentriColineView = () => {
             render: (text, record) => {
                 return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')) : '-')
             },
-           
+
         },
 
         {
@@ -248,7 +244,7 @@ const CentriColineView = () => {
             render: (text, record) => {
                 return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
             },
-          
+
 
         },
         {
@@ -274,9 +270,9 @@ const CentriColineView = () => {
                 style={{ color: 'green' }}
                 onClick={handleExport}
                 icon={<FileExcelFilled />}>Download Excel</Button> : null}>
-            <Form 
-             onFinish={getData} 
-            form={form} layout='vertical'>
+            <Form
+                onFinish={getData}
+                form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
                         <Form.Item name='buyerPo' label='Buyer Po' >
@@ -310,7 +306,7 @@ const CentriColineView = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    
+
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                         <Form.Item>
                             <Button htmlType="submit" icon={<SearchOutlined />} type="primary">SEARCH</Button>

@@ -1,32 +1,11 @@
-import {
-  Button,
-  Card,
-  Col,
-  Form,
-  Input,
-  Modal,
-  Row,
-  Select,
-  Table,
-  Tooltip,
-  message,
-} from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip, message } from "antd";
 import { useEffect, useRef, useState } from "react";
-import {
-  CentricService,
-  NikeService,
-  RLOrdersService,
-} from "@project-management-system/shared-services";
+import { CentricService } from "@project-management-system/shared-services";
 import React from "react";
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
-import {
-  CentricOrderAcceptanceRequest,
-  OrderDataModel,
-  PoOrderFilter,
-} from "@project-management-system/shared-models";
-import { ColumnsType } from "antd/es/table";
+import { CentricOrderAcceptanceRequest, OrderDataModel, PoOrderFilter } from "@project-management-system/shared-models";
 import { useIAMClientState } from "../nike/iam-client-react";
 import { Excel } from "antd-table-saveas-excel";
 
@@ -69,8 +48,7 @@ export function CentricOrderAcceptanceGrid() {
       }
     });
   };
-  
-  console.log(form.getFieldValue("poNumber"),"uuuuu")
+
   const getPoNumber = () => {
     service.getPoNumber().then((res) => {
       if (res.status) {
@@ -80,39 +58,32 @@ export function CentricOrderAcceptanceGrid() {
     });
   };
 
-  
+
   const handleItemNoChange = (value, record, index) => {
     const formValues = form.getFieldsValue();
     const itemNoValue = formValues[index]?.itemNo;
-  
-    //console.log("Item No from form:", itemNoValue);
-  
     setItemNoValues((prevValues) => ({
       ...prevValues,
       [index]: value,
     }));
   };
- 
 
-  const createCOLine = (record,index) => {
+
+  const createCOLine = (record, index) => {
     const formValues = form.getFieldsValue();
     const itemNoValue = formValues[index]?.itemNo;
-   // console.log(record);
     const req = new CentricOrderAcceptanceRequest();
     req.poNumber = record.poNumber;
     req.poLine = record.poLine;
-    req.itemNo = itemNoValue; 
+    req.itemNo = itemNoValue;
     req.buyer = 'Centric';
-    req.deliveryDate=record.deliveryDate;
-   req.material=record.material;
+    req.deliveryDate = record.deliveryDate;
+    req.material = record.material;
 
-  
-   // console.log("Request Payload:", req);
-  
     service.coLineCreationReq(req).then((res) => {
       if (res.status) {
         getCentricorderData();
-        setItemNoValues({}); 
+        setItemNoValues({});
         form.setFieldsValue({ [index]: { itemNo: undefined } });
         message.success(res.internalMessage);
       } else {
@@ -120,13 +91,12 @@ export function CentricOrderAcceptanceGrid() {
       }
     });
   };
+
   const processData = (tableData: CentricOrderAcceptanceRequest[]) => {
     const dataTobeReturned = [];
     const roleWiseMapData = new Map<string, CentricOrderAcceptanceRequest[]>();
-
     tableData.forEach(rec => {
       const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}_${rec.material}`;
-
       if (!roleWiseMapData.has(key)) {
         roleWiseMapData.set(key, [rec]);
       } else {
@@ -143,13 +113,8 @@ export function CentricOrderAcceptanceGrid() {
         });
       });
     }
-
     return dataTobeReturned;
   };
-
-
-
-
 
   const isActionButtonEnabled = (index) => {
     return (
@@ -157,6 +122,7 @@ export function CentricOrderAcceptanceGrid() {
       itemNoValues[index].trim() !== ""
     );
   };
+
   const onReset = () => {
     form.resetFields();
     getCentricorderData();
@@ -167,19 +133,12 @@ export function CentricOrderAcceptanceGrid() {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
+
   const handleReset = (clearFilters) => {
     clearFilters();
     setSearchText("");
   };
 
-  // const showModal1 = (record) => {
-  //   setPoNumber(record);
-  //   setIsModalOpen1(true);
-  // };
-
-  // const cancelHandle = () => {
-  //   setIsModalOpen1(false);
-  // };
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -203,7 +162,7 @@ export function CentricOrderAcceptanceGrid() {
           onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
           icon={<SearchOutlined />}
           size="small"
-          style={{  marginRight: 8 }}
+          style={{ marginRight: 8 }}
         >
           Search
         </Button>
@@ -253,11 +212,6 @@ export function CentricOrderAcceptanceGrid() {
       ) : null,
   });
 
-  const setMoreData = (record) => {
-    navigate("/ralph-lauren/order-data-detail-view", {
-      state: { data: record },
-    });
-  };
   const getSizeWiseHeaders = (data) => {
     const sizeHeaders = new Set<string>();
     data?.forEach((rec) =>
@@ -268,10 +222,8 @@ export function CentricOrderAcceptanceGrid() {
     return Array.from(sizeHeaders);
   };
 
-
   const renderReport = (data) => {
     const sizeHeaders = getSizeWiseHeaders(data);
-
 
     const columns: any = [
       {
@@ -284,7 +236,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "PO Number",
         dataIndex: "poNumber",
-        width:90,
+        width: 90,
         sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
         sortDirections: ["ascend", "descend"],
         // render: (text) => text ? text : "-",
@@ -296,19 +248,17 @@ export function CentricOrderAcceptanceGrid() {
             },
           };
         },
-
         fixed: "left",
         // ...getColumnSearchProps('poNumber')
       },
       {
         title: "PO Line Number",
         dataIndex: "poLine",
-        width:90,
+        width: 90,
         // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
         // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-",
-         fixed: "left",
-        
+        fixed: "left",
       },
       {
         title: 'Delivery Date',
@@ -318,7 +268,6 @@ export function CentricOrderAcceptanceGrid() {
         className: "center",
         render: (text, record) => {
           const sizeData = record.sizeWiseData.find(item => item.size);
-          console.log()
           if (sizeData) {
             if (sizeData.size !== null) {
               const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) : "-"
@@ -326,10 +275,7 @@ export function CentricOrderAcceptanceGrid() {
                 formattedQty
               );
             } else {
-
-              return (
-                '-'
-              );
+              return '-'
             }
           } else {
             return '-';
@@ -339,18 +285,15 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Material",
         dataIndex: "material",
-        
-        // sorter: (a, b) => a.material.localeCompare(b.material),
-        // sortDirections: ["ascend", "descend"],
+        width: 90,
         render: (text) => text ? text : "-",
-       // ...getColumnSearchProps('material')
-
+        // ...getColumnSearchProps('material')
       },
       {
         title: "PO Date",
         dataIndex: "PODate",
         align: "center",
-        
+        width: 90,
         sorter: (a, b) => a.PODate.localeCompare(b.PODate),
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
@@ -358,176 +301,119 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Shipment Method",
         dataIndex: "shipmentMethod",
-        width:90,
-        // sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
-        // sortDirections: ["ascend", "descend"],
+        width: 90,
         render: (text) => text ? text : "-",
-         ...getColumnSearchProps('shipmentMethod')
-
+        ...getColumnSearchProps('shipmentMethod')
       },
-
-      
       {
         title: "PPK UPC",
         dataIndex: "ppkUpc",
-        width:90,
-        
-        // sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
-        // sortDirections: ["ascend", "descend"],
+        width: 90,
         render: (text) => text ? text : "-",
         ...getColumnSearchProps('ppkUpc')
-  
-
       },
       {
         title: "Color",
         dataIndex: "color",
-        
-        // sorter: (a, b) => a.color.localeCompare(b.color),
-        // sortDirections: ["ascend", "descend"],
+        width: 90,
         render: (text) => text ? text : "-",
         ...getColumnSearchProps('color')
-
       },
       {
         title: "Gender",
         dataIndex: "gender",
-        width:90,
-        // sorter: (a, b) => a.gender.localeCompare(b.gender),
-        // sortDirections: ["ascend", "descend"],
+        width: 90,
         render: (text) => text ? text : "-",
         ...getColumnSearchProps('gender')
-
       },
       {
         title: "Short Description",
         dataIndex: "shortDescription",
-        
-        sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
-        sortDirections: ["ascend", "descend"],
+        width: 90,
         render: (text) => text ? text : "-",
         ...getColumnSearchProps('shortDescription')
       },
       {
         title: "Pack Method",
         dataIndex: "packMethod",
-        
-        // sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
-        // sortDirections: ["ascend", "descend"],
+        width: 90,
         render: (text) => text ? text : "-",
         ...getColumnSearchProps('packMethod')
-
-
       },
-      {
-        title: "Vendor Booking Flag",
-        dataIndex: "vendorFlag",
-        align: "center",
-        width:90,
-        // sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
-        // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-",
-        ...getColumnSearchProps('vendorFlag')
-      },
-
-
+      // {
+      //   title: "Vendor Booking Flag",
+      //   dataIndex: "vendorFlag",
+      //   align: "center",
+      //   width: 90,
+      //   render: (text) => text ? text : "-",
+      //   ...getColumnSearchProps('vendorFlag')
+      // },
       {
         title: "Season",
         dataIndex: "season",
-        width:90,
-        // sorter: (a, b) => a.season.localeCompare(b.season),
-        // sortDirections: ["ascend", "descend"],
+        width: 90,
         render: (text) => text ? text : "-",
         ...getColumnSearchProps('season')
-
-
       },
       {
         title: "Port Of Export",
         dataIndex: "portOfExport",
         align: "center",
-        width:90,
-        
-        // sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
-        // sortDirections: ["ascend", "descend"],
+        width: 90,
         render: (text) => text ? text : "-"
       },
       {
         title: "Port of Entry Name",
         dataIndex: "portOfEntry",
         align: "center",
-        
-        // sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
-        // sortDirections: ["ascend", "descend"],
+        width: 90,
         render: (text) => text ? text : "-"
       },
-
       {
         title: "Reference",
         dataIndex: "reference",
-        width:90,
-        // sorter: (a, b) => a.reference.localeCompare(b.reference),
-        // sortDirections: ["ascend", "descend"],
+        width: 90,
         render: (text) => text ? text : "-"
       },
       {
         title: "Payment Terms Description",
         dataIndex: "paymentTermDescription",
         align: "center",
-        width:180,
-        
-        // sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
-        // sortDirections: ["ascend", "descend"],
+        width: 180,
         render: (text) => text ? text : "-"
       },
-
-      {
-        title: "Special Instructions",
-        dataIndex: "specialInstructions",
-        align: "center",
-        width: 180,
-        render: (text) => (
-          <>
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}...` : "-"}
-            </Tooltip>
-          </>
-        )
-      },
-
-
-
+      // {
+      //   title: "Special Instructions",
+      //   dataIndex: "specialInstructions",
+      //   align: "center",
+      //   width: 180,
+      //   render: (text) => (
+      //     <>
+      //       <Tooltip title={text || "-"}>
+      //         {text ? `${text.substring(0, 20)}...` : "-"}
+      //       </Tooltip>
+      //     </>
+      //   )
+      // },
       {
         title: "Division",
         dataIndex: "division",
-        width:130,
-        
-        // sorter: (a, b) => a.division.localeCompare(b.division),
-        // sortDirections: ["ascend", "descend"],
+        width: 130,
         render: (text) => text ? text : "-"
       },
       // {
       //   title: "Manufacture",
       //   dataIndex: "manufacture",
-        
-      //   // sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
-      //   // sortDirections: ["ascend", "descend"],
-      //   render: (text) => text ? text : "-"
+      //   width: 150,
+      //   sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
+      //   sortDirections: ["ascend", "descend"],
+      //   ...getColumnSearchProps('manufacture'),
+      //   render: (text) => (
+      //     <Tooltip title={text || "-"}>
+      //       {text ? `${text.substring(0, 20)}...` : "-"}
+      //     </Tooltip>
+      //   ),
       // },
-      {
-        title: "Manufacture",
-        dataIndex: "manufacture",
-        width: 150,
-        sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
-        sortDirections: ["ascend", "descend"],
-        ...getColumnSearchProps('manufacture'),
-        render: (text) => (
-          <Tooltip title={text || "-"}>
-            {text ? `${text.substring(0, 20)}...` : "-"}
-          </Tooltip>
-        ),
-      },
-
       {
         title: "Compt.Material",
         dataIndex: "comptMaterial",
@@ -535,12 +421,7 @@ export function CentricOrderAcceptanceGrid() {
         // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
         // sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-"
-      },
-
-
-
-
-
+      }
     ];
 
     sizeHeaders?.forEach(version => {
@@ -559,19 +440,12 @@ export function CentricOrderAcceptanceGrid() {
             className: "center",
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
               if (sizeData) {
                 if (sizeData.size !== null) {
                   const formattedQty = (sizeData?.ratio) ? (sizeData?.ratio) : "-"
-
-                  return (
-                    formattedQty
-                  );
+                  return formattedQty;
                 } else {
-
-                  return (
-                    '-'
-                  );
+                  return '-';
                 }
               } else {
                 return '-';
@@ -591,14 +465,9 @@ export function CentricOrderAcceptanceGrid() {
                 if (sizeData.size !== null) {
                   const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
                   // const formattedQty = (sizeData?.amount)
-                  return (
-                    formattedQty
-                  );
+                  return formattedQty;
                 } else {
-
-                  return (
-                    '-'
-                  );
+                  return '-';
                 }
               } else {
                 return '-';
@@ -618,21 +487,15 @@ export function CentricOrderAcceptanceGrid() {
                 if (sizeData.size !== null) {
                   const formattedQty = (sizeData?.label) ? (sizeData?.label) : "-"
                   // const formattedQty = (sizeData?.amount)
-                  return (
-                    formattedQty
-                  );
+                  return formattedQty;
                 } else {
-
-                  return (
-                    '-'
-                  );
+                  return '-'
                 }
               } else {
                 return '-';
               }
             }
           },
-
           {
             title: 'FOB Price',
             dataIndex: '',
@@ -645,14 +508,9 @@ export function CentricOrderAcceptanceGrid() {
               if (sizeData) {
                 if (sizeData.size !== null) {
                   const formattedQty = (sizeData?.fobPrice) ? (sizeData?.fobPrice) : "-"
-                  return (
-                    formattedQty
-                  );
+                  return formattedQty
                 } else {
-
-                  return (
-                    '-'
-                  );
+                  return '-'
                 }
               } else {
                 return '-';
@@ -671,23 +529,15 @@ export function CentricOrderAcceptanceGrid() {
               if (sizeData) {
                 if (sizeData.size !== null) {
                   const formattedQty = (sizeData?.totalQuantity) ? (sizeData?.totalQuantity) : "-"
-                  return (
-                    formattedQty
-                  );
+                  return formattedQty
                 } else {
-
-                  return (
-                    '-'
-                  );
+                  return '-'
                 }
               } else {
                 return '-';
               }
             }
           },
-
-
-
           {
             title: 'Retail Price(USD) ',
             dataIndex: '',
@@ -700,14 +550,9 @@ export function CentricOrderAcceptanceGrid() {
               if (sizeData) {
                 if (sizeData.size !== null) {
                   const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) : "-"
-                  return (
-                    formattedQty
-                  );
+                  return formattedQty
                 } else {
-
-                  return (
-                    '-'
-                  );
+                  return '-'
                 }
               } else {
                 return '-';
@@ -722,18 +567,12 @@ export function CentricOrderAcceptanceGrid() {
             className: "center",
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
               if (sizeData) {
                 if (sizeData.size !== null) {
                   const formattedQty = (sizeData?.exfactory) ? (sizeData?.exfactory) : '-'
-                  return (
-                    formattedQty
-                  );
+                  return formattedQty
                 } else {
-
-                  return (
-                    '-'
-                  );
+                  return '-'
                 }
               } else {
                 return '-';
@@ -752,14 +591,9 @@ export function CentricOrderAcceptanceGrid() {
               if (sizeData) {
                 if (sizeData.size !== null) {
                   const formattedQty = (sizeData?.exportDate) ? (sizeData?.exportDate) : "-"
-                  return (
-                    formattedQty
-                  );
+                  return formattedQty
                 } else {
-
-                  return (
-                    '-'
-                  );
+                  return '-'
                 }
               } else {
                 return '-';
@@ -778,14 +612,9 @@ export function CentricOrderAcceptanceGrid() {
               if (sizeData) {
                 if (sizeData.size !== null) {
                   const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) : "-"
-                  return (
-                    formattedQty
-                  );
+                  return formattedQty
                 } else {
-
-                  return (
-                    '-'
-                  );
+                  return '-'
                 }
               } else {
                 return '-';
@@ -797,15 +626,6 @@ export function CentricOrderAcceptanceGrid() {
     })
 
     columns.push(
-
-      // {
-      //   title: "Incoterm",
-      //   dataIndex: "incoterm",
-      //   align: "center",
-        
-      //   sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
-      //   sortDirections: ["ascend", "descend"],
-      // },
       {
         title: "Incoterm",
         dataIndex: "incoterm",
@@ -819,17 +639,6 @@ export function CentricOrderAcceptanceGrid() {
           </Tooltip>
         ),
       },
-
-
-
-      // {
-      //   title: "Ship to Address",
-      //   dataIndex: "shipToAddress",
-      //   align: "center",
-        
-      //   sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-      //   sortDirections: ["ascend", "descend"],
-      // },
       {
         title: "Address",
         dataIndex: "shipToAddress",
@@ -858,26 +667,23 @@ export function CentricOrderAcceptanceGrid() {
           };
         },
       },
-      
       {
         title: "Item No",
         dataIndex: "itemNo",
         width: 100,
         align: "center",
-        fixed:'right',
-        render: (text, record,index) => {
+        fixed: 'right',
+        render: (text, record, index) => {
           return {
             children: (
-            
-                <Form.Item name={[index,'itemNo']}>
-                  <Input
-                  style={{width:'95px'}}
-                    placeholder="Enter Item No"
-                    onChange={(e) => handleItemNoChange(e.target.value, record,index)}
-                    disabled={record.status == 'ACCEPTED' ? true : false}
-                  />
-                </Form.Item>
-             
+              <Form.Item name={[index, 'itemNo']}>
+                <Input
+                  style={{ width: '95px' }}
+                  placeholder="Enter Item No"
+                  onChange={(e) => handleItemNoChange(e.target.value, record, index)}
+                  disabled={record.status == 'ACCEPTED' ? true : false}
+                />
+              </Form.Item>
             ),
             props: {
               rowSpan: record.rowSpan,
@@ -885,7 +691,6 @@ export function CentricOrderAcceptanceGrid() {
           };
         },
       },
-
       {
         title: "Action",
         dataIndex: "action",
@@ -898,10 +703,10 @@ export function CentricOrderAcceptanceGrid() {
             children: (
               <Button
                 style={{ position: "relative", top: "-7.5px" }}
-                onClick={() => createCOLine(record,index)}
+                onClick={() => createCOLine(record, index)}
                 disabled={record.status === 'ACCEPTED' ? true : !isEnabled}
               >
-               {record.status === 'ACCEPTED' ? "Accepted" : "Accept"}
+                {record.status === 'ACCEPTED' ? "Accepted" : "Accept"}
               </Button>
             ),
             props: {
@@ -910,39 +715,29 @@ export function CentricOrderAcceptanceGrid() {
           };
         },
       },
-
-
     );
-
-    const getRowClassName = (record) => {
-      if (record.displayName) {
-        return "colored-row";
-      }
-      return "";
-    };
 
     return (
       <>
         {/* {filterData.length > 0 ? ( */}
         <Form form={form}>
-        <Table
-          // loading={tableLoading}
-          columns={columns}
-          dataSource={processData(filterData)}
-          size="small"
-          pagination={false}
-          // pagination={{
-          //   pageSize: 50,
-          //   onChange(current, pageSize) {
-          //     setPage(current);
-          //     setPageSize(pageSize);
-          //   },
-          // }}
-          className="custom-table-wrapper"
-          scroll={{ x: "max-content", y: 450 }}
-          rowClassName={getRowClassName}
-          bordered
-        />
+          <Table
+            // loading={tableLoading}
+            columns={columns}
+            dataSource={processData(filterData)}
+            size="small"
+            pagination={false}
+            // pagination={{
+            //   pageSize: 50,
+            //   onChange(current, pageSize) {
+            //     setPage(current);
+            //     setPageSize(pageSize);
+            //   },
+            // }}
+            className="custom-table-wrapper"
+            scroll={{ x: "max-content", y: 450 }}
+            bordered
+          />
         </Form>
         {/* ) : (
           <Table size="large" />
@@ -1009,40 +804,39 @@ export function CentricOrderAcceptanceGrid() {
               </Form.Item>
             </Col> */}
             <Row>
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 5 }}
-              lg={{ span: 5 }}
-              xl={{ span: 4 }}
-            >
-              <Form.Item>
-                <Button
-                  htmlType="submit"
-                  icon={<SearchOutlined />}
-                  type="primary"
-                  onClick={getCentricorderData}
-                >
-                  SEARCH
-           
-                </Button>
-              </Form.Item>
-            </Col>
-            <Col>
-            <Form.Item>
-            <Button
-            style={{marginLeft:60}}
-                  htmlType="submit"
-                  type="primary"
-                  onClick={onReset}
-                  icon={<UndoOutlined />}
-                >
-                  Reset
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 5 }}
+                lg={{ span: 5 }}
+                xl={{ span: 4 }}
+              >
+                <Form.Item>
+                  <Button
+                    htmlType="submit"
+                    icon={<SearchOutlined />}
+                    type="primary"
+                    onClick={getCentricorderData}
+                  >
+                    SEARCH
                   </Button>
-                  </Form.Item>
+                </Form.Item>
+              </Col>
+              <Col>
+                <Form.Item>
+                  <Button
+                    style={{ marginLeft: 60 }}
+                    htmlType="submit"
+                    type="primary"
+                    onClick={onReset}
+                    icon={<UndoOutlined />}
+                  >
+                    Reset
+                  </Button>
+                </Form.Item>
 
-                  </Col>
-                  </Row>
+              </Col>
+            </Row>
           </Row>
         </Form>
         {/* <Table
