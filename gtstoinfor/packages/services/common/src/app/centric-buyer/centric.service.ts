@@ -179,7 +179,44 @@ export class CentricService {
         console.log(entity.fileData, "dfdfdfdfdfdfffffff");
 
           if (orderData) {
-            const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {})
+            const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
+              shipment : req.shipment,
+              season : req.season,
+              portOfExport : req.portOfExport,
+              portOfEntry : req.portOfEntry,
+              Refrence : req.Refrence,
+              paymentTermDescription : req.paymentTermDescription,
+              specialInstructions : req.specialInstructions,
+              division : req.division,
+              incoterm : req.incoterm,
+              shipToAdd : req.shipToAdd,
+              manufacture : req.manufacture,
+              poDate : req.poDate,
+              buyerAddress : req.buyerAddress,
+    
+    
+              material : item.material,
+              color : item.color,
+              gender : item.gender,
+              shortDescription : item.shortDescription,
+              packMethod : item.packMethod,
+              vendorBookingFlag : item.vendorBookingFlag,
+              ppkupc : item.ppkupc,
+              currency : item.currency,
+              totalQuantity : item.totalQuantity,
+    
+              upc : variant.upc,
+              label : variant.label,
+              quantity : variant.quantity,
+              unitPrice : variant.unitPrice,
+              exFactory : variant.exFactory,
+              exPort : variant.exPort,
+              deliveryDate : variant.deliveryDate,
+              retialPrice : variant.retialPrice,
+              comptMaterial : variant.comptMaterial,
+              ratio : variant.ratio,
+    
+            })
             if (!update.affected) {
               throw new Error('Update failed');
             }
