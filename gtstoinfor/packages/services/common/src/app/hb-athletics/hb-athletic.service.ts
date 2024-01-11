@@ -1,11 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { HbOrdersRepository } from "./repositories/hb-orders.repo";
 import { HbPdfRepo } from "./repositories/hb-pdf.repo";
-import { CommonResponseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel } from "@project-management-system/shared-models";
+import { CoLinereqModel, Color, CommonResponseModel, DestinationModel, HBCoLinereqModels, HBDestinationModel, HBSizeModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SizeModel } from "@project-management-system/shared-models";
 import { HbOrdersEntity } from "./entity/hb-orders.entity";
 import { HbPdfFileInfoEntity } from "./entity/hb-pdf.entity";
 import { HbCOLineEntity } from "./entity/hb-co-line.entity";
 import { HbCOLineRepository } from "./repositories/hb-co-line.repository";
+import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
 
 @Injectable()
 export class HbService {
@@ -187,6 +188,70 @@ export class HbService {
       return new CommonResponseModel(false, 0, 'failed', e);
     }
   }
+ 
+
+  async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
+    try {
+      const data = await this.HbOrdersRepo.find({ where: { custPo: req.poNumber } })
+      let destinationMap = new Map<string, HBDestinationModel>();
+      // po -> destination -> color -> sizes
+      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+      const poMap = new Map<string, HbOrdersEntity>();
+      data.forEach(rec => {
+        poMap.set(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`, rec)
+        const dest = rec.shipToAdd
+        // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
+
+        // const parts = rec.shipToAdd.split(',')
+        // const destAdd = parts[2].trim();
+        // const dest = destAdd;
+
+        // const destCountry = rec.shipToAddress.slice(-2).trim();
+        // const parts = rec.shipToAddress.split(',')
+        // const destAdd = parts[0].trim();
+        // const dest = destAdd + ',' + destCountry;
+
+        if (!destinationColSizesMap.has(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`)) {
+          destinationColSizesMap.set(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`, new Map<string, Map<string, []>>());
+        }
+        if (!destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).has(dest)) {
+          destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).set(dest, new Map<string, []>());
+        }
+        if (!destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).get(dest).has(rec.color)) {
+          destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).get(dest).set(rec.color, []);
+        }
+        destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+      });
+      const coData = []
+      destinationColSizesMap.forEach((destColorSize, poNumber) => {
+        const desArray = []
+        destColorSize.forEach((colorSizes, dest) => {
+          const ColArray = []
+          colorSizes.forEach((sizes, color) => {
+            const sizeArray = []
+            sizes.forEach((size) => {
+              const sizeObj = new HBSizeModel(size.size, size.quantity, size.price);
+              sizeArray.push(sizeObj)
+            })
+            const col = new Color(color, sizeArray);
+            ColArray.push(col)
+          });
+          const des = new HBDestinationModel(dest, ColArray);
+          desArray.push(des)
+        });
+        const poInfo = poMap.get(poNumber)
+        const co = new HBCoLinereqModels(poInfo.custPo, poInfo.style, poInfo.unitPrice, poInfo.exitFactoryDate, desArray);
+        coData.push(co)
+      });
+      if (coData) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
+    } catch (err) {
+      throw err
+    }
+  }
 
 
   async getHbPoNumber(): Promise<CommonResponseModel> {
@@ -237,6 +302,9 @@ export class HbService {
       return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
     }
   }
+
+
+ 
 
 
 }
