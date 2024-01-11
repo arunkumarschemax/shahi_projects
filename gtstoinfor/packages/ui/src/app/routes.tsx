@@ -56,6 +56,8 @@ import HbPdfUpload from "./hb-athletics/hb-pdf-upload"
 import HbPdFInfoGrid from "./hb-athletics/hb-pdf-grid"
 import HbPdfInfoDetailView from "./hb-athletics/hb-pdf-info-detail-view"
 import HbOrderAcceptanceGrid from "./hb-athletics/hb-order-acceptance-view"
+import HBOrdersGrid from "./hb-athletics/hb-order-data-grid"
+import HBOrdersDetailView from "./hb-athletics/hb-order-data-details-view"
 
 
 export const AppRoutes = () => {
@@ -227,6 +229,10 @@ export const AppRoutes = () => {
                    <Route path='pdf-info-detail-view' element={<HbPdfInfoDetailView />} />
 
                    <Route path='hb-order-acceptance' element={<HbOrderAcceptanceGrid />} />
+                   <Route path='hb-order-data-info-grid' element={<HBOrdersGrid />} />
+                   <Route path='hb-order-data-detail-view' element={<HBOrdersDetailView />} />
+
+
 
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />

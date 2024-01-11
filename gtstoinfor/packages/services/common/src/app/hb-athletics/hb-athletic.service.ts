@@ -364,10 +364,10 @@ export class HbService {
 
 
       if (save) {
-        // const update = await this.Repo.update(
-        //   { poNumber: req.poNumber, deliveryDate:req.deliveryDate,material:req.material }, // Conditions for updating
-        //   { status: StatusEnum.ACCEPTED } // Data to update
-        // );
+        const update = await this.HbOrdersRepo.update(
+          { custPo: req.custPo, exitFactoryDate:req.exitFactoryDate }, // Conditions for updating
+          { } 
+        );
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
       } else {
         return new CommonResponseModel(false, 0, 'CO-Line request failed')
