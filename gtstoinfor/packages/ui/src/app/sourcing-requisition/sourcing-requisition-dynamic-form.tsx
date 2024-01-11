@@ -148,6 +148,9 @@ export const SourcingRequisitionDynamicForm = () => {
         m3Service.getM3TrimsByBuyer(request).then(res => {
             if(res.status) {
                 setM3Trims(res.data)
+            }else{
+                setM3Trims([])
+                message.info('No Data Found')
             }
         })
     }
