@@ -37,7 +37,7 @@ const pdfFilesValidationObject = [
 ]
 
 const pdfIndexes = {
-    poNumber: 6
+    custPo: 6
 }
 
 
@@ -112,7 +112,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                     const formData = new FormData();
                     fileList.forEach((file: any) => {
                         formData.append('file', file);
-                        formData.append('PoNumber', poPdfData?.poNumber);
+                        formData.append('custPo', poPdfData?.custPo);
                         formData.append('jsonData',JSON.stringify(poPdfData))
                     })
                     console.log(formData, "form")
@@ -130,7 +130,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         })
     }
 
-    console.log(poPdfData?.poNumber, "addddddddd")
+    console.log(poPdfData?.custPo, "addddddddd")
 
     function onReset() {
         setFileList([]);
