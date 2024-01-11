@@ -7,6 +7,7 @@ import { CommonResponseModel, HbPoOrderFilter } from "@project-management-system
 import { HbService } from "./hb-athletic.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { diskStorage } from 'multer'
+import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
 
 
 @ApiTags("/hb-athletics")
@@ -76,6 +77,16 @@ export class HbController {
         try {
             // console.log(req,"con")
             return await this.Service.getHborderData(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getOrderdataForCOline')
+    @ApiBody({ type: OrderDetailsReq })
+    async getOrderdataForCOline(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getOrderdataForCOline(req);
         } catch (err) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
