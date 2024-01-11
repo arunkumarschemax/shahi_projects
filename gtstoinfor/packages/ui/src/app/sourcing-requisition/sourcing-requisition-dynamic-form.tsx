@@ -148,6 +148,9 @@ export const SourcingRequisitionDynamicForm = () => {
         m3Service.getM3TrimsByBuyer(request).then(res => {
             if(res.status) {
                 setM3Trims(res.data)
+            }else{
+                setM3Trims([])
+                message.info('No Data Found')
             }
         })
     }
@@ -333,6 +336,7 @@ export const SourcingRequisitionDynamicForm = () => {
                 setFabricM3Code(res.data)
             }
             else{
+                setFabricM3Code([])
                 message.info('No M3 Fabric Data Found')
             }
         })
@@ -1354,23 +1358,19 @@ const handleFabricsfilterData = (data) => {
                                             <Form.Item name='m3FabricCode' label='M3 Fabric Code' 
                                             // rules={[{ required: true, message: 'M3 Code is required' }]}
                                             >
-                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
+                                                <Select showSearch allowClear 
+                                                optionFilterProp="children"
+                                                 placeholder='Select M3 Code'
                                                 dropdownMatchSelectWidth={false}
                                                   style={{ width: "100%" }}
-                        suffixIcon={<SearchOutlined
-                             onClick={m3FabricFilters}
-                              style={{ fontSize: '28px', marginLeft: '-7px' }} />}
-                                            
+                                        suffixIcon={sourcingForm.getFieldValue('buyer') != undefined ?<SearchOutlined
+                                            onClick={m3FabricFilters}
+                                            style={{ fontSize: '28px', marginLeft: '-7px' }} />:<></>}
                                                     >
                                                     {fabricM3Code.map(e => {
                                                         return (
-
                                                             <Option key={e.m3ItemsId} value={e.m3ItemsId}>
-                                                               <Tooltip title={e.description}>
-                                                               <span>
                                                                 {e.itemCode} - {e.description}
-                                                                </span>
-                                                                </Tooltip> 
                                                                 </Option>
                                                         );
                                                     })}
