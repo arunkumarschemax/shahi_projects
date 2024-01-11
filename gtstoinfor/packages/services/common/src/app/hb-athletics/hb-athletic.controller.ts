@@ -1,5 +1,5 @@
 
-import { Controller, Post, Body, UseInterceptors, UploadedFile,Get } from "@nestjs/common";
+import { Controller, Post, Body, UseInterceptors, UploadedFile, Get } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiTags, ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { HbDto } from "./dto/hb.dto";
@@ -20,7 +20,7 @@ export class HbController {
 
     ) { }
     @Post("/saveHbOrdersData")
-    @ApiBody({ type:HbDto })
+    @ApiBody({ type: HbDto })
     async saveHbOrdersData(@Body() req: any): Promise<CommonResponseModel> {
         console.log(req, "post")
         try {
@@ -53,10 +53,10 @@ export class HbController {
         },
     }))
 
-    async fileUpload(@UploadedFile() file, @Body() req:any): Promise<CommonResponseModel> {
+    async fileUpload(@UploadedFile() file, @Body() req: any): Promise<CommonResponseModel> {
 
         try {
-            return await this.Service.updatePath(req.jsonData,req.custPo, file.path, file.filename, file.mimetype)
+            return await this.Service.updatePath(req.jsonData, req.custPo, file.path, file.filename, file.mimetype)
         } catch (error) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, error);
         }
@@ -110,11 +110,24 @@ export class HbController {
         }
     }
 
-    
-    @Get('hb-athletic-bot')
-    async hbAthleticBot(): Promise<any> {
-        return this.Service.hbAthleticBot();
+//     @Post('/getHborderData')
+// @ApiBody({ type: HbPoOrderFilter })
+// async getHborderData (@Body() req: any): Promise<CommonResponseModel> {
+// try {
+// // console.log(req, "con")
+// return await this.Service.getHborderData (req);
+// } catch (err) {
+// }
+// return this.applicationExeptionhandler.returnException (CommonResponseModel, err);
+// }
 
+    @Post('/hbAthleticBot')
+    async hbAthleticBot(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.hbAthleticBot();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
     }
 
     @Post('/getHborderDataForInfo')
