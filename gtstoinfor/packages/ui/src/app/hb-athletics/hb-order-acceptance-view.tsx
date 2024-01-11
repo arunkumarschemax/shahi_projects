@@ -55,7 +55,7 @@ export function HbOrderAcceptanceGrid() {
     if (form.getFieldValue("custPo") !== undefined) {
       req.custPo = form.getFieldValue("custPo");
     }
-   // req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
+    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
 
     service.getHborderData(req).then((res) => {
       if (res.status) {
@@ -80,7 +80,7 @@ export function HbOrderAcceptanceGrid() {
     const formValues = form.getFieldsValue();
     const itemNoValue = formValues[index]?.itemNo;
 
-    //console.log("Item No from form:", itemNoValue);
+    console.log("Item No from form:", itemNoValue);
 
     setItemNoValues((prevValues) => ({
       ...prevValues,
@@ -89,21 +89,46 @@ export function HbOrderAcceptanceGrid() {
   };
 
 
+  // const createCOLine = (record, index) => {
+  //   const formValues = form.getFieldsValue();
+  //   const itemNoValue = formValues[index]?.itemNo;
+  //   console.log(record);
+  //   const req = new HbOrderAcceptanceRequest();
+  //   req.custPo = record.custPo;
+  //   req.style = record.style;
+  //   req.itemNo = itemNoValue;
+  //   req.buyer = 'HB ATHLETIC';
+  //   req.exitFactoryDate = record.exitFactoryDate;
+   
+
+
+  //   console.log("Request Payload:", req);
+
+  //   service.hbCoLineCreationReq(req).then((res) => {
+  //     if (res.status) {
+  //       getHborderData();
+  //       setItemNoValues({});
+  //       form.setFieldsValue({ [index]: { itemNo: undefined } });
+  //       message.success(res.internalMessage);
+  //     } else {
+  //       message.error(res.internalMessage);
+  //     }
+  //   });
+  // };
+
   const createCOLine = (record, index) => {
     const formValues = form.getFieldsValue();
     const itemNoValue = formValues[index]?.itemNo;
-    // console.log(record);
+    console.log(record,'hhhhhhhhhhhhhhhh');
     const req = new HbOrderAcceptanceRequest();
     req.custPo = record.custPo;
     req.style = record.style;
     req.itemNo = itemNoValue;
     req.buyer = 'HB ATHLETIC';
     req.exitFactoryDate = record.exitFactoryDate;
-   
-
-
+  
     console.log("Request Payload:", req);
-
+  
     service.hbCoLineCreationReq(req).then((res) => {
       if (res.status) {
         getHborderData();
@@ -115,6 +140,7 @@ export function HbOrderAcceptanceGrid() {
       }
     });
   };
+  
   const processData = (tableData: HbOrderAcceptanceRequest[]) => {
     const dataTobeReturned = [];
     const roleWiseMapData = new Map<string, HbOrderAcceptanceRequest[]>();
@@ -319,6 +345,7 @@ export function HbOrderAcceptanceGrid() {
       {
         title: "Delivery Date",
         dataIndex: "exitFactoryDate",
+        width:90,
 
         // sorter: (a, b) => a.material.localeCompare(b.material),
         // sortDirections: ["ascend", "descend"],
