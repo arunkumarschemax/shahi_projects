@@ -55,6 +55,7 @@ import PdfInfoDetailView from "./centric/pdf-info-detail-view"
 import HbPdfUpload from "./hb-athletics/hb-pdf-upload"
 import HbPdFInfoGrid from "./hb-athletics/hb-pdf-grid"
 import HbPdfInfoDetailView from "./hb-athletics/hb-pdf-info-detail-view"
+import HbOrderAcceptanceGrid from "./hb-athletics/hb-order-acceptance-view"
 
 
 export const AppRoutes = () => {
@@ -224,6 +225,8 @@ export const AppRoutes = () => {
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
                    <Route path='pdf-info' element={<HbPdFInfoGrid />} />
                    <Route path='pdf-info-detail-view' element={<HbPdfInfoDetailView />} />
+
+                   <Route path='hb-order-acceptance' element={<HbOrderAcceptanceGrid />} />
 
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />

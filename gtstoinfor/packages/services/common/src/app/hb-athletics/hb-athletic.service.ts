@@ -1,9 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { HbOrdersRepository } from "./repositories/hb-orders.repo";
 import { HbPdfRepo } from "./repositories/hb-pdf.repo";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CoLinereqModel, Color, CommonResponseModel, DestinationModel, HBCoLinereqModels, HBDestinationModel, HBSizeModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SizeModel } from "@project-management-system/shared-models";
 import { HbOrdersEntity } from "./entity/hb-orders.entity";
 import { HbPdfFileInfoEntity } from "./entity/hb-pdf.entity";
+import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
 import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -225,7 +226,103 @@ export class HbService {
   }
 
 
+ async getHborderData(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
+    try {
+      const details = await this.HbOrdersRepo.getHborderData(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+      }
+      const sizeDateMap = new Map<string, HbOrderDataModel>();
+      for (const rec of details) {
+        // console.log(rec,"rrrrrrrrr")
+        if (!sizeDateMap.has(`${rec.style},${rec.cust_po}`)) {
+          sizeDateMap.set(
+            `${rec.style},${rec.cust_po}`,
+            new HbOrderDataModel(rec.id, rec.cust_po,rec.style,rec.color,rec.size,rec.exit_factory_date,rec.ship_to_add,[],rec.quantity,rec.unit_price)
+          );
 
+          // console.log(sizeDateMap,)
+        }
+        const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.cust_po}`).sizeWiseData;
+        if (rec.size !== null) {
+          sizeWiseData.push(new HbSizeWiseModel(rec.size, rec.unit_price, rec.quantity,));
+        }
+      }
+      const dataModelArray: HbOrderDataModel[] = Array.from(sizeDateMap.values());
+      // console.log(dataModelArray,"kkkk")
+      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+      // return new CommonResponseModel(true, 1, 'data retrieved', details);
+
+
+    } catch (e) {
+      console.log(e, "errrrrrrrrr")
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
+ 
+
+  async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
+    try {
+      const data = await this.HbOrdersRepo.find({ where: { custPo: req.poNumber } })
+      let destinationMap = new Map<string, HBDestinationModel>();
+      // po -> destination -> color -> sizes
+      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+      const poMap = new Map<string, HbOrdersEntity>();
+      data.forEach(rec => {
+        poMap.set(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`, rec)
+        const dest = rec.shipToAdd
+        // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
+
+        // const parts = rec.shipToAdd.split(',')
+        // const destAdd = parts[2].trim();
+        // const dest = destAdd;
+
+        // const destCountry = rec.shipToAddress.slice(-2).trim();
+        // const parts = rec.shipToAddress.split(',')
+        // const destAdd = parts[0].trim();
+        // const dest = destAdd + ',' + destCountry;
+
+        if (!destinationColSizesMap.has(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`)) {
+          destinationColSizesMap.set(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`, new Map<string, Map<string, []>>());
+        }
+        if (!destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).has(dest)) {
+          destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).set(dest, new Map<string, []>());
+        }
+        if (!destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).get(dest).has(rec.color)) {
+          destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).get(dest).set(rec.color, []);
+        }
+        destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+      });
+      const coData = []
+      destinationColSizesMap.forEach((destColorSize, poNumber) => {
+        const desArray = []
+        destColorSize.forEach((colorSizes, dest) => {
+          const ColArray = []
+          colorSizes.forEach((sizes, color) => {
+            const sizeArray = []
+            sizes.forEach((size) => {
+              const sizeObj = new HBSizeModel(size.size, size.quantity, size.price);
+              sizeArray.push(sizeObj)
+            })
+            const col = new Color(color, sizeArray);
+            ColArray.push(col)
+          });
+          const des = new HBDestinationModel(dest, ColArray);
+          desArray.push(des)
+        });
+        const poInfo = poMap.get(poNumber)
+        const co = new HBCoLinereqModels(poInfo.custPo, poInfo.style, poInfo.unitPrice, poInfo.exitFactoryDate, desArray);
+        coData.push(co)
+      });
+      if (coData) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
+    } catch (err) {
+      throw err
+    }
+  }
 
 
 }
