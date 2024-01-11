@@ -53,7 +53,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <td className='ta-b'>{pdfData?.shipToAdd}</td>
                 </tr>
 
-                {pdfData?.CentricpoItemDetails?.map((i) => {
+                {pdfData?.HbpoItemDetails?.map((i) => {
                     return <>
                         <tr className='ta-b'>
                             <th></th>
@@ -76,7 +76,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                             <th className='ta-b'>UNIT PRICE</th>
                         </tr>
                         {
-                            i.CentricpoItemVariantDetails.map((j) => {
+                            i.HbpoItemVariantDetails.map((j) => {
                                 return <tr>
                                     <td></td>
                                     <td></td>

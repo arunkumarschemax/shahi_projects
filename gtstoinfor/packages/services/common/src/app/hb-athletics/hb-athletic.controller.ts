@@ -1,5 +1,5 @@
 
-import { Controller, Post, Body, UseInterceptors, UploadedFile } from "@nestjs/common";
+import { Controller, Post, Body, UseInterceptors, UploadedFile,Get } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiTags, ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { HbDto } from "./dto/hb.dto";
@@ -68,6 +68,13 @@ export class HbController {
         } catch (err) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
+    }
+
+    
+    @Get('hb-athletic-bot')
+    async hbAthleticBot(): Promise<any> {
+        return this.Service.hbAthleticBot();
+
     }
 
 }

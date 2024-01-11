@@ -1,5 +1,5 @@
 import { CentricPoDetails, CentricPoItemDetails, CentricPoItemVariant, HbPoDetails, HbPoItemDetails } from "@project-management-system/shared-models";
-import { EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, ITEM_NO_EXP, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, MANUFACTURE_1, MANUFACTURE_2, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SPECIAL_INSTRUCTIONS, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./hb-popdf-regex-expressions";
+import { EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, ITEM_NO_EXP, ITEM_NO_EXP1, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, ITEM_VARIANT_START_TEXT1, MANUFACTURE_1, MANUFACTURE_2, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SPECIAL_INSTRUCTIONS, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./hb-popdf-regex-expressions";
 
 
 /** 
@@ -151,11 +151,11 @@ export const extractDataFromPoPdf = async (pdf) => {
     let prevColorIndex = 0;
     let isSecondFormat = false;
     for (const [index, rec] of filteredData.entries()) {
-        
-        if (rec.str.match(ITEM_NO_EXP)) {
+
+        if (rec.str.match(ITEM_NO_EXP) || rec.str.match(ITEM_NO_EXP1)) {
             prevItemIndex = index
         }
-        if (rec.str.includes(ITEM_VARIANT_START_TEXT)) {
+        if (rec.str.includes(ITEM_VARIANT_START_TEXT) || rec.str.includes(ITEM_VARIANT_START_TEXT1)) {
             itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
         }
 
@@ -174,42 +174,49 @@ export const extractDataFromPoPdf = async (pdf) => {
         let itemVariantStartIndex;
         const itemDetailsObj = new HbPoItemDetails();
         console.log(rec.itemIndex, "iiiiiiiiiiiiii");
-
+    
         itemDetailsObj.style = filteredData[rec.itemIndex - 4].str;
         itemDetailsObj.color = filteredData[rec.itemIndex - 1].str;
-
+    
         itemTextEndIndex = rec.amountIndex;
         itemVariantStartIndex = itemTextEndIndex + 1;
-
+    
         //------------------------------------------------------------------------- 
-        // item varinat details parsing starts here 
-        const itemVarinatsTextArr = []
-        let k = itemVariantStartIndex
+        // item variant details parsing starts here 
+        const itemVarinatsTextArr = [];
+        let k = itemVariantStartIndex;
         while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT1)) {
-            itemVarinatsTextArr.push(filteredData[k].str)
-            k++
+            itemVarinatsTextArr.push(filteredData[k].str);
+            k++;
         }
-        console.log(itemVarinatsTextArr, 'VVVVVVVv')
-        const stringsWithLength13 = itemVarinatsTextArr.filter(value => typeof value === 'string' && value.length === 6);
-        console.log("stringsWithLength13", stringsWithLength13);
-        const sizes = stringsWithLength13.length;
-        const count = itemVarinatsTextArr.length / sizes;
-        const itemVariantsArr: CentricPoItemVariant[] = []
-        for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
+        console.log(itemVarinatsTextArr, 'VVVVVVVv');
+    
+        // Extract unique sizes
+        const uniqueSizes = [...new Set(itemVarinatsTextArr.filter(size => ['XXS', 'XS', 'S', 'M', 'L', 'XL','2X', 'XXL', 'XXXL','LT', 'XLT', '2XLT', '3XLT', '4XLT', '5XLT','ST', 'XST', '2XST', '3XST', '4XST', '5XST','XS-Slim', 'S-Slim', 'M-Slim', 'L-Slim', 'XL-Slim', 'XXL-Slim','XS-Regular', 'S-Regular', 'M-Regular', 'L-Regular', 'XL-Regular', 'XXL-Regular'].includes(size)))];
+    
+        const itemVariantsArr: CentricPoItemVariant[] = [];
+    
+        for (const size of uniqueSizes) {
             const itemVariantsObj = new CentricPoItemVariant();
+            itemVariantsObj.size = size;
+    
+            const sizeIndex = itemVarinatsTextArr.indexOf(size);
+    
+            if (sizeIndex > 0) {
+                itemVariantsObj.unitPrice = itemVarinatsTextArr[sizeIndex - 1];
+            }
 
-            itemVariantsObj.size = itemVarinatsTextArr[(count * l) + count - 1]
-            itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count - 1]
-            itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) + count - 1]
-            console.log(itemVariantsObj)
-            itemVariantsArr.push(itemVariantsObj)
+            if (sizeIndex > 0) {
+                itemVariantsObj.quantity = itemVarinatsTextArr[sizeIndex - 2];
+            }
+    
+            console.log(itemVariantsObj);
+            itemVariantsArr.push(itemVariantsObj);
         }
-
-        itemDetailsObj.CentricpoItemVariantDetails = itemVariantsArr
-        itemDetailsArr.push(itemDetailsObj)
-        // }
+    
+        itemDetailsObj.HbpoItemVariantDetails = itemVariantsArr;
+        itemDetailsArr.push(itemDetailsObj);
     }
-
     /* 1st format */
     // else if (ITEM_TEXT_END_TEXT === "Total Eaches") {
     //     for (const rec of itemsArr) {
@@ -395,7 +402,7 @@ export const extractDataFromPoPdf = async (pdf) => {
     //     }
     // }
 
-    poData.CentricpoItemDetails = itemDetailsArr
+    poData.HbpoItemDetails = itemDetailsArr
     console.log(poData)
     return poData
 }
