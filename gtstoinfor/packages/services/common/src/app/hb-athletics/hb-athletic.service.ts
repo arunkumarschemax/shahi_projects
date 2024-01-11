@@ -27,18 +27,19 @@ export class HbService {
     // const transactionManager = new GenericTransactionManager(this.dataSource)
     try {
       let saved
+      const pdfData=[];
       // await transactionManager.startTransaction()
       for (const item of req.HbpoItemDetails) {
-        const match = item.style.match(/\d+/);
+        const match = item.color.match(/\d+/);
         console.log(match, "match");
         console.log(item, "item");
         // Check if a match is found and convert it to an integer
-        // const style = match ? parseInt(match[0], 10) : null;
-        const style = match
+        // const color = match ? parseInt(match[0], 10) : null;
+        const color = match
 
-        console.log(style, "style")
+        console.log(color, "color")
         for (const variant of item.HbpoItemVariantDetails) {
-          const orderData = await this.HbOrdersRepo.findOne({ where: { custPo: req.custPo, style: item.style, size: variant.size } })
+          const orderData = await this.HbOrdersRepo.findOne({ where: { custPo: req.custPo, color: item.color, size: variant.size } })
           console.log(orderData, "orderData")
           console.log(variant, "variant");
           const entity = new HbOrdersEntity();
@@ -54,13 +55,17 @@ export class HbService {
           entity.quantity = variant.quantity
           entity.unitPrice = variant.unitPrice
 
+          pdfData.push(entity)
+
+
           if (orderData) {
-            const update = await this.HbOrdersRepo.update({ custPo: req.custPo, style: item.style, size: variant.size }, {exitFactoryDate:req.exitFactoryDate,shipToAdd:req.shipToAdd,color:item.color,quantity:variant.quantity,unitPrice:variant.unitPrice})
+            const update = await this.HbOrdersRepo.update({ custPo: req.custPo, color: item.color, size: variant.size }, {exitFactoryDate:req.exitFactoryDate,shipToAdd:req.shipToAdd,style:item.style,quantity:variant.quantity,unitPrice:variant.unitPrice})
             if (!update.affected) {
               throw new Error('Update failed');
             }
           } else {
-            saved = await this.HbOrdersRepo.save(entity)
+            saved = await this.HbOrdersRepo.save(pdfData)
+            console.log(saved,"saved")
             // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
             if (!saved) {
               throw new Error('Save failed')
@@ -138,7 +143,7 @@ export class HbService {
     entity.filePath = filePath;
     entity.fileType = mimetype;
     entity.fileData = req;
-    console.log(entity.fileData, "fileData")
+    // console.log(entity.fileData, "fileData")
 
     const file = await this.HbPdfRepo.findOne({ where: { pdfFileName: filePath } });
     if (file) {
@@ -343,6 +348,7 @@ export class HbService {
 
   async hbCoLineCreationReq(req: any): Promise<CommonResponseModel> {
     try {
+     // console.log(req,'req')
       if (req.itemNo == undefined || null) {
         return new CommonResponseModel(false, 0, 'Please enter Item No')
       };
@@ -350,6 +356,7 @@ export class HbService {
       const records = await this.HbOrdersRepo.find({ where: { custPo: req.custPo,exitFactoryDate:req.exitFactoryDate } });
       const empty = [];
       for (const rec of records) {
+        //console.log(rec,'reccccccccc')
         const entity = new HbCOLineEntity()
         entity.buyer = req.buyer
         entity.custPo = req.custPo;
@@ -357,11 +364,13 @@ export class HbService {
         entity.itemNo =  req?.itemNo;
         entity.status = 'Open';
         entity.exitFactoryDate=rec.exitFactoryDate;
-        entity.createdUser = req.createdUser;
+        entity.createdUser = 'admin';
         empty.push(entity)
       }
+     // console.log(empty,'emptyyyyy')
       const save = await this.hbCoLineRepo.save(empty);
 
+      
 
       if (save) {
         const update = await this.HbOrdersRepo.update(
@@ -373,6 +382,7 @@ export class HbService {
         return new CommonResponseModel(false, 0, 'CO-Line request failed')
       }
     } catch (err) {
+    //  console.log(err,',,,,,,,,,,,,,,,')
       return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
     }
   }
