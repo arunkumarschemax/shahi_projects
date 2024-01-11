@@ -1,3 +1,4 @@
+import { StatusEnum } from "packages/libs/shared-models/src/Enum/status.enum";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity('orders')
@@ -82,5 +83,11 @@ export class HbOrdersEntity {
         default: 1
     })
     isActive: boolean;
+    @Column({
+        type: 'enum',
+        enum: StatusEnum, // Specify the enum type
+        name: 'status',
+      })
+      status: StatusEnum;
 
 }

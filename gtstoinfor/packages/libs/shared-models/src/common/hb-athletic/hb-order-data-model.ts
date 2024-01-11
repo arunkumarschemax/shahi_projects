@@ -12,6 +12,7 @@ export class HbOrderDataModel {
     sizeWiseData: HbSizeWiseModel[]
     quantity?:number
     unitPrice?:string
+    status?:string
     // color?:string
 
     constructor(
@@ -25,6 +26,7 @@ export class HbOrderDataModel {
         sizeWiseData: HbSizeWiseModel[],
         quantity?:number,
         unitPrice?:string,
+        status?:string,
         // color?:string
 
         
@@ -39,6 +41,7 @@ export class HbOrderDataModel {
         this.sizeWiseData = sizeWiseData
         this.quantity = quantity
         this.unitPrice = unitPrice
+        this. status=status
         //  this.color = color
        
        

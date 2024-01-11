@@ -246,7 +246,7 @@ export class HbService {
         if (!sizeDateMap.has(`${rec.style},${rec.cust_po},${rec.color},${rec.exit_factory_date}`)) {
           sizeDateMap.set(
             `${rec.style},${rec.cust_po},${rec.color},${rec.exit_factory_date}`,
-            new HbOrderDataModel(rec.id, rec.cust_po,rec.style,rec.color,rec.size,rec.exit_factory_date,rec.ship_to_add,[],rec.quantity,rec.unit_price)
+            new HbOrderDataModel(rec.id, rec.cust_po,rec.style,rec.color,rec.size,rec.exit_factory_date,rec.ship_to_add,[],rec.quantity,rec.unit_price,rec.status)
           );
 
           // console.log(sizeDateMap,)
