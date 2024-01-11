@@ -141,7 +141,7 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
         setWeightData(weight);
         setWidthData(width);
         setUom(res.data);
-        form.setFieldValue('widthUomId',res?.data[2].uomId)
+        // form.setFieldValue('widthUomId',res?.data[2].uomId)
       }
     });
   };
@@ -165,18 +165,19 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
 
 
   const onFinish = (val) => {
-    const req = new m3FabricFiltersReq(undefined,val.fabricTypeId,val.weaveId,val.weightUomId,val.epiConstruction,val.ppiConstruction,yarnType,val.widthUomId,val.finishId,val.shrinkage,val.hsnCode,val.content,val.weightValue,val.widthValue)
+    // console.log(val.weightValue)
+    const req = new m3FabricFiltersReq(undefined,val.fabricTypeId,val.weaveId,val.weightUomId,val.epiConstruction?val.epiConstruction:undefined,val.ppiConstruction?val.ppiConstruction:undefined,yarnType,val.widthUomId,val.finishId,val.shrinkage?val.shrinkage:undefined,val.hsnCode?val.hsnCode:undefined,val.content,val.weightValue?val.weightValue:undefined,val.widthValue?val.widthValue:undefined,val.m3Code?val.m3Code:undefined)
      props.formValues([req])
      props.close(null)
      };
 
-// console.log(selectedValues)
 
   const clearData = () => {
+    setYarnType('')
     form.resetFields();
-    setYarn(undefined)
+    console.log(yarnType)
     props.formValues(undefined)
-    // props.close(null)
+    props.close(null)
   };
 
 
@@ -203,6 +204,7 @@ const onFabricTpe = (val) =>{
               <Select 
               placeholder=" Select Fabric Type" 
               onChange={onFabricTpe}
+              allowClear
               >
                 {fabricType.map((option) => (
                 <Option key={option.fabricTypeId} value={option.fabricTypeId}>
@@ -216,6 +218,7 @@ const onFabricTpe = (val) =>{
             <Form.Item label=" Weave" name="weaveId">
               <Select 
               placeholder=" Select Weave" 
+              allowClear
               >
                 {weave.map((option) => (
                 <Option key={option.weaveId} value={option.weaveId}>
@@ -225,7 +228,7 @@ const onFabricTpe = (val) =>{
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 8 }}>
             <Form.Item label="Weight" name="weightId">
             <Space.Compact>
               <Form.Item name='weightValue'>
@@ -235,6 +238,7 @@ const onFabricTpe = (val) =>{
               </Form.Item>
               <Form.Item name='weightUomId'>
                 <Select  placeholder="Select Unit" 
+                allowClear
                 // onChange={onWeightUom} onBlur={generateItemCode}
                  style={{width:'180px'}}>
                   {weightUomData.map((e) => (
@@ -247,7 +251,7 @@ const onFabricTpe = (val) =>{
             </Space.Compact>
             </Form.Item>
           </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 8 }}>
               <Form.Item label="Width" name="widthValue"  >
                 <Space.Compact>
                   <Form.Item name="width">
@@ -257,6 +261,8 @@ const onFabricTpe = (val) =>{
                   </Form.Item>
                   <Form.Item name='widthUomId'>
                   <Select   placeholder="Select Unit"
+                   style={{width:'150px'}}
+                   allowClear
                 //    onChange={onWidthUomChange} style={{width:'120px'}}
                    >
                     {uom.map((e) => {
@@ -308,7 +314,9 @@ const onFabricTpe = (val) =>{
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label=" Finish" name="finishId"
               >
-                <Select   placeholder="Select Unit">
+                <Select   placeholder="Select Unit" 
+                  allowClear
+                >
                     {fabricFinish.map((e) => {
                       return (
                       <Option key={e.fabricFinishTypeId} value={e.fabricFinishTypeId}>
@@ -325,7 +333,7 @@ const onFabricTpe = (val) =>{
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label=" Content" name="content" >
-                <Select   placeholder="Select Content" style={{width: '150px'}}>
+                <Select   placeholder="Select Content" style={{width: '150px'}} allowClear>
                         {contentData.map((e) => (
                                     <Option key={e.contentId} value={e.contentId}>
                                       {e.content}

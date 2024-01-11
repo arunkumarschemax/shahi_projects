@@ -103,7 +103,7 @@ const SizeDetail = ({props,buyerId,form}) => {
           
         });
       }
-      else if(name === "quantity" && quantity > 0){
+      else if(name === "quantity"){
         updatedData = data.map((record) => {
           console.log(record);
           if (record.key === recordKey) {
@@ -178,7 +178,7 @@ const SizeDetail = ({props,buyerId,form}) => {
                 )
               }
               type='number'
-              min={1}
+              // min={1}
               placeholder='quantity'
             >
             </Input>
