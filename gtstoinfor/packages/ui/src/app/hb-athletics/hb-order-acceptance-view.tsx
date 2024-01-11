@@ -346,6 +346,7 @@ export function HbOrderAcceptanceGrid() {
         title: "Delivery Date",
         dataIndex: "exitFactoryDate",
         width:90,
+        fixed: "left",
 
         // sorter: (a, b) => a.material.localeCompare(b.material),
         // sortDirections: ["ascend", "descend"],
@@ -471,13 +472,29 @@ export function HbOrderAcceptanceGrid() {
           </Tooltip>
         ),
       },
+      // {
+      //   title: "Status",
+      //   dataIndex: "status",
+      //   align: "center",
+      //   width: "80px",
+      //   fixed: "right",
+      //   render: (text, record, index) => {
+      //     return {
+      //       children: <div style={{ position: "relative", top: "-7px" }}>{text}</div>,
+      //       props: {
+      //         rowSpan: record.rowSpan,
+      //       },
+      //     };
+      //   },
+      // },
+
       {
-        title: "Status",
+        title: "Item status",
         dataIndex: "status",
         align: "center",
-        width: "80px",
-        fixed: "right",
-        render: (text, record, index) => {
+        width: 90,
+        fixed:"right",
+        render: (text, record) => {
           return {
             children: <div style={{ position: "relative", top: "-7px" }}>{text}</div>,
             props: {
@@ -485,6 +502,17 @@ export function HbOrderAcceptanceGrid() {
             },
           };
         },
+        filters: [
+          {
+            text: 'OPEN',
+            value: 'OPEN',
+          },
+          {
+            text: 'INPROGRESS',
+            value: 'INPROGRESS',
+          },
+        ],
+        onFilter: (value, record) => record.status.toLowerCase() === value.toLowerCase(),
       },
 
       {
@@ -502,7 +530,7 @@ export function HbOrderAcceptanceGrid() {
                   style={{ width: '95px' }}
                   placeholder="Enter Item No"
                   onChange={(e) => handleItemNoChange(e.target.value, record, index)}
-                  disabled={record.status == 'ACCEPTED' ? true : false}
+                  disabled={record.status == 'INPROGRESS' ? true : false}
                 />
               </Form.Item>
 
@@ -527,9 +555,9 @@ export function HbOrderAcceptanceGrid() {
               <Button
                 style={{ position: "relative", top: "-7.5px" }}
                 onClick={() => createCOLine(record, index)}
-                disabled={record.status === 'ACCEPTED' ? true : !isEnabled}
+                disabled={record.status === 'INPROGRESS' ? true : !isEnabled}
               >
-                {record.status === 'ACCEPTED' ? "Accepted" : "Accept"}
+                {record.status === 'INPROGRESS' ? "Accept" : "Accept"}
               </Button>
             ),
             props: {

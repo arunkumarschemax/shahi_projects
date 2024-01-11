@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { HbOrdersRepository } from "./repositories/hb-orders.repo";
 import { HbPdfRepo } from "./repositories/hb-pdf.repo";
-import { CoLinereqModel, Color, CommonResponseModel, DestinationModel, HBCoLinereqModels, HBDestinationModel, HBSizeModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SizeModel } from "@project-management-system/shared-models";
+import { CoLinereqModel, Color, CommonResponseModel, DestinationModel, HBCoLinereqModels, HBDestinationModel, HBSizeModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SizeModel, StatusEnum } from "@project-management-system/shared-models";
 import { HbOrdersEntity } from "./entity/hb-orders.entity";
 import { HbPdfFileInfoEntity } from "./entity/hb-pdf.entity";
 import { HbCOLineEntity } from "./entity/hb-co-line.entity";
@@ -376,7 +376,7 @@ export class HbService {
       if (save) {
         const update = await this.HbOrdersRepo.update(
           { custPo: req.custPo, exitFactoryDate:req.exitFactoryDate }, // Conditions for updating
-          { } 
+          { status: StatusEnum.INPROGRESS } 
         );
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
       } else {
