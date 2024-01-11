@@ -117,7 +117,7 @@ export function M3TrimsReqFile(props:M3Trimprps) {
 
   const onFinish = (value) => {
     console.log(value)
-    const req= new M3TrimFilterReq(undefined,undefined,undefined,value.categoryId,value.contentId,value.finishId,value.holeId,value.hsnCode,value.m3Code,value.typeId)
+    const req= new M3TrimFilterReq(undefined,undefined,undefined,value.categoryId,value.contentId,value.finishId,value.holeId,value.hsnCode?value.hsnCode:undefined,value.m3Code?value.m3Code:undefined,value.typeId)
     props.formValues([req])
     props.close(null)
   };
