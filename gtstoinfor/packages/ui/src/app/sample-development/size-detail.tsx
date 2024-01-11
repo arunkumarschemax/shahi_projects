@@ -132,6 +132,7 @@ const SizeDetail = ({props,buyerId,form}) => {
 
 
   const handleDelete = (key) => {
+    console.log("delete")
     const updatedData = data.filter((record) => record.key !== key);
     setOnchangeData(updatedData); 
     setData(updatedData);
@@ -237,7 +238,7 @@ width:'10%',
       fixed:'right',
       width:'10%',
       render: (_, record) => (
-        <Button htmlType='submit' onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
+        <Button htmlType='button' onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
       ),
     },
   ];
