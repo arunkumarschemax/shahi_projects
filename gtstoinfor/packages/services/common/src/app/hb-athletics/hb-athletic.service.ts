@@ -377,6 +377,42 @@ export class HbService {
     }
   }
 
+  async getHborderDataForInfo(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
+    console.log(req,"servvv")
+    try {
+      const details = await this.HbOrdersRepo.getHborderDataForInfo(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'data not found');
+      }
+      const sizeDateMap = new Map<string, HbOrderDataModel>();
+      for (const rec of details) {
+        // console.log(rec,"rrrrrrrrr")
+        if (!sizeDateMap.has(`${rec.style},${rec.cust_po},${rec.exit_factory_date}`)) {
+          sizeDateMap.set(
+            `${rec.style},${rec.cust_po},${rec.exit_factory_date}`,
+            new HbOrderDataModel(rec.id, rec.cust_po,rec.style,rec.color,rec.size,rec.exit_factory_date,rec.ship_to_add,[],rec.quantity,rec.unit_price)
+          );
+
+          // console.log(sizeDateMap,)
+        }
+        const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.cust_po},${rec.exit_factory_date}`).sizeWiseData;
+        if (rec.size !== null) {
+          sizeWiseData.push(new HbSizeWiseModel(rec.size, rec.unit_price, rec.quantity,rec.color));
+        }
+      }
+      const dataModelArray: HbOrderDataModel[] = Array.from(sizeDateMap.values());
+      // console.log(dataModelArray,"kkkk")
+      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+      // return new CommonResponseModel(true, 1, 'data retrieved', details);
+
+
+    } catch (e) {
+      console.log(e, "errrrrrrrrr")
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
+ 
+
 
  
 
