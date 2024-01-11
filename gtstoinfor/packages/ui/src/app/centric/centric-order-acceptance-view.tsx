@@ -681,7 +681,7 @@ export function CentricOrderAcceptanceGrid() {
                   style={{ width: '95px' }}
                   placeholder="Enter Item No"
                   onChange={(e) => handleItemNoChange(e.target.value, record, index)}
-                  disabled={record.status == 'ACCEPTED' ? true : false}
+                  disabled={record.status == 'INPROGRESS' ? true : false}
                 />
               </Form.Item>
             ),
@@ -704,9 +704,9 @@ export function CentricOrderAcceptanceGrid() {
               <Button
                 style={{ position: "relative", top: "-7.5px" }}
                 onClick={() => createCOLine(record, index)}
-                disabled={record.status === 'ACCEPTED' ? true : !isEnabled}
+                disabled={record.status === 'INPROGRESS' ? true : !isEnabled}
               >
-                {record.status === 'ACCEPTED' ? "Accepted" : "Accept"}
+                {record.status === 'INPROGRESS' ? "Accept" : "Accept"}
               </Button>
             ),
             props: {

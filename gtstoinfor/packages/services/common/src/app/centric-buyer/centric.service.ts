@@ -321,7 +321,7 @@ export class CentricService {
       if (save) {
         const update = await this.Repo.update(
           { poNumber: req.poNumber, deliveryDate: req.deliveryDate, material: req.material }, // Conditions for updating
-          { status: StatusEnum.ACCEPTED } // Data to update
+          { status: StatusEnum.INPROGRESS } // Data to update
         );
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
       } else {
