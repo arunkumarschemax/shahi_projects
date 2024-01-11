@@ -5,7 +5,7 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
 import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, MaterailViewDto, ProductGroupReq, ROSLGroupsResponseModel, RequestNoDto, RequestNoReq, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, SampleRequestFilter, UploadResponse, lifeCycleStatusReq, requestNoReq, sampleReqIdReq } from '@project-management-system/shared-models';
 import { SampleRequestDto } from './dto/samle-dev-req';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Body, Controller, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
@@ -16,6 +16,7 @@ import { AllLocationRequest } from './dto/location-req';
 import { MaterialIssueRequest } from './dto/material-issue.req';
 import { SampleOrderIdRequest } from './dto/sample-req-id';
 import { OrderQuantityRequset } from './dto/order-quantity-request';
+// import { exec } from 'child_process';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -539,4 +540,29 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  // @Get('open')
+  // async openWindowsApp() {
+  //   try{
+  //     // const appPath = 'E:\myprojects\\windowsapp\\my-windows-app-launcher\\dist\\win-unpacked\\my-windows-app-launcher.exe';
+  //     const appPath = 'E:\\myprojects\\windowsapp\\WindowsFormsApp\\WindowsFormsApp\\bin\\Debug\\WindowsFormsApp.exe';
+  //     console.log(appPath);
+  //     const cmd = `start "" "${appPath}"`;
+  //     console.log(cmd)
+  //     exec(`start "" "${appPath}"`, (error) => {
+  //       if (error) {
+  //         console.error(error);
+  //         return 'Error opening Windows app';
+  //       } else {
+  //         console.log('mmmmm');
+  //         return 'Windows app opened successfully';
+  //       }
+  //     });
+
+  //   }catch(err){
+  //     return err
+
+  //   }
+
+  // }
 }

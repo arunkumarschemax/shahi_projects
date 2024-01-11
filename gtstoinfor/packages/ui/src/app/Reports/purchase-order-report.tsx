@@ -198,18 +198,51 @@ const Columns:any=[
         
     },
     {
-      title:"Material Type",
-      dataIndex:"po_material_type",
-      width:100,
-      ...getColumnSearchProps("po_material_type"),
+      title: "Material Type",
+      dataIndex: "item_type",
+      width: 150,
       render: (text) => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
-        return EnumObj ? EnumObj.displayVal : text;
+        return EnumObj ? EnumObj.displayVal : text ? text : '-';
       },
-
-      
-      
-  },
+      onFilter: (value, record) => {
+        // Check if the record's item_type includes the selected material type
+        return record.item_type.includes(value);
+      },
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+          <Checkbox
+            checked={selectedKeys.includes('FABRIC')}
+            onChange={() => setSelectedKeys(selectedKeys.includes('FABRIC') ? [] : ['FABRIC'])}
+          >
+            <span style={{ color: 'green' }}>FABRIC</span>
+          </Checkbox><br/>
+          <Checkbox
+            checked={selectedKeys.includes('SEWING_TRIM')}
+            onChange={() => setSelectedKeys(selectedKeys.includes('SEWING_TRIM') ? [] : ['SEWING_TRIM'])}
+          >
+            <span style={{ color: 'red' }}>SEWING TRIM</span>
+          </Checkbox><br/>
+          <Checkbox
+            checked={selectedKeys.includes('PACKING_TRIM')}
+            onChange={() => setSelectedKeys(selectedKeys.includes('PACKING_TRIM') ? [] : ['PACKING_TRIM'])}
+          >
+            <span style={{ color: 'green' }}>PACKING TRIM</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns">
+            <Button onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          </div>
+        </div>
+      ),
+      filterMultiple: false,
+    },
+    
+    
   {
     title: "Po Against",
     dataIndex: "po_against",
@@ -227,7 +260,7 @@ const Columns:any=[
           onChange={() => setSelectedKeys(selectedKeys.includes('Indent') ? [] : ['Indent'])}
         >
           <span style={{ color: 'green' }}>Indent</span>
-        </Checkbox>
+        </Checkbox><br/>
         <Checkbox
           checked={selectedKeys.includes('Sample Order')}
           onChange={() => setSelectedKeys(selectedKeys.includes('Sample Order') ? [] : ['Sample Order'])}
@@ -379,7 +412,8 @@ width:170
 },
   {
     title:"Status",
-    dataIndex:"status"
+    dataIndex:"status",
+    fixed:'right'
     
 },
     

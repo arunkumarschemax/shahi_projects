@@ -88,7 +88,7 @@ export const SourcingRequisitionDynamicView = () => {
  const [details, setDetails] = useState('')
  const checkAccess = (buttonParam) => {  
   const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus.Indent,buttonParam)
-   console.log(buttonParam,accessValue,'access');
+  //  console.log(buttonParam,accessValue,'access');
   
   return accessValue
 }

@@ -5,9 +5,9 @@ import { useState } from "react"
 import { BuyersService, ColourService, CurrencyService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, M3TrimsService, ProfitControlHeadService, SampleDevelopmentService, SizeService, StyleService, TrimParamsMappingService, TrimService, UomService, VendorsService } from "@project-management-system/shared-services";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
-import { DeleteOutlined, EditOutlined, EyeOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined, UploadOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, LoadingOutlined, MinusCircleOutlined, PlusOutlined, SearchOutlined, UploadOutlined } from "@ant-design/icons";
 import dayjs from 'dayjs';
-import { BuyerIdReq, BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, M3MastersCategoryReq, M3TrimType, M3trimsDTO, MenusAndScopesEnum, SourcingRequisitionReq, StyleIdReq, TrimIdRequestDto, UomCategoryEnum, buyerReq } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, M3MastersCategoryReq, M3TrimFilterReq, M3TrimType, M3trimsDTO, MenusAndScopesEnum, SourcingRequisitionReq, StyleIdReq, TrimIdRequestDto, UomCategoryEnum, buyerReq, m3FabricFiltersReq } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
 import TextArea from "antd/es/input/TextArea";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -15,6 +15,8 @@ import M3Items from "../masters/m3-items/m3-items-form";
 import { useIAMClientState } from "../common/iam-client-react";
 import RolePermission from "../role-permissions";
 import './sourcing-view.css';
+import M3FabricFilters from "./m3-items-fabric-req-file";
+import M3TrimsReqFile from "./m3-trims-req.file";
 
 const {Option} = Select;
 
@@ -92,6 +94,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const paramsService = new TrimParamsMappingService()
     const [mapData, setMapData] = useState<any[]>([])
     const [modal, setModal] = useState('')
+    // const [trimFilterData, setTrimFilterData] = useState<any[]>([])
 
 
 
@@ -141,11 +144,13 @@ export const SourcingRequisitionDynamicForm = () => {
         })
     }
 
-    const getM3TrimsTypes = () => {
-        const req = new BuyerIdReq(sourcingForm.getFieldValue('buyer'),trimForm.getFieldValue('trimType'),trimForm.getFieldValue('trimCategory'))
-        m3Service.getM3TrimsByBuyer(req).then(res => {
+    const getM3TrimsTypes = (request) => {
+        m3Service.getM3TrimsByBuyer(request).then(res => {
             if(res.status) {
                 setM3Trims(res.data)
+            }else{
+                setM3Trims([])
+                message.info('No Data Found')
             }
         })
     }
@@ -218,16 +223,17 @@ export const SourcingRequisitionDynamicForm = () => {
         const req = new M3TrimType(value,sourcingForm.getFieldValue('buyer'))
         m3Service.getAllTrimCategories(req).then((res)=>{
             if(res.status){
+                console.log(res.data)
                 setTrimData(res.data)
             }
         })
     }
 
     const getMappedTrims = (value, option) => {
-        console.log(value);
-        console.log(option);
-
-        getM3TrimsTypes()
+        // console.log(value);
+        // console.log(option);
+      const  request = new M3TrimFilterReq(sourcingForm.getFieldValue('buyer'),trimForm.getFieldValue('trimCategory'),trimForm.getFieldValue('trimType'),undefined,undefined,undefined,undefined,undefined,undefined,undefined)
+        getM3TrimsTypes(request)
         setTrimCat(option?.name)
         const req = new TrimIdRequestDto(undefined,option?.name)
         paramsService.getMappedParamsByTrim(req).then((res) => {
@@ -303,10 +309,33 @@ export const SourcingRequisitionDynamicForm = () => {
             }
         })
     }
-    const getM3FabricStyleCodes = (buyer) => {
-        m3ItemsService.getM3FabricsByBuyer({buyerId:buyer}).then(res => {
+    const getM3FabricStyleCodes = (buyer,request) => {
+        console.log(request)
+         req= new m3FabricFiltersReq() 
+         req.buyerId=buyer
+         if(request != undefined){
+         req.fabricTypeId=request.fabricTypeId
+         req.content=request.content
+         req.epiConstruction=request.epiConstruction
+         req.ppiConstruction=request.ppiConstruction
+         req.finishId=request.finishId
+         req.hsnCode=request.hsnCode
+         req.m3Code=request.m3Code
+         req.shrinkage=request.shrinkage
+         req.weaveId=request.weaveId
+         req.weightUnit=request.weightUnit
+         req.widthUnit=request.widthUnit
+         req.yarnType=request.yarnType
+         req.weightValue=request.weightValue
+         req.widthValue=request.widthValue
+         }     
+        m3ItemsService.getM3FabricsByBuyer(req).then(res => {
             if(res.status){
                 setFabricM3Code(res.data)
+            }
+            else{
+                setFabricM3Code([])
+                message.info('No M3 Fabric Data Found')
             }
         })
     }
@@ -722,7 +751,7 @@ export const SourcingRequisitionDynamicForm = () => {
 
 
     const onFabricAdd = (values) => {
-        console.log(values)
+        // console.log(values)
         fabricForm.validateFields().then(() => {
             if(values.color || values.newColor){
 
@@ -750,6 +779,7 @@ export const SourcingRequisitionDynamicForm = () => {
                 console.log(fabricTableData,'fabric table data')
                 setFabricTableVisible(true)
                 setBtnType("Add")
+              getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),undefined)
             }else{
                 message.error('Please Give the color')
             }
@@ -774,6 +804,10 @@ export const SourcingRequisitionDynamicForm = () => {
         setTrimTableVisible(true)
         console.log(trimTableInfo,'namaste')
         setTrimBtnType("Add")
+        // const  request = new M3TrimFilterReq(sourcingForm.getFieldValue('buyer'),trimForm.getFieldValue('trimCategory'),trimForm.getFieldValue('trimType'),undefined,undefined,undefined,undefined,undefined,undefined,undefined)
+        // getM3TrimsTypes(undefined)
+        const  request = new M3TrimFilterReq(sourcingForm.getFieldValue('buyer'),trimForm.getFieldValue('trimCategory'),trimForm.getFieldValue('trimType'),undefined,undefined,undefined,undefined,undefined,undefined,undefined)
+        getM3TrimsTypes(request)
     }
 
 
@@ -798,7 +832,7 @@ export const SourcingRequisitionDynamicForm = () => {
         fabricForm.setFieldsValue({buyerName:option})
         getStyle(val);
         // getM3TrimsTypes(val);
-        getM3FabricStyleCodes(val)
+        getM3FabricStyleCodes(val,req)
         setFabricTableData([])
         setFabricTableVisible(false)
     }
@@ -875,6 +909,43 @@ const onTrimChange = (val, option) => {
         reader.readAsDataURL(img);
       }
 
+    // const uploadFabricProps: UploadProps = {
+    //     // alert();
+    //     multiple: false,
+    //     onRemove: file => {
+    //       setFabricfilelist([]);
+    //       setImageUrl('');
+    //     },
+    //     beforeUpload: (file: any) => {
+    //       if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+    //         AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+    //         // return true;
+    //       }
+    //       var reader = new FileReader();
+    //       reader.readAsArrayBuffer(file);
+    //       reader.onload = data => {
+    //         if (fabricfilelist.length == 1) {
+    //           AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+    //           return true;
+    //         } else {
+    //             setFabricfilelist([...fabricfilelist,file]);
+    //           getBase64(file, imageUrl =>
+    //             setImageUrl(imageUrl)
+    //           );
+    //           return false;
+    //         }
+    //       }
+    //     },
+    //     progress: {
+    //       strokeColor: {
+    //         '0%': '#108ee9',
+    //         '100%': '#87d068',
+    //       },
+    //       strokeWidth: 3,
+    //       format: percent => `${parseFloat(percent.toFixed(2))}%`,
+    //     },
+    //     fileList: fabricfilelist,
+    //   };
     const uploadFabricProps: UploadProps = {
         // alert();
         multiple: false,
@@ -885,11 +956,11 @@ const onTrimChange = (val, option) => {
         beforeUpload: (file: any) => {
           if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
             AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
-            // return true;
+            return false;
           }
-          var reader = new FileReader();
-          reader.readAsArrayBuffer(file);
-          reader.onload = data => {
+        //   var reader = new FileReader();
+        //   reader.readAsArrayBuffer(file);
+        //   reader.onload = data => {
             if (fabricfilelist.length == 1) {
               AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
               return true;
@@ -899,7 +970,7 @@ const onTrimChange = (val, option) => {
                 setImageUrl(imageUrl)
               );
               return false;
-            }
+            // }
           }
         },
         progress: {
@@ -913,7 +984,47 @@ const onTrimChange = (val, option) => {
         fileList: fabricfilelist,
       };
 
-      const uploadTrimProps: UploadProps = {
+    //   const uploadTrimProps: UploadProps = {
+    //     // alert();
+    //     multiple: false,
+    //     onRemove: file => {
+    //       setTrimfilelist([]);
+    //     //   setImageUrl('');
+    //     setTrimImgageUrl('')
+    //     },
+    //     beforeUpload: (file: any) => {
+    //       if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+    //         AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+    //         // return true;
+    //       }
+    //       var reader = new FileReader();
+    //       reader.readAsArrayBuffer(file);
+    //       reader.onload = data => {
+    //         if (trimfilelist.length == 1) {
+    //           AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+    //           return true;
+    //         } else {
+    //             setTrimfilelist([...trimfilelist,file]);
+    //           getBase64(file, imageUrl =>
+    //             // setImageUrl(imageUrl)
+    //             setTrimImgageUrl(imageUrl)
+    //           );
+    //           return false;
+    //         }
+    //       }
+    //     },
+    //     progress: {
+    //       strokeColor: {
+    //         '0%': '#108ee9',
+    //         '100%': '#87d068',
+    //       },
+    //       strokeWidth: 3,
+    //       format: percent => `${parseFloat(percent.toFixed(2))}%`,
+    //     },
+    //     fileList: trimfilelist,
+    //   };
+
+    const uploadTrimProps: UploadProps = {
         // alert();
         multiple: false,
         onRemove: file => {
@@ -926,9 +1037,9 @@ const onTrimChange = (val, option) => {
             AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
             // return true;
           }
-          var reader = new FileReader();
-          reader.readAsArrayBuffer(file);
-          reader.onload = data => {
+        //   var reader = new FileReader();
+        //   reader.readAsArrayBuffer(file);
+        //   reader.onload = data => {
             if (trimfilelist.length == 1) {
               AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
               return true;
@@ -940,7 +1051,7 @@ const onTrimChange = (val, option) => {
               );
               return false;
             }
-          }
+        //   }
         },
         progress: {
           strokeColor: {
@@ -952,7 +1063,6 @@ const onTrimChange = (val, option) => {
         },
         fileList: trimfilelist,
       };
-
 
       
   const handleCancel = () => {
@@ -1035,7 +1145,41 @@ const handleColor = (val) => {
         setIsColorRequired(true)
     }
 }
+const m3FabricFilters = () =>{
+setModal('fabricFilter')
+setVisibleModel(true)
+}
+let req
+const handleFabricsfilterData = (data) => {
+    console.log(data)
+    if(data != undefined){
+        req = new m3FabricFiltersReq(sourcingForm.getFieldValue('buyer'),data[0].fabricTypeId,data[0].weaveId,data[0].weightUnit,data[0].epiConstruction,data[0].ppiConstruction,data[0].yarnType,data[0].widthUnit,data[0].finishId,data[0].shrinkage,data[0].hsnCode,data[0].content,data[0].weightValue,data[0].widthValue,data[0].m3Code)
+        console.log(req)
+       getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),req)
+    }else{
+        getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),undefined)
 
+    }
+  };
+  const closeModel = () =>{
+    setVisibleModel(false)
+  }
+
+  const trimFilterFormVisible =()=>{
+    setModal('trimFilter')
+     setVisibleModel(true)
+  }
+
+  
+  const handleTrimFilterData =(trimFilterData) =>{
+    let req
+    if(trimFilterData == undefined){
+        req = new M3TrimFilterReq(sourcingForm.getFieldValue('buyer'),trimForm.getFieldValue('trimCategory'),trimForm.getFieldValue('trimType'),undefined,undefined,undefined,undefined,undefined,undefined,undefined)
+    }else{
+        req = new M3TrimFilterReq(sourcingForm.getFieldValue('buyer'),trimForm.getFieldValue('trimCategory'),trimForm.getFieldValue('trimType'),trimFilterData[0].categoryId,trimFilterData[0].contentId,trimFilterData[0].finishId,trimFilterData[0].holeId,trimFilterData[0].hsnCode,trimFilterData[0].m3Code,trimFilterData[0].typeId,trimFilterData[0].trimMapId) 
+    }
+   getM3TrimsTypes(req)
+  }
 
     return(
         <><Card title='Indent' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/requisition-view')}>View</Button></span>}>
@@ -1218,19 +1362,19 @@ const handleColor = (val) => {
                                             <Form.Item name='m3FabricCode' label='M3 Fabric Code' 
                                             // rules={[{ required: true, message: 'M3 Code is required' }]}
                                             >
-                                                <Select showSearch allowClear optionFilterProp="children" placeholder='Select M3 Code'
+                                                <Select showSearch allowClear 
+                                                optionFilterProp="children"
+                                                 placeholder='Select M3 Code'
                                                 dropdownMatchSelectWidth={false}
                                                   style={{ width: "100%" }}
+                                        suffixIcon={sourcingForm.getFieldValue('buyer') != undefined ?<SearchOutlined
+                                            onClick={m3FabricFilters}
+                                            style={{ fontSize: '28px', marginLeft: '-7px' }} />:<></>}
                                                     >
                                                     {fabricM3Code.map(e => {
                                                         return (
-
                                                             <Option key={e.m3ItemsId} value={e.m3ItemsId}>
-                                                               <Tooltip title={e.description}>
-                                                               <span>
                                                                 {e.itemCode} - {e.description}
-                                                                </span>
-                                                                </Tooltip> 
                                                                 </Option>
                                                         );
                                                     })}
@@ -1523,6 +1667,9 @@ const handleColor = (val) => {
                                                     optionFilterProp="children"
                                                     placeholder={renderTrimCodeOptions()[0]?.props.children}
                                                     onChange={onTrimChange}
+                                                    suffixIcon={trimForm.getFieldValue('trimCategory') != undefined || trimBtnType == 'Update'? <SearchOutlined
+                                                        onClick={trimFilterFormVisible}
+                                                         style={{ fontSize: '28px', marginLeft: '-7px' }} />:<></>}
                                                 >
                                                     {renderTrimCodeOptions()}
                                                     {m3Trims.map((e) => {
@@ -1701,8 +1848,8 @@ const handleColor = (val) => {
         </Card>
         <Modal
             className='rm-'
-            key={'modal' + Date.now()}
-            width={'50%'}
+            // key={'modal' + Date.now()}
+            width={'70%'}
             style={{ top: 30, alignContent: 'right' }}
             visible={visibleModel}
             title={<React.Fragment>
@@ -1734,6 +1881,10 @@ const handleColor = (val) => {
                                                 />
                                                 </Form.Item>
                                             </Card>
+               </>:modal == 'fabricFilter' ?<>
+               <M3FabricFilters formValues={handleFabricsfilterData} close={closeModel} />
+               </>:modal == 'trimFilter' ?<>
+               <M3TrimsReqFile trimCategoryId={trimForm.getFieldValue('trimCategory')} close={closeModel} formValues={handleTrimFilterData}/>
                </>:
             <M3Items />
             }
