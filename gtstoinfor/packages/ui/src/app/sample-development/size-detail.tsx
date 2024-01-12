@@ -166,7 +166,7 @@ const SizeDetail = ({props,buyerId,form}) => {
           >
           </Input>
         </Form.Item>
-          <Form.Item name={`quantity${size.sizeId}+${record.key}`} rules={[{ required: true, message: 'Missing Size' }]}>
+          <Form.Item name={`quantity${size.sizeId}+${record.key}`} rules={[{ required: true, message: 'Missing Size' }]} initialValue={0}>
             <Input
               name={`quantity${size.sizeId}`}
               value={record[size.sizeId]}
