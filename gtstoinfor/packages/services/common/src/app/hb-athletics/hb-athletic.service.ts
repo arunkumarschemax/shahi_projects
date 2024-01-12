@@ -10,6 +10,7 @@ import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
 import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
 import * as path from 'path';
+import { HbOrdersChildRepository } from "./repositories/hb-order-child.repo";
 
 @Injectable()
 export class HbService {
@@ -18,6 +19,8 @@ export class HbService {
     private HbOrdersRepo: HbOrdersRepository,
     private HbPdfRepo: HbPdfRepo,
     private hbCoLineRepo:HbCOLineRepository,
+    private HbOrdersChildRepo:HbOrdersChildRepository,
+
 
   ) { }
 
@@ -46,11 +49,8 @@ export class HbService {
           entity.custPo = req.custPo
           entity.exitFactoryDate = req.exitFactoryDate
           entity.shipToAdd = req.shipToAdd
-
-
           entity.style = item.style
           entity.color = item.color
-
           entity.size = variant.size
           entity.quantity = variant.quantity
           entity.unitPrice = variant.unitPrice
