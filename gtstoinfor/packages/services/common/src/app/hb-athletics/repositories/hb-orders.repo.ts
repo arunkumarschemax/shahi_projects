@@ -24,6 +24,7 @@ export class HbOrdersRepository extends Repository<HbOrdersEntity> {
             if(req.custPo !== undefined){
                 query.andWhere(`o.cust_po ='${req.custPo}'`) 
             }
+            query.andWhere(`o.status != 'ACCEPTED'`);
           
         return await query.getRawMany()
     }
