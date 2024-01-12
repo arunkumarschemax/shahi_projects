@@ -187,36 +187,6 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemTextEndIndex = rec.amountIndex;
         itemVariantStartIndex = itemTextEndIndex + 1;
 
-    //     const itemVarinatsTextArr = []
-    //     let k = itemVariantStartIndex
-    //     while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
-    //         itemVarinatsTextArr.push(filteredData[k].str)
-    //         k++
-    //     }
-    //     console.log(itemVarinatsTextArr, 'VVVVVVVv')
-    //     const stringsWithLength13 = itemVarinatsTextArr.filter(value => typeof value === 'string' && value.length === 13 || value.length === 12);
-    //     console.log("stringsWithLength13", stringsWithLength13)
-    //     const regexPattern = /[0-9]{2}[A-Z]{5}\w+-\d+/;
-    //     const CompMaterialData = itemVarinatsTextArr.filter(value => regexPattern.test(value));
-    //     console.log("CompMaterialData", CompMaterialData);
-    //     const sizes = stringsWithLength13.length;
-    //     const count = itemVarinatsTextArr.length / sizes;
-    //     const itemVariantsArr: CentricPoItemVariant[] = []
-    //     for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
-    //         const itemVariantsObj = new CentricPoItemVariant();
-
-    //         itemVariantsObj.size = itemVarinatsTextArr[(count * l) + 0]
-    //         itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count - 2]
-    //         itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) + count - 1]
-    //         console.log(itemVariantsObj)
-
-    //         itemVariantsArr.push(itemVariantsObj)
-    //     }
-    //     itemDetailsObj.HbpoItemVariantDetails = itemVariantsArr
-    //     itemDetailsArr.push(itemDetailsObj)
-    // }
-
-    /* This is By given as Sizes Array */
 
         const itemVarinatsTextArr = [];
         let k = itemVariantStartIndex;
@@ -248,6 +218,38 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsObj.HbpoItemVariantDetails = itemVariantsArr;
         itemDetailsArr.push(itemDetailsObj);
     }
+
+    
+    //     const itemVarinatsTextArr = []
+    //     let k = itemVariantStartIndex
+    //     while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
+    //         itemVarinatsTextArr.push(filteredData[k].str)
+    //         k++
+    //     }
+    //     console.log(itemVarinatsTextArr, 'VVVVVVVv')
+    //     const stringsWithLength13 = itemVarinatsTextArr.filter(value => typeof value === 'string' && value.length === 13 || value.length === 12);
+    //     console.log("stringsWithLength13", stringsWithLength13)
+    //     const regexPattern = /[0-9]{2}[A-Z]{5}\w+-\d+/;
+    //     const CompMaterialData = itemVarinatsTextArr.filter(value => regexPattern.test(value));
+    //     console.log("CompMaterialData", CompMaterialData);
+    //     const sizes = stringsWithLength13.length;
+    //     const count = itemVarinatsTextArr.length / sizes;
+    //     const itemVariantsArr: CentricPoItemVariant[] = []
+    //     for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
+    //         const itemVariantsObj = new CentricPoItemVariant();
+
+    //         itemVariantsObj.size = itemVarinatsTextArr[(count * l) + 0]
+    //         itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count - 2]
+    //         itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) + count - 1]
+    //         console.log(itemVariantsObj)
+
+    //         itemVariantsArr.push(itemVariantsObj)
+    //     }
+    //     itemDetailsObj.HbpoItemVariantDetails = itemVariantsArr
+    //     itemDetailsArr.push(itemDetailsObj)
+    // }
+
+    
     /* 1st format */
     // else if (ITEM_TEXT_END_TEXT === "Total Eaches") {
     //     for (const rec of itemsArr) {
