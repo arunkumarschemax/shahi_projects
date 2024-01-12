@@ -539,7 +539,7 @@ export function CentricOrderAcceptanceGrid() {
             }
           },
           {
-            title: 'Tot PO Qty in PC',
+            title: 'Size Qty in Pcs',
             dataIndex: '',
             key: '',
             width: 70,

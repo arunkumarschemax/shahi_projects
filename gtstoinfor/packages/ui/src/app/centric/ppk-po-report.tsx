@@ -1015,17 +1015,30 @@ import { Excel } from "antd-table-saveas-excel";
 
           },
 
-          {
-            title: "Special Instructions",
-            dataIndex: "specialInstructions",
-            align: "center",
-            width: 200,
-            sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-",
-            ...getColumnSearchProps('specialInstructions')
+          // {
+          //   title: "Special Instructions",
+          //   dataIndex: "specialInstructions",
+          //   align: "center",
+          //   width: 200,
+          //   sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
+          //   sortDirections: ["ascend", "descend"],
+          //   render: (text) => text ? text : "-",
+          //   ...getColumnSearchProps('specialInstructions')
 
-          },
+          // }
+          {
+          title: "Special Instructions",
+          dataIndex: "specialInstructions",
+          width: 150,
+          sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('specialInstructions'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+        },
 
          
          
