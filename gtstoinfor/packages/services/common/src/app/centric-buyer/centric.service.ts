@@ -133,42 +133,42 @@ export class CentricService {
 
           if (orderData) {
             const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
-              shipment : req.shipment,
-              season : req.season,
-              portOfExport : req.portOfExport,
-              portOfEntry : req.portOfEntry,
-              Refrence : req.Refrence,
-              paymentTermDescription : req.paymentTermDescription,
-              specialInstructions : req.specialInstructions,
-              division : req.division,
-              incoterm : req.incoterm,
-              shipToAdd : req.shipToAdd,
-              manufacture : req.manufacture,
-              poDate : req.poDate,
-              buyerAddress : req.buyerAddress,
-    
-    
-              material : item.material,
-              color : item.color,
-              gender : item.gender,
-              shortDescription : item.shortDescription,
-              packMethod : item.packMethod,
-              vendorBookingFlag : item.vendorBookingFlag,
-              ppkupc : item.ppkupc,
-              currency : item.currency,
-              totalQuantity : item.totalQuantity,
-    
-              upc : variant.upc,
-              label : variant.label,
-              quantity : variant.quantity,
-              unitPrice : variant.unitPrice,
-              exFactory : variant.exFactory,
-              exPort : variant.exPort,
-              deliveryDate : variant.deliveryDate,
-              retialPrice : variant.retialPrice,
-              comptMaterial : variant.comptMaterial,
-              ratio : variant.ratio,
-    
+              shipment: req.shipment,
+              season: req.season,
+              portOfExport: req.portOfExport,
+              portOfEntry: req.portOfEntry,
+              Refrence: req.Refrence,
+              paymentTermDescription: req.paymentTermDescription,
+              specialInstructions: req.specialInstructions,
+              division: req.division,
+              incoterm: req.incoterm,
+              shipToAdd: req.shipToAdd,
+              manufacture: req.manufacture,
+              poDate: req.poDate,
+              buyerAddress: req.buyerAddress,
+
+
+              material: item.material,
+              color: item.color,
+              gender: item.gender,
+              shortDescription: item.shortDescription,
+              packMethod: item.packMethod,
+              vendorBookingFlag: item.vendorBookingFlag,
+              ppkupc: item.ppkupc,
+              currency: item.currency,
+              totalQuantity: item.totalQuantity,
+
+              upc: variant.upc,
+              label: variant.label,
+              quantity: variant.quantity,
+              unitPrice: variant.unitPrice,
+              exFactory: variant.exFactory,
+              exPort: variant.exPort,
+              deliveryDate: variant.deliveryDate,
+              retialPrice: variant.retialPrice,
+              comptMaterial: variant.comptMaterial,
+              ratio: variant.ratio,
+
             })
             if (!update.affected) {
               throw new Error('Update failed');
@@ -357,6 +357,7 @@ export class CentricService {
       let deliveryAddress;
       let pkgTerms;
       let paymentTerms;
+      let styleNo;
       if (po.buyer === 'Centric') {
         const response = await this.getOrderdataForCOline({ poNumber: po.po_number, poLine: po.po_line })
         console.log(response.data[0])
@@ -375,7 +376,7 @@ export class CentricService {
         const request = coData.destinations[0]?.name;
         const address = await this.addressService.getAddressInfoByCountry({ country: request });
         const addressData = address.data[0];
-        console.log(addressData)
+        styleNo = coData.styleNo
         buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 12;
         deliveryAddress = addressData?.deliveryCode
         buyerValue1 = "FIN-FINISHED GOODS - KY"
@@ -411,6 +412,9 @@ export class CentricService {
       await driver.wait(until.elementLocated(By.id('bpo')))
       await driver.findElement(By.id('bpo')).clear();
       await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
+      await driver.wait(until.elementLocated(By.id('bus')))
+      await driver.findElement(By.id('bus')).clear();
+      await driver.findElement(By.id('bus')).sendKeys(styleNo);
       await driver.wait(until.elementLocated(By.id('agnt')));
       const agentDropDown = await driver.findElement(By.id('agnt'));
       await driver.executeScript(`arguments[0].value = '${agent}';`, agentDropDown)
@@ -563,9 +567,10 @@ export class CentricService {
         await driver.navigate().refresh();
         await driver.quit();
       } else {
-        await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
-        const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[last()]/td[7]`));
-        const coNo = await coNoElement.getAttribute('innerText');
+        await driver.sleep(10000)
+        await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
+        const coNoElement = await driver.findElement(By.xpath('//*[@id="orno"]'));
+        const coNo = await coNoElement.getAttribute('value');
         const currentDate = new Date();
         const day = currentDate.getDate().toString().padStart(2, '0');
         const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
@@ -794,7 +799,7 @@ export class CentricService {
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new CoLinereqModel(poInfo.poNumber, null, poInfo.unitPrice, poInfo.currency, poInfo.deliveryDate, desArray);
+        const co = new CoLinereqModel(poInfo.poNumber, null, poInfo.unitPrice, poInfo.currency, poInfo.deliveryDate, poInfo.material, desArray);
         coData.push(co)
       });
       if (coData) {
