@@ -38,4 +38,14 @@ export class HbService extends CommonAxiosService {
         return this.axiosPostCall(this.hbOrdersController + "/hbAthleticBot")
     }
 
+    async getHbCoLineData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.hbOrdersController + "/getHbCoLineData", req)
+    }
+
+    async getItem(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.hbOrdersController + "/getItem")
+    }
+    async getCoPoNumber(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.hbOrdersController + "/getCoPoNumber")
+    }
 }

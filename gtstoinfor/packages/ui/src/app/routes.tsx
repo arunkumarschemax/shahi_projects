@@ -58,6 +58,7 @@ import HbPdfInfoDetailView from "./hb-athletics/hb-pdf-info-detail-view"
 import HbOrderAcceptanceGrid from "./hb-athletics/hb-order-acceptance-view"
 import HBOrdersGrid from "./hb-athletics/hb-order-data-grid"
 import HBOrdersDetailView from "./hb-athletics/hb-order-data-details-view"
+import HbColineView from "./hb-athletics/hb-co-line-view"
 
 
 export const AppRoutes = () => {
@@ -231,6 +232,9 @@ export const AppRoutes = () => {
                    <Route path='hb-order-acceptance' element={<HbOrderAcceptanceGrid />} />
                    <Route path='hb-order-data-info-grid' element={<HBOrdersGrid />} />
                    <Route path='hb-order-data-detail-view' element={<HBOrdersDetailView />} />
+
+
+                   <Route path='hb-co-line-view' element={<HbColineView />} />
 
 
 

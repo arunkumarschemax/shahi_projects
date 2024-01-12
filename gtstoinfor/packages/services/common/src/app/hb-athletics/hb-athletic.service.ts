@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { HbOrdersRepository } from "./repositories/hb-orders.repo";
 import { HbPdfRepo } from "./repositories/hb-pdf.repo";
-import { CoLinereqModel, Color, CommonResponseModel, DestinationModel, HBCoLinereqModels, HBDestinationModel, HBSizeModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SizeModel, StatusEnum } from "@project-management-system/shared-models";
+import { CoLinereqModel, Color, CommonResponseModel, DestinationModel, HBCoLinereqModels, HBDestinationModel, HBSizeModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SizeModel, StatusEnum, hbCoLineRequest } from "@project-management-system/shared-models";
 import { HbOrdersEntity } from "./entity/hb-orders.entity";
 import { HbPdfFileInfoEntity } from "./entity/hb-pdf.entity";
 import { HbCOLineEntity } from "./entity/hb-co-line.entity";
@@ -424,8 +424,35 @@ export class HbService {
   }
  
 
+  async getHbCoLineData(req?: hbCoLineRequest): Promise<CommonResponseModel> {
+    const data = await this.hbCoLineRepo.getHbCoLineData(req)
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
 
- 
+  async getItem(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.hbCoLineRepo.getItem()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async getCoPoNumber(): Promise<CommonResponseModel> {
+    const data = await this.hbCoLineRepo.getCoPoNumber()
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
+  
 
 
 }
