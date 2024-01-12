@@ -10,7 +10,7 @@ const {Option} = Select
 export interface M3FabricFilterProps{
  formValues:any
  close: (value: any) => void;
-
+ 
 }
 
 const M3FabricFilters = (props:M3FabricFilterProps) => {
@@ -306,7 +306,7 @@ const onFabricTpe = (val) =>{
             <Form.Item name="yarnType">
               Yarn Type : <Radio.Group name="yarnType" style={{ marginTop: "25px" }}
                onChange={(e)=>yarnSelect(e?.target?.value)} >
-                <Radio value="Warp">Warp</Radio>
+                <Radio value="Wrap">Wrap</Radio>
                 <Radio value="Weft">Weft</Radio>
               </Radio.Group>
             </Form.Item>
