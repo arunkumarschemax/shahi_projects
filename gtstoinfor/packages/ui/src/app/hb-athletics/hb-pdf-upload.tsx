@@ -37,7 +37,7 @@ const pdfFilesValidationObject = [
 ]
 
 const pdfIndexes = {
-    poNumber: 6
+    custPo: 6
 }
 
 
@@ -51,6 +51,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
     const [diaPDfForm] = Form.useForm()
     const HbServices = new HbService();
+    // const services = new HbService();
     const adobeAcrobatApi = new AdobeAcrobatApiService()
 
     const uploadProps: UploadProps = {
@@ -69,6 +70,17 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         },
         fileList,
         showUploadList: false
+    };
+
+    const hbAthleticBot = (req) => {
+        HbServices.hbAthleticBot().then(res => {
+            if (res.status) {
+                // setBuyer(res.data);
+                // setPoPdfData(res.data)
+                message.success("Button CLicked")
+                console.log("Trade button clicked");
+            }
+        });
     };
 
     async function extractPoPdfData(pdf: any, pdfText: any) {
@@ -112,8 +124,8 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                     const formData = new FormData();
                     fileList.forEach((file: any) => {
                         formData.append('file', file);
-                        formData.append('PoNumber', poPdfData?.poNumber);
-                        formData.append('jsonData',JSON.stringify(poPdfData))
+                        formData.append('custPo', poPdfData?.custPo);
+                        formData.append('jsonData', JSON.stringify(poPdfData))
                     })
                     console.log(formData, "form")
                     HbServices.fileUpload(formData).then((res) => {
@@ -130,7 +142,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         })
     }
 
-    console.log(poPdfData?.poNumber, "addddddddd")
+    console.log(poPdfData?.custPo, "addddddddd")
 
     function onReset() {
         setFileList([]);
@@ -151,6 +163,17 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         <Card title='Order Upload'>
             {resultProps === undefined &&
                 <Row gutter={24} >
+                     <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 5 }}
+                        lg={{ span: 5 }}
+                        xl={{ span: 4 }}
+                    >
+                        <Form.Item>
+                            <Button type='primary' onClick={hbAthleticBot}>Upload Bot</Button>
+                        </Form.Item>
+                    </Col>
                     <Col span={24}>
                         <Dragger {...uploadProps} >
                             <p className="ant-upload-drag-icon">
@@ -163,6 +186,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
                         </Dragger>
                     </Col>
+                   
                 </Row>}
             <Row gutter={24} justify={'center'}  >
                 {resultProps !== undefined &&

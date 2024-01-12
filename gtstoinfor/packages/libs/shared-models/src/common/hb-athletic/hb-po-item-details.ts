@@ -5,6 +5,6 @@ export class HbPoItemDetails {
     style: string;
     color: string;
 
-    CentricpoItemVariantDetails: HbPoItemVariant[]
+    HbpoItemVariantDetails: HbPoItemVariant[]
 
 }

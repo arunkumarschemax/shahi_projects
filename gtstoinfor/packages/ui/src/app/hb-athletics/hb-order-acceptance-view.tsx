@@ -2,9 +2,9 @@ import {
   Button,
   Card,
   Col,
+  DatePicker,
   Form,
   Input,
-  Modal,
   Row,
   Select,
   Table,
@@ -13,24 +13,18 @@ import {
 } from "antd";
 import { useEffect, useRef, useState } from "react";
 import {
-  CentricService,
   HbService,
-  NikeService,
-  RLOrdersService,
 } from "@project-management-system/shared-services";
 import React from "react";
-import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import {SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
 import {
   
   HbOrderAcceptanceRequest,
-  OrderDataModel,
-  PoOrderFilter,
+  HbPoOrderFilter,
 } from "@project-management-system/shared-models";
-import { ColumnsType } from "antd/es/table";
 import { useIAMClientState } from "../nike/iam-client-react";
-import { Excel } from "antd-table-saveas-excel";
 
 export function HbOrderAcceptanceGrid() {
   const service = new HbService();
@@ -42,27 +36,42 @@ export function HbOrderAcceptanceGrid() {
   const [pageSize, setPageSize] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [poNumber, setPoNumber] = useState([]);
+  const [custPo, setcustPo] = useState([]);
   const [form] = Form.useForm();
   const { Option } = Select;
   const [isModalOpen1, setIsModalOpen1] = useState(false);
   const [filterData, setFilterData] = useState([]);
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [itemNoValues, setItemNoValues] = useState({});
+  const { RangePicker } = DatePicker;
 
   useEffect(() => {
-    getCentricorderData();
-    getPoNumber()
+    getHborderData();
+    getHbPoNumber()
   }, []);
 
 
-  const getCentricorderData = () => {
-    const req = new PoOrderFilter();
+  const getHborderData = () => {
+    const req = new HbPoOrderFilter();
 
     if (form.getFieldValue("poNumber") !== undefined) {
-      req.poNumber = form.getFieldValue("poNumber");
+      req.custPo = form.getFieldValue("poNumber");
     }
-    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
+    if (form.getFieldValue('deliveryDate') !== undefined) {
+      req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('DD-MM-YYYY');
+    }
+    if (form.getFieldValue('deliveryDate') !== undefined) {
+      req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('DD-MM-YYYY');
+    }
+    
+    if (form.getFieldValue("style") !== undefined) {
+      req.style = form.getFieldValue("style");
+    }
+    if (form.getFieldValue("color") !== undefined) {
+      req.color = form.getFieldValue("color");
+    }
+
+
 
     service.getHborderData(req).then((res) => {
       if (res.status) {
@@ -72,14 +81,14 @@ export function HbOrderAcceptanceGrid() {
     });
   };
 
-  console.log(form.getFieldValue("poNumber"), "uuuuu")
-  const getPoNumber = () => {
-    // service.getPoNumber().then((res) => {
-    //   if (res.status) {
-    //     setPoNumber(res.data);
+  console.log(form.getFieldValue("custPo"), "uuuuu")
+  const getHbPoNumber = () => {
+    service.getHbPoNumber().then((res) => {
+      if (res.status) {
+        setcustPo(res.data);
 
-    //   }
-    // });
+      }
+    });
   };
 
 
@@ -87,7 +96,7 @@ export function HbOrderAcceptanceGrid() {
     const formValues = form.getFieldsValue();
     const itemNoValue = formValues[index]?.itemNo;
 
-    //console.log("Item No from form:", itemNoValue);
+    console.log("Item No from form:", itemNoValue);
 
     setItemNoValues((prevValues) => ({
       ...prevValues,
@@ -96,32 +105,58 @@ export function HbOrderAcceptanceGrid() {
   };
 
 
+  // const createCOLine = (record, index) => {
+  //   const formValues = form.getFieldsValue();
+  //   const itemNoValue = formValues[index]?.itemNo;
+  //   console.log(record);
+  //   const req = new HbOrderAcceptanceRequest();
+  //   req.custPo = record.custPo;
+  //   req.style = record.style;
+  //   req.itemNo = itemNoValue;
+  //   req.buyer = 'HB ATHLETIC';
+  //   req.exitFactoryDate = record.exitFactoryDate;
+   
+
+
+  //   console.log("Request Payload:", req);
+
+  //   service.hbCoLineCreationReq(req).then((res) => {
+  //     if (res.status) {
+  //       getHborderData();
+  //       setItemNoValues({});
+  //       form.setFieldsValue({ [index]: { itemNo: undefined } });
+  //       message.success(res.internalMessage);
+  //     } else {
+  //       message.error(res.internalMessage);
+  //     }
+  //   });
+  // };
+
   const createCOLine = (record, index) => {
     const formValues = form.getFieldsValue();
     const itemNoValue = formValues[index]?.itemNo;
-    // console.log(record);
+    console.log(record,'hhhhhhhhhhhhhhhh');
     const req = new HbOrderAcceptanceRequest();
     req.custPo = record.custPo;
     req.style = record.style;
     req.itemNo = itemNoValue;
     req.buyer = 'HB ATHLETIC';
     req.exitFactoryDate = record.exitFactoryDate;
-   
-
-
-    // console.log("Request Payload:", req);
-
-    // service.coLineCreationReq(req).then((res) => {
-    //   if (res.status) {
-    //     getCentricorderData();
-    //     setItemNoValues({});
-    //     form.setFieldsValue({ [index]: { itemNo: undefined } });
-    //     message.success(res.internalMessage);
-    //   } else {
-    //     message.error(res.internalMessage);
-    //   }
-    // });
+  
+    console.log("Request Payload:", req);
+  
+    service.hbCoLineCreationReq(req).then((res) => {
+      if (res.status) {
+        getHborderData();
+        setItemNoValues({});
+        form.setFieldsValue({ [index]: { itemNo: undefined } });
+        message.success(res.internalMessage);
+      } else {
+        message.error(res.internalMessage);
+      }
+    });
   };
+  
   const processData = (tableData: HbOrderAcceptanceRequest[]) => {
     const dataTobeReturned = [];
     const roleWiseMapData = new Map<string, HbOrderAcceptanceRequest[]>();
@@ -161,7 +196,7 @@ export function HbOrderAcceptanceGrid() {
   };
   const onReset = () => {
     form.resetFields();
-    getCentricorderData();
+    getHborderData();
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -289,7 +324,7 @@ export function HbOrderAcceptanceGrid() {
         width: 90,
        // sorter: (a, b) => a.custPo.localeCompare(b.custPo),
      //   sortDirections: ["ascend", "descend"],
-        // render: (text) => text ? text : "-",
+       // render: (text) => text ? text : "-",
         render: (text, record, index) => {
           return {
             children: text,
@@ -303,8 +338,18 @@ export function HbOrderAcceptanceGrid() {
         // ...getColumnSearchProps('poNumber')
       },
       {
-        title: "STYLE",
+        title: "Style",
         dataIndex: "style",
+        width: 90,
+        // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+        // sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-",
+        fixed: "left",
+
+      },
+      {
+        title: "Color",
+        dataIndex: "color",
         width: 90,
         // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
         // sortDirections: ["ascend", "descend"],
@@ -316,6 +361,8 @@ export function HbOrderAcceptanceGrid() {
       {
         title: "Delivery Date",
         dataIndex: "exitFactoryDate",
+        width:90,
+        fixed: "left",
 
         // sorter: (a, b) => a.material.localeCompare(b.material),
         // sortDirections: ["ascend", "descend"],
@@ -323,16 +370,7 @@ export function HbOrderAcceptanceGrid() {
         // ...getColumnSearchProps('material')
 
       },
-      {
-        title: "Color",
-        dataIndex: "color",
-
-        // sorter: (a, b) => a.color.localeCompare(b.color),
-        // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-",
-     //   ...getColumnSearchProps('color')
-
-      },
+     
 
     ];
 
@@ -344,6 +382,33 @@ export function HbOrderAcceptanceGrid() {
         width: 70,
         align: 'center',
         children: [
+          // {
+          //   title: 'COLOR',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 70,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     console.log()
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.color) ? (sizeData?.color) : "-"
+
+          //         return (
+          //           formattedQty
+          //         );
+          //       } else {
+
+          //         return (
+          //           '-'
+          //         );
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
           {
             title: 'QUANTITY',
             dataIndex: '',
@@ -423,13 +488,29 @@ export function HbOrderAcceptanceGrid() {
           </Tooltip>
         ),
       },
+      // {
+      //   title: "Status",
+      //   dataIndex: "status",
+      //   align: "center",
+      //   width: "80px",
+      //   fixed: "right",
+      //   render: (text, record, index) => {
+      //     return {
+      //       children: <div style={{ position: "relative", top: "-7px" }}>{text}</div>,
+      //       props: {
+      //         rowSpan: record.rowSpan,
+      //       },
+      //     };
+      //   },
+      // },
+
       {
-        title: "Status",
+        title: "Item status",
         dataIndex: "status",
         align: "center",
-        width: "80px",
-        fixed: "right",
-        render: (text, record, index) => {
+        width: 90,
+        fixed:"right",
+        render: (text, record) => {
           return {
             children: <div style={{ position: "relative", top: "-7px" }}>{text}</div>,
             props: {
@@ -437,6 +518,17 @@ export function HbOrderAcceptanceGrid() {
             },
           };
         },
+        filters: [
+          {
+            text: 'OPEN',
+            value: 'OPEN',
+          },
+          {
+            text: 'INPROGRESS',
+            value: 'INPROGRESS',
+          },
+        ],
+        onFilter: (value, record) => record.status.toLowerCase() === value.toLowerCase(),
       },
 
       {
@@ -454,7 +546,7 @@ export function HbOrderAcceptanceGrid() {
                   style={{ width: '95px' }}
                   placeholder="Enter Item No"
                   onChange={(e) => handleItemNoChange(e.target.value, record, index)}
-                  disabled={record.status == 'ACCEPTED' ? true : false}
+                  disabled={record.status == 'INPROGRESS' ? true : false}
                 />
               </Form.Item>
 
@@ -479,9 +571,9 @@ export function HbOrderAcceptanceGrid() {
               <Button
                 style={{ position: "relative", top: "-7.5px" }}
                 onClick={() => createCOLine(record, index)}
-                disabled={record.status === 'ACCEPTED' ? true : !isEnabled}
+                disabled={record.status === 'INPROGRESS' ? true : !isEnabled}
               >
-                {record.status === 'ACCEPTED' ? "Accepted" : "Accept"}
+                {record.status === 'INPROGRESS' ? "Accept" : "Accept"}
               </Button>
             ),
             props: {
@@ -535,9 +627,9 @@ export function HbOrderAcceptanceGrid() {
     <>
       <Card title="Order Acceptance" headStyle={{ fontWeight: "bold" }}>
         <Form
-          onFinish={getCentricorderData}
+          onFinish={getHborderData}
           form={form}
-        // layout='vertical'
+        layout='vertical'
         >
           <Row gutter={24}>
             <Col
@@ -545,50 +637,59 @@ export function HbOrderAcceptanceGrid() {
               sm={{ span: 24 }}
               md={{ span: 4 }}
               lg={{ span: 4 }}
-              xl={{ span: 6 }}
+              xl={{ span: 4 }}
             >
-              <Form.Item name="poNumber" label="BUYER PO Number">
+              <Form.Item name="poNumber" label="Buyer Po number">
                 <Select
                   showSearch
-                  placeholder="Select PO number"
+                  placeholder="Select Buyer Po "
                   optionFilterProp="children"
                   allowClear
                 >
-                  {poNumber.map((inc: any) => {
+                  {custPo.map((inc: any) => {
                     return (
-                      <Option key={inc.po_number} value={inc.po_number}>
-                        {inc.po_number}
+                      <Option key={inc.cust_po} value={inc.cust_po}>
+                        {inc.cust_po}
                       </Option>
                     );
                   })}
                 </Select>
               </Form.Item>
             </Col>
-            {/* <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 6 }}
-            >
-              <Form.Item name="poLine" label="PO Line">
-                <Select
-                  showSearch
-                  placeholder="Select PO Line"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {orderData.map((inc: any) => {
-                    return (
-                      <Option key={inc.poLine} value={inc.poLine}>
-                        {inc.poLine}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-            </Col> */}
-            <Row>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Style" name="style"  >
+                  <Input placeholder="Enter Style " allowClear />
+                </Form.Item>
+              </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Color" name="color"  >
+                  <Input placeholder="Enter Color "  allowClear />
+                </Form.Item>
+              </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Delivery Date" name="deliveryDate"  >
+                  <RangePicker style={{width:180}}   />
+                </Form.Item>
+              </Col>
+              <Row>
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
@@ -596,22 +697,28 @@ export function HbOrderAcceptanceGrid() {
                 lg={{ span: 5 }}
                 xl={{ span: 4 }}
               >
-                <Form.Item>
+                <Form.Item style={{marginTop:20,marginLeft:60}}>
                   <Button
                     htmlType="submit"
                     icon={<SearchOutlined />}
                     type="primary"
-                    onClick={getCentricorderData}
+                    onClick={getHborderData}
                   >
                     SEARCH
-
                   </Button>
+                
                 </Form.Item>
               </Col>
-              <Col>
-                <Form.Item>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 5 }}
+                lg={{ span: 5 }}
+                xl={{ span: 4 }}
+              >
+                <Form.Item style={{marginTop:20}}>
                   <Button
-                    style={{ marginLeft: 60 }}
+                    style={{ marginLeft: 120 }}
                     htmlType="submit"
                     type="primary"
                     onClick={onReset}
@@ -620,7 +727,6 @@ export function HbOrderAcceptanceGrid() {
                     Reset
                   </Button>
                 </Form.Item>
-
               </Col>
             </Row>
           </Row>

@@ -5,5 +5,5 @@ export class HbPoDetails {
     exitFactoryDate: string;
     shipToAdd: string;
  
-    CentricpoItemDetails: HbPoItemDetails[]
+    HbpoItemDetails: HbPoItemDetails[]
 }

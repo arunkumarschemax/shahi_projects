@@ -24,8 +24,44 @@ export class HbOrdersRepository extends Repository<HbOrdersEntity> {
             if(req.custPo !== undefined){
                 query.andWhere(`o.cust_po ='${req.custPo}'`) 
             }
+            if(req.style !== undefined){
+                query.andWhere(`o.style ='${req.style}'`) 
+            }
+            if(req.color !== undefined){
+                query.andWhere(`o.color ='${req.color}'`) 
+            }
+            if (req.deliveryDateStartDate !== undefined) {
+                query.andWhere(`(o.exit_factory_date) BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+            }
+            query.andWhere(`o.status != 'ACCEPTED'`);
           
         return await query.getRawMany()
     }
 
+    async getDistinctHBPoNumbers(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`DISTINCT cust_po`)
+        
+        return await query.getRawMany()
+    }
+
+    async getHborderDataForInfo(req?:HbPoOrderFilter): Promise<any[]> {
+        console.log(req,"uuuuuu")
+        const query = this.createQueryBuilder('o')
+            .select(`*`)
+            if(req.custPo !== undefined){
+                query.andWhere(`o.cust_po ='${req.custPo}'`) 
+            }
+            if(req.style !== undefined){
+                query.andWhere(`o.style ='${req.style}'`) 
+            }
+            if(req.color !== undefined){
+                query.andWhere(`o.color ='${req.color}'`) 
+            }
+            if (req.deliveryDateStartDate !== undefined) {
+                query.andWhere(`(o.exit_factory_date) BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+            }
+          
+        return await query.getRawMany()
+    }
 }

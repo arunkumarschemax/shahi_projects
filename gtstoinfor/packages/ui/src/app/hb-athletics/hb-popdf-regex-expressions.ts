@@ -2,6 +2,7 @@ import exp from "constants"
  
 export const EMP_STR_EXP = /^\s*$/
 export const ITEM_NO_EXP = "Women's"
+export const ITEM_NO_EXP1 = "Men’s"
 export const ITEM_NO_INDEX = 0
 export const ITEM_MATERIAL_INDEX = "Women's"
 // export const ITEM_DESCRIPTION_INDEX = ITEM_MATERIAL_INDEX + 1 // 2
@@ -26,19 +27,19 @@ export const SPECIAL_INSTRUCTIONS='Special Instructions'
 
 export const ITEM_TEXT_END_TEXT= 'Amount' 
 export const ITEM_TEXT_END_TEXT2 = 'Merchandise Amount' 
-export const UNWANTED_TEXT_1 = 'Acceptance of this HB Athletic Inc. - Globe-Tex purchase order constitutes Vendors agreement to:' 
-export const UNWANTED_TEXT_2 = "1. Manufacture all product on this Purchases Order…- Globe-Tex and the license holder of the branded"
-export const UNWANTED_TEXT_3 = "product being ordered on this Purchase Order. Fail… will result in the cancellation of this Purchase"
-export const UNWANTED_TEXT_4 = "Order with no financial responsibility to HB Athletic Inc. - Globe-tex."
-export const UNWANTED_TEXT_5 = "2. Deliver this purchase order complete by the req…ble to deliver any part or all of the merchandise"
-export const UNWANTED_TEXT_6 = "called for by the requested ship date, Vendor agre…if required Vendor agrees to ship any quantity of"
-export const UNWANTED_TEXT_7 = "items requested via Air at their expense. If deliv… ship date Vendor is also subject to chargebacks." 
-export const UNWANTED_TEXT_8 = "Quantity" 
-export const UNWANTED_TEXT_9 = "(USD)" 
-export const UNWANTED_TEXT_10 = "(USD)" 
-export const UNWANTED_TEXT_11 = "Date"  
-export const UNWANTED_TEXT_12 = "(USD)" 
-export const UNWANTED_TEXT_13 = "RALPH LAUREN CHILDRENSWEAR"
+// export const UNWANTED_TEXT_1 = 'Acceptance of this HB Athletic Inc. - Globe-Tex purchase order constitutes Vendors agreement to:' 
+// export const UNWANTED_TEXT_2 = "1. Manufacture all product on this Purchases Order…- Globe-Tex and the license holder of the branded"
+// export const UNWANTED_TEXT_3 = "product being ordered on this Purchase Order. Fail… will result in the cancellation of this Purchase"
+// export const UNWANTED_TEXT_4 = "Order with no financial responsibility to HB Athletic Inc. - Globe-tex."
+// export const UNWANTED_TEXT_5 = "2. Deliver this purchase order complete by the req…ble to deliver any part or all of the merchandise"
+// export const UNWANTED_TEXT_6 = "called for by the requested ship date, Vendor agre…if required Vendor agrees to ship any quantity of"
+// export const UNWANTED_TEXT_7 = "" 
+// export const UNWANTED_TEXT_8 = "" 
+// export const UNWANTED_TEXT_9 = "(USD)" 
+// export const UNWANTED_TEXT_10 = "(USD)" 
+// export const UNWANTED_TEXT_11 = "Date"  
+// export const UNWANTED_TEXT_12 = "(USD)" 
+// export const UNWANTED_TEXT_13 = "RALPH LAUREN CHILDRENSWEAR"
 // export const UNWANTED_TEXT_14 = "Quantity"
 // export const UNWANTED_TEXT_15 = "(USD)"
 // export const UNWANTED_TEXT_16 = "(USD)"
@@ -56,6 +57,7 @@ export const PO_NUMBER_INDEX = 1
 // export const SELLER_ADDRESS_START_TEXT = "SELLER:"
 // export const SELLER_ADDRESS_END_TEXT = "BUYER:"
 export const ITEM_VARIANT_START_TEXT = "Women's" 
+export const ITEM_VARIANT_START_TEXT1 = "Men’s"
 
 
  // Jaswanth Chnages 2nd format// 

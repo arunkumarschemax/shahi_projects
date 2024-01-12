@@ -12,18 +12,23 @@ export class HbOrderDataModel {
     sizeWiseData: HbSizeWiseModel[]
     quantity?:number
     unitPrice?:string
+    status?:string
+    // color?:string
 
     constructor(
         id: number,
         custPo: string,
         style: string,
-        color: string,
+       color: string,
         size: string,
         exitFactoryDate: string,
         shipToAdd: number,
         sizeWiseData: HbSizeWiseModel[],
         quantity?:number,
         unitPrice?:string,
+        status?:string,
+        // color?:string
+
         
     ) {
         this.id = id
@@ -36,6 +41,9 @@ export class HbOrderDataModel {
         this.sizeWiseData = sizeWiseData
         this.quantity = quantity
         this.unitPrice = unitPrice
+        this. status=status
+        //  this.color = color
+       
        
     }
 }
