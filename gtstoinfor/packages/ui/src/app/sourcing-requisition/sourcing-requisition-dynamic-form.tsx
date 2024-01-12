@@ -1679,13 +1679,13 @@ console.log(req)
                                                     allowClear
                                                     showSearch
                                                     optionFilterProp="children"
-                                                    placeholder={renderTrimCodeOptions()[0]?.props.children}
+                                                    // placeholder={renderTrimCodeOptions()[0]?.props.children}
                                                     onChange={onTrimChange}
                                                     suffixIcon={trimForm.getFieldValue('trimCategory') != undefined || trimBtnType == 'Update'? <SearchOutlined
                                                         onClick={trimFilterFormVisible}
                                                          style={{ fontSize: '28px', marginLeft: '-7px' }} />:<></>}
                                                 >
-                                                    {renderTrimCodeOptions()}
+                                                    {/* {renderTrimCodeOptions()} */}
                                                     {m3Trims.map((e) => {
                                                         return (
                                                             <Option key={e.m3TrimsId} value={e.m3TrimsId} trimUomId={e.uomId} trimUomName={e.uom}>
