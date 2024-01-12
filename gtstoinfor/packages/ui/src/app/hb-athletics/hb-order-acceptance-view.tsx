@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   Col,
+  DatePicker,
   Form,
   Input,
   Row,
@@ -42,6 +43,7 @@ export function HbOrderAcceptanceGrid() {
   const [filterData, setFilterData] = useState([]);
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [itemNoValues, setItemNoValues] = useState({});
+  const { RangePicker } = DatePicker;
 
   useEffect(() => {
     getHborderData();
@@ -52,10 +54,24 @@ export function HbOrderAcceptanceGrid() {
   const getHborderData = () => {
     const req = new HbPoOrderFilter();
 
-    if (form.getFieldValue("custPo") !== undefined) {
-      req.custPo = form.getFieldValue("custPo");
+    if (form.getFieldValue("poNumber") !== undefined) {
+      req.custPo = form.getFieldValue("poNumber");
     }
-    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
+    if (form.getFieldValue('deliveryDate') !== undefined) {
+      req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('DD-MM-YYYY');
+    }
+    if (form.getFieldValue('deliveryDate') !== undefined) {
+      req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('DD-MM-YYYY');
+    }
+    
+    if (form.getFieldValue("style") !== undefined) {
+      req.style = form.getFieldValue("style");
+    }
+    if (form.getFieldValue("color") !== undefined) {
+      req.color = form.getFieldValue("color");
+    }
+
+
 
     service.getHborderData(req).then((res) => {
       if (res.status) {
@@ -613,7 +629,7 @@ export function HbOrderAcceptanceGrid() {
         <Form
           onFinish={getHborderData}
           form={form}
-        // layout='vertical'
+        layout='vertical'
         >
           <Row gutter={24}>
             <Col
@@ -621,12 +637,12 @@ export function HbOrderAcceptanceGrid() {
               sm={{ span: 24 }}
               md={{ span: 4 }}
               lg={{ span: 4 }}
-              xl={{ span: 6 }}
+              xl={{ span: 4 }}
             >
-              <Form.Item name="custPo" label="Buyer po number">
+              <Form.Item name="poNumber" label="Buyer Po number">
                 <Select
                   showSearch
-                  placeholder="Select buyer po number"
+                  placeholder="Select Buyer Po "
                   optionFilterProp="children"
                   allowClear
                 >
@@ -640,31 +656,40 @@ export function HbOrderAcceptanceGrid() {
                 </Select>
               </Form.Item>
             </Col>
-            {/* <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 4 }}
-              lg={{ span: 4 }}
-              xl={{ span: 6 }}
-            >
-              <Form.Item name="poLine" label="PO Line">
-                <Select
-                  showSearch
-                  placeholder="Select PO Line"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {orderData.map((inc: any) => {
-                    return (
-                      <Option key={inc.poLine} value={inc.poLine}>
-                        {inc.poLine}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-            </Col> */}
-            <Row>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Style" name="style"  >
+                  <Input placeholder="Enter Style " allowClear />
+                </Form.Item>
+              </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Color" name="color"  >
+                  <Input placeholder="Enter Color "  allowClear />
+                </Form.Item>
+              </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Delivery Date" name="deliveryDate"  >
+                  <RangePicker style={{width:180}}   />
+                </Form.Item>
+              </Col>
+              <Row>
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
@@ -672,7 +697,7 @@ export function HbOrderAcceptanceGrid() {
                 lg={{ span: 5 }}
                 xl={{ span: 4 }}
               >
-                <Form.Item>
+                <Form.Item style={{marginTop:20,marginLeft:60}}>
                   <Button
                     htmlType="submit"
                     icon={<SearchOutlined />}
@@ -680,14 +705,20 @@ export function HbOrderAcceptanceGrid() {
                     onClick={getHborderData}
                   >
                     SEARCH
-
                   </Button>
+                
                 </Form.Item>
               </Col>
-              <Col>
-                <Form.Item>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 5 }}
+                lg={{ span: 5 }}
+                xl={{ span: 4 }}
+              >
+                <Form.Item style={{marginTop:20}}>
                   <Button
-                    style={{ marginLeft: 60 }}
+                    style={{ marginLeft: 120 }}
                     htmlType="submit"
                     type="primary"
                     onClick={onReset}
@@ -696,7 +727,6 @@ export function HbOrderAcceptanceGrid() {
                     Reset
                   </Button>
                 </Form.Item>
-
               </Col>
             </Row>
           </Row>
