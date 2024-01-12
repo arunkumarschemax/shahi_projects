@@ -652,13 +652,37 @@ export function CentricOrderAcceptanceGrid() {
           </Tooltip>
         ),
       },
+
+      // {
+      //   title: "Item status",
+      //   dataIndex: "status",
+      //   align: "center",
+      //   width: 90,
+      //   render: (text) => text ? text : "-",
+      //   filters: [
+      //     {
+      //       text: 'OPEN',
+      //       value: 'OPEN',
+      //     },
+      //     {
+      //       text: 'INPROGRESS',
+      //       value: 'INPROGRESS',
+      //     },
+    
+      //   ],
+      //   onFilter: (value,record) =>{ return record.status.toLowerCase() === value.toLowerCase()}
+      // },
+  
+
+
+
       {
-        title: "Status",
+        title: "Item status",
         dataIndex: "status",
         align: "center",
-        width: "80px",
-        fixed: "right",
-        render: (text, record, index) => {
+        fixed: 'right',
+        width: 90,
+        render: (text, record) => {
           return {
             children: <div style={{ position: "relative", top: "-7px" }}>{text}</div>,
             props: {
@@ -666,7 +690,21 @@ export function CentricOrderAcceptanceGrid() {
             },
           };
         },
+        filters: [
+          {
+            text: 'OPEN',
+            value: 'OPEN',
+          },
+          {
+            text: 'INPROGRESS',
+            value: 'INPROGRESS',
+          },
+        ],
+        onFilter: (value, record) => record.status.toLowerCase() === value.toLowerCase(),
       },
+      
+      
+      
       {
         title: "Item No",
         dataIndex: "itemNo",
@@ -681,7 +719,7 @@ export function CentricOrderAcceptanceGrid() {
                   style={{ width: '95px' }}
                   placeholder="Enter Item No"
                   onChange={(e) => handleItemNoChange(e.target.value, record, index)}
-                  disabled={record.status == 'ACCEPTED' ? true : false}
+                  disabled={record.status == 'INPROGRESS' ? true : false}
                 />
               </Form.Item>
             ),
@@ -704,9 +742,9 @@ export function CentricOrderAcceptanceGrid() {
               <Button
                 style={{ position: "relative", top: "-7.5px" }}
                 onClick={() => createCOLine(record, index)}
-                disabled={record.status === 'ACCEPTED' ? true : !isEnabled}
+                disabled={record.status === 'INPROGRESS' ? true : !isEnabled}
               >
-                {record.status === 'ACCEPTED' ? "Accepted" : "Accept"}
+                {record.status === 'INPROGRESS' ? "Accept" : "Accept"}
               </Button>
             ),
             props: {
