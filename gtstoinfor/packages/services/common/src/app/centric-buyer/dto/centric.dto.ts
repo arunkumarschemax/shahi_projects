@@ -84,8 +84,8 @@ export class CentricDto {
     @ApiProperty()
     style: string
 
-    // @ApiProperty()
-    // poType: string
+    @ApiProperty()
+    poType: string
 
 
 

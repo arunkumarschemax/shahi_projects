@@ -14,7 +14,7 @@ export class CentricPoItemDetails {
     currency:string;
     totalQuantity:string;
     style:string;
-    // poType:string;
+    poType:string;
 
     // materialNo: string;
     // poItem: string;

@@ -77,7 +77,7 @@ export class CentricService {
           entity.currency = item.currency
           entity.totalQuantity = item.totalQuantity
           entity.style = item.style
-          // entity.poType = item.poType
+          entity.poType = item.poType
 
           entity.size = variant.size
           entity.upc = variant.upc
