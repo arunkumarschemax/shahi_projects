@@ -1,4 +1,4 @@
-import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Table, Tabs, Tooltip, Typography, message } from "antd"
+import { Alert, Button, Card, Col, DatePicker, Form, Input, Row, Select, Space, Table, Tabs, Tooltip, Typography, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane"
 import { HbService, OrdersService, RLOrdersService } from "@project-management-system/shared-services"
 import React, { useEffect, useRef, useState } from "react"
@@ -23,37 +23,53 @@ export const OrderComparisionReport = () => {
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const { RangePicker } = DatePicker;
+
 
   const { Option } = Select;
 
   useEffect(() => {
-    // getordercomparationData();
+    getordercomparationData();
     getHbPoNumber();
   }, []);
   
-  // const getordercomparationData = () => {
-  //   const req = new HbPoOrderFilter();
+  const getordercomparationData = () => {
+    const req = new HbPoOrderFilter();
 
-  //   if (form.getFieldValue("poNumber") !== undefined) {
-  //     req.poNumber = form.getFieldValue("poNumber");
-  //   }
+    if (form.getFieldValue("poNumber") !== undefined) {
+      req.custPo = form.getFieldValue("poNumber");
+    }
+    if (form.getFieldValue('deliveryDate') !== undefined) {
+      req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('DD-MM-YYYY');
+    }
+    if (form.getFieldValue('deliveryDate') !== undefined) {
+      req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('DD-MM-YYYY');
+    }
+    
+    if (form.getFieldValue("style") !== undefined) {
+      req.style = form.getFieldValue("style");
+    }
+    if (form.getFieldValue("color") !== undefined) {
+      req.color = form.getFieldValue("color");
+    }
+
   
 
-  //   service.getordercomparationData(req).then((res) => {
-  //     if (res.status) {
-  //       setOrderData(res.data);
-  //       setFilterData(res.data);
-  //     } else {
-  //       setOrderData([]);
-  //       setFilterData([]);
-  //       AlertMessages.getErrorMessage(res.internalMessage);
-  //     }
-  //   }).catch(err => {
-  //      setOrderData([]);
-  //       setFilterData([]);
-  //      AlertMessages.getErrorMessage(err.message);
-  //    })
-  // };
+    service.getordercomparationData(req).then((res) => {
+      if (res.status) {
+        setOrderData(res.data);
+        setFilterData(res.data);
+      } else {
+        setOrderData([]);
+        setFilterData([]);
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+       setOrderData([]);
+        setFilterData([]);
+       AlertMessages.getErrorMessage(err.message);
+     })
+  };
 
   const getHbPoNumber = () => {
 
@@ -63,17 +79,17 @@ export const OrderComparisionReport = () => {
       
       } else {
         setPoNumberData([]);
-        AlertMessages.getErrorMessage(res.internalMessage);
+        // AlertMessages.getErrorMessage(res.internalMessage);
       }
     }).catch(err => {
        setPoNumberData([]);
-       AlertMessages.getErrorMessage(err.message);
+      //  AlertMessages.getErrorMessage(err.message);
      })
   };
 
   const onReset = () => {
     form.resetFields();
-    // getordercomparationData();
+    getordercomparationData();
   };
 
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -198,22 +214,22 @@ export const OrderComparisionReport = () => {
       },
       {
         title: "Buyer PO",
-        dataIndex: "poNumber",
+        dataIndex: "custPo",
         width: 90,
-        sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+        sorter: (a, b) => a.custPo.localeCompare(b.custPo),
         sortDirections: ["ascend", "descend"],
         fixed: "left",
-        // ...getColumnSearchProps('poNumber'),
+        // ...getColumnSearchProps('custPo'),
         render: (text) => text ? text : "-"
       },
       {
         title: "Style",
-        dataIndex: "Style",
+        dataIndex: "style",
         width: 90,
-        sorter: (a, b) => a.Style.localeCompare(b.Style),
+        sorter: (a, b) => a.style.localeCompare(b.style),
         sortDirections: ["ascend", "descend"],
         fixed: "left",
-        // ...getColumnSearchProps('Style'),
+        // ...getColumnSearchProps('style'),
         render: (text) => text ? text : "-"
       },
       {
@@ -304,7 +320,7 @@ export const OrderComparisionReport = () => {
             key: '',
             width: 100,
             className: "center",
-            render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
+            render: (text) => text ? text : "-"
            
           },
           {
@@ -313,7 +329,7 @@ export const OrderComparisionReport = () => {
             key: '',
             width: 100,
             className: "center",
-            render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
+            render: (text) => text ? text : "-"
             // (moment(rec.last_modified_date).format('MM/DD/YYYY')
     
           },
@@ -385,7 +401,7 @@ export const OrderComparisionReport = () => {
       },
       {
         title: "Buyer PO Number",
-        dataIndex: "poNumber",
+        dataIndex: "custPo",
         width: 90,
         render: (text) => text ? text : "-"
       },
@@ -466,7 +482,7 @@ export const OrderComparisionReport = () => {
             dataIndex: 'oldDeliveryDate',
             key: '',
             width: 100,
-            render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
+            render: (text) => text ? text : "-"
            
           },
           {
@@ -474,7 +490,7 @@ export const OrderComparisionReport = () => {
             dataIndex: 'newDelieveryDate',
             key: '',
             width: 100,
-            render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
+            render: (text) => text ? text : "-"
     
           },
   ]
@@ -512,17 +528,17 @@ export const OrderComparisionReport = () => {
           onClick={exportExcel}
           icon={<FileExcelFilled />}>Download Excel</Button>}>
         <Form
-        // onFinish={getordercomparationData}
+        onFinish={getordercomparationData}
           form={form}
-        // layout='vertical'
+        layout='vertical'
         >
           <Row gutter={24}>
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
-              md={{ span: 4 }}
+              md={{ span: 4}}
               lg={{ span: 4 }}
-              xl={{ span: 6 }}
+              xl={{ span: 4 }}
             >
               <Form.Item name="poNumber" label="Buyer PO Number">
                 <Select
@@ -541,6 +557,39 @@ export const OrderComparisionReport = () => {
                 </Select>
               </Form.Item>
             </Col>
+            <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Style" name="style"  >
+                  <Input placeholder="Enter Style " allowClear />
+                </Form.Item>
+              </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Color" name="color"  >
+                  <Input placeholder="Enter Color "  allowClear />
+                </Form.Item>
+              </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Delivery Date" name="deliveryDate"  >
+                  <RangePicker style={{width:180}}   />
+                </Form.Item>
+              </Col>
             
             <Row>
             <Col
@@ -552,10 +601,11 @@ export const OrderComparisionReport = () => {
             >
               <Form.Item>
                 <Button
-                  style={{ marginLeft: 20 }}
+                  style={{ marginLeft: 50 ,marginTop:20}}
                   htmlType="submit"
                   icon={<SearchOutlined />}
                   type="primary"
+                  // onClick={getordercomparationData}
                 >
                   SEARCH
                 </Button>
@@ -571,7 +621,7 @@ export const OrderComparisionReport = () => {
             >
               <Form.Item>
                 <Button
-                  style={{ marginLeft: 70 }}
+                  style={{ marginLeft: 100,marginTop:20 }}
                   htmlType="submit"
                   type="primary"
                   onClick={onReset}

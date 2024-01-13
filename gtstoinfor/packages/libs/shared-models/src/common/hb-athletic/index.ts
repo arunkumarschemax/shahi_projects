@@ -8,3 +8,4 @@ export * from './hb-order-data-model'
 export * from './hb-coLine.req'
 
 export * from './hb-co-line-model'
+export * from './hb-comparision model'

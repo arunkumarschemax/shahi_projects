@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { HbOrdersRepository } from "./repositories/hb-orders.repo";
 import { HbPdfRepo } from "./repositories/hb-pdf.repo";
-import { CoLinereqModel, Color, CommonResponseModel, DestinationModel, HBCoLinereqModels, HBDestinationModel, HBSizeModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SizeModel, StatusEnum, hbCoLineRequest } from "@project-management-system/shared-models";
+import { CoLinereqModel, Color, CommonResponseModel, DestinationModel, HBCoLinereqModels, HBDestinationModel, HBSizeModel, HbCompareModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SizeModel, StatusEnum, hbCoLineRequest } from "@project-management-system/shared-models";
 import { HbOrdersEntity } from "./entity/hb-orders.entity";
 import { HbPdfFileInfoEntity } from "./entity/hb-pdf.entity";
 import { HbCOLineEntity } from "./entity/hb-co-line.entity";
@@ -17,7 +17,7 @@ import { DataSource } from "typeorm";
 
 @Injectable()
 export class HbService {
-  
+   
 
   constructor(
     private HbOrdersRepo: HbOrdersRepository,
@@ -431,7 +431,7 @@ export class HbService {
     try {
       const details = await this.HbOrdersRepo.getHborderDataForInfo(req);
       if (details.length === 0) {
-        return new CommonResponseModel(false, 0, 'data not found');
+        return new CommonResponseModel(false, 0, 'No data Found');
       }
       const sizeDateMap = new Map<string, HbOrderDataModel>();
       for (const rec of details) {
@@ -764,6 +764,67 @@ export class HbService {
   //     driver.quit()
   //   }
   // }
+
+
+  // async getordercomparationData(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
+  //   console.log(req,"servvv")
+  //   try {
+  //     const details = await this.HbOrdersRepo.getordercomparationData(req);
+  //     if (details.length === 0) {
+  //       return new CommonResponseModel(false, 0, 'data not found');
+  //     }else {
+  //       return new CommonResponseModel(true, 0, 'sucesss',details);
+
+  //     }
+     
+
+  //   } catch (e) {
+  //     return new CommonResponseModel(false, 0, 'failed', e);
+  //   }
+  // }
+  async getordercomparationData(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
+    try {
+      const Originaldata = await this.HbOrdersRepo.getordercomparationData(req)
+      if (Originaldata.length === 0) {
+        return new CommonResponseModel(false, 0, 'No data Found');
+      }
+      const compareModel: HbCompareModel[] = []
+      for (const rec of Originaldata) {
+        const childData = await this.HbOrdersChildRepo.find({
+          where: {
+            custPo: rec.cust_po, style: rec.style, color: rec.color
+          }, order: { id: 'DESC' }, take: 1, skip: 1
+        })
+        if (childData.length > 0) {
+          const oldData = childData[0];
+        
+          if (
+            oldData.unitPrice !== rec.unit_price ||
+            oldData.exitFactoryDate !== rec.exit_factory_date ||
+            oldData.quantity !== rec.quantity
+          ) {
+        
+            compareModel.push(new HbCompareModel(rec.cust_po,rec.style,rec.color,rec.size,oldData.unitPrice,rec.unit_price,oldData.exitFactoryDate,rec.exit_factory_date,oldData.quantity,rec.quantity));
+          }
+        } else {
+          const oldData = childData[0];
+
+          compareModel.push(new HbCompareModel(rec.cust_po,rec.style,rec.color,rec.size,oldData.unitPrice,rec.unit_price,oldData.exitFactoryDate,rec.exit_factory_date,oldData.quantity,rec.quantity));
+        }
+      }
+      if (compareModel) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
+      } 
+      else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+
+
 
 
 }
