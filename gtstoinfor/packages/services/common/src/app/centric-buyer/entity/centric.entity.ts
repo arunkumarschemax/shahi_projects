@@ -148,11 +148,11 @@ export class CentricEntity {
     })
     style: string
 
-    @Column('varchar', {
-        name: "po_type",
+    // @Column('varchar', {
+    //     name: "po_type",
         
-    })
-    poType: string
+    // })
+    // poType: string
 
 
     @Column('varchar', {
