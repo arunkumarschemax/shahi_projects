@@ -81,6 +81,12 @@ export class CentricDto {
     @ApiProperty()
     totalQuantity: string
 
+    @ApiProperty()
+    style: string
+
+    @ApiProperty()
+    poType: string
+
 
 
     @ApiProperty()

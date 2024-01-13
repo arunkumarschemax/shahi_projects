@@ -645,7 +645,7 @@ import {
   
       return (
         <>
-          {/* {filterData.length > 0 ? ( */}
+          {/* {filterData.length > 0 ? (  */}
             <Table
               // loading={tableLoading}
               columns={columns}
@@ -664,9 +664,9 @@ import {
               rowClassName={getRowClassName}
               bordered
             />
-          {/* ) : ( */}
-            <Table size="large" />
-          {/* )} */}
+          {/* ) : ( 
+            "NO DATA"
+         )} */}
         </>
       );
     };
@@ -756,21 +756,6 @@ import {
               </Row>
             </Row>
           </Form>
-          {/* <Table
-                      columns={columns}
-                      dataSource={orderData}
-                      bordered
-                      className="custom-table-wrapper"
-                      pagination={{
-                          pageSize: 50,
-                          onChange(current, pageSize) {
-                              setPage(current);
-                              setPageSize(pageSize);
-                          },
-                      }}
-                      scroll={{ x: 'max-content', y: 450 }}
-                  >
-                  </Table> */}
           {renderReport(filterData)}
         </Card>
       </>

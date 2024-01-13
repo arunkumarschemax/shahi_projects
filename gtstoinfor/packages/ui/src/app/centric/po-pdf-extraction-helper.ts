@@ -247,9 +247,11 @@ export const extractDataFromPoPdf = async (pdf) => {
             const itemDetailsObj = new CentricPoItemDetails();
             console.log(rec.itemIndex, "iiiiiiiiiiiiii")
             itemDetailsObj.poLine = filteredData[rec.itemIndex + 11].str
-            itemDetailsObj.material = filteredData[rec.itemIndex + 12].str.replace(/^\d{2}|-.*$/g, '')
+            itemDetailsObj.material = filteredData[rec.itemIndex + 12].str;
+            itemDetailsObj.style = filteredData[rec.itemIndex + 12].str.replace(/^\d{2}|-.*$/g, '')
             itemDetailsObj.ppkupc = filteredData[rec.itemIndex + 13].str;
             itemDetailsObj.color = filteredData[rec.itemIndex + 14].str;
+            itemDetailsObj.poType = "PPK"
             
             let totalQuantityIndex;
             for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
@@ -419,8 +421,10 @@ export const extractDataFromPoPdf = async (pdf) => {
             const itemDetailsObj = new CentricPoItemDetails();
             console.log(rec.itemIndex, "iiiiiiiiiiiiii")
             itemDetailsObj.poLine = filteredData[rec.itemIndex + 10].str
-            itemDetailsObj.material = filteredData[rec.itemIndex + 11].str.replace(/^\d{2}|-.*$/g, '')
+            itemDetailsObj.material = filteredData[rec.itemIndex + 11].str
+            itemDetailsObj.style = filteredData[rec.itemIndex + 11].str.replace(/^\d{2}|-.*$/g, '')
             itemDetailsObj.color = filteredData[rec.itemIndex + 12].str;
+            itemDetailsObj.poType = "SOLID"
 
             // let shortDescriptionIndex;
             // for (let i = 0; i < filteredData.length; i++) {

@@ -1,4 +1,4 @@
-import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip, message } from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Spin, Table, Tooltip, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { CentricService } from "@project-management-system/shared-services";
 import React from "react";
@@ -26,6 +26,7 @@ export function CentricOrderAcceptanceGrid() {
   const [filterData, setFilterData] = useState([]);
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [itemNoValues, setItemNoValues] = useState({});
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getCentricorderData();
@@ -33,15 +34,35 @@ export function CentricOrderAcceptanceGrid() {
   }, []);
 
 
-  const getCentricorderData = () => {
-    const req = new PoOrderFilter();
+  // const getCentricorderData = () => {
+  //   const req = new PoOrderFilter();
 
+  //   if (form.getFieldValue("poNumber") !== undefined) {
+  //     req.poNumber = form.getFieldValue("poNumber");
+  //   }
+  //   req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
+
+  //   service.getCentricorderData(req).then((res) => {
+  //     if (res.status) {
+  //       setOrderData(res.data);
+  //       setFilterData(res.data);
+  //     }
+  //   });
+  // };
+
+  const getCentricorderData = () => {
+    setLoading(true);
+    const req = new PoOrderFilter();
+  
     if (form.getFieldValue("poNumber") !== undefined) {
       req.poNumber = form.getFieldValue("poNumber");
     }
-    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
-
+    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo
+      ? IAMClientAuthContext.user?.externalRefNo
+      : null;
+  
     service.getCentricorderData(req).then((res) => {
+      setLoading(false); // Stop the loading spinner
       if (res.status) {
         setOrderData(res.data);
         setFilterData(res.data);
@@ -315,7 +336,7 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Color",
         dataIndex: "color",
-        width: 90,
+        width: 150,
         render: (text) => text ? text : "-",
         ...getColumnSearchProps('color')
       },
@@ -329,14 +350,14 @@ export function CentricOrderAcceptanceGrid() {
       {
         title: "Short Description",
         dataIndex: "shortDescription",
-        width: 90,
+        width: 150,
         render: (text) => text ? text : "-",
         ...getColumnSearchProps('shortDescription')
       },
       {
         title: "Pack Method",
         dataIndex: "packMethod",
-        width: 90,
+        width: 150,
         render: (text) => text ? text : "-",
         ...getColumnSearchProps('packMethod')
       },
@@ -366,7 +387,7 @@ export function CentricOrderAcceptanceGrid() {
         title: "Port of Entry Name",
         dataIndex: "portOfEntry",
         align: "center",
-        width: 90,
+        width: 180,
         render: (text) => text ? text : "-"
       },
       {
@@ -456,7 +477,7 @@ export function CentricOrderAcceptanceGrid() {
             title: 'UPC',
             dataIndex: '',
             key: '',
-            width: 70,
+            width: 90,
             className: "center",
             render: (text, record) => {
               const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -759,7 +780,7 @@ export function CentricOrderAcceptanceGrid() {
       <>
         {/* {filterData.length > 0 ? ( */}
         <Form form={form}>
-          <Table
+          {/* <Table
             // loading={tableLoading}
             columns={columns}
             dataSource={processData(filterData)}
@@ -775,7 +796,25 @@ export function CentricOrderAcceptanceGrid() {
             className="custom-table-wrapper"
             scroll={{ x: "max-content", y: 450 }}
             bordered
-          />
+          /> */}
+
+
+{loading ? (
+  <Spin spinning={loading}>
+    {/* Content to show while loading */}
+    <div>Loading...</div>
+  </Spin>
+) : (
+  <Table
+    columns={columns}
+    dataSource={processData(filterData)}
+    size="small"
+    pagination={false}
+    className="custom-table-wrapper"
+    scroll={{ y: 450 }}
+    bordered
+  />
+)}
         </Form>
         {/* ) : (
           <Table size="large" />

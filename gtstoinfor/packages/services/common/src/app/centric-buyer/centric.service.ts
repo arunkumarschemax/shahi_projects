@@ -76,6 +76,8 @@ export class CentricService {
           entity.ppkupc = item.ppkupc
           entity.currency = item.currency
           entity.totalQuantity = item.totalQuantity
+          entity.style = item.style
+          entity.poType = item.poType
 
           entity.size = variant.size
           entity.upc = variant.upc
@@ -129,7 +131,7 @@ export class CentricService {
             }]
           };
 
-          entity.fileData = JSON.stringify(fileData);
+          // entity.fileData = JSON.stringify(fileData);
 
           if (orderData) {
             const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
@@ -157,6 +159,7 @@ export class CentricService {
               ppkupc: item.ppkupc,
               currency: item.currency,
               totalQuantity: item.totalQuantity,
+              style: item.style,
 
               upc: variant.upc,
               label: variant.label,

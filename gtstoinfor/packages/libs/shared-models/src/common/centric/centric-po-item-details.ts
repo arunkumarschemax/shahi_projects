@@ -12,7 +12,9 @@ export class CentricPoItemDetails {
 
     ppkupc:string;
     currency:string;
-    totalQuantity:string
+    totalQuantity:string;
+    style:string;
+    poType:string;
 
     // materialNo: string;
     // poItem: string;

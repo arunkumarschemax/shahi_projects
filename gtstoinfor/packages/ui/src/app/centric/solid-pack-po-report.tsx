@@ -971,15 +971,28 @@ import RangePicker from "rc-picker/lib/RangePicker";
             ...getColumnSearchProps('paymentTermDescription')
           },
 
+          // {
+          //   title: "Special Instructions",
+          //   dataIndex: "specialInstructions",
+          //   align: "center",
+          //   width: 200,
+          //   sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
+          //   sortDirections: ["ascend", "descend"],
+          //   render: (text) => text ? text : "-",
+          //   ...getColumnSearchProps('specialInstructions')
+          // },
           {
             title: "Special Instructions",
             dataIndex: "specialInstructions",
-            align: "center",
-            width: 200,
+            width: 150,
             sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-",
-            ...getColumnSearchProps('specialInstructions')
+            ...getColumnSearchProps('specialInstructions'),
+            render: (text) => (
+              <Tooltip title={text || "-"}>
+                {text ? `${text.substring(0, 20)}...` : "-"}
+              </Tooltip>
+            ),
           },
 
          
