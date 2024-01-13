@@ -500,19 +500,14 @@ export const OrderComparisionReport = () => {
 
     );
   
-
-   
-   
     
 
     excel
-      .addSheet(`Order Comparsion Report (${formattedDate})`)
-      .addColumns(excelColumnsWH)
-      .addDataSource(filterData, { str2num: false },);
-      
+    .addSheet(`Order Comparision(${formattedDate})`)
+    .addColumns(excelColumnsWH)
+    .addDataSource(filterData, { str2num: false });
 
-
-    excel.saveAs(`Order Comparsion Report (${formattedDate}).xlsx`);
+   excel.saveAs(`Order Comparision(${formattedDate}).xlsx`);;
 
 
   }
