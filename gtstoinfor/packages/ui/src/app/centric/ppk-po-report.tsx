@@ -528,13 +528,6 @@ import { Excel } from "antd-table-saveas-excel";
          
         },
         {
-          title: "Ship to Address",
-          dataIndex: "shipToAddress",
-          width: 400,
-          render: (text) => (  text ? text: "-"),
-
-        },
-        {
           title: "PO Date",
           dataIndex: "PODate",
           align: "center",
@@ -613,6 +606,13 @@ import { Excel } from "antd-table-saveas-excel";
           sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-"
+        },
+        {
+          title: "Ship to Address",
+          dataIndex: "shipToAddress",
+          width: 400,
+          render: (text) => (  text ? text: "-"),
+
         },
       
       );
@@ -890,7 +890,7 @@ import { Excel } from "antd-table-saveas-excel";
           {
             title: "Color",
             dataIndex: "color",
-            width: 90,
+            width: 110,
             sorter: (a, b) => a.color.localeCompare(b.color),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
@@ -1147,19 +1147,7 @@ import { Excel } from "antd-table-saveas-excel";
           render: (text) => text ? text : "-",
           ...getColumnSearchProps('ppkUpc')
         },
-        {
-          title: "Ship to Address",
-          dataIndex: "shipToAddress",
-          width: 150,
-          sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-          sortDirections: ["ascend", "descend"],
-          ...getColumnSearchProps('shipToAddress'),
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}...` : "-"}
-            </Tooltip>
-          ),
-        },
+        
         {
           title: "PO Date",
           dataIndex: "PODate",
@@ -1253,6 +1241,19 @@ import { Excel } from "antd-table-saveas-excel";
           sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-"
+        },
+        {
+          title: "Ship to Address",
+          dataIndex: "shipToAddress",
+          width: 150,
+          sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('shipToAddress'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
         },
             
 
