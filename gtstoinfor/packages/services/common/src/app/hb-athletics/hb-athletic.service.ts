@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { HbOrdersRepository } from "./repositories/hb-orders.repo";
 import { HbPdfRepo } from "./repositories/hb-pdf.repo";
-import { CoLineRequest, CoLinereqModel, Color, CommonResponseModel, DestinationModel, HBCoLinereqModels, HBDestinationModel, HBSizeModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SizeModel, StatusEnum, hbCoLineRequest } from "@project-management-system/shared-models";
+import { CoLineRequest,CoLinereqModel, Color, CommonResponseModel, DestinationModel, HBCoLinereqModels, HBDestinationModel, HBSizeModel, HbCompareModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SizeModel, StatusEnum, hbCoLineRequest } from "@project-management-system/shared-models";
 import { HbOrdersEntity } from "./entity/hb-orders.entity";
 import { HbPdfFileInfoEntity } from "./entity/hb-pdf.entity";
 import { HbCOLineEntity } from "./entity/hb-co-line.entity";
@@ -14,47 +14,54 @@ import { AddressService } from "../Entites@Shahi/address/address-service";
 const moment = require('moment');
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 
+import { HbOrdersChildRepository } from "./repositories/hb-order-child.repo";
+import { HbOrdersChildEntity } from "./entity/hb-orders-child.entity";
+import { GenericTransactionManager } from "../../typeorm-transactions";
+import { DataSource } from "typeorm";
 
 @Injectable()
 export class HbService {
+   
 
   constructor(
     private HbOrdersRepo: HbOrdersRepository,
     private HbPdfRepo: HbPdfRepo,
     private hbCoLineRepo:HbCOLineRepository,
-    private addressService: AddressService
+    private addressService: AddressService,
+    private HbOrdersChildRepo:HbOrdersChildRepository,
+    private dataSource: DataSource
+
+
   ) { }
 
   
   async saveHbOrdersData(req: any): Promise<CommonResponseModel> {
-    console.log(req, "reqqqqqqqqqqqqq")
-    // const transactionManager = new GenericTransactionManager(this.dataSource)
+    // console.log(req, "reqqqqqqqqqqqqq")
+    const transactionManager = new GenericTransactionManager(this.dataSource)
     try {
       let saved
       const pdfData=[];
-      // await transactionManager.startTransaction()
+      await transactionManager.startTransaction()
       for (const item of req.HbpoItemDetails) {
         const match = item.color.match(/\d+/);
-        console.log(match, "match");
-        console.log(item, "item");
-        // Check if a match is found and convert it to an integer
-        // const color = match ? parseInt(match[0], 10) : null;
+        // console.log(match, "match");
+        // console.log(item, "item");
         const color = match
 
         console.log(color, "color")
         for (const variant of item.HbpoItemVariantDetails) {
           const orderData = await this.HbOrdersRepo.findOne({ where: { custPo: req.custPo, color: item.color, size: variant.size } })
-          console.log(orderData, "orderData")
-          console.log(variant, "variant");
+          const order = await this.HbOrdersChildRepo.findOne({ where: { custPo: req.custPo,color: item.color, size: variant.size  }, order: { poVersion: 'DESC' } })
+          // console.log(orderData, "orderData")
+          // console.log(variant, "variant");
+          // console.log(order, "order");
+
           const entity = new HbOrdersEntity();
           entity.custPo = req.custPo
           entity.exitFactoryDate = req.exitFactoryDate
           entity.shipToAdd = req.shipToAdd
-
-
           entity.style = item.style
           entity.color = item.color
-
           entity.size = variant.size
           entity.quantity = variant.quantity
           entity.unitPrice = variant.unitPrice
@@ -63,23 +70,55 @@ export class HbService {
 
 
           if (orderData) {
-            const update = await this.HbOrdersRepo.update({ custPo: req.custPo, color: item.color, size: variant.size }, {exitFactoryDate:req.exitFactoryDate,shipToAdd:req.shipToAdd,style:item.style,quantity:variant.quantity,unitPrice:variant.unitPrice})
+          
+
+            const update = await transactionManager.getRepository(HbOrdersEntity).update({ custPo: req.custPo, color: item.color, size: variant.size }, {exitFactoryDate:req.exitFactoryDate,shipToAdd:req.shipToAdd,style:item.style,quantity:variant.quantity,unitPrice:variant.unitPrice})
+
+            let po = (order?.poVersion) + 1
+
+            const entitys = new HbOrdersChildEntity()
+            entitys.custPo = req.custPo
+            entitys.exitFactoryDate = req.exitFactoryDate
+            entitys.shipToAdd = req.shipToAdd
+            entitys.style = item.style
+            entitys.color = item.color
+            entitys.size = variant.size
+            entitys.quantity = variant.quantity
+            entitys.unitPrice = variant.unitPrice
+            entitys.poVersion = po
+            entitys.orderId = orderData.id
+
+            const savedChild = await transactionManager.getRepository(HbOrdersChildEntity).save(entitys)
             if (!update.affected) {
               throw new Error('Update failed');
             }
           } else {
-            saved = await this.HbOrdersRepo.save(pdfData)
-            console.log(saved,"saved")
-            // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
+            saved = await transactionManager.getRepository(HbOrdersEntity).save(pdfData)
+         
+            const entitys = new HbOrdersChildEntity()
+            entitys.custPo = req.custPo
+            entitys.exitFactoryDate = req.exitFactoryDate
+            entitys.shipToAdd = req.shipToAdd
+            entitys.style = item.style
+            entitys.color = item.color
+            entitys.size = variant.size
+            entitys.quantity = variant.quantity
+            entitys.unitPrice = variant.unitPrice
+            entitys.orderId = entity.id
+
+        
+           
+          const  savedChild = await await transactionManager.getRepository(HbOrdersChildEntity).save(entitys)
             if (!saved) {
               throw new Error('Save failed')
             }
           }
         }
       }
-      // await transactionManager.completeTransaction()
+      await transactionManager.completeTransaction()
       return new CommonResponseModel(true, 1, 'Data saved successfully', saved)
     } catch (err) {
+      await transactionManager.releaseTransaction()
       return new CommonResponseModel(false, 0, 'Failed', err)
     }
   }
@@ -397,7 +436,7 @@ export class HbService {
     try {
       const details = await this.HbOrdersRepo.getHborderDataForInfo(req);
       if (details.length === 0) {
-        return new CommonResponseModel(false, 0, 'data not found');
+        return new CommonResponseModel(false, 0, 'No data Found');
       }
       const sizeDateMap = new Map<string, HbOrderDataModel>();
       for (const rec of details) {
@@ -730,6 +769,63 @@ export class HbService {
       driver.quit()
     }
   }
+
+
+  // async getordercomparationData(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
+  //   console.log(req,"servvv")
+  //   try {
+  //     const details = await this.HbOrdersRepo.getordercomparationData(req);
+  //     if (details.length === 0) {
+  //       return new CommonResponseModel(false, 0, 'data not found');
+  //     }else {
+  //       return new CommonResponseModel(true, 0, 'sucesss',details);
+
+  //     }
+     
+
+  //   } catch (e) {
+  //     return new CommonResponseModel(false, 0, 'failed', e);
+  //   }
+  // }
+  async getordercomparationData(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
+    try {
+      const Originaldata = await this.HbOrdersRepo.getordercomparationData(req)
+      if (Originaldata.length === 0) {
+        return new CommonResponseModel(false, 0, 'No data Found');
+      }
+      const compareModel: HbCompareModel[] = []
+      for (const rec of Originaldata) {
+        const childData = await this.HbOrdersChildRepo.find({
+          where: {
+            custPo: rec.cust_po, style: rec.style, color: rec.color
+          }, order: { id: 'DESC' }, take: 1, skip: 1
+        })
+        if (childData.length > 0) {
+          const oldData = childData[0];
+        
+          // if (
+          //   oldData.unitPrice !== rec.unit_price ||
+          //   oldData.exitFactoryDate !== rec.exit_factory_date ||
+          //   oldData.quantity !== rec.quantity
+          // ) {
+        
+            compareModel.push(new HbCompareModel(rec.cust_po,rec.style,rec.color,rec.size,oldData.unitPrice,rec.unit_price,oldData.exitFactoryDate,rec.exit_factory_date,oldData.quantity,rec.quantity));
+          }
+        // }
+      }
+      if (compareModel) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
+      } 
+      else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+
+
 
 
 }

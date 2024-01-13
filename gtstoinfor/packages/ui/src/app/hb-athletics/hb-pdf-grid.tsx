@@ -165,7 +165,7 @@ export function HbPdFInfoGrid() {
             sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
             sortDirections: ["ascend", "descend"],
             render: (text, record) => {
-                return record.createdAt ? moment(record.createdAt).format('MM/DD/YYYY') : '-'
+                return record.createdAt ? moment(record.createdAt).format('MM/DD/YYYY HH:mm') : '-'
             }
             
             

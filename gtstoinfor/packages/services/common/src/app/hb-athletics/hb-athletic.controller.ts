@@ -168,4 +168,14 @@ export class HbController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getordercomparationData')
+    @ApiBody({ type: HbPoOrderFilter })
+    async getordercomparationData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getordercomparationData(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
