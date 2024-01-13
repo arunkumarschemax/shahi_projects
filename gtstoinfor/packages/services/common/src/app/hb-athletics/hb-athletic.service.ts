@@ -556,9 +556,9 @@ export class HbService {
           console.log(addressData)
           buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 11;
           deliveryAddress = addressData?.deliveryCode
-          buyerValue1 = "FIN-FINISHED GOODS - KY"
-          buyerValue2 = "CEN00002-CENTRIC BRANDS LLC"
-          agent = "NA-DIRECT CUSTOMER"
+          buyerValue1 = "DIB-DICK'S BRAND"
+          buyerValue2 = "HBA00001-HB ATHLETIC INC"
+          agent = "0"
           pkgTerms = "BOX-BOXES"
           paymentTerms = "081-TT 90 DAYS"
         }
