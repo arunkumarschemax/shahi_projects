@@ -816,16 +816,16 @@ import RangePicker from "rc-picker/lib/RangePicker";
             render: (text) => text ? text : "-",
             ...getColumnSearchProps('material')
           },
-          {
-            title: "Compt.Material",
-            dataIndex: "comptMaterial",
-            width: 150,
-            // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
-            // sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-",
-            ...getColumnSearchProps('comptMaterial')
+          // {
+          //   title: "Compt.Material",
+          //   dataIndex: "comptMaterial",
+          //   width: 150,
+          //   // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
+          //   // sortDirections: ["ascend", "descend"],
+          //   render: (text) => text ? text : "-",
+          //   ...getColumnSearchProps('comptMaterial')
   
-          },
+          // },
           {
             title: "Gender",
             dataIndex: "gender",
