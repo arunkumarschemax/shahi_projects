@@ -833,7 +833,7 @@ import { Excel } from "antd-table-saveas-excel";
           width: 150,
          sorter: (a, b) => a.shipToAdd.localeCompare(b.shipToAdd),
          sortDirections: ["ascend", "descend"],
-         ...getColumnSearchProps('shipToAddress'),
+         ...getColumnSearchProps('shipToAdd'),
           render: (text) => (
             <Tooltip title={text || "-"}>
               {text ? `${text.substring(0, 20)}...` : "-"}
