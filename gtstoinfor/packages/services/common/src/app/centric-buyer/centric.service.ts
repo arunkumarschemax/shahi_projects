@@ -328,6 +328,7 @@ export class CentricService {
     }
   }
 
+  // @Cron('*/5 * * * *')
   async createCOline(req: any): Promise<CommonResponseModel> {
     const po = await this.coLineRepo.getDataforCOLineCreation();
     if (!po) {
@@ -553,7 +554,7 @@ export class CentricService {
         }
       }
       await driver.sleep(10000)
-      // const element = await driver.findElement(By.id('OrderCreateID')).click();
+      const element = await driver.findElement(By.id('OrderCreateID')).click();
       await driver.wait(until.alertIsPresent(), 10000);
       // Switch to the alert and accept it (click "OK")
       const alert = await driver.switchTo().alert();
