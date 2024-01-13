@@ -83,9 +83,21 @@ const CentriColineView = () => {
             .split("-")
             .join("/");
 
-        let exportingColumns: IExcelColumn[] = []
-        exportingColumns = [
-            
+            let rowIndex = 1;
+        let exportingColumns: any[] = []
+        exportingColumns .push(
+            {
+                title: "#",
+                // dataIndex: "sno", 
+                width: 50,
+                render: (text, object, index) => {
+                  if (index == data.length) {
+                    return null;
+                  } else {
+                    return rowIndex++;
+                  }
+                }
+              },
             {
                 title: 'Buyer Po',
                 dataIndex: 'po_number',
@@ -180,7 +192,7 @@ const CentriColineView = () => {
                     return (record.error_msg ? (record.error_msg) : '-')
                 }
             }
-        ]
+        )
 
         const excel = new Excel();
         excel.addSheet("Sheet1");
