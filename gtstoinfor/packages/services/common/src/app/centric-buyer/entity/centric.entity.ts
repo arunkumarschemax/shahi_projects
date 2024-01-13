@@ -79,16 +79,6 @@ export class CentricEntity {
     })
     buyerAddress: string
 
-    
-    @Column('text', {
-        name: "file_data"
-    })
-    fileData: string
-
-
-
-    
-
     @Column('varchar', {
         name: "po_line",
     })
@@ -148,11 +138,11 @@ export class CentricEntity {
     })
     style: string
 
-    // @Column('varchar', {
-    //     name: "po_type",
+    @Column('varchar', {
+        name: "po_type",
         
-    // })
-    // poType: string
+    })
+    poType: string
 
 
     @Column('varchar', {

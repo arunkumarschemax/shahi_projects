@@ -131,7 +131,7 @@ export class CentricService {
             }]
           };
 
-          entity.fileData = JSON.stringify(fileData);
+          // entity.fileData = JSON.stringify(fileData);
 
           if (orderData) {
             const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
