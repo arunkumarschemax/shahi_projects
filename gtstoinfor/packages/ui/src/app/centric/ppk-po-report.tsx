@@ -202,190 +202,114 @@ import { Excel } from "antd-table-saveas-excel";
               }
             },
             {
-              title: "PO Date",
-              dataIndex: "PODate",
-              align: "center",
+              title: "Season",
+              dataIndex: "season",
               width: 90,
-              sorter: (a, b) => a.PODate.localeCompare(b.PODate),
-              sortDirections: ["ascend", "descend"],
               render: (text) => text ? text : "-"
             },
             {
               title: "Shipment Method",
               dataIndex: "shipmentMethod",
               width: 90,
-              sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
+              render: (text) => text ? text : "-",
+              
     
+            },
+            {
+              title: "Division",
+              dataIndex: "division",
+              width: 150,
+              render: (text) => text ? text : "-",
+              
+              
+            },
+            {
+              title: "Manufacture",
+              dataIndex: "manufacture",
+              width: 500,
+              render: (text) => (
+                
+                  text ? text : "-"
+                
+              ),
             },
             {
               title: "PO Number",
               dataIndex: "poNumber",
               width: 90,
-              sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
     
-              // fixed: "left",
-              // ...getColumnSearchProps('poNumber')
+              render: (text) => text ? text : "-",
+    
+          
             },
+           
             {
                 title: "PO Line Number",
                 dataIndex: "poLine",
                 width: 90,
-                sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
-                // fixed: "left",
+                render: (text) => text ? text : "-",
+      
+
               },
               {
                 title: "Material",
                 dataIndex: "material",
-                width: 150,
-                sorter: (a, b) => a.material.localeCompare(b.material),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                width: 200,
+                render: (text) => text ? text : "-",
+          
               },
               {
-                title: "PPK UPC",
-                dataIndex: "ppkUpc",
+                title: "Compt.Material",
+                dataIndex: "comptMaterial",
                 width: 150,
-                sorter: (a, b) => (a.ppkUpc || '').localeCompare(b.ppkUpc || ''),
-                sortDirections: ["ascend", "descend"],
-                render: (text, record) => {
-                  const formattedValue = record?.ppkUpc ? record.ppkUpc.toString() : '-';
+                render: (text) => text ? text : "-",
               
-                  return (
-                    <span>{formattedValue}</span>
-                  );
-                }
-              },
-              {
-                title: "Color",
-                dataIndex: "color",
-                width: 150,
-                sorter: (a, b) => a.color.localeCompare(b.color),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+      
               },
               {
                 title: "Gender",
                 dataIndex: "gender",
-                width: 150,
-                sorter: (a, b) => a.gender.localeCompare(b.gender),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                width: 90,
+                render: (text) => text ? text : "-",
+              
+    
               },
               {
                 title: "Short Description",
                 dataIndex: "shortDescription",
-                width: 200,
-                sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                width:300,
+                render: (text) => text ? text : "-",
               },
               {
-                title: "Pack Method",
-                dataIndex: "packMethod",
+                title: "Color",
+                dataIndex: "color",
                 width: 200,
-                sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                render: (text) => text ? text : "-",
+                
               },
               {
-                title: "Vendor Booking Flag",
-                dataIndex: "vendorFlag",
-                align: "center",
+                title: "Label",
+                dataIndex: "label",
                 width: 90,
-                sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                render: (text) => text ? text : "-",
+            
+                
               },
-           
-             
-              {
-                title: "Season",
-                dataIndex: "season",
-                width: 90,
-                sorter: (a, b) => a.season.localeCompare(b.season),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
-              },
-              {
-                title: "Port Of Export",
-                dataIndex: "portOfExport",
-                align: "center",
-                width: 200,
-                sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
-              },
-              {
-                title: "Port of Entry Name",
-                dataIndex: "portOfEntry",
-                align: "center",
-                width: 200,
-                sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
-              },
-                  
               {
                 title: "Reference",
                 dataIndex: "reference",
                 width: 90,
-                sorter: (a, b) => a.reference.localeCompare(b.reference),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                render: (text) => text ? text : "-",
+            
+    
               },
               {
-                title: "Payment Terms Description",
-                dataIndex: "paymentTermDescription",
-                align: "center",
-                width: 200,
-                sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
-              },
-    
-              {
-                title: "Special Instructions",
-                dataIndex: "specialInstructions",
-                align: "center",
-                width: 500,
-                sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
-              },
-    
+                title: "Pack Method",
+                dataIndex: "packMethod",
+                width: 300,
+                render: (text) => text ? text : "-",
              
-             
-            {
-              title: "Division",
-              dataIndex: "division",
-              width: 200,
-              sorter: (a, b) => a.division.localeCompare(b.division),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-            },
-            {
-              title: "Manufacture",
-              dataIndex: "manufacture",
-              width: 900,
-              sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-            },
-           
-            {
-              title: "Compt.Material",
-              dataIndex: "comptMaterial",
-              width: 150,
-              sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-            },
+              },
           );
           const sizeHeaders = new Set<string>();
           orderData?.forEach((rec) =>
@@ -458,33 +382,33 @@ import { Excel } from "antd-table-saveas-excel";
                       }
                   }
               },
-              {
-                title: 'label',
-                dataIndex: '',
-                key: '',
-                width: 70,
-                className: "center",
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                        if (sizeData.size !== null) {
-                          const formattedQty = (sizeData?.label) ? (sizeData?.label) :"-"
-                            // const formattedQty = (sizeData?.amount)
-                            return (
-                                formattedQty
-                            );
-                        } else {
+            //   {
+            //     title: 'label',
+            //     dataIndex: '',
+            //     key: '',
+            //     width: 70,
+            //     className: "center",
+            //     render: (text, record) => {
+            //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //         console.log()
+            //         if (sizeData) {
+            //             if (sizeData.size !== null) {
+            //               const formattedQty = (sizeData?.label) ? (sizeData?.label) :"-"
+            //                 // const formattedQty = (sizeData?.amount)
+            //                 return (
+            //                     formattedQty
+            //                 );
+            //             } else {
 
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
-                }
-            },
+            //                 return (
+            //                     '-'
+            //                 );
+            //             }
+            //         } else {
+            //             return '-';
+            //         }
+            //     }
+            // },
             
                   {
                       title: 'FOB Price',
@@ -567,88 +491,14 @@ import { Excel } from "antd-table-saveas-excel";
                         }
                     }
                 },
-                {
-                  title: 'Ex-factory Date ',
-                  dataIndex: '',
-                  key: '',
-                  width: 150,
-                  className: "center",
-                  render: (text, record) => {
-                      const sizeData = record.sizeWiseData.find(item => item.size === version);
-                      console.log()
-                      if (sizeData) {
-                          if (sizeData.size !== null) {
-                              const formattedQty = (sizeData?.exfactory) ? (sizeData?.exfactory) :'-'
-                              return (
-                                  formattedQty
-                              );
-                          } else {
-
-                              return (
-                                  '-'
-                              );
-                          }
-                      } else {
-                          return '-';
-                      }
-                  }
-              },
-              {
-                title: 'Export Date ',
-                dataIndex: '',
-                key: '',
-                width: 150,
-                className: "center",
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                        if (sizeData.size !== null) {
-                            const formattedQty = (sizeData?.exportDate) ? (sizeData?.exportDate) :"-"
-                            return (
-                                formattedQty
-                            );
-                        } else {
-
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
-                }
-            },
-            {
-              title: 'Delivery Date',
-              dataIndex: '',
-              key: '',
-              width: 150,
-              className: "center",
-              render: (text, record) => {
-                  const sizeData = record.sizeWiseData.find(item => item.size === version);
-                  console.log()
-                  if (sizeData) {
-                      if (sizeData.size !== null) {
-                          const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) :"-"
-                          return (
-                              formattedQty
-                          );
-                      } else {
-
-                          return (
-                              '-'
-                          );
-                      }
-                  } else {
-                      return '-';
-                  }
-              }
-          },
+                
+              
+          
               ]
           });
       })
       excelColumnsWH.push(
+     
         {
           title: "Total Quantity",
           dataIndex: "",
@@ -663,26 +513,107 @@ import { Excel } from "antd-table-saveas-excel";
             return sum;
           },
         },
+        {
+          title: "Special Instructions",
+          dataIndex: "specialInstructions",
+          width: 400,
+          render: (text) => (  text ? text: "-"),
+
+        },
+        {
+          title: "PPK UPC",
+          dataIndex: "ppkUpc",
+          width: 110,
+          render: (text) => text ? text : "-",
+         
+        },
+        {
+          title: "Ship to Address",
+          dataIndex: "shipToAddress",
+          width: 400,
+          render: (text) => (  text ? text: "-"),
+
+        },
+        {
+          title: "PO Date",
+          dataIndex: "PODate",
+          align: "center",
+          width: 90,
+          render: (text) => text ? text : "-"
+        },
+           
+        {
+            title: "Ex-factory Date",
+            dataIndex: "exFactoryDate",
+            align: "center",
+            width: 90,
+            render: (text) => (  text ? text: "-"),
+
+          },
+        {
+            title: "Export Date",
+            dataIndex: "exPortDate",
+            align: "center",
+            width: 90,
+            render: (text) => (  text ? text: "-"),
+
+          },
+        {
+            title: "Delivery Date",
+            dataIndex: "deliveryDate",
+            align: "center",
+            width: 90,
+            render: (text) => (  text ? text: "-"),
+            
+          },
+        
        
         {
           title: "Incoterm",
           dataIndex: "incoterm",
-          align: "center",
-          width: 500,
+          width: 400,
           sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
           sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('incoterm'),
+          render: (text) => (  text ? text: "-"),
         },
 
-   
-
         {
-            title: "Ship to Address",
-            dataIndex: "shipToAddress",
-            align: "center",
-            width: 800,
-            sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-            sortDirections: ["ascend", "descend"],
-          },
+          title: "Port Of Export",
+          dataIndex: "portOfExport",
+          align: "center",
+          width: 90,
+          render: (text) => text ? text : "-",
+
+        },
+        {
+          title: "Port of Entry Name",
+          dataIndex: "portOfEntry",
+          align: "center",
+          width: 200,
+          render: (text) => text ? text : "-",
+
+        },
+       
+       
+        {
+          title: "Payment Terms Description",
+          dataIndex: "paymentTermDescription",
+          align: "center",
+          width: 150,
+          render: (text) => text ? text : "-",
+          
+
+        },
+        {
+          title: "Vendor Booking Flag",
+          dataIndex: "vendorFlag",
+          align: "center",
+          width: 90,
+          sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+        },
       
       );
 
