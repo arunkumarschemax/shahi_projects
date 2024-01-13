@@ -76,6 +76,8 @@ export class CentricService {
           entity.ppkupc = item.ppkupc
           entity.currency = item.currency
           entity.totalQuantity = item.totalQuantity
+          entity.style = item.style
+          entity.poType = item.poType
 
           entity.size = variant.size
           entity.upc = variant.upc
@@ -157,6 +159,7 @@ export class CentricService {
               ppkupc: item.ppkupc,
               currency: item.currency,
               totalQuantity: item.totalQuantity,
+              style: item.style,
 
               upc: variant.upc,
               label: variant.label,

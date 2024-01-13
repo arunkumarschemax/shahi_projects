@@ -141,7 +141,18 @@ export class CentricEntity {
     })
     totalQuantity: string
 
+    
+    @Column('varchar', {
+        name: "style",
+        
+    })
+    style: string
 
+    @Column('varchar', {
+        name: "po_type",
+        
+    })
+    poType: string
 
 
     @Column('varchar', {
