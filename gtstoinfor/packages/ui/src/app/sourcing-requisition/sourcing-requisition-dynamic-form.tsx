@@ -147,9 +147,22 @@ export const SourcingRequisitionDynamicForm = () => {
     const getM3TrimsTypes = (request) => {
         m3Service.getM3TrimsByBuyer(request).then(res => {
             if(res.status) {
+             const m3itemIds = [];
+            const  trimId =trimForm.getFieldValue('trimCode')
+                if(trimId != undefined){
+                   res.data.forEach((item) => {
+                       m3itemIds.push(item.m3TrimsId);
+                     });
+                     if(m3itemIds.includes(trimId)){
+                     console.log('#')
+                     }else{
+                       trimForm.resetFields(['trimCode'])
+                     }
+                 }
                 setM3Trims(res.data)
             }else{
                 setM3Trims([])
+                trimForm.resetFields(['trimCode'])
                 message.info('No Data Found')
             }
         })
@@ -333,21 +346,24 @@ export const SourcingRequisitionDynamicForm = () => {
          }     
         m3ItemsService.getM3FabricsByBuyer(req).then(res => {
             if(res.status){
-            //  fabItemId =fabricForm.getFieldValue('m3FabricCode')
-            //  if(fabItemId != undefined){
-            //     const idExist = res.data.some(item => item.m3ItemsId === fabItemId)
-            //       if(idExist == true){
-            //           fabricForm.setFieldsValue({m3FabricCode:undefined})
-            //       }    
-            //   }
+             const m3itemIds = [];
+             fabItemId =fabricForm.getFieldValue('m3FabricCode')
+             if(fabItemId != undefined){
+                res.data.forEach((item) => {
+                    m3itemIds.push(item.m3ItemsId);
+                  });
+                  if(m3itemIds.includes(fabItemId)){
+                  console.log('#')
+                  }else{
+                    fabricForm.resetFields(['m3FabricCode'])
+                  }
+              }
                 setFabricM3Code(res.data)
                
             }
             else{
                 setFabricM3Code([])
-                // if(fabItemId != undefined){
-                //     fabricForm.resetFields(['m3FabricCode'])
-                // }
+                    fabricForm.resetFields(['m3FabricCode'])
                 message.info('No M3 Fabric Data Found')
             }
         })
