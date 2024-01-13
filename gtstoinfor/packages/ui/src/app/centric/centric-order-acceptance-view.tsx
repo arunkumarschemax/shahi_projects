@@ -99,7 +99,7 @@ export function CentricOrderAcceptanceGrid() {
     req.itemNo = itemNoValue;
     req.buyer = 'Centric';
     req.deliveryDate = record.deliveryDate;
-    req.material = record.material;
+    req.style = record.style;
 
     service.coLineCreationReq(req).then((res) => {
       if (res.status) {
@@ -117,7 +117,7 @@ export function CentricOrderAcceptanceGrid() {
     const dataTobeReturned = [];
     const roleWiseMapData = new Map<string, CentricOrderAcceptanceRequest[]>();
     tableData.forEach(rec => {
-      const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}_${rec.material}`;
+      const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}_${rec.style}`;
       if (!roleWiseMapData.has(key)) {
         roleWiseMapData.set(key, [rec]);
       } else {
@@ -305,10 +305,10 @@ export function CentricOrderAcceptanceGrid() {
       },
       {
         title: "Material",
-        dataIndex: "material",
+        dataIndex: "style",
         width: 90,
         render: (text) => text ? text : "-",
-        // ...getColumnSearchProps('material')
+        // ...getColumnSearchProps('style')
       },
       {
         title: "PO Date",

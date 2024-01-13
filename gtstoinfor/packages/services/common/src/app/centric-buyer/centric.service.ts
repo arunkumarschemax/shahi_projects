@@ -302,7 +302,7 @@ export class CentricService {
         return new CommonResponseModel(false, 0, 'Please enter Item No')
       };
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
-      const records = await this.Repo.find({ where: { poNumber: req.poNumber, deliveryDate: req.deliveryDate, material: req.material } });
+      const records = await this.Repo.find({ where: { poNumber: req.poNumber, deliveryDate: req.deliveryDate, style: req.style } });
       const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
       const empty = [];
       const entity = new CentricCOLineEntity()
@@ -312,14 +312,14 @@ export class CentricService {
       entity.itemNo = req?.itemNo;
       entity.status = 'Open';
       entity.deliveryDate = req.deliveryDate;
-      entity.material = req.material
+      entity.style = req.style
       entity.createdUser = req.createdUser;
       empty.push(entity)
       const save = await this.coLineRepo.save(empty);
 
       if (save) {
         const update = await this.Repo.update(
-          { poNumber: req.poNumber, deliveryDate: req.deliveryDate, material: req.material }, // Conditions for updating
+          { poNumber: req.poNumber, deliveryDate: req.deliveryDate, style: req.style }, // Conditions for updating
           { status: StatusEnum.INPROGRESS } // Data to update
         );
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
@@ -630,7 +630,7 @@ export class CentricService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number}`,
-            new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status)
+            new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status, "",rec.style)
           );
 
           // console.log(sizeDateMap,)

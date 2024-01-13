@@ -59,7 +59,7 @@ export class CentricOrderDataModel {
     ppkUpc?:string
     status?:string
     currency?:string
-
+    style?:string
     constructor(
         id: number,
 
@@ -119,7 +119,8 @@ export class CentricOrderDataModel {
         ratio?:number,
         ppkUpc?:string,
         status?:string,
-        currency?:string
+        currency?:string,
+        style?:string,
     ) {
         this.id = id
         this.poNumber = poNumber
@@ -158,6 +159,7 @@ export class CentricOrderDataModel {
         this.ppkUpc = ppkUpc
         this.status = status
         this.currency = currency
+        this.style=style
     }
 }
 

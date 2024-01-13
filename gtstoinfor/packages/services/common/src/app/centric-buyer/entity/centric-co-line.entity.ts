@@ -30,7 +30,7 @@ export class CentricCOLineEntity {
     @Column('varchar', {
         name: "material"
     })
-    material: string
+    style: string
 
     @Column('varchar', {
         nullable: true,
