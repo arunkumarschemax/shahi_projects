@@ -304,6 +304,7 @@ export class CentricService {
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
       const records = await this.Repo.find({ where: { poNumber: req.poNumber, deliveryDate: req.deliveryDate, style: req.style } });
       const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
+      const uniqueMaterials = [...new Set(records.map((rec) => rec.material))];
       const empty = [];
       const entity = new CentricCOLineEntity()
       entity.buyer = req.buyer
@@ -313,6 +314,7 @@ export class CentricService {
       entity.status = 'Open';
       entity.deliveryDate = req.deliveryDate;
       entity.style = req.style
+      entity.material=uniqueMaterials.join(',')
       entity.createdUser = req.createdUser;
       empty.push(entity)
       const save = await this.coLineRepo.save(empty);

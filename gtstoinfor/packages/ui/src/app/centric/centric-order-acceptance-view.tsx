@@ -100,6 +100,7 @@ export function CentricOrderAcceptanceGrid() {
     req.buyer = 'Centric';
     req.deliveryDate = record.deliveryDate;
     req.style = record.style;
+    req.material=record.material
 
     service.coLineCreationReq(req).then((res) => {
       if (res.status) {
@@ -305,10 +306,17 @@ export function CentricOrderAcceptanceGrid() {
       },
       {
         title: "Material",
+        dataIndex: "material",
+        width: 150,
+        render: (text) => text ? text : "-",
+        // ...getColumnSearchProps('material')
+      },
+      {
+        title: "Style Number",
         dataIndex: "style",
         width: 90,
         render: (text) => text ? text : "-",
-        // ...getColumnSearchProps('style')
+        // ...getColumnSearchProps('material')
       },
       {
         title: "PO Date",

@@ -6,4 +6,5 @@ export class CentricOrderAcceptanceRequest {
     buyer: string;
     deliveryDate:string;
     style:string;
+    material:string;
 }
