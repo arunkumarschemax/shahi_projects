@@ -170,184 +170,114 @@ import RangePicker from "rc-picker/lib/RangePicker";
               }
             },
             {
-              title: "PO Date",
-              dataIndex: "PODate",
-              align: "center",
+              title: "Season",
+              dataIndex: "season",
               width: 90,
-              sorter: (a, b) => a.PODate.localeCompare(b.PODate),
-              sortDirections: ["ascend", "descend"],
               render: (text) => text ? text : "-"
             },
             {
               title: "Shipment Method",
               dataIndex: "shipmentMethod",
               width: 90,
-              sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
+              render: (text) => text ? text : "-",
+              
     
+            },
+            {
+              title: "Division",
+              dataIndex: "division",
+              width: 150,
+              render: (text) => text ? text : "-",
+              
+              
+            },
+            {
+              title: "Manufacture",
+              dataIndex: "manufacture",
+              width: 500,
+              render: (text) => (
+                
+                  text ? text : "-"
+                
+              ),
             },
             {
               title: "PO Number",
               dataIndex: "poNumber",
               width: 90,
-              sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
     
-              // fixed: "left",
-              // ...getColumnSearchProps('poNumber')
+              render: (text) => text ? text : "-",
+    
+          
             },
+           
             {
                 title: "PO Line Number",
                 dataIndex: "poLine",
                 width: 90,
-                sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
-                // fixed: "left",
+                render: (text) => text ? text : "-",
+      
+
               },
               {
                 title: "Material",
                 dataIndex: "material",
-                width: 150,
-                sorter: (a, b) => a.material.localeCompare(b.material),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                width: 200,
+                render: (text) => text ? text : "-",
+          
               },
-              // {
-              //   title: "PPK UPC",
-              //   dataIndex: "ppkUpc",
-              //   width: 150,
-              //   sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
-              //   sortDirections: ["ascend", "descend"],
-              //   render: (text) => text ? text : "-"
-              // },
               {
-                title: "Color",
-                dataIndex: "color",
+                title: "Compt.Material",
+                dataIndex: "comptMaterial",
                 width: 150,
-                sorter: (a, b) => a.color.localeCompare(b.color),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                render: (text) => text ? text : "-",
+              
+      
               },
               {
                 title: "Gender",
                 dataIndex: "gender",
-                width: 150,
-                sorter: (a, b) => a.gender.localeCompare(b.gender),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                width: 90,
+                render: (text) => text ? text : "-",
+              
+    
               },
               {
                 title: "Short Description",
                 dataIndex: "shortDescription",
-                width: 200,
-                sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                width:300,
+                render: (text) => text ? text : "-",
               },
               {
-                title: "Pack Method",
-                dataIndex: "packMethod",
+                title: "Color",
+                dataIndex: "color",
                 width: 200,
-                sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                render: (text) => text ? text : "-",
+                
               },
               {
-                title: "Vendor Booking Flag",
-                dataIndex: "vendorFlag",
-                align: "center",
+                title: "Label",
+                dataIndex: "label",
                 width: 90,
-                sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                render: (text) => text ? text : "-",
+            
+                
               },
-           
-             
-              {
-                title: "Season",
-                dataIndex: "season",
-                width: 90,
-                sorter: (a, b) => a.season.localeCompare(b.season),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
-              },
-              {
-                title: "Port Of Export",
-                dataIndex: "portOfExport",
-                align: "center",
-                width: 200,
-                sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
-              },
-              {
-                title: "Port of Entry Name",
-                dataIndex: "portOfEntry",
-                align: "center",
-                width: 200,
-                sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
-              },
-                  
               {
                 title: "Reference",
                 dataIndex: "reference",
                 width: 90,
-                sorter: (a, b) => a.reference.localeCompare(b.reference),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
+                render: (text) => text ? text : "-",
+            
+    
               },
               {
-                title: "Payment Terms Description",
-                dataIndex: "paymentTermDescription",
-                align: "center",
-                width: 200,
-                sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
-              },
-    
-              {
-                title: "Special Instructions",
-                dataIndex: "specialInstructions",
-                align: "center",
-                width: 900,
-                sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
-                sortDirections: ["ascend", "descend"],
-                render: (text) => text ? text : "-"
-              },
-    
+                title: "Pack Method",
+                dataIndex: "packMethod",
+                width: 300,
+                render: (text) => text ? text : "-",
              
-             
-            {
-              title: "Division",
-              dataIndex: "division",
-              width: 200,
-              sorter: (a, b) => a.division.localeCompare(b.division),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-            },
-            {
-              title: "Manufacture",
-              dataIndex: "manufacture",
-              width: 900,
-              sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-            },
-           
-            {
-              title: "Compt.Material",
-              dataIndex: "comptMaterial",
-              width: 150,
-              sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
-              sortDirections: ["ascend", "descend"],
-              render: (text) => text ? text : "-"
-            },
+              },
           );
           const sizeHeaders = new Set<string>();
           orderData?.forEach((rec) =>
@@ -529,84 +459,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
                         }
                     }
                 },
-                {
-                  title: 'Ex-factory Date ',
-                  dataIndex: '',
-                  key: '',
-                  width: 150,
-                  className: "center",
-                  render: (text, record) => {
-                      const sizeData = record.sizeWiseData.find(item => item.size === version);
-                      console.log()
-                      if (sizeData) {
-                          if (sizeData.size !== null) {
-                              const formattedQty = (sizeData?.exfactory) ? (sizeData?.exfactory) :'-'
-                              return (
-                                  formattedQty
-                              );
-                          } else {
-
-                              return (
-                                  '-'
-                              );
-                          }
-                      } else {
-                          return '-';
-                      }
-                  }
-              },
-              {
-                title: 'Export Date ',
-                dataIndex: '',
-                key: '',
-                width: 150,
-                className: "center",
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                        if (sizeData.size !== null) {
-                            const formattedQty = (sizeData?.exportDate) ? (sizeData?.exportDate) :"-"
-                            return (
-                                formattedQty
-                            );
-                        } else {
-
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
-                }
-            },
-            {
-              title: 'Delivery Date',
-              dataIndex: '',
-              key: '',
-              width: 150,
-              className: "center",
-              render: (text, record) => {
-                  const sizeData = record.sizeWiseData.find(item => item.size === version);
-                  console.log()
-                  if (sizeData) {
-                      if (sizeData.size !== null) {
-                          const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) :"-"
-                          return (
-                              formattedQty
-                          );
-                      } else {
-
-                          return (
-                              '-'
-                          );
-                      }
-                  } else {
-                      return '-';
-                  }
-              }
-          },
+                
               ]
           });
       })
@@ -627,28 +480,102 @@ import RangePicker from "rc-picker/lib/RangePicker";
         },
        
         {
+          title: "Special Instructions",
+          dataIndex: "specialInstructions",
+          width: 400,
+          render: (text) => (  text ? text: "-"),
+
+        },
+        {
+          title: "PO Date",
+          dataIndex: "PODate",
+          align: "center",
+          width: 90,
+          render: (text) => text ? text : "-"
+        },
+           
+        {
+            title: "Ex-factory Date",
+            dataIndex: "exFactoryDate",
+            align: "center",
+            width: 90,
+            render: (text) => (  text ? text: "-"),
+
+          },
+        {
+            title: "Export Date",
+            dataIndex: "exPortDate",
+            align: "center",
+            width: 90,
+            render: (text) => (  text ? text: "-"),
+
+          },
+        {
+            title: "Delivery Date",
+            dataIndex: "deliveryDate",
+            align: "center",
+            width: 90,
+            render: (text) => (  text ? text: "-"),
+            
+          },
+        
+       
+        {
           title: "Incoterm",
           dataIndex: "incoterm",
-          align: "center",
-          width: 500,
+          width: 400,
           sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
           sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('incoterm'),
+          render: (text) => (  text ? text: "-"),
         },
 
-   
-
         {
-            title: "Ship to Address",
-            dataIndex: "shipToAddress",
-            align: "center",
-            width: 800,
-            sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-            sortDirections: ["ascend", "descend"],
-          },
+          title: "Port Of Export",
+          dataIndex: "portOfExport",
+          align: "center",
+          width: 90,
+          render: (text) => text ? text : "-",
+
+        },
+        {
+          title: "Port of Entry Name",
+          dataIndex: "portOfEntry",
+          align: "center",
+          width: 200,
+          render: (text) => text ? text : "-",
+
+        },
+       
+       
+        {
+          title: "Payment Terms Description",
+          dataIndex: "paymentTermDescription",
+          align: "center",
+          width: 150,
+          render: (text) => text ? text : "-",
+          
+
+        },
+        {
+          title: "Vendor Booking Flag",
+          dataIndex: "vendorFlag",
+          align: "center",
+          width: 90,
+          sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+        },
+        {
+          title: "Ship to Address",
+          dataIndex: "shipToAddress",
+          width: 400,
+          render: (text) => (  text ? text: "-"),
+
+        },
       
       );
 
-       
     
             excel
               .addSheet(`Solid Pack PO Report ${formattedDate}`)
@@ -656,7 +583,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
               .addDataSource(filterData, { str2num: false });
 
      
-        excel.saveAs(`Solid Pack PO Report ${formattedDate}.xlsx`);
+         excel.saveAs(`Solid Pack PO Report ${formattedDate}.xlsx`);
       
     
 
@@ -818,22 +745,10 @@ import RangePicker from "rc-picker/lib/RangePicker";
           fixed: "left",
         },
         {
-          title: "PO Number",
-          dataIndex: "poNumber",
+          title: "Season",
+          dataIndex: "season",
           width: 90,
-          sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-
-          fixed: "left",
-          // ...getColumnSearchProps('poNumber')
-        },
-        {
-          title: "PO Date",
-          dataIndex: "PODate",
-          align: "center",
-          width: 90,
-          sorter: (a, b) => a.PODate.localeCompare(b.PODate),
+          sorter: (a, b) => a.season.localeCompare(b.season),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-"
         },
@@ -847,7 +762,41 @@ import RangePicker from "rc-picker/lib/RangePicker";
           ...getColumnSearchProps('shipmentMethod')
 
         },
-  
+        {
+          title: "Division",
+          dataIndex: "division",
+          width: 150,
+          sorter: (a, b) => a.division.localeCompare(b.division),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('division')
+          
+        },
+        {
+          title: "Manufacture",
+          dataIndex: "manufacture",
+          width: 150,
+          sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('manufacture'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+        },
+        {
+          title: "PO Number",
+          dataIndex: "poNumber",
+          width: 90,
+          sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+
+          // fixed: "left",
+          // ...getColumnSearchProps('poNumber')
+        },
+       
         {
             title: "PO Line Number",
             dataIndex: "poLine",
@@ -867,22 +816,15 @@ import RangePicker from "rc-picker/lib/RangePicker";
             render: (text) => text ? text : "-",
             ...getColumnSearchProps('material')
           },
-          // {
-          //   title: "PPK UPC",
-          //   dataIndex: "ppkUpc",
-          //   width: 90,
-          //   sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
-          //   sortDirections: ["ascend", "descend"],
-          //   render: (text) => text ? text : "-"
-          // },
           {
-            title: "Color",
-            dataIndex: "color",
-            width: 90,
-            sorter: (a, b) => a.color.localeCompare(b.color),
-            sortDirections: ["ascend", "descend"],
+            title: "Compt.Material",
+            dataIndex: "comptMaterial",
+            width: 150,
+            // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
+            // sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
-            ...getColumnSearchProps('color')
+            ...getColumnSearchProps('comptMaterial')
+  
           },
           {
             title: "Gender",
@@ -892,15 +834,46 @@ import RangePicker from "rc-picker/lib/RangePicker";
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
             ...getColumnSearchProps('gender')
+
           },
           {
             title: "Short Description",
             dataIndex: "shortDescription",
-            width: 130,
+            width:130,
             sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
             ...getColumnSearchProps('shortDescription')
+          },
+          {
+            title: "Color",
+            dataIndex: "color",
+            width: 110,
+            sorter: (a, b) => a.color.localeCompare(b.color),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('color')
+            
+          },
+          {
+            title: "Label",
+            dataIndex: "label",
+            width: 90,
+            sorter: (a, b) => a.label.localeCompare(b.label),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('label')
+            
+          },
+          {
+            title: "Reference",
+            dataIndex: "reference",
+            width: 90,
+            sorter: (a, b) => a.reference.localeCompare(b.reference),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('reference')
+
           },
           {
             title: "Pack Method",
@@ -910,137 +883,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
             ...getColumnSearchProps('packMethod')
-          },
-          {
-            title: "Vendor Booking Flag",
-            dataIndex: "vendorFlag",
-            align: "center",
-            width: 90,
-            sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
-          },
-       
-         
-          {
-            title: "Season",
-            dataIndex: "season",
-            width: 90,
-            sorter: (a, b) => a.season.localeCompare(b.season),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
-          },
-          {
-            title: "Port Of Export",
-            dataIndex: "portOfExport",
-            align: "center",
-            width: 90,
-            sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-",
-            ...getColumnSearchProps('portOfExport')
-          },
-          {
-            title: "Port of Entry Name",
-            dataIndex: "portOfEntry",
-            align: "center",
-            width: 200,
-            sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-",
-            ...getColumnSearchProps('portOfEntry')
-          },
-              
-          {
-            title: "Reference",
-            dataIndex: "reference",
-            width: 90,
-            sorter: (a, b) => a.reference.localeCompare(b.reference),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-",
-            ...getColumnSearchProps('reference')
-          },
-          {
-            title: "Payment Terms Description",
-            dataIndex: "paymentTermDescription",
-            align: "center",
-            width: 150,
-            sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-",
-            ...getColumnSearchProps('paymentTermDescription')
-          },
-
-          // {
-          //   title: "Special Instructions",
-          //   dataIndex: "specialInstructions",
-          //   align: "center",
-          //   width: 200,
-          //   sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
-          //   sortDirections: ["ascend", "descend"],
-          //   render: (text) => text ? text : "-",
-          //   ...getColumnSearchProps('specialInstructions')
-          // },
-          {
-            title: "Special Instructions",
-            dataIndex: "specialInstructions",
-            width: 150,
-            sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
-            sortDirections: ["ascend", "descend"],
-            ...getColumnSearchProps('specialInstructions'),
-            render: (text) => (
-              <Tooltip title={text || "-"}>
-                {text ? `${text.substring(0, 20)}...` : "-"}
-              </Tooltip>
-            ),
-          },
-
-         
-         
-        {
-          title: "Division",
-          dataIndex: "division",
-          width: 150,
-          sorter: (a, b) => a.division.localeCompare(b.division),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-          ...getColumnSearchProps('division')
-        },
-        // {
-        //   title: "Manufacture",
-        //   dataIndex: "manufacture",
-        //   width: 500,
-        //   sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
-        //   sortDirections: ["ascend", "descend"],
-        //   render: (text) => text ? text : "-",
-        //   ...getColumnSearchProps('manufacture')
-        // },
-        {
-          title: "Manufacture",
-          dataIndex: "manufacture",
-          width: 150,
-          sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
-          sortDirections: ["ascend", "descend"],
-          ...getColumnSearchProps('manufacture'),
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}...` : "-"}
-            </Tooltip>
-          ),
-        },
-       
-        {
-          title: "Compt.Material",
-          dataIndex: "comptMaterial",
-          width: 110,
-          // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-          ...getColumnSearchProps('comptMaterial')
-        },
-       
-  
-         
+          },   
 
        
       ];
@@ -1107,33 +950,33 @@ import RangePicker from "rc-picker/lib/RangePicker";
                       }
                   }
               },
-              {
-                title: 'label',
-                dataIndex: '',
-                key: '',
-                width: 70,
-                className: "center",
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                        if (sizeData.size !== null) {
-                          const formattedQty = (sizeData?.label) ? (sizeData?.label) :"-"
-                            // const formattedQty = (sizeData?.amount)
-                            return (
-                                formattedQty
-                            );
-                        } else {
+            //   {
+            //     title: 'label',
+            //     dataIndex: '',
+            //     key: '',
+            //     width: 70,
+            //     className: "center",
+            //     render: (text, record) => {
+            //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //         console.log()
+            //         if (sizeData) {
+            //             if (sizeData.size !== null) {
+            //               const formattedQty = (sizeData?.label) ? (sizeData?.label) :"-"
+            //                 // const formattedQty = (sizeData?.amount)
+            //                 return (
+            //                     formattedQty
+            //                 );
+            //             } else {
 
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
-                }
-            },
+            //                 return (
+            //                     '-'
+            //                 );
+            //             }
+            //         } else {
+            //             return '-';
+            //         }
+            //     }
+            // },
             
                   {
                       title: 'FOB Price',
@@ -1216,116 +1059,90 @@ import RangePicker from "rc-picker/lib/RangePicker";
                         }
                     }
                 },
-                {
-                  title: 'Ex-factory Date ',
-                  dataIndex: '',
-                  key: '',
-                  width: 100,
-                  className: "center",
-                  render: (text, record) => {
-                      const sizeData = record.sizeWiseData.find(item => item.size === version);
-                      console.log()
-                      if (sizeData) {
-                          if (sizeData.size !== null) {
-                              const formattedQty = (sizeData?.exfactory) ? (sizeData?.exfactory) :'-'
-                              return (
-                                  formattedQty
-                              );
-                          } else {
+          //       {
+          //         title: 'Ex-factory Date ',
+          //         dataIndex: '',
+          //         key: '',
+          //         width: 100,
+          //         className: "center",
+          //         render: (text, record) => {
+          //             const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //             console.log()
+          //             if (sizeData) {
+          //                 if (sizeData.size !== null) {
+          //                     const formattedQty = (sizeData?.exfactory) ? (sizeData?.exfactory) :'-'
+          //                     return (
+          //                         formattedQty
+          //                     );
+          //                 } else {
 
-                              return (
-                                  '-'
-                              );
-                          }
-                      } else {
-                          return '-';
-                      }
-                  }
-              },
-              {
-                title: 'Export Date ',
-                dataIndex: '',
-                key: '',
-                width: 100,
-                className: "center",
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                        if (sizeData.size !== null) {
-                            const formattedQty = (sizeData?.exportDate) ? (sizeData?.exportDate) :"-"
-                            return (
-                                formattedQty
-                            );
-                        } else {
+          //                     return (
+          //                         '-'
+          //                     );
+          //                 }
+          //             } else {
+          //                 return '-';
+          //             }
+          //         }
+          //     },
+          //     {
+          //       title: 'Export Date ',
+          //       dataIndex: '',
+          //       key: '',
+          //       width: 100,
+          //       className: "center",
+          //       render: (text, record) => {
+          //           const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //           console.log()
+          //           if (sizeData) {
+          //               if (sizeData.size !== null) {
+          //                   const formattedQty = (sizeData?.exportDate) ? (sizeData?.exportDate) :"-"
+          //                   return (
+          //                       formattedQty
+          //                   );
+          //               } else {
 
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
-                }
-            },
-            {
-              title: 'Delivery Date',
-              dataIndex: '',
-              key: '',
-              width: 100,
-              className: "center",
-              render: (text, record) => {
-                  const sizeData = record.sizeWiseData.find(item => item.size === version);
-                  console.log()
-                  if (sizeData) {
-                      if (sizeData.size !== null) {
-                          const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) :"-"
-                          return (
-                              formattedQty
-                          );
-                      } else {
+          //                   return (
+          //                       '-'
+          //                   );
+          //               }
+          //           } else {
+          //               return '-';
+          //           }
+          //       }
+          //   },
+          //   {
+          //     title: 'Delivery Date',
+          //     dataIndex: '',
+          //     key: '',
+          //     width: 100,
+          //     className: "center",
+          //     render: (text, record) => {
+          //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //         console.log()
+          //         if (sizeData) {
+          //             if (sizeData.size !== null) {
+          //                 const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) :"-"
+          //                 return (
+          //                     formattedQty
+          //                 );
+          //             } else {
 
-                          return (
-                              '-'
-                          );
-                      }
-                  } else {
-                      return '-';
-                  }
-              }
-          },
+          //                 return (
+          //                     '-'
+          //                 );
+          //             }
+          //         } else {
+          //             return '-';
+          //         }
+          //     }
+          // },
               ]
           });
       })
   
       columns.push(
-        
-    
-        // {
-        //     title: "Ex-factory Date",
-        //     dataIndex: "exFactoryDate",
-        //     align: "center",
-        //     width: 90,
-        //     sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
-        //     sortDirections: ["ascend", "descend"],
-        //   },
-        // {
-        //     title: "Export Date",
-        //     dataIndex: "exPortDate",
-        //     align: "center",
-        //     width: 90,
-        //     sorter: (a, b) => a.exPortDate.localeCompare(b.exPortDate),
-        //     sortDirections: ["ascend", "descend"],
-        //   },
-        // {
-        //     title: "Delivery Date",
-        //     dataIndex: "deliveryDate",
-        //     align: "center",
-        //     width: 90,
-        //     sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
-        //     sortDirections: ["ascend", "descend"],
-        //   },
-          {
+        {
           title: "Total Quantity",
           dataIndex: "",
           align: "right",
@@ -1339,17 +1156,43 @@ import RangePicker from "rc-picker/lib/RangePicker";
             return sum;
           },
         },
+        
+        {
+          title: "PO Date",
+          dataIndex: "PODate",
+          align: "center",
+          width: 90,
+          sorter: (a, b) => a.PODate.localeCompare(b.PODate),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+        },
+           
+        {
+            title: "Ex-factory Date",
+            dataIndex: "exFactoryDate",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
+            sortDirections: ["ascend", "descend"],
+          },
+        {
+            title: "Export Date",
+            dataIndex: "exPortDate",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.exPortDate.localeCompare(b.exPortDate),
+            sortDirections: ["ascend", "descend"],
+          },
+        {
+            title: "Delivery Date",
+            dataIndex: "deliveryDate",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
+            sortDirections: ["ascend", "descend"],
+          },
+        
        
-
-        // {
-        //     title: "Incoterm",
-        //     dataIndex: "incoterm",
-        //     align: "center",
-        //     width: 400,
-        //     sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
-        //     sortDirections: ["ascend", "descend"],
-        //     ...getColumnSearchProps('incoterm')
-        //   },
         {
           title: "Incoterm",
           dataIndex: "incoterm",
@@ -1363,30 +1206,64 @@ import RangePicker from "rc-picker/lib/RangePicker";
             </Tooltip>
           ),
         },
-     
 
-          // {
-          //     title: "Ship to Address",
-          //     dataIndex: "shipToAddress",
-          //     align: "center",
-          //     width: 400,
-          //     sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-          //     sortDirections: ["ascend", "descend"],
-          //     ...getColumnSearchProps('shipToAddress')
-          //   },
-          {
-            title: "Ship to Address",
-            dataIndex: "shipToAddress",
-            width: 150,
-            sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-            sortDirections: ["ascend", "descend"],
-            ...getColumnSearchProps('shipToAddress'),
-            render: (text) => (
-              <Tooltip title={text || "-"}>
-                {text ? `${text.substring(0, 20)}...` : "-"}
-              </Tooltip>
-            ),
-          },
+        {
+          title: "Port Of Export",
+          dataIndex: "portOfExport",
+          align: "center",
+          width: 90,
+          sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('portOfExport')
+
+        },
+        {
+          title: "Port of Entry Name",
+          dataIndex: "portOfEntry",
+          align: "center",
+          width: 200,
+          sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('portOfEntry')
+
+        },
+       
+       
+        {
+          title: "Payment Terms Description",
+          dataIndex: "paymentTermDescription",
+          align: "center",
+          width: 150,
+          sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('paymentTermDescription')
+
+        },
+        {
+          title: "Vendor Booking Flag",
+          dataIndex: "vendorFlag",
+          align: "center",
+          width: 90,
+          sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+        },
+        {
+          title: "Ship to Address",
+          dataIndex: "shipToAddress",
+          width: 150,
+          sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('shipToAddress'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+        },
  
     
       );
