@@ -29,7 +29,7 @@ console.log(location?.state?.data)
             title: "S.No",
             key: "sno",
             align:"center",
-             width: 100,
+              width: 40,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
             // fixed: 'left'
         },
@@ -39,7 +39,7 @@ console.log(location?.state?.data)
             title:"Size",
             dataIndex: 'size',
             align:"center",
-            width: 150,
+            width: 30,
             sorter: (a, b) => a.size.localeCompare(b.size),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-"
@@ -50,7 +50,7 @@ console.log(location?.state?.data)
             title: <div style={{textAlign:"center"}}>Unit Price</div>,
 
             dataIndex: 'unitPrice',
-            width: 150,
+            width: 20,
             // align:"center",
             sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
             sortDirections: ["ascend", "descend"],
@@ -62,7 +62,7 @@ console.log(location?.state?.data)
             title: <div style={{textAlign:"center"}}>Quantity</div>,
 
             dataIndex: 'quantity',
-            width: 200,
+            width: 120,
             // align:"center",
             sorter: (a, b) => a.quantity.localeCompare(b.quantity),
             sortDirections: ["ascend", "descend"],
@@ -99,7 +99,7 @@ console.log(location?.state?.data)
 
     return (
         <Card title="Order Details"
-        extra ={<Link to='/hb-athletics/hb-order-data-info-grid' ><Button className='panel_button' >View </Button></Link>}
+        extra ={<Link to='/hb-athletics/hb-order-data-info-grid' ><Button className='panel_button' type="primary" >View </Button></Link>}
         >
         <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }} >
         <Descriptions.Item label='Customer PO' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.custPo ? location?.state?.data?.custPo : "--"}</Descriptions.Item>
@@ -117,6 +117,7 @@ console.log(location?.state?.data)
        
                      <Table
                         size="small"
+                        style={{width:700}}
                         columns={columns}
                         dataSource={location?.state?.data?.sizeWiseData}
                         className="custom-table-wrapper"
@@ -134,7 +135,7 @@ console.log(location?.state?.data)
     
                                 <Table.Summary.Row className="tableFooter">
                                     <Table.Summary.Cell index={0} colSpan={3}>
-                                    <span style={{ textAlign: 'right', paddingRight: 8,marginLeft:500}}>
+                                    <span style={{ textAlign: 'right', paddingRight: 8,marginLeft:300}}>
                                         <b>Total Quantity  :</b>
                                     </span>
                                     </Table.Summary.Cell>
@@ -147,7 +148,7 @@ console.log(location?.state?.data)
                                 </Table.Summary.Row>
                                 <Table.Summary.Row className="tableFooter">
                                     <Table.Summary.Cell index={0} colSpan={3}>
-                                    <span style={{ textAlign: 'right', paddingRight: 8,marginLeft:500}}>
+                                    <span style={{ textAlign: 'right', paddingRight: 8,marginLeft:300}}>
                                         <b>Total Amount  :</b>
                                     </span>
                                     </Table.Summary.Cell>
