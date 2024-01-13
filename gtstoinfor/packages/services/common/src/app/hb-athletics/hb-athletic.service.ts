@@ -798,19 +798,15 @@ export class HbService {
         if (childData.length > 0) {
           const oldData = childData[0];
         
-          if (
-            oldData.unitPrice !== rec.unit_price ||
-            oldData.exitFactoryDate !== rec.exit_factory_date ||
-            oldData.quantity !== rec.quantity
-          ) {
+          // if (
+          //   oldData.unitPrice !== rec.unit_price ||
+          //   oldData.exitFactoryDate !== rec.exit_factory_date ||
+          //   oldData.quantity !== rec.quantity
+          // ) {
         
             compareModel.push(new HbCompareModel(rec.cust_po,rec.style,rec.color,rec.size,oldData.unitPrice,rec.unit_price,oldData.exitFactoryDate,rec.exit_factory_date,oldData.quantity,rec.quantity));
           }
-        } else {
-          const oldData = childData[0];
-
-          compareModel.push(new HbCompareModel(rec.cust_po,rec.style,rec.color,rec.size,oldData.unitPrice,rec.unit_price,oldData.exitFactoryDate,rec.exit_factory_date,oldData.quantity,rec.quantity));
-        }
+        // }
       }
       if (compareModel) {
         return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
