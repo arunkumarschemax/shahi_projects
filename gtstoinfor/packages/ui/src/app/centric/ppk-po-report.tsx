@@ -147,7 +147,7 @@ import { Excel } from "antd-table-saveas-excel";
     }
    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
 
-    service.getorderData(req).then((res) => {
+    service.getCentricorderDataForPPK(req).then((res) => {
       if (res.status) {
         setOrderData(res.data);
         setFilterData(res.data);
@@ -854,23 +854,12 @@ import { Excel } from "antd-table-saveas-excel";
           render: (text, object, index) => (page - 1) * pageSize + (index + 1),
           fixed: "left",
         },
+        
         {
-          title: "PO Number",
-          dataIndex: "poNumber",
+          title: "Season",
+          dataIndex: "season",
           width: 90,
-          sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-
-          fixed: "left",
-          // ...getColumnSearchProps('poNumber')
-        },
-        {
-          title: "PO Date",
-          dataIndex: "PODate",
-          align: "center",
-          width: 90,
-          sorter: (a, b) => a.PODate.localeCompare(b.PODate),
+          sorter: (a, b) => a.season.localeCompare(b.season),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-"
         },
@@ -884,7 +873,41 @@ import { Excel } from "antd-table-saveas-excel";
           ...getColumnSearchProps('shipmentMethod')
 
         },
-  
+        {
+          title: "Division",
+          dataIndex: "division",
+          width: 150,
+          sorter: (a, b) => a.division.localeCompare(b.division),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('division')
+          
+        },
+        {
+          title: "Manufacture",
+          dataIndex: "manufacture",
+          width: 150,
+          sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('manufacture'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+        },
+        {
+          title: "PO Number",
+          dataIndex: "poNumber",
+          width: 90,
+          sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+
+          // fixed: "left",
+          // ...getColumnSearchProps('poNumber')
+        },
+       
         {
             title: "PO Line Number",
             dataIndex: "poLine",
@@ -905,23 +928,14 @@ import { Excel } from "antd-table-saveas-excel";
             ...getColumnSearchProps('material')
           },
           {
-            title: "PPK UPC",
-            dataIndex: "ppkUpc",
-            width: 110,
-            sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
-            sortDirections: ["ascend", "descend"],
+            title: "Compt.Material",
+            dataIndex: "comptMaterial",
+            width: 150,
+            // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
+            // sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
-            ...getColumnSearchProps('ppkUpc')
-          },
-          {
-            title: "Color",
-            dataIndex: "color",
-            width: 90,
-            sorter: (a, b) => a.color.localeCompare(b.color),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-",
-            ...getColumnSearchProps('color')
-            
+            ...getColumnSearchProps('comptMaterial')
+  
           },
           {
             title: "Gender",
@@ -943,56 +957,25 @@ import { Excel } from "antd-table-saveas-excel";
             ...getColumnSearchProps('shortDescription')
           },
           {
-            title: "Pack Method",
-            dataIndex: "packMethod",
-            width: 130,
-            sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
+            title: "Color",
+            dataIndex: "color",
+            width: 90,
+            sorter: (a, b) => a.color.localeCompare(b.color),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
-            ...getColumnSearchProps('packMethod')
+            ...getColumnSearchProps('color')
+            
           },
           {
-            title: "Vendor Booking Flag",
-            dataIndex: "vendorFlag",
-            align: "center",
+            title: "Label",
+            dataIndex: "label",
             width: 90,
-            sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
-          },
-       
-         
-          {
-            title: "Season",
-            dataIndex: "season",
-            width: 90,
-            sorter: (a, b) => a.season.localeCompare(b.season),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
-          },
-          {
-            title: "Port Of Export",
-            dataIndex: "portOfExport",
-            align: "center",
-            width: 90,
-            sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
+            sorter: (a, b) => a.label.localeCompare(b.label),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
-            ...getColumnSearchProps('portOfExport')
-
+            ...getColumnSearchProps('label')
+            
           },
-          {
-            title: "Port of Entry Name",
-            dataIndex: "portOfEntry",
-            align: "center",
-            width: 200,
-            sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-",
-            ...getColumnSearchProps('portOfEntry')
-
-          },
-              
           {
             title: "Reference",
             dataIndex: "reference",
@@ -1004,91 +987,16 @@ import { Excel } from "antd-table-saveas-excel";
 
           },
           {
-            title: "Payment Terms Description",
-            dataIndex: "paymentTermDescription",
-            align: "center",
-            width: 150,
-            sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
+            title: "Pack Method",
+            dataIndex: "packMethod",
+            width: 130,
+            sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
-            ...getColumnSearchProps('paymentTermDescription')
-
+            ...getColumnSearchProps('packMethod')
           },
-
-          // {
-          //   title: "Special Instructions",
-          //   dataIndex: "specialInstructions",
-          //   align: "center",
-          //   width: 200,
-          //   sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
-          //   sortDirections: ["ascend", "descend"],
-          //   render: (text) => text ? text : "-",
-          //   ...getColumnSearchProps('specialInstructions')
-
-          // }
-          {
-          title: "Special Instructions",
-          dataIndex: "specialInstructions",
-          width: 150,
-          sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
-          sortDirections: ["ascend", "descend"],
-          ...getColumnSearchProps('specialInstructions'),
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}...` : "-"}
-            </Tooltip>
-          ),
-        },
-
-         
-         
-        {
-          title: "Division",
-          dataIndex: "division",
-          width: 150,
-          sorter: (a, b) => a.division.localeCompare(b.division),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-          ...getColumnSearchProps('division')
+        
           
-        },
-        // {
-        //   title: "Manufacture",
-        //   dataIndex: "manufacture",
-        //   width: 500,
-        //   sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
-        //   sortDirections: ["ascend", "descend"],
-        //   render: (text) => text ? text : "-",
-        //   ...getColumnSearchProps('manufacture')
-
-        // },
-        {
-          title: "Manufacture",
-          dataIndex: "manufacture",
-          width: 150,
-          sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
-          sortDirections: ["ascend", "descend"],
-          ...getColumnSearchProps('manufacture'),
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}...` : "-"}
-            </Tooltip>
-          ),
-        },
-       
-        {
-          title: "Compt.Material",
-          dataIndex: "comptMaterial",
-          width: 150,
-          // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-          ...getColumnSearchProps('comptMaterial')
-
-        },
-       
-  
-         
 
        
       ];
@@ -1155,33 +1063,33 @@ import { Excel } from "antd-table-saveas-excel";
                       }
                   }
               },
-              {
-                title: 'label',
-                dataIndex: '',
-                key: '',
-                width: 70,
-                className: "center",
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                        if (sizeData.size !== null) {
-                          const formattedQty = (sizeData?.label) ? (sizeData?.label) :"-"
-                            // const formattedQty = (sizeData?.amount)
-                            return (
-                                formattedQty
-                            );
-                        } else {
+            //   {
+            //     title: 'label',
+            //     dataIndex: '',
+            //     key: '',
+            //     width: 70,
+            //     className: "center",
+            //     render: (text, record) => {
+            //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //         console.log()
+            //         if (sizeData) {
+            //             if (sizeData.size !== null) {
+            //               const formattedQty = (sizeData?.label) ? (sizeData?.label) :"-"
+            //                 // const formattedQty = (sizeData?.amount)
+            //                 return (
+            //                     formattedQty
+            //                 );
+            //             } else {
 
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
-                }
-            },
+            //                 return (
+            //                     '-'
+            //                 );
+            //             }
+            //         } else {
+            //             return '-';
+            //         }
+            //     }
+            // },
             
                   {
                       title: 'FOB Price',
@@ -1264,115 +1172,14 @@ import { Excel } from "antd-table-saveas-excel";
                         }
                     }
                 },
-                {
-                  title: 'Ex-factory Date ',
-                  dataIndex: '',
-                  key: '',
-                  width: 100,
-                  className: "center",
-                  render: (text, record) => {
-                      const sizeData = record.sizeWiseData.find(item => item.size === version);
-                      console.log()
-                      if (sizeData) {
-                          if (sizeData.size !== null) {
-                              const formattedQty = (sizeData?.exfactory) ? (sizeData?.exfactory) :'-'
-                              return (
-                                  formattedQty
-                              );
-                          } else {
 
-                              return (
-                                  '-'
-                              );
-                          }
-                      } else {
-                          return '-';
-                      }
-                  }
-              },
-              {
-                title: 'Export Date ',
-                dataIndex: '',
-                key: '',
-                width: 100,
-                className: "center",
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                        if (sizeData.size !== null) {
-                            const formattedQty = (sizeData?.exportDate) ? (sizeData?.exportDate) :"-"
-                            return (
-                                formattedQty
-                            );
-                        } else {
-
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
-                }
-            },
-            {
-              title: 'Delivery Date',
-              dataIndex: '',
-              key: '',
-              width: 100,
-              className: "center",
-              render: (text, record) => {
-                  const sizeData = record.sizeWiseData.find(item => item.size === version);
-                  console.log()
-                  if (sizeData) {
-                      if (sizeData.size !== null) {
-                          const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) :"-"
-                          return (
-                              formattedQty
-                          );
-                      } else {
-
-                          return (
-                              '-'
-                          );
-                      }
-                  } else {
-                      return '-';
-                  }
-              }
-          },
               ]
           });
       })
   
       columns.push(
-        
-    
-        // {
-        //     title: "Ex-factory Date",
-        //     dataIndex: "exFactoryDate",
-        //     align: "center",
-        //     width: 90,
-        //     sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
-        //     sortDirections: ["ascend", "descend"],
-        //   },
-        // {
-        //     title: "Export Date",
-        //     dataIndex: "exPortDate",
-        //     align: "center",
-        //     width: 90,
-        //     sorter: (a, b) => a.exPortDate.localeCompare(b.exPortDate),
-        //     sortDirections: ["ascend", "descend"],
-        //   },
-        // {
-        //     title: "Delivery Date",
-        //     dataIndex: "deliveryDate",
-        //     align: "center",
-        //     width: 90,
-        //     sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
-        //     sortDirections: ["ascend", "descend"],
-        //   },
+
+
         {
           title: "Total Quantity",
           dataIndex: "",
@@ -1387,17 +1194,77 @@ import { Excel } from "antd-table-saveas-excel";
             return sum;
           },
         },
+        {
+          title: "Special Instructions",
+          dataIndex: "specialInstructions",
+          width: 150,
+          sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('specialInstructions'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+        },
+        {
+          title: "PPK UPC",
+          dataIndex: "ppkUpc",
+          width: 110,
+          sorter: (a, b) => a.ppkUpc.localeCompare(b.ppkUpc),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('ppkUpc')
+        },
+        {
+          title: "Ship to Address",
+          dataIndex: "shipToAddress",
+          width: 150,
+          sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('shipToAddress'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+        },
+        {
+          title: "PO Date",
+          dataIndex: "PODate",
+          align: "center",
+          width: 90,
+          sorter: (a, b) => a.PODate.localeCompare(b.PODate),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+        },
+           
+        {
+            title: "Ex-factory Date",
+            dataIndex: "exFactoryDate",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
+            sortDirections: ["ascend", "descend"],
+          },
+        {
+            title: "Export Date",
+            dataIndex: "exPortDate",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.exPortDate.localeCompare(b.exPortDate),
+            sortDirections: ["ascend", "descend"],
+          },
+        {
+            title: "Delivery Date",
+            dataIndex: "deliveryDate",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
+            sortDirections: ["ascend", "descend"],
+          },
+        
        
-        // {
-        //     title: "Incoterm",
-        //     dataIndex: "incoterm",
-        //     align: "center",
-        //     width: 400,
-        //     sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
-        //     sortDirections: ["ascend", "descend"],
-        //   ...getColumnSearchProps('incoterm')
-
-        //   },
         {
           title: "Incoterm",
           dataIndex: "incoterm",
@@ -1412,31 +1279,53 @@ import { Excel } from "antd-table-saveas-excel";
           ),
         },
 
-     
+        {
+          title: "Port Of Export",
+          dataIndex: "portOfExport",
+          align: "center",
+          width: 90,
+          sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('portOfExport')
 
-          // {
-          //     title: "Ship to Address",
-          //     dataIndex: "shipToAddress",
-          //     align: "center",
-          //     width: 400,
-          //     sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-          //     sortDirections: ["ascend", "descend"],
-          // ...getColumnSearchProps('shipToAddress')
+        },
+        {
+          title: "Port of Entry Name",
+          dataIndex: "portOfEntry",
+          align: "center",
+          width: 200,
+          sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('portOfEntry')
 
-          //   },
-          {
-            title: "Ship to Address",
-            dataIndex: "shipToAddress",
-            width: 150,
-            sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-            sortDirections: ["ascend", "descend"],
-            ...getColumnSearchProps('shipToAddress'),
-            render: (text) => (
-              <Tooltip title={text || "-"}>
-                {text ? `${text.substring(0, 20)}...` : "-"}
-              </Tooltip>
-            ),
-          },
+        },
+       
+       
+        {
+          title: "Payment Terms Description",
+          dataIndex: "paymentTermDescription",
+          align: "center",
+          width: 150,
+          sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('paymentTermDescription')
+
+        },
+        {
+          title: "Vendor Booking Flag",
+          dataIndex: "vendorFlag",
+          align: "center",
+          width: 90,
+          sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
+        },
+            
+
+         
  
     
       );

@@ -114,7 +114,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
       }
      req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
   
-      service.getorderData(req).then((res) => {
+      service.getCentricorderDataForSolidPO(req).then((res) => {
         if (res.status) {
           setOrderData(res.data);
           setFilterData(res.data);
