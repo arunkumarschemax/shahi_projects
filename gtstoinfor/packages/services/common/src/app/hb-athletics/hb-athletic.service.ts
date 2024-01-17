@@ -123,84 +123,33 @@ export class HbService {
     }
   }
 
-  // async saveHbOrdersData(req: any): Promise<CommonResponseModel> {
-  //   console.log(req, "reqqqqqqqqqqqqq")
-  //   // const transactionManager = new GenericTransactionManager(this.dataSource)
-  //   try {
-  //     let saved
-  //     // await transactionManager.startTransaction()
-  //     for (const item of req.HbpoItemDetails) {
-  //       const match = item.style.match(/\d+/);
-  //       console.log(match, "match");
-  //       const style = match
-
-  //       console.log(style, "poLine")
-  //       for (const variant of item.HbpoItemVariantDetails) {
-  //         const orderData = await this.HbOrdersRepo.findOne({ where: { custPo: req.custPo, style: item.style, size: variant.size } })
-  //         console.log(orderData, "orderData")
-  //         const entity = new HbOrdersEntity();
-  //         entity.custPo = req.custPo
-  //         entity.exitFactoryDate = req.exitFactoryDate
-  //         entity.shipToAdd = req.shipToAdd
-
-
-  //         entity.style = item.style
-  //         entity.color = item.color
-
-  //         entity.size = variant.size
-  //         entity.quantity = variant.quantity
-  //         entity.unitPrice = variant.unitPrice
-
-
-  //         if (orderData) {
-  //           const update = await this.HbOrdersRepo.update({ custPo: req.custPo, style: item.style, size: variant.size }, {})
-  //           if (!update.affected) {
-  //             throw new Error('Update failed');
-  //           }
-  //         } else {
-  //           saved = await this.HbOrdersRepo.save(entity)
-  //           // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
-  //           if (!saved) {
-  //             throw new Error('Save failed')
-  //           }
-  //         }
-  //       }
-  //     }
-  //     // await transactionManager.completeTransaction()
-  //     return new CommonResponseModel(true, 1, 'Data saved successfully', saved)
-  //   } catch (err) {
-  //     return new CommonResponseModel(false, 0, 'Failed', err)
-  //   }
-  // }
 
 
   async updatePath(req: any, custPo: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
     console.log(custPo, "pppppioooooo");
     console.log(req, "reqqqqqqqqq");
 
-    // const custPoFromFileName = filename.replace(/\D/g, "");
-    const custPoFromFileName = filename.replace(/\s+W+\'+s.+/g, "");
     const entity = new HbPdfFileInfoEntity();
-    entity.custPo = custPoFromFileName;
+    entity.custPo = custPo; 
     entity.pdfFileName = filename;
     entity.filePath = filePath;
     entity.fileType = mimetype;
     entity.fileData = req;
-    entity.status = "SUCCESS"
-    // console.log(entity.fileData, "fileData")
+    entity.status = "SUCCESS";
 
     const file = await this.HbPdfRepo.findOne({ where: { pdfFileName: filePath } });
     if (file) {
-      return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
+        return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
     } else {
-      const save = await this.HbPdfRepo.save(entity);
-      if (save) {
-        return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
-      } else {
-        return new CommonResponseModel(false, 0, 'Uploaded failed');
-      }
+        const save = await this.HbPdfRepo.save(entity);
+        if (save) {
+            return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
+        } else {
+            return new CommonResponseModel(false, 0, 'Uploaded failed');
+        }
     }
-  }
+}
+
 
   async getPdfFileInfo(): Promise<CommonResponseModel> {
     try {
