@@ -163,7 +163,7 @@ import { Excel } from "antd-table-saveas-excel";
   
 
     const getPoNumber = () => {
-      service.getPoNumber().then((res) => {
+      service.getPoNumberforPPKReport().then((res) => {
         if (res.status) {
           setPoNumber(res.data);
         
@@ -1361,7 +1361,7 @@ import { Excel } from "antd-table-saveas-excel";
                 xl={{ span: 4 }}
               >
                <Form.Item label="Season" name="season">
-                  <Input placeholder="Enter Season" />
+                  <Input placeholder="Enter Season" allowClear={true} />
                 </Form.Item>
               </Col>
               

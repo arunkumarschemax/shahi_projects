@@ -131,5 +131,21 @@ export class CentricRepository extends Repository<CentricEntity> {
         return await query.getRawMany()
     }
 
+    async getPoNumberforPPKReport(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`DISTINCT po_number`)
+            .where(`o.po_type = 'PPK'`)
+        
+        return await query.getRawMany()
+    }
+
+    async getPoNumberforSolidReport(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`DISTINCT po_number`)
+            .where(`o.po_type = 'SOLID'`)
+        
+        return await query.getRawMany()
+    }
+
 
 }

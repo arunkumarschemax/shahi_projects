@@ -130,7 +130,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
     
 
     const getPoNumber = () => {
-      service.getPoNumber().then((res) => {
+      service.getPoNumberforSolidReport().then((res) => {
         if (res.status) {
           setPoNumber(res.data);
         
@@ -1372,7 +1372,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 xl={{ span: 4 }}
               >
                <Form.Item label="Season" name="season">
-                  <Input placeholder="Enter Season" />
+                  <Input placeholder="Enter Season"  allowClear={true} />
                 </Form.Item>
               </Col>
               
