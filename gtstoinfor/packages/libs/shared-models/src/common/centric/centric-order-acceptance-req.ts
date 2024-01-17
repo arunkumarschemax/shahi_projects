@@ -5,5 +5,6 @@ export class CentricOrderAcceptanceRequest {
     itemNo: string;
     buyer: string;
     deliveryDate:string;
-    material:string
+    style:string;
+    material:string;
 }

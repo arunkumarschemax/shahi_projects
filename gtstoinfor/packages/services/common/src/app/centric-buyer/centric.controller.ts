@@ -176,4 +176,27 @@ export class CentricController {
         }
     }
 
+    
+    @Post('/getCentricorderDataForPPK')
+    @ApiBody({ type: PoOrderFilter })
+    async getCentricorderDataForPPK(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            // console.log(req,"con")
+            return await this.Service.getCentricorderDataForPPK(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getCentricorderDataForSolidPO')
+    @ApiBody({ type: PoOrderFilter })
+    async getCentricorderDataForSolidPO(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            // console.log(req,"con")
+            return await this.Service.getCentricorderDataForSolidPO(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
 }

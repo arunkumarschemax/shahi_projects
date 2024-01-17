@@ -70,7 +70,66 @@ export class CentricRepository extends Repository<CentricEntity> {
         
         return await query.getRawMany()
     }
+  
 
+    async getCentricorderDataForPPK(req?:PoOrderFilter): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`*`)
+            if(req.poNumber !== undefined){
+                query.andWhere(`o.po_number ='${req.poNumber}'`) 
+            }
+            if(req.externalRefNo != undefined){
+                query.andWhere(` o.buyer = "${req.externalRefNo}"`)
+            }
+            if (req.poDateStartDate !== undefined) {
+                query.andWhere(`Date(o.po_date) BETWEEN '${req.poDateStartDate}' AND '${req.poDateEndDate}'`)
+            }
+            if (req.deliveryDateStartDate !== undefined) {
+                query.andWhere(`Date(o.delivery_date) BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+            }
+            if(req.season !== undefined){
+                query.andWhere(`o.season ='${req.season}'`) 
+            }
+            if (req.exfactoryDateStartDate !== undefined) {
+                query.andWhere(`Date(o.exfactory) BETWEEN '${req.exfactoryDateStartDate}' AND '${req.exfactoryDateEndDate}'`)
+            }
+            if (req.exportDateStartDate !== undefined) {
+                query.andWhere(`Date(o.export) BETWEEN '${req.exportDateStartDate}' AND '${req.exportDateEndDate}'`)
+            }
+            query.andWhere(`o.po_type = 'PPK'`);
+          
+        return await query.getRawMany()
+        
+    }
+
+    async getCentricorderDataForSolidPO(req?:PoOrderFilter): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`*`)
+            if(req.poNumber !== undefined){
+                query.andWhere(`o.po_number ='${req.poNumber}'`) 
+            }
+            if(req.externalRefNo != undefined){
+                query.andWhere(` o.buyer = "${req.externalRefNo}"`)
+            }
+            if (req.poDateStartDate !== undefined) {
+                query.andWhere(`Date(o.po_date) BETWEEN '${req.poDateStartDate}' AND '${req.poDateEndDate}'`)
+            }
+            if (req.deliveryDateStartDate !== undefined) {
+                query.andWhere(`Date(o.delivery_date) BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+            }
+            if(req.season !== undefined){
+                query.andWhere(`o.season ='${req.season}'`) 
+            }
+            if (req.exfactoryDateStartDate !== undefined) {
+                query.andWhere(`Date(o.exfactory) BETWEEN '${req.exfactoryDateStartDate}' AND '${req.exfactoryDateEndDate}'`)
+            }
+            if (req.exportDateStartDate !== undefined) {
+                query.andWhere(`Date(o.export) BETWEEN '${req.exportDateStartDate}' AND '${req.exportDateEndDate}'`)
+            }
+            query.andWhere(`o.po_type = 'SOLID'`);
+          
+        return await query.getRawMany()
+    }
 
 
 }

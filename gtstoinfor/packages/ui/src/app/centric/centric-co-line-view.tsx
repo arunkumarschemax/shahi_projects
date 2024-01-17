@@ -2,7 +2,7 @@
 
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 // import { coLineRequest } from "@project-management-system/shared-models";
-import { Button, Card, Col, Form, Row, Select, Table } from "antd"
+import { Button, Card, Col, Form, Row, Select, Table, Tooltip } from "antd"
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react";
@@ -83,13 +83,32 @@ const CentriColineView = () => {
             .split("-")
             .join("/");
 
-        let exportingColumns: IExcelColumn[] = []
-        exportingColumns = [
+            let rowIndex = 1;
+        let exportingColumns: any[] = []
+        exportingColumns .push(
+            {
+                title: "#",
+                // dataIndex: "sno", 
+                width: 50,
+                render: (text, object, index) => {
+                  if (index == data.length) {
+                    return null;
+                  } else {
+                    return rowIndex++;
+                  }
+                }
+              },
             {
                 title: 'Buyer Po',
                 dataIndex: 'po_number',
                 render: (text, record) => {
                     return (record.po_number ? (record.po_number) : '-')
+                }
+            },
+            {
+                title: 'Line Item',
+                dataIndex: 'po_line', render: (text, record) => {
+                    return (record.po_line ? (record.po_line) : '-')
                 }
             },
             {
@@ -100,11 +119,20 @@ const CentriColineView = () => {
                 }
             },
             {
-                title: 'Line Item',
-                dataIndex: 'po_line', render: (text, record) => {
-                    return (record.po_line ? (record.po_line) : '-')
+                title: 'Style No',
+                dataIndex: 'style_no',
+                render: (text, record) => {
+                    return (record.style_no ? (record.style_no) : '-')
                 }
             },
+            {
+                title: 'Full Material',
+                dataIndex: 'full_material',
+                render: (text, record) => {
+                    return (record.full_material ? (record.full_material) : '-')
+                }
+            },
+           
             {
                 title: 'Item No',
                 dataIndex: 'item_no',
@@ -112,13 +140,7 @@ const CentriColineView = () => {
                     return (record.item_no ? (record.item_no) : '-')
                 }
             },
-            {
-                title: 'Material',
-                dataIndex: 'material',
-                render: (text, record) => {
-                    return (record.material ? (record.material) : '-')
-                }
-            },
+            
             {
                 title: 'CO Date',
                 dataIndex: 'co_date',
@@ -134,6 +156,29 @@ const CentriColineView = () => {
                 }
             },
             {
+               title: 'Raised User',
+                dataIndex: 'created_user',
+                render: (text, record) => {
+                    return (record.created_user ? (record.created_user) : '-')
+                }
+            },
+
+            {
+                title: 'Raised Date',
+                 dataIndex: 'raised_date',
+                 render: (text, record) => {
+                     return (record.raised_date ? (record.raised_date) : '-')
+                 }
+             },
+             {
+                title: 'CO Created Date',
+                 dataIndex: 'updated_at',
+                 render: (text, record) => {
+                    return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
+            
+                 }
+             },
+            {
                 title: 'Status',
                 dataIndex: 'status',
                 render: (text, record) => {
@@ -147,7 +192,7 @@ const CentriColineView = () => {
                     return (record.error_msg ? (record.error_msg) : '-')
                 }
             }
-        ]
+        )
 
         const excel = new Excel();
         excel.addSheet("Sheet1");
@@ -190,10 +235,23 @@ const CentriColineView = () => {
             }
         },
         {
-            title: 'Material',
-            dataIndex: 'material',
+            title: 'Style No',
+            dataIndex: 'style_no',
             render: (text, record) => {
-                return (record.material ? (record.material) : '-')
+                return (record.style_no ? (record.style_no) : '-')
+            }
+        },
+
+        {
+            title: 'Full Material',
+            dataIndex: 'full_material',
+            render: (text, record) => {
+                const truncatedText = text ? `${text.substring(0, 20)}...` : "-";
+                return (
+                    <Tooltip title={text || "-"}>
+                        {truncatedText}
+                    </Tooltip>
+                );
             }
         },
         {

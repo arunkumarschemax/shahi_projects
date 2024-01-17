@@ -28,7 +28,12 @@ export class CentricCOLineEntity {
     deliveryDate: string
 
     @Column('varchar', {
-        name: "material"
+        name: "style_no"
+    })
+    style: string
+
+    @Column('varchar', {
+        name: "full_material"
     })
     material: string
 
