@@ -219,6 +219,69 @@ export const extractDataFromPoPdf = async (pdf) => {
                     j++;
                 }
                 itemDetailsObj.itemVasText = itemText
+            } else if (filteredData[itemTextIndex + 3].str.includes('SALES ORDER')) {
+                itemTextSatrtIndex = itemTextIndex + 4
+                let j = itemTextSatrtIndex;
+                while (!(filteredData[j].str == (ITEM_TEXT_END_TEXT))) {
+                    itemText += filteredData[j].str + ',';
+                    itemTextEndIndex = j;
+                    j++;
+                }
+                itemDetailsObj.itemVasText = itemText
+            } else if (filteredData[itemTextIndex + 4].str.includes('SALES ORDER')) {
+                itemTextSatrtIndex = itemTextIndex + 5
+                let j = itemTextSatrtIndex;
+                while (!(filteredData[j].str == (ITEM_TEXT_END_TEXT))) {
+                    itemText += filteredData[j].str + ',';
+                    itemTextEndIndex = j;
+                    j++;
+                }
+                itemDetailsObj.itemVasText = itemText
+            } else if (filteredData[itemTextIndex + 5].str.includes('SALES ORDER')) {
+                itemTextSatrtIndex = itemTextIndex + 6
+                let j = itemTextSatrtIndex;
+                while (!(filteredData[j].str == (ITEM_TEXT_END_TEXT))) {
+                    itemText += filteredData[j].str + ',';
+                    itemTextEndIndex = j;
+                    j++;
+                }
+                itemDetailsObj.itemVasText = itemText
+            } else if (filteredData[itemTextIndex + 6].str.includes('SALES ORDER')) {
+                itemTextSatrtIndex = itemTextIndex + 7
+                let j = itemTextSatrtIndex;
+                while (!(filteredData[j].str == (ITEM_TEXT_END_TEXT))) {
+                    itemText += filteredData[j].str + ',';
+                    itemTextEndIndex = j;
+                    j++;
+                }
+                itemDetailsObj.itemVasText = itemText
+            } else if (filteredData[itemTextIndex + 7].str.includes('SALES ORDER')) {
+                itemTextSatrtIndex = itemTextIndex + 8
+                let j = itemTextSatrtIndex;
+                while (!(filteredData[j].str == (ITEM_TEXT_END_TEXT))) {
+                    itemText += filteredData[j].str + ',';
+                    itemTextEndIndex = j;
+                    j++;
+                }
+                itemDetailsObj.itemVasText = itemText
+            } else if (filteredData[itemTextIndex + 8].str.includes('SALES ORDER')) {
+                itemTextSatrtIndex = itemTextIndex + 9
+                let j = itemTextSatrtIndex;
+                while (!(filteredData[j].str == (ITEM_TEXT_END_TEXT))) {
+                    itemText += filteredData[j].str + ',';
+                    itemTextEndIndex = j;
+                    j++;
+                }
+                itemDetailsObj.itemVasText = itemText
+            } else if (filteredData[itemTextIndex + 9].str.includes('SALES ORDER')) {
+                itemTextSatrtIndex = itemTextIndex + 10
+                let j = itemTextSatrtIndex;
+                while (!(filteredData[j].str == (ITEM_TEXT_END_TEXT))) {
+                    itemText += filteredData[j].str + ',';
+                    itemTextEndIndex = j;
+                    j++;
+                }
+                itemDetailsObj.itemVasText = itemText
             } else {
                 itemTextSatrtIndex = itemTextIndex + 1
                 let j = itemTextSatrtIndex;
