@@ -53,8 +53,8 @@ export class CentricService {
 
         for (const variant of item.CentricpoItemVariantDetails) {
           const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
-          const order = await this.childrepo.findOne({ where: { poNumber: req.PoNumber,poLine: item.poLine, size: variant.size  }, order: { poVersion: 'DESC' } })
-          console.log(order,'NNNNNNNNNN')
+          const order = await this.childrepo.findOne({ where: { poNumber: req.PoNumber,poLine: poLine, size: variant.size  }, order: { poVersion: 'DESC' } })
+          // console.log(order,'NNNNNNNNNN')
           const entity = new CentricEntity();
           entity.poNumber = req.poNumber
           entity.shipment = req.shipment
@@ -140,7 +140,7 @@ export class CentricService {
           // entity.fileData = JSON.stringify(fileData);
 
           if (orderData) {
-            console.log('mmmmmmmm',orderData)
+            // console.log('mmmmmmmm',orderData)
            
             const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
             
@@ -184,7 +184,7 @@ export class CentricService {
             })
             let po = parseInt(order?.poVersion) + 1
             
-            console.log(po,',,,,,,')
+            // console.log(po,',,,,,,')
             const entitys = new CentricChildEntity();
             entitys.poNumber = req.poNumber
             entitys.shipment = req.shipment
