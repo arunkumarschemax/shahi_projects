@@ -698,7 +698,7 @@ export class DpomService {
         return sendMail
     }
 
-    @Cron('0 4 * * *')
+    // @Cron('0 4 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
         try {
@@ -881,13 +881,17 @@ export class DpomService {
                     } else {
                         for (const data1 of CRMData1.data) {
                             let ocrStatus
-                            const dateString = data1.auditdate;
-                            const inputDate = new Date(dateString);
-                            const currentDate = new Date();
-                            if (inputDate < currentDate) {
-                                ocrStatus = 'Closed'
+                            if (data1.auditdate != null && data1.auditdate != undefined) {
+                                const dateString = data1.auditdate;
+                                const inputDate = new Date(dateString);
+                                const currentDate = new Date();
+                                if (inputDate < currentDate) {
+                                    ocrStatus = 'Closed'
+                                } else {
+                                    ocrStatus = null
+                                }
                             } else {
-                                ocrStatus = 'Open'
+                                ocrStatus = null
                             }
                             const updateOrder = await this.dpomRepository.update({ purchaseOrderNumber: buyerPo.po_number, poLineItemNumber: buyerPo.po_line_item_number, sizeQuantity: data1.ord_QTY }, { item: data1.itemno, factory: data1.unit, customerOrder: data1.ordno, coFinalApprovalDate: data1.co_FINAL_APP_DATE, coPrice: data1.price, coPriceCurrency: data1.currency, styleDesc: '', commission: data1.commission, PCD: data1.pcd, crmCoQty: data1.ord_QTY, actualShippedQty: data1.inv_QTY != 0 ? data1.inv_QTY : data1.del_QTY, ocrAuditDate: data1.auditdate, ocrStatus: ocrStatus })
                             if (updateOrder.affected) {
