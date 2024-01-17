@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 
 const { Dragger } = Upload;
 import { Document, pdfjs } from 'react-pdf';
+import { useNavigate } from "react-router-dom";
 
 import { DiaPDFModel, LegalPoPdfModel } from '@project-management-system/shared-models';
 import { AdobeAcrobatApiService, CentricService, HbService, NikeService, RLOrdersService } from '@project-management-system/shared-services';
@@ -47,6 +48,8 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
     const [diaPDFValues, setDiaPDFValues] = useState<DiaPDFModel>()
     const [resultProps, setResultProps] = useState<ResultPropsModel>()
     const [poPdfData, setPoPdfData] = useState<any>()
+    const navigate = useNavigate();
+
 
 
     const [diaPDfForm] = Form.useForm()
@@ -136,6 +139,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                 }
                 // alert(res.internalMessage)
                 message.success(res.internalMessage)
+                // navigate("/hb-athletics/pdf-info")
             } else {
                 message.error(res.internalMessage)
             }
