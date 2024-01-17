@@ -13,15 +13,17 @@ import { CentricCOLineRepository } from "./repositories/centric-co-line.reposito
 import { AddressService } from "../Entites@Shahi/address/address-service";
 import { AddressRepository } from "../Entites@Shahi/address/address.repo";
 import { AddressEntity } from "../Entites@Shahi/address/address-entity";
+import { CentricChildEntity } from "./entity/centric-child.entity";
+import { CentricOrdersChildRepository } from "./repositories/centric-child.repo";
 
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-      CentricEntity, CentricPdfFileUploadEntity, CentricCOLineEntity, AddressEntity
+      CentricEntity, CentricPdfFileUploadEntity, CentricCOLineEntity, AddressEntity,CentricChildEntity
     ])],
   controllers: [CentricController],
-  providers: [CentricService, CentricRepository, ApplicationExceptionHandler, CentricPdfRepository, CentricCOLineRepository, AddressRepository, AddressService]
+  providers: [CentricService, CentricRepository, ApplicationExceptionHandler, CentricPdfRepository, CentricCOLineRepository, AddressRepository, AddressService,CentricOrdersChildRepository]
 })
 export class CentricModule { }

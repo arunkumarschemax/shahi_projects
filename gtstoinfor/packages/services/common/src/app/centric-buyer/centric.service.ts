@@ -22,6 +22,8 @@ import { Cron, CronExpression, Interval } from "@nestjs/schedule";
 import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
 import { AddressService } from "../Entites@Shahi/address/address-service";
 import { In } from "typeorm";
+import { CentricChildEntity } from "./entity/centric-child.entity";
+import { CentricOrdersChildRepository } from "./repositories/centric-child.repo";
 
 
 @Injectable()
@@ -32,7 +34,8 @@ export class CentricService {
     private dataSource: DataSource,
     private pdfRepo: CentricPdfRepository,
     private coLineRepo: CentricCOLineRepository,
-    private addressService: AddressService
+    private addressService: AddressService,
+    private childrepo :CentricOrdersChildRepository
 
   ) { }
 
@@ -46,9 +49,12 @@ export class CentricService {
         // Check if a match is found and convert it to an integer
         // const poLine = match ? parseInt(match[0], 10) : null;
         const poLine = match
+        
 
         for (const variant of item.CentricpoItemVariantDetails) {
           const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
+          const order = await this.childrepo.findOne({ where: { poNumber: req.PoNumber,poLine: item.poLine, size: variant.size  }, order: { poVersion: 'DESC' } })
+          console.log(order,'NNNNNNNNNN')
           const entity = new CentricEntity();
           entity.poNumber = req.poNumber
           entity.shipment = req.shipment
@@ -134,7 +140,10 @@ export class CentricService {
           // entity.fileData = JSON.stringify(fileData);
 
           if (orderData) {
+            console.log('mmmmmmmm',orderData)
+           
             const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
+            
               shipment: req.shipment,
               season: req.season,
               portOfExport: req.portOfExport,
@@ -173,12 +182,105 @@ export class CentricService {
               ratio: variant.ratio,
 
             })
+            let po = parseInt(order?.poVersion) + 1
+            
+            console.log(po,',,,,,,')
+            const entitys = new CentricChildEntity();
+            entitys.poNumber = req.poNumber
+            entitys.shipment = req.shipment
+            entitys.season = req.season
+            entitys.portOfExport = req.portOfExport
+            entitys.portOfEntry = req.portOfEntry
+            entitys.Refrence = req.Refrence
+            entitys.paymentTermDescription = req.paymentTermDescription
+            entitys.specialInstructions = req.specialInstructions
+            entitys.division = req.division
+            entitys.incoterm = req.incoterm
+            entitys.shipToAdd = req.shipToAdd
+            entitys.manufacture = req.manufacture
+            entitys.poDate = req.poDate
+            entitys.buyerAddress = req.buyerAddress
+  
+  
+            entitys.poLine = item.poLine
+            entitys.material = item.material
+            entitys.color = item.color
+            entitys.gender = item.gender
+            entitys.shortDescription = item.shortDescription
+            entitys.packMethod = item.packMethod
+            entitys.vendorBookingFlag = item.vendorBookingFlag
+            entitys.ppkupc = item.ppkupc
+            entitys.currency = item.currency
+            entitys.totalQuantity = item.totalQuantity
+            entitys.style = item.style
+            entitys.poType = item.poType
+  
+            entitys.size = variant.size
+            entitys.upc = variant.upc
+            entitys.label = variant.label
+            entitys.quantity = variant.quantity
+            entitys.unitPrice = variant.unitPrice
+            entitys.exFactory = variant.exFactory
+            entitys.exPort = variant.exPort
+            entitys.deliveryDate = variant.deliveryDate
+            entitys.retialPrice = variant.retialPrice
+            entitys.comptMaterial = variant.comptMaterial
+            entitys.ratio = variant.ratio
+            entitys.orderId=orderData.id
+           
+            entitys.poVersion = po.toString()
+            const savedChild = await this.childrepo.save(entitys)
+
             if (!update.affected) {
               throw new Error('Update failed');
             }
           } else {
             saved = await this.Repo.save(entity)
-            // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
+            const entitys = new CentricChildEntity();
+            entitys.poNumber = req.poNumber
+            entitys.shipment = req.shipment
+            entitys.season = req.season
+            entitys.portOfExport = req.portOfExport
+            entitys.portOfEntry = req.portOfEntry
+            entitys.Refrence = req.Refrence
+            entitys.paymentTermDescription = req.paymentTermDescription
+            entitys.specialInstructions = req.specialInstructions
+            entitys.division = req.division
+            entitys.incoterm = req.incoterm
+            entitys.shipToAdd = req.shipToAdd
+            entitys.manufacture = req.manufacture
+            entitys.poDate = req.poDate
+            entitys.buyerAddress = req.buyerAddress
+  
+  
+            entitys.poLine = item.poLine
+            entitys.material = item.material
+            entitys.color = item.color
+            entitys.gender = item.gender
+            entitys.shortDescription = item.shortDescription
+            entitys.packMethod = item.packMethod
+            entitys.vendorBookingFlag = item.vendorBookingFlag
+            entitys.ppkupc = item.ppkupc
+            entitys.currency = item.currency
+            entitys.totalQuantity = item.totalQuantity
+            entitys.style = item.style
+            entitys.poType = item.poType
+  
+            entitys.size = variant.size
+            entitys.upc = variant.upc
+            entitys.label = variant.label
+            entitys.quantity = variant.quantity
+            entitys.unitPrice = variant.unitPrice
+            entitys.exFactory = variant.exFactory
+            entitys.exPort = variant.exPort
+            entitys.deliveryDate = variant.deliveryDate
+            entitys.retialPrice = variant.retialPrice
+            entitys.comptMaterial = variant.comptMaterial
+            entitys.ratio = variant.ratio
+            entitys.orderId=entity.id
+             const savedChild = await this.childrepo.save(entitys)
+
+             
             if (!saved) {
               throw new Error('Save failed')
             }
