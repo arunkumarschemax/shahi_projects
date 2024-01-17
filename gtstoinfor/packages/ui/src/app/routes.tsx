@@ -52,6 +52,7 @@ import CentricPdfUpload from "./centric/pdf-upload"
 import CentriColineView from "./centric/centric-co-line-view"
 import SolidPOReport from "./centric/solid-pack-po-report"
 import PdfInfoDetailView from "./centric/pdf-info-detail-view"
+import CentricOrderComparisionReport from "./centric/centric-comparision-report"
 
 
 export const AppRoutes = () => {
@@ -209,6 +210,7 @@ export const AppRoutes = () => {
                    <Route path='centric-co-line-view' element={<CentriColineView />} />
                    <Route path='solid-pack-po-report' element={<SolidPOReport />} />
                    <Route path='pdf-info-detail-view' element={<PdfInfoDetailView />} />
+                   <Route path='centric-comparision-report' element={<CentricOrderComparisionReport />} />
 
 
                     
