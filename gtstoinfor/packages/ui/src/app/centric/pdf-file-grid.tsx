@@ -193,10 +193,11 @@ export function CentricPdFInfoGrid() {
             render: (value, record) => (
               <>
                 <Button 
+                type="primary"
                 onClick={() => setMoreData(record)}
                 >More Info</Button>
                  <Tooltip title="PDF download">
-                <Button icon={<FilePdfOutlined onClick={()=>download(record.filePath)}/>} >{value}</Button>
+                <Button icon={<FilePdfOutlined onClick={()=>download(record.filePath)} style={{color:"red"}}/> } >{value}</Button>
                 </Tooltip>
               </>
             ),

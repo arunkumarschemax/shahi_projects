@@ -895,6 +895,34 @@ export class CentricService {
     }
   }
 
+  async getPoNumberforPPKReport(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.Repo.getPoNumberforPPKReport()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async getPoNumberforSolidReport(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.Repo.getPoNumberforSolidReport()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  } 
+
+  
+
 
 
  

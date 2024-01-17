@@ -199,4 +199,24 @@ export class CentricController {
         }
     }
 
+    @Post('/getPoNumberforPPKReport')
+    async getPoNumberforPPKReport(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getPoNumberforPPKReport();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+
+    @Post('/getPoNumberforSolidReport')
+    async getPoNumberforSolidReport(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getPoNumberforSolidReport();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+
 }
