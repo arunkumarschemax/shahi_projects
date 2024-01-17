@@ -21,6 +21,7 @@ import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
 import {
   
+  AlertMessages,
   HbOrderAcceptanceRequest,
   HbPoOrderFilter,
 } from "@project-management-system/shared-models";
@@ -78,6 +79,13 @@ export function HbOrderAcceptanceGrid() {
         setOrderData(res.data);
         setFilterData(res.data);
       }
+      else {
+        setOrderData([]);
+        setFilterData([])
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch((err) => {
+      console.log(err.message);
     });
   };
 
