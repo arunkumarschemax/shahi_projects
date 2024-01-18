@@ -321,7 +321,7 @@ const getBase64 = (img, callback) => {
                         // console.log(file.originFileObj)
                         formData.append('file', file.originFileObj);
                       });
-              
+                      formData.append('reqNo', `${res.data[0].requestNo}`);
                       formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
                       console.log(res.data[0].SampleRequestId)
                       // console.log(formData);
