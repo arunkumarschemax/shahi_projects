@@ -40,10 +40,10 @@ export const OrderComparisionReport = () => {
       req.custPo = form.getFieldValue("poNumber");
     }
     if (form.getFieldValue('deliveryDate') !== undefined) {
-      req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('DD-MM-YYYY');
+      req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
     }
     if (form.getFieldValue('deliveryDate') !== undefined) {
-      req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('DD-MM-YYYY');
+      req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
     }
     
     if (form.getFieldValue("style") !== undefined) {
@@ -210,7 +210,7 @@ export const OrderComparisionReport = () => {
         key: "sno",
         width: 50,
         render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-        fixed: "left",
+        // fixed: "left",
       },
       {
         title: "Buyer PO",
@@ -218,7 +218,7 @@ export const OrderComparisionReport = () => {
         width: 90,
         sorter: (a, b) => a.custPo.localeCompare(b.custPo),
         sortDirections: ["ascend", "descend"],
-        fixed: "left",
+        // fixed: "left",
         // ...getColumnSearchProps('custPo'),
         render: (text) => text ? text : "-"
       },
@@ -228,7 +228,7 @@ export const OrderComparisionReport = () => {
         width: 90,
         sorter: (a, b) => a.style.localeCompare(b.style),
         sortDirections: ["ascend", "descend"],
-        fixed: "left",
+        // fixed: "left",
         // ...getColumnSearchProps('style'),
         render: (text) => text ? text : "-"
       },
@@ -238,7 +238,7 @@ export const OrderComparisionReport = () => {
         width: 90,
         sorter: (a, b) => a.color.localeCompare(b.color),
         sortDirections: ["ascend", "descend"],
-        fixed: "left",
+        // fixed: "left",
         // ...getColumnSearchProps('color'),
         render: (text) => text ? text : "-"
       },
@@ -586,7 +586,7 @@ export const OrderComparisionReport = () => {
                 </Form.Item>
               </Col>
             
-            <Row>
+            {/* <Row>
             <Col
               xs={{ span: 24 }}
               sm={{ span: 24 }}
@@ -626,8 +626,53 @@ export const OrderComparisionReport = () => {
                 </Button>
               </Form.Item>
             </Col>
-            </Row>
-          </Row>
+            </Row> */}
+             {/* <Row> */}
+             <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 5 }}
+                lg={{ span: 5 }}
+                xl={{ span: 4 }}
+                style={{marginTop:23,marginLeft:60}}
+              > 
+                <Form.Item 
+                // style={{marginTop:20,marginLeft:60}}
+                >
+                  <Button
+                    htmlType="submit"
+                    icon={<SearchOutlined />}
+                    type="primary"
+                  >
+                    SEARCH
+                  </Button>
+                
+                </Form.Item>
+              {/* </Col> */}
+              {/* <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 5 }}
+                lg={{ span: 5 }}
+                xl={{ span: 4 }}
+              > */}
+                <Form.Item 
+                // style={{marginTop:20}}
+                 style={{ marginLeft: 120 ,marginTop:-43}}
+                >
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    onClick={onReset}
+                    icon={<UndoOutlined />}
+                  >
+                    Reset
+                  </Button>
+                </Form.Item>
+              </Col>
+              </Row>
+            {/* </Row> */}
+          {/* </Row> */}
         </Form>
         {/* <Table
                     columns={columns}

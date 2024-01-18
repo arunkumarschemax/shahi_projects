@@ -153,7 +153,7 @@ export class HbService {
 
   async getPdfFileInfo(): Promise<CommonResponseModel> {
     try {
-      const data = await this.HbPdfRepo.find()
+      const data = await this.HbPdfRepo.getPDFInfo()
       if (data) {
         return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
       } else {
@@ -212,6 +212,13 @@ export class HbService {
         await page.waitForSelector('button.ant-btn-primary')
         await page.click('button.ant-btn-primary');
         await page.waitForTimeout(10000)
+
+           setTimeout(async () => {
+        await page.goto('http://localhost:4200/#/hb-athletics/hb-pdf-upload/', {
+          timeout: 100000,
+          waitUntil: 'networkidle0'
+        })
+      }, 1000);
 
         const sourceFilePath = path.join(directoryPath, file);
         const destinationFilePath = path.join(destinationDirectory, file);

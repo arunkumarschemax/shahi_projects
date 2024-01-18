@@ -49,6 +49,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
     const [resultProps, setResultProps] = useState<ResultPropsModel>()
     const [poPdfData, setPoPdfData] = useState<any>()
     const navigate = useNavigate();
+    
 
 
 
@@ -139,7 +140,8 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                 }
                 // alert(res.internalMessage)
                 message.success(res.internalMessage)
-                // navigate("/hb-athletics/pdf-info")
+                navigate("/hb-athletics/pdf-info", { state: "rec" });
+                window.location.reload();
             } else {
                 message.error(res.internalMessage)
             }
@@ -167,7 +169,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         <Card title='Order Upload'>
             {resultProps === undefined &&
                 <Row gutter={24} >
-                     <Col
+                    <Col
                         xs={{ span: 24 }}
                         sm={{ span: 24 }}
                         md={{ span: 5 }}
@@ -190,7 +192,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
                         </Dragger>
                     </Col>
-                   
+
                 </Row>}
             <Row gutter={24} justify={'center'}  >
                 {resultProps !== undefined &&
