@@ -66,10 +66,10 @@ import { Excel } from "antd-table-saveas-excel";
         req.custPo = form.getFieldValue("poNumber");
       }
       if (form.getFieldValue('deliveryDate') !== undefined) {
-        req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('DD-MM-YYYY');
+        req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
       }
       if (form.getFieldValue('deliveryDate') !== undefined) {
-        req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('DD-MM-YYYY');
+        req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
       }
       
       if (form.getFieldValue("style") !== undefined) {
