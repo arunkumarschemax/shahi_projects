@@ -1,4 +1,5 @@
-import { ComponentsDto } from "../components.dto";
+import { ComponentsDto } from "../components";
+
 
 export class WhatsAppMessageTemplateDto{
     name : string;
