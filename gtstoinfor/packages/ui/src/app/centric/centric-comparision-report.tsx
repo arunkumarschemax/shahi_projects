@@ -1,6 +1,6 @@
 import { Alert, Button, Card, Col, Form, Input, Row, Select, Space, Table, Tabs, Tooltip, Typography, message } from "antd"
 import TabPane from "antd/es/tabs/TabPane"
-import { OrdersService, RLOrdersService } from "@project-management-system/shared-services"
+import { CentricService, OrdersService, RLOrdersService } from "@project-management-system/shared-services"
 import React, { useEffect, useRef, useState } from "react"
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons"
 import AlertMessages from "../common/common-functions/alert-messages"
@@ -14,7 +14,7 @@ import Highlighter from "react-highlight-words"
 export const CentricOrderComparisionReport = () => {
   const [form] = Form.useForm();
   const [page, setPage] = useState<number>(1);
- const service = new RLOrdersService();
+ const service = new CentricService();
   const { Text } = Typography;
   const [pageSize, setPageSize] = useState(10);
   const [filterData, setFilterData] = useState([]);
@@ -39,36 +39,36 @@ export const CentricOrderComparisionReport = () => {
     }
   
 
-    // service.getordercomparationData(req).then((res) => {
-    //   if (res.status) {
-    //     setOrderData(res.data);
-    //     setFilterData(res.data);
-    //   } else {
-    //     setOrderData([]);
-    //     setFilterData([]);
-    //     AlertMessages.getErrorMessage(res.internalMessage);
-    //   }
-    // }).catch(err => {
-    //    setOrderData([]);
-    //     setFilterData([]);
-    //    AlertMessages.getErrorMessage(err.message);
-    //  })
+    service.getordercomparationData(req).then((res) => {
+      if (res.status) {
+        setOrderData(res.data);
+        setFilterData(res.data);
+      } else {
+        setOrderData([]);
+        setFilterData([]);
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+       setOrderData([]);
+        setFilterData([]);
+       AlertMessages.getErrorMessage(err.message);
+     })
   };
 
   const getPoNumber = () => {
 
-    // service.getPoNumber().then((res) => {
-    //   if (res.status) {
-    //     setPoNumberData(res.data);
+    service.getPoNumber().then((res) => {
+      if (res.status) {
+        setPoNumberData(res.data);
       
-    //   } else {
-    //     setPoNumberData([]);
-    //     AlertMessages.getErrorMessage(res.internalMessage);
-    //   }
-    // }).catch(err => {
-    //    setPoNumberData([]);
-    //    AlertMessages.getErrorMessage(err.message);
-    //  })
+      } else {
+        setPoNumberData([]);
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+       setPoNumberData([]);
+       AlertMessages.getErrorMessage(err.message);
+     })
   };
 
   const onReset = () => {
@@ -209,15 +209,15 @@ export const CentricOrderComparisionReport = () => {
  
       {
         title: "PO Line",
-        dataIndex: "poLine",
+        dataIndex: "po_line",
         width: 90,
         sorter: (a, b) => {
-          const codeA = (a.poLine || "").toString();
-          const codeB = (b.poLine || "").toString();
+          const codeA = (a.po_line || "").toString();
+          const codeB = (b.po_line || "").toString();
           return codeA.localeCompare(codeB);
       },
       sortDirections: ["ascend", "descend"],
-        ...getColumnSearchProps('poLine'),
+        ...getColumnSearchProps('po_line'),
         render: (text) => text ? text : "-"
       },
       {
@@ -550,7 +550,7 @@ export const CentricOrderComparisionReport = () => {
  
       {
         title: "PO Line",
-        dataIndex: "poLine",
+        dataIndex: "po_line",
         width: 90,
         render: (text) => text ? text : "-"
       },

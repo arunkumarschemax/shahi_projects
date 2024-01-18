@@ -60,5 +60,10 @@ export class CentricService extends CommonAxiosService {
 
     async getPoNumberforSolidReport(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.centricOrdersController + "/getPoNumberforSolidReport")
+    
+    }
+
+    async getordercomparationData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.centricOrdersController + "/getordercomparationData", req)
     }
 }

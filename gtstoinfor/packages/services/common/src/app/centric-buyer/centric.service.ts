@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { CentricEntity } from "./entity/centric.entity";
 import { CentricDto } from "./dto/centric.dto";
-import { CentricOrderDataModel, CentricSizeWiseModel, CoLineRequest, CoLinereqModel, Color, CommonResponseModel, DestinationModel, PoOrderFilter, SizeModel, StatusEnum, centricCoLineRequest } from "@project-management-system/shared-models";
+import { CentricOrderDataModel, CentricSizeWiseModel, CoLineRequest, CoLinereqModel, Color, CommonResponseModel, CompareModel, DestinationModel, PoOrderFilter, SizeModel, StatusEnum, centricCoLineRequest } from "@project-management-system/shared-models";
 import { Repository } from "typeorm/repository/Repository";
 import { CentricRepository } from "./repositories/centric.repo";
 import { DataSource } from "typeorm/data-source/DataSource";
@@ -1022,6 +1022,52 @@ export class CentricService {
       throw err
     }
   } 
+
+  async getordercomparationData(req?: any): Promise<CommonResponseModel> {
+    try {
+      const Originaldata = await this.Repo.getordercomparationData(req)
+      const compareModel: CompareModel[] = []
+      
+      for (const rec of Originaldata) {
+        const childData = await this.childrepo.find({
+          where: {
+            poNumber: rec.po_number, poLine: rec.po_line, size: rec.size
+          }, order: { ordersChildId: 'DESC' }, take: 1, skip: 1
+        })
+        if (childData.length > 0) {
+          const oldData = childData[0];
+          // Check for changes in values
+          if (
+            oldData.unitPrice !== rec.unit_price ||
+            oldData.deliveryDate !== rec.delivery_date ||
+            oldData.quantity !== rec.quantity
+          ) {
+            // Only push if there are changes
+            compareModel.push(new 
+              CompareModel(
+              rec.po_number,
+              rec.po_line,
+              rec.size,
+              oldData.unitPrice,
+              rec.unit_price,
+              oldData.deliveryDate,
+              rec.delivery_date,
+              oldData.quantity,
+              rec.quantity
+            ));
+          }
+        }
+      }
+      if (compareModel) {
+       
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
+    } catch (err) {
+      throw err
+    }
+  }
 
   
 

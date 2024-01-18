@@ -168,7 +168,7 @@ export class CentricChildEntity {
         name: "quantity",
         
     })
-    quantity: string
+    quantity: number
 
     @Column('varchar', {
         name: "unit_price",

@@ -147,5 +147,14 @@ export class CentricRepository extends Repository<CentricEntity> {
         return await query.getRawMany()
     }
 
+    async getordercomparationData(req?:PoOrderFilter): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`*`)
+            if(req.poNumber !== undefined){
+                query.andWhere(`o.po_number ='${req.poNumber}'`) 
+            }
+          
+        return await query.getRawMany()
+    }
 
 }

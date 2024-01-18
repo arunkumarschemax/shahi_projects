@@ -210,7 +210,7 @@ export const AppRoutes = () => {
                    <Route path='centric-co-line-view' element={<CentriColineView />} />
                    <Route path='solid-pack-po-report' element={<SolidPOReport />} />
                    <Route path='pdf-info-detail-view' element={<PdfInfoDetailView />} />
-                   <Route path='centric-comparision-report' element={<CentricOrderComparisionReport />} />
+                   <Route path='order-comparision-report' element={<CentricOrderComparisionReport />} />
 
 
                     
