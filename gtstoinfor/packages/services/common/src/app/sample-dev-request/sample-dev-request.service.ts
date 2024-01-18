@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Not, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, requestNoReq, RackPositionStatusEnum,ItemTypeEnum, SampleRequestInfoModel, SampleSizeInfoModel} from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, requestNoReq, RackPositionStatusEnum,ItemTypeEnum, SampleRequestInfoModel, SampleSizeInfoModel, MessageParameters, WhatsAppLogDto, GlobalVariables} from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -29,7 +29,7 @@ import { Size } from '../sizes/sizes-entity';
 import { OperationInventory } from '../operation-tracking/entity/operation-inventory-entity';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { IndentService } from '@project-management-system/shared-services';
+import { IndentService, WhatsAppInfo, WhatsAppNotificationService } from '@project-management-system/shared-services';
 import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 import { MaterialAllocationEntity } from './entities/material-allocation.entity';
 import { MaterialAllocationDTO } from './dto/material-allocation-dto';
@@ -47,8 +47,7 @@ import { RackPositionEntity } from '../rm_locations/rack-position.entity';
 import { OrderQuantityRequset } from './dto/order-quantity-request';
 import { MaterialAllocationItemsDTO } from './dto/material-allocation-items-dto';
 import { M3TrimsEntity } from '../m3-trims/m3-trims.entity';
-
-
+let moment = require('moment');
 
 
 @Injectable()
@@ -67,7 +66,8 @@ export class SampleRequestService {
     private indentService: IndentService,
     private matAllRepo:MaterialAllocationRepo,
     private matAllitemRepo:MaterialAllocationItemsRepo,
-    private stockrepo:StocksRepository
+    private stockrepo:StocksRepository,
+    private wpService: WhatsAppNotificationService,
 
 
     
@@ -251,6 +251,7 @@ export class SampleRequestService {
       sampleReqEntity.madeIn = req.madeIn
       sampleReqEntity.remarks = req.remarks
       sampleReqEntity.status = req.status
+      sampleReqEntity.category = req.category
       let sampleSizeInfo = []
       let sampleFabricInfo = []
       let sampleTrimInfo = []
@@ -1080,11 +1081,11 @@ export class SampleRequestService {
       //   return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
 
       //   }
-        let query1=`SELECT sb.sample_item_id AS sampleItemId,sb.sampling_bom_id AS samplingBomId,required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity, required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS sampleBalanceQuanty,sb.required_quantity AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,IF(sb.item_type = "Fabric",c.colour,tc.colour) AS colourName, IF(sb.item_type = "Fabric", CONCAT(mi.item_code,'-',mi.description), mt.trim_code) AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,(st.quantity-st.allocatd_quantity-st.issued_quantity) AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId FROM sampling_bom sb     
+        let query1=`SELECT sb.sample_item_id AS sampleItemId,sb.sampling_bom_id AS samplingBomId,required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity, required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS sampleBalanceQuanty,sb.required_quantity AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,IF(sb.item_type = "Fabric",c.colour,tc.colour) AS colourName, IF(sb.item_type = "Fabric", CONCAT(mi.item_code,'-',mi.description), mt.trim_code) AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,(st.quantity-st.allocatd_quantity-st.transfered_quantity) AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId FROM sampling_bom sb     
         LEFT JOIN  sample_request_fabric_info srf ON srf.sample_request_id=sb.sample_item_id AND sb.item_type='Fabric' 
         LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id=sb.sample_item_id AND sb.item_type!='Fabric'
         LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id  
-          LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND st.item_type = sb.item_type
+          LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND st.item_type = sb.item_type and st.grn_type = "INDENT"
             LEFT JOIN m3_items mi ON mi.m3_items_Id=sb.m3_item_id and sb.item_type = "Fabric" 
             LEFT JOIN m3_trims mt ON mt.m3_trim_Id=sb.m3_item_id and sb.item_type != "Fabric"
             LEFT JOIN colour c ON c.colour_id=sb.colour_id and sb.item_type = "Fabric"
@@ -1092,7 +1093,7 @@ export class SampleRequestService {
             LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id
               LEFT JOIN style s ON s.style_id=sr.style_id left join brands bs on bs.brand_id=sr.brand_id 
               left join rack_position rp on rp.position_Id =sr.location_id  
-              LEFT JOIN purchae_order_items poi ON poi.sample_item_id =sb.sample_item_id WHERE (required_quantity-received_quantity-IF((st.quantity-st.allocatd_quantity-st.issued_quantity) IS NULL, 0, (st.quantity-st.allocatd_quantity-st.issued_quantity))-IF(po_quantity IS NOT NULL,po_quantity,0)) >0`
+              LEFT JOIN purchae_order_items poi ON poi.sample_item_id =sb.sample_item_id WHERE (required_quantity-received_quantity-IF((st.quantity-st.allocatd_quantity-st.transfered_quantity) IS NULL, 0, (st.quantity-st.allocatd_quantity-st.transfered_quantity))-IF(po_quantity IS NOT NULL,po_quantity,0)) >0`
         if(req.extRefNo){
           query1 = query1+ ` and b.external_ref_number = '${req.extRefNo}'`
         }
@@ -2087,4 +2088,86 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
     }
 }
 
+async getUsageWhtsAppMsg(): Promise<CommonResponseModel> {
+  try {
+    let date = moment().format('YYYY-MM-DD')
+    const manager = this.dataSource;
+    const sampleOrders = `SELECT COUNT(DISTINCT sample_request_id)AS COUNT FROM sample_request_size_info WHERE DATE(created_at) = '${date}'`
+    const indents = `SELECT COUNT(request_no) AS COUNT FROM indent WHERE DATE(created_at) = '${date}'`
+    const pos = `SELECT COUNT(po_number) AS COUNT FROM purchase_order WHERE DATE(created_at) = '${date}'`
+    const grns = `SELECT COUNT(grn_number) AS COUNT FROM grn WHERE DATE(created_at) = '${date}'`
+    const stock =`SELECT COUNT(id) AS COUNT FROM stocks WHERE DATE(created_at) = '${date}'    `
+    const location = `SELECT COUNT(stock_log_id)AS COUNT FROM stock_log WHERE DATE(created_at) = '${date}'`
+    const material = `SELECT COUNT(material_allocation_id) AS COUNT FROM material_allocation WHERE DATE(updated_at) = '${date}' AND STATUS = 'MATERIAL ISSUED'`
+    const operations = `SELECT COUNT(operation_tracking_id) AS COUNT FROM operation_tracking WHERE DATE(created_at) = '${date}'`
+    const sampleOrdersInfo = await manager.query(sampleOrders);
+    const indentsInfo = await manager.query(indents);
+    const posInfo = await manager.query(pos);
+    const grnsInfo = await manager.query(grns);
+    const stockInfo = await manager.query(stock);
+    const operationsInfo = await manager.query(operations);
+    const materialInfo = await manager.query(material);
+    const locationInfo = await manager.query(location);
+     
+
+          const datetime = moment().format('MMMM Do, YYYY')
+
+          // for (const ic of data) {
+          //     let msgContent = '\\n' + ic.lifecycle_status + ' : ' + ic.COUNT
+          //     vehiclelifecycle += msgContent;
+          //     //   const status = ic.lifecycle_status;
+          //     //   const count = ic.COUNT;
+          //     // console.log(ic.lifecycle_status, '{}')
+          // }
+          
+          const parameters = [
+              { "type": "text", "text": datetime },
+              { "type": "text", "text":  sampleOrdersInfo?.[0]?.COUNT},
+              { "type": "text", "text":  indentsInfo?.[0]?.COUNT},
+              { "type": "text", "text":  posInfo?.[0]?.COUNT},
+              { "type": "text", "text":  grnsInfo?.[0]?.COUNT},
+              { "type": "text", "text":  locationInfo?.[0]?.COUNT},
+              { "type": "text", "text":  stockInfo?.[0]?.COUNT},
+              { "type": "text", "text":  materialInfo?.[0]?.COUNT},
+              { "type": "text", "text":  operationsInfo?.[0]?.COUNT}
+
+
+
+          ];
+          // console.log(parameters, 'Parameter-----------')
+
+          const contacts = WhatsAppInfo.contacts;
+          let statusFlag = true
+          for (const contact of contacts) {
+            console.log('ppppppppppp');
+
+              const whatsappres = await new MessageParameters(contact, 'usage_report', parameters, 'en_uk')
+              const messageStatus = await this.wpService.sendMessageThroughFbApi(whatsappres);
+              console.log(messageStatus,'ppppppppppp44444444');
+
+              if (!messageStatus.status) {
+                  statusFlag = false
+                  break
+              } else {
+                  statusFlag = true
+                  const whatsapplogDto = new WhatsAppLogDto(contact,'usage_report','Shahi',23,27)
+
+                  // const whatsapplogDto = new WhatsAppLogDto(contact, 'usage_report', 'Sampling', 23, 27)
+                  await this.wpService.createWhatappLog(whatsapplogDto)
+
+              }
+
+              
+          }
+          // if (data) {
+          return new CommonResponseModel(true, 1, 'Data Retrived Successfully', date)
+
+      //     } else {
+      //     return new CommonResponseModel(false, 0, 'No Data Found..', undefined)
+      // }
+  }
+  catch (err) {
+      throw err
+  }
+}
 }

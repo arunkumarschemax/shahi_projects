@@ -4,7 +4,7 @@ import { Repository, Not, DataSource } from "typeorm";
 import { ErrorResponse } from "packages/libs/backend-utils/src/models/global-res-object";
 import { M3ItemsAdapter } from "./m3-items.adaptor";
 import { M3ItemsEntity } from "./m3-items.entity";
-import { BuyerIdReq, CommonResponseModel, ItemTypeEnum, M3Itemsfilter } from "@project-management-system/shared-models";
+import { BuyerIdReq, CommonResponseModel, ItemTypeEnum, M3Itemsfilter, m3FabricFiltersReq } from "@project-management-system/shared-models";
 import { M3ItemsDTO } from "./m3-items.dto";
 import { M3ItemsRepo } from "./m3-items.repository";
 import { M3TrimItemsDTO } from "./m3-trim-items.dto";
@@ -98,14 +98,60 @@ export class M3ItemsService {
       return new CommonResponseModel(false, 0, 'No data found')
   }
 
-  async getM3FabricsByBuyer(createDto: BuyerIdReq): Promise<CommonResponseModel> {
+  async getM3FabricsByBuyer(req: m3FabricFiltersReq): Promise<CommonResponseModel> {
     try{
-      console.log("**********************************")
-      console.log(createDto)
+      console.log("*#################################")
+      console.log(req)
 
-      const query = "Select m3_items_Id AS m3ItemsId, item_code AS itemCode, description AS description from m3_items where buyer_id ="+createDto.buyerId;
+      let query = "Select m3_items_Id AS m3ItemsId, item_code AS itemCode, description AS description from m3_items where m3_items_Id >0"
+      if(req.buyerId != undefined){
+        query=query+' and buyer_id='+req.buyerId+''
+      }
+      if(req.fabricTypeId != undefined){
+        query=query+' and fabric_type='+req.fabricTypeId+''
+      }
+      if(req.weaveId != undefined){
+        query=query+' and weave='+req.weaveId+''
+      }
+      if(req.epiConstruction != undefined){
+        query=query+' and epi_construction="'+req.epiConstruction+'"'
+      }
+      if(req.ppiConstruction != undefined){
+        query=query+' and ppi_construction="'+req.ppiConstruction+'"'
+      }
+      if(req.yarnType != '' && req.yarnType != undefined){
+        query=query+' and yarn_type="'+req.yarnType+'"'
+      }
+      if(req.finishId != undefined){
+        query=query+' and finish='+req.finishId+''
+      }
+      if(req.shrinkage != undefined){
+        query=query+' and shrinkage="'+req.shrinkage+'"'
+      }
+      if(req.m3Code != undefined){
+        query=query+' and m3_code="'+req.m3Code+'"'
+      }
+      if(req.content != undefined){
+        query=query+' and content_id='+req.content+''
+      }
+      if(req.hsnCode != undefined){
+        query=query+' and hsn_code="'+req.hsnCode+'"'
+      }
+      if(req.weightUnit != undefined){
+        query=query+' and weight_unit='+req.weightUnit+''
+      }
+      if(req.weightValue != undefined){
+        query=query+' and weight="'+req.weightValue+'"'
+      }
+      if(req.widthUnit != undefined){
+        query=query+' and width_unit='+req.widthUnit+''
+      }
+      if(req.widthValue != undefined){
+        query=query+' and width="'+req.widthValue+'"'
+      }
+      
       const data = await this.datasource.query(query);
-      console.log(data)
+      // console.log(data)
       if(data.length > 0){
         return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)
       }

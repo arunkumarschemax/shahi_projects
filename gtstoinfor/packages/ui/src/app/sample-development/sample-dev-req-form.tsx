@@ -1,6 +1,6 @@
 import { EyeOutlined, LoadingOutlined, PlusOutlined, UploadOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import { BuyerRefNoRequest, DepartmentReq,SampleDevelopmentRequest, StyleIdReq } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, CategoryEnumDisplay, DepartmentReq,SampleDevelopmentRequest, StyleIdReq } from "@project-management-system/shared-models";
 import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Tabs, message } from "antd";
 import { useEffect, useState } from "react";
@@ -306,7 +306,7 @@ const getBase64 = (img, callback) => {
             if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
 
               // console.log('TTTTT')
-              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData)
+              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category)
               // console.log(req.sizeData)
               console.log(req)
 
@@ -317,7 +317,7 @@ const getBase64 = (img, callback) => {
                     message.success(res.internalMessage, 2);
                     if (fileList.length > 0) {    
                       const formData = new FormData();
-                      fileList.forEach((file) => {
+                      fileList?.forEach((file) => {
                         // console.log(file.originFileObj)
                         formData.append('file', file.originFileObj);
                       });
@@ -426,29 +426,32 @@ const getBase64 = (img, callback) => {
 
   const uploadFabricProps: UploadProps = {
     // alert();
-    multiple: false,
+    multiple: true,
     onRemove: file => {
-      setFileList([]);
+      console.log(file);
+      console.log(fileList.find((f) => f.uid != file.uid))
+      let files:any[] = fileList.find((f) => f.uid != file.uid)
+      setFileList(files);
       setImageUrl('');
     },
     beforeUpload: (file: any) => {
-      if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+      if (!file.name.match(/\.(pdf|xlsx|xls|png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
         AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
         return true;
       }
       // var reader = new FileReader();
       // reader.readAsArrayBuffer(file);
       // reader.onload = data => {
-        if (fileList.length == 1) {
-          AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
-          return true;
-        } else {
+        // if (fileList.length == 1) {
+        //   AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+        //   return true;
+        // } else {
             setFileList([...fileList,file]);
           getBase64(file, imageUrl =>
             setImageUrl(imageUrl)
           );
           return false;
-        }
+        // }
       // }
     },
     progress: {
@@ -750,9 +753,9 @@ const getBase64 = (img, callback) => {
                                                     <Button
                                                         style={{ color: 'black', backgroundColor: '#7ec1ff' }}
                                                         icon={<UploadOutlined />}
-                                                        disabled={fileList.length == 1? true:false}
+                                                        // disabled={fileList.length == 1? true:false}
                                                     >
-                                                        Upload Fabric
+                                                        Upload Tech Pack
                                                     </Button>
                                                     </Upload>
                                                     {fileList.length ==1?
@@ -907,6 +910,28 @@ const getBase64 = (img, callback) => {
                   return (
                     <Option key={e.typeId} value={e.typeId}>
                       {e.type}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+            <Form.Item
+              name="category"
+              label="Category"
+              rules={[{ required: false, message: "" }]}
+            >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Category"
+              >
+                {CategoryEnumDisplay.map((e) => {
+                  return (
+                    <Option key={e.name} value={e.name}>
+                      {e.displayVal}
                     </Option>
                   );
                 })}

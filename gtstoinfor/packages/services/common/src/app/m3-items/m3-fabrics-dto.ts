@@ -77,5 +77,7 @@ export class M3FabricsDTO {
 
     @ApiProperty({type:[FabricContentDto]})
     fabricContentInfo: FabricContentDto[]
+    @ApiProperty()
+    remarks: string;
 }
 

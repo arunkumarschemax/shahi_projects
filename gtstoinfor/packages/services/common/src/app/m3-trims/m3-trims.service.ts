@@ -4,7 +4,7 @@ import { Repository, Not, DataSource } from "typeorm";
 import { M3TrimsEntity } from "./m3-trims.entity";
 import { M3TrimsAdapter } from "./m3-trims.adaptor";
 import { M3TrimsRepo } from "./m3-trims.repository";
-import { BuyerIdReq, BuyerRefNoRequest, CommonResponseModel, ItemTypeEnum, M3TrimType, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
+import { BuyerIdReq, BuyerRefNoRequest, CommonResponseModel, ItemTypeEnum, M3TrimFilterReq, M3TrimType, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
 import { M3TrimsDTO } from "./m3-trims.dto";
 
 @Injectable()
@@ -42,21 +42,43 @@ export class M3TrimsService {
       return new CommonResponseModel(false, 0, 'No data found')
   }
 
-  async getM3TrimsByBuyer(req: BuyerIdReq): Promise<CommonResponseModel> {
+  async getM3TrimsByBuyer(req: M3TrimFilterReq): Promise<CommonResponseModel> {
     try{
-      console.log(req)
+      console.log(req,'#############################')
+      
       let query = `Select m3.m3_trim_Id as m3TrimsId,m3.trim_code AS trimCode,m3.trim_type AS trimType, uom_id AS uomId, u.uom AS uom, c.colour_id AS colorId, c.colour AS colorName from m3_trims m3 left join uom u on u.id = m3.uom_id left join colour c on c.colour_id = m3.color_id where m3.m3_trim_Id>0`
-      if (req?.buyerId) {
+      if (req.buyerId != undefined) {
         query = query + ` AND m3.buyer_id=${req.buyerId}`
       }
-      if (req?.trimCatId) {
-        query = query + ` AND m3.trim_category_id=${req.trimCatId}`
+      if (req.trimCategory != undefined) {
+        query = query + ` AND m3.trim_category_id=${req.trimCategory}`
       }
-      if (req?.trimType) {
+      if (req.trimType != undefined) {
         query = query + ` AND m3.trim_type="${req.trimType}"`
       }
-      if (req?.trimMapId) {
+      if (req.trimMapId != undefined) {
         query = query + ` AND m3.trim_mapping_id=${req.trimMapId}`
+      }
+      if(req.categoryId != undefined){
+        query = query+' and m3.category_id='+req.categoryId+''
+      }
+      if(req.contentId != undefined){
+        query = query+' and m3.content_id='+req.contentId+''
+      }
+      if(req.finishId != undefined){
+        query=query+' and m3.finish_id='+req.finishId+''
+      }
+      if(req.holeId != undefined){
+        query=query+' and m3.hole_id='+req.holeId+''
+      }
+      if(req.hsnCode != undefined){
+        query=query+' and m3.hsn_code="'+req.hsnCode+'"'
+      }
+      if(req.typeId != undefined){
+        query=query+' and m3.type_id='+req.typeId+''
+      }
+      if(req.m3Code != undefined){
+        query=query+' and m3.m3_code="'+req.m3Code+'"'
       }
       query = query + ` group by m3.m3_trim_Id`
       const data = await this.datasource.query(query)

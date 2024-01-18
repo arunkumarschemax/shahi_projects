@@ -30,7 +30,7 @@ export class M3FabricsDTO {
     createdUser?: string
     updatedUser?: string
     versionFlag?: number
-
+    remarks?: string
     constructor(
         m3ItemsId: number,
         buyerId: number,
@@ -56,6 +56,7 @@ export class M3FabricsDTO {
         createdUser?: string,
         updatedUser?: string,
         versionFlag?: number,
+        remarks?: string
     ){
         this.m3ItemsId = m3ItemsId
         this.buyerId = buyerId
@@ -81,6 +82,7 @@ export class M3FabricsDTO {
         this.hsnCode = hsnCode
         this.fabricYarnInfo = fabricYarnInfo
         this.fabricContentInfo = fabricContentInfo
+        this.remarks = remarks
     }
 }
 

@@ -172,6 +172,7 @@ import { RolePermission } from '../role-permissions';
         {
             title: 'S No',
             key: 'sno',
+            width:'50px',
             style: { background: 'red' },
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * 10 + (index + 1),
@@ -182,7 +183,6 @@ import { RolePermission } from '../role-permissions';
           {
             title: "Grn Date",
             dataIndex: "grndate",
-            width:'200px',
             render:(_,record) =>{
               return(record.grndate?moment(record.grndate).format("YYYY-MM-DD"):'-')
             }
@@ -191,28 +191,24 @@ import { RolePermission } from '../role-permissions';
           {
             title: "Grn Number",
             dataIndex: "grnNumber",
-            width:'300px',
             ...getColumnSearchProps('grnNumber'),
         
           },
           {
             title: "Grn Item Number",
             dataIndex: "grnItemNo",
-            width:'200px',          
             ...getColumnSearchProps('grnItemNo')
 
           },
           {
             title: "Style",
             dataIndex: "style",
-            width:'200px',
             ...getColumnSearchProps('style')
 
         },
           {
               title: "Po Number",
               dataIndex: "poNumber",
-             width:'500px',
             ...getColumnSearchProps('poNumber')
 
           },
@@ -223,22 +219,22 @@ import { RolePermission } from '../role-permissions';
 
           },
           {
-            title: "Indent Number",
-            dataIndex: "indentNo",
-            width:'200px',
-            ...getColumnSearchProps('indentNo')
+            title: "Indent /Sample Order Number",
+            ...getColumnSearchProps('indentNo'),
+            render:(_,record) =>{
+              return (record.indentNo != null ?record.indentNo:record.sampleReqNo)
+             },
+
 
           },
-          {
-            title: "Sample Order",
-            dataIndex: "sampleReqNo",
-            ...getColumnSearchProps('sampleReqNo')
-
-          },
+          // {
+          //   title: "Sample Order",
+          //   dataIndex: "sampleReqNo",
+          //   ...getColumnSearchProps('sampleReqNo')
+          // },
           {
             title: "Item Type",
             dataIndex: "itemType",
-            width:'300px',
             sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
             sortDirections: ["descend", "ascend"],
             // ...getColumnSearchProps('itemType'),
@@ -279,51 +275,79 @@ import { RolePermission } from '../role-permissions';
             dataIndex: "poQuantity",
             ...getColumnSearchProps('poQuantity'),
             render:(_,record)=>{
-              return(record.poQuantity?record.poQuantity+'-'+record.uom:'-')
+              let uom
+              if(record.uom != null){
+                uom='-'+record.uom
+              }else{
+                uom=''
+              }
+              return(record.poQuantity?record.poQuantity+uom:'-')
             }
 
           },
           {
             title: "Recived Quantity",
-            dataIndex: "receivedQuantity",
-            // width:'110px',
-            sorter: (a, b) => a.poQuantity.localeCompare(b.receivedQuantity),
+            sorter: (a, b) => a.receivedQuantity.localeCompare(b.receivedQuantity),
             sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('receivedQuantity')
-
-      
+            ...getColumnSearchProps('receivedQuantity'),
+            render:(_,record)=>{
+              let uom
+              if(record.uom != null){
+                uom='-'+record.uom
+              }else{
+                uom=''
+              }
+              return(record.receivedQuantity?record.receivedQuantity+uom:'-')
+            }
           },
           {
             title: "Rejected Quantity",
-            dataIndex: "rejectedQuantity",
-            width:'110px',
-            // sorter: (a, b) => a.poQuantity.localeCompare(b.rejectedQuantity),
-            // sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('rejectedQuantity')
+            ...getColumnSearchProps('rejectedQuantity'),
+            render:(_,record)=>{
+              let uom
+              if(record.uom != null){
+                uom='-'+record.uom
+              }else{
+                uom=''
+              }
+              return(record.rejectedQuantity?record.rejectedQuantity+uom:'-')
+            }
       
           },
           {
             title: "Unit price",
-            dataIndex: "unitPrice",
-            // width:'110px',
             sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
             sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('unitPrice')
-
-      
+            ...getColumnSearchProps('unitPrice'),
+            render:(_,record) =>{
+              let unitPriceUom
+              if(record.currencyName != null){
+                unitPriceUom ='-'+record.currencyName
+              }else{
+                unitPriceUom=''
+              }
+              return record.unitPrice+unitPriceUom
+            }
           },
           {
             title: "Grn Amount",
-            dataIndex: "totalPoAmount",
-            // width:'110px',
             sorter: (a, b) => a.totalPoAmount.localeCompare(b.totalPoAmount),
             sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('totalPoAmount')
+            ...getColumnSearchProps('totalPoAmount'),
+            render:(_,record) =>{
+              let unitPriceUom
+              if(record.currencyName != null){
+                unitPriceUom ='-'+record.currencyName
+              }else{
+                unitPriceUom=''
+              }
+              return record.totalPoAmount+unitPriceUom
+            }
           },
           {
             title: "Location Mapping Status",
             dataIndex: "locationMappedStatus",
-            // width:'110px',
+            fixed: 'right',  
             sorter: (a, b) => a.locationMappedStatus.localeCompare(b.locationMappedStatus),
             sortDirections: ["descend", "ascend"],
             ...getColumnSearchProps('locationMappedStatus')
@@ -332,7 +356,7 @@ import { RolePermission } from '../role-permissions';
           {
             title: "Po Status",
             dataIndex: "poStatus",
-            // width:'110px',
+            fixed: 'right',  
             sorter: (a, b) => a.poQuantity.localeCompare(b.rejectedQuantity),
             sortDirections: ["descend", "ascend"],
             ...getColumnSearchProps('poStatus')
@@ -410,7 +434,7 @@ import { RolePermission } from '../role-permissions';
                           setPage(current);
                         }
                       }}
-                      scroll={{x:true}}
+                      scroll={{x:'max-content',y:500}}
                     />
         </Card>
         </div>
