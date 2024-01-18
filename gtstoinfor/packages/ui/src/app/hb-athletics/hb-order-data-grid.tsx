@@ -1141,15 +1141,18 @@ import { Excel } from "antd-table-saveas-excel";
                   <RangePicker style={{width:180}}   />
                 </Form.Item>
               </Col>
-              <Row>
+              {/* <Row> */}
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 5 }}
                 lg={{ span: 5 }}
                 xl={{ span: 4 }}
-              >
-                <Form.Item style={{marginTop:20,marginLeft:60}}>
+                style={{marginTop:23,marginLeft:60}}
+              > 
+                <Form.Item 
+                // style={{marginTop:20,marginLeft:60}}
+                >
                   <Button
                     htmlType="submit"
                     icon={<SearchOutlined />}
@@ -1160,17 +1163,19 @@ import { Excel } from "antd-table-saveas-excel";
                   </Button>
                 
                 </Form.Item>
-              </Col>
-              <Col
+              {/* </Col> */}
+              {/* <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 5 }}
                 lg={{ span: 5 }}
                 xl={{ span: 4 }}
-              >
-                <Form.Item style={{marginTop:20}}>
+              > */}
+                <Form.Item 
+                // style={{marginTop:20}}
+                 style={{ marginLeft: 120 ,marginTop:-43}}
+                >
                   <Button
-                    style={{ marginLeft: 120 }}
                     htmlType="submit"
                     type="primary"
                     onClick={onReset}
@@ -1181,7 +1186,7 @@ import { Excel } from "antd-table-saveas-excel";
                 </Form.Item>
               </Col>
               </Row>
-            </Row>
+            {/* </Row> */}
           </Form>
           {/* <Table
                       columns={columns}
