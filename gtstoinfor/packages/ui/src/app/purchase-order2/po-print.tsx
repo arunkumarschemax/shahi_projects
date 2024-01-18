@@ -85,7 +85,8 @@ export function PoPrint(props: PoPrintProps) {
     
     
     
-    const totalAmount = poData.reduce((sum, item) => sum + parseFloat(item.total_amount || 0), 0);
+    // const totalAmount = poData.reduce((sum, item) => sum + parseFloat(item.total_amount || 0), 0);
+    const totalAmount = poData.reduce((sum, e) => (sum + e.unit_price? Number((e.po_quantity*e.unit_price)-((e.po_quantity*e.unit_price)*(e.discount/100))): 0),0)
     const totalAmountInWords = numberToWords.toWords(totalAmount).toUpperCase();
     
     
@@ -152,7 +153,7 @@ export function PoPrint(props: PoPrintProps) {
             </div>
                     
                     
-                    <div style={{  padding: '20px',height:'300px', width: '280px' }}>
+                    <div style={{  padding: '20px',height:'350px', width: '300px' }}>
                     <h1 style={{ textAlign: 'center',marginTop:'-10px', padding: "20px" ,fontSize:"17px",fontFamily:'Century Schoolbook'}}>{'Shahi Exports Pvt.Ltd. Sy.No.13,14 AND 15 Sarjapura Main Road, Bellandur Gate Bengaluru Urban, KARNATAKA (KA) Pin Code:560103'}</h1>
                     <h1 style={{ textAlign: 'center' ,marginTop:'-30px',fontSize:"12px",fontFamily:'Century Schoolbook',color: 'blue'}}>{'GSTIN : 29AAJCS1175L1ZU'}</h1>
                     <h1 style={{ textAlign: 'center' ,marginTop:'-10px',fontSize:"12px",fontFamily:'Century Schoolbook',color: 'blue', textDecoration: 'underline' }}>{'Inter State'}</h1>
@@ -165,11 +166,17 @@ export function PoPrint(props: PoPrintProps) {
   </tr>
   <tr>
     <td style={{ border: '1px solid #000', textAlign: 'left', borderRight: '1px solid #000' }}>Integrated GST</td>
-    <td style={{ border: '1px solid #000' }}>{2389}</td>
+    <td style={{ border: '1px solid #000' }}>{totalAmount}</td>
   </tr>
   <tr>
     <td style={{ border: '1px solid #000', textAlign: 'left', borderRight: '1px solid #000' }}>Total</td>
-    <td style={{ border: '1px solid #000' }}>{900000}</td>
+    <td style={{ border: '1px solid #000' }}>{totalAmount}</td>
+
+  </tr>
+  <tr>
+    <td style={{ border: '1px solid #000', textAlign: 'left', borderRight: '1px solid #000' }}>Total(In Words)</td>
+    <td style={{ border: '1px solid #000' }}>{totalAmountInWords}</td>
+
   </tr>
 </table>
 
@@ -238,6 +245,7 @@ export function PoPrint(props: PoPrintProps) {
                             <th style={{width:'3%'}}>Ln</th>
                             <th>HSN/SAC</th>
                             <th style={{width:'50px'}}>Item Code</th>
+                            <th style={{width:'50px'}}>Colour</th>
                             <th>Supplier Item</th>
                             <th>Item Name</th>
                             <th  style={{width:'50px'}}>Item Description</th>
@@ -267,7 +275,7 @@ export function PoPrint(props: PoPrintProps) {
                                   {e.item_code ? e.item_code : '-'}
                                           </div>
                                        </td>
-
+                            <td >{e.colour? e.colour:'-'}</td>
                             <td >{e.name? e.name:'-'}</td>
                             <td >{e.po_material_type? e.po_material_type:'-'}</td>
                        
