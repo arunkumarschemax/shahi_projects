@@ -25,6 +25,7 @@ import { StocksRepository } from '../stocks/repository/stocks.repository';
 import { StocksEntity } from '../stocks/stocks.entity';
 import { SampleRequestItemsEntity } from './entities/sample-request-items.entity';
 import { UploadFilesRepository } from './repo/upload-files-repository';
+import { UploadFilesEntity } from './entities/upload-files-entity';
 // import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 
 @Module({
@@ -39,7 +40,7 @@ import { UploadFilesRepository } from './repo/upload-files-repository';
     SampleInventoryLogEntity,
     MaterialAllocationEntity,
     MaterialAllocationItemsEntity,
-    StocksEntity,SampleRequestItemsEntity
+    StocksEntity,SampleRequestItemsEntity,UploadFilesEntity
 
   ]),
   ],

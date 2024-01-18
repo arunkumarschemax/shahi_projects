@@ -317,10 +317,19 @@ const getBase64 = (img, callback) => {
                     message.success(res.internalMessage, 2);
                     if (fileList.length > 0) {    
                       const formData = new FormData();
-                      fileList?.forEach((file) => {
-                        // console.log(file.originFileObj)
-                        formData.append('file', file.originFileObj);
-                      });
+                      const files = fileList;
+                      console.log(files);
+                      if (files) {
+                        for (let i = 0; i < files.length; i++) {
+                        console.log(files[i])
+                          formData.append('file', files[i]);
+                        }
+                      }
+                      console.log(formData)
+                      // fileList?.forEach((file) => {
+                      //   // console.log(file.originFileObj)
+                      //   formData.append('file', file.originFileObj);
+                      // });
                       formData.append('reqNo', `${res.data[0].requestNo}`);
                       formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
                       console.log(res.data[0].SampleRequestId)
@@ -330,7 +339,7 @@ const getBase64 = (img, callback) => {
                         res.data[0].filepath = file.data;
                       });
                     }
-                    navigate("/sample-development/sample-requests")
+                    // navigate("/sample-development/sample-requests")
                   } else {
                     message.success(res.internalMessage, 2);
                   }
