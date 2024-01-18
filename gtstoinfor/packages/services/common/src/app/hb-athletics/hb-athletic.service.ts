@@ -213,6 +213,13 @@ export class HbService {
         await page.click('button.ant-btn-primary');
         await page.waitForTimeout(10000)
 
+           setTimeout(async () => {
+        await page.goto('http://localhost:4200/#/hb-athletics/hb-pdf-upload/', {
+          timeout: 100000,
+          waitUntil: 'networkidle0'
+        })
+      }, 1000);
+
         const sourceFilePath = path.join(directoryPath, file);
         const destinationFilePath = path.join(destinationDirectory, file);
         fs.rename(sourceFilePath, destinationFilePath, async (err) => {
