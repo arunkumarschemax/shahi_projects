@@ -87,8 +87,11 @@ export class CentricRepository extends Repository<CentricEntity> {
             if (req.deliveryDateStartDate !== undefined) {
                 query.andWhere(`Date(o.delivery_date) BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
             }
-            if(req.season !== undefined){
-                query.andWhere(`o.season ='${req.season}'`) 
+            // if(req.season !== undefined){
+            //     query.andWhere(`o.season ='${req.season}'`) 
+            // }
+            if (req.season !== undefined) {
+                query.andWhere(`o.season LIKE :season`, { season: `%${req.season}%` });
             }
             if (req.exfactoryDateStartDate !== undefined) {
                 query.andWhere(`Date(o.exfactory) BETWEEN '${req.exfactoryDateStartDate}' AND '${req.exfactoryDateEndDate}'`)
@@ -117,8 +120,8 @@ export class CentricRepository extends Repository<CentricEntity> {
             if (req.deliveryDateStartDate !== undefined) {
                 query.andWhere(`Date(o.delivery_date) BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
             }
-            if(req.season !== undefined){
-                query.andWhere(`o.season ='${req.season}'`) 
+            if (req.season !== undefined) {
+                query.andWhere(`o.season LIKE :season`, { season: `%${req.season}%` });
             }
             if (req.exfactoryDateStartDate !== undefined) {
                 query.andWhere(`Date(o.exfactory) BETWEEN '${req.exfactoryDateStartDate}' AND '${req.exfactoryDateEndDate}'`)
