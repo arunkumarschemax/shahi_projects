@@ -317,7 +317,7 @@ const getBase64 = (img, callback) => {
                     message.success(res.internalMessage, 2);
                     if (fileList.length > 0) {    
                       const formData = new FormData();
-                      fileList.forEach((file) => {
+                      fileList?.forEach((file) => {
                         // console.log(file.originFileObj)
                         formData.append('file', file.originFileObj);
                       });
@@ -426,29 +426,32 @@ const getBase64 = (img, callback) => {
 
   const uploadFabricProps: UploadProps = {
     // alert();
-    multiple: false,
+    multiple: true,
     onRemove: file => {
-      setFileList([]);
+      console.log(file);
+      console.log(fileList.find((f) => f.uid != file.uid))
+      let files:any[] = fileList.find((f) => f.uid != file.uid)
+      setFileList(files);
       setImageUrl('');
     },
     beforeUpload: (file: any) => {
-      if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+      if (!file.name.match(/\.(pdf|xlsx|xls|png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
         AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
         return true;
       }
       // var reader = new FileReader();
       // reader.readAsArrayBuffer(file);
       // reader.onload = data => {
-        if (fileList.length == 1) {
-          AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
-          return true;
-        } else {
+        // if (fileList.length == 1) {
+        //   AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+        //   return true;
+        // } else {
             setFileList([...fileList,file]);
           getBase64(file, imageUrl =>
             setImageUrl(imageUrl)
           );
           return false;
-        }
+        // }
       // }
     },
     progress: {
@@ -750,9 +753,9 @@ const getBase64 = (img, callback) => {
                                                     <Button
                                                         style={{ color: 'black', backgroundColor: '#7ec1ff' }}
                                                         icon={<UploadOutlined />}
-                                                        disabled={fileList.length == 1? true:false}
+                                                        // disabled={fileList.length == 1? true:false}
                                                     >
-                                                        Upload Fabric
+                                                        Upload Tech Pack
                                                     </Button>
                                                     </Upload>
                                                     {fileList.length ==1?
