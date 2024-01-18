@@ -107,6 +107,13 @@ const HbColineView = () => {
                     return (record.cust_po ? (record.cust_po) : '-')
                 }
             },
+
+            {
+                title: 'Style',
+                dataIndex: 'style', render: (text, record) => {
+                    return (record.style ? (record.style) : '-')
+                }
+            },
             {
                 title: 'Delivery Date',
                 dataIndex: 'exit_factory_date',
@@ -114,12 +121,7 @@ const HbColineView = () => {
                     return (record.exit_factory_date ? (record.exit_factory_date) : '-')
                 }
             },
-            {
-                title: 'Style',
-                dataIndex: 'style', render: (text, record) => {
-                    return (record.style ? (record.style) : '-')
-                }
-            },
+    
             {
                 title: 'Item No',
                 dataIndex: 'item_no',
@@ -140,6 +142,20 @@ const HbColineView = () => {
                 dataIndex: 'co_number',
                 render: (text, record) => {
                     return (record.co_number ? (record.co_number) : '-')
+                }
+            },
+            {
+                title: 'Rised User',
+                dataIndex: 'created_user',
+                render: (text, record) => {
+                    return (record.created_user ? (record.created_user) : '-')
+                }
+            },
+            {
+                title: 'Rised Date',
+                dataIndex: 'raised_date',
+                render: (text, record) => {
+                    return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')): '-')
                 }
             },
             {
