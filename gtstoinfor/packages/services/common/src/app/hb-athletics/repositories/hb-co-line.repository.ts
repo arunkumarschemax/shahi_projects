@@ -34,7 +34,7 @@ export class HbCOLineRepository extends Repository<HbCOLineEntity> {
     
 
     if (req.coNumber !== undefined) {
-      query.andWhere(`co.co_number LIKE :co_number`, { coNumber: `%${req.coNumber}%` });
+      query.andWhere(`co.co_number LIKE :coNumber`, { coNumber: `%${req.coNumber}%` });
   }
   
       return await query.getRawMany();
