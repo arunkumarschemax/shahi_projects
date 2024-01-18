@@ -34,6 +34,7 @@ export class M3ItemsAdapter {
         entity.widthUnit = dto.widthUnit;
         entity.m3Code = dto.m3Code;
         entity.hsnCode = dto.hsnCode
+        entity.remarks = dto.remarks
         let fabricYarnInfo = []
         let fabricContentInfo = []
         for(const fYarn of dto.fabricYarnInfo){
@@ -76,6 +77,7 @@ export class M3ItemsAdapter {
         dto.shrinkage=entity.shrinkage
         dto.m3Code = entity.m3Code
         dto.hsnCode=entity.hsnCode
+        dto.remarks = entity.remarks
         return dto;
     }
 

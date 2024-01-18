@@ -1,4 +1,4 @@
-import { SampleDevelopmentStatusEnum } from "../../enum"
+import { CategoryEnum, SampleDevelopmentStatusEnum } from "../../enum"
 import { SampleFabricReq } from "./sample-dev-fabric-info-req";
 import { SampleProcessInfoReq } from "./sample-dev-process-info-req";
 import { SampleTrimReq } from "./sample-dev-trim-req";
@@ -37,7 +37,7 @@ export class SampleDevelopmentRequest {
     fileName?:string;
     filePath?:string;
     createdAt:string
-
+    category?:CategoryEnum
 
     constructor(
         sampleRequestId: number,
@@ -70,7 +70,8 @@ export class SampleDevelopmentRequest {
         processInfo: SampleProcessInfoReq[],
         status?: SampleDevelopmentStatusEnum,
         fileName?:string,
-        filePath?:string
+        filePath?:string,
+        category?:CategoryEnum
 
     ) {
         this.sampleRequestId = sampleRequestId
@@ -104,5 +105,6 @@ export class SampleDevelopmentRequest {
         this.processInfo = processInfo
         this.fileName=fileName
         this.filePath=filePath
+        this.category = category
     }
 }

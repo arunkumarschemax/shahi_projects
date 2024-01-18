@@ -565,4 +565,15 @@ export class SampleDevReqController {
   //   }
 
   // }
+
+  @Post('/getUsageWhtsAppMsg')
+  @ApiBody({ type: Date })
+  async getUsageWhtsAppMsg(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getUsageWhtsAppMsg()
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
 }
