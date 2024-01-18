@@ -355,18 +355,18 @@ export class HbService {
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
       const records = await this.HbOrdersRepo.find({ where: { custPo: req.custPo,exitFactoryDate:req.exitFactoryDate } });
       const empty = [];
-      for (const rec of records) {
+     
         //console.log(rec,'reccccccccc')
         const entity = new HbCOLineEntity()
         entity.buyer = req.buyer
         entity.custPo = req.custPo;
-        entity.style = rec.style;
+        entity.style = req.style;
         entity.itemNo =  req?.itemNo;
         entity.status = 'Open';
-        entity.exitFactoryDate=rec.exitFactoryDate;
+        entity.exitFactoryDate=req.exitFactoryDate;
         entity.createdUser = 'admin';
         empty.push(entity)
-      }
+      
      // console.log(empty,'emptyyyyy')
       const save = await this.hbCoLineRepo.save(empty);
 
@@ -386,6 +386,10 @@ export class HbService {
       return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
     }
   }
+
+
+
+
 
   async getHborderDataForInfo(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
     console.log(req,"servvv")
@@ -423,7 +427,7 @@ export class HbService {
   }
  
 
-  async getHbCoLineData(req?: hbCoLineRequest): Promise<CommonResponseModel> {
+  async getHbCoLineData(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
     const data = await this.hbCoLineRepo.getHbCoLineData(req)
     if (data.length > 0)
       return new CommonResponseModel(true, 1, 'data retrived', data)

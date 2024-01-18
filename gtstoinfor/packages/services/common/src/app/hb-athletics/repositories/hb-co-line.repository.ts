@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { HbCOLineEntity } from "../entity/hb-co-line.entity";
-import { hbCoLineRequest } from "packages/libs/shared-models/src/common/hb-athletic";
+import { HbPoOrderFilter, hbCoLineRequest } from "packages/libs/shared-models/src/common/hb-athletic";
 
 
 @Injectable()
@@ -13,23 +13,37 @@ export class HbCOLineRepository extends Repository<HbCOLineEntity> {
         super(HbCoLineRepository.target, HbCoLineRepository.manager, HbCoLineRepository.queryRunner);
     }
 
-    async getHbCoLineData(req: hbCoLineRequest): Promise<any[]> {
-        const query = this.createQueryBuilder('co')
-          .select(`DISTINCT co.cust_po, co.exit_factory_date, co.co_date, co.style, co.item_no, co.status, co.error_msg,
-                   DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user`);
-    
-        if (req.custPo !== undefined) {
-          query.andWhere(`co.cust_po = :custPo`, { custPo: req.custPo });
-        }
-        if (req.itemNo !== undefined) {
-          query.andWhere(`co.item_no = :itemNo`, { itemNo: req.itemNo });
-        }
-        if (req.style !== undefined) {
-          query.andWhere(`co.style = :style`, { style: req.style });
-        }
-    
-        return await query.getRawMany();
+    async getHbCoLineData(req: HbPoOrderFilter): Promise<any[]> {
+      const query = this.createQueryBuilder('co')
+        .select(`DISTINCT co.cust_po, co.exit_factory_date, co.co_date, co.style, co.item_no, co.status, co.error_msg,
+                 DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user, co.co_number`);
+  
+      if (req.custPo !== undefined) {
+        query.andWhere(`co.cust_po = :custPo`, { custPo: req.custPo });
       }
+      if (req.itemNo !== undefined) {
+        query.andWhere(`co.item_no = :itemNo`, { itemNo: req.itemNo });
+      }
+      if(req.style !== undefined){
+        query.andWhere(`co.style LIKE :style`, { style: `%${req.style}%` });
+    }
+      if (req.deliveryDateStartDate !== undefined) {
+        query.andWhere(`STR_TO_DATE(co.exit_factory_date, '%d-%m-%Y') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+    }
+   
+    
+
+    if (req.coNumber !== undefined) {
+      query.andWhere(`co.co_number LIKE :co_number`, { coNumber: `%${req.coNumber}%` });
+  }
+  
+      return await query.getRawMany();
+    }
+
+
+
+
+
 
     async getCoPoNumber(): Promise<any[]> {
         const query = this.createQueryBuilder('co')
