@@ -1,8 +1,6 @@
-
-
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 // import { coLineRequest } from "@project-management-system/shared-models";
-import { Button, Card, Col, Form, Row, Select, Table } from "antd"
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table } from "antd"
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react";
@@ -10,6 +8,7 @@ import { Excel } from "antd-table-saveas-excel";
 import { CentricService, HbService } from "@project-management-system/shared-services";
 import { centricCoLineRequest } from "packages/libs/shared-models/src/common/centric/centric-coLine.req";
 import moment from "moment";
+import { AlertMessages, HbPoOrderFilter, hbCoLineRequest } from "@project-management-system/shared-models";
 
 const HbColineView = () => {
     const [page, setPage] = useState<number>(1);
@@ -20,6 +19,7 @@ const HbColineView = () => {
     const [item, setItem] = useState<any>([]);
     const [form] = Form.useForm();
     const { Option } = Select;
+    const { RangePicker } = DatePicker;
 
 
      useEffect(() => {
@@ -49,14 +49,24 @@ const HbColineView = () => {
     }
   
     const getData = () => {
-        const req = new centricCoLineRequest();
-
+        const req = new HbPoOrderFilter();
+        
         if (form.getFieldValue('buyerPo') !== undefined) {
-            req.poNumber = form.getFieldValue('buyerPo');
+            req.custPo = form.getFieldValue('buyerPo');
         }
         if (form.getFieldValue('item') !== undefined) {
             req.itemNo = form.getFieldValue('item');
         }
+        if (form.getFieldValue('deliveryDate') !== undefined) {
+            req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
+          }
+          if (form.getFieldValue('deliveryDate') !== undefined) {
+            req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
+          }
+
+          if (form.getFieldValue("co_number") !== undefined) {
+            req.coNumber = form.getFieldValue("co_number");
+          }
         
         service.getHbCoLineData(req).then(res => {
             if (res.status) {
@@ -64,6 +74,7 @@ const HbColineView = () => {
             }
             else {
                 setData([])
+                AlertMessages.getErrorMessage(res.internalMessage);
             }
         })
     }
@@ -96,6 +107,13 @@ const HbColineView = () => {
                     return (record.cust_po ? (record.cust_po) : '-')
                 }
             },
+
+            {
+                title: 'Style',
+                dataIndex: 'style', render: (text, record) => {
+                    return (record.style ? (record.style) : '-')
+                }
+            },
             {
                 title: 'Delivery Date',
                 dataIndex: 'exit_factory_date',
@@ -103,12 +121,7 @@ const HbColineView = () => {
                     return (record.exit_factory_date ? (record.exit_factory_date) : '-')
                 }
             },
-            {
-                title: 'Style',
-                dataIndex: 'style', render: (text, record) => {
-                    return (record.style ? (record.style) : '-')
-                }
-            },
+    
             {
                 title: 'Item No',
                 dataIndex: 'item_no',
@@ -129,6 +142,20 @@ const HbColineView = () => {
                 dataIndex: 'co_number',
                 render: (text, record) => {
                     return (record.co_number ? (record.co_number) : '-')
+                }
+            },
+            {
+                title: 'Rised User',
+                dataIndex: 'created_user',
+                render: (text, record) => {
+                    return (record.created_user ? (record.created_user) : '-')
+                }
+            },
+            {
+                title: 'Rised Date',
+                dataIndex: 'raised_date',
+                render: (text, record) => {
+                    return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')): '-')
                 }
             },
             {
@@ -298,6 +325,28 @@ const HbColineView = () => {
                             </Select>
                         </Form.Item>
                     </Col>
+                    <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Delivery Date" name="deliveryDate"  >
+                  <RangePicker style={{width:180}}   />
+                </Form.Item>
+              </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Co number" name="co_number"  >
+                  <Input placeholder="Enter Co number "  allowClear />
+                </Form.Item>
+              </Col>
                     
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                         <Form.Item>
@@ -329,4 +378,3 @@ const HbColineView = () => {
     )
 }
 export default HbColineView
-
