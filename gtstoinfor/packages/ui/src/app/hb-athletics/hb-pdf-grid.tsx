@@ -135,37 +135,37 @@ export function HbPdFInfoGrid() {
         },
         {
             title: 'Customer PO',
-            dataIndex: 'custPo',
+            dataIndex: 'cust_po',
             width:70 ,
-            sorter: (a, b) => a.custPo.localeCompare(b.custPo),
+            sorter: (a, b) => a.cust_po.localeCompare(b.cust_po),
             sortDirections: ["ascend", "descend"],
-            ...getColumnSearchProps('custPo')
+            ...getColumnSearchProps('cust_po')
         },
         {
             title: 'File Name',
-            dataIndex: 'pdfFileName',
+            dataIndex: 'pdf_file_name',
             width: 90,
-            sorter: (a, b) => a.pdfFileName.localeCompare(b.pdfFileName),
+            sorter: (a, b) => a.pdf_file_name.localeCompare(b.pdf_file_name),
             sortDirections: ["ascend", "descend"],
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
             title: 'File Type',
-            dataIndex: 'fileType',
+            dataIndex: 'file_type',
             width: 90,
-            sorter: (a, b) => a.fileType.localeCompare(b.fileType),
+            sorter: (a, b) => a.file_type.localeCompare(b.file_type),
             sortDirections: ["ascend", "descend"],
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
             title: 'Uploaded Date',
-            dataIndex: 'createdAt',
+            dataIndex: 'upload_date',
             align: 'center',
             width: 90,
-            sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+            sorter: (a, b) => a.upload_date.localeCompare(b.upload_date),
             sortDirections: ["ascend", "descend"],
             render: (text, record) => {
-                return record.createdAt ? moment(record.createdAt).format('MM/DD/YYYY hh:mm A') : '-'
+                return record.upload_date ? record.upload_date : '-'
             }
             
             

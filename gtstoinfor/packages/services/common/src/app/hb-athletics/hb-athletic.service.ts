@@ -153,7 +153,7 @@ export class HbService {
 
   async getPdfFileInfo(): Promise<CommonResponseModel> {
     try {
-      const data = await this.HbPdfRepo.find()
+      const data = await this.HbPdfRepo.getPDFInfo()
       if (data) {
         return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
       } else {
