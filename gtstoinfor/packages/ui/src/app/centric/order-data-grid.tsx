@@ -767,15 +767,16 @@ import {
                   <RangePicker style={{width:180}}   />
                 </Form.Item>
               </Col>
-              <Row>
+              {/* <Row> */}
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 5 }}
                 lg={{ span: 5 }}
                 xl={{ span: 4 }}
+                style={{marginTop:20,marginLeft:60}}
               >
-                <Form.Item style={{marginTop:20,marginLeft:60}}>
+                <Form.Item >
                   <Button
                     htmlType="submit"
                     icon={<SearchOutlined />}
@@ -785,17 +786,17 @@ import {
                   </Button>
                 
                 </Form.Item>
-              </Col>
+              {/* </Col>
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 5 }}
                 lg={{ span: 5 }}
                 xl={{ span: 4 }}
-              >
-                <Form.Item style={{marginTop:20}}>
+              > */}
+                <Form.Item style={{marginTop:-44 ,marginLeft: 120}} >
                   <Button
-                    style={{ marginLeft: 120 }}
+                    // style={{ marginLeft: 170 }}
                     htmlType="submit"
                     type="primary"
                     onClick={onReset}
@@ -806,7 +807,7 @@ import {
                 </Form.Item>
               </Col>
               </Row>
-            </Row>
+            {/* </Row> */}
           </Form>
           {renderReport(filterData)}
         </Card>
