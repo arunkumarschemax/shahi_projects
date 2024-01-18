@@ -103,7 +103,7 @@ const SizeDetail = ({props,buyerId,form}) => {
           
         });
       }
-      else if(name === "quantity" && quantity > 0){
+      else if(name === "quantity"){
         updatedData = data.map((record) => {
           console.log(record);
           if (record.key === recordKey) {
@@ -132,6 +132,7 @@ const SizeDetail = ({props,buyerId,form}) => {
 
 
   const handleDelete = (key) => {
+    console.log("delete")
     const updatedData = data.filter((record) => record.key !== key);
     setOnchangeData(updatedData); 
     setData(updatedData);
@@ -165,7 +166,7 @@ const SizeDetail = ({props,buyerId,form}) => {
           >
           </Input>
         </Form.Item>
-          <Form.Item name={`quantity${size.sizeId}+${record.key}`} rules={[{ required: true, message: 'Missing Size' }]}>
+          <Form.Item name={`quantity${size.sizeId}+${record.key}`} rules={[{ required: true, message: 'Missing Size' }]} initialValue={0}>
             <Input
               name={`quantity${size.sizeId}`}
               value={record[size.sizeId]}
@@ -178,7 +179,7 @@ const SizeDetail = ({props,buyerId,form}) => {
                 )
               }
               type='number'
-              min={1}
+              // min={1}
               placeholder='quantity'
             >
             </Input>
@@ -237,7 +238,7 @@ width:'10%',
       fixed:'right',
       width:'10%',
       render: (_, record) => (
-        <Button htmlType='submit' onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
+        <Button htmlType='button' onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
       ),
     },
   ];

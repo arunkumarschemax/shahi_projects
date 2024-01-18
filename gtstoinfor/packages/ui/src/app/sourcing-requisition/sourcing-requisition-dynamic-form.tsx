@@ -95,7 +95,7 @@ export const SourcingRequisitionDynamicForm = () => {
     const [mapData, setMapData] = useState<any[]>([])
     const [modal, setModal] = useState('')
     // const [trimFilterData, setTrimFilterData] = useState<any[]>([])
-
+    
 
 
 
@@ -147,9 +147,22 @@ export const SourcingRequisitionDynamicForm = () => {
     const getM3TrimsTypes = (request) => {
         m3Service.getM3TrimsByBuyer(request).then(res => {
             if(res.status) {
+             const m3itemIds = [];
+            const  trimId =trimForm.getFieldValue('trimCode')
+                if(trimId != undefined){
+                   res.data.forEach((item) => {
+                       m3itemIds.push(item.m3TrimsId);
+                     });
+                     if(m3itemIds.includes(trimId)){
+                     console.log('#')
+                     }else{
+                       trimForm.resetFields(['trimCode'])
+                     }
+                 }
                 setM3Trims(res.data)
             }else{
                 setM3Trims([])
+                trimForm.resetFields(['trimCode'])
                 message.info('No Data Found')
             }
         })
@@ -309,6 +322,8 @@ export const SourcingRequisitionDynamicForm = () => {
             }
         })
     }
+
+    let fabItemId
     const getM3FabricStyleCodes = (buyer,request) => {
         console.log(request)
          req= new m3FabricFiltersReq() 
@@ -331,10 +346,24 @@ export const SourcingRequisitionDynamicForm = () => {
          }     
         m3ItemsService.getM3FabricsByBuyer(req).then(res => {
             if(res.status){
+             const m3itemIds = [];
+             fabItemId =fabricForm.getFieldValue('m3FabricCode')
+             if(fabItemId != undefined){
+                res.data.forEach((item) => {
+                    m3itemIds.push(item.m3ItemsId);
+                  });
+                  if(m3itemIds.includes(fabItemId)){
+                  console.log('#')
+                  }else{
+                    fabricForm.resetFields(['m3FabricCode'])
+                  }
+              }
                 setFabricM3Code(res.data)
+               
             }
             else{
                 setFabricM3Code([])
+                    fabricForm.resetFields(['m3FabricCode'])
                 message.info('No M3 Fabric Data Found')
             }
         })
@@ -779,6 +808,7 @@ export const SourcingRequisitionDynamicForm = () => {
                 console.log(fabricTableData,'fabric table data')
                 setFabricTableVisible(true)
                 setBtnType("Add")
+                // setOnAdd("Add")
               getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),undefined)
             }else{
                 message.error('Please Give the color')
@@ -1121,8 +1151,8 @@ const onTrimChange = (val, option) => {
 
 const onFabriView =() =>{
     setModal('fileUpload')
-    setVisibleModel(true)
-    
+    setVisibleModel(true)    
+
 }
 
 const onTrimView = () =>{
@@ -1146,17 +1176,17 @@ const handleColor = (val) => {
     }
 }
 const m3FabricFilters = () =>{
-setModal('fabricFilter')
+ setModal('fabricFilter')
 setVisibleModel(true)
 }
 let req
 const handleFabricsfilterData = (data) => {
-    console.log(data)
+console.log(data)
     if(data != undefined){
         req = new m3FabricFiltersReq(sourcingForm.getFieldValue('buyer'),data[0].fabricTypeId,data[0].weaveId,data[0].weightUnit,data[0].epiConstruction,data[0].ppiConstruction,data[0].yarnType,data[0].widthUnit,data[0].finishId,data[0].shrinkage,data[0].hsnCode,data[0].content,data[0].weightValue,data[0].widthValue,data[0].m3Code)
-        console.log(req)
+console.log(req)
        getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),req)
-    }else{
+           }else{
         getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),undefined)
 
     }
@@ -1168,11 +1198,11 @@ const handleFabricsfilterData = (data) => {
   const trimFilterFormVisible =()=>{
     setModal('trimFilter')
      setVisibleModel(true)
-  }
+       }
 
   
   const handleTrimFilterData =(trimFilterData) =>{
-    let req
+        let req
     if(trimFilterData == undefined){
         req = new M3TrimFilterReq(sourcingForm.getFieldValue('buyer'),trimForm.getFieldValue('trimCategory'),trimForm.getFieldValue('trimType'),undefined,undefined,undefined,undefined,undefined,undefined,undefined)
     }else{
@@ -1665,13 +1695,13 @@ const handleFabricsfilterData = (data) => {
                                                     allowClear
                                                     showSearch
                                                     optionFilterProp="children"
-                                                    placeholder={renderTrimCodeOptions()[0]?.props.children}
+                                                    // placeholder={renderTrimCodeOptions()[0]?.props.children}
                                                     onChange={onTrimChange}
                                                     suffixIcon={trimForm.getFieldValue('trimCategory') != undefined || trimBtnType == 'Update'? <SearchOutlined
                                                         onClick={trimFilterFormVisible}
                                                          style={{ fontSize: '28px', marginLeft: '-7px' }} />:<></>}
                                                 >
-                                                    {renderTrimCodeOptions()}
+                                                    {/* {renderTrimCodeOptions()} */}
                                                     {m3Trims.map((e) => {
                                                         return (
                                                             <Option key={e.m3TrimsId} value={e.m3TrimsId} trimUomId={e.uomId} trimUomName={e.uom}>

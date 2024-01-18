@@ -10,7 +10,7 @@ const {Option} = Select
 export interface M3FabricFilterProps{
  formValues:any
  close: (value: any) => void;
-
+ 
 }
 
 const M3FabricFilters = (props:M3FabricFilterProps) => {
@@ -177,7 +177,7 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
     form.resetFields();
     console.log(yarnType)
     props.formValues(undefined)
-    props.close(null)
+    // props.close(null)
   };
 
 
@@ -202,7 +202,9 @@ const onFabricTpe = (val) =>{
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item label=" Fabric Type" name="fabricTypeId" >
               <Select 
+              showSearch
               placeholder=" Select Fabric Type" 
+              optionFilterProp="children"
               onChange={onFabricTpe}
               allowClear
               >
@@ -217,7 +219,9 @@ const onFabricTpe = (val) =>{
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item label=" Weave" name="weaveId">
               <Select 
+              showSearch
               placeholder=" Select Weave" 
+              optionFilterProp="children"
               allowClear
               >
                 {weave.map((option) => (
@@ -237,7 +241,7 @@ const onFabricTpe = (val) =>{
              />
               </Form.Item>
               <Form.Item name='weightUomId'>
-                <Select  placeholder="Select Unit" 
+                <Select  showSearch placeholder="Select Unit" optionFilterProp="children"
                 allowClear
                 // onChange={onWeightUom} onBlur={generateItemCode}
                  style={{width:'180px'}}>
@@ -260,7 +264,7 @@ const onFabricTpe = (val) =>{
                   />
                   </Form.Item>
                   <Form.Item name='widthUomId'>
-                  <Select   placeholder="Select Unit"
+                  <Select showSearch placeholder="Select Unit" optionFilterProp="children"
                    style={{width:'150px'}}
                    allowClear
                 //    onChange={onWidthUomChange} style={{width:'120px'}}
@@ -306,7 +310,7 @@ const onFabricTpe = (val) =>{
             <Form.Item name="yarnType">
               Yarn Type : <Radio.Group name="yarnType" style={{ marginTop: "25px" }}
                onChange={(e)=>yarnSelect(e?.target?.value)} >
-                <Radio value="Warp">Warp</Radio>
+                <Radio value="Wrap">Wrap</Radio>
                 <Radio value="Weft">Weft</Radio>
               </Radio.Group>
             </Form.Item>
@@ -314,7 +318,7 @@ const onFabricTpe = (val) =>{
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label=" Finish" name="finishId"
               >
-                <Select   placeholder="Select Unit" 
+                <Select   showSearch placeholder="Select Finish" optionFilterProp="children"
                   allowClear
                 >
                     {fabricFinish.map((e) => {
@@ -331,24 +335,26 @@ const onFabricTpe = (val) =>{
                 <Input placeholder=" Enter  Shrinkage"  />
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+          </Row>
+          <Row gutter={24}>
+            <Col span={7}>
               <Form.Item label=" Content" name="content" >
-                <Select   placeholder="Select Content" style={{width: '150px'}} allowClear>
-                        {contentData.map((e) => (
-                                    <Option key={e.contentId} value={e.contentId}>
-                                      {e.content}
-                                    </Option>
-                                  ))}
-                                </Select>
+                <Select showSearch placeholder="Select Content" allowClear optionFilterProp="children" >
+                  {contentData.map((e) => (
+                      <Option key={e.contentId} value={e.contentId}>
+                        {e.content}
+                      </Option>
+                    ))}
+                </Select>
               </Form.Item>
             </Col>
           </Row>
-          <Row gutter={16}>
-            </Row>
+          {/* <Row gutter={16}> */}
+            {/* </Row> */}
             <Row>
             <Col span={24} style={{ textAlign: "right" }}>
               <Button type="primary" htmlType="submit">
-                Seacrh
+                Search
               </Button>
               <Button
                 htmlType="button"
