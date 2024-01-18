@@ -47,6 +47,8 @@ import { RackPositionEntity } from '../rm_locations/rack-position.entity';
 import { OrderQuantityRequset } from './dto/order-quantity-request';
 import { MaterialAllocationItemsDTO } from './dto/material-allocation-items-dto';
 import { M3TrimsEntity } from '../m3-trims/m3-trims.entity';
+import { UploadFilesEntity } from './entities/upload-files-entity';
+import { UploadFilesRepository } from './repo/upload-files-repository';
 let moment = require('moment');
 
 
@@ -68,8 +70,7 @@ export class SampleRequestService {
     private matAllitemRepo:MaterialAllocationItemsRepo,
     private stockrepo:StocksRepository,
     private wpService: WhatsAppNotificationService,
-
-
+    private uploadFilesRepository: UploadFilesRepository,
     
   ) { }
 
@@ -539,14 +540,26 @@ export class SampleRequestService {
     }
 
   }
-  async UpdateFilePath(filePath: string, filename: string, SampleRequestId: number): Promise<UploadResponse> {
+  async UpdateFilePath(filePath: any, SampleRequestId: number): Promise<UploadResponse> {
     console.log('upload service id---------------', filePath)
-    console.log('upload service id---------------', filename)
     console.log('upload service id---------------', SampleRequestId)
     try {
-      let filePathUpdate;
-      filePathUpdate = await this.sampleRepo.update({ SampleRequestId: SampleRequestId }, { fileName: filename, filepath: filePath })
-      if (filePathUpdate.affected > 0) {
+      // let filePathUpdate;
+      // filePathUpdate = await this.sampleRepo.update({ SampleRequestId: SampleRequestId }, { fileName: filename, filepath: filePath })
+      let flag = true;
+      for(const res of filePath){
+        const entity = new UploadFilesEntity()
+        entity.fileName=res.fileName
+        entity.filePath="/dist/packages/services/common/"+res.path
+        entity.sampleRequestId=SampleRequestId  
+        entity.createdUser="admin"
+        const uploadDoc = await this.uploadFilesRepository.save(entity);
+        if(!uploadDoc){
+            flag = false;
+        }
+      }
+   
+      if (flag) {
         return new UploadResponse(true, 11, 'uploaded successfully', filePath);
       }
       else {

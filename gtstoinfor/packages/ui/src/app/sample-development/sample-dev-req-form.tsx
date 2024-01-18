@@ -313,7 +313,7 @@ const getBase64 = (img, callback) => {
             
                 sampleService.createSampleDevelopmentRequest(req).then((res) => {
                   if (res.status) {
-                    // console.log(res.data);
+                    console.log(fileList);
                     message.success(res.internalMessage, 2);
                     if (fileList.length > 0) {    
                       const formData = new FormData();

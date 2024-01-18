@@ -24,6 +24,7 @@ import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-re
 import { StocksRepository } from '../stocks/repository/stocks.repository';
 import { StocksEntity } from '../stocks/stocks.entity';
 import { SampleRequestItemsEntity } from './entities/sample-request-items.entity';
+import { UploadFilesRepository } from './repo/upload-files-repository';
 // import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 
 @Module({
@@ -43,6 +44,6 @@ import { SampleRequestItemsEntity } from './entities/sample-request-items.entity
   ]),
   ],
   controllers: [SampleDevReqController],
-  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo,SampleInventoryLoqRepo,IndentService,MaterialAllocationRepo,MaterialAllocationItemsRepo,StocksRepository,SampleDevelopmentService,WhatsAppNotificationService]
+  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo,SampleInventoryLoqRepo,IndentService,MaterialAllocationRepo,MaterialAllocationItemsRepo,StocksRepository,SampleDevelopmentService,WhatsAppNotificationService,UploadFilesRepository]
 })
 export class SampleDevReqModule {}

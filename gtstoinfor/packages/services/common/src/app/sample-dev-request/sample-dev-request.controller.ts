@@ -16,6 +16,7 @@ import { AllLocationRequest } from './dto/location-req';
 import { MaterialIssueRequest } from './dto/material-issue.req';
 import { SampleOrderIdRequest } from './dto/sample-req-id';
 import { OrderQuantityRequset } from './dto/order-quantity-request';
+import * as fs from 'fs';
 // import { exec } from 'child_process';
 
 @ApiTags('sample-request')
