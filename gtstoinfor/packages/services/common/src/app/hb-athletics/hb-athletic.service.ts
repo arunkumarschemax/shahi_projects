@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { HbOrdersRepository } from "./repositories/hb-orders.repo";
 import { HbPdfRepo } from "./repositories/hb-pdf.repo";
-import { CoLineRequest,CoLinereqModel, Color, CommonResponseModel, DestinationModel, HBCoLinereqModels, HBDestinationModel, HBSizeModel, HbCompareModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SizeModel, StatusEnum, hbCoLineRequest } from "@project-management-system/shared-models";
+import { CoLineRequest, CoLinereqModel, Color, CommonResponseModel, DestinationModel, HBCoLinereqModels, HBDestinationModel, HBSizeModel, HbCompareModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SizeModel, StatusEnum, hbCoLineRequest } from "@project-management-system/shared-models";
 import { HbOrdersEntity } from "./entity/hb-orders.entity";
 import { HbPdfFileInfoEntity } from "./entity/hb-pdf.entity";
 import { HbCOLineEntity } from "./entity/hb-co-line.entity";
@@ -21,26 +21,26 @@ import { DataSource } from "typeorm";
 
 @Injectable()
 export class HbService {
-   
+
 
   constructor(
     private HbOrdersRepo: HbOrdersRepository,
     private HbPdfRepo: HbPdfRepo,
-    private hbCoLineRepo:HbCOLineRepository,
+    private hbCoLineRepo: HbCOLineRepository,
     private addressService: AddressService,
-    private HbOrdersChildRepo:HbOrdersChildRepository,
+    private HbOrdersChildRepo: HbOrdersChildRepository,
     private dataSource: DataSource
 
 
   ) { }
 
-  
+
   async saveHbOrdersData(req: any): Promise<CommonResponseModel> {
     // console.log(req, "reqqqqqqqqqqqqq")
     const transactionManager = new GenericTransactionManager(this.dataSource)
     try {
       let saved
-      const pdfData=[];
+      const pdfData = [];
       await transactionManager.startTransaction()
       for (const item of req.HbpoItemDetails) {
         const match = item.color.match(/\d+/);
@@ -51,7 +51,7 @@ export class HbService {
         console.log(color, "color")
         for (const variant of item.HbpoItemVariantDetails) {
           const orderData = await this.HbOrdersRepo.findOne({ where: { custPo: req.custPo, color: item.color, size: variant.size } })
-          const order = await this.HbOrdersChildRepo.findOne({ where: { custPo: req.custPo,color: item.color, size: variant.size  }, order: { poVersion: 'DESC' } })
+          const order = await this.HbOrdersChildRepo.findOne({ where: { custPo: req.custPo, color: item.color, size: variant.size }, order: { poVersion: 'DESC' } })
           // console.log(orderData, "orderData")
           // console.log(variant, "variant");
           // console.log(order, "order");
@@ -70,9 +70,9 @@ export class HbService {
 
 
           if (orderData) {
-          
 
-            const update = await transactionManager.getRepository(HbOrdersEntity).update({ custPo: req.custPo, color: item.color, size: variant.size }, {exitFactoryDate:req.exitFactoryDate,shipToAdd:req.shipToAdd,style:item.style,quantity:variant.quantity,unitPrice:variant.unitPrice})
+
+            const update = await transactionManager.getRepository(HbOrdersEntity).update({ custPo: req.custPo, color: item.color, size: variant.size }, { exitFactoryDate: req.exitFactoryDate, shipToAdd: req.shipToAdd, style: item.style, quantity: variant.quantity, unitPrice: variant.unitPrice })
 
             let po = (order?.poVersion) + 1
 
@@ -94,7 +94,7 @@ export class HbService {
             }
           } else {
             saved = await transactionManager.getRepository(HbOrdersEntity).save(pdfData)
-         
+
             const entitys = new HbOrdersChildEntity()
             entitys.custPo = req.custPo
             entitys.exitFactoryDate = req.exitFactoryDate
@@ -106,9 +106,9 @@ export class HbService {
             entitys.unitPrice = variant.unitPrice
             entitys.orderId = entity.id
 
-        
-           
-          const  savedChild = await await transactionManager.getRepository(HbOrdersChildEntity).save(entitys)
+
+
+            const savedChild = await await transactionManager.getRepository(HbOrdersChildEntity).save(entitys)
             if (!saved) {
               throw new Error('Save failed')
             }
@@ -130,7 +130,7 @@ export class HbService {
     console.log(req, "reqqqqqqqqq");
 
     const entity = new HbPdfFileInfoEntity();
-    entity.custPo = custPo; 
+    entity.custPo = custPo;
     entity.pdfFileName = filename;
     entity.filePath = filePath;
     entity.fileType = mimetype;
@@ -139,16 +139,16 @@ export class HbService {
 
     const file = await this.HbPdfRepo.findOne({ where: { pdfFileName: filePath } });
     if (file) {
-        return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
+      return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
     } else {
-        const save = await this.HbPdfRepo.save(entity);
-        if (save) {
-            return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
-        } else {
-            return new CommonResponseModel(false, 0, 'Uploaded failed');
-        }
+      const save = await this.HbPdfRepo.save(entity);
+      if (save) {
+        return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
+      } else {
+        return new CommonResponseModel(false, 0, 'Uploaded failed');
+      }
     }
-}
+  }
 
 
   async getPdfFileInfo(): Promise<CommonResponseModel> {
@@ -234,7 +234,7 @@ export class HbService {
   }
 
 
- async getHborderData(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
+  async getHborderData(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
     try {
       const details = await this.HbOrdersRepo.getHborderData(req);
       if (details.length === 0) {
@@ -246,14 +246,14 @@ export class HbService {
         if (!sizeDateMap.has(`${rec.style},${rec.cust_po},${rec.color},${rec.exit_factory_date}`)) {
           sizeDateMap.set(
             `${rec.style},${rec.cust_po},${rec.color},${rec.exit_factory_date}`,
-            new HbOrderDataModel(rec.id, rec.cust_po,rec.style,rec.color,rec.size,rec.exit_factory_date,rec.ship_to_add,[],rec.quantity,rec.unit_price,rec.status)
+            new HbOrderDataModel(rec.id, rec.cust_po, rec.style, rec.color, rec.size, rec.exit_factory_date, rec.ship_to_add, [], rec.quantity, rec.unit_price, rec.status)
           );
 
           // console.log(sizeDateMap,)
         }
         const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.cust_po},${rec.color},${rec.exit_factory_date}`).sizeWiseData;
         if (rec.size !== null) {
-          sizeWiseData.push(new HbSizeWiseModel(rec.size, rec.unit_price, rec.quantity,rec.color));
+          sizeWiseData.push(new HbSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.color));
         }
       }
       const dataModelArray: HbOrderDataModel[] = Array.from(sizeDateMap.values());
@@ -267,7 +267,7 @@ export class HbService {
       return new CommonResponseModel(false, 0, 'failed', e);
     }
   }
- 
+
 
   async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
@@ -348,12 +348,12 @@ export class HbService {
 
   async hbCoLineCreationReq(req: any): Promise<CommonResponseModel> {
     try {
-     // console.log(req,'req')
+      // console.log(req,'req')
       if (req.itemNo == undefined || null) {
         return new CommonResponseModel(false, 0, 'Please enter Item No')
       };
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
-      const records = await this.HbOrdersRepo.find({ where: { custPo: req.custPo,exitFactoryDate:req.exitFactoryDate } });
+      const records = await this.HbOrdersRepo.find({ where: { custPo: req.custPo, exitFactoryDate: req.exitFactoryDate } });
       const empty = [];
      
         //console.log(rec,'reccccccccc')
@@ -370,19 +370,19 @@ export class HbService {
      // console.log(empty,'emptyyyyy')
       const save = await this.hbCoLineRepo.save(empty);
 
-      
+
 
       if (save) {
         const update = await this.HbOrdersRepo.update(
-          { custPo: req.custPo, exitFactoryDate:req.exitFactoryDate }, // Conditions for updating
-          { status: StatusEnum.INPROGRESS } 
+          { custPo: req.custPo, exitFactoryDate: req.exitFactoryDate }, // Conditions for updating
+          { status: StatusEnum.INPROGRESS }
         );
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
       } else {
         return new CommonResponseModel(false, 0, 'CO-Line request failed')
       }
     } catch (err) {
-    //  console.log(err,',,,,,,,,,,,,,,,')
+      //  console.log(err,',,,,,,,,,,,,,,,')
       return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
     }
   }
@@ -392,7 +392,7 @@ export class HbService {
 
 
   async getHborderDataForInfo(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
-    console.log(req,"servvv")
+    console.log(req, "servvv")
     try {
       const details = await this.HbOrdersRepo.getHborderDataForInfo(req);
       if (details.length === 0) {
@@ -404,14 +404,14 @@ export class HbService {
         if (!sizeDateMap.has(`${rec.style},${rec.cust_po},${rec.exit_factory_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.style},${rec.cust_po},${rec.exit_factory_date},${rec.color}`,
-            new HbOrderDataModel(rec.id, rec.cust_po,rec.style,rec.color,rec.size,rec.exit_factory_date,rec.ship_to_add,[],rec.quantity,rec.unit_price)
+            new HbOrderDataModel(rec.id, rec.cust_po, rec.style, rec.color, rec.size, rec.exit_factory_date, rec.ship_to_add, [], rec.quantity, rec.unit_price)
           );
 
           // console.log(sizeDateMap,)
         }
         const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.cust_po},${rec.exit_factory_date},${rec.color}`).sizeWiseData;
         if (rec.size !== null) {
-          sizeWiseData.push(new HbSizeWiseModel(rec.size, rec.unit_price, rec.quantity,rec.color));
+          sizeWiseData.push(new HbSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.color));
         }
       }
       const dataModelArray: HbOrderDataModel[] = Array.from(sizeDateMap.values());
@@ -425,7 +425,7 @@ export class HbService {
       return new CommonResponseModel(false, 0, 'failed', e);
     }
   }
- 
+
 
   async getHbCoLineData(req?: HbPoOrderFilter): Promise<CommonResponseModel> {
     const data = await this.hbCoLineRepo.getHbCoLineData(req)
@@ -455,7 +455,7 @@ export class HbService {
     else
       return new CommonResponseModel(false, 0, 'No data found');
   }
-  
+
 
   async isAlertPresent(driver) {
     try {
@@ -741,7 +741,7 @@ export class HbService {
   //       return new CommonResponseModel(true, 0, 'sucesss',details);
 
   //     }
-     
+
 
   //   } catch (e) {
   //     return new CommonResponseModel(false, 0, 'failed', e);
@@ -762,20 +762,20 @@ export class HbService {
         })
         if (childData.length > 0) {
           const oldData = childData[0];
-        
+
           // if (
           //   oldData.unitPrice !== rec.unit_price ||
           //   oldData.exitFactoryDate !== rec.exit_factory_date ||
           //   oldData.quantity !== rec.quantity
           // ) {
-        
-            compareModel.push(new HbCompareModel(rec.cust_po,rec.style,rec.color,rec.size,oldData.unitPrice,rec.unit_price,oldData.exitFactoryDate,rec.exit_factory_date,oldData.quantity,rec.quantity));
-          }
+
+          compareModel.push(new HbCompareModel(rec.cust_po, rec.style, rec.color, rec.size, oldData.unitPrice, rec.unit_price, oldData.exitFactoryDate, rec.exit_factory_date, oldData.quantity, rec.quantity));
+        }
         // }
       }
       if (compareModel) {
         return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
-      } 
+      }
       else {
         return new CommonResponseModel(false, 0, 'No data found');
       }
