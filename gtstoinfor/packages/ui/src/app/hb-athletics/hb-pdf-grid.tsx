@@ -4,7 +4,7 @@ import { CentricService, HbService, NikeService, RLOrdersService } from "@projec
 import React from "react";
 import { FilePdfOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { AlertMessages } from "packages/libs/shared-models/src/common/supplier/alert-messages";
 import { config } from "packages/libs/shared-services/config";
@@ -24,12 +24,24 @@ export function HbPdFInfoGrid() {
     const [form] = Form.useForm();
     const { Option } = Select;
     const [isModalOpen1, setIsModalOpen1] = useState(false);
+    let location = useLocation();
+    
+
+    console.log(location?.state,"ddddddddddd")
+
 
 
     useEffect(() => {
-        getPdfFileInfo()
-    }, [])
+        if (location?.state === "rec") {
+            getPdfFileInfo();
+        }
+    }, []);
 
+    useEffect(() => {
+        getPdfFileInfo();
+    }, []);
+    
+    
     const getPdfFileInfo = () => {
         service.getPdfFileInfo().then(res => {
             setPdfData(res.data)
@@ -119,10 +131,10 @@ export function HbPdFInfoGrid() {
     })
 
     const setMoreData = (record) => {
-         navigate("/hb-athletics/pdf-info-detail-view", {
-          state: { data: record },
+        navigate("/hb-athletics/pdf-info-detail-view", {
+            state: { data: record },
         });
-      };
+    };
 
 
     const columns: any = [
@@ -167,8 +179,8 @@ export function HbPdFInfoGrid() {
             render: (text, record) => {
                 return record.upload_date ? record.upload_date : '-'
             }
-            
-            
+
+
         },
         {
             title: 'Status',
@@ -177,38 +189,38 @@ export function HbPdFInfoGrid() {
             width: 80,
             filters: [
                 {
-                  text: 'SUCCESS',
-                  value: 'SUCCESS',
+                    text: 'SUCCESS',
+                    value: 'SUCCESS',
                 },
                 {
-                  text: 'FAILED',
-                  value: 'FAILED',
+                    text: 'FAILED',
+                    value: 'FAILED',
                 },
-          
-              ],
-              onFilter: (value,record) =>{ return record.status.toLowerCase() === value.toLowerCase();}
-        
-     
-            
+
+            ],
+            onFilter: (value, record) => { return record.status.toLowerCase() === value.toLowerCase(); }
+
+
+
         },
-          
+
         {
             title: "Action",
             dataIndex: "action",
             align: "center",
             width: 120,
             render: (value, record) => (
-              <>
-                <Button 
-                type="primary"
+                <>
+                    <Button
+                        type="primary"
                 onClick={() => setMoreData(record)}
-                >More Info</Button>
-                 <Tooltip title="PDF download">
-                <Button icon={<FilePdfOutlined onClick={()=>download(record.filePath)} style={{color:"red"}}/>} >{value}</Button>
-                </Tooltip>
-              </>
+                    >More Info</Button>
+                    <Tooltip title="PDF download">
+                        <Button icon={<FilePdfOutlined onClick={() => download(record.filePath)}  style={{color:"red"}}/>} >{value}</Button>
+                    </Tooltip>
+                </>
             ),
-          }
+        }
 
 
     ]
@@ -216,28 +228,28 @@ export function HbPdFInfoGrid() {
     const download = (filePath) => {
         console.log(filePath);
         // : FilenameDto[]
-        
+
         if (filePath) {
-          filePath = filePath.split(",");
-          for (const res of filePath) {
-            if(res){
-              console.log(res);
-              setTimeout(() => {
-                const response = {
-                  file: config.file_upload_path+'/'+ `${res}`,
-                };
-      
-                window.open(response.file);
-      
-              }, 100);
+            filePath = filePath.split(",");
+            for (const res of filePath) {
+                if (res) {
+                    console.log(res);
+                    setTimeout(() => {
+                        const response = {
+                            file: config.file_upload_path + '/' + `${res}`,
+                        };
+
+                        window.open(response.file);
+
+                    }, 100);
+                }
             }
-          }
         }
         else {
-          AlertMessages.getErrorMessage("Please upload file. ");
-    
+            AlertMessages.getErrorMessage("Please upload file. ");
+
         }
-      }
+    }
 
     return (
         <>
