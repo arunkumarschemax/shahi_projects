@@ -45,11 +45,15 @@ export class HbController {
                 callback(null, `${name}`);
             },
         }),
-        fileFilter: (req, file, callback) => {
-            if (!file.originalname.match(/\.(pdf)$/)) {
-                return callback(new Error('Only pdf files are allowed!'), false);
+        fileFilter: async (req, file, callback) => {
+            try {
+                if (!file || file.mimetype !== 'application/pdf') {
+                    return callback(new Error('Only PDF files are allowed!'), false);
+                }
+                callback(null, true);
+            } catch (error) {
+                callback(error, false);
             }
-            callback(null, true);
         },
     }))
 
@@ -110,16 +114,16 @@ export class HbController {
         }
     }
 
-//     @Post('/getHborderData')
-// @ApiBody({ type: HbPoOrderFilter })
-// async getHborderData (@Body() req: any): Promise<CommonResponseModel> {
-// try {
-// // console.log(req, "con")
-// return await this.Service.getHborderData (req);
-// } catch (err) {
-// }
-// return this.applicationExeptionhandler.returnException (CommonResponseModel, err);
-// }
+    //     @Post('/getHborderData')
+    // @ApiBody({ type: HbPoOrderFilter })
+    // async getHborderData (@Body() req: any): Promise<CommonResponseModel> {
+    // try {
+    // // console.log(req, "con")
+    // return await this.Service.getHborderData (req);
+    // } catch (err) {
+    // }
+    // return this.applicationExeptionhandler.returnException (CommonResponseModel, err);
+    // }
 
     @Post('/hbAthleticBot')
     async hbAthleticBot(@Body() req: any): Promise<CommonResponseModel> {
