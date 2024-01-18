@@ -21,6 +21,7 @@ export class StyleService{
         const res = await this.styleRepo.findOne({
           where: {style: Raw(alias => `style = '${style}'`)},
         });
+        console.log(res)
         if (res) {
           return res;
         } else {
@@ -30,6 +31,8 @@ export class StyleService{
 
     async creteStyle(req:StyleReq ,isUpdate: boolean):Promise<AllStyleResponseModel>{
         console.log(req,'serve')
+        console.log(isUpdate,'serve')
+
         try{
        
             const style= new Style()
@@ -43,7 +46,7 @@ export class StyleService{
                 const entity = await this.findDuplicate(req.style);
                 if (entity) {
                   if(entity.styleId!=req.styleId) {
-                    throw new AllStyleResponseModel(false,11104, 'reason already exists',[]);      
+                    throw new AllStyleResponseModel(false,11104, 'Style already exists',[]);      
                 }
                 }
               }
@@ -74,9 +77,13 @@ export class StyleService{
         const manager=this.datasource;
         let cutting_qry=`INSERT INTO operation_sequence( operation_group_name, operation_name, sequence, operation_group_id, operation_id, style, style_id) VALUES ('Cutting','Cutting',1,1,4,'`+styleName+`',`+styleId+`)`;
         await manager.query(cutting_qry);
-        let sewing_qry=`INSERT INTO operation_sequence( operation_group_name, operation_name, sequence, operation_group_id, operation_id, style, style_id) VALUES ('Sewing','Sewing',2,2,5,'`+styleName+`',`+styleId+`)`;
+        let sewing_oper = "Select operation_id as operationId from operations where operation_code = 'Sewing'";
+        let sewingOper = await manager.query(sewing_oper);
+        let sewing_qry=`INSERT INTO operation_sequence( operation_group_name, operation_name, sequence, operation_group_id, operation_id, style, style_id) VALUES ('Sewing','Sewing',2,2,`+sewingOper[0].operationId+`,'`+styleName+`',`+styleId+`)`;
         await manager.query(sewing_qry);
-         let finishing_qry=`INSERT INTO operation_sequence( operation_group_name, operation_name, sequence, operation_group_id, operation_id, style, style_id) VALUES ('Finishing','Finishing',3,9,11,'`+styleName+`',`+styleId+`)`;
+        let finishing_oper = "Select operation_id as operationId from operations where operation_code = 'Finishing'";
+        let finishingOper = await manager.query(finishing_oper);
+         let finishing_qry=`INSERT INTO operation_sequence( operation_group_name, operation_name, sequence, operation_group_id, operation_id, style, style_id) VALUES ('Finishing','Finishing',3,9,`+finishingOper[0].operationId+`,'`+styleName+`',`+styleId+`)`;
         await manager.query(finishing_qry);
     }
     async updateStylePath(filePath: string, filename: string, styleId: number): Promise<UploadResponse> {

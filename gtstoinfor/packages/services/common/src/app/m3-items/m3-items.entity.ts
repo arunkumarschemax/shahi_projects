@@ -147,7 +147,12 @@ export class M3ItemsEntity {
     name: "buyer_id"
   })
   buyerId: number;
-
+  
+  @Column("varchar", {
+    nullable: true,
+    name: "remarks"
+  })
+  remarks: string;
   // Trim columns 
 
   // @Column("int", {

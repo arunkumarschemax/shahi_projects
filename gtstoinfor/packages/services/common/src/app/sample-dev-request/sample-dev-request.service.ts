@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Not, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, requestNoReq, RackPositionStatusEnum,ItemTypeEnum, SampleRequestInfoModel, SampleSizeInfoModel} from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, requestNoReq, RackPositionStatusEnum,ItemTypeEnum, SampleRequestInfoModel, SampleSizeInfoModel, MessageParameters, WhatsAppLogDto, GlobalVariables} from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -29,7 +29,7 @@ import { Size } from '../sizes/sizes-entity';
 import { OperationInventory } from '../operation-tracking/entity/operation-inventory-entity';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { IndentService } from '@project-management-system/shared-services';
+import { IndentService, WhatsAppInfo, WhatsAppNotificationService } from '@project-management-system/shared-services';
 import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 import { MaterialAllocationEntity } from './entities/material-allocation.entity';
 import { MaterialAllocationDTO } from './dto/material-allocation-dto';
@@ -47,8 +47,9 @@ import { RackPositionEntity } from '../rm_locations/rack-position.entity';
 import { OrderQuantityRequset } from './dto/order-quantity-request';
 import { MaterialAllocationItemsDTO } from './dto/material-allocation-items-dto';
 import { M3TrimsEntity } from '../m3-trims/m3-trims.entity';
-
-
+import { UploadFilesEntity } from './entities/upload-files-entity';
+import { UploadFilesRepository } from './repo/upload-files-repository';
+let moment = require('moment');
 
 
 @Injectable()
@@ -67,9 +68,9 @@ export class SampleRequestService {
     private indentService: IndentService,
     private matAllRepo:MaterialAllocationRepo,
     private matAllitemRepo:MaterialAllocationItemsRepo,
-    private stockrepo:StocksRepository
-
-
+    private stockrepo:StocksRepository,
+    private wpService: WhatsAppNotificationService,
+    private uploadFilesRepository: UploadFilesRepository,
     
   ) { }
 
@@ -251,6 +252,7 @@ export class SampleRequestService {
       sampleReqEntity.madeIn = req.madeIn
       sampleReqEntity.remarks = req.remarks
       sampleReqEntity.status = req.status
+      sampleReqEntity.category = req.category
       let sampleSizeInfo = []
       let sampleFabricInfo = []
       let sampleTrimInfo = []
@@ -538,14 +540,26 @@ export class SampleRequestService {
     }
 
   }
-  async UpdateFilePath(filePath: string, filename: string, SampleRequestId: number): Promise<UploadResponse> {
+  async UpdateFilePath(filePath: any, SampleRequestId: number): Promise<UploadResponse> {
     console.log('upload service id---------------', filePath)
-    console.log('upload service id---------------', filename)
     console.log('upload service id---------------', SampleRequestId)
     try {
-      let filePathUpdate;
-      filePathUpdate = await this.sampleRepo.update({ SampleRequestId: SampleRequestId }, { fileName: filename, filepath: filePath })
-      if (filePathUpdate.affected > 0) {
+      // let filePathUpdate;
+      // filePathUpdate = await this.sampleRepo.update({ SampleRequestId: SampleRequestId }, { fileName: filename, filepath: filePath })
+      let flag = true;
+      for(const res of filePath){
+        const entity = new UploadFilesEntity()
+        entity.fileName=res.fileName
+        entity.filePath="/dist/packages/services/common/"+res.path
+        entity.sampleRequestId=SampleRequestId  
+        entity.createdUser="admin"
+        const uploadDoc = await this.uploadFilesRepository.save(entity);
+        if(!uploadDoc){
+            flag = false;
+        }
+      }
+   
+      if (flag) {
         return new UploadResponse(true, 11, 'uploaded successfully', filePath);
       }
       else {
@@ -2087,4 +2101,86 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
     }
 }
 
+async getUsageWhtsAppMsg(): Promise<CommonResponseModel> {
+  try {
+    let date = moment().format('YYYY-MM-DD')
+    const manager = this.dataSource;
+    const sampleOrders = `SELECT COUNT(DISTINCT sample_request_id)AS COUNT FROM sample_request_size_info WHERE DATE(created_at) = '${date}'`
+    const indents = `SELECT COUNT(request_no) AS COUNT FROM indent WHERE DATE(created_at) = '${date}'`
+    const pos = `SELECT COUNT(po_number) AS COUNT FROM purchase_order WHERE DATE(created_at) = '${date}'`
+    const grns = `SELECT COUNT(grn_number) AS COUNT FROM grn WHERE DATE(created_at) = '${date}'`
+    const stock =`SELECT COUNT(id) AS COUNT FROM stocks WHERE DATE(created_at) = '${date}'    `
+    const location = `SELECT COUNT(stock_log_id)AS COUNT FROM stock_log WHERE DATE(created_at) = '${date}'`
+    const material = `SELECT COUNT(material_allocation_id) AS COUNT FROM material_allocation WHERE DATE(updated_at) = '${date}' AND STATUS = 'MATERIAL ISSUED'`
+    const operations = `SELECT COUNT(operation_tracking_id) AS COUNT FROM operation_tracking WHERE DATE(created_at) = '${date}'`
+    const sampleOrdersInfo = await manager.query(sampleOrders);
+    const indentsInfo = await manager.query(indents);
+    const posInfo = await manager.query(pos);
+    const grnsInfo = await manager.query(grns);
+    const stockInfo = await manager.query(stock);
+    const operationsInfo = await manager.query(operations);
+    const materialInfo = await manager.query(material);
+    const locationInfo = await manager.query(location);
+     
+
+          const datetime = moment().format('MMMM Do, YYYY')
+
+          // for (const ic of data) {
+          //     let msgContent = '\\n' + ic.lifecycle_status + ' : ' + ic.COUNT
+          //     vehiclelifecycle += msgContent;
+          //     //   const status = ic.lifecycle_status;
+          //     //   const count = ic.COUNT;
+          //     // console.log(ic.lifecycle_status, '{}')
+          // }
+          
+          const parameters = [
+              { "type": "text", "text": datetime },
+              { "type": "text", "text":  sampleOrdersInfo?.[0]?.COUNT},
+              { "type": "text", "text":  indentsInfo?.[0]?.COUNT},
+              { "type": "text", "text":  posInfo?.[0]?.COUNT},
+              { "type": "text", "text":  grnsInfo?.[0]?.COUNT},
+              { "type": "text", "text":  locationInfo?.[0]?.COUNT},
+              { "type": "text", "text":  stockInfo?.[0]?.COUNT},
+              { "type": "text", "text":  materialInfo?.[0]?.COUNT},
+              { "type": "text", "text":  operationsInfo?.[0]?.COUNT}
+
+
+
+          ];
+          // console.log(parameters, 'Parameter-----------')
+
+          const contacts = WhatsAppInfo.contacts;
+          let statusFlag = true
+          for (const contact of contacts) {
+            console.log('ppppppppppp');
+
+              const whatsappres = await new MessageParameters(contact, 'usage_report', parameters, 'en_uk')
+              const messageStatus = await this.wpService.sendMessageThroughFbApi(whatsappres);
+              console.log(messageStatus,'ppppppppppp44444444');
+
+              if (!messageStatus.status) {
+                  statusFlag = false
+                  break
+              } else {
+                  statusFlag = true
+                  const whatsapplogDto = new WhatsAppLogDto(contact,'usage_report','Shahi',23,27)
+
+                  // const whatsapplogDto = new WhatsAppLogDto(contact, 'usage_report', 'Sampling', 23, 27)
+                  await this.wpService.createWhatappLog(whatsapplogDto)
+
+              }
+
+              
+          }
+          // if (data) {
+          return new CommonResponseModel(true, 1, 'Data Retrived Successfully', date)
+
+      //     } else {
+      //     return new CommonResponseModel(false, 0, 'No Data Found..', undefined)
+      // }
+  }
+  catch (err) {
+      throw err
+  }
+}
 }
