@@ -155,10 +155,12 @@ export class SampleDevReqController {
         // destination: './upload-files/manisha-123',
         // destination: `./upload-files/PO-${req}`,
         destination: (req, file, callback) => {
-          console.log(req);
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+          console.log(req.body);
+
           console.log(file);
 
-          const destinationPath = `./upload_files/SD-${req.body.reqNo}`;
+          const destinationPath = `./upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`;
           // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
 
           // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;

@@ -549,7 +549,7 @@ export class SampleRequestService {
       let flag = true;
       for(const res of filePath){
         const entity = new UploadFilesEntity()
-        entity.fileName=res.fileName
+        entity.fileName=res.filename
         entity.filePath="/dist/packages/services/common/"+res.path
         entity.sampleRequestId=SampleRequestId  
         entity.createdUser="admin"
