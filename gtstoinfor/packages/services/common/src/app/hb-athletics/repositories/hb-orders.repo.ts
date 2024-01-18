@@ -53,11 +53,12 @@ export class HbOrdersRepository extends Repository<HbOrdersEntity> {
                 query.andWhere(`o.cust_po ='${req.custPo}'`) 
             }
             if(req.style !== undefined){
-                query.andWhere(`o.style ='${req.style}'`) 
+                query.andWhere(`o.style LIKE :style`, { style: `%${req.style}%` });
             }
-            if(req.color !== undefined){
-                query.andWhere(`o.color ='${req.color}'`) 
+            if (req.color !== undefined) {
+                query.andWhere(`o.color LIKE :color`, { color: `%${req.color}%` });
             }
+            
             if (req.deliveryDateStartDate !== undefined) {
                 query.andWhere(`(o.exit_factory_date) BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
             }
