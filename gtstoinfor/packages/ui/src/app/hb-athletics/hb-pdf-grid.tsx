@@ -177,7 +177,7 @@ export function HbPdFInfoGrid() {
             sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
             sortDirections: ["ascend", "descend"],
             render: (text, record) => {
-                return record.createdAt ? moment(record.createdAt).format('MM/DD/YYYY HH:mm') : '-'
+                return record.createdAt ? moment(record.createdAt).format('MM/DD/YYYY hh:mm A') : '-'
             }
 
 
@@ -212,10 +212,11 @@ export function HbPdFInfoGrid() {
             render: (value, record) => (
                 <>
                     <Button
-                        onClick={() => setMoreData(record)}
+                        type="primary"
+                onClick={() => setMoreData(record)}
                     >More Info</Button>
                     <Tooltip title="PDF download">
-                        <Button icon={<FilePdfOutlined onClick={() => download(record.filePath)} />} >{value}</Button>
+                        <Button icon={<FilePdfOutlined onClick={() => download(record.filePath)}  style={{color:"red"}}/>} >{value}</Button>
                     </Tooltip>
                 </>
             ),

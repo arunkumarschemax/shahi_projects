@@ -2,7 +2,7 @@ import { LegalPoDetails } from '@project-management-system/shared-models'
 import { Button, Card, Table } from 'antd'
 import React, { useEffect, useState } from 'react'
 import './pdf-reader.css'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 
@@ -27,8 +27,11 @@ const HbPdfInfoDetailView = (
 
    
     return (
-        <Card>
+        <Card
+        extra ={<Link to='/hb-athletics/pdf-info' ><Button className='panel_button' type="primary" >View </Button></Link>}
+        >
             {/* <div><Button style={{ backgroundColor: '#29397d', color: 'white' }} onClick={() => setMoreData()}><b><ArrowLeftOutlined />  Back</b></Button></div> */}
+            
             <br />
              <div className="table-container">           
             <table className='ta-b' style={{ width: '100%' }} >
