@@ -102,10 +102,14 @@ console.log(location?.state?.data)
         extra ={<Link to='/sanmar/sanmar-order-data-info-grid' ><Button className='panel_button' type="primary" >View </Button></Link>}
         >
         <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }} >
-        <Descriptions.Item label='Customer PO' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.custPo ? location?.state?.data?.custPo : "--"}</Descriptions.Item>
+        <Descriptions.Item label='Buyer PO' labelStyle={{ color: 'black', fontWeight: 'bold'}} >{location?.state?.data?. buyerPo ? location?.state?.data?. buyerPo : "--"}</Descriptions.Item>
+        <Descriptions.Item label='PO Date' labelStyle={{ color: 'black', fontWeight: 'bold',marginLeft:150}} >{location?.state?.data?. poDate ? location?.state?.data?. poDate : "--"}</Descriptions.Item>
         <Descriptions.Item label='Style' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.style ? location?.state?.data?.style :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Delivery Date' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.exitFactoryDate ? location?.state?.data?.exitFactoryDate :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Address' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipToAdd ? location?.state?.data?.shipToAdd :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Color' labelStyle={{ color: 'black', fontWeight: 'bold',marginLeft:150 }} >{location?.state?.data?.color ? location?.state?.data?.color :"--"}</Descriptions.Item>
+        <Descriptions.Item label=' Buyer Address' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.buyerAddress ? location?.state?.data?.buyerAddress :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Delivery Date' labelStyle={{ color: 'black', fontWeight: 'bold',marginLeft:150 }} >{location?.state?.data?.deliveryDate ? location?.state?.data?.deliveryDate :"--"}</Descriptions.Item>
+        <Descriptions.Item label=' Delivery Address' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipToAdd ? location?.state?.data?.shipToAdd :"--"}</Descriptions.Item>
+
 
 
 
@@ -132,7 +136,7 @@ console.log(location?.state?.data)
                         // scroll={{ y: 450 }}
                         summary={() => (
                         <>
-    
+{/*     
                                 <Table.Summary.Row className="tableFooter">
                                     <Table.Summary.Cell index={0} colSpan={3}>
                                     <span style={{ textAlign: 'right', paddingRight: 8,marginLeft:300}}>
@@ -158,11 +162,12 @@ console.log(location?.state?.data)
                                     </span>
                                     </Table.Summary.Cell>
                                     
-                                </Table.Summary.Row>
+                                </Table.Summary.Row> */}
     
                        
                         </>
-                        )}
+                        )
+                    }
                     ></Table>
 
         

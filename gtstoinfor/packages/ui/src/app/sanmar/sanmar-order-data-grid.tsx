@@ -201,11 +201,12 @@ import {
         ) : null,
     });
   
-    // const setMoreData = (record) => {
-    //   navigate("/sanmar/sanmar-order-data-detail-view", {
-    //     state: { data: record },
-    //   });
-    // };
+    const setMoreData = (record) => {
+      navigate("/sanmar/sanmar-order-data-detail-view", {
+        state: { data: record },
+      });
+    };
+
     const getSizeWiseHeaders = (data) => {
       const sizeHeaders = new Set<string>();
       data?.forEach((rec) =>
@@ -308,6 +309,8 @@ import {
                 if (sizeData) {
                   if (sizeData.size !== null) {
                     const formattedQty = (sizeData?.quantity) ? (sizeData?.quantity) : "-"
+                    // const formattedQty = (sizeData?.quantity) ? String(sizeData?.quantity).replace(/,/g, '') : "-";
+
   
                     return (
                       formattedQty
@@ -356,20 +359,20 @@ import {
   
       columns.push(
   
-        {
-          title: "Total Quantity",
-          dataIndex: "",
-          align: "right",
-          width: 90,
-          render: (text, record) => {
-            let sum = 0;
-            record.sizeWiseData.forEach((r) => {
-              // Convert to number before summing
-              sum += parseFloat(r.quantity) || 0;
-            });
-            return sum;
-          },
-        },
+        // {
+        //   title: "Total Quantity",
+        //   dataIndex: "",
+        //   align: "right",
+        //   width: 90,
+        //   render: (text, record) => {
+        //     let sum = 0;
+        //     record.sizeWiseData.forEach((r) => {
+        //       // Convert to number before summing
+        //       sum += parseFloat(r.quantity) || 0;
+        //     });
+        //     return sum;
+        //   },
+        // },
        
         {
           // title: "Address",
@@ -408,7 +411,7 @@ import {
           width: 120,
           render: (value, record) => (
             <>
-              {/* <Button type="primary" onClick={() => setMoreData(record)}>More Info</Button> */}
+              <Button type="primary" onClick={() => setMoreData(record)}>More Info</Button>
             </>
           ),
         }
@@ -734,7 +737,7 @@ import {
               > */}
                 <Form.Item 
                 // style={{marginTop:20}}
-                 style={{ marginLeft: 120 ,marginTop:-43}}
+                 style={{ marginLeft: 120 ,marginTop:-44}}
                 >
                   <Button
                     htmlType="submit"
