@@ -213,8 +213,8 @@ export class SampleDevReqController {
         // destination: './upload-files/manisha-123',
         // destination: `./upload-files/PO-${req}`,
         destination: (req, file, callback) => {
-          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-          console.log(req.body);
+          // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+          // console.log(req.body);
 
           console.log(file);
 
@@ -237,8 +237,8 @@ export class SampleDevReqController {
         // },
         filename: (req, file, callback) => {
           // console.log(req);
-          console.log(file);
-          console.log("************************************************************************************************");
+          // console.log(file);
+          // console.log("************************************************************************************************");
           const name = file.originalname.split('.')[0];
           const fileExtName = extname(file.originalname);
           const randomName = Array(4)
@@ -256,9 +256,8 @@ export class SampleDevReqController {
       },
     }))
   async fabricUpload(@UploadedFiles() file:File[], @Body() uploadData: any): Promise<UploadResponse> {
-    console.log(file, '-------file')
     try {
-      return await this.sampleService.fabricUpload(file, uploadData)
+      return await this.sampleService.fabricUpload(file, uploadData.fabIds)
     } catch (error) {
       return this.applicationExceptionHandler.returnException(UploadResponse, error);
     }

@@ -330,7 +330,7 @@ const getBase64 = (img, callback) => {
             if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
 
               // console.log('TTTTT')
-              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,0,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
+              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
               // console.log(req.sizeData)
               console.log(req)
               console.log(data.fabricsData)
@@ -341,6 +341,7 @@ const getBase64 = (img, callback) => {
             
                 sampleService.createSampleDevelopmentRequest(req).then((res) => {
                   if (res.status) {
+                    console.log(res.data[0].sampleReqFabricInfo);
                     console.log(fileList);
                     message.success(res.internalMessage, 2);
                     if (fileList.length > 0) {    
@@ -376,7 +377,7 @@ const getBase64 = (img, callback) => {
                       console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
                       const formData = new FormData();
                       formData.append('reqNo', `${res.data[0].requestNo}`);
-                      formData.append('fabIds', `${res.data[0].sampleReqFabricInfo}`);
+                      formData.append('fabIds', JSON.stringify(res.data[0].sampleReqFabricInfo));
                       for (let i = 0; i < data.fabricsData.length; i++) {
                           formData.append('file', data.fabricsData[i].fabricUpload);
                         }
@@ -384,7 +385,7 @@ const getBase64 = (img, callback) => {
                           res.data[0].filepath = file.data;
                         });
                     }
-                    // navigate("/sample-development/sample-requests")
+                    navigate("/sample-development/sample-requests")
                   } else {
                     message.success(res.internalMessage, 2);
                   }
