@@ -120,17 +120,17 @@ export class SanmarService {
     entity.fileData = req;
     entity.status = "SUCCESS";
 
-    const file = await this.SanOrdersRepo.findOne({ where: { pdfFileName: filePath } });
-    if (file) {
-      return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
-    } else {
+    // const file = await this.SanOrdersRepo.findOne({ where: { pdfFileName: filePath } });
+    // if (file) {
+    //   return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
+    // } else {
       const save = await this.SanOrdersRepo.save(entity);
       if (save) {
         return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
       } else {
         return new CommonResponseModel(false, 0, 'Uploaded failed');
       }
-    }
+    // }
   }
 
 
