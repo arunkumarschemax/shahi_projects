@@ -258,6 +258,41 @@ const FabricsForm = (props:FabricsFormProps) => {
     }
     
     else if(field === 'colourId'){
+
+      if(props.form.getFieldValue(`consumption${key}`) != undefined){
+        console.log('77777')
+        console.log(e)
+        updatedData = data.map((record) => {
+          let wastg =props.form.getFieldValue(`wastage${key}`) != undefined ?props.form.getFieldValue(`wastage${key}`) : 2;
+
+          const getColorQuantitySum = (colorId) => {
+            const colorRecords = props.sizeDetails.filter((record) => record.colorId === colorId);
+            console.log(colorRecords)
+          
+            const totalQuantity = colorRecords.reduce((sum, record) => {
+              const sizeInfoQuantitySum = record.sizeInfo.reduce(
+                (sizeSum, sizeInfo) => sizeSum + Number(sizeInfo.quantity),
+                0
+              );
+          
+              return sum + sizeInfoQuantitySum;
+            }, 0);
+          
+            return totalQuantity;
+          }
+          let totalQuantityForColor = 0
+           totalQuantityForColor += getColorQuantitySum(e)
+          console.log(totalQuantityForColor,'totalQuantityForColor')
+  
+          let consumptionCal = Number(totalQuantityForColor) * Number(props.form.getFieldValue(`consumption${key}`));
+          let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
+          console.log(consumptionCal);
+          console.log(withPer);
+         props.form.setFieldValue(`totalRequirement${key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2))
+         return { ...record, [field]: e, [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
+        })
+        return record;
+      }
       fieldName = "colourId"
       isDuplicate =  onchangeData.find((r) => r.colourId === e && r.fabricCode === record.fabricCode);
       console.log(props.sizeDetails);
@@ -285,6 +320,7 @@ const FabricsForm = (props:FabricsFormProps) => {
           return record;
         });
       }
+     
       else{
         AlertMessages.getErrorMessage("Fabric color is not in size details")
        props.form.setFieldValue(`colorId${key}`,undefined)
