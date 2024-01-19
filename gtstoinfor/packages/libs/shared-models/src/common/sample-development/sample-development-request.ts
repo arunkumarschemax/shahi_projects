@@ -25,7 +25,7 @@ export class SampleDevelopmentRequest {
     dmmId: number;
     technicianId: number;
     product: number;
-    type: string;
+    type: number;
     conversion: string;
     madeIn: number;
     remarks: string;
@@ -60,7 +60,7 @@ export class SampleDevelopmentRequest {
         dmmId: number,
         technicianId: number,
         product: number,
-        type: string,
+        type: number,
         conversion: string,
         madeIn: number,
         remarks: string,

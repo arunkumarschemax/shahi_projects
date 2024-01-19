@@ -247,7 +247,7 @@ export class SampleRequestService {
       employee.employeeId = req.technicianId
       sampleReqEntity.technician = employee
       sampleReqEntity.product = req.product
-      sampleReqEntity.type = req.type === '' || undefined?null:req.type
+      sampleReqEntity.type = req.type
       sampleReqEntity.conversion = req.conversion
       sampleReqEntity.madeIn = req.madeIn
       sampleReqEntity.remarks = req.remarks
@@ -549,12 +549,19 @@ export class SampleRequestService {
   async fabricUpload(filePath: any, data: any): Promise<UploadResponse> {
     console.log(filePath);
     console.log(data);
+    console.log(JSON.parse(data));
+
     const manager = new GenericTransactionManager(this.dataSource)
     try {
       let flag = true;
       await manager.startTransaction();
-      for(const res of data){
-        const updateFilePath = await manager.getRepository(SampleReqFabricinfoEntity).update({fabricInfoId:res.fabricInfoId},{fileName: `${filePath[0].filename}`, filePath:`${filePath[0].path}`});
+      for(const [index,value] of JSON.parse(data).entries()){
+        console.log("********************")
+        console.log(value);
+        console.log(index);
+
+        const updateFilePath = await manager.getRepository(SampleReqFabricinfoEntity).update({fabricInfoId:value.fabricInfoId},{fileName: `${filePath[index].filename}`, filePath:`${filePath[index].path}`});
+        console.log(updateFilePath)
         if(!(updateFilePath.affected > 0)){
           flag = false
         }

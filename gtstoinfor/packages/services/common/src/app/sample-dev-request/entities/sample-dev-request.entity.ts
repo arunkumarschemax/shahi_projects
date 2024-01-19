@@ -131,11 +131,11 @@ export class SampleRequest {
   })
   product: number;
 
-  @Column("varchar", {
+  @Column("int", {
     nullable: true,
     name: "type"
   })
-  type: string;
+  type: number;
 
   @Column("varchar", {
     nullable: false,
