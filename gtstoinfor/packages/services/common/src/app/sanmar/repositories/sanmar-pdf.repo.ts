@@ -2,13 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { SanmarOrdersEntity } from "../entity/sanmar-orders.entity";
+import { SanmarPdfInfoEntity } from "../entity/sanmar-pdf.entity";
 
 
 
 @Injectable()
-export class SanmarPdfRepo extends Repository<SanmarOrdersEntity> {
+export class SanmarPdfRepo extends Repository<SanmarPdfInfoEntity> {
 
-    constructor(@InjectRepository(SanmarOrdersEntity) private SanPdfRepo: Repository<SanmarOrdersEntity>
+    constructor(@InjectRepository(SanmarPdfInfoEntity) private SanPdfRepo: Repository<SanmarPdfInfoEntity>
     ) {
         super(SanPdfRepo.target, SanPdfRepo.manager, SanPdfRepo.queryRunner);
     }

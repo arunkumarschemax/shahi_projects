@@ -17,12 +17,12 @@ export class SanmarController {
 
     ) { }
 
-    @Post("/saveHbOrdersData")
+    @Post("/saveSanmarOrdersData")
     @ApiBody({ type: SanmarDto })
-    async saveHbOrdersData(@Body() req: any): Promise<CommonResponseModel> {
+    async saveSanmarOrdersData(@Body() req: any): Promise<CommonResponseModel> {
         console.log(req, "post")
         try {
-            return await this.Service.saveHbOrdersData(req);
+            return await this.Service.saveSanmarOrdersData(req);
         } catch (error) {
             return this.applicationExeptionhandler.returnException(
                 CommonResponseModel,
