@@ -63,6 +63,7 @@ import OrderComparisionReport from "./hb-athletics/hb-order-comparsion-report"
 import SanmarPdfUpload from "./sanmar/sanmar-pdf-upload"
 import SanmarOrdersDetailView from "./sanmar/sanmar-order-data-details-view"
 import SanmarOrdersGrid from "./sanmar/sanmar-order-data-grid"
+import SanmarPdFInfoGrid from "./sanmar/sanmar-pdf-grid"
 
 
 export const AppRoutes = () => {
@@ -246,6 +247,9 @@ export const AppRoutes = () => {
                    <Route path='sanmar-pdf-upload' element={<SanmarPdfUpload />} />
                    <Route path='sanmar-order-data-info-grid' element={<SanmarOrdersGrid />} />
                    <Route path='sanmar-order-data-detail-view' element={<SanmarOrdersDetailView />} />
+                   <Route path='pdf-info' element={<SanmarPdFInfoGrid />} />
+                   
+
               
                 </Route>
 

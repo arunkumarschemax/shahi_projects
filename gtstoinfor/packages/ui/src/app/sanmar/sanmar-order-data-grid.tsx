@@ -17,6 +17,7 @@ import {
     HbService,
     NikeService,
     RLOrdersService,
+    SanmarService,
   } from "@project-management-system/shared-services";
   import React from "react";
   import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
@@ -27,6 +28,7 @@ import {
     HbPoOrderFilter,
     OrderDataModel,
     PoOrderFilter,
+    SanmarOrderFilter,
   } from "@project-management-system/shared-models";
   import { ColumnsType } from "antd/es/table";
   import { useIAMClientState } from "../nike/iam-client-react";
@@ -34,7 +36,7 @@ import {
   import { Excel } from "antd-table-saveas-excel";
   
   export function SanmarOrdersGrid() {
-    const service = new HbService();
+    const service = new SanmarService();
 
 
     const navigate = useNavigate();
@@ -53,17 +55,17 @@ import {
     const { IAMClientAuthContext, dispatch } = useIAMClientState();
     const { RangePicker } = DatePicker;
   
-    // useEffect(() => {
-    //   getorderData();
-    //  getHbPoNumber();
-    // }, []);
+    useEffect(() => {
+      getorderData();
+      getCustomerPoNumber()
+    }, []);
 
   
     const getorderData = () => {
-      const req = new HbPoOrderFilter();
+      const req = new SanmarOrderFilter();
   
       if (form.getFieldValue("poNumber") !== undefined) {
-        req.custPo = form.getFieldValue("poNumber");
+        req.buyerPo = form.getFieldValue("poNumber");
       }
       if (form.getFieldValue('deliveryDate') !== undefined) {
         req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
@@ -81,7 +83,7 @@ import {
 
 
   
-     service.getHborderDataForInfo(req).then((res) => {
+     service.getorderDataForInfo(req).then((res) => {
       if (res.status) {
         setOrderData(res.data);
         setFilterData(res.data);
@@ -95,8 +97,8 @@ import {
     });
     };
 
-    const getHbPoNumber = () => {
-        service.getHbPoNumber().then((res) => {
+    const getCustomerPoNumber = () => {
+        service.getCustomerPoNumber().then((res) => {
           if (res.status) {
             setPoNumber(res.data);
           
@@ -199,11 +201,11 @@ import {
         ) : null,
     });
   
-    const setMoreData = (record) => {
-      navigate("/sanmar/sanmar-order-data-detail-view", {
-        state: { data: record },
-      });
-    };
+    // const setMoreData = (record) => {
+    //   navigate("/sanmar/sanmar-order-data-detail-view", {
+    //     state: { data: record },
+    //   });
+    // };
     const getSizeWiseHeaders = (data) => {
       const sizeHeaders = new Set<string>();
       data?.forEach((rec) =>
@@ -229,9 +231,9 @@ import {
         },
         {
           title: "Buyer PO",
-          dataIndex: "custPo",
+          dataIndex: "buyerPo",
           width: 90,
-         sorter: (a, b) => a.custPo.localeCompare(b.custPo),
+         sorter: (a, b) => a.buyerPo.localeCompare(b.buyerPo),
          sortDirections: ["ascend", "descend"],
          render: (text) => text ? text : "-",
   
@@ -239,7 +241,7 @@ import {
           // ...getColumnSearchProps('poNumber')
         },
         {
-          title: " PO",
+          title: "PO Date",
           dataIndex: "poDate",
           width: 90,
          sorter: (a, b) => a.poDate.localeCompare(b.poDate),
@@ -273,9 +275,9 @@ import {
   
         {
           title: "Delivery Date",
-          dataIndex: "exitFactoryDate",
+          dataIndex: "deliveryDate",
           width: 130,
-          sorter: (a, b) => a.exitFactoryDate.localeCompare(b.exitFactoryDate),
+          sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
           // ...getColumnSearchProps('material')
@@ -373,11 +375,11 @@ import {
           // title: "Address",
           title: <div style={{textAlign:"center"}}>Buyer Address</div>,
 
-          dataIndex: "shipToAdd",
+          dataIndex: "buyerAddress",
           width: 150,
-         sorter: (a, b) => a.shipToAdd.localeCompare(b.shipToAdd),
+         sorter: (a, b) => a.buyerAddress.localeCompare(b.buyerAddress),
          sortDirections: ["ascend", "descend"],
-         ...getColumnSearchProps('shipToAdd'),
+         ...getColumnSearchProps('buyerAddress'),
           render: (text) => (
             <Tooltip title={text || "-"}>
               {text ? `${text.substring(0, 20)}...` : "-"}
@@ -406,7 +408,7 @@ import {
           width: 120,
           render: (value, record) => (
             <>
-              <Button type="primary" onClick={() => setMoreData(record)}>More Info</Button>
+              {/* <Button type="primary" onClick={() => setMoreData(record)}>More Info</Button> */}
             </>
           ),
         }
@@ -638,7 +640,7 @@ import {
           </Button>
         }>
           <Form
-            // onFinish={getorderData}
+            onFinish={getorderData}
             form={form}
             layout='vertical'
           >
@@ -659,8 +661,8 @@ import {
                   >
                      {poNumber.map((inc: any) => {
                       return (
-                        <Option key={inc.cust_po} value={inc.cust_po}>
-                          {inc.cust_po}
+                        <Option key={inc.buyer_po} value={inc.buyer_po}>
+                          {inc.buyer_po}
                         </Option>
                       );
                     })}

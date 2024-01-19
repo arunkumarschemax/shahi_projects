@@ -60,6 +60,15 @@ export class SanmarController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getCustomerPoNumber')
+    async getCustomerPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getCustomerPoNumber();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
     
 
 }
