@@ -1,8 +1,8 @@
 import { EyeOutlined, LoadingOutlined, PlusOutlined, UploadOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import { BuyerRefNoRequest, DepartmentReq,SampleDevelopmentRequest, StyleIdReq } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, DepartmentReq,SampleDevelopmentRequest, StyleIdReq, TypeIdReq } from "@project-management-system/shared-models";
 import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
-import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Tabs, message } from "antd";
+import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Tabs, message } from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import Upload, { RcFile, UploadProps } from "antd/es/upload";
@@ -76,12 +76,13 @@ export const SampleDevForm = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
   const [modal, setModal] = useState('')
+  const [styleImage, setStyleImage] = useState(""); // Add this line
 
 
   useEffect(() => {
     console.log(sizeForm.getFieldsValue())
   },[sizeData])
-
+ 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
     const loginUser = userData?.user?.userName
@@ -94,7 +95,7 @@ export const SampleDevForm = () => {
     getCurrency();
     getCountries();
     getSampleTypes();
-    getSampleSubTypes();
+    // getSampleSubTypes();
     getDMM()
     getM3StyleCode()
     getfabricType()
@@ -201,8 +202,9 @@ const getBase64 = (img, callback) => {
     });
   };
 
-  const getSampleSubTypes = () => {
-    subTypeService.getAllActiveSampleSubType().then((res) => {
+  const getSampleSubTypes = (value) => {
+    const req = new TypeIdReq(value)
+    subTypeService.getAllActiveSampleSubType(req).then((res) => {
       if (res.status) {
         setSubTypes(res.data);
       }
@@ -226,6 +228,27 @@ const getBase64 = (img, callback) => {
         form.setFieldValue('pchId',res.data?.pchId)
       }
     })
+  }
+
+  const styleOnChange=(value,option)=>{
+    getstyleaginstpch(value)
+    getStyleImage(option?.name)
+  }
+  const getStyleImage=(value)=>{
+    const imagePath = `http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/${value}`;
+    setStyleImage(imagePath)
+  }
+
+  // console.log(styleImage,'----')
+
+  const onStyleView =() =>{
+    setModal('styleImage')
+    setPreviewVisible(true)
+  }
+
+  const renderStyle =()=>{
+    return(<EyeOutlined onClick={onStyleView}/>)
+    // return(<Button icon={<EyeOutlined />} onClick={onStyleView}></Button>)
   }
 
   const getBrands = () => {
@@ -561,7 +584,12 @@ const getBase64 = (img, callback) => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="styleId"
-              label="Style"
+              label={
+                <span>
+                  Style
+                  {styleImage ? <span style={{ marginLeft: '140px' }}>{renderStyle()}</span> : null}
+                </span>
+              }
               rules={[{ required: true, message: "Style is required" }]}
             >
               <Select
@@ -569,11 +597,11 @@ const getBase64 = (img, callback) => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Style"
-                onChange={getstyleaginstpch}
+                onChange={styleOnChange}
               >
                 {styles.map((e) => {
                   return (
-                    <Option key={e.styleId} value={e.styleId}>
+                    <Option key={e.styleId} value={e.styleId} name={e.styleFileName}>
                       {e.style}
                     </Option>
                   );
@@ -715,7 +743,7 @@ const getBase64 = (img, callback) => {
               <Input placeholder="Enter Cost Ref" />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }} >
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }} >
             <Form.Item
               name="description"
               label="Description"
@@ -731,34 +759,7 @@ const getBase64 = (img, callback) => {
             >
               <TextArea rows={2} placeholder="Enter Description" />
             </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
-          >
-            <Form.Item name="image" label='Attach File' >
-              {/* <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
-
-                  <div>
-                      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-                      <div style={{ marginTop: 8 }}>Upload Garment</div>
-                  </div>
-              </Upload> */}
-              <Upload
-                                                  style={{ width: '100%' }} 
-                                                    {...uploadFabricProps}
-                                                    accept=".jpeg,.pdf,.png,.jpg"
-                                                    >
-                                                    <Button
-                                                        style={{ color: 'black', backgroundColor: '#7ec1ff' }}
-                                                        icon={<UploadOutlined />}
-                                                        disabled={fileList.length == 1? true:false}
-                                                    >
-                                                        Upload Fabric
-                                                    </Button>
-                                                    </Upload>
-                                                    {fileList.length ==1?
-                                                    <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
-          </Form.Item>
-          </Col>
+          </Col> */}
           
               {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='quality' label='Quality' >
@@ -777,8 +778,8 @@ const getBase64 = (img, callback) => {
                 })}
               </Select>                    </Form.Item>
               </Col> */}
-        </Row>
-        <Row gutter={16}>
+        {/* </Row>
+        <Row gutter={16}> */}
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="contact"
@@ -847,11 +848,12 @@ const getBase64 = (img, callback) => {
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
             <Form.Item
               name="technicianId"
               label="Technician"
-              rules={[{ required: true, message: "Please Select Technician" }]}
+              rules={[{ required: false, message: "Please Select Technician" }]}
+              hidden
             >
               <Select
                 allowClear
@@ -868,7 +870,7 @@ const getBase64 = (img, callback) => {
                 })}
               </Select>
             </Form.Item>
-          </Col>
+          {/* </Col> */}
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="productId"
@@ -902,11 +904,12 @@ const getBase64 = (img, callback) => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Type"
+                onChange={getSampleSubTypes}
               >
-                {licenceType.map((e) => {
+                {sampleTypes.map((e) => {
                   return (
-                    <Option key={e.typeId} value={e.typeId}>
-                      {e.type}
+                    <Option key={e.sampleTypeId} value={e.sampleTypeId}>
+                      {e.sampleType}
                     </Option>
                   );
                 })}
@@ -915,18 +918,42 @@ const getBase64 = (img, callback) => {
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
+              name="subType"
+              label="Sub Type"
+              rules={[{ required: false, message: "" }]}
+            >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Type"
+              >
+                {subTypes.map((e) => {
+                  return (
+                    <Option key={e.sampleSubTypeId} value={e.sampleSubTypeId}>
+                      {e.sampleSubType}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
+            <Form.Item
               name="conversion"
               label="Conversion"
-              rules={[{ required: true, message: "" }]}
+              rules={[{ required: false, message: "" }]}
+              hidden
             >
               <Input placeholder="Enter Conversion" />
             </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+          {/* </Col> */}
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
             <Form.Item
               name="madeIn"
               label="Made In"
-              rules={[{ required: true, message: "" }]}
+              rules={[{ required: false, message: "" }]}
+              hidden
             >
               <Select
                 allowClear
@@ -943,6 +970,23 @@ const getBase64 = (img, callback) => {
                 })}
               </Select>
             </Form.Item>
+          {/* </Col> */}
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
+            <Form.Item
+              name="description"
+              label="Description"
+              // rules={[
+              //   {
+              //     required: false,
+              //   },
+              //   {
+              //     pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
+              //     message: `Don't Allow Spaces`,
+              //   },
+              // ]}
+            >
+              <TextArea rows={2} placeholder="Enter Description" />
+            </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
             <Form.Item
@@ -951,6 +995,33 @@ const getBase64 = (img, callback) => {
             >
             <TextArea rows={2} placeholder="Enter Remarks"/>
             </Form.Item>
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
+          >
+            <Form.Item name="image" label='Attach File' >
+              {/* <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
+
+                  <div>
+                      {loading ? <LoadingOutlined /> : <PlusOutlined />}
+                      <div style={{ marginTop: 8 }}>Upload Garment</div>
+                  </div>
+              </Upload> */}
+              <Upload
+                                                  style={{ width: '100%' }} 
+                                                    {...uploadFabricProps}
+                                                    accept=".jpeg,.pdf,.png,.jpg"
+                                                    >
+                                                    <Button
+                                                        style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                                                        icon={<UploadOutlined />}
+                                                        disabled={fileList.length == 1? true:false}
+                                                    >
+                                                        Upload Fabric
+                                                    </Button>
+                                                    </Upload>
+                                                    {fileList.length ==1?
+                                                    <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
+          </Form.Item>
           </Col>
         </Row>
         {selectedBuyerId != null ?
@@ -1017,6 +1088,26 @@ const getBase64 = (img, callback) => {
                                             </Card>
                </>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
          
+        </Modal>
+        <Modal
+          visible={previewVisible}
+          title={previewTitle}
+          footer={null}
+          onCancel={() => setPreviewVisible(false)}
+        >
+          {modal == 'styleImage' ?<>
+          <Card style={{ height: '250px' }}>
+            <Form.Item>
+              <img
+              src={styleImage}
+              alt="Preview"
+              height={'200px'}
+              width={'500px'}
+              style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+              />
+            </Form.Item>
+          </Card>
+        </>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
         </Modal>
       </Form>
     </Card>

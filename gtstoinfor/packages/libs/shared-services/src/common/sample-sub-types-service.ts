@@ -1,4 +1,4 @@
-import { AllSampleSubTypesResponseModel, SampleSubTypesDTO, SampleSubTypesRequest, SampleSubTypesResponseModel } from "@project-management-system/shared-models";
+import { AllSampleSubTypesResponseModel, SampleSubTypesDTO, SampleSubTypesRequest, SampleSubTypesResponseModel, TypeIdReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class SampleSubTypesService extends CommonAxiosService{
@@ -16,8 +16,8 @@ export class SampleSubTypesService extends CommonAxiosService{
     return this.axiosPostCall(this.URL + '/getAllSampleSubTypes')
   }
 
-  async getAllActiveSampleSubType(): Promise<AllSampleSubTypesResponseModel> {
-    return this.axiosPostCall(this.URL + '/getAllActiveSampleSubTypes')
+  async getAllActiveSampleSubType(req?: TypeIdReq): Promise<AllSampleSubTypesResponseModel> {
+    return this.axiosPostCall(this.URL + '/getAllActiveSampleSubTypes',req)
   }
   async getActiveSampleSubTypeById(Request:SampleSubTypesRequest): Promise<SampleSubTypesResponseModel> {
     return this.axiosPostCall(this.URL + '/getActivesampleSubTypeById',Request)

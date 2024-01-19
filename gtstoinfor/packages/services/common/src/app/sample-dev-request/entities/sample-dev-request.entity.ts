@@ -61,9 +61,9 @@ export class SampleRequest {
   // @JoinColumn({ name: 'sample_type_id' })
   // sampleType: SampleTypes;
 
-  // @ManyToOne(() => SampleSubTypes, sampleSubType => sampleSubType.sampleReq, { nullable: false })
-  // @JoinColumn({ name: 'sample_sub_type_id' })
-  // sampleSubType: SampleSubTypes;
+  @ManyToOne(() => SampleSubTypes, sampleSubType => sampleSubType.sampleReq, { nullable: false })
+  @JoinColumn({ name: 'sub_type_id' })
+  sampleSubType: SampleSubTypes;
 
   @ManyToOne(() => Style, style => style.sampleReq, { nullable: false })
   @JoinColumn({ name: 'style_id' })
@@ -121,7 +121,7 @@ export class SampleRequest {
   @JoinColumn({ name: 'dmm_id' })
   dmm: EmplyeeDetails;
 
-  @ManyToOne(() => EmplyeeDetails, employee => employee.sampleRequest, { nullable: false })
+  @ManyToOne(() => EmplyeeDetails, employee => employee.sampleRequest, { nullable: true })
   @JoinColumn({ name: 'technician_id' })
   technician: EmplyeeDetails;
 
@@ -138,7 +138,7 @@ export class SampleRequest {
   type: string;
 
   @Column("varchar", {
-    nullable: false,
+    nullable: true,
     name: "conversion"
   })
   conversion: string;
@@ -150,7 +150,7 @@ export class SampleRequest {
   user: string;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "made_in"
   })
   madeIn: number;
