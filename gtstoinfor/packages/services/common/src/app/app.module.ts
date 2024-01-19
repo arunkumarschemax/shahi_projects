@@ -10,10 +10,7 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.module';
 import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
-import { RLOrdersModule } from './ralph-lauren/rl-orders.module';
-import { AddressModule } from './Entites@Shahi/address/address-module';
-import { CentricModule } from './centric-buyer/centric.module';
-import { HbModule } from './hb-athletics/hb-athletic.module';
+import { SanmarModule } from './sanmar/sanmar.module';
 
 
 @Module({
@@ -35,7 +32,7 @@ import { HbModule } from './hb-athletics/hb-athletic.module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,AddressModule,HbModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,SanmarModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
