@@ -520,6 +520,11 @@ export class SampleRequestService {
         console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         console.log(save);
 
+        for(const res of req.fabricInfo){
+          save.sampleReqFabricInfo.find((rec) => rec.fabricCode === res.fabricCode && rec.colourId == res.colourId)["fabricUpload"] = res.fabricUpload;
+
+        }
+
         const req1 = new SourcingRequisitionReq(req.styleId,new Date(),"",new Date(),indentFabInfo,indentTrimInfo,save.SampleRequestId);
         // const raiseIndent = await this.indentService.createItems(req1);
         // if(raiseIndent.status){
@@ -540,6 +545,34 @@ export class SampleRequestService {
     }
 
   }
+  
+  async fabricUpload(filePath: any, data: any): Promise<UploadResponse> {
+    console.log(filePath);
+    console.log(data);
+    const manager = new GenericTransactionManager(this.dataSource)
+    try {
+      let flag = true;
+      await manager.startTransaction();
+      for(const res of data){
+        const updateFilePath = await manager.getRepository(SampleReqFabricinfoEntity).update({fabricInfoId:res.fabricInfoId},{fileName: `${filePath[0].filename}`, filePath:`${filePath[0].path}`});
+        if(!(updateFilePath.affected > 0)){
+          flag = false
+        }
+      }
+      if (flag) {
+        await manager.completeTransaction();
+        return new UploadResponse(true, 11, 'uploaded successfully', filePath);
+      }
+      else {
+        await manager.releaseTransaction();
+        return new UploadResponse(false, 11, 'uploaded failed', filePath);
+      }
+    }catch (error) {
+      await manager.releaseTransaction();
+      console.log(error);
+    }
+  }
+
   async UpdateFilePath(filePath: any, SampleRequestId: number): Promise<UploadResponse> {
     console.log('upload service id---------------', filePath)
     console.log('upload service id---------------', SampleRequestId)

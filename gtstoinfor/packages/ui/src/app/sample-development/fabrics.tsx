@@ -406,12 +406,13 @@ const FabricsForm = (props:FabricsFormProps) => {
     multiple: true,
     onRemove: file => {
       console.log(file);
-      console.log(fileList.find((f) => f.uid != file.uid))
-      let files:any[] = fileList.find((f) => f.uid != file.uid)
+      console.log(fileList?.find((f) => f.uid != file.uid))
+      let files:any[] = fileList?.find((f) => f.uid != file.uid)
       setFileList(files);
       setImageUrl('');
     },
-    beforeUpload: (file: any) => {
+    beforeUpload: (file: any, index:any) => {
+      console.log(index)
       if (!file.name.match(/\.(pdf|xlsx|xls|png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
         AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
         return true;
@@ -419,7 +420,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       // var reader = new FileReader();
       // reader.readAsArrayBuffer(file);
       // reader.onload = data => {
-        if (fileList.length == 1) {
+        if (fileList?.length == 1) {
           AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
           return true;
         } else {
@@ -693,6 +694,7 @@ const FabricsForm = (props:FabricsFormProps) => {
           <Upload style={{ width: '100%' }} 
             {...uploadFabricProps}
             accept=".jpeg,.pdf,.png,.jpg"
+            onChange={(e) => handleInputChange(e.file,record.key,'fabricUpload',0,record)}
             >
             <Button
                 style={{ color: 'black', backgroundColor: '#7ec1ff' }}
@@ -701,7 +703,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             >
                 <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
             </Button>
-            {fileList.length ==1?  <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
+            {fileList?.length ==1?  <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
           </Upload>
       </Form.Item>
       ),
