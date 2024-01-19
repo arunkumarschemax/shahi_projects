@@ -23,6 +23,11 @@ export class SanmarOrdersEntity {
     buyerAddress: string
 
     @Column("text", {
+        name: "ship_to_address",
+    })
+    shipToAdd: string
+
+    @Column("text", {
         name: "delivery_address",
     })
     deliveryAddress: string
@@ -58,7 +63,6 @@ export class SanmarOrdersEntity {
         name: "color",
     })
     color: string
-
 
 
     @CreateDateColumn({
