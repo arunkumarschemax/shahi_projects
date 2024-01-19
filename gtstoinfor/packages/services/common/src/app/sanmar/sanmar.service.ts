@@ -216,7 +216,7 @@ export class SanmarService {
         const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.buyer_po},${rec.delivery_date},${rec.color}`).sizeWiseData;
         const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.unitPrice === rec.unit_price);
         if (!existingSizeData && rec.size !== null) {
-          sizeWiseData.push(new SanmarSizeWiseModel(rec.size, rec.unit_price, rec.quantity));
+          sizeWiseData.push(new SanmarSizeWiseModel(rec.size, rec.unit_price, rec.quantity,null,rec.unit));
         }
       }
       const dataModelArray: sanmarOrderDataModel[] = Array.from(sizeDateMap.values());

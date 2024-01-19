@@ -66,7 +66,8 @@ console.log(location?.state?.data)
             // align:"center",
             sorter: (a, b) => a.quantity.localeCompare(b.quantity),
             sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+            // render: (text) => text ? text : "-"
+            render: (text, record) => `${record.quantity} ${record.unit} `
       
            
         },
