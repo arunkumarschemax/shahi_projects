@@ -247,11 +247,23 @@ const getMappedTrims = (value, row) => {
       updatedData = data.map((record) => {
         if (record.key === key) {
           let qtyy = 0;
-          props.sizeDetails?.forEach(element => {
-            element.sizeInfo?.forEach(qty => {
-              qtyy = Number(qtyy)+Number(qty.quantity);
-            })
-          });
+          // props.sizeDetails?.forEach(element => {
+          //   element.sizeInfo?.forEach(qty => {
+          //     qtyy = Number(qtyy)+Number(qty.quantity);
+          //   })
+          // });
+
+           qtyy += props.sizeDetails.reduce((sum, record) => {
+            const sizeInfoQuantitySum = record.sizeInfo.reduce(
+              (sizeSum, sizeInfo) => sizeSum + Number(sizeInfo.quantity),
+              0
+            );
+          
+            return sum + sizeInfoQuantitySum;
+          }, 0);
+
+          console.log(qtyy)
+
           // console.log(qtyy);
           let consumptionCal = Number(qtyy) * Number(e);
           let withPer = (Number(consumptionCal) * Number(wastg))/ 100;

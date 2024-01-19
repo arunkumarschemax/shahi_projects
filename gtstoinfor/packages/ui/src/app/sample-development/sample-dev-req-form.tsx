@@ -309,6 +309,10 @@ const getBase64 = (img, callback) => {
               const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,'',val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category)
               // console.log(req.sizeData)
               console.log(req)
+              console.log(data.fabricsData)
+              console.log(data.trimsData)
+
+
 
             
                 sampleService.createSampleDevelopmentRequest(req).then((res) => {
@@ -341,12 +345,27 @@ const getBase64 = (img, callback) => {
                         res.data[0].filepath = file.data;
                       });
                     }
+                    console.log(data.fabricsData.find((res) => res.fabricUpload != undefined));
+                    console.log(data.fabricsData.find((res) => res.fabricUpload != undefined).length);
+
+                    if(data.fabricsData.find((res) => res.fabricUpload != undefined) != undefined){
+                      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                      const formData = new FormData();
+                      formData.append('reqNo', `${res.data[0].requestNo}`);
+                      formData.append('fabIds', `${res.data[0].sampleReqFabricInfo}`);
+                      for (let i = 0; i < data.fabricsData.length; i++) {
+                          formData.append('file', data.fabricsData[i].fabricUpload);
+                        }
+                        sampleService.fabricUpload(formData).then((file) => {
+                          res.data[0].filepath = file.data;
+                        });
+                    }
                     // navigate("/sample-development/sample-requests")
                   } else {
                     message.success(res.internalMessage, 2);
                   }
                 });
-                // console.log(req.sizeData);
+                console.log(req.sizeData);
             }else{
               // console.log('ddddddd')
               message.error('Please Fill The Size,Fabric, Trim And process Details')
