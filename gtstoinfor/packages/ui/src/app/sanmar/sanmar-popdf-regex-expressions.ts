@@ -24,7 +24,7 @@ export const FRIEGHT_PAY_METHOD = 'Exit Factory By'
 export const REFRENCE = 'Shipment Method'
 export const PAYMENT_TERM_DESCRIPTION = 'Payment Terms Description'
 export const SPECIAL_INSTRUCTIONS = 'Special Instructions'
-
+export const SHIP_TO_ADDRESS = 'Incoterm'
 export const ITEM_TEXT_END_TEXT = 'Merchandis'
 export const ITEM_TEXT_END_TEXT2 = 'Merchandise Amount'
 // export const UNWANTED_TEXT_1 = 'Acceptance of this HB Athletic Inc. - Globe-Tex purchase order constitutes Vendors agreement to:' 
