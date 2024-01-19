@@ -64,6 +64,7 @@ import SanmarPdfUpload from "./sanmar/sanmar-pdf-upload"
 import SanmarOrdersDetailView from "./sanmar/sanmar-order-data-details-view"
 import SanmarOrdersGrid from "./sanmar/sanmar-order-data-grid"
 import SanmarPdFInfoGrid from "./sanmar/sanmar-pdf-grid"
+import SanmarPdfTable from "./sanmar/sanmar-pdf-detail-view"
 
 
 export const AppRoutes = () => {
@@ -248,6 +249,8 @@ export const AppRoutes = () => {
                    <Route path='sanmar-order-data-info-grid' element={<SanmarOrdersGrid />} />
                    <Route path='sanmar-order-data-detail-view' element={<SanmarOrdersDetailView />} />
                    <Route path='pdf-info' element={<SanmarPdFInfoGrid />} />
+                   <Route path='pdf-info-detail-view' element={<SanmarPdfTable />} />
+
                    
 
               

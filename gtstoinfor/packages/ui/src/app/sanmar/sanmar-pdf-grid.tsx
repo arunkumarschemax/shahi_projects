@@ -130,11 +130,11 @@ export function SanmarPdFInfoGrid() {
                 : null
     })
 
-    // const setMoreData = (record) => {
-    //     navigate("/hb-athletics/pdf-info-detail-view", {
-    //         state: { data: record },
-    //     });
-    // };
+    const setMoreData = (record) => {
+        navigate("/sanmar/pdf-info-detail-view", {
+            state: { data: record },
+        });
+    };
 
 
     const columns: any = [
@@ -184,7 +184,7 @@ export function SanmarPdFInfoGrid() {
         },
         {
             title: 'Status',
-            dataIndex: 'status',
+            dataIndex: 'upload_status',
             align: 'center',
             width: 80,
             filters: [
@@ -196,14 +196,10 @@ export function SanmarPdFInfoGrid() {
                     text: 'FAILED',
                     value: 'FAILED',
                 },
-
             ],
-            onFilter: (value, record) => { return record.status.toLowerCase() === value.toLowerCase(); }
-
-
-
+            onFilter: (value, record) => record.upload_status === value,
         },
-
+        
         {
             title: "Action",
             dataIndex: "action",
@@ -213,7 +209,7 @@ export function SanmarPdFInfoGrid() {
                 <>
                     <Button
                         type="primary"
-                // onClick={() => setMoreData(record)}
+                onClick={() => setMoreData(record)}
                     >More Info</Button>
                     <Tooltip title="PDF download">
                         <Button icon={<FilePdfOutlined onClick={() => download(record.filePath)}  style={{color:"red"}}/>} >{value}</Button>
