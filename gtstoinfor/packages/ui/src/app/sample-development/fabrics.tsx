@@ -200,15 +200,37 @@ const FabricsForm = (props:FabricsFormProps) => {
         if (record.key === key) {
           console.log(e);
           console.log(record.totalCount);
-          let totalSizeCountForSize = props.sizeDetails.find((s) => s.colorId ===props.form.getFieldValue(`colorId${key}`))?.sizeInfo;
-          console.log(totalSizeCountForSize);
-          let qtyy = 0;
-          totalSizeCountForSize?.forEach(qty => {
-          console.log(qty.quantity);
-          qtyy = Number(qtyy)+Number(qty.quantity);
-        })
-        console.log(qtyy);
-          let consumptionCal = Number(qtyy) * Number(e);
+          console.log(props.sizeDetails)
+
+          const getColorQuantitySum = (colorId) => {
+            const colorRecords = props.sizeDetails.filter((record) => record.colorId === colorId);
+            console.log(colorRecords)
+          
+            const totalQuantity = colorRecords.reduce((sum, record) => {
+              const sizeInfoQuantitySum = record.sizeInfo.reduce(
+                (sizeSum, sizeInfo) => sizeSum + Number(sizeInfo.quantity),
+                0
+              );
+          
+              return sum + sizeInfoQuantitySum;
+            }, 0);
+          
+            return totalQuantity;
+          }
+          let totalQuantityForColor = 0
+           totalQuantityForColor += getColorQuantitySum(props.form.getFieldValue(`colorId${key}`))
+          console.log(totalQuantityForColor,'totalQuantityForColor')
+
+
+        //   let totalSizeCountForSize = props.sizeDetails.find((s) => s.colorId ===props.form.getFieldValue(`colorId${key}`))?.sizeInfo;
+        //   console.log(totalSizeCountForSize);
+        //   let qtyy = 0;
+        //   totalSizeCountForSize?.forEach(qty => {
+        //   console.log(qty.quantity);
+        //   qtyy = Number(qtyy)+Number(qty.quantity);
+        // })
+        // console.log(qtyy);
+          let consumptionCal = Number(totalQuantityForColor) * Number(e);
           let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
           console.log(consumptionCal);
           console.log(withPer);
