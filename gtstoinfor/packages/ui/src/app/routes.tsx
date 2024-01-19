@@ -238,10 +238,13 @@ export const AppRoutes = () => {
                    <Route path='hb-co-line-view' element={<HbColineView />} />
                    <Route path='hb-order-comparision-report' element={<OrderComparisionReport />} />
 
-
-
-
                 </Route>
+
+                <Route path='/sanmar'>
+                <    Route path='sanmar-pdf-upload' element={<HbPdfUpload />} />
+              
+                </Route>
+
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             </Route>
