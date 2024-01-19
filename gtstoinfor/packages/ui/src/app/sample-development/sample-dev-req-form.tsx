@@ -1,8 +1,8 @@
 import { EyeOutlined, LoadingOutlined, PlusOutlined, UploadOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
-import { BuyerRefNoRequest, CategoryEnumDisplay, DepartmentReq,SampleDevelopmentRequest, StyleIdReq } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, CategoryEnumDisplay, DepartmentReq,SampleDevelopmentRequest, StyleIdReq, TypeIdReq } from "@project-management-system/shared-models";
 import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
-import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Tabs, message } from "antd";
+import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Tabs, message } from "antd";
 import { useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import Upload, { RcFile, UploadProps } from "antd/es/upload";
@@ -76,12 +76,13 @@ export const SampleDevForm = () => {
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
   const [modal, setModal] = useState('')
+  const [styleImage, setStyleImage] = useState(""); // Add this line
 
 
   useEffect(() => {
     console.log(sizeForm.getFieldsValue())
   },[sizeData])
-
+ 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
     const loginUser = userData?.user?.userName
@@ -94,7 +95,7 @@ export const SampleDevForm = () => {
     getCurrency();
     getCountries();
     getSampleTypes();
-    getSampleSubTypes();
+    // getSampleSubTypes();
     getDMM()
     getM3StyleCode()
     getfabricType()
@@ -201,8 +202,9 @@ const getBase64 = (img, callback) => {
     });
   };
 
-  const getSampleSubTypes = () => {
-    subTypeService.getAllActiveSampleSubType().then((res) => {
+  const getSampleSubTypes = (value) => {
+    const req = new TypeIdReq(value)
+    subTypeService.getAllActiveSampleSubType(req).then((res) => {
       if (res.status) {
         setSubTypes(res.data);
       }
@@ -226,6 +228,28 @@ const getBase64 = (img, callback) => {
         form.setFieldValue('pchId',res.data?.pchId)
       }
     })
+  }
+
+  const styleOnChange=(value,option)=>{
+
+    getstyleaginstpch(value)
+    getStyleImage(option?.name)
+  }
+  const getStyleImage=(value)=>{
+    const imagePath = `http://165.22.220.143/sampling/gtstoinfor/dist/packages/services/common/upload_files/${value}`;
+    setStyleImage(imagePath)
+  }
+
+  // console.log(styleImage,'----')
+
+  const onStyleView =() =>{
+    setModal('styleImage')
+    setPreviewVisible(true)
+  }
+
+  const renderStyle =()=>{
+    return(<EyeOutlined onClick={onStyleView}/>)
+    // return(<Button icon={<EyeOutlined />} onClick={onStyleView}></Button>)
   }
 
   const getBrands = () => {
@@ -306,7 +330,7 @@ const getBase64 = (img, callback) => {
             if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
 
               // console.log('TTTTT')
-              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,0,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category)
+              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
               // console.log(req.sizeData)
               console.log(req)
               console.log(data.fabricsData)
@@ -595,7 +619,12 @@ const getBase64 = (img, callback) => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="styleId"
-              label="Style"
+              label={
+                <span>
+                  Style
+                  {/* {styleImage ? <span style={{ marginLeft: '140px' }}>{renderStyle()}</span> : null} */}
+                </span>
+              }
               rules={[{ required: true, message: "Style is required" }]}
             >
               <Select
@@ -603,11 +632,11 @@ const getBase64 = (img, callback) => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Style"
-                onChange={getstyleaginstpch}
+                onChange={styleOnChange}
               >
                 {styles.map((e) => {
                   return (
-                    <Option key={e.styleId} value={e.styleId}>
+                    <Option key={e.styleId} value={e.styleId} name={e.styleFileName}>
                       {e.style}
                     </Option>
                   );
@@ -749,7 +778,7 @@ const getBase64 = (img, callback) => {
               <Input placeholder="Enter Cost Ref" />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }} >
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }} >
             <Form.Item
               name="description"
               label="Description"
@@ -765,34 +794,7 @@ const getBase64 = (img, callback) => {
             >
               <TextArea rows={2} placeholder="Enter Description" />
             </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
-          >
-            <Form.Item name="image" label='Attach File' >
-              {/* <Upload {...uploadFabricProps} style={{ width: '100%' }} listType="picture-card">
-
-                  <div>
-                      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-                      <div style={{ marginTop: 8 }}>Upload Garment</div>
-                  </div>
-              </Upload> */}
-              <Upload
-                                                  style={{ width: '100%' }} 
-                                                    {...uploadFabricProps}
-                                                    accept=".pdf, .xlsx, .xls, .png, .jpeg, .jpg, .pjpeg, .gif, .tiff, .x-tiff, .x-png"
-                                                    >
-                                                    <Button
-                                                        style={{ color: 'black', backgroundColor: '#7ec1ff' }}
-                                                        icon={<UploadOutlined />}
-                                                        // disabled={fileList.length == 1? true:false}
-                                                    >
-                                                        Upload Tech Pack
-                                                    </Button>
-                                                    </Upload>
-                                                    {fileList.length ==1?
-                                                    <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
-          </Form.Item>
-          </Col>
+          </Col> */}
           
               {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='quality' label='Quality' >
@@ -811,8 +813,8 @@ const getBase64 = (img, callback) => {
                 })}
               </Select>                    </Form.Item>
               </Col> */}
-        </Row>
-        <Row gutter={16}>
+        {/* </Row>
+        <Row gutter={16}> */}
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="contact"
@@ -881,11 +883,12 @@ const getBase64 = (img, callback) => {
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
             <Form.Item
               name="technicianId"
               label="Technician"
-              rules={[{ required: true, message: "Please Select Technician" }]}
+              rules={[{ required: false, message: "Please Select Technician" }]}
+              hidden
             >
               <Select
                 allowClear
@@ -902,113 +905,205 @@ const getBase64 = (img, callback) => {
                 })}
               </Select>
             </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-            <Form.Item
-              name="productId"
-              label="Product"
-              // rules={[{ required: true, message: "Please Select Product" }]}
-            >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select Product"
+          {/* </Col> */}
+          </Row>
+          
+          <Row gutter={24}>
+                <Col span={4} >
+                  <Form.Item
+                    name="productId"
+                    label="Product"
+                    // rules={[{ required: true, message: "Please Select Product" }]}
+                  >
+                    <Select
+                      allowClear
+                      showSearch
+                      optionFilterProp="children"
+                      placeholder="Select Product"
+                    >
+                      {licenceType.map((e) => {
+                        return (
+                          <Option key={e.productId} value={e.productId}>
+                            {e.product}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={4} >
+                  <Form.Item
+                    name="category"
+                    label="Category"
+                    rules={[{ required: false, message: "" }]}
+                  >
+                    <Select
+                      allowClear
+                      showSearch
+                      optionFilterProp="children"
+                      placeholder="Select Category"
+                    >
+                      {CategoryEnumDisplay.map((e) => {
+                        return (
+                          <Option key={e.name} value={e.name}>
+                            {e.displayVal}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={4} >
+                  <Form.Item
+                    name="type"
+                    label="Type"
+                    rules={[{ required: false, message: "" }]}
+                  >
+                    <Select
+                      allowClear
+                      showSearch
+                      optionFilterProp="children"
+                      placeholder="Select Type"
+                      onChange={getSampleSubTypes}
+                    >
+                      {sampleTypes.map((e) => {
+                        return (
+                          <Option key={e.sampleTypeId} value={e.sampleTypeId}>
+                            {e.sampleType}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={4} >
+                <Form.Item
+                    name="subType"
+                    label="Sub Type"
+                    rules={[{ required: false, message: "" }]}
+                  >
+                    <Select
+                      allowClear
+                      showSearch
+                      optionFilterProp="children"
+                      placeholder="Select SubType"
+                    >
+                      {subTypes.map((e) => {
+                        return (
+                          <Option key={e.sampleSubTypeId} value={e.sampleSubTypeId}>
+                            {e.sampleSubType}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col span={4}>
+                  <Form.Item name="image" label='Attach File' >
+                    <Upload
+                      style={{ width: '100%' }} 
+                        {...uploadFabricProps}
+                        accept=".pdf, .xlsx, .xls, .png, .jpeg, .jpg, .pjpeg, .gif, .tiff, .x-tiff, .x-png"
+                        >
+                        <Button
+                            style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                            icon={<UploadOutlined />}
+                            disabled={fileList.length == 1? true:false}
+                        >
+                            Upload Fabric
+                        </Button>
+                        </Upload>
+                        {fileList.length ==1?
+                        <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
+                  </Form.Item>
+                </Col>
+              <Col span={4} >
+                </Col>
+            </Row>
+
+          <Row gutter={24}>
+            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
+              <Form.Item
+                name="conversion"
+                label="Conversion"
+                rules={[{ required: false, message: "" }]}
+                hidden
               >
-                {licenceType.map((e) => {
-                  return (
-                    <Option key={e.productId} value={e.productId}>
-                      {e.product}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-            <Form.Item
-              name="type"
-              label="Type"
-              rules={[{ required: false, message: "" }]}
-            >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select Type"
+                <Input placeholder="Enter Conversion" />
+              </Form.Item>
+            {/* </Col> */}
+            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
+              <Form.Item
+                name="madeIn"
+                label="Made In"
+                rules={[{ required: false, message: "" }]}
+                hidden
               >
-                {licenceType.map((e) => {
-                  return (
-                    <Option key={e.typeId} value={e.typeId}>
-                      {e.type}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-            <Form.Item
-              name="category"
-              label="Category"
-              rules={[{ required: false, message: "" }]}
-            >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select Category"
+                <Select
+                  allowClear
+                  showSearch
+                  optionFilterProp="children"
+                  placeholder="Select Made In"
+                >
+                  {country.map((e) => {
+                    return (
+                      <Option key={e.countryId} value={e.countryId}>
+                        {e.countryName}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            {/* </Col> */}
+            <Col span={8} >
+              <Form.Item
+                name="description"
+                label="Description"
+                // rules={[
+                //   {
+                //     required: false,
+                //   },
+                //   {
+                //     pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
+                //     message: `Don't Allow Spaces`,
+                //   },
+                // ]}
               >
-                {CategoryEnumDisplay.map((e) => {
-                  return (
-                    <Option key={e.name} value={e.name}>
-                      {e.displayVal}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-            <Form.Item
-              name="conversion"
-              label="Conversion"
-              rules={[{ required: true, message: "" }]}
-            >
-              <Input placeholder="Enter Conversion" />
-            </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
-            <Form.Item
-              name="madeIn"
-              label="Made In"
-              rules={[{ required: true, message: "" }]}
-            >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select Made In"
+                <TextArea rows={2} placeholder="Enter Description" />
+              </Form.Item>
+            </Col>
+            <Col span={8}  >
+              <Form.Item
+                name="remarks"
+                label="Remarks"
               >
-                {country.map((e) => {
-                  return (
-                    <Option key={e.countryId} value={e.countryId}>
-                      {e.countryName}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
-            <Form.Item
-              name="remarks"
-              label="Remarks"
-            >
-            <TextArea rows={2} placeholder="Enter Remarks"/>
-            </Form.Item>
-          </Col>
+              <TextArea rows={2} placeholder="Enter Remarks"/>
+              </Form.Item>
+            </Col>
+            <Col span={4}>
+
+            </Col>
+            <Col span={4} >
+                {form.getFieldValue('styleId') !== undefined && (
+                  <Card style={{ maxHeight: '200px' }}>
+                    <Form.Item>
+                      <img
+                        src={styleImage}
+                        alt="Preview"
+                        width={'500px'}
+                        style={{ width: '100%', objectFit: 'contain', marginRight: '100px', maxHeight: '200px' }}
+                      />
+                    </Form.Item>
+                  </Card>
+                )}
+              </Col>
         </Row>
+
+        {/* </Col>
+        <Col> */}
+          {/* </Col> */}
+          
+        {/* </Row> */}
         {selectedBuyerId != null ?
          <Card size='small'>
          <Tabs type={'card'} tabPosition={'top'}>
@@ -1074,6 +1169,26 @@ const getBase64 = (img, callback) => {
                </>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
          
         </Modal>
+        {/* <Modal
+          visible={previewVisible}
+          title={previewTitle}
+          footer={null}
+          onCancel={() => setPreviewVisible(false)}
+        >
+          {modal == 'styleImage' ?<>
+          <Card style={{ height: '250px' }}>
+            <Form.Item>
+              <img
+              src={styleImage}
+              alt="Preview"
+              height={'200px'}
+              width={'500px'}
+              style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+              />
+            </Form.Item>
+          </Card>
+        </>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
+        </Modal> */}
       </Form>
     </Card>
   );

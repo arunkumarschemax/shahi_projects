@@ -114,8 +114,11 @@ export class StyleService{
             if(buyerReq.buyerId != undefined){
                 query1 = query1 + " and s.buyer_id ="+buyerReq.buyerId;
             }
-            query1 = query1 + " order by s.created_at DESC";
+            query1 = query1 + " order by s.style ASC";
             let style = await manager.query(query1);
+            console.log("******************************");
+            console.log(style);
+
         console.log(style);
         if(style.length >0){
             return new AllStyleResponseModel(true,1,'Styles Retrived Sucessfully',style)

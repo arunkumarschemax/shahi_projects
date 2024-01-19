@@ -200,6 +200,7 @@ export class SampleRequestService {
   }
 
   async createSampleDevelopmentRequest(req: SampleDevelopmentRequest): Promise<AllSampleDevReqResponseModel> {
+    console.log(req,'sevice')
     const manager = new GenericTransactionManager(this.dataSource)
     // console.log(req)
     // console.log(req.sizeData[0].sizeInfo,'#####')
