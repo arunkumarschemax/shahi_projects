@@ -86,10 +86,15 @@ export function PoPrint(props: PoPrintProps) {
     
     
     // const totalAmount = poData.reduce((sum, item) => sum + parseFloat(item.total_amount || 0), 0);
-    const totalAmount = poData.reduce((sum, e) => (sum + e.unit_price? Number((e.po_quantity*e.unit_price)-((e.po_quantity*e.unit_price)*(e.discount/100))): 0),0)
-    const totalAmountInWords = numberToWords.toWords(totalAmount).toUpperCase();
-    
-    
+     const totalAmount = poData.reduce((sum, e) => (sum + e.unit_price? ((e.po_quantity * e.unit_price) - ((e.po_quantity * e.unit_price) * (e.discount / 100))).toFixed(2): 0),0)
+
+const integerPart = Math.floor(totalAmount);
+const decimalPart = Math.round((totalAmount - integerPart) * 100);
+const integerWords = numberToWords.toWords(integerPart).toUpperCase();
+const decimalWords = numberToWords.toWords(decimalPart).toUpperCase();
+
+const totalAmountInWords = `${integerWords} . ${decimalWords}`;
+
     
     // const downloadAsPDF = () => {
     
@@ -312,6 +317,7 @@ export function PoPrint(props: PoPrintProps) {
                             <td></td>
                             <td ></td>
                             <td></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>

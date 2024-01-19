@@ -2143,27 +2143,23 @@ async getUsageWhtsAppMsg(): Promise<CommonResponseModel> {
               { "type": "text", "text":  stockInfo?.[0]?.COUNT},
               { "type": "text", "text":  materialInfo?.[0]?.COUNT},
               { "type": "text", "text":  operationsInfo?.[0]?.COUNT}
-
-
-
           ];
           // console.log(parameters, 'Parameter-----------')
 
           const contacts = WhatsAppInfo.contacts;
           let statusFlag = true
+          let whatsappres
           for (const contact of contacts) {
-            console.log('ppppppppppp');
 
-              const whatsappres = await new MessageParameters(contact, 'usage_report', parameters, 'en_uk')
+              whatsappres = await new MessageParameters(contact, 'sampling_usage', parameters, 'en_us')
               const messageStatus = await this.wpService.sendMessageThroughFbApi(whatsappres);
-              console.log(messageStatus,'ppppppppppp44444444');
 
               if (!messageStatus.status) {
                   statusFlag = false
                   break
               } else {
                   statusFlag = true
-                  const whatsapplogDto = new WhatsAppLogDto(contact,'usage_report','Shahi',23,27)
+                  const whatsapplogDto = new WhatsAppLogDto(contact,'sampling_usage','Shahi',GlobalVariables.whastAppBiCompanyId,GlobalVariables.whastAppBiModuleId)
 
                   // const whatsapplogDto = new WhatsAppLogDto(contact, 'usage_report', 'Sampling', 23, 27)
                   await this.wpService.createWhatappLog(whatsapplogDto)
@@ -2173,7 +2169,7 @@ async getUsageWhtsAppMsg(): Promise<CommonResponseModel> {
               
           }
           // if (data) {
-          return new CommonResponseModel(true, 1, 'Data Retrived Successfully', date)
+          return new CommonResponseModel(true, 1, 'Data Retrived Successfully', whatsappres)
 
       //     } else {
       //     return new CommonResponseModel(false, 0, 'No Data Found..', undefined)
