@@ -330,7 +330,7 @@ const getBase64 = (img, callback) => {
             if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
 
               // console.log('TTTTT')
-              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
+              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,0,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
               // console.log(req.sizeData)
               console.log(req)
               console.log(data.fabricsData)
@@ -956,7 +956,7 @@ const getBase64 = (img, callback) => {
                   <Form.Item
                     name="type"
                     label="Type"
-                    rules={[{ required: true, message: "" }]}
+                    rules={[{ required: false, message: "" }]}
                   >
                     <Select
                       allowClear
@@ -979,7 +979,7 @@ const getBase64 = (img, callback) => {
                 <Form.Item
                     name="subType"
                     label="Sub Type"
-                    rules={[{ required: true, message: "" }]}
+                    rules={[{ required: false, message: "" }]}
                   >
                     <Select
                       allowClear
