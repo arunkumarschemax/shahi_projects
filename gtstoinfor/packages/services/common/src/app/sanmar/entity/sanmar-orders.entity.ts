@@ -1,3 +1,4 @@
+import { StatusEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
 @Entity('orders')
@@ -63,6 +64,13 @@ export class SanmarOrdersEntity {
         name: "color",
     })
     color: string
+
+    @Column({
+        type: 'enum',
+        enum: StatusEnum,
+        name: 'status',
+      })
+      status: StatusEnum;
 
 
     @CreateDateColumn({
