@@ -12,6 +12,54 @@ export class SanmarOrdersEntity {
     })
     buyerPo: string
 
+    @Column("varchar", {
+        name: "po_date",
+    })
+    poDate: string
+
+    @Column("text", {
+        name: "buyer_address",
+    })
+    buyerAddress: string
+
+    @Column("text", {
+        name: "delivery_address",
+    })
+    deliveryAddress: string
+
+    @Column("varchar", {
+        name: "po_style",
+    })
+    poStyle: string
+
+    
+    @Column("varchar", {
+        name: "delivery_date",
+    })
+    deliveryDate: string
+
+        
+    @Column("varchar", {
+        name: "quantity",
+    })
+    quantity: string
+
+    @Column("varchar", {
+        name: "unit_price",
+    })
+    unitPrice: string
+
+    @Column("varchar", {
+        name: "size",
+    })
+    size: string
+
+    @Column("varchar", {
+        name: "color",
+    })
+    color: string
+
+
 
     @CreateDateColumn({
         name: "created_at",
