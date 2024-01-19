@@ -458,175 +458,190 @@ import {
       );
     };
 
-    // const exportExcel = () => {
-    //   const excel = new Excel();
+    const exportExcel = () => {
+      const excel = new Excel();
   
-    //   const currentDate = new Date();
-    //   const formattedDate = currentDate.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+      const currentDate = new Date();
+      const formattedDate = currentDate.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
   
-    //         let rowIndex = 1;
-    //         const excelColumnsWH: any[] = [];
-    //         excelColumnsWH.push(
-    //           { 
-    //             title: "#", 
-    //             // dataIndex: "sno", 
-    //             width:50,
-    //             render: (text, object, index) => { 
-    //               if(index == orderData.length) { 
-    //                 return null;
-    //               } else { 
-    //                 return rowIndex++; 
-    //               } 
-    //             }
-    //           },
-    //           {
-    //             title: "Customer PO",
-    //             dataIndex: "custPo",
-    //             width: 90,
-    //             render: (text) => text ? text : "-",
+            let rowIndex = 1;
+            const excelColumnsWH: any[] = [];
+            excelColumnsWH.push(
+              { 
+                title: "#", 
+                // dataIndex: "sno", 
+                width:50,
+                render: (text, object, index) => { 
+                  if(index == orderData.length) { 
+                    return null;
+                  } else { 
+                    return rowIndex++; 
+                  } 
+                }
+              },
+              {
+                title: "Buyer PO",
+                dataIndex: "buyerPo",
+                width: 150,
+                render: (text) => text ? text : "-",
 
              
-    //           },
-    //           {
-    //             title: "Style",
-    //             dataIndex: "style",
-    //             width: 90,
-    //             render: (text) => text ? text : "-",
+              },
+              {
+                title: "PO Date",
+                dataIndex: "poDate",
+                width: 90,
+               render: (text) => text ? text : "-",
+        
+             
+              },
+              {
+                title: "Style",
+                dataIndex: "style",
+                width: 90,
+                render: (text) => text ? text : "-",
 
               
                 
         
-    //           },
-    //           {
-    //             title: "Color",
-    //             dataIndex: "color",
-    //             width: 90,
-    //             render: (text) => text ? text : "-",
+              },
+              {
+                title: "Color",
+                dataIndex: "color",
+                width: 150,
+                render: (text) => text ? text : "-",
        
         
-    //           },
+              },
         
-    //           {
-    //             title: "Delivery Date",
-    //             dataIndex: "exitFactoryDate",
-    //             width: 130,
-    //             render: (text) => text ? text : "-",
+              {
+                title: "Delivery Date",
+                dataIndex: "deliveryDate",
+                width: 130,
+                render: (text) => text ? text : "-",
             
         
-    //           },
+              },
               
-    //         );
-    //         const sizeHeaders = new Set<string>();
-    //         orderData?.forEach((rec) =>
-    //         rec.sizeWiseData?.forEach((version) => {
-    //           sizeHeaders.add("" + version.size);
-    //         })
-    //       );
+            );
+            const sizeHeaders = new Set<string>();
+            orderData?.forEach((rec) =>
+            rec.sizeWiseData?.forEach((version) => {
+              sizeHeaders.add("" + version.size);
+            })
+          );
            
   
-    //       sizeHeaders?.forEach(version => {
-    //         excelColumnsWH.push({
-    //           title: version,
-    //           dataIndex: version,
-    //           key: version,
-    //           width: 70,
-    //           align: 'center',
-    //           children: [
+          sizeHeaders?.forEach(version => {
+            excelColumnsWH.push({
+              title: version,
+              dataIndex: version,
+              key: version,
+              width: 70,
+              align: 'center',
+              children: [
     
-    //             {
-    //               title: 'Quantity',
-    //               dataIndex: '',
-    //               key: '',
-    //               width: 70,
-    //               className: "center",
-    //               render: (text, record) => {
-    //                 const sizeData = record.sizeWiseData.find(item => item.size === version);
-    //                 console.log()
-    //                 if (sizeData) {
-    //                   if (sizeData.size !== null) {
-    //                     const formattedQty = (sizeData?.quantity) ? (sizeData?.quantity) : "-"
+                {
+                  title: 'Quantity',
+                  dataIndex: '',
+                  key: '',
+                  width: 130,
+                  className: "center",
+                  render: (text, record) => {
+                    const sizeData = record.sizeWiseData.find(item => item.size === version);
+                    console.log()
+                    if (sizeData) {
+                      if (sizeData.size !== null) {
+                        const formattedQty = (sizeData?.quantity) ? (sizeData?.quantity) : "-"
       
-    //                     return (
-    //                       formattedQty
-    //                     );
-    //                   } else {
+                        return (
+                          formattedQty
+                        );
+                      } else {
       
-    //                     return (
-    //                       '-'
-    //                     );
-    //                   }
-    //                 } else {
-    //                   return '-';
-    //                 }
-    //               }
-    //             },
-    //             {
-    //               title: 'Unit Price',
-    //               dataIndex: '',
-    //               key: '',
-    //               width: 70,
-    //               className: "center",
-    //               render: (text, record) => {
-    //                 const sizeData = record.sizeWiseData.find(item => item.size === version);
-    //                 console.log()
-    //                 if (sizeData) {
-    //                   if (sizeData.size !== null) {
-    //                     const formattedQty = (sizeData?.unitPrice) ? (sizeData?.unitPrice) : "-"
-    //                     // const formattedQty = (sizeData?.amount)
-    //                     return (
-    //                       formattedQty
-    //                     );
-    //                   } else {
+                        return (
+                          '-'
+                        );
+                      }
+                    } else {
+                      return '-';
+                    }
+                  }
+                },
+                {
+                  title: 'Unit Price',
+                  dataIndex: '',
+                  key: '',
+                  width: 130,
+                  className: "center",
+                  render: (text, record) => {
+                    const sizeData = record.sizeWiseData.find(item => item.size === version);
+                    console.log()
+                    if (sizeData) {
+                      if (sizeData.size !== null) {
+                        const formattedQty = (sizeData?.unitPrice) ? (sizeData?.unitPrice) : "-"
+                        // const formattedQty = (sizeData?.amount)
+                        return (
+                          formattedQty
+                        );
+                      } else {
       
-    //                     return (
-    //                       '-'
-    //                     );
-    //                   }
-    //                 } else {
-    //                   return '-';
-    //                 }
-    //               }
-    //             },
-    //           ]
-    //         });
-    //     })
-    //     excelColumnsWH.push(
-    //       {
-    //         title: "Total Quantity",
-    //         dataIndex: "",
-    //         align: "right",
-    //         width: 90,
-    //         render: (text, record) => {
-    //           let sum = 0;
-    //           record.sizeWiseData.forEach((r) => {
-    //             // Convert to number before summing
-    //             sum += parseFloat(r.quantity) || 0;
-    //           });
-    //           return sum;
-    //         },
-    //       },
-    //       {
-    //         title: "Address",
-    //         dataIndex: "shipToAdd",
-    //         width: 400,
-    //         render: (text) => text ? text : "-",
-    //       },
+                        return (
+                          '-'
+                        );
+                      }
+                    } else {
+                      return '-';
+                    }
+                  }
+                },
+              ]
+            });
+        })
+        excelColumnsWH.push(
+          // {
+          //   title: "Total Quantity",
+          //   dataIndex: "",
+          //   align: "right",
+          //   width: 90,
+          //   render: (text, record) => {
+          //     let sum = 0;
+          //     record.sizeWiseData.forEach((r) => {
+          //       // Convert to number before summing
+          //       sum += parseFloat(r.quantity) || 0;
+          //     });
+          //     return sum;
+          //   },
+          // },
         
-    //     );
+          {
+            title: "Buyer Address",
+            dataIndex: "buyerAddress",
+            width: 400,
+            render: (text) => text ? text : "-",
+          },
+          {
+            title: "Delivery Address",
+            dataIndex: "shipToAdd",
+            width: 400,
+            render: (text) => text ? text : "-",
+          },
+        
+        );
   
          
       
-    //           excel
-    //             .addSheet(`Order Info (${formattedDate})`)
-    //             .addColumns(excelColumnsWH)
-    //             .addDataSource(filterData, { str2num: false });
+              excel
+                .addSheet(`Order Info (${formattedDate})`)
+                .addColumns(excelColumnsWH)
+                .addDataSource(filterData, { str2num: false });
   
        
-    //       excel.saveAs(`Order Info ${formattedDate}.xlsx`);
+          excel.saveAs(`Order Info ${formattedDate}.xlsx`);
   
   
    
-    // }
+    }
   
   
     return (
@@ -636,7 +651,7 @@ import {
           <Button
             type="default"
             style={{ color: "green" }}
-            // onClick={exportExcel}
+            onClick={exportExcel}
             icon={<FileExcelFilled />}
           >
             Download Excel
