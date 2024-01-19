@@ -5,6 +5,14 @@ export class SanmarService extends CommonAxiosService {
     private sanmarOrdersController = "/sanmar-orders"
 
 
+    async saveSanmarOrdersData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.sanmarOrdersController + "/saveSanmarOrdersData", req)
+    }
+
+    async fileUpload(formData: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.sanmarOrdersController + "/fileUpload", formData)
+    }
+
     async getPdfFileInfo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.sanmarOrdersController + "/getPdfFileInfo")
     }

@@ -63,15 +63,6 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                 {pdfData?.shipToAdd}
                             </div>
                         </Tooltip>
-                        {/* <td className='ta-b'>{pdfData?.buyerAddress}</td> */}
-                        {/* <td className='ta-b'>{pdfData?.shipToAdd}</td> */}
-                        <td className='ta-b'>
-                            <Tooltip title={pdfData?.shipToAdd} placement="topLeft">
-                                <div style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                                    {pdfData?.shipToAdd}
-                                </div>
-                            </Tooltip>
-                        </td>
                     </tr>
 
                     {pdfData?.SanmarpoItemDetails?.map((i) => {

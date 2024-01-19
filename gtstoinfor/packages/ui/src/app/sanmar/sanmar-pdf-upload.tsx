@@ -8,7 +8,7 @@ import { Document, pdfjs } from 'react-pdf';
 import { useNavigate } from "react-router-dom";
 
 import { DiaPDFModel, LegalPoPdfModel } from '@project-management-system/shared-models';
-import { AdobeAcrobatApiService, CentricService, HbService, NikeService, RLOrdersService } from '@project-management-system/shared-services';
+import { AdobeAcrobatApiService, CentricService, HbService, NikeService, RLOrdersService, SanmarService } from '@project-management-system/shared-services';
 import { extractDataFromPoPdf } from './sanmar-po-pdf-extraction-helper';
 import PoPdfTable from './sanmar-po-pdf-table';
 // import PoPdfTable from './po-pdf-table';
@@ -54,7 +54,7 @@ const SanmarPdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
 
     const [diaPDfForm] = Form.useForm()
-    const HbServices = new HbService();
+    const SanmarServices = new SanmarService();
     // const services = new HbService();
     const adobeAcrobatApi = new AdobeAcrobatApiService()
 
@@ -76,16 +76,16 @@ const SanmarPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         showUploadList: false
     };
 
-    const hbAthleticBot = (req) => {
-        HbServices.hbAthleticBot().then(res => {
-            if (res.status) {
-                // setBuyer(res.data);
-                // setPoPdfData(res.data)
-                message.success("Button CLicked")
-                console.log("Trade button clicked");
-            }
-        });
-    };
+    // const hbAthleticBot = (req) => {
+    //     SanmarServices.hbAthleticBot().then(res => {
+    //         if (res.status) {
+    //             // setBuyer(res.data);
+    //             // setPoPdfData(res.data)
+    //             message.success("Button CLicked")
+    //             console.log("Trade button clicked");
+    //         }
+    //     });
+    // };
 
     async function extractPoPdfData(pdf: any, pdfText: any) {
         const poData = await extractDataFromPoPdf(pdf)
@@ -121,18 +121,18 @@ const SanmarPdfUpload: React.FC<IPdfUploadProps> = (props) => {
     }
 
     const savePdfFields = () => {
-        HbServices.saveHbOrdersData(poPdfData).then((res) => {
+        SanmarServices.saveSanmarOrdersData(poPdfData).then((res) => {
             if (res.status) {
                 onReset()
                 if (fileList) {
                     const formData = new FormData();
                     fileList.forEach((file: any) => {
                         formData.append('file', file);
-                        formData.append('custPo', poPdfData?.custPo);
+                        formData.append('buyerPo', poPdfData?.buyerPo);
                         formData.append('jsonData', JSON.stringify(poPdfData))
                     })
                     console.log(formData, "form")
-                    HbServices.fileUpload(formData).then((res) => {
+                    SanmarServices.fileUpload(formData).then((res) => {
                         if (res.status) {
                             message.success(res.internalMessage)
                         }
@@ -140,7 +140,7 @@ const SanmarPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                 }
                 // alert(res.internalMessage)
                 message.success(res.internalMessage)
-                navigate("/hb-athletics/pdf-info", { state: "rec" });
+                // navigate("/hb-athletics/pdf-info", { state: "rec" });
                 window.location.reload();
             } else {
                 message.error(res.internalMessage)
@@ -148,7 +148,7 @@ const SanmarPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         })
     }
 
-    console.log(poPdfData?.custPo, "addddddddd")
+    console.log(poPdfData?.buyerPo, "addddddddd")
 
     function onReset() {
         setFileList([]);
@@ -177,7 +177,7 @@ const SanmarPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                         xl={{ span: 4 }}
                     >
                         <Form.Item>
-                            <Button type='primary' onClick={hbAthleticBot}>Upload Bot</Button>
+                            <Button type='primary'>Upload Bot</Button>
                         </Form.Item>
                     </Col>
                     <Col span={24}>
