@@ -62,7 +62,7 @@ console.log(location?.state?.data)
             title: <div style={{textAlign:"center"}}>Quantity</div>,
 
             dataIndex: 'quantity',
-            width: 120,
+            width: 20,
             // align:"center",
             sorter: (a, b) => a.quantity.localeCompare(b.quantity),
             sortDirections: ["ascend", "descend"],
@@ -70,6 +70,14 @@ console.log(location?.state?.data)
       
            
         },
+        {
+            title: <div style={{ textAlign: "center" }}>Cost</div>,
+            dataIndex: 'cost',
+            width: 120,
+            render: (text, record) => (parseFloat(record.unitPrice) * parseFloat(record.quantity)).toFixed(2)
+        }
+        
+
 
        
 

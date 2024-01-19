@@ -209,13 +209,14 @@ export class SanmarService {
         if (!sizeDateMap.has(`${rec.style},${rec.buyer_po},${rec.delivery_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.style},${rec.buyer_po},${rec.delivery_date},${rec.color}`,
-            new sanmarOrderDataModel(rec.id, rec.buyer_po, rec.po_date, rec.po_style, rec.color, rec.size, rec.delivery_date, rec.ship_to_address, rec.buyer_address, [], rec.quantity, rec.unit_price)
+            new sanmarOrderDataModel(rec.id, rec.buyer_po, rec.po_date, rec.po_style, rec.color, rec.size, rec.delivery_date, rec.ship_to_address, rec.buyer_address, [])
           );
 
         }
         const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.buyer_po},${rec.delivery_date},${rec.color}`).sizeWiseData;
-        if (rec.size !== null) {
-          sizeWiseData.push(new SanmarSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.color));
+        const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.unitPrice === rec.unit_price);
+        if (!existingSizeData && rec.size !== null) {
+          sizeWiseData.push(new SanmarSizeWiseModel(rec.size, rec.unit_price, rec.quantity));
         }
       }
       const dataModelArray: sanmarOrderDataModel[] = Array.from(sizeDateMap.values());
