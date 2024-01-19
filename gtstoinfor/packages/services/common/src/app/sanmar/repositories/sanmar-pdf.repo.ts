@@ -12,5 +12,12 @@ export class SanmarPdfRepo extends Repository<SanmarOrdersEntity> {
     ) {
         super(SanPdfRepo.target, SanPdfRepo.manager, SanPdfRepo.queryRunner);
     }
+
+    async getPDFInfo(): Promise<any[]> {
+        const query = this.createQueryBuilder('co')
+          .select(`*,DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as upload_date`);
+        return await query.getRawMany();
+      }
+
   
 }

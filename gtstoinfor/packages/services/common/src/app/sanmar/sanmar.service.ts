@@ -2,9 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { DataSource } from "typeorm";
 import { SanmarOrdersRepository } from "./repositories/sanmar-orders.repo";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarOrderFilter, SanmarSizeWiseModel, sanmarOrderDataModel } from "@project-management-system/shared-models";
 import { SanmarOrdersEntity } from "./entity/sanmar-orders.entity";
 import { SanmarPdfInfoEntity } from "./entity/sanmar-pdf.entity";
+import { SanmarPdfRepo } from "./repositories/sanmar-pdf.repo";
 
 @Injectable()
 export class SanmarService {
@@ -13,6 +14,7 @@ export class SanmarService {
   constructor(
     private dataSource: DataSource,
     private SanOrdersRepo: SanmarOrdersRepository,
+    private pdfRepo:SanmarPdfRepo
 
 
   ) { }
@@ -132,8 +134,54 @@ export class SanmarService {
       }
     // }
   }
+  
+
+  
+  async getPdfFileInfo(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.pdfRepo.getPDFInfo()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async getorderDataForInfo(req?: SanmarOrderFilter): Promise<CommonResponseModel> {
+    console.log(req, "servvv")
+    try {
+      const details = await this.SanOrdersRepo.getorderDataForInfo(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'No data Found');
+      }
+      const sizeDateMap = new Map<string, sanmarOrderDataModel>();
+      for (const rec of details) {
+        if (!sizeDateMap.has(`${rec.style},${rec.buyer_po},${rec.delivery_date},${rec.color}`)) {
+          sizeDateMap.set(
+            `${rec.style},${rec.buyer_po},${rec.delivery_date},${rec.color}`,
+            new sanmarOrderDataModel(rec.id,rec.buyer_po,rec.po_date,rec.po_style,rec.color,rec.size,rec.delivery_date,rec.ship_to_address,rec.buyer_address,[],rec.quantity,rec.unit_price )
+          );
+
+        }
+        const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.buyer_po},${rec.delivery_date},${rec.color}`).sizeWiseData;
+        if (rec.size !== null) {
+          sizeWiseData.push(new SanmarSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.color));
+        }
+      }
+      const dataModelArray: sanmarOrderDataModel[] = Array.from(sizeDateMap.values());
+
+      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    
 
 
+    } catch (e) {
+      console.log(e, "errrrrrrrrr")
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
 
 
 }
