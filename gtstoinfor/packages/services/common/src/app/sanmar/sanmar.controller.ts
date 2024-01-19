@@ -3,7 +3,7 @@ import { Controller, Post, Body, UseInterceptors, UploadedFile, Get } from "@nes
 import { ApiTags, ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { SanmarService } from "./sanmar.service";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, SanmarOrderFilter } from "@project-management-system/shared-models";
 import { SanmarDto } from "./dto/sanmar.dto";
 
 
@@ -39,7 +39,27 @@ export class SanmarController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, error);
         }
     }
+  
 
+    @Post('/getPdfFileInfo')
+    async getPdfFileInfo(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getPdfFileInfo();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getorderDataForInfo')
+    @ApiBody({ type: SanmarOrderFilter })
+    async getorderDataForInfo(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            // console.log(req,"con")
+            return await this.Service.getorderDataForInfo(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
     
 
 }

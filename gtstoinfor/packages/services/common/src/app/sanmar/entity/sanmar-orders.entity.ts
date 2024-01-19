@@ -27,10 +27,10 @@ export class SanmarOrdersEntity {
     })
     shipToAdd: string
 
-    @Column("text", {
-        name: "delivery_address",
-    })
-    deliveryAddress: string
+    // @Column("text", {
+    //     name: "delivery_address",
+    // })
+    // deliveryAddress: string
 
     @Column("varchar", {
         name: "po_style",
