@@ -4,5 +4,6 @@ export class SanmarPoItemVariant {
     unitPrice: string;
     size: string;
     color:string;
+    unit:string;
    
 }

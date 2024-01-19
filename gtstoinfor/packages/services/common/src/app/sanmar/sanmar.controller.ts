@@ -5,6 +5,10 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { SanmarService } from "./sanmar.service";
 import { CommonResponseModel, SanmarOrderFilter } from "@project-management-system/shared-models";
 import { SanmarDto } from "./dto/sanmar.dto";
+import { diskStorage } from 'multer'
+import { FileInterceptor } from "@nestjs/platform-express";
+
+
 
 
 @ApiTags("/sanmar")
@@ -30,6 +34,30 @@ export class SanmarController {
             );
         }
     }
+
+    @Post('/fileUpload')
+    @ApiConsumes('multipart/form-data')
+    @UseInterceptors(FileInterceptor('file', {
+        limits: { files: 1 },
+        storage: diskStorage({
+            destination: './upload-files',
+            filename: (req, file, callback) => {
+                console.log(file.originalname);
+                const name = file.originalname;
+                callback(null, `${name}`);
+            },
+        }),
+        fileFilter: async (req, file, callback) => {
+            try {
+                if (!file || file.mimetype !== 'application/pdf') {
+                    return callback(new Error('Only PDF files are allowed!'), false);
+                }
+                callback(null, true);
+            } catch (error) {
+                callback(error, false);
+            }
+        },
+    }))
 
     async fileUpload(@UploadedFile() file, @Body() req: any): Promise<CommonResponseModel> {
 

@@ -75,7 +75,7 @@ export class SanmarService {
       const pdfData = [];
       await transactionManager.startTransaction()
       for (const item of req.SanmarpoItemDetails) {
-        const match = item.poStyle.match(/\w+\d+/);
+        const match = item.poStyle.match(/\d+/);
         // console.log(match, "match");
         // console.log(item, "item");
         const poStyle = match
@@ -99,6 +99,7 @@ export class SanmarService {
           entity.color = variant.color
           entity.quantity = variant.quantity
           entity.unitPrice = variant.unitPrice
+          entity.unit = variant.unit
           pdfData.push(entity)
 
 
@@ -106,7 +107,7 @@ export class SanmarService {
 
 
             const update = await transactionManager.getRepository(SanmarOrdersEntity).update({ buyerPo: req.buyerPo, poStyle: item.poStyle, size: variant.size },
-              { poDate: req.poDate, buyerAddress: req.buyerAddress, shipToAdd: req.shipToAdd, deliveryDate: item.deliveryDate, color:variant.color, quantity: variant.quantity, unitPrice: variant.unitPrice })
+              { poDate: req.poDate, buyerAddress: req.buyerAddress, shipToAdd: req.shipToAdd, deliveryDate: item.deliveryDate, color:variant.color, quantity: variant.quantity, unitPrice: variant.unitPrice,unit:variant.unit })
             // let po = (order?.poVersion) + 1
 
             // const entitys = new HbOrdersChildEntity()
@@ -121,7 +122,6 @@ export class SanmarService {
             // entitys.poVersion = po
             // entitys.orderId = orderData.id
 
-            // const savedChild = await transactionManager.getRepository(HbOrdersChildEntity).save(entitys)
             if (!update.affected) {
               throw new Error('Update failed');
             }
@@ -146,6 +146,7 @@ export class SanmarService {
               throw new Error('Save failed')
             }
           }
+          
         }
       }
       await transactionManager.completeTransaction()
@@ -166,13 +167,13 @@ export class SanmarService {
     entity.filePath = filePath;
     entity.fileType = mimetype;
     entity.fileData = req;
-    entity.status = "SUCCESS";
+    entity.uploadStatus = "SUCCESS";
 
     const file = await this.pdfRepo.findOne({ where: { pdfFileName: filePath } });
     if (file) {
       return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
     } else {
-      const save = await this.SanOrdersRepo.save(entity);
+      const save = await this.pdfRepo.save(entity);
       if (save) {
         return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
       } else {

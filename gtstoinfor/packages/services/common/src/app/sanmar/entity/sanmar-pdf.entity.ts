@@ -80,8 +80,8 @@ export class SanmarPdfInfoEntity {
     @Column("varchar", {
 
         length: 40,
-        name: "status",
+        name: "upload_status",
     })
-    status: string ;
+    uploadStatus: string ;
 
 }

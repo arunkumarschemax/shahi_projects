@@ -50,6 +50,12 @@ export class SanmarOrdersEntity {
     })
     quantity: string
 
+           
+    @Column("varchar", {
+        name: "unit",
+    })
+    unit: string
+
     @Column("varchar", {
         name: "unit_price",
     })

@@ -279,22 +279,26 @@ export const extractDataFromPoPdf = async (pdf) => {
 
                 const quantityIndex = productDescriptionIndex - 5;
                 const quantityMatch = itemVarinatsTextArr[quantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
-        
+                
                 if (quantityMatch) {
-                    const quantity = quantityMatch;
-                    itemVariantsObj.quantity = quantity;
+                    const quantity = quantityMatch[0]; // Access the first (and only) element in the array
+                    const unit = quantity.match(/\s+\w+/)[0]; // Extract the unit from the quantity
+                    itemVariantsObj.quantity = quantity.replace(/EACH/g, "");
+                    itemVariantsObj.unit = unit.match(/\w+/g,""); // Trim to remove leading whitespace
                 } else {
                     const fallbackQuantityIndex = productDescriptionIndex - 32;
                     const fallbackQuantityMatch = itemVarinatsTextArr[fallbackQuantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
-        
+                
                     if (fallbackQuantityMatch) {
-                        const fallbackQuantity = fallbackQuantityMatch;
-                        itemVariantsObj.quantity = fallbackQuantity;
+                        const fallbackQuantity = fallbackQuantityMatch[0];
+                        const unit = fallbackQuantity.match(/\s+\w+/)[0];
+                        itemVariantsObj.quantity = fallbackQuantity.replace(/EACH/g, "");
+                        itemVariantsObj.unit = unit.match(/\w+/g,"");
                     } else {
                         itemVariantsObj.quantity = "-";
+                        itemVariantsObj.unit = "-";
                     }
                 }
-                
         
                 itemVariantsObj.size = size;
                 itemVariantsObj.color = color;

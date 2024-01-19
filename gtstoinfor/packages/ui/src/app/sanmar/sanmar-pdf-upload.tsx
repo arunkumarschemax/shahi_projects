@@ -132,11 +132,11 @@ const SanmarPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                         formData.append('jsonData', JSON.stringify(poPdfData))
                     })
                     console.log(formData, "form")
-                    // SanmarServices.fileUpload(formData).then((res) => {
-                    //     if (res.status) {
-                    //         message.success(res.internalMessage)
-                    //     }
-                    // })
+                    SanmarServices.fileUpload(formData).then((res) => {
+                        if (res.status) {
+                            message.success(res.internalMessage)
+                        }
+                    })
                 }
                 // alert(res.internalMessage)
                 message.success(res.internalMessage)

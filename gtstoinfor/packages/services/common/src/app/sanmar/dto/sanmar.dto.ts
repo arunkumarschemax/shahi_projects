@@ -30,6 +30,9 @@ export class SanmarDto {
     quantity: string
 
     @ApiProperty()
+    unit: string
+
+    @ApiProperty()
     unitPrice: string
 
     @ApiProperty()
