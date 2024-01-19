@@ -7,7 +7,7 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
 import { type } from 'os';
 import { SampleSubTypesService } from './sample-sub-types.service';
 import { SampleSubTypeDTO } from './dto/sample-sub-types.dto';
-import { AllSampleSubTypesResponseModel, SampleSubTypesResponseModel } from '@project-management-system/shared-models';
+import { AllSampleSubTypesResponseModel, SampleSubTypesResponseModel, TypeIdReq } from '@project-management-system/shared-models';
 import { SampleSubTypeRequest } from './dto/sample-sub-types.request';
 
 @ApiTags('sampleSubTypes')
@@ -50,9 +50,10 @@ export class SampleSubTypesController {
          }
        }
        @Post('/getAllActiveSampleSubTypes')
-       async getAllActiveSampleSubTypes(@Req() request: Request): Promise<AllSampleSubTypesResponseModel> {
+       @ApiBody({type:TypeIdReq})
+       async getAllActiveSampleSubTypes(@Body() req?: any): Promise<AllSampleSubTypesResponseModel> {
            try {
-               return await this.sampleSubTypeService.getAllActiveSampleSubTypes();
+               return await this.sampleSubTypeService.getAllActiveSampleSubTypes(req);
            } catch (error) {
                return this.applicationExceptionHandler.returnException(AllSampleSubTypesResponseModel, error)
            }
