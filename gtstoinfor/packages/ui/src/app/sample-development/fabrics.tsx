@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance, Modal } from 'antd';
-import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
+import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance, Modal, Upload, UploadProps, Card } from 'antd';
+import { DeleteOutlined, EyeOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { BuyerDestinationService, ColourService, M3ItemsService, SampleDevelopmentService, UomService } from '@project-management-system/shared-services';
 import { UomCategoryEnum, buyerandM3ItemIdReq, m3FabricFiltersReq } from '@project-management-system/shared-models';
@@ -26,7 +26,8 @@ const FabricsForm = (props:FabricsFormProps) => {
   const [fabricCodeData, setFabricCodeData] = useState<any[]>([])
   const [stockData, setStockData] = useState<any[]>([])
   const [allocatedData, setAllocatedData] = useState<any[]>([])
-
+  const [fileList, setFileList] = useState([]);
+  const [imageUrl, setImageUrl] = useState('');
   const [color, setColor] = useState<any[]>([])
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const {Option}=Select
@@ -41,8 +42,8 @@ const FabricsForm = (props:FabricsFormProps) => {
   const [onchangeData, setOnchangeData] = useState<any[]>([]);
   const [modal, setModal] = useState('')
   const [visibleModel, setVisibleModel] = useState<boolean>(false);
-
-
+  const [previewImage, setPreviewImage] = useState("");
+  const [previewVisible, setPreviewVisible] = useState(false);
   const { IAMClientAuthContext } = useIAMClientState();
   // const [form] =props.form.useForm();
   const [stockForm] = Form.useForm();
@@ -352,6 +353,10 @@ const FabricsForm = (props:FabricsFormProps) => {
     });
   };
 
+  const handleUpload = (key) => {
+    console.log(key)
+  }
+
   const handleDelete = (key) => {
     console.log(key);
     console.log(data);
@@ -367,6 +372,52 @@ const FabricsForm = (props:FabricsFormProps) => {
       props.data(updatedData)
     }
    
+  };
+
+  const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
+  const uploadFabricProps: UploadProps = {
+    // alert();
+    multiple: true,
+    onRemove: file => {
+      console.log(file);
+      console.log(fileList.find((f) => f.uid != file.uid))
+      let files:any[] = fileList.find((f) => f.uid != file.uid)
+      setFileList(files);
+      setImageUrl('');
+    },
+    beforeUpload: (file: any) => {
+      if (!file.name.match(/\.(pdf|xlsx|xls|png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+        AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+        return true;
+      }
+      // var reader = new FileReader();
+      // reader.readAsArrayBuffer(file);
+      // reader.onload = data => {
+        if (fileList.length == 1) {
+          AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+          return true;
+        } else {
+            setFileList([...fileList,file]);
+          getBase64(file, imageUrl =>
+            setImageUrl(imageUrl)
+          );
+          return false;
+        }
+      // }
+    },
+    progress: {
+      strokeColor: {
+        '0%': '#108ee9',
+        '100%': '#87d068',
+      },
+      strokeWidth: 3,
+      format: percent => `${parseFloat(percent.toFixed(2))}%`,
+    },
+    fileList: fileList,
   };
 
   const getSelectedProductGroupId = (selectedFabricId) => {
@@ -609,18 +660,47 @@ const FabricsForm = (props:FabricsFormProps) => {
       </Form.Item>
       ),
     },
+
+    {
+      title: 'Upload Fabric',
+      dataIndex: 'fabricUpload',
+      width:"20%",
+      fixed:'right',
+      render: (_, record) => (
+        <Form.Item name={`fabricUpload${record.key}`}>
+          <Upload style={{ width: '100%' }} 
+            {...uploadFabricProps}
+            accept=".jpeg,.pdf,.png,.jpg"
+            >
+            <Button
+                style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                // icon={<UploadOutlined />}
+                disabled={fileList?.length == 1? true:false}
+            >
+                <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
+            </Button>
+            {fileList.length ==1?  <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
+          </Upload>
+      </Form.Item>
+      ),
+    },
     {
       title: 'Action',
       dataIndex: 'action',
-
       width:"10%",
       fixed:'right',
       render: (_, record) => (
-        <Button onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
+        <><Button onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
+        </>
       ),
     },
   ];
 
+  const onFabriView =() =>{
+    setModal('fileUpload')
+    setPreviewVisible(true)
+    
+  }
   const tableColumns = (val,fabindex) => {
     if(val === undefined){
       AlertMessages.getWarningMessage("Please give required consumption. ");
@@ -781,6 +861,26 @@ const FabricsForm = (props:FabricsFormProps) => {
       />
       </Form>
 
+      <Modal
+          visible={previewVisible}
+          title={"previewTitle"}
+          footer={null}
+          onCancel={() => setPreviewVisible(false)}
+        >
+          {modal == 'fileUpload' ?<>
+            <Card style={{ height: '250px' }}>
+                <Form.Item>
+                <img
+                    src={imageUrl}
+                    alt="Preview"
+                    height={'200px'}
+                    width={'500px'}
+                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                />
+                </Form.Item>
+            </Card></>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
+        </Modal>
+        
       <Modal
             className='rm-'
             // key={'modal' + Date.now()}
