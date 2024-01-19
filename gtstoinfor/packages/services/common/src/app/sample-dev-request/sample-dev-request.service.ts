@@ -247,7 +247,7 @@ export class SampleRequestService {
       employee.employeeId = req.technicianId
       sampleReqEntity.technician = employee
       sampleReqEntity.product = req.product
-      sampleReqEntity.type = req.type
+      sampleReqEntity.type = req.type === '' || undefined?null:req.type
       sampleReqEntity.conversion = req.conversion
       sampleReqEntity.madeIn = req.madeIn
       sampleReqEntity.remarks = req.remarks
