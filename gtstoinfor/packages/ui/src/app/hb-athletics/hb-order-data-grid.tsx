@@ -847,7 +847,7 @@ import { Excel } from "antd-table-saveas-excel";
           width: 120,
           render: (value, record) => (
             <>
-              <Button onClick={() => setMoreData(record)}>More Info</Button>
+              <Button type="primary" onClick={() => setMoreData(record)}>More Info</Button>
             </>
           ),
         }
