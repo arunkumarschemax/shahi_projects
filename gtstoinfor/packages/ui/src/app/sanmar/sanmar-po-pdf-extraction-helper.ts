@@ -255,16 +255,51 @@ export const extractDataFromPoPdf = async (pdf) => {
                 const colorIndex = productDescriptionIndex + 5;
                 const color = itemVarinatsTextArr[colorIndex];
 
+                // const unitPriceIndex = productDescriptionIndex - 4;
+                // const unitPrice = itemVarinatsTextArr[unitPriceIndex].match(/\d+(,|.|\d)\d+/g,"")||"-";
+
                 const unitPriceIndex = productDescriptionIndex - 4;
-                const unitPrice = itemVarinatsTextArr[unitPriceIndex].match(/\d+(,|.|\d)\d+/g,"")||"-";
+                const unitPriceMatch = itemVarinatsTextArr[unitPriceIndex].match(/\d+(,|.|\d)\d+/g);
+        
+                if (unitPriceMatch) {
+                    const unitPrice = unitPriceMatch;
+                    itemVariantsObj.unitPrice = unitPrice;
+                } else {
+                    const lastUnitPriceIndex = productDescriptionIndex - 31;
+                    const exactUnitPriceMatch = itemVarinatsTextArr[lastUnitPriceIndex].match(/\d+(,|.|\d)\d+/g);
+        
+                    if (exactUnitPriceMatch) {
+                        const unitPriceMatching = exactUnitPriceMatch;
+                        itemVariantsObj.unitPrice = unitPriceMatching;
+                    } else {
+                        itemVariantsObj.unitPrice = "-";
+                    }
+                }
+                
 
                 const quantityIndex = productDescriptionIndex - 5;
-                const quantity = itemVarinatsTextArr[quantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g,"")||"-";
+                const quantityMatch = itemVarinatsTextArr[quantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
+        
+                if (quantityMatch) {
+                    const quantity = quantityMatch;
+                    itemVariantsObj.quantity = quantity;
+                } else {
+                    const fallbackQuantityIndex = productDescriptionIndex - 32;
+                    const fallbackQuantityMatch = itemVarinatsTextArr[fallbackQuantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
+        
+                    if (fallbackQuantityMatch) {
+                        const fallbackQuantity = fallbackQuantityMatch;
+                        itemVariantsObj.quantity = fallbackQuantity;
+                    } else {
+                        itemVariantsObj.quantity = "-";
+                    }
+                }
+                
         
                 itemVariantsObj.size = size;
                 itemVariantsObj.color = color;
-                itemVariantsObj.unitPrice = unitPrice;
-                itemVariantsObj.quantity = quantity;
+                // itemVariantsObj.unitPrice = unitPrice;
+                // itemVariantsObj.quantity = quantity;
         
                 console.log(itemVariantsObj);
                 itemVariantsArr.push(itemVariantsObj);
