@@ -49,7 +49,7 @@ export class WhatsAppNotificationService {
         // console.log(this.whatsAppBroadCatURL)
           return await axios.post(this.whatsappbiMessageURL + '/createWhatappLog', req)
               .then(res => {
-                console.log(res)
+                // console.log(res)
                   return res.data
               })
       }

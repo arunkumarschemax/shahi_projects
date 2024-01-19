@@ -231,25 +231,31 @@ const M3Items = () => {
   }
 
   const onFinish = (val) => {
-console.log('coming')
+    const contentIsNull = formData.some((item) => item.content === '');
+  if (contentIsNull) {
+    AlertMessages.getErrorMessage("Content is required.");
+    return;
+  }
   const totalPercentage = formData.reduce((sum, item) => sum + (item.percentage || 0), 0);
   if (totalPercentage !== 100) {
     AlertMessages.getErrorMessage("Total percentage must be equal to 100.");
+    return;
+  }
+
+  if (yarnType.length === 0) {
+    AlertMessages.getInfoMessage("YarnType is required.");
     return;
   }
   
   if (yarnType.length > 0) {
     const yarnCountInvalid = yarn.some((item) => item.countNum === '' || item.countDenom === '' || item.uomId === null);
     if (yarnCountInvalid) {
-      AlertMessages.getErrorMessage("Yarn count should not be empty, and uomId should not be null.");
+      AlertMessages.getErrorMessage("Yarn count is required.");
       return;
     }
   }
-
-
-    console.log(formData,'on content')
      const req = new M3FabricsDTO(0,val.buyerId,val.itemCode,val.fabricTypeId,val.weaveId,weightChange,weightUom,epiData,ppiData,yarnType,widthChange,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code,val.hsnCode,yarn,formData,undefined,undefined,undefined,undefined,val.remarks)
-     console.log(req,"LLLLLLLLLLLLLLLLLLLL");
+    //  console.log(req,"LLLLLLLLLLLLLLLLLLLL");
     service.createM3Items(req).then((res) => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage);
@@ -408,7 +414,7 @@ const handleYarnUnitChange = (index, value) => {
               <Input />
             </Form.Item>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-            <Form.Item label=" Fabric Type" name="fabricTypeId" rules={[{ required: true, message: "Field is required" }]}>
+            <Form.Item label=" Fabric Type" name="fabricTypeId" rules={[{ required: true, message: "Fabric Type is required" }]}>
               <Select 
               placeholder=" Select Fabric Type" 
               onChange={onFabricTpe}
@@ -422,7 +428,7 @@ const handleYarnUnitChange = (index, value) => {
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-            <Form.Item label=" Weave" name="weaveId" rules={[{ required: true, message: "Field is required" }]}>
+            <Form.Item label=" Weave" name="weaveId" rules={[{ required: true, message: "Weave is required" }]}>
               <Select 
               placeholder=" Select Weave" 
               onChange={generateItemCode}
@@ -436,7 +442,7 @@ const handleYarnUnitChange = (index, value) => {
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-            <Form.Item label="Weight" name="weightId" rules={[{ required: true, message: "Field is required" }]}>
+            <Form.Item label="Weight" name="weightId" rules={[{ required: true, message: "Weight is required" }]}>
             <Space.Compact>
               <Form.Item name='weightValue'>
               <Input placeholder="Enter Weight" allowClear onChange={(e)=>onWeightChange(e?.target?.value)} onBlur={generateItemCode}/>
@@ -454,7 +460,7 @@ const handleYarnUnitChange = (index, value) => {
             </Form.Item>
           </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item label="Width" name="widthValue" rules={[{ required: false, message: "Field is required" }]} >
+              <Form.Item label="Width" name="widthValue" rules={[{ required: true, message: "Width is required" }]} >
                 <Space.Compact>
                   <Form.Item name="width">
                   <Input placeholder="Enter Width" allowClear onChange={(e)=>onWidthChange(e?.target?.value)}/>
@@ -473,7 +479,7 @@ const handleYarnUnitChange = (index, value) => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item label="Construction" name="construction" rules={[{ required: false, message: "Field is required" }]}>
+              <Form.Item label="Construction" name="construction" rules={[{ required: true, message: "Construction is required" }]}>
                 <Space.Compact>
                   <Form.Item name='epiConstruction'>
                   <Input placeholder="Enter EPI" allowClear onChange={(e) => epiChange(e?.target?.value)}/>
@@ -494,17 +500,9 @@ const handleYarnUnitChange = (index, value) => {
                     <Input placeholder="Enter HSN Code"/>
                 </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 8 }} xl={{ span: 6 }}>
-            <Form.Item name="yarnType" rules={[{ required: false, message : "Type is required" }]}>
-              Yarn Type : <Radio.Group name="yarnType" style={{ marginTop: "25px" }} onChange={(e)=>yarnSelect(e?.target?.value)} onBlur={generateItemCode}>
-                <Radio value="Warp">Warp</Radio>
-                <Radio value="Weft">Weft</Radio>
-              </Radio.Group>
-            </Form.Item>
-            </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label=" Finish" name="finishId" rules={[
-                  { required: true, message: 'Field is required' },
+                  { required: true, message: 'Finish is required' },
                 ]}
               >
                 <Select  allowClear placeholder="Select Unit">
@@ -529,7 +527,7 @@ const handleYarnUnitChange = (index, value) => {
               <TextArea rows={2}  disabled />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }} >
             <Form.Item
               name="remarks"
               label="Remarks"
@@ -537,10 +535,18 @@ const handleYarnUnitChange = (index, value) => {
             <TextArea rows={2} placeholder="Enter Remarks"/>
             </Form.Item>
           </Col>
-          </Row>
-          <Row gutter={16}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Form.Item name="yarnType" rules={[{ required: false, message : "Yarn Type is required" }]}>
+              Yarn Type : <Radio.Group name="yarnType" style={{ marginTop: "25px" }} onChange={(e)=>yarnSelect(e?.target?.value)} onBlur={generateItemCode}>
+                <Radio value="Warp">Warp</Radio>
+                <Radio value="Weft">Weft</Radio>
+              </Radio.Group>
+            </Form.Item>
+            </Col>
+          {/* </Row>
+          <Row gutter={16}> */}
           {yarnRadio && (
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 9 }} xl={{ span: 9 }}>
               <Card>
                 <Form.List name="yarnCount" initialValue={[{ countNum: '',countDenom: '', uomId: null }]}>
                   {(fields, { add, remove }) => (
@@ -560,22 +566,22 @@ const handleYarnUnitChange = (index, value) => {
                                 allowClear
                                 onChange={(e) => handleCountNumChange(index, e.target.value)}
                                 onBlur={generateItemCode}
-                                style={{width:'90px'}}
+                                style={{width:'70px'}}
                                 />
-                                <Typography.Text style={{ margin: '0 8px' }}>/</Typography.Text>
+                                <Typography.Text style={{ margin: '0 7px' }}>/</Typography.Text>
                                 <Input
                                   placeholder="Yarn Count"
                                   allowClear
                                   onChange={(e) => handleYarnCountChange(index, e.target.value)}
                                   onBlur={generateItemCode}
-                                  style={{width:'90px'}}
+                                  style={{width:'70px'}}
                                 />
                                 <Select
                                   allowClear
                                   placeholder="Unit"
                                   onChange={(value) => handleYarnUnitChange(index, value)}
                                   onBlur={generateItemCode}
-                                  style={{width:'180px'}}
+                                  style={{width:'200px'}}
                                 >
                                   {yarnUom.map((e) => (
                                     <Option key={e.id} value={e.id}>
@@ -609,7 +615,7 @@ const handleYarnUnitChange = (index, value) => {
               </Card>
             </Col>
           )}
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 8 }} xl={{ span: 8 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 9 }} xl={{ span: 9 }}>
               <Card>
               <Form.List name="content" initialValue={[{ content: '', percentage: null }]}>
                 {(fields, { add, remove }) => (
@@ -629,7 +635,7 @@ const handleYarnUnitChange = (index, value) => {
                                   placeholder="Select Content"
                                   onChange={(value) => onContentChange(index, value)}
                                   onBlur={generateItemCode}
-                                  style={{width: '150px'}}
+                                  style={{width: '290px'}}
                                 >
                                   {contentData.map((e) => (
                                     <Option key={e.contentId} value={e.contentId}>
@@ -641,7 +647,7 @@ const handleYarnUnitChange = (index, value) => {
                                 placeholder="Enter %"
                                 allowClear
                                 onChange={(e) => onPercentChange(index, e.target.value)}
-                                style={{width:'150px'}}
+                                style={{width:'100px'}}
                               />
                               {fields.length > 1 && (
                                 <MinusOutlined
