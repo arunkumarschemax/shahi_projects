@@ -62,34 +62,27 @@ const SizeDetail = ({props,buyerId,form}) => {
 
    const handleInputChange = (colourId, sizeId, quantity,recordKey,name) => {
     console.log(recordKey)
-    console.log(onchangeData)
+    console.log(name)
     console.log(data)
-    console.log(colourId)
-    console.log(form.getFieldsValue())
-    let isDuplicate = data.find((r) => r.colorId === colourId && r.key != recordKey);
-    console.log(isDuplicate);
-    console.log(isDuplicate?.colour);
-    let updatedData;
+    console.log(sizeId)
 
-    if(isDuplicate?.colorId > 0 && name === "colorId")
-    {
+    let isDuplicate = data.find((r) => r.colorId === colourId && r.sizeId === sizeId && r.key != recordKey);
+   
+    console.log(isDuplicate);
+
+    let updatedData;
+   
+    if(isDuplicate){
       console.log(updatedData);
-      AlertMessages.getErrorMessage("Duplicate Colors not allowed. ")
-      form.setFieldValue(`colorId${recordKey}`,null)
+      AlertMessages.getErrorMessage("Duplicate Size for same Color is not allowed. ")
+      form.setFieldValue(`sizeId${recordKey}`,null)
       updatedData = data.map((record) => {
-        console.log(record);
         if (record.key === recordKey) {
-          return { ...record, [`colorId`]:null };
+          return { ...record, [`sizeId`]:null };
         }
         return record
         
       });
-      // form.validateFields().then(size => {
-      // })
-      // .catch((err) => {
-      //   console.log(err);
-      // })
-      
     }
     else{
       if(name === "colorId"){
@@ -102,7 +95,55 @@ const SizeDetail = ({props,buyerId,form}) => {
           return record
           
         });
+        const hasDuplicate = (array, newItem) => {
+          return array.some(item => item.sizeId === newItem.sizeId && item.colorId === newItem.colorId);
+        };
+        
+        const duplicateRecord = updatedData.find((item, index, array) => hasDuplicate(array.slice(0, index), item));
+        
+        if (duplicateRecord) {
+          AlertMessages.getErrorMessage("Duplicate Color for same Size is not allowed. ")
+          form.setFieldValue(`colorId${recordKey}`,null)
+          // console.log('Duplicate record found:', duplicateRecord);
+        } else {
+          console.log('No duplicate records found.');
+        }
       }
+      else if(name === 'sizeId'){
+        updatedData = data.map((record) => {
+          console.log(record);
+          if (record.key === recordKey) {
+            return { ...record, [`sizeId`]:sizeId };
+          }
+          console.log(record)
+          return record
+        });
+        // console.log(updatedData)
+        // console.log(data)
+        const hasDuplicate = (array, newItem) => {
+          return array.some(item => item.sizeId === newItem.sizeId && item.colorId === newItem.colorId);
+        };
+        
+        const duplicateRecord = updatedData.find((item, index, array) => hasDuplicate(array.slice(0, index), item));
+        
+        if (duplicateRecord) {
+          AlertMessages.getErrorMessage("Duplicate Size for same Color is not allowed. ")
+          form.setFieldValue(`sizeId${recordKey}`,null)
+          // console.log('Duplicate record found:', duplicateRecord);
+        } else {
+          console.log('No duplicate records found.');
+        }
+      }
+      // else if(name === "quantity"){
+      //   updatedData = data.map((record) => {
+      //     console.log(record);
+      //     if (record.key === recordKey) {
+      //       return { ...record, [`quantity`]:quantity };
+      //     }
+      //     console.log(record)
+      //     return record 
+      //   });
+      // }
       else if(name === "quantity"){
         updatedData = data.map((record) => {
           console.log(record);
@@ -124,6 +165,8 @@ const SizeDetail = ({props,buyerId,form}) => {
           
         });
       }
+     
+      console.log(updatedData)
       setOnchangeData(updatedData); 
       setData(updatedData); 
       props(updatedData)
@@ -196,13 +239,14 @@ const SizeDetail = ({props,buyerId,form}) => {
       dataIndex: 'sNo',
       fixed:'left',
       align:'center',
-width:'10%',
+      width:'10%',
       render: (_, record, index) => index + 1,
     },
     {
       title: 'Color',
       dataIndex: 'colourId',
       align:'center',
+      width:'30%',
       render: (_, record) => (
         <Form.Item name={`colorId${record.key}`} rules={[{ required: true, message: 'Missing Color',  }]}>
         <Select
@@ -225,12 +269,74 @@ width:'10%',
         </Form.Item>
       ),
     },
-    {
-      title: 'Quantity by Size',
-      dataIndex: 'size',
+    // {
+    //   title: 'Quantity by Size',
+    //   dataIndex: 'size',
 
-      children :sizeColumns,
+    //   children :sizeColumns,
+    // },
+    {
+      title: 'Size',
+      dataIndex: 'size',
+      align:'center',
+      render:(_,record) =>{
+        return(
+          <Form.Item name={`sizeId${record.key}`} rules={[{ required: true, message: 'Missing Size',  }]}>
+          <Select
+            style={{width:"100%"}}
+            allowClear
+            showSearch
+            optionFilterProp="children"
+            placeholder="Select Size"
+            onChange={(value) => handleInputChange(0, value, 0, record.key,'sizeId')}
+          >
+            {/* <Option name={`colorId${record.key}`} key={0} value={0}>Please Select Color</Option> */}
+            {sizeData.map((e) => {
+                    return (
+                      <Option name={`sizeId${record.key}`} key={e.sizeId} value={e.sizeId}>
+                        {e.size}
+                      </Option>
+                    );
+                  })}
+            </Select>
+          </Form.Item>
+        ) 
+         },
+        },
+       {
+      title: 'Quantity',
+      dataIndex: 'quantity',
+      align:'center',
+      width:'20%',
+      render:(_,record)=>{
+        return(
+          <Form.Item name={`quantity+${record.key}`} rules={[{ required: true, message: 'Missing Quantity' }]} >
+          <Input
+            name={`quantity${record.key}`}
+            // value={}
+            onChange={(e) =>
+              handleInputChange(
+                form.getFieldValue(`colorId${record.key}`),
+                form.getFieldValue(`sizeId${record.key}`),
+                e.target.value,
+                record.key,'quantity'
+              )
+            }
+            type='number'
+            min={1}
+            placeholder='quantity'
+          >
+          </Input>
+        </Form.Item>
+        )
+      }
     },
+    // {
+    //   title: 'Quantity by Size',
+    //   dataIndex: 'size',
+
+    //   children :sizeColumns,
+    // },
     {
       title: 'Action',
       dataIndex: 'action',

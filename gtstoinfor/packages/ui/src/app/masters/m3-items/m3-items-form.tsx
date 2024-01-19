@@ -248,7 +248,7 @@ console.log('coming')
 
 
     console.log(formData,'on content')
-     const req = new M3FabricsDTO(0,val.buyerId,val.itemCode,val.fabricTypeId,val.weaveId,weightChange,weightUom,epiData,ppiData,yarnType,widthChange,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code,val.hsnCode,yarn,formData)
+     const req = new M3FabricsDTO(0,val.buyerId,val.itemCode,val.fabricTypeId,val.weaveId,weightChange,weightUom,epiData,ppiData,yarnType,widthChange,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code,val.hsnCode,yarn,formData,undefined,undefined,undefined,undefined,val.remarks)
      console.log(req,"LLLLLLLLLLLLLLLLLLLL");
     service.createM3Items(req).then((res) => {
       if (res.status) {
@@ -518,7 +518,7 @@ const handleYarnUnitChange = (index, value) => {
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item label=" Shrinkage" name="shrinkage"  rules={[{ required: true, message: 'Field is required' },]}>
+              <Form.Item label=" Shrinkage" name="shrinkage"  >
                 <Input placeholder=" Enter  Shrinkage"  onBlur={generateItemCode}/>
               </Form.Item>
             </Col>
@@ -527,6 +527,14 @@ const handleYarnUnitChange = (index, value) => {
               ]}
             >
               <TextArea rows={2}  disabled />
+            </Form.Item>
+          </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
+            <Form.Item
+              name="remarks"
+              label="Remarks"
+            >
+            <TextArea rows={2} placeholder="Enter Remarks"/>
             </Form.Item>
           </Col>
           </Row>

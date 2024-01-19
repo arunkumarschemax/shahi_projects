@@ -8,7 +8,7 @@ import { Buyers } from '../../buyers/buyers.entity';
 import { SampleTypes } from '../../sample Types/sample-types.entity';
 import { SampleSubTypes } from '../../sample-sub-types/sample-sub-types.entity';
 import { Brands } from '../../master-brands/master-brands.entity';
-import { SampleDevelopmentStatusEnum , LifeCycleStatusEnum} from '@project-management-system/shared-models';
+import { SampleDevelopmentStatusEnum , LifeCycleStatusEnum, CategoryEnum} from '@project-management-system/shared-models';
 import { EmplyeeDetails } from '../../employee-details/dto/employee-details-entity';
 import { type } from 'os';
 import { SampleReqSizeEntity } from './sample-requset-size-info-entity';
@@ -131,11 +131,11 @@ export class SampleRequest {
   })
   product: number;
 
-  @Column("varchar", {
+  @Column("int", {
     nullable: true,
     name: "type"
   })
-  type: string;
+  type: number;
 
   @Column("varchar", {
     nullable: true,
@@ -168,6 +168,12 @@ export class SampleRequest {
     enum: SampleDevelopmentStatusEnum
   })
   status: SampleDevelopmentStatusEnum;
+  @Column('enum', {
+    name: 'category',
+    nullable: true,
+    enum: CategoryEnum
+  })
+  category: CategoryEnum;
 
   @Column('enum', {
     name: 'life_cycle_status',

@@ -16,7 +16,7 @@ import { SampleProcessRepo } from './repo/sample-dev-process-repo';
 import { SamplingbomEntity } from './entities/sampling-bom-entity';
 import { SampleInventoryLogEntity } from './entities/sample-inventory-log-entity';
 import { SampleInventoryLoqRepo } from './repo/sample-inventory-loe-repo';
-import { IndentService, SampleDevelopmentService } from '@project-management-system/shared-services';
+import { IndentService, SampleDevelopmentService, WhatsAppNotificationService } from '@project-management-system/shared-services';
 import { MaterialAllocationEntity } from './entities/material-allocation.entity';
 import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 import { MaterialAllocationItemsEntity } from './entities/material-allocation-items';
@@ -24,6 +24,8 @@ import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-re
 import { StocksRepository } from '../stocks/repository/stocks.repository';
 import { StocksEntity } from '../stocks/stocks.entity';
 import { SampleRequestItemsEntity } from './entities/sample-request-items.entity';
+import { UploadFilesRepository } from './repo/upload-files-repository';
+import { UploadFilesEntity } from './entities/upload-files-entity';
 // import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 
 @Module({
@@ -38,11 +40,11 @@ import { SampleRequestItemsEntity } from './entities/sample-request-items.entity
     SampleInventoryLogEntity,
     MaterialAllocationEntity,
     MaterialAllocationItemsEntity,
-    StocksEntity,SampleRequestItemsEntity
+    StocksEntity,SampleRequestItemsEntity,UploadFilesEntity
 
   ]),
   ],
   controllers: [SampleDevReqController],
-  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo,SampleInventoryLoqRepo,IndentService,MaterialAllocationRepo,MaterialAllocationItemsRepo,StocksRepository,SampleDevelopmentService]
+  providers: [SampleRequestService,ApplicationExceptionHandler,SampleRequestRepository,SampleSizeRepo,SampleFabricRepo,SampleTrimRepo,SampleProcessRepo,SampleInventoryLoqRepo,IndentService,MaterialAllocationRepo,MaterialAllocationItemsRepo,StocksRepository,SampleDevelopmentService,WhatsAppNotificationService,UploadFilesRepository]
 })
 export class SampleDevReqModule {}

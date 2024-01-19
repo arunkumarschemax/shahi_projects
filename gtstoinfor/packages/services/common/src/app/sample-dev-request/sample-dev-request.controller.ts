@@ -4,8 +4,8 @@ import { SampleRequestService } from './sample-dev-request.service';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, MaterailViewDto, ProductGroupReq, ROSLGroupsResponseModel, RequestNoDto, RequestNoReq, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, SampleRequestFilter, UploadResponse, lifeCycleStatusReq, requestNoReq, sampleReqIdReq } from '@project-management-system/shared-models';
 import { SampleRequestDto } from './dto/samle-dev-req';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { Body, Controller, Get, Post, Req, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { Body, Controller, Get, Post, Req, UploadedFile, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
@@ -16,6 +16,7 @@ import { AllLocationRequest } from './dto/location-req';
 import { MaterialIssueRequest } from './dto/material-issue.req';
 import { SampleOrderIdRequest } from './dto/sample-req-id';
 import { OrderQuantityRequset } from './dto/order-quantity-request';
+import * as fs from 'fs';
 // import { exec } from 'child_process';
 
 @ApiTags('sample-request')
@@ -125,33 +126,81 @@ export class SampleDevReqController {
     }
   }
 
+  // @Post('/fileUpload')
+  // @ApiConsumes('multipart/form-data')
+  // @UseInterceptors(FileInterceptor('file', {
+  //   limits: { files: 1 },
+  //   storage: diskStorage({
+  //     destination: './upload-files',
+  //     filename: (req, file, callback) => {
+  //       const name = file.originalname.split('.')[0];
+  //       const fileExtName = extname(file.originalname);
+  //       const randomName = Array(4)
+  //         .fill(null)
+  //         .map(() => Math.round(Math.random() * 16).toString(16))
+  //         .join('');
+  //       callback(null, `${name}-${randomName}${fileExtName}`);
+  //     },
+  //   }),
+  //   fileFilter: (req, file, callback) => {
+  //     if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+  //       return callback(new Error('Only png,jpeg,PNG,jpg,gif,tiff,x-tiff,z-png files are allowed!'), false);
+  //     }
+  //     callback(null, true);
+  //   },
+  // }))
   @Post('/fileUpload')
-  @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('file', {
-    limits: { files: 1 },
-    storage: diskStorage({
-      destination: './upload-files',
-      filename: (req, file, callback) => {
-        const name = file.originalname.split('.')[0];
-        const fileExtName = extname(file.originalname);
-        const randomName = Array(4)
-          .fill(null)
-          .map(() => Math.round(Math.random() * 16).toString(16))
-          .join('');
-        callback(null, `${name}-${randomName}${fileExtName}`);
+    @UseInterceptors(FilesInterceptor('file', 10, {
+      storage: diskStorage({
+        // destination: './upload-files/manisha-123',
+        // destination: `./upload-files/PO-${req}`,
+        destination: (req, file, callback) => {
+          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+          console.log(req.body);
+
+          console.log(file);
+
+          const destinationPath = `./upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+          // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
+
+          // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
+
+          try {
+            // Attempt to create the directory if it doesn't exist
+            fs.mkdirSync(destinationPath, { recursive: true });
+            callback(null, destinationPath);
+          } catch (error) {
+            console.error('Error creating directory:', error);
+            callback(error, null);
+          }
+        },
+        // destination: (req, file, callback) => {
+        //   callback(null, `./upload-files/PO-${req.body.customerPo}`);
+        // },
+        filename: (req, file, callback) => {
+          // console.log(req);
+          // console.log(file);
+          // console.log("************************************************************************************************");
+          const name = file.originalname.split('.')[0];
+          const fileExtName = extname(file.originalname);
+          const randomName = Array(4)
+            .fill(null)
+            .map(() => Math.round(Math.random() * 16).toString(16))
+            .join('');
+          callback(null, `${name}-${randomName}${fileExtName}`);
+        },
+      }),
+      fileFilter: (req, file, callback) => {
+        if (!file.originalname.match(/\.(xlsx|xls|pdf|jpg|png|jpeg|doc|PDF)$/)) {
+          return callback(new Error('Only xlsx,xls,pdf, jpg, png, doc, jpeg files are allowed!'), false);
+        }
+        callback(null, true);
       },
-    }),
-    fileFilter: (req, file, callback) => {
-      if (!file.originalname.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
-        return callback(new Error('Only png,jpeg,PNG,jpg,gif,tiff,x-tiff,z-png files are allowed!'), false);
-      }
-      callback(null, true);
-    },
-  }))
-  async updateStylePath(@UploadedFile() file: any, @Body() uploadData: any): Promise<UploadResponse> {
+    }))
+  async updateStylePath(@UploadedFiles() file:File[], @Body() uploadData: any): Promise<UploadResponse> {
     console.log(file, '-------file')
     try {
-      return await this.sampleService.UpdateFilePath(file.path, file.filename, uploadData.SampleRequestId)
+      return await this.sampleService.UpdateFilePath(file, uploadData.SampleRequestId)
     } catch (error) {
       return this.applicationExceptionHandler.returnException(UploadResponse, error);
     }
@@ -565,4 +614,15 @@ export class SampleDevReqController {
   //   }
 
   // }
+
+  @Post('/getUsageWhtsAppMsg')
+  @ApiBody({ type: Date })
+  async getUsageWhtsAppMsg(@Body() req?:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getUsageWhtsAppMsg()
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
 }
