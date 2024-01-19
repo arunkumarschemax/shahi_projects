@@ -196,7 +196,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         }
         console.log(itemVarinatsTextArr, 'VVVVVVVv');
 
-        const allSizesData = [...new Set(itemVarinatsTextArr.filter(size => ['XXS', 'XS', 'S', 'M', 'L', 'XL','2X', 'XXL', 'XXXL','LT', 'XLT', '2XLT', '3XLT', '4XLT', '5XLT','ST', 'XST', '2XST', '3XST', '4XST', '5XST','XS-Slim', 'S-Slim', 'M-Slim', 'L-Slim', 'XL-Slim', 'XXL-Slim','XS-Regular', 'S-Regular', 'M-Regular', 'L-Regular', 'XL-Regular', 'XXL-Regular'].includes(size)))];
+        const allSizesData = [...new Set(itemVarinatsTextArr.filter(size => ['XXS', 'XS', 'S', 'M', 'L', 'XL','2X', 'XXL', 'XXXL','LT', 'XLT', '2XLT', '3XLT', '4XLT', '5XLT','ST', 'XST', '2XST', '3XST', '4XST', '5XST','XS-Slim', 'S-Slim', 'M-Slim', 'L-Slim', 'XL-Slim', 'XXL-Slim','XS-Regular', 'S-Regular', 'M-Regular', 'L-Regular', 'XL-Regular', 'XXL-Regular','3X','4X','5X','6X'].includes(size)))];
         const itemVariantsArr: CentricPoItemVariant[] = [];
 
         for (const size of allSizesData) {
