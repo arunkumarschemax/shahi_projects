@@ -25,7 +25,7 @@ export class SampleDevelopmentRequest {
     dmmId: number;
     technicianId: number;
     product: number;
-    type: string;
+    type: number;
     conversion: string;
     madeIn: number;
     remarks: string;
@@ -38,6 +38,7 @@ export class SampleDevelopmentRequest {
     filePath?:string;
     createdAt:string
     category?:CategoryEnum
+    subType?:number
 
     constructor(
         sampleRequestId: number,
@@ -60,7 +61,7 @@ export class SampleDevelopmentRequest {
         dmmId: number,
         technicianId: number,
         product: number,
-        type: string,
+        type: number,
         conversion: string,
         madeIn: number,
         remarks: string,
@@ -71,8 +72,8 @@ export class SampleDevelopmentRequest {
         status?: SampleDevelopmentStatusEnum,
         fileName?:string,
         filePath?:string,
-        category?:CategoryEnum
-
+        category?:CategoryEnum,
+        subType?: number
     ) {
         this.sampleRequestId = sampleRequestId
         this.locationId = locationId
@@ -106,5 +107,6 @@ export class SampleDevelopmentRequest {
         this.fileName=fileName
         this.filePath=filePath
         this.category = category
+        this.subType = subType
     }
 }

@@ -8,7 +8,7 @@ import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res
 import { SampleSubTypes } from './sample-sub-types.entity';
 import { SampleSubTypeAdapter } from './dto/sample-sub-types.adapter';
 import { SampleSubTypeDTO } from './dto/sample-sub-types.dto';
-import { AllSampleSubTypesResponseModel, SampleSubTypesResponseModel } from '@project-management-system/shared-models';
+import { AllSampleSubTypesResponseModel, SampleSubTypesResponseModel, TypeIdReq } from '@project-management-system/shared-models';
 import { SampleSubTypeRequest } from './dto/sample-sub-types.request';
 
 
@@ -119,12 +119,12 @@ export class SampleSubTypesService {
       }
 
   
-      async getAllActiveSampleSubTypes(): Promise<AllSampleSubTypesResponseModel> {
+      async getAllActiveSampleSubTypes(req?: TypeIdReq): Promise<AllSampleSubTypesResponseModel> {
         // const page: number = 1;
         try {
             const SampleSubTypeDto: SampleSubTypeDTO[] = [];
             //retrieves all companies
-            const SampleSubTypeEntities: SampleSubTypes[] = await this.SampleSubTypesRepository.find({ order: { 'sampleSubType': 'ASC' },where:{isActive:true}
+            const SampleSubTypeEntities: SampleSubTypes[] = await this.SampleSubTypesRepository.find({ order: { 'sampleSubType': 'ASC' },where:{isActive:true,sampleSubTypes:{sampleTypeId: req.sampleTypeId}}
            });
          console.log(SampleSubTypeEntities)
             if (SampleSubTypeEntities) {
