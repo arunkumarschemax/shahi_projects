@@ -15,22 +15,31 @@ export class SanmarOrdersRepository extends Repository<SanmarOrdersEntity> {
     }
 
     async getorderDataForInfo(req?:SanmarOrderFilter): Promise<any[]> {
+        console.log(req)
         const query = this.createQueryBuilder('o')
             .select(`*`)
             if(req.buyerPo !== undefined){
-                query.andWhere(`o.cust_po ='${req.buyerPo}'`) 
+                query.andWhere(`o.buyer_po ='${req.buyerPo}'`) 
             }
             if(req.style !== undefined){
-                query.andWhere(`o.style LIKE :style`, { style: `%${req.style}%` });
+                query.andWhere(`o.po_style LIKE :po_style`, { po_style: `%${req.style}%` });
             }
             if (req.color !== undefined) {
                 query.andWhere(`o.color LIKE :color`, { color: `%${req.color}%` });
             }
             if (req.deliveryDateStartDate !== undefined) {
-                query.andWhere(`STR_TO_DATE(o.exit_factory_date, '%d-%m-%Y') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+                query.andWhere(`STR_TO_DATE(o.delivery_date, '%d-%m-%Y') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
             }
             // query.andWhere(`o.status != 'ACCEPTED'`);
           
+        return await query.getRawMany()
+    }
+
+
+    async getCustomerPoNumber(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`DISTINCT buyer_po`)
+        
         return await query.getRawMany()
     }
 
