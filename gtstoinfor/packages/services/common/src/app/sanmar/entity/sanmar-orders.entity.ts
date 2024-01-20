@@ -66,6 +66,12 @@ export class SanmarOrdersEntity {
     })
     unitPrice: string
 
+    
+    @Column("varchar", {
+        name: "line",
+    })
+    line: string
+
     @Column("varchar", {
         name: "size",
     })
