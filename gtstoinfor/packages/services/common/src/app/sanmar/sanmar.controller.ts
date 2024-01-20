@@ -97,6 +97,15 @@ export class SanmarController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/sanmarBot')
+    async sanmarBot(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.sanmarBot();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
     
 
 }
