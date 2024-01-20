@@ -760,6 +760,7 @@ export class SampleRequestService {
               }
             }
             else{
+              fabFlag.add(false);
               console.log("else")
             }
             
@@ -850,12 +851,15 @@ export class SampleRequestService {
                 }
               }
             }
+            else{
+              trimFlag.add(false);
+            }
           }
         }
         console.log(fabFlag.has(true) +"-"+ trimFlag.has(true))
         console.log(fabFlag.has(false) +"-"+ trimFlag.has(false))
-
-        if(!fabFlag.has(false) || !trimFlag.has(false)){
+        
+        if(fabFlag.has(true) && trimFlag.has(true)){
           let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})
           console.log(updateSampleRequestStatus)
             if(updateSampleRequestStatus.affected === 0){
