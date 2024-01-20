@@ -194,8 +194,8 @@ export class HbService {
         })
       }, 1000);
 
-      const directoryPath = 'D:/hb-unread/';
-      const destinationDirectory = 'D:/hb-read/';
+      const directoryPath = 'C:/centric-unread/';
+      const destinationDirectory = 'C:/centric-read/';
 
       const files = fs.readdirSync(directoryPath);
       if (files.length === 0) {
