@@ -6,7 +6,7 @@ import { CommonResponseModel } from "packages/libs/shared-models/src/common/glob
 import { CentricService } from "./centric.service";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { diskStorage } from 'multer'
-import { PoOrderFilter } from "@project-management-system/shared-models";
+import { PoOrderFilter, centricOrderHistory } from "@project-management-system/shared-models";
 import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
 
 
@@ -76,9 +76,10 @@ export class CentricController {
 
 
     @Post('/getPdfFileInfo')
-    async getPdfFileInfo(): Promise<CommonResponseModel> {
+    @ApiBody({ type: centricOrderHistory })
+    async getPdfFileInfo(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.Service.getPdfFileInfo();
+            return this.Service.getPdfFileInfo(req);
         } catch (err) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }

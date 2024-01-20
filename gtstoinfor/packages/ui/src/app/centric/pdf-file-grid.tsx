@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { CentricService, NikeService, RLOrdersService } from "@project-management-system/shared-services";
@@ -8,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { AlertMessages } from "packages/libs/shared-models/src/common/supplier/alert-messages";
 import { config } from "packages/libs/shared-services/config";
+import {  centricOrderHistory } from "@project-management-system/shared-models";
 
 
 export function CentricPdFInfoGrid() {
@@ -20,35 +22,50 @@ export function CentricPdFInfoGrid() {
     const [pageSize, setPageSize] = useState(1);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const [poNumber, setPoNumber] = useState('');
+    const [poNumber, setPoNumber] = useState([]);
     const [form] = Form.useForm();
     const { Option } = Select;
     const [isModalOpen1, setIsModalOpen1] = useState(false);
 
 
+
     // const handleDownload = (record) => {
     //     console.log('Downloading file:', record.pdfFileName);
-    
+
     //     const downloadLink = document.createElement('a');
-        
-      
+
+
     //     downloadLink.href = `gtstoinfor/upload-files/${record.pdfFileName}`;
-        
+
     //     downloadLink.download = record.pdfFileName;
-    
+
     //     console.log('Download link:', downloadLink);
-    
+
     //     downloadLink.click();
     // };
     useEffect(() => {
-        getPdfFileInfo()
+        getPdfFileInfo();
+        getPoNumber();
     }, [])
 
     const getPdfFileInfo = () => {
-        service.getPdfFileInfo().then(res => {
+        const req = new centricOrderHistory();
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
+        }
+        service.getPdfFileInfo(req).then(res => {
+        if(res.status){
             setPdfData(res.data)
-        })
+        }
+        else{
+            setPdfData([]);
+            AlertMessages.getErrorMessage(res.internalMessage);
+        }
+        }).catch((err) => {
+            console.log(err.message);
+          })
     }
+
     const onReset = () => {
         form.resetFields()
         getPdfFileInfo()
@@ -69,6 +86,15 @@ export function CentricPdFInfoGrid() {
         setPoNumber(record)
         setIsModalOpen1(true);
     };
+
+    const getPoNumber = () => {
+        service.getPoNumber().then((res) => {
+          if (res.status) {
+            setPoNumber(res.data);
+    
+          }
+        });
+      };
 
 
     const cancelHandle = () => {
@@ -133,10 +159,10 @@ export function CentricPdFInfoGrid() {
     })
 
     const setMoreData = (record) => {
-         navigate("/centric/pdf-info-detail-view", {
-          state: { data: record },
+        navigate("/centric/pdf-info-detail-view", {
+            state: { data: record },
         });
-      };
+    };
 
 
     const columns: any = [
@@ -149,59 +175,59 @@ export function CentricPdFInfoGrid() {
         },
         {
             title: 'PO Number',
-            dataIndex: 'poNumber',
-            width:70 ,
+            dataIndex: 'po_number',
+            width: 70,
             sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
             sortDirections: ["ascend", "descend"],
             ...getColumnSearchProps('poNumber')
         },
         {
             title: 'File Name',
-            dataIndex: 'pdfFileName',
+            dataIndex: 'pdf_file_name',
             width: 90,
-            sorter: (a, b) => a.pdfFileName.localeCompare(b.pdfFileName),
+            sorter: (a, b) => a.pdf_file_name.localeCompare(b.pdf_file_name),
             sortDirections: ["ascend", "descend"],
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
             title: 'File Type',
-            dataIndex: 'fileType',
+            dataIndex: 'file_type',
             width: 90,
-            sorter: (a, b) => a.fileType.localeCompare(b.fileType),
+            sorter: (a, b) => a.file_type.localeCompare(b.file_type),
             sortDirections: ["ascend", "descend"],
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
         {
             title: 'Uploaded Date',
-            dataIndex: 'createdAt',
+            dataIndex: 'created_at',
             align: 'center',
             width: 90,
-            sorter: (a, b) => a.createdAt.localeCompare(b.createdAt),
+            sorter: (a, b) => a.created_at.localeCompare(b.created_at),
             sortDirections: ["ascend", "descend"],
             render: (text, record) => {
-                return record.createdAt ? moment(record.createdAt).format('MM/DD/YYYY') : '-'
+                return record.created_at ? moment(record.created_at).format('MM/DD/YYYY') : '-'
             }
-            
-            
+
+
         },
-          
+
         {
             title: "Action",
             dataIndex: "action",
             align: "center",
             width: 120,
             render: (value, record) => (
-              <>
-                <Button 
-                type="primary"
-                onClick={() => setMoreData(record)}
-                >More Info</Button>
-                 <Tooltip title="PDF download">
-                <Button icon={<FilePdfOutlined onClick={()=>download(record.filePath)} style={{color:"red"}}/> } >{value}</Button>
-                </Tooltip>
-              </>
+                <>
+                    <Button
+                        type="primary"
+                        onClick={() => setMoreData(record)}
+                    >More Info</Button>
+                    <Tooltip title="PDF download">
+                        <Button icon={<FilePdfOutlined onClick={() => download(record.filePath)} style={{ color: "red" }} />} >{value}</Button>
+                    </Tooltip>
+                </>
             ),
-          }
+        }
 
 
     ]
@@ -209,79 +235,117 @@ export function CentricPdFInfoGrid() {
     const download = (filePath) => {
         console.log(filePath);
         // : FilenameDto[]
-        
+
         if (filePath) {
-          filePath = filePath.split(",");
-          for (const res of filePath) {
-            if(res){
-              console.log(res);
-              setTimeout(() => {
-                const response = {
-                  file: config.file_upload_path+'/'+ `${res}`,
-                };
-      
-                window.open(response.file);
-      
-              }, 100);
+            filePath = filePath.split(",");
+            for (const res of filePath) {
+                if (res) {
+                    console.log(res);
+                    setTimeout(() => {
+                        const response = {
+                            file: config.file_upload_path + '/' + `${res}`,
+                        };
+
+                        window.open(response.file);
+
+                    }, 100);
+                }
             }
-          }
         }
         else {
-          AlertMessages.getErrorMessage("Please upload file. ");
-    
+            AlertMessages.getErrorMessage("Please upload file. ");
+
         }
-      }
+    }
 
     return (
         <>
-            <Card title="Orders History" headStyle={{ fontWeight: 'bold' }}>
-                {/* <Form
-            // onFinish={getOrderAcceptanceData}
+          <Card title="Orders History" headStyle={{ fontWeight: 'bold' }} >
+          <Form
+             onFinish={getPdfFileInfo}
             form={form}
-            layout='vertical'>
+            layout='vertical'
+          >
             <Row gutter={24}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-                    <Form.Item name='poandLine' label='PO Number' >
-                        <Select
-                            showSearch
-                            placeholder="Select Po+Line"
-                            optionFilterProp="children"
-                            allowClear
-                        >
-                            {poLine.map((inc: any) => {
-                                return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
-                            })
-                            }
-                        </Select>
-                    </Form.Item>
-                </Col>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 40, }} >
-                    <Form.Item>
-                        <Button htmlType="submit"
-                            icon={<SearchOutlined />}
-                            type="primary">SEARCH</Button>
-                        <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
-                    </Form.Item>
-                </Col>
+            <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+                <Form.Item name="poNumber" label="PO Number">
+                  <Select
+                    showSearch
+                    placeholder="Select PO number"
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                     {poNumber.map((inc: any) => {
+                      return (
+                        <Option key={inc.po_number} value={inc.po_number}>
+                          {inc.po_number}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+
+               <Row>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 5 }}
+                lg={{ span: 5 }}
+                xl={{ span: 4 }}
+                style={{marginTop:23,marginLeft:30}}
+              >
+                <Form.Item>
+                  <Button
+                    htmlType="submit"
+                    icon={<SearchOutlined />}
+                    type="primary"
+                    // onClick={getPdfFileInfo}
+                  >
+                    SEARCH
+                  </Button>
+                </Form.Item>
+              </Col>
+              <Col>
+                <Form.Item>
+                  <Button
+                     style={{ marginLeft: 70,marginTop:23}}
+                    htmlType="submit"
+                    type="primary"
+                    onClick={onReset}
+                    icon={<UndoOutlined />}
+                  >
+                    Reset
+                  </Button>
+                </Form.Item>
+
+              </Col>
             </Row>
-        </Form> */}
-                <Table
-                    columns={columns}
-                    dataSource={pdfData}
-                    bordered
-                    className="custom-table-wrapper"
-                    pagination={{
-                        pageSize: 50,
-                        onChange(current, pageSize) {
-                            setPage(current);
-                            setPageSize(pageSize);
-                        },
-                    }}
-                    scroll={{ x: 'max-content', y: 450 }}
-                >
-                </Table>
-            </Card>
+            </Row>
+            <Table
+              columns={columns}
+              dataSource={pdfData}
+              bordered
+              className="custom-table-wrapper"
+              pagination={{
+                pageSize: 50,
+                onChange(current, pageSize) {
+                  setPage(current);
+                  setPageSize(pageSize);
+                },
+              }}
+              scroll={{ x: 'max-content', y: 450 }}
+            ></Table>
+            </Form>
+          </Card>
         </>
-    )
+      );
+      
 }
 export default CentricPdFInfoGrid;

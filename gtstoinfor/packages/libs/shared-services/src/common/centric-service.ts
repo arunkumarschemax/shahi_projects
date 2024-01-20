@@ -16,8 +16,8 @@ export class CentricService extends CommonAxiosService {
     }
 
     
-    async getPdfFileInfo(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.centricOrdersController + "/getPdfFileInfo")
+    async getPdfFileInfo(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.centricOrdersController + "/getPdfFileInfo",req)
     }
 
     async getPoNumber(): Promise<CommonResponseModel> {

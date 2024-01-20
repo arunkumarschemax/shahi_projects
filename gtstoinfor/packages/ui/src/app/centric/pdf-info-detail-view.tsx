@@ -15,7 +15,7 @@ const PdfInfoDetailView = (
     const navigate = useNavigate();
      const location = useLocation()
     // console.log(location?.state?.data?.fileData,"ooooooooo")
-    const parsedData = JSON.parse(location?.state?.data?.fileData)
+    const parsedData = JSON.parse(location?.state?.data?.file_data)
     console.log(parsedData,"kkkkkkkkkkk")
 
 
