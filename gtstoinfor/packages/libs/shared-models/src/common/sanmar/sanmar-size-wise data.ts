@@ -5,13 +5,16 @@ export class SanmarSizeWiseModel {
     quantity:string;
     color?:string;
     unit?:string
+    currency?:string
 
     constructor(
         size: string,
         unitPrice: string,
         quantity:string,
         color?:string,
-        unit?:string
+        unit?:string,
+        currency?:string
+
         
 
     ) {
@@ -21,6 +24,7 @@ export class SanmarSizeWiseModel {
         this.quantity=quantity
         this.color=color
         this.unit = unit
+        this.currency = currency
 
     };
 }

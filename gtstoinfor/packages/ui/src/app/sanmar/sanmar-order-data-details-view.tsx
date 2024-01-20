@@ -75,11 +75,8 @@ console.log(location?.state?.data)
             title: <div style={{ textAlign: "center" }}>Cost</div>,
             dataIndex: 'cost',
             width: 120,
-            render: (text, record) => (parseFloat(record.unitPrice) * parseFloat(record.quantity)).toFixed(2)
+            render: (text, record) => `${(parseFloat(record.unitPrice) * parseFloat(record.quantity)).toFixed(2)} ${record.currency}`
         }
-        
-
-
        
 
     ]
@@ -115,9 +112,9 @@ console.log(location?.state?.data)
         <Descriptions.Item label='PO Date' labelStyle={{ color: 'black', fontWeight: 'bold',marginLeft:150}} >{location?.state?.data?. poDate ? location?.state?.data?. poDate : "--"}</Descriptions.Item>
         <Descriptions.Item label='Style' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.style ? location?.state?.data?.style :"--"}</Descriptions.Item>
         <Descriptions.Item label='Color' labelStyle={{ color: 'black', fontWeight: 'bold',marginLeft:150 }} >{location?.state?.data?.color ? location?.state?.data?.color :"--"}</Descriptions.Item>
-        <Descriptions.Item label=' Buyer Address' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.buyerAddress ? location?.state?.data?.buyerAddress :"--"}</Descriptions.Item>
+        <Descriptions.Item label= 'Buyer Address' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.buyerAddress ? location?.state?.data?.buyerAddress :"--"}</Descriptions.Item>
         <Descriptions.Item label='Delivery Date' labelStyle={{ color: 'black', fontWeight: 'bold',marginLeft:150 }} >{location?.state?.data?.deliveryDate ? location?.state?.data?.deliveryDate :"--"}</Descriptions.Item>
-        <Descriptions.Item label=' Delivery Address' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipToAdd ? location?.state?.data?.shipToAdd :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Delivery Address' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipToAdd ? location?.state?.data?.shipToAdd :"--"}</Descriptions.Item>
 
 
 
