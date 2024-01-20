@@ -1226,7 +1226,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
             sorter: (a, b) => a.color.localeCompare(b.color),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
-            ...getColumnSearchProps('color')
+            // ...getColumnSearchProps('color')
             
           },
           {
