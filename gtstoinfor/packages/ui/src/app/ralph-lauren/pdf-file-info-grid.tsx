@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { config } from "packages/libs/shared-services/config";
-import { StatusTypeEnum } from "@project-management-system/shared-models";
+import { OrderRevertModel, StatusTypeEnum } from "@project-management-system/shared-models";
 
 
 export function PdFInfoGrid() {
@@ -227,13 +227,20 @@ export function PdFInfoGrid() {
             title: "Action",
             dataIndex: "action",
             align: "center",
-            width: 120,
+            width: 150,
             render: (value, record) => (
               <>
+              <Row>
                 <Button type="primary" onClick={() => setMoreData(record)}>More Info</Button>
+                <br></br>&nbsp;&nbsp;
                 <Tooltip title="PDF download">
                 <Button icon={<FilePdfOutlined onClick={()=>download(record.filePath)}/>} >{value}</Button>
                 </Tooltip>
+                <br></br> &nbsp;&nbsp;
+
+                {/* <Button icon={<UndoOutlined style={{color:"red"}} />}  onClick={()=>revert(record)}>Revert File</Button> */}
+
+                </Row>
       
       
               </>
@@ -284,11 +291,26 @@ export function PdFInfoGrid() {
     
         }
       }
+
+      const revert =(record) =>{
+
+        console.log(record,"pppkk")
+        const  req = new OrderRevertModel(record.id,record.poNumber)
+        service.revertProjectionFileData(req).then(res => {
+           if (res.status){
+            AlertMessages.getSuccessMessage(res.internalMessage)
+           }else {
+            AlertMessages.getErrorMessage(res.internalMessage)
+           }
+        })
+
+
+      }
       
       
     return (
         <>
-            <Card title="PDF Info" headStyle={{ fontWeight: 'bold' }}>
+            <Card title="PDF History" headStyle={{ fontWeight: 'bold' }}>
                 {/* <Form
             // onFinish={getOrderAcceptanceData}
             form={form}

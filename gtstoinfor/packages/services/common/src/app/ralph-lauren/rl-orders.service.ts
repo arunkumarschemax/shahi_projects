@@ -1,7 +1,7 @@
 
 import { Injectable } from "@nestjs/common";
 import { RLOrdersRepository } from "./repositories/rl-orders.repo";
-import { CoLineModel, Color, CoLineRequest, Destination, Colors, CommonResponseModel, Destinations, OrderDataModel, OrderSizeWiseModel, PoOrderFilter, Sizes, coLineRequest, Size, ItemStatusEnum, StatusTypeEnum, CompareModel } from "@project-management-system/shared-models";
+import { CoLineModel, Color, CoLineRequest, Destination, Colors, CommonResponseModel, Destinations, OrderDataModel, OrderSizeWiseModel, PoOrderFilter, Sizes, coLineRequest, Size, ItemStatusEnum, StatusTypeEnum, CompareModel, OrderRevertModel } from "@project-management-system/shared-models";
 import { DataSource } from "typeorm";
 import { PdfFileUploadRepository } from "./repositories/pdf-file.repo";
 import { OrderDetailsReq } from "./dto/order-details-req";
@@ -17,6 +17,9 @@ import * as AdmZip from 'adm-zip';
 import { RLOrderschildEntity } from "./entities/rl-orders-child.entity";
 import { RLOrdersChildRepository } from "./repositories/rl-orders-child.repo";
 import { StatusDto } from "./dto/pdf-file-status.dto";
+import { OrdersChildEntity } from "../orders/entities/orders-child.entity";
+import { OrdersEntity } from "../orders/entities/orders.entity";
+import { FileUploadEntity } from "../orders/entities/upload-file.entity";
 const fs = require('fs');
 const path = require('path')
 
@@ -45,11 +48,6 @@ export class RLOrdersService {
         for (const variant of item.poItemVariantDetails) {
           const orderData = await this.rlOrdersRepo.findOne({ where: { poNumber: req.poNumber, poItem: poItem, size: variant.size } })
           const order = await this.orderChildRepo.findOne({ where: { poNumber: req.poNumber }, order: { poVersion: 'DESC' } })
-          //  console.log(order,"test")
-          //  const lastPoVersionObject = order.slice(-1);
-
-          // Now 'lastPoVersionObject' contains the last object of the 'poVersion' array.
-          //  console.log(lastPoVersionObject[0].poVersion,"7777777777");
 
           const entity = new RLOrdersEntity()
           entity.agent = req.agent
@@ -74,7 +72,6 @@ export class RLOrdersService {
           entity.status = req.revisionNo == 1 ? 'New' : 'Revised'
           entity.upcEan = variant.upc
           if (orderData) {
-            // console.log("uuuuuuu")
             const update = await transactionManager.getRepository(RLOrdersEntity).update({ poNumber: req.poNumber, poItem: poItem, size: variant.size }, { revisionNo: req.revisionNo, agent: req.agent, amount: variant.amount, price: variant.unitPrice, currency: variant.currency, materialNo: item.materialNo, shipToAddress: req.shipToAddress })
 
             let po = parseInt(order?.poVersion) + 1
@@ -105,10 +102,7 @@ export class RLOrdersService {
             entitys.orderId = orderData.id
 
             const savedChild = await transactionManager.getRepository(RLOrderschildEntity).save(entitys)
-
-            if (!update.affected
-              // && !updated.affected 
-            ) {
+            if (!update.affected) {
               throw new Error('Update failed');
             }
           } else {
@@ -134,7 +128,7 @@ export class RLOrdersService {
             entitys.shipToAddress = req.shipToAddress
             entitys.billToAddress = req.buyerAddress
             entitys.size = variant.size
-            entitys.status = 'Revised'
+            entitys.status = req.revisionNo == 1 ? 'New' : 'Revised'
             entitys.upcEan = variant.upc
             entitys.orderId = saved.id
 
@@ -180,7 +174,7 @@ export class RLOrdersService {
         if (!sizeDateMap.has(rec.po_number)) {
           sizeDateMap.set(
             rec.po_number,
-            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [], rec.item_status)
+            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [], rec.item_status,rec.handover_date)
           );
         }
         const sizeWiseData = sizeDateMap.get(rec.po_number).sizeWiseData;
@@ -206,7 +200,7 @@ export class RLOrdersService {
         if (!sizeDateMap.has(rec.po_number)) {
           sizeDateMap.set(
             rec.po_number,
-            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [], rec.item_status)
+            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [], rec.item_status,rec.handover_date)
           );
         }
         const sizeWiseData = sizeDateMap.get(rec.po_number).sizeWiseData;
@@ -306,7 +300,7 @@ export class RLOrdersService {
       if (save) {
         const update = await this.rlOrdersRepo.update({
           poNumber: req.purchaseOrderNumber
-        }, { itemStatus: ItemStatusEnum.ACCEPTED })
+        }, { itemStatus: ItemStatusEnum.INPROGRESS })
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
       } else {
         return new CommonResponseModel(false, 0, 'CO-Line request failed')
@@ -423,7 +417,7 @@ export class RLOrdersService {
 
         await page.waitForSelector('button.ant-btn-primary')
         await page.click('button.ant-btn-primary');
-        await page.waitForTimeout(6000)
+        await page.waitForTimeout(9000)
 
         const sourceFilePath = path.join(directoryPath, file);
         const destinationFilePath = path.join(destinationDirectory, file);
@@ -822,20 +816,15 @@ export class RLOrdersService {
   async getordercomparationData(req?: any): Promise<CommonResponseModel> {
     try {
       const Originaldata = await this.rlOrdersRepo.getordercomparationData(req)
-
       const compareModel: CompareModel[] = []
-
       for (const rec of Originaldata) {
         const childData = await this.orderChildRepo.find({
           where: {
             poNumber: rec.po_number, poItem: rec.po_item, size: rec.size
           }, order: { ordersChildId: 'DESC' }, take: 1, skip: 1
         })
-
-
         if (childData.length > 0) {
           const oldData = childData[0];
-
           // Check for changes in values
           if (
             oldData.price !== rec.price ||
@@ -856,10 +845,7 @@ export class RLOrdersService {
             ));
           }
         }
-
       }
-
-
       if (compareModel) {
         return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
       } else {
@@ -869,6 +855,82 @@ export class RLOrdersService {
       throw err
     }
   }
+
+  async revertProjectionFileData(req: OrderRevertModel): Promise<CommonResponseModel> {
+    console.log(req,"ooojjjj")
+        if (req) {
+      
+            const latestFileId = await this.pdfrepo.update({ id: req.pdfId, poNumber: req.poNumber }, { isActive: false });
+
+            if (!latestFileId.affected) {
+                return new CommonResponseModel(false, 0, 'Something went wrong in File update')
+            } 
+            // else{
+            //   return new CommonResponseModel(true, 0, 'File update')
+
+            // }
+        }
+        if (req) {
+      
+            const childData = await this.orderChildRepo.find({ where:{ poNumber:req.poNumber}, order: {ordersChildId: 'DESC'}, take: 1, skip: 1})
+            console.log(childData,"kkk")
+            const deleteChildData = await this.orderChildRepo.delete({ poNumber: childData[0].poNumber,poVersion: childData[0].poVersion })
+            const deleteOrdersData = await this.rlOrdersRepo.delete({ poNumber: childData[0].poNumber, versionFlag: 1 })
+            
+
+        }
+    
+    
+        // const updatedData = await manager.getRepository(OrdersChildEntity).find({
+        //     select: ['fileId'],
+        //     order: { id: 'DESC' }, take: 1
+        // })
+
+        const updatedData = await this.orderChildRepo.find({ where:{
+          poNumber:req.poNumber
+        }, order: {ordersChildId: 'DESC'}, take: 1, skip: 1})
+        
+        const flag = new Set()
+        let data = []
+        if (updatedData.length > 0) {
+            // data = await manager.getRepository(OrdersChildEntity).find({ where: { fileId: updatedData[0]?.fileId } })
+            data = await this.orderChildRepo.find({ where: { ordersChildId: updatedData[0]?.ordersChildId } })
+            // this.ordersChildRepo.find({
+            //     where: { fileId: updatedData[0]?.fileId },
+            //     // relations: ['orders']
+            // })
+        } else {
+            flag.add(true)
+        }
+
+        if (data.length > 0) {
+
+            for (const dtoData of data) {
+                // const prodPlanId = new OrdersEntity();
+                // prodPlanId.productionPlanId = dtoData.orders.productionPlanId
+                // const updateOrder = await manager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber }, {
+                //     year: dtoData.year, planningSsn: dtoData.planningSsn, biz: dtoData.biz, coreCategory: dtoData.coreCategory, planningSum: dtoData.planningSum, coeff: dtoData.coeff, publishFlagForFactory: dtoData.publishFlagForFactory, orderPlanQty: dtoData.orderPlanQty, orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff, prodPlanType: dtoData.prodPlanType, wh: dtoData.wh, exfEtd: dtoData.exfEtd, etdWh: dtoData.etdWh, sample: dtoData.sample, version: dtoData.version, fileId: dtoData.fileId, updatedUser: dtoData.createdUser
+                // })
+
+                // if (updateOrder.affected) {
+                //     flag.add(true)
+                // } else {
+                //     flag.add(false)
+                //     // await manager.releaseTransaction()
+                //     return new CommonResponseModel(false, 0, 'Something went wrong in order update', updateOrder)
+                // }
+            }
+        } else {
+            flag.add(true)
+        }
+        if (flag.has(true)) {
+            // await manager.completeTransaction()
+            return new CommonResponseModel(true, 1, 'File Reverted Successfully')
+        } else {
+            // await manager.releaseTransaction()
+            return new CommonResponseModel(false, 0, 'failed to revert file data')
+        }
+    }
 
 
 

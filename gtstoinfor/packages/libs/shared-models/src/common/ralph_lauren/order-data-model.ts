@@ -67,6 +67,7 @@ export class OrderDataModel {
     upcEan: string;
     sizeWiseData: OrderSizeWiseModel[]
     itemStatus?:string;
+    handOverDate?:string;
 
     constructor(
         
@@ -104,6 +105,7 @@ export class OrderDataModel {
    upcEan: string,
   sizeWiseData: OrderSizeWiseModel[],
   itemStatus?:string,
+  handOverDate?:string
         ) {
             this.id = id
             this.poNumber = poNumber
@@ -141,6 +143,7 @@ export class OrderDataModel {
             this.upcEan = upcEan
             this.sizeWiseData = sizeWiseData
             this.itemStatus=itemStatus
+            this.handOverDate = handOverDate
         }
 }
 

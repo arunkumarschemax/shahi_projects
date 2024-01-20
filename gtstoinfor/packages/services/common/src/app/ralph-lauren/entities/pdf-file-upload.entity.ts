@@ -84,11 +84,11 @@ export class PdfFileUploadEntity {
     // })
     // versionFlag: number;
 
-    // @Column({
-    //     nullable: false,
-    //     name: "is_active",
-    //     default: 1
-    // })
-    // isActive: boolean;
+    @Column({
+        nullable: false,
+        name: "is_active",
+        default: 1
+    })
+    isActive: boolean;
 
 }

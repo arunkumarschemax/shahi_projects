@@ -45,7 +45,7 @@ export class RLOrdersRepository extends Repository<RLOrdersEntity> {
             if(req.material != undefined){
                 query.andWhere(` o.material_no = "${req.material}"`)
             }
-            query.andWhere(`o.item_status = "OPEN"`);
+            query.andWhere(`o.item_status != "ACCEPTED"`);
         return await query.getRawMany()
     }
 
