@@ -119,6 +119,6 @@ updatedUser: string | null;
   @OneToMany(()=>SampleRequest, sampleReq => sampleReq.dmm, {cascade: true})
   sampleReq : SampleRequest[]
 
-  @OneToMany(()=>SampleRequest, sampleReq => sampleReq.technician, {cascade: true})
-  sampleRequest : SampleRequest[]
+  // @OneToMany(()=>SampleRequest, sampleReq => sampleReq.technician, {cascade: true})
+  // sampleRequest : SampleRequest[]
 }

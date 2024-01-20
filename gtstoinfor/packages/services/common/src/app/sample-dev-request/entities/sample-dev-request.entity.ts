@@ -57,12 +57,12 @@ export class SampleRequest {
   @JoinColumn({ name: 'buyer_id' })
   buyer: Buyers;
 
-  // @ManyToOne(() => SampleTypes, sampleTypes => sampleTypes.sampleReq, { nullable: false })
-  // @JoinColumn({ name: 'sample_type_id' })
-  // sampleType: SampleTypes;
+  @ManyToOne(() => SampleTypes, sampleTypes => sampleTypes.sampleReq, { nullable: false })
+  @JoinColumn({ name: 'sample_type_id' })
+  sampleType: SampleTypes;
 
   @ManyToOne(() => SampleSubTypes, sampleSubType => sampleSubType.sampleReq, { nullable: false })
-  @JoinColumn({ name: 'sub_type_id' })
+  @JoinColumn({ name: 'sample_sub_type_id' })
   sampleSubType: SampleSubTypes;
 
   @ManyToOne(() => Style, style => style.sampleReq, { nullable: false })
@@ -121,9 +121,9 @@ export class SampleRequest {
   @JoinColumn({ name: 'dmm_id' })
   dmm: EmplyeeDetails;
 
-  @ManyToOne(() => EmplyeeDetails, employee => employee.sampleRequest, { nullable: true })
-  @JoinColumn({ name: 'technician_id' })
-  technician: EmplyeeDetails;
+  // @ManyToOne(() => EmplyeeDetails, employee => employee.sampleRequest, { nullable: false })
+  // @JoinColumn({ name: 'technician_id' })
+  // technician: EmplyeeDetails;
 
   @Column("int", {
     nullable: true,
@@ -131,11 +131,11 @@ export class SampleRequest {
   })
   product: number;
 
-  @Column("int", {
-    nullable: true,
-    name: "type"
-  })
-  type: number;
+  // @Column("varchar", {
+  //   nullable: true,
+  //   name: "type"
+  // })
+  // type: string;
 
   @Column("varchar", {
     nullable: true,
