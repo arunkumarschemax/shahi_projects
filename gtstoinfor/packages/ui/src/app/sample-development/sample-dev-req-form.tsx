@@ -230,11 +230,12 @@ const getBase64 = (img, callback) => {
     })
   }
   const styleOnChange=(value,option)=>{
-
+    console.log(option);
     getstyleaginstpch(value)
     getStyleImage(option?.name)
   }
   const getStyleImage=(value)=>{
+    console.log(value);
     const imagePath = `http://165.22.220.143/sampling/gtstoinfor/dist/packages/services/common/upload_files/${value}`;
     setStyleImage(imagePath)
   }
