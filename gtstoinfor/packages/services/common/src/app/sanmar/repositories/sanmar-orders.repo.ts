@@ -28,7 +28,7 @@ export class SanmarOrdersRepository extends Repository<SanmarOrdersEntity> {
                 query.andWhere(`o.color LIKE :color`, { color: `%${req.color}%` });
             }
             if (req.deliveryDateStartDate !== undefined) {
-                query.andWhere(`STR_TO_DATE(o.delivery_date, '%d-%m-%Y') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+                query.andWhere(`STR_TO_DATE(o.delivery_date, '%Y-%m-%d') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
             }
             // query.andWhere(`o.status != 'ACCEPTED'`);
           
