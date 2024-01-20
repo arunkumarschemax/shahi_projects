@@ -87,6 +87,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                 <th></th>
                                 <th></th>
 
+                                <th className='ta-b'>LINE</th>
                                 <th className='ta-b'>SIZE</th>
                                 <th className='ta-b'>COLOR</th>
                                 <th className='ta-b'>QTY</th>
@@ -97,6 +98,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                     return <tr>
                                         <td></td>
                                         <td></td>
+                                        <td className='ta-b'>{j.line}</td>
                                         <td className='ta-b'>{j.size}</td>
                                         <td className='ta-b'>{j.color}</td>
                                         <td className='ta-b'>{j.quantity}</td>

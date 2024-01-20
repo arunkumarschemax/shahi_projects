@@ -186,72 +186,72 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsObj.deliveryDate = filteredData[rec.itemIndex + 9].str.replace(/\d+-\d+-\d+\s+\//g, "");
         const collectIndex = filteredData.findIndex((data, ind) => ind > rec.itemIndex && data.str.includes("Collect -"));
         if (collectIndex !== -1) {
-            itemDetailsObj.currency = filteredData[collectIndex + 5].str.replace(/Unit Price /g,"").replace(/\(/g,"").replace(/\)/g,"");;
+            itemDetailsObj.currency = filteredData[collectIndex + 5].str.replace(/Unit Price /g, "").replace(/\(/g, "").replace(/\)/g, "");;
         }
 
 
         itemTextEndIndex = rec.amountIndex;
         itemVariantStartIndex = itemTextEndIndex + 1;
 
-    //     const itemVarinatsTextArr = [];
-    //     let k = itemVariantStartIndex;
+        //     const itemVarinatsTextArr = [];
+        //     let k = itemVariantStartIndex;
 
-    //     while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
-    //         itemVarinatsTextArr.push(filteredData[k].str);
-    //         k++;
-    //     }
+        //     while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
+        //         itemVarinatsTextArr.push(filteredData[k].str);
+        //         k++;
+        //     }
 
-    //     console.log(itemVarinatsTextArr, 'VVVVVVVv');
+        //     console.log(itemVarinatsTextArr, 'VVVVVVVv');
 
-    //     const stringsWithLength13 = itemVarinatsTextArr.filter(value => value.includes('Product Description'));
-    //     const sizes = stringsWithLength13.length;
-    //     const count = itemVarinatsTextArr.length / sizes;
+        //     const stringsWithLength13 = itemVarinatsTextArr.filter(value => value.includes('Product Description'));
+        //     const sizes = stringsWithLength13.length;
+        //     const count = itemVarinatsTextArr.length / sizes;
 
-    //     const itemVariantsArr = [];
+        //     const itemVariantsArr = [];
 
-    //     for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
-    //         const itemVariantsObj = new SanmarPoItemVariant();
-    //         const index = count * l;
+        //     for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
+        //         const itemVariantsObj = new SanmarPoItemVariant();
+        //         const index = count * l;
 
-    //         // itemVariantsObj.size = itemVarinatsTextArr[index + count - 1];
-    //         const productDescriptionIndex = itemVarinatsTextArr.findIndex(value => value.includes('Product Description'));
-    //         if (productDescriptionIndex !== -1) {
-    //             itemVariantsObj.size = itemVarinatsTextArr[productDescriptionIndex - 1];
-    //             itemVariantsObj.color = itemVarinatsTextArr[productDescriptionIndex - 3];
-    //             itemVariantsObj.unitPrice = itemVarinatsTextArr[productDescriptionIndex - 12];
-    //             itemVariantsObj.quantity = itemVarinatsTextArr[productDescriptionIndex - 13];
-    //         }
-    //         console.log(itemVariantsObj);
-    //         itemVariantsArr.push(itemVariantsObj);
-    //     }
+        //         // itemVariantsObj.size = itemVarinatsTextArr[index + count - 1];
+        //         const productDescriptionIndex = itemVarinatsTextArr.findIndex(value => value.includes('Product Description'));
+        //         if (productDescriptionIndex !== -1) {
+        //             itemVariantsObj.size = itemVarinatsTextArr[productDescriptionIndex - 1];
+        //             itemVariantsObj.color = itemVarinatsTextArr[productDescriptionIndex - 3];
+        //             itemVariantsObj.unitPrice = itemVarinatsTextArr[productDescriptionIndex - 12];
+        //             itemVariantsObj.quantity = itemVarinatsTextArr[productDescriptionIndex - 13];
+        //         }
+        //         console.log(itemVariantsObj);
+        //         itemVariantsArr.push(itemVariantsObj);
+        //     }
 
 
-    //     itemDetailsObj.SanmarpoItemVariantDetails = itemVariantsArr;
-    //     itemDetailsArr.push(itemDetailsObj);
-    // }
+        //     itemDetailsObj.SanmarpoItemVariantDetails = itemVariantsArr;
+        //     itemDetailsArr.push(itemDetailsObj);
+        // }
 
-    const itemVarinatsTextArr = [];
+        const itemVarinatsTextArr = [];
         let k = itemVariantStartIndex;
-        
+
         while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
             itemVarinatsTextArr.push(filteredData[k].str);
             k++;
         }
-        
+
         console.log(itemVarinatsTextArr, 'VVVVVVVv');
-        
+
         const stringsWithLength13 = itemVarinatsTextArr.filter(value => value.includes('Product Description'));
         const sizes = stringsWithLength13.length;
         const count = itemVarinatsTextArr.length / sizes;
-        
+
         const itemVariantsArr = [];
-        
+
         for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
             const itemVariantsObj = new SanmarPoItemVariant();
             const index = count * l;
-        
+
             const productDescriptionIndex = itemVarinatsTextArr.indexOf('Ship Window Start Date', index);
-        
+
             if (productDescriptionIndex !== -1) {
                 const sizeIndex = productDescriptionIndex + 7;
                 const size = itemVarinatsTextArr[sizeIndex];
@@ -259,19 +259,33 @@ export const extractDataFromPoPdf = async (pdf) => {
                 const colorIndex = productDescriptionIndex + 5;
                 const color = itemVarinatsTextArr[colorIndex];
 
+                // const lineIndex = productDescriptionIndex - 14;
+                // const line = itemVarinatsTextArr[lineIndex];
+
+                const lineRegexIndex = itemVarinatsTextArr.findIndex((value, i) => i > productDescriptionIndex && value.match(/[A-Za-z]{2}[0-9]{4}/));
+
+                if (lineRegexIndex !== -1) {
+                    const nextIdIndex = lineRegexIndex - 1;
+                    const nextId = itemVarinatsTextArr[nextIdIndex];
+                    itemVariantsObj.line = nextId;
+                } else {
+                    itemVariantsObj.line = "-";
+                }
+
+
                 // const unitPriceIndex = productDescriptionIndex - 4;
                 // const unitPrice = itemVarinatsTextArr[unitPriceIndex].match(/\d+(,|.|\d)\d+/g,"")||"-";
 
                 const unitPriceIndex = productDescriptionIndex - 4;
                 const unitPriceMatch = itemVarinatsTextArr[unitPriceIndex].match(/\d+(,|.|\d)\d+/g);
-        
+
                 if (unitPriceMatch) {
                     const unitPrice = unitPriceMatch;
                     itemVariantsObj.unitPrice = unitPrice;
                 } else {
                     const lastUnitPriceIndex = productDescriptionIndex - 31;
                     const exactUnitPriceMatch = itemVarinatsTextArr[lastUnitPriceIndex].match(/\d+(,|.|\d)\d+/g);
-        
+
                     if (exactUnitPriceMatch) {
                         const unitPriceMatching = exactUnitPriceMatch;
                         itemVariantsObj.unitPrice = unitPriceMatching;
@@ -279,41 +293,42 @@ export const extractDataFromPoPdf = async (pdf) => {
                         itemVariantsObj.unitPrice = "-";
                     }
                 }
-                
+
 
                 const quantityIndex = productDescriptionIndex - 5;
                 const quantityMatch = itemVarinatsTextArr[quantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
-                
+
                 if (quantityMatch) {
                     const quantity = quantityMatch[0];
-                    const unit = quantity.match(/\s+\w+/)[0]; 
+                    const unit = quantity.match(/\s+\w+/)[0];
                     itemVariantsObj.quantity = quantity.replace(/EACH/g, "");
-                    itemVariantsObj.unit = unit.match(/\w+/g,"");
+                    itemVariantsObj.unit = unit.match(/\w+/g, "");
                 } else {
                     const fallbackQuantityIndex = productDescriptionIndex - 32;
                     const fallbackQuantityMatch = itemVarinatsTextArr[fallbackQuantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
-                
+
                     if (fallbackQuantityMatch) {
                         const fallbackQuantity = fallbackQuantityMatch[0];
                         const unit = fallbackQuantity.match(/\s+\w+/)[0];
                         itemVariantsObj.quantity = fallbackQuantity.replace(/EACH/g, "");
-                        itemVariantsObj.unit = unit.match(/\w+/g,"");
+                        itemVariantsObj.unit = unit.match(/\w+/g, "");
                     } else {
                         itemVariantsObj.quantity = "-";
                         itemVariantsObj.unit = "-";
                     }
                 }
-        
+
                 itemVariantsObj.size = size;
                 itemVariantsObj.color = color;
+                // itemVariantsObj.line = line;
                 // itemVariantsObj.unitPrice = unitPrice;
                 // itemVariantsObj.quantity = quantity;
-        
+
                 console.log(itemVariantsObj);
                 itemVariantsArr.push(itemVariantsObj);
             }
         }
-        
+
         itemDetailsObj.SanmarpoItemVariantDetails = itemVariantsArr;
         itemDetailsArr.push(itemDetailsObj);
     }
@@ -323,58 +338,3 @@ export const extractDataFromPoPdf = async (pdf) => {
     console.log(poData)
     return poData
 }
-
-
-// const itemVarinatsTextArr = [];
-//         let k = itemVariantStartIndex;
-        
-//         while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
-//             itemVarinatsTextArr.push(filteredData[k].str);
-//             k++;
-//         }
-        
-//         console.log(itemVarinatsTextArr, 'VVVVVVVv');
-        
-//         const stringsWithLength13 = itemVarinatsTextArr.filter(value => value.includes('Product Description'));
-//         const sizes = stringsWithLength13.length;
-//         const count = itemVarinatsTextArr.length / sizes;
-        
-//         const itemVariantsArr = [];
-        
-//         for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
-//             const itemVariantsObj = new SanmarPoItemVariant();
-//             const index = count * l;
-        
-//             const productDescriptionIndex = itemVarinatsTextArr.indexOf('Product Description', index);
-        
-//             if (productDescriptionIndex !== -1) {
-//                 const sizeIndex = productDescriptionIndex - 1;
-//                 const size = itemVarinatsTextArr[sizeIndex];
-
-//                 const colorIndex = productDescriptionIndex - 3;
-//                 const color = itemVarinatsTextArr[colorIndex];
-
-//                 const unitPriceIndex = productDescriptionIndex - 12;
-//                 const unitPrice = itemVarinatsTextArr[unitPriceIndex];
-
-//                 const quantityIndex = productDescriptionIndex - 13;
-//                 const quantity = itemVarinatsTextArr[quantityIndex];
-        
-//                 itemVariantsObj.size = size;
-//                 itemVariantsObj.color = color;
-//                 itemVariantsObj.unitPrice = unitPrice;
-//                 itemVariantsObj.quantity = quantity;
-        
-//                 // itemVariantsObj.color = itemVarinatsTextArr[index + count - 3];
-//                 // itemVariantsObj.unitPrice = itemVarinatsTextArr[index + count - 12];
-//                 // itemVariantsObj.quantity = itemVarinatsTextArr[index + count - 13];
-        
-//                 console.log(itemVariantsObj);
-//                 itemVariantsArr.push(itemVariantsObj);
-//             }
-//         }
-        
-//         // Further processing or storage of item variants data
-//         itemDetailsObj.SanmarpoItemVariantDetails = itemVariantsArr;
-//         itemDetailsArr.push(itemDetailsObj);
-//     }
