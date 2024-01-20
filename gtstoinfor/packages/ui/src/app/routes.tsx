@@ -41,6 +41,7 @@ import FabricContentForm from "./masters/fabric-content/fabric-content-form"
 import { Suspense, lazy } from "react"
 import AddressView from "./masters/address/address-view"
 import AddressUpload from "./masters/address/address-excel-upload"
+import BackingPaper from "./trims/backing-paper"
 
 
 export const AppRoutes = () => {
@@ -76,6 +77,8 @@ export const AppRoutes = () => {
                     <Route path='pdf-upload' element={<PdfUpload />} />
                     <Route path='co-line-view' element={<ColineView />} />
                     <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
+                    <Route path='backing-paper' element={<BackingPaper/>} />
+
                 </Route>
                 <Route path='/reports'>
                     <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
@@ -153,6 +156,7 @@ export const AppRoutes = () => {
                     <Route path='po-pdf-table' element={<PoPdfTable data={undefined} />} />
                     <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
                     <Route path='co-line-view' element={<ColineView />} />
+                    <Route path='backing-paper' element={<BackingPaper/>} />
 
 
 
