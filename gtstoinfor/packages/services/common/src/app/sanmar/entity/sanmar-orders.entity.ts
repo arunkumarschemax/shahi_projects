@@ -44,6 +44,11 @@ export class SanmarOrdersEntity {
     })
     deliveryDate: string
 
+    @Column("varchar", {
+        name: "currency",
+    })
+    currency: string
+
         
     @Column("varchar", {
         name: "quantity",

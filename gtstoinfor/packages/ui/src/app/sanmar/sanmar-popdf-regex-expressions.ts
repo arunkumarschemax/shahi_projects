@@ -64,6 +64,7 @@ export const ITEM_VARIANT_START_TEXT = "Parent Partner ID"
 export const ITEM_TEXT_END_TEXT1 = '$'
 export const FORMAT_SEPARATION_KEYWORD = 'Compt. Material'
 export const TOTAL_QUANTITY = 'Total Cost'
+export const CURRENCY_INDEX='Collect -'
 
 
 

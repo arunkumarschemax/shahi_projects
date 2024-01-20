@@ -27,6 +27,9 @@ export class SanmarDto {
     deliveryDate: string
 
     @ApiProperty()
+    currency: string
+
+    @ApiProperty()
     quantity: string
 
     @ApiProperty()

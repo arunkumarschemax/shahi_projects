@@ -4,6 +4,7 @@ export class SanmarPoItemDetails {
 
     poStyle: string;
     deliveryDate: string;
+    currency: string;
 
     SanmarpoItemVariantDetails: SanmarPoItemVariant[]
 

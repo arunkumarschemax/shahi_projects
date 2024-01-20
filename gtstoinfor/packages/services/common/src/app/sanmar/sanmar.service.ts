@@ -98,6 +98,7 @@ export class SanmarService {
           entity.shipToAdd = req.shipToAdd
           entity.poStyle = item.poStyle
           entity.deliveryDate = item.deliveryDate
+          entity.currency = item.currency
           entity.size = variant.size
           entity.color = variant.color
           entity.quantity = variant.quantity
@@ -110,7 +111,7 @@ export class SanmarService {
 
 
             const update = await transactionManager.getRepository(SanmarOrdersEntity).update({ buyerPo: req.buyerPo, poStyle: item.poStyle, size: variant.size },
-              { poDate: req.poDate, buyerAddress: req.buyerAddress, shipToAdd: req.shipToAdd, deliveryDate: item.deliveryDate, color:variant.color, quantity: variant.quantity, unitPrice: variant.unitPrice,unit:variant.unit })
+              { poDate: req.poDate, buyerAddress: req.buyerAddress, shipToAdd: req.shipToAdd, deliveryDate: item.deliveryDate,currency:item.currency,color:variant.color, quantity: variant.quantity, unitPrice: variant.unitPrice,unit:variant.unit })
             // let po = (order?.poVersion) + 1
 
             // const entitys = new HbOrdersChildEntity()
@@ -219,7 +220,7 @@ export class SanmarService {
         const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.buyer_po},${rec.delivery_date},${rec.color}`).sizeWiseData;
         const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.unitPrice === rec.unit_price);
         if (!existingSizeData && rec.size !== null) {
-          sizeWiseData.push(new SanmarSizeWiseModel(rec.size, rec.unit_price, rec.quantity,null,rec.unit));
+          sizeWiseData.push(new SanmarSizeWiseModel(rec.size, rec.unit_price, rec.quantity,null,rec.unit,rec.currency));
         }
       }
       const dataModelArray: sanmarOrderDataModel[] = Array.from(sizeDateMap.values());
