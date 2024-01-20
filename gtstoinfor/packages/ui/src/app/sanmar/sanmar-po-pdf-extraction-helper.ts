@@ -184,10 +184,14 @@ export const extractDataFromPoPdf = async (pdf) => {
         // itemDetailsObj.style = filteredData[rec.itemIndex - 4].str;
         itemDetailsObj.poStyle = filteredData[rec.itemIndex - 4].str;
         itemDetailsObj.deliveryDate = filteredData[rec.itemIndex + 9].str.replace(/\d+-\d+-\d+\s+\//g, "");
+        const collectIndex = filteredData.findIndex((data, ind) => ind > rec.itemIndex && data.str.includes("Collect -"));
+        if (collectIndex !== -1) {
+            itemDetailsObj.currency = filteredData[collectIndex + 5].str.replace(/Unit Price /g,"").replace(/\(/g,"").replace(/\)/g,"");;
+        }
+
 
         itemTextEndIndex = rec.amountIndex;
         itemVariantStartIndex = itemTextEndIndex + 1;
-
 
     //     const itemVarinatsTextArr = [];
     //     let k = itemVariantStartIndex;
@@ -281,10 +285,10 @@ export const extractDataFromPoPdf = async (pdf) => {
                 const quantityMatch = itemVarinatsTextArr[quantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
                 
                 if (quantityMatch) {
-                    const quantity = quantityMatch[0]; // Access the first (and only) element in the array
-                    const unit = quantity.match(/\s+\w+/)[0]; // Extract the unit from the quantity
+                    const quantity = quantityMatch[0];
+                    const unit = quantity.match(/\s+\w+/)[0]; 
                     itemVariantsObj.quantity = quantity.replace(/EACH/g, "");
-                    itemVariantsObj.unit = unit.match(/\w+/g,""); // Trim to remove leading whitespace
+                    itemVariantsObj.unit = unit.match(/\w+/g,"");
                 } else {
                     const fallbackQuantityIndex = productDescriptionIndex - 32;
                     const fallbackQuantityMatch = itemVarinatsTextArr[fallbackQuantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);

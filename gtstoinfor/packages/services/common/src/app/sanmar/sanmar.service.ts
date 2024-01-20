@@ -95,6 +95,7 @@ export class SanmarService {
           entity.shipToAdd = req.shipToAdd
           entity.poStyle = item.poStyle
           entity.deliveryDate = item.deliveryDate
+          entity.currency = item.currency
           entity.size = variant.size
           entity.color = variant.color
           entity.quantity = variant.quantity
@@ -107,7 +108,7 @@ export class SanmarService {
 
 
             const update = await transactionManager.getRepository(SanmarOrdersEntity).update({ buyerPo: req.buyerPo, poStyle: item.poStyle, size: variant.size },
-              { poDate: req.poDate, buyerAddress: req.buyerAddress, shipToAdd: req.shipToAdd, deliveryDate: item.deliveryDate, color:variant.color, quantity: variant.quantity, unitPrice: variant.unitPrice,unit:variant.unit })
+              { poDate: req.poDate, buyerAddress: req.buyerAddress, shipToAdd: req.shipToAdd, deliveryDate: item.deliveryDate,currency:item.currency,color:variant.color, quantity: variant.quantity, unitPrice: variant.unitPrice,unit:variant.unit })
             // let po = (order?.poVersion) + 1
 
             // const entitys = new HbOrdersChildEntity()

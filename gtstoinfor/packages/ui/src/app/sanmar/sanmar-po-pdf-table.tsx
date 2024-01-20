@@ -51,18 +51,20 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <tr className='ta-b'>
                         <td className='ta-b'>{pdfData?.buyerPo}</td>
                         <td className='ta-b'>{pdfData?.poDate}</td>
-                        <td className='ta-b'>
+                        <td className='ta-b'>{pdfData?.buyerAddress}</td>
+                        <td className='ta-b'>{pdfData?.shipToAdd}</td>
+                        {/* <td className='ta-b'>
                             <Tooltip title={pdfData?.buyerAddress} placement="topLeft">
                                 <div style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                     {pdfData?.buyerAddress}
                                 </div>
                             </Tooltip>
-                        </td>
-                        <Tooltip title={pdfData?.shipToAdd} placement="topLeft">
+                        </td> */}
+                        {/* <Tooltip title={pdfData?.shipToAdd} placement="topLeft">
                             <div style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                 {pdfData?.shipToAdd}
                             </div>
-                        </Tooltip>
+                        </Tooltip> */}
                     </tr>
 
                     {pdfData?.SanmarpoItemDetails?.map((i) => {
@@ -71,12 +73,14 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                 <th></th>
                                 <th className='ta-b'>PO STYLE</th>
                                 <th className='ta-b'>DELIVERY DATE</th>
+                                <th className='ta-b'>CURRENCY</th>
 
                             </tr>
                             <tr className='ta-b'>
                                 <td></td>
                                 <td className='ta-b'>{i.poStyle}</td>
                                 <td className='ta-b'>{i.deliveryDate}</td>
+                                <td className='ta-b'>{i.currency}</td>
 
                             </tr>
                             <tr className='ta-b'>
