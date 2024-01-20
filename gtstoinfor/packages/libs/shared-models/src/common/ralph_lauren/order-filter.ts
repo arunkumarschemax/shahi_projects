@@ -11,6 +11,7 @@ export class PoOrderFilter {
     exportDateEndDate?:any
     exfactoryDateStartDate?:any
     exfactoryDateEndDate?:any
+    color?:string
     
 
     constructor(poNumber?: string, externalRefNo?:string ,poDateStartDate?:any,
@@ -18,7 +19,7 @@ export class PoOrderFilter {
         deliveryDateEndDate?:any, season?:string, exportDateStartDate?:any,
         exportDateEndDate?:any,
         exfactoryDateStartDate?:any,
-        exfactoryDateEndDate?:any){
+        exfactoryDateEndDate?:any,color?:string){
             this.poNumber= poNumber;
             this.externalRefNo = externalRefNo
             this.poDateStartDate = poDateStartDate
@@ -30,5 +31,6 @@ export class PoOrderFilter {
             this.exportDateEndDate = exportDateEndDate
             this.exfactoryDateStartDate = exfactoryDateStartDate
             this.exfactoryDateEndDate = exfactoryDateEndDate
+            this.color = color
     }
 }

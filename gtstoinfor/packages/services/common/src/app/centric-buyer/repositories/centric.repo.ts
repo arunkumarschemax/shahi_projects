@@ -99,6 +99,9 @@ export class CentricRepository extends Repository<CentricEntity> {
             if (req.exportDateStartDate !== undefined) {
                 query.andWhere(`Date(o.export) BETWEEN '${req.exportDateStartDate}' AND '${req.exportDateEndDate}'`)
             }
+            if (req.color !== undefined) {
+                query.andWhere(`o.color LIKE :color`, { color: `%${req.color}%` });
+            }
             query.andWhere(`o.po_type = 'PPK'`);
           
         return await query.getRawMany()
@@ -128,6 +131,9 @@ export class CentricRepository extends Repository<CentricEntity> {
             }
             if (req.exportDateStartDate !== undefined) {
                 query.andWhere(`Date(o.export) BETWEEN '${req.exportDateStartDate}' AND '${req.exportDateEndDate}'`)
+            }
+            if (req.color !== undefined) {
+                query.andWhere(`o.color LIKE :color`, { color: `%${req.color}%` });
             }
             query.andWhere(`o.po_type = 'SOLID'`);
           

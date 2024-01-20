@@ -105,12 +105,12 @@ import RangePicker from "rc-picker/lib/RangePicker";
         }
 
       }
-
-    
-
-     
+  
       if (form.getFieldValue("season") !== undefined) {
         req.season = form.getFieldValue("season");
+      }
+      if (form.getFieldValue("color") !== undefined) {
+        req.color = form.getFieldValue("color");
       }
      req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
   
@@ -177,8 +177,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
             },
             {
               title: "Shipment Method",
-              dataIndex: "shipmentMethod",
-              width: 90,
+               dataIndex: "shipment",
+               width: 90,
               render: (text) => text ? text : "-",
               
     
@@ -203,7 +203,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
             },
             {
               title: "PO Number",
-              dataIndex: "poNumber",
+              dataIndex: "po_number",
               width: 90,
     
               render: (text) => text ? text : "-",
@@ -213,7 +213,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
            
             {
                 title: "PO Line Number",
-                dataIndex: "poLine",
+                dataIndex: "po_line",
                 width: 90,
                 render: (text) => text ? text : "-",
       
@@ -226,14 +226,14 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 render: (text) => text ? text : "-",
           
               },
-              {
-                title: "Compt.Material",
-                dataIndex: "comptMaterial",
-                width: 150,
-                render: (text) => text ? text : "-",
+              // {
+              //   title: "Compt.Material",
+              //   dataIndex: "comptMaterial",
+              //   width: 150,
+              //   render: (text) => text ? text : "-",
               
       
-              },
+              // },
               {
                 title: "Gender",
                 dataIndex: "gender",
@@ -244,7 +244,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
               },
               {
                 title: "Short Description",
-                dataIndex: "shortDescription",
+                dataIndex: "short_description",
                 width:300,
                 render: (text) => text ? text : "-",
               },
@@ -265,7 +265,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
               },
               {
                 title: "Reference",
-                dataIndex: "reference",
+                dataIndex: "refrence",
                 width: 90,
                 render: (text) => text ? text : "-",
             
@@ -273,310 +273,125 @@ import RangePicker from "rc-picker/lib/RangePicker";
               },
               {
                 title: "Pack Method",
-                dataIndex: "packMethod",
+                dataIndex: "pack_method",
                 width: 300,
                 render: (text) => text ? text : "-",
              
               },
-          );
-          const sizeHeaders = new Set<string>();
-          orderData?.forEach((rec) =>
-          rec.sizeWiseData?.forEach((version) => {
-            sizeHeaders.add("" + version.size);
-          })
-        );
-         
-
-        sizeHeaders?.forEach(version => {
-          excelColumnsWH.push({
-              title: version,
-              dataIndex: version,
-              key: version,
-              width: 70,
-              align: 'center',
-              children: [
-            
-              //   {
-              //     title: 'Ratio',
-              //     dataIndex: '',
-              //     key: '',
-              //     width: 70,
-              //     className: "center",
-              //     render: (text, record) => {
-              //         const sizeData = record.sizeWiseData.find(item => item.size === version);
-              //         console.log()
-              //         if (sizeData) {
-              //             if (sizeData.size !== null) {
-              //               const formattedQty = (sizeData?.ratio) ?  (sizeData?.ratio)  : "-"
-                        
-              //                 return (
-              //                     formattedQty
-              //                 );
-              //             } else {
-
-              //                 return (
-              //                     '-'
-              //                 );
-              //             }
-              //         } else {
-              //             return '-';
-              //         }
-              //     }
-              // },
-                {
-                  title: 'UPC',
-                  dataIndex: '',
-                  key: '',
-                  width: 150,
-                  className: "center",
-                  render: (text, record) => {
-                      const sizeData = record.sizeWiseData.find(item => item.size === version);
-                      console.log()
-                      if (sizeData) {
-                          if (sizeData.size !== null) {
-                            const formattedQty = (sizeData?.upc) ? (sizeData?.upc):"-"
-                              // const formattedQty = (sizeData?.amount)
-                              return (
-                                  formattedQty
-                              );
-                          } else {
-
-                              return (
-                                  '-'
-                              );
-                          }
-                      } else {
-                          return '-';
-                      }
-                  }
+              {
+                title: "Size",
+                dataIndex: "size",
+                width: 90,
+                render: (text) => text ? text : "-",
+              
               },
               {
-                title: 'label',
-                dataIndex: '',
-                key: '',
-                width: 70,
-                className: "center",
-                render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                        if (sizeData.size !== null) {
-                          const formattedQty = (sizeData?.label) ? (sizeData?.label) :"-"
-                            // const formattedQty = (sizeData?.amount)
-                            return (
-                                formattedQty
-                            );
-                        } else {
-
-                            return (
-                                '-'
-                            );
-                        }
-                    } else {
-                        return '-';
-                    }
-                }
+                title: 'FOB Price',
+                dataIndex: 'unit_price',
+                width: 80,
+                render: (text) => text ? text : "-",
+               
             },
-            
-                  {
-                      title: 'FOB Price',
-                      dataIndex: '',
-                      key: '',
-                      width: 70,
-                      className: "center",
-                      render: (text, record) => {
-                          const sizeData = record.sizeWiseData.find(item => item.size === version);
-                          console.log()
-                          if (sizeData) {
-                              if (sizeData.size !== null) {
-                                  const formattedQty = (sizeData?.fobPrice) ? (sizeData?.fobPrice):"-"
-                                  return (
-                                      formattedQty
-                                  );
-                              } else {
-  
-                                  return (
-                                      '-'
-                                  );
-                              }
-                          } else {
-                              return '-';
-                          }
-                      }
-                  },
-                  {
-                      title: 'Tot PO Qty in PC',
-                      dataIndex: '',
-                      key: '',
-                      width: 70,
-                      className: "center",
-                      render: (text, record) => {
-                          const sizeData = record.sizeWiseData.find(item => item.size === version);
-                          console.log()
-                          if (sizeData) {
-                              if (sizeData.size !== null) {
-                                  const formattedQty = (sizeData?.totalQuantity) ? (sizeData?.totalQuantity):"-"
-                                  return (
-                                      formattedQty
-                                  );
-                              } else {
-  
-                                  return (
-                                      '-'
-                                  );
-                              }
-                          } else {
-                              return '-';
-                          }
-                      }
-                  },
-                  
-                
-              
-                  {
-                    title: 'Retail Price(USD) ',
-                    dataIndex: '',
-                    key: '',
-                    width: 70,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                        console.log()
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) :"-"
-                                return (
-                                    formattedQty
-                                );
-                            } else {
-
-                                return (
-                                    '-'
-                                );
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-                
-              ]
-          });
-      })
-      excelColumnsWH.push(
-        {
-          title: "Total Quantity",
-          dataIndex: "",
-          align: "right",
-          width: 90,
-          render: (text, record) => {
-            let sum = 0;
-            record.sizeWiseData.forEach((r) => {
-              // Convert to number before summing
-              sum += parseFloat(r.totalQuantity) || 0;
-            });
-            return sum;
+            {
+              title: 'Tot PO Qty in PC',
+              dataIndex: 'total_quantity',
+              width: 100,
+              render: (text) => text ? text : "-",
           },
-        },
-       
-        {
-          title: "Special Instructions",
-          dataIndex: "specialInstructions",
-          width: 400,
-          render: (text) => (  text ? text: "-"),
-
-        },
-        {
-          title: "PO Date",
-          dataIndex: "PODate",
-          align: "center",
-          width: 90,
-          render: (text) => text ? text : "-"
-        },
+          {
+            title: "UPC",
+            dataIndex: "upc",
+            width: 130,
+            render: (text) => text ? text : "-",
+          },
+          {
+            title: 'Retail Price(USD) ',
+            dataIndex: 'retial_price',
+            width: 100,
+              render: (text) => text ? text : "-",
+          },
            
-        {
+          {
+            title: "PO Date",
+            dataIndex: "po_date",
+            align: "center",
+            width: 90,
+            render: (text) => text ? text : "-"
+          },
+          {
             title: "Ex-factory Date",
-            dataIndex: "exFactoryDate",
+            dataIndex: "exfactory",
             align: "center",
             width: 90,
-            render: (text) => (  text ? text: "-"),
+            render: (text) => text ? text : "-"
 
-          },
-        {
-            title: "Export Date",
-            dataIndex: "exPortDate",
-            align: "center",
-            width: 90,
-            render: (text) => (  text ? text: "-"),
-
-          },
-        {
-            title: "Delivery Date",
-            dataIndex: "deliveryDate",
-            align: "center",
-            width: 90,
-            render: (text) => (  text ? text: "-"),
-            
-          },
-        
-       
-        {
-          title: "Incoterm",
-          dataIndex: "incoterm",
-          width: 400,
-          sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
-          sortDirections: ["ascend", "descend"],
-          ...getColumnSearchProps('incoterm'),
-          render: (text) => (  text ? text: "-"),
-        },
-
-        {
-          title: "Port Of Export",
-          dataIndex: "portOfExport",
-          align: "center",
-          width: 90,
-          render: (text) => text ? text : "-",
-
-        },
-        {
-          title: "Port of Entry Name",
-          dataIndex: "portOfEntry",
-          align: "center",
-          width: 200,
-          render: (text) => text ? text : "-",
-
-        },
-       
-       
-        {
-          title: "Payment Terms Description",
-          dataIndex: "paymentTermDescription",
-          align: "center",
-          width: 150,
-          render: (text) => text ? text : "-",
           
+          },
+          {
+            title: "Export Date",
+            dataIndex: "export",
+            align: "center",
+            width: 90,
+            render: (text) => text ? text : "-"
 
-        },
-        {
-          title: "Vendor Booking Flag",
-          dataIndex: "vendorFlag",
-          align: "center",
-          width: 90,
-          sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
-        },
-        {
-          title: "Ship to Address",
-          dataIndex: "shipToAddress",
-          width: 400,
-          render: (text) => (  text ? text: "-"),
+         
+          },
+          {
+            title: "Delivery Date",
+            dataIndex: "delivery_date",
+            align: "center",
+            width: 90,
+            render: (text) => text ? text : "-"
 
-        },
-      
-      );
+          },
+          {
+            title: "Incoterm",
+            dataIndex: "incoterm",
+            width: 400,
+            render: (text) => (  text ? text: "-"),
+          },
+          {
+            title: "Port Of Export",
+            dataIndex: "port_of_export",
+            align: "center",
+            width: 90,
+            render: (text) => text ? text : "-",
+  
+          },
+          {
+            title: "Port of Entry Name",
+            dataIndex: "port_of_entry",
+            align: "center",
+            width: 200,
+            render: (text) => text ? text : "-",
+  
+          },
+          {
+            title: "Payment Terms Description",
+            dataIndex: "payment_term_description",
+            align: "center",
+            width: 150,
+            render: (text) => text ? text : "-",
+  
+          },
+          {
+            title: "Vendor Booking Flag",
+            dataIndex: "vendor_booking_flag",
+            align: "center",
+            width: 90,
+            render: (text) => text ? text : "-"
+          },
+          {
+            title: "Ship to Address",
+            dataIndex: "ship_to_add",
+            width: 400,
+            render: (text) => (  text ? text: "-"),
+  
+          },
 
-    
+
+          );
+
             excel
               .addSheet(`Solid Pack PO Report ${formattedDate}`)
               .addColumns(excelColumnsWH)
@@ -1510,6 +1325,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
               width: 90,
               sorter: (a, b) => a.exfactory.localeCompare(b.exfactory),
               sortDirections: ["ascend", "descend"],
+              render: (text) => text ? text : "-"
+
             },
           {
               title: "Export Date",
@@ -1518,6 +1335,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
               width: 90,
               sorter: (a, b) => a.export.localeCompare(b.export),
               sortDirections: ["ascend", "descend"],
+              render: (text) => text ? text : "-"
+
             },
           {
               title: "Delivery Date",
@@ -1526,6 +1345,8 @@ import RangePicker from "rc-picker/lib/RangePicker";
               width: 90,
               sorter: (a, b) => a.delivery_date.localeCompare(b.delivery_date),
               sortDirections: ["ascend", "descend"],
+              render: (text) => text ? text : "-"
+
             },
           
          
@@ -1934,7 +1755,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
                 lg={{ span: 4 }}
-                xl={{ span: 4 }}
+                xl={{ span: 5 }}
               >
                 <Form.Item name="poNumber" label="PO Number">
                   <Select
@@ -1960,10 +1781,21 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
                 lg={{ span: 4 }}
-                xl={{ span: 4 }}
+                xl={{ span: 5 }}
               >
                <Form.Item label="Season" name="season">
                   <Input placeholder="Enter Season"  allowClear={true} />
+                </Form.Item>
+              </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 5 }}
+              >
+               <Form.Item label="Color" name="color">
+                  <Input placeholder="Enter Color"  allowClear={true} />
                 </Form.Item>
               </Col>
               
@@ -1995,7 +1827,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
                 lg={{ span: 4 }}
-                xl={{ span: 4 }}
+                xl={{ span: 5 }}
               >
                <Form.Item label="Range" name="range_date" hidden={poDateDis} >
                   <RangePicker style={{width:180}}  />
