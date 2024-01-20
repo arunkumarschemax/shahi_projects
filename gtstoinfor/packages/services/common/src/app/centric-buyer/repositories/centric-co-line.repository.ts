@@ -16,7 +16,7 @@ export class CentricCOLineRepository extends Repository<CentricCOLineEntity> {
     async getCentricCoLineData(req: centricCoLineRequest): Promise<any[]> {
         const query = this.createQueryBuilder('co')
             .select(`DISTINCT co.po_number, co.delivery_date, co.co_date, co.po_line, co.item_no, co.status, co.error_msg, co.style_no, co.full_material,
-                   DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user`);
+                   DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user,co.id`);
 
         if (req.poNumber !== undefined) {
             query.andWhere(`co.po_number = :poNumber`, { poNumber: req.poNumber });

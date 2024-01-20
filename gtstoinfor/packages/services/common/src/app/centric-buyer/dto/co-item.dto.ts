@@ -7,5 +7,8 @@ export class ItemNoDtos {
    
    @ApiProperty()
    itemNo: string;
+
+   @ApiProperty()
+   poNumber: string;
  
 }

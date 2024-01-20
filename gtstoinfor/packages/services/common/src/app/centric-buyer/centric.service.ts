@@ -1105,7 +1105,7 @@ export class CentricService {
     try {
         const update = await this.coLineRepo.update(
             { id: Number(req.id) },
-            { itemNo: req.itemNo }
+            { poNumber: req.poNumber ,itemNo: req.itemNo }
         );
 
         if (update) {
