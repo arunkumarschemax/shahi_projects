@@ -199,14 +199,11 @@ export function CentricPdFInfoGrid() {
         },
         {
             title: 'Uploaded Date',
-            dataIndex: 'created_at',
+            dataIndex: 'upload_date',
             align: 'center',
             width: 90,
-            sorter: (a, b) => a.created_at.localeCompare(b.created_at),
+            sorter: (a, b) => a.upload_date.localeCompare(b.upload_date),
             sortDirections: ["ascend", "descend"],
-            render: (text, record) => {
-                return record.created_at ? moment(record.created_at).format('MM/DD/YYYY') : '-'
-            }
 
 
         },

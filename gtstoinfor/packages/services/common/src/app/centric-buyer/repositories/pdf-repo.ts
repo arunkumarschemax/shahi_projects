@@ -16,7 +16,7 @@ export class CentricPdfRepository extends Repository<CentricPdfFileUploadEntity>
 
     async getPdfFileInfo(req?:centricOrderHistory): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(`*`)
+            .select(`*,DATE_FORMAT(o.created_at, '%m/%d/%Y %H:%i') as upload_date`)
             if(req.poNumber !== undefined){
                 query.andWhere(`o.po_number ='${req.poNumber}'`) 
             }
