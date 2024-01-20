@@ -2144,7 +2144,7 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
 
 async getUsageWhtsAppMsg(): Promise<CommonResponseModel> {
   try {
-    let date = moment().format('YYYY-MM-DD')
+    let date = moment().subtract(1, 'days').format('YYYY-MM-DD')
     const manager = this.dataSource;
     const sampleOrders = `SELECT COUNT(DISTINCT sample_request_id)AS COUNT FROM sample_request_size_info WHERE DATE(created_at) = '${date}'`
     const indents = `SELECT COUNT(request_no) AS COUNT FROM indent WHERE DATE(created_at) = '${date}'`
