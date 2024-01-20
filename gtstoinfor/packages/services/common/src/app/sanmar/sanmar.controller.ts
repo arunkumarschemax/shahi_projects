@@ -127,4 +127,32 @@ export class SanmarController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
         }
     }
+
+    @Post('/getSanmarCoLineData')
+    async getSanmarCoLineData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.getSanmarCoLineData(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getItem')
+    async getItem(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getItem();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getCoPoNumber')
+    async getCoPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getCoPoNumber();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
 }
