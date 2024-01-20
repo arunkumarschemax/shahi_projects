@@ -26,4 +26,17 @@ export class SanmarService extends CommonAxiosService {
         return this.axiosPostCall(this.sanmarOrdersController + "/getCustomerPoNumber")
     }
 
+    
+    async sanmarBot(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.sanmarOrdersController + "/sanmarBot")
+    }
+
+
+    async getorderacceptanceData(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.sanmarOrdersController + "/getorderacceptanceData",req)
+    }
+
+    async sanmarCoLineCreationReq(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.sanmarOrdersController + "/sanmarCoLineCreationReq", req)
+    }
 }

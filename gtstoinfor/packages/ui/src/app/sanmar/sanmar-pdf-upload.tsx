@@ -76,16 +76,16 @@ const SanmarPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         showUploadList: false
     };
 
-    // const hbAthleticBot = (req) => {
-    //     SanmarServices.hbAthleticBot().then(res => {
-    //         if (res.status) {
-    //             // setBuyer(res.data);
-    //             // setPoPdfData(res.data)
-    //             message.success("Button CLicked")
-    //             console.log("Trade button clicked");
-    //         }
-    //     });
-    // };
+    const sanmarBot = (req) => {
+        SanmarServices.sanmarBot().then(res => {
+            if (res.status) {
+                // setBuyer(res.data);
+                // setPoPdfData(res.data)
+                message.success("Button CLicked")
+                console.log("Trade button clicked");
+            }
+        });
+    };
 
     async function extractPoPdfData(pdf: any, pdfText: any) {
         const poData = await extractDataFromPoPdf(pdf)
@@ -140,8 +140,8 @@ const SanmarPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                 }
                 // alert(res.internalMessage)
                 message.success(res.internalMessage)
-                // navigate("/hb-athletics/pdf-info", { state: "rec" });
-                // window.location.reload();
+                navigate("/sanmar/pdf-info", { state: "rec" });
+                window.location.reload();
             } else {
                 message.error(res.internalMessage)
             }
@@ -177,7 +177,7 @@ const SanmarPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                         xl={{ span: 4 }}
                     >
                         <Form.Item>
-                            <Button type='primary'>Upload Bot</Button>
+                            <Button type='primary' onClick={sanmarBot}>Upload Bot</Button>
                         </Form.Item>
                     </Col>
                     <Col span={24}>

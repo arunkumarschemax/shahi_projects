@@ -2,10 +2,15 @@ import { Injectable } from "@nestjs/common";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { DataSource } from "typeorm";
 import { SanmarOrdersRepository } from "./repositories/sanmar-orders.repo";
-import { CommonResponseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarOrderFilter, SanmarSizeWiseModel, sanmarOrderDataModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarOrderFilter, SanmarSizeWiseModel, StatusEnum, sanmarOrderDataModel } from "@project-management-system/shared-models";
 import { SanmarOrdersEntity } from "./entity/sanmar-orders.entity";
 import { SanmarPdfInfoEntity } from "./entity/sanmar-pdf.entity";
 import { SanmarPdfRepo } from "./repositories/sanmar-pdf.repo";
+import * as puppeteer from 'puppeteer';
+import * as fs from 'fs';
+import * as path from 'path';
+import { SanmarCOLineEntity } from "./entity/sanmar-co-line.entity";
+import { SanmarCOLineRepository } from "./repositories/sanmar-co-line.repository";
 
 @Injectable()
 export class SanmarService {
@@ -14,7 +19,8 @@ export class SanmarService {
   constructor(
     private dataSource: DataSource,
     private SanOrdersRepo: SanmarOrdersRepository,
-    private pdfRepo: SanmarPdfRepo
+    private pdfRepo: SanmarPdfRepo,
+    private sanmarCoLineRepo:SanmarCOLineRepository
 
 
   ) { }
@@ -245,6 +251,153 @@ export class SanmarService {
       throw err
     }
   }
+
+  async sanmarBot() {
+    try {
+      const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
+
+      const page = await browser.newPage();
+      await page.setViewport({ width: 1580, height: 900 });
+
+      setTimeout(async () => {
+        await page.goto('http://localhost:4200/', {
+          timeout: 100000,
+          waitUntil: 'networkidle0',
+        })
+      }, 1000);
+
+      await page.waitForSelector('#login-form_username');
+      await page.type('#login-form_username', 'sanmar@gmail.com');
+
+      await page.waitForSelector('#login-form_password');
+      await page.type('#login-form_password', 'sanmar');
+
+      await page.click('button.ant-btn-primary');
+      await page.waitForNavigation();
+
+      setTimeout(async () => {
+        await page.goto('http://localhost:4200/#/sanmar/sanmar-pdf-upload/', {
+          timeout: 100000,
+          waitUntil: 'networkidle0'
+        })
+      }, 1000);
+
+      const directoryPath = 'D:/sanmar-unread/';
+      const destinationDirectory = 'D:/sanmar-read/';
+
+      const files = fs.readdirSync(directoryPath);
+      if (files.length === 0) {
+
+        return new CommonResponseModel(false, 0, "No Files Found")
+      }
+      for (const file of files) {
+        await page.waitForSelector('input[type="file"]');
+        const fileInput = await page.$('input[type="file"]');
+        const filePath = path.join(directoryPath, file);
+        await fileInput.uploadFile(filePath);
+        await page.waitForTimeout(2000);
+
+        await page.waitForSelector('button.ant-btn-primary')
+        await page.click('button.ant-btn-primary');
+        await page.waitForTimeout(10000)
+
+        setTimeout(async () => {
+          await page.goto('http://localhost:4200/#/sanmar/sanmar-pdf-upload/', {
+            timeout: 100000,
+            waitUntil: 'networkidle0'
+          })
+        }, 1000);
+  
+
+        const sourceFilePath = path.join(directoryPath, file);
+        const destinationFilePath = path.join(destinationDirectory, file);
+        fs.rename(sourceFilePath, destinationFilePath, async (err) => {
+          if (err) {
+            return new CommonResponseModel(false, 0, '');
+          }
+        })
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, error)
+    }
+  }
+
+
+  async getorderacceptanceData(req?: SanmarOrderFilter): Promise<CommonResponseModel> {
+    console.log(req, "servvv")
+    try {
+      const details = await this.SanOrdersRepo.getorderacceptanceData(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'No data Found');
+      }
+      const sizeDateMap = new Map<string, sanmarOrderDataModel>();
+      for (const rec of details) {
+        if (!sizeDateMap.has(`${rec.style},${rec.buyer_po},${rec.delivery_date},${rec.color}`)) {
+          sizeDateMap.set(
+            `${rec.style},${rec.buyer_po},${rec.delivery_date},${rec.color}`,
+            new sanmarOrderDataModel(rec.id, rec.buyer_po, rec.po_date, rec.po_style, rec.color, rec.size, rec.delivery_date, rec.ship_to_address, rec.buyer_address, [],null,null,rec.status)
+          );
+
+        }
+        const sizeWiseData = sizeDateMap.get(`${rec.style},${rec.buyer_po},${rec.delivery_date},${rec.color}`).sizeWiseData;
+        const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.unitPrice === rec.unit_price);
+        if (!existingSizeData && rec.size !== null) {
+          sizeWiseData.push(new SanmarSizeWiseModel(rec.size, rec.unit_price, rec.quantity,null,rec.unit));
+        }
+      }
+      const dataModelArray: sanmarOrderDataModel[] = Array.from(sizeDateMap.values());
+
+      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+
+
+
+    } catch (e) {
+      console.log(e, "errrrrrrrrr")
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
+
+  async sanmarCoLineCreationReq(req: any): Promise<CommonResponseModel> {
+    try {
+      // console.log(req,'req')
+      if (req.itemNo == undefined || null) {
+        return new CommonResponseModel(false, 0, 'Please enter Item No')
+      };
+      // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
+      const records = await this.SanOrdersRepo.find({ where: { buyerPo: req.buyerPo, deliveryDate: req.deliveryDate } });
+      const empty = [];
+     
+        //console.log(rec,'reccccccccc')
+        const entity = new SanmarCOLineEntity()
+        entity.buyer = req.buyer
+        entity.buyerPo = req.buyerPo;
+        entity.style = req.style;
+        entity.itemNo =  req?.itemNo;
+        entity.status = 'Open';
+        entity.deliveryDate=req.deliveryDate;
+        entity.createdUser = 'admin';
+        empty.push(entity)
+      
+     // console.log(empty,'emptyyyyy')
+      const save = await this.sanmarCoLineRepo.save(empty);
+
+
+
+      if (save) {
+        const update = await this.SanOrdersRepo.update(
+          { buyerPo: req.buyerPo, deliveryDate: req.deliveryDate }, // Conditions for updating
+          { status: StatusEnum.INPROGRESS }
+        );
+        return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
+      } else {
+        return new CommonResponseModel(false, 0, 'CO-Line request failed')
+      }
+    } catch (err) {
+      //  console.log(err,',,,,,,,,,,,,,,,')
+      return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
+    }
+  }
+
 
 
 }

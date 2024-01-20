@@ -5,6 +5,8 @@ export class SanmarOrderFilter {
     deliveryDateStartDate?:any
     deliveryDateEndDate?:any
     externalRefNo?:string
+    itemNo?: string;
+    coNumber?:string;
 
 
 
@@ -14,6 +16,8 @@ export class SanmarOrderFilter {
         deliveryDateStartDate?:any,
         deliveryDateEndDate?:any,
         externalRefNo?:string,
+        itemNo?: string,
+        coNumber?:string,
       
     ) {
         this.buyerPo = buyerPo;
@@ -22,6 +26,8 @@ export class SanmarOrderFilter {
         this.deliveryDateEndDate = deliveryDateEndDate
         this.deliveryDateStartDate = deliveryDateStartDate
         this.externalRefNo = externalRefNo
+        this.itemNo=itemNo
+        this.coNumber=coNumber
     
     
     }
