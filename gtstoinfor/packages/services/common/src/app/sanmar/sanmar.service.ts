@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { DataSource } from "typeorm";
 import { SanmarOrdersRepository } from "./repositories/sanmar-orders.repo";
-import { CommonResponseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarOrderFilter, SanmarSizeWiseModel, StatusEnum, sanmarOrderDataModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarCoLinereqModels, SanmarColorModel, SanmarDestinationModel, SanmarOrderFilter, SanmarSizeModel, SanmarSizeWiseModel, StatusEnum, sanmarOrderDataModel } from "@project-management-system/shared-models";
 import { SanmarOrdersEntity } from "./entity/sanmar-orders.entity";
 import { SanmarPdfInfoEntity } from "./entity/sanmar-pdf.entity";
 import { SanmarPdfRepo } from "./repositories/sanmar-pdf.repo";
@@ -11,6 +11,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { SanmarCOLineEntity } from "./entity/sanmar-co-line.entity";
 import { SanmarCOLineRepository } from "./repositories/sanmar-co-line.repository";
+import { SanmarOrderDetailsReq } from "./dto/sanmar-order-details-req";
 
 @Injectable()
 export class SanmarService {
@@ -395,6 +396,69 @@ export class SanmarService {
     } catch (err) {
       //  console.log(err,',,,,,,,,,,,,,,,')
       return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
+    }
+  }
+
+  async getOrderdataForCOline(req: SanmarOrderDetailsReq): Promise<CommonResponseModel> {
+    try {
+      const data = await this.SanOrdersRepo.find({ where: { buyerPo: req.buyerPo } })
+      let destinationMap = new Map<string, SanmarDestinationModel>();
+      // po -> destination -> color -> sizes
+      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+      const poMap = new Map<string, SanmarOrdersEntity>();
+      data.forEach(rec => {
+        poMap.set(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`, rec)
+        const dest = rec.shipToAdd
+        // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
+
+        // const parts = rec.shipToAdd.split(',')
+        // const destAdd = parts[2].trim();
+        // const dest = destAdd;
+
+        // const destCountry = rec.shipToAddress.slice(-2).trim();
+        // const parts = rec.shipToAddress.split(',')
+        // const destAdd = parts[0].trim();
+        // const dest = destAdd + ',' + destCountry;
+
+        if (!destinationColSizesMap.has(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`)) {
+          destinationColSizesMap.set(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`, new Map<string, Map<string, []>>());
+        }
+        if (!destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`).has(dest)) {
+          destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`).set(dest, new Map<string, []>());
+        }
+        if (!destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`).get(dest).has(rec.color)) {
+          destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`).get(dest).set(rec.color, []);
+        }
+        destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+      });
+      const coData = []
+      destinationColSizesMap.forEach((destColorSize, poNumber) => {
+        const desArray = []
+        destColorSize.forEach((colorSizes, dest) => {
+          const ColArray = []
+          colorSizes.forEach((sizes, color) => {
+            const sizeArray = []
+            sizes.forEach((size) => {
+              const sizeObj = new SanmarSizeModel(size.size, size.quantity, size.price);
+              sizeArray.push(sizeObj)
+            })
+            const col = new SanmarColorModel(color, sizeArray);
+            ColArray.push(col)
+          });
+          const des = new SanmarDestinationModel(dest, ColArray);
+          desArray.push(des)
+        });
+        const poInfo = poMap.get(poNumber)
+        const co = new SanmarCoLinereqModels(poInfo.buyerPo, poInfo.poStyle, poInfo.unitPrice, poInfo.deliveryDate,poInfo.currency, desArray);
+        coData.push(co)
+      });
+      if (coData) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
+    } catch (err) {
+      throw err
     }
   }
 

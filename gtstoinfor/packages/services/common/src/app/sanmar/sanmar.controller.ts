@@ -7,6 +7,7 @@ import { CommonResponseModel, SanmarOrderFilter } from "@project-management-syst
 import { SanmarDto } from "./dto/sanmar.dto";
 import { diskStorage } from 'multer'
 import { FileInterceptor } from "@nestjs/platform-express";
+import { SanmarOrderDetailsReq } from "./dto/sanmar-order-details-req";
 
 
 
@@ -127,4 +128,16 @@ export class SanmarController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
         }
     }
+
+    @Post('/getOrderdataForCOline')
+    @ApiBody({ type: SanmarOrderDetailsReq })
+    async getOrderdataForCOline(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getOrderdataForCOline(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+
 }
