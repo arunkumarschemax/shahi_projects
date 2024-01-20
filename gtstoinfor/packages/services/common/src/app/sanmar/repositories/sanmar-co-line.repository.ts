@@ -28,9 +28,9 @@ export class SanmarCOLineRepository extends Repository<SanmarCOLineEntity> {
       if(req.style !== undefined){
         query.andWhere(`co.style LIKE :style`, { style: `%${req.style}%` });
     }
-      if (req.deliveryDateStartDate !== undefined) {
-        query.andWhere(`STR_TO_DATE(co.delivery_date, '%d-%m-%Y') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
-    }
+    if (req.deliveryDateStartDate !== undefined) {
+      query.andWhere(`STR_TO_DATE(co.delivery_date, '%Y-%m-%d') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+  }
    
     
 
