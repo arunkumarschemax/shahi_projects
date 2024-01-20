@@ -934,64 +934,93 @@ export class CentricService {
   }
 
   
+  // async getCentricorderDataForPPK(req?: PoOrderFilter): Promise<CommonResponseModel> {
+  //   try {
+  //     const details = await this.Repo.getCentricorderDataForPPK(req);
+  //     if (details.length === 0) {
+  //       return new CommonResponseModel(false, 0, 'No Data found');
+  //     }
+  //     const sizeDateMap = new Map<string, CentricOrderDataModel>();
+  //     for (const rec of details) {
+  //       // console.log(rec,"rrrrrrrrr")
+  //       if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
+  //         sizeDateMap.set(
+  //           `${rec.po_line},${rec.po_number}`,
+  //           new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status, rec.currency)
+  //         );
+
+  //         // console.log(sizeDateMap,)
+  //       }
+  //       const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number}`).sizeWiseData;
+  //       if (rec.size !== null) {
+  //         sizeWiseData.push(new CentricSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.special_instructions, rec.upc, rec.retial_price, rec.color, rec.ratio, rec.ppk_upc, rec.label, rec.exfactory, rec.export, rec.delivery_date, rec.currency));
+  //       }
+  //     }
+  //     const dataModelArray: CentricOrderDataModel[] = Array.from(sizeDateMap.values());
+  //     // console.log(dataModelArray,"kkkk")
+  //     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+  //     // return new CommonResponseModel(true, 1, 'data retrieved', details);
+  //   } catch (e) {
+  //     return new CommonResponseModel(false, 0, 'failed', e);
+  //   }
+  // }
   async getCentricorderDataForPPK(req?: PoOrderFilter): Promise<CommonResponseModel> {
     try {
       const details = await this.Repo.getCentricorderDataForPPK(req);
       if (details.length === 0) {
         return new CommonResponseModel(false, 0, 'No Data found');
-      }
-      const sizeDateMap = new Map<string, CentricOrderDataModel>();
-      for (const rec of details) {
-        // console.log(rec,"rrrrrrrrr")
-        if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
-          sizeDateMap.set(
-            `${rec.po_line},${rec.po_number}`,
-            new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status, rec.currency)
-          );
+      } else {
+       
+      return new CommonResponseModel(true, 1, 'data retrieved', details);
 
-          // console.log(sizeDateMap,)
-        }
-        const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number}`).sizeWiseData;
-        if (rec.size !== null) {
-          sizeWiseData.push(new CentricSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.special_instructions, rec.upc, rec.retial_price, rec.color, rec.ratio, rec.ppk_upc, rec.label, rec.exfactory, rec.export, rec.delivery_date, rec.currency));
-        }
       }
-      const dataModelArray: CentricOrderDataModel[] = Array.from(sizeDateMap.values());
-      // console.log(dataModelArray,"kkkk")
-      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
-      // return new CommonResponseModel(true, 1, 'data retrieved', details);
     } catch (e) {
       return new CommonResponseModel(false, 0, 'failed', e);
     }
   }
 
+
   
+  // async getCentricorderDataForSolidPO(req?: PoOrderFilter): Promise<CommonResponseModel> {
+  //   try {
+  //     const details = await this.Repo.getCentricorderDataForSolidPO(req);
+  //     if (details.length === 0) {
+  //       return new CommonResponseModel(false, 0, 'No Data found');
+  //     }
+  //     const sizeDateMap = new Map<string, CentricOrderDataModel>();
+  //     for (const rec of details) {
+  //       // console.log(rec,"rrrrrrrrr")
+  //       if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
+  //         sizeDateMap.set(
+  //           `${rec.po_line},${rec.po_number}`,
+  //           new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status, rec.currency)
+  //         );
+
+  //         // console.log(sizeDateMap,)
+  //       }
+  //       const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number}`).sizeWiseData;
+  //       if (rec.size !== null) {
+  //         sizeWiseData.push(new CentricSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.special_instructions, rec.upc, rec.retial_price, rec.color, rec.ratio, rec.ppk_upc, rec.label, rec.exfactory, rec.export, rec.delivery_date, rec.currency));
+  //       }
+  //     }
+  //     const dataModelArray: CentricOrderDataModel[] = Array.from(sizeDateMap.values());
+  //     // console.log(dataModelArray,"kkkk")
+  //     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+  //     // return new CommonResponseModel(true, 1, 'data retrieved', details);
+  //   } catch (e) {
+  //     return new CommonResponseModel(false, 0, 'failed', e);
+  //   }
+  // }
+
   async getCentricorderDataForSolidPO(req?: PoOrderFilter): Promise<CommonResponseModel> {
     try {
       const details = await this.Repo.getCentricorderDataForSolidPO(req);
       if (details.length === 0) {
         return new CommonResponseModel(false, 0, 'No Data found');
+      }else {
+      return new CommonResponseModel(true, 1, 'data retrieved', details);    
       }
-      const sizeDateMap = new Map<string, CentricOrderDataModel>();
-      for (const rec of details) {
-        // console.log(rec,"rrrrrrrrr")
-        if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
-          sizeDateMap.set(
-            `${rec.po_line},${rec.po_number}`,
-            new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status, rec.currency)
-          );
-
-          // console.log(sizeDateMap,)
-        }
-        const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number}`).sizeWiseData;
-        if (rec.size !== null) {
-          sizeWiseData.push(new CentricSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.special_instructions, rec.upc, rec.retial_price, rec.color, rec.ratio, rec.ppk_upc, rec.label, rec.exfactory, rec.export, rec.delivery_date, rec.currency));
-        }
-      }
-      const dataModelArray: CentricOrderDataModel[] = Array.from(sizeDateMap.values());
-      // console.log(dataModelArray,"kkkk")
-      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
-      // return new CommonResponseModel(true, 1, 'data retrieved', details);
+      
     } catch (e) {
       return new CommonResponseModel(false, 0, 'failed', e);
     }

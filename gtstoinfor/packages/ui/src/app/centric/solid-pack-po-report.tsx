@@ -732,6 +732,577 @@ import RangePicker from "rc-picker/lib/RangePicker";
     };
   
   
+    // const renderReport = (data) => {
+    //   const sizeHeaders = getSizeWiseHeaders(data);
+
+  
+    //   const columns: any = [
+    //     {
+    //       title: "S.No",
+    //       key: "sno",
+    //       width: 50,
+    //       render: (text, object, index) => (page - 1) * pageSize + (index + 1),
+    //       fixed: "left",
+    //     },
+    //     {
+    //       title: "Season",
+    //       dataIndex: "season",
+    //       width: 90,
+    //       sorter: (a, b) => a.season.localeCompare(b.season),
+    //       sortDirections: ["ascend", "descend"],
+    //       render: (text) => text ? text : "-"
+    //     },
+    //     {
+    //       title: "Shipment Method",
+    //       dataIndex: "shipmentMethod",
+    //       width: 90,
+    //       sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
+    //       sortDirections: ["ascend", "descend"],
+    //       render: (text) => text ? text : "-",
+    //       ...getColumnSearchProps('shipmentMethod')
+
+    //     },
+    //     {
+    //       title: "Division",
+    //       dataIndex: "division",
+    //       width: 150,
+    //       sorter: (a, b) => a.division.localeCompare(b.division),
+    //       sortDirections: ["ascend", "descend"],
+    //       render: (text) => text ? text : "-",
+    //       ...getColumnSearchProps('division')
+          
+    //     },
+    //     {
+    //       title: "Manufacture",
+    //       dataIndex: "manufacture",
+    //       width: 150,
+    //       sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
+    //       sortDirections: ["ascend", "descend"],
+    //       ...getColumnSearchProps('manufacture'),
+    //       render: (text) => (
+    //         <Tooltip title={text || "-"}>
+    //           {text ? `${text.substring(0, 20)}...` : "-"}
+    //         </Tooltip>
+    //       ),
+    //     },
+    //     {
+    //       title: "PO Number",
+    //       dataIndex: "poNumber",
+    //       width: 90,
+    //       sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+    //       sortDirections: ["ascend", "descend"],
+    //       render: (text) => text ? text : "-",
+
+    //       // fixed: "left",
+    //       // ...getColumnSearchProps('poNumber')
+    //     },
+       
+    //     {
+    //         title: "PO Line Number",
+    //         dataIndex: "poLine",
+    //         width: 90,
+    //         sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+    //         sortDirections: ["ascend", "descend"],
+    //         render: (text) => text ? text : "-",
+    //         ...getColumnSearchProps('poLine')
+    //         // fixed: "left",
+    //       },
+    //       {
+    //         title: "Material",
+    //         dataIndex: "material",
+    //         width: 150,
+    //         sorter: (a, b) => a.material.localeCompare(b.material),
+    //         sortDirections: ["ascend", "descend"],
+    //         render: (text) => text ? text : "-",
+    //         ...getColumnSearchProps('material')
+    //       },
+    //       // {
+    //       //   title: "Compt.Material",
+    //       //   dataIndex: "comptMaterial",
+    //       //   width: 150,
+    //       //   // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
+    //       //   // sortDirections: ["ascend", "descend"],
+    //       //   render: (text) => text ? text : "-",
+    //       //   ...getColumnSearchProps('comptMaterial')
+  
+    //       // },
+    //       {
+    //         title: "Gender",
+    //         dataIndex: "gender",
+    //         width: 90,
+    //         sorter: (a, b) => a.gender.localeCompare(b.gender),
+    //         sortDirections: ["ascend", "descend"],
+    //         render: (text) => text ? text : "-",
+    //         ...getColumnSearchProps('gender')
+
+    //       },
+    //       {
+    //         title: "Short Description",
+    //         dataIndex: "shortDescription",
+    //         width:130,
+    //         sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
+    //         sortDirections: ["ascend", "descend"],
+    //         render: (text) => text ? text : "-",
+    //         ...getColumnSearchProps('shortDescription')
+    //       },
+    //       {
+    //         title: "Color",
+    //         dataIndex: "color",
+    //         width: 110,
+    //         sorter: (a, b) => a.color.localeCompare(b.color),
+    //         sortDirections: ["ascend", "descend"],
+    //         render: (text) => text ? text : "-",
+    //         ...getColumnSearchProps('color')
+            
+    //       },
+    //       {
+    //         title: "Label",
+    //         dataIndex: "label",
+    //         width: 90,
+    //         sorter: (a, b) => a.label.localeCompare(b.label),
+    //         sortDirections: ["ascend", "descend"],
+    //         render: (text) => text ? text : "-",
+    //         ...getColumnSearchProps('label')
+            
+    //       },
+    //       {
+    //         title: "Reference",
+    //         dataIndex: "reference",
+    //         width: 90,
+    //         sorter: (a, b) => a.reference.localeCompare(b.reference),
+    //         sortDirections: ["ascend", "descend"],
+    //         render: (text) => text ? text : "-",
+    //         ...getColumnSearchProps('reference')
+
+    //       },
+    //       {
+    //         title: "Pack Method",
+    //         dataIndex: "packMethod",
+    //         width: 130,
+    //         sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
+    //         sortDirections: ["ascend", "descend"],
+    //         render: (text) => text ? text : "-",
+    //         ...getColumnSearchProps('packMethod')
+    //       },   
+
+       
+    //   ];
+  
+    //   sizeHeaders?.forEach(version => {
+    //       columns.push({
+    //           title: version,
+    //           dataIndex: version,
+    //           key: version,
+    //           width: 70,
+    //           align: 'center',
+    //           children: [
+    //           //   {
+    //           //     title: 'Ratio',
+    //           //     dataIndex: '',
+    //           //     key: '',
+    //           //     width: 70,
+    //           //     className: "center",
+    //           //     render: (text, record) => {
+    //           //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //           //         console.log()
+    //           //         if (sizeData) {
+    //           //             if (sizeData.size !== null) {
+    //           //               const formattedQty = (sizeData?.ratio) ?  (sizeData?.ratio)  : "-"
+                        
+    //           //                 return (
+    //           //                     formattedQty
+    //           //                 );
+    //           //             } else {
+
+    //           //                 return (
+    //           //                     '-'
+    //           //                 );
+    //           //             }
+    //           //         } else {
+    //           //             return '-';
+    //           //         }
+    //           //     }
+    //           // },
+    //             {
+    //               title: 'UPC',
+    //               dataIndex: '',
+    //               key: '',
+    //               width: 70,
+    //               className: "center",
+    //               render: (text, record) => {
+    //                   const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //                   console.log()
+    //                   if (sizeData) {
+    //                       if (sizeData.size !== null) {
+    //                         const formattedQty = (sizeData?.upc) ? (sizeData?.upc):"-"
+    //                           // const formattedQty = (sizeData?.amount)
+    //                           return (
+    //                               formattedQty
+    //                           );
+    //                       } else {
+
+    //                           return (
+    //                               '-'
+    //                           );
+    //                       }
+    //                   } else {
+    //                       return '-';
+    //                   }
+    //               }
+    //           },
+    //         //   {
+    //         //     title: 'label',
+    //         //     dataIndex: '',
+    //         //     key: '',
+    //         //     width: 70,
+    //         //     className: "center",
+    //         //     render: (text, record) => {
+    //         //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //         //         console.log()
+    //         //         if (sizeData) {
+    //         //             if (sizeData.size !== null) {
+    //         //               const formattedQty = (sizeData?.label) ? (sizeData?.label) :"-"
+    //         //                 // const formattedQty = (sizeData?.amount)
+    //         //                 return (
+    //         //                     formattedQty
+    //         //                 );
+    //         //             } else {
+
+    //         //                 return (
+    //         //                     '-'
+    //         //                 );
+    //         //             }
+    //         //         } else {
+    //         //             return '-';
+    //         //         }
+    //         //     }
+    //         // },
+            
+    //               {
+    //                   title: 'FOB Price',
+    //                   dataIndex: '',
+    //                   key: '',
+    //                   width: 70,
+    //                   className: "center",
+    //                   render: (text, record) => {
+    //                       const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //                       console.log()
+    //                       if (sizeData) {
+    //                           if (sizeData.size !== null) {
+    //                               const formattedQty = (sizeData?.fobPrice) ? (sizeData?.fobPrice):"-"
+    //                               return (
+    //                                   formattedQty
+    //                               );
+    //                           } else {
+  
+    //                               return (
+    //                                   '-'
+    //                               );
+    //                           }
+    //                       } else {
+    //                           return '-';
+    //                       }
+    //                   }
+    //               },
+    //               {
+    //                   title: 'Tot PO Qty in PC',
+    //                   dataIndex: '',
+    //                   key: '',
+    //                   width: 70,
+    //                   className: "center",
+    //                   render: (text, record) => {
+    //                       const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //                       console.log()
+    //                       if (sizeData) {
+    //                           if (sizeData.size !== null) {
+    //                               const formattedQty = (sizeData?.totalQuantity) ? (sizeData?.totalQuantity):"-"
+    //                               return (
+    //                                   formattedQty
+    //                               );
+    //                           } else {
+  
+    //                               return (
+    //                                   '-'
+    //                               );
+    //                           }
+    //                       } else {
+    //                           return '-';
+    //                       }
+    //                   }
+    //               },
+                  
+                
+              
+    //               {
+    //                 title: 'Retail Price(USD) ',
+    //                 dataIndex: '',
+    //                 key: '',
+    //                 width: 70,
+    //                 className: "center",
+    //                 render: (text, record) => {
+    //                     const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //                     console.log()
+    //                     if (sizeData) {
+    //                         if (sizeData.size !== null) {
+    //                             const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) :"-"
+    //                             return (
+    //                                 formattedQty
+    //                             );
+    //                         } else {
+
+    //                             return (
+    //                                 '-'
+    //                             );
+    //                         }
+    //                     } else {
+    //                         return '-';
+    //                     }
+    //                 }
+    //             },
+    //       //       {
+    //       //         title: 'Ex-factory Date ',
+    //       //         dataIndex: '',
+    //       //         key: '',
+    //       //         width: 100,
+    //       //         className: "center",
+    //       //         render: (text, record) => {
+    //       //             const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //       //             console.log()
+    //       //             if (sizeData) {
+    //       //                 if (sizeData.size !== null) {
+    //       //                     const formattedQty = (sizeData?.exfactory) ? (sizeData?.exfactory) :'-'
+    //       //                     return (
+    //       //                         formattedQty
+    //       //                     );
+    //       //                 } else {
+
+    //       //                     return (
+    //       //                         '-'
+    //       //                     );
+    //       //                 }
+    //       //             } else {
+    //       //                 return '-';
+    //       //             }
+    //       //         }
+    //       //     },
+    //       //     {
+    //       //       title: 'Export Date ',
+    //       //       dataIndex: '',
+    //       //       key: '',
+    //       //       width: 100,
+    //       //       className: "center",
+    //       //       render: (text, record) => {
+    //       //           const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //       //           console.log()
+    //       //           if (sizeData) {
+    //       //               if (sizeData.size !== null) {
+    //       //                   const formattedQty = (sizeData?.exportDate) ? (sizeData?.exportDate) :"-"
+    //       //                   return (
+    //       //                       formattedQty
+    //       //                   );
+    //       //               } else {
+
+    //       //                   return (
+    //       //                       '-'
+    //       //                   );
+    //       //               }
+    //       //           } else {
+    //       //               return '-';
+    //       //           }
+    //       //       }
+    //       //   },
+    //       //   {
+    //       //     title: 'Delivery Date',
+    //       //     dataIndex: '',
+    //       //     key: '',
+    //       //     width: 100,
+    //       //     className: "center",
+    //       //     render: (text, record) => {
+    //       //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //       //         console.log()
+    //       //         if (sizeData) {
+    //       //             if (sizeData.size !== null) {
+    //       //                 const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) :"-"
+    //       //                 return (
+    //       //                     formattedQty
+    //       //                 );
+    //       //             } else {
+
+    //       //                 return (
+    //       //                     '-'
+    //       //                 );
+    //       //             }
+    //       //         } else {
+    //       //             return '-';
+    //       //         }
+    //       //     }
+    //       // },
+    //           ]
+    //       });
+    //   })
+  
+    //   columns.push(
+    //     {
+    //       title: "Total Quantity",
+    //       dataIndex: "",
+    //       align: "right",
+    //       width: 90,
+    //       render: (text, record) => {
+    //         let sum = 0;
+    //         record.sizeWiseData.forEach((r) => {
+    //           // Convert to number before summing
+    //           sum += parseFloat(r.totalQuantity) || 0;
+    //         });
+    //         return sum;
+    //       },
+    //     },
+        
+    //     {
+    //       title: "PO Date",
+    //       dataIndex: "PODate",
+    //       align: "center",
+    //       width: 90,
+    //       sorter: (a, b) => a.PODate.localeCompare(b.PODate),
+    //       sortDirections: ["ascend", "descend"],
+    //       render: (text) => text ? text : "-"
+    //     },
+           
+    //     {
+    //         title: "Ex-factory Date",
+    //         dataIndex: "exFactoryDate",
+    //         align: "center",
+    //         width: 90,
+    //         sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
+    //         sortDirections: ["ascend", "descend"],
+    //       },
+    //     {
+    //         title: "Export Date",
+    //         dataIndex: "exPortDate",
+    //         align: "center",
+    //         width: 90,
+    //         sorter: (a, b) => a.exPortDate.localeCompare(b.exPortDate),
+    //         sortDirections: ["ascend", "descend"],
+    //       },
+    //     {
+    //         title: "Delivery Date",
+    //         dataIndex: "deliveryDate",
+    //         align: "center",
+    //         width: 90,
+    //         sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
+    //         sortDirections: ["ascend", "descend"],
+    //       },
+        
+       
+    //     {
+    //       title: "Incoterm",
+    //       dataIndex: "incoterm",
+    //       width: 150,
+    //       sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
+    //       sortDirections: ["ascend", "descend"],
+    //       ...getColumnSearchProps('incoterm'),
+    //       render: (text) => (
+    //         <Tooltip title={text || "-"}>
+    //           {text ? `${text.substring(0, 20)}...` : "-"}
+    //         </Tooltip>
+    //       ),
+    //     },
+
+    //     {
+    //       title: "Port Of Export",
+    //       dataIndex: "portOfExport",
+    //       align: "center",
+    //       width: 90,
+    //       sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
+    //       sortDirections: ["ascend", "descend"],
+    //       render: (text) => text ? text : "-",
+    //       ...getColumnSearchProps('portOfExport')
+
+    //     },
+    //     {
+    //       title: "Port of Entry Name",
+    //       dataIndex: "portOfEntry",
+    //       align: "center",
+    //       width: 200,
+    //       sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
+    //       sortDirections: ["ascend", "descend"],
+    //       render: (text) => text ? text : "-",
+    //       ...getColumnSearchProps('portOfEntry')
+
+    //     },
+       
+       
+    //     {
+    //       title: "Payment Terms Description",
+    //       dataIndex: "paymentTermDescription",
+    //       align: "center",
+    //       width: 150,
+    //       sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
+    //       sortDirections: ["ascend", "descend"],
+    //       render: (text) => text ? text : "-",
+    //       ...getColumnSearchProps('paymentTermDescription')
+
+    //     },
+    //     {
+    //       title: "Vendor Booking Flag",
+    //       dataIndex: "vendorFlag",
+    //       align: "center",
+    //       width: 90,
+    //       sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
+    //       sortDirections: ["ascend", "descend"],
+    //       render: (text) => text ? text : "-"
+    //     },
+    //     {
+    //       title: "Ship to Address",
+    //       dataIndex: "shipToAddress",
+    //       width: 150,
+    //       sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
+    //       sortDirections: ["ascend", "descend"],
+    //       ...getColumnSearchProps('shipToAddress'),
+    //       render: (text) => (
+    //         <Tooltip title={text || "-"}>
+    //           {text ? `${text.substring(0, 20)}...` : "-"}
+    //         </Tooltip>
+    //       ),
+    //     },
+ 
+    
+    //   );
+  
+    //   const getRowClassName = (record) => {
+    //     if (record.displayName) {
+    //       return "colored-row";
+    //     }
+    //     return "";
+    //   };
+  
+    //   return (
+    //     <>
+    //       {/* {filterData.length > 0 ? ( */}
+    //         <Table
+    //           // loading={tableLoading}
+    //           columns={columns}
+    //           dataSource={filterData}
+    //           size="small"
+    //           // pagination={false}
+    //           pagination={{
+    //             pageSize: 50,
+    //             onChange(current, pageSize) {
+    //               setPage(current);
+    //               setPageSize(pageSize);
+    //             },
+    //           }}
+    //           className="custom-table-wrapper"
+    //           scroll={{ x: "max-content", y: 450 }}
+    //           rowClassName={getRowClassName}
+    //           bordered
+    //         />
+    //       {/* ) : (
+    //         <Table size="large" />
+    //       )} */}
+    //     </>
+    //   );
+    // };
+    
     const renderReport = (data) => {
       const sizeHeaders = getSizeWiseHeaders(data);
 
@@ -754,12 +1325,12 @@ import RangePicker from "rc-picker/lib/RangePicker";
         },
         {
           title: "Shipment Method",
-          dataIndex: "shipmentMethod",
+          dataIndex: "shipment",
           width: 90,
-          sorter: (a, b) => a.shipmentMethod.localeCompare(b.shipmentMethod),
+          sorter: (a, b) => a.shipment.localeCompare(b.shipment),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
-          ...getColumnSearchProps('shipmentMethod')
+          ...getColumnSearchProps('shipment')
 
         },
         {
@@ -787,24 +1358,22 @@ import RangePicker from "rc-picker/lib/RangePicker";
         },
         {
           title: "PO Number",
-          dataIndex: "poNumber",
+          dataIndex: "po_number",
           width: 90,
-          sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+          sorter: (a, b) => a.po_number.localeCompare(b.po_number),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
 
-          // fixed: "left",
-          // ...getColumnSearchProps('poNumber')
         },
        
         {
             title: "PO Line Number",
-            dataIndex: "poLine",
+            dataIndex: "po_line",
             width: 90,
-            sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+            sorter: (a, b) => a.po_line.localeCompare(b.po_line),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
-            ...getColumnSearchProps('poLine')
+            ...getColumnSearchProps('po_line')
             // fixed: "left",
           },
           {
@@ -816,16 +1385,6 @@ import RangePicker from "rc-picker/lib/RangePicker";
             render: (text) => text ? text : "-",
             ...getColumnSearchProps('material')
           },
-          // {
-          //   title: "Compt.Material",
-          //   dataIndex: "comptMaterial",
-          //   width: 150,
-          //   // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
-          //   // sortDirections: ["ascend", "descend"],
-          //   render: (text) => text ? text : "-",
-          //   ...getColumnSearchProps('comptMaterial')
-  
-          // },
           {
             title: "Gender",
             dataIndex: "gender",
@@ -838,12 +1397,12 @@ import RangePicker from "rc-picker/lib/RangePicker";
           },
           {
             title: "Short Description",
-            dataIndex: "shortDescription",
+            dataIndex: "short_description",
             width:130,
-            sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
+            sorter: (a, b) => a.short_description.localeCompare(b.short_description),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
-            ...getColumnSearchProps('shortDescription')
+            ...getColumnSearchProps('short_description')
           },
           {
             title: "Color",
@@ -867,406 +1426,438 @@ import RangePicker from "rc-picker/lib/RangePicker";
           },
           {
             title: "Reference",
-            dataIndex: "reference",
+            dataIndex: "refrence",
             width: 90,
-            sorter: (a, b) => a.reference.localeCompare(b.reference),
+            sorter: (a, b) => a.refrence.localeCompare(b.refrence),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
-            ...getColumnSearchProps('reference')
+            ...getColumnSearchProps('refrence')
 
           },
           {
             title: "Pack Method",
-            dataIndex: "packMethod",
+            dataIndex: "pack_method",
             width: 130,
-            sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
+            sorter: (a, b) => a.pack_method.localeCompare(b.pack_method),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
-            ...getColumnSearchProps('packMethod')
-          },   
+            ...getColumnSearchProps('pack_method')
+          },
+          ////////////////////  
+          {
+            title: "Size",
+            dataIndex: "size",
+            width: 70,
+            sorter: (a, b) => a.size.localeCompare(b.size),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('size')
+          },
+      
+          {
+            title: 'FOB Price',
+            dataIndex: 'unit_price',
+            width: 80,
+            sorter: (a, b) => a.unit_price.localeCompare(b.unit_price),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('unit_price')
+           
+        },
+        {
+          title: 'Tot PO Qty in PC',
+          dataIndex: 'total_quantity',
+          width: 100,
+          sorter: (a, b) => a.total_quantity.localeCompare(b.total_quantity),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('total_quantity')
+      },
+      {
+        title: "UPC",
+        dataIndex: "upc",
+        width: 130,
+        sorter: (a, b) => a.upc.localeCompare(b.upc),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-",
+        ...getColumnSearchProps('upc')
+      },
+      {
+        title: 'Retail Price(USD) ',
+        dataIndex: 'retial_price',
+        width: 100,
+          sorter: (a, b) => a.retial_price.localeCompare(b.retial_price),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('retial_price')
+    },
+      
+          
+          {
+            title: "PO Date",
+            dataIndex: "po_date",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.po_date.localeCompare(b.po_date),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-"
+          },
+             
+          {
+              title: "Ex-factory Date",
+              dataIndex: "exfactory",
+              align: "center",
+              width: 90,
+              sorter: (a, b) => a.exfactory.localeCompare(b.exfactory),
+              sortDirections: ["ascend", "descend"],
+            },
+          {
+              title: "Export Date",
+              dataIndex: "export",
+              align: "center",
+              width: 90,
+              sorter: (a, b) => a.export.localeCompare(b.export),
+              sortDirections: ["ascend", "descend"],
+            },
+          {
+              title: "Delivery Date",
+              dataIndex: "delivery_date",
+              align: "center",
+              width: 90,
+              sorter: (a, b) => a.delivery_date.localeCompare(b.delivery_date),
+              sortDirections: ["ascend", "descend"],
+            },
+          
+         
+          {
+            title: "Incoterm",
+            dataIndex: "incoterm",
+            width: 150,
+            sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
+            sortDirections: ["ascend", "descend"],
+            ...getColumnSearchProps('incoterm'),
+            render: (text) => (
+              <Tooltip title={text || "-"}>
+                {text ? `${text.substring(0, 20)}...` : "-"}
+              </Tooltip>
+            ),
+          },
+  
+          {
+            title: "Port Of Export",
+            dataIndex: "port_of_export",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.port_of_export.localeCompare(b.port_of_export),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('port_of_export')
+  
+          },
+          {
+            title: "Port of Entry Name",
+            dataIndex: "port_of_entry",
+            align: "center",
+            width: 200,
+            sorter: (a, b) => a.port_of_entry.localeCompare(b.port_of_entry),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('port_of_entry')
+  
+          },
+         
+         
+          {
+            title: "Payment Terms Description",
+            dataIndex: "payment_term_description",
+            align: "center",
+            width: 150,
+            sorter: (a, b) => a.payment_term_description.localeCompare(b.payment_term_description),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('payment_term_description')
+  
+          },
+          {
+            title: "Vendor Booking Flag",
+            dataIndex: "vendor_booking_flag",
+            align: "center",
+            width: 90,
+            sorter: (a, b) => a.vendor_booking_flag.localeCompare(b.vendor_booking_flag),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-"
+          },
+          {
+            title: "Ship to Address",
+            dataIndex: "ship_to_add",
+            width: 150,
+            sorter: (a, b) => a.ship_to_add.localeCompare(b.ship_to_add),
+            sortDirections: ["ascend", "descend"],
+            ...getColumnSearchProps('ship_to_add'),
+            render: (text) => (
+              <Tooltip title={text || "-"}>
+                {text ? `${text.substring(0, 20)}...` : "-"}
+              </Tooltip>
+            ),
+          },
 
        
       ];
   
-      sizeHeaders?.forEach(version => {
-          columns.push({
-              title: version,
-              dataIndex: version,
-              key: version,
-              width: 70,
-              align: 'center',
-              children: [
-              //   {
-              //     title: 'Ratio',
-              //     dataIndex: '',
-              //     key: '',
-              //     width: 70,
-              //     className: "center",
-              //     render: (text, record) => {
-              //         const sizeData = record.sizeWiseData.find(item => item.size === version);
-              //         console.log()
-              //         if (sizeData) {
-              //             if (sizeData.size !== null) {
-              //               const formattedQty = (sizeData?.ratio) ?  (sizeData?.ratio)  : "-"
+      // sizeHeaders?.forEach(version => {
+      //     columns.push({
+      //         title: version,
+      //         dataIndex: version,
+      //         key: version,
+      //         width: 70,
+      //         align: 'center',
+      //         children: [
+      //         //   {
+      //         //     title: 'Ratio',
+      //         //     dataIndex: '',
+      //         //     key: '',
+      //         //     width: 70,
+      //         //     className: "center",
+      //         //     render: (text, record) => {
+      //         //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+      //         //         console.log()
+      //         //         if (sizeData) {
+      //         //             if (sizeData.size !== null) {
+      //         //               const formattedQty = (sizeData?.ratio) ?  (sizeData?.ratio)  : "-"
                         
-              //                 return (
-              //                     formattedQty
-              //                 );
-              //             } else {
+      //         //                 return (
+      //         //                     formattedQty
+      //         //                 );
+      //         //             } else {
 
-              //                 return (
-              //                     '-'
-              //                 );
-              //             }
-              //         } else {
-              //             return '-';
-              //         }
-              //     }
-              // },
-                {
-                  title: 'UPC',
-                  dataIndex: '',
-                  key: '',
-                  width: 70,
-                  className: "center",
-                  render: (text, record) => {
-                      const sizeData = record.sizeWiseData.find(item => item.size === version);
-                      console.log()
-                      if (sizeData) {
-                          if (sizeData.size !== null) {
-                            const formattedQty = (sizeData?.upc) ? (sizeData?.upc):"-"
-                              // const formattedQty = (sizeData?.amount)
-                              return (
-                                  formattedQty
-                              );
-                          } else {
+      //         //                 return (
+      //         //                     '-'
+      //         //                 );
+      //         //             }
+      //         //         } else {
+      //         //             return '-';
+      //         //         }
+      //         //     }
+      //         // },
+      //           {
+      //             title: 'UPC',
+      //             dataIndex: '',
+      //             key: '',
+      //             width: 70,
+      //             className: "center",
+      //             render: (text, record) => {
+      //                 const sizeData = record.sizeWiseData.find(item => item.size === version);
+      //                 console.log()
+      //                 if (sizeData) {
+      //                     if (sizeData.size !== null) {
+      //                       const formattedQty = (sizeData?.upc) ? (sizeData?.upc):"-"
+      //                         // const formattedQty = (sizeData?.amount)
+      //                         return (
+      //                             formattedQty
+      //                         );
+      //                     } else {
 
-                              return (
-                                  '-'
-                              );
-                          }
-                      } else {
-                          return '-';
-                      }
-                  }
-              },
-            //   {
-            //     title: 'label',
-            //     dataIndex: '',
-            //     key: '',
-            //     width: 70,
-            //     className: "center",
-            //     render: (text, record) => {
-            //         const sizeData = record.sizeWiseData.find(item => item.size === version);
-            //         console.log()
-            //         if (sizeData) {
-            //             if (sizeData.size !== null) {
-            //               const formattedQty = (sizeData?.label) ? (sizeData?.label) :"-"
-            //                 // const formattedQty = (sizeData?.amount)
-            //                 return (
-            //                     formattedQty
-            //                 );
-            //             } else {
+      //                         return (
+      //                             '-'
+      //                         );
+      //                     }
+      //                 } else {
+      //                     return '-';
+      //                 }
+      //             }
+      //         },
+      //       //   {
+      //       //     title: 'label',
+      //       //     dataIndex: '',
+      //       //     key: '',
+      //       //     width: 70,
+      //       //     className: "center",
+      //       //     render: (text, record) => {
+      //       //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+      //       //         console.log()
+      //       //         if (sizeData) {
+      //       //             if (sizeData.size !== null) {
+      //       //               const formattedQty = (sizeData?.label) ? (sizeData?.label) :"-"
+      //       //                 // const formattedQty = (sizeData?.amount)
+      //       //                 return (
+      //       //                     formattedQty
+      //       //                 );
+      //       //             } else {
 
-            //                 return (
-            //                     '-'
-            //                 );
-            //             }
-            //         } else {
-            //             return '-';
-            //         }
-            //     }
-            // },
+      //       //                 return (
+      //       //                     '-'
+      //       //                 );
+      //       //             }
+      //       //         } else {
+      //       //             return '-';
+      //       //         }
+      //       //     }
+      //       // },
             
-                  {
-                      title: 'FOB Price',
-                      dataIndex: '',
-                      key: '',
-                      width: 70,
-                      className: "center",
-                      render: (text, record) => {
-                          const sizeData = record.sizeWiseData.find(item => item.size === version);
-                          console.log()
-                          if (sizeData) {
-                              if (sizeData.size !== null) {
-                                  const formattedQty = (sizeData?.fobPrice) ? (sizeData?.fobPrice):"-"
-                                  return (
-                                      formattedQty
-                                  );
-                              } else {
+      //             {
+      //                 title: 'FOB Price',
+      //                 dataIndex: '',
+      //                 key: '',
+      //                 width: 70,
+      //                 className: "center",
+      //                 render: (text, record) => {
+      //                     const sizeData = record.sizeWiseData.find(item => item.size === version);
+      //                     console.log()
+      //                     if (sizeData) {
+      //                         if (sizeData.size !== null) {
+      //                             const formattedQty = (sizeData?.fobPrice) ? (sizeData?.fobPrice):"-"
+      //                             return (
+      //                                 formattedQty
+      //                             );
+      //                         } else {
   
-                                  return (
-                                      '-'
-                                  );
-                              }
-                          } else {
-                              return '-';
-                          }
-                      }
-                  },
-                  {
-                      title: 'Tot PO Qty in PC',
-                      dataIndex: '',
-                      key: '',
-                      width: 70,
-                      className: "center",
-                      render: (text, record) => {
-                          const sizeData = record.sizeWiseData.find(item => item.size === version);
-                          console.log()
-                          if (sizeData) {
-                              if (sizeData.size !== null) {
-                                  const formattedQty = (sizeData?.totalQuantity) ? (sizeData?.totalQuantity):"-"
-                                  return (
-                                      formattedQty
-                                  );
-                              } else {
+      //                             return (
+      //                                 '-'
+      //                             );
+      //                         }
+      //                     } else {
+      //                         return '-';
+      //                     }
+      //                 }
+      //             },
+      //             {
+      //                 title: 'Tot PO Qty in PC',
+      //                 dataIndex: '',
+      //                 key: '',
+      //                 width: 70,
+      //                 className: "center",
+      //                 render: (text, record) => {
+      //                     const sizeData = record.sizeWiseData.find(item => item.size === version);
+      //                     console.log()
+      //                     if (sizeData) {
+      //                         if (sizeData.size !== null) {
+      //                             const formattedQty = (sizeData?.totalQuantity) ? (sizeData?.totalQuantity):"-"
+      //                             return (
+      //                                 formattedQty
+      //                             );
+      //                         } else {
   
-                                  return (
-                                      '-'
-                                  );
-                              }
-                          } else {
-                              return '-';
-                          }
-                      }
-                  },
+      //                             return (
+      //                                 '-'
+      //                             );
+      //                         }
+      //                     } else {
+      //                         return '-';
+      //                     }
+      //                 }
+      //             },
                   
                 
               
-                  {
-                    title: 'Retail Price(USD) ',
-                    dataIndex: '',
-                    key: '',
-                    width: 70,
-                    className: "center",
-                    render: (text, record) => {
-                        const sizeData = record.sizeWiseData.find(item => item.size === version);
-                        console.log()
-                        if (sizeData) {
-                            if (sizeData.size !== null) {
-                                const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) :"-"
-                                return (
-                                    formattedQty
-                                );
-                            } else {
+      //             {
+      //               title: 'Retail Price(USD) ',
+      //               dataIndex: '',
+      //               key: '',
+      //               width: 70,
+      //               className: "center",
+      //               render: (text, record) => {
+      //                   const sizeData = record.sizeWiseData.find(item => item.size === version);
+      //                   console.log()
+      //                   if (sizeData) {
+      //                       if (sizeData.size !== null) {
+      //                           const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) :"-"
+      //                           return (
+      //                               formattedQty
+      //                           );
+      //                       } else {
 
-                                return (
-                                    '-'
-                                );
-                            }
-                        } else {
-                            return '-';
-                        }
-                    }
-                },
-          //       {
-          //         title: 'Ex-factory Date ',
-          //         dataIndex: '',
-          //         key: '',
-          //         width: 100,
-          //         className: "center",
-          //         render: (text, record) => {
-          //             const sizeData = record.sizeWiseData.find(item => item.size === version);
-          //             console.log()
-          //             if (sizeData) {
-          //                 if (sizeData.size !== null) {
-          //                     const formattedQty = (sizeData?.exfactory) ? (sizeData?.exfactory) :'-'
-          //                     return (
-          //                         formattedQty
-          //                     );
-          //                 } else {
+      //                           return (
+      //                               '-'
+      //                           );
+      //                       }
+      //                   } else {
+      //                       return '-';
+      //                   }
+      //               }
+      //           },
+      //     //       {
+      //     //         title: 'Ex-factory Date ',
+      //     //         dataIndex: '',
+      //     //         key: '',
+      //     //         width: 100,
+      //     //         className: "center",
+      //     //         render: (text, record) => {
+      //     //             const sizeData = record.sizeWiseData.find(item => item.size === version);
+      //     //             console.log()
+      //     //             if (sizeData) {
+      //     //                 if (sizeData.size !== null) {
+      //     //                     const formattedQty = (sizeData?.exfactory) ? (sizeData?.exfactory) :'-'
+      //     //                     return (
+      //     //                         formattedQty
+      //     //                     );
+      //     //                 } else {
 
-          //                     return (
-          //                         '-'
-          //                     );
-          //                 }
-          //             } else {
-          //                 return '-';
-          //             }
-          //         }
-          //     },
-          //     {
-          //       title: 'Export Date ',
-          //       dataIndex: '',
-          //       key: '',
-          //       width: 100,
-          //       className: "center",
-          //       render: (text, record) => {
-          //           const sizeData = record.sizeWiseData.find(item => item.size === version);
-          //           console.log()
-          //           if (sizeData) {
-          //               if (sizeData.size !== null) {
-          //                   const formattedQty = (sizeData?.exportDate) ? (sizeData?.exportDate) :"-"
-          //                   return (
-          //                       formattedQty
-          //                   );
-          //               } else {
+      //     //                     return (
+      //     //                         '-'
+      //     //                     );
+      //     //                 }
+      //     //             } else {
+      //     //                 return '-';
+      //     //             }
+      //     //         }
+      //     //     },
+      //     //     {
+      //     //       title: 'Export Date ',
+      //     //       dataIndex: '',
+      //     //       key: '',
+      //     //       width: 100,
+      //     //       className: "center",
+      //     //       render: (text, record) => {
+      //     //           const sizeData = record.sizeWiseData.find(item => item.size === version);
+      //     //           console.log()
+      //     //           if (sizeData) {
+      //     //               if (sizeData.size !== null) {
+      //     //                   const formattedQty = (sizeData?.exportDate) ? (sizeData?.exportDate) :"-"
+      //     //                   return (
+      //     //                       formattedQty
+      //     //                   );
+      //     //               } else {
 
-          //                   return (
-          //                       '-'
-          //                   );
-          //               }
-          //           } else {
-          //               return '-';
-          //           }
-          //       }
-          //   },
-          //   {
-          //     title: 'Delivery Date',
-          //     dataIndex: '',
-          //     key: '',
-          //     width: 100,
-          //     className: "center",
-          //     render: (text, record) => {
-          //         const sizeData = record.sizeWiseData.find(item => item.size === version);
-          //         console.log()
-          //         if (sizeData) {
-          //             if (sizeData.size !== null) {
-          //                 const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) :"-"
-          //                 return (
-          //                     formattedQty
-          //                 );
-          //             } else {
+      //     //                   return (
+      //     //                       '-'
+      //     //                   );
+      //     //               }
+      //     //           } else {
+      //     //               return '-';
+      //     //           }
+      //     //       }
+      //     //   },
+      //     //   {
+      //     //     title: 'Delivery Date',
+      //     //     dataIndex: '',
+      //     //     key: '',
+      //     //     width: 100,
+      //     //     className: "center",
+      //     //     render: (text, record) => {
+      //     //         const sizeData = record.sizeWiseData.find(item => item.size === version);
+      //     //         console.log()
+      //     //         if (sizeData) {
+      //     //             if (sizeData.size !== null) {
+      //     //                 const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) :"-"
+      //     //                 return (
+      //     //                     formattedQty
+      //     //                 );
+      //     //             } else {
 
-          //                 return (
-          //                     '-'
-          //                 );
-          //             }
-          //         } else {
-          //             return '-';
-          //         }
-          //     }
-          // },
-              ]
-          });
-      })
+      //     //                 return (
+      //     //                     '-'
+      //     //                 );
+      //     //             }
+      //     //         } else {
+      //     //             return '-';
+      //     //         }
+      //     //     }
+      //     // },
+      //         ]
+      //     });
+      // })
   
-      columns.push(
-        {
-          title: "Total Quantity",
-          dataIndex: "",
-          align: "right",
-          width: 90,
-          render: (text, record) => {
-            let sum = 0;
-            record.sizeWiseData.forEach((r) => {
-              // Convert to number before summing
-              sum += parseFloat(r.totalQuantity) || 0;
-            });
-            return sum;
-          },
-        },
-        
-        {
-          title: "PO Date",
-          dataIndex: "PODate",
-          align: "center",
-          width: 90,
-          sorter: (a, b) => a.PODate.localeCompare(b.PODate),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
-        },
-           
-        {
-            title: "Ex-factory Date",
-            dataIndex: "exFactoryDate",
-            align: "center",
-            width: 90,
-            sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
-            sortDirections: ["ascend", "descend"],
-          },
-        {
-            title: "Export Date",
-            dataIndex: "exPortDate",
-            align: "center",
-            width: 90,
-            sorter: (a, b) => a.exPortDate.localeCompare(b.exPortDate),
-            sortDirections: ["ascend", "descend"],
-          },
-        {
-            title: "Delivery Date",
-            dataIndex: "deliveryDate",
-            align: "center",
-            width: 90,
-            sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
-            sortDirections: ["ascend", "descend"],
-          },
-        
-       
-        {
-          title: "Incoterm",
-          dataIndex: "incoterm",
-          width: 150,
-          sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
-          sortDirections: ["ascend", "descend"],
-          ...getColumnSearchProps('incoterm'),
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}...` : "-"}
-            </Tooltip>
-          ),
-        },
-
-        {
-          title: "Port Of Export",
-          dataIndex: "portOfExport",
-          align: "center",
-          width: 90,
-          sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-          ...getColumnSearchProps('portOfExport')
-
-        },
-        {
-          title: "Port of Entry Name",
-          dataIndex: "portOfEntry",
-          align: "center",
-          width: 200,
-          sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-          ...getColumnSearchProps('portOfEntry')
-
-        },
-       
-       
-        {
-          title: "Payment Terms Description",
-          dataIndex: "paymentTermDescription",
-          align: "center",
-          width: 150,
-          sorter: (a, b) => a.paymentTermDescription.localeCompare(b.paymentTermDescription),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-          ...getColumnSearchProps('paymentTermDescription')
-
-        },
-        {
-          title: "Vendor Booking Flag",
-          dataIndex: "vendorFlag",
-          align: "center",
-          width: 90,
-          sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
-        },
-        {
-          title: "Ship to Address",
-          dataIndex: "shipToAddress",
-          width: 150,
-          sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
-          sortDirections: ["ascend", "descend"],
-          ...getColumnSearchProps('shipToAddress'),
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}...` : "-"}
-            </Tooltip>
-          ),
-        },
- 
     
-      );
   
       const getRowClassName = (record) => {
         if (record.displayName) {
