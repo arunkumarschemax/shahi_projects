@@ -24,6 +24,7 @@ import { AddressService } from "../Entites@Shahi/address/address-service";
 import { In } from "typeorm";
 import { CentricChildEntity } from "./entity/centric-child.entity";
 import { CentricOrdersChildRepository } from "./repositories/centric-child.repo";
+import { ItemNoDtos } from "./dto/co-item.dto";
 
 
 @Injectable()
@@ -1098,6 +1099,40 @@ export class CentricService {
     }
   }
 
+
+  async updateItemNo(req: ItemNoDtos): Promise<CommonResponseModel> {
+    console.log(req, "reqq");
+    try {
+        const update = await this.coLineRepo.update(
+            { id: Number(req.id) },
+            { itemNo: req.itemNo }
+        );
+
+        if (update) {
+            return new CommonResponseModel(true, 1, "ItemNo Update Successfully");
+        } else {
+            return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+        }
+    } catch (error) {
+        return new CommonResponseModel(false, 0, "Error occurred while updating ItemNo", error);
+    }
+}
+
+
+async deleteCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
+    console.log(req, "reqq");
+    try {
+        const deletedItem = await this.coLineRepo.delete({ id: Number(req.id) });
+
+        if (deletedItem && deletedItem.affected) {
+            return new CommonResponseModel(true, 1, "ItemNo Deleted Successfully");
+        } else {
+            return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+        }
+    } catch (error) {
+        return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
+    }
+}
   
 
 

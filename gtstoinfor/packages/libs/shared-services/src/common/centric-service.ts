@@ -1,4 +1,4 @@
-import { CommonResponseModel, FileIdReq, OrderAcceptanceRequest, PoOrderFilter, SaveOrderDto } from "@project-management-system/shared-models"
+import { CommonResponseModel, FileIdReq, ItemNoDto, OrderAcceptanceRequest, PoOrderFilter, SaveOrderDto } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 
 export class CentricService extends CommonAxiosService {
@@ -65,5 +65,13 @@ export class CentricService extends CommonAxiosService {
 
     async getordercomparationData(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.centricOrdersController + "/getordercomparationData", req)
+    }
+
+    async updateItemNo(payload?:ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.centricOrdersController + "/updateItemNo",payload)
+    }
+
+    async deleteCoLine(payload?:ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.centricOrdersController + "/deleteCoLine",payload)
     }
 }
