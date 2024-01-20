@@ -99,4 +99,23 @@ export class SanmarController {
     }
     
 
+    @Post('/getorderacceptanceData')
+    @ApiBody({ type: SanmarOrderFilter })
+    async getorderacceptanceData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            // console.log(req,"con")
+            return await this.Service.getorderacceptanceData(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/sanmarCoLineCreationReq')
+    async sanmarCoLineCreationReq(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.sanmarCoLineCreationReq(req)
+        } catch (error) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
 }
