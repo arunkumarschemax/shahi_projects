@@ -344,7 +344,7 @@ const getBase64 = (img, callback) => {
                     console.log(res.data[0].sampleReqFabricInfo);
                     console.log(fileList);
                     message.success(res.internalMessage, 2);
-                    if (fileList.length > 0) {    
+                    if (fileList?.length > 0) {    
                       const formData = new FormData();
                       const files = fileList;
                       console.log(files);
@@ -484,8 +484,8 @@ const getBase64 = (img, callback) => {
     multiple: true,
     onRemove: file => {
       console.log(file);
-      console.log(fileList.find((f) => f.uid != file.uid))
-      let files:any[] = fileList.find((f) => f.uid != file.uid)
+      console.log(fileList?.find((f) => f.uid != file.uid))
+      let files:any[] = fileList?.find((f) => f.uid != file.uid)
       setFileList(files);
       setImageUrl('');
     },
@@ -778,6 +778,39 @@ const getBase64 = (img, callback) => {
               <Input placeholder="Enter Cost Ref" />
             </Form.Item>
           </Col>
+          <Col span={4}>
+            <Form.Item name="image" label='Upload Tech Pack' >
+              <Upload
+                style={{ width: '100%' }} 
+                  {...uploadFabricProps}
+                  accept=".pdf, .xlsx, .xls, .png, .jpeg, .jpg, .pjpeg, .gif, .tiff, .x-tiff, .x-png"
+                  >
+                  <Button
+                      style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                      icon={<UploadOutlined />}
+                      // disabled={fileList?.length == 1? true:false}
+                  >
+                      Upload
+                  </Button>
+                  </Upload>
+                  {fileList?.length > 1?
+                  <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
+            </Form.Item>
+          </Col>
+          <Col span={4} >
+                {form.getFieldValue('styleId') !== undefined && (
+                  <Card style={{ maxHeight: '200px' }}>
+                    <Form.Item>
+                      <img
+                        src={styleImage}
+                        alt="Preview"
+                        width={'500px'}
+                        style={{ width: '100%', objectFit: 'contain', height:'100%' }}
+                      />
+                    </Form.Item>
+                  </Card>
+                )}
+              </Col>
           {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }} >
             <Form.Item
               name="description"
@@ -815,6 +848,8 @@ const getBase64 = (img, callback) => {
               </Col> */}
         {/* </Row>
         <Row gutter={16}> */}
+        </Row>
+        <Row gutter={24} >
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="contact"
@@ -906,9 +941,7 @@ const getBase64 = (img, callback) => {
               </Select>
             </Form.Item>
           {/* </Col> */}
-          </Row>
           
-          <Row gutter={24}>
                 <Col span={4} >
                   <Form.Item
                     name="productId"
@@ -953,6 +986,8 @@ const getBase64 = (img, callback) => {
                     </Select>
                   </Form.Item>
                 </Col>
+              </Row>
+              <Row gutter={24}>
                 <Col span={4} >
                   <Form.Item
                     name="type"
@@ -998,30 +1033,10 @@ const getBase64 = (img, callback) => {
                     </Select>
                   </Form.Item>
                 </Col>
-                <Col span={4}>
-                  <Form.Item name="image" label='Attach File' >
-                    <Upload
-                      style={{ width: '100%' }} 
-                        {...uploadFabricProps}
-                        accept=".pdf, .xlsx, .xls, .png, .jpeg, .jpg, .pjpeg, .gif, .tiff, .x-tiff, .x-png"
-                        >
-                        <Button
-                            style={{ color: 'black', backgroundColor: '#7ec1ff' }}
-                            icon={<UploadOutlined />}
-                            disabled={fileList.length == 1? true:false}
-                        >
-                            Upload Fabric
-                        </Button>
-                        </Upload>
-                        {fileList.length ==1?
-                        <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
-                  </Form.Item>
-                </Col>
-              <Col span={4} >
-                </Col>
-            </Row>
+                
+            {/* </Row>
 
-          <Row gutter={24}>
+          <Row gutter={24}> */}
             {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
               <Form.Item
                 name="conversion"
@@ -1080,23 +1095,6 @@ const getBase64 = (img, callback) => {
               <TextArea rows={2} placeholder="Enter Remarks"/>
               </Form.Item>
             </Col>
-            <Col span={4}>
-
-            </Col>
-            <Col span={4} >
-                {form.getFieldValue('styleId') !== undefined && (
-                  <Card style={{ maxHeight: '200px' }}>
-                    <Form.Item>
-                      <img
-                        src={styleImage}
-                        alt="Preview"
-                        width={'500px'}
-                        style={{ width: '100%', objectFit: 'contain', marginRight: '100px', maxHeight: '200px' }}
-                      />
-                    </Form.Item>
-                  </Card>
-                )}
-              </Col>
         </Row>
 
         {/* </Col>
