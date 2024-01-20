@@ -81,19 +81,48 @@ export function PoPrint(props: PoPrintProps) {
       document.body.innerHTML = oldPage;
     };
     
-    
-    
-    
-    
-    // const totalAmount = poData.reduce((sum, item) => sum + parseFloat(item.total_amount || 0), 0);
-     const totalAmount = poData.reduce((sum, e) => (sum + e.unit_price? ((e.po_quantity * e.unit_price) - ((e.po_quantity * e.unit_price) * (e.discount / 100))).toFixed(2): 0),0)
+    const numberToWords = require('number-to-words');
 
+function convertDecimalToWords(decimalPart) {
+  const decimalDigits = decimalPart.toString().split('').map(Number);
+  const decimalWords = decimalDigits.map(digit => numberToWords.toWords(digit));
+  return decimalWords.join(' ');
+}
+
+// const totalAmount = poData.reduce((sum, e) => {
+//   const itemAmount = e.unit_price
+//     ? Number((e.po_quantity * e.unit_price - (e.po_quantity * e.unit_price * (e.discount / 100))).toFixed(2))
+//     : 0;
+
+//   return sum + itemAmount;
+// }, 0);
+const totalAmount = 48.52
 const integerPart = Math.floor(totalAmount);
 const decimalPart = Math.round((totalAmount - integerPart) * 100);
+
 const integerWords = numberToWords.toWords(integerPart).toUpperCase();
-const decimalWords = numberToWords.toWords(decimalPart).toUpperCase();
+const decimalWords = convertDecimalToWords(decimalPart).toUpperCase();
 
 const totalAmountInWords = `${integerWords} . ${decimalWords}`;
+
+console.log('Total sum available in words:', totalAmountInWords);
+
+    
+    
+//     const totalAmount = poData.reduce((sum, e) => {
+//       const itemAmount = e.unit_price
+//         ? Number((e.po_quantity * e.unit_price - (e.po_quantity * e.unit_price * (e.discount / 100))).toFixed(2))
+//         : 0;
+    
+//       return sum + itemAmount;
+//     }, 0);
+   
+// const integerPart = Math.floor(totalAmount);
+// const decimalPart = Math.round((totalAmount - integerPart) * 10);
+// const integerWords = numberToWords.toWords(integerPart).toUpperCase();
+// const decimalWords = numberToWords.toWords(decimalPart).toUpperCase();
+
+// const totalAmountInWords = `${integerWords} . ${decimalWords}`;
 
     
     // const downloadAsPDF = () => {
@@ -171,11 +200,11 @@ const totalAmountInWords = `${integerWords} . ${decimalWords}`;
   </tr>
   <tr>
     <td style={{ border: '1px solid #000', textAlign: 'left', borderRight: '1px solid #000' }}>Integrated GST</td>
-    <td style={{ border: '1px solid #000' }}>{totalAmount}</td>
+    <td style={{ border: '1px solid #000' }}>{totalAmount.toFixed(2)}</td>
   </tr>
   <tr>
     <td style={{ border: '1px solid #000', textAlign: 'left', borderRight: '1px solid #000' }}>Total</td>
-    <td style={{ border: '1px solid #000' }}>{totalAmount}</td>
+    <td style={{ border: '1px solid #000' }}>{totalAmount.toFixed(2)}</td>
 
   </tr>
   <tr>

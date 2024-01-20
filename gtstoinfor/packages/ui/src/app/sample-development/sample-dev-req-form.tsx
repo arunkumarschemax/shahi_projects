@@ -983,7 +983,7 @@ const getBase64 = (img, callback) => {
             <Form.Item
               name="type"
               label="Type"
-              rules={[{ required: false, message: "" }]}
+              rules={[{ required: true, message: "" }]}
             >
               <Select
                 allowClear
@@ -1006,7 +1006,7 @@ const getBase64 = (img, callback) => {
           <Form.Item
               name="subType"
               label="Sub Type"
-              rules={[{ required: false, message: "" }]}
+              rules={[{ required: true, message: "" }]}
             >
               <Select
                 allowClear
