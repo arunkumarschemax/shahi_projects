@@ -51,6 +51,11 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return await this.axiosPostCall(this.URL + '/fabricUpload', file);
   }
 
+  async trimUpload(file: any): Promise<UploadResponse> {
+    console.log(file)
+    return await this.axiosPostCall(this.URL + '/trimUpload', file);
+  }
+
   async getSampleRequestReport(req: SamplerawmaterialStausReq): Promise<AllSampleDevReqResponseModel> {
     return this.axiosPostCall(this.URL + "/getSampleRequestReport", req)
   }

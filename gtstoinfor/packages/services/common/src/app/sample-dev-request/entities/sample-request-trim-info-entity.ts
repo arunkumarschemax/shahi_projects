@@ -47,6 +47,16 @@ export class SampleRequestTriminfoEntity {
     })
     wastage : number;
 
+    @Column("varchar", {
+        name: "file_name",
+        nullable:true
+    })
+    fileName: string;
+    @Column("varchar", {
+        name: "file_path",
+        nullable:true
+    })
+    filePath: string;
     @ManyToOne(() => SampleRequest, sampleDevReq => sampleDevReq.sampleTrimInfo)
     @JoinColumn({ name: 'sample_request_id' })
     sampleDevReqInfo: SampleRequest

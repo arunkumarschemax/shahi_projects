@@ -937,6 +937,40 @@ export class SampleRequestService {
     }
   }
 
+  async trimUpload(filePath: any, data: any): Promise<UploadResponse> {
+    console.log(filePath);
+    console.log(data);
+    console.log(JSON.parse(data));
+
+    const manager = new GenericTransactionManager(this.dataSource)
+    try {
+      let flag = true;
+      await manager.startTransaction();
+      for(const [index,value] of JSON.parse(data).entries()){
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        console.log(value);
+        console.log(index);
+
+        const updateFilePath = await manager.getRepository(SampleRequestTriminfoEntity).update({trimInfoId:value.trimInfoId},{fileName: `${filePath[index].filename}`, filePath:`${filePath[index].path}`});
+        console.log(updateFilePath)
+        if(!(updateFilePath.affected > 0)){
+          flag = false
+        }
+      }
+      if (flag) {
+        await manager.completeTransaction();
+        return new UploadResponse(true, 11, 'uploaded successfully', filePath);
+      }
+      else {
+        await manager.releaseTransaction();
+        return new UploadResponse(false, 11, 'uploaded failed', filePath);
+      }
+    }catch (error) {
+      await manager.releaseTransaction();
+      console.log(error);
+    }
+  }
+
   async UpdateFilePath(filePath: any, SampleRequestId: number): Promise<UploadResponse> {
     console.log('upload service id---------------', filePath)
     console.log('upload service id---------------', SampleRequestId)

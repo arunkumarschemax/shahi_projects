@@ -381,6 +381,20 @@ const getBase64 = (img, callback) => {
                           res.data[0].filepath = file.data;
                         });
                     }
+
+                    if(data.trimsData.find((res) => res.trimUpload != undefined) != undefined){
+                      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                      const formData = new FormData();
+                      formData.append('reqNo', `${res.data[0].requestNo}`);
+                      formData.append('fabIds', JSON.stringify(res.data[0].sampleTrimInfo));
+                      for (let i = 0; i < data.trimsData.length; i++) {
+                          formData.append('file', data.trimsData[i].trimUpload);
+                        }
+                        sampleService.trimUpload(formData).then((file) => {
+                          res.data[0].filepath = file.data;
+                        });
+                    }
+
                     navigate("/sample-development/sample-requests")
                   } else {
                     message.success(res.internalMessage, 2);
