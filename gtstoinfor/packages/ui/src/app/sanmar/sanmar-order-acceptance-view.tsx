@@ -675,8 +675,8 @@ import {
                   >
                     {poNumber.map((inc: any) => {
                       return (
-                        <Option key={inc.cust_po} value={inc.cust_po}>
-                          {inc.cust_po}
+                        <Option key={inc.buyer_po} value={inc.buyer_po}>
+                          {inc.buyer_po}
                         </Option>
                       );
                     })}

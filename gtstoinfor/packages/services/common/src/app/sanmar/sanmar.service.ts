@@ -399,7 +399,34 @@ export class SanmarService {
     }
   }
 
-  async getOrderdataForCOline(req: SanmarOrderDetailsReq): Promise<CommonResponseModel> {
+  async getSanmarCoLineData(req?: SanmarOrderFilter): Promise<CommonResponseModel> {
+    const data = await this.sanmarCoLineRepo.getSanmarCoLineData(req)
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
+
+  async getItem(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.sanmarCoLineRepo.getItem()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async getCoPoNumber(): Promise<CommonResponseModel> {
+    const data = await this.sanmarCoLineRepo.getCoPoNumber()
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }  async getOrderdataForCOline(req: SanmarOrderDetailsReq): Promise<CommonResponseModel> {
     try {
       const data = await this.SanOrdersRepo.find({ where: { buyerPo: req.buyerPo } })
       let destinationMap = new Map<string, SanmarDestinationModel>();
