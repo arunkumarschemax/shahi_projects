@@ -27,60 +27,124 @@ export class SanmarService {
   ) { }
 
 
-  async saveSanmarOrdersData(req: any): Promise<CommonResponseModel> {
-    // console.log(req, "reqqqqqqqqqqqqq")
-    const transactionManager = new GenericTransactionManager(this.dataSource)
-    try {
-      let saved
-      const pdfData = [];
-      await transactionManager.startTransaction()
-      for (const item of req.SanmarpoItemDetails) {
+  // async saveSanmarOrdersData(req: any): Promise<CommonResponseModel> {
+  //   // console.log(req, "reqqqqqqqqqqqqq")
+  //   const transactionManager = new GenericTransactionManager(this.dataSource)
+  //   try {
+  //     let saved
+  //     const pdfData = [];
+  //     await transactionManager.startTransaction()
+  //     for (const item of req.SanmarpoItemDetails) {
   
+  //       for (const variant of item.SanmarpoItemVariantDetails) {
+  //         const orderData = await this.SanOrdersRepo.findOne({ where: { buyerPo: req.buyerPo, poStyle: item.poStyle, line: variant.line } })
+  
+  //         const entity = new SanmarOrdersEntity();
+  //         entity.buyerPo = req.buyerPo
+  //         entity.poDate = req.poDate
+  //         entity.buyerAddress = req.buyerAddress
+  //         entity.shipToAdd = req.shipToAdd
+  //         entity.poStyle = item.poStyle
+  //         entity.deliveryDate = item.deliveryDate
+  //         entity.currency = item.currency
+  //         entity.line = variant.line
+  //         entity.size = variant.size
+  //         entity.color = variant.color
+  //         entity.quantity = variant.quantity
+  //         entity.unitPrice = variant.unitPrice
+  //         entity.unit = variant.unit
+  //         pdfData.push(entity)
+
+  //         if (orderData) {
+  //           const update = await transactionManager.getRepository(SanmarOrdersEntity).update({ buyerPo: req.buyerPo, poStyle: item.poStyle, line:variant.line },
+  //             { poDate: req.poDate, buyerAddress: req.buyerAddress, shipToAdd: req.shipToAdd, deliveryDate: item.deliveryDate,currency:item.currency,size:variant.size,color:variant.color, quantity: variant.quantity, unitPrice: variant.unitPrice,unit:variant.unit })
+  
+
+  //           if (!update.affected) {
+  //             throw new Error('Update failed');
+  //           }
+  //         } else {
+  //           saved = await transactionManager.getRepository(SanmarOrdersEntity).save(pdfData)
+
+  //           if (!saved) {
+  //             throw new Error('Save failed')
+  //           }
+  //         }
+
+  //       }
+  //     }
+  //     await transactionManager.completeTransaction()
+  //     return new CommonResponseModel(true, 1, 'Data saved successfully', saved)
+  //   } catch (err) {
+  //     await transactionManager.releaseTransaction()
+  //     return new CommonResponseModel(false, 0, 'Failed', err)
+  //   }
+  // }
+
+  async saveSanmarOrdersData(req: any): Promise<CommonResponseModel> {
+    const transactionManager = new GenericTransactionManager(this.dataSource);
+  
+    try {
+      let saved;
+      const pdfData = [];
+  
+      await transactionManager.startTransaction();
+  
+      for (const item of req.SanmarpoItemDetails) {
         for (const variant of item.SanmarpoItemVariantDetails) {
-          const orderData = await this.SanOrdersRepo.findOne({ where: { buyerPo: req.buyerPo, poStyle: item.poStyle, line: variant.line } })
+          const orderData = await this.SanOrdersRepo.findOne({
+            where: { buyerPo: req.buyerPo, poStyle: item.poStyle, line: variant.line }
+          });
   
           const entity = new SanmarOrdersEntity();
-          entity.buyerPo = req.buyerPo
-          entity.poDate = req.poDate
-          entity.buyerAddress = req.buyerAddress
-          entity.shipToAdd = req.shipToAdd
-          entity.poStyle = item.poStyle
-          entity.deliveryDate = item.deliveryDate
-          entity.currency = item.currency
-          entity.line = variant.line
-          entity.size = variant.size
-          entity.color = variant.color
-          entity.quantity = variant.quantity
-          entity.unitPrice = variant.unitPrice
-          entity.unit = variant.unit
-          pdfData.push(entity)
-
-          if (orderData) {
-            const update = await transactionManager.getRepository(SanmarOrdersEntity).update({ buyerPo: req.buyerPo, poStyle: item.poStyle, line:variant.line },
-              { poDate: req.poDate, buyerAddress: req.buyerAddress, shipToAdd: req.shipToAdd, deliveryDate: item.deliveryDate,currency:item.currency,size:variant.size,color:variant.color, quantity: variant.quantity, unitPrice: variant.unitPrice,unit:variant.unit })
+          entity.buyerPo = req.buyerPo;
+          entity.poDate = req.poDate;
+          entity.buyerAddress = req.buyerAddress;
+          entity.shipToAdd = req.shipToAdd;
+          entity.poStyle = item.poStyle;
+          entity.deliveryDate = item.deliveryDate;
+          entity.currency = item.currency;
+          entity.line = variant.line;
+          entity.size = variant.size;
+          entity.color = variant.color;
+          entity.quantity = variant.quantity;
+          entity.unitPrice = variant.unitPrice;
+          entity.unit = variant.unit;
+          pdfData.push(entity);
   
-
-            if (!update.affected) {
-              throw new Error('Update failed');
+          if (orderData) {
+            // Check if any of the fields have changed
+            const fieldsChanged = Object.keys(entity).some(key => orderData[key] !== entity[key]);
+  
+            if (fieldsChanged) {
+              const update = await transactionManager.getRepository(SanmarOrdersEntity).update(
+                { buyerPo: req.buyerPo, poStyle: item.poStyle, line: variant.line },
+                { ...entity }
+              );
+  
+              if (!update.affected) {
+                throw new Error('Update failed');
+              }
             }
           } else {
-            saved = await transactionManager.getRepository(SanmarOrdersEntity).save(pdfData)
-
+            // Only save if the record doesn't exist
+            saved = await transactionManager.getRepository(SanmarOrdersEntity).save(entity);
+  
             if (!saved) {
-              throw new Error('Save failed')
+              throw new Error('Save failed');
             }
           }
-
         }
       }
-      await transactionManager.completeTransaction()
-      return new CommonResponseModel(true, 1, 'Data saved successfully', saved)
+  
+      await transactionManager.completeTransaction();
+      return new CommonResponseModel(true, 1, 'Data saved successfully', saved);
     } catch (err) {
-      await transactionManager.releaseTransaction()
-      return new CommonResponseModel(false, 0, 'Failed', err)
+      await transactionManager.releaseTransaction();
+      return new CommonResponseModel(false, 0, 'Failed', err.message || 'Unknown error');
     }
   }
-
+  
 
   // async saveSanmarOrdersData(req: any): Promise<CommonResponseModel> {
   //   const transactionManager = new GenericTransactionManager(this.dataSource);
