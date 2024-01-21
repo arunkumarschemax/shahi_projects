@@ -89,14 +89,14 @@ function convertDecimalToWords(decimalPart) {
   return decimalWords.join(' ');
 }
 
-// const totalAmount = poData.reduce((sum, e) => {
-//   const itemAmount = e.unit_price
-//     ? Number((e.po_quantity * e.unit_price - (e.po_quantity * e.unit_price * (e.discount / 100))).toFixed(2))
-//     : 0;
+const totalAmount = poData.reduce((sum, e) => {
+  const itemAmount = e.unit_price
+    ? Number((e.po_quantity * e.unit_price - (e.po_quantity * e.unit_price * (e.discount / 100))).toFixed(2))
+    : 0;
 
-//   return sum + itemAmount;
-// }, 0);
-const totalAmount = 48.52
+  return sum + itemAmount;
+}, 0);
+// const totalAmount = 48.20
 const integerPart = Math.floor(totalAmount);
 const decimalPart = Math.round((totalAmount - integerPart) * 100);
 
