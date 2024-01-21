@@ -51,8 +51,25 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <tr className='ta-b'>
                         <td className='ta-b'>{pdfData?.buyerPo}</td>
                         <td className='ta-b'>{pdfData?.poDate}</td>
-                        <td className='ta-b'>{pdfData?.buyerAddress}</td>
-                        <td className='ta-b'>{pdfData?.shipToAdd}</td>
+                        <td className='ta-b'>
+                            {pdfData?.buyerAddress && (
+                                <>
+                                    {pdfData.buyerAddress.substring(0, pdfData.buyerAddress.length / 2)}
+                                    <br />
+                                    {pdfData.buyerAddress.substring(pdfData.buyerAddress.length / 2)}
+                                </>
+                            )}
+                        </td>
+                        <td className='ta-b'>
+                            {pdfData?.shipToAdd && (
+                                <>
+                                    {pdfData.shipToAdd.substring(0, pdfData.shipToAdd.length / 2)}
+                                    <br />
+                                    {pdfData.shipToAdd.substring(pdfData.shipToAdd.length / 2)}
+                                </>
+                            )}
+                        </td>
+
                         {/* <td className='ta-b'>
                             <Tooltip title={pdfData?.buyerAddress} placement="topLeft">
                                 <div style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>

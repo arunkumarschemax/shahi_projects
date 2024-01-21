@@ -259,18 +259,31 @@ export const extractDataFromPoPdf = async (pdf) => {
                 const colorIndex = productDescriptionIndex + 5;
                 const color = itemVarinatsTextArr[colorIndex];
 
-                // const lineIndex = productDescriptionIndex - 14;
-                // const line = itemVarinatsTextArr[lineIndex];
+                const lineIndex = productDescriptionIndex - 14;
+                const lineData = itemVarinatsTextArr[lineIndex];
+                const regexMatch = lineData.match(/PO-[0-9]{9}/);
 
-                const lineRegexIndex = itemVarinatsTextArr.findIndex((value, i) => i > productDescriptionIndex && value.match(/[A-Za-z]{2}[0-9]{4}/));
-
-                if (lineRegexIndex !== -1) {
-                    const nextIdIndex = lineRegexIndex - 1;
-                    const nextId = itemVarinatsTextArr[nextIdIndex];
-                    itemVariantsObj.line = nextId;
+                if (regexMatch) {
+                    const nextIndex = lineIndex - 27;
+                    if (nextIndex >= 0) {
+                        const nextId = itemVarinatsTextArr[nextIndex];
+                        itemVariantsObj.line = nextId;
+                    } else {
+                        itemVariantsObj.line = "-";
+                    }
                 } else {
-                    itemVariantsObj.line = "-";
+                    itemVariantsObj.line = lineData;
                 }
+
+                // const lineRegexIndex = itemVarinatsTextArr.findIndex((value, i) => i > productDescriptionIndex && value.match(/[A-Za-z]{2}[0-9]{4}/));
+
+                // if (lineRegexIndex !== -1) {
+                //     const nextIdIndex = lineRegexIndex - 1;
+                //     const nextId = itemVarinatsTextArr[nextIdIndex];
+                //     itemVariantsObj.line = nextId;
+                // } else {
+                //     itemVariantsObj.line = "-";
+                // }
 
 
                 // const unitPriceIndex = productDescriptionIndex - 4;
@@ -317,6 +330,21 @@ export const extractDataFromPoPdf = async (pdf) => {
                         itemVariantsObj.unit = "-";
                     }
                 }
+
+                // if (quantityMatch) {
+                //     const quantity = quantityMatch[0];
+                //     const unit = quantity.match(/\s+\w+/)[0];
+                //     itemVariantsObj.quantity = quantity.replace(/EACH/g, "");
+                //     itemVariantsObj.unit = unit.match(/\w+/g, "");
+
+                //     // Extracting the line information
+                //     const lineIndex = quantityIndex - 9;
+                //     if (lineIndex >= 0 && lineIndex < itemVarinatsTextArr.length) {
+                //         itemVariantsObj.line = itemVarinatsTextArr[lineIndex];
+                //     } else {
+                //         itemVariantsObj.line = "-";
+                //     }
+                // }
 
                 itemVariantsObj.size = size;
                 itemVariantsObj.color = color;
