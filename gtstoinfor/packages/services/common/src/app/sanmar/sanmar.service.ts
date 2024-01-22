@@ -12,6 +12,7 @@ import * as path from 'path';
 import { SanmarCOLineEntity } from "./entity/sanmar-co-line.entity";
 import { SanmarCOLineRepository } from "./repositories/sanmar-co-line.repository";
 import { SanmarOrderDetailsReq } from "./dto/sanmar-order-details-req";
+import { ItemNoDtos } from "./dto/sanmar-item-no.dto";
 
 @Injectable()
 export class SanmarService {
@@ -35,10 +36,10 @@ export class SanmarService {
   //     const pdfData = [];
   //     await transactionManager.startTransaction()
   //     for (const item of req.SanmarpoItemDetails) {
-  
+
   //       for (const variant of item.SanmarpoItemVariantDetails) {
   //         const orderData = await this.SanOrdersRepo.findOne({ where: { buyerPo: req.buyerPo, poStyle: item.poStyle, line: variant.line } })
-  
+
   //         const entity = new SanmarOrdersEntity();
   //         entity.buyerPo = req.buyerPo
   //         entity.poDate = req.poDate
@@ -58,7 +59,7 @@ export class SanmarService {
   //         if (orderData) {
   //           const update = await transactionManager.getRepository(SanmarOrdersEntity).update({ buyerPo: req.buyerPo, poStyle: item.poStyle, line:variant.line },
   //             { poDate: req.poDate, buyerAddress: req.buyerAddress, shipToAdd: req.shipToAdd, deliveryDate: item.deliveryDate,currency:item.currency,size:variant.size,color:variant.color, quantity: variant.quantity, unitPrice: variant.unitPrice,unit:variant.unit })
-  
+
 
   //           if (!update.affected) {
   //             throw new Error('Update failed');
@@ -83,19 +84,19 @@ export class SanmarService {
 
   async saveSanmarOrdersData(req: any): Promise<CommonResponseModel> {
     const transactionManager = new GenericTransactionManager(this.dataSource);
-  
+
     try {
       let saved;
       const pdfData = [];
-  
+
       await transactionManager.startTransaction();
-  
+
       for (const item of req.SanmarpoItemDetails) {
         for (const variant of item.SanmarpoItemVariantDetails) {
           const orderData = await this.SanOrdersRepo.findOne({
             where: { buyerPo: req.buyerPo, poStyle: item.poStyle, line: variant.line }
           });
-  
+
           const entity = new SanmarOrdersEntity();
           entity.buyerPo = req.buyerPo;
           entity.poDate = req.poDate;
@@ -111,17 +112,17 @@ export class SanmarService {
           entity.unitPrice = variant.unitPrice;
           entity.unit = variant.unit;
           pdfData.push(entity);
-  
+
           if (orderData) {
             // Check if any of the fields have changed
             const fieldsChanged = Object.keys(entity).some(key => orderData[key] !== entity[key]);
-  
+
             if (fieldsChanged) {
               const update = await transactionManager.getRepository(SanmarOrdersEntity).update(
                 { buyerPo: req.buyerPo, poStyle: item.poStyle, line: variant.line },
                 { ...entity }
               );
-  
+
               if (!update.affected) {
                 throw new Error('Update failed');
               }
@@ -129,14 +130,14 @@ export class SanmarService {
           } else {
             // Only save if the record doesn't exist
             saved = await transactionManager.getRepository(SanmarOrdersEntity).save(entity);
-  
+
             if (!saved) {
               throw new Error('Save failed');
             }
           }
         }
       }
-  
+
       await transactionManager.completeTransaction();
       return new CommonResponseModel(true, 1, 'Data saved successfully', saved);
     } catch (err) {
@@ -144,7 +145,7 @@ export class SanmarService {
       return new CommonResponseModel(false, 0, 'Failed', err.message || 'Unknown error');
     }
   }
-  
+
 
   // async saveSanmarOrdersData(req: any): Promise<CommonResponseModel> {
   //   const transactionManager = new GenericTransactionManager(this.dataSource);
@@ -171,7 +172,7 @@ export class SanmarService {
   //         entity.unit = variant.unit;
 
   //         pdfData.push(entity);
-          
+
   //       }
   //     }
 
@@ -212,7 +213,7 @@ export class SanmarService {
 
 
 
-  async getPdfFileInfo(req:any): Promise<CommonResponseModel> {
+  async getPdfFileInfo(req: any): Promise<CommonResponseModel> {
     try {
       const data = await this.pdfRepo.getPDFInfo(req)
       if (data) {
@@ -506,6 +507,40 @@ export class SanmarService {
       }
     } catch (err) {
       throw err
+    }
+  }
+
+  async updateItemNo(req: ItemNoDtos): Promise<CommonResponseModel> {
+    console.log(req, "reqq");
+    try {
+      const update = await this.sanmarCoLineRepo.update(
+        { id: Number(req.id) },
+        { itemNo: req.itemNo }
+      );
+
+      if (update) {
+        return new CommonResponseModel(true, 1, "ItemNo Update Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while updating ItemNo", error);
+    }
+  }
+
+
+  async deleteCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
+    console.log(req, "reqq");
+    try {
+      const deletedItem = await this.sanmarCoLineRepo.delete({ id: Number(req.id) });
+
+      if (deletedItem && deletedItem.affected) {
+        return new CommonResponseModel(true, 1, "ItemNo Deleted Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
     }
   }
 
