@@ -1,6 +1,6 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 // import { coLineRequest } from "@project-management-system/shared-models";
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table } from "antd"
+import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, message } from "antd"
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react";
@@ -8,7 +8,7 @@ import { Excel } from "antd-table-saveas-excel";
 import { CentricService, HbService, SanmarService } from "@project-management-system/shared-services";
 import { centricCoLineRequest } from "packages/libs/shared-models/src/common/centric/centric-coLine.req";
 import moment from "moment";
-import { AlertMessages, HbPoOrderFilter, SanmarOrderFilter, hbCoLineRequest } from "@project-management-system/shared-models";
+import { AlertMessages, HbPoOrderFilter, ItemNoDto, SanmarOrderFilter, hbCoLineRequest } from "@project-management-system/shared-models";
 
 const SanmarColineView = () => {
     const [page, setPage] = useState<number>(1);
@@ -20,16 +20,19 @@ const SanmarColineView = () => {
     const [form] = Form.useForm();
     const { Option } = Select;
     const { RangePicker } = DatePicker;
+    const [editedValue, setEditedValue] = useState('');
+    const [editingRow, setEditingRow] = useState(null);
+    const [editedId, setEditedId] = useState('');
 
 
-     useEffect(() => {
+    useEffect(() => {
         getData()
         BuyerPo()
-         getItem()
-   
-     }, [])
+        getItem()
 
-     
+    }, [])
+
+
 
 
 
@@ -47,10 +50,10 @@ const SanmarColineView = () => {
             }
         })
     }
-  
+
     const getData = () => {
         const req = new SanmarOrderFilter();
-        
+
         if (form.getFieldValue('buyerPo') !== undefined) {
             req.buyerPo = form.getFieldValue('buyerPo');
         }
@@ -59,15 +62,15 @@ const SanmarColineView = () => {
         }
         if (form.getFieldValue('deliveryDate') !== undefined) {
             req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
-          }
-          if (form.getFieldValue('deliveryDate') !== undefined) {
+        }
+        if (form.getFieldValue('deliveryDate') !== undefined) {
             req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
-          }
+        }
 
-          if (form.getFieldValue("co_number") !== undefined) {
+        if (form.getFieldValue("co_number") !== undefined) {
             req.coNumber = form.getFieldValue("co_number");
-          }
-        
+        }
+
         service.getSanmarCoLineData(req).then(res => {
             if (res.status) {
                 setData(res.data)
@@ -121,7 +124,7 @@ const SanmarColineView = () => {
                     return (record.delivery_date ? (record.delivery_date) : '-')
                 }
             },
-    
+
             {
                 title: 'Item No',
                 dataIndex: 'item_no',
@@ -155,7 +158,7 @@ const SanmarColineView = () => {
                 title: 'Rised Date',
                 dataIndex: 'raised_date',
                 render: (text, record) => {
-                    return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')): '-')
+                    return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')) : '-')
                 }
             },
             {
@@ -182,6 +185,43 @@ const SanmarColineView = () => {
         excel.saveAs(`Co-Line-${currentDate}.xlsx`);
     }
 
+    const onFinishEdit = (record: any) => {
+        const req = new ItemNoDto(editedId,editedValue)
+        service.updateItemNo(req).then(res => {
+            if (res.status) {
+                getData();
+                setEditingRow(null);
+                setEditedValue(null);
+                message.success("Updated SuccessFully");
+            } else {
+                message.error("Not Updated")
+            }
+        })
+    };
+
+    const onEditClick = (record) => {
+        setEditingRow(record);
+        setEditedValue(record.itemNo);
+        setEditedId(record.id);
+        console.log(record,"recccc")
+    };
+
+    const handleConfirmDelete = (record) => {
+        const req = new ItemNoDto(record.id)
+        service.deleteCoLine(req).then(res => {
+            if (res.status) {
+                getData();
+                AlertMessages.getSuccessMessage(res.internalMessage)
+
+            } else {
+                AlertMessages.getErrorMessage(res.internalMessage)
+            }
+        })
+        // const deleteUpdatedData = data.filter(item => item !== record);
+        // message.success("Deleted Successfully");
+        // setData(deleteUpdatedData);
+    };
+
     const columns: ColumnProps<any>[] = [
         {
             title: 'S.No',
@@ -195,8 +235,8 @@ const SanmarColineView = () => {
             render: (text, record) => {
                 return (record.buyer_po ? (record.buyer_po) : '-')
             },
-              sorter: (a, b) => a.buyerPo.localeCompare(b.buyerPo),
-           sortDirections: ["ascend", "descend"],
+            sorter: (a, b) => a.buyerPo.localeCompare(b.buyerPo),
+            sortDirections: ["ascend", "descend"],
 
         },
         {
@@ -211,19 +251,43 @@ const SanmarColineView = () => {
             title: 'Delivery Date',
             dataIndex: 'delivery_date',
             render: (text, record) => {
-                return (record.delivery_date? (record.delivery_date): '-')
+                return (record.delivery_date ? (record.delivery_date) : '-')
             }
         },
-        
+
+        // {
+        //     title: 'Item No',
+        //     dataIndex: 'item_no',
+        //     render: (text, record) => {
+        //         return (record.item_no ? (record.item_no) : '-')
+        //     },
+        //     sorter: (a, b) => a.item_no.localeCompare(b.item_no),
+        //     sortDirections: ["ascend", "descend"],
+
+        // },
+
         {
             title: 'Item No',
             dataIndex: 'item_no',
-            render: (text, record) => {
-                return (record.item_no ? (record.item_no) : '-')
-            },
-            sorter: (a, b) => a.item_no.localeCompare(b.item_no),
-            sortDirections: ["ascend", "descend"],
-
+            render: (text, record, index) => {
+                return (
+                    <div>
+                        {editingRow === record ? (
+                            <Input
+                                value={editedValue}
+                                onChange={(e) => setEditedValue(e.target.value)}
+                                style={{ width: '60px', border: '1px solid rgb(217, 217, 217)', borderRadius: '5px', textAlign: "center" }}
+                            />
+                        ) : (
+                            <Input
+                                value={text}
+                                readOnly
+                                style={{ width: '60px', border: '1px solid rgb(217, 217, 217)', borderRadius: '5px', textAlign: "center" }}
+                            />
+                        )}
+                    </div>
+                );
+            }
         },
         {
             title: 'CO Date',
@@ -245,8 +309,8 @@ const SanmarColineView = () => {
             render: (text, record) => {
                 return (record.created_user ? (record.created_user) : '-')
             },
-            
-          
+
+
         },
         {
             title: 'Raised Date',
@@ -254,7 +318,7 @@ const SanmarColineView = () => {
             render: (text, record) => {
                 return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')) : '-')
             },
-           
+
         },
 
         {
@@ -263,7 +327,7 @@ const SanmarColineView = () => {
             render: (text, record) => {
                 return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
             },
-          
+
 
         },
         {
@@ -279,7 +343,42 @@ const SanmarColineView = () => {
             render: (text, record) => {
                 return (record.error_msg ? (record.error_msg) : '-')
             }
-        }
+        },
+        {
+            title: 'Actions',
+            dataIndex: 'actions',
+            render: (text, record) => {
+                // if (record.status && record.status.toLowerCase() === 'failed') {
+                    return (
+                        <div>
+                            {editingRow === record ? (
+                                <div>
+                                    <Button type="primary" onClick={() => onFinishEdit(record)}>Update</Button>
+                                    &nbsp; &nbsp;
+                                    <Button type="primary" danger onClick={() => setEditingRow(null)}>Cancel</Button>
+                                </div>
+                            ) : (
+                                <div>
+                                    <Button type="primary" onClick={() => onEditClick(record)}>Edit</Button>
+                                    &nbsp; &nbsp;
+                                    <Popconfirm
+                                        title="Are you sure to Delete?"
+                                        onConfirm={() => handleConfirmDelete(record)}
+                                        // onCancel={() => message.info('Delete canceled')}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
+                                        <Button type="primary" danger>Delete</Button>
+                                    </Popconfirm>
+                                </div>
+                            )}
+                        </div>
+                    );
+                // } else {
+                //     return <span>-</span>;
+                // }
+            },
+        },
     ]
 
     return (
@@ -289,9 +388,9 @@ const SanmarColineView = () => {
                 style={{ color: 'green' }}
                 onClick={handleExport}
                 icon={<FileExcelFilled />}>Download Excel</Button> : null}>
-            <Form 
-             onFinish={getData} 
-            form={form} layout='vertical'>
+            <Form
+                onFinish={getData}
+                form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
                         <Form.Item name='buyerPo' label='Buyer PO' >
