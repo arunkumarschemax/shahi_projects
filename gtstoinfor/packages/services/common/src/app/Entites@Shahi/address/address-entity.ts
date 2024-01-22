@@ -7,10 +7,10 @@ export class AddressEntity {
     })
     addressId: number
 
-    @Column('varchar', {
-        name: 'destination'
-    })
-    destination: string
+    // @Column('varchar', {
+    //     name: 'destination'
+    // })
+    // destination: string
 
 
     // @Column("text",{

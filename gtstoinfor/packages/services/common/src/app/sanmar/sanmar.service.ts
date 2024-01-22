@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { DataSource } from "typeorm";
 import { SanmarOrdersRepository } from "./repositories/sanmar-orders.repo";
-import { CommonResponseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarCoLinereqModels, SanmarColorModel, SanmarDestinationModel, SanmarOrderFilter, SanmarSizeModel, SanmarSizeWiseModel, StatusEnum, sanmarOrderDataModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarCoLinereqModels, SanmarColorModel, SanmarCompareModel, SanmarDestinationModel, SanmarOrderFilter, SanmarSizeModel, SanmarSizeWiseModel, StatusEnum, sanmarOrderDataModel } from "@project-management-system/shared-models";
 import { SanmarOrdersEntity } from "./entity/sanmar-orders.entity";
 import { SanmarPdfInfoEntity } from "./entity/sanmar-pdf.entity";
 import { SanmarPdfRepo } from "./repositories/sanmar-pdf.repo";
@@ -12,6 +12,8 @@ import * as path from 'path';
 import { SanmarCOLineEntity } from "./entity/sanmar-co-line.entity";
 import { SanmarCOLineRepository } from "./repositories/sanmar-co-line.repository";
 import { SanmarOrderDetailsReq } from "./dto/sanmar-order-details-req";
+import { SanmarOrderschildEntity } from "./entity/sanmar-orders-child";
+import { SanmarOrdersChildRepository } from "./repositories/sanmar-orders-child.repo";
 
 @Injectable()
 export class SanmarService {
@@ -21,7 +23,9 @@ export class SanmarService {
     private dataSource: DataSource,
     private SanOrdersRepo: SanmarOrdersRepository,
     private pdfRepo: SanmarPdfRepo,
-    private sanmarCoLineRepo: SanmarCOLineRepository
+    private sanmarCoLineRepo: SanmarCOLineRepository,
+    private SanOrdersChildRepo: SanmarOrdersChildRepository
+
 
 
   ) { }
@@ -95,6 +99,9 @@ export class SanmarService {
           const orderData = await this.SanOrdersRepo.findOne({
             where: { buyerPo: req.buyerPo, poStyle: item.poStyle, line: variant.line }
           });
+
+          const order = await this.SanOrdersChildRepo.findOne({ where: { buyerPo: req.buyerPo, poStyle: item.poStyle, line: variant.line }, order: { poVersion: 'DESC' } })
+
   
           const entity = new SanmarOrdersEntity();
           entity.buyerPo = req.buyerPo;
@@ -121,6 +128,29 @@ export class SanmarService {
                 { buyerPo: req.buyerPo, poStyle: item.poStyle, line: variant.line },
                 { ...entity }
               );
+
+              let po = (order?.poVersion) + 1
+            const entitys = new SanmarOrderschildEntity()
+
+
+              entitys.buyerPo = req.buyerPo;
+              entitys.poDate = req.poDate;
+              entitys.buyerAddress = req.buyerAddress;
+              entitys.shipToAdd = req.shipToAdd;
+              entitys.poStyle = item.poStyle;
+              entitys.deliveryDate = item.deliveryDate;
+              entitys.currency = item.currency;
+              entitys.line = variant.line;
+              entitys.size = variant.size;
+              entitys.color = variant.color;
+              entitys.quantity = variant.quantity;
+              entitys.unitPrice = variant.unitPrice;
+              entitys.unit = variant.unit;
+              entitys.poVersion = po
+              entitys.orderId = orderData.id
+
+            const savedChild = await transactionManager.getRepository(SanmarOrderschildEntity).save(entitys)
+
   
               if (!update.affected) {
                 throw new Error('Update failed');
@@ -129,6 +159,25 @@ export class SanmarService {
           } else {
             // Only save if the record doesn't exist
             saved = await transactionManager.getRepository(SanmarOrdersEntity).save(entity);
+            const entitys = new SanmarOrderschildEntity()
+            
+            entitys.buyerPo = req.buyerPo;
+            entitys.poDate = req.poDate;
+            entitys.buyerAddress = req.buyerAddress;
+            entitys.shipToAdd = req.shipToAdd;
+            entitys.poStyle = item.poStyle;
+            entitys.deliveryDate = item.deliveryDate;
+            entitys.currency = item.currency;
+            entitys.line = variant.line;
+            entitys.size = variant.size;
+            entitys.color = variant.color;
+            entitys.quantity = variant.quantity;
+            entitys.unitPrice = variant.unitPrice;
+            entitys.unit = variant.unit;
+            entitys.orderId = entity.id
+
+            const savedChild = await await transactionManager.getRepository(SanmarOrderschildEntity).save(entitys)
+
   
             if (!saved) {
               throw new Error('Save failed');
@@ -446,26 +495,19 @@ export class SanmarService {
       return new CommonResponseModel(true, 1, 'data retrived', data)
     else
       return new CommonResponseModel(false, 0, 'No data found');
-  } async getOrderdataForCOline(req: SanmarOrderDetailsReq): Promise<CommonResponseModel> {
+  }
+  
+  
+  async getOrderdataForCOline(req: SanmarOrderDetailsReq): Promise<CommonResponseModel> {
     try {
       const data = await this.SanOrdersRepo.find({ where: { buyerPo: req.buyerPo } })
-      let destinationMap = new Map<string, SanmarDestinationModel>();
       // po -> destination -> color -> sizes
       const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
       const poMap = new Map<string, SanmarOrdersEntity>();
       data.forEach(rec => {
         poMap.set(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`, rec)
         const dest = rec.shipToAdd
-        // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
 
-        // const parts = rec.shipToAdd.split(',')
-        // const destAdd = parts[2].trim();
-        // const dest = destAdd;
-
-        // const destCountry = rec.shipToAddress.slice(-2).trim();
-        // const parts = rec.shipToAddress.split(',')
-        // const destAdd = parts[0].trim();
-        // const dest = destAdd + ',' + destCountry;
 
         if (!destinationColSizesMap.has(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`)) {
           destinationColSizesMap.set(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`, new Map<string, Map<string, []>>());
@@ -478,6 +520,7 @@ export class SanmarService {
         }
         destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
       });
+
       const coData = []
       destinationColSizesMap.forEach((destColorSize, poNumber) => {
         const desArray = []
@@ -502,6 +545,44 @@ export class SanmarService {
       if (coData) {
         return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
       } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async getordercomparationData(req?: SanmarOrderFilter): Promise<CommonResponseModel> {
+    try {
+      const Originaldata = await this.SanOrdersRepo.getordercomparationData(req)
+      if (Originaldata.length === 0) {
+        return new CommonResponseModel(false, 0, 'No data Found');
+      }
+      const compareModel: SanmarCompareModel[] = []
+      for (const rec of Originaldata) {
+        const childData = await this.SanOrdersChildRepo.find({
+          where: {
+            buyerPo: rec.buyer_po, poStyle: rec.po_style, color: rec.color
+          }, order: { id: 'DESC' }, take: 1, skip: 1
+        })
+        if (childData.length > 0) {
+          const oldData = childData[0];
+          console.log(childData,"ppppp")
+
+          // if (
+          //   oldData.unitPrice !== rec.unit_price ||
+          //   oldData.deliveryDate !== rec.delivery_date ||
+          //   oldData.quantity !== rec.quantity
+          // ) {
+
+          compareModel.push(new SanmarCompareModel(rec.buyer_po, rec.po_style, rec.color, rec.size, oldData.unitPrice, rec.unit_price, oldData.deliveryDate, rec.delivery_date, oldData.quantity, rec.quantity));
+        }
+        // }
+      }
+      if (compareModel) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
+      }
+      else {
         return new CommonResponseModel(false, 0, 'No data found');
       }
     } catch (err) {
