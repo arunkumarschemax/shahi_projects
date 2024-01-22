@@ -6,12 +6,18 @@ import { CommonResponseModel } from "@project-management-system/shared-models";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
 import { StyleComboEntity } from "./entittes/style-combo-entity";
+import { StyleRepo } from "./dto/style-repo";
+import { BomRepo } from "./dto/bom-repo";
+import { StyleComboRepo } from "./dto/style-combo-repo";
+import { BomDto } from "./dto/bom-dto";
 
 @Injectable()
 export class BomService{
     constructor(
-    @InjectRepository(StyleEntity)
-    private StyleRepo: Repository<StyleEntity>,
+
+    private StyleRepo: StyleRepo,
+    private bomRepo: BomRepo,
+    private styleComboRepo:StyleComboRepo
     ){ }
     async createBom(req:StyleDto):Promise<CommonResponseModel>{
         try{
@@ -49,6 +55,37 @@ export class BomService{
             }else{
             return new CommonResponseModel(false,0,'Something Went Wrong')
 
+            }
+        }
+        catch(err){
+            throw err
+        }
+    }
+
+    async getAllStylesData():Promise<CommonResponseModel>{
+        try{
+            let styles=[]
+            let styleCombos=[]
+            let bomdetails=[]
+            const style= await this.StyleRepo.getStyelsData()
+            if(style.length >0){
+                for(const styleDetails of style){
+                    const bomDetails = await this.bomRepo.getBomData(styleDetails.id)
+                        for(const combo of bomDetails){
+                            const comboDetails = await this.styleComboRepo.getBomData(combo.bomId)
+                            for(const data of comboDetails){
+                                styleCombos.push(data)
+                            }
+                            bomdetails.push(new BomDto(combo.itemName,combo.description,combo.imCode,combo.itemType,combo.use,styleCombos,combo.id,combo.styleId))
+                        }
+                        styles.push(new StyleDto(styleDetails.style,styleDetails.styleName,styleDetails.season,styleDetails.expNo,bomdetails))
+                }
+            }
+            if(styles){
+                return new CommonResponseModel(true,1,'Data Retrived Sucessfully',styles)
+
+            }else{
+                return new CommonResponseModel(false,1,'No Data Found',[])
             }
         }
         catch(err){

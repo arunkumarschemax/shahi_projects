@@ -22,6 +22,13 @@ export class BomController{
         catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
-
+    }
+    @Post('/getAllStylesData')
+    async getAllStylesData():Promise<CommonResponseModel>{
+        try{
+            return this.bomService.getAllStylesData()
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
     }
 }

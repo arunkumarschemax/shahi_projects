@@ -29,6 +29,27 @@ export class BomDto {
 
     @ApiProperty()
     createdUser: string | null;
+    constructor(
+        itemName:ItemtypeEnum,
+        description:string,
+        imCode:string,
+        itemType:string,
+        use:string,
+        styleCombo:StyleComboDto[],
+        bomId?:number,
+        styleId?:number,
+        createdUser?: string | null
+    ){
+        this.itemName=itemName
+        this.description=description
+        this.imCode=imCode
+        this.itemType=itemType
+        this.use=use
+        this.styleCombo=styleCombo
+        this.bomId=bomId
+        this.styleId=styleId
+        this.createdUser=createdUser
+    }
 
 
 }
