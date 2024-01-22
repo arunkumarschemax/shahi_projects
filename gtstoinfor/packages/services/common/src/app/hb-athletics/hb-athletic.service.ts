@@ -496,7 +496,7 @@ export class HbService {
         let pkgTerms;
         let paymentTerms;
         if (po.buyer === 'HB ATHLETIC') {
-          const response = await this.getOrderdataForCOline({ poNumber: po.buyer_po })
+          const response = await this.getOrderdataForCOline({ poNumber: po.cust_po })
           console.log(response.data[0])
           const coData = response.data[0];
           coLine.buyerPo = coData.buyerPo;
@@ -695,7 +695,7 @@ export class HbService {
         if (await this.isAlertPresent(driver)) {
           const alert = await driver.switchTo().alert();
           const alertText = await alert.getText();
-          const update = await this.hbCoLineRepo.update({ custPo: po.buyer_po }, { status: 'Failed', errorMsg: alertText });
+          const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed', errorMsg: alertText });
           await alert.accept();
           await driver.sleep(5000)
           await driver.navigate().refresh();
@@ -710,11 +710,11 @@ export class HbService {
           const year = currentDate.getFullYear().toString().slice(-2);
           const currentDateFormatted = `${day}-${month}-${year}`;
           if (coNo) {
-            const update = await this.hbCoLineRepo.update({ custPo: po.buyer_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+            const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           } else {
-            const update = await this.hbCoLineRepo.update({ custPo: po.buyer_po }, { status: 'Failed' });
+            const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed' });
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           }

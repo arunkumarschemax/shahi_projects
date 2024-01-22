@@ -10,6 +10,9 @@ import { SanmarService } from "./sanmar.service";
 import { SanmarPdfInfoEntity } from "./entity/sanmar-pdf.entity";
 import { SanmarCOLineEntity } from "./entity/sanmar-co-line.entity";
 import { SanmarCOLineRepository } from "./repositories/sanmar-co-line.repository";
+import { AddressService } from "../Entites@Shahi/address/address-service";
+import { AddressRepository } from "../Entites@Shahi/address/address.repo";
+import { AddressEntity } from "../Entites@Shahi/address/address-entity";
 
 
 
@@ -17,9 +20,9 @@ import { SanmarCOLineRepository } from "./repositories/sanmar-co-line.repository
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-        SanmarOrdersEntity,SanmarPdfInfoEntity,SanmarCOLineEntity
+        SanmarOrdersEntity,SanmarPdfInfoEntity,SanmarCOLineEntity,AddressEntity
     ])],
   controllers: [SanmarController],
-  providers: [SanmarService,ApplicationExceptionHandler,SanmarOrdersRepository,SanmarPdfRepo,SanmarCOLineRepository]
+  providers: [AddressRepository, AddressService,SanmarService,ApplicationExceptionHandler,SanmarOrdersRepository,SanmarPdfRepo,SanmarCOLineRepository]
 })
 export class SanmarModule { }
