@@ -193,9 +193,9 @@ export class HbService {
           waitUntil: 'networkidle0'
         })
       }, 1000);
-
-      const directoryPath = 'D:/hb-unread/';
-      const destinationDirectory = 'D:/hb-read/';
+     
+      const directoryPath = 'C:/hb-unread/';
+      const destinationDirectory = 'C:/hb-read/';
 
       const files = fs.readdirSync(directoryPath);
       if (files.length === 0) {
