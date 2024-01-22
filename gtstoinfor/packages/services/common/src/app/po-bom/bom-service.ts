@@ -32,7 +32,7 @@ export class BomService{
                for(const styleCombo of bom.styleCombo){
                     const styleComboEntity = new StyleComboEntity()
                     const style =new StyleEntity()
-                    style.id = styleCombo.styleId;
+                    style.id = entity.id;
                     styleComboEntity.combination=styleCombo.combination
                     styleComboEntity.primaryColor=styleCombo.primaryColor
                     styleComboEntity.secondaryColor=styleCombo.secondaryColor

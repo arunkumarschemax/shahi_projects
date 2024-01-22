@@ -74,5 +74,5 @@ export class StyleEntity {
     bomEntity: BomEntity[];
 
     @OneToMany(type =>StyleComboEntity, style =>style.styleEntity,{cascade: true})
-    styleComboEntity:StyleComboEntity
+    styleComboEntity:StyleComboEntity[]
 }

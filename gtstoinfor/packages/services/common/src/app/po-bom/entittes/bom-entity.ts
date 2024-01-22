@@ -82,7 +82,7 @@ export class BomEntity {
     @JoinColumn({ name: 'style_id' })
     styleEnityy:StyleEntity
     
-    @OneToMany(type => StyleComboEntity,styleCombo =>styleCombo.bomEntity)
+    @OneToMany(type => StyleComboEntity,styleCombo =>styleCombo.bomEntity,{cascade:true})
     styleComboEntity:StyleComboEntity[]
 
 }
