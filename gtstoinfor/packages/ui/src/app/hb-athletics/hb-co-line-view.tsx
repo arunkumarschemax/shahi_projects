@@ -347,7 +347,7 @@ const HbColineView = () => {
             title: 'Actions',
             dataIndex: 'actions',
             render: (text, record) => {
-                // if (record.status && record.status.toLowerCase() === 'failed') {
+                if (record.status === 'Open'||record.status === 'Failed') {
                     return (
                         <div>
                             {editingRow === record ? (
@@ -373,9 +373,9 @@ const HbColineView = () => {
                             )}
                         </div>
                     );
-                // } else {
-                //     return <span>-</span>;
-                // }
+                } else {
+                    return <span>-</span>;
+                }
             },
         },
 
