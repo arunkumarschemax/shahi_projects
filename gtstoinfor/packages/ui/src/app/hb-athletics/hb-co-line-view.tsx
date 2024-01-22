@@ -294,7 +294,7 @@ const HbColineView = () => {
             form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='buyerPo' label='Customer Po' >
+                        <Form.Item name='buyerPo' label='Customer PO' >
                             <Select
                                 showSearch
                                 placeholder="Select Customer Po"
@@ -342,9 +342,10 @@ const HbColineView = () => {
                 md={{ span: 4 }}
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
+                style={{marginLeft:30}}
               >
-               <Form.Item label="Co number" name="co_number"  >
-                  <Input placeholder="Enter Co number "  allowClear />
+               <Form.Item label="CO number" name="co_number"  >
+                  <Input placeholder="Enter CO Number "  allowClear />
                 </Form.Item>
               </Col>
                     
