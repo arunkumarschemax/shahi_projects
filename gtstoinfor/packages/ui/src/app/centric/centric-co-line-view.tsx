@@ -378,7 +378,7 @@ const CentriColineView = () => {
             title: 'Actions',
             dataIndex: 'actions',
             render: (text, record) => {
-                // if (record.status && record.status.toLowerCase() === 'OPEN') {
+                if (record.status  === 'Open'||record.status  === 'Failed') {
                 return (
                     <div>
                         {editingRow === record ? (
@@ -404,9 +404,9 @@ const CentriColineView = () => {
                         )}
                     </div>
                 );
-                // } else {
-                //     return <span>-</span>;
-                // }
+                } else {
+                    return <span>-</span>;
+                }
             },
         },
     ]
