@@ -6,4 +6,5 @@ export * from './sanmar-order-data-model'
 export * from './sanmar-size-wise data'
 export * from './sanmar-order-acceptance-req'
 export * from './sanmar-co-line-model'
+export * from './sanmar-comparision-model'
 export * from './item-no.dto';

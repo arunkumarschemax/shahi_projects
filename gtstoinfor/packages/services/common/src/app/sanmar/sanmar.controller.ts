@@ -185,5 +185,14 @@ export class SanmarController {
         }
     }
 
+    @Post('/getordercomparationData')
+    @ApiBody({ type: SanmarOrderFilter })
+    async getordercomparationData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getordercomparationData(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 
 }

@@ -393,10 +393,10 @@ const SanmarColineView = () => {
                 form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='buyerPo' label='Buyer Po' >
+                        <Form.Item name='buyerPo' label='Buyer PO' >
                             <Select
                                 showSearch
-                                placeholder="Select Buyer Po"
+                                placeholder="Select Buyer PO"
                                 optionFilterProp="children"
                                 allowClear
                             >
@@ -425,28 +425,29 @@ const SanmarColineView = () => {
                         </Form.Item>
                     </Col>
                     <Col
-                        xs={{ span: 24 }}
-                        sm={{ span: 24 }}
-                        md={{ span: 4 }}
-                        lg={{ span: 4 }}
-                        xl={{ span: 4 }}
-                    >
-                        <Form.Item label="Delivery Date" name="deliveryDate"  >
-                            <RangePicker style={{ width: 180 }} />
-                        </Form.Item>
-                    </Col>
-                    <Col
-                        xs={{ span: 24 }}
-                        sm={{ span: 24 }}
-                        md={{ span: 4 }}
-                        lg={{ span: 4 }}
-                        xl={{ span: 4 }}
-                    >
-                        <Form.Item label="Co number" name="co_number"  >
-                            <Input placeholder="Enter Co number " allowClear />
-                        </Form.Item>
-                    </Col>
-
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+               <Form.Item label="Delivery Date" name="deliveryDate"  >
+                  <RangePicker style={{width:180}}   />
+                </Form.Item>
+              </Col>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+                style={{marginLeft:30}}
+              >
+               <Form.Item label="Co number" name="co_number"  >
+                  <Input placeholder="Enter Co number "  allowClear />
+                </Form.Item>
+              </Col>
+                    
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                         <Form.Item>
                             <Button htmlType="submit" icon={<SearchOutlined />} type="primary">SEARCH</Button>

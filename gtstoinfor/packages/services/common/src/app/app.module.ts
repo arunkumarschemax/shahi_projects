@@ -11,6 +11,7 @@ import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.mod
 import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
 import { SanmarModule } from './sanmar/sanmar.module';
+import { AddressModule } from './Entites@Shahi/address/address-module';
 
 
 @Module({
@@ -32,7 +33,7 @@ import { SanmarModule } from './sanmar/sanmar.module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,SanmarModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,SanmarModule,AddressModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
