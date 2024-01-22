@@ -212,9 +212,9 @@ export class SanmarService {
 
 
 
-  async getPdfFileInfo(): Promise<CommonResponseModel> {
+  async getPdfFileInfo(req:any): Promise<CommonResponseModel> {
     try {
-      const data = await this.pdfRepo.getPDFInfo()
+      const data = await this.pdfRepo.getPDFInfo(req)
       if (data) {
         return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
       } else {

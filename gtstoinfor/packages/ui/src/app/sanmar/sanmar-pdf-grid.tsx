@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { AlertMessages } from "packages/libs/shared-models/src/common/supplier/alert-messages";
 import { config } from "packages/libs/shared-services/config";
+import { SanmarOrderFilter } from "@project-management-system/shared-models";
 
 
 export function SanmarPdFInfoGrid() {
@@ -20,10 +21,11 @@ export function SanmarPdFInfoGrid() {
     const [pageSize, setPageSize] = useState(1);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const [poNumber, setPoNumber] = useState('');
+    const [poNumber, setPoNumber] = useState([]);
     const [form] = Form.useForm();
     const { Option } = Select;
     const [isModalOpen1, setIsModalOpen1] = useState(false);
+    
     // let location = useLocation();
     
 
@@ -39,13 +41,41 @@ export function SanmarPdFInfoGrid() {
 
     useEffect(() => {
         getPdfFileInfo();
+        getCustomerPoNumber();
+        
     }, []);
+
+    const getCustomerPoNumber = () => {
+        service.getCustomerPoNumber().then((res) => {
+          if (res.status) {
+            setPoNumber(res.data);
+          
+          }
+        });
+      };
     
     
     const getPdfFileInfo = () => {
-        service.getPdfFileInfo().then(res => {
+        const req = new SanmarOrderFilter();
+
+        if (form.getFieldValue("poNumber") !== undefined) {
+            req.buyerPo = form.getFieldValue("poNumber");
+          }
+        service.getPdfFileInfo(req).then(res => {
+            if (res.status){
             setPdfData(res.data)
-        })
+              
+            } else {
+            setPdfData([])
+          AlertMessages.getErrorMessage(res.internalMessage);
+
+
+            }
+        }).catch((err) => {
+            console.log(err.message);
+          });
+          
+      
     }
     const onReset = () => {
         form.resetFields()
@@ -151,7 +181,7 @@ export function SanmarPdFInfoGrid() {
             width:70 ,
             sorter: (a, b) => a.buyer_po.localeCompare(b.buyer_po),
             sortDirections: ["ascend", "descend"],
-            ...getColumnSearchProps('buyer_po')
+            // ...getColumnSearchProps('buyer_po')
         },
         {
             title: 'File Name',
@@ -212,7 +242,7 @@ export function SanmarPdFInfoGrid() {
                 onClick={() => setMoreData(record)}
                     >More Info</Button>
                     <Tooltip title="PDF download">
-                        <Button icon={<FilePdfOutlined onClick={() => download(record.filePath)}  style={{color:"red"}}/>} >{value}</Button>
+                        <Button icon={<FilePdfOutlined onClick={() => download(record.file_path)}  style={{color:"red"}}/>} >{value}</Button>
                     </Tooltip>
                 </>
             ),
@@ -250,6 +280,85 @@ export function SanmarPdFInfoGrid() {
     return (
         <>
             <Card title="Orders History" headStyle={{ fontWeight: 'bold' }}>
+            <Form
+            onFinish={getPdfFileInfo}
+            form={form}
+            layout='vertical'
+          >
+            <Row gutter={24}>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 5 }}
+              >
+                <Form.Item name="poNumber" label="Buyer PO Number">
+                  <Select
+                    showSearch
+                    placeholder="Select Buyer PO "
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                     {poNumber.map((inc: any) => {
+                      return (
+                        <Option key={inc.buyer_po} value={inc.buyer_po}>
+                          {inc.buyer_po}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+             
+             
+              {/* <Row> */}
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 5 }}
+                lg={{ span: 5 }}
+                xl={{ span: 4 }}
+                style={{marginTop:23,marginLeft:60}}
+              > 
+                <Form.Item 
+                // style={{marginTop:20,marginLeft:60}}
+                >
+                  <Button
+                    htmlType="submit"
+                    icon={<SearchOutlined />}
+                    type="primary"
+                    // onClick={getorderData}
+                  >
+                    SEARCH
+                  </Button>
+                
+                </Form.Item>
+              {/* </Col> */}
+              {/* <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 5 }}
+                lg={{ span: 5 }}
+                xl={{ span: 4 }}
+              > */}
+                <Form.Item 
+                // style={{marginTop:20}}
+                 style={{ marginLeft: 120 ,marginTop:-44}}
+                >
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    onClick={onReset}
+                    icon={<UndoOutlined />}
+                  >
+                    Reset
+                  </Button>
+                </Form.Item>
+              </Col>
+              </Row>
+            {/* </Row> */}
+          </Form>
                 <Table
                     columns={columns}
                     dataSource={pdfData}
