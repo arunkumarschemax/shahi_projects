@@ -285,7 +285,7 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
   return (
     <div>
       <Card>
-        <Card title="PO Detail View" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span style={{ color: 'white' }} > <Button className='panel_button' onClick={openPrint}>Print</Button> <Button className='panel_button' onClick={() => navigate('/purchase-view')}>Po View</Button> </span>} >
+        <Card title="PO Detail View" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span style={{ color: 'white' }} > <Button className='panel_button' onClick={()=>openPrint()}>Print</Button> <Button className='panel_button' onClick={() => navigate('/purchase-view')}>Po View</Button> </span>} >
           <Descriptions size='small' >
 
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>PO Number</span>}>{data[0]?.po_number}</DescriptionsItem>
@@ -349,13 +349,13 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
           {isModalVisible ?
             <Modal
               className='print-docket-modal'
-              key={'modal' + Date.now()}
-              width={'90%'}
+              key={'modal'}
+              width={'95%'}
               style={{ top: 30, alignContent: 'right' }}
               visible={isModalVisible}
               title={<React.Fragment>
               </React.Fragment>}
-              onCancel={handleCancel}
+              onCancel={()=>handleCancel()}
               footer={[
 
               ]}
