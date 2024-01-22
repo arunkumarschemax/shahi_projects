@@ -37,18 +37,18 @@ export class BomService{
                 let styleComboArray=[]
                for(const styleCombo of bom.styleCombo){
                     const styleComboEntity = new StyleComboEntity()
-                    const style =new StyleEntity()
-                    style.id = entity.id;
                     styleComboEntity.combination=styleCombo.combination
                     styleComboEntity.primaryColor=styleCombo.primaryColor
                     styleComboEntity.secondaryColor=styleCombo.secondaryColor
                     styleComboEntity.logoColor=styleCombo.logoColor
+                    styleComboEntity.styleEntity=entity
                     styleComboArray.push(styleComboEntity)
                }
                bomEntity.styleComboEntity=styleComboArray
                bomEntityArray.push(bomEntity)
             }
             entity.bomEntity=bomEntityArray
+            
             const save = await this.StyleRepo.save(entity)
             if(save){
             return new CommonResponseModel(true,1,'Created Sucessfully')
