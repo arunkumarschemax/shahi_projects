@@ -8,7 +8,7 @@ import { Buyers } from '../../buyers/buyers.entity';
 import { SampleTypes } from '../../sample Types/sample-types.entity';
 import { SampleSubTypes } from '../../sample-sub-types/sample-sub-types.entity';
 import { Brands } from '../../master-brands/master-brands.entity';
-import { SampleDevelopmentStatusEnum , LifeCycleStatusEnum} from '@project-management-system/shared-models';
+import { SampleDevelopmentStatusEnum , LifeCycleStatusEnum, CategoryEnum} from '@project-management-system/shared-models';
 import { EmplyeeDetails } from '../../employee-details/dto/employee-details-entity';
 import { type } from 'os';
 import { SampleReqSizeEntity } from './sample-requset-size-info-entity';
@@ -57,13 +57,13 @@ export class SampleRequest {
   @JoinColumn({ name: 'buyer_id' })
   buyer: Buyers;
 
-  // @ManyToOne(() => SampleTypes, sampleTypes => sampleTypes.sampleReq, { nullable: false })
-  // @JoinColumn({ name: 'sample_type_id' })
-  // sampleType: SampleTypes;
+  @ManyToOne(() => SampleTypes, sampleTypes => sampleTypes.sampleReq, { nullable: false })
+  @JoinColumn({ name: 'sample_type_id' })
+  sampleType: SampleTypes;
 
-  // @ManyToOne(() => SampleSubTypes, sampleSubType => sampleSubType.sampleReq, { nullable: false })
-  // @JoinColumn({ name: 'sample_sub_type_id' })
-  // sampleSubType: SampleSubTypes;
+  @ManyToOne(() => SampleSubTypes, sampleSubType => sampleSubType.sampleReq, { nullable: false })
+  @JoinColumn({ name: 'sample_sub_type_id' })
+  sampleSubType: SampleSubTypes;
 
   @ManyToOne(() => Style, style => style.sampleReq, { nullable: false })
   @JoinColumn({ name: 'style_id' })
@@ -121,9 +121,9 @@ export class SampleRequest {
   @JoinColumn({ name: 'dmm_id' })
   dmm: EmplyeeDetails;
 
-  @ManyToOne(() => EmplyeeDetails, employee => employee.sampleRequest, { nullable: false })
-  @JoinColumn({ name: 'technician_id' })
-  technician: EmplyeeDetails;
+  // @ManyToOne(() => EmplyeeDetails, employee => employee.sampleRequest, { nullable: false })
+  // @JoinColumn({ name: 'technician_id' })
+  // technician: EmplyeeDetails;
 
   @Column("int", {
     nullable: true,
@@ -131,14 +131,14 @@ export class SampleRequest {
   })
   product: number;
 
-  @Column("varchar", {
-    nullable: true,
-    name: "type"
-  })
-  type: string;
+  // @Column("varchar", {
+  //   nullable: true,
+  //   name: "type"
+  // })
+  // type: string;
 
   @Column("varchar", {
-    nullable: false,
+    nullable: true,
     name: "conversion"
   })
   conversion: string;
@@ -150,7 +150,7 @@ export class SampleRequest {
   user: string;
 
   @Column("int", {
-    nullable: false,
+    nullable: true,
     name: "made_in"
   })
   madeIn: number;
@@ -168,6 +168,12 @@ export class SampleRequest {
     enum: SampleDevelopmentStatusEnum
   })
   status: SampleDevelopmentStatusEnum;
+  @Column('enum', {
+    name: 'category',
+    nullable: true,
+    enum: CategoryEnum
+  })
+  category: CategoryEnum;
 
   @Column('enum', {
     name: 'life_cycle_status',

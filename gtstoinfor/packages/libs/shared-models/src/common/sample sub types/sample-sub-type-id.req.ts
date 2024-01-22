@@ -5,3 +5,11 @@ export class SampleSubTypesRequest{
         this.sampleSubTypeId = sampleSubTypeId;
     }
 }
+
+export class TypeIdReq{
+    sampleTypeId?:number;
+    
+    constructor(sampleTypeId?:number){
+        this.sampleTypeId = sampleTypeId;
+    }
+}

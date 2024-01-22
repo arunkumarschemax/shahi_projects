@@ -51,6 +51,16 @@ export class SampleReqFabricinfoEntity{
     })
       remarks : string;
 
+      @Column("varchar", {
+        name: "file_name",
+        nullable:true
+    })
+    fileName: string;
+    @Column("varchar", {
+        name: "file_path",
+        nullable:true
+    })
+    filePath: string;
     @ManyToOne(type =>SampleRequest,sampleReqFabric =>sampleReqFabric.sampleReqFabricInfo)
     @JoinColumn({name:'sample_request_id'})
     samplerReqFabricEntity:SampleRequest

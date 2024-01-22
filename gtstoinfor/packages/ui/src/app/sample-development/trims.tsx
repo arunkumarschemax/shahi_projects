@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance, Modal } from 'antd';
-import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
+import { Table, Button, Input, Select, Tooltip, message, Form, InputNumber, Checkbox, FormInstance, Modal, Upload, UploadProps, Card } from 'antd';
+import { DeleteOutlined, EyeOutlined, SearchOutlined, UploadOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
 import { M3TrimsService, SampleDevelopmentService, TrimParamsMappingService, UomService } from '@project-management-system/shared-services';
 import { ItemTypeEnumDisplay, ItemTypeEnum, M3TrimType, BuyerIdReq, TrimIdRequestDto, buyerandM3ItemIdReq, UomCategoryEnum, M3TrimFilterReq } from '@project-management-system/shared-models';
@@ -40,8 +40,60 @@ const TrimsForm = (props:TrimsFormProps) => {
   const [visibleModel, setVisibleModel] = useState<boolean>(false);
   const [searchVisible, setSearchVisible] = useState<boolean>(false)
   const [trimCatId, setTrimCatId] = useState<number>(undefined)
+  const [fileList, setFileList] = useState([]);
+  const [imageUrl, setImageUrl] = useState('');
+  const [modal, setModal] = useState('')
+  const [previewVisible, setPreviewVisible] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
 
  const {Option}=Select
+
+ const getBase64 = (img, callback) => {
+  const reader = new FileReader();
+  reader.addEventListener('load', () => callback(reader.result));
+  reader.readAsDataURL(img);
+}
+ const uploadFabricProps: UploadProps = {
+  // alert();
+  multiple: true,
+  onRemove: file => {
+    console.log(file);
+    console.log(fileList?.find((f) => f.uid != file.uid))
+    let files:any[] = fileList?.find((f) => f.uid != file.uid)
+    setFileList(files);
+    setImageUrl('');
+  },
+  beforeUpload: (file: any, index:any) => {
+    console.log(index)
+    if (!file.name.match(/\.(pdf|xlsx|xls|png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+      AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+      return true;
+    }
+    // var reader = new FileReader();
+    // reader.readAsArrayBuffer(file);
+    // reader.onload = data => {
+      if (fileList?.length == 1) {
+        AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+        return true;
+      } else {
+          setFileList([...fileList,file]);
+        getBase64(file, imageUrl =>
+          setImageUrl(imageUrl)
+        );
+        return false;
+      }
+    // }
+  },
+  progress: {
+    strokeColor: {
+      '0%': '#108ee9',
+      '100%': '#87d068',
+    },
+    strokeWidth: 3,
+    format: percent => `${parseFloat(percent.toFixed(2))}%`,
+  },
+  fileList: fileList,
+};
 
   const handleAddRow = () => {
     if(props.sizeDetails.length > 0){
@@ -247,11 +299,23 @@ const getMappedTrims = (value, row) => {
       updatedData = data.map((record) => {
         if (record.key === key) {
           let qtyy = 0;
-          props.sizeDetails?.forEach(element => {
-            element.sizeInfo?.forEach(qty => {
-              qtyy = Number(qtyy)+Number(qty.quantity);
-            })
-          });
+          // props.sizeDetails?.forEach(element => {
+          //   element.sizeInfo?.forEach(qty => {
+          //     qtyy = Number(qtyy)+Number(qty.quantity);
+          //   })
+          // });
+
+           qtyy += props.sizeDetails.reduce((sum, record) => {
+            const sizeInfoQuantitySum = record.sizeInfo.reduce(
+              (sizeSum, sizeInfo) => sizeSum + Number(sizeInfo.quantity),
+              0
+            );
+          
+            return sum + sizeInfoQuantitySum;
+          }, 0);
+
+          console.log(qtyy)
+
           // console.log(qtyy);
           let consumptionCal = Number(qtyy) * Number(e);
           let withPer = (Number(consumptionCal) * Number(wastg))/ 100;
@@ -535,6 +599,30 @@ const getMappedTrims = (value, row) => {
       ),
     },
     {
+      title: 'Upload Trim',
+      dataIndex: 'trimUpload',
+      width:"20%",
+      fixed:'right',
+      render: (_, record) => (
+        <Form.Item name={`trimUpload${record.key}`}>
+          <Upload style={{ width: '100%' }} 
+            {...uploadFabricProps}
+            accept=".jpeg,.pdf,.png,.jpg"
+            onChange={(e) => handleInputChange(e.file,record.key,'trimUpload',record)}
+            >
+            <Button
+                style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                // icon={<UploadOutlined />}
+                disabled={fileList?.length == 1? true:false}
+            >
+                <Tooltip title="Upload Trim"><UploadOutlined /></Tooltip>
+            </Button>
+            {fileList?.length ==1?  <Button icon={<EyeOutlined/>} onClick={onTrimView}></Button>:<></>}
+          </Upload>
+      </Form.Item>
+      ),
+    },
+    {
       title: 'Action',
       dataIndex: 'action',
       width:"10%",
@@ -544,6 +632,12 @@ const getMappedTrims = (value, row) => {
       ),
     },
   ];
+
+  const onTrimView =() =>{
+    setModal('fileUpload')
+    setPreviewVisible(true)
+    
+  }
 
   const setAllocatedQty = (index, rowData, value, total,fabIndex) => {
     // console.log(fabIndex)
@@ -738,6 +832,25 @@ const tableColumns = (val,fabindex) => {
         bordered
       />
       </Form>
+      <Modal
+          visible={previewVisible}
+          title={"previewTitle"}
+          footer={null}
+          onCancel={() => setPreviewVisible(false)}
+        >
+          {modal == 'fileUpload' ?<>
+            <Card style={{ height: '250px' }}>
+                <Form.Item>
+                <img
+                    src={imageUrl}
+                    alt="Preview"
+                    height={'200px'}
+                    width={'500px'}
+                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                />
+                </Form.Item>
+            </Card></>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
+        </Modal>
       <Modal
             className='rm-'
             // key={'modal' + Date.now()}

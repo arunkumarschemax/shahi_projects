@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Not, QueryRunner, Raw, Repository } from 'typeorm';
 import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, requestNoReq, RackPositionStatusEnum,ItemTypeEnum, SampleRequestInfoModel, SampleSizeInfoModel} from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, requestNoReq, RackPositionStatusEnum,ItemTypeEnum, SampleRequestInfoModel, SampleSizeInfoModel, MessageParameters, WhatsAppLogDto, GlobalVariables} from '@project-management-system/shared-models';
 import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { Location } from '../locations/location.entity';
 import { Style } from '../style/dto/style-entity';
@@ -29,7 +29,7 @@ import { Size } from '../sizes/sizes-entity';
 import { OperationInventory } from '../operation-tracking/entity/operation-inventory-entity';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { IndentService } from '@project-management-system/shared-services';
+import { IndentService, WhatsAppInfo, WhatsAppNotificationService } from '@project-management-system/shared-services';
 import { MaterialAllocationRepo } from './repo/material-allocation-repo';
 import { MaterialAllocationEntity } from './entities/material-allocation.entity';
 import { MaterialAllocationDTO } from './dto/material-allocation-dto';
@@ -47,8 +47,9 @@ import { RackPositionEntity } from '../rm_locations/rack-position.entity';
 import { OrderQuantityRequset } from './dto/order-quantity-request';
 import { MaterialAllocationItemsDTO } from './dto/material-allocation-items-dto';
 import { M3TrimsEntity } from '../m3-trims/m3-trims.entity';
-
-
+import { UploadFilesEntity } from './entities/upload-files-entity';
+import { UploadFilesRepository } from './repo/upload-files-repository';
+let moment = require('moment');
 
 
 @Injectable()
@@ -67,9 +68,9 @@ export class SampleRequestService {
     private indentService: IndentService,
     private matAllRepo:MaterialAllocationRepo,
     private matAllitemRepo:MaterialAllocationItemsRepo,
-    private stockrepo:StocksRepository
-
-
+    private stockrepo:StocksRepository,
+    private wpService: WhatsAppNotificationService,
+    private uploadFilesRepository: UploadFilesRepository,
     
   ) { }
 
@@ -198,9 +199,362 @@ export class SampleRequestService {
     }
   }
 
+  // async createSampleDevelopmentRequest(req: SampleDevelopmentRequest): Promise<AllSampleDevReqResponseModel> {
+  //   const manager = new GenericTransactionManager(this.dataSource)
+  //   // console.log(req)
+  //   // console.log(req.sizeData[0].sizeInfo,'#####')
+  //   let save
+  //   let saveBomDetails
+  //   try {
+  //     await manager.startTransaction();
+  //     // const sampleId = await this.sampleRepo.getsampleId()
+  //     // const maxId = sampleId.id
+  //     const sampleReqEntity = new SampleRequest();
+  //     // const locationEntity = new Location()
+  //     // locationEntity.locationId = req.locationId
+  //     sampleReqEntity.locationId = req.locationId
+  //     sampleReqEntity.expectedDeliveryDate = req.expectedDeliveryDate
+  //     sampleReqEntity.requestNo = "SAM" + "/" + "23-24" + "/" + "00000" + Number(Number(1) + 1);
+  //     const profitHead = new ProfitControlHead()
+  //     profitHead.profitControlHeadId = req.pchId
+  //     sampleReqEntity.pch = profitHead
+  //     sampleReqEntity.user = req.user
+  //     const buyer = new Buyers()
+  //     buyer.buyerId = req.buyerId
+  //     sampleReqEntity.buyer = buyer
+  //     // const samType = new SampleTypes()
+  //     // samType.sampleTypeId = req.sampleTypeId
+  //     // sampleReqEntity.sampleType = samType
+  //     // const samSubType = new SampleSubTypes()
+  //     // samSubType.sampleSubTypeId = req.sampleSubTypeId
+  //     // sampleReqEntity.sampleSubType = samSubType
+  //     const styleEntity = new Style()
+  //     styleEntity.styleId = req.styleId
+  //     sampleReqEntity.style = styleEntity
+  //     sampleReqEntity.description = req.description
+  //     const brand = new Brands()
+  //     brand.brandId = req.brandId
+  //     sampleReqEntity.brand = brand
+  //     sampleReqEntity.costRef = req.costRef
+  //     // sampleReqEntity.m3StyleNo = req.m3Style
+  //     sampleReqEntity.contact = req.contact
+  //     sampleReqEntity.extension = req.extension
+  //     sampleReqEntity.samValue = req.samValue
+  //     const dmm = new EmplyeeDetails()
+  //     dmm.employeeId = req.dmmId
+  //     sampleReqEntity.dmm = dmm
+  //     const employee = new EmplyeeDetails()
+  //     employee.employeeId = req.technicianId
+  //     sampleReqEntity.technician = employee
+  //     sampleReqEntity.product = req.product
+  //     // sampleReqEntity.type = req.type
+  //     sampleReqEntity.conversion = req.conversion
+  //     sampleReqEntity.madeIn = req.madeIn
+  //     sampleReqEntity.remarks = req.remarks
+  //     sampleReqEntity.status = req.status
+  //     sampleReqEntity.category = req.category
+  //     // let sampleSizeInfo = []
+  //     // let sampleFabricInfo = []
+  //     // let sampleTrimInfo = []
+  //     // let sampleProcessInfo = []
+  //     // for (const size of req.sizeData) {
+  //     //   for (const sizedetails of size.sizeInfo) {
+  //     //     const sizeEntity = new SampleReqSizeEntity()
+  //     //     sizeEntity.colourId = size.colorId
+  //     //     sizeEntity.sizeId = sizedetails.sizeId
+  //     //     sizeEntity.quantity = sizedetails.quantity
+  //     //     sampleSizeInfo.push(sizeEntity)
+  //     //   }
+  //     // }
+  //     // sampleReqEntity.sampleReqSizeInfo = sampleSizeInfo;
+  //     // let indentFabInfo : FabricInfoReq[] = [];
+  //     // for (let fabricObj of req.fabricInfo) {
+  //     //   const fabricEntity = new SampleReqFabricinfoEntity()
+  //     //   fabricEntity.fabricCode = fabricObj.fabricCode
+  //     //   fabricEntity.colourId = fabricObj.colourId
+  //     //   fabricEntity.consumption = fabricObj.consumption
+  //     //   fabricEntity.uomId = fabricObj.uomId
+  //     //   fabricEntity.remarks = fabricObj.remarks
+  //     //   fabricEntity.totalRequirement = fabricObj.totalRequirement
+  //     //   fabricEntity.wastage = fabricObj.wastage
+  //     //   sampleFabricInfo.push(fabricEntity)
+  //     //   const fabricInfoReq = new FabricInfoReq(fabricObj.fabricCode,fabricObj.colourId,fabricObj.consumption,fabricObj.uomId,fabricObj.remarks)
+  //     //   indentFabInfo.push(fabricInfoReq);
+  //     // }
+  //     // sampleReqEntity.sampleReqFabricInfo = sampleFabricInfo;
+  //     // let indentTrimInfo : TrimInfoReq[] = [];
+  //     // for (const trimObj of req.trimInfo) {
+  //     //   let m3Data : M3TrimsEntity
+  //     //   if(trimObj.uomStatus){
+  //     //     m3Data = await manager.getRepository(M3TrimsEntity).findOne({where:{m3TrimId:trimObj.trimCode}});
+  //     //   }
+  //     //   const trimEntity = new SampleRequestTriminfoEntity()
+  //     //   trimEntity.trimCode = trimObj.trimCode
+  //     //   trimEntity.uomId = m3Data?.uomId != null ? m3Data?.uomId:null;
+  //     //   trimEntity.consumption = trimObj.consumption
+  //     //   trimEntity.trimType = trimObj.trimType
+  //     //   trimEntity.remarks = trimObj.remarks
+  //     //   trimEntity.totalRequirement = trimObj.totalRequirement
+  //     //   trimEntity.wastage = trimObj.wastage
+  //     //   sampleTrimInfo.push(trimEntity)
+  //     //   const trimInfoReq = new TrimInfoReq(trimObj.trimType,trimObj.trimCode,trimObj.consumption,trimObj.uomId,trimObj.remarks)
+  //     //   indentTrimInfo.push(trimInfoReq);
+        
+  //     // }
+  //     // sampleReqEntity.sampleTrimInfo = sampleTrimInfo
+  //     // for (const processObj of req.processInfo) {
+  //     //   const processEntity = new SampleRequestProcessInfoEntity()
+  //     //   processEntity.process = processObj.process
+  //     //   processEntity.description = processObj.description
+  //     //   sampleProcessInfo.push(processEntity)
+  //     // }
+  //     // sampleReqEntity.sampleProcessInfo = sampleProcessInfo
+
+  //     console.log("***********sampleReqEntity*************")
+  //     console.log(sampleReqEntity)
+  //     console.log("***********sampleReqEntity*************")
+  //     console.log(await manager.getRepository(SampleRequest).save(sampleReqEntity))
+
+  //     // save = await manager.getRepository(SampleRequest).save(sampleReqEntity);
+  //     console.log("$############################################################");
+  //     console.log(save);
+
+  //     // save = await this.sampleRepo.save(sampleReqEntity)
+  //     // if (save) 
+  //     // {
+  //     //   let fabFlag = new Set<boolean>()
+  //     //   if (req.fabricInfo) {
+  //     //     let fabricAllocation;
+  //     //     for (const fabricData of req.fabricInfo) {
+  //     //       const quantityWithWastage = Number(fabricData.consumption) + Number((2 / 100) * fabricData.consumption)
+  //     //       const bomEntity = new SamplingbomEntity()
+  //     //       bomEntity.sampleRequestId = save.SampleRequestId
+  //     //       bomEntity.colourId = fabricData.colourId
+  //     //       bomEntity.m3ItemId=fabricData.fabricCode
+  //     //       bomEntity.itemType='Fabric';
+  //     //       bomEntity.requiredQuantity = fabricData.totalRequirement
+  //     //       bomEntity.sampleItemId = save.sampleReqFabricInfo.find((e) => e.fabricCode === fabricData.fabricCode && e. colourId === fabricData.colourId).fabricInfoId
+  //     //       saveBomDetails = await manager.getRepository(SamplingbomEntity).save(bomEntity)
+  //     //       // saveBomDetails = await this.bomRepo.save(bomEntity)
+            
+  //     //       console.log("######################################################################")
+  //     //       console.log(fabricData.allocatedStock);
+  //     //       console.log(fabricData.allocatedStock.find((e)=>e.checkedStatus === 1));
+
+  //     //       if(fabricData.allocatedStock.find((e)=>e.checkedStatus === 1) != undefined)
+  //     //       {
+  //     //         let stockArray : any[] = [];
+  //     //         stockArray.push(fabricData.allocatedStock.find((e)=>e.checkedStatus === 1 && e.issuedQty > 0));
+  //     //         console.log(stockArray);
+  //     //         console.log("if")
+  //     //         console.log(req)
+  //     //         console.log(req.buyerId)
+
+  //     //         let totalAllocated = 0  
+  //     //         let item:MaterialAllocationItemsEntity[] = []
+  //     //         for (const stock of stockArray) {
+  //     //           console.log("7777")
+  //     //             totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
+  //     //             let itemData = new MaterialAllocationItemsEntity();
+  //     //             itemData.locationId = stock.locationId;
+  //     //             itemData.quantity = stock.quantity;
+  //     //             itemData.stockId = stock.stockId;
+  //     //             itemData.allocateQuantity = stock.issuedQty;
+  //     //             item.push(itemData);
+  //     //             let stockUpdate = await manager.getRepository(StocksEntity).update({id:stock.stockId},{allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}`});
+  //     //             if(stockUpdate.affected === 0){
+  //     //               await manager.releaseTransaction();
+  //     //             }
+  //     //         }
+  //     //         let materialAllocation = new MaterialAllocationEntity();
+
+  //     //         materialAllocation.buyerId = req.buyerId!= undefined?req.buyerId:0;
+  //     //         materialAllocation.itemType = ItemTypeEnum.FABRIC
+  //     //         materialAllocation.m3ItemId = fabricData.fabricCode
+  //     //         materialAllocation.totalIssueQty = totalAllocated
+  //     //         materialAllocation.sampleOrderId = save.SampleRequestId;
+  //     //         // materialAllocation.samplingBomId = saveBomDetails.samplingBomId;
+  //     //         materialAllocation.sampleItemId = save.sampleReqFabricInfo.find((e) => e.fabricCode === fabricData.fabricCode && e. colourId === fabricData.colourId).fabricInfoId;
+  //     //         materialAllocation.materialAllocationinfo = item;
+  //     //         console.log(materialAllocation);
+  //     //         console.log(materialAllocation)
+  //     //         fabricAllocation = await manager.getRepository(MaterialAllocationEntity).save(materialAllocation);
+  //     //         // fabricAllocation = await this.creatematerialAlloction(materialAllocation);
+
+  //     //         console.log(fabricAllocation);
+  //     //         // fabricAllocation = await manager.getRepository(MaterialAllocationEntity).save(allocationEntity)
+  //     //         if(!fabricAllocation){
+  //     //           fabFlag.add(false);
+  //     //           await manager.releaseTransaction();
+  //     //           return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+  //     //         }
+  //     //         else{
+  //     //           console.log("&&&&&&&&&&")
+  //     //           console.log(fabricData.totalRequirement)
+  //     //           console.log(totalAllocated);
+  //     //           let fabBomStatus = BomStatusEnum.OPEN;
+  //     //           if(Number(fabricData.totalRequirement) === Number(totalAllocated)){
+  //     //             fabBomStatus = BomStatusEnum.ALLOCATED
+  //     //             // fabFlag.add(true)
+  //     //           }
+  //     //           // else{
+  //     //           //   fabFlag.add(false)
+  //     //           // }
+  //     //           let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({samplingBomId:saveBomDetails.samplingBomId},{status:fabBomStatus,receivedQuantity : () => `received_quantity + ${totalAllocated}`})
+  //     //           if(updateSampleFabricInfo.affected === 0){
+  //     //             fabFlag.add(false)
+  //     //             await manager.releaseTransaction();
+  //     //             return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+  //     //           }
+  //     //           else{
+  //     //             fabFlag.add(true)
+  //     //           }
+  //     //         }
+  //     //       }
+  //     //       else{
+  //     //         console.log("else")
+  //     //       }
+            
+  //     //     }
+  //     //   }
+  //     //   let trimFlag = new Set<boolean>()
+  //     //   if (req.trimInfo) {
+  //     //     let trimAllocation;
+  //     //     for (const trimData of req.trimInfo) {
+  //     //       const bomEntity = new SamplingbomEntity()
+  //     //       bomEntity.sampleRequestId = save.SampleRequestId
+  //     //       bomEntity.itemType=trimData.trimType
+  //     //       bomEntity.m3ItemId=trimData.trimCode
+  //     //       bomEntity.colourId = trimData.colourId
+  //     //       bomEntity.requiredQuantity = trimData.totalRequirement
+  //     //       bomEntity.sampleItemId = save.sampleTrimInfo.find((e) => e.trimCode === trimData.trimCode).trimInfoId
+  //     //       saveBomDetails = await manager.getRepository(SamplingbomEntity).save(bomEntity);
+  //     //       // saveBomDetails = await this.bomRepo.save(bomEntity)
+          
+  //     //       if(trimData.allocatedStock.find((e)=>e.checkedStatus === 1) != undefined)
+  //     //       {
+  //     //         let stockArray : any[] = []
+  //     //         stockArray.push(trimData.allocatedStock.find((e)=>e.checkedStatus === 1 && e.issuedQty > 0))
+  //     //         console.log(stockArray);
+  //     //         let totalAllocated = 0
+  //     //         let item:MaterialAllocationItemsEntity[] = []
+  //     //         for (const stock of stockArray) {
+  //     //           totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
+  //     //           let itemData = new MaterialAllocationItemsEntity();
+  //     //           itemData.locationId = stock.locationId;
+  //     //           itemData.quantity = stock.quantity;
+  //     //           itemData.stockId = stock.stockId;
+  //     //           itemData.allocateQuantity = stock.issuedQty;
+  //     //           item.push(itemData);
+  //     //           let stockUpdate = await manager.getRepository(StocksEntity).update({id:stock.stockId},{allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}`});
+  //     //             if(stockUpdate.affected === 0){
+  //     //               console.log("1111111111111111111111111111111111111111111111111111111111111");
+  //     //               trimFlag.add(false);
+  //     //               await manager.releaseTransaction();
+  //     //             }
+  //     //         }
+  //     //         let materialAllocation = new MaterialAllocationEntity();
+
+  //     //         materialAllocation.buyerId = req.buyerId
+  //     //         materialAllocation.itemType = trimData.trimType
+  //     //         materialAllocation.m3ItemId = trimData.trimCode
+  //     //         materialAllocation.totalIssueQty = totalAllocated
+  //     //         materialAllocation.sampleOrderId = save.SampleRequestId;
+  //     //         // materialAllocation.samplingBomId = saveBomDetails.samplingBomId;
+  //     //         materialAllocation.sampleItemId = save.sampleTrimInfo.find((e) => e.trimCode === trimData.trimCode).trimInfoId;
+  //     //         materialAllocation.materialAllocationinfo = item;
+  //     //         console.log(materialAllocation);
+  //     //         // trimAllocation = await this.creatematerialAlloction(materialAllocation);
+  //     //         trimAllocation = await manager.getRepository(MaterialAllocationEntity).save(materialAllocation);
+
+  //     //         console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+  //     //         console.log(trimAllocation);
+
+  //     //         if(!trimAllocation){
+  //     //           console.log("222222222222222222222222222222222222222222222222222222222222");
+
+  //     //           trimFlag.add(false)
+  //     //           await manager.releaseTransaction();
+  //     //           return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+  //     //         }
+  //     //         // else{
+  //     //         //   trimFlag.add(true)
+  //     //         // }
+  //     //         else{
+  //     //           let trimBomStatus = BomStatusEnum.OPEN;
+  //     //           if(Number(trimData.totalRequirement) === Number(totalAllocated)){
+  //     //             trimBomStatus = BomStatusEnum.ALLOCATED
+  //     //             // trimFlag.add(true);
+  //     //           }
+  //     //           console.log(saveBomDetails)
+  //     //           let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({samplingBomId:saveBomDetails.samplingBomId},{status:trimBomStatus,receivedQuantity : () => `received_quantity + ${totalAllocated}`})
+  //     //           console.log("updateSampleFabricInfo")
+  //     //           console.log(updateSampleFabricInfo)
+
+  //     //           if(updateSampleFabricInfo.affected === 0){
+  //     //             console.log("333333333333333333333333333333333333333333333333333333333333333333333");
+  //     //             trimFlag.add(false);
+  //     //             await manager.releaseTransaction();
+  //     //             return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+  //     //           }
+  //     //           else{
+  //     //             trimFlag.add(true);
+  //     //           }
+  //     //         }
+  //     //       }
+  //     //     }
+  //     //   }
+  //     //   console.log(fabFlag.has(true) +"-"+ trimFlag.has(true))
+  //     //   console.log(fabFlag.has(false) +"-"+ trimFlag.has(false))
+
+  //     //   if(!fabFlag.has(false) || !trimFlag.has(false)){
+  //     //     let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})
+  //     //     console.log(updateSampleRequestStatus)
+  //     //       if(updateSampleRequestStatus.affected === 0){
+  //     //         await manager.releaseTransaction();
+  //     //         return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+  //     //       }
+  //     //   }
+  //     // }
+  //     // else{
+  //     //   await manager.releaseTransaction();
+  //     //   return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
+  //     // }
+  //     // if (save && saveBomDetails) {
+  //     //   await manager.completeTransaction();
+  //     //   console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+  //     //   console.log(save);
+
+  //     //   for(const res of req.fabricInfo){
+  //     //     save.sampleReqFabricInfo.find((rec) => rec.fabricCode === res.fabricCode && rec.colourId == res.colourId)["fabricUpload"] = res.fabricUpload;
+
+  //     //   }
+
+  //     //   const req1 = new SourcingRequisitionReq(req.styleId,new Date(),"",new Date(),indentFabInfo,indentTrimInfo,save.SampleRequestId);
+  //     //   // const raiseIndent = await this.indentService.createItems(req1);
+  //     //   // if(raiseIndent.status){
+  //     //     return new AllSampleDevReqResponseModel(true, 1, 'SampleDevelopmentRequest created successfully', [save])
+  //     //   // }
+  //     //   // else {
+  //     //   //   return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
+  //     //   // }
+  //     // }
+  //     // else {
+  //       return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
+  //     // }
+  //   }
+  //   catch (err) {
+  //     console.log(err);
+  //     await manager.releaseTransaction();
+  //     throw err
+  //   }
+
+  // }
   async createSampleDevelopmentRequest(req: SampleDevelopmentRequest): Promise<AllSampleDevReqResponseModel> {
     const manager = new GenericTransactionManager(this.dataSource)
-    // console.log(req)
+    console.log(req)
+    console.log(req.subType)
+
     // console.log(req.sizeData[0].sizeInfo,'#####')
     let save
     let saveBomDetails
@@ -222,11 +576,11 @@ export class SampleRequestService {
       buyer.buyerId = req.buyerId
       sampleReqEntity.buyer = buyer
       const samType = new SampleTypes()
-      samType.sampleTypeId = req.sampleTypeId
-      // sampleReqEntity.sampleType = samType
+      samType.sampleTypeId = req.type
+      sampleReqEntity.sampleType = samType
       const samSubType = new SampleSubTypes()
-      samSubType.sampleSubTypeId = req.sampleSubTypeId
-      // sampleReqEntity.sampleSubType = samSubType
+      samSubType.sampleSubTypeId = req.subType
+      sampleReqEntity.sampleSubType = samSubType
       const styleEntity = new Style()
       styleEntity.styleId = req.styleId
       sampleReqEntity.style = styleEntity
@@ -242,15 +596,16 @@ export class SampleRequestService {
       const dmm = new EmplyeeDetails()
       dmm.employeeId = req.dmmId
       sampleReqEntity.dmm = dmm
-      const employee = new EmplyeeDetails()
-      employee.employeeId = req.technicianId
-      sampleReqEntity.technician = employee
+      // const employee = new EmplyeeDetails()
+      // employee.employeeId = req.technicianId
+      // sampleReqEntity.technician = employee
       sampleReqEntity.product = req.product
-      sampleReqEntity.type = req.type
-      sampleReqEntity.conversion = req.conversion
-      sampleReqEntity.madeIn = req.madeIn
+      // sampleReqEntity.type = req.type === '' || undefined?null:req.type
+      // sampleReqEntity.conversion = req.conversion
+      // sampleReqEntity.madeIn = req.madeIn
       sampleReqEntity.remarks = req.remarks
       sampleReqEntity.status = req.status
+      sampleReqEntity.category = req.category
       let sampleSizeInfo = []
       let sampleFabricInfo = []
       let sampleTrimInfo = []
@@ -405,6 +760,7 @@ export class SampleRequestService {
               }
             }
             else{
+              fabFlag.add(false);
               console.log("else")
             }
             
@@ -495,12 +851,15 @@ export class SampleRequestService {
                 }
               }
             }
+            else{
+              trimFlag.add(false);
+            }
           }
         }
         console.log(fabFlag.has(true) +"-"+ trimFlag.has(true))
         console.log(fabFlag.has(false) +"-"+ trimFlag.has(false))
-
-        if(!fabFlag.has(false) || !trimFlag.has(false)){
+        
+        if(fabFlag.has(true) && trimFlag.has(true)){
           let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})
           console.log(updateSampleRequestStatus)
             if(updateSampleRequestStatus.affected === 0){
@@ -517,6 +876,11 @@ export class SampleRequestService {
         await manager.completeTransaction();
         console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         console.log(save);
+
+        for(const res of req.fabricInfo){
+          save.sampleReqFabricInfo.find((rec) => rec.fabricCode === res.fabricCode && rec.colourId == res.colourId)["fabricUpload"] = res.fabricUpload;
+
+        }
 
         const req1 = new SourcingRequisitionReq(req.styleId,new Date(),"",new Date(),indentFabInfo,indentTrimInfo,save.SampleRequestId);
         // const raiseIndent = await this.indentService.createItems(req1);
@@ -538,14 +902,95 @@ export class SampleRequestService {
     }
 
   }
-  async UpdateFilePath(filePath: string, filename: string, SampleRequestId: number): Promise<UploadResponse> {
+  
+  async fabricUpload(filePath: any, data: any): Promise<UploadResponse> {
+    console.log(filePath);
+    console.log(data);
+    console.log(JSON.parse(data));
+
+    const manager = new GenericTransactionManager(this.dataSource)
+    try {
+      let flag = true;
+      await manager.startTransaction();
+      for(const [index,value] of JSON.parse(data).entries()){
+        console.log("********************")
+        console.log(value);
+        console.log(index);
+
+        const updateFilePath = await manager.getRepository(SampleReqFabricinfoEntity).update({fabricInfoId:value.fabricInfoId},{fileName: `${filePath[index].filename}`, filePath:`${filePath[index].path}`});
+        console.log(updateFilePath)
+        if(!(updateFilePath.affected > 0)){
+          flag = false
+        }
+      }
+      if (flag) {
+        await manager.completeTransaction();
+        return new UploadResponse(true, 11, 'uploaded successfully', filePath);
+      }
+      else {
+        await manager.releaseTransaction();
+        return new UploadResponse(false, 11, 'uploaded failed', filePath);
+      }
+    }catch (error) {
+      await manager.releaseTransaction();
+      console.log(error);
+    }
+  }
+
+  async trimUpload(filePath: any, data: any): Promise<UploadResponse> {
+    console.log(filePath);
+    console.log(data);
+    console.log(JSON.parse(data));
+
+    const manager = new GenericTransactionManager(this.dataSource)
+    try {
+      let flag = true;
+      await manager.startTransaction();
+      for(const [index,value] of JSON.parse(data).entries()){
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        console.log(value);
+        console.log(index);
+
+        const updateFilePath = await manager.getRepository(SampleRequestTriminfoEntity).update({trimInfoId:value.trimInfoId},{fileName: `${filePath[index].filename}`, filePath:`${filePath[index].path}`});
+        console.log(updateFilePath)
+        if(!(updateFilePath.affected > 0)){
+          flag = false
+        }
+      }
+      if (flag) {
+        await manager.completeTransaction();
+        return new UploadResponse(true, 11, 'uploaded successfully', filePath);
+      }
+      else {
+        await manager.releaseTransaction();
+        return new UploadResponse(false, 11, 'uploaded failed', filePath);
+      }
+    }catch (error) {
+      await manager.releaseTransaction();
+      console.log(error);
+    }
+  }
+
+  async UpdateFilePath(filePath: any, SampleRequestId: number): Promise<UploadResponse> {
     console.log('upload service id---------------', filePath)
-    console.log('upload service id---------------', filename)
     console.log('upload service id---------------', SampleRequestId)
     try {
-      let filePathUpdate;
-      filePathUpdate = await this.sampleRepo.update({ SampleRequestId: SampleRequestId }, { fileName: filename, filepath: filePath })
-      if (filePathUpdate.affected > 0) {
+      // let filePathUpdate;
+      // filePathUpdate = await this.sampleRepo.update({ SampleRequestId: SampleRequestId }, { fileName: filename, filepath: filePath })
+      let flag = true;
+      for(const res of filePath){
+        const entity = new UploadFilesEntity()
+        entity.fileName=res.filename
+        entity.filePath="/dist/packages/services/common/"+res.path
+        entity.sampleRequestId=SampleRequestId  
+        entity.createdUser="admin"
+        const uploadDoc = await this.uploadFilesRepository.save(entity);
+        if(!uploadDoc){
+            flag = false;
+        }
+      }
+   
+      if (flag) {
         return new UploadResponse(true, 11, 'uploaded successfully', filePath);
       }
       else {
@@ -2087,4 +2532,82 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
     }
 }
 
+async getUsageWhtsAppMsg(): Promise<CommonResponseModel> {
+  try {
+    let date = moment().subtract(1, 'days').format('YYYY-MM-DD')
+    const manager = this.dataSource;
+    const sampleOrders = `SELECT COUNT(DISTINCT sample_request_id)AS COUNT FROM sample_request_size_info WHERE DATE(created_at) = '${date}'`
+    const indents = `SELECT COUNT(request_no) AS COUNT FROM indent WHERE DATE(created_at) = '${date}'`
+    const pos = `SELECT COUNT(po_number) AS COUNT FROM purchase_order WHERE DATE(created_at) = '${date}'`
+    const grns = `SELECT COUNT(grn_number) AS COUNT FROM grn WHERE DATE(created_at) = '${date}'`
+    const stock =`SELECT COUNT(id) AS COUNT FROM stocks WHERE DATE(created_at) = '${date}'    `
+    const location = `SELECT COUNT(stock_log_id)AS COUNT FROM stock_log WHERE DATE(created_at) = '${date}'`
+    const material = `SELECT COUNT(material_allocation_id) AS COUNT FROM material_allocation WHERE DATE(updated_at) = '${date}' AND STATUS = 'MATERIAL ISSUED'`
+    const operations = `SELECT COUNT(operation_tracking_id) AS COUNT FROM operation_tracking WHERE DATE(created_at) = '${date}'`
+    const sampleOrdersInfo = await manager.query(sampleOrders);
+    const indentsInfo = await manager.query(indents);
+    const posInfo = await manager.query(pos);
+    const grnsInfo = await manager.query(grns);
+    const stockInfo = await manager.query(stock);
+    const operationsInfo = await manager.query(operations);
+    const materialInfo = await manager.query(material);
+    const locationInfo = await manager.query(location);
+     
+
+          const datetime = moment().format('MMMM Do, YYYY')
+
+          // for (const ic of data) {
+          //     let msgContent = '\\n' + ic.lifecycle_status + ' : ' + ic.COUNT
+          //     vehiclelifecycle += msgContent;
+          //     //   const status = ic.lifecycle_status;
+          //     //   const count = ic.COUNT;
+          //     // console.log(ic.lifecycle_status, '{}')
+          // }
+          
+          const parameters = [
+              { "type": "text", "text": datetime },
+              { "type": "text", "text":  sampleOrdersInfo?.[0]?.COUNT},
+              { "type": "text", "text":  indentsInfo?.[0]?.COUNT},
+              { "type": "text", "text":  posInfo?.[0]?.COUNT},
+              { "type": "text", "text":  grnsInfo?.[0]?.COUNT},
+              { "type": "text", "text":  locationInfo?.[0]?.COUNT},
+              { "type": "text", "text":  stockInfo?.[0]?.COUNT},
+              { "type": "text", "text":  materialInfo?.[0]?.COUNT},
+              { "type": "text", "text":  operationsInfo?.[0]?.COUNT}
+          ];
+          // console.log(parameters, 'Parameter-----------')
+
+          const contacts = WhatsAppInfo.contacts;
+          let statusFlag = true
+          let whatsappres
+          for (const contact of contacts) {
+
+              whatsappres = await new MessageParameters(contact, 'sampling_usage', parameters, 'en_us')
+              const messageStatus = await this.wpService.sendMessageThroughFbApi(whatsappres);
+
+              if (!messageStatus.status) {
+                  statusFlag = false
+                  break
+              } else {
+                  statusFlag = true
+                  const whatsapplogDto = new WhatsAppLogDto(contact,'sampling_usage','Shahi',GlobalVariables.whastAppBiCompanyId,GlobalVariables.whastAppBiModuleId)
+
+                  // const whatsapplogDto = new WhatsAppLogDto(contact, 'usage_report', 'Sampling', 23, 27)
+                  await this.wpService.createWhatappLog(whatsapplogDto)
+
+              }
+
+              
+          }
+          // if (data) {
+          return new CommonResponseModel(true, 1, 'Data Retrived Successfully', whatsappres)
+
+      //     } else {
+      //     return new CommonResponseModel(false, 0, 'No Data Found..', undefined)
+      // }
+  }
+  catch (err) {
+      throw err
+  }
+}
 }
