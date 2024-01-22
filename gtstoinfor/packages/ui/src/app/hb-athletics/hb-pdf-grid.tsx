@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { AlertMessages } from "packages/libs/shared-models/src/common/supplier/alert-messages";
 import { config } from "packages/libs/shared-services/config";
+import { HbPoOrderFilter } from "@project-management-system/shared-models";
 
 
 export function HbPdFInfoGrid() {
@@ -20,7 +21,7 @@ export function HbPdFInfoGrid() {
     const [pageSize, setPageSize] = useState(1);
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const [poNumber, setPoNumber] = useState('');
+    const [poNumber, setPoNumber] = useState([]);
     const [form] = Form.useForm();
     const { Option } = Select;
     const [isModalOpen1, setIsModalOpen1] = useState(false);
@@ -39,14 +40,38 @@ export function HbPdFInfoGrid() {
 
     useEffect(() => {
         getPdfFileInfo();
+        getHbPoNumber()
     }, []);
     
     
     const getPdfFileInfo = () => {
-        service.getPdfFileInfo().then(res => {
+        const req = new HbPoOrderFilter();
+  
+        if (form.getFieldValue("poNumber") !== undefined) {
+          req.custPo = form.getFieldValue("poNumber");
+        }
+        service.getPdfFileInfo(req).then(res => {
+            if (res.data){
             setPdfData(res.data)
-        })
+               
+            } else {
+                setPdfData([])
+        AlertMessages.getErrorMessage(res.internalMessage);
+
+            }
+        }).catch((err) => {
+            console.log(err.message);
+          });
     }
+
+    const getHbPoNumber = () => {
+        service.getHbPoNumber().then((res) => {
+          if (res.status) {
+            setPoNumber(res.data);
+          
+          }
+        });
+      };
     const onReset = () => {
         form.resetFields()
         getPdfFileInfo()
@@ -254,6 +279,84 @@ export function HbPdFInfoGrid() {
     return (
         <>
             <Card title="Orders History" headStyle={{ fontWeight: 'bold' }}>
+            <Form
+            onFinish={getPdfFileInfo}
+            form={form}
+            layout='vertical'
+          >
+            <Row gutter={24}>
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 4 }}
+                lg={{ span: 4 }}
+                xl={{ span: 4 }}
+              >
+                <Form.Item name="poNumber" label="Customer PO Number">
+                  <Select
+                    showSearch
+                    placeholder="Select Customer PO "
+                    optionFilterProp="children"
+                    allowClear
+                  >
+                     {poNumber.map((inc: any) => {
+                      return (
+                        <Option key={inc.cust_po} value={inc.cust_po}>
+                          {inc.cust_po}
+                        </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+             
+            
+              {/* <Row> */}
+              <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 5 }}
+                lg={{ span: 5 }}
+                xl={{ span: 4 }}
+                style={{marginTop:23,marginLeft:60}}
+              > 
+                <Form.Item 
+                // style={{marginTop:20,marginLeft:60}}
+                >
+                  <Button
+                    htmlType="submit"
+                    icon={<SearchOutlined />}
+                    type="primary"
+                  >
+                    SEARCH
+                  </Button>
+                
+                </Form.Item>
+              {/* </Col> */}
+              {/* <Col
+                xs={{ span: 24 }}
+                sm={{ span: 24 }}
+                md={{ span: 5 }}
+                lg={{ span: 5 }}
+                xl={{ span: 4 }}
+              > */}
+                <Form.Item 
+                // style={{marginTop:20}}
+                 style={{ marginLeft: 120 ,marginTop:-43}}
+                >
+                  <Button
+                    htmlType="submit"
+                    type="primary"
+                    onClick={onReset}
+                    icon={<UndoOutlined />}
+                  >
+                    Reset
+                  </Button>
+                </Form.Item>
+              </Col>
+              </Row>
+            {/* </Row> */}
+          </Form>
                 <Table
                     columns={columns}
                     dataSource={pdfData}
@@ -269,6 +372,7 @@ export function HbPdFInfoGrid() {
                     scroll={{ x: 'max-content', y: 450 }}
                 >
                 </Table>
+        
             </Card>
         </>
     )

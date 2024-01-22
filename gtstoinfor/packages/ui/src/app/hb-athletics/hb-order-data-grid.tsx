@@ -1091,10 +1091,10 @@ import { Excel } from "antd-table-saveas-excel";
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-                <Form.Item name="poNumber" label="Buyer PO Number">
+                <Form.Item name="poNumber" label="Customer PO Number">
                   <Select
                     showSearch
-                    placeholder="Select Buyer PO "
+                    placeholder="Select Customer PO "
                     optionFilterProp="children"
                     allowClear
                   >

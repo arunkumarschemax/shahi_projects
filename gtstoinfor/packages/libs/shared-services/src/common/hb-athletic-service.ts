@@ -13,8 +13,8 @@ export class HbService extends CommonAxiosService {
         return this.axiosPostCall(this.hbOrdersController + "/fileUpload", formData)
     }
 
-    async getPdfFileInfo(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.hbOrdersController + "/getPdfFileInfo")
+    async getPdfFileInfo(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.hbOrdersController + "/getPdfFileInfo",req)
     }
 
     async getHborderData(req:any): Promise<CommonResponseModel> {

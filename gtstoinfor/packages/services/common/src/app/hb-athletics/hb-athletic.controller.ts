@@ -67,9 +67,9 @@ export class HbController {
     }
 
     @Post('/getPdfFileInfo')
-    async getPdfFileInfo(): Promise<CommonResponseModel> {
+    async getPdfFileInfo(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.Service.getPdfFileInfo();
+            return this.Service.getPdfFileInfo(req);
         } catch (err) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
