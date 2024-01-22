@@ -344,41 +344,41 @@ const SanmarColineView = () => {
                 return (record.error_msg ? (record.error_msg) : '-')
             }
         },
-        // {
-        //     title: 'Actions',
-        //     dataIndex: 'actions',
-        //     render: (text, record) => {
-        //         // if (record.status && record.status.toLowerCase() === 'failed') {
-        //             return (
-        //                 <div>
-        //                     {editingRow === record ? (
-        //                         <div>
-        //                             <Button type="primary" onClick={() => onFinishEdit(record)}>Update</Button>
-        //                             &nbsp; &nbsp;
-        //                             <Button type="primary" danger onClick={() => setEditingRow(null)}>Cancel</Button>
-        //                         </div>
-        //                     ) : (
-        //                         <div>
-        //                             <Button type="primary" onClick={() => onEditClick(record)}>Edit</Button>
-        //                             &nbsp; &nbsp;
-        //                             <Popconfirm
-        //                                 title="Are you sure to Delete?"
-        //                                 onConfirm={() => handleConfirmDelete(record)}
-        //                                 // onCancel={() => message.info('Delete canceled')}
-        //                                 okText="Yes"
-        //                                 cancelText="No"
-        //                             >
-        //                                 <Button type="primary" danger>Delete</Button>
-        //                             </Popconfirm>
-        //                         </div>
-        //                     )}
-        //                 </div>
-        //             );
-        //         // } else {
-        //         //     return <span>-</span>;
-        //         // }
-        //     },
-        // },
+        {
+            title: 'Actions',
+            dataIndex: 'actions',
+            render: (text, record) => {
+                // if (record.status && record.status.toLowerCase() === 'failed') {
+                    return (
+                        <div>
+                            {editingRow === record ? (
+                                <div>
+                                    <Button type="primary" onClick={() => onFinishEdit(record)}>Update</Button>
+                                    &nbsp; &nbsp;
+                                    <Button type="primary" danger onClick={() => setEditingRow(null)}>Cancel</Button>
+                                </div>
+                            ) : (
+                                <div>
+                                    <Button type="primary" onClick={() => onEditClick(record)}>Edit</Button>
+                                    &nbsp; &nbsp;
+                                    <Popconfirm
+                                        title="Are you sure to Delete?"
+                                        onConfirm={() => handleConfirmDelete(record)}
+                                        // onCancel={() => message.info('Delete canceled')}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
+                                        <Button type="primary" danger>Delete</Button>
+                                    </Popconfirm>
+                                </div>
+                            )}
+                        </div>
+                    );
+                // } else {
+                //     return <span>-</span>;
+                // }
+            },
+        },
     ]
 
     return (
