@@ -54,7 +54,7 @@ export class GrnItemsFormDto {
     trimMappingId?: number
     styleId?: number
     trimParams?: string
-    rejectedQuantity?: number
+    rejectedQuantity?: number | string
     rejectedUomId?: number
     conversionQuantity?: number
     conversionUomId?: number;
