@@ -65,7 +65,7 @@ export class SanmarOrdersRepository extends Repository<SanmarOrdersEntity> {
     }
 
     async getordercomparationData(req?:SanmarOrderFilter): Promise<any[]> {
-        console.log(req)
+        console.log(req,"tayay")
         const query = this.createQueryBuilder('o')
             .select(`*`)
             if(req.buyerPo !== undefined){
@@ -80,7 +80,7 @@ export class SanmarOrdersRepository extends Repository<SanmarOrdersEntity> {
             if (req.deliveryDateStartDate !== undefined) {
                 query.andWhere(`STR_TO_DATE(o.delivery_date, '%Y-%m-%d') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
             }
-            query.andWhere(`o.status != 'ACCEPTED'`);
+            // query.andWhere(`o.status != 'ACCEPTED'`);
           
         return await query.getRawMany()
     }

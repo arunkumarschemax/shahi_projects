@@ -26,11 +26,12 @@ export const SanmarOrderComparisionReport = () => {
   const { RangePicker } = DatePicker;
 
 
+
   const { Option } = Select;
 
   useEffect(() => {
     getordercomparationData();
-    // getHbPoNumber();
+    getPoNumber();
   }, []);
   
   const getordercomparationData = () => {
@@ -71,21 +72,21 @@ export const SanmarOrderComparisionReport = () => {
      })
   };
 
-  // const getHbPoNumber = () => {
+  const getPoNumber = () => {
 
-  //   service.getHbPoNumber().then((res) => {
-  //     if (res.status) {
-  //       setPoNumberData(res.data);
+    service.getCustomerPoNumber().then((res) => {
+      if (res.status) {
+        setPoNumberData(res.data);
       
-  //     } else {
-  //       setPoNumberData([]);
-  //       // AlertMessages.getErrorMessage(res.internalMessage);
-  //     }
-  //   }).catch(err => {
-  //      setPoNumberData([]);
-  //     //  AlertMessages.getErrorMessage(err.message);
-  //    })
-  // };
+      } else {
+        setPoNumberData([]);
+        // AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+       setPoNumberData([]);
+      //  AlertMessages.getErrorMessage(err.message);
+     })
+  };
 
   const onReset = () => {
     form.resetFields();
@@ -544,8 +545,8 @@ export const SanmarOrderComparisionReport = () => {
                 >
                   {poNumberData.map((inc: any) => {
                     return (
-                      <Option key={inc.cust_po} value={inc.cust_po}>
-                        {inc.cust_po}
+                      <Option key={inc.buyer_po} value={inc.buyer_po}>
+                        {inc.buyer_po}
                       </Option>
                     );
                   })}
