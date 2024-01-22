@@ -437,7 +437,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
   }
-  const uploadFabricProps: UploadProps = {
+  const uploadFabricProps: UploadProps =  {
     // alert();
     multiple: true,
     onRemove: file => {
@@ -727,7 +727,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       fixed:'right',
       render: (_, record) => (
         <Form.Item name={`fabricUpload${record.key}`}>
-          <Upload style={{ width: '100%' }} 
+          <Upload name={`fabricUpload${record.key}`} style={{ width: '100%' }} 
             {...uploadFabricProps}
             accept=".jpeg,.pdf,.png,.jpg"
             onChange={(e) => handleInputChange(e.file,record.key,'fabricUpload',0,record)}
