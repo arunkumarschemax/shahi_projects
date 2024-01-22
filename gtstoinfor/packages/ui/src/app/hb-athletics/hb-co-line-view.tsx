@@ -101,7 +101,7 @@ const HbColineView = () => {
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
             {
-                title: 'Buyer Po',
+                title: 'Customer PO',
                 dataIndex: 'cust_po',
                 render: (text, record) => {
                     return (record.cust_po ? (record.cust_po) : '-')
@@ -190,7 +190,7 @@ const HbColineView = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'Buyer PO',
+            title: 'Customer PO',
             dataIndex: 'cust_po',
             render: (text, record) => {
                 return (record.cust_po ? (record.cust_po) : '-')
@@ -294,10 +294,10 @@ const HbColineView = () => {
             form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='buyerPo' label='Buyer Po' >
+                        <Form.Item name='buyerPo' label='Customer Po' >
                             <Select
                                 showSearch
-                                placeholder="Select Buyer Po"
+                                placeholder="Select Customer Po"
                                 optionFilterProp="children"
                                 allowClear
                             >

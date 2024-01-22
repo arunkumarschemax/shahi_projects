@@ -213,7 +213,7 @@ export const OrderComparisionReport = () => {
         // fixed: "left",
       },
       {
-        title: "Buyer PO",
+        title: "Customer PO",
         dataIndex: "custPo",
         width: 90,
         sorter: (a, b) => a.custPo.localeCompare(b.custPo),
@@ -400,7 +400,7 @@ export const OrderComparisionReport = () => {
         }
       },
       {
-        title: "Buyer PO Number",
+        title: "Customer PO Number",
         dataIndex: "custPo",
         width: 90,
         render: (text) => text ? text : "-"
@@ -535,10 +535,10 @@ export const OrderComparisionReport = () => {
               lg={{ span: 4 }}
               xl={{ span: 4 }}
             >
-              <Form.Item name="poNumber" label="Buyer PO Number">
+              <Form.Item name="poNumber" label="Customer PO Number">
                 <Select
                   showSearch
-                  placeholder="Select Buyer PO"
+                  placeholder="Select Customer PO"
                   optionFilterProp="children"
                   allowClear
                 >

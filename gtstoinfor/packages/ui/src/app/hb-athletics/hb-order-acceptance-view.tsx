@@ -327,7 +327,7 @@ export function HbOrderAcceptanceGrid() {
         fixed: "left",
       },
       {
-        title: "BUYER PO",
+        title: "Customer PO",
         dataIndex: "custPo",
         width: 90,
        // sorter: (a, b) => a.custPo.localeCompare(b.custPo),
@@ -647,10 +647,10 @@ export function HbOrderAcceptanceGrid() {
               lg={{ span: 4 }}
               xl={{ span: 4 }}
             >
-              <Form.Item name="poNumber" label="Buyer Po number">
+              <Form.Item name="poNumber" label="Customer PO number">
                 <Select
                   showSearch
-                  placeholder="Select Buyer Po "
+                  placeholder="Select Customer PO "
                   optionFilterProp="children"
                   allowClear
                 >
