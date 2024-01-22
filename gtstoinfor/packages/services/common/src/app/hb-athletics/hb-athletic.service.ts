@@ -18,6 +18,7 @@ import { HbOrdersChildRepository } from "./repositories/hb-order-child.repo";
 import { HbOrdersChildEntity } from "./entity/hb-orders-child.entity";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { DataSource } from "typeorm";
+import { ItemNoDtos } from "./dto/item-no.dto";
 
 @Injectable()
 export class HbService {
@@ -151,7 +152,7 @@ export class HbService {
   }
 
 
-  async getPdfFileInfo(req:any): Promise<CommonResponseModel> {
+  async getPdfFileInfo(req: any): Promise<CommonResponseModel> {
     try {
       const data = await this.HbPdfRepo.getPDFInfo(req)
       if (data) {
@@ -193,7 +194,7 @@ export class HbService {
           waitUntil: 'networkidle0'
         })
       }, 1000);
-     
+
       const directoryPath = 'C:/hb-unread/';
       const destinationDirectory = 'C:/hb-read/';
 
@@ -213,12 +214,12 @@ export class HbService {
         await page.click('button.ant-btn-primary');
         await page.waitForTimeout(10000)
 
-           setTimeout(async () => {
-        await page.goto('http://localhost:4200/#/hb-athletics/hb-pdf-upload/', {
-          timeout: 100000,
-          waitUntil: 'networkidle0'
-        })
-      }, 1000);
+        setTimeout(async () => {
+          await page.goto('http://localhost:4200/#/hb-athletics/hb-pdf-upload/', {
+            timeout: 100000,
+            waitUntil: 'networkidle0'
+          })
+        }, 1000);
 
         const sourceFilePath = path.join(directoryPath, file);
         const destinationFilePath = path.join(destinationDirectory, file);
@@ -355,19 +356,19 @@ export class HbService {
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
       const records = await this.HbOrdersRepo.find({ where: { custPo: req.custPo, exitFactoryDate: req.exitFactoryDate } });
       const empty = [];
-     
-        //console.log(rec,'reccccccccc')
-        const entity = new HbCOLineEntity()
-        entity.buyer = req.buyer
-        entity.custPo = req.custPo;
-        entity.style = req.style;
-        entity.itemNo =  req?.itemNo;
-        entity.status = 'Open';
-        entity.exitFactoryDate=req.exitFactoryDate;
-        entity.createdUser = 'admin';
-        empty.push(entity)
-      
-     // console.log(empty,'emptyyyyy')
+
+      //console.log(rec,'reccccccccc')
+      const entity = new HbCOLineEntity()
+      entity.buyer = req.buyer
+      entity.custPo = req.custPo;
+      entity.style = req.style;
+      entity.itemNo = req?.itemNo;
+      entity.status = 'Open';
+      entity.exitFactoryDate = req.exitFactoryDate;
+      entity.createdUser = 'admin';
+      empty.push(entity)
+
+      // console.log(empty,'emptyyyyy')
       const save = await this.hbCoLineRepo.save(empty);
 
 
@@ -784,6 +785,41 @@ export class HbService {
     }
   }
 
+
+
+  async updateItemNo(req: ItemNoDtos): Promise<CommonResponseModel> {
+    console.log(req, "reqq");
+    try {
+      const update = await this.hbCoLineRepo.update(
+        { id: Number(req.id) },
+        { itemNo: req.itemNo }
+      );
+
+      if (update) {
+        return new CommonResponseModel(true, 1, "ItemNo Update Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while updating ItemNo", error);
+    }
+  }
+
+
+  async deleteCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
+    console.log(req, "reqq");
+    try {
+      const deletedItem = await this.hbCoLineRepo.delete({ id: Number(req.id) });
+
+      if (deletedItem && deletedItem.affected) {
+        return new CommonResponseModel(true, 1, "ItemNo Deleted Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
+    }
+  }
 
 
 
