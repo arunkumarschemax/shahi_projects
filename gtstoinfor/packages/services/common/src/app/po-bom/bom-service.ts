@@ -29,6 +29,10 @@ export class BomService{
             entity.season=req.season
             entity.expNo=req.expNo
             entity.styleName=req.styleName
+            entity.msc=req.msc
+            entity.factoryLo=req.factoryLo
+            entity.status=req.status
+
            let  bomEntityArray = []
             for(const bom of req.bomdto){
                 const bomEntity = new BomEntity()
@@ -81,7 +85,7 @@ export class BomService{
                             }
                             bomdetails.push(new BomDto(combo.itemName,combo.description,combo.imCode,combo.itemType,combo.use,styleCombos,combo.id,combo.styleId))
                         }
-                        styles.push(new StyleDto(styleDetails.style,styleDetails.styleName,styleDetails.season,styleDetails.expNo,bomdetails))
+                        styles.push(new StyleDto(styleDetails.style,styleDetails.styleName,styleDetails.season,styleDetails.expNo,styleDetails.msc,styleDetails.factoryLo,styleDetails.status,bomdetails))
                 }
             }
             if(styles){

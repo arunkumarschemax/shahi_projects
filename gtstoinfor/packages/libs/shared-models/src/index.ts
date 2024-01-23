@@ -10,4 +10,5 @@ export * from './common/factory/factory-activate-deactivate.dto'
 export * from './Enum/report-type.enum';
 export * from './common/nike/po-qty-data.dto'
 export * from './Enum/pdf-file-types.enum'
+export * from './common/bom'
 export * from './Enum/bom-item-type-enum'

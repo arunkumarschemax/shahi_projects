@@ -41,7 +41,9 @@ import FabricContentForm from "./masters/fabric-content/fabric-content-form"
 import { Suspense, lazy } from "react"
 import AddressView from "./masters/address/address-view"
 import AddressUpload from "./masters/address/address-excel-upload"
+import BomPdfUpload from "./bom-pdf-extraction/pdf-upload"
 import BackingPaper from "./trims/backing-paper"
+import BomView from "./bom-pdf-extraction/bom-view"
 
 
 export const AppRoutes = () => {
@@ -159,8 +161,13 @@ export const AppRoutes = () => {
                     <Route path='backing-paper' element={<BackingPaper/>} />
 
 
-
                 </Route>
+                
+                <Route path='/bom'>
+                    <Route path='bom-pdf-upload' element={<BomPdfUpload />} />
+                    <Route path='bom-view' element={<BomView />} />
+                </Route>
+
                 <Route path='/reports'>
                     {/* <Route path='factory-report' element={<FactoryPPMReport />} /> */}
                     <Route path='shipment-compare' key='/shipment-compare' element={<ShipmentChangesCompareGrid />} />
