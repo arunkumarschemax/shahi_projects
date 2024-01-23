@@ -299,8 +299,8 @@ export class DpomRepository extends Repository<DpomEntity> {
             dpm.ogac AS ogac ,dpm.gac AS gac, dpm.product_code AS productCode, dpm.item_vas_text AS itemVasText, dpm.item_text as itemText,
             dpm.total_item_qty AS Quantity, dpm.created_at AS dpomCreatedDates, dpm.diverted_to_pos, dpm.factory, dpm.gross_price_fob,
             dpm.trading_net_inc_disc, od.old_val as oldVal`)
-            .leftJoin(DpomDifferenceEntity, 'od', `od.po_number = dpm.po_number AND od.po_line_item_number = dpm.po_line_item_number AND od.schedule_line_item_number = dpm.schedule_line_item_number AND od.column_name='total_item_qty'`)
-            .where(`diverted_to_pos IS NOT null`)
+            .leftJoin(DpomDifferenceEntity, 'od', `od.po_number = dpm.po_number AND od.po_line_item_number = dpm.po_line_item_number AND od.column_name='total_item_qty'`)
+            .where(`diverted_to_pos IS NOT NULL AND ocr_status IS NULL`)
             // .andWhere(` od.column_name='total_item_qty' `)
             .groupBy(`po_and_line  `)
         return await query.getRawMany()

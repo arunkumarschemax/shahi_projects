@@ -422,7 +422,7 @@ export class DpomService {
             const dropdown1 = await driver.wait(until.elementIsVisible(dropdownElement1)).then(element => new Select(element))
             await dropdown1.selectByValue(buyerValue1)
             // // await driver.executeScript(`arguments[0].value = '${buyerValue1}';`, buyerDropDown1)
-            await driver.sleep(10000)
+            await driver.sleep(5000)
             await driver.wait(until.elementLocated(By.id('byr')));
             const dropdownElement2 = await driver.findElement(By.id('byr'));
             const dropdown2 = await driver.wait(until.elementIsVisible(dropdownElement2)).then(element => new Select(element))
@@ -698,7 +698,7 @@ export class DpomService {
         return sendMail
     }
 
-    // @Cron('0 4 * * *')
+    @Cron('0 4 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
         try {
@@ -1862,31 +1862,47 @@ export class DpomService {
     }
 
     async getDivertReportData(): Promise<CommonResponseModel> {
-        const reports = await this.dpomRepository.getDivertReport();
-        const divertModelData: DivertModel[] = [];
-        const processedPoLineSet = new Set<string>();
-        for (const report of reports) {
-            const divertedPos = report.diverted_to_pos.split(',');
-            if (report.diverted_to_pos) {
-                for (const PoLine of divertedPos) {
-                    const [po, line] = PoLine.split('/');
-                    if (!processedPoLineSet.has(PoLine)) {
-                        {/* Check if this Po/line combination has already been processed*/ }
-                        const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line]);
-                        for (const newpoDivert of newPoData) {
-                            const model = new DivertModel(report, newpoDivert);
-                            divertModelData.push(model);
+        try {
+            const reports = await this.dpomRepository.getDivertReport();
+            const divertModelData: DivertModel[] = [];
+            const processedPoLineSet = new Set<string>();
+            for (const report of reports) {
+                const divertedPos = report.diverted_to_pos.split(',');
+                if (report.diverted_to_pos) {
+                    for (const PoLine of divertedPos) {
+                        const [po, line] = PoLine.split('/');
+                        if (PoLine) {
+                            {/* Check if this Po/line combination has already been processed*/ }
+                            const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line]);
+                            for (const newpoDivert of newPoData) {
+                                const model = new DivertModel([report], [newpoDivert]);
+
+                                const inputText = report.itemText
+                                const pattern = PoLine;
+                                const regex = new RegExp(`${pattern} at (\\d{2}/\\d{2}/\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4})`, 'g');
+                                let match;
+                                let dateAfterPattern
+                                while ((match = regex.exec(inputText)) !== null) {
+                                    dateAfterPattern = match[1];
+                                }
+                                // model.oldPo[0] = model.oldPo[0] || {};
+                                model.oldPo[0].orequestDate = dateAfterPattern ? moment(dateAfterPattern, ['MM/DD/YYYY', 'DD.MM.YYYY']).format('MM/DD/YYYY') : "-"
+                                divertModelData.push(model);
+                            }
+                            // Mark this Po/line combination as processed
+                            processedPoLineSet.add(PoLine);
                         }
-                        // Mark this Po/line combination as processed
-                        processedPoLineSet.add(PoLine);
                     }
                 }
             }
-        }
-        if (divertModelData.length > 0) {
-            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
-        } else {
-            return new CommonResponseModel(false, 0, 'No Data Found', []);
+            if (divertModelData.length > 0) {
+                return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
+            } else {
+                return new CommonResponseModel(false, 0, 'No Data Found', []);
+            }
+        } catch (error) {
+            console.error('Error in getDivertReportData:', error);
+            return new CommonResponseModel(false, 0, 'Error retrieving data', []);
         }
     }
 
