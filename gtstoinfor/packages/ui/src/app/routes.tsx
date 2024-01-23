@@ -256,12 +256,8 @@ export const AppRoutes = () => {
                    <Route path="sanmar-order-acceptance" element={<SanmarOrderAcceptanceGrid/>}/>
                    <Route path="sanmar-co-line-view" element={<SanmarColineView/>}/>
                    <Route path='sanmar-order-comparision-report' element={<SanmarOrderComparisionReport />} />
-
-
-
-
-                   
-
+                   <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
+                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
               
                 </Route>
 

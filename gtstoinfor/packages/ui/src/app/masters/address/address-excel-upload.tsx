@@ -90,38 +90,7 @@ export const AddressUpload = () => {
     //     }
     //   };
 
-    // const handleFileChange = (event) => {
-    //   const file = event.target.files[0];
-    //   setSelectedFile(event.target.files[0]);
-    //   const reader = new FileReader();
-    
-    //   reader.onload = (e:any) => {
-    //     const data = new Uint8Array(e.target.result);
-    //     const workbook = XLSX.read(data, { type: 'array' });
-    //     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-    
-    //     // Specify the desired column names in the headers array
-    //     // const headers = ['s_no', 'destination', 'buyer_code',"buyer_address","delivery_code","delivery_address"];
-    //      const headers = [ "delivery_code","delivery_address",'buyer_code','buyer_address']
-    //      if (headers){
-    //       const json = XLSX.utils.sheet_to_json(worksheet, { header: headers });
-    //        json.splice(0, 3);
-    //       setData(json);
-
-    //      } else {
-    //       // Pass the headers array to the sheet_to_json function
-    //     const json = XLSX.utils.sheet_to_json(worksheet, { header: 0 });
-    //     // json.splice(0, 3);
-    //      setData(json);
-
-    //      }
-
-    
-        
-    //   };
-    
-    //   reader.readAsArrayBuffer(file);
-    // };
+   
 
     const handleFileChange = (event) => {
       const file = event.target.files[0];
@@ -134,11 +103,11 @@ export const AddressUpload = () => {
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     
         // Specify the desired column names in the headers array
-        const headers = ["delivery_code", "delivery_address", 'buyer_code', 'buyer_address'];
+        const headers = ["s_no","destination","buyer_code", "buyer_address", 'delivery_code', 'delivery_address'];
   
           // Pass the headers array to the sheet_to_json function
           const json = XLSX.utils.sheet_to_json(worksheet, { header: headers });
-          json.splice(0, 3);
+           json.splice(0, 2);
           setData(json);
         
       };
@@ -155,7 +124,7 @@ export const AddressUpload = () => {
                     setLoading(true);
                     if(res.status){
                         AlertMessages.getSuccessMessage(res.internalMessage)
-                        navigate("/hb-athletics/masters/address/address-view")
+                        navigate("/sanmar/masters/address/address-view")
 
                     } else{
                         AlertMessages.getErrorMessage(res.internalMessage)
@@ -169,7 +138,7 @@ export const AddressUpload = () => {
           }
       }
     return(
-        <Card title='Address' extra={<Link to='/hb-athletics/masters/address/address-view' >
+        <Card title='Address' extra={<Link to='/sanmar/masters/address/address-view' >
         <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
         </Link>}>
             <Form>

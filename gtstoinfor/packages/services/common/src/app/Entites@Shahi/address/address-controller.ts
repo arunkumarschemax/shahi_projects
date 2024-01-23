@@ -14,6 +14,7 @@ export class AddressController {
 
     @Post('/saveAddressInfo')
     async saveAddressInfo(@Body() data: any): Promise<CommonResponseModel> {
+        console.log(data,"opopopop")
         try {
             return this.addressService.saveAddressInfo(data);
         } catch (err) {

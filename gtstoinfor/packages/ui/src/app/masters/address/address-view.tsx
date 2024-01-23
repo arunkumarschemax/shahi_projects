@@ -123,41 +123,17 @@ export const AddressView = () => {
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1))
         },
-        // {
-        //     // title:'Destination',
-        //     title:<div style={{textAlign:"center"}}>Destination</div>,
-        //     dataIndex:'destination',
-        //     sorter: (a, b) => a.destination.localeCompare(b.destination),
-        //     sortDirections: ["ascend", "descend"],
-        //     render: (text) => text ? text : "-",
-        //     ...getColumnSearchProps('destination') 
-        // },
+        {
+            // title:'Destination',
+            title:<div style={{textAlign:"center"}}>Destination</div>,
+            dataIndex:'destination',
+            sorter: (a, b) => a.destination.localeCompare(b.destination),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('destination') 
+        },
        
-        {
-            title: 'Delivery Code',  
-            dataIndex: 'deliveryCode',
-            width:130,
-            align:"center",
-            sorter: (a, b) => {
-                const codeA = (a.deliveryCode || "").toString();
-                const codeB = (b.deliveryCode || "").toString();
-                return codeA.localeCompare(codeB);
-            },
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-",
-            ...getColumnSearchProps('deliveryCode')
-        },
-        {
-            // title:'Delivery Address',
-            title:<div style={{textAlign:"center"}}>Delivery Address</div>,
-            dataIndex:'deliveryAddress',
-            sorter: (a, b) => a.deliveryAddress.localeCompare(b.deliveryAddress),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-",
-            ...getColumnSearchProps('deliveryAddress')
-
-            
-        },
+       
         {
           title: 'Buyer Code',
           dataIndex: 'buyerCode',
@@ -180,36 +156,59 @@ export const AddressView = () => {
           sorter: (a, b) => a.buyerAddress.localeCompare(b.buyerAddress),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
-          ...getColumnSearchProps('buyerAddress')
-
-          
+          ...getColumnSearchProps('buyerAddress')       
          
       },
+      {
+        title: 'Delivery Code',  
+        dataIndex: 'deliveryCode',
+        width:130,
+        align:"center",
+        sorter: (a, b) => {
+            const codeA = (a.deliveryCode || "").toString();
+            const codeB = (b.deliveryCode || "").toString();
+            return codeA.localeCompare(codeB);
+        },
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-",
+        ...getColumnSearchProps('deliveryCode')
+    },
+    {
+        // title:'Delivery Address',
+        title:<div style={{textAlign:"center"}}>Delivery Address</div>,
+        dataIndex:'deliveryAddress',
+        sorter: (a, b) => a.deliveryAddress.localeCompare(b.deliveryAddress),
+        sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-",
+        ...getColumnSearchProps('deliveryAddress')
+
+        
+    },
     ]
 
     let i = 1;
     let rowIndex = 1;
     const exceldata = [
-        // { title: 'S No', dataIndex: 'sNo', render: (text, object, index) => { 
-        //     if(index == data.length) { 
-        //       return null;
-        //     } else { 
-        //       return rowIndex++; 
-        //     } 
-        //   },
-        //   width: 60, 
+        { title: 'S No', dataIndex: 'sNo', render: (text, object, index) => { 
+            if(index == data.length) { 
+              return null;
+            } else { 
+              return index+1
+            } 
+          },
+          width: 60, 
          
-        // }, 
-        // { title: 'Destination', dataIndex: 'destination',width: 100,render:(text:any,record:any) => {return record.destination ? record.destination : '-'} },  
-       
-        { title: 'Delivery Code', dataIndex: 'deliveryCode',width: 100,render:(text:any,record:any) => {return record.deliveryCode ? record.deliveryCode : '-'} },
-        { title: 'Delivery Address', dataIndex: 'deliveryAddress',width: 600,render:(text:any,record:any) => {return record.deliveryAddress ? record.deliveryAddress : '-'} },
+        }, 
+        { title: 'Destination', dataIndex: 'destination',width: 100,render:(text:any,record:any) => {return record.destination ? record.destination : '-'} },  
         { title: 'Buyer Code', dataIndex: 'buyerCode',width: 100,render:(text:any,record:any) => {return record.buyerCode ? record.buyerCode : '-'} },
-        { title: 'Buyer Address', dataIndex: 'buyerAddress',width: 600,render:(text:any,record:any) => {return record.buyerAddress ? record.buyerAddress : '-'} },
+        { title: 'Buyer Address', dataIndex: 'buyerAddress',width: 500,render:(text:any,record:any) => {return record.buyerAddress ? record.buyerAddress : '-'} },     
+        { title: 'Delivery Code', dataIndex: 'deliveryCode',width: 100,render:(text:any,record:any) => {return record.deliveryCode ? record.deliveryCode : '-'} },
+        { title: 'Delivery Address', dataIndex: 'deliveryAddress',width: 500,render:(text:any,record:any) => {return record.deliveryAddress ? record.deliveryAddress : '-'} },
+        
 
     ]
 
-    const headers = [ "delivery_code","delivery_address",'buyer_code','buyer_address']
+  
 
 
     const exportExcel = () => {
@@ -217,11 +216,11 @@ export const AddressView = () => {
         excel
           .addSheet('Address Excel')
           .addColumns(exceldata)
-          .addDataSource(data, { str2num: true })
+          .addDataSource(data, { str2num: false })
           .saveAs('Address.xlsx');
       }
     return(
-        <Card title='Address' extra={<Link to='/hb-athletics/masters/address/address-excel-upload' >
+        <Card title='Address' extra={<Link to='/sanmar/masters/address/address-excel-upload' >
         <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
         </Link>}>
             <Row justify={'end'}>
