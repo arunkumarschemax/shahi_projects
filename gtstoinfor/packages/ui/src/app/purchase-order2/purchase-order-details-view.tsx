@@ -30,7 +30,7 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
     // getMaterialTypeDate();
 
   }, [props.purchaseOrderId])
-
+  
   const renderCellData = (data) => {
     return data ? data : "-";
   }
@@ -255,8 +255,11 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
     const divContents = document.getElementById('printme').innerHTML;
     const element = window.open('', '', 'height=700, width=1024');
     element.document.write(divContents);
-    getCssFromComponent(document, element.document);
-    element.document.close();
+getCssFromComponent(document, element.document);
+  element.document.close();
+    //  element.document.write(divContents);
+    // getCssFromComponent(document, element.document);
+    // element.document.close();
     element.print();
     element.close(); // to close window when click on cancel/Save
     setIsModalVisible(true); // model should be open
@@ -350,7 +353,7 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
             <Modal
               className='print-docket-modal'
               key={'modal'}
-              width={'95%'}
+              width={'90%'}
               style={{ top: 30, alignContent: 'right' }}
               visible={isModalVisible}
               title={<React.Fragment>

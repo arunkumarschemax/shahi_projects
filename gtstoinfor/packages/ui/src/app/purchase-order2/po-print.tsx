@@ -41,45 +41,68 @@ export function PoPrint(props: PoPrintProps) {
             }
         })
     }
-
-    // const printOrder = () => {
-    //     const printableElements = document.getElementById('printme').innerHTML;
-    //     const orderHTML = 
-    //     '<html><head><title></title><style>@media print { @page { size: B5 landscape; } }</style></head><body> ${printableElements}  </body></html>';
-    //     const oldPage = document.body.innerHTML;
-    //     document.body.innerHTML = orderHTML;
-    //     window.print();
-    //     document.body.innerHTML = oldPage;
-        
-    // }
+ 
     const printOrder = () => {
-      const printableElements = document.getElementById('printme').innerHTML;
-      const orderHTML = `
-      <html>
-        <head>
-          <title></title>
-          <style>
-            @media print {
-              @page {
-                size: landscape;
+      const divContents = document.getElementById('printme').innerHTML;
+      const element = window.open('', '', 'height=700, width=1024');
+      const style = `
+        <html>
+          <head>
+            <title></title>
+            <style>
+              @media print {
+                @page {
+                  size: landscape;
+                }
+                body {
+                  width: 100%;
+                }
               }
-              body {
-                width: 100%;
-              }
-              
-            }
-          </style>
-        </head>
-        <body class="page">${printableElements}</body>
-      </html>`;
-    
-      const oldPage = document.body.innerHTML;
-      document.body.innerHTML = orderHTML;
-    
-      window.print();
-    
-      document.body.innerHTML = oldPage;
+            </style>
+          </head>
+          <body class="page">${divContents}</body>
+        </html>
+      `;
+      element.document.write(style + divContents);
+      element.document.close();
+      element.print();
+      element.close();
     };
+    
+    
+    
+    
+    // const printOrder = () => {
+    //   const printableElements = document.getElementById('printme').innerHTML;
+    //   const element = window.open('', '', 'height=700, width=1024');
+
+    //   const orderHTML = `
+    //   <html>
+    //     <head>
+    //       <title></title>
+    //       <style>
+    //         @media print {
+    //           @page {
+    //             size: landscape;
+    //           }
+    //           body {
+    //             width: 100%;
+    //           }
+              
+    //         }
+    //       </style>
+    //     </head>
+    //     <body class="page">${printableElements}</body>
+    //   </html>`;
+    
+    //   const oldPage = document.body.innerHTML;
+    //   document.body.innerHTML = orderHTML;
+    //   element.document.write(orderHTML + printableElements);
+    //   element.document.close();
+    //   window.print();
+    
+    //   document.body.innerHTML = oldPage;
+    // };
     
     const numberToWords = require('number-to-words');
 
@@ -96,7 +119,6 @@ const totalAmount = poData.reduce((sum, e) => {
 
   return sum + itemAmount;
 }, 0);
-// const totalAmount = 48.20
 const integerPart = Math.floor(totalAmount);
 const decimalPart = Math.round((totalAmount - integerPart) * 100);
 
@@ -105,42 +127,7 @@ const decimalWords = convertDecimalToWords(decimalPart).toUpperCase();
 
 const totalAmountInWords = `${integerWords} . ${decimalWords}`;
 
-console.log('Total sum available in words:', totalAmountInWords);
 
-    
-    
-//     const totalAmount = poData.reduce((sum, e) => {
-//       const itemAmount = e.unit_price
-//         ? Number((e.po_quantity * e.unit_price - (e.po_quantity * e.unit_price * (e.discount / 100))).toFixed(2))
-//         : 0;
-    
-//       return sum + itemAmount;
-//     }, 0);
-   
-// const integerPart = Math.floor(totalAmount);
-// const decimalPart = Math.round((totalAmount - integerPart) * 10);
-// const integerWords = numberToWords.toWords(integerPart).toUpperCase();
-// const decimalWords = numberToWords.toWords(decimalPart).toUpperCase();
-
-// const totalAmountInWords = `${integerWords} . ${decimalWords}`;
-
-    
-    // const downloadAsPDF = () => {
-    
-    //   const element = document.getElementById('printme');
-    //   const options = {
-    //    margin:6,
-    //     width: '100%',
-    //     filename: 'PO.pdf',
-    //     image: { type: 'jpeg', quality: 1.0 },
-    //     html2canvas: { scale: 2 }, // Experiment with different scale values
-    //     jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },
-    //   };
-      
-    
-    //   html2pdf(element, options);
-    // };
-    
     const downloadAsPDF = () => {
       const element = document.getElementById('printme');
       const options = {
@@ -161,12 +148,13 @@ console.log('Total sum available in words:', totalAmountInWords);
     return (
         <Card title='PO Print'
             style={{ textAlign: 'center' }}
-            headStyle={{ backgroundColor: '#69c0ff', border: 0 }}extra={<span style={{ color: 'white' }} ><Button onClick={printOrder} className='panel_button'><PrinterOutlined /> Print</Button> <Button className='panel_button' onClick={downloadAsPDF}>Download PDF</Button></span> }>
+            headStyle={{ backgroundColor: '#69c0ff', border: 0 }}extra={<span style={{ color: 'white' }} ><Button onClick={printOrder} className='panel_button'><PrinterOutlined /> Print</Button>
+            <Button className='panel_button' onClick={downloadAsPDF}>Download PDF</Button></span> }>
             <html>
                 <body id='printme'>
-                  <div>
-              <Row>
-                 <div style={{  padding: '20px',height:'300px', width: '280px' }}>
+              <div>
+                  <div  style={{ flexDirection: "row", display: "flex"}}>
+             <div style={{  padding: '20px',height:'300px', width: '280px',flex:1 }}>
              <h1 style={{ textAlign: 'start', fontSize:'17px',fontFamily: 'Fancy', marginRight:'30px',lineHeight: '2', marginBottom: '20px' }}>{'"Say flat NO to Wrong Practices"'}</h1>
              <h2 style={{ textAlign: 'start', fontSize:'12px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Last Updated By :</h2>
              <h2 style={{ textAlign: 'start', fontSize:'12px',fontFamily: 'Un Shinmun',marginLeft:'18px', marginTop: '0', marginBottom: '0' }}>Vendor Name : {`${poData[0]?.vendor_name}`}</h2>
@@ -187,7 +175,7 @@ console.log('Total sum available in words:', totalAmountInWords);
             </div>
                     
                     
-                    <div style={{  padding: '20px',height:'350px', width: '300px' }}>
+                    <div style={{  padding: '20px',height:'350px', width: '300px',flex:1 }}>
                     <h1 style={{ textAlign: 'center',marginTop:'-10px', padding: "20px" ,fontSize:"17px",fontFamily:'Century Schoolbook'}}>{'Shahi Exports Pvt.Ltd. Sy.No.13,14 AND 15 Sarjapura Main Road, Bellandur Gate Bengaluru Urban, KARNATAKA (KA) Pin Code:560103'}</h1>
                     <h1 style={{ textAlign: 'center' ,marginTop:'-30px',fontSize:"12px",fontFamily:'Century Schoolbook',color: 'blue'}}>{'GSTIN : 29AAJCS1175L1ZU'}</h1>
                     <h1 style={{ textAlign: 'center' ,marginTop:'-10px',fontSize:"12px",fontFamily:'Century Schoolbook',color: 'blue', textDecoration: 'underline' }}>{'Inter State'}</h1>
@@ -218,7 +206,7 @@ console.log('Total sum available in words:', totalAmountInWords);
                     </div>
 
 
-                    <div style={{  padding: '20px',height:'300px', width: '280px',marginLeft:'50px' }}>
+                    <div style={{  padding: '20px',height:'300px', width: '280px',flex:1 }}>
                     <h1  style={{ textAlign: 'end',fontSize:'17px', fontFamily: 'Fancy', lineHeight: '2', marginBottom: '20px'  }}>{'"Say a big NO to Child Labour"'}</h1>
                     <h1  style={{ textAlign: 'end', fontSize:'10pX',fontFamily: 'Candra', marginRight:'-18px',lineHeight: '1', marginBottom: '10px',marginTop:'-10px'  }}>{'DISPATCH  INSTRUCTION  TO  BE  STRICTLY FOLLOWED'}</h1>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline', marginLeft: '50px' }}>
@@ -266,7 +254,7 @@ console.log('Total sum available in words:', totalAmountInWords);
 
                     <h2 style={{ textAlign: 'start',fontSize:'12px', fontFamily: 'Un Shinmun',marginLeft:'20px', marginTop: '0', marginBottom: '0' }}>Currency : {`${poData[0]?.currencyName}`}</h2></div>
                     </div>
-                    </Row>
+                    </div>
                  <br></br>
 
                    <h4 style={{fontFamily:' Fancy',fontSize:'12px'}}>This is in reference to your above mention quotaion. We are pleased to place an order with you for following items as per terms and conditions mentioned herewith</h4>
@@ -274,7 +262,7 @@ console.log('Total sum available in words:', totalAmountInWords);
                         {/* To add border to html table
                         // <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'> */}
 
-                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
+                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'90%'}} border={1} cellSpacing="0" cellPadding='0'>
                           <tr >
                             <th style={{width:'3%'}}>Ln</th>
                             <th>HSN/SAC</th>
