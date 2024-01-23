@@ -304,7 +304,8 @@ export class HbService {
       const poMap = new Map<string, HbOrdersEntity>();
       data.forEach(rec => {
         poMap.set(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`, rec)
-        const dest = rec.shipToAdd
+        // const dest = rec.shipToAdd
+        const dest = rec.shipToAdd.replace(/\n/g, '')
         // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
 
         // const parts = rec.shipToAdd.split(',')
