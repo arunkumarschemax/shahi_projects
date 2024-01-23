@@ -16,6 +16,7 @@ import { AppDataSource } from './app-datasource';
 import { FobModule } from './fob-price-list/fob.module';
 import { FabricContentModule } from './fabric-content/fabric-content.module';
 import { AddressModule } from './address/address.module';
+import { bomModule } from './po-bom/bom-module';
 
 
 @Module({
@@ -36,6 +37,7 @@ import { AddressModule } from './address/address.module';
         connectionLimit: 20
       }
     }),
+    bomModule,
     FactoriesModule,
     SupplierModule,
     UsersModule,
