@@ -371,14 +371,14 @@ const GRNForm = () => {
       AlertMessages.getErrorMessage('Accepted Qunatity should not exceed Received')
       itemsForm.setFieldsValue({acceptedQuantity:null})
     }else{
-
+      
       setPoItemData(prevData =>
         prevData.map(item => {
           if (item.poItemId === poItemId) {
             return {
               ...item,
               acceptedQuantity: e.target.value,
-              rejectedQuantity: item.receivedQuantity - Number(e.target.value)
+              rejectedQuantity: (item.receivedQuantity - Number(e.target.value)).toFixed(2)
             };
           }
           return item;

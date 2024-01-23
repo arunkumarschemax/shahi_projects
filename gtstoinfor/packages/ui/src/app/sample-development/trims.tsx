@@ -605,19 +605,19 @@ const getMappedTrims = (value, row) => {
       fixed:'right',
       render: (_, record) => (
         <Form.Item name={`trimUpload${record.key}`}>
-          <Upload style={{ width: '100%' }} 
+          <Upload key={record.key} style={{ width: '100%' }} 
             {...uploadFabricProps}
             accept=".jpeg,.pdf,.png,.jpg"
             onChange={(e) => handleInputChange(e.file,record.key,'trimUpload',record)}
             >
-            <Button
+            <Button key={record.key}
                 style={{ color: 'black', backgroundColor: '#7ec1ff' }}
                 // icon={<UploadOutlined />}
                 disabled={fileList?.length == 1? true:false}
             >
                 <Tooltip title="Upload Trim"><UploadOutlined /></Tooltip>
             </Button>
-            {fileList?.length ==1?  <Button icon={<EyeOutlined/>} onClick={onTrimView}></Button>:<></>}
+            {fileList?.length ==1?  <Button key={record.key} icon={<EyeOutlined/>} onClick={onTrimView}></Button>:<></>}
           </Upload>
       </Form.Item>
       ),

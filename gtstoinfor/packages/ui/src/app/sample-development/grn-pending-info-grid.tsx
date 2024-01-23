@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
 import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import { ExternalRefReq, GRNLocationPropsRequest, GRNTypeEnumDisplay, ItemTypeEnumDisplay } from '@project-management-system/shared-models';
+import { ExternalRefReq, GRNLocationPropsRequest, GRNTypeEnumDisplay, ItemStatusTypeEnumDisplay, ItemTypeEnumDisplay } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
 import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
@@ -337,7 +337,7 @@ function handleReset(clearFilters) {
                    placeholder="Select MaterialType "
                    optionFilterProp="children"
                    allowClear>
-                    {Object.values(ItemTypeEnumDisplay).map((val) => (
+                    {Object.values(ItemStatusTypeEnumDisplay).map((val) => (
             <Select.Option key={val.name} value={val.name}>
               {val.displayVal}
             </Select.Option>
