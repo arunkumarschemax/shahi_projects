@@ -32,7 +32,28 @@ export class StyleEntity {
         nullable:false
     })
     expNo:string
+
     
+    @Column('varchar',{
+        name:'msc',
+        nullable:false
+    })
+    msc:string
+    
+    
+    @Column('varchar',{
+        name:'factoryLo',
+        nullable:false
+    })
+    factoryLo:string
+
+    
+    @Column('varchar',{
+        name:'status',
+        nullable:false
+    })
+    status:string
+
     @CreateDateColumn({
         name: 'created_at'
     })

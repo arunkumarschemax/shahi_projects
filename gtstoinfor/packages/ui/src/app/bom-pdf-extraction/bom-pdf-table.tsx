@@ -43,8 +43,8 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
              <div className="table-container">           
             <table className='ta-b' style={{ width: '100%' }} >
                 <tr className='ta-b'>
-                    <th className='ta-b'>STYLE NAME</th>
                     <th className='ta-b'>STYLE</th>
+                    <th className='ta-b'>STYLE NAME</th>
                     <th className='ta-b'>MSC</th>
                     <th className='ta-b'>SEASON</th>
                     <th className='ta-b'>FACTORY L.O</th>
@@ -52,8 +52,8 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <th className='ta-b'>EXP</th>
                 </tr>
                 <tr className='ta-b'>
+                <td className='ta-b'>{pdfData?.style}</td>
                     <td className='ta-b'>{pdfData?.styleName}</td>
-                    <td className='ta-b'>{pdfData?.style}</td>
                     <td className='ta-b'>{pdfData?.msc}</td>
                     <td className='ta-b'>{pdfData?.season}</td>
                     <td className='ta-b'>{pdfData?.factoryLo}</td>
