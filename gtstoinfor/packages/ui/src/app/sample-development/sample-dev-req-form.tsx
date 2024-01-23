@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { useIAMClientState } from "../common/iam-client-react";
 import AlertMessages from "../common/common-functions/alert-messages";
+import { config } from "packages/libs/shared-services/config";
 
 
 const { Option } = Select;
@@ -236,7 +237,7 @@ const getBase64 = (img, callback) => {
   }
   const getStyleImage=(value)=>{
     console.log(value);
-    const imagePath = `https://sampling-backend.shahiapps.in/static/${value}`;
+    const imagePath = config.file_upload_path+value;
     setStyleImage(imagePath)
   }
 
