@@ -236,7 +236,7 @@ const getBase64 = (img, callback) => {
   }
   const getStyleImage=(value)=>{
     console.log(value);
-    const imagePath = `http://165.22.220.143:8005/static/17360.jpg`;
+    const imagePath = `https://sampling-backend.shahiapps.in/static/${value}`;
     setStyleImage(imagePath)
   }
 
