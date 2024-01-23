@@ -122,6 +122,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
     const savePdfFields = () => {
         HbServices.saveHbOrdersData(poPdfData).then((res) => {
+            console.log(poPdfData,"naiiiiiiiiiii")
             if (res.status) {
                 onReset()
                 if (fileList) {

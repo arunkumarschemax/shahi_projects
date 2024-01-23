@@ -350,7 +350,7 @@ export function HbPdFInfoGrid() {
                     onClick={onReset}
                     icon={<UndoOutlined />}
                   >
-                    Reset
+                    RESET
                   </Button>
                 </Form.Item>
               </Col>

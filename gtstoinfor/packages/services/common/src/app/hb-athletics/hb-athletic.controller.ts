@@ -58,6 +58,7 @@ export class HbController {
     }))
 
     async fileUpload(@UploadedFile() file, @Body() req: any): Promise<CommonResponseModel> {
+        console.log(req,"ppppp")
 
         try {
             return await this.Service.updatePath(req.jsonData, req.custPo, file.path, file.filename, file.mimetype)
