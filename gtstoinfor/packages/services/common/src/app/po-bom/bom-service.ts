@@ -107,13 +107,14 @@ export class BomService{
             const result = await this.dataSource.query(query)
             const combo=[]
             const allStyleData =new Map<number, StyleDto>()
-            const comboStyle = new Map<number, StyleComboDto>()
+const comboStyle = new Map<number, StyleComboDto>()
             if(result.length >0){
                 for(const rec of result){
                     if(!allStyleData.has(rec.styeleId)){
-                        allStyleData.set(rec.styeleId,new StyleDto(rec.style,rec.styleName,rec.season,rec.expNo,[]))
+                        allStyleData.set(rec.styeleId,new StyleDto(rec.style,rec.styleName,rec.season,rec.expNo,rec.msc,rec.factoryLo,rec.status,[]))
                     }
                     allStyleData.get(rec.styeleId).bomdto.push(new BomDto(rec.itemName,rec.description,rec.imCode,rec.itemType,rec.use,combo))
+                    
                     // if(!comboStyle.has(rec.bomId)){
                     //    const data= comboStyle.set(rec.bomId,new StyleComboDto(rec.combination,rec.primaryColor,rec.secondaryColor,rec.logoColor))
                     // }
