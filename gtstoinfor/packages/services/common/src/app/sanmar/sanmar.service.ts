@@ -511,20 +511,20 @@ export class SanmarService {
       const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
       const poMap = new Map<string, SanmarOrdersEntity>();
       data.forEach(rec => {
-        poMap.set(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`, rec)
+        poMap.set(`${rec.buyerPo},${rec.poStyle}, ${rec.deliveryDate}`, rec)
         const dest = rec.shipToAdd
 
 
-        if (!destinationColSizesMap.has(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`)) {
-          destinationColSizesMap.set(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`, new Map<string, Map<string, []>>());
+        if (!destinationColSizesMap.has(`${rec.buyerPo},${rec.poStyle}, ${rec.deliveryDate}`)) {
+          destinationColSizesMap.set(`${rec.buyerPo},${rec.poStyle}, ${rec.deliveryDate}`, new Map<string, Map<string, []>>());
         }
-        if (!destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`).has(dest)) {
-          destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`).set(dest, new Map<string, []>());
+        if (!destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle}, ${rec.deliveryDate}`).has(dest)) {
+          destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle}, ${rec.deliveryDate}`).set(dest, new Map<string, []>());
         }
-        if (!destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`).get(dest).has(rec.color)) {
-          destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`).get(dest).set(rec.color, []);
+        if (!destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle}, ${rec.deliveryDate}`).get(dest).has(rec.color)) {
+          destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle}, ${rec.deliveryDate}`).get(dest).set(rec.color, []);
         }
-        destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle},${rec.color}, ${rec.deliveryDate}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+        destinationColSizesMap.get(`${rec.buyerPo},${rec.poStyle}, ${rec.deliveryDate}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
       });
 
       const coData = []
