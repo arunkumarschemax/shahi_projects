@@ -162,6 +162,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   };
 
   const handleInputChange = async (e, key, field, additionalValue,record) => {
+    console.log(fileList);
     console.log(e);
     console.log(field);
     console.log(key);
@@ -437,7 +438,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
   }
-  const uploadFabricProps: UploadProps = {
+  const uploadFabricProps: UploadProps =  {
     // alert();
     multiple: true,
     onRemove: file => {
@@ -727,19 +728,19 @@ const FabricsForm = (props:FabricsFormProps) => {
       fixed:'right',
       render: (_, record) => (
         <Form.Item name={`fabricUpload${record.key}`}>
-          <Upload style={{ width: '100%' }} 
+          <Upload key={record.key} style={{ width: '100%' }} 
             {...uploadFabricProps}
             accept=".jpeg,.pdf,.png,.jpg"
             onChange={(e) => handleInputChange(e.file,record.key,'fabricUpload',0,record)}
             >
-            <Button
+            <Button key={record.key}
                 style={{ color: 'black', backgroundColor: '#7ec1ff' }}
                 // icon={<UploadOutlined />}
                 disabled={fileList?.length == 1? true:false}
             >
                 <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
             </Button>
-            {fileList?.length ==1?  <Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
+            {fileList?.length > 0?  <Button key={record.key} icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
           </Upload>
       </Form.Item>
       ),

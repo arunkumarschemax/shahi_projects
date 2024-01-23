@@ -10,3 +10,8 @@ export const ItemTypeEnumDisplay = [
     { name:'PACKING_TRIM', displayVal:'PACKING TRIM'},
 ]
 
+
+export const ItemStatusTypeEnumDisplay = [
+    { name: "FABRIC", displayVal:'FABRIC'},
+    { name:'TRIM', displayVal:'TRIM'},
+]

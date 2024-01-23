@@ -40,7 +40,7 @@ export class GrnItemsEntity {
         name: 'rejected_quantity',
         nullable: false
     })
-    rejectedQuantity: number
+    rejectedQuantity: number | string
 
 
     @Column('decimal', {

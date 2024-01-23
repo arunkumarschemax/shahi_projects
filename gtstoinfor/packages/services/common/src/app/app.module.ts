@@ -95,6 +95,9 @@ import { StructureModel } from '@project-management-system/shared-models';
 import { StructureModule } from './structure/structure.module';
 import { TrimParamsMappingModule } from './trim-params-mapping/trim-params-mapping.module';
 import { WeightModule } from './weight/weight-module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+console.log(join(__dirname, '..', 'sampling', 'gtstoinfor', 'dist', 'packages', 'services', 'common', 'upload_files'))
 
 
 @Module({
@@ -107,12 +110,21 @@ import { WeightModule } from './weight/weight-module';
       username: appConfig.database.username,
       password: appConfig.database.password,
       database: appConfig.database.dbName,
+      // host: "localhost",
+      // port: 3306,
+      // username: "root",
+      // password: "",
+      // database: "sampling_test",
             autoLoadEntities: true,
       synchronize: false,
       logging: true,
       extra: {
         connectionLimit: 20
       }
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', '..', '..', 'dist','packages','services','common','upload_files'),
+      serveRoot: '/static',
     }),
     FactoriesModule,
     QualitysModule,
