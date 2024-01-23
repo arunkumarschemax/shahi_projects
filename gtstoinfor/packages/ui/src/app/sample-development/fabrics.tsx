@@ -461,6 +461,7 @@ const FabricsForm = (props:FabricsFormProps) => {
           AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
           return true;
         } else {
+          console.log(fileList)
             setFileList([...fileList,file]);
           getBase64(file, imageUrl =>
             setImageUrl(imageUrl)
@@ -728,12 +729,12 @@ const FabricsForm = (props:FabricsFormProps) => {
       fixed:'right',
       render: (_, record) => (
         <Form.Item name={`fabricUpload${record.key}`}>
-          <Upload key={record.key} style={{ width: '100%' }} 
+          <Upload key={record.key} name={`fabricUpload${record.key}`} style={{ width: '100%' }} 
             {...uploadFabricProps}
             accept=".jpeg,.pdf,.png,.jpg"
             onChange={(e) => handleInputChange(e.file,record.key,'fabricUpload',0,record)}
             >
-            <Button key={record.key}
+            <Button key={record.key} name={`fabricUpload${record.key}`}
                 style={{ color: 'black', backgroundColor: '#7ec1ff' }}
                 // icon={<UploadOutlined />}
                 disabled={fileList?.length == 1? true:false}

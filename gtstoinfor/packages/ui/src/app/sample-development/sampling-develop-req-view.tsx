@@ -2,6 +2,7 @@ import {
     BarcodeOutlined,
     CaretDownOutlined,
     CaretRightOutlined,
+    DownloadOutlined,
     EyeOutlined,
     InfoCircleOutlined,
     PrinterOutlined,
@@ -66,6 +67,8 @@ import { useIAMClientState } from "../common/iam-client-react";
 import PickListPrint, { getCssFromComponent } from "./pick-list-print";
 import PoPrint from "../purchase-order2/po-print";
 import RolePermission from "../role-permissions";
+import DownloadFolderButton from "./download-folder-button";
+import axios from "axios";
 // const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   
@@ -728,6 +731,18 @@ import RolePermission from "../role-permissions";
       setRow(rowData)
     };
 
+    const handleDownload = () => {
+      console.log("jjjjj")
+      axios.get('http://165.22.220.143/sampling/gtstoinfor/dist/packages/services/common/upload_files/', { responseType: 'blob' })
+        .then((response) => {
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement('a');
+          link.href = url;
+          link.setAttribute('download', 'folder.zip');
+          document.body.appendChild(link);
+          link.click();
+        });
+    };
     const HeaderRow = (props: any) => {
 
       
@@ -754,14 +769,19 @@ import RolePermission from "../role-permissions";
           <span style={{ width: "10px" }}></span>
           <span> Status : {<b>{LifeCycleStatusDisplay.find((e)=>e.name === lifeCycleStatus)?.displayVal}</b>}</span>
           <span style={{marginLeft:'auto'}}>
+          <span style={{paddingRight:20}}  >
+          <Tooltip title='Download Tech Pack'>
+          <DownloadOutlined onClick={handleDownload} style={{fontSize:'15px',marginLeft:'-5px', color:'blue'}}/>
+          </Tooltip>
+          </span>
                {lifeCycleStatus === LifeCycleStatusEnum.READY_TO_DISPATCH ? (
         <>
+          
           <span style={{paddingRight:20}}  >
             <Button type="primary"  size="small" onClick={()=>handleDispatchClick(index)}>
               Dispatch 
             </Button>
           </span>
-        
         </>
       ):(<></>)}
         {lifeCycleStatus === LifeCycleStatusEnum.READY_FOR_PRODUCTION ? (
