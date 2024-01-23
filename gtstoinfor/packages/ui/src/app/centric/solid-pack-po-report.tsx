@@ -202,7 +202,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
               ),
             },
             {
-              title: "PO Number",
+              title: "Purchase Order Number",
               dataIndex: "po_number",
               width: 90,
     
@@ -226,14 +226,14 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 render: (text) => text ? text : "-",
           
               },
-              // {
-              //   title: "Compt.Material",
-              //   dataIndex: "comptMaterial",
-              //   width: 150,
-              //   render: (text) => text ? text : "-",
+              {
+                title: "Compt.Material",
+                dataIndex: "compt_material",
+                width: 150,
+                render: (text) => text ? text : "-",
               
       
-              // },
+              },
               {
                 title: "Gender",
                 dataIndex: "gender",
@@ -264,7 +264,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
                 
               },
               {
-                title: "Reference",
+                title: "Reference #/POW #",
                 dataIndex: "refrence",
                 width: 90,
                 render: (text) => text ? text : "-",
@@ -294,9 +294,16 @@ import RangePicker from "rc-picker/lib/RangePicker";
             },
             {
               title: 'Tot PO Qty in PC',
-              dataIndex: 'total_quantity',
+              dataIndex: 'quantity',
               width: 100,
               render: (text) => text ? text : "-",
+          },
+          {
+            title: "Special Instructions",
+            dataIndex: "special_instructions",
+            width: 400,
+            render: (text) => (  text ? text: "-"),
+  
           },
           {
             title: "UPC",
@@ -1172,9 +1179,9 @@ import RangePicker from "rc-picker/lib/RangePicker";
           ),
         },
         {
-          title: "PO Number",
+          title: "Purchase Order Number",
           dataIndex: "po_number",
-          width: 90,
+          width: 120,
           sorter: (a, b) => a.po_number.localeCompare(b.po_number),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
@@ -1200,6 +1207,17 @@ import RangePicker from "rc-picker/lib/RangePicker";
             render: (text) => text ? text : "-",
             ...getColumnSearchProps('material')
           },
+          {
+            title: "Compt.Material",
+            dataIndex: "compt_material",
+            width: 150,
+            sorter: (a, b) => a.compt_material.localeCompare(b.compt_material),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('compt_material')
+  
+          },
+          
           {
             title: "Gender",
             dataIndex: "gender",
@@ -1240,7 +1258,7 @@ import RangePicker from "rc-picker/lib/RangePicker";
             
           },
           {
-            title: "Reference",
+            title: "Reference #/POW #",
             dataIndex: "refrence",
             width: 90,
             sorter: (a, b) => a.refrence.localeCompare(b.refrence),
@@ -1281,12 +1299,25 @@ import RangePicker from "rc-picker/lib/RangePicker";
         },
         {
           title: 'Tot PO Qty in PC',
-          dataIndex: 'total_quantity',
+          dataIndex: 'quantity',
           width: 100,
-          sorter: (a, b) => a.total_quantity.localeCompare(b.total_quantity),
+          sorter: (a, b) => a.quantity.localeCompare(b.quantity),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
-          ...getColumnSearchProps('total_quantity')
+          ...getColumnSearchProps('quantity')
+      },
+      {
+        title: "Special Instructions",
+        dataIndex: "special_instructions",
+        width: 150,
+        sorter: (a, b) => a.special_instructions.localeCompare(b.special_instructions),
+        sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps('special_instructions'),
+        render: (text) => (
+          <Tooltip title={text || "-"}>
+            {text ? `${text.substring(0, 20)}...` : "-"}
+          </Tooltip>
+        ),
       },
       {
         title: "UPC",
