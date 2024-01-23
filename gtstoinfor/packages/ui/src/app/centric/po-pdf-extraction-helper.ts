@@ -361,7 +361,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             const itemVariantsArr: CentricPoItemVariant[] = []
             for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
                 const itemVariantsObj = new CentricPoItemVariant();
-                itemVariantsObj.comptMaterial = CompMaterialData[l];
+                itemVariantsObj.comptMaterial = CompMaterialData[l]||'-';
                 itemVariantsObj.upc = stringsWithLength13[l];
                 const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
                 if (upcIndex !== -1 && upcIndex < itemVarinatsTextArr.length - 1) {
@@ -424,7 +424,8 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemDetailsObj.material = filteredData[rec.itemIndex + 11].str
             itemDetailsObj.style = filteredData[rec.itemIndex + 11].str.replace(/^\d{2}|-.*$/g, '')
             itemDetailsObj.color = filteredData[rec.itemIndex + 12].str;
-            itemDetailsObj.poType = "SOLID"
+            itemDetailsObj.poType = "SOLID";
+            itemDetailsObj.ppkupc = "-";
 
             // let shortDescriptionIndex;
             // for (let i = 0; i < filteredData.length; i++) {
@@ -588,6 +589,9 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemVariantsObj.exPort = itemVarinatsTextArr[(count * l) + count - 3]
                 itemVariantsObj.deliveryDate = itemVarinatsTextArr[(count * l) + count - 2]
                 itemVariantsObj.retialPrice = itemVarinatsTextArr[(count * l) + count - 1]
+                itemVariantsObj.comptMaterial = "-";
+                itemVariantsObj.ratio = "-";
+                
 
                 itemVariantsObj.amount = itemVarinatsTextArr[(count * l) + count - 1]
                 console.log(itemVariantsObj)
