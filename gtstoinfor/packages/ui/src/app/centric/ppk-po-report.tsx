@@ -234,7 +234,7 @@ import { Excel } from "antd-table-saveas-excel";
               ),
             },
             {
-              title: "PO Number",
+              title: "Purchase Order Number",
               dataIndex: "po_number",
               width: 90,
     
@@ -296,7 +296,7 @@ import { Excel } from "antd-table-saveas-excel";
                 
               },
               {
-                title: "Reference",
+                title: "Reference #/POW #",
                 dataIndex: "refrence",
                 width: 90,
                 render: (text) => text ? text : "-",
@@ -1173,7 +1173,7 @@ import { Excel } from "antd-table-saveas-excel";
           ),
         },
         {
-          title: "PO Number",
+          title: "Purchase Order Number",
           dataIndex: "po_number",
           width: 90,
           sorter: (a, b) => a.po_number.localeCompare(b.po_number),
@@ -1253,7 +1253,7 @@ import { Excel } from "antd-table-saveas-excel";
             
           },
           {
-            title: "Reference",
+            title: "Reference #/POW #",
             dataIndex: "refrence",
             width: 90,
             sorter: (a, b) => a.refrence.localeCompare(b.refrence),
