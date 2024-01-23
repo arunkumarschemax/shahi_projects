@@ -126,6 +126,31 @@ export class HbService {
 
 
 
+  // async updatePath(req: any, custPo: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
+  //   console.log(custPo, "pppppioooooo");
+  //   console.log(req, "reqqqqqqqqq");
+
+  //   const entity = new HbPdfFileInfoEntity();
+  //   entity.custPo = custPo;
+  //   entity.pdfFileName = filename;
+  //   entity.filePath = filePath;
+  //   entity.fileType = mimetype;
+  //   entity.fileData = req;
+  //   entity.status = "SUCCESS";
+
+  //   // const file = await this.HbPdfRepo.findOne({ where: { pdfFileName: filePath } });
+  //   // if (file) {
+  //   //   return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
+  //   // } else {
+  //     const save = await this.HbPdfRepo.save(entity);
+  //     if (save) {
+  //       return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
+  //     } else {
+  //       return new CommonResponseModel(false, 0, 'Uploaded failed');
+  //     // }
+  //   }
+  // }
+
   async updatePath(req: any, custPo: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
     console.log(custPo, "pppppioooooo");
     console.log(req, "reqqqqqqqqq");
@@ -138,16 +163,16 @@ export class HbService {
     entity.fileData = req;
     entity.status = "SUCCESS";
 
-    const file = await this.HbPdfRepo.findOne({ where: { pdfFileName: filePath } });
-    if (file) {
-      return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
-    } else {
+    // const file = await this.HbPdfRepo.findOne({ where: { pdfFileName: filePath } });
+    // if (file) {
+    //   return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
+    // } else {
       const save = await this.HbPdfRepo.save(entity);
       if (save) {
         return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
       } else {
         return new CommonResponseModel(false, 0, 'Uploaded failed');
-      }
+      // }
     }
   }
 
