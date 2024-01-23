@@ -1871,27 +1871,20 @@ export class DpomService {
                 if (report.diverted_to_pos) {
                     for (const PoLine of divertedPos) {
                         const [po, line] = PoLine.split('/');
-                        if (PoLine) {
-                            {/* Check if this Po/line combination has already been processed*/ }
-                            const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line]);
-                            for (const newpoDivert of newPoData) {
-                                const model = new DivertModel([report], [newpoDivert]);
-
-                                const inputText = report.itemText
-                                const pattern = PoLine;
-                                const regex = new RegExp(`${pattern} at (\\d{2}/\\d{2}/\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4})`, 'g');
-                                let match;
-                                let dateAfterPattern
-                                while ((match = regex.exec(inputText)) !== null) {
-                                    dateAfterPattern = match[1];
-                                }
-                                // model.oldPo[0] = model.oldPo[0] || {};
-                                model.oldPo[0].orequestDate = dateAfterPattern ? moment(dateAfterPattern, ['MM/DD/YYYY', 'DD.MM.YYYY']).format('MM/DD/YYYY') : "-"
-                                divertModelData.push(model);
-                            }
-                            // Mark this Po/line combination as processed
-                            processedPoLineSet.add(PoLine);
+                        {/* Check if this Po/line combination has already been processed*/ }
+                        const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line]);
+                        const model = new DivertModel([report], newPoData);
+                        const inputText = report.itemText
+                        const regex = new RegExp(`${PoLine} at (\\d{2}/\\d{2}/\\d{4})`, 'g');
+                        let match;
+                        let dateAfterPattern
+                        while ((match = regex.exec(inputText)) !== null) {
+                            dateAfterPattern = match[1];
                         }
+                        model.newpo[0].orequestDate = dateAfterPattern ? moment(dateAfterPattern, ['MM/DD/YYYY', 'DD.MM.YYYY']).format('MM/DD/YYYY') : "-"
+                        divertModelData.push(model);
+                        // Mark this Po/line combination as processed
+                        processedPoLineSet.add(PoLine);
                     }
                 }
             }
