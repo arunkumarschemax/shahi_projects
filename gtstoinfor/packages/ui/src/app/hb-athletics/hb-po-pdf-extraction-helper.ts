@@ -83,6 +83,16 @@ export const extractDataFromPoPdf = async (pdf) => {
                     specialInstructionsIndex = ind
                 }
 
+                const currencySymbolToText = {
+                    '$': 'USD',
+                    '₹': 'INR',
+                };
+                const match = /([$₹])\d+(,|\.|\d)\d+(\.|,|\d)\d+/.exec(ele.str);
+                if (match) {
+                    const currencySymbol = match[0][0]||'-';
+                    poData.currency = match[0].replace(currencySymbol, currencySymbolToText[currencySymbol]).replace(/\d+(,|\.|\d)\d+(\.|,|\d)\d+/g, "")||'-';
+                    break;
+                }
             }
             poData.custPo = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX].str
             // poData.exitFactoryDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX - 6].str
@@ -95,7 +105,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             const paddedMonth = month.padStart(2, '0');
             const formattedDate = `${paddedDay}-${paddedMonth}-${fourDigitYear}`;
             poData.exitFactoryDate = formattedDate;
-            
+
             let foundExitFactory = false;
             let foundShipVia = false;
             let shipToAddressIndex = '';
@@ -196,7 +206,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         }
         console.log(itemVarinatsTextArr, 'VVVVVVVv');
 
-        const allSizesData = [...new Set(itemVarinatsTextArr.filter(size => ['XXS', 'XS', 'S', 'M', 'L', 'XL','2X', 'XXL', 'XXXL','LT', 'XLT', '2XLT', '3XLT', '4XLT', '5XLT','ST', 'XST', '2XST', '3XST', '4XST', '5XST','XS-Slim', 'S-Slim', 'M-Slim', 'L-Slim', 'XL-Slim', 'XXL-Slim','XS-Regular', 'S-Regular', 'M-Regular', 'L-Regular', 'XL-Regular', 'XXL-Regular','3X','4X','5X','6X'].includes(size)))];
+        const allSizesData = [...new Set(itemVarinatsTextArr.filter(size => ['XXS', 'XS', 'S', 'M', 'L', 'XL', '2X', 'XXL', 'XXXL', 'LT', 'XLT', '2XLT', '3XLT', '4XLT', '5XLT', 'ST', 'XST', '2XST', '3XST', '4XST', '5XST', 'XS-Slim', 'S-Slim', 'M-Slim', 'L-Slim', 'XL-Slim', 'XXL-Slim', 'XS-Regular', 'S-Regular', 'M-Regular', 'L-Regular', 'XL-Regular', 'XXL-Regular', '3X', '4X', '5X', '6X'].includes(size)))];
         const itemVariantsArr: CentricPoItemVariant[] = [];
 
         for (const size of allSizesData) {
@@ -219,7 +229,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         itemDetailsArr.push(itemDetailsObj);
     }
 
-    
+
     //     const itemVarinatsTextArr = []
     //     let k = itemVariantStartIndex
     //     while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
@@ -249,7 +259,7 @@ export const extractDataFromPoPdf = async (pdf) => {
     //     itemDetailsArr.push(itemDetailsObj)
     // }
 
-    
+
     /* 1st format */
     // else if (ITEM_TEXT_END_TEXT === "Total Eaches") {
     //     for (const rec of itemsArr) {

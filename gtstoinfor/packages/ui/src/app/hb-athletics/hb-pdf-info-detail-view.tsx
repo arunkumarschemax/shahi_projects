@@ -39,12 +39,14 @@ const HbPdfInfoDetailView = (
                     <th className='ta-b'>CUST PO</th>
                     <th className='ta-b'>EXIT FACTORY DATE</th>
                     <th className='ta-b'>SHIP TO ADDRESS</th>
+                    <th className='ta-b'>CURRENCY</th>
                 </tr>
 
                 <tr className='ta-b'>
                     <td className='ta-b'>{parsedData?.custPo}</td>
                     <td className='ta-b'>{parsedData?.exitFactoryDate}</td>
                     <td className='ta-b'>{parsedData?.shipToAdd}</td>
+                    <td className='ta-b'>{parsedData?.currency}</td>
                 </tr>
 
                 {parsedData?.HbpoItemDetails?.map((i) => {
