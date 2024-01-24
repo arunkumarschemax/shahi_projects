@@ -536,7 +536,8 @@ export class HbService {
           coLine.currency = coData.currency
           coLine.destinations = coData.destinations
           const request = coData.destinations[0]?.name;
-          const address = await this.addressService.getAddressInfoByCountry({ country: request });
+          const addressSegment = request.split(',')
+          const address = await this.addressService.getAddressInfoByCountry({ country: addressSegment[0] });
           const addressData = address.data[0];
           console.log(addressData)
           buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 11;
