@@ -145,5 +145,11 @@ export class PurchaseOrderItemsEntity{
   @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poItemInfo)
   @JoinColumn({name:'purchase_order_id'})
   purchaseOrderEntity:PurchaseOrderEntity
+
+  @Column('int',{
+    name:'size_id',
+    nullable:true
+})
+sizeId:number
   
 }

@@ -1,12 +1,13 @@
 import { EditOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { faDisplay } from "@fortawesome/free-solid-svg-icons";
 import { M3MastersCategoryReq, UomCategoryEnum } from "@project-management-system/shared-models";
-import { ColourService, IndentService, M3MastersService, M3TrimsService, SampleDevelopmentService, TaxesService, UomService } from "@project-management-system/shared-services";
+import { ColourService, IndentService, M3MastersService, M3TrimsService, SampleDevelopmentService, SizeService, TaxesService, UomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Divider, Form, Input, InputNumber, Popconfirm, Row, Select, Table, Tag, Tooltip } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
 import React, { useEffect } from "react";
 import { useState } from "react";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>{
     let tableData: any[] = []
@@ -36,13 +37,16 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
     const m3TrimService = new M3TrimsService()
     const taxService = new TaxesService();
     const [taxPer, setTaxPer] = useState(0);
-
+    const sizeService = new SizeService()
+const [sizeData, setSizeData]=useState<any[]>([])
     useEffect(() =>{
         getColor()
         getM3TrimCodes()
         getTrimType()
         getUom()
         getTax()
+        getAllSizes()
+
     },[])
 
     useEffect(() =>{
@@ -73,7 +77,16 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
             trimForm.setFieldsValue({m3TrimCode:data.data.m3TrimCode})
         }
     },[data])
-
+    const getAllSizes =() =>{
+        sizeService.getAllActiveSize().then(res=>{
+          if(res.status){
+            setSizeData(res.data)
+          }else{
+            setSizeData([])
+            AlertMessages.getInfoMessage(res.internalMessage)
+          }
+        })
+      }
 
     const getTax = () => {
         taxService.getAllActiveTaxes().then((res) => {
@@ -434,7 +447,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         }
     ]
 
-    const onColorChange= (value,option) =>{
+    const colorChange= (value,option) =>{
         trimForm.setFieldsValue({colourName:option?.name ? option?.name:''})
     }
     
@@ -704,6 +717,33 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                             rules={[{ required: true, message: 'unit price is required' }]}
                         >
                             <Input type="number" placeholder="unit price" onChange={(e) => finalCalculation()} />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                        <Form.Item name='colourId' label='Color'>
+                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Color'
+                                 onChange={colorChange}
+                                //  disabled={inputDisable}
+                            >
+                                {color.map(e => {
+                                    return (
+                                        <Option type={e.colour} key={e.colourId} value={e.colourId} name={e.colour}> {e.colour}</Option>
+                                    )
+                                })}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                        <Form.Item name='sizeId' label='Size'>
+                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Size'
+                               
+                            >
+                                {sizeData.map(e => {
+                                    return (
+                                        <Option type={e.size} key={e.sizeId} value={e.sizeId} name={e.size}>{e.size}</Option>
+                                    )
+                                })}
+                            </Select>
                         </Form.Item>
                     </Col>
                     <Col span={4}>

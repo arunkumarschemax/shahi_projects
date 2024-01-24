@@ -1,7 +1,7 @@
 import { ConsoleSqlOutlined, EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
 import { faL } from "@fortawesome/free-solid-svg-icons"
 import { M3MastersCategoryReq } from "@project-management-system/shared-models"
-import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, SampleDevelopmentService, TaxesService, UomService } from "@project-management-system/shared-services"
+import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, SampleDevelopmentService, SizeService, TaxesService, UomService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Divider, Form, Input, InputNumber, Popconfirm, Row, Select, Space, Tag, Tooltip, message } from "antd"
 import Table, { ColumnProps } from "antd/es/table"
 import moment from "moment"
@@ -43,6 +43,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
     const sampleservice = new SampleDevelopmentService()
     const taxService = new TaxesService();
     const [taxPer, setTaxPer] = useState(0);
+    const sizeService = new SizeService()
+const [sizeData, setSizeData]=useState<any[]>([])
 
     useEffect(() => {
         getweave()
@@ -52,6 +54,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         getFabricType()
         getM3FabricStyleCodes()
         getTax()
+        getAllSizes()
     }, [])
 
     useEffect(() => {
@@ -98,7 +101,16 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
             }
         })
     }
-
+    const getAllSizes =() =>{
+        sizeService.getAllActiveSize().then(res=>{
+          if(res.status){
+            setSizeData(res.data)
+          }else{
+            setSizeData([])
+            message.info(res.internalMessage)
+          }
+        })
+      }
     const AllIndnetDetails = (value) => {
         indentService.getAllIndentItemDetailsAgainstIndent({ indentId: value }).then(res => {
             if (res.status) {
@@ -663,6 +675,20 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                                 {color.map(e => {
                                     return (
                                         <Option type={e.colour} key={e.colourId} value={e.colourId} name={e.colour}> {e.colour}</Option>
+                                    )
+                                })}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                        <Form.Item name='sizeId' label='Size'>
+                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Size'
+                                // onChange={colorOnchange}
+                                // disabled={inputDisbale}
+                            >
+                                {sizeData.map(e => {
+                                    return (
+                                        <Option type={e.size} key={e.sizeId} value={e.sizeId} name={e.size}>{e.size}</Option>
                                     )
                                 })}
                             </Select>
