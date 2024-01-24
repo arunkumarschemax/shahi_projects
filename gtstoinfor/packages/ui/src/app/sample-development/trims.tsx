@@ -36,6 +36,7 @@ const TrimsForm = (props:TrimsFormProps) => {
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const [stockForm] = Form.useForm();
   const [keyUpdate, setKeyUpdate] = useState<number>(1);
+  const [keyValue, setKeyValue] = useState<number>(undefined);
   // const [uomStatus, setUomStatus] = useState<boolean>(false);
   const [visibleModel, setVisibleModel] = useState<boolean>(false);
   const [searchVisible, setSearchVisible] = useState<boolean>(false)
@@ -53,35 +54,49 @@ const TrimsForm = (props:TrimsFormProps) => {
   reader.addEventListener('load', () => callback(reader.result));
   reader.readAsDataURL(img);
 }
- const uploadFabricProps: UploadProps = {
+const uploadFabricProps = (keyValue:number): UploadProps =>  ({
   // alert();
   multiple: true,
   onRemove: file => {
     console.log(file);
-    console.log(fileList?.find((f) => f.uid != file.uid))
-    let files:any[] = fileList?.find((f) => f.uid != file.uid)
+    console.log(fileList.length);
+
+    let files:any[] = fileList.length != undefined ? fileList?.find((f) => f.uid != file.uid) : []
+    console.log(data)
+    console.log(data[keyValue]);
+    data[keyValue].trimUpload = undefined;
+    setData(data);
+    props.data(data);
+
     setFileList(files);
     setImageUrl('');
   },
   beforeUpload: (file: any, index:any) => {
+    console.log(file)
+    console.log(fileList);
     console.log(index)
+    console.log(keyValue)
     if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
       AlertMessages.getErrorMessage("Only png,jpeg,jpg,pjpeg,gif files are allowed!");
       return true;
     }
+    console.log(fileList)
+
     // var reader = new FileReader();
     // reader.readAsArrayBuffer(file);
     // reader.onload = data => {
-      if (fileList?.length == 1) {
-        AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
-        return true;
-      } else {
-          setFileList([...fileList,file]);
-        getBase64(file, imageUrl =>
-          setImageUrl(imageUrl)
-        );
+      // if (fileList?.length == 1) {
+      //   AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+      //   return true;
+      // } else {
+        console.log(fileList)
+        setFileList([...fileList,file]);
+        console.log(fileList,"****")
+        // getBase64(file, imageUrl =>
+          // setImageUrl(imageUrl)
+        // );
         return false;
-      }
+      // }
     // }
   },
   progress: {
@@ -92,8 +107,8 @@ const TrimsForm = (props:TrimsFormProps) => {
     strokeWidth: 3,
     format: percent => `${parseFloat(percent.toFixed(2))}%`,
   },
-  fileList: fileList,
-};
+  // fileList: fileList,
+});
 
   const handleAddRow = () => {
     if(props.sizeDetails.length > 0){
@@ -107,7 +122,8 @@ const TrimsForm = (props:TrimsFormProps) => {
           colourId:element.colour,
           totalCount: qtyy,
           wastage:2,
-          uomStatus:false
+          uomStatus:false,
+          fabricUpload:undefined
         };
         props.form.setFieldValue([`wastage${count}`],2)
         setData([...data, newRow]);
@@ -261,6 +277,7 @@ const getMappedTrims = (value, row) => {
     // console.log(e)
     // console.log(key)
     // console.log(field)
+    setKeyValue(key)
     let isDuplicate 
     let updatedData
     if(field == 'trimCategory'){
@@ -604,20 +621,20 @@ const getMappedTrims = (value, row) => {
       width:"20%",
       fixed:'right',
       render: (_, record) => (
-        <Form.Item name={`trimUpload${record.key}`}>
-          <Upload key={record.key} style={{ width: '100%' }} 
-            {...uploadFabricProps}
+        <Form.Item name={`trimUpload${record.key}`} initialValue={record.trimUpload}>
+          <Upload key={record.key} name={`trimUpload${record.key}`} style={{ width: '100%' }} 
+            {...uploadFabricProps(record.key)}
             accept=".jpeg,.png,.jpg"
             onChange={(e) => handleInputChange(e.file,record.key,'trimUpload',record)}
             >
-            <Button key={record.key}
+            <Button key={record.key} name={`trimUpload${record.key}`}
                 style={{ color: 'black', backgroundColor: '#7ec1ff' }}
                 // icon={<UploadOutlined />}
-                disabled={fileList?.length == 1? true:false}
+                disabled={(fileList[record.key] != undefined)? true:false}
             >
-                <Tooltip title="Upload Trim"><UploadOutlined /></Tooltip>
+                <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
             </Button>
-            {fileList?.length ==1?  <Button key={record.key} icon={<EyeOutlined/>} onClick={onTrimView}></Button>:<></>}
+            {(fileList[record.key] != undefined)? <Button key={record.key} icon={<EyeOutlined/>} onClick={onTrimView}></Button>:<></>}
           </Upload>
       </Form.Item>
       ),
