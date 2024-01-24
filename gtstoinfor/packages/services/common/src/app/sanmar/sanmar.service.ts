@@ -528,6 +528,11 @@ export class SanmarService {
       });
 
       const coData = []
+      // below Added for total unit price and Size count
+      let totalUnitPrice = 0;
+      let totalSizeCount = 0;
+      const sizeSet = new Set<string>();
+
       destinationColSizesMap.forEach((destColorSize, poNumber) => {
         const desArray = []
         destColorSize.forEach((colorSizes, dest) => {
@@ -537,15 +542,44 @@ export class SanmarService {
             sizes.forEach((size) => {
               const sizeObj = new SanmarSizeModel(size.size, size.quantity, size.price);
               sizeArray.push(sizeObj)
+
+          //  below code is  added for  adding of all unit price which pushed to SanmarSizeModel
+              sizes.forEach((size) => {
+                const sizeKey = `${size.size}-${color}`; // Create a unique key based on size and color
+    
+                // Check if the size is unique, then calculate totalUnitPrice
+                if (!sizeSet.has(sizeKey)) {
+                  console.log(sizeKey,"pppoiiiii")
+            
+                  totalUnitPrice += parseFloat(size.price);
+                  sizeSet.add(sizeKey); // Add the unique size to the set
+                  totalSizeCount += 1;  // for total size count for Avg of unit price
+
+                }
+    
+              });
+
             })
+
+
             const col = new SanmarColorModel(color, sizeArray);
             ColArray.push(col)
-          });
+    
+            sizeSet.clear();
+          });   
+
+
           const des = new SanmarDestinationModel(dest, ColArray);
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new SanmarCoLinereqModels(poInfo.buyerPo, poInfo.poStyle, poInfo.unitPrice, poInfo.deliveryDate, poInfo.currency, desArray);
+        console.log(totalSizeCount,"count")
+        console.log(totalUnitPrice,"totalUnitPrice")
+
+        
+        const averageUnitPrice = totalSizeCount > 0 ? totalUnitPrice / totalSizeCount : 0;  // calculation of Avg unit price
+
+        const co = new SanmarCoLinereqModels(poInfo.buyerPo, poInfo.poStyle, averageUnitPrice.toString(), poInfo.deliveryDate, poInfo.currency, desArray);
         coData.push(co)
       });
       if (coData) {
