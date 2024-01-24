@@ -1,8 +1,9 @@
 import { PrinterOutlined } from "@ant-design/icons";
 import { Button, Card, Col, Row } from "antd";
 import { useLocation } from "react-router-dom";
-import { Shahi } from "./SHAHI";
-import { HTTP } from "./http";
+import { Shahi } from "../SHAHI";
+import { HTTP } from "../http";
+import React from "react";
 
 export function BackingPaper() {
 let totalqty = 100;
