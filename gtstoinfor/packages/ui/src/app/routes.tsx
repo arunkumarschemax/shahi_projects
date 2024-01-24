@@ -47,6 +47,8 @@ import BomView from "./bom-pdf-extraction/bom-view"
 import ButtonPrint, { Button1Print } from "./trims/trim-prints/button-print"
 import Button2Print from "./trims/trim-prints/button2-print"
 import Button3Print from "./trims/trim-prints/button3-print"
+import TrimsGrid from "./trims/trims-grid"
+
 
 export const AppRoutes = () => {
     const router = createBrowserRouter(createRoutesFromElements(
@@ -160,6 +162,7 @@ export const AppRoutes = () => {
                     <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
                     <Route path='co-line-view' element={<ColineView />} />
                     <Route path='backing-paper' element={<BackingPaper/>} />
+                    <Route path='trim-grid' element={<TrimsGrid/>} />
 
 
                 </Route>
