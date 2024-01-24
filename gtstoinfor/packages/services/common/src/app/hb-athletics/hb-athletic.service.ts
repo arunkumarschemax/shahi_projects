@@ -152,9 +152,6 @@ export class HbService {
   // }
 
   async updatePath(req: any, custPo: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
-    console.log(custPo, "pppppioooooo");
-    console.log(req, "reqqqqqqqqq");
-
     const entity = new HbPdfFileInfoEntity();
     entity.custPo = custPo;
     entity.pdfFileName = filename;
@@ -167,11 +164,11 @@ export class HbService {
     // if (file) {
     //   return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
     // } else {
-      const save = await this.HbPdfRepo.save(entity);
-      if (save) {
-        return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
-      } else {
-        return new CommonResponseModel(false, 0, 'Uploaded failed');
+    const save = await this.HbPdfRepo.save(entity);
+    if (save) {
+      return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
+    } else {
+      return new CommonResponseModel(false, 0, 'Uploaded failed');
       // }
     }
   }
@@ -516,16 +513,21 @@ export class HbService {
         let pkgTerms;
         let paymentTerms;
         if (po.buyer === 'HB ATHLETIC') {
-          const response = await this.getOrderdataForCOline({ poNumber: po.buyer_po })
+          const response = await this.getOrderdataForCOline({ poNumber: po.cust_po })
           console.log(response.data[0])
           const coData = response.data[0];
           coLine.buyerPo = coData.buyerPo;
-          const inputDate = new Date(coData.deliveryDate)
+          const parts = coData.deliveryDate.split('-');
+          let formattedDate;
+          if (parts.length === 3) {
+            formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+          }
+          const inputDate = new Date(formattedDate)
           // Calculate the date 7 days before the GAC date
           const sevenDaysBefore = new Date(inputDate);
           sevenDaysBefore.setDate(inputDate.getDate() - 7);
           const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBefore);
-          coLine.deliveryDate = moment(coData.deliveryDate).format("DD/MM/YYYY")
+          coLine.deliveryDate = moment(formattedDate).format("DD/MM/YYYY")
           coLine.exFactoryDate = exFactoryDate
           coLine.salesPrice = coData.salesPrice
           coLine.currency = coData.currency
@@ -707,7 +709,7 @@ export class HbService {
           }
         }
         await driver.sleep(10000)
-        const element = await driver.findElement(By.id('OrderCreateID')).click();
+        // const element = await driver.findElement(By.id('OrderCreateID')).click();
         await driver.wait(until.alertIsPresent(), 10000);
         // Switch to the alert and accept it (click "OK")
         const alert = await driver.switchTo().alert();
@@ -715,7 +717,7 @@ export class HbService {
         if (await this.isAlertPresent(driver)) {
           const alert = await driver.switchTo().alert();
           const alertText = await alert.getText();
-          const update = await this.hbCoLineRepo.update({ custPo: po.buyer_po }, { status: 'Failed', errorMsg: alertText });
+          const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed', errorMsg: alertText });
           await alert.accept();
           await driver.sleep(5000)
           await driver.navigate().refresh();
@@ -730,11 +732,11 @@ export class HbService {
           const year = currentDate.getFullYear().toString().slice(-2);
           const currentDateFormatted = `${day}-${month}-${year}`;
           if (coNo) {
-            const update = await this.hbCoLineRepo.update({ custPo: po.buyer_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+            const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           } else {
-            const update = await this.hbCoLineRepo.update({ custPo: po.buyer_po }, { status: 'Failed' });
+            const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed' });
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           }
@@ -777,7 +779,7 @@ export class HbService {
       for (const rec of Originaldata) {
         const childData = await this.HbOrdersChildRepo.find({
           where: {
-            custPo: rec.cust_po, style: rec.style, color: rec.color,size:rec.size
+            custPo: rec.cust_po, style: rec.style, color: rec.color, size: rec.size
           }, order: { id: 'DESC' }, take: 1, skip: 1
         })
         if (childData.length > 0) {
@@ -789,8 +791,8 @@ export class HbService {
             oldData.quantity !== rec.quantity
           ) {
 
-          compareModel.push(new HbCompareModel(rec.cust_po, rec.style, rec.color, rec.size, oldData.unitPrice, rec.unit_price, oldData.exitFactoryDate, rec.exit_factory_date, oldData.quantity, rec.quantity));
-        }
+            compareModel.push(new HbCompareModel(rec.cust_po, rec.style, rec.color, rec.size, oldData.unitPrice, rec.unit_price, oldData.exitFactoryDate, rec.exit_factory_date, oldData.quantity, rec.quantity));
+          }
         }
       }
       if (compareModel) {

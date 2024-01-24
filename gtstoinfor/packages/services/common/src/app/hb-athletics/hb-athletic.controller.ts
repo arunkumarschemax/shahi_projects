@@ -58,8 +58,6 @@ export class HbController {
     }))
 
     async fileUpload(@UploadedFile() file, @Body() req: any): Promise<CommonResponseModel> {
-        console.log(req,"ppppp")
-
         try {
             return await this.Service.updatePath(req.jsonData, req.custPo, file.path, file.filename, file.mimetype)
         } catch (error) {
@@ -110,6 +108,15 @@ export class HbController {
     async getOrderdataForCOline(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.Service.getOrderdataForCOline(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/createCOline')
+    async createCOline(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.createCOline(req);
         } catch (err) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
