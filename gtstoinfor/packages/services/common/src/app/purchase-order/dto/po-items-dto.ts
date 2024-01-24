@@ -73,4 +73,6 @@ export class PoItemdetails{
   @ApiProperty()  
   materialType?:ItemTypeEnum
 
+  @ApiProperty()
+  hsnCode?:string
 }

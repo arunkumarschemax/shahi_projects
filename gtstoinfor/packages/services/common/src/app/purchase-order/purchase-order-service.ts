@@ -130,6 +130,8 @@ export class PurchaseOrderService {
                         pofabricEntity.tax = item.tax
                         pofabricEntity.subjectiveAmount = item.subjectiveAmount
                         pofabricEntity.styleId = item.styleId
+                        pofabricEntity.hsnCode = item.hsnCode
+
                         if((req.poAgainst).toUpperCase() == 'SAMPLE ORDER'){
                             pofabricEntity.materialType = ItemTypeEnum[(req.poMaterialType).toUpperCase()]
                         }
@@ -576,7 +578,7 @@ export class PurchaseOrderService {
         // poData = poData+` where po.purchase_order_id = ${req.id}`
         // const podatares = await this.dataSource.query(poData)
         
-        const poTrimData = `select po.*,poi.*,${columnName},poi.unit_price,i.request_no as indentNo,i.indent_date as indentDate,v.vendor_name,v.contact_number,v.bank_acc_no,v.gst_number,v.postal_code,f.address,t.tax_percentage AS taxPercentage ,cur.currency_name as currencyName,co.colour
+        const poTrimData = `select po.*,poi.*,${columnName},poi.unit_price,i.request_no as indentNo,i.indent_date as indentDate,v.vendor_name,v.contact_number,v.bank_acc_no,v.gst_number,v.postal_code,f.address,t.tax_percentage AS taxPercentage ,cur.currency_name as currencyName,co.colour,poi.hsn_code AS poHsnCode
         from purchase_order po
         left join purchae_order_items poi on poi.purchase_order_id = po.purchase_order_id ${concatString}
         LEFT JOIN indent i ON i.indent_id = ii.indent_id left join factory f on f.id = po.delivery_address 
