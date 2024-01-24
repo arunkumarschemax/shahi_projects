@@ -820,7 +820,7 @@ import { config } from "packages/libs/shared-services/config";
           <span style={{marginLeft:'auto'}}>
           <span style={{paddingRight:20}}  >
           <Tooltip title='Download Tech Pack'>
-          <DownloadOutlined onClick={() => handleDownload(requestNo)} style={{fontSize:'15px',marginLeft:'-5px', color:'blue'}}/>
+          <DownloadOutlined onClick={() => handleDownload((requestNo).replace(/\//g, "_"))} style={{fontSize:'15px',marginLeft:'-5px', color:'blue'}}/>
           </Tooltip>
           </span>
                {lifeCycleStatus === LifeCycleStatusEnum.READY_TO_DISPATCH ? (
