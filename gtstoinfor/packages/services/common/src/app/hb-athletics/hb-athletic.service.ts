@@ -61,6 +61,7 @@ export class HbService {
           entity.custPo = req.custPo
           entity.exitFactoryDate = req.exitFactoryDate
           entity.shipToAdd = req.shipToAdd
+          entity.currency = req.currency
           entity.style = item.style
           entity.color = item.color
           entity.size = variant.size
@@ -73,7 +74,7 @@ export class HbService {
           if (orderData) {
 
 
-            const update = await transactionManager.getRepository(HbOrdersEntity).update({ custPo: req.custPo, color: item.color, size: variant.size }, { exitFactoryDate: req.exitFactoryDate, shipToAdd: req.shipToAdd, style: item.style, quantity: variant.quantity, unitPrice: variant.unitPrice })
+            const update = await transactionManager.getRepository(HbOrdersEntity).update({ custPo: req.custPo, color: item.color, size: variant.size }, { exitFactoryDate: req.exitFactoryDate, shipToAdd: req.shipToAdd,currency:req.currency, style: item.style, quantity: variant.quantity, unitPrice: variant.unitPrice })
 
             let po = (order?.poVersion) + 1
 
@@ -81,6 +82,7 @@ export class HbService {
             entitys.custPo = req.custPo
             entitys.exitFactoryDate = req.exitFactoryDate
             entitys.shipToAdd = req.shipToAdd
+            entitys.currency = req.currency
             entitys.style = item.style
             entitys.color = item.color
             entitys.size = variant.size
@@ -100,6 +102,7 @@ export class HbService {
             entitys.custPo = req.custPo
             entitys.exitFactoryDate = req.exitFactoryDate
             entitys.shipToAdd = req.shipToAdd
+            entitys.currency = req.currency
             entitys.style = item.style
             entitys.color = item.color
             entitys.size = variant.size

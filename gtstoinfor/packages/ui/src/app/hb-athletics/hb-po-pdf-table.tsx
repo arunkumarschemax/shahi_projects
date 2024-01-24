@@ -45,19 +45,21 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                         <th className='ta-b'>CUST PO</th>
                         <th className='ta-b'>EXIT FACTORY DATE</th>
                         <th className='ta-b'>SHIP TO ADDRESS</th>
+                        <th className='ta-b'>CURRENCY</th>
                     </tr>
 
                     <tr className='ta-b'>
                         <td className='ta-b'>{pdfData?.custPo}</td>
                         <td className='ta-b'>{pdfData?.exitFactoryDate}</td>
-                        {/* <td className='ta-b'>{pdfData?.shipToAdd}</td> */}
-                        <td className='ta-b'>
+                        <td className='ta-b'>{pdfData?.shipToAdd}</td>
+                        <td className='ta-b'>{pdfData?.currency}</td>
+                        {/* <td className='ta-b'>
                             <Tooltip title={pdfData?.shipToAdd} placement="topLeft">
                                 <div style={{ maxWidth: '150px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                                     {pdfData?.shipToAdd}
                                 </div>
                             </Tooltip>
-                        </td>
+                        </td> */}
                     </tr>
 
                     {pdfData?.HbpoItemDetails?.map((i) => {

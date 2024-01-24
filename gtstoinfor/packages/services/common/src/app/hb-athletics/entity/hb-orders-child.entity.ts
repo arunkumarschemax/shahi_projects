@@ -23,6 +23,12 @@ export class HbOrdersChildEntity {
     })
     shipToAdd: string
 
+    
+    @Column("varchar", {
+        name: "currency",
+    })
+    currency: string
+
     @Column("varchar", {
         name: "style",
     })

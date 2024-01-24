@@ -11,7 +11,8 @@ export class HbDto {
     @ApiProperty()
     shipToAdd: string
 
-    
+    @ApiProperty()
+    currency: string
 
     @ApiProperty()
     style: string

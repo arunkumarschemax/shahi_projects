@@ -24,6 +24,11 @@ export class HbOrdersEntity {
     shipToAdd: string
 
     @Column("varchar", {
+        name: "currency",
+    })
+    currency: string
+
+    @Column("varchar", {
         name: "style",
     })
     style: string

@@ -4,6 +4,7 @@ export class HbPoDetails {
     custPo: string;
     exitFactoryDate: string;
     shipToAdd: string;
+    currency:string;
  
     HbpoItemDetails: HbPoItemDetails[]
 }
