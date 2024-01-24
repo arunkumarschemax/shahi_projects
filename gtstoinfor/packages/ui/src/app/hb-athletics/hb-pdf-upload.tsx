@@ -136,13 +136,15 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                     HbServices.fileUpload(formData).then((res) => {
                         if (res.status) {
                             message.success(res.internalMessage)
+                             navigate("/hb-athletics/pdf-info", { state: "rec" });
+                            window.location.reload();
                         }
                     })
                 }
                 // alert(res.internalMessage)
                 message.success(res.internalMessage)
-                navigate("/hb-athletics/pdf-info", { state: "rec" });
-                window.location.reload();
+                // navigate("/hb-athletics/pdf-info", { state: "rec" });
+                // window.location.reload();
             } else {
                 message.error(res.internalMessage)
             }

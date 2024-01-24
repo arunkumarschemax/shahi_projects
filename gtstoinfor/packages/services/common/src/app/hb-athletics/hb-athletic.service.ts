@@ -300,8 +300,9 @@ export class HbService {
       const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
       const poMap = new Map<string, HbOrdersEntity>();
       data.forEach(rec => {
-        poMap.set(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`, rec)
-        const dest = rec.shipToAdd
+        poMap.set(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`, rec)
+        // const dest = rec.shipToAdd
+        const dest = rec.shipToAdd.replace(/\n/g, '')
         // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
 
         // const parts = rec.shipToAdd.split(',')
@@ -313,16 +314,16 @@ export class HbService {
         // const destAdd = parts[0].trim();
         // const dest = destAdd + ',' + destCountry;
 
-        if (!destinationColSizesMap.has(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`)) {
-          destinationColSizesMap.set(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`, new Map<string, Map<string, []>>());
+        if (!destinationColSizesMap.has(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`)) {
+          destinationColSizesMap.set(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`, new Map<string, Map<string, []>>());
         }
-        if (!destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).has(dest)) {
-          destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).set(dest, new Map<string, []>());
+        if (!destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).has(dest)) {
+          destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).set(dest, new Map<string, []>());
         }
-        if (!destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).get(dest).has(rec.color)) {
-          destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).get(dest).set(rec.color, []);
+        if (!destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).get(dest).has(rec.color)) {
+          destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).get(dest).set(rec.color, []);
         }
-        destinationColSizesMap.get(`${rec.custPo},${rec.style},${rec.color}, ${rec.exitFactoryDate}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+        destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
       });
       const coData = []
       destinationColSizesMap.forEach((destColorSize, poNumber) => {
