@@ -308,14 +308,7 @@ export class HbService {
         const dest = rec.shipToAdd.replace(/\n/g, '')
         // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
 
-        // const parts = rec.shipToAdd.split(',')
-        // const destAdd = parts[2].trim();
-        // const dest = destAdd;
-
-        // const destCountry = rec.shipToAddress.slice(-2).trim();
-        // const parts = rec.shipToAddress.split(',')
-        // const destAdd = parts[0].trim();
-        // const dest = destAdd + ',' + destCountry;
+        const newColor = rec.color.replace(/\d+/, '').trim()
 
         if (!destinationColSizesMap.has(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`)) {
           destinationColSizesMap.set(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`, new Map<string, Map<string, []>>());
@@ -323,10 +316,10 @@ export class HbService {
         if (!destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).has(dest)) {
           destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).set(dest, new Map<string, []>());
         }
-        if (!destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).get(dest).has(rec.color)) {
-          destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).get(dest).set(rec.color, []);
+        if (!destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).get(dest).has(newColor)) {
+          destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).get(dest).set(newColor, []);
         }
-        destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+        destinationColSizesMap.get(`${rec.custPo},${rec.style}, ${rec.exitFactoryDate}`).get(dest).get(newColor).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
       });
       const coData = []
       destinationColSizesMap.forEach((destColorSize, poNumber) => {
@@ -346,7 +339,7 @@ export class HbService {
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new HBCoLinereqModels(poInfo.custPo, poInfo.style, poInfo.unitPrice, poInfo.exitFactoryDate, desArray);
+        const co = new HBCoLinereqModels(poInfo.custPo, poInfo.style, poInfo.unitPrice, poInfo.exitFactoryDate,"USD", desArray);
         coData.push(co)
       });
       if (coData) {

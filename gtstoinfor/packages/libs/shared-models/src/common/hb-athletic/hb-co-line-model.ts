@@ -3,13 +3,15 @@ export class HBCoLinereqModels {
     style:string;
     salesPrice: string;
     deliveryDate: any;
+    currency:string
     destinations: HBDestinationModel[]
 
-    constructor(buyerPo: string, style: string, salesPrice: string,deliveryDate: any, destinations: HBDestinationModel[]) {
+    constructor(buyerPo: string, style: string, salesPrice: string,deliveryDate: any, currency:string, destinations: HBDestinationModel[]) {
         this.buyerPo = buyerPo
         this.style = style
         this.salesPrice = salesPrice
         this.deliveryDate = deliveryDate
+        this.currency = currency
         this.destinations = destinations
     }
 }
