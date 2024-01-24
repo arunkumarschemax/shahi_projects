@@ -141,10 +141,10 @@ const getBuyers = () => {
     },
     {
         title: "PCH",
-        dataIndex: "pch",
+        dataIndex: "pchName",
       width:'100px',
-        sorter: (a, b) => a.pch.localeCompare(b.pch),
-      ...getColumnSearchProps("pch"),
+        sorter: (a, b) => a.pchName.localeCompare(b.pchName),
+      ...getColumnSearchProps("pchName"),
       },
     
     {
