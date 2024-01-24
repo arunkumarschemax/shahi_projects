@@ -1,8 +1,8 @@
-import {BuyersService,CategoryService,ColourService,ContentService,FabricStructuresService,FinishService,HoleService,M3ItemsService,M3TrimsService,QualitysService,StructureService,ThicknessService,TrimParamsMappingService,TrimService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
+import {BuyersService,CategoryService,ColourService,ContentService,FabricRequestCodeService,FabricStructuresService,FinishService,HoleService,M3ItemsService,M3TrimsService,QualitysService,StructureService,ThicknessService,TrimParamsMappingService,TrimService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Select, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3TrimFilterReq, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto } from "@project-management-system/shared-models";
+import { ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3TrimFilterReq, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto, TrimRequestCodeDto } from "@project-management-system/shared-models";
 import FormItem from "antd/es/form/FormItem";
 import AlertMessages from "../common/common-functions/alert-messages";
 
@@ -13,6 +13,8 @@ export interface M3Trimprps{
   trimCategoryId:number
  close: (value: any) => void;
  formValues:any
+ buyerId?: number
+ trimType?: string
 }
 
 
@@ -37,12 +39,19 @@ export function M3TrimsReqFile(props:M3Trimprps) {
   const [mapData, setMapData] = useState<any[]>([])
   const [mapDataId, setMapDataId] = useState<any[]>([])
 
-
+  const trimReqCodeService = new FabricRequestCodeService()
   useEffect(() =>{
     if(props.trimCategoryId != undefined){
       getMappedTrims(props.trimCategoryId)
+      form.setFieldsValue({trimCategoryId : props.trimCategoryId})
     }
-  },[props.trimCategoryId])
+    if (props.buyerId !== undefined) {
+      form.setFieldsValue({ buyerId: props.buyerId });
+    }
+    if (props.trimType !== undefined) {
+      form.setFieldsValue({ trimType: props.trimType });
+    }
+  },[props.trimCategoryId,props.buyerId,props.trimType])
 
   const getMappedTrims = (value) => {
     const req = new TrimIdRequestDto(value)
@@ -113,6 +122,19 @@ export function M3TrimsReqFile(props:M3Trimprps) {
     });
   };
 
+  const createReqCode = () => {
+      const req = new TrimRequestCodeDto(form.getFieldValue('trimType'),form.getFieldValue('trimCategoryId'),form.getFieldValue('buyerId'),form.getFieldValue('typeId'),form.getFieldValue('holeId'),
+      form.getFieldValue('finishId'),form.getFieldValue('contentId'),form.getFieldValue('categoryId'),form.getFieldValue('m3Code'),form.getFieldValue('hsnCode'));
+      trimReqCodeService.createTrimRequestedCode(req).then((res) => {
+        if (res.status) {
+          message.success(res.internalMessage, 2);
+        } else {
+          message.error(res.internalMessage, 2);
+        }
+      }).catch(err => {
+        AlertMessages.getErrorMessage(err.message);
+      });
+  };
 
 
   const onFinish = (value) => {
@@ -139,6 +161,9 @@ export function M3TrimsReqFile(props:M3Trimprps) {
       <Form form={form} layout={"vertical"} name="control-hooks" onFinish={onFinish}
       >
         <Row gutter={24}>
+        <Form.Item name={'buyerId'} hidden><Input></Input></Form.Item>
+        <Form.Item name={'trimCategoryId'} hidden><Input></Input></Form.Item>
+        <Form.Item name={'trimType'} hidden><Input></Input></Form.Item>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name="m3Code" label="M3 Code" >
                     <Input placeholder="Enter M3 Code"/>
@@ -269,6 +294,7 @@ export function M3TrimsReqFile(props:M3Trimprps) {
         </Row>
         <Row>
             <Col span={24} style={{ textAlign: "right" }}>
+                <Button type="primary" htmlType="submit" onClick={createReqCode}>Request</Button>
                 <Button type="primary" htmlType="submit">Submit</Button>
                 <Button htmlType="button" style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
             </Col>

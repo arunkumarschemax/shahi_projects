@@ -1,7 +1,7 @@
-import {BuyersService,ContentService,FabricFinishTypeService,FabricTypeService,FabricWeaveService,FinishService,M3ItemsService,UomService,WeightService } from"@project-management-system/shared-services";
+import {BuyersService,ContentService,FabricFinishTypeService,FabricRequestCodeService,FabricTypeService,FabricWeaveService,FinishService,M3ItemsService,UomService,WeightService } from"@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Radio, Row, Select, Space, Typography, message } from "antd";
 import React, { useEffect, useState } from "react";
-import {FabricContentDto, FabricTypeIdReq,M3FabricsDTO,M3ItemsDTO,UomCategoryEnum,m3FabricFiltersReq,m3ItemsContentEnum} from "@project-management-system/shared-models";
+import {FabricContentDto, FabricRequestCodeDto, FabricTypeIdReq,M3FabricsDTO,M3ItemsDTO,UomCategoryEnum,m3FabricFiltersReq,m3ItemsContentEnum} from "@project-management-system/shared-models";
 import { useNavigate } from "react-router-dom";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import AlertMessages from "../common/common-functions/alert-messages";
@@ -10,9 +10,8 @@ const {Option} = Select
 export interface M3FabricFilterProps{
  formValues:any
  close: (value: any) => void;
- 
+ buyerId?: number
 }
-
 const M3FabricFilters = (props:M3FabricFilterProps) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
@@ -53,6 +52,7 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
   const finishService = new FinishService()
   const fabFinishService = new FabricFinishTypeService()
   const contentService = new ContentService()
+  const fabReqCodeService = new FabricRequestCodeService()
 
   const getAllWeights = ()=>{
     weightService.getAllActiveWeight().then((res)=>{
@@ -123,7 +123,10 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
     getAllContents()
     getWeightUom()
     getYarnUom()
-  }, []);
+    if (props.buyerId !== undefined) {
+      form.setFieldsValue({ buyerId: props.buyerId });
+    }
+  }, [props.buyerId]);
 
   const getUom = () => {
     uomService.getAllUoms().then((res) => {
@@ -162,13 +165,36 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
     })
   }
 
-
+  const createReqCode = () => {
+    const requiredFields = [
+      'fabricTypeId', 'weaveId', 'weightId', 'weightUomId', 'epiConstruction',
+      'ppiConstruction', 'yarnType', 'widthValue', 'widthUomId', 'finishId',
+      'content', 'shrinkage', 'm3Code', 'hsnCode',
+    ];
+  
+    // if (requiredFields.every(field => form.getFieldValue(field))) {
+      const req = new FabricRequestCodeDto(form.getFieldValue('buyerId'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('weightId'),form.getFieldValue('weightUomId'),
+      form.getFieldValue('epiConstruction'),form.getFieldValue('ppiConstruction'),yarnType,form.getFieldValue('widthValue'),form.getFieldValue('widthUomId'),form.getFieldValue('finishId'),
+      form.getFieldValue('content'),form.getFieldValue('shrinkage'),form.getFieldValue('m3Code'),form.getFieldValue('hsnCode')
+      );
+      fabReqCodeService.createFabricRequestedCode(req).then((res) => {
+        if (res.status) {
+          message.success(res.internalMessage, 2);
+        } else {
+          message.error(res.internalMessage, 2);
+        }
+      }).catch(err => {
+        AlertMessages.getErrorMessage(err.message);
+      });
+    // } else {
+    //   message.error("All fields are required for requesting", 2);
+    // }
+  };
 
   const onFinish = (val) => {
-    // console.log(val.weightValue)
     const req = new m3FabricFiltersReq(undefined,val.fabricTypeId,val.weaveId,val.weightUomId,val.epiConstruction?val.epiConstruction:undefined,val.ppiConstruction?val.ppiConstruction:undefined,yarnType,val.widthUomId,val.finishId,val.shrinkage?val.shrinkage:undefined,val.hsnCode?val.hsnCode:undefined,val.content,val.weightValue?val.weightValue:undefined,val.widthValue?val.widthValue:undefined,val.m3Code?val.m3Code:undefined)
-     props.formValues([req])
-     props.close(null)
+      props.formValues([req]);
+      props.close(null);
      };
 
 
@@ -198,8 +224,9 @@ const onFabricTpe = (val) =>{
     headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
     >
       <Form layout="vertical" form={form} onFinish={onFinish}>
-        <Row gutter={24}>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+        <Row gutter={18}>
+        <Form.Item name={'buyerId'} hidden><Input></Input></Form.Item>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 8 }}>
             <Form.Item label=" Fabric Type" name="fabricTypeId" >
               <Select 
               showSearch
@@ -216,7 +243,7 @@ const onFabricTpe = (val) =>{
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 8 }}>
             <Form.Item label=" Weave" name="weaveId">
               <Select 
               showSearch
@@ -280,7 +307,7 @@ const onFabricTpe = (val) =>{
                 </Space.Compact>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
               <Form.Item label="Construction" name="construction">
                 <Space.Compact>
                   <Form.Item name='epiConstruction'>
@@ -296,12 +323,12 @@ const onFabricTpe = (val) =>{
                 </Space.Compact>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }}>
                 <Form.Item name="m3Code" label="M3 Code" >
                     <Input placeholder="Enter M3 Code"/>
                 </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 8 }}>
                 <Form.Item name="hsnCode" label="HSN Code" >
                     <Input placeholder="Enter HSN Code"/>
                 </Form.Item>
@@ -335,9 +362,9 @@ const onFabricTpe = (val) =>{
                 <Input placeholder=" Enter  Shrinkage"  />
               </Form.Item>
             </Col>
-          </Row>
-          <Row gutter={24}>
-            <Col span={7}>
+          {/* </Row> */}
+          {/* <Row gutter={24}> */}
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label=" Content" name="content" >
                 <Select showSearch placeholder="Select Content" allowClear optionFilterProp="children" >
                   {contentData.map((e) => (
@@ -353,9 +380,12 @@ const onFabricTpe = (val) =>{
             {/* </Row> */}
             <Row>
             <Col span={24} style={{ textAlign: "right" }}>
-              <Button type="primary" htmlType="submit">
-                Search
-              </Button>
+            <Button type="primary" onClick={createReqCode}>
+              Request
+            </Button>
+            <Button type="primary" onClick={() => onFinish(form.getFieldsValue())}>
+              Search
+            </Button>
               <Button
                 htmlType="button"
                 style={{ margin: "0 14px" }}
