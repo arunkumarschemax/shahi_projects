@@ -74,7 +74,7 @@ export class HbService {
           if (orderData) {
 
 
-            const update = await transactionManager.getRepository(HbOrdersEntity).update({ custPo: req.custPo, color: item.color, size: variant.size }, { exitFactoryDate: req.exitFactoryDate, shipToAdd: req.shipToAdd,currency:req.currency, style: item.style, quantity: variant.quantity, unitPrice: variant.unitPrice })
+            const update = await transactionManager.getRepository(HbOrdersEntity).update({ custPo: req.custPo, color: item.color, size: variant.size }, { exitFactoryDate: req.exitFactoryDate, shipToAdd: req.shipToAdd, currency: req.currency, style: item.style, quantity: variant.quantity, unitPrice: variant.unitPrice })
 
             let po = (order?.poVersion) + 1
 
@@ -339,7 +339,7 @@ export class HbService {
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new HBCoLinereqModels(poInfo.custPo, poInfo.style, poInfo.unitPrice, poInfo.exitFactoryDate,poInfo.currency, desArray);
+        const co = new HBCoLinereqModels(poInfo.custPo, poInfo.style, poInfo.unitPrice, poInfo.exitFactoryDate, poInfo.currency, desArray);
         coData.push(co)
       });
       if (coData) {
@@ -515,6 +515,7 @@ export class HbService {
         let deliveryAddress;
         let pkgTerms;
         let paymentTerms;
+        let styleNo;
         if (po.buyer === 'HB ATHLETIC') {
           const response = await this.getOrderdataForCOline({ poNumber: po.cust_po })
           console.log(response.data[0])
@@ -531,6 +532,7 @@ export class HbService {
           sevenDaysBefore.setDate(inputDate.getDate() - 7);
           const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBefore);
           coLine.deliveryDate = moment(formattedDate).format("DD/MM/YYYY")
+          styleNo = coData.style
           coLine.exFactoryDate = exFactoryDate
           coLine.salesPrice = coData.salesPrice
           coLine.currency = coData.currency
@@ -575,6 +577,9 @@ export class HbService {
         await driver.wait(until.elementLocated(By.id('bpo')))
         await driver.findElement(By.id('bpo')).clear();
         await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
+        await driver.wait(until.elementLocated(By.id('bus')))
+        await driver.findElement(By.id('bus')).clear();
+        await driver.findElement(By.id('bus')).sendKeys(styleNo);
         await driver.wait(until.elementLocated(By.id('agnt')));
         const agentDropDown = await driver.findElement(By.id('agnt'));
         await driver.executeScript(`arguments[0].value = '${agent}';`, agentDropDown)
