@@ -110,7 +110,7 @@ export class StyleService{
         try{
             console.log(buyerReq)
             const manager=this.datasource;
-            let query1 = "SELECT s.style_id AS styleId,s.location_id AS locationId,pf.profit_control_head_id AS pchId,pf.profit_control_head AS pch, s.style, b.buyer_name AS buyer, s.is_active AS isActive, s.style_file_name AS styleFileName, s.style_file_path AS styleFilePath, s.description AS description, s.created_user AS createdUser, s.version_flag AS versionFlag, s.updated_user AS updatedUser, s.updated_at AS updatedAt, s.created_at AS createdAt from style s left join profit_control_head pf on pf.profit_control_head_id = s.pch left join buyers b on b.buyer_id = s.buyer_id where style_id > 0  ";
+            let query1 = "SELECT s.pch,s.buyer_id as buyerId,s.style_id AS styleId,s.location_id AS locationId,pf.profit_control_head_id AS pchId,pf.profit_control_head AS pchName, s.style, b.buyer_name AS buyer, s.is_active AS isActive, s.style_file_name AS styleFileName, s.style_file_path AS styleFilePath, s.description AS description, s.created_user AS createdUser, s.version_flag AS versionFlag, s.updated_user AS updatedUser, s.updated_at AS updatedAt, s.created_at AS createdAt from style s left join profit_control_head pf on pf.profit_control_head_id = s.pch left join buyers b on b.buyer_id = s.buyer_id where style_id > 0  ";
             if(buyerReq.buyerId != undefined){
                 query1 = query1 + " and s.buyer_id ="+buyerReq.buyerId;
             }
