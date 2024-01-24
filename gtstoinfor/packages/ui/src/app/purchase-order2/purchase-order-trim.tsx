@@ -195,6 +195,8 @@ const [sizeData, setSizeData]=useState<any[]>([])
         trimForm.setFieldsValue({styleId: rowData?.styleId})
         trimForm.setFieldsValue({trimParams: rowData?.trimParams})
         trimForm.setFieldsValue({taxPercentage: rowData?.taxPercentage})
+        trimForm.setFieldsValue({hsnCode: rowData?.hsnCode})
+
         
         // trimForm.setFieldsValue({poQuantity: rowData?.quantity})
         }
@@ -217,6 +219,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
             trimForm.setFieldsValue({trimParams: rowData?.trimParams})
             trimForm.setFieldsValue({styleId:rowData?.styleId,})
             trimForm.setFieldsValue({taxPercentage: rowData?.taxPercentage})
+            trimForm.setFieldsValue({hsnCode: rowData?.hsnCode})
 
         setInputDisable(true)
         }
@@ -499,7 +502,8 @@ const [sizeData, setSizeData]=useState<any[]>([])
                 m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
                 trimParams: defaultTrimFormData.trimParams,
                 styleId: defaultTrimFormData.styleId,
-                taxPercentage: defaultTrimFormData?.taxPercentage
+                taxPercentage: defaultTrimFormData?.taxPercentage,
+                hsnCode: defaultTrimFormData?.hsnCode
             })
 
             }
@@ -515,6 +519,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
                 trimForm.setFieldsValue({ taxAmount: defaultTrimFormData.taxAmount })
                 trimForm.setFieldsValue({ subjectiveAmount: defaultTrimFormData.subjectiveAmount })
                 trimForm.setFieldsValue({ transportation: defaultTrimFormData.transportation })
+                trimForm.setFieldsValue({ hsnCode: defaultTrimFormData.hsnCode })
                 trimForm.setFieldsValue({poQuantity:(defaultTrimFormData.poQuantity > 0) ?(Number(defaultTrimFormData.poQuantity)) : Number(defaultTrimFormData.indentQuantity) - Number(defaultTrimFormData.poQuantity)})
                 trimForm.setFieldsValue({
                     colourName: defaultTrimFormData.colourName,
@@ -805,7 +810,13 @@ const [sizeData, setSizeData]=useState<any[]>([])
                             <Input name='styleId' disabled placeholder="Subjective amount"  style={{display:'none'}}/>
                         </Form.Item>
                     </Col>
-                   
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name='hsnCode' label='HSN Code'
+                            rules={[{ required: true, message: 'HSN Code is required' }]}
+                        >
+                            <Input placeholder="HSN Code" />
+                        </Form.Item>
+                    </Col>
                 </Row>
                 <Row justify={'end'}>
                     {update?

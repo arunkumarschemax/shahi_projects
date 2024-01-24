@@ -98,6 +98,11 @@ export class PurchaseOrderItemsEntity{
   })
   subjectiveAmount:number
 
+  @Column('varchar',{
+    name:'hsn_code'
+  })
+  hsnCode:string
+  
   @Column('enum',{
     name:'item_type',
     nullable: true,

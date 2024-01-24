@@ -20,6 +20,8 @@ export class PoItemDetailsDto {
     styleId:number
     materialType?:string
     sizeId?:number;
+    hsnCode?:string
+
 
     constructor(
         // purchaseOrderItemId: number,
@@ -40,7 +42,8 @@ export class PoItemDetailsDto {
     sampleReqId:number,
     styleId:number,
     materialType?:string,
-    sizeId?:number
+    sizeId?:number,
+    hsnCode?:string
 
     ){
 //    this.purchaseOrderItemId = purchaseOrderItemId
@@ -62,6 +65,8 @@ export class PoItemDetailsDto {
    this.styleId=styleId
    this.materialType=materialType
    this.sizeId = sizeId
+   this.hsnCode=hsnCode
+
 
     }
 }

@@ -206,7 +206,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
             fabricForm.setFieldsValue({ styleId: rowData.styleId })
             fabricForm.setFieldsValue({ taxPercentage: rowData?.taxPercentage })
             fabricForm.setFieldsValue({ fabricCode: rowData?.fabricCode })
-
+            fabricForm.setFieldsValue({ hsnCode: rowData?.hsnCode })
         }
         if (rowData.samplereFabId != undefined) {
             if(rowData?.uom_id > 0){
@@ -232,6 +232,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
             fabricForm.setFieldsValue({ styleId: rowData.styleId })
             fabricForm.setFieldsValue({ taxPercentage: rowData?.taxPercentage })
             fabricForm.setFieldsValue({ description: rowData?.description })
+            fabricForm.setFieldsValue({ hsnCode: rowData?.hsnCode })
         }
         setFabricIndexVal(index)
     }
@@ -257,6 +258,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
                 fabricForm.setFieldsValue({ taxAmount: defaultFabricFormData?.taxAmount })
                 fabricForm.setFieldsValue({ subjectiveAmount: defaultFabricFormData?.subjectiveAmount })
                 fabricForm.setFieldsValue({ transportation: defaultFabricFormData?.transportation })
+                fabricForm.setFieldsValue({ hsnCode: defaultFabricFormData?.hsnCode })
                 // trimForm.setFieldsValue({poQuantity:(defaultFabricFormData.poQuantity > 0) ?(Number(defaultFabricFormData.poQuantity)) : Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity)})
                 fabricForm.setFieldsValue({
                     poQuantity: defaultFabricFormData.sampleQuantity,
@@ -288,6 +290,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
                 fabricForm.setFieldsValue({ discountAmount: defaultFabricFormData?.discountAmount })
                 fabricForm.setFieldsValue({ subjectiveAmount: defaultFabricFormData?.subjectiveAmount })
                 fabricForm.setFieldsValue({ transportation: defaultFabricFormData?.transportation })
+                fabricForm.setFieldsValue({ hsnCode: defaultFabricFormData?.hsnCode })
                 fabricForm.setFieldsValue({poQuantity:(defaultFabricFormData.poQuantity > 0) ?(Number(defaultFabricFormData.poQuantity)) : Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity)})
                 fabricForm.setFieldsValue({
                     // poQuantity: Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity),
@@ -774,6 +777,13 @@ const [sizeData, setSizeData]=useState<any[]>([])
                             rules={[{ required: true, message: 'Subjective Amount is required' }]}
                         >
                             <Input disabled placeholder="Subjective amount" />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name='hsnCode' label='HSN Code'
+                            rules={[{ required: true, message: 'HSN Code is required' }]}
+                        >
+                            <Input placeholder="HSN Code" />
                         </Form.Item>
                     </Col>
                 </Row>
