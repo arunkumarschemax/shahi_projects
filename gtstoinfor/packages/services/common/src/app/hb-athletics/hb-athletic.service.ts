@@ -339,7 +339,7 @@ export class HbService {
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new HBCoLinereqModels(poInfo.custPo, poInfo.style, poInfo.unitPrice, poInfo.exitFactoryDate,"USD", desArray);
+        const co = new HBCoLinereqModels(poInfo.custPo, poInfo.style, poInfo.unitPrice, poInfo.exitFactoryDate,poInfo.currency, desArray);
         coData.push(co)
       });
       if (coData) {
