@@ -547,9 +547,9 @@ export class HbService {
           deliveryAddress = addressData?.deliveryCode
           buyerValue1 = "DIB-DICK'S BRAND"
           buyerValue2 = "HBA00001-HB ATHLETIC INC"
-          agent = "0"
+          agent = "NA-DIRECT CUSTOMER"
           pkgTerms = "BOX-BOXES"
-          paymentTerms = "081-TT 90 DAYS"
+          paymentTerms = "081-TT  90 Days"
         }
         const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
         const allApps = await apps.findElements(By.tagName('span'));
@@ -561,17 +561,17 @@ export class HbService {
         }
         await driver.wait(until.elementLocated(By.id('styleid2H')))
         await driver.findElement(By.id('styleid2H')).sendKeys(po.item_no);
-        await driver.sleep(10000)
+        await driver.sleep(3000)
         await driver.wait(until.elementLocated(By.id('bgpset1')));
         const dropdownElement1 = await driver.findElement(By.id('bgpset1'));
         const dropdown1 = await driver.wait(until.elementIsVisible(dropdownElement1)).then(element => new Select(element))
         await dropdown1.selectByValue(buyerValue1)
-        await driver.sleep(10000)
+        await driver.sleep(5000)
         await driver.wait(until.elementLocated(By.id('byr')));
         const dropdownElement2 = await driver.findElement(By.id('byr'));
         const dropdown2 = await driver.wait(until.elementIsVisible(dropdownElement2)).then(element => new Select(element))
         await dropdown2.selectByValue(buyerValue2)
-        await driver.sleep(5000)
+        await driver.sleep(3000)
         await driver.wait(until.elementLocated(By.id('CreateOrderID')))
         await driver.sleep(3000)
         await driver.findElement(By.id('CreateOrderID')).click();
@@ -665,7 +665,7 @@ export class HbService {
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
               }
-            } else if ((await tab.getAttribute('innerText')) == 'US') {
+            } else if ((await tab.getAttribute('innerText')) == 'USA') {
               await driver.executeScript('arguments[0].click();', tab);
               for (let [colorIndex, color] of dest.colors.entries()) {
                 for (let [sizeIndex, size] of color.sizes.entries()) {
@@ -707,7 +707,9 @@ export class HbService {
                       await inputField.sendKeys(size.price);
                     }
                   }
-                  const inputId = `${size.name}:${color.name}:US`.replace(/\*/g, '');
+                  console.log(color.name)
+                  const inputId = `${size.name}:${color.name}:USA`.replace(/\*/g, '');
+                  console.log(inputId)
                   const input = await driver.wait(until.elementLocated(By.id(inputId)))
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
