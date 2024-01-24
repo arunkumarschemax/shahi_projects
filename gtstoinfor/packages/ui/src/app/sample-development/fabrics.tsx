@@ -450,8 +450,8 @@ const FabricsForm = (props:FabricsFormProps) => {
     },
     beforeUpload: (file: any, index:any) => {
       console.log(index)
-      if (!file.name.match(/\.(pdf|xlsx|xls|png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
-        AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+      if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+        AlertMessages.getErrorMessage("Only png,jpeg,jpg,pjpeg,gif files are allowed!");
         return true;
       }
       // var reader = new FileReader();
@@ -461,6 +461,7 @@ const FabricsForm = (props:FabricsFormProps) => {
           AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
           return true;
         } else {
+          console.log(fileList)
             setFileList([...fileList,file]);
           getBase64(file, imageUrl =>
             setImageUrl(imageUrl)
@@ -728,12 +729,12 @@ const FabricsForm = (props:FabricsFormProps) => {
       fixed:'right',
       render: (_, record) => (
         <Form.Item name={`fabricUpload${record.key}`}>
-          <Upload key={record.key} style={{ width: '100%' }} 
+          <Upload key={record.key} name={`fabricUpload${record.key}`} style={{ width: '100%' }} 
             {...uploadFabricProps}
-            accept=".jpeg,.pdf,.png,.jpg"
+            accept=".jpeg,.png,.jpg"
             onChange={(e) => handleInputChange(e.file,record.key,'fabricUpload',0,record)}
             >
-            <Button key={record.key}
+            <Button key={record.key} name={`fabricUpload${record.key}`}
                 style={{ color: 'black', backgroundColor: '#7ec1ff' }}
                 // icon={<UploadOutlined />}
                 disabled={fileList?.length == 1? true:false}

@@ -65,8 +65,8 @@ const TrimsForm = (props:TrimsFormProps) => {
   },
   beforeUpload: (file: any, index:any) => {
     console.log(index)
-    if (!file.name.match(/\.(pdf|xlsx|xls|png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
-      AlertMessages.getErrorMessage("Only png,jpeg,jpg files are allowed!");
+    if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+      AlertMessages.getErrorMessage("Only png,jpeg,jpg,pjpeg,gif files are allowed!");
       return true;
     }
     // var reader = new FileReader();
@@ -607,7 +607,7 @@ const getMappedTrims = (value, row) => {
         <Form.Item name={`trimUpload${record.key}`}>
           <Upload key={record.key} style={{ width: '100%' }} 
             {...uploadFabricProps}
-            accept=".jpeg,.pdf,.png,.jpg"
+            accept=".jpeg,.png,.jpg"
             onChange={(e) => handleInputChange(e.file,record.key,'trimUpload',record)}
             >
             <Button key={record.key}

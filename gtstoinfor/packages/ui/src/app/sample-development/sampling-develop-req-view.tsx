@@ -2,6 +2,7 @@ import {
     BarcodeOutlined,
     CaretDownOutlined,
     CaretRightOutlined,
+    DownloadOutlined,
     EyeOutlined,
     InfoCircleOutlined,
     PrinterOutlined,
@@ -66,6 +67,8 @@ import { useIAMClientState } from "../common/iam-client-react";
 import PickListPrint, { getCssFromComponent } from "./pick-list-print";
 import PoPrint from "../purchase-order2/po-print";
 import RolePermission from "../role-permissions";
+// import axios from "axios";
+import { config } from "packages/libs/shared-services/config";
 // const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   
@@ -357,6 +360,11 @@ import RolePermission from "../role-permissions";
         render: (text, record) => {
           return (
             <>
+            <span style={{paddingRight:20}}  >
+              <Tooltip title='Download Fabric'>
+                <DownloadOutlined onClick={() => handleFabDownload(record.filePath)} style={{fontSize:'15px',marginLeft:'-5px', color:'blue'}}/>
+              </Tooltip>
+            </span>
               {Number(record.tobeProcured) > 0 && record.status != BomStatusEnum.ALLOCATED && Number(record.resltantavaliblequantity) > 0 ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:(Number(record.resltantavaliblequantity) <=0 && record.status != BomStatusEnum.ALLOCATED) ? <Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Need to Procure</b></Tag>:record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag>:""}
             </>
           );
@@ -445,6 +453,11 @@ import RolePermission from "../role-permissions";
         render: (text, record) => {
           return (
             <>
+            <span style={{paddingRight:20}}  >
+              <Tooltip title='Download Trim'>
+                <DownloadOutlined onClick={() => handleFabDownload(record.filePath)} style={{fontSize:'15px',marginLeft:'-5px', color:'blue'}}/>
+              </Tooltip>
+            </span>
               {Number(record.tobeProcured) > 0 && record.status != BomStatusEnum.ALLOCATED && Number(record.resltantavaliblequantity) > 0 ? <Tag style={{backgroundColor:'#03a9f46b' ,color:"black"}}><b>Need to allocate</b></Tag>:(Number(record.resltantavaliblequantity) <= 0 && record.status != BomStatusEnum.ALLOCATED) ? <Tag style={{backgroundColor:'#41f4036b',color:"black"}}><b>Need to Procure</b></Tag>:record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag>:""}
             </>
           );
@@ -728,6 +741,57 @@ import RolePermission from "../role-permissions";
       setRow(rowData)
     };
 
+    const handleDownload = (file) => {
+      console.log(file,'filepath');      
+      if (file) {
+          // if(file.fileName){
+            setTimeout(() => {
+              const response = {
+               file: config.file_upload_path+'/SD-'+file
+              //  file: config.file_upload_path+'/Cotton-Shirt-Shirt.jpg'
+
+              };
+              window.open(response.file);
+            }, 100);
+          // }
+      }
+      else {
+        AlertMessages.getErrorMessage("Please upload file. ");
+      }
+    }
+
+    const handleFabDownload = (file) => {
+      console.log(file,'filepath');    
+      console.log(file.substr(12))  
+      if (file) {
+          // if(file.fileName){
+            setTimeout(() => {
+              const response = {
+              //  file: config.file_upload_path+'/SD-'+file
+               file: config.file_upload_path+`${file.substr(12)}`
+
+              };
+              window.open(response.file);
+            }, 100);
+          // }
+      }
+      else {
+        AlertMessages.getErrorMessage("Please upload file. ");
+      }
+    }
+
+    // const handleDownload = () => {
+    //   console.log("jjjjj")
+    //   axios.get('http://165.22.220.143/sampling/gtstoinfor/dist/packages/services/common/upload_files/', { responseType: 'blob' })
+    //     .then((response) => {
+    //       const url = window.URL.createObjectURL(new Blob([response.data]));
+    //       const link = document.createElement('a');
+    //       link.href = url;
+    //       link.setAttribute('download', 'folder.zip');
+    //       document.body.appendChild(link);
+    //       link.click();
+    //     });
+    // };
     const HeaderRow = (props: any) => {
 
       
@@ -754,14 +818,19 @@ import RolePermission from "../role-permissions";
           <span style={{ width: "10px" }}></span>
           <span> Status : {<b>{LifeCycleStatusDisplay.find((e)=>e.name === lifeCycleStatus)?.displayVal}</b>}</span>
           <span style={{marginLeft:'auto'}}>
+          <span style={{paddingRight:20}}  >
+          <Tooltip title='Download Tech Pack'>
+          <DownloadOutlined onClick={() => handleDownload(requestNo)} style={{fontSize:'15px',marginLeft:'-5px', color:'blue'}}/>
+          </Tooltip>
+          </span>
                {lifeCycleStatus === LifeCycleStatusEnum.READY_TO_DISPATCH ? (
         <>
+          
           <span style={{paddingRight:20}}  >
             <Button type="primary"  size="small" onClick={()=>handleDispatchClick(index)}>
               Dispatch 
             </Button>
           </span>
-        
         </>
       ):(<></>)}
         {lifeCycleStatus === LifeCycleStatusEnum.READY_FOR_PRODUCTION ? (
