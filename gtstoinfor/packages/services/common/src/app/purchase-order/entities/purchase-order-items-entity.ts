@@ -98,6 +98,11 @@ export class PurchaseOrderItemsEntity{
   })
   subjectiveAmount:number
 
+  @Column('varchar',{
+    name:'hsn_code'
+  })
+  hsnCode:string
+  
   @Column('enum',{
     name:'item_type',
     nullable: true,
@@ -145,5 +150,11 @@ export class PurchaseOrderItemsEntity{
   @ManyToOne(type =>PurchaseOrderEntity,purchaseOrder =>purchaseOrder.poItemInfo)
   @JoinColumn({name:'purchase_order_id'})
   purchaseOrderEntity:PurchaseOrderEntity
+
+  @Column('int',{
+    name:'size_id',
+    nullable:true
+})
+sizeId:number
   
 }

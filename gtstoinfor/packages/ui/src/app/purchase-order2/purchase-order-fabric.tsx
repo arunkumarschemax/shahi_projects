@@ -1,7 +1,7 @@
 import { ConsoleSqlOutlined, EditOutlined, EnvironmentOutlined, MinusCircleOutlined, PlusOutlined, UndoOutlined } from "@ant-design/icons"
 import { faL } from "@fortawesome/free-solid-svg-icons"
 import { M3MastersCategoryReq } from "@project-management-system/shared-models"
-import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, SampleDevelopmentService, TaxesService, UomService } from "@project-management-system/shared-services"
+import { ColourService, FabricTypeService, FabricWeaveService, IndentService, M3ItemsService, M3MastersService, M3StyleService, ProfitControlHeadService, SampleDevelopmentService, SizeService, TaxesService, UomService } from "@project-management-system/shared-services"
 import { Button, Card, Col, Divider, Form, Input, InputNumber, Popconfirm, Row, Select, Space, Tag, Tooltip, message } from "antd"
 import Table, { ColumnProps } from "antd/es/table"
 import moment from "moment"
@@ -43,6 +43,8 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
     const sampleservice = new SampleDevelopmentService()
     const taxService = new TaxesService();
     const [taxPer, setTaxPer] = useState(0);
+    const sizeService = new SizeService()
+const [sizeData, setSizeData]=useState<any[]>([])
 
     useEffect(() => {
         getweave()
@@ -52,6 +54,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
         getFabricType()
         getM3FabricStyleCodes()
         getTax()
+        getAllSizes()
     }, [])
 
     useEffect(() => {
@@ -98,7 +101,16 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
             }
         })
     }
-
+    const getAllSizes =() =>{
+        sizeService.getAllActiveSize().then(res=>{
+          if(res.status){
+            setSizeData(res.data)
+          }else{
+            setSizeData([])
+            message.info(res.internalMessage)
+          }
+        })
+      }
     const AllIndnetDetails = (value) => {
         indentService.getAllIndentItemDetailsAgainstIndent({ indentId: value }).then(res => {
             if (res.status) {
@@ -194,7 +206,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
             fabricForm.setFieldsValue({ styleId: rowData.styleId })
             fabricForm.setFieldsValue({ taxPercentage: rowData?.taxPercentage })
             fabricForm.setFieldsValue({ fabricCode: rowData?.fabricCode })
-
+            fabricForm.setFieldsValue({ hsnCode: rowData?.hsnCode })
         }
         if (rowData.samplereFabId != undefined) {
             if(rowData?.uom_id > 0){
@@ -220,6 +232,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
             fabricForm.setFieldsValue({ styleId: rowData.styleId })
             fabricForm.setFieldsValue({ taxPercentage: rowData?.taxPercentage })
             fabricForm.setFieldsValue({ description: rowData?.description })
+            fabricForm.setFieldsValue({ hsnCode: rowData?.hsnCode })
         }
         setFabricIndexVal(index)
     }
@@ -245,6 +258,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                 fabricForm.setFieldsValue({ taxAmount: defaultFabricFormData?.taxAmount })
                 fabricForm.setFieldsValue({ subjectiveAmount: defaultFabricFormData?.subjectiveAmount })
                 fabricForm.setFieldsValue({ transportation: defaultFabricFormData?.transportation })
+                fabricForm.setFieldsValue({ hsnCode: defaultFabricFormData?.hsnCode })
                 // trimForm.setFieldsValue({poQuantity:(defaultFabricFormData.poQuantity > 0) ?(Number(defaultFabricFormData.poQuantity)) : Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity)})
                 fabricForm.setFieldsValue({
                     poQuantity: defaultFabricFormData.sampleQuantity,
@@ -276,6 +290,7 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                 fabricForm.setFieldsValue({ discountAmount: defaultFabricFormData?.discountAmount })
                 fabricForm.setFieldsValue({ subjectiveAmount: defaultFabricFormData?.subjectiveAmount })
                 fabricForm.setFieldsValue({ transportation: defaultFabricFormData?.transportation })
+                fabricForm.setFieldsValue({ hsnCode: defaultFabricFormData?.hsnCode })
                 fabricForm.setFieldsValue({poQuantity:(defaultFabricFormData.poQuantity > 0) ?(Number(defaultFabricFormData.poQuantity)) : Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity)})
                 fabricForm.setFieldsValue({
                     // poQuantity: Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity),
@@ -668,6 +683,20 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                             </Select>
                         </Form.Item>
                     </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                        <Form.Item name='sizeId' label='Size'>
+                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Size'
+                                // onChange={colorOnchange}
+                                // disabled={inputDisbale}
+                            >
+                                {sizeData.map(e => {
+                                    return (
+                                        <Option type={e.size} key={e.sizeId} value={e.sizeId} name={e.size}>{e.size}</Option>
+                                    )
+                                })}
+                            </Select>
+                        </Form.Item>
+                    </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                         <Form.Item name='poQuantity' label='PO Quantity'
                             rules={[{ required: true, message: 'Quantity is required' }]}
@@ -748,6 +777,13 @@ export const PurchaseOrderfabricForm = ({ props, indentId, data, sampleReqId, it
                             rules={[{ required: true, message: 'Subjective Amount is required' }]}
                         >
                             <Input disabled placeholder="Subjective amount" />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name='hsnCode' label='HSN Code'
+                            rules={[{ required: true, message: 'HSN Code is required' }]}
+                        >
+                            <Input placeholder="HSN Code" />
                         </Form.Item>
                     </Col>
                 </Row>

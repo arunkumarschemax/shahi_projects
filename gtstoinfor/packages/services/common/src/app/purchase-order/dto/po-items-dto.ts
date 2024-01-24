@@ -10,6 +10,9 @@ export class PoItemdetails{
   colourId:number
 
   @ApiProperty()
+  sizeId:number
+
+  @ApiProperty()
   m3ItemId:number
 
   @ApiProperty()
@@ -70,7 +73,10 @@ export class PoItemdetails{
 
   @ApiProperty()  
   sampleReqId:number
+  
   @ApiProperty()  
   materialType?:ItemTypeEnum
 
+  @ApiProperty()
+  hsnCode?:string
 }
