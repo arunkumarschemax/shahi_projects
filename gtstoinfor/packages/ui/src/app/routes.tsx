@@ -44,6 +44,7 @@ import AddressUpload from "./masters/address/address-excel-upload"
 import BomPdfUpload from "./bom-pdf-extraction/pdf-upload"
 import BackingPaper from "./trims/backing-paper"
 import BomView from "./bom-pdf-extraction/bom-view"
+import TrimsGrid from "./trims/trims-grid"
 
 
 export const AppRoutes = () => {
@@ -159,6 +160,7 @@ export const AppRoutes = () => {
                     <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
                     <Route path='co-line-view' element={<ColineView />} />
                     <Route path='backing-paper' element={<BackingPaper/>} />
+                    <Route path='trim-grid' element={<TrimsGrid/>} />
 
 
                 </Route>
