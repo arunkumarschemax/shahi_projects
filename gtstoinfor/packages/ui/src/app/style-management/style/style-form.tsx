@@ -39,8 +39,8 @@ export function StyleForm(props: StyleFormProps) {
 
   useEffect(() => {
   //  if(props.styleData){
-    console.log(props.styleData)
-    console.log(props.styleData.styleFileName)
+    // console.log(props.styleData)
+    // console.log(props.styleData.styleFileName)
     if(props.isUpdate){
       if(props.styleData){
         const updateImage ='https://sampling-backend.shahiapps.in/static/'+props.styleData.styleFileName
