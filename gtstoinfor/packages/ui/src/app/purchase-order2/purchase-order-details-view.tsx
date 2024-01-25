@@ -101,6 +101,11 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       ),
     },
     {
+      title: 'HSN Code',
+      key: 'HSN Code',
+      dataIndex: 'poHsnCode',
+    },
+    {
       title: 'PO Quantity',
       key: 'PO Quantity',
       dataIndex: 'po_quantity',

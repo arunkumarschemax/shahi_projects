@@ -19,6 +19,11 @@ export class PoItemDetailsDto {
     sampleReqId:number
     styleId:number
     materialType?:string
+    sizeId?:number;
+    hsnCode?:string
+    itemDescription?:string
+
+
 
     constructor(
         // purchaseOrderItemId: number,
@@ -38,7 +43,10 @@ export class PoItemDetailsDto {
        indentId:number,
     sampleReqId:number,
     styleId:number,
-    materialType?:string
+    materialType?:string,
+    sizeId?:number,
+    hsnCode?:string,
+    itemDescription?:string
 
     ){
 //    this.purchaseOrderItemId = purchaseOrderItemId
@@ -59,6 +67,9 @@ export class PoItemDetailsDto {
    this.sampleReqId=sampleReqId
    this.styleId=styleId
    this.materialType=materialType
+   this.sizeId = sizeId
+   this.hsnCode=hsnCode
+ this.itemDescription = itemDescription
 
     }
 }

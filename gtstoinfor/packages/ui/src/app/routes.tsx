@@ -219,6 +219,8 @@ import WeightView from "./common/weight/weight-view"
 import SampleReqDetailView from "./sample-development/sample-dev-req-detail-view"
 import GrnReport from "./Reports/grn-report"
 import PurchaseOrderReport from "./Reports/purchase-order-report"
+import FabricRequestCodeView from "./item-request-code/fabric-request-code-view"
+import { TrimReqCodeView } from "./item-request-code/trim-request-code-view"
 
 
 
@@ -802,7 +804,8 @@ export const AppRoutes = () => {
                     <Route path="store-issue-detail" element={<StoreIssueDetailed />} />
                     <Route path="market-issue-detailview" element={<MarketIssueDetail />} />
                     <Route path="sample-inventory-grid" element={<SampleInventory />} />
-
+                    <Route path='fabric-request-code-view' element={<FabricRequestCodeView/>}/>
+                    <Route path='trim-request-code-view' element={<TrimReqCodeView/>}/>
                 </Route>
 
 

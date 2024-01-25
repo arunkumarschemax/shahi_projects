@@ -975,7 +975,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             onCancel={handleCancel}
             footer={[]}
         >
-          <M3FabricFilters formValues={handleFabricsfilterData} close={handleCancel}/>
+          <M3FabricFilters formValues={handleFabricsfilterData} close={handleCancel} buyerId={props.buyerId}/>
         </Modal>
     </div>
   );
