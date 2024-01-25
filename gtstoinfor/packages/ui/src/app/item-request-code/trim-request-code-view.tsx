@@ -586,7 +586,7 @@ export const TrimReqCodeView = () => {
 
  
   return (
-    <Card title="M3 Trims" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/trim-master/m3-trim-items/m3-trim-items-form' >
+    <Card title="Trim Request Code" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/trim-master/m3-trim-items/m3-trim-items-form' >
     <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
     </Link>}>
       <Form form={form} layout={"vertical"} name="control-hooks" onFinish={onFinish}
