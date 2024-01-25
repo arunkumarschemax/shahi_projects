@@ -206,7 +206,7 @@ export class AddressService {
             if (info) {
                 return new CommonResponseModel(true, 1, 'Data retrieved', [info])
             } else {
-                return new CommonResponseModel(false, 0, 'No data found')
+                return new CommonResponseModel(false, 0, 'No data found',[])
             }
         } catch (err) {
             return new CommonResponseModel(false, 0, 'Something went wrong', err)

@@ -195,4 +195,13 @@ export class SanmarController {
         }
     }
 
+    @Post('/createCOline')
+    async createCOline(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.createCOline(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
 }

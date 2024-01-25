@@ -579,7 +579,7 @@ export class SanmarService {
         
         const averageUnitPrice = totalSizeCount > 0 ? totalUnitPrice / totalSizeCount : 0;  // calculation of Avg unit price
 
-        const co = new SanmarCoLinereqModels(poInfo.buyerPo, poInfo.poStyle, averageUnitPrice.toString(), poInfo.deliveryDate, poInfo.currency, desArray);
+        const co = new SanmarCoLinereqModels(poInfo.buyerPo, poInfo.poStyle, averageUnitPrice.toFixed(2).toString(), poInfo.deliveryDate, poInfo.currency, desArray);
         coData.push(co)
       });
       if (coData) {
@@ -682,13 +682,13 @@ export class SanmarService {
           const address = await this.addressService.getAddressInfoByCountry({ country: request });
           const addressData = address.data[0];
           console.log(addressData)
-          buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 11;
-          deliveryAddress = addressData?.deliveryCode
+          buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 10;
+          deliveryAddress = addressData?.deliveryCode ? addressData?.deliveryCode:11
           buyerValue1 = "SAN-SANMAR CORPORATION"
           buyerValue2 = "SAN00013-SANMAR CORPORATION"
           agent = "-NA"
           pkgTerms = "BOX-BOXES"
-          paymentTerms = "030-TRDE CARD30 DAY"
+          paymentTerms = "030-Trde Card30 Day"
         }
         const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
         const allApps = await apps.findElements(By.tagName('span'));
@@ -804,8 +804,12 @@ export class SanmarService {
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
               }
-            } else if ((await tab.getAttribute('innerText')) == 'US') {
+            } else if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
+              // console.log(dest.colors[1],'kuuuuuu')
+              // console.log(dest.colors[1].sizes,'kuuuuuusizes')
+
               await driver.executeScript('arguments[0].click();', tab);
+              // console.log(dest.colors,'kuuuuuu')
               for (let [colorIndex, color] of dest.colors.entries()) {
                 for (let [sizeIndex, size] of color.sizes.entries()) {
                   if (colorIndex === 0) {
@@ -846,7 +850,7 @@ export class SanmarService {
                       await inputField.sendKeys(size.price);
                     }
                   }
-                  const inputId = `${size.name}:${color.name}:US`.replace(/\*/g, '');
+                  const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
                   const input = await driver.wait(until.elementLocated(By.id(inputId)))
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
@@ -855,7 +859,7 @@ export class SanmarService {
           }
         }
         await driver.sleep(10000)
-        const element = await driver.findElement(By.id('OrderCreateID')).click();
+        // const element = await driver.findElement(By.id('OrderCreateID')).click();
         await driver.wait(until.alertIsPresent(), 10000);
         // Switch to the alert and accept it (click "OK")
         const alert = await driver.switchTo().alert();
