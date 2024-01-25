@@ -60,7 +60,7 @@ export const TrimReqCodeView = () => {
     if (form.getFieldValue('categoryId') !== undefined) {
       req.categoryId = form.getFieldValue('categoryId')
     }
-    service.getAllStructures(req).then((res) => {
+    trimReqCodeService.getAllStructures(req).then((res) => {
       if (res.status) {
         setStructureData(res.data);
       }
@@ -71,7 +71,7 @@ export const TrimReqCodeView = () => {
     if (form.getFieldValue('categoryId') !== undefined) {
       req.categoryId = form.getFieldValue('categoryId')
     }
-    service.getAllCategories(req).then((res) => {
+    trimReqCodeService.getAllCategories(req).then((res) => {
       if (res.status) {
         setCategoryData(res.data);
       }
@@ -82,7 +82,7 @@ export const TrimReqCodeView = () => {
     if (form.getFieldValue('categoryId') !== undefined) {
       req.categoryId = form.getFieldValue('categoryId')
     }
-    service.getAllContents(req).then((res) => {
+    trimReqCodeService.getAllContents(req).then((res) => {
       if (res.status) {
         setContentData(res.data);
       }
@@ -93,7 +93,7 @@ export const TrimReqCodeView = () => {
     if (form.getFieldValue('categoryId') !== undefined) {
       req.categoryId = form.getFieldValue('categoryId')
     }
-    service.getAllTypes(req).then((res) => {
+    trimReqCodeService.getAllTypes(req).then((res) => {
       if (res.status) {
         setTypeData(res.data);
       }
@@ -104,7 +104,7 @@ export const TrimReqCodeView = () => {
     if (form.getFieldValue('categoryId') !== undefined) {
       req.categoryId = form.getFieldValue('categoryId')
     }
-    service.getAllFinishes(req).then((res) => {
+    trimReqCodeService.getAllFinishes(req).then((res) => {
       if (res.status) {
         setFinishData(res.data);
       }
@@ -115,7 +115,7 @@ export const TrimReqCodeView = () => {
     if (form.getFieldValue('categoryId') !== undefined) {
       req.categoryId = form.getFieldValue('categoryId')
     }
-    service.getAllHoles(req).then((res) => {
+    trimReqCodeService.getAllHoles(req).then((res) => {
       if (res.status) {
         setHoleData(res.data);
       }
@@ -126,7 +126,7 @@ export const TrimReqCodeView = () => {
     if (form.getFieldValue('categoryId') !== undefined) {
       req.categoryId = form.getFieldValue('categoryId')
     }
-    service.getAllQuality(req).then((res) => {
+    trimReqCodeService.getAllQuality(req).then((res) => {
       if (res.status) {
         setQtyData(res.data);
       }
@@ -137,7 +137,7 @@ export const TrimReqCodeView = () => {
     if (form.getFieldValue('categoryId') !== undefined) {
       req.categoryId = form.getFieldValue('categoryId')
     }
-    service.getAllThickness(req).then((res) => {
+    trimReqCodeService.getAllThickness(req).then((res) => {
       if (res.status) {
         setThickData(res.data);
       }
@@ -148,7 +148,7 @@ export const TrimReqCodeView = () => {
     if (form.getFieldValue('categoryId') !== undefined) {
       req.categoryId = form.getFieldValue('categoryId')
     }
-    service.getAllVariety(req).then((res) => {
+    trimReqCodeService.getAllVariety(req).then((res) => {
       if (res.status) {
         setVarietyData(res.data);
       }
@@ -156,7 +156,7 @@ export const TrimReqCodeView = () => {
   };
 
   const getTrims = () => {
-    service.getAllTrimCategories().then((res) => {
+    trimReqCodeService.getAllTrimCategories().then((res) => {
       if (res.status) {
         setTrimData(res.data);
       }
@@ -167,7 +167,7 @@ export const TrimReqCodeView = () => {
     if (form.getFieldValue('categoryId') !== undefined) {
       req.categoryId = form.getFieldValue('categoryId')
     }
-    service.getAllUom(req).then((res) => {
+    trimReqCodeService.getAllUom(req).then((res) => {
       if (res.status) {
         setUomData(res.data);
       }
@@ -178,7 +178,7 @@ export const TrimReqCodeView = () => {
     if (form.getFieldValue('categoryId') !== undefined) {
       req.categoryId = form.getFieldValue('categoryId')
     }
-    service.getAllColors(req).then((res) => {
+    trimReqCodeService.getAllColors(req).then((res) => {
       if (res.status) {
         setColorData(res.data);
       }
@@ -190,7 +190,7 @@ export const TrimReqCodeView = () => {
     const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null   
     req.buyerRefNo = refNo
     console.log(refNo,'=========')
-    service.getAllBuyers(req).then((res) => {
+    trimReqCodeService.getAllBuyers(req).then((res) => {
       if (res.status) {
         setBuyerData(res.data);
       //   if(refNo){
@@ -586,9 +586,7 @@ export const TrimReqCodeView = () => {
 
  
   return (
-    <Card title="M3 Trims" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to='/trim-master/m3-trim-items/m3-trim-items-form' >
-    <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
-    </Link>}>
+    <Card title="Trim Request Code" headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
       <Form form={form} layout={"vertical"} name="control-hooks" onFinish={onFinish}
       >
         <Row gutter={24}>
