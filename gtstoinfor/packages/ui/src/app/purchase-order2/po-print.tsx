@@ -295,7 +295,7 @@ const totalAmountInWords = `${integerWords} . ${decimalWords}`;
 
                           <tr key={index}>
                             <td>{sno}</td>
-                            <td >{e.hsnCode? e.hsnCode:'-'}</td>
+                            <td >{e.poHsnCode? e.poHsnCode:'-'}</td>
                             <td style={{ minWidth: '100px', maxWidth: '300px', overflow: 'hidden' }}>
                                     <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
                                   {e.item_code ? e.item_code : '-'}
