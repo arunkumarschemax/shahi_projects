@@ -180,6 +180,7 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
       fabReqCodeService.createFabricRequestedCode(req).then((res) => {
         if (res.status) {
           message.success(res.internalMessage, 2);
+          navigate("/sample-development/fabric-request-code-view");
         } else {
           message.error(res.internalMessage, 2);
         }

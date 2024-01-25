@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { FabricRequestCodeEntity } from './entities/fabric-request-code-entity';
 import { FabricRequestCodeDto } from './dtos/fabric-request-code.dto';
@@ -10,7 +10,8 @@ import { CommonResponseModel, MaterialFabricEnum } from '@project-management-sys
 export class FabricReqCodeService {
     constructor(
         @InjectRepository(FabricRequestCodeEntity) 
-        private fabricReqRepo: Repository<FabricRequestCodeEntity>
+        private fabricReqRepo: Repository<FabricRequestCodeEntity>,
+        private readonly dataSource: DataSource,
       ) { }
 
       async createFabricRequestedCode(dto: FabricRequestCodeDto): Promise<CommonResponseModel> {
@@ -54,7 +55,25 @@ export class FabricReqCodeService {
     // @LogActions({ isAsync: true })
     async getAllFabrics(): Promise<CommonResponseModel> {  
        try{
-        const data = await this.fabricReqRepo.find({order:{createdAt:'ASC'}})
+        let query =`SELECT frc.fabric_type_id AS fabricTypeId,fabric_type_name AS fabricType,
+        frc.weave_id AS weaveId,fw.fabric_weave_name AS fabricWeave,
+        frc.weight,frc.weight_unit AS weightUnitId,uwt.uom AS weightUom,
+        frc.epi_construction as epi,frc.ppi_construction as ppi,frc.yarn_type as yarnType,
+        frc.width,frc.width_unit AS widthUnit,uwd.uom AS widthUom,
+        frc.finish_id,fft.fabric_finish_type AS finishType,
+        frc.shrinkage,frc.buyer_id,b.buyer_name AS buyerName,
+        frc.content_id,c.content,
+        frc.hsn_code as hsnCode,frc.m3_code as m3Code,frc.status
+        FROM fabric_request_code frc
+        LEFT JOIN fabric_type ft ON ft.fabric_type_id = frc.fabric_type_id
+        LEFT JOIN fabric_weave fw ON fw.fabric_weave_id = frc.weave_id
+        LEFT JOIN uom uwt ON uwt.id = frc.weight_unit
+        LEFT JOIN uom uwd ON uwd.id = frc.width_unit
+        LEFT JOIN fabric_finish_types fft ON fft.fabric_finish_type_id = frc.finish_id
+        LEFT JOIN buyers b ON b.buyer_id = frc.buyer_id
+        LEFT JOIN content c ON c.content_id = frc.content_id`
+
+        const data = await this.dataSource.query(query)
         if(data.length >0){
             return new CommonResponseModel(true,1,'Data retrieved successfully',data)
         }else{
