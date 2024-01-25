@@ -702,7 +702,19 @@ export function CentricOrderAcceptanceGrid() {
       //   onFilter: (value,record) =>{ return record.status.toLowerCase() === value.toLowerCase()}
       // },
   
-
+      {
+        title: "Consignee",
+        dataIndex: "consignee",
+        width: 150,
+        sorter: (a, b) => a.consignee.localeCompare(b.consignee),
+        sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps('consignee'),
+        render: (text) => (
+          <Tooltip title={text || "-"}>
+            {text ? `${text.substring(0, 20)}...` : "-"}
+          </Tooltip>
+        ),
+      },
 
 
       {
@@ -758,6 +770,7 @@ export function CentricOrderAcceptanceGrid() {
           };
         },
       },
+      
       {
         title: "Action",
         dataIndex: "action",
