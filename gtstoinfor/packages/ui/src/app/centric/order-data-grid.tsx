@@ -275,7 +275,15 @@ import {
           render: (text) => text ? text : "-",
          ...getColumnSearchProps('material')
         },
-       
+        {
+          title: "Compt.Material",
+          dataIndex: "comptMaterial",
+          width: 130,
+          sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         ...getColumnSearchProps('comptMaterial')
+        },
         {
             title: "Color",
             dataIndex: "color",
@@ -666,6 +674,19 @@ import {
           ),
         },
         {
+          title: "Consignee",
+          dataIndex: "consignee",
+          width: 150,
+          sorter: (a, b) => a.consignee.localeCompare(b.consignee),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('consignee'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+        },
+        {
           title: "Vendor Booking Flag",
           dataIndex: "vendorFlag",
           align: "center",
@@ -682,7 +703,7 @@ import {
         width: 120,
         render: (value, record) => (
           <>
-            <Button onClick={() => setMoreData(record)}>More Info</Button>
+            <Button  type = "primary" onClick={() => setMoreData(record)}>More Info</Button>
           </>
         ),
       }

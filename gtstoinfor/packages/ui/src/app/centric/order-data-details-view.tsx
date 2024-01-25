@@ -163,7 +163,7 @@ console.log(location?.state?.data)
 
     return (
         <Card title="Order Details"
-        extra ={<Link to='/centric/order-data-info-grid' ><Button className='panel_button' >View </Button></Link>}
+        extra ={<Link to='/centric/order-data-info-grid' ><Button type="primary" >View </Button></Link>}
         >
         <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }} >
         <Descriptions.Item label='Material'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.material ? location.state.data.material : "--"}</Descriptions.Item>
@@ -178,6 +178,7 @@ console.log(location?.state?.data)
         <Descriptions.Item label='Shipment Method'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipmentMethod ? location?.state?.data?.shipmentMethod :"--"}</Descriptions.Item>
         <Descriptions.Item label='Ship Date'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipDate ? location?.state?.data?.shipDate :"--"}</Descriptions.Item>
         <Descriptions.Item label='Ship To Address'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipToAddress ? location?.state?.data?.shipToAddress :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Consignee'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.consignee ? location?.state?.data?.consignee :"--"}</Descriptions.Item>
         <Descriptions.Item label='Short Description'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shortDescription ? location?.state?.data?.shortDescription :"--"}</Descriptions.Item>
         <Descriptions.Item label='Compt Material'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.comptMaterial ? location?.state?.data?.comptMaterial :"--"}</Descriptions.Item>
         <Descriptions.Item label='PPK UPC'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.ppkUpc ? location?.state?.data?.ppkUpc :"--"}</Descriptions.Item>

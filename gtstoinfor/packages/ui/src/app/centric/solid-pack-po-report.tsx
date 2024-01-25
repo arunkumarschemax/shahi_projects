@@ -395,6 +395,12 @@ import RangePicker from "rc-picker/lib/RangePicker";
             render: (text) => (  text ? text: "-"),
   
           },
+          {
+            title: "Consignee",
+            dataIndex: "buyer_address",
+            width: 400,
+            render: (text) => (  text ? text: "-"),
+          },
 
 
           );
@@ -1446,6 +1452,19 @@ import RangePicker from "rc-picker/lib/RangePicker";
             sorter: (a, b) => a.ship_to_add.localeCompare(b.ship_to_add),
             sortDirections: ["ascend", "descend"],
             ...getColumnSearchProps('ship_to_add'),
+            render: (text) => (
+              <Tooltip title={text || "-"}>
+                {text ? `${text.substring(0, 20)}...` : "-"}
+              </Tooltip>
+            ),
+          },
+          {
+            title: "Consignee",
+            dataIndex: "buyer_address",
+            width: 150,
+            sorter: (a, b) => a.buyer_address.localeCompare(b.buyer_address),
+            sortDirections: ["ascend", "descend"],
+            ...getColumnSearchProps('buyer_address'),
             render: (text) => (
               <Tooltip title={text || "-"}>
                 {text ? `${text.substring(0, 20)}...` : "-"}

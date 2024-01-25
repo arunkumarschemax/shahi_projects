@@ -60,6 +60,7 @@ export class CentricOrderDataModel {
     status?:string
     currency?:string
     style?:string
+    consignee?:string
     constructor(
         id: number,
 
@@ -121,6 +122,8 @@ export class CentricOrderDataModel {
         status?:string,
         currency?:string,
         style?:string,
+      consignee?:string
+
     ) {
         this.id = id
         this.poNumber = poNumber
@@ -160,6 +163,7 @@ export class CentricOrderDataModel {
         this.status = status
         this.currency = currency
         this.style=style
+        this.consignee = consignee
     }
 }
 
