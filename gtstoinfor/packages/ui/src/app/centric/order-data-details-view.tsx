@@ -166,23 +166,29 @@ console.log(location?.state?.data)
         extra ={<Link to='/centric/order-data-info-grid' ><Button type="primary" >View </Button></Link>}
         >
         <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }} >
-        <Descriptions.Item label='Material'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.material ? location.state.data.material : "--"}</Descriptions.Item>
+        <Descriptions.Item label='Season'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.season ? location?.state?.data?.season :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Shipment Method'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipmentMethod ? location?.state?.data?.shipmentMethod :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Division'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.division ? location?.state?.data?.division :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Manufacture'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.manufacture ? location?.state?.data?.manufacture :"--"}</Descriptions.Item>
         <Descriptions.Item label='PO Number' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.poNumber ? location?.state?.data?.poNumber : "--"}</Descriptions.Item>
         <Descriptions.Item label='PO Line' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.poLine ? location?.state?.data?.poLine :"--"}</Descriptions.Item>
-        <Descriptions.Item label='PO Date' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.PODate ? location?.state?.data?.PODate :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Pack Method' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.packMethod ? location?.state?.data?.packMethod :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Season'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.season ? location?.state?.data?.season :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Payment Term Description'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.paymentTermDescription ? location?.state?.data?.paymentTermDescription :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Material'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.material ? location.state.data.material : "--"}</Descriptions.Item>
+        <Descriptions.Item label='Compt Material'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.comptMaterial ? location?.state?.data?.comptMaterial :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Gender'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.gender ? location?.state?.data?.gender :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Short Description'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shortDescription ? location?.state?.data?.shortDescription :"--"}</Descriptions.Item>
         <Descriptions.Item label='Color'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.color ? location?.state?.data?.color :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Division'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.division ? location?.state?.data?.division :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Shipment Method'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipmentMethod ? location?.state?.data?.shipmentMethod :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Ship Date'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipDate ? location?.state?.data?.shipDate :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Label'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.label ? location?.state?.data?.label :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Reference #/POW #'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.reference ? location?.state?.data?.reference :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Pack Method' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.packMethod ? location?.state?.data?.packMethod :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Special Instructions' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.specialInstructions ? location?.state?.data?.specialInstructions :"--"}</Descriptions.Item>
+        <Descriptions.Item label='PO Date' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.PODate ? location?.state?.data?.PODate :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Port Of Export' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.portOfExport ? location?.state?.data?.portOfExport :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Port of Entry Name' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.portOfEntry ? location?.state?.data?.portOfEntry :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Payment Term Description'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.paymentTermDescription ? location?.state?.data?.paymentTermDescription :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Vendor Booking Flag'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.vendorFlag ? location?.state?.data?.vendorFlag :"--"}</Descriptions.Item>
+        <Descriptions.Item label='PPK UPC'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.ppkUpc ? location?.state?.data?.ppkUpc :"--"}</Descriptions.Item>
         <Descriptions.Item label='Ship To Address'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipToAddress ? location?.state?.data?.shipToAddress :"--"}</Descriptions.Item>
         <Descriptions.Item label='Consignee'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.consignee ? location?.state?.data?.consignee :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Short Description'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shortDescription ? location?.state?.data?.shortDescription :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Compt Material'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.comptMaterial ? location?.state?.data?.comptMaterial :"--"}</Descriptions.Item>
-        <Descriptions.Item label='PPK UPC'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.ppkUpc ? location?.state?.data?.ppkUpc :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Vendor Booking Flag'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.vendorFlag ? location?.state?.data?.vendorFlag :"--"}</Descriptions.Item>
 
 
 
@@ -205,36 +211,36 @@ console.log(location?.state?.data)
                         // }}
                         pagination={false}
                         scroll={{ y: 450 }}
-                        summary={() => (
-                        <>
-                            <Table.Summary.Row className="tableFooter">
+                        // summary={() => (
+                        // <>
+                        //     <Table.Summary.Row className="tableFooter">
                                 
-                                    <Table.Summary.Cell index={1} colSpan={5}>
-                                    <span style={{marginLeft:300}}>
-                                        <b>Total   :</b>
-                                    </span>
+                        //             <Table.Summary.Cell index={1} colSpan={5}>
+                        //             <span style={{marginLeft:300}}>
+                        //                 <b>Total   :</b>
+                        //             </span>
                                 
-                                    </Table.Summary.Cell>
-                                    <Table.Summary.Cell index={1} colSpan={1}>
-                                    {/* <span>
-                                        <b>{Number(totalQuantity)}</b>
-                                    </span> */}
-                                    </Table.Summary.Cell>
-                                    <Table.Summary.Cell index={1} colSpan={1}>
-                                    <span>
-                                        <b>{Number(totalQuantity)}  </b>
-                                    </span>
-                                    </Table.Summary.Cell>
+                        //             </Table.Summary.Cell>
+                        //             <Table.Summary.Cell index={1} colSpan={1}>
+                        //             {/* <span>
+                        //                 <b>{Number(totalQuantity)}</b>
+                        //             </span> */}
+                        //             </Table.Summary.Cell>
+                        //             <Table.Summary.Cell index={1} colSpan={1}>
+                        //             <span>
+                        //                 <b>{Number(totalQuantity)}  </b>
+                        //             </span>
+                        //             </Table.Summary.Cell>
                                     
 
-                                    <Table.Summary.Cell index={1} colSpan={1}>
-                                    <span style={{ textAlign: "end" }}>
-                                    </span>
-                                    </Table.Summary.Cell>
-                                </Table.Summary.Row>
+                        //             <Table.Summary.Cell index={1} colSpan={1}>
+                        //             <span style={{ textAlign: "end" }}>
+                        //             </span>
+                        //             </Table.Summary.Cell>
+                        //         </Table.Summary.Row>
                        
-                        </>
-                        )}
+                        // </>
+                        // )}
                     ></Table>
 
         

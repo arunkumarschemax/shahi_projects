@@ -246,6 +246,19 @@ import {
           
         },
         {
+          title: "Manufacture",
+          dataIndex: "manufacture",
+          width: 150,
+          sorter: (a, b) => a.manufacture.localeCompare(b.manufacture),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('manufacture'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+        },
+        {
           title: "PO Number",
           dataIndex: "poNumber",
           width: 90,
@@ -285,6 +298,26 @@ import {
          ...getColumnSearchProps('comptMaterial')
         },
         {
+          title: "Gender",
+          dataIndex: "gender",
+          width: 90,
+          sorter: (a, b) => a.gender.localeCompare(b.gender),
+          sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-",
+
+          ...getColumnSearchProps('gender')
+        },
+        {
+          title: "Short Description",
+          dataIndex: "shortDescription",
+          width:130,
+          sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('shortDescription')
+        },
+     
+        {
             title: "Color",
             dataIndex: "color",
             width: 110,
@@ -294,29 +327,36 @@ import {
 
             ...getColumnSearchProps('color')
           },
-
           {
-            title: "Gender",
-            dataIndex: "gender",
+            title: "Label",
+            dataIndex: "label",
             width: 90,
-            sorter: (a, b) => a.gender.localeCompare(b.gender),
-            sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-
-            ...getColumnSearchProps('gender')
-          },
-          {
-            title: "Short Description",
-            dataIndex: "shortDescription",
-            width:130,
-            sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
+            sorter: (a, b) => a.label.localeCompare(b.label),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
-            ...getColumnSearchProps('shortDescription')
+            ...getColumnSearchProps('label')
+            
           },
-       
-      
-       
+          {
+            title: "Reference #/POW #",
+            dataIndex: "reference",
+            width: 90,
+            sorter: (a, b) => a.reference.localeCompare(b.reference),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('reference')
+
+          },
+          {
+            title: "Pack Method",
+            dataIndex: "packMethod",
+            width: 130,
+            sorter: (a, b) => a.packMethod.localeCompare(b.packMethod),
+            sortDirections: ["ascend", "descend"],
+            render: (text) => text ? text : "-",
+            ...getColumnSearchProps('packMethod')
+          },
+
        
       
        
@@ -384,6 +424,33 @@ import {
                         }
                     }
                 },
+                {
+                  title: 'PPK UPC',
+                  dataIndex: '',
+                  key: '',
+                  width: 100,
+                  className: "center",
+                  render: (text, record) => {
+                      const sizeData = record.sizeWiseData.find(item => item.size === version);
+                      console.log()
+                      if (sizeData) {
+                          if (sizeData.size !== null) {
+                            const formattedQty = (sizeData?.ppkUpc) ? (sizeData?.ppkUpc):"-"
+                              // const formattedQty = (sizeData?.amount)
+                              return (
+                                  formattedQty
+                              );
+                          } else {
+
+                              return (
+                                  '-'
+                              );
+                          }
+                      } else {
+                          return '-';
+                      }
+                  }
+              },
               //   {
               //     title: 'Label',
               //     dataIndex: '',
@@ -592,6 +659,19 @@ import {
           },
         },
         {
+          title: "Special Instructions",
+          dataIndex: "specialInstructions",
+          width: 150,
+          sorter: (a, b) => a.specialInstructions.localeCompare(b.specialInstructions),
+          sortDirections: ["ascend", "descend"],
+          ...getColumnSearchProps('specialInstructions'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+        },
+        {
           title: "PO Date",
           dataIndex: "PODate",
           align: "center",
@@ -640,6 +720,28 @@ import {
           ),
         },
         {
+          title: "Port Of Export",
+          dataIndex: "portOfExport",
+          align: "center",
+          width: 90,
+          sorter: (a, b) => a.portOfExport.localeCompare(b.portOfExport),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('portOfExport')
+
+        },
+        {
+          title: "Port of Entry Name",
+          dataIndex: "portOfEntry",
+          align: "center",
+          width: 200,
+          sorter: (a, b) => a.portOfEntry.localeCompare(b.portOfEntry),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('portOfEntry')
+
+        },
+        {
           title: "Payment Terms Description",
           dataIndex: "paymentTermDescription",
           align: "center",
@@ -649,6 +751,15 @@ import {
           render: (text) => text ? text : "-",
           ...getColumnSearchProps('paymentTermDescription') 
 
+        },
+        {
+          title: "Vendor Booking Flag",
+          dataIndex: "vendorFlag",
+          align: "center",
+          width: 90,
+          sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-"
         },
         // {
         //     title: "Address",
@@ -661,7 +772,7 @@ import {
         //     ...getColumnSearchProps('shipToAddress')
         //   },
         {
-          title: "Address",
+          title: "Ship To Address",
           dataIndex: "shipToAddress",
           width: 150,
           sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),
@@ -686,15 +797,7 @@ import {
             </Tooltip>
           ),
         },
-        {
-          title: "Vendor Booking Flag",
-          dataIndex: "vendorFlag",
-          align: "center",
-          width: 90,
-          sorter: (a, b) => a.vendorFlag.localeCompare(b.vendorFlag),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-"
-        },
+      
           
           {
         title: "Action",
