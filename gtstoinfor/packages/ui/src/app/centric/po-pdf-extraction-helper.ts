@@ -361,7 +361,9 @@ export const extractDataFromPoPdf = async (pdf) => {
             const itemVariantsArr: CentricPoItemVariant[] = []
             for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
                 const itemVariantsObj = new CentricPoItemVariant();
-                itemVariantsObj.comptMaterial = CompMaterialData[l]||'-';
+                // itemVariantsObj.comptMaterial = CompMaterialData[l]||'-';
+                const compMaterialIndex = l % CompMaterialData.length;
+                itemVariantsObj.comptMaterial = CompMaterialData[compMaterialIndex] || '-';
                 itemVariantsObj.upc = stringsWithLength13[l];
                 const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
                 if (upcIndex !== -1 && upcIndex < itemVarinatsTextArr.length - 1) {
