@@ -301,8 +301,12 @@ const totalAmountInWords = `${integerWords} . ${decimalWords}`;
                                   {e.item_code ? e.item_code : '-'}
                                           </div>
                                        </td>
-                            <td >{e.colour? e.colour:''}-{e.size?e.size:
-                            ''}</td>
+                                       {poData[0]?.po_material_type === 'Trim'?(
+                              <td>{e.item_description}</td>
+                              ):(
+                                <td>{e.colour? e.colour:''}-{e.size?e.size:
+                                  ''}</td>
+                                )}
                             <td >{e.name? e.name:'-'}</td>
                             <td >{e.po_material_type? e.po_material_type:'-'}</td>
                        

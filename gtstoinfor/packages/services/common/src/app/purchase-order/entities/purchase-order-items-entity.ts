@@ -157,4 +157,9 @@ export class PurchaseOrderItemsEntity{
 })
 sizeId:number
   
+@Column('varchar',{
+  name:'item_description',
+  nullable:true
+})
+itemDescription:string
 }

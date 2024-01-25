@@ -132,6 +132,7 @@ export class PurchaseOrderService {
                         pofabricEntity.styleId = item.styleId
                         pofabricEntity.sizeId = item.sizeId
                         pofabricEntity.hsnCode = item.hsnCode
+                        pofabricEntity.itemDescription = item.itemDescription
 
                         if((req.poAgainst).toUpperCase() == 'SAMPLE ORDER'){
                             pofabricEntity.materialType = ItemTypeEnum[(req.poMaterialType).toUpperCase()]

@@ -196,7 +196,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
         trimForm.setFieldsValue({trimParams: rowData?.trimParams})
         trimForm.setFieldsValue({taxPercentage: rowData?.taxPercentage})
         trimForm.setFieldsValue({hsnCode: rowData?.hsnCode})
-
+        
         
         // trimForm.setFieldsValue({poQuantity: rowData?.quantity})
         }
@@ -451,7 +451,9 @@ const [sizeData, setSizeData]=useState<any[]>([])
     ]
 
     const colorChange= (value,option) =>{
-        trimForm.setFieldsValue({colourName:option?.name ? option?.name:''})
+        console.log(option,'oooooooo');
+        
+        trimForm.setFieldsValue({ colorName: option?.type ? option.type : '' })
     }
     
     const OnTrimAdd = (values) =>{
@@ -724,11 +726,11 @@ const [sizeData, setSizeData]=useState<any[]>([])
                             <Input type="number" placeholder="unit price" onChange={(e) => finalCalculation()} />
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
                         <Form.Item name='colourId' label='Color'>
                             <Select showSearch allowClear optionFilterProp="children" placeholder='Select Color'
                                  onChange={colorChange}
-                                //  disabled={inputDisable}
+                                  disabled={inputDisable}
                             >
                                 {color.map(e => {
                                     return (
@@ -737,8 +739,8 @@ const [sizeData, setSizeData]=useState<any[]>([])
                                 })}
                             </Select>
                         </Form.Item>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                    </Col> */}
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
                         <Form.Item name='sizeId' label='Size'>
                             <Select showSearch allowClear optionFilterProp="children" placeholder='Select Size'
                                
@@ -749,6 +751,11 @@ const [sizeData, setSizeData]=useState<any[]>([])
                                     )
                                 })}
                             </Select>
+                        </Form.Item>
+                    </Col> */}
+                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                        <Form.Item name='itemDescription' label='Item Description'>
+                            <Input  allowClear type="string"  placeholder='Enter Item Description'/>
                         </Form.Item>
                     </Col>
                     <Col span={4}>
