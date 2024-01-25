@@ -888,13 +888,14 @@ export function CentricOrderAcceptanceGrid() {
                 </Select>
               </Form.Item>
             </Col> */}
-            <Row>
+            {/* <Row> */}
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 5 }}
                 lg={{ span: 5 }}
                 xl={{ span: 4 }}
+                //style={{marginTop:20,marginLeft:60}}
               >
                 <Form.Item>
                   <Button
@@ -906,11 +907,11 @@ export function CentricOrderAcceptanceGrid() {
                     SEARCH
                   </Button>
                 </Form.Item>
-              </Col>
-              <Col>
-                <Form.Item>
+              {/* </Col>
+              <Col> */}
+                <Form.Item  style={{marginTop:-44 ,marginLeft: 120}} >
                   <Button
-                    style={{ marginLeft: 60 }}
+                    //style={{ marginLeft: 60 }}
                     htmlType="submit"
                     type="primary"
                     onClick={onReset}
@@ -921,7 +922,7 @@ export function CentricOrderAcceptanceGrid() {
                 </Form.Item>
 
               </Col>
-            </Row>
+            {/* </Row> */}
           </Row>
         </Form>
         {/* <Table
