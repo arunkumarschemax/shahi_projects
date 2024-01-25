@@ -312,6 +312,14 @@ export function CentricOrderAcceptanceGrid() {
         // ...getColumnSearchProps('material')
       },
       {
+        title: "Compt.Material",
+        dataIndex: "comptMaterial",
+        width: 110,
+        // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
+        // sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-"
+      },
+      {
         title: "Style Number",
         dataIndex: "style",
         width: 90,
@@ -443,14 +451,7 @@ export function CentricOrderAcceptanceGrid() {
       //     </Tooltip>
       //   ),
       // },
-      {
-        title: "Compt.Material",
-        dataIndex: "comptMaterial",
-        width: 110,
-        // sorter: (a, b) => a.comptMaterial.localeCompare(b.comptMaterial),
-        // sortDirections: ["ascend", "descend"],
-        render: (text) => text ? text : "-"
-      }
+     
     ];
 
     sizeHeaders?.forEach(version => {
