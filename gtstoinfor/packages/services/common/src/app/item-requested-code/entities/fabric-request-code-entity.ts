@@ -14,25 +14,25 @@ export class FabricRequestCodeEntity {
   buyerId: number;
 
   @Column('int', {
-    nullable: false,
+    nullable: true,
     name: 'fabric_type_id',
   })
   fabricTypeId: number;
 
   @Column('int', {
-    nullable: false,
+    nullable: true,
     name: 'weave_id',
   })
   weaveId: number;
 
   @Column('int', {
-    nullable: false,
+    nullable: true,
     name: 'weight',
   })
   weight: number;
 
   @Column('int', {
-    nullable: false,
+    nullable: true,
     name: 'weight_unit',
   })
   weightUnit: number;
