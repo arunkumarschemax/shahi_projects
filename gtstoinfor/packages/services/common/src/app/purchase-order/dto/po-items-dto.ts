@@ -79,4 +79,7 @@ export class PoItemdetails{
 
   @ApiProperty()
   hsnCode?:string
+
+  @ApiProperty()
+  itemDescription?:string
 }

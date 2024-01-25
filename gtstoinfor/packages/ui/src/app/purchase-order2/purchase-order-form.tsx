@@ -234,7 +234,7 @@ export const PurchaseOrderForm = () => {
         }
         if(trimData.length != 0){
             for (const trimdata of trimData) {
-                const trim  = new PoItemDetailsDto(trimdata.colourId,trimdata.m3TrimCode,trimdata.poQuantity,trimdata.quantityUomId,undefined,trimdata.sampleTrimInfoId,trimdata.indentTrimId,trimdata.unitPrice,trimdata.discount,trimdata.tax,trimdata.transportation,trimdata.subjectiveAmount,trimdata.indentId,trimdata.sampleReqId,trimdata.styleId,trimdata.materialType,trimdata.sizeId,trimdata.hsnCode)
+                const trim = new PoItemDetailsDto(null,trimdata.m3TrimCode,trimdata.poQuantity,trimdata.quantityUomId,undefined,trimdata.sampleTrimInfoId,trimdata.indentTrimId,trimdata.unitPrice,trimdata.discount,trimdata.tax,trimdata.transportation,trimdata.subjectiveAmount,trimdata.indentId,trimdata.sampleReqId,trimdata.styleId,trimdata.materialType,null,trimdata.hsnCode,trimdata.itemDescription)
                 poItemDetails.push(trim)
             }
         }
