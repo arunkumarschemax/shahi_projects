@@ -9,7 +9,7 @@ let totalqty = 100;
 let value =50;
     return(
         <Card>
-            
+{/*             
         <h4 style={{textAlign:'center',fontFamily:'Arial'}}>Shahi Exports Pvt Ltd Mail - Nike-item#719M,720M IM#A0329862 InterLining Requirement-Freudenberg.</h4>
         <div>
         <Row >
@@ -39,7 +39,7 @@ let value =50;
 
         <h5 style={{ color: 'blue',fontSize:'11px'}}>Dear Chandru Sir, </h5>
         <h5 style={{ color: 'blue',fontSize:'11px'}}> Pls find below Interlining requirement for SP'24- Nike Kid's jogger for june 2nd buy order.</h5>
-        <h5 style={{ color: 'blue',fontSize:'11px'}}> Supplier - FREDENBERG & VILENE IN - TW</h5>
+        <h5 style={{ color: 'blue',fontSize:'11px'}}> Supplier - FREDENBERG & VILENE IN - TW</h5> */}
         <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
         <tr>
         <th style={{width:'3%'}}>ITEM#</th>
@@ -101,18 +101,18 @@ let value =50;
         
 
       </table>
-      <h5 style={{ color: 'blue',fontSize:'11px'}}>Confrim EDD </h5>
+      {/* <h5 style={{ color: 'blue',fontSize:'11px'}}>Confrim EDD </h5>
       <h5 style={{ fontSize:'11px',marginTop:'-20px'}}>Thanks & Regards,</h5>
       <h5 style={{ fontSize:'11px',marginTop:'-20px'}}>Shobha L</h5>
       <h5 style={{ fontSize:'11px',marginTop:'-20px'}}>Shahi Exports Pvt Ltd - knits</h5>
       <h5 style={{ fontSize:'11px',marginTop:'-20px'}}>Mob.No- +91 6363629665</h5>
-      <h5 style={{ color: 'blue',fontSize:'11px',marginTop:'-20px'}}>| www.shahi.co.in |</h5>
+      <h5 style={{ color: 'blue',fontSize:'11px',marginTop:'-20px'}}>| www.shahi.co.in |</h5> */}
 
+      {/* <tr></tr>
       <tr></tr>
       <tr></tr>
       <tr></tr>
-      <tr></tr>
-      <HTTP/>
+      <HTTP/> */}
       </Card>
         
     )
