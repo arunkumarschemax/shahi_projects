@@ -880,7 +880,7 @@ const tableColumns = (val,fabindex) => {
             footer={[]}
         >
          <>
-               <M3TrimsReqFile trimCategoryId={trimCatId} close={closeModel} formValues={handleTrimFilterData}/>
+               <M3TrimsReqFile trimCategoryId={trimCatId} close={closeModel} formValues={handleTrimFilterData} buyerId={props.buyerId} trimType={itemType}/>
                </>:
          
             </Modal>
