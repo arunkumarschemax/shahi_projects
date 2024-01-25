@@ -43,6 +43,20 @@ export class trimService extends CommonAxiosService{
             ]
         },
         {
+            trim:'Chennille SwooshLabel',
+            trimId:2,
+            format:[
+                {
+                    formatId:'Chennille SwooshLabel 1',
+                    printId:5,
+
+                   
+                },
+               
+             
+            ]
+        },
+        {
             trim:'Country Specific Sticker',
             trimId:2,
             format:[

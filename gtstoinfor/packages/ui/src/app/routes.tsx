@@ -48,6 +48,7 @@ import ButtonPrint, { Button1Print } from "./trims/trim-prints/button-print"
 import Button2Print from "./trims/trim-prints/button2-print"
 import Button3Print from "./trims/trim-prints/button3-print"
 import TrimsGrid from "./trims/trims-grid"
+import TrimColumns from "./trims/trim-columns"
 
 
 export const AppRoutes = () => {
@@ -163,6 +164,8 @@ export const AppRoutes = () => {
                     <Route path='co-line-view' element={<ColineView />} />
                     <Route path='backing-paper' element={<BackingPaper/>} />
                     <Route path='trim-grid' element={<TrimsGrid/>} />
+
+                    <Route path='trim-columns' element={<TrimColumns/>} />
 
 
                 </Route>
