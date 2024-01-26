@@ -48,12 +48,13 @@ export const TrimReqCodeView = () => {
 
 
   useEffect(() => {
-    const userrefNo = IAMClientAuthContext.user?.externalRefNo
-    if(userrefNo){
-      setIsBuyer(true)
-    }
+    // const userrefNo = IAMClientAuthContext.user?.externalRefNo
+    // if(userrefNo){
+    //   setIsBuyer(true)
+    // }
     getTrims();
     getBuyers();
+    onFinish()
   }, [mapData]);
 
   const getStructures = (req?: M3trimsDTO) => {
@@ -313,7 +314,7 @@ export const TrimReqCodeView = () => {
     if (form.getFieldValue('varietyId') !== undefined) {
       req.varietyId = form.getFieldValue('varietyId')
     }
-    req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    // req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     trimReqCodeService.getAllTrims().then((res) => {
       if (res.status) {
         setData(res.data);
@@ -442,6 +443,11 @@ export const TrimReqCodeView = () => {
       ...getColumnSearchProps("buyerName"),
       sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
       sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.buyerName ? record.buyerName : '-'}
+        </span>
+    ),
     },
     {
       title: <div style={{textAlign:"center"}}>Trim Type</div>,
@@ -460,6 +466,11 @@ export const TrimReqCodeView = () => {
       ...getColumnSearchProps("trimCategory"),
       sorter: (a, b) => a.trimCategory.localeCompare(b.trimCategory),
       sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.trimCategory ? record.trimCategory : '-'}
+        </span>
+    ),
     },
     // mapData[0]?.structure === true?{
     //   title: <div style={{textAlign:"center"}}>Structure</div>,
@@ -468,21 +479,38 @@ export const TrimReqCodeView = () => {
     //   sorter: (a, b) => a.structure.localeCompare(b.structure),
     //   sortDirections: ["descend", "ascend"],
     // }: {},
-    mapData[0]?.category === true?{
+    // mapData[0]?.category === true?
+    {
       title: <div style={{textAlign:"center"}}>Category</div>,
       dataIndex: "category",
       ...getColumnSearchProps("category"),
       sorter: (a, b) => a.category.localeCompare(b.category),
       sortDirections: ["descend", "ascend"],
-    }:{},
-    mapData[0]?.content === true?{
+      render: (text, record) => (
+        <span>
+            {record.category ? record.category : '-'}
+        </span>
+    ),
+    }
+    // :{}
+    ,
+    // mapData[0]?.content === true?
+    {
       title: <div style={{textAlign:"center"}}>Content</div>,
       dataIndex: "content",
       ...getColumnSearchProps("content"),
       sorter: (a, b) => a.content.localeCompare(b.content),
       sortDirections: ["descend", "ascend"],
-    }:{},
-    mapData[0]?.type === true?{
+      render: (text, record) => (
+        <span>
+            {record.content ? record.content : '-'}
+        </span>
+    ),
+    }
+    // :{}
+    ,
+    // mapData[0]?.type === true?
+    {
       title: <div style={{textAlign:"center"}}>Type</div>,
       dataIndex: "type",
       ...getColumnSearchProps("type"),
@@ -491,21 +519,40 @@ export const TrimReqCodeView = () => {
       render: (text) => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
         return EnumObj ? EnumObj.displayVal : text;
-      },    }: {},
-    mapData[0]?.finish === true?{
+      },
+  }
+      // : {}
+      ,
+    // mapData[0]?.finish === true?
+    {
       title: <div style={{textAlign:"center"}}>Finish</div>,
       dataIndex: "finish",
       ...getColumnSearchProps("finish"),
       sorter: (a, b) => a.finish.localeCompare(b.finish),
       sortDirections: ["descend", "ascend"],
-    }: {},
-    mapData[0]?.hole === true?{
+      render: (text, record) => (
+        <span>
+            {record.finish ? record.finish : '-'}
+        </span>
+    ),
+    }
+    // : {}
+    ,
+    // mapData[0]?.hole === true?
+    {
       title: <div style={{textAlign:"center"}}>Hole</div>,
       dataIndex: "hole",
       ...getColumnSearchProps("hole"),
       sorter: (a, b) => a.hole.localeCompare(b.hole),
       sortDirections: ["descend", "ascend"],
-    }: {},
+      render: (text, record) => (
+        <span>
+            {record.hole ? record.hole : '-'}
+        </span>
+    ),
+    }
+    // : {}
+    ,
     // mapData[0]?.quality === true?{
     //   title: <div style={{textAlign:"center"}}>Quality</div>,
     //   dataIndex: "qualityName",
@@ -559,16 +606,35 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>M3 Code</div>,
       dataIndex: "m3Code",
       ...getColumnSearchProps("m3Code"),
+      render: (text, record) => (
+        <span>
+            {record.m3Code ? record.m3Code : '-'}
+        </span>
+    ),
     },
     {
       title: <div style={{textAlign:"center"}}>HSN Code</div>,
       dataIndex: "hsnCode",
       ...getColumnSearchProps("hsnCode"),
+      render: (text, record) => (
+        <span>
+            {record.hsnCode ? record.hsnCode : '-'}
+        </span>
+    ),
     },
     {
       title: <div style={{textAlign:"center"}}>Status</div>,
       dataIndex: "status",
       ...getColumnSearchProps("status"),
+      render: (text, record) => (
+        <span>
+            {record.status ? record.status : '-'}
+        </span>
+    ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Action</div>,
+      dataIndex: "action"
     },
   ]
 
@@ -625,7 +691,7 @@ export const TrimReqCodeView = () => {
                     </Select>
                 </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name="trimCategoryId" label="Trim Category" rules={[{ required: false, message: "Trim Category is required" }]}>
                     <Select 
                     showSearch 
@@ -644,7 +710,7 @@ export const TrimReqCodeView = () => {
                         })}
                     </Select>
                 </Form.Item>
-            </Col>
+            </Col> */}
             {/* {mapData[0]?.structure === true ? (
               <>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
@@ -669,7 +735,7 @@ export const TrimReqCodeView = () => {
                 </Col>
               </>
             ) : (<></>)} */}
-            {mapData[0]?.category == true ? (
+            {/* {mapData[0]?.category == true ? (
             <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name="categoryId" label="Category" rules={[{ required: false, message: "Category is required" }]}>
@@ -778,7 +844,7 @@ export const TrimReqCodeView = () => {
                 </Form.Item>
             </Col>
             </>
-            ) : (<></>)}
+            ) : (<></>)} */}
             {/* {mapData[0]?.quality === true ? (
               <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
@@ -930,8 +996,8 @@ export const TrimReqCodeView = () => {
                     <Input hidden/>
                 </Form.Item>
             </Col> */}
-        </Row>
-        <Row gutter={24} justify={'end'}>
+        {/* </Row>
+        <Row gutter={24}> */}
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }} style={{ marginTop: "18px", textAlign: "right" }}>
               <Form.Item>
                 <Button icon={<SearchOutlined />} htmlType="submit" type="primary" style={{ marginLeft: 50, marginTop: 5 }}>
