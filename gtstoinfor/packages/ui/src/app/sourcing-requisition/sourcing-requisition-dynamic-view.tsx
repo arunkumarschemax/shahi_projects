@@ -1,7 +1,10 @@
 import {
+  ArrowDownOutlined,
   BarcodeOutlined,
   CaretDownOutlined,
   CaretRightOutlined,
+  DownloadOutlined,
+  FilePdfOutlined,
   InfoCircleOutlined,
   PrinterOutlined,
   QrcodeOutlined,
@@ -51,6 +54,8 @@ import {
 import Highlighter from "react-highlight-words";
 import { useIAMClientState } from "../common/iam-client-react";
 import RolePermission from "../role-permissions";
+import AlertMessages from "../common/common-functions/alert-messages";
+import { config } from "packages/libs/shared-services/config";
 
 const { Option } = Select;
 
@@ -465,8 +470,27 @@ const segmentedOptions = options();
       //     );
       //   },
       // },
-      
       {
+        title: "Action",
+        dataIndex: "action",
+        align: "center",
+        width: 70,
+        render: (value, record) => (
+            <>
+                <Tooltip title="Image Download">
+                    <Button
+                        icon={<DownloadOutlined />}
+                        onClick={() =>  download(record.filePath)}
+                        disabled={!record.filePath} // Disable the button if filePath is not present
+                    >
+                        {value}
+                    </Button>
+                </Tooltip>
+            </>
+        ),
+    },  
+      
+    {
         title: <div style={{ textAlign: "center" }}>{checkAccess(MenusAndScopesEnum.Scopes.createPo) && val > 0 ?<Button  type="primary" onClick={() =>generatePoForFabric(key)} >Generate Po</Button>:<></>}</div>,
         dataIndex: "sm",
         key: "sm",
@@ -504,10 +528,39 @@ const segmentedOptions = options();
       // );
       // },
       // },
+     
     ];
     return [...Columns];   
  
   }
+
+  const download = (filePath) => {
+    console.log(filePath);
+    // : FilenameDto[]
+
+    if (filePath) {
+        filePath = filePath.split(",");
+        for (const res of filePath) {
+            if (res) {
+                console.log(res);
+                setTimeout(() => {
+                    const response = {
+                        file: config.file_upload_path + '/' +`${res}` ,
+                    };
+
+                    window.open(response.file);
+
+                }, 100);
+            }
+        }
+    }
+    else {
+        AlertMessages.getErrorMessage("Please upload file. ");
+
+    }
+}
+
+
   const handleTextClick = (remarks) => {
     setRemarks(remarks)
     setRemarkModal(true)
@@ -591,6 +644,26 @@ const onRemarksModalOk = () => {
           )
       }
       },
+    {
+      title: "Action",
+      dataIndex: "action",
+      align: "center",
+      width: 70,
+      render: (value, record) => (
+          <>
+              <Tooltip title="Image Download">
+                  <Button
+                      icon={<DownloadOutlined />}
+                      onClick={() =>  downloads(record.filePath)}
+                      disabled={!record.filePath} // Disable the button if filePath is not present
+                  >
+                      {value}
+                  </Button>
+              </Tooltip>
+          </>
+      ),
+  },
+
       {
         title: <div style={{ textAlign: "center" }}>
           
@@ -643,9 +716,36 @@ const onRemarksModalOk = () => {
       // );
       // },
       // },
+      
     ];
     return [...columnsSkelton];   
   }
+
+  const downloads = (filePath) => {
+    console.log(filePath);
+    // : FilenameDto[]
+
+    if (filePath) {
+        filePath = filePath.split(",");
+        for (const res of filePath) {
+            if (res) {
+                console.log(res);
+                setTimeout(() => {
+                    const response = {
+                        file: config.file_upload_path + '/' +`${res}` ,
+                    };
+
+                    window.open(response.file);
+
+                }, 100);
+            }
+        }
+    }
+    else {
+        AlertMessages.getErrorMessage("Please upload file. ");
+
+    }
+}
   const genereatePoForTrim = (indentId: number) => {
     let indentDetails = tableData.find((e)=>e.indentId === indentId);
     // console.log(indentDetails)
