@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ColumnProps, ColumnsType } from 'antd/lib/table';
 import { Button, Card, Descriptions, Table } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { GRNLocationPropsRequest, MaterialAllocationitemsIdreq } from '@project-management-system/shared-models';
+import { GRNLocationPropsRequest, ItemTypeEnumDisplay, MaterialAllocationitemsIdreq } from '@project-management-system/shared-models';
 import { LocationMappingService, SampleDevelopmentService } from '@project-management-system/shared-services';
 import DescriptionsItem from 'antd/es/descriptions/Item';
 
@@ -111,7 +111,7 @@ export const MaterialAllocationDetailView = () => {
                 <Descriptions size='small'>
                 <DescriptionsItem label='Sample Request No'>{location?.state?.request_no}</DescriptionsItem>
                  <DescriptionsItem label='Buyer'>{location?.state?.buyer_name}</DescriptionsItem>
-                <DescriptionsItem label='Item Type'>{location?.state?.item_type}</DescriptionsItem>
+                <DescriptionsItem label='Item Type'>{location?.state?.item_type?ItemTypeEnumDisplay.find((e)=>e.name === location?.state?.item_type)?.displayVal:'-'}</DescriptionsItem>
                 {/* <DescriptionsItem label='Quantity'>{location?.state?.quantity}</DescriptionsItem> */}
                 <DescriptionsItem label='Total Allocated Quantity'>{location?.state?.total_allocated_quantity}</DescriptionsItem>
                

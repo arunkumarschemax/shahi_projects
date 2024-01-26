@@ -95,7 +95,8 @@ export const SourcingRequisitionDynamicForm = () => {
     const [mapData, setMapData] = useState<any[]>([])
     const [modal, setModal] = useState('')
     // const [trimFilterData, setTrimFilterData] = useState<any[]>([])
-    
+    const [remarkModal,setRemarkModal] = useState<boolean>(false)
+    const [remarks,setRemarks] = useState<string>('')
 
 
 
@@ -667,6 +668,13 @@ export const SourcingRequisitionDynamicForm = () => {
             )
         }
     ]
+    const handleTextClick = (remarks) => {
+        setRemarks(remarks)
+        setRemarkModal(true)
+      }
+      const onRemarksModalOk = () => {
+      setRemarkModal(false)
+      }
 
     const columnsSkelton: any = [
         {
@@ -738,11 +746,11 @@ export const SourcingRequisitionDynamicForm = () => {
           title: 'Remarks',
           dataIndex: 'remarks',
           render: (text, row) => (
-            // <Tooltip title={row.remarks} placement="top" arrowPointAtCenter>
               <span className="fabCode">
-                {row.remarks != undefined ? `${row.remarks}`: ""}
+                 { row.remarks?.length > 30 ? (<><Tooltip title='Cilck to open full remarks'><p><span onClick={() => handleTextClick(row.remarks)} style={{ cursor: 'pointer' }}>
+                           {row.remarks.length > 30 ? `${row.remarks?.substring(0, 30)}....` : row.remarks}
+                       </span></p></Tooltip></>) : (<>{row.remarks}</>)}
               </span>
-            // </Tooltip>
           ),
         },
         {
@@ -1919,7 +1927,11 @@ console.log(req)
             <M3Items />
             }
             </Modal>
-           
+            <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{remarks}</p>
+                </Card>
+            </Modal>
             </>
     )
 }

@@ -28,6 +28,9 @@ export class SampleRequestInfoModel{
     fabInfo?:any[]
     trimInfo?:any[]
     location?:string
+    sampleType?:string
+        sampleSubType?:string
+        category?:string
     
     constructor(
         sampleRequestNo: string,
@@ -58,6 +61,10 @@ export class SampleRequestInfoModel{
         fabInfo?:any[],
         trimInfo?:any[],
         location?:string,
+        sampleType?:string,
+        sampleSubType?:string,
+        category?:string
+
 
     ){
        this.brand = brand
@@ -88,6 +95,9 @@ export class SampleRequestInfoModel{
        this.fileName = fileName
        this.sam = sam   
        this.location =location
+       this.sampleType = sampleType
+       this.sampleSubType = sampleSubType
+       this.category =category
         }
 
 
