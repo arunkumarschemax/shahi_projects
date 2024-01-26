@@ -269,7 +269,7 @@ const stockService = new StockService();
             title: "Buyer",
             dataIndex: "buyerName",
             ...getColumnSearchProps('buyerName'),
-            sorter: (a, b) => a.buyerName.length - b.buyerName.length,
+            sorter: (a, b) => a.buyerName?.length - b.buyerName?.length,
            sortDirections: ['descend', 'ascend'],
            fixed:'left'
         },
@@ -277,7 +277,7 @@ const stockService = new StockService();
             title: "Item Code",
             dataIndex: "itemCode",
             ...getColumnSearchProps('itemCode'),
-            sorter: (a, b) => a.itemCode.length - b.itemCode.length,
+            sorter: (a, b) => a.itemCode?.length - b.itemCode?.length,
            sortDirections: ['descend', 'ascend'],
             fixed:'left'
 
@@ -286,7 +286,7 @@ const stockService = new StockService();
           title: "M3 Code",
           dataIndex: "m3Code",
           ...getColumnSearchProps('m3Code'),
-          sorter: (a, b) => a.m3Code.length - b.m3Code.length,
+          sorter: (a, b) => a.m3Code?.length - b.m3Code?.length,
          sortDirections: ['descend', 'ascend'],
          render: (text) => text || "-",
 
@@ -295,7 +295,7 @@ const stockService = new StockService();
         title: "HSN Code",
         dataIndex: "hsnCode",
         ...getColumnSearchProps('hsnCode'),
-        sorter: (a, b) => a.hsnCode.length - b.hsnCode.length,
+        sorter: (a, b) => a.hsnCode?.length - b.hsnCode?.length,
        sortDirections: ['descend', 'ascend'],
        render: (text) => text || "-",
     },
@@ -310,7 +310,7 @@ const stockService = new StockService();
             title: "Fabric Type",
             dataIndex: "fabricType",
             ...getColumnSearchProps('fabricType'),
-            sorter: (a, b) => a.fabricType.length - b.fabricType.length,
+            sorter: (a, b) => a.fabricType?.length - b.fabricType?.length,
            sortDirections: ['descend', 'ascend'],
            ...getColumnSearchProps('fabricType')
         },
@@ -318,7 +318,7 @@ const stockService = new StockService();
             title: "Weave",
             dataIndex: "fabricWeave",
             ...getColumnSearchProps('fabricWeave'),
-            sorter: (a, b) => a.fabricWeave.length - b.fabricWeave.length,
+            sorter: (a, b) => a.fabricWeave?.length - b.fabricWeave?.length,
            sortDirections: ['descend', 'ascend'],
         },
   
@@ -385,7 +385,7 @@ const stockService = new StockService();
         {
             title: "Finish",
             dataIndex: "fabricFinish",
-            sorter: (a, b) => a.fabricFinish.length - b.fabricFinish.length,
+            sorter: (a, b) => a.fabricFinish?.length - b.fabricFinish?.length,
             sortDirections: ['descend', 'ascend'],     
             render: (text) => text || "-",
         },
@@ -393,13 +393,13 @@ const stockService = new StockService();
             title: "Shrinkage",
             dataIndex: "shrinkage",
             ...getColumnSearchProps('shrinkage'),
-            sorter: (a, b) => a.shrinkage.length - b.shrinkage.length,
+            sorter: (a, b) => a.shrinkage?.length - b.shrinkage?.length,
             sortDirections: ['descend', 'ascend'],
         },
         {
             title: "Description",
             dataIndex: "description",
-            sorter: (a, b) => a.description.length - b.description.length,
+            sorter: (a, b) => a.description?.length - b.description?.length,
             sortDirections: ['descend', 'ascend'],
             // width:'250px',
             render: text => (
