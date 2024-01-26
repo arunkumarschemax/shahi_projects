@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Modal } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
 import { FabricRequestCodeDto } from '@project-management-system/shared-models';
-import { FabricRequestCodeService } from '@project-management-system/shared-services';
+import { FabricRequestCodeService, M3ItemsService } from '@project-management-system/shared-services';
+import AlertMessages from '../common/common-functions/alert-messages';
+import M3Items from '../masters/m3-items/m3-items-form';
 
 const FabricRequestCodeView = ()=>{
   const searchInput = useRef(null);
@@ -13,10 +15,15 @@ const FabricRequestCodeView = ()=>{
   const [searchedColumn, setSearchedColumn] = useState('');
 
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const [data, setData] = useState<any>(undefined);
   const [reqCodeData, setReqCodeData] = useState<any>([]);
+
   const [selectedDeliveryMethodData, setSelectedDeliveryMethodData] = useState<any>(undefined);
   
   const requestCodeService = new FabricRequestCodeService();
+  const m3ItemsService = new M3ItemsService();
 
   useEffect(() => {
     getAllFabrics();
@@ -288,10 +295,46 @@ const FabricRequestCodeView = ()=>{
     {
       title:`Action`,
       dataIndex: 'action',
-    //   render: (text, rowData) => ()
+      render: (text, rowData) => {
+        return (<span>
+          <Tooltip placement="top" title='Create Item'>
+              <Tag >
+                  <EditOutlined type= "edit"
+                      onClick={() => {
+                          createItem(rowData)
+                      }}
+                      style={{ color: '#1890ff', fontSize: '14px' }} />
+              </Tag>
+          </Tooltip>
+          </span>
+        )
+      }
     }
   ];
 
+  const createItem = (rowData: any) => {
+    console.log(rowData)
+    setModalVisible(true)
+    setData(rowData);
+  }
+  const modalView = (rowData:any) => {
+    return  (
+  //   <Modal
+  //     className='rm-'
+  //     // key={'modal' + Date.now()}
+  //     width={'70%'}
+  //     visible={modalVisible}
+  //     style={{ top: 30, alignContent: 'right' }}
+  //     title={<React.Fragment>
+  //     </React.Fragment>}
+  //     onCancel={handleCancel}
+  //     footer={[]}
+  // >
+    <M3Items props={data}/>
+  // </Modal>
+  )
+  
+  }
   /**
    * 
    * @param pagination 
@@ -302,6 +345,10 @@ const FabricRequestCodeView = ()=>{
   const onChange=(pagination, filters, sorter, extra)=> {
     console.log('params', pagination, filters, sorter, extra);
   }
+
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
    return (
     <Card title={<span >Fabric Request Code</span>}
     headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
@@ -332,6 +379,19 @@ const FabricRequestCodeView = ()=>{
           onChange={onChange}
           bordered />
         
+        <Modal
+            className='rm-'
+            // key={'modal' + Date.now()}
+            width={'79%'}
+            style={{ top: 30, alignContent: 'right' }}
+            visible={modalVisible}
+            title={<React.Fragment>
+            </React.Fragment>}
+            onCancel={handleCancel}
+            footer={[]}
+        >
+          {modalView(data)}
+        </Modal>
      </Card>
    );
 }

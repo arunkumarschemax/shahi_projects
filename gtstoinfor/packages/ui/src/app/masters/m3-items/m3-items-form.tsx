@@ -8,7 +8,7 @@ import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 const { TextArea } = Input;
 const {Option} = Select
 
-const M3Items = () => {
+const M3Items = ({props}) => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [uom, setUom] = useState<any[]>([]);
@@ -178,6 +178,52 @@ const M3Items = () => {
   }
 
   useEffect(() => {
+    console.log("********************")
+    console.log(props)
+   if(props != undefined){
+    console.log("********************")
+    console.log(props.buyer_id)
+    
+    if(props.fabricTypeId> 0){
+      onFabricTpe(props.fabricTypeId);
+    }
+    if(props.yarnType != undefined){
+      yarnSelect(props.yarnType)
+    }
+    if(props.buyer_id != undefined){
+      console.log("LLLLLLLLL")
+      onBuyerChange(props.buyer_id,props.buyerName)
+    }
+    onWidthChange(props.width)
+    onWidthUomChange(props.widthUnit)
+    epiChange(props.epi)
+    ppiChange(props.ppi)
+    generateItemCode()
+    form.setFieldsValue({buyerId:props.buyer_id});
+    form.setFieldsValue({fabricTypeId:props.fabricTypeId});
+    form.setFieldsValue({weaveId:props.weaveId});
+    form.setFieldsValue({weightValue:props.weight});
+    form.setFieldsValue({weightId:props.weight});
+    form.setFieldsValue({weightUomId:props.weightUnitId});
+    form.setFieldsValue({widthValue:props.width});
+    form.setFieldsValue({width:props.width});
+    form.setFieldsValue({widthUomId:props.widthUnit});
+    form.setFieldsValue({epiConstruction:props.epi});
+    form.setFieldsValue({construction:props.epi});
+    form.setFieldsValue({ppiConstruction:props.ppi});
+    form.setFieldsValue({hsnCode:props.hsnCode});
+    form.setFieldsValue({finishId:props.finish_id});
+    form.setFieldsValue({shrinkage:props.shrinkage});
+    form.setFieldsValue({yarnType:props.yarnType});
+    // form.setFieldsValue({content:props.content_id});
+
+
+
+    // form.setFieldsValue({buyerId:props.buyer_id,fabricTypeId:props.fabricTypeId,content:props.content_id,weaveId:props.weaveId,weightValue:props.weight,weightId:props.weight,weightUomId:props.weightUnitId,widthValue:props.width,width:props.width,widthUomId:props.widthUnit,epiConstruction:props.epi,construction:props.epi,ppiConstruction:props.ppi,hsnCode:props.hsnCode,finishId:props.finish_id,shrinkage:props.shrinkage,yarnType:props.yarnType})
+  }
+  },[props != undefined])
+
+  useEffect(() => {
     getUom();
     getFabricTypedata();
     getBuyers();
@@ -226,11 +272,15 @@ const M3Items = () => {
   }
 
   const onBuyerChange = (val,option)=>{
+    console.log("hi")
     generateItemCode()
     form.setFieldValue('buyerCode', option?.name)
   }
 
   const onFinish = (val) => {
+    console.log("val");
+    console.log(val);
+
     const contentIsNull = formData.some((item) => item.content === '');
   if (contentIsNull) {
     AlertMessages.getErrorMessage("Content is required.");
@@ -343,7 +393,7 @@ const M3Items = () => {
     setFormData(updatedFormData); // Update the state with the modified array
   console.log(updatedFormData,'-------------')
   };
-  console.log(formData,'==-=-=-')
+  // console.log(formData,'==-=-=-')
 
   const handleCountNumChange = (index, value) => {
   setYarn((prevData) => {
@@ -537,7 +587,7 @@ const handleYarnUnitChange = (index, value) => {
           </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item name="yarnType" rules={[{ required: false, message : "Yarn Type is required" }]}>
-              Yarn Type : <Radio.Group name="yarnType" style={{ marginTop: "25px" }} onChange={(e)=>yarnSelect(e?.target?.value)} onBlur={generateItemCode}>
+              Yarn Type : <Radio.Group name="yarnType" style={{ marginTop: "25px" }} onChange={(e)=>yarnSelect(e?.target?.value)} onBlur={generateItemCode} defaultValue={props?.yarnType}>
                 <Radio value="Warp">Warp</Radio>
                 <Radio value="Weft">Weft</Radio>
               </Radio.Group>

@@ -1924,7 +1924,7 @@ console.log(req)
                </>:modal == 'trimFilter' ?<>
                <M3TrimsReqFile trimCategoryId={trimForm.getFieldValue('trimCategory')} close={closeModel} formValues={handleTrimFilterData}/>
                </>:
-            <M3Items />
+            <M3Items props={undefined}/>
             }
             </Modal>
             <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
