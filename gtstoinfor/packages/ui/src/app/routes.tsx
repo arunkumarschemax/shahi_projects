@@ -42,9 +42,14 @@ import { Suspense, lazy } from "react"
 import AddressView from "./masters/address/address-view"
 import AddressUpload from "./masters/address/address-excel-upload"
 import BomPdfUpload from "./bom-pdf-extraction/pdf-upload"
-import BackingPaper from "./trims/backing-paper"
+import BackingPaper from "./trims/trim-prints/backing-paper"
 import BomView from "./bom-pdf-extraction/bom-view"
 import BomPdfInfoDetailView from "./bom-pdf-extraction/deatiled-view"
+import ButtonPrint, { Button1Print } from "./trims/trim-prints/button-print"
+import Button2Print from "./trims/trim-prints/button2-print"
+import Button3Print from "./trims/trim-prints/button3-print"
+import TrimsGrid from "./trims/trims-grid"
+import TrimColumns from "./trims/trim-columns"
 
 
 export const AppRoutes = () => {
@@ -80,7 +85,6 @@ export const AppRoutes = () => {
                     <Route path='pdf-upload' element={<PdfUpload />} />
                     <Route path='co-line-view' element={<ColineView />} />
                     <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
-                    <Route path='backing-paper' element={<BackingPaper/>} />
 
                 </Route>
                 <Route path='/reports'>
@@ -160,6 +164,9 @@ export const AppRoutes = () => {
                     <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
                     <Route path='co-line-view' element={<ColineView />} />
                     <Route path='backing-paper' element={<BackingPaper/>} />
+                    <Route path='trim-grid' element={<TrimsGrid/>} />
+
+                    <Route path='trim-columns' element={<TrimColumns/>} />
 
 
                 </Route>
@@ -189,6 +196,12 @@ export const AppRoutes = () => {
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
+            <Route path="/print">
+            <Route path='button1' element={<Button1Print />} />
+            <Route path='button2' element={<Button2Print />} />
+            <Route path='button3' element={<Button3Print />} />
+            <Route path='backing-paper' element={<BackingPaper/>} />
+            </Route>
             </Route>
             <Route path="/login" element={<Login />} />
         </Routes>
