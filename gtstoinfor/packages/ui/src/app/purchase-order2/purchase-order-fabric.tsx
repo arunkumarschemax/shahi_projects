@@ -207,6 +207,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
             fabricForm.setFieldsValue({ taxPercentage: rowData?.taxPercentage })
             fabricForm.setFieldsValue({ fabricCode: rowData?.fabricCode })
             fabricForm.setFieldsValue({ hsnCode: rowData?.hsnCode })
+            fabricForm.setFieldsValue({ sizeId: rowData?.size})
         }
         if (rowData.samplereFabId != undefined) {
             if(rowData?.uom_id > 0){
@@ -233,6 +234,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
             fabricForm.setFieldsValue({ taxPercentage: rowData?.taxPercentage })
             fabricForm.setFieldsValue({ description: rowData?.description })
             fabricForm.setFieldsValue({ hsnCode: rowData?.hsnCode })
+            fabricForm.setFieldsValue({ sizeId: rowData.size})
         }
         setFabricIndexVal(index)
     }
@@ -259,6 +261,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
                 fabricForm.setFieldsValue({ subjectiveAmount: defaultFabricFormData?.subjectiveAmount })
                 fabricForm.setFieldsValue({ transportation: defaultFabricFormData?.transportation })
                 fabricForm.setFieldsValue({ hsnCode: defaultFabricFormData?.hsnCode })
+                fabricForm.setFieldsValue({ sizeId: defaultFabricFormData?.sizeId})
                 // trimForm.setFieldsValue({poQuantity:(defaultFabricFormData.poQuantity > 0) ?(Number(defaultFabricFormData.poQuantity)) : Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity)})
                 fabricForm.setFieldsValue({
                     poQuantity: defaultFabricFormData.sampleQuantity,
@@ -291,6 +294,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
                 fabricForm.setFieldsValue({ subjectiveAmount: defaultFabricFormData?.subjectiveAmount })
                 fabricForm.setFieldsValue({ transportation: defaultFabricFormData?.transportation })
                 fabricForm.setFieldsValue({ hsnCode: defaultFabricFormData?.hsnCode })
+                fabricForm.setFieldsValue({ sizeId: defaultFabricFormData?.sizeId})
                 fabricForm.setFieldsValue({poQuantity:(defaultFabricFormData.poQuantity > 0) ?(Number(defaultFabricFormData.poQuantity)) : Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity)})
                 fabricForm.setFieldsValue({
                     // poQuantity: Number(defaultFabricFormData.indentQuantity) - Number(defaultFabricFormData.poQuantity),
@@ -346,6 +350,10 @@ const [sizeData, setSizeData]=useState<any[]>([])
         {
             title: 'Color',
             dataIndex: 'colorName',
+        },
+        {
+            title: 'HSN Code',
+            dataIndex: 'hsnCode',
         },
         {
             title: 'Indent Quantity',
