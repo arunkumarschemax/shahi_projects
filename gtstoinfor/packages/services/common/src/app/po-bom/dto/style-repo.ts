@@ -13,7 +13,7 @@ export class StyleRepo extends Repository<StyleEntity> {
 
     async getStyelsData(): Promise<any[]> {
         const queryBuilder = this.createQueryBuilder('s')
-        .select(`id,style, style_name AS styleName,season,exp_no AS expNo,msc,factoryLo,status`)
+        .select(`id,style, style_name AS styleName,season,exp_no AS expNo,msc,factoryLo,status,file_data as fileData`)
         return await queryBuilder.getRawMany()
     }
 }

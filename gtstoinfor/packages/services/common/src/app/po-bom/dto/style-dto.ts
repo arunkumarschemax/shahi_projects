@@ -26,11 +26,15 @@ export class StyleDto {
     @ApiProperty()
     status:string
    
+    @ApiProperty()
+    fileData:string
+
     @ApiProperty({type:[BomDto]})
     bomdto:BomDto[]
 
     @ApiProperty()
     styleId:number
+
     
     constructor(
         style:string,
@@ -40,6 +44,7 @@ export class StyleDto {
         msc:string,
         factoryLo:string,
         status:string,
+        fileData:string,
         bomdto:BomDto[],
         styleId?:number 
         )
@@ -51,6 +56,7 @@ export class StyleDto {
             this.msc=msc
             this.factoryLo=factoryLo
             this.status=status
+            this.fileData=fileData
             this.bomdto=bomdto
             this.styleId=styleId
     }

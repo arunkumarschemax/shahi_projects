@@ -29,6 +29,7 @@ export class BomService{
             entity.msc=req.msc
             entity.factoryLo=req.factoryLo
             entity.status=req.status
+            entity.fileData=req.fileData
 
            let  bomEntityArray = []
             for(const bom of req.bomdto){
@@ -82,7 +83,7 @@ export class BomService{
                             }
                             bomdetails.push(new BomDto(combo.itemName,combo.description,combo.imCode,combo.itemType,combo.use,styleCombos,combo.id,combo.styleId))
                         }
-                        styles.push(new StyleDto(styleDetails.style,styleDetails.styleName,styleDetails.season,styleDetails.expNo,styleDetails.msc,styleDetails.factoryLo,styleDetails.status,bomdetails))
+                        styles.push(new StyleDto(styleDetails.style,styleDetails.styleName,styleDetails.season,styleDetails.expNo,styleDetails.msc,styleDetails.factoryLo,styleDetails.status,styleDetails.fileData,bomdetails))
                 }
             }
             if(styles){

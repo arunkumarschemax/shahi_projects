@@ -44,6 +44,7 @@ import AddressUpload from "./masters/address/address-excel-upload"
 import BomPdfUpload from "./bom-pdf-extraction/pdf-upload"
 import BackingPaper from "./trims/backing-paper"
 import BomView from "./bom-pdf-extraction/bom-view"
+import BomPdfInfoDetailView from "./bom-pdf-extraction/deatiled-view"
 
 
 export const AppRoutes = () => {
@@ -166,6 +167,7 @@ export const AppRoutes = () => {
                 <Route path='/bom'>
                     <Route path='bom-pdf-upload' element={<BomPdfUpload />} />
                     <Route path='bom-view' element={<BomView />} />
+                    <Route path='bom-pdf-info-detail-view' element={<BomPdfInfoDetailView />} />
                 </Route>
 
                 <Route path='/reports'>
