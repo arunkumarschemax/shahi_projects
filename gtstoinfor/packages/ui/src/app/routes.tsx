@@ -269,7 +269,7 @@ export const AppRoutes = () => {
                 <Route path='/uom-form' element={<UomForm />} />
 
 
-                <Route path='/m3-items' element={<M3Items />} />
+                <Route path='/m3-items' element={<M3Items props={undefined}/>} />
                 <Route path='/m3-items-view' element={<M3ItemsView />} />
                 <Route path='/wh-dashboard' element={<WarehouseDashboard />} />
                 {/* <Route path='/masters'> */}
