@@ -24,6 +24,8 @@ export class IndentTrimDto{
     @ApiProperty()
     filePath: string;
     @ApiProperty()
+    fileName: string
+    @ApiProperty()
     isUploaded: boolean;
     @ApiProperty()
     isActive?: boolean;
@@ -49,6 +51,7 @@ export class IndentTrimDto{
     // description: string,
     remarks: string,
     filePath: string,
+    fileName: string,
     isUploaded: boolean,
     isActive?: boolean,
     createdAt?: Date,
@@ -68,6 +71,7 @@ export class IndentTrimDto{
     // this.description = description;
     this.remarks = remarks;
     this.filePath = filePath;
+    this.fileName=fileName
     this.isUploaded = isUploaded;
     this.isActive = isActive;
     this.createdAt = createdAt;

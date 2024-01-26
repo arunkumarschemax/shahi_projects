@@ -53,7 +53,9 @@ export class IndentAdapter
               // fabEntity.construction =indentitems.construction;
               // fabEntity.content=indentitems.content;
               // fabEntity.fabricType=indentitems.fabricType;
-              fabEntity.file_path=indentitems.file_path;
+              fabEntity.filePath=indentitems.filePath;
+              fabEntity.fileName=indentitems.fileName;
+
               // fabEntity.finish=indentitems.finish;
               // fabEntity.grnDate=indentitems.grnDate;
               fabEntity.isUploaded=indentitems.isUploaded;
@@ -117,13 +119,13 @@ export class IndentAdapter
               // fabItem.content,fabItem.fabricType,fabItem.weaveId,fabItem.weight,fabItem.width,fabItem.yarnCount,fabItem.yarnCount,fabItem.weightUnit,fabItem.construction,fabItem.finish,fabItem.shrinkage
               ,fabItem.m3FabricCode,fabItem.color,"",0,0,new Date(),"",
               // fabItem.pch,fabItem.moq,fabItem.moqUnit,fabItem.moqPrice,fabItem.moqPriceUnit,
-              fabItem.quantity,fabItem.quantityUnit,fabItem.file_path,fabItem.isUploaded,fabItem.remarks,fabItem.isActive,fabItem.createdAt,fabItem.createdUser,fabItem.updatedAt,fabItem.updatedUser);
+              fabItem.quantity,fabItem.quantityUnit,fabItem.filePath,fabItem.fileName,fabItem.isUploaded,fabItem.remarks,fabItem.isActive,fabItem.createdAt,fabItem.createdUser,fabItem.updatedAt,fabItem.updatedUser);
             fabDto.push(fabricdata);
         }
 
         const trimDto:IndentTrimDto[] = [];
         for (const trimItem of indentObject.iTrimsInfo) {
-            const trimData= new IndentTrimDto(trimItem.itrimsId,trimItem.trimType,trimItem.trimCode,trimItem.quantity,trimItem.remarks,trimItem.filePath,trimItem.isUploaded,trimItem.isActive,trimItem.createdAt,trimItem.createdUser,trimItem.updatedAt,trimItem.updatedUser,trimItem.versionFlag);
+            const trimData= new IndentTrimDto(trimItem.itrimsId,trimItem.trimType,trimItem.trimCode,trimItem.quantity,trimItem.remarks,trimItem.filePath,trimItem.fileName,trimItem.isUploaded,trimItem.isActive,trimItem.createdAt,trimItem.createdUser,trimItem.updatedAt,trimItem.updatedUser,trimItem.versionFlag);
             trimDto.push(trimData);
         }
 
