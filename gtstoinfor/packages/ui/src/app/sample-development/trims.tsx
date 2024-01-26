@@ -92,9 +92,9 @@ const uploadFabricProps = (keyValue:number): UploadProps =>  ({
         console.log(fileList)
         setFileList([...fileList,file]);
         console.log(fileList,"****")
-        // getBase64(file, imageUrl =>
-          // setImageUrl(imageUrl)
-        // );
+        getBase64(file, imageUrl =>
+          setImageUrl(imageUrl)
+        );
         return false;
       // }
     // }
@@ -618,7 +618,7 @@ const getMappedTrims = (value, row) => {
     {
       title: 'Upload Trim',
       dataIndex: 'trimUpload',
-      width:"20%",
+      width:"25%",
       fixed:'right',
       render: (_, record) => (
         <Form.Item name={`trimUpload${record.key}`} initialValue={record.trimUpload}>
@@ -634,8 +634,8 @@ const getMappedTrims = (value, row) => {
             >
                 <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
             </Button>
-            {(fileList[record.key] != undefined)? <Button key={record.key} icon={<EyeOutlined/>} onClick={onTrimView}></Button>:<></>}
           </Upload>
+          {(fileList[record.key] != undefined)? <Button key={record.key} icon={<EyeOutlined/>} onClick={onTrimView}></Button>:<></>}
       </Form.Item>
       ),
     },

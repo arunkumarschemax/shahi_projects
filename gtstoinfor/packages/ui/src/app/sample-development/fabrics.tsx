@@ -483,9 +483,9 @@ const FabricsForm = (props:FabricsFormProps) => {
           console.log(fileList)
           setFileList([...fileList,file]);
           console.log(fileList,"****")
-          // getBase64(file, imageUrl =>
-            // setImageUrl(imageUrl)
-          // );
+          getBase64(file, imageUrl =>
+            setImageUrl(imageUrl)
+          );
           return false;
         // }
       // }
@@ -749,6 +749,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       fixed:'right',
       render: (_, record) => (
         <Form.Item name={`fabricUpload${record.key}`} initialValue={record.fabricUpload}>
+          
           <Upload key={record.key} name={`fabricUpload${record.key}`} style={{ width: '100%' }} 
             {...uploadFabricProps(record.key)}
             accept=".jpeg,.png,.jpg"
@@ -761,8 +762,8 @@ const FabricsForm = (props:FabricsFormProps) => {
             >
                 <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
             </Button>
-            {(fileList[record.key] != undefined)? <Button key={record.key} icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
           </Upload>
+          {(fileList[record.key] != undefined)?<Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
       </Form.Item>
       ),
     },
@@ -961,7 +962,8 @@ const FabricsForm = (props:FabricsFormProps) => {
                     style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
                 />
                 </Form.Item>
-            </Card></>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
+            </Card>
+               </>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
         </Modal>
         
       <Modal
