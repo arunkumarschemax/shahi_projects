@@ -616,6 +616,17 @@ const getMappedTrims = (value, row) => {
       ),
     },
     {
+      title:'preview',
+      dataIndex: 'fabricUpload',
+      width:"10%",
+      fixed:'right',
+      render: (_, record) => (
+        <span style={{alignContent:'center'}}>{
+        (fileList[record.key] != undefined)?<Button icon={<EyeOutlined/>} onClick={()=>onTrimView(record.key)}></Button>:<></>
+    }</span>
+      )
+    },
+    {
       title: 'Upload Trim',
       dataIndex: 'trimUpload',
       width:"25%",
@@ -635,7 +646,6 @@ const getMappedTrims = (value, row) => {
                 <Tooltip title="Upload Trim"><UploadOutlined /></Tooltip>
             </Button>
           </Upload>
-          {(fileList[record.key] != undefined)? <Button key={record.key} icon={<EyeOutlined/>} onClick={() => onTrimView(record.key)}></Button>:<></>}
       </Form.Item>
       ),
     },

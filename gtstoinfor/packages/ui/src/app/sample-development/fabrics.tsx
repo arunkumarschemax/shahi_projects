@@ -741,7 +741,17 @@ const FabricsForm = (props:FabricsFormProps) => {
       </Form.Item>
       ),
     },
-
+    {
+      title:'preview',
+      dataIndex: 'fabricUpload',
+      width:"9%",
+      fixed:'right',
+      render: (_, record) => (
+        <span style={{alignContent:'center'}}>{
+        (fileList[record.key] != undefined)?<Button icon={<EyeOutlined/>} onClick={()=>onFabriView(record.key)}></Button>:<></>
+    }</span>
+      )
+    },
     {
       title: 'Upload Fabric',
       dataIndex: 'fabricUpload',
@@ -749,22 +759,20 @@ const FabricsForm = (props:FabricsFormProps) => {
       fixed:'right',
       render: (_, record) => (
         <Form.Item name={`fabricUpload${record.key}`} initialValue={record.fabricUpload}>
-          
-          <Upload key={record.key} name={`fabricUpload${record.key}`} style={{ width: '100%' }} 
+          <Upload key={record.key} name={`fabricUpload${record.key}`} style={{ width: '100%' }}
             {...uploadFabricProps(record.key)}
             accept=".jpeg,.png,.jpg"
-            onChange={(e) => handleInputChange(e.file,record.key,'fabricUpload',0,record)}
-            >
+            onChange={(e) => handleInputChange(e.file, record.key, 'fabricUpload', 0, record)}
+          >
             <Button key={record.key} name={`fabricUpload${record.key}`}
-                style={{ color: 'black', backgroundColor: '#7ec1ff' }}
-                // icon={<UploadOutlined />}
-                disabled={(fileList[record.key] != undefined)? true:false}
+              style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+              // icon={<UploadOutlined />}
+              disabled={(fileList[record.key] != undefined) ? true : false}
             >
-                <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
+              <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
             </Button>
           </Upload>
-          {(fileList[record.key] != undefined)?<Button icon={<EyeOutlined/>} onClick={()=>onFabriView(record.key)}></Button>:<></>}
-      </Form.Item>
+        </Form.Item>
       ),
     },
     {
