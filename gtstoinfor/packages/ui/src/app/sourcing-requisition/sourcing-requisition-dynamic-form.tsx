@@ -453,7 +453,8 @@ export const SourcingRequisitionDynamicForm = () => {
                 quantity  : defaultFabricFormData.quantity,
                 quantityUnit: defaultFabricFormData.quantityUnit,
                 // fabricUpload:defaultFabricFormData.fabricUpload.fileList[0].name,
-                uomName:defaultFabricFormData.uomName
+                uomName:defaultFabricFormData.uomName,
+                fabricUpload:defaultFabricFormData.fabricUpload
 
             })
         }
@@ -479,7 +480,8 @@ export const SourcingRequisitionDynamicForm = () => {
                 description : defaultTrimFormData.description,
                 remarks : defaultTrimFormData.remarks,
                 quantityUnit: defaultTrimFormData.quantityUnit,
-                uomName:defaultTrimFormData.uomName
+                uomName:defaultTrimFormData.uomName,
+                trimUpload:defaultTrimFormData.trimUpload
             })
         }
     },[defaultTrimFormData])
@@ -926,10 +928,46 @@ const onTrimChange = (val, option) => {
         sourcingForm.validateFields().then(() => {
             const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),sourcingForm.getFieldValue('expectedDate'),sourcingForm.getFieldValue('requestNo'),sourcingForm.getFieldValue('indentDate'),fabricTableData,trimsTableData,sourcingForm.getFieldValue('buyer'))
             console.log(req)
+            console.log(fabricTableData)
+            console.log(trimsTableData.length)
+            console.log(trimsTableData)
+
             indentService.createItems(req).then(res => {
                 if(res.status){
-                    navigate('/requisition-view')
+                    // console.log(res.data)
+                    // navigate('/requisition-view')
                     AlertMessages.getSuccessMessage(res.internalMessage);
+                    if(fabricTableData.length >0){
+                    if(fabricTableData.find((res) => res.fabricUpload != undefined) != undefined){
+                        console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                        const formData = new FormData();
+                        formData.append('reqNo', `${res.data.requestNo}`);
+                        formData.append('fabIds', JSON.stringify(res.data.indentFabricDetails));
+                        for (let i = 0; i < fabricTableData.length; i++) {
+                            console.log(fabricTableData[i].fabricUpload.file)
+
+                            formData.append('file', fabricTableData[i].fabricUpload.file);
+                          }
+                          indentService.indentFabricUpload(formData).then((file) => {
+                            res.data.filepath = file.data;
+                          });
+                      }
+                    }
+                    if(trimsTableData.length >0){
+                        if(trimsTableData.find((res) => res.trimUpload != undefined) != undefined){
+                            console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                            const formData = new FormData();
+                            formData.append('reqNo', `${res.data.requestNo}`);
+                            formData.append('fabIds', JSON.stringify(res.data.indentTrimDetails
+                                ));
+                            for (let i = 0; i < trimsTableData.length; i++) {
+                                formData.append('file', trimsTableData[i].trimUpload.file);
+                              }
+                              indentService.indentTrimUpload(formData).then((file) => {
+                                res.data.filepath = file.data;
+                              });
+                          }
+                        }
                 }
                 else{
                     AlertMessages.getErrorMessage(res.internalMessage);

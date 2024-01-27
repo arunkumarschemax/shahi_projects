@@ -58,7 +58,9 @@ export class IndentFabricDto{
     @ApiProperty()
     quantityUnit: number;
     @ApiProperty()
-    file_path: string;
+    fileName: string;
+    @ApiProperty()
+    filePath: string;
     @ApiProperty()
     isUploaded: boolean;
     @ApiProperty()
@@ -104,7 +106,8 @@ export class IndentFabricDto{
     xlNo: string,
     quantity: number,
     quantityUnit: number,
-    file_path: string,
+    filePath: string,
+    fileName:string,
     isUploaded: boolean,
     remarks: string,
     isActive?: boolean,
@@ -141,7 +144,8 @@ export class IndentFabricDto{
     this.xlNo=xlNo;
     this.quantity=quantity;
     this.quantityUnit=quantityUnit;
-    this.file_path=file_path;
+    this.filePath=filePath;
+    this.fileName=fileName;
     this.isUploaded=isUploaded;
     this.remarks=remarks;
     this.isActive=isActive;

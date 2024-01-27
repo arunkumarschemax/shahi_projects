@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IndentRepository } from './dto/indent-repository';
-import { CommonResponseModel, IndentReq, IndentFabricModel, IndentModel, IndentTrimsModel, IndentRequestDto, indentIdReq, BuyerRefNoRequest, ColourDto } from '@project-management-system/shared-models';
+import { CommonResponseModel, IndentReq, IndentFabricModel, IndentModel, IndentTrimsModel, IndentRequestDto, indentIdReq, BuyerRefNoRequest, ColourDto, UploadResponse } from '@project-management-system/shared-models';
 import { Indent } from './indent-entity';
 import { IndentDto } from './dto/indent-dto';
 import { IndentAdapter } from './dto/indent-adapter';
@@ -13,6 +13,9 @@ import { Colour } from '../colours/colour.entity';
 import { ColourService } from '../colours/colour.service';
 import { ColourDTO } from '../colours/dto/colour-dto';
 
+import { GenericTransactionManager } from '../../typeorm-transactions';
+import { IndentFabricEntity } from './indent-fabric-entity';
+import { IndentTrimsEntity } from './indent-trims-entity';
 
 @Injectable()
 
@@ -86,6 +89,89 @@ export class IndentService {
             return error;
         }
     }
+
+
+
+    
+
+    async indentFabricUpload(filePath: any, data: any): Promise<UploadResponse> {
+        // console.log(filePath);
+        // console.log(data);
+        // console.log(JSON.parse(data));
+    
+        const manager = new GenericTransactionManager(this.dataSource)
+        try {
+          let flag = true;
+          await manager.startTransaction();
+          for(const [index,value] of JSON.parse(data).entries()){
+            console.log("********************")
+            console.log(value);
+            console.log(index);
+    
+            const updateFilePath = await manager.getRepository(IndentFabricEntity).update({ifabricId:value.ifabricId},{fileName: `${filePath[index].filename}`, filePath:`${filePath[index].path}`});
+            console.log(updateFilePath)
+            if(!(updateFilePath.affected > 0)){
+              flag = false
+            }
+          }
+          if (flag) {
+            await manager.completeTransaction();
+            return new UploadResponse(true, 11, 'uploaded successfully', filePath);
+          }
+          else {
+            await manager.releaseTransaction();
+            return new UploadResponse(false, 11, 'uploaded failed', filePath);
+          }
+        }catch (error) {
+          await manager.releaseTransaction();
+          console.log(error);
+        }
+      }
+
+
+      async indentTrimUpload(filePath: any, data: any): Promise<UploadResponse> {
+        console.log(filePath);
+        console.log(data);
+        console.log(JSON.parse(data));
+    
+        const manager = new GenericTransactionManager(this.dataSource)
+        try {
+          let flag = true;
+          await manager.startTransaction();
+          for(const [index,value] of JSON.parse(data).entries()){
+            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            console.log(value);
+            console.log(index);
+    
+            const updateFilePath = await manager.getRepository(IndentTrimsEntity).update({itrimsId:value.itrimsId},{fileName: `${filePath[index].filename}`, filePath:`${filePath[index].path}`});
+            console.log(updateFilePath)
+            if(!(updateFilePath.affected > 0)){
+              flag = false
+            }
+          }
+          if (flag) {
+            await manager.completeTransaction();
+            return new UploadResponse(true, 11, 'uploaded successfully', filePath);
+          }
+          else {
+            await manager.releaseTransaction();
+            return new UploadResponse(false, 11, 'uploaded failed', filePath);
+          }
+        }catch (error) {
+          await manager.releaseTransaction();
+          console.log(error);
+        }
+      }
+
+
+
+
+
+
+
+
+
+
 
     async getAllIndentData(req?: any): Promise<CommonResponseModel> {
        
