@@ -483,9 +483,9 @@ const FabricsForm = (props:FabricsFormProps) => {
           console.log(fileList)
           setFileList([...fileList,file]);
           console.log(fileList,"****")
-          getBase64(file, imageUrl =>
-            setImageUrl(imageUrl)
-          );
+          // getBase64(file, imageUrl =>
+          //   setImageUrl(imageUrl)
+          // );
           return false;
         // }
       // }
@@ -763,7 +763,7 @@ const FabricsForm = (props:FabricsFormProps) => {
                 <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
             </Button>
           </Upload>
-          {(fileList[record.key] != undefined)?<Button icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
+          {(fileList[record.key] != undefined)?<Button icon={<EyeOutlined/>} onClick={()=>onFabriView(record.key)}></Button>:<></>}
       </Form.Item>
       ),
     },
@@ -780,9 +780,14 @@ const FabricsForm = (props:FabricsFormProps) => {
     },
   ];
 
-  const onFabriView =() =>{
+  const onFabriView =(key) =>{
     setModal('fileUpload')
     setPreviewVisible(true)
+    console.log(fileList[key])
+    getBase64(fileList[key], imageUrl =>
+      // console.log(imageUrl)
+      setImageUrl(imageUrl)
+    );
     
   }
   const tableColumns = (val,fabindex) => {

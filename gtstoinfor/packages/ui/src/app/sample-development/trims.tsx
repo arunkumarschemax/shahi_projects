@@ -92,9 +92,9 @@ const uploadFabricProps = (keyValue:number): UploadProps =>  ({
         console.log(fileList)
         setFileList([...fileList,file]);
         console.log(fileList,"****")
-        getBase64(file, imageUrl =>
-          setImageUrl(imageUrl)
-        );
+        // getBase64(file, imageUrl =>
+        //   setImageUrl(imageUrl)
+        // );
         return false;
       // }
     // }
@@ -632,10 +632,10 @@ const getMappedTrims = (value, row) => {
                 // icon={<UploadOutlined />}
                 disabled={(fileList[record.key] != undefined)? true:false}
             >
-                <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
+                <Tooltip title="Upload Trim"><UploadOutlined /></Tooltip>
             </Button>
           </Upload>
-          {(fileList[record.key] != undefined)? <Button key={record.key} icon={<EyeOutlined/>} onClick={onTrimView}></Button>:<></>}
+          {(fileList[record.key] != undefined)? <Button key={record.key} icon={<EyeOutlined/>} onClick={() => onTrimView(record.key)}></Button>:<></>}
       </Form.Item>
       ),
     },
@@ -650,9 +650,14 @@ const getMappedTrims = (value, row) => {
     },
   ];
 
-  const onTrimView =() =>{
+  const onTrimView =(key) =>{
     setModal('fileUpload')
     setPreviewVisible(true)
+    console.log(fileList[key])
+    getBase64(fileList[key], imageUrl =>
+      // console.log(imageUrl)
+      setImageUrl(imageUrl)
+    );
     
   }
 
