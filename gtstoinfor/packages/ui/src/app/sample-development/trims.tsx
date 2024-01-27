@@ -46,7 +46,7 @@ const TrimsForm = (props:TrimsFormProps) => {
   const [modal, setModal] = useState('')
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
-
+  const [imageName, setImageName] = useState('');
  const {Option}=Select
 
  const getBase64 = (img, callback) => {
@@ -664,6 +664,7 @@ const getMappedTrims = (value, row) => {
     setModal('fileUpload')
     setPreviewVisible(true)
     console.log(fileList[key])
+    setImageName(fileList[key].name)
     getBase64(fileList[key], imageUrl =>
       // console.log(imageUrl)
       setImageUrl(imageUrl)
@@ -866,7 +867,7 @@ const tableColumns = (val,fabindex) => {
       </Form>
       <Modal
           visible={previewVisible}
-          title={"previewTitle"}
+          title={imageName}
           footer={null}
           onCancel={() => setPreviewVisible(false)}
         >

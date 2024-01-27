@@ -28,6 +28,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   const [allocatedData, setAllocatedData] = useState<any[]>([])
   const [fileList, setFileList] = useState([]);
   const [imageUrl, setImageUrl] = useState('');
+  const [imageName, setImageName] = useState('');
   const [color, setColor] = useState<any[]>([])
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const {Option}=Select
@@ -792,6 +793,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     setModal('fileUpload')
     setPreviewVisible(true)
     console.log(fileList[key])
+    setImageName(fileList[key].name)
     getBase64(fileList[key], imageUrl =>
       // console.log(imageUrl)
       setImageUrl(imageUrl)
@@ -960,7 +962,7 @@ const FabricsForm = (props:FabricsFormProps) => {
 
       <Modal
           visible={previewVisible}
-          title={"previewTitle"}
+          title={imageName}
           footer={null}
           onCancel={() => setPreviewVisible(false)}
         >
