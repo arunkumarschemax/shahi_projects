@@ -2,7 +2,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { Body, Controller, Post, Req } from '@nestjs/common';
 import { FabricRequestCodeDto } from './dtos/fabric-request-code.dto';
-import { CommonResponseModel, M3TrimType, M3trimsDTO } from '@project-management-system/shared-models';
+import { CommonResponseModel, FabricCodeReq, M3TrimType, M3trimsDTO, TrimCodeReq } from '@project-management-system/shared-models';
 import { FabricReqCodeService } from './fabric-request-code.service';
 import { TrimReqCodeService } from './trim-req-code.service';
 import { TrimRequestCodeDto } from './dtos/trim-request-code.dto';
@@ -32,9 +32,10 @@ export class ItemReqCodeController {
      }
 
     @Post('/getAllFabrics')
-    async getAllFabrics(): Promise<CommonResponseModel> {
+    @ApiBody({type:FabricCodeReq})
+    async getAllFabrics(@Body() req?:any): Promise<CommonResponseModel> {
         try {
-         return await this.fabReqService.getAllFabrics();
+         return await this.fabReqService.getAllFabrics(req);
        } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
        }
@@ -51,9 +52,10 @@ export class ItemReqCodeController {
      }
 
     @Post('/getAllTrims')
-    async getAllTrims(): Promise<CommonResponseModel> {
+    @ApiBody({type:TrimCodeReq})
+    async getAllTrims(@Body() req?: any): Promise<CommonResponseModel> {
         try {
-         return await this.trimReqService.getAllTrims();
+         return await this.trimReqService.getAllTrims(req);
        } catch (error) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
        }
@@ -183,6 +185,60 @@ async getAllTrimCategories(@Body() req?:any): Promise<CommonResponseModel> {
 async getAllBuyers(@Body() req?:any): Promise<CommonResponseModel> {
   try {
     return await this.trimReqService.getAllBuyers(req);
+  } catch (error) {
+    return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+  }
+}
+
+@Post('/getContents')
+async getContents(): Promise<CommonResponseModel> {
+  try {
+    return await this.fabReqService.getContents();
+  } catch (error) {
+    return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+  }
+}
+
+@Post('/getAllWeaves')
+async getAllWeaves(): Promise<CommonResponseModel> {
+  try {
+    return await this.fabReqService.getAllWeaves();
+  } catch (error) {
+    return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+  }
+}
+
+@Post('/getAllHSNCodes')
+async getAllHSNCodes(): Promise<CommonResponseModel> {
+  try {
+    return await this.fabReqService.getAllHSNCodes();
+  } catch (error) {
+    return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+  }
+}
+
+@Post('/getAllFinish')
+async getAllFinish(): Promise<CommonResponseModel> {
+  try {
+    return await this.fabReqService.getAllFinish();
+  } catch (error) {
+    return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+  }
+}
+
+@Post('/getAllFabricTypes')
+async getAllFabricTypes(): Promise<CommonResponseModel> {
+  try {
+    return await this.fabReqService.getAllFabricTypes();
+  } catch (error) {
+    return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+  }
+}
+
+@Post('/getAllFabricBuyers')
+async getAllFabricBuyers(): Promise<CommonResponseModel> {
+  try {
+    return await this.fabReqService.getAllFabricBuyers();
   } catch (error) {
     return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
   }
