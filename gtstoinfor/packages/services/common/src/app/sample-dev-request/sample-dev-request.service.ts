@@ -2450,7 +2450,7 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
       const manager = this.dataSource;
       const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,si.size_id,s.extension,s.cost_ref,s.description,s.dmm_id,s.user,lt.liscence_type AS product,m.country_name as made_in,s.remarks,s.file_name,srt.remarks AS trim_remarks,srf.remarks AS fab_remarks ,s.sam_value,
       st.style,pch.profit_control_head,mi.item_code as fabCode,mt.description as trimCode,e.first_name,s.contact,s.status,srs.quantity,srf.total_requirement as fabtotal_requirement,srf.wastage as fabwastage,srf.consumption as fabconsumption,uf.uom as fabuom,srt.total_requirement as trimtotal_requirement,srt.wastage as trimwastage,srt.consumption as trimconsumption,ut.uom as trimuom,cf.colour as fabcolour,ca.category,ed.first_name as dmm,sty.sample_type,sst.sample_sub_type,s.category as sampleCategory,
-      s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date,rp.rack_position_name AS location FROM sample_request s
+      s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date,rp.rack_position_name ,s.location_id as location,t.trim_category FROM sample_request s
       LEFT JOIN brands b ON b.brand_id = s.brand_id
       LEFT JOIN buyers bu ON bu.buyer_id = s.buyer_id
       LEFT JOIN style st ON st.style_id = s.style_id
@@ -2473,6 +2473,8 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
       LEFT JOIN rack_position rp ON rp.position_Id = s.location_id
       LEFT JOIN sample_types sty ON sty.sample_type_id= s.sample_type_id
       LEFT JOIN sample_sub_types sst ON sst.sample_sub_type_id = s.sample_sub_type_id
+      LEFT JOIN trim t ON  t.trim_id = mt.trim_category_id
+
       WHERE s.sample_request_id = ${req.sampleReqId}`
       
    
@@ -2499,7 +2501,7 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
           consumption:rec.trimconsumption,
           wastage:rec.trimwastage,
           uom:rec.trimuom,
-            category : rec.category,
+            category : rec.trim_category,
             remarks:rec.trim_remarks
           });
       }
