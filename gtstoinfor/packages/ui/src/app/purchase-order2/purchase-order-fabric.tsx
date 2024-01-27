@@ -234,7 +234,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
             fabricForm.setFieldsValue({ taxPercentage: rowData?.taxPercentage })
             fabricForm.setFieldsValue({ description: rowData?.description })
             fabricForm.setFieldsValue({ hsnCode: rowData?.hsnCode })
-            fabricForm.setFieldsValue({ sizeId: rowData.size})
+            fabricForm.setFieldsValue({ sizeId: rowData.sizeId})
         }
         setFabricIndexVal(index)
     }
@@ -270,8 +270,8 @@ const [sizeData, setSizeData]=useState<any[]>([])
                     sampleReqNo: defaultFabricFormData.sampleReqNo,
                     sampleQuantity:defaultFabricFormData.sampleQuantity,
                     m3FabricCode: defaultFabricFormData.m3FabricCode,
-                  colourId: defaultFabricFormData.colourId,
-                 colorName: defaultFabricFormData.colorName,
+                    colourId: defaultFabricFormData.colourId,
+                    colorName: defaultFabricFormData.colorName,
                 shahiFabricCode: defaultFabricFormData.shahiFabricCode,
                 itemCode:defaultFabricFormData.itemCode,
                 quantityUomId: defaultFabricFormData.quantityUomId,
@@ -449,6 +449,10 @@ const [sizeData, setSizeData]=useState<any[]>([])
             dataIndex: 'colorName',
         },
         {
+            title: 'HSN Code',
+            dataIndex: 'hsnCode',
+        },
+        {
             title: 'Sample Quantity',
             dataIndex: 'sampleQuantity',
         },
@@ -608,6 +612,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
         if(disc_per!==''&&disc_per>0){
             discAmnt=baseValue*disc_per/100;
             baseValue=Number(baseValue)-Number(discAmnt);
+
         }
         console.log('Tax Percentage')
         console.log(taxPer)
@@ -625,7 +630,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
         fabricForm.setFieldsValue({taxAmount:Number(taxAmount).toFixed(2)})
         fabricForm.setFieldsValue({discountAmount:Number(discAmnt).toFixed(2)})
         fabricForm.setFieldsValue({subjectiveAmount:totalAmount>0?Number(totalAmount).toFixed(2):0})
-        // fabricForm.setFieldsValue({ taxAmount: taxAmount })
+        fabricForm.setFieldsValue({ taxAmount: taxAmount })
        
         setTaxAmountVisible(false)        
     }
