@@ -11,6 +11,7 @@ import Highlighter from "react-highlight-words"
 import { useLocation, useNavigate } from "react-router-dom"
 import AlertMessages from "../common/common-functions/alert-messages"
 import { CategoryEnumDisplay, ItemTypeEnumDisplay, LifeCycleStatusDisplay, sampleReqIdReq } from "@project-management-system/shared-models"
+import moment from "moment"
 
 export const SampleReqDetailView = () =>{
     const searchInput = useRef(null);
@@ -375,7 +376,7 @@ return(
         <DescriptionsItem label='PCH'>{data?.[0]?.pch?data?.[0]?.pch:'-'}</DescriptionsItem>
         <DescriptionsItem label='User'>{data?.[0]?.user?data?.[0]?.user:'-'}</DescriptionsItem>
         <DescriptionsItem label='Brand'>{data?.[0]?.brand?data?.[0]?.brand:'-'}</DescriptionsItem>
-        <DescriptionsItem label='Epected Delivery Date'>{data?.[0]?.ETD?data?.[0]?.ETD:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Epected Delivery Date'>{data?.[0]?.ETD?moment(data?.[0]?.ETD).format('DD-MM-YYYY'):'-'}</DescriptionsItem>
         <DescriptionsItem label='Cost Ref'>{data?.[0]?.costRef?data?.[0]?.costRef:'-'}</DescriptionsItem>
         <Descriptions.Item label="Description" style={{ width: '33%' }}>
                                 {/* {grnData.description} */}
