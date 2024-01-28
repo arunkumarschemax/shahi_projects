@@ -935,7 +935,7 @@ const onTrimChange = (val, option) => {
             indentService.createItems(req).then(res => {
                 if(res.status){
                     // console.log(res.data)
-                    // navigate('/requisition-view')
+                     navigate('/requisition-view')
                     AlertMessages.getSuccessMessage(res.internalMessage);
                     if(fabricTableData.length >0){
                     if(fabricTableData.find((res) => res.fabricUpload != undefined) != undefined){

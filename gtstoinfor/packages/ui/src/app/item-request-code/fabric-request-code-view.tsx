@@ -1,36 +1,61 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Modal } from 'antd';
-import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Modal, Tabs, Form, Select } from 'antd';
+import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
-import { FabricRequestCodeDto } from '@project-management-system/shared-models';
+import { FabricCodeReq, FabricRequestCodeDto } from '@project-management-system/shared-models';
 import { FabricRequestCodeService, M3ItemsService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 import M3Items from '../masters/m3-items/m3-items-form';
+import TabPane from 'antd/es/tabs/TabPane';
+
+const { Option } = Select;
 
 const FabricRequestCodeView = ()=>{
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const [searchText, setSearchText] = useState(''); 
   const [searchedColumn, setSearchedColumn] = useState('');
+  const [form] = Form.useForm();
 
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   const [data, setData] = useState<any>(undefined);
   const [reqCodeData, setReqCodeData] = useState<any>([]);
+  const [buyerData, setBuyerData] = useState<any>([])
+  const [fabricType, setFabricType] = useState<any>([])
+  const [finishData, setFinishData] = useState<any>([])
+  const [hsnCode, setHsnCode] = useState<any>([])
+  const [weaveData, setWeaveData] = useState<any>([])
+  const [content, setContent] = useState<any>([])
 
   const [selectedDeliveryMethodData, setSelectedDeliveryMethodData] = useState<any>(undefined);
   
   const requestCodeService = new FabricRequestCodeService();
   const m3ItemsService = new M3ItemsService();
 
+  const [activeTab, setActiveTab] = useState<string>()
+
+  const onTabChange = (key) => {
+    console.log(key,'-------------------')
+    setActiveTab(key);
+    getAllFabrics(key)
+  };
+
   useEffect(() => {
-    getAllFabrics();
+    getAllFabrics('Open');
+    getAllBuyers()
+    getAllFabricTypes()
+    getAllFinish()
+    getAllHSNCodes()
+    getAllWeaves()
+    getAllContents()
   }, []);
 
-  const getAllFabrics= () => {
-    requestCodeService.getAllFabrics().then(res => {
+  const getAllFabrics= (key) => {
+    const req = new FabricCodeReq(form.getFieldValue('hsnCode'),form.getFieldValue('hsnCode'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('finishTypeId'),form.getFieldValue('contentId'),key)
+    requestCodeService.getAllFabrics(req).then(res => {
       if (res.status) {
         setReqCodeData(res.data);
       } else {
@@ -44,6 +69,55 @@ const FabricRequestCodeView = ()=>{
     }).catch(err => {
       setReqCodeData([]);
       message.error(err.message,2);
+    })
+  }
+
+
+  const getAllBuyers=()=>{
+    requestCodeService.getAllFabricBuyers().then((res)=>{
+      if(res.status){
+        setBuyerData(res.data)
+      }
+    })
+  }
+
+  const getAllFabricTypes=()=>{
+    requestCodeService.getAllFabricTypes().then((res)=>{
+      if(res.status){
+        setFabricType(res.data)
+      }
+    })
+  }
+
+  const getAllFinish=()=>{
+    requestCodeService.getAllFinish().then((res)=>{
+      if(res.status){
+        setFinishData(res.data)
+      }
+    })
+  }
+
+  const getAllHSNCodes=()=>{
+    requestCodeService.getAllHSNCodes().then((res)=>{
+      if(res.status){
+        setHsnCode(res.data)
+      }
+    })
+  }
+
+  const getAllWeaves=()=>{
+    requestCodeService.getAllWeaves().then((res)=>{
+      if(res.status){
+        setWeaveData(res.data)
+      }
+    })
+  }
+
+  const getAllContents=()=>{
+    requestCodeService.getContents().then((res)=>{
+      if(res.status){
+        setWeaveData(res.data)
+      }
     })
   }
 
@@ -346,12 +420,18 @@ const FabricRequestCodeView = ()=>{
     console.log('params', pagination, filters, sorter, extra);
   }
 
+  
+  const onReset = () => {
+    form.resetFields();
+  };
+
   const handleCancel = () => {
     setModalVisible(false);
   };
    return (
     <Card title={<span >Fabric Request Code</span>}
-    headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
+    headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+            <Form form={form} layout={"vertical"} name="control-hooks" onFinish={getAllFabrics}>
      {/* <Row gutter={40}>
       
         <Col>
@@ -365,7 +445,7 @@ const FabricRequestCodeView = ()=>{
         </Col>
           </Row> */}
           <br></br>
-          <Table
+          {/* <Table
           size='small'
           rowKey={record => record.deliveryMethodId}
           columns={columnsSkelton}
@@ -377,7 +457,153 @@ const FabricRequestCodeView = ()=>{
             }
           }}
           onChange={onChange}
-          bordered />
+          bordered /> */}
+          <Row gutter={24}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="buyerId" label="Buyer" rules={[{ required: false, message: "Buyer is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Buyer"
+                    >
+                        {buyerData.map((e) => {
+                            return (
+                            <Option key={e.buyerId} value={e.buyerId}>
+                                {e.buyerName}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="hsnCode" label="HSN Code" rules={[{ required: false, message: "HSN Code is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children"
+                    placeholder="Select HSN Code"
+                    >
+                      {hsnCode.map((e) => {
+                            return (
+                            <Option key={e.hsnCode} value={e.hsnCode}>
+                                {e.hsnCode}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="fabricType" label="Fabric Type" rules={[{ required: false, message: "Fabric Type is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children"
+                    placeholder="Select Fabric Type"
+                    >
+                      {fabricType.map((e) => {
+                            return (
+                            <Option key={e.fabric_type_id} value={e.fabric_type_id}>
+                                {e.fabricType}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="weaveId" label="Weave" rules={[{ required: false, message: "Weave is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children"
+                    placeholder="Select Weave"
+                    >
+                      {weaveData.map((e) => {
+                            return (
+                            <Option key={e.weaveId} value={e.weaveId}>
+                                {e.fabricWeaveName}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="finish_id" label="Finish" rules={[{ required: false, message: "Finish is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children"
+                    placeholder="Select Finish"
+                    >
+                      {finishData.map((e) => {
+                            return (
+                            <Option key={e.finish_id} value={e.finish_id}>
+                                {e.finishType}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="content_id" label="Content" rules={[{ required: false, message: "Content is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children"
+                    placeholder="Select Content"
+                    >
+                      {content.map((e) => {
+                            return (
+                            <Option key={e.content_id} value={e.content_id}>
+                                {e.finishType}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }} style={{ marginTop: "18px", textAlign: "right" }}>
+              <Form.Item>
+                <Button 
+                icon={<SearchOutlined />} 
+                htmlType="submit" 
+                type="primary" 
+                style={{ marginLeft: 50, marginTop: 5 }}
+                >
+                  Submit
+                </Button>
+                <Button danger icon={<UndoOutlined />} onClick={onReset} style={{ marginLeft: 30 }}>
+                  Reset
+                </Button>
+              </Form.Item>
+            </Col>
+            </Row>
+</Form>
+          <Tabs activeKey={activeTab} type="card" onChange={onTabChange} style={{ marginTop: '20px' }}>
+                  <TabPane tab="Open" key="OPEN">
+                      <Table
+                        className="custom-table-wrapper"
+                        dataSource={reqCodeData}
+                        columns={columnsSkelton}
+                        size="small"
+                        scroll={{x:'max-content'}}
+                      />
+                  </TabPane>
+                  <TabPane tab="Completed" key="COMPLETED">
+                      <Table
+                        className="custom-table-wrapper"
+                        dataSource={reqCodeData}
+                        columns={columnsSkelton}
+                        size="small"
+                        scroll={{x:'max-content'}}
+                      />
+                  </TabPane>
+                </Tabs>
         
         <Modal
             className='rm-'

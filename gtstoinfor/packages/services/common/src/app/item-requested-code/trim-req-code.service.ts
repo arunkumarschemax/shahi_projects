@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { FabricRequestCodeDto } from './dtos/fabric-request-code.dto';
-import { BuyerRefNoRequest, CommonResponseModel, M3TrimType, M3trimsDTO, MaterialFabricEnum } from '@project-management-system/shared-models';
+import { BuyerRefNoRequest, CommonResponseModel, M3TrimType, M3trimsDTO, MaterialFabricEnum, TrimCodeReq } from '@project-management-system/shared-models';
 import { TrimRequestCodeEntity } from './entities/trim-request-code.entity';
 import { TrimRequestCodeDto } from './dtos/trim-request-code.dto';
 
@@ -58,7 +58,7 @@ export class TrimReqCodeService {
      * @returns all the  Item category details .
      */
     // @LogActions({ isAsync: true })
-    async getAllTrims(): Promise<CommonResponseModel> {  
+    async getAllTrims(req?: TrimCodeReq): Promise<CommonResponseModel> {  
        try{
         let query = `SELECT m3t.trim_type AS trimType,m3t.logo,m3t.part,
         m3t.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName,
@@ -89,7 +89,17 @@ export class TrimReqCodeService {
         LEFT JOIN type ty ON ty.type_id = m3t.type_id
         LEFT JOIN uom u ON u.id = m3t.uom_id
         LEFT JOIN variety v ON v.variety_id = m3t.variety_id
-        LEFT JOIN trim tr ON tr.trim_id = m3t.trim_category_id`
+        LEFT JOIN trim tr ON tr.trim_id = m3t.trim_category_id
+        WHERE 1=1`
+        if (req?.buyerId) {
+          query = query + ` AND m3t.buyer_id=${req.buyerId}`
+        }
+        if (req?.trimType) {
+          query = query + ` AND m3t.buyer_id=${req.trimType}`
+        }
+        if (req?.status) {
+          query = query + ` AND m3t.status='${req.status}'`
+        }
         const data = await this.dataSource.query(query)
         if(data.length >0){
             return new CommonResponseModel(true,1,'Data retrieved successfully',data)

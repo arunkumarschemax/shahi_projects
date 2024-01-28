@@ -480,7 +480,7 @@ const segmentedOptions = options();
                 <Tooltip title="Image Download">
                     <Button
                         icon={<DownloadOutlined />}
-                        onClick={() =>  download(record.filePath)}
+                        onClick={() =>  download(record)}
                         disabled={!record.filePath} // Disable the button if filePath is not present
                     >
                         {value}
@@ -534,31 +534,81 @@ const segmentedOptions = options();
  
   }
 
-  const download = (filePath) => {
-    console.log(filePath);
-    // : FilenameDto[]
+//   const download = (record) => {
+//     // console.log(record);
+//     const indent = record.indentCode.replace(/\//g,"_")
 
-    if (filePath) {
-        filePath = filePath.split(",");
-        for (const res of filePath) {
-            if (res) {
-                console.log(res);
-                setTimeout(() => {
-                    const response = {
-                        file: config.file_upload_path + '/' +`${res}` ,
-                    };
+//     if (record) {
+//       const   filePath = record.filePath.split(",");
+//         for (const res of filePath) {
+//             if (res) {
+//                 console.log(res);
+//                 setTimeout(() => {
+//                     const response = {
+//                         file: config.file_upload_path + '/' + 'Fabric-SD-'+`${indent}`+'/'+`${res}` ,
+//                     };
 
-                    window.open(response.file);
+//                     window.open(response.file);
 
-                }, 100);
-            }
-        }
-    }
-    else {
-        AlertMessages.getErrorMessage("Please upload file. ");
+//                 }, 100);
+//             }
+//         }
+//     }
+//     else {
+//         AlertMessages.getErrorMessage("Please upload file. ");
 
-    }
+//     }
+// }
+
+const download = (record) => {
+  // console.log(record);
+  const indent = record.indentCode.replace(/\//g,"_")
+
+
+  if (record) {
+    const   filePath = record.filePath.split(",");
+      for (const res of filePath) {
+          if (res) {
+              console.log(res);
+              setTimeout(() => {
+               
+               const file = config.file_upload_path + '/' + 'Fabric-SD-'+`${indent}`+'/'+`${res}` 
+               
+                  const url = file;
+
+                  const xhr = new XMLHttpRequest();
+                  xhr.responseType = 'blob';
+
+                  xhr.onload = function () {
+                      const blob = xhr.response;
+
+                      const a = document.createElement('a');
+                      const url = window.URL.createObjectURL(blob);
+                      a.href = url;
+                      a.download = record.fileName
+                      a.style.display = 'none';
+
+                      document.body.appendChild(a);
+                      a.click();
+
+                      window.URL.revokeObjectURL(url);
+                  };
+
+                  xhr.open('GET', url);
+                  xhr.send();
+
+             
+
+              }, 100);
+          }
+      }
+  }
+  else {
+      AlertMessages.getErrorMessage("Please upload file. ");
+
+  }
 }
+
 
 
   const handleTextClick = (remarks) => {
@@ -721,30 +771,73 @@ const onRemarksModalOk = () => {
     return [...columnsSkelton];   
   }
 
-  const downloads = (filePath) => {
-    console.log(filePath);
-    // : FilenameDto[]
+//   const downloads = (filePath) => {
+//     console.log(filePath);
+//     // : FilenameDto[]
+//     const file = filePath.replace('upload_files/', '');
 
-    if (filePath) {
-        filePath = filePath.split(",");
-        for (const res of filePath) {
-            if (res) {
-                console.log(res);
-                setTimeout(() => {
-                    const response = {
-                        file: config.file_upload_path + '/' +`${res}` ,
-                    };
+//     if (filePath) {
+//         filePath = filePath.split(",");
+//         for (const res of filePath) {
+//             if (res) {
+//                 console.log(res);
+//                 setTimeout(() => {
+//                     const response = {
+//                         file: config.file_upload_path + '/' +`${file}` ,
+//                     };
 
-                    window.open(response.file);
+//                     window.open(response.file);
 
-                }, 100);
-            }
-        }
-    }
-    else {
-        AlertMessages.getErrorMessage("Please upload file. ");
+//                 }, 100);
+//             }
+//         }
+//     }
+//     else {
+//         AlertMessages.getErrorMessage("Please upload file. ");
 
-    }
+//     }
+// }
+
+const downloads = (filePath) => {
+  console.log(filePath);
+
+  if (filePath) {
+      filePath = filePath.split(",");
+      for (const res of filePath) {
+          if (res) {
+              // console.log(res);
+              const file = res.replace('upload_files/', '');
+              const DownloadedFileName = file.replace(/^[^/]*\//g, "")
+
+              setTimeout(() => {
+                  const url = config.file_upload_path + '/' + file;
+
+                  const xhr = new XMLHttpRequest();
+                  xhr.responseType = 'blob';
+
+                  xhr.onload = function () {
+                      const blob = xhr.response;
+
+                      const a = document.createElement('a');
+                      const url = window.URL.createObjectURL(blob);
+                      a.href = url;
+                      a.download = DownloadedFileName
+                      a.style.display = 'none';
+
+                      document.body.appendChild(a);
+                      a.click();
+
+                      window.URL.revokeObjectURL(url);
+                  };
+
+                  xhr.open('GET', url);
+                  xhr.send();
+              }, 100);
+          }
+      }
+  } else {
+      AlertMessages.getErrorMessage("Please upload a file.");
+  }
 }
   const genereatePoForTrim = (indentId: number) => {
     let indentDetails = tableData.find((e)=>e.indentId === indentId);
