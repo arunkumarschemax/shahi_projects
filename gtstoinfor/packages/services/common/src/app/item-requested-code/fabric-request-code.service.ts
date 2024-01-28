@@ -4,7 +4,7 @@ import { DataSource, Repository } from 'typeorm';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { FabricRequestCodeEntity } from './entities/fabric-request-code-entity';
 import { FabricRequestCodeDto } from './dtos/fabric-request-code.dto';
-import { CommonResponseModel, MaterialFabricEnum } from '@project-management-system/shared-models';
+import { CommonResponseModel, FabricRequestResponseModel, M3FabricsDTO, MaterialFabricEnum } from '@project-management-system/shared-models';
 
 @Injectable()
 export class FabricReqCodeService {
@@ -53,7 +53,7 @@ export class FabricReqCodeService {
      * @returns all the  Item category details .
      */
     // @LogActions({ isAsync: true })
-    async getAllFabrics(): Promise<CommonResponseModel> {  
+    async getAllFabrics(): Promise<FabricRequestResponseModel> {  
        try{
         let query =`SELECT frc.fabric_type_id AS fabricTypeId,fabric_type_name AS fabricType,
         frc.weave_id AS weaveId,fw.fabric_weave_name AS fabricWeave,
@@ -74,10 +74,18 @@ export class FabricReqCodeService {
         LEFT JOIN content c ON c.content_id = frc.content_id`
 
         const data = await this.dataSource.query(query)
-        if(data.length >0){
-            return new CommonResponseModel(true,1,'Data retrieved successfully',data)
+        let response:M3FabricsDTO[] = [];
+        for(const res of data){
+          console.log("**********");
+          console.log(res);
+          console.log("************")
+          let rec = new M3FabricsDTO(0,res.buyer_id,"",res.fabricTypeId,res.weaveId,res.weight,res.weightUnitId,res.epi,res.ppi,res.yarnType,res.width,res.widthUnit,res.finish_id,res.shrinkage,"",res.buyerName,"",res.hsnCode,[],[{"content":res.content_id,"percentage":"100"}],true,"","",0,"",res.fabricType);
+          response.push(rec);
+        }
+        if(response.length >0){
+            return new FabricRequestResponseModel(true,1,'Data retrieved successfully',response)
         }else{
-            return new CommonResponseModel(false,0,'No data found',[])
+            return new FabricRequestResponseModel(false,0,'No data found',[])
 
         }
        }catch(err){

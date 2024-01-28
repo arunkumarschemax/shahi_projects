@@ -137,13 +137,13 @@ const FabricRequestCodeView = ()=>{
     },
     {
       title: 'Buyer',
-      dataIndex: 'buyerName',
-      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
+      dataIndex: 'buyerCode',
+      sorter: (a, b) => a.buyerCode.localeCompare(b.buyerCode),
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('buyerName'),
+      ...getColumnSearchProps('buyerCode'),
       render: (text, record) => (
         <span>
-            {record.buyerName ? record.buyerName : '-'}
+            {record.buyerCode ? record.buyerCode : '-'}
         </span>
     ),
     },
@@ -179,7 +179,7 @@ const FabricRequestCodeView = ()=>{
       ...getColumnSearchProps('fabricType'),
       render: (text, record) => (
         <span>
-            {record.fabricType ? record.fabricType : '-'}
+            {record.fabricType != null ? record.fabricType : '-'}
         </span>
     ),
     },
