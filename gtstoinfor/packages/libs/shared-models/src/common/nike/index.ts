@@ -33,4 +33,6 @@ export * from './co-line-api.req';
 export * from './destinations';
 export * from './colors';
 export * from './sizes';
-export * from './co-line-item-no.dto'
+export * from './co-line-item-no.dto';
+export * from './bom-size-modal.req';
+export * from './bom-report-modal.req';

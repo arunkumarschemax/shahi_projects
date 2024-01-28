@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
 import { DataSource, Repository } from "typeorm";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { BomReportModel, BomReportSizeModel, CommonResponseModel, MarketingReportModel, MarketingReportSizeModel } from "@project-management-system/shared-models";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
 import { StyleComboEntity } from "./entittes/style-combo-entity";
@@ -11,6 +11,7 @@ import { BomRepo } from "./dto/bom-repo";
 import { StyleComboRepo } from "./dto/style-combo-repo";
 import { BomDto } from "./dto/bom-dto";
 import { StyleComboDto } from "./dto/style-combo-dto";
+import { DpomRepository } from "../dpom/repositories/dpom.repository";
 
 @Injectable()
 export class BomService{
@@ -20,6 +21,7 @@ export class BomService{
     private bomRepo: BomRepo,
     private styleComboRepo:StyleComboRepo,
     private dataSource: DataSource,
+    private dpomRepo:  DpomRepository,
 
     ){ }
     async createBom(req:StyleDto):Promise<CommonResponseModel>{
@@ -128,4 +130,87 @@ export class BomService{
             throw err
         }
     }
+   
+    // async getPpmPoLineData(): Promise<CommonResponseModel> {
+    //     const details = await this.dpomRepo.getPoLineData();
+    //     if (details.length < 0) {
+    //         return new CommonResponseModel(false, 0, 'data not found');
+    //     }
+    
+    //     // Limit the data to the first 100 records for testing
+    //     const limitedDetails = details.slice(0, 100);
+    
+    //     const sizeDateMap = new Map<string, BomReportModel>();
+    
+    //     for (const rec of limitedDetails) {
+    //         let sizeData = sizeDateMap.get(rec.po_and_line);
+    
+    //         if (!sizeData) {
+    //             sizeData = new BomReportModel(
+    //                 rec.po_number,rec.po_and_line,rec.DPOMLineItemStatus, rec.style_number,rec.destination_country_code,rec.destination_country,rec.planning_season_code,rec.planning_season_year,
+    //                 rec.geo_code,
+    //                 rec.total_item_qty, // Assuming this property exists in your data
+    //                 []
+    //             );
+    
+    //             sizeDateMap.set(rec.po_and_line, sizeData);
+    //         }
+    
+    //         if (!sizeData.sizeWiseData) {
+    //             sizeData.sizeWiseData = [];
+    //         }
+    
+    //         sizeData.sizeWiseData.push(new BomReportSizeModel(rec.size_description, rec.size_qty));
+    //     }
+    
+    //     const dataModelArray: BomReportModel[] = [];
+    //     sizeDateMap.forEach(sizeData => dataModelArray.push(sizeData));
+    
+    //     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    // }
+    //created  for sample purpose for 100 records
+
+    async getPpmPoLineData(): Promise<CommonResponseModel> {
+        const details = await this.dpomRepo.getPoLineData();
+        if (details.length < 0) {
+            return new CommonResponseModel(false, 0, 'data not found');
+        }
+    
+        const sizeDateMap = new Map<string, BomReportModel>();
+    
+        for (const rec of details) {
+            let sizeData = sizeDateMap.get(rec.po_and_line);
+    
+            if (!sizeData) {
+                sizeData = new BomReportModel(
+                    rec.po_number,
+                    rec.po_and_line,
+                    rec.DPOMLineItemStatus, // Assuming this property exists in your data
+                    rec.style_number,
+                    rec.destination_country_code,
+                    rec.destination_country,
+                    rec.planning_season_code,
+                    rec.planning_season_year,
+                    rec.geo_code,
+                    rec.total_item_qty, // Assuming this property exists in your data
+                    []
+                );
+    
+                sizeDateMap.set(rec.po_and_line, sizeData);
+            }
+    
+            if (!sizeData.sizeWiseData) {
+                sizeData.sizeWiseData = [];
+            }
+    
+            sizeData.sizeWiseData.push(new BomReportSizeModel(rec.size_description, rec.size_qty));
+        }
+    
+        const dataModelArray: BomReportModel[] = [];
+        sizeDateMap.forEach(sizeData => dataModelArray.push(sizeData));
+    
+        return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+    }
+    
+    
 }

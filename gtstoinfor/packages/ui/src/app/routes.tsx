@@ -48,6 +48,7 @@ import ButtonPrint, { Button1Print } from "./trims/trim-prints/button-print"
 import Button2Print from "./trims/trim-prints/button2-print"
 import Button3Print from "./trims/trim-prints/button3-print"
 import TrimsGrid from "./trims/trims-grid"
+import BomCreation from "./trims/bom-creation"
 
 
 export const AppRoutes = () => {
@@ -170,6 +171,7 @@ export const AppRoutes = () => {
                 <Route path='/bom'>
                     <Route path='bom-pdf-upload' element={<BomPdfUpload />} />
                     <Route path='bom-view' element={<BomView />} />
+                    <Route path='bom-creation' key='/bom-creation' element={<BomCreation />} />
                 </Route>
 
                 <Route path='/reports'>
@@ -189,6 +191,7 @@ export const AppRoutes = () => {
                     <Route path='po-detailed-view' element={<PoDetailedview data={undefined} />} />
 
                 </Route>
+             
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             <Route path="/print">

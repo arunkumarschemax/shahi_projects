@@ -10,15 +10,17 @@ import { StyleRepo } from "./dto/style-repo";
 import { BomRepo } from "./dto/bom-repo";
 import { StyleComboRepo } from "./dto/style-combo-repo";
 import { ItemEntity } from "./entittes/item-entity";
+import { DpomRepository } from "../dpom/repositories/dpom.repository";
+import { DpomEntity } from "../dpom/entites/dpom.entity";
 
 @Module({
     imports:[
         TypeOrmModule.forFeature([
             StyleEntity, 
             BomEntity,
-            StyleComboEntity,ItemEntity
+            StyleComboEntity,ItemEntity,DpomEntity
         ])],
     controllers:[BomController],
-    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler]
+    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository]
 })
 export class bomModule{ }

@@ -39,4 +39,13 @@ export class BomController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
+    
+    @Post('/getPpmPoLineData')
+    async getPpmPoLineData():Promise<CommonResponseModel>{
+        try{
+            return this.bomService.getPpmPoLineData()
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
 }
