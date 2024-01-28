@@ -44,10 +44,12 @@ import AddressUpload from "./masters/address/address-excel-upload"
 import BomPdfUpload from "./bom-pdf-extraction/pdf-upload"
 import BackingPaper from "./trims/trim-prints/backing-paper"
 import BomView from "./bom-pdf-extraction/bom-view"
+import BomPdfInfoDetailView from "./bom-pdf-extraction/deatiled-view"
 import ButtonPrint, { Button1Print } from "./trims/trim-prints/button-print"
 import Button2Print from "./trims/trim-prints/button2-print"
 import Button3Print from "./trims/trim-prints/button3-print"
 import TrimsGrid from "./trims/trims-grid"
+import TrimColumns from "./trims/trim-columns"
 import BomCreation from "./trims/bom-creation"
 
 
@@ -165,12 +167,15 @@ export const AppRoutes = () => {
                     <Route path='backing-paper' element={<BackingPaper/>} />
                     <Route path='trim-grid' element={<TrimsGrid/>} />
 
+                    <Route path='trim-columns' element={<TrimColumns/>} />
+
 
                 </Route>
                 
                 <Route path='/bom'>
                     <Route path='bom-pdf-upload' element={<BomPdfUpload />} />
                     <Route path='bom-view' element={<BomView />} />
+                    <Route path='bom-pdf-info-detail-view' element={<BomPdfInfoDetailView />} />
                     <Route path='bom-creation' key='/bom-creation' element={<BomCreation />} />
                 </Route>
 

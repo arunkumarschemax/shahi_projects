@@ -89,6 +89,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                             <td className='ta-b'>{i.totalQuantity}</td> 
 
                         </tr>
+    {/* ------------------------------------------------------------------------ */}
                         {/* <tr className='ta-b'> */}
                             {/* <th></th>
                             <th></th> */}
@@ -114,26 +115,39 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                         {/* </tr> */}
                         {
                             i.BompoItemVariantDetails.map((j) => {
-                                return <tr>
-                                    <td></td>
-                                    <td></td>
+                                return <>
+                       <tr className='ta-b'>
+                            <th></th>
+                            <th className='ta-b'>#</th>
+                            <th className='ta-b'>IS</th>
+                            <th className='ta-b'>N</th>
+                            <th className='ta-b'>VENDOR/DESCRIPTION</th>
+                            <th className='ta-b'>USE</th>
+                            <th className='ta-b'>QTY</th>
+                            <th className='ta-b'>UOM</th> 
+                            <th className='ta-b'>COMBO 1</th>
+                            <th className='ta-b'>COMBO 2</th>
+                            <th className='ta-b'>COMBO 3</th> 
+                            <th className='ta-b'>COMBO 4</th> 
 
-                                    {/* <td className='ta-b'>{j.uom}</td> */}
-                                    {/* <td className='ta-b'>{j.comptMaterial}</td> */}
-                                    {/* <td className='ta-b'>{j.ratio}</td> */}
+
+                         </tr> <tr className='ta-b'>
+                            <td></td>
+                            <td className='ta-b'>{i.hasTag}</td>
+                            <td className='ta-b'>{i.is}</td>
+                            <td className='ta-b'>{i.n}</td>
+                            <td className='ta-b'>{i.vendorDescription}</td>
+                            <td className='ta-b'>{i.use}</td>
+                            <td className='ta-b'>{i.qty}</td>
+                            <td className='ta-b'>{i.uom}</td> 
+                            <td className='ta-b'>{i.combo1}</td>
+                            <td className='ta-b'>{i.combo2}</td>
+                            <td className='ta-b'>{i.combo3}</td> 
+                            <td className='ta-b'>{i.combo4}</td> 
 
 
-                                    <td className='ta-b'>{j.size}</td>
-                                    <td className='ta-b'>{j.upc}</td>
-                                    <td className='ta-b'>{j.label}</td>
-                                    <td className='ta-b'>{j.quantity}</td>
-                                    <td className='ta-b'>{j.unitPrice}</td>
-                                    <td className='ta-b'>{j.exFactory}</td>
-                                    <td className='ta-b'>{j.exPort}</td>
-                                    <td className='ta-b'>{j.deliveryDate}</td>
-                                    <td className='ta-b'>{j.retialPrice}</td>
-                                    {/* <td className='ta-b'>{j.amount}</td> */}
-                                </tr>
+                        </tr>
+                        </>
                             })
                         }
                     </>

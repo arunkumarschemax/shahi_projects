@@ -53,6 +53,12 @@ export class StyleEntity {
         nullable:false
     })
     status:string
+    
+    @Column("text", {
+        nullable: false,
+        name: "file_data",
+    })
+    fileData: string;
 
     @CreateDateColumn({
         name: 'created_at'

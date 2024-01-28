@@ -84,16 +84,22 @@ export function BomView() {
             
             render: (value, record) => (
                 <>
-                    <Button >More Info</Button>
+                    <Button onClick={() => setMoreData(record)} type="primary">More Info</Button>
                 </>
             ),
         }
 
     ]
 
+
+const setMoreData = (record) => {
+    navigate('/bom/bom-pdf-info-detail-view', {
+     state: { data: record },
+   });
+ };
     return (
         <>
-            <Card title="PDF Info" headStyle={{ fontWeight: 'bold' }}>
+            <Card title="Style Info" headStyle={{ fontWeight: 'bold' }}>
                 <Table
                     columns={columns}
                     dataSource={pdfData}

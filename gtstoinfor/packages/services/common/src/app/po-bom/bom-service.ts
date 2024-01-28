@@ -34,6 +34,7 @@ export class BomService{
             entity.msc=req.msc
             entity.factoryLo=req.factoryLo
             entity.status=req.status
+            entity.fileData=req.fileData
 
            let  bomEntityArray = []
             for(const bom of req.bomdto){
@@ -87,7 +88,7 @@ export class BomService{
                             }
                             bomdetailsArray.push(new BomDto(bom.itemName,bom.description,bom.imCode,bom.itemType,bom.use,styleCombosArray,bom.bomId,bom.styleId))
                      }
-                    stylesArray.push(new StyleDto(styleDetails.style,styleDetails.styleName,styleDetails.season,styleDetails.expNo,styleDetails.msc,styleDetails.factoryLo,styleDetails.status,bomdetailsArray))
+                    stylesArray.push(new StyleDto(styleDetails.style,styleDetails.styleName,styleDetails.season,styleDetails.expNo,styleDetails.msc,styleDetails.factoryLo,styleDetails.status,styleDetails.fileData,bomdetailsArray))
                 }
             }
             console.log(stylesArray,'stylesarray')
@@ -114,7 +115,7 @@ export class BomService{
             if(result.length >0){
                 for(const rec of result){
                     if(!allStyleData.has(rec.styeleId)){
-                        allStyleData.set(rec.styeleId,new StyleDto(rec.style,rec.styleName,rec.season,rec.expNo,rec.msc,rec.factoryLo,rec.status,[]))
+                        allStyleData.set(rec.styeleId,new StyleDto(rec.style,rec.styleName,rec.season,rec.expNo,rec.msc,rec.factoryLo,rec.status,rec.fileData,[]))
                     }
                     allStyleData.get(rec.styeleId).bomdto.push(new BomDto(rec.itemName,rec.description,rec.imCode,rec.itemType,rec.use,[],rec.bomId,rec.bstyleId
                         // [...combo,new StyleComboDto(rec.combination,rec.primaryColor,rec.secondaryColor,rec.logoColor)]
