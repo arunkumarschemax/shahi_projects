@@ -1,17 +1,18 @@
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { BuyersService, CategoryService, ColourService, ContentService, FabricRequestCodeService, FabricTypeService, FabricWeaveService, FinishService, GRNService, HoleService, M3ItemsService, M3TrimsService, QualitysService, StockService, StructureService, ThicknessService, TrimParamsMappingService, TrimService, TypeService, UomService, VarietyService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag } from "antd";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag, Tabs } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
-import { BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, PartEnum, PartEnumDisplay, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, MaterialFabricEnum, PartEnum, PartEnumDisplay, TrimCodeReq, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 const { TextArea } = Input;
 const { Option } = Select;
 import { Link } from 'react-router-dom';
 import { useIAMClientState } from "../common/iam-client-react";
 import AlertMessages from "../common/common-functions/alert-messages";
+import TabPane from "antd/es/tabs/TabPane";
 
 export const TrimReqCodeView = () => {
   const stockService = new StockService();
@@ -44,8 +45,12 @@ export const TrimReqCodeView = () => {
   const [isBuyer, setIsBuyer] = useState(false);
   const [filterData, setFilterData] = useState<any[]>([])
   const [selectedTrimCategory, setSelectedTrimCategory] = useState(null);
-  
+  const [activeTab, setActiveTab] = useState<string>()
 
+  const onTabChange = (key) => {
+    setActiveTab(key);
+    onFinish(key)
+  };
 
   useEffect(() => {
     // const userrefNo = IAMClientAuthContext.user?.externalRefNo
@@ -54,8 +59,9 @@ export const TrimReqCodeView = () => {
     // }
     getTrims();
     getBuyers();
-    onFinish()
+    onFinish('Open')
   }, [mapData]);
+
 
   const getStructures = (req?: M3trimsDTO) => {
     if (form.getFieldValue('categoryId') !== undefined) {
@@ -238,84 +244,10 @@ export const TrimReqCodeView = () => {
   getMappedTrims(value);
   }
 
-  const onFinish = (req?: M3trimsDTO) => {
-    if (mapData[0]?.structure === true) {
-      getStructures(req);
-    }
-    if (mapData[0]?.category === true) {
-      getCategories(req);
-    }
-    if (mapData[0]?.content === true) {
-      getContents(req);
-    }
-    if (mapData[0]?.type === true) {
-      getTypes(req);
-    }
-    if (mapData[0]?.finish === true) {
-      getFinishes(req);
-    }
-    if (mapData[0]?.hole === true) {
-      getHoles(req);
-    }
-    if (mapData[0]?.quality === true) {
-      getQuality(req);
-    }
-    if (mapData[0]?.thickness === true) {
-      getThicks(req);
-    }
-    if (mapData[0]?.variety === true) {
-      getVarieties(req);
-    }
-    if (mapData[0]?.uom === true) {
-      getUom(req);
-    }
-    if (mapData[0]?.color === true) {
-      getColors(req);
-    }
-    if (form.getFieldValue('buyerId') !== undefined) {
-      req.buyerId = form.getFieldValue('buyerId')
-    }
-    if (form.getFieldValue('categoryId') !== undefined) {
-      req.categoryId = form.getFieldValue('categoryId')
-    }
-    if (form.getFieldValue('colorId') !== undefined) {
-      req.colorId = form.getFieldValue('colorId')
-    }
-    if (form.getFieldValue('contentId') !== undefined) {
-      req.contentId = form.getFieldValue('contentId')
-    }
-    if (form.getFieldValue('finishId') !== undefined) {
-      req.finishId = form.getFieldValue('finishId')
-    }
-    if (form.getFieldValue('holeId') !== undefined) {
-      req.holeId = form.getFieldValue('holeId')
-    }
-    if (form.getFieldValue('logo') !== undefined) {
-      req.logo = form.getFieldValue('logo')
-    }
-    if (form.getFieldValue('part') !== undefined) {
-      req.part = form.getFieldValue('part')
-    }
-    if (form.getFieldValue('qualityId') !== undefined) {
-      req.qualityId = form.getFieldValue('qualityId')
-    }
-    if (form.getFieldValue('structureId') !== undefined) {
-      req.structureId = form.getFieldValue('structureId')
-    }
-    if (form.getFieldValue('thicknessId') !== undefined) {
-      req.thicknessId = form.getFieldValue('thicknessId')
-    }
-    if (form.getFieldValue('typeId') !== undefined) {
-      req.typeId = form.getFieldValue('typeId')
-    }
-    if (form.getFieldValue('uomId') !== undefined) {
-      req.uomId = form.getFieldValue('uomId')
-    }
-    if (form.getFieldValue('varietyId') !== undefined) {
-      req.varietyId = form.getFieldValue('varietyId')
-    }
-    // req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
-    trimReqCodeService.getAllTrims().then((res) => {
+  const onFinish = (key) => {
+    console.log(activeTab,'------000000000000000')
+    const req = new TrimCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('trimType'),key)  
+    trimReqCodeService.getAllTrims(req).then((res) => {
       if (res.status) {
         setData(res.data);
         message.success(res.internalMessage,2);
@@ -648,6 +580,10 @@ export const TrimReqCodeView = () => {
 
    const onBuyerChange = (value) =>{
     setMapData([])
+   }
+
+   const handleChange =(value?,)=>{
+
    }
 
  
@@ -1000,7 +936,12 @@ export const TrimReqCodeView = () => {
         <Row gutter={24}> */}
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 6 }} style={{ marginTop: "18px", textAlign: "right" }}>
               <Form.Item>
-                <Button icon={<SearchOutlined />} htmlType="submit" type="primary" style={{ marginLeft: 50, marginTop: 5 }}>
+                <Button 
+                icon={<SearchOutlined />} 
+                htmlType="submit" 
+                type="primary" 
+                style={{ marginLeft: 50, marginTop: 5 }}
+                >
                   Submit
                 </Button>
                 <Button danger icon={<UndoOutlined />} onClick={onReset} style={{ marginLeft: 30 }}>
@@ -1010,14 +951,32 @@ export const TrimReqCodeView = () => {
             </Col>
         </Row>
       </Form>
-      {data.length > 0 && (
+      <Tabs activeKey={activeTab} type="card" onChange={onTabChange} style={{ marginTop: '20px' }}>
+        <TabPane tab="Open" key="OPEN">
+            <Table
+              className="custom-table-wrapper"
+              dataSource={data}
+              columns={filteredColumns}
+              size="small"
+            />
+        </TabPane>
+        <TabPane tab="Completed" key="COMPLETED">
+            <Table
+              className="custom-table-wrapper"
+              dataSource={data}
+              columns={filteredColumns}
+              size="small"
+            />
+        </TabPane>
+      </Tabs>
+      {/* {data.length > 0 && (
         <Table
           className="custom-table-wrapper"
           dataSource={data.length > 0 ? data : []}
           columns={filteredColumns}
           size="small"
         />
-      )}
+      )} */}
     </Card>
   );
 };
