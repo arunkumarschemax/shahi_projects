@@ -55,7 +55,7 @@ export class FabricReqCodeService {
     // @LogActions({ isAsync: true })
     async getAllFabrics(req?:FabricCodeReq): Promise<FabricRequestResponseModel> {  
        try{
-        let query =`SELECT frc.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricType,
+        let query =`SELECT frc.fabric_request_code_id AS fabricRequestCodeId,frc.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricType,
         frc.weave_id AS weaveId,fw.fabric_weave_name AS fabricWeave,
         frc.weight,frc.weight_unit AS weightUnitId,uwt.uom AS weightUom,
         frc.epi_construction as epi,frc.ppi_construction as ppi,frc.yarn_type as yarnType,
@@ -100,7 +100,7 @@ export class FabricReqCodeService {
           console.log("**********");
           console.log(res);
           console.log("************")
-          let rec = new M3FabricsDTO(0,res.buyer_id,"",res.fabricTypeId,res.weaveId,res.weight,res.weightUnitId,res.epi,res.ppi,res.yarnType,res.width,res.widthUnit,res.finish_id,res.shrinkage,"",res.buyerName,"",res.hsnCode,[],[{"content":res.content_id,"percentage":"100"}],true,"","",0,"",res.fabricType);
+          let rec = new M3FabricsDTO(0,res.buyer_id,"",res.fabricTypeId,res.weaveId,res.weight,res.weightUnitId,res.epi,res.ppi,res.yarnType,res.width,res.widthUnit,res.finish_id,res.shrinkage,"",res.buyerName,"",res.hsnCode,[],[{"content":res.content_id,"percentage":"100"}],true,"","",0,"",res.fabricType,res.status,res.fabricWeave,res.weightUom,res.widthUom,res.finishType,res.content);
           response.push(rec);
         }
         if(response.length >0){
@@ -210,6 +210,37 @@ export class FabricReqCodeService {
         const data = await this.dataSource.query(query)
         if(data.length > 0){
           return new CommonResponseModel(true,1,'Data retrieved successfully',data)
+      }else{
+          return new CommonResponseModel(false,0,'No data found',[])
+      }
+      }catch(err){
+        throw(err)
+      }
+    }
+
+    async updateFabStatus(req:number):Promise<CommonResponseModel>{
+      try{
+        let query = `update fabric_request_code set status='completed' where fabric_request_code_id = ${req}`;
+        const data = await this.dataSource.query(query)
+        if(data.affectedRows > 0){
+          return new CommonResponseModel(true,1,'Status Updated successfully',data)
+      }else{
+          return new CommonResponseModel(false,0,'No data found',[])
+      }
+      }catch(err){
+        throw(err)
+      }
+    }
+
+    async updateTrimStatus(req:number):Promise<CommonResponseModel>{
+      try{
+        console.log("req**********");
+        console.log(req);
+        let query = `update trim_request_code set status='completed' where trim_request_code_id = ${req}`;
+        const data = await this.dataSource.query(query)
+        console.log(data);
+        if(data.affectedRows > 0){
+          return new CommonResponseModel(true,1,'Status Updated successfully',data)
       }else{
           return new CommonResponseModel(false,0,'No data found',[])
       }

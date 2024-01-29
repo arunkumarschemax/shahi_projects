@@ -75,8 +75,22 @@ export class TrimReqCodeService {
         m3t.variety_id AS varietyId,v.variety,
         m3t.trim_category_id AS trimCategoryId,tr.trim_category AS trimCategory,
         m3t.m3_code AS m3Code,
-        m3t.hsn_code AS hsnCode,m3t.status
+        m3t.hsn_code AS hsnCode,m3t.status,
+        tpm.structure AS structureStatus,
+        tpm.category AS categoryStatus,
+        tpm.content AS contentStatus,
+        tpm.type AS typeStatus,
+        tpm.finish AS finishStatus,
+        tpm.hole AS holeStatus,
+        tpm.quality AS qualityStatus,
+        tpm.thickness AS thicknessStatus,
+        tpm.variety AS varietyStatus,
+        tpm.uom AS uomStatus,
+        tpm.color AS colorStatus,
+        tpm.logo AS logoStatus,
+        tpm.part AS partStatus, m3t.trim_request_code_id AS trimRequestCodeId
         FROM trim_request_code m3t
+        LEFT JOIN trim_params_mapping tpm ON tpm.trim_id = m3t.trim_category_id
         LEFT JOIN buyers b ON b.buyer_id = m3t.buyer_id
         LEFT JOIN category cg ON cg.category_id = m3t.category_id
         LEFT JOIN colour c ON c.colour_id = m3t.color_id

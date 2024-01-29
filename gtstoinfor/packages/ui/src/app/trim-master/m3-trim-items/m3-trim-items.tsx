@@ -1,4 +1,4 @@
-import {BuyersService,CategoryService,ColourService,ContentService,FabricStructuresService,FinishService,HoleService,M3ItemsService,M3TrimsService,QualitysService,StructureService,ThicknessService,TrimParamsMappingService,TrimService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
+import {BuyersService,CategoryService,ColourService,ContentService,FabricRequestCodeService,FabricStructuresService,FinishService,HoleService,M3ItemsService,M3TrimsService,QualitysService,StructureService,ThicknessService,TrimParamsMappingService,TrimService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Select, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import AlertMessages from "../../common/common-functions/alert-messages";
@@ -29,7 +29,7 @@ export function M3TrimItemsForm({props}) {
   const paramsService = new TrimParamsMappingService()
   const service = new M3ItemsService()
   const m3TrimService = new M3TrimsService()
-
+  const trimReqCodeService = new FabricRequestCodeService()
   const [structureData, setStructureData] = useState<any[]>([]);
   const [categoryData, setCategoryData] = useState<any[]>([]);
   const [contentData, setContentData] = useState<any[]>([]);
@@ -208,9 +208,19 @@ export function M3TrimItemsForm({props}) {
     console.log(req,'---------------------')
     m3TrimService.createM3Trims(req).then((res) => {
       if (res.status) {
-        AlertMessages.getSuccessMessage(res.internalMessage);
-        navigate('/trim-master/m3-trim-items/m3-trim-items-view')
-        onReset()
+        console.log(props);
+        if(props != undefined){
+          trimReqCodeService.updateTrimStatus({id:props.trimRequestCodeId}).then((res) => {
+            if(res.status){
+              AlertMessages.getSuccessMessage(res.internalMessage);
+              navigate('/trim-master/m3-trim-items/m3-trim-items-view')
+              onReset()
+            }
+            else {
+              AlertMessages.getErrorMessage(res.internalMessage);
+            }
+          })
+        }
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
       }
@@ -349,6 +359,46 @@ export function M3TrimItemsForm({props}) {
       form.setFieldsValue({trimType:props.trimType})
       form.setFieldsValue({trimCategoryId:props.trimCategoryId})
       form.setFieldsValue({hsnCode:props.hsnCode})
+      if (props.structureStatus === 1) {
+        form.setFieldsValue({structureId:props.structureId})
+      }
+      if (props.categoryStatus === 1) {
+        form.setFieldsValue({categoryId:props.categoryId})
+      }
+      if (props.contentStatus === 1) {
+        form.setFieldsValue({contentId:props.contentId})
+      }
+      if (props.typeStatus === 1) {
+        form.setFieldsValue({typeId:props.typeId})
+      }
+      if (props.finishStatus === 1) {
+        form.setFieldsValue({finishId:props.finishId})
+      }
+      if (props.holeStatus === 1) {
+        form.setFieldsValue({holeId:props.holeId})
+      }
+      if (props.qualityStatus === 1) {
+        form.setFieldsValue({qualityId:props.qualityId})
+      }
+      if (props.thicknessStatus === 1) {
+        form.setFieldsValue({thicknessId:props.thicknessId})
+      }
+      if (props.varietyStatus === 1) {
+        form.setFieldsValue({varietyId:props.varietyId})
+      }
+      if (props.uomStatus === 1) {
+        form.setFieldsValue({uomId:props.uomId})
+      }
+      if (props.colorStatus === 1) {
+        form.setFieldsValue({colorId:props.colorId})
+      }
+      if (props.logoStatus === 1) {
+        form.setFieldsValue({logo:props.logo})
+      }
+      if (props.partStatus === 1) {
+        form.setFieldsValue({part:props.part})
+      }
+      generateItemCode()
     }
   }, [props]);
 

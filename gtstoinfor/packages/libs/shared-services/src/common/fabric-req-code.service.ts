@@ -1,7 +1,7 @@
 import axios from "axios";
 import { from } from "rxjs";
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { FabricTypesDto,FabricTypeResponse,AllFabricTypesResponse, CommonResponseModel, FabricRequestCodeDto, TrimRequestCodeDto, M3trimsDTO, M3TrimType, BuyerRefNoRequest, TrimCodeReq, FabricCodeReq } from "@project-management-system/shared-models";
+import { FabricTypesDto,FabricTypeResponse,AllFabricTypesResponse, CommonResponseModel, FabricRequestCodeDto, TrimRequestCodeDto, M3trimsDTO, M3TrimType, BuyerRefNoRequest, TrimCodeReq, FabricCodeReq, UpdateIdReq } from "@project-management-system/shared-models";
 
 
 export class FabricRequestCodeService extends CommonAxiosService{
@@ -99,6 +99,11 @@ export class FabricRequestCodeService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + "/getContents")
     }
 
-    
-    
+    async updateFabStatus(req:UpdateIdReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/updateFabStatus",req)
+    }
+    async updateTrimStatus(req:UpdateIdReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/updateTrimStatus",req)
+    }
+   
 }

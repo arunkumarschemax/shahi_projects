@@ -206,6 +206,8 @@ const FabricRequestCodeView = ()=>{
     }
 
 
+  const tableColumns = (key) => {
+
   const columnsSkelton: any = [
     {
       title: 'S No',
@@ -264,13 +266,13 @@ const FabricRequestCodeView = ()=>{
     },
     {
       title: 'Weave',
-      dataIndex: 'fabricWeave',
-      sorter: (a, b) => a.fabricWeave.localeCompare(b.fabricWeave),
+      dataIndex: 'weave',
+      sorter: (a, b) => a.weave.localeCompare(b.weave),
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('fabricWeave'),
+      ...getColumnSearchProps('weave'),
       render: (text, record) => (
         <span>
-            {record.fabricWeave ? record.fabricWeave : '-'}
+            {record.weave ? record.weave : '-'}
         </span>
     ),
     },
@@ -280,7 +282,7 @@ const FabricRequestCodeView = ()=>{
         render : (text,record) => {
             return (
                 <span>
-                    {record.weight ? `${record.weight}-${record.weightUom}`: '-'}
+                    {record.weightId ? `${record.weightId}-${record.weightUOM}`: '-'}
                 </span>
             )
         },
@@ -291,19 +293,19 @@ const FabricRequestCodeView = ()=>{
         children:[
           {
             title:'EPI',
-            dataIndex:'epi',
+            dataIndex:'epiConstruction',
             render: (text, record) => (
                 <span>
-                    {record.epi ? record.epi : '-'}
+                    {record.epiConstruction ? record.epiConstruction : '-'}
                 </span>
             ),
           },
           {
             title:'PPI',
-            dataIndex:'ppi',
+            dataIndex:'ppiConstruction',
             render: (text, record) => (
                 <span>
-                    {record.ppi ? record.ppi : '-'}
+                    {record.ppiConstruction ? record.ppiConstruction : '-'}
                 </span>
             ),
           }
@@ -327,7 +329,7 @@ const FabricRequestCodeView = ()=>{
         render : (text,record) => {
             return (
                 <span>
-                    {record.width ? `${record.width}-${record.widthUom}`: '-'}
+                    {record.width ? `${record.width}-${record.widthUOM}`: '-'}
                 </span>
             )
         },
@@ -371,6 +373,8 @@ const FabricRequestCodeView = ()=>{
       title: 'Status',
       dataIndex: 'status',
     },
+  ];
+  const actionColumns: any = [
     {
       title:`Action`,
       dataIndex: 'action',
@@ -392,6 +396,13 @@ const FabricRequestCodeView = ()=>{
       }
     }
   ];
+
+    if(key === "1") {
+      return [...columnsSkelton, ...actionColumns];
+    }else{
+      return [...columnsSkelton];
+    }
+}
 
   const createItem = (rowData: any) => {
     console.log(rowData)
@@ -596,7 +607,7 @@ const FabricRequestCodeView = ()=>{
                       <Table
                         className="custom-table-wrapper"
                         dataSource={reqCodeData}
-                        columns={columnsSkelton}
+                        columns={tableColumns("1")}
                         size="small"
                         scroll={{x:'max-content'}}
                       />
@@ -605,7 +616,7 @@ const FabricRequestCodeView = ()=>{
                       <Table
                         className="custom-table-wrapper"
                         dataSource={reqCodeData}
-                        columns={columnsSkelton}
+                        columns={tableColumns("2")}
                         size="small"
                         scroll={{x:'max-content'}}
                       />
