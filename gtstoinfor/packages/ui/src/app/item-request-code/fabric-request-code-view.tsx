@@ -259,13 +259,13 @@ const FabricRequestCodeView = ()=>{
     },
     {
       title: 'Weave',
-      dataIndex: 'fabricWeave',
-      sorter: (a, b) => a.fabricWeave.localeCompare(b.fabricWeave),
+      dataIndex: 'weave',
+      sorter: (a, b) => a.weave.localeCompare(b.weave),
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('fabricWeave'),
+      ...getColumnSearchProps('weave'),
       render: (text, record) => (
         <span>
-            {record.fabricWeave ? record.fabricWeave : '-'}
+            {record.weave ? record.weave : '-'}
         </span>
     ),
     },
@@ -275,7 +275,7 @@ const FabricRequestCodeView = ()=>{
         render : (text,record) => {
             return (
                 <span>
-                    {record.weight ? `${record.weight}-${record.weightUom}`: '-'}
+                    {record.weightId ? `${record.weightId}-${record.weightUOM}`: '-'}
                 </span>
             )
         },
@@ -286,19 +286,19 @@ const FabricRequestCodeView = ()=>{
         children:[
           {
             title:'EPI',
-            dataIndex:'epi',
+            dataIndex:'epiConstruction',
             render: (text, record) => (
                 <span>
-                    {record.epi ? record.epi : '-'}
+                    {record.epiConstruction ? record.epiConstruction : '-'}
                 </span>
             ),
           },
           {
             title:'PPI',
-            dataIndex:'ppi',
+            dataIndex:'ppiConstruction',
             render: (text, record) => (
                 <span>
-                    {record.ppi ? record.ppi : '-'}
+                    {record.ppiConstruction ? record.ppiConstruction : '-'}
                 </span>
             ),
           }
