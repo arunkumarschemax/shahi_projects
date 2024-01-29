@@ -1,4 +1,4 @@
-import {BuyersService,ContentService,FabricFinishTypeService,FabricTypeService,FabricWeaveService,FinishService,M3ItemsService,UomService,WeightService } from"@project-management-system/shared-services";
+import {BuyersService,ContentService,FabricFinishTypeService,FabricRequestCodeService,FabricTypeService,FabricWeaveService,FinishService,M3ItemsService,UomService,WeightService } from"@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Radio, Row, Select, Space, Typography, message } from "antd";
 import React, { useEffect, useState } from "react";
 import AlertMessages from "../../common/common-functions/alert-messages";
@@ -38,7 +38,7 @@ const M3Items = ({props}) => {
   const [weightUomData, setWeightUomData] = useState<any[]>([])
   const [yarnUom, setYarnUom]= useState<any[]>([])
   const [selectedContentValues, setSelectedContentValues] = useState([]);
-
+  const trimReqCodeService = new FabricRequestCodeService()
   const service = new M3ItemsService();
   const uomService = new UomService();
   const fabricService = new FabricTypeService();
@@ -331,11 +331,22 @@ const M3Items = ({props}) => {
     //  console.log(req,"LLLLLLLLLLLLLLLLLLLL");
     service.createM3Items(req).then((res) => {
       if (res.status) {
-        AlertMessages.getSuccessMessage(res.internalMessage);
-        setTimeout(() => {
-          message.success("Submitted successfully")
-          navigate('/m3-items-view')
-        }, 500)
+        console.log(props);
+        if(props != undefined){
+          trimReqCodeService.updateFabStatus({id:props.fabricRequestCodeId}).then((res) => {
+            if(res.status){
+              AlertMessages.getSuccessMessage(res.internalMessage);
+              setTimeout(() => {
+                message.success("Submitted successfully")
+                navigate('/m3-items-view')
+              }, 500)
+            }
+            else {
+              AlertMessages.getErrorMessage(res.internalMessage);
+            }
+          })
+        }
+        
       }else{
         AlertMessages.getWarningMessage(res.internalMessage);
       }}).catch((err) => {

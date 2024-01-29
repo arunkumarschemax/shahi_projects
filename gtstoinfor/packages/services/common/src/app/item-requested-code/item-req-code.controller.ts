@@ -6,6 +6,7 @@ import { CommonResponseModel, FabricCodeReq, M3TrimType, M3trimsDTO, TrimCodeReq
 import { FabricReqCodeService } from './fabric-request-code.service';
 import { TrimReqCodeService } from './trim-req-code.service';
 import { TrimRequestCodeDto } from './dtos/trim-request-code.dto';
+import { UpdateIdReq } from './dtos/update-id-req';
 
 @ApiTags('item-req-code')
 @Controller('item-req-code')
@@ -239,6 +240,24 @@ async getAllFabricTypes(): Promise<CommonResponseModel> {
 async getAllFabricBuyers(): Promise<CommonResponseModel> {
   try {
     return await this.fabReqService.getAllFabricBuyers();
+  } catch (error) {
+    return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+  }
+}
+
+@Post('/updateFabStatus')
+async updateFabStatus(@Body() req?:any): Promise<CommonResponseModel> {
+  try {
+    return await this.fabReqService.updateFabStatus(req.id);
+  } catch (error) {
+    return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+  }
+}
+@Post('/updateTrimStatus')
+async updateTrimStatus(@Body() req?:any): Promise<CommonResponseModel> {
+  try {
+    console.log(req);
+    return await this.fabReqService.updateTrimStatus(req.id);
   } catch (error) {
     return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
   }
