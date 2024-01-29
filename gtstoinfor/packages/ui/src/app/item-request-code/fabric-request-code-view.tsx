@@ -231,7 +231,9 @@ const FabricRequestCodeView = ()=>{
     {
       title: 'HSN Code',
       dataIndex: 'hsnCode',
-      sorter: (a, b) => a.hsnCode.localeCompare(b.hsnCode),
+      // sorter: (a, b) => a.hsnCode-(b.hsnCode),
+      sorter: (a, b) => a.hsnCode - b.hsnCode ,
+
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('hsnCode'),
       render: (text, record) => (
@@ -243,7 +245,8 @@ const FabricRequestCodeView = ()=>{
     {
       title: 'M3Code',
       dataIndex: 'm3Code',
-      sorter: (a, b) => a.m3Code.localeCompare(b.m3Code),
+      sorter: (a, b) => a.m3Code.length - b.m3Code.length,
+
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('m3Code'),
       render: (text, record) => (
@@ -255,7 +258,9 @@ const FabricRequestCodeView = ()=>{
     {
       title: 'Fabric Type',
       dataIndex: 'fabricType',
-      sorter: (a, b) => a.fabricType.localeCompare(b.fabricType),
+      sorter: (a, b) => a.fabricType.length - b.fabricType.length,
+
+      // sorter: (a, b) => a.fabricType.localeCompare(b.fabricType),
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('fabricType'),
       render: (text, record) => (
@@ -267,7 +272,7 @@ const FabricRequestCodeView = ()=>{
     {
       title: 'Weave',
       dataIndex: 'weave',
-      sorter: (a, b) => a.weave.localeCompare(b.weave),
+      sorter: (a, b) => a.weave-(b.weave),
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('weave'),
       render: (text, record) => (
@@ -314,7 +319,7 @@ const FabricRequestCodeView = ()=>{
     {
       title: 'Yarn Type',
       dataIndex: 'yarnType',
-      sorter: (a, b) => a.yarnType.localeCompare(b.yarnType),
+      // sorter: (a, b) => a.yarnType-(b.yarnType),
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('yarnType'),
       render: (text, record) => (
@@ -337,7 +342,7 @@ const FabricRequestCodeView = ()=>{
     {
         title: 'Finish Type',
         dataIndex: 'finishType',
-        sorter: (a, b) => a.finishType.localeCompare(b.finishType),
+        sorter: (a, b) => a.finishType-(b.finishType),
         sortDirections: ['descend', 'ascend'],
         ...getColumnSearchProps('finishType'),
         render: (text, record) => (
@@ -349,7 +354,7 @@ const FabricRequestCodeView = ()=>{
     {
         title: 'Content',
         dataIndex: 'content',
-        sorter: (a, b) => a.content.localeCompare(b.content),
+        sorter: (a, b) => a.content-(b.content),
         sortDirections: ['descend', 'ascend'],
         ...getColumnSearchProps('content'),
         render: (text, record) => (
@@ -361,7 +366,7 @@ const FabricRequestCodeView = ()=>{
     {
         title: 'Shrinkage',
         dataIndex: 'shrinkage',
-        sorter: (a, b) => a.shrinkage.localeCompare(b.shrinkage),
+        sorter: (a, b) => a.shrinkage-(b.shrinkage),
         sortDirections: ['descend', 'ascend'],
         render: (text, record) => (
             <span>
