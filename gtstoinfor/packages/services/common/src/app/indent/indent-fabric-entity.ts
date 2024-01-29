@@ -151,12 +151,20 @@ export class IndentFabricEntity {
           nullable: false
           })
           quantityUnit: number;
+          
+          @Column("varchar", {
+            nullable: true,
+            length: 255,
+            name: "file_name"
+            })
+            fileName: string;
+
     @Column("varchar", {
         nullable: true,
         length: 255,
         name: "file_path"
         })
-        file_path: string;
+        filePath: string;
         @Column("boolean", {
             nullable: false,
             default: false,

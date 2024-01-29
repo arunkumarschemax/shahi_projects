@@ -1,4 +1,4 @@
-import { BuyerRefNoRequest, CommonResponseModel, IndentDTO, IndentRequestDto, SourcingRequisitionReq, indentIdReq } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, CommonResponseModel, IndentDTO, IndentRequestDto, SourcingRequisitionReq, UploadResponse, indentIdReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class IndentService extends CommonAxiosService {
@@ -32,4 +32,13 @@ export class IndentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/getIndentDropDown")
   }
 
+  async indentFabricUpload(file: any): Promise<UploadResponse> {
+    console.log(file)
+    return await this.axiosPostCall(this.URL + '/indentFabricUpload', file);
+  }
+
+  async indentTrimUpload(file: any): Promise<UploadResponse> {
+    console.log(file)
+    return await this.axiosPostCall(this.URL + '/indentTrimUpload', file);
+  }
 }

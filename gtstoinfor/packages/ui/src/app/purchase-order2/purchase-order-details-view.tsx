@@ -101,6 +101,105 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       ),
     },
     {
+      title: 'HSN Code',
+      key: 'HSN Code',
+      dataIndex: 'poHsnCode',
+    },
+    {
+      title: 'Size',
+      dataIndex: 'size',
+    },
+    {
+      title: 'PO Quantity',
+      key: 'PO Quantity',
+      dataIndex: 'po_quantity',
+      render: (text, record) => {
+        return (<span>{`${record.po_quantity} ${record.uom!=null?`(${record.uom})`:""}`}</span>)
+      }
+    },
+    {
+      title: 'GRN Quantity',
+      key: 'GRN Quantity',
+      dataIndex: 'grn_quantity',
+      render: (text, record) => {
+        return (<span>{record.grn_quantity > 0 ? record.grn_quantity : 0}</span>)
+      }
+    },
+
+    {
+      title: 'Unit Price',
+      key: 'Unit Price',
+      dataIndex: 'unit_price',
+      render: (text,val) => {
+        return (`${text}(${val.currencyName?val.currencyName:'-'})`) }
+    },
+    {
+      title: 'Discount %',
+      key: 'Discount',
+      dataIndex: 'discount',
+      render: (text) => {
+        return text !== undefined && text !== null ? text : '-';
+      },
+    },
+    {
+      title: 'Tax %',
+      key: 'Tax %',
+      dataIndex: 'taxPercentage',
+    },
+    {
+      title: 'Total Amount',
+      key: 'Tax %',
+      dataIndex: 'subjective_amount',
+    },
+
+  ]
+  const itemColumns1: any = [
+    {
+      title: 'S No',
+      key: 'sno',
+      width: '70px',
+      responsive: ['sm'],
+      render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
+      fixed: 'left',
+    },
+    {
+      title: 'Sample Request No',
+      dataIndex: 'sample_req_no',
+    },
+    {
+      title: 'Material Type',
+      key: 'Material Type',
+      dataIndex: 'po_material_type',
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },
+    },
+    {
+      title: 'Item Code',
+      key: 'Item Code',
+      dataIndex: 'item_code',
+      render: (m3FabricCode, row) => (
+        <Tooltip title={row.description} placement="top" arrowPointAtCenter>
+          <span className="fabCode">
+            {`${row.item_code} - ${row.description}`}
+          </span>
+        </Tooltip>
+      ),
+    },
+    {
+      title: 'HSN Code',
+      key: 'HSN Code',
+      dataIndex: 'poHsnCode',
+    },
+    {
+      title: 'Size',
+      dataIndex: 'size',
+    },
+    {
       title: 'PO Quantity',
       key: 'PO Quantity',
       dataIndex: 'po_quantity',
@@ -296,11 +395,11 @@ getCssFromComponent(document, element.document);
               {data[0]?.orderDates}</DescriptionsItem>
             {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Material Type</span>}>{data[0]?.materialType}</DescriptionsItem> */}
             <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>PO Against</span>}>{data[0]?.po_against}</DescriptionsItem>
-            {data[0]?.po_against === 'Sample Order' ? (            
-            <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Sample Request No</span>}>{data[0]?.sample_req_no}</DescriptionsItem>
-            ):(
+            {data[0]?.po_against != 'Sample Order' ? (            
+            // <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Sample Request No</span>}>{data[0]?.sample_req_no}</DescriptionsItem>
+            // ):(
               <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent No</span>}>{data[0]?.request_no}</DescriptionsItem>
-              )}
+              ):('')}
             {/* <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Indent No</span>}>{data[0]?.Number}</DescriptionsItem> */}
             {data[0]?.po_against === 'Sample Order' ? (            
               <DescriptionsItem label={<span style={{ fontWeight: 'bold', color: 'darkblack' }}>Expected Delivery Date</span>}>{moment(data[0]?.expected_delivery_date).format('YYYY-MM-DD')}</DescriptionsItem>
@@ -338,7 +437,16 @@ getCssFromComponent(document, element.document);
             </Form> */}
 
           <Card >
-            <Table
+          {data[0]?.po_against === 'Sample Order' ? (<Table
+              rowKey={record => record.purchase_order_item_id}
+              columns={itemColumns1}
+              pagination={{
+                onChange(current) {
+                  setPage(current);
+                }
+              }}
+              dataSource={data}
+            /> ):(<Table
               rowKey={record => record.purchase_order_item_id}
               columns={itemColumns}
               pagination={{
@@ -347,7 +455,8 @@ getCssFromComponent(document, element.document);
                 }
               }}
               dataSource={data}
-            />
+            />)}
+            
           </Card>
           {isModalVisible ?
             <Modal

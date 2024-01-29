@@ -267,10 +267,14 @@ const totalAmountInWords = `${integerWords} . ${decimalWords}`;
                             <th style={{width:'3%'}}>Ln</th>
                             <th>HSN/SAC</th>
                             <th style={{width:'50px'}}>Item Code</th>
-                            <th style={{width:'50px'}}>Colour</th>
+                            <th style={{width:'50px'}}>Item Description</th>
                             <th>Supplier Item</th>
                             <th>Item Name</th>
-                            <th  style={{width:'50px'}}>Item Description</th>
+                            {poData[0]?.po_material_type === 'Trim'?(
+                              <th  style={{width:'50px'}}>Trim Description</th>
+                              ):(
+                                <th  style={{width:'50px'}}>Fabric Description</th>
+                                )}
                             <th>GRM</th>
                             <th>Mx.Del.Date</th>
                             <th>Unit C.Fact</th>
@@ -291,13 +295,18 @@ const totalAmountInWords = `${integerWords} . ${decimalWords}`;
 
                           <tr key={index}>
                             <td>{sno}</td>
-                            <td >{e.hsnCode? e.hsnCode:'-'}</td>
+                            <td >{e.poHsnCode? e.poHsnCode:'-'}</td>
                             <td style={{ minWidth: '100px', maxWidth: '300px', overflow: 'hidden' }}>
                                     <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
                                   {e.item_code ? e.item_code : '-'}
                                           </div>
                                        </td>
-                            <td >{e.colour? e.colour:'-'}</td>
+                                       {poData[0]?.po_material_type === 'Trim'?(
+                              <td>{e.item_description}</td>
+                              ):(
+                                <td>{e.colour? e.colour:''}-{e.size?e.size:
+                                  ''}</td>
+                                )}
                             <td >{e.name? e.name:'-'}</td>
                             <td >{e.po_material_type? e.po_material_type:'-'}</td>
                        

@@ -10,7 +10,8 @@ import { useState } from "react"
 import Highlighter from "react-highlight-words"
 import { useLocation, useNavigate } from "react-router-dom"
 import AlertMessages from "../common/common-functions/alert-messages"
-import { ItemTypeEnumDisplay, LifeCycleStatusDisplay, sampleReqIdReq } from "@project-management-system/shared-models"
+import { CategoryEnumDisplay, ItemTypeEnumDisplay, LifeCycleStatusDisplay, sampleReqIdReq } from "@project-management-system/shared-models"
+import moment from "moment"
 
 export const SampleReqDetailView = () =>{
     const searchInput = useRef(null);
@@ -357,7 +358,12 @@ export const SampleReqDetailView = () =>{
   ]
 return(
     <Card headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
-    title={'Sample Request Detail view'}
+    title={
+      <div style={{textAlign:"center"}}>
+        <span style={{marginRight:"20px"}}>Sample Request: {data[0]?.sampleRequestNo}</span>
+      </div>
+    }
+    // title={'Sample Request Detail view'}
     extra={
       <span>
         <Button onClick={() => navigate("/sample-development/sample-requests")}>Back</Button>
@@ -370,7 +376,7 @@ return(
         <DescriptionsItem label='PCH'>{data?.[0]?.pch?data?.[0]?.pch:'-'}</DescriptionsItem>
         <DescriptionsItem label='User'>{data?.[0]?.user?data?.[0]?.user:'-'}</DescriptionsItem>
         <DescriptionsItem label='Brand'>{data?.[0]?.brand?data?.[0]?.brand:'-'}</DescriptionsItem>
-        <DescriptionsItem label='Epected Delivery Date'>{data?.[0]?.ETD?data?.[0]?.ETD:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Epected Delivery Date'>{data?.[0]?.ETD?moment(data?.[0]?.ETD).format('DD-MM-YYYY'):'-'}</DescriptionsItem>
         <DescriptionsItem label='Cost Ref'>{data?.[0]?.costRef?data?.[0]?.costRef:'-'}</DescriptionsItem>
         <Descriptions.Item label="Description" style={{ width: '33%' }}>
                                 {/* {grnData.description} */}
@@ -382,13 +388,16 @@ return(
         <DescriptionsItem label='Extn'>{data?.[0]?.extn?data?.[0]?.extn:'-'}</DescriptionsItem>
         <DescriptionsItem label='Sam'>{data?.[0]?.sam?data?.[0]?.sam:'-'}</DescriptionsItem>
         <DescriptionsItem label='DMM'>{data?.[0]?.dmm?data?.[0]?.dmm:'-'}</DescriptionsItem>
-        <DescriptionsItem label='Technician'>{data?.[0]?.employee?data?.[0]?.employee:'-'}</DescriptionsItem>
+        {/* <DescriptionsItem label='Technician'>{data?.[0]?.employee?data?.[0]?.employee:'-'}</DescriptionsItem> */}
         <DescriptionsItem label='Product'>{data?.[0]?.product?data?.[0]?.product:'-'}</DescriptionsItem>
-        <DescriptionsItem label='Type'>{data?.[0]?.type?data?.[0]?.type:'-'}</DescriptionsItem>
-        <DescriptionsItem label='Conversion'>{data?.[0]?.conversion?data?.[0]?.conversion:'-'}</DescriptionsItem>
-        <DescriptionsItem label='Made In'>{data?.[0]?.madeIn?data?.[0]?.madeIn:'-'}</DescriptionsItem>
+        {/* <DescriptionsItem label='Type'>{data?.[0]?.type?data?.[0]?.type:'-'}</DescriptionsItem> */}
+        {/* <DescriptionsItem label='Conversion'>{data?.[0]?.conversion?data?.[0]?.conversion:'-'}</DescriptionsItem>
+        <DescriptionsItem label='Made In'>{data?.[0]?.madeIn?data?.[0]?.madeIn:'-'}</DescriptionsItem> */}
         <DescriptionsItem label='Life Cycle Status'>{data?.[0]?.lifeCycleStatus?LifeCycleStatusDisplay.find((e)=>e.name === data?.[0]?.lifeCycleStatus)?.displayVal:'-'}</DescriptionsItem>
                 {/* <DescriptionsItem label='Status'>{data?.[0]?.status?data?.[0]?.status:'-'}</DescriptionsItem> */}
+                <DescriptionsItem label='Sample Type'>{data?.[0]?.sampleType?data?.[0]?.sampleType:'-'}</DescriptionsItem>
+                <DescriptionsItem label='Sample Sub Type'>{data?.[0]?.sampleSubType?data?.[0]?.sampleSubType:'-'}</DescriptionsItem>
+                <DescriptionsItem label='Category'>{data?.[0]?.category?CategoryEnumDisplay.find((e)=>e.name === data?.[0]?.category)?.displayVal:'-'}</DescriptionsItem>
         <Descriptions.Item label="Remarks" style={{ width: '33%' }}>
                                 {data?.[0]?.remarks?.length > 30 ? (<><Tooltip title='Cilck to open full remarks'><p><span onClick={() => handleTextClick(data?.[0]?.remarks)} style={{ cursor: 'pointer' }}>
                         {data?.[0]?.remarks.length > 30 ? `${data?.[0]?.remarks?.substring(0, 30)}....` : data?.[0]?.remarks}
