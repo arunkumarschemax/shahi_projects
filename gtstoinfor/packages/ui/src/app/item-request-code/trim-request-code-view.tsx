@@ -6,7 +6,7 @@ import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
-import { BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, MaterialFabricEnum, PartEnum, PartEnumDisplay, TrimCodeReq, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, MaterialFabricEnum, MenusAndScopesEnum, PartEnum, PartEnumDisplay, TrimCodeReq, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 const { TextArea } = Input;
 const { Option } = Select;
 import { Link } from 'react-router-dom';
@@ -15,6 +15,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 import TabPane from "antd/es/tabs/TabPane";
 import M3Items from "../masters/m3-items/m3-items-form";
 import M3TrimItemsForm from "../trim-master/m3-trim-items/m3-trim-items";
+import RolePermission from "../role-permissions";
 
 export const TrimReqCodeView = () => {
   const stockService = new StockService();
@@ -66,7 +67,11 @@ export const TrimReqCodeView = () => {
     getBuyers();
     onFinish('Open')
   }, [mapData]);
-
+  const checkAccess = (buttonParam) => {   
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Sample Development"],MenusAndScopesEnum.SubMenus["Trim Request"],buttonParam)
+    
+    return accessValue
+}
 
   const getStructures = (req?: M3trimsDTO) => {
     if (form.getFieldValue('categoryId') !== undefined) {
@@ -406,7 +411,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Buyer</div>,
       dataIndex: "buyerName",
       ...getColumnSearchProps("buyerName"),
-      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
+      sorter: (a, b) => a.buyerName-(b.buyerName),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -418,7 +423,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Trim Type</div>,
       dataIndex: "trimType",
       ...getColumnSearchProps("trimType"),
-      sorter: (a, b) => a.trimType.localeCompare(b.trimType),
+      sorter: (a, b) => a.trimType-(b.trimType),
       sortDirections: ["descend", "ascend"],
       render: (text) => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
@@ -429,7 +434,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Trim Category</div>,
       dataIndex: "trimCategory",
       ...getColumnSearchProps("trimCategory"),
-      sorter: (a, b) => a.trimCategory.localeCompare(b.trimCategory),
+      sorter: (a, b) => a.trimCategory-(b.trimCategory),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -449,7 +454,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Category</div>,
       dataIndex: "category",
       ...getColumnSearchProps("category"),
-      sorter: (a, b) => a.category.localeCompare(b.category),
+      sorter: (a, b) => a.category-(b.category),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -464,7 +469,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Content</div>,
       dataIndex: "content",
       ...getColumnSearchProps("content"),
-      sorter: (a, b) => a.content.localeCompare(b.content),
+      sorter: (a, b) => a.content-(b.content),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -479,7 +484,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Type</div>,
       dataIndex: "type",
       ...getColumnSearchProps("type"),
-      sorter: (a, b) => a.type.localeCompare(b.type),
+      sorter: (a, b) => a.type-(b.type),
       sortDirections: ["descend", "ascend"],
       render: (text) => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
@@ -493,7 +498,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Finish</div>,
       dataIndex: "finish",
       ...getColumnSearchProps("finish"),
-      sorter: (a, b) => a.finish.localeCompare(b.finish),
+      sorter: (a, b) => a.finish-(b.finish),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -508,7 +513,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Hole</div>,
       dataIndex: "hole",
       ...getColumnSearchProps("hole"),
-      sorter: (a, b) => a.hole.localeCompare(b.hole),
+      sorter: (a, b) => a.hole-(b.hole),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -604,6 +609,7 @@ export const TrimReqCodeView = () => {
       dataIndex: 'action',
       render: (text, rowData) => {
         return (<span>
+          {checkAccess(MenusAndScopesEnum.Scopes.Update)?(
           <Tooltip placement="top" title='Create Item'>
               <Tag >
                   <EditOutlined type= "edit"
@@ -613,6 +619,7 @@ export const TrimReqCodeView = () => {
                       style={{ color: '#1890ff', fontSize: '14px' }} />
               </Tag>
           </Tooltip>
+          ):('-')}
           </span>
         )
       }
