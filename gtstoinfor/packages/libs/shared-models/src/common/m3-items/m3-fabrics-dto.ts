@@ -32,6 +32,13 @@ export class M3FabricsDTO {
     versionFlag?: number
     remarks?: string
     fabricType?:string
+    status?:string
+    weave?:string
+    weightUOM?:string
+    widthUOM?:string
+    finishType?:string
+    content?:string
+
     constructor(
         m3ItemsId: number,
         buyerId: number,
@@ -58,7 +65,13 @@ export class M3FabricsDTO {
         updatedUser?: string,
         versionFlag?: number,
         remarks?: string,
-        fabricType?:string
+        fabricType?:string,
+        status?:string,
+        weave?:string,
+        weightUOM?:string,
+        widthUOM?:string,
+        finishType?:string,
+        content?:string,
     ){
         this.m3ItemsId = m3ItemsId
         this.buyerId = buyerId
@@ -86,6 +99,12 @@ export class M3FabricsDTO {
         this.fabricContentInfo = fabricContentInfo
         this.remarks = remarks
         this.fabricType = fabricType
+        this.status = status
+        this.weave = weave
+        this.weightUOM = weightUOM
+        this.widthUOM = widthUOM
+        this.finishType = finishType
+        this.content = content
     }
 }
 

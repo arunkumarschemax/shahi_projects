@@ -100,7 +100,7 @@ export class FabricReqCodeService {
           console.log("**********");
           console.log(res);
           console.log("************")
-          let rec = new M3FabricsDTO(0,res.buyer_id,"",res.fabricTypeId,res.weaveId,res.weight,res.weightUnitId,res.epi,res.ppi,res.yarnType,res.width,res.widthUnit,res.finish_id,res.shrinkage,"",res.buyerName,"",res.hsnCode,[],[{"content":res.content_id,"percentage":"100"}],true,"","",0,"",res.fabricType);
+          let rec = new M3FabricsDTO(0,res.buyer_id,"",res.fabricTypeId,res.weaveId,res.weight,res.weightUnitId,res.epi,res.ppi,res.yarnType,res.width,res.widthUnit,res.finish_id,res.shrinkage,"",res.buyerName,"",res.hsnCode,[],[{"content":res.content_id,"percentage":"100"}],true,"","",0,"",res.fabricType,res.status,res.fabricWeave,res.weightUom,res.widthUom,res.finishType,res.content);
           response.push(rec);
         }
         if(response.length >0){

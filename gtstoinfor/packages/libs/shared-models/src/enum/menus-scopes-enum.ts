@@ -29,6 +29,8 @@ export const MenusAndScopesEnum ={
         'Grn Report' : 'Grn Report',
         'Stock Report' : 'Stock Report',
         'Material Issue Report' : 'Indent Report',
+        'Fabric Request' : 'Fabric Request',
+        'Trim Request': 'Trim Request',
 
         // 'Attributes' : 'Attributes',
         // 'Buyers' : 'Buyers',
