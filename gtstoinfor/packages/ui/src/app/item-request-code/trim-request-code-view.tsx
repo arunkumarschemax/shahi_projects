@@ -393,8 +393,9 @@ export const TrimReqCodeView = () => {
     setModalVisible(true)
     setRequestData(rowData);
   }
+  const tableColumns = (key) => {
 
-  const columns: ColumnProps<any>[] = [
+  const columnsSkelton: ColumnProps<any>[] = [
     {
       title: "S No",
       key: "sno",
@@ -596,6 +597,8 @@ export const TrimReqCodeView = () => {
         </span>
     ),
     },
+  ];
+  const actionColumns: ColumnProps<any>[] = [
     {
       title:`Action`,
       dataIndex: 'action',
@@ -615,8 +618,13 @@ export const TrimReqCodeView = () => {
       }
     }
   ]
-
-  const filteredColumns = columns.filter((column) => Object.keys(column).length > 0);
+  if(key === "1") {
+    return [...columnsSkelton, ...actionColumns];
+  }else{
+    return [...columnsSkelton];
+  }
+  }
+  const filteredColumns = tableColumns("1").filter((column) => Object.keys(column).length > 0);
 
 
   const clearData = () => {
@@ -1002,7 +1010,7 @@ export const TrimReqCodeView = () => {
             <Table
               className="custom-table-wrapper"
               dataSource={data}
-              columns={filteredColumns}
+              columns={tableColumns("1")}
               size="small"
             />
         </TabPane>
@@ -1010,7 +1018,7 @@ export const TrimReqCodeView = () => {
             <Table
               className="custom-table-wrapper"
               dataSource={data}
-              columns={filteredColumns}
+              columns={tableColumns("2")}
               size="small"
             />
         </TabPane>
