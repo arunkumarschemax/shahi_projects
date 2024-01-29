@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IndentRepository } from './dto/indent-repository';
-import { CommonResponseModel, IndentReq, IndentFabricModel, IndentModel, IndentTrimsModel, IndentRequestDto, indentIdReq, BuyerRefNoRequest, ColourDto } from '@project-management-system/shared-models';
+import { CommonResponseModel, IndentReq, IndentFabricModel, IndentModel, IndentTrimsModel, IndentRequestDto, indentIdReq, BuyerRefNoRequest, ColourDto, UploadResponse } from '@project-management-system/shared-models';
 import { Indent } from './indent-entity';
 import { IndentDto } from './dto/indent-dto';
 import { IndentAdapter } from './dto/indent-adapter';
@@ -13,6 +13,9 @@ import { Colour } from '../colours/colour.entity';
 import { ColourService } from '../colours/colour.service';
 import { ColourDTO } from '../colours/dto/colour-dto';
 
+import { GenericTransactionManager } from '../../typeorm-transactions';
+import { IndentFabricEntity } from './indent-fabric-entity';
+import { IndentTrimsEntity } from './indent-trims-entity';
 
 @Injectable()
 
@@ -87,6 +90,89 @@ export class IndentService {
         }
     }
 
+
+
+    
+
+    async indentFabricUpload(filePath: any, data: any): Promise<UploadResponse> {
+        // console.log(filePath);
+        // console.log(data);
+        // console.log(JSON.parse(data));
+    
+        const manager = new GenericTransactionManager(this.dataSource)
+        try {
+          let flag = true;
+          await manager.startTransaction();
+          for(const [index,value] of JSON.parse(data).entries()){
+            console.log("********************")
+            console.log(value);
+            console.log(index);
+    
+            const updateFilePath = await manager.getRepository(IndentFabricEntity).update({ifabricId:value.ifabricId},{fileName: `${filePath[index].filename}`, filePath:`${filePath[index].path}`});
+            console.log(updateFilePath)
+            if(!(updateFilePath.affected > 0)){
+              flag = false
+            }
+          }
+          if (flag) {
+            await manager.completeTransaction();
+            return new UploadResponse(true, 11, 'uploaded successfully', filePath);
+          }
+          else {
+            await manager.releaseTransaction();
+            return new UploadResponse(false, 11, 'uploaded failed', filePath);
+          }
+        }catch (error) {
+          await manager.releaseTransaction();
+          console.log(error);
+        }
+      }
+
+
+      async indentTrimUpload(filePath: any, data: any): Promise<UploadResponse> {
+        console.log(filePath);
+        console.log(data);
+        console.log(JSON.parse(data));
+    
+        const manager = new GenericTransactionManager(this.dataSource)
+        try {
+          let flag = true;
+          await manager.startTransaction();
+          for(const [index,value] of JSON.parse(data).entries()){
+            console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            console.log(value);
+            console.log(index);
+    
+            const updateFilePath = await manager.getRepository(IndentTrimsEntity).update({itrimsId:value.itrimsId},{fileName: `${filePath[index].filename}`, filePath:`${filePath[index].path}`});
+            console.log(updateFilePath)
+            if(!(updateFilePath.affected > 0)){
+              flag = false
+            }
+          }
+          if (flag) {
+            await manager.completeTransaction();
+            return new UploadResponse(true, 11, 'uploaded successfully', filePath);
+          }
+          else {
+            await manager.releaseTransaction();
+            return new UploadResponse(false, 11, 'uploaded failed', filePath);
+          }
+        }catch (error) {
+          await manager.releaseTransaction();
+          console.log(error);
+        }
+      }
+
+
+
+
+
+
+
+
+
+
+
     async getAllIndentData(req?: any): Promise<CommonResponseModel> {
        
 
@@ -112,14 +198,18 @@ export class IndentService {
             if(req.tab === 'both' ){
                 const fabricIndentData = await this.indentFabricRepo.getFabricIndentData(data.indent_id);
                 for (const fabric of fabricIndentData) {
+                    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+                    console.log(fabric.hsnCode)
                     fabricModel.push(new IndentFabricModel(fabric.ifabric_id, fabric.content,
                         fabric.fabric_type_name, fabric.fabric_weave_name, fabric.weight, fabric.width, fabric.yarn_count, fabric.unit, fabric.construction, fabric.finish, fabric.shrinkage, fabric.m3_fabric_code,fabric.colour,
                         fabric.pch, fabric.moq, fabric.moqUnit, fabric.moq_price, fabric.moqPriceUnit, fabric.season, fabric.vendor_name,
-                        fabric.buyer, fabric.grn_date, fabric.xlNo, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId,data.styleId,true,fabric.indentCode,fabric.description,fabric.colour,fabric.quantity,fabric.poQuantity,fabric.quantityUnit,fabric.colorId,fabric.ifabric_id,fabric.description,fabric.quantity_unit,fabric.poQty,fabric.item_code,fabric.toBeProcured))
+                        fabric.buyer, fabric.grn_date, fabric.xlNo, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId,data.styleId,true,fabric.indentCode,fabric.description,fabric.colour,fabric.quantity,fabric.poQuantity,fabric.quantityUnit,fabric.colorId,fabric.ifabric_id,fabric.description,fabric.quantity_unit,fabric.poQty,fabric.item_code,fabric.toBeProcured,fabric.hsnCode,fabric.fileName,fabric.fileName))
                 }
                 const trimIndentData = await this.indentTrimRepo.getTrimIndentData(data.indent_id);
                 for (const trim of trimIndentData) {
                     //trim params
+                    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
+                    console.log(trim.hsnCode)
                     const trueValues = Object.keys(trim)
                     .filter(key => ["structure", "category", "content", "type", "finish", "hole", "quality", "thickness", "variety", "uom", "color", "logo", "part"].includes(key) && trim[key] === 1)
                     .map(key => key.toUpperCase());
@@ -131,7 +221,7 @@ export class IndentService {
 
                     trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
                         trim.quantity, trim.trim_code, trim.description,
-                        trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity,trim.poQuantity,trimParams,trim.toBeProcured,trim.trimUomId,trim.trimUomName))
+                        trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity,trim.poQuantity,trimParams,trim.toBeProcured,trim.trimUomId,trim.trimUomName,trim.hsnCode,trim.filePath,trim.fileName))
                     // console.log(trimModel);
 
                 }
@@ -143,7 +233,7 @@ export class IndentService {
                     fabricModel.push(new IndentFabricModel(fabric.ifabric_id, fabric.content,
                         fabric.fabric_type_name, fabric.fabric_weave_name, fabric.weight, fabric.width, fabric.yarn_count, fabric.unit, fabric.construction, fabric.finish, fabric.shrinkage, fabric.m3_fabric_code,fabric.colour,
                         fabric.pch, fabric.moq, fabric.moqUnit, fabric.moq_price, fabric.moqPriceUnit, fabric.season, fabric.vendor_name,
-                        fabric.buyer, fabric.grn_date, fabric.xlNo, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId,data.styleId,true,fabric.indentCode,fabric.description,fabric.colour,fabric.quantity,fabric.poQuantity,fabric.quantityUnit,fabric.colorId,fabric.ifabric_id,fabric.description,fabric.quantity_unit,fabric.poQty,fabric.item_code,fabric.toBeProcured))
+                        fabric.buyer, fabric.grn_date, fabric.xlNo, fabric.quantity, fabric.quantityUnit, fabric.status,fabric.indentId,fabric.materialType,fabric.description,fabric.buyerId,data.styleId,true,fabric.indentCode,fabric.description,fabric.colour,fabric.quantity,fabric.poQuantity,fabric.quantityUnit,fabric.colorId,fabric.ifabric_id,fabric.description,fabric.quantity_unit,fabric.poQty,fabric.item_code,fabric.toBeProcured,fabric.hsnCode,fabric.filePath,fabric.fileName))
                 }
                 console.log("**********************************")
                 console.log(fabricModel.length)
@@ -164,7 +254,7 @@ export class IndentService {
                     const trimParams = label + concatenatedValues
                     trimModel.push(new IndentTrimsModel(trim.itrims_id, trim.trimType, trim.item_code, trim.sizes, trim.colour,
                         trim.quantity, trim.trim_code, trim.description,
-                        trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity,trim.poQuantity,trimParams,trim.toBeProcured,trim.trimUomId,trim.trimUomName))
+                        trim.remarks, trim.quantity,trim.quantityUnit, trim.status,trim.indentId,trim.materialType,trim.buyerName,trim.buyerId,trim.quantityUnitId,trim.styleId,true,trim.itrims_id,trim.description,trim.indentCode,trim.poQty,trim.quantity,trim.poQuantity,trimParams,trim.toBeProcured,trim.trimUomId,trim.trimUomName,trim.hsnCode,trim.filePath,trim.fileName))
                     // console.log(trimModel);
 
                 }

@@ -1,12 +1,13 @@
 import { EditOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { faDisplay } from "@fortawesome/free-solid-svg-icons";
 import { M3MastersCategoryReq, UomCategoryEnum } from "@project-management-system/shared-models";
-import { ColourService, IndentService, M3MastersService, M3TrimsService, SampleDevelopmentService, TaxesService, UomService } from "@project-management-system/shared-services";
+import { ColourService, IndentService, M3MastersService, M3TrimsService, SampleDevelopmentService, SizeService, TaxesService, UomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Divider, Form, Input, InputNumber, Popconfirm, Row, Select, Table, Tag, Tooltip } from "antd";
 import { ColumnProps } from "antd/lib/table";
 import { VALUE_SPLIT } from "rc-cascader/lib/utils/commonUtil";
 import React, { useEffect } from "react";
 import { useState } from "react";
+import AlertMessages from "../common/common-functions/alert-messages";
 
 export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>{
     let tableData: any[] = []
@@ -36,13 +37,16 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
     const m3TrimService = new M3TrimsService()
     const taxService = new TaxesService();
     const [taxPer, setTaxPer] = useState(0);
-
+    const sizeService = new SizeService()
+const [sizeData, setSizeData]=useState<any[]>([])
     useEffect(() =>{
         getColor()
         getM3TrimCodes()
         getTrimType()
         getUom()
         getTax()
+        getAllSizes()
+
     },[])
 
     useEffect(() =>{
@@ -73,7 +77,16 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
             trimForm.setFieldsValue({m3TrimCode:data.data.m3TrimCode})
         }
     },[data])
-
+    const getAllSizes =() =>{
+        sizeService.getAllActiveSize().then(res=>{
+          if(res.status){
+            setSizeData(res.data)
+          }else{
+            setSizeData([])
+            AlertMessages.getInfoMessage(res.internalMessage)
+          }
+        })
+      }
 
     const getTax = () => {
         taxService.getAllActiveTaxes().then((res) => {
@@ -182,6 +195,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         trimForm.setFieldsValue({styleId: rowData?.styleId})
         trimForm.setFieldsValue({trimParams: rowData?.trimParams})
         trimForm.setFieldsValue({taxPercentage: rowData?.taxPercentage})
+        trimForm.setFieldsValue({hsnCode: rowData?.hsnCode})
+        
         
         // trimForm.setFieldsValue({poQuantity: rowData?.quantity})
         }
@@ -204,6 +219,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
             trimForm.setFieldsValue({trimParams: rowData?.trimParams})
             trimForm.setFieldsValue({styleId:rowData?.styleId,})
             trimForm.setFieldsValue({taxPercentage: rowData?.taxPercentage})
+            trimForm.setFieldsValue({hsnCode: rowData?.hsnCode})
 
         setInputDisable(true)
         }
@@ -434,8 +450,10 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
         }
     ]
 
-    const onColorChange= (value,option) =>{
-        trimForm.setFieldsValue({colourName:option?.name ? option?.name:''})
+    const colorChange= (value,option) =>{
+        console.log(option,'oooooooo');
+        
+        trimForm.setFieldsValue({ colorName: option?.type ? option.type : '' })
     }
     
     const OnTrimAdd = (values) =>{
@@ -486,7 +504,8 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                 m3TrimCodeName:defaultTrimFormData.m3TrimCodeName,
                 trimParams: defaultTrimFormData.trimParams,
                 styleId: defaultTrimFormData.styleId,
-                taxPercentage: defaultTrimFormData?.taxPercentage
+                taxPercentage: defaultTrimFormData?.taxPercentage,
+                hsnCode: defaultTrimFormData?.hsnCode
             })
 
             }
@@ -502,6 +521,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                 trimForm.setFieldsValue({ taxAmount: defaultTrimFormData.taxAmount })
                 trimForm.setFieldsValue({ subjectiveAmount: defaultTrimFormData.subjectiveAmount })
                 trimForm.setFieldsValue({ transportation: defaultTrimFormData.transportation })
+                trimForm.setFieldsValue({ hsnCode: defaultTrimFormData.hsnCode })
                 trimForm.setFieldsValue({poQuantity:(defaultTrimFormData.poQuantity > 0) ?(Number(defaultTrimFormData.poQuantity)) : Number(defaultTrimFormData.indentQuantity) - Number(defaultTrimFormData.poQuantity)})
                 trimForm.setFieldsValue({
                     colourName: defaultTrimFormData.colourName,
@@ -706,6 +726,38 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                             <Input type="number" placeholder="unit price" onChange={(e) => finalCalculation()} />
                         </Form.Item>
                     </Col>
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                        <Form.Item name='colourId' label='Color'>
+                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Color'
+                                 onChange={colorChange}
+                                  disabled={inputDisable}
+                            >
+                                {color.map(e => {
+                                    return (
+                                        <Option type={e.colour} key={e.colourId} value={e.colourId} name={e.colour}> {e.colour}</Option>
+                                    )
+                                })}
+                            </Select>
+                        </Form.Item>
+                    </Col> */}
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                        <Form.Item name='sizeId' label='Size'>
+                            <Select showSearch allowClear optionFilterProp="children" placeholder='Select Size'
+                               
+                            >
+                                {sizeData.map(e => {
+                                    return (
+                                        <Option type={e.size} key={e.sizeId} value={e.sizeId} name={e.size}>{e.size}</Option>
+                                    )
+                                })}
+                            </Select>
+                        </Form.Item>
+                    </Col> */}
+                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }}>
+                        <Form.Item name='itemDescription' label='Item Description'>
+                            <Input  allowClear type="string"  placeholder='Enter Item Description'/>
+                        </Form.Item>
+                    </Col>
                     <Col span={4}>
                         <Form.Item name='discount' label='Discount(%)'
                             rules={[{ required: false, message: 'Discount is required' }]}
@@ -765,7 +817,13 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
                             <Input name='styleId' disabled placeholder="Subjective amount"  style={{display:'none'}}/>
                         </Form.Item>
                     </Col>
-                   
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+                        <Form.Item name='hsnCode' label='HSN Code'
+                            rules={[{ required: true, message: 'HSN Code is required' }]}
+                        >
+                            <Input placeholder="HSN Code" />
+                        </Form.Item>
+                    </Col>
                 </Row>
                 <Row justify={'end'}>
                     {update?

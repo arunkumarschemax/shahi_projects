@@ -744,16 +744,16 @@ import { config } from "packages/libs/shared-services/config";
     const handleDownload = (file) => {
       console.log(file,'filepath');      
       if (file) {
-          // if(file.fileName){
-            setTimeout(() => {
-              const response = {
-               file: config.file_upload_path+'/SD-'+file
-              //  file: config.file_upload_path+'/Cotton-Shirt-Shirt.jpg'
 
-              };
-              window.open(response.file);
-            }, 100);
-          // }
+        const downloadUrl = config.file_upload_path + '/SD-' + file;
+
+    // Create a link and trigger the download
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = 'downloaded-directory.zip';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
       }
       else {
         AlertMessages.getErrorMessage("Please upload file. ");
@@ -764,17 +764,19 @@ import { config } from "packages/libs/shared-services/config";
       console.log(file,'filepath');    
       console.log(file.substr(12))  
       if (file) {
-          // if(file.fileName){
-            setTimeout(() => {
-              const response = {
-              //  file: config.file_upload_path+'/SD-'+file
-               file: config.file_upload_path+`${file.substr(12)}`
+        fetch(config.file_upload_path + `${file.substr(12)}`)
+        .then((response) => {
+          response.blob().then((blob) => {
+            var FileSaver = require('file-saver');
+            
+            // Set the appropriate MIME type for your image file
+            var mimeType = response.headers.get('content-type') || 'image/png';
 
-              };
-              window.open(response.file);
-            }, 100);
-          // }
-      }
+            var newBlob = new Blob([blob], { type: mimeType });
+            FileSaver.saveAs(newBlob, `${file.substr(12)}`);
+          });
+        });
+    }
       else {
         AlertMessages.getErrorMessage("Please upload file. ");
       }
@@ -820,7 +822,7 @@ import { config } from "packages/libs/shared-services/config";
           <span style={{marginLeft:'auto'}}>
           <span style={{paddingRight:20}}  >
           <Tooltip title='Download Tech Pack'>
-          <DownloadOutlined onClick={() => handleDownload(requestNo)} style={{fontSize:'15px',marginLeft:'-5px', color:'blue'}}/>
+          <DownloadOutlined onClick={() => handleDownload((requestNo).replace(/\//g, "_"))} style={{fontSize:'15px',marginLeft:'-5px', color:'blue'}}/>
           </Tooltip>
           </span>
                {lifeCycleStatus === LifeCycleStatusEnum.READY_TO_DISPATCH ? (

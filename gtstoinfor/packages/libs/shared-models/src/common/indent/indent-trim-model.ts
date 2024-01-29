@@ -30,6 +30,9 @@ export class IndentTrimsModel{
     toBeProcured?:number
     trimUomId?:number
     trimUomName?:number
+    hsnCode?:string
+    filePath?:string
+    fileName?:string
 
   constructor(
     itrimsId: number,
@@ -60,7 +63,10 @@ export class IndentTrimsModel{
     trimParams?:string,
     toBeProcured?:number,
     trimUomId?:number,
-    trimUomName?:number
+    trimUomName?:number,
+    hsnCode?:string,
+    filePath?:string,
+    fileName?:string
   ){
     this.itrimsId = itrimsId;
     this.trimType = trimType;
@@ -91,6 +97,9 @@ export class IndentTrimsModel{
     this.toBeProcured = toBeProcured
     this.trimUomId = trimUomId
     this.trimUomName = trimUomName
+    this.hsnCode = hsnCode
+    this.fileName = fileName
+    this.filePath = filePath
   }
 
 

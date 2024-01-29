@@ -59,6 +59,13 @@ export class IndentTrimsEntity {
         name: "remarks"
       })
       remarks: string;
+
+      @Column("varchar", {
+        nullable: true,
+        length: 255,
+        name: "file_name"
+        })
+        fileName: string;
     
       @Column("varchar", {
         nullable: true,

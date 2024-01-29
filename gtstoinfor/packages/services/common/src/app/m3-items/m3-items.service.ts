@@ -54,7 +54,7 @@ export class M3ItemsService {
     m3i.weight_unit AS weightUnit,wu.uom AS weightUom,
     m3i.ppi_construction AS ppiConstruction, m3i.epi_construction AS epiConstruction,m3i.yarn_type AS yarnType,
     m3i.width, m3i.width_unit AS widthUnit,wi.uom AS widthUom,
-    m3i.finish AS finishId,fft.fabric_finish_type AS fabricFinish,
+    m3i.finish_id AS finishId,fft.fabric_finish_type AS fabricFinish,
     m3i.shrinkage,
     m3i.buyer_id AS buyerId,b.buyer_name AS buyerName,
     m3i.m3_code AS m3Code, m3i.hsn_code AS hsnCode
@@ -63,7 +63,7 @@ export class M3ItemsService {
     LEFT JOIN fabric_weave fw ON fw.fabric_weave_id = m3i.weave
     LEFT JOIN uom wu ON wu.id = m3i.weight_unit
     LEFT JOIN uom wi ON wi.id = m3i.width_unit
-    LEFT JOIN fabric_finish_types fft ON fft.fabric_finish_type_id = m3i.finish
+    LEFT JOIN fabric_finish_types fft ON fft.fabric_finish_type_id = m3i.finish_id
     LEFT JOIN buyers b ON b.buyer_id = m3i.buyer_id 
      WHERE 1 = 1 `
     let param :any={}

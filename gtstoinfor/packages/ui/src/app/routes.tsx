@@ -219,6 +219,8 @@ import WeightView from "./common/weight/weight-view"
 import SampleReqDetailView from "./sample-development/sample-dev-req-detail-view"
 import GrnReport from "./Reports/grn-report"
 import PurchaseOrderReport from "./Reports/purchase-order-report"
+import FabricRequestCodeView from "./item-request-code/fabric-request-code-view"
+import { TrimReqCodeView } from "./item-request-code/trim-request-code-view"
 
 
 
@@ -267,7 +269,7 @@ export const AppRoutes = () => {
                 <Route path='/uom-form' element={<UomForm />} />
 
 
-                <Route path='/m3-items' element={<M3Items />} />
+                <Route path='/m3-items' element={<M3Items props={undefined}/>} />
                 <Route path='/m3-items-view' element={<M3ItemsView />} />
                 <Route path='/wh-dashboard' element={<WarehouseDashboard />} />
                 {/* <Route path='/masters'> */}
@@ -763,7 +765,7 @@ export const AppRoutes = () => {
                         closeForm={() => { }}
                         updateDetails={(undefined) => { }} TypeData={undefined} />} />
                     <Route path='Type/Type-view' element={<TypeView />} />                    
-                    <Route path='m3-trim-items/m3-trim-items-form' element={<M3TrimItemsForm />} />
+                    <Route path='m3-trim-items/m3-trim-items-form' element={<M3TrimItemsForm props={undefined}/>} />
                     <Route path='m3-trim-items/m3-trim-items-view' element={<M3TrimsView />} />
 
                     
@@ -802,7 +804,8 @@ export const AppRoutes = () => {
                     <Route path="store-issue-detail" element={<StoreIssueDetailed />} />
                     <Route path="market-issue-detailview" element={<MarketIssueDetail />} />
                     <Route path="sample-inventory-grid" element={<SampleInventory />} />
-
+                    <Route path='fabric-request-code-view' element={<FabricRequestCodeView/>}/>
+                    <Route path='trim-request-code-view' element={<TrimReqCodeView/>}/>
                 </Route>
 
 

@@ -38,12 +38,18 @@ export function StyleForm(props: StyleFormProps) {
   }]:[]);
 
   useEffect(() => {
-   if(props.styleData){
-    console.log(props.styleData.styleFileName)
-    const updateImage ='http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/'+props.styleData.styleFileName
-    // const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+props.styleData.styleFileName
-    setisUpdateImg(updateImage)
-   }
+  //  if(props.styleData){
+    // console.log(props.styleData)
+    // console.log(props.styleData.styleFileName)
+    if(props.isUpdate){
+      if(props.styleData){
+        const updateImage ='https://sampling-backend.shahiapps.in/static/'+props.styleData.styleFileName
+        // const updateImage ='http://165.22.220.143/crm/gtstoinfor/upload-files/'+props.styleData.styleFileName
+        setImageUrl(updateImage)
+      }
+ 
+    }
+  //  }
    getBuyers()
    getPCHData()
   }, [])
@@ -297,7 +303,7 @@ const service = new StyleService()
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 10 }} >
             <Card style={{height:'331px'}}>
                     <Form.Item >
-                    <img src={props.isUpdate ? isUpdateimg:imageUrl} alt="Preview"  
+                    <img src={imageUrl} alt="Preview"  
                      height={'300px'} 
                     width={'500px'}   
                     style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}

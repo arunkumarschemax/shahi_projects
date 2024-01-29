@@ -95,7 +95,8 @@ export const SourcingRequisitionDynamicForm = () => {
     const [mapData, setMapData] = useState<any[]>([])
     const [modal, setModal] = useState('')
     // const [trimFilterData, setTrimFilterData] = useState<any[]>([])
-    
+    const [remarkModal,setRemarkModal] = useState<boolean>(false)
+    const [remarks,setRemarks] = useState<string>('')
 
 
 
@@ -452,7 +453,8 @@ export const SourcingRequisitionDynamicForm = () => {
                 quantity  : defaultFabricFormData.quantity,
                 quantityUnit: defaultFabricFormData.quantityUnit,
                 // fabricUpload:defaultFabricFormData.fabricUpload.fileList[0].name,
-                uomName:defaultFabricFormData.uomName
+                uomName:defaultFabricFormData.uomName,
+                fabricUpload:defaultFabricFormData.fabricUpload
 
             })
         }
@@ -478,7 +480,8 @@ export const SourcingRequisitionDynamicForm = () => {
                 description : defaultTrimFormData.description,
                 remarks : defaultTrimFormData.remarks,
                 quantityUnit: defaultTrimFormData.quantityUnit,
-                uomName:defaultTrimFormData.uomName
+                uomName:defaultTrimFormData.uomName,
+                trimUpload:defaultTrimFormData.trimUpload
             })
         }
     },[defaultTrimFormData])
@@ -667,6 +670,13 @@ export const SourcingRequisitionDynamicForm = () => {
             )
         }
     ]
+    const handleTextClick = (remarks) => {
+        setRemarks(remarks)
+        setRemarkModal(true)
+      }
+      const onRemarksModalOk = () => {
+      setRemarkModal(false)
+      }
 
     const columnsSkelton: any = [
         {
@@ -738,11 +748,11 @@ export const SourcingRequisitionDynamicForm = () => {
           title: 'Remarks',
           dataIndex: 'remarks',
           render: (text, row) => (
-            // <Tooltip title={row.remarks} placement="top" arrowPointAtCenter>
               <span className="fabCode">
-                {row.remarks != undefined ? `${row.remarks}`: ""}
+                 { row.remarks?.length > 30 ? (<><Tooltip title='Cilck to open full remarks'><p><span onClick={() => handleTextClick(row.remarks)} style={{ cursor: 'pointer' }}>
+                           {row.remarks.length > 30 ? `${row.remarks?.substring(0, 30)}....` : row.remarks}
+                       </span></p></Tooltip></>) : (<>{row.remarks}</>)}
               </span>
-            // </Tooltip>
           ),
         },
         {
@@ -918,10 +928,46 @@ const onTrimChange = (val, option) => {
         sourcingForm.validateFields().then(() => {
             const req = new SourcingRequisitionReq(sourcingForm.getFieldValue('style'),sourcingForm.getFieldValue('expectedDate'),sourcingForm.getFieldValue('requestNo'),sourcingForm.getFieldValue('indentDate'),fabricTableData,trimsTableData,sourcingForm.getFieldValue('buyer'))
             console.log(req)
+            console.log(fabricTableData)
+            console.log(trimsTableData.length)
+            console.log(trimsTableData)
+
             indentService.createItems(req).then(res => {
                 if(res.status){
-                    navigate('/requisition-view')
+                    // console.log(res.data)
+                     navigate('/requisition-view')
                     AlertMessages.getSuccessMessage(res.internalMessage);
+                    if(fabricTableData.length >0){
+                    if(fabricTableData.find((res) => res.fabricUpload != undefined) != undefined){
+                        console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                        const formData = new FormData();
+                        formData.append('reqNo', `${res.data.requestNo}`);
+                        formData.append('fabIds', JSON.stringify(res.data.indentFabricDetails));
+                        for (let i = 0; i < fabricTableData.length; i++) {
+                            console.log(fabricTableData[i].fabricUpload.file)
+
+                            formData.append('file', fabricTableData[i].fabricUpload.file);
+                          }
+                          indentService.indentFabricUpload(formData).then((file) => {
+                            res.data.filepath = file.data;
+                          });
+                      }
+                    }
+                    if(trimsTableData.length >0){
+                        if(trimsTableData.find((res) => res.trimUpload != undefined) != undefined){
+                            console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                            const formData = new FormData();
+                            formData.append('reqNo', `${res.data.requestNo}`);
+                            formData.append('fabIds', JSON.stringify(res.data.indentTrimDetails
+                                ));
+                            for (let i = 0; i < trimsTableData.length; i++) {
+                                formData.append('file', trimsTableData[i].trimUpload.file);
+                              }
+                              indentService.indentTrimUpload(formData).then((file) => {
+                                res.data.filepath = file.data;
+                              });
+                          }
+                        }
                 }
                 else{
                     AlertMessages.getErrorMessage(res.internalMessage);
@@ -1916,10 +1962,14 @@ console.log(req)
                </>:modal == 'trimFilter' ?<>
                <M3TrimsReqFile trimCategoryId={trimForm.getFieldValue('trimCategory')} close={closeModel} formValues={handleTrimFilterData}/>
                </>:
-            <M3Items />
+            <M3Items props={undefined}/>
             }
             </Modal>
-           
+            <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{remarks}</p>
+                </Card>
+            </Modal>
             </>
     )
 }

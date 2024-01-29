@@ -288,6 +288,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
                 let stockdata = await this.sampleService.getAvailbelQuantityAginstBuyerAnditem(req)
                 let data = {
                     fabric_info_id: rec.fabric_info_id,fabric_item_code:rec.fabric_item_code, m3ItemFabricId: rec.m3ItemFabricId, fabric_description: rec.fabric_description, colour_id: rec.colour_id, fab_remarks: rec.fab_remarks, fabric_consumption: rec.fabric_consumption, fabric_sample_request_id: rec.fabric_sample_request_id,colour :rec.colour,item_code:rec.itemCode,stockM3ItemId:rec.stockM3ItemId,buyerId:rec.buyerId,sampleRequestid:rec.sampleRequestid,itemType:rec.itemType,availableQuantity:rec.availableQuantity,stockIds:rec.stockIds,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,totalRequirement:rec.total_requirement,status:rec.status,receivedQty:rec.receivedQty,tobeProcured:rec.tobeProcured,allocatedStock:stockdata.data,samplingBomId:rec.samplingBomId,filePath:rec.filePath
+
                 };
                 console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
                 console.log(data)
@@ -318,6 +319,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
                 let stockdata = await this.sampleService.getAvailbelQuantityAginstBuyerAnditem(reqq)
                 let data = {
                     trim_info_id: recc.trim_info_id,trim_item_code:recc.trim_item_code, trim_description: recc.trim_description, trim_consumption: recc.trim_consumption, tri_remarks: recc.tri_remarks, trim_sample_request_id: recc.trim_sample_request_id,trim_code:recc.m3trimcode,availabeQuantity:recc.availabeQuantity,trimType:recc.trimType,sample_request_idmt:recc.sample_request_id,resltantavaliblequantity:recc.resltantavaliblequantity,consumedQty:recc.consumedQty,buyerId:recc.buyerId,trimCode:recc.trimCode,status:recc.status,itemType:recc.trimType,sampleRequestid:recc.trim_sample_request_id,sampleItemId:recc.trimInfoIdm,totalRequirement:recc.required_quantity,receivedQty:recc.receivedQty,allocatedStock:stockdata.data,samplingBomId:recc.samplingBomId,tobeProcured:recc.tobeProcured,filePath:recc.filePath
+                    
                 }
                 respnse.push(data);
             }

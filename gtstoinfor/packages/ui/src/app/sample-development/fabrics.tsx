@@ -28,6 +28,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   const [allocatedData, setAllocatedData] = useState<any[]>([])
   const [fileList, setFileList] = useState([]);
   const [imageUrl, setImageUrl] = useState('');
+  const [imageName, setImageName] = useState('');
   const [color, setColor] = useState<any[]>([])
   const [btnEnable,setbtnEnable]=useState<boolean>(false)
   const {Option}=Select
@@ -39,6 +40,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   const colorService = new ColourService()
   const buyerDestinationService = new BuyerDestinationService()
   const [keyUpdate, setKeyUpdate] = useState<number>(1);
+  const [keyValue, setKeyValue] = useState<number>(undefined);
   const [onchangeData, setOnchangeData] = useState<any[]>([]);
   const [modal, setModal] = useState('')
   const [visibleModel, setVisibleModel] = useState<boolean>(false);
@@ -62,7 +64,8 @@ const FabricsForm = (props:FabricsFormProps) => {
           key: count,
           colourId:0,
           totalCount: qtyy,
-          wastage:2
+          wastage:2,
+          fabricUpload:undefined
         };
         props.form.setFieldValue([`wastage${count}`],2)
         console.log(newRow)
@@ -162,6 +165,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   };
 
   const handleInputChange = async (e, key, field, additionalValue,record) => {
+    setKeyValue[key];
     console.log(fileList);
     console.log(e);
     console.log(field);
@@ -438,36 +442,53 @@ const FabricsForm = (props:FabricsFormProps) => {
     reader.addEventListener('load', () => callback(reader.result));
     reader.readAsDataURL(img);
   }
-  const uploadFabricProps: UploadProps =  {
+  const uploadFabricProps = (keyValue:number): UploadProps =>  ({
     // alert();
     multiple: true,
     onRemove: file => {
       console.log(file);
-      console.log(fileList?.find((f) => f.uid != file.uid))
-      let files:any[] = fileList?.find((f) => f.uid != file.uid)
+      console.log(fileList.length);
+
+      let files:any[] = fileList.length != undefined ? fileList?.find((f) => f.uid != file.uid) : []
+      console.log(data)
+      console.log(data[keyValue]);
+      console.log(onchangeData)
+      console.log(onchangeData[keyValue]);
+      data[keyValue].fabricUpload = undefined;
+      onchangeData[keyValue].fabricUpload = undefined;
+      setData(data);
+      setOnchangeData(onchangeData)
+      props.data(data);
+
       setFileList(files);
       setImageUrl('');
     },
     beforeUpload: (file: any, index:any) => {
+      console.log(file)
+      console.log(fileList);
       console.log(index)
+      console.log(keyValue)
       if (!file.name.match(/\.(png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
         AlertMessages.getErrorMessage("Only png,jpeg,jpg,pjpeg,gif files are allowed!");
         return true;
       }
+      console.log(fileList)
+
       // var reader = new FileReader();
       // reader.readAsArrayBuffer(file);
       // reader.onload = data => {
-        if (fileList?.length == 1) {
-          AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
-          return true;
-        } else {
+        // if (fileList?.length == 1) {
+        //   AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
+        //   return true;
+        // } else {
           console.log(fileList)
-            setFileList([...fileList,file]);
-          getBase64(file, imageUrl =>
-            setImageUrl(imageUrl)
-          );
+          setFileList([...fileList,file]);
+          console.log(fileList,"****")
+          // getBase64(file, imageUrl =>
+          //   setImageUrl(imageUrl)
+          // );
           return false;
-        }
+        // }
       // }
     },
     progress: {
@@ -478,8 +499,8 @@ const FabricsForm = (props:FabricsFormProps) => {
       strokeWidth: 3,
       format: percent => `${parseFloat(percent.toFixed(2))}%`,
     },
-    fileList: fileList,
-  };
+    // fileList: fileList,
+  });
 
   const getSelectedProductGroupId = (selectedFabricId) => {
     const selectedFabric = fabricCodeData.find(item =>item.fabricId == selectedFabricId)
@@ -721,29 +742,38 @@ const FabricsForm = (props:FabricsFormProps) => {
       </Form.Item>
       ),
     },
-
+    {
+      title:'preview',
+      dataIndex: 'fabricUpload',
+      width:"9%",
+      fixed:'right',
+      render: (_, record) => (
+        <span style={{alignContent:'center'}}>{
+        (fileList[record.key] != undefined)?<Button icon={<EyeOutlined/>} onClick={()=>onFabriView(record.key)}></Button>:<></>
+    }</span>
+      )
+    },
     {
       title: 'Upload Fabric',
       dataIndex: 'fabricUpload',
       width:"20%",
       fixed:'right',
       render: (_, record) => (
-        <Form.Item name={`fabricUpload${record.key}`}>
-          <Upload key={record.key} name={`fabricUpload${record.key}`} style={{ width: '100%' }} 
-            {...uploadFabricProps}
+        <Form.Item name={`fabricUpload${record.key}`} initialValue={record.fabricUpload}>
+          <Upload key={record.key} name={`fabricUpload${record.key}`} style={{ width: '100%' }}
+            {...uploadFabricProps(record.key)}
             accept=".jpeg,.png,.jpg"
-            onChange={(e) => handleInputChange(e.file,record.key,'fabricUpload',0,record)}
-            >
+            onChange={(e) => handleInputChange(e.file, record.key, 'fabricUpload', 0, record)}
+          >
             <Button key={record.key} name={`fabricUpload${record.key}`}
-                style={{ color: 'black', backgroundColor: '#7ec1ff' }}
-                // icon={<UploadOutlined />}
-                disabled={fileList?.length == 1? true:false}
+              style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+              // icon={<UploadOutlined />}
+              disabled={(fileList[record.key] != undefined) ? true : false}
             >
-                <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
+              <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
             </Button>
-            {fileList?.length > 0?  <Button key={record.key} icon={<EyeOutlined/>} onClick={onFabriView}></Button>:<></>}
           </Upload>
-      </Form.Item>
+        </Form.Item>
       ),
     },
     {
@@ -752,15 +782,22 @@ const FabricsForm = (props:FabricsFormProps) => {
       width:"10%",
       fixed:'right',
       render: (_, record) => (
-        <><Button onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
+        <>
+        <Button onClick={() => handleDelete(record.key)}><Tooltip title="Delete Row"><DeleteOutlined /></Tooltip></Button>
         </>
       ),
     },
   ];
 
-  const onFabriView =() =>{
+  const onFabriView =(key) =>{
     setModal('fileUpload')
     setPreviewVisible(true)
+    console.log(fileList[key])
+    setImageName(fileList[key].name)
+    getBase64(fileList[key], imageUrl =>
+      // console.log(imageUrl)
+      setImageUrl(imageUrl)
+    );
     
   }
   const tableColumns = (val,fabindex) => {
@@ -925,7 +962,7 @@ const FabricsForm = (props:FabricsFormProps) => {
 
       <Modal
           visible={previewVisible}
-          title={"previewTitle"}
+          title={imageName}
           footer={null}
           onCancel={() => setPreviewVisible(false)}
         >
@@ -940,7 +977,8 @@ const FabricsForm = (props:FabricsFormProps) => {
                     style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
                 />
                 </Form.Item>
-            </Card></>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
+            </Card>
+               </>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
         </Modal>
         
       <Modal
@@ -954,7 +992,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             onCancel={handleCancel}
             footer={[]}
         >
-          <M3FabricFilters formValues={handleFabricsfilterData} close={handleCancel}/>
+          <M3FabricFilters formValues={handleFabricsfilterData} close={handleCancel} buyerId={props.buyerId}/>
         </Modal>
     </div>
   );
