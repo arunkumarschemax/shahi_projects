@@ -405,7 +405,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Buyer</div>,
       dataIndex: "buyerName",
       ...getColumnSearchProps("buyerName"),
-      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
+      sorter: (a, b) => a.buyerName-(b.buyerName),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -417,7 +417,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Trim Type</div>,
       dataIndex: "trimType",
       ...getColumnSearchProps("trimType"),
-      sorter: (a, b) => a.trimType.localeCompare(b.trimType),
+      sorter: (a, b) => a.trimType-(b.trimType),
       sortDirections: ["descend", "ascend"],
       render: (text) => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
@@ -428,7 +428,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Trim Category</div>,
       dataIndex: "trimCategory",
       ...getColumnSearchProps("trimCategory"),
-      sorter: (a, b) => a.trimCategory.localeCompare(b.trimCategory),
+      sorter: (a, b) => a.trimCategory-(b.trimCategory),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -448,7 +448,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Category</div>,
       dataIndex: "category",
       ...getColumnSearchProps("category"),
-      sorter: (a, b) => a.category.localeCompare(b.category),
+      sorter: (a, b) => a.category-(b.category),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -463,7 +463,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Content</div>,
       dataIndex: "content",
       ...getColumnSearchProps("content"),
-      sorter: (a, b) => a.content.localeCompare(b.content),
+      sorter: (a, b) => a.content-(b.content),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -478,7 +478,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Type</div>,
       dataIndex: "type",
       ...getColumnSearchProps("type"),
-      sorter: (a, b) => a.type.localeCompare(b.type),
+      sorter: (a, b) => a.type-(b.type),
       sortDirections: ["descend", "ascend"],
       render: (text) => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
@@ -492,7 +492,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Finish</div>,
       dataIndex: "finish",
       ...getColumnSearchProps("finish"),
-      sorter: (a, b) => a.finish.localeCompare(b.finish),
+      sorter: (a, b) => a.finish-(b.finish),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -507,7 +507,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Hole</div>,
       dataIndex: "hole",
       ...getColumnSearchProps("hole"),
-      sorter: (a, b) => a.hole.localeCompare(b.hole),
+      sorter: (a, b) => a.hole-(b.hole),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
