@@ -252,13 +252,13 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemDetailsObj.ppkupc = filteredData[rec.itemIndex + 13].str;
             itemDetailsObj.color = filteredData[rec.itemIndex + 14].str;
             itemDetailsObj.poType = "PPK"
-            
+
             let totalQuantityIndex;
             for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
                 const currentInfo = filteredData[i].str;
 
                 if (currentInfo.includes("Mens") || currentInfo.includes("Womens")) {
-                    totalQuantityIndex = i + 3; 
+                    totalQuantityIndex = i + 3;
                     break;
                 }
             }
@@ -380,7 +380,13 @@ export const extractDataFromPoPdf = async (pdf) => {
                         itemVariantsObj.exFactory = itemVarinatsTextArr[upcIndex + 5];
                         itemVariantsObj.exPort = itemVarinatsTextArr[upcIndex + 6];
                         itemVariantsObj.deliveryDate = itemVarinatsTextArr[upcIndex + 7];
-                        itemVariantsObj.retialPrice = itemVarinatsTextArr[upcIndex + 8];
+                        // itemVariantsObj.retialPrice = itemVarinatsTextArr[upcIndex + 8];
+                        const retailPriceData = itemVarinatsTextArr[upcIndex + 8];;
+                        if ((/^\d+(\.\d+)?$/ || /^\d?$/).test(retailPriceData)) {
+                            itemVariantsObj.retialPrice = retailPriceData;
+                        } else {
+                            itemVariantsObj.retialPrice = "-";
+                        }
                     } else {
                         itemVariantsObj.label = nextIndexValue;
                         const labelWithQuantity = itemVarinatsTextArr[upcIndex + 2];
@@ -392,7 +398,14 @@ export const extractDataFromPoPdf = async (pdf) => {
                             itemVariantsObj.exFactory = itemVarinatsTextArr[upcIndex + 6];
                             itemVariantsObj.exPort = itemVarinatsTextArr[upcIndex + 7];
                             itemVariantsObj.deliveryDate = itemVarinatsTextArr[upcIndex + 8];
-                            itemVariantsObj.retialPrice = itemVarinatsTextArr[upcIndex + 9];
+                            // itemVariantsObj.retialPrice = itemVarinatsTextArr[upcIndex + 9];
+                            const retailPriceData = itemVarinatsTextArr[upcIndex + 9];
+                            if ((/^\d+(\.\d+)?$/ || /^\d?$/).test(retailPriceData)) {
+                                itemVariantsObj.retialPrice = retailPriceData;
+                            } else {
+                                itemVariantsObj.retialPrice = "-";
+                            }
+                            
                         }
                     }
                 }
@@ -480,7 +493,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 const currentInfo = filteredData[i].str;
 
                 if (currentInfo.includes("Mens") || currentInfo.includes("Womens")) {
-                    totalQuantityIndex = i + 3; 
+                    totalQuantityIndex = i + 3;
                     break;
                 }
             }
@@ -590,10 +603,16 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemVariantsObj.exFactory = itemVarinatsTextArr[(count * l) + count - 4]
                 itemVariantsObj.exPort = itemVarinatsTextArr[(count * l) + count - 3]
                 itemVariantsObj.deliveryDate = itemVarinatsTextArr[(count * l) + count - 2]
-                itemVariantsObj.retialPrice = itemVarinatsTextArr[(count * l) + count - 1]
+                // itemVariantsObj.retialPrice = itemVarinatsTextArr[(count * l) + count - 1]
+                const retailPriceData = itemVarinatsTextArr[(count * l) + count - 1];
+                if ((/^\d+(\.\d+)?$/ || /^\d?$/).test(retailPriceData)) {
+                    itemVariantsObj.retialPrice = retailPriceData;
+                } else {
+                    itemVariantsObj.retialPrice = "-";
+                }
                 itemVariantsObj.comptMaterial = "-";
                 itemVariantsObj.ratio = "-";
-                
+
 
                 itemVariantsObj.amount = itemVarinatsTextArr[(count * l) + count - 1]
                 console.log(itemVariantsObj)
