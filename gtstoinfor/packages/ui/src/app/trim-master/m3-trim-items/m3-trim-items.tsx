@@ -340,14 +340,14 @@ export function M3TrimItemsForm({props}) {
   useEffect(() => {
     if(props != undefined){
       console.log(props);
-      if(props.trimCategory != null){
-        trimOnChange(props.trimCategory)
+      if(props.trimCategoryId != null){
+        trimOnChange(props.trimCategoryId)
       }
       form.setFieldsValue({buyerId:props.buyerId})
       form.setFieldsValue({buyerId:props.buyerId})
       form.setFieldsValue({buyerCode:props.buyerName})
       form.setFieldsValue({trimType:props.trimType})
-      form.setFieldsValue({trimCategoryId:props.trimCategory})
+      form.setFieldsValue({trimCategoryId:props.trimCategoryId})
       form.setFieldsValue({hsnCode:props.hsnCode})
     }
   }, [props]);
