@@ -18,6 +18,7 @@ import { SampleOrderIdRequest } from './dto/sample-req-id';
 import { OrderQuantityRequset } from './dto/order-quantity-request';
 import * as fs from 'fs';
 // import { exec } from 'child_process';
+import { Cron } from '@nestjs/schedule';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -727,7 +728,7 @@ export class SampleDevReqController {
   //   }
 
   // }
-
+  @Cron('0 8 * * *')
   @Post('/getUsageWhtsAppMsg')
   @ApiBody({ type: Date })
   async getUsageWhtsAppMsg(@Body() req?:any): Promise<CommonResponseModel> {
