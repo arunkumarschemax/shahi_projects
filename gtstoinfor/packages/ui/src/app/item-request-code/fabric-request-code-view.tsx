@@ -322,7 +322,7 @@ const FabricRequestCodeView = ()=>{
         render : (text,record) => {
             return (
                 <span>
-                    {record.width ? `${record.width}-${record.widthUom}`: '-'}
+                    {record.width ? `${record.width}-${record.widthUOM}`: '-'}
                 </span>
             )
         },
