@@ -10,7 +10,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 
-export function M3TrimItemsForm() {
+export function M3TrimItemsForm({props}) {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const structureService = new StructureService();
@@ -336,6 +336,21 @@ export function M3TrimItemsForm() {
     generateItemCode()
     console.log(Option?.name)
   }
+
+  useEffect(() => {
+    if(props != undefined){
+      console.log(props);
+      if(props.trimCategory != null){
+        trimOnChange(props.trimCategory)
+      }
+      form.setFieldsValue({buyerId:props.buyerId})
+      form.setFieldsValue({buyerId:props.buyerId})
+      form.setFieldsValue({buyerCode:props.buyerName})
+      form.setFieldsValue({trimType:props.trimType})
+      form.setFieldsValue({trimCategoryId:props.trimCategory})
+      form.setFieldsValue({hsnCode:props.hsnCode})
+    }
+  }, [props]);
 
   return (
     <Card 

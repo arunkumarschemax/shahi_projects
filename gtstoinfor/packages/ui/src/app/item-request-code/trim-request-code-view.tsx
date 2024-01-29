@@ -1,6 +1,6 @@
-import { SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import { EditOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import { BuyersService, CategoryService, ColourService, ContentService, FabricRequestCodeService, FabricTypeService, FabricWeaveService, FinishService, GRNService, HoleService, M3ItemsService, M3TrimsService, QualitysService, StockService, StructureService, ThicknessService, TrimParamsMappingService, TrimService, TypeService, UomService, VarietyService } from "@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag, Tabs } from "antd";
+import { Button, Card, Col, Form, Input, Row, Space, Table, Select, message, Modal, Tag, Tabs, Tooltip } from "antd";
 import { ColumnType, ColumnProps } from "antd/es/table";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
@@ -13,6 +13,8 @@ import { Link } from 'react-router-dom';
 import { useIAMClientState } from "../common/iam-client-react";
 import AlertMessages from "../common/common-functions/alert-messages";
 import TabPane from "antd/es/tabs/TabPane";
+import M3Items from "../masters/m3-items/m3-items-form";
+import M3TrimItemsForm from "../trim-master/m3-trim-items/m3-trim-items";
 
 export const TrimReqCodeView = () => {
   const stockService = new StockService();
@@ -46,6 +48,9 @@ export const TrimReqCodeView = () => {
   const [filterData, setFilterData] = useState<any[]>([])
   const [selectedTrimCategory, setSelectedTrimCategory] = useState(null);
   const [activeTab, setActiveTab] = useState<string>()
+  const [modalVisible, setModalVisible] = useState(false);
+  const [requestData, setRequestData] = useState<any[]>([]);
+
 
   const onTabChange = (key) => {
     setActiveTab(key);
@@ -272,6 +277,27 @@ export const TrimReqCodeView = () => {
     console.log(val);
     // setVisibleModel(val);
   }
+  const handleCancel = () => {
+    setModalVisible(false);
+  };
+  const modalView = (rowData:any) => {
+    return  (
+  //   <Modal
+  //     className='rm-'
+  //     // key={'modal' + Date.now()}
+  //     width={'70%'}
+  //     visible={modalVisible}
+  //     style={{ top: 30, alignContent: 'right' }}
+  //     title={<React.Fragment>
+  //     </React.Fragment>}
+  //     onCancel={handleCancel}
+  //     footer={[]}
+  // >
+    <M3TrimItemsForm props={requestData}/>
+  // </Modal>
+  )
+  
+  }
 
   const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
     filterDropdown: ({
@@ -361,6 +387,12 @@ export const TrimReqCodeView = () => {
     if (value === null) return true; // If filter is not active, show all rows
     return record.itemType === value;
   };
+
+  const createItem = (rowData: any) => {
+    console.log(rowData)
+    setModalVisible(true)
+    setRequestData(rowData);
+  }
 
   const columns: ColumnProps<any>[] = [
     {
@@ -565,9 +597,23 @@ export const TrimReqCodeView = () => {
     ),
     },
     {
-      title: <div style={{textAlign:"center"}}>Action</div>,
-      dataIndex: "action"
-    },
+      title:`Action`,
+      dataIndex: 'action',
+      render: (text, rowData) => {
+        return (<span>
+          <Tooltip placement="top" title='Create Item'>
+              <Tag >
+                  <EditOutlined type= "edit"
+                      onClick={() => {
+                          createItem(rowData)
+                      }}
+                      style={{ color: '#1890ff', fontSize: '14px' }} />
+              </Tag>
+          </Tooltip>
+          </span>
+        )
+      }
+    }
   ]
 
   const filteredColumns = columns.filter((column) => Object.keys(column).length > 0);
@@ -977,6 +1023,19 @@ export const TrimReqCodeView = () => {
           size="small"
         />
       )} */}
+      <Modal
+            className='rm-'
+            // key={'modal' + Date.now()}
+            width={'79%'}
+            style={{ top: 30, alignContent: 'right' }}
+            visible={modalVisible}
+            title={<React.Fragment>
+            </React.Fragment>}
+            onCancel={handleCancel}
+            footer={[]}
+        >
+          {modalView(data)}
+        </Modal>
     </Card>
   );
 };
