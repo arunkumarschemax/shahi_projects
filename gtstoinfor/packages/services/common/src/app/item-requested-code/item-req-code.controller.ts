@@ -6,7 +6,6 @@ import { CommonResponseModel, FabricCodeReq, M3TrimType, M3trimsDTO, TrimCodeReq
 import { FabricReqCodeService } from './fabric-request-code.service';
 import { TrimReqCodeService } from './trim-req-code.service';
 import { TrimRequestCodeDto } from './dtos/trim-request-code.dto';
-import { UpdateIdReq } from './dtos/update-id-req';
 
 @ApiTags('item-req-code')
 @Controller('item-req-code')
