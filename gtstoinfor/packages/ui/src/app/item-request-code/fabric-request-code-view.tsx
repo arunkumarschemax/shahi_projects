@@ -3,11 +3,12 @@ import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
-import { FabricCodeReq, FabricRequestCodeDto } from '@project-management-system/shared-models';
+import { FabricCodeReq, FabricRequestCodeDto, MenusAndScopesEnum } from '@project-management-system/shared-models';
 import { FabricRequestCodeService, M3ItemsService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 import M3Items from '../masters/m3-items/m3-items-form';
 import TabPane from 'antd/es/tabs/TabPane';
+import RolePermission from '../role-permissions';
 
 const { Option } = Select;
 
@@ -52,7 +53,11 @@ const FabricRequestCodeView = ()=>{
     getAllWeaves()
     getAllContents()
   }, []);
-
+  const checkAccess = (buttonParam) => {   
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Sample Development"],MenusAndScopesEnum.SubMenus['Fabric Request'],buttonParam)
+    
+    return accessValue
+}
   const getAllFabrics= (key) => {
     const req = new FabricCodeReq(form.getFieldValue('hsnCode'),form.getFieldValue('hsnCode'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('finishTypeId'),form.getFieldValue('contentId'),key)
     requestCodeService.getAllFabrics(req).then(res => {
@@ -371,15 +376,17 @@ const FabricRequestCodeView = ()=>{
       dataIndex: 'action',
       render: (text, rowData) => {
         return (<span>
+          {checkAccess(MenusAndScopesEnum.Scopes.Update)?(
           <Tooltip placement="top" title='Create Item'>
               <Tag >
-                  <EditOutlined type= "edit"
+                  <EditOutlined type= "edit" 
                       onClick={() => {
                           createItem(rowData)
                       }}
                       style={{ color: '#1890ff', fontSize: '14px' }} />
               </Tag>
           </Tooltip>
+          ):('-')}
           </span>
         )
       }

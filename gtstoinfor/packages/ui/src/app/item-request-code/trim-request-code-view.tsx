@@ -6,7 +6,7 @@ import React, { useEffect, useRef } from "react";
 import { useState } from "react";
 import Highlighter from "react-highlight-words";
 import { useNavigate } from "react-router-dom";
-import { BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, MaterialFabricEnum, PartEnum, PartEnumDisplay, TrimCodeReq, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, ItemTypeEnum, ItemTypeEnumDisplay, LogoEnum, LogoEnumDisplay, M3ItemsDTO, M3trimsDTO, MaterialFabricEnum, MenusAndScopesEnum, PartEnum, PartEnumDisplay, TrimCodeReq, TrimIdRequestDto, UomCategoryEnum, m3ItemsContentEnum } from "@project-management-system/shared-models";
 const { TextArea } = Input;
 const { Option } = Select;
 import { Link } from 'react-router-dom';
@@ -15,6 +15,7 @@ import AlertMessages from "../common/common-functions/alert-messages";
 import TabPane from "antd/es/tabs/TabPane";
 import M3Items from "../masters/m3-items/m3-items-form";
 import M3TrimItemsForm from "../trim-master/m3-trim-items/m3-trim-items";
+import RolePermission from "../role-permissions";
 
 export const TrimReqCodeView = () => {
   const stockService = new StockService();
@@ -66,7 +67,11 @@ export const TrimReqCodeView = () => {
     getBuyers();
     onFinish('Open')
   }, [mapData]);
-
+  const checkAccess = (buttonParam) => {   
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Sample Development"],MenusAndScopesEnum.SubMenus["Trim Request"],buttonParam)
+    
+    return accessValue
+}
 
   const getStructures = (req?: M3trimsDTO) => {
     if (form.getFieldValue('categoryId') !== undefined) {
@@ -601,6 +606,7 @@ export const TrimReqCodeView = () => {
       dataIndex: 'action',
       render: (text, rowData) => {
         return (<span>
+          {checkAccess(MenusAndScopesEnum.Scopes.Update)?(
           <Tooltip placement="top" title='Create Item'>
               <Tag >
                   <EditOutlined type= "edit"
@@ -610,6 +616,7 @@ export const TrimReqCodeView = () => {
                       style={{ color: '#1890ff', fontSize: '14px' }} />
               </Tag>
           </Tooltip>
+          ):('-')}
           </span>
         )
       }
