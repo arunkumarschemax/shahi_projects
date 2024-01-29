@@ -4,3 +4,10 @@ export class BuyerRefNoRequest{
     //     this.buyerRefNo = buyerRefNo
     // }
 }
+
+export class UpdateIdReq{
+    id:number;
+    constructor(id:number){
+        this.id = id
+    }
+}
