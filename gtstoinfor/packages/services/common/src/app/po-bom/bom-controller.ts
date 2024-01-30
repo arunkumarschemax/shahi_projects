@@ -4,13 +4,15 @@ import { BomService } from "./bom-service";
 import { CommonResponseModel } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleDto } from "./dto/style-dto";
+import { TrimService } from "./trim-service";
 
 @ApiTags('bom')
 @Controller('bom')
 export class BomController{
     constructor(
     private readonly bomService: BomService,   
-    private readonly applicationExceptionHandler: ApplicationExceptionHandler
+    private readonly applicationExceptionHandler: ApplicationExceptionHandler,
+    private readonly trimService : TrimService
 
     ){}
     
@@ -44,6 +46,15 @@ export class BomController{
     async getPpmPoLineData():Promise<CommonResponseModel>{
         try{
             return this.bomService.getPpmPoLineData()
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+
+    @Post('/getAllTrimInfo')
+    async getAllTrimInfo():Promise<CommonResponseModel>{
+        try{
+            return this.trimService.getAllTrimInfo()
         }catch(err){
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }

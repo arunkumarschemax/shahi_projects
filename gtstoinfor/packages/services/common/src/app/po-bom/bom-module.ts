@@ -12,6 +12,7 @@ import { StyleComboRepo } from "./dto/style-combo-repo";
 import { ItemEntity } from "./entittes/item-entity";
 import { DpomRepository } from "../dpom/repositories/dpom.repository";
 import { DpomEntity } from "../dpom/entites/dpom.entity";
+import { TrimService } from "./trim-service";
 
 @Module({
     imports:[
@@ -21,6 +22,6 @@ import { DpomEntity } from "../dpom/entites/dpom.entity";
             StyleComboEntity,ItemEntity,DpomEntity
         ])],
     controllers:[BomController],
-    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository]
+    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository,TrimService]
 })
 export class bomModule{ }
