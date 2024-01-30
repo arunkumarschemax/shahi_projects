@@ -231,7 +231,7 @@ const M3Items = ({props}) => {
       weightValue: props.weightId,
       weightUomId: props.weightUnit,
     });
-    // form.setFieldsValue({weightId:props.weight});
+    form.setFieldsValue({m3Code:props.m3Code});
     // form.setFieldsValue({widthValue:props.width});
     form.setFieldsValue({width:props.width,widthUomId:props.widthUnit,});
     form.setFieldsValue({epiConstruction:props.epiConstruction,ppiConstruction:props.ppiConstruction,});
@@ -333,7 +333,7 @@ const M3Items = ({props}) => {
       if (res.status) {
         console.log(props);
         if(props != undefined){
-          trimReqCodeService.updateFabStatus({id:props.fabricRequestCodeId}).then((res) => {
+          trimReqCodeService.updateFabStatus({id:props.m3ItemsId}).then((res) => {
             if(res.status){
               AlertMessages.getSuccessMessage(res.internalMessage);
               setTimeout(() => {
@@ -364,6 +364,7 @@ const M3Items = ({props}) => {
 
   const yarnSelect = (val) =>{
     console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+    console.log(val)
     setYarnRadio(true)
     setYarnType(val)
   }
@@ -623,7 +624,7 @@ const handleYarnUnitChange = (index, value) => {
           </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }} xl={{ span: 6 }}>
             <Form.Item name="yarnType" id="yarnType" rules={[{ required: false, message : "Yarn Type is required" }]}>
-              Yarn Type : <Radio.Group name="yarnType" id="yarnType" style={{ marginTop: "25px" }} onChange={(e)=>yarnSelect(e?.target?.value)} onBlur={generateItemCode} value={form.getFieldValue("yarnType") === "Warp"?"Warp":"Weft"}>
+              Yarn Type : <Radio.Group name="yarnType" id="yarnType" style={{ marginTop: "25px" }} onChange={(e)=>yarnSelect(e?.target?.value)} onBlur={generateItemCode} value={props?.yarnType === "Warp"?"Warp":props?.yarnType === "Weft"?"Weft":""}>
                 <Radio value="Warp">Warp</Radio>
                 <Radio value="Weft">Weft</Radio>
               </Radio.Group>
@@ -703,7 +704,7 @@ const handleYarnUnitChange = (index, value) => {
           )}
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 9 }} xl={{ span: 9 }}>
               <Card>
-              <Form.List name="content">
+              <Form.List name="content" initialValue={[{ content: '', percentage: null }]}>
                 {(fields, { add, remove }) => (
                   <>
                     {fields.map((field, index) => (
@@ -716,20 +717,19 @@ const handleYarnUnitChange = (index, value) => {
                             rules={[{ required: false, message: 'Field is required' }]}
                           >
                             <Space.Compact>
-                              <Select
-                                allowClear
-                                placeholder="Select Content"
-                                onChange={(value) => onContentChange(index, value)}
-                                onBlur={generateItemCode}
-                                style={{ width: '290px' }}
-                              >
-                                {/* Replace contentData with your actual data */}
-                                {contentData.map((e) => (
-                                  <Select.Option key={e.contentId} value={e.contentId}>
-                                    {e.content}
-                                  </Select.Option>
-                                ))}
-                              </Select>
+                            <Select
+                                  allowClear
+                                  placeholder="Select Content"
+                                  onChange={(value) => onContentChange(index, value)}
+                                  onBlur={generateItemCode}
+                                  style={{width: '290px'}}
+                                >
+                                  {contentData.map((e) => (
+                                    <Option key={e.contentId} value={e.contentId}>
+                                      {e.content}
+                                    </Option>
+                                  ))}
+                                </Select>
                               <Input
                                 placeholder="Enter %"
                                 allowClear

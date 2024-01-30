@@ -381,9 +381,9 @@ const onFabricTpe = (val) =>{
             {/* </Row> */}
             <Row>
             <Col span={24} style={{ textAlign: "right" }}>
-            <Button type="primary" onClick={createReqCode}>
+            <span style={{paddingRight:"10px"}}><Button type="primary" onClick={createReqCode}>
               Request
-            </Button>
+            </Button></span>
             <Button type="primary" onClick={() => onFinish(form.getFieldsValue())}>
               Search
             </Button>
