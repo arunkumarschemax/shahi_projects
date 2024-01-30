@@ -89,7 +89,7 @@ export class FabricReqCodeService {
           query = query + ` AND frc.finish_id=${req.finishType}`
         }
         if (req?.contentId) {
-          query = query + ` AND frc.content='${req.contentId}'`
+          query = query + ` AND frc.content_id='${req.contentId}'`
         }
         if (req?.status) {
           query = query + ` AND frc.status='${req.status}'`
@@ -100,7 +100,7 @@ export class FabricReqCodeService {
           console.log("**********");
           console.log(res);
           console.log("************")
-          let rec = new M3FabricsDTO(res.fabricRequestCodeId,res.buyer_id,"",res.fabricTypeId,res.weaveId,res.weight,res.weightUnitId,res.epi,res.ppi,res.yarnType,res.width,res.widthUnit,res.finish_id,res.shrinkage,"",res.buyerName,"",res.hsnCode,[],[{"content":res.content_id,"percentage":"100"}],true,"","",0,"",res.fabricType,res.status,res.fabricWeave,res.weightUom,res.widthUom,res.finishType,res.content);
+          let rec = new M3FabricsDTO(res.fabricRequestCodeId,res.buyer_id,"",res.fabricTypeId,res.weaveId,res.weight,res.weightUnitId,res.epi,res.ppi,res.yarnType,res.width,res.widthUnit,res.finish_id,res.shrinkage,"",res.buyerName,res.m3Code,res.hsnCode,[],[{"content":res.content_id,"percentage":"100"}],true,"","",0,"",res.fabricType,res.status,res.fabricWeave,res.weightUom,res.widthUom,res.finishType,res.content);
           response.push(rec);
         }
         if(response.length >0){
@@ -119,6 +119,7 @@ export class FabricReqCodeService {
         let query = `SELECT frc.buyer_id, b.buyer_name AS buyerName 
         FROM fabric_request_code frc
         LEFT JOIN buyers b ON b.buyer_id = frc.buyer_id
+        WHERE b.buyer_name is not null
         GROUP BY frc.buyer_id
         ORDER BY b.buyer_name`
         const data = await this.dataSource.query(query)
@@ -137,6 +138,7 @@ export class FabricReqCodeService {
         let query = `SELECT frc.fabric_type_id,ft.fabric_type_name AS fabricType
         FROM fabric_request_code frc
         LEFT JOIN fabric_type ft ON ft.fabric_type_id = frc.fabric_type_id
+        WHERE ft.fabric_type_name is not null
         GROUP BY frc.fabric_type_id
         ORDER BY ft.fabric_type_name`
         const data = await this.dataSource.query(query)
@@ -155,6 +157,7 @@ export class FabricReqCodeService {
         let query = `SELECT frc.weave_id AS weaveId,fw.fabric_weave_name AS fabricWeave
         FROM fabric_request_code frc
         LEFT JOIN fabric_weave fw ON fw.fabric_weave_id = frc.weave_id
+        WHERE fw.fabric_weave_name is not null
         GROUP BY frc.weave_id
         ORDER BY fw.fabric_weave_name`
         const data = await this.dataSource.query(query)
@@ -173,6 +176,7 @@ export class FabricReqCodeService {
         let query = `SELECT frc.finish_id,fft.fabric_finish_type AS finishType
         FROM fabric_request_code frc
         LEFT JOIN fabric_finish_types fft ON fft.fabric_finish_type_id = frc.finish_id
+        WHERE fft.fabric_finish_type is not null
         GROUP BY frc.finish_id
         ORDER BY fft.fabric_finish_type`
         const data = await this.dataSource.query(query)
@@ -191,6 +195,7 @@ export class FabricReqCodeService {
         let query = `SELECT frc.content_id,c.content
         FROM fabric_request_code frc
         LEFT JOIN content c ON c.content_id = frc.content_id
+        WHERE c.content IS NOT NULL
         GROUP BY frc.content_id
         ORDER BY c.content`
         const data = await this.dataSource.query(query)
@@ -206,7 +211,7 @@ export class FabricReqCodeService {
 
     async getAllHSNCodes():Promise<CommonResponseModel>{
       try{
-        let query = `SELECT hsn_code FROM fabric_request_code GROUP BY hsn_code ORDER BY hsn_code`
+        let query = `SELECT hsn_code as hsnCode FROM fabric_request_code WHERE hsn_code is not null GROUP BY hsn_code ORDER BY hsn_code`
         const data = await this.dataSource.query(query)
         if(data.length > 0){
           return new CommonResponseModel(true,1,'Data retrieved successfully',data)

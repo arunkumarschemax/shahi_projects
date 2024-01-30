@@ -231,7 +231,7 @@ const M3Items = ({props}) => {
       weightValue: props.weightId,
       weightUomId: props.weightUnit,
     });
-    // form.setFieldsValue({weightId:props.weight});
+    form.setFieldsValue({m3Code:props.m3Code});
     // form.setFieldsValue({widthValue:props.width});
     form.setFieldsValue({width:props.width,widthUomId:props.widthUnit,});
     form.setFieldsValue({epiConstruction:props.epiConstruction,ppiConstruction:props.ppiConstruction,});

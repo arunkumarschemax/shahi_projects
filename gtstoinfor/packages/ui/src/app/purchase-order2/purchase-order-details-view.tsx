@@ -238,6 +238,12 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       },
     },
     {
+      title:'Transportation Amount',
+      key:'transportation',
+      dataIndex:'transportation'
+
+    },
+    {
       title: 'Tax %',
       key: 'Tax %',
       dataIndex: 'taxPercentage',
