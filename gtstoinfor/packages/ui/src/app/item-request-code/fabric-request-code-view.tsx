@@ -37,7 +37,9 @@ const FabricRequestCodeView = ()=>{
   const m3ItemsService = new M3ItemsService();
 
   const [activeTab, setActiveTab] = useState<string>()
-
+  const [openData, setOpenData] = useState<any[]>([]);
+  const [completedData, setCompletedData] = useState<any[]>([]);
+ 
   const onTabChange = (key) => {
     console.log(key,'.........................')
     setActiveTab(key);
@@ -64,6 +66,8 @@ const FabricRequestCodeView = ()=>{
     requestCodeService.getAllFabrics(req).then(res => {
       if (res.status) {
         setReqCodeData(res.data);
+        setOpenData(res.data.filter((e)=>e.status === 'open'))
+        setCompletedData(res.data.filter((e)=>e.status === 'completed'))
       } else {
         if (res.data) {
           setReqCodeData([]);
@@ -588,7 +592,7 @@ const FabricRequestCodeView = ()=>{
                   <TabPane tab="Open" key="OPEN">
                       <Table
                         className="custom-table-wrapper"
-                        dataSource={reqCodeData}
+                        dataSource={openData}
                         columns={tableColumns("1")}
                         size="small"
                         scroll={{x:'max-content'}}
@@ -603,7 +607,7 @@ const FabricRequestCodeView = ()=>{
                   <TabPane tab="Completed" key="COMPLETED">
                       <Table
                         className="custom-table-wrapper"
-                        dataSource={reqCodeData}
+                        dataSource={completedData}
                         columns={tableColumns("2")}
                         size="small"
                         scroll={{x:'max-content'}}
