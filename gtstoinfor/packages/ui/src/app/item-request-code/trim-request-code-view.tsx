@@ -422,7 +422,7 @@ export const TrimReqCodeView = () => {
     {
       title: <div style={{textAlign:"center"}}>Trim Type</div>,
       dataIndex: "trimType",
-      ...getColumnSearchProps("trimType"),
+      // ...getColumnSearchProps("trimType"),
       sorter: (a, b) => a.trimType-(b.trimType),
       sortDirections: ["descend", "ascend"],
       render: (text) => {
