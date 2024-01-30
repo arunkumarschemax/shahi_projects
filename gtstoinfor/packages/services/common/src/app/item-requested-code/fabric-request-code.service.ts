@@ -117,14 +117,20 @@ export class FabricReqCodeService {
        }
     }
 
-    async getAllFabricBuyers():Promise<CommonResponseModel>{
+    async getAllFabricBuyers(req?:any):Promise<CommonResponseModel>{
       try{
         let query = `SELECT frc.buyer_id, b.buyer_name AS buyerName 
         FROM fabric_request_code frc
         LEFT JOIN buyers b ON b.buyer_id = frc.buyer_id
         WHERE b.buyer_name is not null
-        GROUP BY frc.buyer_id
-        ORDER BY b.buyer_name`
+       `
+        if(req.buyerRefNo){
+            query = query + ` AND b.external_ref_number='${req.buyerRefNo}'`
+ 
+          // data.where(`b.external_ref_number = '${refNo}'`)
+         }
+         query+= ` GROUP BY frc.buyer_id ORDER BY b.buyer_name`
+
         const data = await this.dataSource.query(query)
         if(data.length > 0){
           return new CommonResponseModel(true,1,'Data retrieved successfully',data)

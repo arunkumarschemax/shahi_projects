@@ -3,12 +3,13 @@ import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
-import { FabricCodeReq, FabricRequestCodeDto, MenusAndScopesEnum } from '@project-management-system/shared-models';
+import { BuyerRefNoRequest, FabricCodeReq, FabricRequestCodeDto, MenusAndScopesEnum } from '@project-management-system/shared-models';
 import { FabricRequestCodeService, M3ItemsService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 import M3Items from '../masters/m3-items/m3-items-form';
 import TabPane from 'antd/es/tabs/TabPane';
 import RolePermission from '../role-permissions';
+import { useIAMClientState } from '../common/iam-client-react';
 
 const { Option } = Select;
 
@@ -40,6 +41,7 @@ const FabricRequestCodeView = ()=>{
   const [openData, setOpenData] = useState<any[]>([]);
   const [completedData, setCompletedData] = useState<any[]>([]);
   const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   const onTabChange = (key) => {
     console.log(key,'.........................')
@@ -85,10 +87,17 @@ const FabricRequestCodeView = ()=>{
 
 
   const getAllBuyers=()=>{
-    requestCodeService.getAllFabricBuyers().then((res)=>{
+    const req = new BuyerRefNoRequest()
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    requestCodeService.getAllFabricBuyers(req).then((res)=>{
+      if (res.status && req.buyerRefNo) {
+        form.setFieldsValue({buyerId: res.data[0]?.buyer_id})
+        getAllFabrics()
+      }
       if(res.status){
         setBuyerData(res.data)
       }
+      
     })
   }
 

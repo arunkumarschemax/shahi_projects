@@ -205,16 +205,16 @@ export const TrimReqCodeView = () => {
 
   const getBuyers = () => {
     const req = new BuyerRefNoRequest()
-    const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null   
-    req.buyerRefNo = refNo
-    console.log(refNo,'=========')
-    trimReqCodeService.getAllBuyers(req).then((res) => {
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+      trimReqCodeService.getAllBuyers(req).then((res) => {
+      console.log(res,'ppppppppppp');
+      
       if (res.status) {
         setBuyerData(res.data);
-      //   if(refNo){
-      //     form.setFieldsValue({buyerId: res.data[0]?.buyerId})
-      //     // onBuyerChange(res.data[0]?.buyerId,res.data[0]?.buyerName)
-      // }
+        if(req.buyerRefNo){
+          form.setFieldsValue({buyerId: res.data[0]?.buyerId})
+          // onBuyerChange(res.data[0]?.buyerId,res.data[0]?.buyerName)
+      }
       }
     });
   };
