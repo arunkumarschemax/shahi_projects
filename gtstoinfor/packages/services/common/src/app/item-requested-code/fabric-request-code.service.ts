@@ -76,6 +76,9 @@ export class FabricReqCodeService {
         LEFT JOIN buyers b ON b.buyer_id = frc.buyer_id
         LEFT JOIN content c ON c.content_id = frc.content_id
         WHERE 1=1`
+        if (req.ExternalRefNo && req.ExternalRefNo!=null){
+          query += ` AND b.external_ref_number = '${req.ExternalRefNo}'`
+        }
         if (req?.buyerId) {
           query = query + ` AND frc.buyer_id=${req.buyerId}`
         }

@@ -51,12 +51,13 @@ export const TrimReqCodeView = () => {
   const [activeTab, setActiveTab] = useState<string>()
   const [modalVisible, setModalVisible] = useState(false);
   const [requestData, setRequestData] = useState<any[]>([]);
-
-
+  const [openData, setOpenData] = useState<any[]>([]);
+  const [completedData, setCompletedData] = useState<any[]>([]);
   const onTabChange = (key) => {
     setActiveTab(key);
-    onFinish(key)
+    getAllTrims(key);
   };
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
 
   useEffect(() => {
     // const userrefNo = IAMClientAuthContext.user?.externalRefNo
@@ -65,7 +66,7 @@ export const TrimReqCodeView = () => {
     // }
     getTrims();
     getBuyers();
-    onFinish('Open')
+    getAllTrims('OPEN');
   }, [mapData]);
   const checkAccess = (buttonParam) => {   
     const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Sample Development"],MenusAndScopesEnum.SubMenus["Trim Request"],buttonParam)
@@ -253,13 +254,16 @@ export const TrimReqCodeView = () => {
   });
   getMappedTrims(value);
   }
-
-  const onFinish = (key) => {
+  const getAllTrims = (key) =>{
     console.log(activeTab,'------000000000000000')
-    const req = new TrimCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('trimType'),key)  
+    const req = new TrimCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('trimType'),key,externalRefNo)  
     trimReqCodeService.getAllTrims(req).then((res) => {
       if (res.status) {
         setData(res.data);
+        // console.log(res.data.filter((e)=>e.status === 'OPEN'));
+        // console.log(res.data.filter((e)=>e.status === 'COMPLETED'));
+        setOpenData(res.data.filter((e)=>e.status === 'OPEN'))
+       setCompletedData(res.data.filter((e)=>e.status === 'COMPLETED'))
         message.success(res.internalMessage,2);
       }else{
         message.warning(res.internalMessage,2);
@@ -268,6 +272,11 @@ export const TrimReqCodeView = () => {
       setData([]);
       AlertMessages.getErrorMessage(err.message);
     });
+  }
+
+  const onFinish = (key) => {
+   getAllTrims (activeTab)
+ 
   };
 
   const onReset = () => {
@@ -411,8 +420,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Buyer</div>,
       dataIndex: "buyerName",
       ...getColumnSearchProps("buyerName"),
-      sorter: (a, b) => (a.buyerName || '').localeCompare(b.buyerName || ''),
-
+      sorter: (a, b) => a.buyerName-(b.buyerName),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -424,7 +432,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Trim Type</div>,
       dataIndex: "trimType",
       ...getColumnSearchProps("trimType"),
-      sorter: (a, b) => a.trimType.localeCompare(b.trimType),
+      sorter: (a, b) => a.trimType-(b.trimType),
       sortDirections: ["descend", "ascend"],
       render: (text) => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
@@ -435,7 +443,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Trim Category</div>,
       dataIndex: "trimCategory",
       ...getColumnSearchProps("trimCategory"),
-      sorter: (a, b) => a.trimCategory.localeCompare(b.trimCategory),
+      sorter: (a, b) => a.trimCategory-(b.trimCategory),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -455,7 +463,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Category</div>,
       dataIndex: "category",
       ...getColumnSearchProps("category"),
-      sorter: (a, b) => (a.content || '').localeCompare(b.content || ''),
+      sorter: (a, b) => a.category-(b.category),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -470,8 +478,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Content</div>,
       dataIndex: "content",
       ...getColumnSearchProps("content"),
-      // sorter: (a, b) => a.content-(b.content),
-      sorter: (a, b) => (a.content || '').localeCompare(b.content || ''),
+      sorter: (a, b) => a.content-(b.content),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -486,8 +493,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Type</div>,
       dataIndex: "type",
       ...getColumnSearchProps("type"),
-      sorter: (a, b) => (a.type || '').localeCompare(b.type || ''),
-
+      sorter: (a, b) => a.type-(b.type),
       sortDirections: ["descend", "ascend"],
       render: (text) => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
@@ -501,8 +507,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Finish</div>,
       dataIndex: "finish",
       ...getColumnSearchProps("finish"),
-      sorter: (a, b) => (a.finish || '').localeCompare(b.finish || ''),
-
+      sorter: (a, b) => a.finish-(b.finish),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -517,8 +522,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Hole</div>,
       dataIndex: "hole",
       ...getColumnSearchProps("hole"),
-      sorter: (a, b) => (a.hole || '').localeCompare(b.hole || ''),
-
+      sorter: (a, b) => a.hole-(b.hole),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
         <span>
@@ -597,16 +601,16 @@ export const TrimReqCodeView = () => {
         </span>
     ),
     },
-    {
-      title: <div style={{textAlign:"center"}}>Status</div>,
-      dataIndex: "status",
-      ...getColumnSearchProps("status"),
-      render: (text, record) => (
-        <span>
-            {record.status ? record.status : '-'}
-        </span>
-    ),
-    },
+    // {
+    //   title: <div style={{textAlign:"center"}}>Status</div>,
+    //   dataIndex: "status",
+    //   ...getColumnSearchProps("status"),
+    //   render: (text, record) => (
+    //     <span>
+    //         {record.status ? record.status : '-'}
+    //     </span>
+    // ),
+    // },
   ];
   const actionColumns: ColumnProps<any>[] = [
     {
@@ -665,7 +669,7 @@ export const TrimReqCodeView = () => {
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Buyer"
-                    onChange={onBuyerChange}
+                    // onChange={onBuyerChange}
                     >
                         {buyerData.map((e) => {
                             return (
@@ -1021,7 +1025,7 @@ export const TrimReqCodeView = () => {
         <TabPane tab="Open" key="OPEN">
             <Table
               className="custom-table-wrapper"
-              dataSource={data}
+              dataSource={openData}
               columns={tableColumns("1")}
               size="small"
             />
@@ -1029,7 +1033,7 @@ export const TrimReqCodeView = () => {
         <TabPane tab="Completed" key="COMPLETED">
             <Table
               className="custom-table-wrapper"
-              dataSource={data}
+              dataSource={completedData}
               columns={tableColumns("2")}
               size="small"
             />

@@ -2558,7 +2558,7 @@ async getUsageWhtsAppMsg(): Promise<CommonResponseModel> {
     const locationInfo = await manager.query(location);
      
 
-          const datetime = moment().format('MMMM Do, YYYY')
+          const datetime = moment().subtract(1, 'days').format('MMMM Do, YYYY')
 
           // for (const ic of data) {
           //     let msgContent = '\\n' + ic.lifecycle_status + ' : ' + ic.COUNT
