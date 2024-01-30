@@ -359,6 +359,7 @@ export function M3TrimItemsForm({props}) {
       form.setFieldsValue({trimType:props.trimType})
       form.setFieldsValue({trimCategoryId:props.trimCategoryId})
       form.setFieldsValue({hsnCode:props.hsnCode})
+      form.setFieldsValue({m3Code:props.m3Code})
       if (props.structureStatus === 1) {
         form.setFieldsValue({structureId:props.structureId})
       }
