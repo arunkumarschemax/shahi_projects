@@ -194,7 +194,8 @@ export class BomService{
                     rec.planning_season_year,
                     rec.geo_code,
                     rec.total_item_qty, // Assuming this property exists in your data
-                    []
+                    [],
+                    rec.gender_age_desc
                 );
     
                 sizeDateMap.set(rec.po_and_line, sizeData);

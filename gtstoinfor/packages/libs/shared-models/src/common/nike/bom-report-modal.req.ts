@@ -13,9 +13,10 @@ export class BomReportModel {
     totalItemQty ?: string;
  
     sizeWiseData ?: BomReportSizeModel[];
+    genderAgeDesc?: string;
 
     constructor(id:number, purchaseOrderNumber ?: string,poAndLine ?: string, styleNumber ?: string,destinationCountryCode ?: string, destinationCountry ?: string, planningSeasonCode ?: string, planningSeasonYear ?: string,   geoCode ?: string, totalItemQty ?: string, 
-         sizeWiseData ?: BomReportSizeModel[]
+         sizeWiseData ?: BomReportSizeModel[],genderAgeDesc?: string
     ) {
         this.id = id
         this.purchaseOrderNumber = purchaseOrderNumber
@@ -29,5 +30,6 @@ export class BomReportModel {
         this.totalItemQty = totalItemQty
        
         this.sizeWiseData = sizeWiseData
+        this.genderAgeDesc = genderAgeDesc
        };
 }

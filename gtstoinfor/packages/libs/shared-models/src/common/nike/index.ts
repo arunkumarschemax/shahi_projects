@@ -36,3 +36,4 @@ export * from './sizes';
 export * from './co-line-item-no.dto';
 export * from './bom-size-modal.req';
 export * from './bom-report-modal.req';
+export * from './trim-info-model'
