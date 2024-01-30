@@ -1,6 +1,6 @@
 
 import { FileExcelFilled, RightSquareOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { BomReportModel, BomReportSizeModel, FactoryUpdateRequest, MarketingModel, MarketingReportSizeModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
+import { BomReportModel, BomReportSizeModel, FactoryUpdateRequest, MarketingModel, MarketingReportSizeModel, PpmDateFilterRequest, StyleNumberReq } from '@project-management-system/shared-models';
 import { BomService, NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect, Tooltip, Checkbox, Popconfirm, Switch } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
@@ -351,6 +351,8 @@ const bomservice = new BomService();
       //     }
       //   },
       // },
+   
+
     ]
 
     sizeHeaders?.forEach(version => {
@@ -445,6 +447,25 @@ const bomservice = new BomService();
         });
       }
     });
+    columns.push({
+      title: 'Action', dataIndex: 'action', width: 120, align: 'center',
+      render:(text,record)=>{
+        return(
+          <Button onClick={() => onGenerateBom(record)}>Generate BOM</Button>
+        )
+      }
+  
+    })
+
+    const onGenerateBom = (record) => {
+      console.log(record,'***')
+      // const req = new StyleNumberReq(record.styleNumber)
+      // bomservice.getBomInfoAgainstStyle(req).then(res =>{
+      //   if(res.status){
+
+      //   }
+      // })
+    }
 
     return (
       <>
