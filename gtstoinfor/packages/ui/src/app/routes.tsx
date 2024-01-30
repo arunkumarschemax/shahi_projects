@@ -49,6 +49,7 @@ import Button2Print from "./trims/trim-prints/button2-print"
 import Button3Print from "./trims/trim-prints/button3-print"
 import TrimsGrid from "./trims/trims-grid"
 import TrimColumns from "./trims/trim-columns"
+import TrimList from "./trims/trims-cardview"
 
 
 export const AppRoutes = () => {
@@ -166,6 +167,7 @@ export const AppRoutes = () => {
                     <Route path='trim-grid' element={<TrimsGrid/>} />
 
                     <Route path='trim-columns' element={<TrimColumns/>} />
+                    <Route path='trim-List' element={<TrimList/>} />
 
 
                 </Route>
