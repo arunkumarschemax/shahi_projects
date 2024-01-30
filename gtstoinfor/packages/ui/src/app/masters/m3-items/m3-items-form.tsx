@@ -180,7 +180,7 @@ const M3Items = ({props}) => {
   useEffect(() => {
     console.log("********************")
     console.log(props)
-    console.log(`"`+props.yarnType+`"`)
+    console.log(`"`+props?.yarnType+`"`)
 
    if(props != undefined){
     console.log("********************")
@@ -333,7 +333,7 @@ const M3Items = ({props}) => {
       if (res.status) {
         console.log(props);
         if(props != undefined){
-          trimReqCodeService.updateFabStatus({id:props.m3ItemsId}).then((res) => {
+          trimReqCodeService.updateFabStatus({id:props.m3ItemsId,m3ItemsId:res.data?.m3ItemsId}).then((res) => {
             if(res.status){
               AlertMessages.getSuccessMessage(res.internalMessage);
               setTimeout(() => {

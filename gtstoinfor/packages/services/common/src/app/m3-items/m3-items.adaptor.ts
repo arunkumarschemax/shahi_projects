@@ -63,7 +63,7 @@ export class M3ItemsAdapter {
     convertEntityToDto(entity: M3ItemsEntity): M3FabricsDTO {
         console.log(entity,'-----------------------------')
         const dto = new M3FabricsDTO();
-        entity.m3ItemsId = dto.m3ItemsId;
+        dto.m3ItemsId = entity.m3ItemsId;
         dto.itemCode = entity.itemCode
         // dto.content = entity.content
         dto.fabricTypeId = entity.fabricType

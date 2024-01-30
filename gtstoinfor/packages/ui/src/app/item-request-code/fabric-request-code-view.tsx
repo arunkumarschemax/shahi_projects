@@ -36,12 +36,15 @@ const FabricRequestCodeView = ()=>{
   const requestCodeService = new FabricRequestCodeService();
   const m3ItemsService = new M3ItemsService();
 
-  const [activeTab, setActiveTab] = useState<string>()
+  const [activeTab, setActiveTab] = useState<string>('OPEN');
 
   const onTabChange = (key) => {
-    console.log(key,'.........................')
-    setActiveTab(key);
-    getAllFabrics(key)
+    setActiveTab((prevTab) => {
+      if (key !== prevTab) {
+        getAllFabrics(key);
+      }
+      return key;
+    });
   };
 
   useEffect(() => {
@@ -59,7 +62,6 @@ const FabricRequestCodeView = ()=>{
     return accessValue
 }
   const getAllFabrics= (val?) => {
-    console.log(val,'.........................')
     const req = new FabricCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('hsnCode'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('finishTypeId'),form.getFieldValue('contentId'),val)
     requestCodeService.getAllFabrics(req).then(res => {
       if (res.status) {
@@ -246,8 +248,7 @@ const FabricRequestCodeView = ()=>{
     {
       title: 'M3Code',
       dataIndex: 'm3Code',
-      sorter: (a, b) => a.m3Code.length - b.m3Code.length,
-
+      sorter: (a, b) => a.m3Code?.length - b.m3Code?.length,
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('m3Code'),
       render: (text, record) => (
@@ -343,7 +344,7 @@ const FabricRequestCodeView = ()=>{
     {
         title: 'Finish Type',
         dataIndex: 'finishType',
-        sorter: (a, b) => a.finishType-(b.finishType),
+        sorter: (a, b) => a.finishType?.length - b.finishType?.length,
         sortDirections: ['descend', 'ascend'],
         // ...getColumnSearchProps('finishType'),
         render: (text, record) => (
@@ -355,7 +356,7 @@ const FabricRequestCodeView = ()=>{
     {
         title: 'Content',
         dataIndex: 'content',
-        sorter: (a, b) => a.content-(b.content),
+        sorter: (a, b) => a.content?.length - b.content?.length,
         sortDirections: ['descend', 'ascend'],
         // ...getColumnSearchProps('content'),
         render: (text, record) => (
@@ -444,10 +445,9 @@ const FabricRequestCodeView = ()=>{
     console.log('params', pagination, filters, sorter, extra);
   }
 
-  
   const onReset = () => {
     form.resetFields();
-    getAllFabrics()
+    getAllFabrics(activeTab)
   };
 
   const handleCancel = () => {
@@ -455,7 +455,6 @@ const FabricRequestCodeView = ()=>{
   };
 
   const onfinish = (val) =>{
-    console.log(val,'------------------------------')
     getAllFabrics(activeTab)
   }
   

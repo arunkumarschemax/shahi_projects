@@ -247,7 +247,7 @@ async getAllFabricBuyers(): Promise<CommonResponseModel> {
 @Post('/updateFabStatus')
 async updateFabStatus(@Body() req?:any): Promise<CommonResponseModel> {
   try {
-    return await this.fabReqService.updateFabStatus(req.id);
+    return await this.fabReqService.updateFabStatus(req);
   } catch (error) {
     return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
   }
