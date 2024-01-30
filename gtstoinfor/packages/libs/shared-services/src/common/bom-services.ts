@@ -16,4 +16,7 @@ export class BomService extends CommonAxiosService {
     async getPpmPoLineData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getPpmPoLineData")
     }  
+    async getAllTrimInfo(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllTrimInfo")
+    }
 }
