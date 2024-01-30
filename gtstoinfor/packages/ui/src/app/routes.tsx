@@ -44,11 +44,13 @@ import AddressUpload from "./masters/address/address-excel-upload"
 import BomPdfUpload from "./bom-pdf-extraction/pdf-upload"
 import BackingPaper from "./trims/trim-prints/backing-paper"
 import BomView from "./bom-pdf-extraction/bom-view"
+import BomPdfInfoDetailView from "./bom-pdf-extraction/deatiled-view"
 import ButtonPrint, { Button1Print } from "./trims/trim-prints/button-print"
 import Button2Print from "./trims/trim-prints/button2-print"
 import Button3Print from "./trims/trim-prints/button3-print"
 import TrimsGrid from "./trims/trims-grid"
 import TrimColumns from "./trims/trim-columns"
+import BomCreation from "./trims/bom-creation"
 import TrimList from "./trims/trims-cardview"
 
 
@@ -175,6 +177,8 @@ export const AppRoutes = () => {
                 <Route path='/bom'>
                     <Route path='bom-pdf-upload' element={<BomPdfUpload />} />
                     <Route path='bom-view' element={<BomView />} />
+                    <Route path='bom-pdf-info-detail-view' element={<BomPdfInfoDetailView />} />
+                    <Route path='bom-creation' key='/bom-creation' element={<BomCreation />} />
                 </Route>
 
                 <Route path='/reports'>
@@ -194,6 +198,7 @@ export const AppRoutes = () => {
                     <Route path='po-detailed-view' element={<PoDetailedview data={undefined} />} />
 
                 </Route>
+             
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             <Route path="/print">

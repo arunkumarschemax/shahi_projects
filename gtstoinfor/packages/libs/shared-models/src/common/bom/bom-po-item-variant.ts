@@ -1,18 +1,16 @@
 export class BomPoItemVariant {
 
-    size: string;
-    upc: string;
-    label:string;
-    unitPrice: string;
-    quantity: string;
-    amount: string;
-    exFactory:string;
-    exPort:string;
-    deliveryDate:string;
-    retialPrice:string;
-
-
-    comptMaterial:string;
+    hasTag: string;
+    is: string;
+    n:string;
+    vendorDescription: string;
+    use: string;
+    qty: string;
+    uom:string;
+    combo1:string;
+    combo2:string;
+    combo3:string;
+    combo4:string;
     ratio:string;
 
 

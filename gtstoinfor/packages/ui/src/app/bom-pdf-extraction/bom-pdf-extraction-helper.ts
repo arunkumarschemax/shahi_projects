@@ -162,13 +162,10 @@ export const extractDataFromPoPdf = async (pdf) => {
         const colorlastUpdatedIndex = filteredData.findIndex(item => item.str === "Last Updated:");
         if (startIndex !== -1 && colorlastUpdatedIndex !== -1) {
             itemDetailsObj.color = filteredData.slice(startIndex, colorlastUpdatedIndex).map(item => item.str).join(' ');
-        }
-
-        
+        }        
 
         itemDetailsObj.material = filteredData[rec.itemIndex + 12].str.replace(/^\d{2}|-.*$/g, '');
         itemDetailsObj.ppkupc = filteredData[rec.itemIndex + 13].str;
-        // itemDetailsObj.color = filteredData[rec.itemIndex + 14].str;
     
     
             itemTextEndIndex = rec.amountIndex
@@ -194,9 +191,9 @@ export const extractDataFromPoPdf = async (pdf) => {
 
             for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
                 const itemVariantsObj = new BomPoItemVariant();
-                itemVariantsObj.size = itemVarinatsTextArr[(count * l) + 19]
-                itemVariantsObj.upc = itemVarinatsTextArr[(count * l) + 1]
-                itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count + 19]
+                itemVariantsObj.hasTag = itemVarinatsTextArr[(count * l) + 19]
+                itemVariantsObj.is = itemVarinatsTextArr[(count * l) + 1]
+                itemVariantsObj.n = itemVarinatsTextArr[(count * l) + count + 19]
                
                 console.log(itemVariantsObj)
                 itemVariantsArr.push(itemVariantsObj)

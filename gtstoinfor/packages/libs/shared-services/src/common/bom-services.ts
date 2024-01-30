@@ -13,5 +13,7 @@ export class BomService extends CommonAxiosService {
     async getAllStylesData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllStylesData")
     }  
-
+    async getPpmPoLineData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getPpmPoLineData")
+    }  
 }
