@@ -16,17 +16,21 @@ export class BomInfo{
     bomId:number;
     itemName:string;
     description:string;
-    imCOde:string;
+    imCode:string;
     itemType:string;
     use:string;
+    uom: string;
+    qty:number;
     styleComboInfo:StyleComboInfo[]
-    constructor(bomId:number,itemName:string,description:string,imCOde:string,itemType:string,use:string,styleComboInfo:StyleComboInfo[]){
+    constructor(bomId:number,itemName:string,description:string,imCode:string,itemType:string,use:string,uom:string,qty:number,styleComboInfo:StyleComboInfo[]){
     this.bomId = bomId
     this.itemName = itemName
     this.description = description
-    this.imCOde = imCOde
+    this.imCode = imCode
     this.itemType = itemType
     this.use = use
+    this.uom = uom
+    this.qty = qty
     this.styleComboInfo = styleComboInfo
     }
 }
@@ -37,13 +41,15 @@ export class StyleComboInfo{
     primaryColor: string;
     secondaryColor:string;
     logoColor:string;
+    color:string;
 
-    constructor(styleComboId: number,combination:string,primaryColor: string,secondaryColor:string,logoColor:string){
+    constructor(styleComboId: number,combination:string,primaryColor: string,secondaryColor:string,logoColor:string,color:string){
         this.styleComboId = styleComboId  
         this.combination = combination 
         this.primaryColor  = primaryColor  
         this.secondaryColor = secondaryColor 
         this.logoColor = logoColor
+        this.color = color
     }
 
 }

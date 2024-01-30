@@ -45,9 +45,9 @@ export class TrimService{
             if(data){
                 for(const rec of data){
                     if(!bomInfoMap.has(rec.bomId)){
-                        bomInfoMap.set(rec.bomId,new BomInfo(rec.bomId,rec.item_name,rec.description,rec.im_code,rec.item_type,rec.use,[]))
+                        bomInfoMap.set(rec.bomId,new BomInfo(rec.bomId,rec.item_name,rec.description,rec.im_code,rec.item_type,rec.use,rec.uom,rec.qty,[]))
                     }
-                    bomInfoMap.get(rec.bomId).styleComboInfo.push(new StyleComboInfo(rec.styleComboId,rec.combination,rec.primary_color,rec.secondayr_color,rec.logo_color))
+                    bomInfoMap.get(rec.bomId).styleComboInfo.push(new StyleComboInfo(rec.styleComboId,rec.combination,rec.primary_color,rec.secondayr_color,rec.logo_color,rec.color))
 
                 }
                 const bomInfoModel: BomInfo[] = []
