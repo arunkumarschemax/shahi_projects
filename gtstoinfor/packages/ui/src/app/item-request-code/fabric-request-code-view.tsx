@@ -350,7 +350,7 @@ const FabricRequestCodeView = ()=>{
     {
         title: 'Content',
         dataIndex: 'content',
-        sorter: (a, b) => a.content-(b.content),
+        sorter: (a, b) => (a.content || '').localeCompare(b.content || ''),
         sortDirections: ['descend', 'ascend'],
         // ...getColumnSearchProps('content'),
         render: (text, record) => (
@@ -362,7 +362,7 @@ const FabricRequestCodeView = ()=>{
     {
         title: 'Shrinkage',
         dataIndex: 'shrinkage',
-        sorter: (a, b) => a.shrinkage-(b.shrinkage),
+        sorter: (a, b) => (a.shrinkage || '').localeCompare(b.shrinkage || ''),
         sortDirections: ['descend', 'ascend'],
         render: (text, record) => (
             <span>
