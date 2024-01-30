@@ -32,7 +32,7 @@ useEffect(()=>{
     // }
     return(
    <>
-   <Card title="TRIMS" headStyle={{ color: 'black', fontWeight: 'bold' }}>
+   <Card title="TRIMS" headStyle={{ color: 'black', fontWeight: 'bold',fontSize:'20px' }}>
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
            {trim.length > 0 && trim.map((e, index) => (
         <Card key={index} style={{
@@ -44,9 +44,8 @@ useEffect(()=>{
             <div>
                 <Descriptions
                     key={index}
-                    style={{ fontSize: "2px", textAlign: "center" }}
-                    title={` ${e.item}`} 
-                    
+                    style={{ fontSize:'10px !important', textAlign: "center" }}
+                    title={<span style={{ fontSize: '20px', textAlign: "center" ,fontFamily:'revert-layer'}}>{e.item}</span>}                     
                 >
                  </Descriptions>
             </div>
