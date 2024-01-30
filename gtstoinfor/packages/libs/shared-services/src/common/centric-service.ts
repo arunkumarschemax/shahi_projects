@@ -74,4 +74,8 @@ export class CentricService extends CommonAxiosService {
     async deleteCoLine(payload?:ItemNoDto): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.centricOrdersController + "/deleteCoLine",payload)
     }
+
+    async centricBot(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.centricOrdersController + "/centricBot")
+    }
 }

@@ -132,10 +132,19 @@ export class CentricController {
         }
     }
 
-    @Get('centric-Bot')
-    async centricBot(): Promise<any> {
-        return this.Service.centricBot();
+    // @Get('centric-Bot')
+    // async centricBot(): Promise<any> {
+    //     return this.Service.centricBot();
 
+    // }
+
+    @Post('/centricBot')
+    async centricBot(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.centricBot();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
     }
 
 

@@ -807,11 +807,11 @@ export class CentricService {
         const fileInput = await page.$('input[type="file"]');
         const filePath = path.join(directoryPath, file);
         await fileInput.uploadFile(filePath);
-        await page.waitForTimeout(2000);
+        await page.waitForTimeout(3000);
 
         await page.waitForSelector('button.ant-btn-primary')
         await page.click('button.ant-btn-primary');
-        await page.waitForTimeout(10000)
+        await page.waitForTimeout(16000)
 
         const sourceFilePath = path.join(directoryPath, file);
         const destinationFilePath = path.join(destinationDirectory, file);
