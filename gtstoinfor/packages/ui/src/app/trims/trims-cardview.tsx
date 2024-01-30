@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { BomService, trimService } from "@project-management-system/shared-services";
 
 
-export const TrimList=()=>{
+export const TrimList=({})=>{
 const service = new BomService();
 const [trim,setTrim]=useState<any>([]);
 
@@ -14,28 +14,46 @@ useEffect(()=>{
 
     const getAllTrims=()=>{
         service.getAllTrimInfo().then(res=>{
-            if(res){
-                setTrim(res);
+            if(res.status){
+                setTrim(res.data);
             }
         })
     }
-
+    // const getAllTrims = () => {
+    //     service.getAllTrimInfo().then(res => {
+    //         if (Array.isArray(res)) { // Check if response is an array
+    //             setTrim(res);
+    //         }
+    //         // Handle non-array responses if needed
+    //     }).catch(error => {
+    //         console.error("Error fetching trims:", error);
+    //         // Handle error appropriately
+    //     });
+    // }
     return(
    <>
-   <Card style={{
-    width: "20%",
-    height: "100%",
-    backgroundColor: "#b5838d ",
-    marginRight: "-50px",
-    }} >
-   <Descriptions 
-    column={1}
-    style={{ fontSize: "2px", }} 
-    title={`TRIM: $`}
-    >
-
-  </Descriptions >
-  </Card>
+   <Card title="TRIMS" headStyle={{ color: 'black', fontWeight: 'bold' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+           {trim.length > 0 && trim.map((e, index) => (
+        <Card key={index} style={{
+            width: "20%",
+            height: "100%",
+            backgroundColor: "#9ec1a3",
+            marginRight: "20px",
+            marginBottom: "20px",        }}>
+            <div>
+                <Descriptions
+                    key={index}
+                    style={{ fontSize: "2px", textAlign: "center" }}
+                    title={` ${e.item}`} 
+                    
+                >
+                 </Descriptions>
+            </div>
+        </Card>
+    ))}
+</div>
+</Card>
    </> 
     )
    
