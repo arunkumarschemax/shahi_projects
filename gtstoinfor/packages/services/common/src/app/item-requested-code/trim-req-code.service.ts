@@ -105,6 +105,9 @@ export class TrimReqCodeService {
         LEFT JOIN variety v ON v.variety_id = m3t.variety_id
         LEFT JOIN trim tr ON tr.trim_id = m3t.trim_category_id
         WHERE 1=1`
+        if (req.ExternalRefNo && req.ExternalRefNo!=null){
+          query += ` AND b.external_ref_number = '${req.ExternalRefNo}'`
+        }
         if (req?.buyerId) {
           query = query + ` AND m3t.buyer_id=${req.buyerId}`
         }

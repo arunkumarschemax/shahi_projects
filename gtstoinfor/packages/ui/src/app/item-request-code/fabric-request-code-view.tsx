@@ -39,7 +39,8 @@ const FabricRequestCodeView = ()=>{
   const [activeTab, setActiveTab] = useState<string>()
   const [openData, setOpenData] = useState<any[]>([]);
   const [completedData, setCompletedData] = useState<any[]>([]);
- 
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+
   const onTabChange = (key) => {
     console.log(key,'.........................')
     setActiveTab(key);
@@ -62,7 +63,7 @@ const FabricRequestCodeView = ()=>{
 }
   const getAllFabrics= (val?) => {
     console.log(val,'.........................')
-    const req = new FabricCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('hsnCode'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('finishTypeId'),form.getFieldValue('contentId'),val)
+    const req = new FabricCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('hsnCode'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('finishTypeId'),form.getFieldValue('contentId'),val,externalRefNo)
     requestCodeService.getAllFabrics(req).then(res => {
       if (res.status) {
         setReqCodeData(res.data);

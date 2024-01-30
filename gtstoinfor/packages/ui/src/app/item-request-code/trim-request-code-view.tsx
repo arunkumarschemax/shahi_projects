@@ -57,6 +57,7 @@ export const TrimReqCodeView = () => {
     setActiveTab(key);
     getAllTrims(key);
   };
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
 
   useEffect(() => {
     // const userrefNo = IAMClientAuthContext.user?.externalRefNo
@@ -255,7 +256,7 @@ export const TrimReqCodeView = () => {
   }
   const getAllTrims = (key) =>{
     console.log(activeTab,'------000000000000000')
-    const req = new TrimCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('trimType'),key)  
+    const req = new TrimCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('trimType'),key,externalRefNo)  
     trimReqCodeService.getAllTrims(req).then((res) => {
       if (res.status) {
         setData(res.data);
