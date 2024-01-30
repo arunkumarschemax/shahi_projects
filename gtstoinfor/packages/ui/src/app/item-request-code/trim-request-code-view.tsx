@@ -600,16 +600,16 @@ export const TrimReqCodeView = () => {
         </span>
     ),
     },
-    {
-      title: <div style={{textAlign:"center"}}>Status</div>,
-      dataIndex: "status",
-      ...getColumnSearchProps("status"),
-      render: (text, record) => (
-        <span>
-            {record.status ? record.status : '-'}
-        </span>
-    ),
-    },
+    // {
+    //   title: <div style={{textAlign:"center"}}>Status</div>,
+    //   dataIndex: "status",
+    //   ...getColumnSearchProps("status"),
+    //   render: (text, record) => (
+    //     <span>
+    //         {record.status ? record.status : '-'}
+    //     </span>
+    // ),
+    // },
   ];
   const actionColumns: ColumnProps<any>[] = [
     {
