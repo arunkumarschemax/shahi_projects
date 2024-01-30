@@ -37,16 +37,19 @@ const FabricRequestCodeView = ()=>{
   const requestCodeService = new FabricRequestCodeService();
   const m3ItemsService = new M3ItemsService();
 
-  const [activeTab, setActiveTab] = useState<string>()
+  const [activeTab, setActiveTab] = useState<string>('OPEN');
   const [openData, setOpenData] = useState<any[]>([]);
   const [completedData, setCompletedData] = useState<any[]>([]);
   const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   const onTabChange = (key) => {
-    console.log(key,'.........................')
-    setActiveTab(key);
-    getAllFabrics(key)
+    setActiveTab((prevTab) => {
+      if (key !== prevTab) {
+        getAllFabrics(key);
+      }
+      return key;
+    });
   };
 
   useEffect(() => {
@@ -64,8 +67,7 @@ const FabricRequestCodeView = ()=>{
     return accessValue
 }
   const getAllFabrics= (val?) => {
-    console.log(val,'.........................')
-    const req = new FabricCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('hsnCode'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('finishTypeId'),form.getFieldValue('contentId'),val,externalRefNo)
+    const req = new FabricCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('hsnCode'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('finishTypeId'),form.getFieldValue('contentId'),val)
     requestCodeService.getAllFabrics(req).then(res => {
       if (res.status) {
         setReqCodeData(res.data);
@@ -453,10 +455,9 @@ const FabricRequestCodeView = ()=>{
     console.log('params', pagination, filters, sorter, extra);
   }
 
-  
   const onReset = () => {
     form.resetFields();
-    getAllFabrics()
+    getAllFabrics(activeTab)
   };
 
   const handleCancel = () => {
@@ -464,7 +465,6 @@ const FabricRequestCodeView = ()=>{
   };
 
   const onfinish = (val) =>{
-    console.log(val,'------------------------------')
     getAllFabrics(activeTab)
   }
   

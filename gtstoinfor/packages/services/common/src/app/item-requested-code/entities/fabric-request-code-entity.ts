@@ -109,6 +109,12 @@ export class FabricRequestCodeEntity {
   })
   status: MaterialFabricEnum;
 
+  @Column('int', {
+    nullable: true,
+    name: 'm3_item_id',
+  })
+  m3ItemId: number;
+
   @Column("boolean", {
     nullable: false,
     default: true,
