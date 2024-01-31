@@ -72,11 +72,11 @@ export class FabricRequestCodeService extends CommonAxiosService{
     }
 
     async getAllBuyers(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL + "/getAllBuyers")
+        return this.axiosPostCall(this.URL + "/getAllBuyers",req)
     }
 
-    async getAllFabricBuyers(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL + "/getAllFabricBuyers")
+    async getAllFabricBuyers(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllFabricBuyers",req)
     }
 
     async getAllFabricTypes(): Promise<CommonResponseModel> {

@@ -385,14 +385,14 @@ export class TrimReqCodeService {
       }
     }
   
-    async getAllBuyers(req?:BuyerRefNoRequest):Promise<CommonResponseModel>{
+    async getAllBuyers(req?:any):Promise<CommonResponseModel>{
       try{
         let query = 
         `SELECT m3t.buyer_id AS buyerId, b.buyer_name AS buyerName, b.buyer_code AS buyerCode
         FROM trim_request_code m3t
         LEFT JOIN buyers b ON b.buyer_id = m3t.buyer_id`
         if (req.buyerRefNo) {
-          query = query + ` WHERE b.external_ref_number = ${req.buyerRefNo}`
+          query = query + ` WHERE b.external_ref_number = '${req.buyerRefNo}'`
         }
         query = query + ` GROUP BY m3t.buyer_id ORDER BY b.buyer_name`
         const data = await this.dataSource.query(query)

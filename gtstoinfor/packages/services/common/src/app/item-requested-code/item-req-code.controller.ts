@@ -236,9 +236,9 @@ async getAllFabricTypes(): Promise<CommonResponseModel> {
 }
 
 @Post('/getAllFabricBuyers')
-async getAllFabricBuyers(): Promise<CommonResponseModel> {
+async getAllFabricBuyers(@Body() req?:any): Promise<CommonResponseModel> {
   try {
-    return await this.fabReqService.getAllFabricBuyers();
+    return await this.fabReqService.getAllFabricBuyers(req);
   } catch (error) {
     return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
   }
