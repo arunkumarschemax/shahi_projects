@@ -64,7 +64,9 @@ const uploadFabricProps = (keyValue:number): UploadProps =>  ({
     let files:any[] = fileList.length != undefined ? fileList?.find((f) => f.uid != file.uid) : []
     console.log(data)
     console.log(data[keyValue]);
-    data[keyValue].trimUpload = undefined;
+    if(data[keyValue] != undefined){
+      data[keyValue].trimUpload = undefined;
+    }
     setData(data);
     props.data(data);
 
@@ -622,7 +624,7 @@ const getMappedTrims = (value, row) => {
       fixed:'right',
       render: (_, record) => (
         <span style={{alignContent:'center'}}>{
-        (fileList[record.key] != undefined)?<Button icon={<EyeOutlined/>} onClick={()=>onTrimView(record.key)}></Button>:<></>
+        (fileList.length>0 && fileList[record.key] != undefined)?<Button icon={<EyeOutlined/>} onClick={()=>onTrimView(record.key)}></Button>:<></>
     }</span>
       )
     },
