@@ -962,7 +962,7 @@ export class CentricService {
   // }
   async getCentricorderDataForPPK(req?: PoOrderFilter): Promise<CommonResponseModel> {
     try {
-      const details = await this.Repo.getCentricorderDataForPPK(req);
+      const details = await this.Repo.getCentricOrderDataForPPK(req);
       if (details.length === 0) {
         return new CommonResponseModel(false, 0, 'No Data found');
       } else {
@@ -970,6 +970,19 @@ export class CentricService {
       return new CommonResponseModel(true, 1, 'data retrieved', details);
 
       }
+    } catch (e) {
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
+  async getCentricorderDataForScanAndPack(req?: PoOrderFilter): Promise<CommonResponseModel> {
+    try {
+      const details = await this.Repo.getCentricorderDataForScanAndPack(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'No Data found');
+      }else {
+      return new CommonResponseModel(true, 1, 'data retrieved', details);    
+      }
+      
     } catch (e) {
       return new CommonResponseModel(false, 0, 'failed', e);
     }
@@ -1010,7 +1023,7 @@ export class CentricService {
 
   async getCentricorderDataForSolidPO(req?: PoOrderFilter): Promise<CommonResponseModel> {
     try {
-      const details = await this.Repo.getCentricorderDataForSolidPO(req);
+      const details = await this.Repo.getCentricOrderDataForSolidPO(req);
       if (details.length === 0) {
         return new CommonResponseModel(false, 0, 'No Data found');
       }else {
