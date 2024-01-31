@@ -110,7 +110,7 @@ const CentricPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                     const formData = new FormData();
                     fileList.forEach((file: any) => {
                         formData.append('file', file);
-                        formData.append('PoNumber', poPdfData?.poNumber);
+                        formData.append('poNumber', poPdfData?.poNumber);
                         formData.append('jsonData',JSON.stringify(poPdfData))
                     })
                     console.log(formData, "form")
@@ -145,10 +145,31 @@ const CentricPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         return <></>
     }
 
+    const centricBot = (req) => {
+        centricService.centricBot().then(res => {
+            if (res.status) {
+                // setBuyer(res.data);
+                // setPoPdfData(res.data)
+                message.success("Button CLicked")
+            }
+        });
+    };
+
     return (
         <Card title='Order Upload'>
             {resultProps === undefined &&
                 <Row gutter={24} >
+                {/* <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 5 }}
+                        lg={{ span: 5 }}
+                        xl={{ span: 4 }}
+                    >
+                        <Form.Item>
+                            <Button type='primary' onClick={centricBot}>Upload Bot</Button>
+                        </Form.Item>
+                    </Col> */}
                     <Col span={24}>
                         <Dragger {...uploadProps} >
                             <p className="ant-upload-drag-icon">

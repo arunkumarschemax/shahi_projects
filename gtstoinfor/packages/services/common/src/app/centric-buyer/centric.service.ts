@@ -296,26 +296,21 @@ export class CentricService {
   }
 
   async updatePath(req: any, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
-    // const poNumberFromFileName = filename.replace(/\D/g, "");
-    const poNumberFromFileName = filename.replace(/\(+.+/g, "").replace(/\D/g, "");
+    // const poNumberFromFileName = filename.match(/[0-9]{10}/);
     const entity = new CentricPdfFileUploadEntity();
-    entity.poNumber = poNumberFromFileName;
+    // entity.poNumber = poNumberFromFileName ? poNumberFromFileName[0] : '';
+    entity.poNumber = poNumber;
     entity.pdfFileName = filename;
     entity.filePath = filePath;
     entity.fileType = mimetype;
     entity.fileData = req;
 
-    const file = await this.pdfRepo.findOne({ where: { pdfFileName: filePath } });
-    if (file) {
-      return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
-    } else {
       const save = await this.pdfRepo.save(entity);
       if (save) {
         return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
       } else {
         return new CommonResponseModel(false, 0, 'Uploaded failed');
       }
-    }
   }
 
 
@@ -812,11 +807,11 @@ export class CentricService {
         const fileInput = await page.$('input[type="file"]');
         const filePath = path.join(directoryPath, file);
         await fileInput.uploadFile(filePath);
-        await page.waitForTimeout(2000);
+        await page.waitForTimeout(3000);
 
         await page.waitForSelector('button.ant-btn-primary')
         await page.click('button.ant-btn-primary');
-        await page.waitForTimeout(10000)
+        await page.waitForTimeout(16000)
 
         const sourceFilePath = path.join(directoryPath, file);
         const destinationFilePath = path.join(destinationDirectory, file);
