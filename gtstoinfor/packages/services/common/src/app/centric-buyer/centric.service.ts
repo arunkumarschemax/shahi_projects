@@ -36,7 +36,7 @@ export class CentricService {
     private pdfRepo: CentricPdfRepository,
     private coLineRepo: CentricCOLineRepository,
     private addressService: AddressService,
-    private childrepo :CentricOrdersChildRepository
+    private childrepo: CentricOrdersChildRepository
 
   ) { }
 
@@ -50,11 +50,11 @@ export class CentricService {
         // Check if a match is found and convert it to an integer
         // const poLine = match ? parseInt(match[0], 10) : null;
         const poLine = match
-        
+
 
         for (const variant of item.CentricpoItemVariantDetails) {
           const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
-          const order = await this.childrepo.findOne({ where: { poNumber: req.PoNumber,poLine: poLine, size: variant.size  }, order: { poVersion: 'DESC' } })
+          const order = await this.childrepo.findOne({ where: { poNumber: req.PoNumber, poLine: poLine, size: variant.size }, order: { poVersion: 'DESC' } })
           // console.log(order,'NNNNNNNNNN')
           const entity = new CentricEntity();
           entity.poNumber = req.poNumber
@@ -142,9 +142,9 @@ export class CentricService {
 
           if (orderData) {
             // console.log('mmmmmmmm',orderData)
-           
+
             const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
-            
+
               shipment: req.shipment,
               season: req.season,
               portOfExport: req.portOfExport,
@@ -184,7 +184,7 @@ export class CentricService {
 
             })
             let po = parseInt(order?.poVersion) + 1
-            
+
             // console.log(po,',,,,,,')
             const entitys = new CentricChildEntity();
             entitys.poNumber = req.poNumber
@@ -201,8 +201,8 @@ export class CentricService {
             entitys.manufacture = req.manufacture
             entitys.poDate = req.poDate
             entitys.buyerAddress = req.buyerAddress
-  
-  
+
+
             entitys.poLine = item.poLine
             entitys.material = item.material
             entitys.color = item.color
@@ -215,7 +215,7 @@ export class CentricService {
             entitys.totalQuantity = item.totalQuantity
             entitys.style = item.style
             entitys.poType = item.poType
-  
+
             entitys.size = variant.size
             entitys.upc = variant.upc
             entitys.label = variant.label
@@ -227,8 +227,8 @@ export class CentricService {
             entitys.retialPrice = variant.retialPrice
             entitys.comptMaterial = variant.comptMaterial
             entitys.ratio = variant.ratio
-            entitys.orderId=orderData.id
-           
+            entitys.orderId = orderData.id
+
             entitys.poVersion = po.toString()
             const savedChild = await this.childrepo.save(entitys)
 
@@ -252,8 +252,8 @@ export class CentricService {
             entitys.manufacture = req.manufacture
             entitys.poDate = req.poDate
             entitys.buyerAddress = req.buyerAddress
-  
-  
+
+
             entitys.poLine = item.poLine
             entitys.material = item.material
             entitys.color = item.color
@@ -266,7 +266,7 @@ export class CentricService {
             entitys.totalQuantity = item.totalQuantity
             entitys.style = item.style
             entitys.poType = item.poType
-  
+
             entitys.size = variant.size
             entitys.upc = variant.upc
             entitys.label = variant.label
@@ -278,10 +278,10 @@ export class CentricService {
             entitys.retialPrice = variant.retialPrice
             entitys.comptMaterial = variant.comptMaterial
             entitys.ratio = variant.ratio
-            entitys.orderId=entity.id
-             const savedChild = await this.childrepo.save(entitys)
+            entitys.orderId = entity.id
+            const savedChild = await this.childrepo.save(entitys)
 
-             
+
             if (!saved) {
               throw new Error('Save failed')
             }
@@ -305,12 +305,12 @@ export class CentricService {
     entity.fileType = mimetype;
     entity.fileData = req;
 
-      const save = await this.pdfRepo.save(entity);
-      if (save) {
-        return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
-      } else {
-        return new CommonResponseModel(false, 0, 'Uploaded failed');
-      }
+    const save = await this.pdfRepo.save(entity);
+    if (save) {
+      return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
+    } else {
+      return new CommonResponseModel(false, 0, 'Uploaded failed');
+    }
   }
 
 
@@ -361,7 +361,7 @@ export class CentricService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number}`,
-            new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status, rec.currency,"",rec.buyer_address)
+            new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status, rec.currency, "", rec.buyer_address)
           );
 
           // console.log(sizeDateMap,)
@@ -381,7 +381,7 @@ export class CentricService {
   }
 
 
-  async getPdfFileInfo(req?:any): Promise<CommonResponseModel> {
+  async getPdfFileInfo(req?: any): Promise<CommonResponseModel> {
     try {
       const data = await this.pdfRepo.getPdfFileInfo(req)
       if (data) {
@@ -412,7 +412,7 @@ export class CentricService {
       entity.status = 'Open';
       entity.deliveryDate = req.deliveryDate;
       entity.style = req.style
-      entity.material=uniqueMaterials.join(',')
+      entity.material = uniqueMaterials.join(',')
       entity.createdUser = req.createdUser;
       empty.push(entity)
       const save = await this.coLineRepo.save(empty);
@@ -487,7 +487,7 @@ export class CentricService {
         buyerValue2 = "CEN00002-CENTRIC BRANDS LLC"
         agent = "NA-DIRECT CUSTOMER"
         pkgTerms = "BOX-BOXES"
-        paymentTerms = "081-TT 90 DAYS"
+        paymentTerms = "081-TT  90 Days"
       }
       const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
       const allApps = await apps.findElements(By.tagName('span'));
@@ -646,10 +646,17 @@ export class CentricService {
                     // Clear the existing value (if any) and fill it with the new price.
                     await inputField.clear();
                     await inputField.sendKeys(size.price);
+                  } else {
+                    const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Size found' });
+                    return new CommonResponseModel(false, 0, 'NO matching Size found')
                   }
                 }
                 const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
-                const input = await driver.wait(until.elementLocated(By.id(inputId)))
+                const input = await driver.wait(until.elementLocated(By.id(inputId)), 5000)
+                if (!input) {
+                  const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+                  return new CommonResponseModel(false, 0, 'NO matching Color found')
+                }
                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
               }
             }
@@ -731,7 +738,7 @@ export class CentricService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number}`,
-            new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status, "",rec.style,rec.buyer_address)
+            new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status, "", rec.style, rec.buyer_address)
           );
 
           // console.log(sizeDateMap,)
@@ -929,7 +936,7 @@ export class CentricService {
     }
   }
 
-  
+
   // async getCentricorderDataForPPK(req?: PoOrderFilter): Promise<CommonResponseModel> {
   //   try {
   //     const details = await this.Repo.getCentricorderDataForPPK(req);
@@ -966,8 +973,8 @@ export class CentricService {
       if (details.length === 0) {
         return new CommonResponseModel(false, 0, 'No Data found');
       } else {
-       
-      return new CommonResponseModel(true, 1, 'data retrieved', details);
+
+        return new CommonResponseModel(true, 1, 'data retrieved', details);
 
       }
     } catch (e) {
@@ -976,7 +983,7 @@ export class CentricService {
   }
 
 
-  
+
   // async getCentricorderDataForSolidPO(req?: PoOrderFilter): Promise<CommonResponseModel> {
   //   try {
   //     const details = await this.Repo.getCentricorderDataForSolidPO(req);
@@ -1013,10 +1020,10 @@ export class CentricService {
       const details = await this.Repo.getCentricorderDataForSolidPO(req);
       if (details.length === 0) {
         return new CommonResponseModel(false, 0, 'No Data found');
-      }else {
-      return new CommonResponseModel(true, 1, 'data retrieved', details);    
+      } else {
+        return new CommonResponseModel(true, 1, 'data retrieved', details);
       }
-      
+
     } catch (e) {
       return new CommonResponseModel(false, 0, 'failed', e);
     }
@@ -1046,13 +1053,13 @@ export class CentricService {
     } catch (err) {
       throw err
     }
-  } 
+  }
 
   async getordercomparationData(req?: any): Promise<CommonResponseModel> {
     try {
       const Originaldata = await this.Repo.getordercomparationData(req)
       const compareModel: CompareModel[] = []
-      
+
       for (const rec of Originaldata) {
         const childData = await this.childrepo.find({
           where: {
@@ -1068,23 +1075,23 @@ export class CentricService {
             oldData.quantity !== rec.quantity
           ) {
             // Only push if there are changes
-            compareModel.push(new 
+            compareModel.push(new
               CompareModel(
-              rec.po_number,
-              rec.po_line,
-              rec.size,
-              oldData.unitPrice,
-              rec.unit_price,
-              oldData.deliveryDate,
-              rec.delivery_date,
-              oldData.quantity,
-              rec.quantity
-            ));
+                rec.po_number,
+                rec.po_line,
+                rec.size,
+                oldData.unitPrice,
+                rec.unit_price,
+                oldData.deliveryDate,
+                rec.delivery_date,
+                oldData.quantity,
+                rec.quantity
+              ));
           }
         }
       }
       if (compareModel) {
-       
+
         return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
       } else {
         return new CommonResponseModel(false, 0, 'No data found');
@@ -1098,41 +1105,41 @@ export class CentricService {
   async updateItemNo(req: ItemNoDtos): Promise<CommonResponseModel> {
     console.log(req, "reqq");
     try {
-        const update = await this.coLineRepo.update(
-            { id: Number(req.id) },
-            { poNumber: req.poNumber ,itemNo: req.itemNo }
-        );
+      const update = await this.coLineRepo.update(
+        { id: Number(req.id) },
+        { poNumber: req.poNumber, itemNo: req.itemNo }
+      );
 
-        if (update) {
-            return new CommonResponseModel(true, 1, " Update Successfully");
-        } else {
-            return new CommonResponseModel(false, 0, " Something Went Wrong", []);
-        }
+      if (update) {
+        return new CommonResponseModel(true, 1, " Update Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, " Something Went Wrong", []);
+      }
     } catch (error) {
-        return new CommonResponseModel(false, 0, "Error Occurred ", error);
+      return new CommonResponseModel(false, 0, "Error Occurred ", error);
     }
-}
+  }
 
 
-async deleteCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
+  async deleteCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
     console.log(req, "reqq");
     try {
-        const deletedItem = await this.coLineRepo.delete({ id: Number(req.id) });
+      const deletedItem = await this.coLineRepo.delete({ id: Number(req.id) });
 
-        if (deletedItem && deletedItem.affected) {
-            return new CommonResponseModel(true, 1, " Deleted Successfully");
-        } else {
-            return new CommonResponseModel(false, 0, " Something Went Wrong", []);
-        }
+      if (deletedItem && deletedItem.affected) {
+        return new CommonResponseModel(true, 1, " Deleted Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, " Something Went Wrong", []);
+      }
     } catch (error) {
-        return new CommonResponseModel(false, 0, "Error Occurred", error);
+      return new CommonResponseModel(false, 0, "Error Occurred", error);
     }
-}
-  
+  }
 
 
 
- 
+
+
 
 
 
