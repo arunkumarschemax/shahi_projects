@@ -11,7 +11,7 @@ export const WhatsAppInfo = {
     //new phone number id and access token details
     'PHONE_NUMBER_ID' : '168595539660514',
     'ACCESS_TOKEN' : 'EAABtPfqQEJ0BAGLwjcos2nyZAaptYdOdPAoZBig7xgkZC82x10w72Fzw7xna1TAJ7YCG86ZAg9Vf083i2eSpSRBtlp4cZBZB1bvrZBEEhBNbe4GoMc6YHiHZAlivhzOkZAIv8c8bjHZAszqdZBIIGuGM9smQ6MZCZAtvbUUNKGqrlK6GWMSqFyfH3iLA0ZAPHlMfxTGYJJb41bPkbmwAZDZD',
-        // 'contacts': ['917036352224'],
+        // 'contacts': ['919246649070','917036352224'],
     'contacts': ['918790477753','919030069351','917702621117'],
     'server':'LIVE DATA'
 }

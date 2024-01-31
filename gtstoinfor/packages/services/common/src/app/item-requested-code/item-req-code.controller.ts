@@ -236,9 +236,27 @@ async getAllFabricTypes(): Promise<CommonResponseModel> {
 }
 
 @Post('/getAllFabricBuyers')
-async getAllFabricBuyers(): Promise<CommonResponseModel> {
+async getAllFabricBuyers(@Body() req?:any): Promise<CommonResponseModel> {
   try {
-    return await this.fabReqService.getAllFabricBuyers();
+    return await this.fabReqService.getAllFabricBuyers(req);
+  } catch (error) {
+    return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+  }
+}
+
+@Post('/updateFabStatus')
+async updateFabStatus(@Body() req?:any): Promise<CommonResponseModel> {
+  try {
+    return await this.fabReqService.updateFabStatus(req);
+  } catch (error) {
+    return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
+  }
+}
+@Post('/updateTrimStatus')
+async updateTrimStatus(@Body() req?:any): Promise<CommonResponseModel> {
+  try {
+    console.log(req);
+    return await this.fabReqService.updateTrimStatus(req.id);
   } catch (error) {
     return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
   }

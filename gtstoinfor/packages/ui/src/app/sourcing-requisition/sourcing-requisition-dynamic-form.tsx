@@ -1958,9 +1958,9 @@ console.log(req)
                                                 </Form.Item>
                                             </Card>
                </>:modal == 'fabricFilter' ?<>
-               <M3FabricFilters formValues={handleFabricsfilterData} close={closeModel} />
+               <M3FabricFilters formValues={handleFabricsfilterData} close={closeModel} buyerId={sourcingForm.getFieldValue("buyer")} />
                </>:modal == 'trimFilter' ?<>
-               <M3TrimsReqFile trimCategoryId={trimForm.getFieldValue('trimCategory')} close={closeModel} formValues={handleTrimFilterData}/>
+               <M3TrimsReqFile trimCategoryId={trimForm.getFieldValue('trimCategory')} close={closeModel} formValues={handleTrimFilterData} buyerId={sourcingForm.getFieldValue("buyer")} trimType={trimForm.getFieldValue("trimCategory")}/>
                </>:
             <M3Items props={undefined}/>
             }

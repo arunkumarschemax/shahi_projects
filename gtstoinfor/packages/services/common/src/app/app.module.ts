@@ -98,6 +98,7 @@ import { WeightModule } from './weight/weight-module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { RequestCodeModule } from './item-requested-code/request-code.module';
+import { ScheduleModule } from '@nestjs/schedule';
 console.log(join(__dirname, '..', 'sampling', 'gtstoinfor', 'dist', 'packages', 'services', 'common', 'upload_files'))
 
 
@@ -124,7 +125,7 @@ console.log(join(__dirname, '..', 'sampling', 'gtstoinfor', 'dist', 'packages', 
       }
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', '..', '..', 'dist','packages','services','common','upload_files'),
+      rootPath: join(__dirname, '../../../../','upload_files'),
       serveRoot: '/static',
     }),
     FactoriesModule,
@@ -178,6 +179,7 @@ console.log(join(__dirname, '..', 'sampling', 'gtstoinfor', 'dist', 'packages', 
     QualitysModule,
     CategoryModule,
     StructureModule,
+    ScheduleModule.forRoot(),
     AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule,MaterialIssueModule,IndentModule,RackPositionModule,StocksModule,GrnModule,LocationMappingModule,M3TrimsModule,ReclassificationModule,varietyModule,trimModule,FinishModule,HoleModule,TrimParamsMappingModule,WeightModule,RequestCodeModule],
   controllers: [AppController],
   providers: [AppService],

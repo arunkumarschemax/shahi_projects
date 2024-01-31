@@ -3,11 +3,13 @@ import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
-import { FabricCodeReq, FabricRequestCodeDto } from '@project-management-system/shared-models';
+import { BuyerRefNoRequest, FabricCodeReq, FabricRequestCodeDto, MenusAndScopesEnum } from '@project-management-system/shared-models';
 import { FabricRequestCodeService, M3ItemsService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 import M3Items from '../masters/m3-items/m3-items-form';
 import TabPane from 'antd/es/tabs/TabPane';
+import RolePermission from '../role-permissions';
+import { useIAMClientState } from '../common/iam-client-react';
 
 const { Option } = Select;
 
@@ -35,16 +37,23 @@ const FabricRequestCodeView = ()=>{
   const requestCodeService = new FabricRequestCodeService();
   const m3ItemsService = new M3ItemsService();
 
-  const [activeTab, setActiveTab] = useState<string>()
+  const [activeTab, setActiveTab] = useState<string>('OPEN');
+  const [openData, setOpenData] = useState<any[]>([]);
+  const [completedData, setCompletedData] = useState<any[]>([]);
+  const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   const onTabChange = (key) => {
-    console.log(key,'-------------------')
-    setActiveTab(key);
-    getAllFabrics(key)
+    setActiveTab((prevTab) => {
+      if (key !== prevTab) {
+        getAllFabrics(key);
+      }
+      return key;
+    });
   };
 
   useEffect(() => {
-    getAllFabrics('Open');
+    getAllFabrics('OPEN');
     getAllBuyers()
     getAllFabricTypes()
     getAllFinish()
@@ -52,12 +61,18 @@ const FabricRequestCodeView = ()=>{
     getAllWeaves()
     getAllContents()
   }, []);
-
-  const getAllFabrics= (key) => {
-    const req = new FabricCodeReq(form.getFieldValue('hsnCode'),form.getFieldValue('hsnCode'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('finishTypeId'),form.getFieldValue('contentId'),key)
+  const checkAccess = (buttonParam) => {   
+    const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Sample Development"],MenusAndScopesEnum.SubMenus['Fabric Request'],buttonParam)
+    
+    return accessValue
+}
+  const getAllFabrics= (val?) => {
+    const req = new FabricCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('hsnCode'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('finishTypeId'),form.getFieldValue('contentId'),val)
     requestCodeService.getAllFabrics(req).then(res => {
       if (res.status) {
         setReqCodeData(res.data);
+        setOpenData(res.data.filter((e)=>e.status === 'open'))
+        setCompletedData(res.data.filter((e)=>e.status === 'completed'))
       } else {
         if (res.data) {
           setReqCodeData([]);
@@ -74,10 +89,17 @@ const FabricRequestCodeView = ()=>{
 
 
   const getAllBuyers=()=>{
-    requestCodeService.getAllFabricBuyers().then((res)=>{
+    const req = new BuyerRefNoRequest()
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    requestCodeService.getAllFabricBuyers(req).then((res)=>{
+      if (res.status && req.buyerRefNo) {
+        form.setFieldsValue({buyerId: res.data[0]?.buyer_id})
+        getAllFabrics()
+      }
       if(res.status){
         setBuyerData(res.data)
       }
+      
     })
   }
 
@@ -116,7 +138,7 @@ const FabricRequestCodeView = ()=>{
   const getAllContents=()=>{
     requestCodeService.getContents().then((res)=>{
       if(res.status){
-        setWeaveData(res.data)
+        setContent(res.data)
       }
     })
   }
@@ -201,6 +223,8 @@ const FabricRequestCodeView = ()=>{
     }
 
 
+  const tableColumns = (key) => {
+
   const columnsSkelton: any = [
     {
       title: 'S No',
@@ -214,7 +238,7 @@ const FabricRequestCodeView = ()=>{
       dataIndex: 'buyerCode',
       sorter: (a, b) => a.buyerCode.localeCompare(b.buyerCode),
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('buyerCode'),
+      // ...getColumnSearchProps('buyerCode'),
       render: (text, record) => (
         <span>
             {record.buyerCode ? record.buyerCode : '-'}
@@ -224,7 +248,7 @@ const FabricRequestCodeView = ()=>{
     {
       title: 'HSN Code',
       dataIndex: 'hsnCode',
-      sorter: (a, b) => a.hsnCode.localeCompare(b.hsnCode),
+      sorter: (a, b) => (a.hsnCode || '').localeCompare(b.hsnCode || ''),
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('hsnCode'),
       render: (text, record) => (
@@ -236,7 +260,7 @@ const FabricRequestCodeView = ()=>{
     {
       title: 'M3Code',
       dataIndex: 'm3Code',
-      sorter: (a, b) => a.m3Code.localeCompare(b.m3Code),
+      sorter: (a, b) => (a.m3Code || '').localeCompare(b.m3Code || ''),
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('m3Code'),
       render: (text, record) => (
@@ -248,9 +272,9 @@ const FabricRequestCodeView = ()=>{
     {
       title: 'Fabric Type',
       dataIndex: 'fabricType',
-      sorter: (a, b) => a.fabricType.localeCompare(b.fabricType),
+      sorter: (a, b) => (a.fabricType || '').localeCompare(b.fabricType || ''),
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('fabricType'),
+      // ...getColumnSearchProps('fabricType'),
       render: (text, record) => (
         <span>
             {record.fabricType != null ? record.fabricType : '-'}
@@ -259,13 +283,13 @@ const FabricRequestCodeView = ()=>{
     },
     {
       title: 'Weave',
-      dataIndex: 'fabricWeave',
-      sorter: (a, b) => a.fabricWeave.localeCompare(b.fabricWeave),
+      dataIndex: 'weave',
+      sorter: (a, b) => (a.weave || '').localeCompare(b.weave || ''),
       sortDirections: ['descend', 'ascend'],
-      ...getColumnSearchProps('fabricWeave'),
+      // ...getColumnSearchProps('weave'),
       render: (text, record) => (
         <span>
-            {record.fabricWeave ? record.fabricWeave : '-'}
+            {record.weave ? record.weave : '-'}
         </span>
     ),
     },
@@ -275,7 +299,7 @@ const FabricRequestCodeView = ()=>{
         render : (text,record) => {
             return (
                 <span>
-                    {record.weight ? `${record.weight}-${record.weightUom}`: '-'}
+                    {record.weightId ? `${record.weightId}-${record.weightUOM}`: '-'}
                 </span>
             )
         },
@@ -286,19 +310,19 @@ const FabricRequestCodeView = ()=>{
         children:[
           {
             title:'EPI',
-            dataIndex:'epi',
+            dataIndex:'epiConstruction',
             render: (text, record) => (
                 <span>
-                    {record.epi ? record.epi : '-'}
+                    {record.epiConstruction ? record.epiConstruction : '-'}
                 </span>
             ),
           },
           {
             title:'PPI',
-            dataIndex:'ppi',
+            dataIndex:'ppiConstruction',
             render: (text, record) => (
                 <span>
-                    {record.ppi ? record.ppi : '-'}
+                    {record.ppiConstruction ? record.ppiConstruction : '-'}
                 </span>
             ),
           }
@@ -307,7 +331,7 @@ const FabricRequestCodeView = ()=>{
     {
       title: 'Yarn Type',
       dataIndex: 'yarnType',
-      sorter: (a, b) => a.yarnType.localeCompare(b.yarnType),
+      // sorter: (a, b) => a.yarnType-(b.yarnType),
       sortDirections: ['descend', 'ascend'],
       ...getColumnSearchProps('yarnType'),
       render: (text, record) => (
@@ -322,7 +346,7 @@ const FabricRequestCodeView = ()=>{
         render : (text,record) => {
             return (
                 <span>
-                    {record.width ? `${record.width}-${record.widthUom}`: '-'}
+                    {record.width ? `${record.width}-${record.widthUOM}`: '-'}
                 </span>
             )
         },
@@ -330,9 +354,9 @@ const FabricRequestCodeView = ()=>{
     {
         title: 'Finish Type',
         dataIndex: 'finishType',
-        sorter: (a, b) => a.finishType.localeCompare(b.finishType),
+        sorter: (a, b) => (a.finishType || '').localeCompare(b.finishType || ''),
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('finishType'),
+        // ...getColumnSearchProps('finishType'),
         render: (text, record) => (
             <span>
                 {record.finishType ? record.finishType : '-'}
@@ -342,9 +366,9 @@ const FabricRequestCodeView = ()=>{
     {
         title: 'Content',
         dataIndex: 'content',
-        sorter: (a, b) => a.content.localeCompare(b.content),
+        sorter: (a, b) => (a.content || '').localeCompare(b.content || ''),
         sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('content'),
+        // ...getColumnSearchProps('content'),
         render: (text, record) => (
             <span>
                 {record.content ? record.content : '-'}
@@ -354,7 +378,7 @@ const FabricRequestCodeView = ()=>{
     {
         title: 'Shrinkage',
         dataIndex: 'shrinkage',
-        sorter: (a, b) => a.shrinkage.localeCompare(b.shrinkage),
+        sorter: (a, b) => (a.shrinkage || '').localeCompare(b.shrinkage || ''),
         sortDirections: ['descend', 'ascend'],
         render: (text, record) => (
             <span>
@@ -362,29 +386,40 @@ const FabricRequestCodeView = ()=>{
             </span>
         ),
     },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-    },
+    // {
+    //   title: 'Status',
+    //   dataIndex: 'status',
+    // },
+  ];
+  const actionColumns: any = [
     {
       title:`Action`,
       dataIndex: 'action',
       render: (text, rowData) => {
         return (<span>
+          {checkAccess(MenusAndScopesEnum.Scopes.Update)?(
           <Tooltip placement="top" title='Create Item'>
               <Tag >
-                  <EditOutlined type= "edit"
+                  <EditOutlined type= "edit" 
                       onClick={() => {
                           createItem(rowData)
                       }}
                       style={{ color: '#1890ff', fontSize: '14px' }} />
               </Tag>
           </Tooltip>
+          ):('-')}
           </span>
         )
       }
     }
   ];
+
+    if(key === "1") {
+      return [...columnsSkelton, ...actionColumns];
+    }else{
+      return [...columnsSkelton];
+    }
+}
 
   const createItem = (rowData: any) => {
     console.log(rowData)
@@ -420,64 +455,42 @@ const FabricRequestCodeView = ()=>{
     console.log('params', pagination, filters, sorter, extra);
   }
 
-  
   const onReset = () => {
     form.resetFields();
+    getAllFabrics(activeTab)
   };
 
   const handleCancel = () => {
     setModalVisible(false);
   };
-   return (
-    <Card title={<span >Fabric Request Code</span>}
-    headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
-            <Form form={form} layout={"vertical"} name="control-hooks" onFinish={getAllFabrics}>
-     {/* <Row gutter={40}>
-      
-        <Col>
-          <Card title={'Total Delivery Methods: ' + deliveryMethodData.length} style={{ textAlign: 'left', width: 220, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+
+  const onfinish = (val) =>{
+    getAllFabrics(activeTab)
+  }
+  
+  return (
+  <Card title={<span >Fabric Request Code</span>} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+    <Form form={form} layout={"vertical"} name="control-hooks" onFinish={onfinish}>
+      <Row gutter={24}>
+        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+          <Form.Item name="buyerId" label="Buyer" rules={[{ required: false, message: "Buyer is required" }]}>
+            <Select
+            showSearch
+            allowClear
+            optionFilterProp="children"
+            placeholder="Select Buyer"
+            >
+              {buyerData.map((e) => {
+                return (
+                <Option key={e.buyer_id} value={e.buyer_id}>
+                  {e.buyerName}
+                </Option>
+                )
+              })}
+            </Select>
+          </Form.Item>
         </Col>
-        <Col>
-          <Card title={'Active: ' + deliveryMethodData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
-        </Col>
-        <Col>
-          <Card title={'In-Active: ' + deliveryMethodData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
-        </Col>
-          </Row> */}
-          <br></br>
-          {/* <Table
-          size='small'
-          rowKey={record => record.deliveryMethodId}
-          columns={columnsSkelton}
-          dataSource={reqCodeData}
-          scroll={{x:'max-content'}}
-          pagination={{
-            onChange(current) {
-              setPage(current);
-            }
-          }}
-          onChange={onChange}
-          bordered /> */}
-          <Row gutter={24}>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="buyerId" label="Buyer" rules={[{ required: false, message: "Buyer is required" }]}>
-                    <Select
-                    showSearch
-                    allowClear
-                    optionFilterProp="children"
-                    placeholder="Select Buyer"
-                    >
-                        {buyerData.map((e) => {
-                            return (
-                            <Option key={e.buyerId} value={e.buyerId}>
-                                {e.buyerName}
-                            </Option>
-                            );
-                        })}
-                    </Select>
-                </Form.Item>
-            </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name="hsnCode" label="HSN Code" rules={[{ required: false, message: "HSN Code is required" }]}>
                     <Select 
                     showSearch 
@@ -494,9 +507,9 @@ const FabricRequestCodeView = ()=>{
                         })}
                     </Select>
                 </Form.Item>
-            </Col>
+            </Col> */}
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="fabricType" label="Fabric Type" rules={[{ required: false, message: "Fabric Type is required" }]}>
+                <Form.Item name="fabricTypeId" label="Fabric Type" rules={[{ required: false, message: "Fabric Type is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
@@ -524,7 +537,7 @@ const FabricRequestCodeView = ()=>{
                       {weaveData.map((e) => {
                             return (
                             <Option key={e.weaveId} value={e.weaveId}>
-                                {e.fabricWeaveName}
+                                {e.fabricWeave}
                             </Option>
                             );
                         })}
@@ -532,7 +545,7 @@ const FabricRequestCodeView = ()=>{
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="finish_id" label="Finish" rules={[{ required: false, message: "Finish is required" }]}>
+                <Form.Item name="finishTypeId" label="Finish" rules={[{ required: false, message: "Finish is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
@@ -550,7 +563,7 @@ const FabricRequestCodeView = ()=>{
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="content_id" label="Content" rules={[{ required: false, message: "Content is required" }]}>
+                <Form.Item name="contentId" label="Content" rules={[{ required: false, message: "Content is required" }]}>
                     <Select 
                     showSearch 
                     allowClear 
@@ -560,7 +573,7 @@ const FabricRequestCodeView = ()=>{
                       {content.map((e) => {
                             return (
                             <Option key={e.content_id} value={e.content_id}>
-                                {e.finishType}
+                                {e.content}
                             </Option>
                             );
                         })}
@@ -574,6 +587,7 @@ const FabricRequestCodeView = ()=>{
                 htmlType="submit" 
                 type="primary" 
                 style={{ marginLeft: 50, marginTop: 5 }}
+                // onClick={getAllFabrics}
                 >
                   Submit
                 </Button>
@@ -588,19 +602,31 @@ const FabricRequestCodeView = ()=>{
                   <TabPane tab="Open" key="OPEN">
                       <Table
                         className="custom-table-wrapper"
-                        dataSource={reqCodeData}
-                        columns={columnsSkelton}
+                        dataSource={openData}
+                        columns={tableColumns("1")}
                         size="small"
                         scroll={{x:'max-content'}}
+                        pagination={{
+                          pageSize:10,
+                          onChange(current) {
+                            setPage(current);
+                          }
+                        }}
                       />
                   </TabPane>
                   <TabPane tab="Completed" key="COMPLETED">
                       <Table
                         className="custom-table-wrapper"
-                        dataSource={reqCodeData}
-                        columns={columnsSkelton}
+                        dataSource={completedData}
+                        columns={tableColumns("2")}
                         size="small"
                         scroll={{x:'max-content'}}
+                        pagination={{
+                          pageSize:10,
+                          onChange(current) {
+                            setPage(current);
+                          }
+                        }}
                       />
                   </TabPane>
                 </Tabs>

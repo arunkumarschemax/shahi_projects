@@ -6,7 +6,7 @@ export class FabricCodeReq{
     finishType?:number
     contentId?:number
     status?: any
-
+    ExternalRefNo?:string
     constructor(
         buyerId?: number,
         hsnCode?: string,
@@ -14,7 +14,9 @@ export class FabricCodeReq{
         weaveId?:number,
         finishType?:number,
         contentId?:number,
-        status?: any
+        status?: any,
+        ExternalRefNo?:string
+
     ){
         this.buyerId = buyerId
         this.hsnCode =  hsnCode
@@ -23,5 +25,6 @@ export class FabricCodeReq{
         this.finishType = finishType
         this.contentId = contentId
         this.status = status
+        this.ExternalRefNo = ExternalRefNo
     }
 }

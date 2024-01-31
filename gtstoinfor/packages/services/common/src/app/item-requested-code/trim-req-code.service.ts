@@ -75,8 +75,22 @@ export class TrimReqCodeService {
         m3t.variety_id AS varietyId,v.variety,
         m3t.trim_category_id AS trimCategoryId,tr.trim_category AS trimCategory,
         m3t.m3_code AS m3Code,
-        m3t.hsn_code AS hsnCode,m3t.status
+        m3t.hsn_code AS hsnCode,m3t.status,
+        tpm.structure AS structureStatus,
+        tpm.category AS categoryStatus,
+        tpm.content AS contentStatus,
+        tpm.type AS typeStatus,
+        tpm.finish AS finishStatus,
+        tpm.hole AS holeStatus,
+        tpm.quality AS qualityStatus,
+        tpm.thickness AS thicknessStatus,
+        tpm.variety AS varietyStatus,
+        tpm.uom AS uomStatus,
+        tpm.color AS colorStatus,
+        tpm.logo AS logoStatus,
+        tpm.part AS partStatus, m3t.trim_request_code_id AS trimRequestCodeId
         FROM trim_request_code m3t
+        LEFT JOIN trim_params_mapping tpm ON tpm.trim_id = m3t.trim_category_id
         LEFT JOIN buyers b ON b.buyer_id = m3t.buyer_id
         LEFT JOIN category cg ON cg.category_id = m3t.category_id
         LEFT JOIN colour c ON c.colour_id = m3t.color_id
@@ -91,6 +105,9 @@ export class TrimReqCodeService {
         LEFT JOIN variety v ON v.variety_id = m3t.variety_id
         LEFT JOIN trim tr ON tr.trim_id = m3t.trim_category_id
         WHERE 1=1`
+        if (req.ExternalRefNo && req.ExternalRefNo!=null){
+          query += ` AND b.external_ref_number = '${req.ExternalRefNo}'`
+        }
         if (req?.buyerId) {
           query = query + ` AND m3t.buyer_id=${req.buyerId}`
         }
@@ -368,14 +385,14 @@ export class TrimReqCodeService {
       }
     }
   
-    async getAllBuyers(req?:BuyerRefNoRequest):Promise<CommonResponseModel>{
+    async getAllBuyers(req?:any):Promise<CommonResponseModel>{
       try{
         let query = 
         `SELECT m3t.buyer_id AS buyerId, b.buyer_name AS buyerName, b.buyer_code AS buyerCode
         FROM trim_request_code m3t
         LEFT JOIN buyers b ON b.buyer_id = m3t.buyer_id`
         if (req.buyerRefNo) {
-          query = query + ` WHERE b.external_ref_number = ${req.buyerRefNo}`
+          query = query + ` WHERE b.external_ref_number = '${req.buyerRefNo}'`
         }
         query = query + ` GROUP BY m3t.buyer_id ORDER BY b.buyer_name`
         const data = await this.dataSource.query(query)

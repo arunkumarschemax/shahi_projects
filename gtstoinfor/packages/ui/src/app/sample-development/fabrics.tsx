@@ -299,7 +299,7 @@ const FabricsForm = (props:FabricsFormProps) => {
         })
         return record;
       }
-      fieldName = "colourId"
+      fieldName = "colorId"
       isDuplicate =  onchangeData.find((r) => r.colourId === e && r.fabricCode === record.fabricCode);
       console.log(props.sizeDetails);
       console.log(props.sizeDetails.find((s) => s.colorId === e));
@@ -329,7 +329,7 @@ const FabricsForm = (props:FabricsFormProps) => {
      
       else{
         AlertMessages.getErrorMessage("Fabric color is not in size details")
-       props.form.setFieldValue(`colorId${key}`,undefined)
+       props.form.setFieldValue(`colorId${key}`,"")
         updatedData = data.map((record) => {
           // if (record.key === key) {
           //   return { ...record, [field]: e };
@@ -350,7 +350,13 @@ const FabricsForm = (props:FabricsFormProps) => {
     if(isDuplicate?.fabricCode > 0)
     {
       AlertMessages.getErrorMessage("Duplicate Entries not allowed. ")
-      props.form.setFieldValue(`${fieldName}${key}`,null)
+      updatedData = data.map((record) => {
+        if (record.key === key) {
+          return { ...record, [field]: undefined };
+        }
+        return record;
+      });
+      props.form.setFieldValue(`${fieldName}${key}`,undefined)
       props.form.validateFields().then(fab => {
       })
       .catch((err) => {
@@ -612,7 +618,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             optionFilterProp="children"
             placeholder="Select Color"
           >
-          {/* <Option name={`colorId${record.key}`} key={0} value={0}>Please Select Color</Option> */}
+          {/* <Option name={`colorId${record.key}`} key={0} value={undefined}>Please Select Color</Option> */}
             {color.map((e) => {
               return (
                 <Option name={`colorId${record.key}`} key={e.colourId} value={e.colourId}>
