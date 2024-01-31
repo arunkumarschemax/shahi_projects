@@ -15,6 +15,8 @@ export class CentricPoItemVariant {
     comptMaterial:string;
     ratio:string;
 
+    eachPerCarton:string;
+
 
    
 }

@@ -97,6 +97,7 @@ export class CentricService {
           entity.retialPrice = variant.retialPrice
           entity.comptMaterial = variant.comptMaterial
           entity.ratio = variant.ratio
+          entity.eachPerCarton = variant.eachPerCarton
 
           const fileData = {
             poNumber: entity.poNumber,
@@ -181,6 +182,7 @@ export class CentricService {
               retialPrice: variant.retialPrice,
               comptMaterial: variant.comptMaterial,
               ratio: variant.ratio,
+              eachPerCarton: variant.eachPerCarton,
 
             })
             let po = parseInt(order?.poVersion) + 1
@@ -227,6 +229,7 @@ export class CentricService {
             entitys.retialPrice = variant.retialPrice
             entitys.comptMaterial = variant.comptMaterial
             entitys.ratio = variant.ratio
+            entitys.eachPerCarton = variant.eachPerCarton
             entitys.orderId = orderData.id
 
             entitys.poVersion = po.toString()
@@ -278,6 +281,7 @@ export class CentricService {
             entitys.retialPrice = variant.retialPrice
             entitys.comptMaterial = variant.comptMaterial
             entitys.ratio = variant.ratio
+            entitys.eachPerCarton = variant.eachPerCarton
             entitys.orderId = entity.id
             const savedChild = await this.childrepo.save(entitys)
 

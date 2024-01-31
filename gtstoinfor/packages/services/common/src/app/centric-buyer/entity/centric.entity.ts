@@ -261,4 +261,9 @@ export class CentricEntity {
     })
     currency: string;
 
+    @Column('varchar', {
+        name: "each_per_carton"
+    })
+    eachPerCarton: string
+
 }

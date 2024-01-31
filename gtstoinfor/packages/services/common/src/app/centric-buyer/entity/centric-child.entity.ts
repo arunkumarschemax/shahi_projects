@@ -274,4 +274,9 @@ export class CentricChildEntity {
     })
     orderId: number
 
+    @Column('varchar', {
+        name: "each_per_carton"
+    })
+    eachPerCarton: string
+
 }

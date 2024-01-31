@@ -375,7 +375,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                     if (!isNaN(parseInt(nextIndexValue))) {
                         itemVariantsObj.quantity = nextIndexValue;
                         itemVariantsObj.label = "-";
-
+                        itemVariantsObj.eachPerCarton = '-';
                         itemVariantsObj.unitPrice = itemVarinatsTextArr[upcIndex + 3];
                         itemVariantsObj.exFactory = itemVarinatsTextArr[upcIndex + 5];
                         itemVariantsObj.exPort = itemVarinatsTextArr[upcIndex + 6];
@@ -393,7 +393,7 @@ export const extractDataFromPoPdf = async (pdf) => {
 
                         if (!isNaN(parseInt(labelWithQuantity))) {
                             itemVariantsObj.quantity = labelWithQuantity;
-
+                            itemVariantsObj.eachPerCarton = '-';
                             itemVariantsObj.unitPrice = itemVarinatsTextArr[upcIndex + 4];
                             itemVariantsObj.exFactory = itemVarinatsTextArr[upcIndex + 6];
                             itemVariantsObj.exPort = itemVarinatsTextArr[upcIndex + 7];
@@ -405,7 +405,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                             } else {
                                 itemVariantsObj.retialPrice = "-";
                             }
-                            
+
                         }
                     }
                 }
@@ -598,7 +598,15 @@ export const extractDataFromPoPdf = async (pdf) => {
                 } else {
                     itemVariantsObj.label = "-";
                 }
-                itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count - 8]
+                itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count - 8];
+
+                const eachPerCartonRegex = /\d{12}|\d{13}/;
+                if (eachPerCartonRegex.test(itemVarinatsTextArr[(count * l) + count - 9])) {
+                    itemVariantsObj.eachPerCarton = '-';
+                } else {
+                    itemVariantsObj.eachPerCarton = itemVarinatsTextArr[(count * l) + count - 9] || '-';
+                }
+                
                 itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) + count - 6]
                 itemVariantsObj.exFactory = itemVarinatsTextArr[(count * l) + count - 4]
                 itemVariantsObj.exPort = itemVarinatsTextArr[(count * l) + count - 3]
