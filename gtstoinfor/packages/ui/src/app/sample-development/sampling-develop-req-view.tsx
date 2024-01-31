@@ -358,6 +358,8 @@ import { config } from "packages/libs/shared-services/config";
         align:'center',
         fixed:'right',
         render: (text, record) => {
+          console.log(record,'ppppppppppppppppppppp');
+          
           return (
             <>
             <span style={{paddingRight:20}}  >
@@ -769,9 +771,13 @@ import { config } from "packages/libs/shared-services/config";
     }
 
     const handleFabDownload = (file) => {
+      console.log('0000000','ooooooooo');
+
       console.log(file,'filepath');    
-      console.log(file.substr(12))  
-      if (file) {
+      // console.log(file.substr(12))  
+      if (file !== null) {
+        console.log('0000000');
+        
         fetch(config.file_upload_path + `${file.substr(12)}`)
         .then((response) => {
           response.blob().then((blob) => {
@@ -786,6 +792,7 @@ import { config } from "packages/libs/shared-services/config";
         });
     }
       else {
+        console.log('000000022222222222222');
         AlertMessages.getErrorMessage("Please upload file. ");
       }
     }
