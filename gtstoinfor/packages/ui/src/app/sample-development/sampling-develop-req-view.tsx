@@ -747,13 +747,21 @@ import { config } from "packages/libs/shared-services/config";
 
         const downloadUrl = config.file_upload_path + '/SD-' + file;
 
-    // Create a link and trigger the download
-    const link = document.createElement('a');
-    link.href = downloadUrl;
-    link.download = 'downloaded-directory.zip';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+        fetch(downloadUrl)
+        .then(response => {
+          // Trigger download by creating a blob and setting up a download link
+          response.blob().then(blob => {
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'downloadedDirectory.zip'; // Set the desired file name
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          });
+        })
+        .catch(error => console.error('Error downloading directory:', error));
       }
       else {
         AlertMessages.getErrorMessage("Please upload file. ");
