@@ -52,6 +52,7 @@ import TrimsGrid from "./trims/trims-grid"
 import TrimColumns from "./trims/trim-columns"
 import BomCreation from "./trims/bom-creation"
 import TrimList from "./trims/trims-cardview"
+import JokerTagPrint from "./trims/trim-prints/joker-tag"
 
 
 export const AppRoutes = () => {
@@ -179,6 +180,7 @@ export const AppRoutes = () => {
                     <Route path='bom-view' element={<BomView />} />
                     <Route path='bom-pdf-info-detail-view' element={<BomPdfInfoDetailView />} />
                     <Route path='bom-creation' key='/bom-creation' element={<BomCreation />} />
+                    <Route path='joker-tag' key='/joker-tag' element={<JokerTagPrint/>}/>
                 </Route>
 
                 <Route path='/reports'>

@@ -3,9 +3,10 @@ import {CloseOutlined,CreditCardOutlined,EditOutlined,EyeOutlined,HomeOutlined,P
 import { useEffect, useRef, useState } from "react";
 import { BomService, trimService } from "@project-management-system/shared-services";
 import { useLocale } from "antd/es/locale";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { StyleNumberReq } from "@project-management-system/shared-models";
 import AlertMessages from "../common/common-functions/alert-messages";
+import JokerTagPrint from "./trim-prints/joker-tag";
 
 
 export const TrimList=({})=>{
@@ -13,6 +14,7 @@ const service = new BomService();
 const [trim,setTrim]=useState<any>([]);
 const state = useLocation()
 const [bomInfo,setBomInfo] = useState<any[]>([])
+const navigate = useNavigate()
 
 useEffect(()=>{
     getAllTrims();
@@ -48,6 +50,12 @@ useEffect(()=>{
     //         // Handle error appropriately
     //     });
     // }
+
+    const cardOnclick = (val) => {
+        if(val.item === 'Joker Tag'){
+           navigate('/bom/joker-tag',{state:{info:state.state.info}})
+        }
+    }
     return(
    <>
    <Card title="TRIMS" headStyle={{ color: 'black', fontWeight: 'bold' }}>
@@ -59,7 +67,7 @@ useEffect(()=>{
             backgroundColor: "#9ec1a3",
             marginRight: "20px",
             marginBottom: "20px",}}
-            onClick={() => {AlertMessages.getSuccessMessage('success')}}
+            onClick={() => cardOnclick(e)}
             >
             <div>
                 <Descriptions
