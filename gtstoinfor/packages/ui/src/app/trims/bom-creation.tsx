@@ -460,11 +460,10 @@ const bomservice = new BomService();
 
     const onGenerateBom = (record) => {
       console.log(record,'***')
-      navigate('/nike/trim-List',{state:{info:record}})
+      navigate('/bom/trim-List',{state:{info:record}})
       // const req = new StyleNumberReq(record.styleNumber)
       // bomservice.getBomInfoAgainstStyle(req).then(res =>{
       //   if(res.status){
-
       //   }
       // })
     }

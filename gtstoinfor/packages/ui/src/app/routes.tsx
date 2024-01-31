@@ -52,6 +52,8 @@ import TrimsGrid from "./trims/trims-grid"
 import TrimColumns from "./trims/trim-columns"
 import BomCreation from "./trims/bom-creation"
 import TrimList from "./trims/trims-cardview"
+import JokerTagPrint from "./trims/trim-prints/joker-tag"
+import WasCarelabel from "./trims/trim-prints/wash-care-label"
 import HANGTAG, { HangTag } from "./trims/trim-prints/hang-tag"
 
 
@@ -167,10 +169,8 @@ export const AppRoutes = () => {
                     <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
                     <Route path='co-line-view' element={<ColineView />} />
                     <Route path='backing-paper' element={<BackingPaper/>} />
-                    <Route path='trim-grid' element={<TrimsGrid/>} />
-
+                    {/* <Route path='trim-grid' element={<TrimsGrid/>} /> */}
                     <Route path='trim-columns' element={<TrimColumns/>} />
-                    <Route path='trim-List' element={<TrimList/>} />
                     <Route path='hang-tag' element={<HangTag/>} />
 
 
@@ -181,6 +181,10 @@ export const AppRoutes = () => {
                     <Route path='bom-view' element={<BomView />} />
                     <Route path='bom-pdf-info-detail-view' element={<BomPdfInfoDetailView />} />
                     <Route path='bom-creation' key='/bom-creation' element={<BomCreation />} />
+                    <Route path='joker-tag' key='/joker-tag' element={<JokerTagPrint/>}/>
+                    <Route path='trim-grid' element={<TrimsGrid/>} />
+                    <Route path='trim-List' element={<TrimList/>} />
+                    <Route path='washcare-label' element={<WasCarelabel />}/>
                 </Route>
 
                 <Route path='/reports'>
