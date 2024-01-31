@@ -434,6 +434,9 @@ export class DpomService {
             await driver.wait(until.elementLocated(By.id('bpo')))
             await driver.findElement(By.id('bpo')).clear();
             await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
+            await driver.wait(until.elementLocated(By.id('bus')))
+            await driver.findElement(By.id('bus')).clear();
+            await driver.findElement(By.id('bus')).sendKeys(styleNo);
             await driver.wait(until.elementLocated(By.id('agnt')));
             const agentDropDown = await driver.findElement(By.id('agnt'));
             await driver.executeScript(`arguments[0].value = '${agent}';`, agentDropDown)
@@ -588,6 +591,7 @@ export class DpomService {
                                     }
                                 }
                                 const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
+                                console.log(inputId)
                                 await driver.wait(until.elementLocated(By.id(inputId)))
                                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                             }
