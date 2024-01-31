@@ -305,7 +305,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .leftJoin(SampleRequest, 'sr', 'sr.sample_request_id= stri.sample_request_id ')
             .leftJoin(SamplingbomEntity, 'sb', 'sb.m3_item_id= stri.trim_code and sb.sample_request_id = stri.sample_request_id')
             .leftJoin(M3TrimsEntity, 'mt', 'mt.m3_trim_id=stri.trim_code ')
-            .leftJoin(StocksEntity,'st','st.m3_item=stri.trim_code and sr.buyer_id=st.buyer_id and grn_type = "INDENT"')
+            .leftJoin(StocksEntity,'st','st.m3_item=stri.trim_code and sr.buyer_id=st.buyer_id and grn_type = "INDENT" and st.item_type = stri.trim_type')
             .leftJoin(GrnItemsEntity,'gi','gi.grn_item_id=st.grn_item_id')
             .leftJoin(GrnEntity,'g','g.grn_id=gi.grn_id and g.grn_type = "INDENT"')
             .where(`stri.sample_request_id = "${sampleId}"`)
