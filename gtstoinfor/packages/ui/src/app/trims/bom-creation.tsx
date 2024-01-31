@@ -28,6 +28,7 @@ const BomCreation = () => {
   const [productCode, setProductCode] = useState<any>([]);
   const { RangePicker } = DatePicker;
   const { Option } = Select;
+  const navigate = useNavigate()
  
   const [hideChildren, setHideChildren] = useState(true);
   const [csvData, setcsvData] = useState([]);
@@ -459,6 +460,7 @@ const bomservice = new BomService();
 
     const onGenerateBom = (record) => {
       console.log(record,'***')
+      navigate('/nike/trim-List',{state:{info:record}})
       // const req = new StyleNumberReq(record.styleNumber)
       // bomservice.getBomInfoAgainstStyle(req).then(res =>{
       //   if(res.status){
