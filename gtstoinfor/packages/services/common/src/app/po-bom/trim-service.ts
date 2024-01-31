@@ -42,7 +42,7 @@ export class TrimService{
         try{
             const data = await this.styleRepo.getBomInfoAgainstStyle(req)
             const bomInfoMap = new Map<number, BomInfo>()
-            if(data){
+            if(data.length >0){
                 for(const rec of data){
                     if(!bomInfoMap.has(rec.bomId)){
                         bomInfoMap.set(rec.bomId,new BomInfo(rec.bomId,rec.item_name,rec.description,rec.im_code,rec.item_type,rec.use,rec.uom,rec.qty,[]))
