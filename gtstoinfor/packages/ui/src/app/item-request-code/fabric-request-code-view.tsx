@@ -43,14 +43,7 @@ const FabricRequestCodeView = ()=>{
   const externalRefNo = JSON.parse(localStorage.getItem('currentUser')).user.externalRefNo
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
-  const onTabChange = (key) => {
-    setActiveTab((prevTab) => {
-      if (key !== prevTab) {
-        getAllFabrics(key);
-      }
-      return key;
-    });
-  };
+ 
 
   useEffect(() => {
     getAllFabrics('OPEN');
@@ -66,13 +59,24 @@ const FabricRequestCodeView = ()=>{
     
     return accessValue
 }
+const onTabChange = (key) => {
+  setActiveTab((prevTab) => {
+    if (key !== prevTab) {
+      getAllFabrics(key);
+    }
+    return key;
+  });
+};
   const getAllFabrics= (val?) => {
-    const req = new FabricCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('hsnCode'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('finishTypeId'),form.getFieldValue('contentId'),val)
+    console.log(val,'88888');
+    const req = new FabricCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('hsnCode'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('finishTypeId'),form.getFieldValue('contentId'),val,externalRefNo)
     requestCodeService.getAllFabrics(req).then(res => {
+      console.log(res,'ppppppppppppp');
+      
       if (res.status) {
         setReqCodeData(res.data);
-        setOpenData(res.data.filter((e)=>e.status === 'open'))
-        setCompletedData(res.data.filter((e)=>e.status === 'completed'))
+        // setOpenData(res.data.filter((e)=>e.status === 'open'))
+        // setCompletedData(res.data.filter((e)=>e.status === 'completed'))
       } else {
         if (res.data) {
           setReqCodeData([]);
@@ -94,7 +98,7 @@ const FabricRequestCodeView = ()=>{
     requestCodeService.getAllFabricBuyers(req).then((res)=>{
       if (res.status && req.buyerRefNo) {
         form.setFieldsValue({buyerId: res.data[0]?.buyer_id})
-        getAllFabrics()
+        // getAllFabrics(activeTab)
       }
       if(res.status){
         setBuyerData(res.data)
@@ -602,7 +606,7 @@ const FabricRequestCodeView = ()=>{
                   <TabPane tab="Open" key="OPEN">
                       <Table
                         className="custom-table-wrapper"
-                        dataSource={openData}
+                        dataSource={reqCodeData}
                         columns={tableColumns("1")}
                         size="small"
                         scroll={{x:'max-content'}}
@@ -617,7 +621,7 @@ const FabricRequestCodeView = ()=>{
                   <TabPane tab="Completed" key="COMPLETED">
                       <Table
                         className="custom-table-wrapper"
-                        dataSource={completedData}
+                        dataSource={reqCodeData}
                         columns={tableColumns("2")}
                         size="small"
                         scroll={{x:'max-content'}}
