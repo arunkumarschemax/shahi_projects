@@ -52,6 +52,7 @@ import TrimsGrid from "./trims/trims-grid"
 import TrimColumns from "./trims/trim-columns"
 import BomCreation from "./trims/bom-creation"
 import TrimList from "./trims/trims-cardview"
+import HANGTAG, { HangTag } from "./trims/trim-prints/hang-tag"
 
 
 export const AppRoutes = () => {
@@ -170,6 +171,7 @@ export const AppRoutes = () => {
 
                     <Route path='trim-columns' element={<TrimColumns/>} />
                     <Route path='trim-List' element={<TrimList/>} />
+                    <Route path='hang-tag' element={<HangTag/>} />
 
 
                 </Route>
