@@ -107,13 +107,13 @@ export class BomService{
 
     async getAll():Promise<CommonResponseModel>{
         try{
-            const query= 'SELECT s.id as styeleId,s.style, s.style_name AS styleName,s.season,s.exp_no AS expNo,b.id AS bomId,b.style_id as bstyleId,b.item_name AS itemName,b.DESCRIPTION,b.im_code AS imCode,b.item_type AS itemType ,sc.id AS styleComboId,sc.bom_id AS bomId,sc.style_id AS sstyleId,sc.combination,sc.primary_color AS primaryColor,sc.secondary_color AS secondaryColor,sc.logo_color AS logoColor FROM styles s  LEFT JOIN bom b ON b.style_id=s.id LEFT JOIN style_combos sc ON sc.bom_id=b.id'
+            const query= 'SELECT b.use,s.id as styeleId,s.style, s.style_name AS styleName,s.season,s.exp_no AS expNo,b.id AS bomId,b.style_id as bstyleId,b.item_name AS itemName,b.DESCRIPTION,b.im_code AS imCode,b.item_type AS itemType ,sc.id AS styleComboId,sc.bom_id AS sbomId,sc.style_id AS sstyleId,sc.combination,sc.primary_color AS primaryColor,sc.secondary_color AS secondaryColor,sc.logo_color AS logoColor FROM styles s  LEFT JOIN bom b ON b.style_id=s.id LEFT JOIN style_combos sc ON sc.bom_id=b.id'
             const result = await this.dataSource.query(query)
             const bomDetailsmap = new Map<number, BomDto>()
             if(result.length >0){
                 for(const rec of result){
                     if(!bomDetailsmap.has(rec.bomId)){
-                        bomDetailsmap.set(rec.bomId,new BomDto(rec.itemName,rec.description,rec.imCode,rec.itemType,rec.use,[],rec.bomId,rec.bstyleId))
+                        bomDetailsmap.set(rec.bomId,new BomDto(rec.itemName,rec.DESCRIPTION,rec.imCode,rec.itemType,rec.use,[],rec.bomId,rec.bstyleId))
                     }
                     bomDetailsmap.get(rec.bomId).styleCombo.push(new StyleComboDto(rec.combination,rec.primaryColor,rec.secondaryColor,rec.logoColor))
                 }
@@ -122,6 +122,7 @@ export class BomService{
                     bomInfo.push(e)
                 })
                 const finalData = new StyleDto(result.style,result.styleName,result.season,result.expNo,result.msc,result.factoryLo,result.status,result.fileData,bomInfo)
+                
             return new CommonResponseModel(true,1,'Data Retrived Sucessfully',finalData)
             }else{
                 return new CommonResponseModel(false,1,'No Data Found',[])

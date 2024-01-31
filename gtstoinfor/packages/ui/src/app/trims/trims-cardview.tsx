@@ -6,6 +6,7 @@ import { useLocale } from "antd/es/locale";
 import { useLocation } from "react-router-dom";
 import { StyleNumberReq } from "@project-management-system/shared-models";
 import AlertMessages from "../common/common-functions/alert-messages";
+import { stat } from "fs";
 
 
 export const TrimList=({})=>{
@@ -18,17 +19,18 @@ useEffect(()=>{
     getAllTrims();
 },[])
 
-// useEffect(() => {
-//     if(state.state.info){
-//         const req = new StyleNumberReq(state.state.info[0].styleNumber)
-//          service.getBomInfoAgainstStyle(req).then(res =>{
-//             if(res.status){
-//                 setBomInfo(res.data)
-//             }
-//         })
-//     }
+useEffect(() => {
+    if(state.state.info){
+        console.log(state.state.info.styleNumber)
+        const req = new StyleNumberReq(state.state.info.styleNumber)
+         service.getBomInfoAgainstStyle(req).then(res =>{
+            if(res.status){
+                setBomInfo(res.data)
+            }
+        })
+    }
 
-// },[state.state])
+},[state.state])
 
     const getAllTrims=()=>{
         service.getAllTrimInfo().then(res=>{
