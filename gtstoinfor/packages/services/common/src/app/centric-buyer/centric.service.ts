@@ -487,7 +487,7 @@ export class CentricService {
         buyerValue2 = "CEN00002-CENTRIC BRANDS LLC"
         agent = "NA-DIRECT CUSTOMER"
         pkgTerms = "BOX-BOXES"
-        paymentTerms = "081-TT 90 DAYS"
+        paymentTerms = "081-TT  90 Days"
       }
       const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
       const allApps = await apps.findElements(By.tagName('span'));
