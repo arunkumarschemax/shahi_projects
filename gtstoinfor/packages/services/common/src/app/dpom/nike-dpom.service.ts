@@ -592,7 +592,11 @@ export class DpomService {
                                 }
                                 const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
                                 console.log(inputId)
-                                await driver.wait(until.elementLocated(By.id(inputId)))
+                                const input = await driver.wait(until.elementLocated(By.id(inputId)))
+                                if (!input) {
+                                    const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: 'NO matching Size/Color found' });
+                                    return new CommonResponseModel(false, 0, 'NO matching Size/Color found')
+                                }
                                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                             }
                         }
