@@ -254,7 +254,7 @@ export const TrimReqCodeView = () => {
   });
   getMappedTrims(value);
   }
-  const getAllTrims = (key) =>{
+  const getAllTrims = (key?) =>{
     console.log(activeTab,'------000000000000000')
     const req = new TrimCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('trimType'),key,externalRefNo)  
     trimReqCodeService.getAllTrims(req).then((res) => {
@@ -281,8 +281,9 @@ export const TrimReqCodeView = () => {
 
   const onReset = () => {
     form.resetFields();
-    setMapData([])
-    setData([])
+    // setMapData([])
+    // setData([])
+    getAllTrims()
   };
 
 
@@ -431,7 +432,7 @@ export const TrimReqCodeView = () => {
     {
       title: <div style={{textAlign:"center"}}>Trim Type</div>,
       dataIndex: "trimType",
-      ...getColumnSearchProps("trimType"),
+      // ...getColumnSearchProps("trimType"),
       sorter: (a, b) => a.trimType-(b.trimType),
       sortDirections: ["descend", "ascend"],
       render: (text) => {
