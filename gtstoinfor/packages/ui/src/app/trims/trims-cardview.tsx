@@ -28,7 +28,7 @@ useEffect(()=>{
     //     }).catch(error => {
     //         console.error("Error fetching trims:", error);
     //         // Handle error appropriately
-    //     });
+    //     }); 
     // }
     return(
    <>
