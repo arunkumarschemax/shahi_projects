@@ -53,10 +53,10 @@ export class CentricController {
         },
     }))
 
-    async fileUpload(@UploadedFile() file, @Body() req:any): Promise<CommonResponseModel> {
+    async fileUpload(@UploadedFile() file, @Body() req: any): Promise<CommonResponseModel> {
 
         try {
-            return await this.Service.updatePath(req.jsonData,req.poNumber, file.path, file.filename, file.mimetype)
+            return await this.Service.updatePath(req.jsonData, req.poNumber, file.path, file.filename, file.mimetype)
         } catch (error) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, error);
         }
@@ -167,7 +167,7 @@ export class CentricController {
         }
     }
 
-    
+
     @Post('/getseasonData')
     async getseasonData(): Promise<CommonResponseModel> {
         try {
@@ -177,7 +177,7 @@ export class CentricController {
         }
     }
 
-    
+
     @Post('/getCentricorderDataForPPK')
     @ApiBody({ type: PoOrderFilter })
     async getCentricorderDataForPPK(@Body() req: any): Promise<CommonResponseModel> {
@@ -195,6 +195,21 @@ export class CentricController {
         try {
             // console.log(req,"con")
             return await this.Service.getCentricorderDataForSolidPO(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    /**
+     * this API is consumed by the external App SCAN-AND-PACK
+     * @param req 
+     * @returns 
+     */
+    @Post('/getCentricorderDataForScanAndPack')
+    @ApiBody({ type: PoOrderFilter })
+    async getCentricorderDataForScanAndPack(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.getCentricorderDataForScanAndPack(req);
         } catch (err) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
