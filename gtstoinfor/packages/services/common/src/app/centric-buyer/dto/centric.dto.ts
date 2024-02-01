@@ -137,6 +137,9 @@ export class CentricDto {
     poItemDetails: any;
 
 
+    
+    @ApiProperty()
+    eachPerCarton: string
 
 
 

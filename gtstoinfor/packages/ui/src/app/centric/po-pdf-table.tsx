@@ -123,7 +123,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                             <th className='ta-b'>AMOUNT</th> */}
                             <th className='ta-b'>COMPT MATERIAL</th>
                             <th className='ta-b'>RATIO</th>
-
+                            {/* <th className='ta-b'>EACH PER CARTON</th> */}
 
                             <th className='ta-b'>SIZE</th>
                             <th className='ta-b'>UPC</th>
@@ -144,6 +144,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                     {/* <td className='ta-b'>{j.uom}</td> */}
                                     <td className='ta-b'>{j.comptMaterial}</td>
                                     <td className='ta-b'>{j.ratio}</td>
+                                    {/* <td className='ta-b'>{j.eachPerCarton}</td> */}
 
 
                                     <td className='ta-b'>{j.size}</td>
