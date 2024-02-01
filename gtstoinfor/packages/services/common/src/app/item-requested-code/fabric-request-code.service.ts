@@ -100,6 +100,7 @@ export class FabricReqCodeService {
         if (req?.status) {
           query = query + ` AND frc.status='${req.status}'`
         }
+        query = query + ` ORDER By frc.created_at`
       }
 
       if(req.status === 'COMPLETED'){
@@ -146,6 +147,7 @@ export class FabricReqCodeService {
         if (req?.status) {
           query = query + ` AND frc.status='${req.status}'`
         }
+        query = query + ` ORDER By frc.updated_at`
       }
         const data = await this.dataSource.query(query)
         let response:M3FabricsDTO[] = [];
