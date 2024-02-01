@@ -1,5 +1,5 @@
 import {BuyersService,ContentService,FabricFinishTypeService,FabricRequestCodeService,FabricTypeService,FabricWeaveService,FinishService,M3ItemsService,UomService,WeightService } from"@project-management-system/shared-services";
-import { Button, Card, Col, Form, Input, Radio, Row, Select, Space, Typography, message } from "antd";
+import { Button, Card, Col, Form, Input, Radio, Row, Select, Space, Tag, Typography, message } from "antd";
 import React, { useEffect, useState } from "react";
 import AlertMessages from "../../common/common-functions/alert-messages";
 import {FabricContentDto, FabricTypeIdReq,M3FabricsDTO,M3ItemsDTO,UomCategoryEnum,m3ItemsContentEnum} from "@project-management-system/shared-models";
@@ -183,6 +183,7 @@ const M3Items = ({props}) => {
     console.log(`"`+props?.yarnType+`"`)
 
    if(props != undefined){
+    form.resetFields();
     console.log("********************")
     console.log(props.buyer_id)
     
@@ -198,7 +199,7 @@ const M3Items = ({props}) => {
     if(props.width != null){
       onWidthChange(props.width)
     }
-    if(props.onWidthUomChange != null){
+    if(props.widthUnit != null){
       onWidthUomChange(props.onWidthUomChange)
     }
     if(props.epiConstruction != null){
@@ -231,9 +232,16 @@ const M3Items = ({props}) => {
       weightValue: props.weightId,
       weightUomId: props.weightUnit,
     });
+    form.setFieldsValue({weightId:[{
+      weightValue: props.weightId,
+      weightUomId: props.weightUnit,
+    }]})
     form.setFieldsValue({m3Code:props.m3Code});
-    // form.setFieldsValue({widthValue:props.width});
-    form.setFieldsValue({width:props.width,widthUomId:props.widthUnit,});
+    form.setFieldsValue({widthValue:[{
+      width:props.width,widthUomId:props.widthUnit,
+    }]});
+    form.setFieldsValue({width:props.width})
+    form.setFieldsValue({widthUomId:props.widthUnit});
     form.setFieldsValue({epiConstruction:props.epiConstruction,ppiConstruction:props.ppiConstruction,});
     // form.setFieldsValue({construction:props.epi});
     // form.setFieldsValue({ppiConstruction:props.ppi});
@@ -528,7 +536,7 @@ const handleYarnUnitChange = (index, value) => {
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-            <Form.Item label="Weight" htmlFor="weightId" rules={[{ required: true, message: "Weight is required" }]}>
+            <Form.Item label="Weight" htmlFor="weightId" name={"weightId"} rules={[{ required: true, message: "Weight is required" }]}>
             <Space.Compact>
               <Form.Item name='weightValue' id='weightValue'>
               <Input placeholder="Enter Weight" allowClear onChange={(e)=>onWeightChange(e?.target?.value)} onBlur={generateItemCode}/>
@@ -546,7 +554,7 @@ const handleYarnUnitChange = (index, value) => {
             </Form.Item>
           </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item label="Width" htmlFor="widthValue" rules={[{ required: true, message: "Width is required" }]} >
+              <Form.Item label="Width" htmlFor="widthValue" name={"widthValue"} rules={[{ required: true, message: "Width is required" }]} >
                 <Space.Compact>
                   <Form.Item name="width" id="width" rules={[{ required: true, message: "Width is required" }]}>
                   <Input placeholder="Enter Width" allowClear onChange={(e)=>onWidthChange(e?.target?.value)}/>
