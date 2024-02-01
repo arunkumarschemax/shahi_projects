@@ -707,12 +707,21 @@ export class HbService {
                       // Clear the existing value (if any) and fill it with the new price.
                       await inputField.clear();
                       await inputField.sendKeys(size.price);
+                    } else {
+                      /// update for if size is mismatch
+                      const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed', errorMsg: 'NO matching Size found' });
+                      return new CommonResponseModel(false, 0, 'NO matching Size found')
                     }
                   }
                   console.log(color.name)
                   const inputId = `${size.name}:${color.name}:USA`.replace(/\*/g, '');
                   console.log(inputId)
-                  const input = await driver.wait(until.elementLocated(By.id(inputId)))
+                  const input = await driver.wait(until.elementLocated(By.id(inputId)), 5000)
+                  ////// update for if color is mismatch
+                  if (!input) {
+                    const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+                    return new CommonResponseModel(false, 0, 'NO matching Color found')
+                  }
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
               }
