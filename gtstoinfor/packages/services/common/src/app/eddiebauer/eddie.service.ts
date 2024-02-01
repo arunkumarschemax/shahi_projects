@@ -128,7 +128,7 @@ export class EddieService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.style},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.style},${rec.po_number},${rec.delivery_date},${rec.color}`,
-            new eddieOrderDataModel(rec.id, rec.po_number, rec.po_date,rec.incoterm, rec.po_style, rec.color, rec.delivery_date, rec.ship_to_address, rec.buyer_address,rec.manufacture,rec.shipment_mode,rec.payment_terms,rec.po_line,rec.buyer_item,rec.short_description,rec.currency,rec.retail_price,rec.status,[])
+            new eddieOrderDataModel(rec.id, rec.po_number, rec.po_date,rec.incoterm, rec.po_style, rec.color, rec.delivery_date, rec.ship_to_add, rec.buyer_address,rec.manufacture,rec.shipment_mode,rec.payment_terms,rec.po_line,rec.buyer_item,rec.short_description,rec.currency,rec.retail_price,rec.status,[])
           );
 
         }
@@ -151,38 +151,5 @@ export class EddieService {
   }
 
 
-  // async getorderacceptanceData(req?: SanmarOrderFilter): Promise<CommonResponseModel> {
-  //   try {
-  //     const details = await this.EddieOrdersRepo.getorderacceptanceData(req);
-  //     if (details.length === 0) {
-  //       return new CommonResponseModel(false, 0, 'data not found');
-  //     }
-  //     const sizeDateMap = new Map<string, eddieOrderDataModel>();
-  //     for (const rec of details) {
-  //       // console.log(rec,"rrrrrrrrr")
-  //       if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
-  //         sizeDateMap.set(
-  //           `${rec.po_line},${rec.po_number}`,
-  //           new eddieOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status)
-  //         );
-
-  //         // console.log(sizeDateMap,)
-  //       }
-  //       const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number}`).sizeWiseData;
-  //       if (rec.size !== null) {
-  //         sizeWiseData.push(new EddieSizeWiseModel(rec.size, rec.unit_price, rec.quantity, rec.special_instructions, rec.upc, rec.retial_price, rec.color, rec.ratio, rec.ppk_upc, rec.label, rec.exfactory, rec.export, rec.delivery_date));
-  //       }
-  //     }
-  //     const dataModelArray: eddieOrderDataModel[] = Array.from(sizeDateMap.values());
-  //     // console.log(dataModelArray,"kkkk")
-  //     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
-  //     // return new CommonResponseModel(true, 1, 'data retrieved', details);
-
-
-  //   } catch (e) {
-  //     console.log(e, "errrrrrrrrr")
-  //     return new CommonResponseModel(false, 0, 'failed', e);
-  //   }
-  // }
-
+  
 }

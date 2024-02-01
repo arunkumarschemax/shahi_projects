@@ -13,6 +13,7 @@ import {
   } from "antd";
   import { useEffect, useRef, useState } from "react";
   import {
+    EddieService,
     HbService, SanmarService,
   } from "@project-management-system/shared-services";
   import React from "react";
@@ -22,14 +23,14 @@ import {
   import {
     
     AlertMessages,
-    SanmarOrderAcceptanceRequest,
+    EddieOrderAcceptanceRequest,
     HbPoOrderFilter,
     SanmarOrderFilter,
   } from "@project-management-system/shared-models";
   import { useIAMClientState } from "../nike/iam-client-react";
   
   export function EddieOrderAcceptanceGrid() {
-    const service = new SanmarService();
+    const service = new EddieService();
     const navigate = useNavigate();
     const searchInput = useRef(null);
     const [orderData, setOrderData] = useState<any>([]);
@@ -50,7 +51,7 @@ import {
   
     useEffect(() => {
       getorderacceptanceData();
-      getCustomerPoNumber()
+     // getCustomerPoNumber()
     }, []);
   
   
@@ -92,14 +93,14 @@ import {
     };
   
     console.log(form.getFieldValue("custPo"), "uuuuu")
-    const getCustomerPoNumber = () => {
-      service.getCustomerPoNumber().then((res) => {
-        if (res.status) {
-          setPoNumber(res.data);
+    // const getCustomerPoNumber = () => {
+    //   service.getCustomerPoNumber().then((res) => {
+    //     if (res.status) {
+    //       setPoNumber(res.data);
         
-        }
-      });
-    };
+    //     }
+    //   });
+    // };
   
   
     const handleItemNoChange = (value, record, index) => {
@@ -119,7 +120,7 @@ import {
     //   const formValues = form.getFieldsValue();
     //   const itemNoValue = formValues[index]?.itemNo;
     //   console.log(record);
-    //   const req = new SanmarOrderAcceptanceRequest();
+    //   const req = new EddieOrderAcceptanceRequest();
     //   req.custPo = record.custPo;
     //   req.style = record.style;
     //   req.itemNo = itemNoValue;
@@ -146,33 +147,33 @@ import {
       const formValues = form.getFieldsValue();
       const itemNoValue = formValues[index]?.itemNo;
       console.log(record,'hhhhhhhhhhhhhhhh');
-      const req = new SanmarOrderAcceptanceRequest();
-      req.buyerPo = record.buyerPo;
-      req.style = record.style;
-      req.itemNo = itemNoValue;
+      const req = new EddieOrderAcceptanceRequest();
+      req.poNumber = record.poNumber;
+      // req.style = record.style;
+      // req.itemNo = itemNoValue;
       req.buyer = 'SanMar Corporation';
-      req.deliveryDate = record.deliveryDate;
+      // req.deliveryDate = record.deliveryDate;
     
       console.log("Request Payload:", req);
     
-      service.sanmarCoLineCreationReq(req).then((res) => {
-        if (res.status) {
-            getorderacceptanceData();
-          setItemNoValues({});
-          form.setFieldsValue({ [index]: { itemNo: undefined } });
-          message.success(res.internalMessage);
-        } else {
-          message.error(res.internalMessage);
-        }
-      });
+      // service.sanmarCoLineCreationReq(req).then((res) => {
+      //   if (res.status) {
+      //       getorderacceptanceData();
+      //     setItemNoValues({});
+      //     form.setFieldsValue({ [index]: { itemNo: undefined } });
+      //     message.success(res.internalMessage);
+      //   } else {
+      //     message.error(res.internalMessage);
+      //   }
+      // });
     };
     
-    const processData = (tableData: SanmarOrderAcceptanceRequest[]) => {
+    const processData = (tableData: EddieOrderAcceptanceRequest[]) => {
       const dataTobeReturned = [];
-      const roleWiseMapData = new Map<string, SanmarOrderAcceptanceRequest[]>();
+      const roleWiseMapData = new Map<string, EddieOrderAcceptanceRequest[]>();
   
       tableData.forEach(rec => {
-        const key = `${rec.buyerPo}_${rec.itemNo}_${rec.deliveryDate}`;
+        const key = `${rec.poNumber}_${rec.itemNo}`;
   
         if (!roleWiseMapData.has(key)) {
           roleWiseMapData.set(key, [rec]);
@@ -329,8 +330,8 @@ import {
           fixed: "left",
         },
         {
-          title: "BUYER PO",
-          dataIndex: "buyerPo",
+          title: "Po Number",
+          dataIndex: "poNumber",
           width: 90,
          // sorter: (a, b) => a.custPo.localeCompare(b.custPo),
        //   sortDirections: ["ascend", "descend"],
@@ -348,40 +349,134 @@ import {
           // ...getColumnSearchProps('poNumber')
         },
         {
-          title: "Style",
-          dataIndex: "style",
+          title: "Po Date",
+          dataIndex: "poDate",
           width: 90,
           // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
           // sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
-          fixed: "left",
+         
   
         },
         {
-          title: "Color",
-          dataIndex: "color",
+          title: "Incoterm",
+          dataIndex: "incoterm",
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 13)}...` : "-"}
+            </Tooltip>
+          ),
+        },
+        {
+          title: "Shipment Mode",
+          dataIndex: "shipmentMode",
           width: 90,
           // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
           // sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
-          fixed: "left",
+         
   
         },
-  
         {
-          title: "Delivery Date",
-          dataIndex: "deliveryDate",
-          width:90,
-          fixed: "left",
+          title: "Payment Terms",
+          dataIndex: "paymentTerms",
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 10)}...` : "-"}
+            </Tooltip>
+          ),
   
-          // sorter: (a, b) => a.material.localeCompare(b.material),
+        },
+        {
+          title: "Ship To Address",
+          dataIndex: "shipToAdd",
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 15)}...` : "-"}
+            </Tooltip>
+          ),
+         
+  
+        },
+        {
+          title: "Manufacture",
+          dataIndex: "manufacture",
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+         
+  
+        },
+        {
+          title: "Consignee",
+          dataIndex: "buyerAddress",
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 15)}...` : "-"}
+            </Tooltip>
+          ),
+         
+  
+        },
+
+        {
+          title: "Po Line",
+          dataIndex: "poLine",
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
           // sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
-          // ...getColumnSearchProps('material')
+         
   
         },
-       
+        
+        {
+          title: "Buyer Item",
+          dataIndex: "buyerItem",
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         
   
+        },
+        {
+          title: "Short Description",
+          dataIndex: "shortDescription",
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         
+  
+        },
+        {
+          title: "Currency",
+          dataIndex: "currency",
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         
+  
+        },
       ];
   
       sizeHeaders?.forEach(version => {
@@ -392,33 +487,169 @@ import {
           width: 70,
           align: 'center',
           children: [
-            // {
-            //   title: 'COLOR',
-            //   dataIndex: '',
-            //   key: '',
-            //   width: 70,
-            //   className: "center",
-            //   render: (text, record) => {
-            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
-            //     console.log()
-            //     if (sizeData) {
-            //       if (sizeData.size !== null) {
-            //         const formattedQty = (sizeData?.color) ? (sizeData?.color) : "-"
+            
+            {
+              title: 'Size Code',
+              dataIndex: '',
+              key: '',
+              width: 70,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.sizeCode) ? (sizeData?.sizeCode) : "-"
   
-            //         return (
-            //           formattedQty
-            //         );
-            //       } else {
+                    return (
+                      formattedQty
+                    );
+                  } else {
   
-            //         return (
-            //           '-'
-            //         );
-            //       }
-            //     } else {
-            //       return '-';
-            //     }
-            //   }
-            // },
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
+            {
+              title: 'Size',
+              dataIndex: '',
+              key: '',
+              width: 70,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.size) ? (sizeData?.size) : "-"
+  
+                    return (
+                      formattedQty
+                    );
+                  } else {
+  
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
+            {
+              title: 'UPC',
+              dataIndex: '',
+              key: '',
+              width: 70,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
+  
+                    return (
+                      formattedQty
+                    );
+                  } else {
+  
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
+            {
+              title: 'SKU',
+              dataIndex: '',
+              key: '',
+              width: 70,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.sku) ? (sizeData?.sku) : "-"
+  
+                    return (
+                      formattedQty
+                    );
+                  } else {
+  
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
+            {
+              title: 'Quantity Per Inner Pack',
+              dataIndex: '',
+              key: '',
+              width: 70,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.quantityPerInnerPack) ? (sizeData?.quantityPerInnerPack) : "-"
+  
+                    return (
+                      formattedQty
+                    );
+                  } else {
+  
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
+            {
+              title: 'Retail Price',
+              dataIndex: '',
+              key: '',
+              width: 70,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) : "-"
+  
+                    return (
+                      formattedQty
+                    );
+                  } else {
+  
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
             {
               title: 'QUANTITY',
               dataIndex: '',
@@ -447,7 +678,7 @@ import {
               }
             },
             {
-              title: 'UNIT PRICE',
+              title: 'Unit Cost',
               dataIndex: '',
               key: '',
               width: 70,
@@ -457,7 +688,34 @@ import {
                 console.log()
                 if (sizeData) {
                   if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.unitPrice) ? (sizeData?.unitPrice) : "-"
+                    const formattedQty = (sizeData?.unitCost) ? (sizeData?.unitCost) : "-"
+                    // const formattedQty = (sizeData?.amount)
+                    return (
+                      formattedQty
+                    );
+                  } else {
+  
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
+            {
+              title: 'Cost',
+              dataIndex: '',
+              key: '',
+              width: 70,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.cost) ? (sizeData?.cost) : "-"
                     // const formattedQty = (sizeData?.amount)
                     return (
                       formattedQty
@@ -683,7 +941,7 @@ import {
                   </Select>
                 </Form.Item>
               </Col>
-                <Col
+                {/* <Col
                   xs={{ span: 24 }}
                   sm={{ span: 24 }}
                   md={{ span: 4 }}
@@ -715,7 +973,7 @@ import {
                  <Form.Item label="Delivery Date" name="deliveryDate"  >
                     <RangePicker style={{width:180}}   />
                   </Form.Item>
-                </Col>
+                </Col> */}
                 <Row>
                 <Col
                   xs={{ span: 24 }}
