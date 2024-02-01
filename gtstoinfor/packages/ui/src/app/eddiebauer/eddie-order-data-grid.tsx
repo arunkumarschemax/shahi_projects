@@ -231,7 +231,7 @@ import {
           fixed: "left",
         },
         {
-          title: "Buyer PO",
+          title: "PO Number",
           dataIndex: "buyerPo",
           width: 90,
          sorter: (a, b) => a.buyerPo.localeCompare(b.buyerPo),
@@ -670,10 +670,10 @@ import {
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-                <Form.Item name="poNumber" label="Buyer PO Number">
+                <Form.Item name="poNumber" label="PO Number">
                   <Select
                     showSearch
-                    placeholder="Select Buyer PO "
+                    placeholder="Select PO Number "
                     optionFilterProp="children"
                     allowClear
                   >

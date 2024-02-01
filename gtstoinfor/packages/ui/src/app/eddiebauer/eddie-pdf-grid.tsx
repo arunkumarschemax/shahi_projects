@@ -25,19 +25,7 @@ export function EddiePdFInfoGrid() {
     const [form] = Form.useForm();
     const { Option } = Select;
     const [isModalOpen1, setIsModalOpen1] = useState(false);
-    
-    // let location = useLocation();
-    
-
-    // console.log(location?.state,"ddddddddddd")
-
-
-
-    // useEffect(() => {
-    //     if (location?.state === "rec") {
-    //         getPdfFileInfo();
-    //     }
-    // }, []);
+   
 
     useEffect(() => {
         // getPdfFileInfo();
@@ -161,9 +149,9 @@ export function EddiePdFInfoGrid() {
     })
 
     const setMoreData = (record) => {
-        navigate("/sanmar/pdf-info-detail-view", {
-            state: { data: record },
-        });
+        // navigate("/sanmar/pdf-info-detail-view", {
+        //     state: { data: record },
+        // });
     };
 
 
@@ -176,12 +164,12 @@ export function EddiePdFInfoGrid() {
             fixed: 'left'
         },
         {
-            title: 'Buyer PO',
-            dataIndex: 'buyer_po',
+            title: ' PO number',
+            dataIndex: 'po_number',
             width:70 ,
-            sorter: (a, b) => a.buyer_po.localeCompare(b.buyer_po),
+            sorter: (a, b) => a.po_number.localeCompare(b.po_number),
             sortDirections: ["ascend", "descend"],
-            // ...getColumnSearchProps('buyer_po')
+            // ...getColumnSearchProps('po_number')
         },
         {
             title: 'File Name',
@@ -293,10 +281,10 @@ export function EddiePdFInfoGrid() {
                 lg={{ span: 4 }}
                 xl={{ span: 5 }}
               >
-                <Form.Item name="poNumber" label="Buyer PO Number">
+                <Form.Item name="poNumber" label="PO Number">
                   <Select
                     showSearch
-                    placeholder="Select Buyer PO "
+                    placeholder="Select PO Number "
                     optionFilterProp="children"
                     allowClear
                   >
