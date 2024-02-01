@@ -745,7 +745,7 @@ import { config } from "packages/libs/shared-services/config";
 
     const handleDownload = (file) => {
       console.log(file,'filepath');      
-      if (file) {
+      if (file !== null) {
 
         const downloadUrl = config.file_upload_path + '/SD-' + file;
 
@@ -766,7 +766,7 @@ import { config } from "packages/libs/shared-services/config";
         .catch(error => console.error('Error downloading directory:', error));
       }
       else {
-        AlertMessages.getErrorMessage("Please upload file. ");
+        AlertMessages.getErrorMessage("File Not uploaded ");
       }
     }
 
@@ -793,7 +793,7 @@ import { config } from "packages/libs/shared-services/config";
     }
       else {
         console.log('000000022222222222222');
-        AlertMessages.getErrorMessage("Please upload file. ");
+        AlertMessages.getErrorMessage("File Not uploaded ");
       }
     }
 
@@ -812,7 +812,7 @@ import { config } from "packages/libs/shared-services/config";
     const HeaderRow = (props: any) => {
 
       
-      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location, brandName,pch,dispatch ,index} =
+      const { requestNo, style, buyerName, expectedDate, indentDate, status, lifeCycleStatus, location, brandName,pch,dispatch ,index,file} =
         props;
       const formattedIndentDate = moment(indentDate).format("YYYY-MM-DD");
       const formattedExpectedDate = moment(expectedDate).format("YYYY-MM-DD");
@@ -837,7 +837,8 @@ import { config } from "packages/libs/shared-services/config";
           <span style={{marginLeft:'auto'}}>
           <span style={{paddingRight:20}}  >
           <Tooltip title='Download Tech Pack'>
-          <DownloadOutlined onClick={() => handleDownload((requestNo).replace(/\//g, "_"))} style={{fontSize:'15px',marginLeft:'-5px', color:'blue'}}/>
+            {file !== null ?( <DownloadOutlined onClick={() => handleDownload((requestNo).replace(/\//g, "_"))} style={{fontSize:'15px',marginLeft:'-5px', color:'blue'}}/>):('')}
+         
           </Tooltip>
           </span>
                {lifeCycleStatus === LifeCycleStatusEnum.READY_TO_DISPATCH ? (
@@ -1119,6 +1120,7 @@ import { config } from "packages/libs/shared-services/config";
                   brandName={item.brandName}
                   pch={item.pch}
                   status={item.status}
+                  file={item.uploadedFile}
                 />
               }
               key={index}
