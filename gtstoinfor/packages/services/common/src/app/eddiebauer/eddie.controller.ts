@@ -5,7 +5,7 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { diskStorage } from 'multer'
 import { FileInterceptor } from "@nestjs/platform-express";
 import { EddieService } from "./eddie.service";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, EddieOrderFilter } from "@project-management-system/shared-models";
 import { CentricDto } from "../centric-buyer/dto/centric.dto";
 
 
@@ -65,6 +65,16 @@ export class EddieController {
     }
 
 
+    @Post('/getorderacceptanceData')
+    @ApiBody({ type: EddieOrderFilter })
+    async getorderacceptanceData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            // console.log(req,"con")
+            return await this.Service.getorderacceptanceData(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
  
 
 }
