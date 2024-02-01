@@ -16,5 +16,9 @@ export class EddieService extends CommonAxiosService {
     async getorderacceptanceData(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.eddierOrdersController + "/getorderacceptanceData", req)
     }
+    async getPoNumber(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.eddierOrdersController + "/getPoNumber")
+    }
+
 
 }

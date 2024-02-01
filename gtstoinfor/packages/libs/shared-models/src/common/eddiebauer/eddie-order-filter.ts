@@ -1,5 +1,5 @@
 export class EddieOrderFilter {
-    buyerPo?: string;
+    poNumber?: string;
     style?:string
     color?:string
     deliveryDateStartDate?:any
@@ -11,7 +11,7 @@ export class EddieOrderFilter {
 
 
 
-    constructor(buyerPo?: string,style?:string,
+    constructor(poNumber?: string,style?:string,
         color?:string,
         deliveryDateStartDate?:any,
         deliveryDateEndDate?:any,
@@ -20,7 +20,7 @@ export class EddieOrderFilter {
         coNumber?:string,
       
     ) {
-        this.buyerPo = buyerPo;
+        this.poNumber = poNumber;
         this.color = color
         this.style = style
         this.deliveryDateEndDate = deliveryDateEndDate

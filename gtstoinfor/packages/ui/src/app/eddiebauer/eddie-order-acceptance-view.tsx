@@ -24,6 +24,7 @@ import {
     
     AlertMessages,
     EddieOrderAcceptanceRequest,
+    EddieOrderFilter,
     HbPoOrderFilter,
     SanmarOrderFilter,
   } from "@project-management-system/shared-models";
@@ -51,15 +52,15 @@ import {
   
     useEffect(() => {
       getorderacceptanceData();
-     // getCustomerPoNumber()
+      getPoNumber()
     }, []);
   
   
     const getorderacceptanceData = () => {
-      const req = new SanmarOrderFilter();
+      const req = new EddieOrderFilter();
   
       if (form.getFieldValue("poNumber") !== undefined) {
-        req.buyerPo = form.getFieldValue("poNumber");
+        req.poNumber = form.getFieldValue("poNumber");
       }
       if (form.getFieldValue('deliveryDate') !== undefined) {
         req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
@@ -93,14 +94,14 @@ import {
     };
   
     console.log(form.getFieldValue("custPo"), "uuuuu")
-    // const getCustomerPoNumber = () => {
-    //   service.getCustomerPoNumber().then((res) => {
-    //     if (res.status) {
-    //       setPoNumber(res.data);
+    const getPoNumber = () => {
+      service.getPoNumber().then((res) => {
+        if (res.status) {
+          setPoNumber(res.data);
         
-    //     }
-    //   });
-    // };
+        }
+      });
+    };
   
   
     const handleItemNoChange = (value, record, index) => {
@@ -933,8 +934,8 @@ import {
                   >
                     {poNumber.map((inc: any) => {
                       return (
-                        <Option key={inc.buyer_po} value={inc.buyer_po}>
-                          {inc.buyer_po}
+                        <Option key={inc.po_number} value={inc.po_number}>
+                          {inc.po_number}
                         </Option>
                       );
                     })}

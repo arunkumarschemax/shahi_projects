@@ -150,6 +150,19 @@ export class EddieService {
     }
   }
 
+  async getPoNumber(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.EddieOrdersRepo.getPoNumber()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
 
   
 }

@@ -77,4 +77,12 @@ export class EddieController {
     }
  
 
+    @Post('/getPoNumber')
+    async getPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getPoNumber();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }

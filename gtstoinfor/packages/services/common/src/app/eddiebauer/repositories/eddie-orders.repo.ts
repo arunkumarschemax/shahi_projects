@@ -20,8 +20,8 @@ export class EddieOrdersRepository extends Repository<EddieOrdersEntity> {
         console.log(req)
         const query = this.createQueryBuilder('o')
             .select(`*`)
-            if(req.buyerPo !== undefined){
-                query.andWhere(`o.buyer_po ='${req.buyerPo}'`) 
+            if(req.poNumber !== undefined){
+                query.andWhere(`o.po_number ='${req.poNumber}'`) 
             }
             if(req.style !== undefined){
                 query.andWhere(`o.po_style LIKE :po_style`, { po_style: `%${req.style}%` });
@@ -34,6 +34,13 @@ export class EddieOrdersRepository extends Repository<EddieOrdersEntity> {
             }
             query.andWhere(`o.status != 'ACCEPTED'`);
           
+        return await query.getRawMany()
+    }
+
+    async getPoNumber(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`DISTINCT po_number`)
+        
         return await query.getRawMany()
     }
   
