@@ -256,7 +256,7 @@ async updateFabStatus(@Body() req?:any): Promise<CommonResponseModel> {
 async updateTrimStatus(@Body() req?:any): Promise<CommonResponseModel> {
   try {
     console.log(req);
-    return await this.fabReqService.updateTrimStatus(req.id);
+    return await this.fabReqService.updateTrimStatus(req);
   } catch (error) {
     return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
   }

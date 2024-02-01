@@ -76,5 +76,8 @@ export class TrimRequestCodeDto {
     @ApiProperty()
     versionFlag: number;
 
+    @ApiProperty()
+    m3TrimId: number;
+
 }
 

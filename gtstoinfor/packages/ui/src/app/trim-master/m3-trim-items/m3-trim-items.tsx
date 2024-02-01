@@ -210,7 +210,7 @@ export function M3TrimItemsForm({props}) {
       if (res.status) {
         console.log(props);
         if(props != undefined){
-          trimReqCodeService.updateTrimStatus({id:props.trimRequestCodeId}).then((res) => {
+          trimReqCodeService.updateTrimStatus({id:props.trimRequestCodeId, m3ItemsId:res.data?.m3TrimId}).then((res) => {
             if(res.status){
               AlertMessages.getSuccessMessage(res.internalMessage);
               navigate('/trim-master/m3-trim-items/m3-trim-items-view')
