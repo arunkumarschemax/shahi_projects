@@ -23,6 +23,10 @@ export const FRIEGHT_PAY_METHOD = 'Country Of Origin'
 export const REFRENCE = 'Shipment Method'
 export const PAYMENT_TERM_DESCRIPTION = 'Payment Terms Description'
 export const SPECIAL_INSTRUCTIONS = 'Special Instructions'
+export const INCOTERM = 'Transshipments'
+export const SHIPMENT_MODE='Business Code Description'
+
+
 
 export const ITEM_TEXT_END_TEXT = 'Total'
 export const ITEM_TEXT_END_TEXT2 = 'Merchandise Amount'

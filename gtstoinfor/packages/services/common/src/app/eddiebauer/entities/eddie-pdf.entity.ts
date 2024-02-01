@@ -10,7 +10,7 @@ export class EddiePdfInfoEntity {
     @Column("varchar", {
         nullable: false,
         length: 50,
-        name: "poNumber",
+        name: "po_number",
     })
     poNumber: string 
 
