@@ -338,7 +338,7 @@ const onFabricTpe = (val) =>{
             <Form.Item name="yarnType">
               Yarn Type : <Radio.Group name="yarnType" style={{ marginTop: "25px" }}
                onChange={(e)=>yarnSelect(e?.target?.value)} >
-                <Radio value="Wrap">Wrap</Radio>
+                <Radio value="Warp">Warp</Radio>
                 <Radio value="Weft">Weft</Radio>
               </Radio.Group>
             </Form.Item>
