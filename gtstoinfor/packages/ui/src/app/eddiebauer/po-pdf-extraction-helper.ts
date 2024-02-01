@@ -259,9 +259,12 @@ export const extractDataFromPoPdf = async (pdf) => {
             if (upcIndex !== -1 && upcIndex < itemVarinatsTextArr.length - 1) {
                 itemVariantsObj.sizeCode = itemVarinatsTextArr[upcIndex - 2] /* size code */
                 itemVariantsObj.size = itemVarinatsTextArr[upcIndex - 1]; /* size */
+                itemVariantsObj.sku = itemVarinatsTextArr[upcIndex + 1]; /* sku */
+                itemVariantsObj.quantityPerInnerPack = itemVarinatsTextArr[upcIndex + 3]; /* quantityPerInnerPack */
                 // itemVariantsObj.ratio = itemVarinatsTextArr[upcIndex - 1];
                 itemVariantsObj.retailPrice = itemVarinatsTextArr[upcIndex + 4] /* po retail price */
                 itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 6] /* item quantity */
+                itemVariantsObj.unit = itemVarinatsTextArr[upcIndex + 7] /* unit */
                 itemVariantsObj.unitCost = itemVarinatsTextArr[upcIndex + 8] /* unit price */
                 itemVariantsObj.cost = itemVarinatsTextArr[upcIndex + 9] /* cost  */
             }

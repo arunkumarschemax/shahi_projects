@@ -87,8 +87,11 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                 <th className='ta-b'>SIZE CODE</th>
                                 <th className='ta-b'>SIZE</th>
                                 <th className='ta-b'>UPC</th>
+                                <th className='ta-b'>SKU</th>
+                                <th className='ta-b'>QUANTITY PER INNER PACK</th>
                                 <th className='ta-b'>RETAIL PRICE</th>
                                 <th className='ta-b'>QUANTITY</th>
+                                {/* <th className='ta-b'>UNIT</th> */}
                                 <th className='ta-b'>UNIT COST</th>
                                 <th className='ta-b'>COST</th>
                             </tr>
@@ -101,8 +104,11 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                         <td className='ta-b'>{j.sizeCode}</td>
                                         <td className='ta-b'>{j.size}</td>
                                         <td className='ta-b'>{j.upc}</td>
+                                        <td className='ta-b'>{j.sku}</td>
+                                        <td className='ta-b'>{j.quantityPerInnerPack}</td>
                                         <td className='ta-b'>{j.retailPrice}</td>
                                         <td className='ta-b'>{j.quantity}</td>
+                                        {/* <td className='ta-b'>{j.unit}</td> */}
                                         <td className='ta-b'>{j.unitCost}</td>
                                         <td className='ta-b'>{j.cost}</td>
                                     </tr>
