@@ -848,10 +848,20 @@ export class SanmarService {
                       // Clear the existing value (if any) and fill it with the new price.
                       await inputField.clear();
                       await inputField.sendKeys(size.price);
+                    } else {
+                      // update added for if sizes mismatch
+                      const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed', errorMsg: 'NO matching Size found' });
+                      return new CommonResponseModel(false, 0, 'NO matching Size found')
                     }
                   }
                   const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
-                  const input = await driver.wait(until.elementLocated(By.id(inputId)))
+                  const input = await driver.wait(until.elementLocated(By.id(inputId)), 5000)
+                  console.log(input,'oo90876')
+                  if (!input) {
+                    // update  added for if  color mismatch
+                    const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+                    return new CommonResponseModel(false, 0, 'NO matching Color found')
+                  }
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
               }
@@ -859,7 +869,7 @@ export class SanmarService {
           }
         }
         await driver.sleep(10000)
-        // const element = await driver.findElement(By.id('OrderCreateID')).click();
+        const element = await driver.findElement(By.id('OrderCreateID')).click();
         await driver.wait(until.alertIsPresent(), 10000);
         // Switch to the alert and accept it (click "OK")
         const alert = await driver.switchTo().alert();
