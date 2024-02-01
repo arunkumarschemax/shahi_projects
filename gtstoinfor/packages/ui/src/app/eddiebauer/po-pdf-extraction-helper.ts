@@ -122,7 +122,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 firstPageContent[shipToAddIndex - 16]?.str + " " +
                 firstPageContent[shipToAddIndex - 15]?.str;
 
-                /* buyer address */
+            /* buyer address */
 
             if (firstPageContent[materialIndex + 32]?.str === 'E') {
                 poData.buyerAddress =
@@ -230,141 +230,10 @@ export const extractDataFromPoPdf = async (pdf) => {
             }
             console.log(matchIndex, "matchIndex")
         }
-        itemDetailsObj.currency = filteredData[rec.itemIndex + 11].str;
-        // itemDetailsObj.style = filteredData[rec.itemIndex + 11].str.replace(/^\d{2}|-.*$/g, '');
-        // itemDetailsObj.color = filteredData[rec.itemIndex + 12].str;
-        // itemDetailsObj.poType = "SOLID";
-        // itemDetailsObj.ppkupc = "-";
+        const currencyRegex = /Short Description/
+        const currencyMatchingIndex = filteredData.findIndex((data, index) => index >= rec.itemIndex && currencyRegex.test(data.str));
+        itemDetailsObj.currency = filteredData[currencyMatchingIndex + 3].str.replace(/Cost\s+\(/g, "").replace(/\)/g, "").trim();
 
-        // let shortDescriptionIndex;
-        // for (let i = 0; i < filteredData.length; i++) {
-        //     if (filteredData[i].str.includes('Short Description')) {
-        //         shortDescriptionIndex = i;
-        //         break;
-        //     }
-        // }
-        // if (shortDescriptionIndex> 0) {
-        //     itemDetailsObj.totalQuantity = filteredData[shortDescriptionIndex - 1].str;
-        // }
-
-        // const poLineIndex = filteredData.findIndex((item, index) => index >= rec.itemIndex + 10);
-        // if (poLineIndex !== -1) {
-        //     itemDetailsObj.currency = filteredData[poLineIndex - 1].str.replace(/Cost\(/g, '').replace(/\)/g, '');
-        // }
-
-        // for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
-        //     if (filteredData[i].str.includes("Mens")) {
-        //         itemDetailsObj.color = itemDetailsObj.color.split("Mens")[0];
-        //         break;
-        //     } else if (filteredData[i].str.includes("Womens")) {
-        //         itemDetailsObj.color = itemDetailsObj.color.split("Womens")[0];
-        //         break;
-        //     } else {
-        //         itemDetailsObj.color += filteredData[i].str;
-        //     }
-        // } let foundMens = false;
-        // for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
-        //     const currentInfo = filteredData[i].str;
-        //     if (currentInfo.includes("Mens" || "Womens")) {
-        //         itemDetailsObj.gender = currentInfo;
-        //         foundMens = true;
-        //         break;
-        //     }
-        // }
-        // if (!foundMens) {
-        //     for (let i = rec.itemIndex; i < filteredData.length; i++) {
-        //         const currentInfo = filteredData[i].str;
-
-        //         if (currentInfo.includes("Mens" || "Womens")) {
-        //             itemDetailsObj.gender = currentInfo;
-        //             break;
-        //         }
-        //     }
-        // }
-
-        // let totalQuantityIndex;
-        // for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
-        //     const currentInfo = filteredData[i].str;
-
-        //     if (currentInfo.includes("Mens") || currentInfo.includes("Womens")) {
-        //         totalQuantityIndex = i + 3;
-        //         break;
-        //     }
-        // }
-        // if (totalQuantityIndex !== -1 && totalQuantityIndex < filteredData.length) {
-        //     itemDetailsObj.totalQuantity = filteredData[totalQuantityIndex].str;
-        // }
-
-        // let shortDescriptionMatching;
-        // let vendorBookingFlagMatching;
-        // let packMethodMatching;
-
-        // filteredData.forEach(item => {
-        //     if (/Short/.test(item.str)) {
-        //         shortDescriptionMatching = item;
-        //         return;
-        //     }
-        // });
-
-        // if (shortDescriptionMatching) {
-        //     itemDetailsObj.shortDescription = shortDescriptionMatching.str.replace(/Short Description: /g, "");
-        // }
-
-        // const totalCostIndex = filteredData.findIndex(item => /Total Eaches/.test(item.str));
-        // if (totalCostIndex) {
-        //     itemDetailsObj.totalQuantity = filteredData[totalCostIndex + 1].str;
-        // }
-
-
-        // for (let i = 1; i < filteredData.length; i++) {
-        //     if (/Short/.test(filteredData[i].str)) {
-        //         shortDescriptionMatching = filteredData[i];
-        //         const totalQuantityIndex = i - 1;
-        //         if (totalQuantityIndex >= 0) {
-        //             itemDetailsObj.shortDescription = shortDescriptionMatching.str.replace(/Short Description: /g, "");
-        //             itemDetailsObj.totalQuantity = filteredData[totalQuantityIndex].str;
-        //             break;
-        //         }
-        //     }
-        // }
-
-        // let shortDescriptionIndex = -1;
-        // for (let i = 0; i < filteredData.length; i++) {
-        //     if (filteredData[i].str.includes('Short Description')) {
-        //         shortDescriptionIndex = i;
-        //         break;
-        //     }
-        // }
-
-        // if (shortDescriptionIndex !== -1) {
-        //     const totalQuantityIndex = shortDescriptionIndex - 1;
-        //     if (totalQuantityIndex >= 0 && totalQuantityIndex < filteredData.length) {
-        //         itemDetailsObj.totalQuantity = filteredData[totalQuantityIndex].str;
-        //     }
-        // }
-
-        // filteredData.forEach(item => {
-        //     if (/Vendor Booking Flag =/.test(item.str)) {
-        //         vendorBookingFlagMatching = item;
-        //         return;
-        //     }
-        // });
-
-        // if (vendorBookingFlagMatching) {
-        //     itemDetailsObj.vendorBookingFlag = vendorBookingFlagMatching.str.replace(/Vendor Booking Flag =/g, "");
-        // }
-
-
-        // filteredData.forEach(item => {
-        //     if (/Pack Method: /.test(item.str)) {
-        //         packMethodMatching = item;
-        //         return;
-        //     }
-        // });
-
-        // if (packMethodMatching) {
-        //     itemDetailsObj.packMethod = packMethodMatching.str.replace(/Pack Method: /g, "");
-        // }
 
         itemTextEndIndex = rec.amountIndex
         itemVariantStartIndex = itemTextEndIndex + 1

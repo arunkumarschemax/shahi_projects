@@ -66,7 +66,7 @@ export class EddieDto {
     quantity: string
 
     @ApiProperty()
-    each: string
+    unit: string
 
     @ApiProperty()
     unitCost: string

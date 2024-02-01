@@ -7,7 +7,7 @@ export class EddiePoItemVariant {
     quantityPerInnerPack:string;
     retailPrice:string;
     quantity: string;
-    each:string;
+    unit:string;
     unitCost: string;
     cost:string;
 

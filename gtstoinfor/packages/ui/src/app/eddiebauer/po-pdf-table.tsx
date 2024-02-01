@@ -50,8 +50,8 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                         <th className='ta-b'>SHIP TO ADDRESS</th>
                         <th className='ta-b'>MANUFACTURE</th>
                         <th className='ta-b'>CONSIGNEE</th>
-
                     </tr>
+                    
                     <tr className='ta-b'>
                         <td className='ta-b'>{pdfData?.poNumber}</td>
                         <td className='ta-b'>{pdfData?.poDate}</td>
@@ -60,9 +60,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                         <td className='ta-b'>{pdfData?.paymentTerms}</td>
                         <td className='ta-b'>{pdfData?.shipToAdd}</td>
                         <td className='ta-b'>{pdfData?.manufacture}</td>
-                        <td className='ta-b'>{pdfData?.buyerAddress}</td>{/* consignee */}
-                        
-
+                        <td className='ta-b'>{pdfData?.buyerAddress}</td>
 
                     </tr>
                     {pdfData?.EddiepoItemDetails?.map((i) => {
@@ -99,12 +97,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                     return <tr>
                                         <td></td>
                                         <td></td>
-
-                                        {/* <td className='ta-b'>{j.uom}</td> */}
-                                        {/* <td className='ta-b'>{j.comptMaterial}</td>
-                                    <td className='ta-b'>{j.ratio}</td> */}
-
-
+                                        
                                         <td className='ta-b'>{j.sizeCode}</td>
                                         <td className='ta-b'>{j.size}</td>
                                         <td className='ta-b'>{j.upc}</td>

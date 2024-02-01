@@ -123,10 +123,10 @@ export class EddieOrdersEntity {
 
     
     @Column('varchar', {
-        name: "each",
+        name: "unit",
 
     })
-    each: string
+    unit: string
 
     @Column('varchar', {
         name: "unit_cost",
