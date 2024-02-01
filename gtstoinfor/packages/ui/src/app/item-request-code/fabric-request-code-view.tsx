@@ -431,6 +431,7 @@ const onTabChange = (key) => {
     setData(rowData);
   }
   const modalView = (rowData:any) => {
+    console.log("********%%%%%%")
     return  (
   //   <Modal
   //     className='rm-'
@@ -443,7 +444,7 @@ const onTabChange = (key) => {
   //     onCancel={handleCancel}
   //     footer={[]}
   // >
-    <M3Items props={data}/>
+    <M3Items props={data} />
   // </Modal>
   )
   
@@ -646,7 +647,9 @@ const onTabChange = (key) => {
             onCancel={handleCancel}
             footer={[]}
         >
-          {modalView(data)}
+          <M3Items key={Date.now()} props={data} />
+
+          {/* {modalView(data)} */}
         </Modal>
      </Card>
    );

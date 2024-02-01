@@ -24,6 +24,7 @@ export function PoPrint(props: PoPrintProps) {
     let totalValue = 0
     let totalNetValue = 0
     let totalGst = 0
+    let disc =0
 
     const Service = new PurchaseOrderservice();
 
@@ -287,8 +288,10 @@ const totalAmountInWords = `${integerWords} . ${decimalWords}`;
                           {poData.map((e,index)=>{
                             totalQty += e.po_quantity ? Number(e.po_quantity) : 0
                             totalValue += e.unit_price ? Number(e.po_quantity*e.unit_price): 0 
-                            totalGst += e.unit_price? Number((e.po_quantity*e.unit_price)*(e.taxPercentage/100)): 0
-                            totalNetValue += e.unit_price? Number((e.po_quantity*e.unit_price)-((e.po_quantity*e.unit_price)*(e.discount/100))+((e.po_quantity*e.unit_price)*(e.taxPercentage/100))): 0
+                           disc += e.unit_price ? (e.po_quantity*e.unit_price)*(e.discount/100):0
+                            totalGst += e.unit_price? Number((totalValue-disc)*(e.taxPercentage/100)): 0
+                            totalNetValue += e.unit_price?Number(((e.po_quantity*e.unit_price)-((e.po_quantity*e.unit_price)*(e.discount/100)))+((e.po_quantity*e.unit_price)-(e.po_quantity*e.unit_price)*(e.discount/100))*(e.taxPercentage/100)): 0
+                            // totalNetValue += e.subjective_amount 
                             const sno = index + 1;
                             return(
 
@@ -338,7 +341,7 @@ const totalAmountInWords = `${integerWords} . ${decimalWords}`;
                                 <td></td>
                                 <td></td>
                                 <td></td>
-                                <td>{e.taxPercentage ? `${((e.po_quantity * e.unit_price * e.taxPercentage) / 100).toFixed(2)}` : '-'}</td></tr></>
+                                <td>{e.taxPercentage ? `${(((e.po_quantity * e.unit_price-(((e.po_quantity * e.unit_price) * (e.discount / 100)))) * e.taxPercentage) / 100).toFixed(2)}` : '-'}</td></tr></>
                             )
                             })}
                             
