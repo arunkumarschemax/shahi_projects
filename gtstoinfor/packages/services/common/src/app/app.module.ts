@@ -125,7 +125,7 @@ console.log(join(__dirname, '..', 'sampling', 'gtstoinfor', 'dist', 'packages', 
       }
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '../../../../','upload_files'),
+      rootPath: join(__dirname, '..','..','..','..','upload_files'),
       serveRoot: '/static',
     }),
     FactoriesModule,
