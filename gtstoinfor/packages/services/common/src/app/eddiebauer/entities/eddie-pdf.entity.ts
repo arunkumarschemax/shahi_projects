@@ -10,9 +10,9 @@ export class EddiePdfInfoEntity {
     @Column("varchar", {
         nullable: false,
         length: 50,
-        name: "buyer_po",
+        name: "poNumber",
     })
-    buyerPo: string 
+    poNumber: string 
 
     
     @Column("varchar", {

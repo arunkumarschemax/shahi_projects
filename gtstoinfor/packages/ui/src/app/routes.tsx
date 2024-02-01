@@ -69,6 +69,7 @@ import SanmarOrderAcceptanceGrid from "./sanmar/sanmar-order-acceptance-view"
 import SanmarColineView from "./sanmar/sanmar-co-line-view"
 import SanmarOrderComparisionReport from "./sanmar/sanmar-order-comparsion-report"
 import EddieOrdersGrid from "./eddiebauer/eddie-order-data-grid"
+import EddiePdfUpload from "./eddiebauer/pdf-upload"
 
 
 export const AppRoutes = () => {
@@ -264,6 +265,7 @@ export const AppRoutes = () => {
                 <Route path='/eddiebauer'>
                    
                    <Route path='eddiebauer-order-data-info-grid' element={<EddieOrdersGrid />} />
+                   <Route path='eddiebauer-pdf-upload' element={<EddiePdfUpload />} />
                   
               
                 </Route>

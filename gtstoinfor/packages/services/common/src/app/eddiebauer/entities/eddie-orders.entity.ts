@@ -8,12 +8,144 @@ export class EddieOrdersEntity {
     })
     id: number;
 
+    @Column("varchar", {
+        name: "po_number",
+    })
+    poNumber: string
+
+    @Column("varchar", {
+        name: "po_date",
+    })
+    poDate: string
+
+    @Column('text', {
+        name: "incoterm"
+    })
+    incoterm: string
+
+    @Column('text', {
+        name: "ship_to_add"
+    })
+    shipToAdd: string
+
+
+    @Column('text', {
+        name: "manufacture"
+    })
+    manufacture: string
+
+    @Column('text', {
+        name: "buyer_address"
+    })
+    buyerAddress: string
+
+
+    @Column("varchar", {
+        name: "payment_terms",
+    })
+    paymentTerms: string
+
+    @Column('varchar', {
+        name: "shipment_mode"
+    })
+    shipmentMode: string
+
+
+
+    @Column('varchar', {
+        name: "po_line",
+    })
+    poLine: string;
+
+    @Column('varchar', {
+        name: "buyer_item",
+
+    })
+    buyerItem: string
+
+
+    @Column('varchar', {
+        name: "short_description",
+
+    })
+    shortDescription: string
+
+    @Column('varchar', {
+        name: "currency",
+
+    })
+    currency: string
+
+
+
+    @Column('varchar', {
+        name: "size_code",
+
+    })
+    sizeCode: string
+
+    @Column('varchar', {
+        name: "size",
+
+    })
+    size: string
+
+    @Column('varchar', {
+        name: "upc",
+
+    })
+    upc: string
+
+    @Column('varchar', {
+        name: "sku",
+
+    })
+    sku: string
+
+    @Column('varchar', {
+        name: "quantity_per_inner_pack",
+
+    })
+    quantityPerInnerPack: string
+
+    @Column('varchar', {
+        name: "retail_price",
+
+    })
+    retailPrice: string
+
+
+    @Column('varchar', {
+        name: "quantity",
+
+    })
+    quantity: string
+
+    
+    @Column('varchar', {
+        name: "each",
+
+    })
+    each: string
+
+    @Column('varchar', {
+        name: "unit_cost",
+
+    })
+    unitCost: string
+
+    @Column('varchar', {
+        name: "cost",
+
+    })
+    cost: string
+
     @Column({
         type: 'enum',
         enum: StatusEnum,
         name: 'status',
-      })
-      status: StatusEnum;
+    })
+    status: StatusEnum;
 
 
     @CreateDateColumn({
@@ -50,6 +182,6 @@ export class EddieOrdersEntity {
         default: 1
     })
     isActive: boolean;
-    
+
 
 }
