@@ -23,6 +23,7 @@ export function PoPrint(props: PoPrintProps) {
     let totalQty = 0
     let totalValue = 0
     let totalNetValue = 0
+    let totalGst = 0
 
     const Service = new PurchaseOrderservice();
 
@@ -113,10 +114,7 @@ function convertDecimalToWords(decimalPart) {
 }
 
 const totalAmount = poData.reduce((sum, e) => {
-  const itemAmount = e.unit_price
-    ? Number((e.po_quantity * e.unit_price - (e.po_quantity * e.unit_price * (e.discount / 100))).toFixed(2))
-    : 0;
-
+  const itemAmount = e.unit_price? Number((e.po_quantity*e.unit_price)*(e.taxPercentage/100)): 0
   return sum + itemAmount;
 }, 0);
 const integerPart = Math.floor(totalAmount);
@@ -289,50 +287,58 @@ const totalAmountInWords = `${integerWords} . ${decimalWords}`;
                           {poData.map((e,index)=>{
                             totalQty += e.po_quantity ? Number(e.po_quantity) : 0
                             totalValue += e.unit_price ? Number(e.po_quantity*e.unit_price): 0 
-                            totalNetValue += e.unit_price? Number((e.po_quantity*e.unit_price)-((e.po_quantity*e.unit_price)*(e.discount/100))): 0
+                            totalGst += e.unit_price? Number((e.po_quantity*e.unit_price)*(e.taxPercentage/100)): 0
+                            totalNetValue += e.unit_price? Number((e.po_quantity*e.unit_price)-((e.po_quantity*e.unit_price)*(e.discount/100))+((e.po_quantity*e.unit_price)*(e.taxPercentage/100))): 0
                             const sno = index + 1;
                             return(
 
-                          <tr key={index}>
-                            <td>{sno}</td>
-                            <td >{e.poHsnCode? e.poHsnCode:'-'}</td>
-                            <td style={{ minWidth: '100px', maxWidth: '300px', overflow: 'hidden' }}>
-                                    <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
-                                  {e.item_code ? e.item_code : '-'}
-                                          </div>
-                                       </td>
-                                       {poData[0]?.po_material_type === 'Trim'?(
-                              <td>{e.item_description}</td>
-                              ):(
-                                <td>{e.colour? e.colour:''}-{e.size?e.size:
-                                  ''}</td>
-                                )}
-                            <td >{e.name? e.name:'-'}</td>
-                            <td >{e.po_material_type? e.po_material_type:'-'}</td>
-                       
+                          <><tr key={index}>
+                                <td >{sno}</td>
+                                <td>{e.poHsnCode ? e.poHsnCode : '-'}</td>
                                 <td style={{ minWidth: '100px', maxWidth: '300px', overflow: 'hidden' }}>
-                                    <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
-                                  {e.description ? e.description : '-'}
-                                          </div>
-                                       </td>
+                                  <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
+                                    {e.item_code ? e.item_code : '-'}
+                                  </div>
+                                </td>
+                                {poData[0]?.po_material_type === 'Trim' ? (
+                                  <td>{e.item_description}</td>
+                                ) : (
+                                  <td>{e.colour ? e.colour : ''}-{e.size ? e.size :
+                                    ''}</td>
+                                )}
+                                <td>{e.name ? e.name : '-'}</td>
+                                <td>{e.po_material_type ? e.po_material_type : '-'}</td>
 
-                        <td >{e.name? e.name:'-'}</td>
-                        <td >{e.expected_delivery_date ? new Date(e.expected_delivery_date).toLocaleDateString() : '-'}</td>
-                        <td >{e.uom?e.uom:'-'}</td>
-                        <td >
-                          {typeof e.po_quantity === 'number'
-                          ? e.po_quantity.toFixed(2)
-                          : typeof e.po_quantity === 'string'
-                           ? parseFloat(e.po_quantity).toFixed(2)
-                                       : '-'}
-                                 </td>
-                        <td >{typeof e.unit_price === 'number' ? e.unit_price.toFixed(2) : '-'}</td>
-                        <td >{e.unit_price ? (e.po_quantity * e.unit_price).toFixed(2): '-'} </td>                                
-                          <td style={{width:'7%'}}>{e.discount? `${((e.po_quantity * e.unit_price * e.discount) / 100).toFixed(2)} (${e.discount}%)`: '-'}</td>
-                          <td >{e.unit_price? ((e.po_quantity * e.unit_price) - ((e.po_quantity * e.unit_price) * (e.discount / 100))).toFixed(2): '-'}</td>
-                            
+                                <td style={{ minWidth: '100px', maxWidth: '300px', overflow: 'hidden' }}>
+                                  <div style={{ wordBreak: 'break-all', whiteSpace: 'pre-wrap' }}>
+                                    {e.description ? e.description : '-'}
+                                  </div>
+                                </td>
 
-                          </tr>
+                                <td>{e.name ? e.name : '-'}</td>
+                                <td>{e.expected_delivery_date ? new Date(e.expected_delivery_date).toLocaleDateString() : '-'}</td>
+                                <td>{e.uom ? e.uom : '-'}</td>
+                                <td>
+                                  {typeof e.po_quantity === 'number'
+                                    ? e.po_quantity.toFixed(2)
+                                    : typeof e.po_quantity === 'string'
+                                      ? parseFloat(e.po_quantity).toFixed(2)
+                                      : '-'}
+                                </td>
+                                <td>{typeof e.unit_price === 'number' ? e.unit_price.toFixed(2) : '-'}</td>
+                                <td>{e.unit_price ? (e.po_quantity * e.unit_price).toFixed(2) : '-'} </td>
+                                <td style={{ width: '7%' }}>{e.discount ? `${((e.po_quantity * e.unit_price * e.discount) / 100).toFixed(2)} (${e.discount}%)` : '-'}</td>
+                                <td>{e.unit_price ? ((e.po_quantity * e.unit_price) - ((e.po_quantity * e.unit_price) * (e.discount / 100))).toFixed(2) : '-'}</td>
+
+
+                              </tr>
+                              <tr>
+                                <td colSpan={10} style={{textAlign:'right',paddingRight:10}}>Integrated GST</td>
+                                <td >{e.taxPercentage ? `${e.taxPercentage}%`:'-'}</td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td>{e.taxPercentage ? `${((e.po_quantity * e.unit_price * e.taxPercentage) / 100).toFixed(2)}` : '-'}</td></tr></>
                             )
                             })}
                             

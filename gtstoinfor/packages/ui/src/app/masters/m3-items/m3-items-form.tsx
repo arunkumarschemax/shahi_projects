@@ -327,7 +327,7 @@ const M3Items = ({props}) => {
       return;
     }
   }
-     const req = new M3FabricsDTO(0,val.buyerId,val.itemCode,val.fabricTypeId,val.weaveId,weightChange,weightUom,epiData,ppiData,yarnType,widthChange,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code,val.hsnCode,yarn,formData,undefined,undefined,undefined,undefined,val.remarks)
+     const req = new M3FabricsDTO(0,val.buyerId,val.itemCode,val.fabricTypeId,val.weaveId,weightChange,weightUom,epiData,ppiData,val.yarnType,widthChange,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code,val.hsnCode,yarn,formData,undefined,undefined,undefined,undefined,val.remarks)
     //  console.log(req,"LLLLLLLLLLLLLLLLLLLL");
     service.createM3Items(req).then((res) => {
       if (res.status) {
@@ -548,10 +548,10 @@ const handleYarnUnitChange = (index, value) => {
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label="Width" htmlFor="widthValue" rules={[{ required: true, message: "Width is required" }]} >
                 <Space.Compact>
-                  <Form.Item name="width" id="width">
+                  <Form.Item name="width" id="width" rules={[{ required: true, message: "Width is required" }]}>
                   <Input placeholder="Enter Width" allowClear onChange={(e)=>onWidthChange(e?.target?.value)}/>
                   </Form.Item>
-                  <Form.Item name='widthUomId' id='widthUomId'>
+                  <Form.Item name='widthUomId' id='widthUomId' rules={[{ required: true, message: "Width UOM is required" }]}>
                   <Select  allowClear placeholder="Select Unit" onChange={onWidthUomChange} style={{width:'120px'}}>
                     {uom.map((e) => {
                       return (
@@ -622,14 +622,56 @@ const handleYarnUnitChange = (index, value) => {
             <TextArea rows={2} placeholder="Enter Remarks"/>
             </Form.Item>
           </Col>
+          {
+            props?.yarnType === "Weft"?
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-            <Form.Item name="yarnType" id="yarnType" rules={[{ required: false, message : "Yarn Type is required" }]}>
-              Yarn Type : <Radio.Group name="yarnType" id="yarnType" style={{ marginTop: "25px" }} onChange={(e)=>yarnSelect(e?.target?.value)} onBlur={generateItemCode} value={props?.yarnType === "Warp"?"Warp":props?.yarnType === "Weft"?"Weft":""}>
+              <Form.Item name="yarnType" id="yarnType" rules={[{ required: false, message: "Yarn Type is required" }]}>
+                Yarn Type :
+                <Radio.Group
+                  name="yarnType"
+                  id="yarnType"
+                  style={{ marginTop: "25px" }}
+                  onChange={(e) => yarnSelect(e?.target?.value)}
+                  onBlur={generateItemCode} value={"Weft"}
+                >
+                  <Radio value="Warp">Warp</Radio>
+                  <Radio value="Weft">Weft</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+            :
+            props?.yarnType === "Warp"?
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+              <Form.Item name="yarnType" id="yarnType" rules={[{ required: false, message: "Yarn Type is required" }]}>
+                Yarn Type :
+                <Radio.Group
+                  name="yarnType"
+                  id="yarnType"
+                  style={{ marginTop: "25px" }}
+                  onChange={(e) => yarnSelect(e?.target?.value)}
+                  onBlur={generateItemCode} value={"Warp"}
+                >
+                  <Radio value="Warp">Warp</Radio>
+                  <Radio value="Weft">Weft</Radio>
+                </Radio.Group>
+              </Form.Item>
+            </Col>
+            :<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+            <Form.Item name="yarnType" id="yarnType" rules={[{ required: false, message: "Yarn Type is required" }]}>
+              Yarn Type :
+              <Radio.Group
+                name="yarnType"
+                id="yarnType"
+                style={{ marginTop: "25px" }}
+                onChange={(e) => yarnSelect(e?.target?.value)}
+                onBlur={generateItemCode}
+              >
                 <Radio value="Warp">Warp</Radio>
                 <Radio value="Weft">Weft</Radio>
               </Radio.Group>
             </Form.Item>
-            </Col>
+          </Col>
+          }
           {/* </Row>
           <Row gutter={16}> */}
           {yarnRadio && (

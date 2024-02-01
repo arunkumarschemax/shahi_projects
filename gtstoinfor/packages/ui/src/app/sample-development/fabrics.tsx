@@ -452,22 +452,24 @@ const FabricsForm = (props:FabricsFormProps) => {
     // alert();
     multiple: true,
     onRemove: file => {
-      console.log(file);
-      console.log(fileList.length);
-
-      let files:any[] = fileList.length != undefined ? fileList?.find((f) => f.uid != file.uid) : []
-      console.log(data)
-      console.log(data[keyValue]);
-      console.log(onchangeData)
-      console.log(onchangeData[keyValue]);
-      data[keyValue].fabricUpload = undefined;
-      onchangeData[keyValue].fabricUpload = undefined;
+      console.log(fileList)
+      let files:any[] = fileList?.find((f) => f.uid != file.uid)
+      console.log(files);
+      // let files:any[] = fileList.length != undefined ? fileList?.find((f) => f.uid != file.uid) : []
+      console.log(data[keyValue])
+      if(data[keyValue] != undefined){
+        data[keyValue].fabricUpload = undefined;
+      }
+      if(onchangeData[keyValue] != undefined){
+        onchangeData[keyValue].fabricUpload = undefined;
+      }
       setData(data);
       setOnchangeData(onchangeData)
       props.data(data);
 
-      setFileList(files);
+      setFileList(files === undefined ? [] : files);
       setImageUrl('');
+      console.log(fileList.length);
     },
     beforeUpload: (file: any, index:any) => {
       console.log(file)
@@ -755,7 +757,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       fixed:'right',
       render: (_, record) => (
         <span style={{alignContent:'center'}}>{
-        (fileList[record.key] != undefined)?<Button icon={<EyeOutlined/>} onClick={()=>onFabriView(record.key)}></Button>:<></>
+        (fileList.length>0 && fileList[record.key] != undefined)?<Button icon={<EyeOutlined/>} onClick={()=>onFabriView(record.key)}></Button>:<></>
     }</span>
       )
     },
