@@ -652,11 +652,7 @@ export class CentricService {
                   }
                 }
                 const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
-                const input = await driver.wait(until.elementLocated(By.id(inputId)), 5000)
-                if (!input) {
-                  const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found' });
-                  return new CommonResponseModel(false, 0, 'NO matching Color found')
-                }
+                const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
               }
             }
@@ -664,7 +660,7 @@ export class CentricService {
         }
       }
       await driver.sleep(10000)
-      const element = await driver.findElement(By.id('OrderCreateID')).click();
+      // const element = await driver.findElement(By.id('OrderCreateID')).click();
       await driver.wait(until.alertIsPresent(), 10000);
       // Switch to the alert and accept it (click "OK")
       const alert = await driver.switchTo().alert();
@@ -699,9 +695,15 @@ export class CentricService {
       }
       // }
       return new CommonResponseModel(true, 1, `COline created successfully`)
-    } catch (err) {
-      console.log(err, 'error');
-      return new CommonResponseModel(false, 0, err)
+    } catch (error) {
+      console.log(error, 'error');
+      if (error.name === 'TimeoutError') {
+        const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+        return new CommonResponseModel(false, 0, 'Matching Color not found')
+      } else {
+        // Handle other types of errors
+        return new CommonResponseModel(false, 0, error)
+      }
     }
     finally {
       driver.quit()
@@ -740,7 +742,6 @@ export class CentricService {
             `${rec.po_line},${rec.po_number}`,
             new CentricOrderDataModel(rec.id, rec.po_number, rec.shipment, rec.season, rec.division, rec.manufacture, rec.port_of_export, rec.port_of_entry, rec.refrence, rec.pack_method, rec.payment_term_description, rec.incoterm, rec.special_instructions, rec.po_line, rec.material, rec.compt_material, rec.color, rec.gender, rec.short_description, rec.size, rec.upc, rec.retial_price, rec.unit_price, rec.label, rec.quantity, rec.vendor_booking_flag, rec.exfactory, rec.export, rec.delivery_date, rec.retial_price, rec.po_date, rec.ship_to_add, [], null, rec.ppk_upc, rec.status, "", rec.style, rec.buyer_address)
           );
-
           // console.log(sizeDateMap,)
         }
         const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number}`).sizeWiseData;
@@ -986,10 +987,10 @@ export class CentricService {
       const details = await this.Repo.getCentricorderDataForScanAndPack(req);
       if (details.length === 0) {
         return new CommonResponseModel(false, 0, 'No Data found');
-      }else {
-      return new CommonResponseModel(true, 1, 'data retrieved', details);    
+      } else {
+        return new CommonResponseModel(true, 1, 'data retrieved', details);
       }
-      
+
     } catch (e) {
       return new CommonResponseModel(false, 0, 'failed', e);
     }
