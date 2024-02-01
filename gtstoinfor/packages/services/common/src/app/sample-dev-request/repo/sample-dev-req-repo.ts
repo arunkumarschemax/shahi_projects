@@ -250,6 +250,7 @@ import { Colour } from "../../colours/colour.entity";
 import { GrnItemsEntity } from "../../grn/entities/grn-items-entity";
 import { GrnEntity } from "../../grn/entities/grn-entity";
 import { SampleDevelopmentService } from "@project-management-system/shared-services";
+import { UploadFilesEntity } from "../entities/upload-files-entity";
 
 
 
@@ -334,7 +335,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
     async getAllSampleDevData(req: SampleFilterRequest): Promise<any[]> {
         console.log(req,"hhhhhhhhhhhh")
         const query = this.createQueryBuilder('sr')
-            .select(`sr.location_id as location,life_cycle_status as lifeCycleStatus,st.quantity,sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.sample_type_id,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name,sr.life_cycle_status AS lifeCycleStatus,clr.colour`)
+            .select(`sr.location_id as location,life_cycle_status as lifeCycleStatus,st.quantity,sr.sample_request_id,sr.description,sr.remarks,sr.user,sr.request_no AS requestNo,sr.cost_ref AS costRef,sr.contact,sr.extension,sr.sam_value AS samValue,sr.product,sr.sample_type_id,sr.conversion,sr.made_in AS madeIn,sr.facility_id,sr.status,sr.location_id,sr.style_id,sr.profit_control_head_id,sr.buyer_id,sr.brand_id,sr.dmm_id,sr.technician_id,co.country_name,sr.life_cycle_status AS lifeCycleStatus,clr.colour,up.file_name as uploadedFile`)
             .addSelect(`l.location_name AS locationName,s.style,pch.profit_control_head AS pch,b.buyer_name AS buyerName,b.buyer_code AS buyerCode,br.brand_name AS brandName,ed1.first_name AS dmmName,ed2.first_name AS techName`)
             .leftJoin(Location, 'l', 'l.location_id = sr.location_id')
             .leftJoin(Style, 's', 's.style_id = sr.style_id')
@@ -353,6 +354,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .leftJoin(M3ItemsEntity,'m3items','m3items.m3_items_Id  = srfi.fabric_code')
             .leftJoin(M3TrimsEntity,'m3trims','m3trims.m3_trim_Id = srti.trim_code')
             .leftJoin(StocksEntity,'st','st.buyer_id=sr.buyer_id')
+            .leftJoin(UploadFilesEntity, 'up','up.sample_request_id = sr.sample_request_id')
             // .leftJoin(SampleReqFabricinfoEntity,'sf','sf.fabric_code=st.item_id')
             // .leftJoin(SampleRequestTriminfoEntity,'srt','srt.trim_code=st.item_id')
              .where('1 =1')
