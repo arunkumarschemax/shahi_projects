@@ -50,6 +50,13 @@ export class CentricRepository extends Repository<CentricEntity> {
         return await query.getRawMany()
     }
 
+    async getPoLineNumbers(req?: PoOrderFilter): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`DISTINCT po_line`)
+            .where(`po_number='${req.poNumber}'`)
+        return await query.getRawMany()
+    }
+
 
     async getCentricorderData(req?: PoOrderFilter): Promise<any[]> {
         const query = this.createQueryBuilder('o')

@@ -94,6 +94,15 @@ export class CentricController {
         }
     }
 
+    @Post('/getPoLineNumbers')
+    async getPoLineNumbers(@Body() req?: PoOrderFilter): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getPoLineNumbers(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
     @Post('/coLineCreationReq')
     async coLineCreationReq(@Body() req: any): Promise<CommonResponseModel> {
         try {
