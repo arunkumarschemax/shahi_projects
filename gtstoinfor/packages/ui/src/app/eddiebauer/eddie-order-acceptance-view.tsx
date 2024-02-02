@@ -151,22 +151,22 @@ import {
       const req = new EddieOrderAcceptanceRequest();
       req.poNumber = record.poNumber;
       // req.style = record.style;
-      // req.itemNo = itemNoValue;
-      req.buyer = 'SanMar Corporation';
+      req.itemNo = itemNoValue;
+      req.buyer = 'Eddie Bauer LLC';
       // req.deliveryDate = record.deliveryDate;
     
       console.log("Request Payload:", req);
     
-      // service.sanmarCoLineCreationReq(req).then((res) => {
-      //   if (res.status) {
-      //       getorderacceptanceData();
-      //     setItemNoValues({});
-      //     form.setFieldsValue({ [index]: { itemNo: undefined } });
-      //     message.success(res.internalMessage);
-      //   } else {
-      //     message.error(res.internalMessage);
-      //   }
-      // });
+      service.coLineCreationReq(req).then((res) => {
+        if (res.status) {
+            getorderacceptanceData();
+          setItemNoValues({});
+          form.setFieldsValue({ [index]: { itemNo: undefined } });
+          message.success(res.internalMessage);
+        } else {
+          message.error(res.internalMessage);
+        }
+      });
     };
     
     const processData = (tableData: EddieOrderAcceptanceRequest[]) => {
