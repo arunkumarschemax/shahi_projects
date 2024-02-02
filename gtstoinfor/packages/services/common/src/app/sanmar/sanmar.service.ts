@@ -855,13 +855,8 @@ export class SanmarService {
                     }
                   }
                   const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
-                  const input = await driver.wait(until.elementLocated(By.id(inputId)), 5000)
+                  const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
                   console.log(input,'oo90876')
-                  if (!input) {
-                    // update  added for if  color mismatch
-                    const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
-                    return new CommonResponseModel(false, 0, 'NO matching Color found')
-                  }
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
               }
@@ -903,9 +898,15 @@ export class SanmarService {
         }
       }
       return new CommonResponseModel(true, 1, `COline created successfully`)
-    } catch (err) {
-      console.log(err, 'error');
-      return new CommonResponseModel(false, 0, err)
+    } catch (error) {
+      console.log(error, 'error');
+      if (error.name === 'TimeoutError') {
+        const update = await this.sanmarCoLineRepo.update({ buyerPo: poDetails[0].buyer_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+        return new CommonResponseModel(false, 0, 'Matching Color not found')
+      } else {
+        // Handle other types of errors
+        return new CommonResponseModel(false, 0, error)
+      }
     }
     finally {
       driver.quit()
