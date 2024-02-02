@@ -103,10 +103,10 @@
                                 <th className='ta-b'>USE</th>
                                 <th className='ta-b'>QTY</th>
                                 <th className='ta-b'>UOM</th>
-                                <th className='ta-b'>{parsedData.style === "BV2662" || parsedData.style === "BV2671" ? "@010" : "@010"}</th>
-                                <th className='ta-b'>{parsedData.style === "BV2662" || parsedData.style === "BV2671" ? "@063" : "@077"}</th>
-                                <th className='ta-b'>{parsedData.style === "BV2662" || parsedData.style === "BV2671" ? "@071" : "113"}</th>
-                                <th className='ta-b'>{parsedData.style === "BV2662" || parsedData.style === "BV2671" ? "@100" : "@410"}</th>
+                                <th className='ta-b'>{parsedData.style === "CJ4456" || parsedData.style === "FN3894" ? "@010" : "@010"}</th>
+                                <th className='ta-b'>{parsedData.style === "CJ4456" || parsedData.style === "FN3894" ? "@063" : "@077"}</th>
+                                <th className='ta-b'>{parsedData.style === "CJ4456" || parsedData.style === "FN3894" ? "@072" : "113"}</th>
+                                <th className='ta-b'>{parsedData.style === "CJ4456" || parsedData.style === "FN3894" ? "@100" : "@410"}</th>
 
                             </tr>
                             {
