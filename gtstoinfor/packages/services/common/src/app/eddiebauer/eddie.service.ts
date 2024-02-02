@@ -292,13 +292,32 @@ export class EddieService {
     }
   }
 
-  // async getSanmarCoLineData(req?: SanmarOrderFilter): Promise<CommonResponseModel> {
-  //   const data = await this.eddieCoLineRepo.getSanmarCoLineData(req)
-  //   if (data.length > 0)
-  //     return new CommonResponseModel(true, 1, 'data retrived', data)
-  //   else
-  //     return new CommonResponseModel(false, 0, 'No data found');
-  // }
+  async getCoLineData(req?:EddieOrderFilter ): Promise<CommonResponseModel> {
+    const data = await this.eddieCoLineRepo.getCoLineData(req)
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
 
-  
+  async getCoPoNumber(): Promise<CommonResponseModel> {
+    const data = await this.eddieCoLineRepo.getCoPoNumber()
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
+
+  async getItem(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.eddieCoLineRepo.getItem()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
 }

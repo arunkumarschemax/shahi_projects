@@ -360,84 +360,6 @@ import {
   
         },
         {
-          title: "Incoterm",
-          dataIndex: "incoterm",
-          width: 90,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 13)}...` : "-"}
-            </Tooltip>
-          ),
-        },
-        {
-          title: "Shipment Mode",
-          dataIndex: "shipmentMode",
-          width: 90,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-         
-  
-        },
-        {
-          title: "Payment Terms",
-          dataIndex: "paymentTerms",
-          width: 90,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 10)}...` : "-"}
-            </Tooltip>
-          ),
-  
-        },
-        {
-          title: "Ship To Address",
-          dataIndex: "shipToAdd",
-          width: 90,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 15)}...` : "-"}
-            </Tooltip>
-          ),
-         
-  
-        },
-        {
-          title: "Manufacture",
-          dataIndex: "manufacture",
-          width: 90,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}...` : "-"}
-            </Tooltip>
-          ),
-         
-  
-        },
-        {
-          title: "Consignee",
-          dataIndex: "buyerAddress",
-          width: 90,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 15)}...` : "-"}
-            </Tooltip>
-          ),
-         
-  
-        },
-
-        {
           title: "Po Line",
           dataIndex: "poLine",
           width: 90,
@@ -447,7 +369,6 @@ import {
          
   
         },
-        
         {
           title: "Buyer Item",
           dataIndex: "buyerItem",
@@ -459,8 +380,22 @@ import {
   
         },
         {
-          title: "Short Description",
-          dataIndex: "shortDescription",
+          title: "Manufacture",
+          dataIndex: "manufacture",
+          width: 130,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+         
+  
+        },
+        {
+          title: "Shipment Mode",
+          dataIndex: "shipmentMode",
           width: 90,
           // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
           // sortDirections: ["ascend", "descend"],
@@ -468,6 +403,8 @@ import {
          
   
         },
+       
+      
         {
           title: "Currency",
           dataIndex: "currency",
@@ -517,37 +454,10 @@ import {
               }
             },
             {
-              title: 'Size',
-              dataIndex: '',
-              key: '',
-              width: 70,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.size) ? (sizeData?.size) : "-"
-  
-                    return (
-                      formattedQty
-                    );
-                  } else {
-  
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
-            {
               title: 'UPC',
               dataIndex: '',
               key: '',
-              width: 70,
+              width: 130,
               className: "center",
               render: (text, record) => {
                 const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -574,7 +484,7 @@ import {
               title: 'SKU',
               dataIndex: '',
               key: '',
-              width: 70,
+              width: 130,
               className: "center",
               render: (text, record) => {
                 const sizeData = record.sizeWiseData.find(item => item.size === version);
@@ -652,7 +562,7 @@ import {
               }
             },
             {
-              title: 'QUANTITY',
+              title: 'Quantity',
               dataIndex: '',
               key: '',
               width: 70,
@@ -747,33 +657,45 @@ import {
         {
           title: "Total Quantity",
           dataIndex: "",
-          align: "right",
+          // align: "right",
           width: 90,
           render: (text, record) => {
             let sum = 0;
+            const unit = record.sizeWiseData[0].unit
             record.sizeWiseData.forEach((r) => {
               // Convert to number before summing
               sum += parseFloat(r.quantity) || 0;
             });
-            return sum;
+            return `${sum} ${unit}`;
           },
         },
-       
+
         {
-          // title: "Address",
-          title: <div style={{textAlign:"center"}}>Buyer Address</div>,
+          title: "Short Description",
+          dataIndex: "shortDescription",
+          width: 130,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         
   
+        },
+        {
+          title: "Consignee",
           dataIndex: "buyerAddress",
-          width: 150,
-         sorter: (a, b) => a.buyerAddress.localeCompare(b.buyerAddress),
-         sortDirections: ["ascend", "descend"],
-         ...getColumnSearchProps('buyerAddress'),
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
           render: (text) => (
             <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}... `: "-"}
+              {text ? `${text.substring(0, 15)}...` : "-"}
             </Tooltip>
           ),
+         
+  
         },
+       
+        
         {
           // title: "Address",
           title: <div style={{textAlign:"center"}}>Delivery Address</div>,
@@ -788,6 +710,31 @@ import {
               {text ? `${text.substring(0, 20)}...` : "-"}
             </Tooltip>
           ),
+        },
+        {
+          title: "Incoterm",
+          dataIndex: "incoterm",
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 13)}...` : "-"}
+            </Tooltip>
+          ),
+        },
+        {
+          title: "Payment Terms",
+          dataIndex: "paymentTerms",
+          width: 120,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 10)}...` : "-"}
+            </Tooltip>
+          ),
+  
         },
   
         {

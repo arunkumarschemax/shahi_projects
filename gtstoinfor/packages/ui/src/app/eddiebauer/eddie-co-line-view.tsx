@@ -5,15 +5,15 @@ import { IExcelColumn } from "antd-table-saveas-excel/app";
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react";
 import { Excel } from "antd-table-saveas-excel";
-import { CentricService, HbService, SanmarService } from "@project-management-system/shared-services";
+import { CentricService, EddieService, HbService, SanmarService } from "@project-management-system/shared-services";
 import { centricCoLineRequest } from "packages/libs/shared-models/src/common/centric/centric-coLine.req";
 import moment from "moment";
-import { AlertMessages, HbPoOrderFilter, ItemNoDto, SanmarOrderFilter, hbCoLineRequest } from "@project-management-system/shared-models";
+import { AlertMessages, EddieOrderFilter, HbPoOrderFilter, ItemNoDto, SanmarOrderFilter, hbCoLineRequest } from "@project-management-system/shared-models";
 
 const EddieColineView = () => {
     const [page, setPage] = useState<number>(1);
     const [pageSize, setPageSize] = useState<number>(1);
-    const service = new SanmarService()
+    const service = new EddieService()
     const [data, setData] = useState<any[]>([]);
     const [buyer, setBuyer] = useState<any>([]);
     const [item, setItem] = useState<any>([]);
@@ -27,7 +27,7 @@ const EddieColineView = () => {
 
     useEffect(() => {
         getData()
-        BuyerPo()
+        PoNumber()
         getItem()
 
     }, [])
@@ -36,7 +36,7 @@ const EddieColineView = () => {
 
 
 
-    const BuyerPo = () => {
+    const PoNumber = () => {
         service.getCoPoNumber().then(res => {
             if (res.status) {
                 setBuyer(res.data)
@@ -52,26 +52,26 @@ const EddieColineView = () => {
     }
 
     const getData = () => {
-        const req = new SanmarOrderFilter();
+        const req = new EddieOrderFilter();
 
-        if (form.getFieldValue('buyerPo') !== undefined) {
-            req.buyerPo = form.getFieldValue('buyerPo');
+        if (form.getFieldValue('poNumber') !== undefined) {
+            req.poNumber = form.getFieldValue('poNumber');
         }
         if (form.getFieldValue('item') !== undefined) {
             req.itemNo = form.getFieldValue('item');
         }
-        if (form.getFieldValue('deliveryDate') !== undefined) {
-            req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
-        }
-        if (form.getFieldValue('deliveryDate') !== undefined) {
-            req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
-        }
+        // if (form.getFieldValue('deliveryDate') !== undefined) {
+        //     req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
+        // }
+        // if (form.getFieldValue('deliveryDate') !== undefined) {
+        //     req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
+        // }
 
         if (form.getFieldValue("co_number") !== undefined) {
             req.coNumber = form.getFieldValue("co_number");
         }
 
-        service.getSanmarCoLineData(req).then(res => {
+        service.getCoLineData(req).then(res => {
             if (res.status) {
                 setData(res.data)
             }
@@ -104,26 +104,26 @@ const EddieColineView = () => {
         let exportingColumns: IExcelColumn[] = []
         exportingColumns = [
             {
-                title: 'Buyer Po',
-                dataIndex: 'buyer_po',
+                title: 'PO Number',
+                dataIndex: 'po_number',
                 render: (text, record) => {
-                    return (record.buyer_po ? (record.buyer_po) : '-')
+                    return (record.po_number ? (record.po_number) : '-')
                 }
             },
 
-            {
-                title: 'Style',
-                dataIndex: 'style', render: (text, record) => {
-                    return (record.style ? (record.style) : '-')
-                }
-            },
-            {
-                title: 'Delivery Date',
-                dataIndex: 'delivery_date',
-                render: (text, record) => {
-                    return (record.delivery_date ? (record.delivery_date) : '-')
-                }
-            },
+            // {
+            //     title: 'Style',
+            //     dataIndex: 'style', render: (text, record) => {
+            //         return (record.style ? (record.style) : '-')
+            //     }
+            // },
+            // {
+            //     title: 'Delivery Date',
+            //     dataIndex: 'delivery_date',
+            //     render: (text, record) => {
+            //         return (record.delivery_date ? (record.delivery_date) : '-')
+            //     }
+            // },
 
             {
                 title: 'Item No',
@@ -185,19 +185,19 @@ const EddieColineView = () => {
         excel.saveAs(`Co-Line-${currentDate}.xlsx`);
     }
 
-    const onFinishEdit = (record: any) => {
-        const req = new ItemNoDto(editedId,editedValue)
-        service.updateItemNo(req).then(res => {
-            if (res.status) {
-                getData();
-                setEditingRow(null);
-                setEditedValue(null);
-                message.success("Updated SuccessFully");
-            } else {
-                message.error("Not Updated")
-            }
-        })
-    };
+    // const onFinishEdit = (record: any) => {
+    //     const req = new ItemNoDto(editedId,editedValue)
+    //     service.updateItemNo(req).then(res => {
+    //         if (res.status) {
+    //             getData();
+    //             setEditingRow(null);
+    //             setEditedValue(null);
+    //             message.success("Updated SuccessFully");
+    //         } else {
+    //             message.error("Not Updated")
+    //         }
+    //     })
+    // };
 
     const onEditClick = (record) => {
         setEditingRow(record);
@@ -206,21 +206,21 @@ const EddieColineView = () => {
         console.log(record,"recccc")
     };
 
-    const handleConfirmDelete = (record) => {
-        const req = new ItemNoDto(record.id)
-        service.deleteCoLine(req).then(res => {
-            if (res.status) {
-                getData();
-                AlertMessages.getSuccessMessage(res.internalMessage)
+    // const handleConfirmDelete = (record) => {
+    //     const req = new ItemNoDto(record.id)
+    //     service.deleteCoLine(req).then(res => {
+    //         if (res.status) {
+    //             getData();
+    //             AlertMessages.getSuccessMessage(res.internalMessage)
 
-            } else {
-                AlertMessages.getErrorMessage(res.internalMessage)
-            }
-        })
-        // const deleteUpdatedData = data.filter(item => item !== record);
-        // message.success("Deleted Successfully");
-        // setData(deleteUpdatedData);
-    };
+    //         } else {
+    //             AlertMessages.getErrorMessage(res.internalMessage)
+    //         }
+    //     })
+    //     // const deleteUpdatedData = data.filter(item => item !== record);
+    //     // message.success("Deleted Successfully");
+    //     // setData(deleteUpdatedData);
+    // };
 
     const columns: ColumnProps<any>[] = [
         {
@@ -230,41 +230,30 @@ const EddieColineView = () => {
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
         },
         {
-            title: 'Buyer PO',
-            dataIndex: 'buyer_po',
+            title: 'PO Number',
+            dataIndex: 'po_number',
             render: (text, record) => {
-                return (record.buyer_po ? (record.buyer_po) : '-')
+                return (record.po_number ? (record.po_number) : '-')
             },
-            sorter: (a, b) => a.buyerPo.localeCompare(b.buyerPo),
-            sortDirections: ["ascend", "descend"],
-
-        },
-        {
-            title: 'Style',
-            dataIndex: 'style', render: (text, record) => {
-                return (record.style ? (record.style) : '-')
-            },
-            sorter: (a, b) => a.style.localeCompare(b.style),
+            sorter: (a, b) => a.po_number.localeCompare(b.po_number),
             sortDirections: ["ascend", "descend"],
         },
-        {
-            title: 'Delivery Date',
-            dataIndex: 'delivery_date',
-            render: (text, record) => {
-                return (record.delivery_date ? (record.delivery_date) : '-')
-            }
-        },
-
         // {
-        //     title: 'Item No',
-        //     dataIndex: 'item_no',
-        //     render: (text, record) => {
-        //         return (record.item_no ? (record.item_no) : '-')
+        //     title: 'Style',
+        //     dataIndex: 'style', render: (text, record) => {
+        //         return (record.style ? (record.style) : '-')
         //     },
-        //     sorter: (a, b) => a.item_no.localeCompare(b.item_no),
+        //     sorter: (a, b) => a.style.localeCompare(b.style),
         //     sortDirections: ["ascend", "descend"],
-
         // },
+        // {
+        //     title: 'Delivery Date',
+        //     dataIndex: 'delivery_date',
+        //     render: (text, record) => {
+        //         return (record.delivery_date ? (record.delivery_date) : '-')
+        //     }
+        // },
+
 
         {
             title: 'Item No',
@@ -353,7 +342,9 @@ const EddieColineView = () => {
                         <div>
                             {editingRow === record ? (
                                 <div>
-                                    <Button type="primary" onClick={() => onFinishEdit(record)}>Update</Button>
+                                    <Button type="primary" onClick={() =>
+                                        // onFinishEdit
+                                         (record)}>Update</Button>
                                     &nbsp; &nbsp;
                                     <Button type="primary" danger onClick={() => setEditingRow(null)}>Cancel</Button>
                                 </div>
@@ -363,7 +354,7 @@ const EddieColineView = () => {
                                     &nbsp; &nbsp;
                                     <Popconfirm
                                         title="Are you sure to Delete?"
-                                        onConfirm={() => handleConfirmDelete(record)}
+                                      //  onConfirm={() => handleConfirmDelete(record)}
                                         // onCancel={() => message.info('Delete canceled')}
                                         okText="Yes"
                                         cancelText="No"
@@ -393,16 +384,16 @@ const EddieColineView = () => {
                 form={form} layout='vertical'>
                 <Row gutter={24}>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                        <Form.Item name='buyerPo' label='Buyer PO' >
+                        <Form.Item name='poNumber' label='PO Number' >
                             <Select
                                 showSearch
-                                placeholder="Select Buyer PO"
+                                placeholder="Select PO Number"
                                 optionFilterProp="children"
                                 allowClear
                             >
                                 {
                                     buyer.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.buyer_po}>{inc.buyer_po}</Option>
+                                        return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
                                     })
                                 }
                             </Select>
@@ -424,7 +415,7 @@ const EddieColineView = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col
+                    {/* <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
@@ -434,7 +425,7 @@ const EddieColineView = () => {
                <Form.Item label="Delivery Date" name="deliveryDate"  >
                   <RangePicker style={{width:180}}   />
                 </Form.Item>
-              </Col>
+              </Col> */}
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
