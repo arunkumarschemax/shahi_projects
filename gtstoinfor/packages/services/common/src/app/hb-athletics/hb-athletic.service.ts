@@ -716,12 +716,7 @@ export class HbService {
                   console.log(color.name)
                   const inputId = `${size.name}:${color.name}:USA`.replace(/\*/g, '');
                   console.log(inputId)
-                  const input = await driver.wait(until.elementLocated(By.id(inputId)), 5000)
-                  ////// update for if color is mismatch
-                  if (!input) {
-                    const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
-                    return new CommonResponseModel(false, 0, 'NO matching Color found')
-                  }
+                  const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
               }
@@ -763,9 +758,15 @@ export class HbService {
         }
       }
       return new CommonResponseModel(true, 1, `COline created successfully`)
-    } catch (err) {
-      console.log(err, 'error');
-      return new CommonResponseModel(false, 0, err)
+    } catch (error) {
+      console.log(error, 'error');
+      if (error.name === 'TimeoutError') {
+        const update = await this.hbCoLineRepo.update({ custPo:poDetails[0].cust_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+        return new CommonResponseModel(false, 0, 'Matching Color not found')
+      } else {
+        // Handle other types of errors
+        return new CommonResponseModel(false, 0, error)
+      }
     }
     finally {
       driver.quit()
