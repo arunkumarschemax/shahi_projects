@@ -1,5 +1,5 @@
 import { EddiePoDetails, EddiePoItemDetails, EddiePoItemVariant } from "@project-management-system/shared-models";
-import { EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, INCOTERM, ITEM_NO_EXP, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, MANUFACTURE_1, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SHIPMENT_MODE, SHIP_TO_ADD, SPECIAL_INSTRUCTIONS, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./popdf-regex-expressions";
+import { DELIVERY_DATE, EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, INCOTERM, ITEM_NO_EXP, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, MANUFACTURE_1, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SHIPMENT_MODE, SHIP_TO_ADD, SPECIAL_INSTRUCTIONS, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./popdf-regex-expressions";
 
 
 /** 
@@ -46,6 +46,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             let shipToAddIndex;
             let incotermIndex;
             let shipMentModeIndex;
+            let deliveryDateIndex;
             for (const [ind, ele] of firstPageContent.entries()) {
                 if (ele.str == PO_NUMBER_TEXT) {
                     poNumberTextIndex = ind
@@ -94,33 +95,46 @@ export const extractDataFromPoPdf = async (pdf) => {
                 if (ele.str == SHIPMENT_MODE) {
                     shipMentModeIndex = ind
                 }
+                if (ele.str == DELIVERY_DATE) {
+                    deliveryDateIndex = ind
+                }
 
             }
-            poData.poNumber = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX].str
+            // poData.poNumber = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX - 4].str
+            const originalPoNumber = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX - 4].str;
+            const splittedPoNumber = originalPoNumber.split('-');
+            const reversedPoNumber = splittedPoNumber.reverse().join('-');
+            poData.poNumber = reversedPoNumber;
+
             poData.poDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX + 1].str
-            poData.incoterm = firstPageContent[incotermIndex + 1].str
-            poData.shipmentMode = firstPageContent[shipMentModeIndex - 2].str
-            poData.paymentTerms = firstPageContent[shipMentModeIndex - 3].str
+            poData.deliveryDate = firstPageContent[deliveryDateIndex + 2].str
+            const deliveryDate = new Date(poData.deliveryDate);
+            const exFactoryDate = new Date(deliveryDate);
+            exFactoryDate.setDate(deliveryDate.getDate() - 9);
+            poData.exFactoryDate = exFactoryDate.toISOString().split('T')[0];
+            // poData.incoterm = firstPageContent[incotermIndex + 1].str
+            // poData.shipmentMode = firstPageContent[shipMentModeIndex - 2].str
+            // poData.paymentTerms = firstPageContent[shipMentModeIndex - 3].str
 
 
 
-            poData.shipToAdd =
-                firstPageContent[shipToAddIndex - 6]?.str + " " +
-                firstPageContent[shipToAddIndex - 5]?.str + " " +
-                firstPageContent[shipToAddIndex - 4]?.str + " " +
-                firstPageContent[shipToAddIndex - 3]?.str;
+            // poData.shipToAdd =
+            //     firstPageContent[shipToAddIndex - 6]?.str + " " +
+            //     firstPageContent[shipToAddIndex - 5]?.str + " " +
+            //     firstPageContent[shipToAddIndex - 4]?.str + " " +
+            //     firstPageContent[shipToAddIndex - 3]?.str;
 
-            poData.manufacture =
-                firstPageContent[shipToAddIndex - 24]?.str + " " +
-                firstPageContent[shipToAddIndex - 23]?.str + " " +
-                firstPageContent[shipToAddIndex - 22]?.str + " " +
-                firstPageContent[shipToAddIndex - 21]?.str + " " +
-                firstPageContent[shipToAddIndex - 20]?.str + " " +
-                firstPageContent[shipToAddIndex - 19]?.str + " " +
-                firstPageContent[shipToAddIndex - 18]?.str + " " +
-                firstPageContent[shipToAddIndex - 17]?.str + " " +
-                firstPageContent[shipToAddIndex - 16]?.str + " " +
-                firstPageContent[shipToAddIndex - 15]?.str;
+            // poData.manufacture =
+            //     firstPageContent[shipToAddIndex - 24]?.str + " " +
+            //     firstPageContent[shipToAddIndex - 23]?.str + " " +
+            //     firstPageContent[shipToAddIndex - 22]?.str + " " +
+            //     firstPageContent[shipToAddIndex - 21]?.str + " " +
+            //     firstPageContent[shipToAddIndex - 20]?.str + " " +
+            //     firstPageContent[shipToAddIndex - 19]?.str + " " +
+            //     firstPageContent[shipToAddIndex - 18]?.str + " " +
+            //     firstPageContent[shipToAddIndex - 17]?.str + " " +
+            //     firstPageContent[shipToAddIndex - 16]?.str + " " +
+            //     firstPageContent[shipToAddIndex - 15]?.str;
 
             /* buyer address */
 
@@ -132,6 +146,20 @@ export const extractDataFromPoPdf = async (pdf) => {
                     firstPageContent[materialIndex + 36]?.str;
             } else {
                 poData.buyerAddress =
+                    firstPageContent[materialIndex + 32]?.str + " " +
+                    firstPageContent[materialIndex + 33]?.str + " " +
+                    firstPageContent[materialIndex + 34]?.str + " " +
+                    firstPageContent[materialIndex + 35]?.str;
+            }
+
+            if (firstPageContent[materialIndex + 32]?.str === 'E') {
+                poData.deliveryAddress =
+                    firstPageContent[materialIndex + 33]?.str + " " +
+                    firstPageContent[materialIndex + 34]?.str + " " +
+                    firstPageContent[materialIndex + 35]?.str + " " +
+                    firstPageContent[materialIndex + 36]?.str;
+            } else {
+                poData.deliveryAddress =
                     firstPageContent[materialIndex + 32]?.str + " " +
                     firstPageContent[materialIndex + 33]?.str + " " +
                     firstPageContent[materialIndex + 34]?.str + " " +
@@ -227,6 +255,12 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemDetailsObj.shortDescription = filteredData[matchIndex + 1].str;
             } else {
                 itemDetailsObj.shortDescription = filteredData[matchIndex + 1].str + " " + filteredData[matchIndex + 2].str;
+
+                const colorMatch = /-(.*)/.exec(itemDetailsObj.shortDescription);
+                if (colorMatch && colorMatch.length > 1) {
+                    const color = colorMatch[1].trim();                 
+                    itemDetailsObj.color = color;
+                }
             }
             console.log(matchIndex, "matchIndex")
         }

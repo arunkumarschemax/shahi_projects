@@ -46,17 +46,21 @@ export class EddieService {
           const entity = new EddieOrdersEntity();
           entity.poNumber = req.poNumber
           entity.poDate = req.poDate
-          entity.incoterm = req.incoterm
-          entity.shipToAdd = req.shipToAdd
-          entity.manufacture = req.manufacture
+          entity.deliveryDate = req.deliveryDate
+          entity.exFactoryDate = req.exFactoryDate
+          // entity.incoterm = req.incoterm
+          // entity.shipToAdd = req.shipToAdd
+          // entity.manufacture = req.manufacture
           entity.buyerAddress = req.buyerAddress
-          entity.paymentTerms = req.paymentTerms
-          entity.shipmentMode = req.shipmentMode
+          entity.deliveryAddress = req.deliveryAddress
+          // entity.paymentTerms = req.paymentTerms
+          // entity.shipmentMode = req.shipmentMode
 
 
           entity.poLine = item.poLine
           entity.buyerItem = item.buyerItem
-          entity.shortDescription = item.shortDescription
+          // entity.shortDescription = item.shortDescription
+          entity.color = item.color
           entity.currency = item.currency
 
           entity.sizeCode = variant.sizeCode
