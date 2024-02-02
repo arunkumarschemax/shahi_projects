@@ -86,6 +86,15 @@ export class EddieController {
         }
     }
 
+    @Post('/EddieBot')
+    async EddieBot(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.EddieBot();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
     
     @Post('/getPdfFileInfo')
     async getPdfFileInfo(@Body() req: any): Promise<CommonResponseModel> {

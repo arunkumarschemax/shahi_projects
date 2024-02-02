@@ -10,6 +10,7 @@ import { DiaPDFModel, LegalPoPdfModel } from '@project-management-system/shared-
 import { AdobeAcrobatApiService, CentricService, EddieService, NikeService, RLOrdersService } from '@project-management-system/shared-services';
 import PoPdfTable from './po-pdf-table';
 import { extractDataFromPoPdf } from './po-pdf-extraction-helper'
+import { useNavigate } from 'react-router-dom';
 // import { DiaPdfDataExtractor } from './dia-pdf-extraction-helper';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 interface IPdfUploadProps {
@@ -50,6 +51,7 @@ const EddiePdfUpload: React.FC<IPdfUploadProps> = (props) => {
     const [diaPDfForm] = Form.useForm()
     const eddieService = new EddieService();
     const adobeAcrobatApi = new AdobeAcrobatApiService()
+    const navigate=useNavigate();
 
     const uploadProps: UploadProps = {
         name: 'file',
@@ -122,6 +124,7 @@ const EddiePdfUpload: React.FC<IPdfUploadProps> = (props) => {
                 }
                 // alert(res.internalMessage)
                 message.success(res.internalMessage)
+                navigate('/eddiebauer/pdf-info/')
             } else {
                 message.error(res.internalMessage)
             }
@@ -145,10 +148,32 @@ const EddiePdfUpload: React.FC<IPdfUploadProps> = (props) => {
         return <></>
     }
 
+    const EddieBot = (req) => {
+        eddieService.EddieBot().then(res => {
+            if (res.status) {
+                // setBuyer(res.data);
+                // setPoPdfData(res.data)
+                message.success("Button CLicked")
+                console.log("Trade button clicked");
+            }
+        });
+    };
+
     return (
         <Card title='Order Upload'>
             {resultProps === undefined &&
                 <Row gutter={24} >
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 5 }}
+                        lg={{ span: 5 }}
+                        xl={{ span: 4 }}
+                    >
+                        <Form.Item>
+                            <Button type='primary' onClick={EddieBot}>Upload Bot</Button>
+                        </Form.Item>
+                    </Col>
                     <Col span={24}>
                         <Dragger {...uploadProps} >
                             <p className="ant-upload-drag-icon">
