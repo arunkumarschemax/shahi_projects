@@ -71,7 +71,7 @@ useEffect(() => {
         <Card key={index} hoverable style={{
             width: "20%",
             height: "100%",
-            backgroundColor: "#9ec1a3",
+            backgroundColor: "#8ab0ab",
             marginRight: "20px",
             marginBottom: "20px",}}
             onClick={() => cardOnclick(e)}
