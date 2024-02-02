@@ -51,6 +51,7 @@ export default function EddiePdfTable() {
                         <th className='ta-b'>MANUFACTURE</th> */}
                         <th className='ta-b'>BUYER ADDRESS</th>
                         <th className='ta-b'>DELIVERY ADDRESS</th>
+                        <th className='ta-b'>CURRENCY</th>
                     </tr>
                     
                     <tr className='ta-b'>
@@ -65,6 +66,7 @@ export default function EddiePdfTable() {
                         <td className='ta-b'>{parsedData?.manufacture}</td> */}
                         <td className='ta-b'>{parsedData?.buyerAddress}</td>
                         <td className='ta-b'>{parsedData?.deliveryAddress}</td>
+                        <td className='ta-b'>{parsedData?.currency}</td>
 
                     </tr>
                     {parsedData?.EddiepoItemDetails?.map((i) => {
@@ -75,7 +77,7 @@ export default function EddiePdfTable() {
                                 <th className='ta-b'>BUYER ITEM</th>
                                 {/* <th className='ta-b'>SHORT DESCRIPTION</th> */}
                                 <th className='ta-b'>COLOR</th>
-                                <th className='ta-b'>CURRENCY</th>
+                                {/* <th className='ta-b'>CURRENCY</th> */}
 
                             </tr>
                             <tr className='ta-b'>
@@ -84,7 +86,7 @@ export default function EddiePdfTable() {
                                 <td className='ta-b'>{i.buyerItem}</td>
                                 {/* <td className='ta-b'>{i.shortDescription}</td> */}
                                 <td className='ta-b'>{i.color}</td>
-                                <td className='ta-b'>{i.currency}</td>
+                                {/* <td className='ta-b'>{i.currency}</td> */}
 
                             </tr>
                             <tr className='ta-b'>

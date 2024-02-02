@@ -12,6 +12,7 @@ export class EddiePoDetails {
     deliveryAddress: string;
     // paymentTerms: string;
     // shipmentMode: string;
+     currency: string;
 
 
     EddiepoItemDetails: EddiePoItemDetails[]

@@ -26,6 +26,7 @@ export const SPECIAL_INSTRUCTIONS = 'Special Instructions'
 export const INCOTERM = 'Transshipments'
 export const SHIPMENT_MODE='Business Code Description'
 export const DELIVERY_DATE='Canadian DC Closure Flag'
+export const CURRENCY='Short Description'
 
 
 

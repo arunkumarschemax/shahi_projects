@@ -55,6 +55,12 @@ export class EddieOrdersEntity {
     })
     deliveryAddress: string
 
+    @Column('varchar', {
+        name: "currency",
+
+    })
+    currency: string
+
 
     // @Column("varchar", {
     //     name: "payment_terms",
@@ -91,11 +97,11 @@ export class EddieOrdersEntity {
     })
     color: string
 
-    @Column('varchar', {
-        name: "currency",
+    // @Column('varchar', {
+    //     name: "currency",
 
-    })
-    currency: string
+    // })
+    // currency: string
 
 
 

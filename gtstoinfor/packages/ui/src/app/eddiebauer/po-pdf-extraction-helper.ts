@@ -1,5 +1,5 @@
 import { EddiePoDetails, EddiePoItemDetails, EddiePoItemVariant } from "@project-management-system/shared-models";
-import { DELIVERY_DATE, EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, INCOTERM, ITEM_NO_EXP, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, MANUFACTURE_1, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SHIPMENT_MODE, SHIP_TO_ADD, SPECIAL_INSTRUCTIONS, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./popdf-regex-expressions";
+import { CURRENCY, DELIVERY_DATE, EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, INCOTERM, ITEM_NO_EXP, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, MANUFACTURE_1, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SHIPMENT_MODE, SHIP_TO_ADD, SPECIAL_INSTRUCTIONS, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./popdf-regex-expressions";
 
 
 /** 
@@ -47,6 +47,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             let incotermIndex;
             let shipMentModeIndex;
             let deliveryDateIndex;
+            let currencyIndex;
             for (const [ind, ele] of firstPageContent.entries()) {
                 if (ele.str == PO_NUMBER_TEXT) {
                     poNumberTextIndex = ind
@@ -98,6 +99,9 @@ export const extractDataFromPoPdf = async (pdf) => {
                 if (ele.str == DELIVERY_DATE) {
                     deliveryDateIndex = ind
                 }
+                if (ele.str == CURRENCY) {
+                    currencyIndex = ind
+                }
 
             }
             // poData.poNumber = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX - 4].str
@@ -112,6 +116,8 @@ export const extractDataFromPoPdf = async (pdf) => {
             const exFactoryDate = new Date(deliveryDate);
             exFactoryDate.setDate(deliveryDate.getDate() - 9);
             poData.exFactoryDate = exFactoryDate.toISOString().split('T')[0];
+
+
             // poData.incoterm = firstPageContent[incotermIndex + 1].str
             // poData.shipmentMode = firstPageContent[shipMentModeIndex - 2].str
             // poData.paymentTerms = firstPageContent[shipMentModeIndex - 3].str
@@ -165,6 +171,9 @@ export const extractDataFromPoPdf = async (pdf) => {
                     firstPageContent[materialIndex + 34]?.str + " " +
                     firstPageContent[materialIndex + 35]?.str;
             }
+
+            poData.currency = firstPageContent[currencyIndex + 2].str.replace(/Unit Price\s+\(/g,"").replace(/\)/g,"");
+
         }
 
 
@@ -273,9 +282,9 @@ export const extractDataFromPoPdf = async (pdf) => {
             // }
             console.log(matchIndex, "matchIndex")
         }
-        const currencyRegex = /Short Description/
-        const currencyMatchingIndex = filteredData.findIndex((data, index) => index >= rec.itemIndex && currencyRegex.test(data.str));
-        itemDetailsObj.currency = filteredData[currencyMatchingIndex + 3].str.replace(/Cost\s+\(/g, "").replace(/\)/g, "").trim();
+        // const currencyRegex = /Size Code/
+        // const currencyMatchingIndex = filteredData.findIndex((data, index) => index >= rec.itemIndex && currencyRegex.test(data.str));
+        // itemDetailsObj.currency = filteredData[currencyMatchingIndex - 1].str.replace(/Cost\s+\(/g, "").replace(/\)/g, "").trim();
 
 
         itemTextEndIndex = rec.amountIndex

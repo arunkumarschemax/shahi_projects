@@ -56,6 +56,7 @@ export class EddieService {
           // entity.manufacture = req.manufacture
           entity.buyerAddress = req.buyerAddress
           entity.deliveryAddress = req.deliveryAddress
+          entity.currency = req.currency
           // entity.paymentTerms = req.paymentTerms
           // entity.shipmentMode = req.shipmentMode
 
@@ -64,7 +65,7 @@ export class EddieService {
           entity.buyerItem = item.buyerItem
           // entity.shortDescription = item.shortDescription
           entity.color = item.color
-          entity.currency = item.currency
+          // entity.currency = item.currency
 
           entity.sizeCode = variant.sizeCode
           entity.size = variant.size

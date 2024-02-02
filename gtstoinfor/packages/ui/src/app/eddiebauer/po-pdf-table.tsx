@@ -53,6 +53,8 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                         <th className='ta-b'>MANUFACTURE</th> */}
                         <th className='ta-b'>BUYER ADDRESS</th>
                         <th className='ta-b'>DELIVERY ADDRESS</th>
+                        <th className='ta-b'>CURRENCY</th>
+
                     </tr>
                     
                     <tr className='ta-b'>
@@ -67,6 +69,8 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                         <td className='ta-b'>{pdfData?.manufacture}</td> */}
                         <td className='ta-b'>{pdfData?.buyerAddress}</td>
                         <td className='ta-b'>{pdfData?.deliveryAddress}</td>
+                        <td className='ta-b'>{pdfData?.currency}</td>
+
 
                     </tr>
                     {pdfData?.EddiepoItemDetails?.map((i) => {
@@ -77,7 +81,6 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                 <th className='ta-b'>BUYER ITEM</th>
                                 {/* <th className='ta-b'>SHORT DESCRIPTION</th> */}
                                 <th className='ta-b'>COLOR</th>
-                                <th className='ta-b'>CURRENCY</th>
 
                             </tr>
                             <tr className='ta-b'>
@@ -86,7 +89,6 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                 <td className='ta-b'>{i.buyerItem}</td>
                                 {/* <td className='ta-b'>{i.shortDescription}</td> */}
                                 <td className='ta-b'>{i.color}</td>
-                                <td className='ta-b'>{i.currency}</td>
 
                             </tr>
                             <tr className='ta-b'>
