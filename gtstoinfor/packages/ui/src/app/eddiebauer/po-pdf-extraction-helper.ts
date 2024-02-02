@@ -245,23 +245,32 @@ export const extractDataFromPoPdf = async (pdf) => {
         console.log(rec.itemIndex, "iiiiiiiiiiiiii");
 
         const regex = /^\d{3}-\d{4}$/;
+        const colorRegex =/\d+\s+\w+/
         const matchIndex = filteredData.findIndex((data, index) => index >= rec.itemIndex && regex.test(data.str));
         if (matchIndex !== -1 && matchIndex < filteredData.length - 1) {
             itemDetailsObj.poLine = filteredData[matchIndex - 1].str;
             itemDetailsObj.buyerItem = filteredData[matchIndex].str;
-
-            const quantityRegex = /\d+(,|.|\d)\d+/;
-            if (quantityRegex.test(filteredData[matchIndex + 2].str)) {
-                itemDetailsObj.shortDescription = filteredData[matchIndex + 1].str;
-            } else {
-                itemDetailsObj.shortDescription = filteredData[matchIndex + 1].str + " " + filteredData[matchIndex + 2].str;
-
-                const colorMatch = /-(.*)/.exec(itemDetailsObj.shortDescription);
-                if (colorMatch && colorMatch.length > 1) {
-                    const color = colorMatch[1].trim();                 
-                    itemDetailsObj.color = color;
+            let currentIndex = matchIndex + 1;
+            while (currentIndex < filteredData.length && !colorRegex.test(filteredData[currentIndex].str)) {
+                const parts = filteredData[currentIndex].str.split('-');
+                if (parts.length > 1) {
+                    itemDetailsObj.color = (itemDetailsObj.color || '') + parts[1];
                 }
+                currentIndex++;
             }
+
+            // const quantityRegex = /\d+(,|.|\d)\d+/;
+            // if (quantityRegex.test(filteredData[matchIndex + 2].str)) {
+            //     itemDetailsObj.shortDescription = filteredData[matchIndex + 1].str;
+            // } else {
+            //     itemDetailsObj.shortDescription = filteredData[matchIndex + 1].str + " " + filteredData[matchIndex + 2].str;
+
+            //     const colorMatch = /-(.*)/.exec(itemDetailsObj.shortDescription);
+            //     if (colorMatch && colorMatch.length > 1) {
+            //         const color = colorMatch[1].trim();                 
+            //         itemDetailsObj.color = color;
+            //     }
+            // }
             console.log(matchIndex, "matchIndex")
         }
         const currencyRegex = /Short Description/
