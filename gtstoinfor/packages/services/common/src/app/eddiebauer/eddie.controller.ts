@@ -85,4 +85,14 @@ export class EddieController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    
+    @Post('/getPdfFileInfo')
+    async getPdfFileInfo(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getPdfFileInfo(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }

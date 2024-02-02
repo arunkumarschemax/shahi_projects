@@ -101,7 +101,8 @@ export class EddieService {
     entity.filePath = filePath;
     entity.fileType = mimetype;
     entity.fileData = req;
-    console.log(entity.fileData, "fileData")
+    entity.uploadStatus = "SUCCESS";
+    // console.log(entity.fileData, "fileData")
 
     const file = await this.pdfRepo.findOne({ where: { pdfFileName: filePath } });
     if (file) {
@@ -153,6 +154,19 @@ export class EddieService {
   async getPoNumber(): Promise<CommonResponseModel> {
     try {
       const data = await this.EddieOrdersRepo.getPoNumber()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+  async getPdfFileInfo(req: any): Promise<CommonResponseModel> {
+    try {
+      const data = await this.pdfRepo.getPDFInfo(req)
       if (data) {
         return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
       } else {

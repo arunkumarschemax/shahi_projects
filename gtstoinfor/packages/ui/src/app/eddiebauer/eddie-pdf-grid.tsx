@@ -1,6 +1,6 @@
 import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { CentricService, HbService, NikeService, RLOrdersService, SanmarService } from "@project-management-system/shared-services";
+import { CentricService, EddieService, HbService, NikeService, RLOrdersService, SanmarService } from "@project-management-system/shared-services";
 import React from "react";
 import { FilePdfOutlined, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
@@ -8,11 +8,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 import { AlertMessages } from "packages/libs/shared-models/src/common/supplier/alert-messages";
 import { config } from "packages/libs/shared-services/config";
-import { SanmarOrderFilter } from "@project-management-system/shared-models";
+import { EddieOrderFilter, SanmarOrderFilter } from "@project-management-system/shared-models";
 
 
 export function EddiePdFInfoGrid() {
-    const service = new SanmarService();
+    const service = new EddieService();
     const navigate = useNavigate();
     const searchInput = useRef(null);
     const [pdfData, setPdfData] = useState<any>([]);
@@ -28,13 +28,13 @@ export function EddiePdFInfoGrid() {
    
 
     useEffect(() => {
-        // getPdfFileInfo();
-        // getCustomerPoNumber();
+        getPdfFileInfo();
+        getPoNumber();
         
     }, []);
 
-    const getCustomerPoNumber = () => {
-        service.getCustomerPoNumber().then((res) => {
+    const getPoNumber = () => {
+        service.getPoNumber().then((res) => {
           if (res.status) {
             setPoNumber(res.data);
           
@@ -44,10 +44,10 @@ export function EddiePdFInfoGrid() {
     
     
     const getPdfFileInfo = () => {
-        const req = new SanmarOrderFilter();
+        const req = new EddieOrderFilter();
 
         if (form.getFieldValue("poNumber") !== undefined) {
-            req.buyerPo = form.getFieldValue("poNumber");
+            req.poNumber = form.getFieldValue("poNumber");
           }
         service.getPdfFileInfo(req).then(res => {
             if (res.status){
@@ -149,9 +149,9 @@ export function EddiePdFInfoGrid() {
     })
 
     const setMoreData = (record) => {
-        // navigate("/sanmar/pdf-info-detail-view", {
-        //     state: { data: record },
-        // });
+        navigate("/eddiebauer/pdf-info-detail-view", {
+            state: { data: record },
+        });
     };
 
 
@@ -290,8 +290,8 @@ export function EddiePdFInfoGrid() {
                   >
                      {poNumber.map((inc: any) => {
                       return (
-                        <Option key={inc.buyer_po} value={inc.buyer_po}>
-                          {inc.buyer_po}
+                        <Option key={inc.po_number} value={inc.po_number}>
+                          {inc.po_number}
                         </Option>
                       );
                     })}
@@ -318,7 +318,7 @@ export function EddiePdFInfoGrid() {
                     type="primary"
                     // onClick={getorderData}
                   >
-                    SEARCH
+                    Search
                   </Button>
                 
                 </Form.Item>
