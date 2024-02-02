@@ -66,6 +66,7 @@ export const M3TrimsView = () => {
     }
     getTrims();
     getBuyers();
+    onFinish()
   }, [mapData]);
 
   const getStructures = (req?: M3trimsDTO) => {
@@ -250,6 +251,9 @@ export const M3TrimsView = () => {
   }
 
   const onFinish = (req?: M3trimsDTO) => {
+  // getMappedTrims(form.getFieldValue('trimCategory'));
+
+    req = req || {} as M3trimsDTO
     if (mapData[0]?.structure === true) {
       getStructures(req);
     }
@@ -352,96 +356,74 @@ export const M3TrimsView = () => {
     // setVisibleModel(val);
   }
 
-  const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
-    filterDropdown: ({
-      setSelectedKeys,
-      selectedKeys,
-      confirm,
-      clearFilters,
-    }: any) => (
-      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
-        <Input
-          ref={searchInput}
-          placeholder={`Search ${dataIndex}`}
-          value={selectedKeys[0]}
-          onChange={(e) =>
-            setSelectedKeys(e.target.value ? [e.target.value] : [])
-          }
-          onPressEnter={() =>
-            handleSearch(selectedKeys as string[], confirm, dataIndex)
-          }
-          style={{ marginBottom: 8, display: "block" }}
-        />
-        <Space>
-          <Button
-            type="primary"
-            onClick={() =>
-              handleSearch(selectedKeys as string[], confirm, dataIndex)
-            }
-            icon={<SearchOutlined />}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Search
-          </Button>
-          <Button
-            onClick={() => {
-              handleReset(clearFilters);
-              setSearchedColumn(dataIndex);
-              confirm({ closeDropdown: true });
-            }}
-            size="small"
-            style={{ width: 90 }}
-          >
-            Reset
-          </Button>
-        </Space>
-      </div>
+  const getColumnSearchProps = (dataIndex: string) => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div style={{ padding: 8 }}>
+            <Input
+                ref={searchInput}
+                placeholder={`Search ${dataIndex}`}
+                value={selectedKeys[0]}
+                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                style={{ width: 188, marginBottom: 8, display: 'block' }}
+            />
+            <Button
+                type="primary"
+                onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
+                icon={<SearchOutlined />}
+                size="small"
+                style={{ width: 90, marginRight: 8 }}
+            >
+                Search
+            </Button>
+            <Button size="small" style={{ width: 90 }}
+                onClick={() => {
+                    handleReset(clearFilters)
+                    setSearchedColumn(dataIndex);
+                    confirm({ closeDropdown: true });
+                }}>
+                Reset
+            </Button>
+        </div>
     ),
-    filterIcon: (filtered: boolean) => (
-      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    filterIcon: filtered => (
+        <SearchOutlined type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
     ),
     onFilter: (value, record) =>
-      record[dataIndex]
-        ? record[dataIndex]
-          .toString()
-          .toLowerCase()
-          .includes((value as string).toLowerCase())
-        : false,
-    onFilterDropdownOpenChange: (visible) => {
-      if (visible) {
-        setTimeout(() => searchInput.current?.select(), 100);
-      }
+        record[dataIndex]
+            ? record[dataIndex]
+                .toString()
+                .toLowerCase()
+                .includes(value.toLowerCase())
+            : false,
+    onFilterDropdownVisibleChange: visible => {
+        if (visible) { setTimeout(() => searchInput.current.select()); }
     },
-    render: (text) =>
-      searchedColumn === dataIndex ? (
-        <Highlighter
-          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
-          searchWords={[searchText]}
-          autoEscape
-          textToHighlight={text ? text.toString() : ""}
-        />
-      ) : (
-        text
-      ),
-  });
-
+    render: text =>
+        text ? (
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text.toString()}
+                />
+            ) : text
+        )
+            : null
+})
   function handleSearch(selectedKeys, confirm, dataIndex) {
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
-  }
+  };
 
   function handleReset(clearFilters) {
     clearFilters();
-    setSearchText("");
-  }
-  const customFilter = (value, record) => {
-    if (value === null) return true; // If filter is not active, show all rows
-    return record.itemType === value;
+    setSearchText('');
   };
 
-  const columns: ColumnProps<any>[] = [
+  const columnsSkelton: any= [
     {
       title: "S No",
       key: "sno",
@@ -452,14 +434,15 @@ export const M3TrimsView = () => {
       title: <div style={{textAlign:"center"}}>Buyer</div>,
       dataIndex: "buyerName",
       ...getColumnSearchProps("buyerName"),
-      sorter: (a, b) => a.buyerName.localeCompare(b.buyerName),
+      sorter: (a, b) => a.buyerName?.localeCompare(b.buyerName),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     },
     {
       title: <div style={{textAlign:"center"}}>Trim Type</div>,
       dataIndex: "trimType",
       ...getColumnSearchProps("trimType"),
-      sorter: (a, b) => a.trimType.localeCompare(b.trimType),
+      sorter: (a, b) => a.trimType?.localeCompare(b.trimType),
       sortDirections: ["descend", "ascend"],
       render: (text) => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
@@ -470,123 +453,143 @@ export const M3TrimsView = () => {
       title: <div style={{textAlign:"center"}}>Trim Category</div>,
       dataIndex: "trimCategory",
       ...getColumnSearchProps("trimCategory"),
-      sorter: (a, b) => a.trimCategory.localeCompare(b.trimCategory),
+      sorter: (a, b) => a.trimCategory?.localeCompare(b.trimCategory),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     },
     mapData[0]?.structure === true?{
       title: <div style={{textAlign:"center"}}>Structure</div>,
       dataIndex: "structure",
       ...getColumnSearchProps("structure"),
-      sorter: (a, b) => a.structure.localeCompare(b.structure),
+      sorter: (a, b) => a.structure?.localeCompare(b.structure),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     }: {},
     mapData[0]?.category === true?{
       title: <div style={{textAlign:"center"}}>Category</div>,
       dataIndex: "category",
       ...getColumnSearchProps("category"),
-      sorter: (a, b) => a.category.localeCompare(b.category),
+      sorter: (a, b) => a.category?.localeCompare(b.category),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     }:{},
     mapData[0]?.content === true?{
       title: <div style={{textAlign:"center"}}>Content</div>,
       dataIndex: "content",
       ...getColumnSearchProps("content"),
-      sorter: (a, b) => a.content.localeCompare(b.content),
+      sorter: (a, b) => a.content?.localeCompare(b.content),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     }:{},
     mapData[0]?.type === true?{
       title: <div style={{textAlign:"center"}}>Type</div>,
       dataIndex: "type",
       ...getColumnSearchProps("type"),
-      sorter: (a, b) => a.type.localeCompare(b.type),
+      sorter: (a, b) => a.type?.localeCompare(b.type),
       sortDirections: ["descend", "ascend"],
       render: (text) => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
-        return EnumObj ? EnumObj.displayVal : text;
+        return EnumObj ? EnumObj.displayVal : (text ? text : ' - ');
       },    }: {},
     mapData[0]?.finish === true?{
       title: <div style={{textAlign:"center"}}>Finish</div>,
       dataIndex: "finish",
       ...getColumnSearchProps("finish"),
-      sorter: (a, b) => a.finish.localeCompare(b.finish),
+      sorter: (a, b) => a.finish?.localeCompare(b.finish),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     }: {},
     mapData[0]?.hole === true?{
       title: <div style={{textAlign:"center"}}>Hole</div>,
       dataIndex: "hole",
       ...getColumnSearchProps("hole"),
-      sorter: (a, b) => a.hole.localeCompare(b.hole),
+      sorter: (a, b) => a.hole?.localeCompare(b.hole),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     }: {},
     mapData[0]?.quality === true?{
       title: <div style={{textAlign:"center"}}>Quality</div>,
       dataIndex: "qualityName",
       ...getColumnSearchProps("qualityName"),
-      sorter: (a, b) => a.qualityName.localeCompare(b.qualityName),
+      sorter: (a, b) => a.qualityName?.localeCompare(b.qualityName),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     }: {},
     mapData[0]?.thickness === true?{
       title: <div style={{textAlign:"center"}}>Thickness</div>,
       dataIndex: "thickness",
       ...getColumnSearchProps("thickness"),
-      sorter: (a, b) => a.thickness.localeCompare(b.thickness),
+      sorter: (a, b) => a.thickness?.localeCompare(b.thickness),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     }: {},
     mapData[0]?.variety === true?{
       title: <div style={{textAlign:"center"}}>Variety</div>,
       dataIndex: "variety",
       ...getColumnSearchProps("variety"),
-      sorter: (a, b) => a.variety.localeCompare(b.variety),
+      sorter: (a, b) => a.variety?.localeCompare(b.variety),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     }: {},
     mapData[0]?.uom === true?{
       title: <div style={{textAlign:"center"}}>UOM</div>,
       dataIndex: "uom",
       ...getColumnSearchProps("uom"),
-      sorter: (a, b) => a.uom.localeCompare(b.uom),
+      sorter: (a, b) => a.uom?.localeCompare(b.uom),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     }: {},
     mapData[0]?.color === true?{
       title: <div style={{textAlign:"center"}}>Color</div>,
       dataIndex: "color",
       ...getColumnSearchProps("color"),
-      sorter: (a, b) => a.color.localeCompare(b.color),
+      sorter: (a, b) => a.color?.localeCompare(b.color),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     }: {},
     mapData[0]?.logo === true?{
       title: <div style={{textAlign:"center"}}>Logo</div>,
       dataIndex: "logo",
       ...getColumnSearchProps("logo"),
-      sorter: (a, b) => a.logo.localeCompare(b.logo),
+      sorter: (a, b) => a.logo?.localeCompare(b.logo),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     }: {},
     mapData[0]?.part === true?{
       title: <div style={{textAlign:"center"}}>Part</div>,
       dataIndex: "part",
       ...getColumnSearchProps("part"),
-      sorter: (a, b) => a.part.localeCompare(b.part),
+      sorter: (a, b) => a.part?.localeCompare(b.part),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     }:{},
     {
       title: <div style={{textAlign:"center"}}>Description</div>,
       dataIndex: "trimCode",
       ...getColumnSearchProps("description"),
-      sorter: (a, b) => a.description.localeCompare(b.description),
+      // sorter: (a, b) => a.description?.localeCompare(b.description),
       sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     },
     {
       title: <div style={{textAlign:"center"}}>M3 Code</div>,
       dataIndex: "m3Code",
       ...getColumnSearchProps("m3Code"),
+      sorter: (a, b) => a.m3Code?.localeCompare(b.m3Code),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     },
     {
       title: <div style={{textAlign:"center"}}>HSN Code</div>,
       dataIndex: "hsnCode",
       ...getColumnSearchProps("hsnCode"),
+      sorter: (a, b) => a.hsnCode?.localeCompare(b.hsnCode),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
     },
   ]
 
-  const filteredColumns = columns.filter((column) => Object.keys(column).length > 0);
+  const filteredColumns = columnsSkelton.filter((column) => Object.keys(column).length > 0);
 
 
   const clearData = () => {
@@ -625,7 +628,7 @@ export const M3TrimsView = () => {
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Buyer"
-                    onChange={onBuyerChange}
+                    // onChange={onBuyerChange}
                     >
                         {buyerData.map((e) => {
                             return (
