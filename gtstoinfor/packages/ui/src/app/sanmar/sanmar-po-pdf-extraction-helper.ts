@@ -1,5 +1,5 @@
 import { CentricPoDetails, CentricPoItemDetails, CentricPoItemVariant, SanmarPoDetails, SanmarPoItemDetails, SanmarPoItemVariant } from "@project-management-system/shared-models";
-import { EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, ITEM_NO_EXP, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, MANUFACTURE_1, MANUFACTURE_2, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SHIP_TO_ADDRESS, SPECIAL_INSTRUCTIONS } from "./sanmar-popdf-regex-expressions";
+import { EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, ITEM_NO_EXP, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT_1, ITEM_VARIANT_START_TEXT, MANUFACTURE_1, MANUFACTURE_2, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SHIP_TO_ADDRESS, SPECIAL_INSTRUCTIONS } from "./sanmar-popdf-regex-expressions";
 
 
 /** 
@@ -246,6 +246,7 @@ export const extractDataFromPoPdf = async (pdf) => {
 
         const itemVariantsArr = [];
 
+        let lineCounter = 1; 
         for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
             const itemVariantsObj = new SanmarPoItemVariant();
             const index = count * l;
@@ -259,31 +260,34 @@ export const extractDataFromPoPdf = async (pdf) => {
                 const colorIndex = productDescriptionIndex + 5;
                 const color = itemVarinatsTextArr[colorIndex];
 
-                const lineIndex = productDescriptionIndex - 14;
-                const lineData = itemVarinatsTextArr[lineIndex];
-                const regexMatch = lineData.match(/PO-[0-9]{9}/);
 
-                if (regexMatch) {
-                    const nextIndex = lineIndex - 27;
-                    if (nextIndex >= 0) {
-                        const nextId = itemVarinatsTextArr[nextIndex];
-                        itemVariantsObj.line = nextId;
-                    } else {
-                        itemVariantsObj.line = "-";
-                    }
-                } else {
-                    itemVariantsObj.line = lineData;
-                }
+                // const lineIndex = productDescriptionIndex - 14;
+                // const lineData = itemVarinatsTextArr[lineIndex];
+                // const regexMatch = lineData.match(/PO-[0-9]{9}/);
 
-                // const lineRegexIndex = itemVarinatsTextArr.findIndex((value, i) => i > productDescriptionIndex && value.match(/[A-Za-z]{2}[0-9]{4}/));
-
-                // if (lineRegexIndex !== -1) {
-                //     const nextIdIndex = lineRegexIndex - 1;
-                //     const nextId = itemVarinatsTextArr[nextIdIndex];
-                //     itemVariantsObj.line = nextId;
+                // if (regexMatch) {
+                //     const nextIndex = lineIndex - 27;
+                //     if (nextIndex >= 0) {
+                //         const nextId = itemVarinatsTextArr[nextIndex];
+                //         itemVariantsObj.line = nextId;
+                //     } else {
+                //         itemVariantsObj.line = "-";
+                //     }
                 // } else {
-                //     itemVariantsObj.line = "-";
+                //     itemVariantsObj.line = lineData;
                 // }
+
+
+
+                // const lineRegexIndex = itemVarinatsTextArr.findIndex((value) =>  value.match(/[A-Z]{2}[0-9]{4}/));
+                // const line = itemVarinatsTextArr[lineRegexIndex - 1];
+
+                const lineRegexIndex = itemVarinatsTextArr.findIndex((value, index) => {
+                    const isAfterProductDescription = index > productDescriptionIndex;
+                    const matchesPattern = value.match(/[A-Z]{2}[0-9]{4}/);
+                    return isAfterProductDescription && matchesPattern;
+                });
+                const line = lineRegexIndex > 0 ? itemVarinatsTextArr[lineRegexIndex - 1] : null;
 
 
                 // const unitPriceIndex = productDescriptionIndex - 4;
@@ -309,27 +313,51 @@ export const extractDataFromPoPdf = async (pdf) => {
 
 
                 const quantityIndex = productDescriptionIndex - 5;
-                const quantityMatch = itemVarinatsTextArr[quantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
-
-                if (quantityMatch) {
-                    const quantity = quantityMatch[0];
-                    const unit = quantity.match(/\s+\w+/)[0];
-                    itemVariantsObj.quantity = quantity.replace(/EACH/g, "");
-                    itemVariantsObj.unit = unit.match(/\w+/g, "");
-                } else {
+                let quantity = itemVarinatsTextArr[quantityIndex].replace(/EACH/g, "");
+                if (quantity == 'Quantity') {
                     const fallbackQuantityIndex = productDescriptionIndex - 32;
-                    const fallbackQuantityMatch = itemVarinatsTextArr[fallbackQuantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
-
-                    if (fallbackQuantityMatch) {
-                        const fallbackQuantity = fallbackQuantityMatch[0];
-                        const unit = fallbackQuantity.match(/\s+\w+/)[0];
-                        itemVariantsObj.quantity = fallbackQuantity.replace(/EACH/g, "");
-                        itemVariantsObj.unit = unit.match(/\w+/g, "");
-                    } else {
-                        itemVariantsObj.quantity = "-";
-                        itemVariantsObj.unit = "-";
-                    }
+                    quantity = itemVarinatsTextArr[fallbackQuantityIndex].replace(/EACH/g, "");
                 }
+                // const lineIndexRegex = itemDetailsArr.findIndexOf(value => /[A-Z]{2}[0-9]{4}/.test(value));
+                // let line;
+
+                // if (lineIndexRegex !== -1) {
+                //     line = itemDetailsArr[lineIndexRegex - 1];
+                // }
+
+                // const lineIndex = itemVarinatsTextArr.indexOf(quantity);
+                // let line;
+
+                // if (lineIndex !== -1) {
+                //     line = itemVarinatsTextArr[lineIndex - 5];
+                // } else {
+                //     console.log("Quantity not found");
+                // }
+                // const lineRegexPattern = /\d+-\d+-\d/;
+                // if (lineRegexPattern.test(line)) {
+                //     line = itemVarinatsTextArr[lineIndex - 38];
+                // }
+                // const quantityMatch = itemVarinatsTextArr[quantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
+
+                // if (quantityMatch) {
+                //     const quantity = quantityMatch[0];
+                //     const unit = quantity.match(/\s+\w+/)[0];
+                //     itemVariantsObj.quantity = quantity.replace(/EACH/g, "");
+                //     itemVariantsObj.unit = unit.match(/\w+/g, "");
+                // } else {
+                //     const fallbackQuantityIndex = productDescriptionIndex - 32;
+                //     const fallbackQuantityMatch = itemVarinatsTextArr[fallbackQuantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
+
+                //     if (fallbackQuantityMatch) {
+                //         const fallbackQuantity = fallbackQuantityMatch[0];
+                //         const unit = fallbackQuantity.match(/\s+\w+/)[0];
+                //         itemVariantsObj.quantity = fallbackQuantity.replace(/EACH/g, "");
+                //         itemVariantsObj.unit = unit.match(/\w+/g, "");
+                //     } else {
+                //         itemVariantsObj.quantity = "-";
+                //         itemVariantsObj.unit = "-";
+                //     }
+                // }
 
                 // if (quantityMatch) {
                 //     const quantity = quantityMatch[0];
@@ -348,9 +376,9 @@ export const extractDataFromPoPdf = async (pdf) => {
 
                 itemVariantsObj.size = size;
                 itemVariantsObj.color = color;
-                // itemVariantsObj.line = line;
+                itemVariantsObj.line = lineCounter++;
                 // itemVariantsObj.unitPrice = unitPrice;
-                // itemVariantsObj.quantity = quantity;
+                itemVariantsObj.quantity = quantity;
 
                 console.log(itemVariantsObj);
                 itemVariantsArr.push(itemVariantsObj);

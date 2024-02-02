@@ -25,8 +25,8 @@ export const REFRENCE = 'Shipment Method'
 export const PAYMENT_TERM_DESCRIPTION = 'Payment Terms Description'
 export const SPECIAL_INSTRUCTIONS = 'Special Instructions'
 export const SHIP_TO_ADDRESS = 'Incoterm'
-export const ITEM_TEXT_END_TEXT = 'Merchandis'
-export const ITEM_TEXT_END_TEXT2 = 'Merchandise Amount'
+export const ITEM_TEXT_END_TEXT = 'Merchandise'
+export const ITEM_TEXT_END_TEXT_1 = 'Lines Ordered'
 // export const UNWANTED_TEXT_1 = 'Acceptance of this HB Athletic Inc. - Globe-Tex purchase order constitutes Vendors agreement to:' 
 // export const UNWANTED_TEXT_2 = "1. Manufacture all product on this Purchases Order…- Globe-Tex and the license holder of the branded"
 // export const UNWANTED_TEXT_3 = "product being ordered on this Purchase Order. Fail… will result in the cancellation of this Purchase"
@@ -61,7 +61,7 @@ export const ITEM_VARIANT_START_TEXT = "Parent Partner ID"
 
 
 // Jaswanth Chnages 2nd format// 
-export const ITEM_TEXT_END_TEXT1 = '$'
+// export const ITEM_TEXT_END_TEXT1 = '$'
 export const FORMAT_SEPARATION_KEYWORD = 'Compt. Material'
 export const TOTAL_QUANTITY = 'Total Cost'
 export const CURRENCY_INDEX='Collect -'

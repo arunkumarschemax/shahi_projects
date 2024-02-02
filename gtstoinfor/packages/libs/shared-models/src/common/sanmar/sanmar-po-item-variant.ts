@@ -5,6 +5,6 @@ export class SanmarPoItemVariant {
     size: string;
     color:string;
     unit:string;
-    line:string;
+    line:number;
    
 }
