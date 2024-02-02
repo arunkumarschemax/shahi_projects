@@ -40,7 +40,7 @@ export const SampleDevForm = () => {
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [previewTitle, setPreviewTitle] = useState("");
-  const [fileList, setFileList] = useState([]);
+  const [fileList, setFileList] = useState<any[]>([]);
   const [tabsData,setTabsData] = useState<any>()
   const [selectedBuyerId, setSelectedBuyerId] = useState(null)
   const [m3StleCode, setM3StleCode] = useState<any[]>([])
@@ -496,9 +496,14 @@ const getBase64 = (img, callback) => {
     multiple: true,
     onRemove: file => {
       console.log(file);
-      console.log(fileList?.find((f) => f.uid != file.uid))
-      let files:any[] = fileList?.find((f) => f.uid != file.uid)
-      setFileList(files);
+      console.log(fileList);
+      console.log(fileList.splice(0,1));
+      const index = (fileList || []).findIndex((f) => f.uid === file.uid);
+      if (index !== -1) {
+        fileList[index] = undefined;
+      }
+      console.log(fileList);
+      setFileList(fileList);
       setImageUrl('');
     },
     beforeUpload: (file: any) => {
@@ -506,6 +511,7 @@ const getBase64 = (img, callback) => {
         AlertMessages.getErrorMessage("Only pdf,xlsx,xls,png,jpeg,jpg files are allowed!");
         return true;
       }
+      console.log(file);
       // var reader = new FileReader();
       // reader.readAsArrayBuffer(file);
       // reader.onload = data => {
@@ -527,7 +533,7 @@ const getBase64 = (img, callback) => {
       strokeWidth: 3,
       format: percent => `${parseFloat(percent.toFixed(2))}%`,
     },
-    fileList: fileList,
+    fileList: fileList.length > 0?fileList:[],
   };
   
   const handleFabricsDataUpdate = (updatedData) => {
@@ -558,7 +564,6 @@ const renderButtons = (): ReactNode => {
   const buttons: ReactNode[] = [];
   console.log(fileList)
   if(fileList != undefined){
-
     fileList?.forEach(res => {
       console.log(res)
       if(res.type !="application/pdf" && res.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && res.type != "application/xlsx" ){
@@ -601,7 +606,7 @@ const renderButtons = (): ReactNode => {
                 optionFilterProp="children"
                 placeholder="Select Location"
               >
-                <Option key={300} value={300}>{'300'}</Option>
+                <Option key={340} value={340}>{'340'}</Option>
                 {/* {locations.map((e) => {
                   return (
                     <Option key={e.locationId} value={e.locationId}>
@@ -792,7 +797,7 @@ const renderButtons = (): ReactNode => {
               </Col>
           
           
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} hidden> */}
             <Form.Item
               name="costRef"
               label="Cost Ref"
@@ -801,11 +806,11 @@ const renderButtons = (): ReactNode => {
                   pattern: /^[0-9]*$/,
                   message: `Only numbers are accepted`,
                 },
-              ]}
+              ]} hidden
             >
               <Input placeholder="Enter Cost Ref" />
             </Form.Item>
-          </Col>
+          {/* </Col> */}
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }} >
             <Form.Item
               name="description"
