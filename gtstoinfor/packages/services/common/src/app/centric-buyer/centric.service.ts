@@ -352,7 +352,7 @@ export class CentricService {
     }
   }
 
-  async getPoLineNumbers(req?: PoOrderFilter): Promise<CommonResponseModel> {
+  async getPoLineNumbers(req: PoOrderFilter): Promise<CommonResponseModel> {
     try {
       const data = await this.Repo.getPoLineNumbers(req);
       if (data) {
