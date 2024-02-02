@@ -115,7 +115,7 @@ function convertDecimalToWords(decimalPart) {
 }
 
 const totalAmount = poData.reduce((sum, e) => {
-  const itemAmount = e.unit_price? Number((e.po_quantity*e.unit_price)*(e.taxPercentage/100)): 0
+  const itemAmount = e.unit_price? Number(((e.po_quantity*e.unit_price)-(e.po_quantity*e.unit_price)*(e.discount/100))*(e.taxPercentage/100)): 0
   return sum + itemAmount;
 }, 0);
 const integerPart = Math.floor(totalAmount);
@@ -281,6 +281,7 @@ const totalAmountInWords = `${integerWords} . ${decimalWords}`;
                             <th>Rate</th>
                             <th>Value</th>
                             <th style={{width:'7%'}}>Discount</th>
+                            <th>Transportation</th>
                             <th>Net Value</th>
                            
 
@@ -290,7 +291,7 @@ const totalAmountInWords = `${integerWords} . ${decimalWords}`;
                             totalValue += e.unit_price ? Number(e.po_quantity*e.unit_price): 0 
                            disc += e.unit_price ? (e.po_quantity*e.unit_price)*(e.discount/100):0
                             totalGst += e.unit_price? Number((totalValue-disc)*(e.taxPercentage/100)): 0
-                            totalNetValue += e.unit_price?Number(((e.po_quantity*e.unit_price)-((e.po_quantity*e.unit_price)*(e.discount/100)))+((e.po_quantity*e.unit_price)-(e.po_quantity*e.unit_price)*(e.discount/100))*(e.taxPercentage/100)): 0
+                            totalNetValue += e.unit_price?Number(((e.po_quantity*e.unit_price)-((e.po_quantity*e.unit_price)*(e.discount/100)))+(e.transportation)+((e.po_quantity*e.unit_price)-(e.po_quantity*e.unit_price)*(e.discount/100))*(e.taxPercentage/100)): 0
                             // totalNetValue += e.subjective_amount 
                             const sno = index + 1;
                             return(
@@ -331,13 +332,13 @@ const totalAmountInWords = `${integerWords} . ${decimalWords}`;
                                 <td>{typeof e.unit_price === 'number' ? e.unit_price.toFixed(2) : '-'}</td>
                                 <td>{e.unit_price ? (e.po_quantity * e.unit_price).toFixed(2) : '-'} </td>
                                 <td style={{ width: '7%' }}>{e.discount ? `${((e.po_quantity * e.unit_price * e.discount) / 100).toFixed(2)} (${e.discount}%)` : '-'}</td>
-                                <td>{e.unit_price ? ((e.po_quantity * e.unit_price) - ((e.po_quantity * e.unit_price) * (e.discount / 100))).toFixed(2) : '-'}</td>
-
-
+                                <td>{e.unit_price ? (e.transportation):'-'}</td>
+                                <td>{e.unit_price ? ((e.po_quantity * e.unit_price) - ((e.po_quantity * e.unit_price) * (e.discount / 100))+(e.transportation)).toFixed(2) : '-'}</td>
                               </tr>
                               <tr>
                                 <td colSpan={10} style={{textAlign:'right',paddingRight:10}}>Integrated GST</td>
                                 <td >{e.taxPercentage ? `${e.taxPercentage}%`:'-'}</td>
+                                <td></td>
                                 <td></td>
                                 <td></td>
                                 <td></td>
@@ -350,6 +351,7 @@ const totalAmountInWords = `${integerWords} . ${decimalWords}`;
                             <td></td>
                             <td></td>
                             <td></td>
+                            <td ></td>
                             <td ></td>
                             <td></td>
                         <td></td>
