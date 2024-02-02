@@ -74,6 +74,7 @@ import EddiePdFInfoGrid from "./eddiebauer/eddie-pdf-grid"
 import EddieOrderAcceptanceGrid from "./eddiebauer/eddie-order-acceptance-view"
 import EddieColineView from "./eddiebauer/eddie-co-line-view"
 import EddiePdfTable from "./eddiebauer/eddie-pdf-detail-view"
+import EddieOrdersDetailView from "./eddiebauer/eedie-order-detail-view"
 
 
 export const AppRoutes = () => {
@@ -274,6 +275,8 @@ export const AppRoutes = () => {
                    <Route path="eddiebauer-order-acceptance" element={<EddieOrderAcceptanceGrid/>}/>
                    <Route path="eddiebauer-co-line-view" element={<EddieColineView/>}/>
                    <Route path='pdf-info-detail-view' element={<EddiePdfTable />} />
+                   <Route path='eddiebauer-order-data-detail-view' element={<EddieOrdersDetailView />} />
+
 
 
                   

@@ -14,6 +14,7 @@ import {
   import { useEffect, useRef, useState } from "react";
   import {
       CentricService,
+    EddieService,
     HbService,
     NikeService,
     RLOrdersService,
@@ -25,6 +26,7 @@ import {
   import { useNavigate } from "react-router-dom";
   import {
     AlertMessages,
+    EddieOrderFilter,
     HbPoOrderFilter,
     OrderDataModel,
     PoOrderFilter,
@@ -36,7 +38,7 @@ import {
   import { Excel } from "antd-table-saveas-excel";
   
   export function EddieOrdersGrid() {
-    const service = new SanmarService();
+    const service = new EddieService();
 
 
     const navigate = useNavigate();
@@ -56,30 +58,30 @@ import {
     const { RangePicker } = DatePicker;
   
     useEffect(() => {
-      // getorderData();
-      // getCustomerPoNumber()
+      getorderData();
+       getPoNumber()
     }, []);
 
   
     const getorderData = () => {
-      const req = new SanmarOrderFilter();
+      const req = new EddieOrderFilter();
   
       if (form.getFieldValue("poNumber") !== undefined) {
-        req.buyerPo = form.getFieldValue("poNumber");
+        req.poNumber = form.getFieldValue("poNumber");
       }
-      if (form.getFieldValue('deliveryDate') !== undefined) {
-        req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
-      }
-      if (form.getFieldValue('deliveryDate') !== undefined) {
-        req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
-      }
+      // if (form.getFieldValue('deliveryDate') !== undefined) {
+      //   req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
+      // }
+      // if (form.getFieldValue('deliveryDate') !== undefined) {
+      //   req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
+      // }
       
-      if (form.getFieldValue("style") !== undefined) {
-        req.style = form.getFieldValue("style");
-      }
-      if (form.getFieldValue("color") !== undefined) {
-        req.color = form.getFieldValue("color");
-      }
+      // if (form.getFieldValue("style") !== undefined) {
+      //   req.style = form.getFieldValue("style");
+      // }
+      // if (form.getFieldValue("color") !== undefined) {
+      //   req.color = form.getFieldValue("color");
+      // }
 
 
   
@@ -97,8 +99,8 @@ import {
     });
     };
 
-    const getCustomerPoNumber = () => {
-        service.getCustomerPoNumber().then((res) => {
+    const getPoNumber = () => {
+        service.getPoNumber().then((res) => {
           if (res.status) {
             setPoNumber(res.data);
           
@@ -202,7 +204,7 @@ import {
     });
   
     const setMoreData = (record) => {
-      navigate("/sanmar/sanmar-order-data-detail-view", {
+      navigate("/eddiebauer/eddiebauer-order-data-detail-view", {
         state: { data: record },
       });
     };
@@ -232,13 +234,13 @@ import {
         },
         {
           title: "PO Number",
-          dataIndex: "buyerPo",
+          dataIndex: "poNumber",
           width: 90,
-         sorter: (a, b) => a.buyerPo.localeCompare(b.buyerPo),
+         sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
          sortDirections: ["ascend", "descend"],
          render: (text) => text ? text : "-",
   
-          fixed: "left",
+          // fixed: "left",
           // ...getColumnSearchProps('poNumber')
         },
         {
@@ -249,41 +251,85 @@ import {
          sortDirections: ["ascend", "descend"],
          render: (text) => text ? text : "-",
   
-          fixed: "left",
+          // fixed: "left",
           // ...getColumnSearchProps('poNumber')
         },
-        
         {
-          title: "Style",
-          dataIndex: "style",
+          title: "Po Line",
+          dataIndex: "poLine",
           width: 90,
-          sorter: (a, b) => a.style.localeCompare(b.style),
+          sorter: (a, b) => a.poLine.localeCompare(b.poLine),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
+         
+  
+        },
+        {
+          title: "Buyer Item",
+          dataIndex: "buyerItem",
+          width: 90,
+           sorter: (a, b) => a.buyerItem.localeCompare(b.buyerItem),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         
+  
+        },
+        {
+          title: "Manufacture",
+          dataIndex: "manufacture",
+          width: 130,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 20)}...` : "-"}
+            </Tooltip>
+          ),
+         
+  
+        },
+        {
+          title: "Shipment Mode",
+          dataIndex: "shipmentMode",
+          width: 90,
+          sorter: (a, b) => a.shipmentMode.localeCompare(b.shipmentMode),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         
+  
+        },
+        
+        // {
+        //   title: "Style",
+        //   dataIndex: "style",
+        //   width: 90,
+        //   sorter: (a, b) => a.style.localeCompare(b.style),
+        //   sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
           
   
-        },
-        {
-          title: "Color",
-          dataIndex: "color",
-          width: 90,
-          sorter: (a, b) => a.color.localeCompare(b.color),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
+        // },
+        // {
+        //   title: "Color",
+        //   dataIndex: "color",
+        //   width: 90,
+        //   sorter: (a, b) => a.color.localeCompare(b.color),
+        //   sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
  
   
-        },
+        // },
   
-        {
-          title: "Delivery Date",
-          dataIndex: "deliveryDate",
-          width: 130,
-          sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
-          // ...getColumnSearchProps('material')
+        // {
+        //   title: "Delivery Date",
+        //   dataIndex: "deliveryDate",
+        //   width: 130,
+        //   sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
+        //   sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
+        //   // ...getColumnSearchProps('material')
   
-        },
+        // },
        
   
       ];
@@ -296,6 +342,141 @@ import {
           width: 70,
           align: 'center',
           children: [
+            {
+              title: 'Size Code',
+              dataIndex: '',
+              key: '',
+              width: 70,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.sizeCode) ? (sizeData?.sizeCode) : "-"
+  
+                    return (
+                      formattedQty
+                    );
+                  } else {
+  
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
+            {
+              title: 'UPC',
+              dataIndex: '',
+              key: '',
+              width: 130,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
+  
+                    return (
+                      formattedQty
+                    );
+                  } else {
+  
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
+            {
+              title: 'SKU',
+              dataIndex: '',
+              key: '',
+              width: 130,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.sku) ? (sizeData?.sku) : "-"
+  
+                    return (
+                      formattedQty
+                    );
+                  } else {
+  
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
+            {
+              title: 'Quantity Per Inner Pack',
+              dataIndex: '',
+              key: '',
+              width: 70,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.quantityPerInnerPack) ? (sizeData?.quantityPerInnerPack) : "-"
+  
+                    return (
+                      formattedQty
+                    );
+                  } else {
+  
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
+            {
+              title: 'Retail Price',
+              dataIndex: '',
+              key: '',
+              width: 70,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) : "-"
+  
+                    return (
+                      formattedQty
+                    );
+                  } else {
+  
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
 
             {
               title: 'Quantity',
@@ -327,7 +508,7 @@ import {
               }
             },
             {
-              title: 'Unit Price',
+              title: 'Unit Cost',
               dataIndex: '',
               key: '',
               width: 70,
@@ -337,7 +518,34 @@ import {
                 console.log()
                 if (sizeData) {
                   if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.unitPrice) ? (sizeData?.unitPrice) : "-"
+                    const formattedQty = (sizeData?.unitCost) ? (sizeData?.unitCost) : "-"
+                    // const formattedQty = (sizeData?.amount)
+                    return (
+                      formattedQty
+                    );
+                  } else {
+  
+                    return (
+                      '-'
+                    );
+                  }
+                } else {
+                  return '-';
+                }
+              }
+            },
+            {
+              title: 'Cost',
+              dataIndex: '',
+              key: '',
+              width: 70,
+              className: "center",
+              render: (text, record) => {
+                const sizeData = record.sizeWiseData.find(item => item.size === version);
+                console.log()
+                if (sizeData) {
+                  if (sizeData.size !== null) {
+                    const formattedQty = (sizeData?.cost) ? (sizeData?.cost) : "-"
                     // const formattedQty = (sizeData?.amount)
                     return (
                       formattedQty
@@ -359,40 +567,50 @@ import {
   
       columns.push(
   
-        // {
-        //   title: "Total Quantity",
-        //   dataIndex: "",
-        //   align: "right",
-        //   width: 90,
-        //   render: (text, record) => {
-        //     let sum = 0;
-        //     record.sizeWiseData.forEach((r) => {
-        //       // Convert to number before summing
-        //       sum += parseFloat(r.quantity) || 0;
-        //     });
-        //     return sum;
-        //   },
-        // },
-       
         {
-          // title: "Address",
-          title: <div style={{textAlign:"center"}}>Buyer Address</div>,
-
+          title: "Total Quantity",
+          dataIndex: "",
+          // align: "right",
+          width: 90,
+          render: (text, record) => {
+            let sum = 0;
+            const unit = record.sizeWiseData[0].unit
+            record.sizeWiseData.forEach((r) => {
+              // Convert to number before summing
+              sum += parseFloat(r.quantity) || 0;
+            });
+            return `${sum} ${unit}`;
+          },
+        },
+        
+        {
+          title: "Short Description",
+          dataIndex: "shortDescription",
+          width: 130,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         
+  
+        },
+       
+       {
+          title: "Consignee",
           dataIndex: "buyerAddress",
-          width: 150,
-         sorter: (a, b) => a.buyerAddress.localeCompare(b.buyerAddress),
-         sortDirections: ["ascend", "descend"],
-         ...getColumnSearchProps('buyerAddress'),
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
           render: (text) => (
             <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}...` : "-"}
+              {text ? `${text.substring(0, 15)}...` : "-"}
             </Tooltip>
           ),
+         
+  
         },
         {
-          // title: "Address",
           title: <div style={{textAlign:"center"}}>Delivery Address</div>,
-
+  
           dataIndex: "shipToAdd",
           width: 150,
          sorter: (a, b) => a.shipToAdd.localeCompare(b.shipToAdd),
@@ -403,6 +621,32 @@ import {
               {text ? `${text.substring(0, 20)}...` : "-"}
             </Tooltip>
           ),
+        },
+
+        {
+          title: "Incoterm",
+          dataIndex: "incoterm",
+          width: 90,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 13)}...` : "-"}
+            </Tooltip>
+          ),
+        },
+        {
+          title: "Payment Terms",
+          dataIndex: "paymentTerms",
+          width: 120,
+          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 10)}...` : "-"}
+            </Tooltip>
+          ),
+  
         },
         {
           title: "Action",
@@ -458,190 +702,190 @@ import {
       );
     };
 
-    const exportExcel = () => {
-      const excel = new Excel();
+    // const exportExcel = () => {
+    //   const excel = new Excel();
   
-      const currentDate = new Date();
-      const formattedDate = currentDate.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+    //   const currentDate = new Date();
+    //   const formattedDate = currentDate.toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
   
-            let rowIndex = 1;
-            const excelColumnsWH: any[] = [];
-            excelColumnsWH.push(
-              { 
-                title: "#", 
-                // dataIndex: "sno", 
-                width:50,
-                render: (text, object, index) => { 
-                  if(index == orderData.length) { 
-                    return null;
-                  } else { 
-                    return rowIndex++; 
-                  } 
-                }
-              },
-              {
-                title: "Buyer PO",
-                dataIndex: "buyerPo",
-                width: 150,
-                render: (text) => text ? text : "-",
+    //         let rowIndex = 1;
+    //         const excelColumnsWH: any[] = [];
+    //         excelColumnsWH.push(
+    //           { 
+    //             title: "#", 
+    //             // dataIndex: "sno", 
+    //             width:50,
+    //             render: (text, object, index) => { 
+    //               if(index == orderData.length) { 
+    //                 return null;
+    //               } else { 
+    //                 return rowIndex++; 
+    //               } 
+    //             }
+    //           },
+    //           {
+    //             title: "Buyer PO",
+    //             dataIndex: "buyerPo",
+    //             width: 150,
+    //             render: (text) => text ? text : "-",
 
              
-              },
-              {
-                title: "PO Date",
-                dataIndex: "poDate",
-                width: 90,
-               render: (text) => text ? text : "-",
+    //           },
+    //           {
+    //             title: "PO Date",
+    //             dataIndex: "poDate",
+    //             width: 90,
+    //            render: (text) => text ? text : "-",
         
              
-              },
-              {
-                title: "Style",
-                dataIndex: "style",
-                width: 90,
-                render: (text) => text ? text : "-",
+    //           },
+    //           {
+    //             title: "Style",
+    //             dataIndex: "style",
+    //             width: 90,
+    //             render: (text) => text ? text : "-",
 
               
                 
         
-              },
-              {
-                title: "Color",
-                dataIndex: "color",
-                width: 150,
-                render: (text) => text ? text : "-",
+    //           },
+    //           {
+    //             title: "Color",
+    //             dataIndex: "color",
+    //             width: 150,
+    //             render: (text) => text ? text : "-",
        
         
-              },
+    //           },
         
-              {
-                title: "Delivery Date",
-                dataIndex: "deliveryDate",
-                width: 130,
-                render: (text) => text ? text : "-",
+    //           {
+    //             title: "Delivery Date",
+    //             dataIndex: "deliveryDate",
+    //             width: 130,
+    //             render: (text) => text ? text : "-",
             
         
-              },
+    //           },
               
-            );
-            const sizeHeaders = new Set<string>();
-            orderData?.forEach((rec) =>
-            rec.sizeWiseData?.forEach((version) => {
-              sizeHeaders.add("" + version.size);
-            })
-          );
+    //         );
+    //         const sizeHeaders = new Set<string>();
+    //         orderData?.forEach((rec) =>
+    //         rec.sizeWiseData?.forEach((version) => {
+    //           sizeHeaders.add("" + version.size);
+    //         })
+    //       );
            
   
-          sizeHeaders?.forEach(version => {
-            excelColumnsWH.push({
-              title: version,
-              dataIndex: version,
-              key: version,
-              width: 70,
-              align: 'center',
-              children: [
+    //       sizeHeaders?.forEach(version => {
+    //         excelColumnsWH.push({
+    //           title: version,
+    //           dataIndex: version,
+    //           key: version,
+    //           width: 70,
+    //           align: 'center',
+    //           children: [
     
-                {
-                  title: 'Quantity',
-                  dataIndex: '',
-                  key: '',
-                  width: 130,
-                  className: "center",
-                  render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                      if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.quantity) ? (sizeData?.quantity) : "-"
+    //             {
+    //               title: 'Quantity',
+    //               dataIndex: '',
+    //               key: '',
+    //               width: 130,
+    //               className: "center",
+    //               render: (text, record) => {
+    //                 const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //                 console.log()
+    //                 if (sizeData) {
+    //                   if (sizeData.size !== null) {
+    //                     const formattedQty = (sizeData?.quantity) ? (sizeData?.quantity) : "-"
       
-                        return (
-                          formattedQty
-                        );
-                      } else {
+    //                     return (
+    //                       formattedQty
+    //                     );
+    //                   } else {
       
-                        return (
-                          '-'
-                        );
-                      }
-                    } else {
-                      return '-';
-                    }
-                  }
-                },
-                {
-                  title: 'Unit Price',
-                  dataIndex: '',
-                  key: '',
-                  width: 130,
-                  className: "center",
-                  render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                      if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.unitPrice) ? (sizeData?.unitPrice) : "-"
-                        // const formattedQty = (sizeData?.amount)
-                        return (
-                          formattedQty
-                        );
-                      } else {
+    //                     return (
+    //                       '-'
+    //                     );
+    //                   }
+    //                 } else {
+    //                   return '-';
+    //                 }
+    //               }
+    //             },
+    //             {
+    //               title: 'Unit Price',
+    //               dataIndex: '',
+    //               key: '',
+    //               width: 130,
+    //               className: "center",
+    //               render: (text, record) => {
+    //                 const sizeData = record.sizeWiseData.find(item => item.size === version);
+    //                 console.log()
+    //                 if (sizeData) {
+    //                   if (sizeData.size !== null) {
+    //                     const formattedQty = (sizeData?.unitPrice) ? (sizeData?.unitPrice) : "-"
+    //                     // const formattedQty = (sizeData?.amount)
+    //                     return (
+    //                       formattedQty
+    //                     );
+    //                   } else {
       
-                        return (
-                          '-'
-                        );
-                      }
-                    } else {
-                      return '-';
-                    }
-                  }
-                },
-              ]
-            });
-        })
-        excelColumnsWH.push(
-          // {
-          //   title: "Total Quantity",
-          //   dataIndex: "",
-          //   align: "right",
-          //   width: 90,
-          //   render: (text, record) => {
-          //     let sum = 0;
-          //     record.sizeWiseData.forEach((r) => {
-          //       // Convert to number before summing
-          //       sum += parseFloat(r.quantity) || 0;
-          //     });
-          //     return sum;
-          //   },
-          // },
+    //                     return (
+    //                       '-'
+    //                     );
+    //                   }
+    //                 } else {
+    //                   return '-';
+    //                 }
+    //               }
+    //             },
+    //           ]
+    //         });
+    //     })
+    //     excelColumnsWH.push(
+    //       // {
+    //       //   title: "Total Quantity",
+    //       //   dataIndex: "",
+    //       //   align: "right",
+    //       //   width: 90,
+    //       //   render: (text, record) => {
+    //       //     let sum = 0;
+    //       //     record.sizeWiseData.forEach((r) => {
+    //       //       // Convert to number before summing
+    //       //       sum += parseFloat(r.quantity) || 0;
+    //       //     });
+    //       //     return sum;
+    //       //   },
+    //       // },
         
-          {
-            title: "Buyer Address",
-            dataIndex: "buyerAddress",
-            width: 400,
-            render: (text) => text ? text : "-",
-          },
-          {
-            title: "Delivery Address",
-            dataIndex: "shipToAdd",
-            width: 400,
-            render: (text) => text ? text : "-",
-          },
+    //       {
+    //         title: "Buyer Address",
+    //         dataIndex: "buyerAddress",
+    //         width: 400,
+    //         render: (text) => text ? text : "-",
+    //       },
+    //       {
+    //         title: "Delivery Address",
+    //         dataIndex: "shipToAdd",
+    //         width: 400,
+    //         render: (text) => text ? text : "-",
+    //       },
         
-        );
+    //     );
   
          
       
-              excel
-                .addSheet(`Order Info (${formattedDate})`)
-                .addColumns(excelColumnsWH)
-                .addDataSource(filterData, { str2num: false });
+    //           excel
+    //             .addSheet(`Order Info (${formattedDate})`)
+    //             .addColumns(excelColumnsWH)
+    //             .addDataSource(filterData, { str2num: false });
   
        
-          excel.saveAs(`Order Info ${formattedDate}.xlsx`);
+    //       excel.saveAs(`Order Info ${formattedDate}.xlsx`);
   
   
    
-    }
+    // }
   
   
     return (
@@ -651,7 +895,7 @@ import {
           <Button
             type="default"
             style={{ color: "green" }}
-            onClick={exportExcel}
+            // onClick={exportExcel}
             icon={<FileExcelFilled />}
           >
             Download Excel
@@ -679,15 +923,15 @@ import {
                   >
                      {poNumber.map((inc: any) => {
                       return (
-                        <Option key={inc.buyer_po} value={inc.buyer_po}>
-                          {inc.buyer_po}
+                        <Option key={inc.po_number} value={inc.po_number}>
+                          {inc.po_number}
                         </Option>
                       );
                     })}
                   </Select>
                 </Form.Item>
               </Col>
-              <Col
+              {/* <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
@@ -697,8 +941,8 @@ import {
                <Form.Item label="Style" name="style"  >
                   <Input placeholder="Enter Style " allowClear />
                 </Form.Item>
-              </Col>
-              <Col
+              </Col> */}
+              {/* <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
@@ -708,8 +952,8 @@ import {
                <Form.Item label="Color" name="color"  >
                   <Input placeholder="Enter Color "  allowClear />
                 </Form.Item>
-              </Col>
-              <Col
+              </Col> */}
+              {/* <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
@@ -719,7 +963,7 @@ import {
                <Form.Item label="Delivery Date" name="deliveryDate"  >
                   <RangePicker style={{width:180}}   />
                 </Form.Item>
-              </Col>
+              </Col> */}
               {/* <Row> */}
               <Col
                 xs={{ span: 24 }}
@@ -738,7 +982,7 @@ import {
                     type="primary"
                     onClick={getorderData}
                   >
-                    SEARCH
+                    Search
                   </Button>
                 
                 </Form.Item>

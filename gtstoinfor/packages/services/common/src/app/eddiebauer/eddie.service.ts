@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import { CoLineRequest,CommonResponseModel, EddieSizeWiseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarCoLinereqModels, SanmarColorModel, SanmarCompareModel, SanmarDestinationModel, SanmarOrderFilter, SanmarSizeModel, SanmarSizeWiseModel, StatusEnum, eddieOrderDataModel, sanmarOrderDataModel } from "@project-management-system/shared-models";
+import { CoLineRequest,CommonResponseModel, EddieOrderFilter, EddieSizeWiseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarCoLinereqModels, SanmarColorModel, SanmarCompareModel, SanmarDestinationModel, SanmarOrderFilter, SanmarSizeModel, SanmarSizeWiseModel, StatusEnum, eddieOrderDataModel, sanmarOrderDataModel } from "@project-management-system/shared-models";
 import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -8,6 +8,8 @@ import { EddieOrdersRepository } from "./repositories/eddie-orders.repo";
 import { EddieOrdersEntity } from "./entities/eddie-orders.entity";
 import { EddiePdfInfoEntity } from "./entities/eddie-pdf.entity";
 import { EddiePdfRepo } from "./repositories/eddie-pdf.repo";
+import { EddieCOLineEntity } from "./entities/eddie-co-line.entity";
+import { EddieCOLineRepository } from "./repositories/eddie-co-line.repository";
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 const moment = require('moment');
@@ -22,6 +24,7 @@ export class EddieService {
     private dataSource: DataSource,
     private EddieOrdersRepo: EddieOrdersRepository,
     private pdfRepo: EddiePdfRepo,
+    private eddieCoLineRepo:EddieCOLineRepository
    
 
   ) { }
@@ -121,7 +124,7 @@ export class EddieService {
     }
   }
 
-  async getorderacceptanceData(req?: SanmarOrderFilter): Promise<CommonResponseModel> {
+  async getorderacceptanceData(req?: EddieOrderFilter): Promise<CommonResponseModel> {
     console.log(req, "servvv")
     try {
       const details = await this.EddieOrdersRepo.getorderacceptanceData(req);
@@ -251,6 +254,55 @@ export class EddieService {
     }
   }
 
+
+  async coLineCreationReq(req: any): Promise<CommonResponseModel> {
+    try {
+      // console.log(req,'req')
+      if (req.itemNo == undefined || null) {
+        return new CommonResponseModel(false, 0, 'Please enter Item No')
+      };
+      // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
+      const records = await this.EddieOrdersRepo.find({ where: { poNumber: req.poNumber} });
+      const empty = [];
+
+      //console.log(rec,'reccccccccc')
+      const entity = new EddieCOLineEntity()
+      entity.buyer = req.buyer
+      entity.poNumber = req.poNumber;
+      // entity.style = req.style;
+      entity.itemNo = req?.itemNo;
+      entity.status = 'Open';
+      // entity.deliveryDate = req.deliveryDate;
+      entity.createdUser = 'admin';
+      empty.push(entity)
+
+      // console.log(empty,'emptyyyyy')
+      const save = await this.eddieCoLineRepo.save(empty);
+
+
+
+      if (save) {
+        const update = await this.EddieOrdersRepo.update(
+          { poNumber: req.poNumber}, // Conditions for updating
+          { status: StatusEnum.INPROGRESS }
+        );
+        return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
+      } else {
+        return new CommonResponseModel(false, 0, 'CO-Line request failed')
+      }
+    } catch (err) {
+      //  console.log(err,',,,,,,,,,,,,,,,')
+      return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
+    }
+  }
+
+  // async getSanmarCoLineData(req?: SanmarOrderFilter): Promise<CommonResponseModel> {
+  //   const data = await this.eddieCoLineRepo.getSanmarCoLineData(req)
+  //   if (data.length > 0)
+  //     return new CommonResponseModel(true, 1, 'data retrived', data)
+  //   else
+  //     return new CommonResponseModel(false, 0, 'No data found');
+  // }
 
   
 }
