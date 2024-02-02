@@ -85,4 +85,13 @@ export class EddieController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/EddieBot')
+    async EddieBot(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.EddieBot();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 }
