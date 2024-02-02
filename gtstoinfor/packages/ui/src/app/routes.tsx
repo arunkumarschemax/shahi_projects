@@ -179,7 +179,7 @@ export const AppRoutes = () => {
                     <Route path='bom-view' element={<BomView />} />
                     <Route path='bom-pdf-info-detail-view' element={<BomPdfInfoDetailView />} />
                     <Route path='bom-creation' key='/bom-creation' element={<BomCreation />} />
-                    <Route path='joker-tag' key='/joker-tag' element={<JokerTagPrint/>}/>
+                    <Route path='joker-tag' key='/joker-tag' element={<JokerTagPrint info={[]}/>}/>
                     <Route path='trim-grid' element={<TrimsGrid/>} />
                     <Route path='trim-List' element={<TrimList/>} />
                     <Route path='washcare-label' element={<WasCarelabel />}/>
