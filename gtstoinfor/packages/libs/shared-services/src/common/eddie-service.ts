@@ -27,6 +27,9 @@ export class EddieService extends CommonAxiosService {
     async getPdfFileInfo(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.eddierOrdersController + "/getPdfFileInfo", req)
     }
+    async coLineCreationReq(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.eddierOrdersController + "/coLineCreationReq", req)
+    }
 
     
     async getorderDataForInfo(req: any): Promise<CommonResponseModel> {
