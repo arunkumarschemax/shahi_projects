@@ -220,7 +220,7 @@ export const AddressView = () => {
           .saveAs('Address.xlsx');
       }
     return(
-        <Card title='Address' extra={<Link to='/sanmar/masters/address/address-excel-upload' >
+        <Card title='Address' extra={<Link to='/eddiebauer/masters/address/address-excel-upload' >
         <span style={{color:'white'}} ><Button type={'primary'} >New</Button> </span>
         </Link>}>
             <Row justify={'end'}>

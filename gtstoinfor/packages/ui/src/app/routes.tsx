@@ -276,6 +276,8 @@ export const AppRoutes = () => {
                    <Route path="eddiebauer-co-line-view" element={<EddieColineView/>}/>
                    <Route path='pdf-info-detail-view' element={<EddiePdfTable />} />
                    <Route path='eddiebauer-order-data-detail-view' element={<EddieOrdersDetailView />} />
+                   <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
+                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
 
 
 

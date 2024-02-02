@@ -10,15 +10,17 @@ import { EddiePdfInfoEntity } from "./entities/eddie-pdf.entity";
 import { EddiePdfRepo } from "./repositories/eddie-pdf.repo";
 import { EddieCOLineRepository } from "./repositories/eddie-co-line.repository";
 import { EddieCOLineEntity } from "./entities/eddie-co-line.entity";
+import { AddressEntity } from "../Entites@Shahi/address/address-entity";
+import { AddressRepository } from "../Entites@Shahi/address/address.repo";
 
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-        EddieOrdersEntity,EddiePdfInfoEntity,EddieCOLineEntity
+        EddieOrdersEntity,EddiePdfInfoEntity,EddieCOLineEntity,AddressEntity
     ])],
   controllers: [EddieController],
-  providers: [EddieService,ApplicationExceptionHandler,EddieOrdersRepository,EddiePdfRepo,EddieCOLineRepository]
+  providers: [EddieService,ApplicationExceptionHandler,EddieOrdersRepository,EddiePdfRepo,EddieCOLineRepository,AddressRepository]
 })
 export class EddieModule { }

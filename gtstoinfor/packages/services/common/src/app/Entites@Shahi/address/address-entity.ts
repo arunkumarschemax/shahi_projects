@@ -13,14 +13,6 @@ export class AddressEntity {
     destination: string
 
 
-    // @Column("text",{
-    //     name:'bill_to',
-    //     nullable:false,
-
-    // })
-    // billTo: string
-
-
     @Column("text", {
         name: 'buyer_address',
         nullable: false,
@@ -47,13 +39,6 @@ export class AddressEntity {
 
     })
     deliveryCode: number
-
-    // @Column("text",{
-    //     name:'ship_to',
-    //     nullable:false,
-
-    // })
-    // shipTo: string
 
 
     @Column({
