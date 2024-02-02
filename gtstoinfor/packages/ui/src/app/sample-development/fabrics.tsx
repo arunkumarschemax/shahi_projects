@@ -122,8 +122,8 @@ const FabricsForm = (props:FabricsFormProps) => {
   const getM3FabricStyleCodes = (buyer,request) => {
     console.log(request)
      req= new m3FabricFiltersReq() 
-     req.buyerId=buyer
      if(request != undefined){
+     req.buyerId=request.buyerId
      req.fabricTypeId=request.fabricTypeId
      req.content=request.content
      req.epiConstruction=request.epiConstruction
@@ -139,9 +139,7 @@ const FabricsForm = (props:FabricsFormProps) => {
      req.weightValue=request.weightValue
      req.widthValue=request.widthValue
      }
-
-    
-    m3ItemsService.getM3FabricsByBuyer(req).then(res => {
+      m3ItemsService.getM3FabricsByBuyer(req).then(res => {
         if(res.status){
           setFabricCodeData(res.data)
         }
@@ -149,13 +147,13 @@ const FabricsForm = (props:FabricsFormProps) => {
           setFabricCodeData([])
             message.info('No M3 Fabric Data Found')
         }
-    })
+      })
 }
   let req
   const handleFabricsfilterData = (data) => {
     console.log(data)
     if(data != undefined){
-        req = new m3FabricFiltersReq(sourcingForm.getFieldValue('buyer'),data[0].fabricTypeId,data[0].weaveId,data[0].weightUnit,data[0].epiConstruction,data[0].ppiConstruction,data[0].yarnType,data[0].widthUnit,data[0].finishId,data[0].shrinkage,data[0].hsnCode,data[0].content,data[0].weightValue,data[0].widthValue,data[0].m3Code)
+        req = new m3FabricFiltersReq(data[0].buyerId,data[0].fabricTypeId,data[0].weaveId,data[0].weightUnit,data[0].epiConstruction,data[0].ppiConstruction,data[0].yarnType,data[0].widthUnit,data[0].finishId,data[0].shrinkage,data[0].hsnCode,data[0].content,data[0].weightValue,data[0].widthValue,data[0].m3Code)
         console.log(req)
         getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),req)
     }else{
@@ -1000,7 +998,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             onCancel={handleCancel}
             footer={[]}
         >
-          <M3FabricFilters formValues={handleFabricsfilterData} close={handleCancel} buyerId={props.buyerId}/>
+          <M3FabricFilters formValues={handleFabricsfilterData} close={handleCancel} buyerId={props.buyerId} screenType={"SampleDev"}/>
         </Modal>
     </div>
   );

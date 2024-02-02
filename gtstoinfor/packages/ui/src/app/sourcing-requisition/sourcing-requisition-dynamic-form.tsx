@@ -1958,7 +1958,7 @@ console.log(req)
                                                 </Form.Item>
                                             </Card>
                </>:modal == 'fabricFilter' ?<>
-               <M3FabricFilters formValues={handleFabricsfilterData} close={closeModel} buyerId={sourcingForm.getFieldValue("buyer")} />
+               <M3FabricFilters formValues={handleFabricsfilterData} close={closeModel} buyerId={sourcingForm.getFieldValue("buyer")} screenType={"Indent"} />
                </>:modal == 'trimFilter' ?<>
                <M3TrimsReqFile trimCategoryId={trimForm.getFieldValue('trimCategory')} close={closeModel} formValues={handleTrimFilterData} buyerId={sourcingForm.getFieldValue("buyer")} trimType={trimForm.getFieldValue("trimCategory")}/>
                </>:
