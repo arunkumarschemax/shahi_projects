@@ -209,7 +209,7 @@ const M3Items = ({props}) => {
       ppiChange(props.ppiConstruction)
     }
     if(props.yarnType != null){
-      yarnSelect(`"`+props.yarnType+`"`)
+      yarnSelect(props.yarnType)
     }
     // if(props.yarnType != undefined){
     //   yarnSelect(props.yarnType)
@@ -311,6 +311,8 @@ const M3Items = ({props}) => {
   const onFinish = (val) => {
     console.log("val");
     console.log(val);
+    console.log(yarnType);
+
 
     const contentIsNull = formData.some((item) => item.content === '');
   if (contentIsNull) {
@@ -335,8 +337,8 @@ const M3Items = ({props}) => {
       return;
     }
   }
-     const req = new M3FabricsDTO(0,val.buyerId,val.itemCode,val.fabricTypeId,val.weaveId,weightChange,weightUom,epiData,ppiData,val.yarnType,widthChange,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code,val.hsnCode,yarn,formData,undefined,undefined,undefined,undefined,val.remarks)
-    //  console.log(req,"LLLLLLLLLLLLLLLLLLLL");
+     const req = new M3FabricsDTO(0,val.buyerId,val.itemCode,val.fabricTypeId,val.weaveId,weightChange,weightUom,epiData,ppiData,(yarnType).replace(/""/g, '"'),widthChange,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code,val.hsnCode,yarn,formData,undefined,undefined,undefined,undefined,val.remarks)
+     console.log(req,"LLLLLLLLLLLLLLLLLLLL");
     service.createM3Items(req).then((res) => {
       if (res.status) {
         console.log(props);
@@ -354,7 +356,13 @@ const M3Items = ({props}) => {
             }
           })
         }
-        
+        else{
+          AlertMessages.getSuccessMessage(res.internalMessage);
+          setTimeout(() => {
+            message.success("Submitted successfully")
+            navigate('/m3-items-view')
+          }, 500)
+        }
       }else{
         AlertMessages.getWarningMessage(res.internalMessage);
       }}).catch((err) => {
