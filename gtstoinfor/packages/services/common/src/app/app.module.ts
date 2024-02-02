@@ -11,6 +11,7 @@ import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.mod
 import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
 import { EddieModule } from './eddiebauer/eddie.module';
+import { AddressModule } from './Entites@Shahi/address/address-module';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { EddieModule } from './eddiebauer/eddie.module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,EddieModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,EddieModule,AddressModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,

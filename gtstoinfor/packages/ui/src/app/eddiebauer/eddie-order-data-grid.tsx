@@ -204,7 +204,7 @@ import {
     });
   
     const setMoreData = (record) => {
-      navigate("/sanmar/sanmar-order-data-detail-view", {
+      navigate("/eddiebauer/eddiebauer-order-data-detail-view", {
         state: { data: record },
       });
     };

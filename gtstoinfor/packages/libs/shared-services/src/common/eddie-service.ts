@@ -31,6 +31,11 @@ export class EddieService extends CommonAxiosService {
         return this.axiosPostCall(this.eddierOrdersController + "/coLineCreationReq", req)
     }
 
+    
+    async getorderDataForInfo(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.eddierOrdersController + "/getorderDataForInfo", req)
+    }
+
 
     async getCoLineData(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.eddierOrdersController + "/getCoLineData", req)

@@ -59,13 +59,14 @@ export class AddressService {
                 return new CommonResponseModel(false, 0, 'Something went wrong in data deletion')
             }
             for (const data of convertedData) {
-                if (data.destination != null) {
+                if (data.Destination != null) {
+
                     const addObj = new AddressEntity()
-                    addObj.buyerAddress = data.buyer_address
-                    addObj.deliveryAddress = data.delivery_address
-                    addObj.buyerCode = data.buyer_code
-                    addObj.deliveryCode = data.delivery_code
-                    addObj.destination = data.destination
+                    addObj.buyerAddress = data.BuyerAddress
+                    addObj.deliveryAddress = data.DeliveryAddress
+                    addObj.buyerCode = data.BuyerCode
+                    addObj.deliveryCode = data.DeliveryCode
+                    addObj.destination = data.Destination
                     const addSave = await transactionManager.getRepository(AddressEntity).save(addObj)
                     if (addSave) {
                         flag.add(true)

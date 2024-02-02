@@ -12,22 +12,31 @@ export class EddieDto {
     poDate: string
 
     @ApiProperty()
-    incoterm: string
+    deliveryDate: string
 
     @ApiProperty()
-    shipToAdd: string
+    exFactoryDate: string
 
-    @ApiProperty()
-    manufacture: string
+    // @ApiProperty()
+    // incoterm: string
+
+    // @ApiProperty()
+    // shipToAdd: string
+
+    // @ApiProperty()
+    // manufacture: string
 
     @ApiProperty()
     buyerAddress: string
 
     @ApiProperty()
-    paymentTerms: string
+    deliveryAddress: string
 
-    @ApiProperty()
-    shipmentMode: string
+    // @ApiProperty()
+    // paymentTerms: string
+
+    // @ApiProperty()
+    // shipmentMode: string
 
 
     @ApiProperty()
@@ -36,8 +45,11 @@ export class EddieDto {
     @ApiProperty()
     buyerItem: string
 
+    // @ApiProperty()
+    // shortDescription: string
+
     @ApiProperty()
-    shortDescription: string
+    color: string
 
     @ApiProperty()
     currency: string
