@@ -274,6 +274,7 @@ export const TrimReqCodeView = () => {
         message.success(res.internalMessage,2);
       }else{
         message.warning(res.internalMessage,2);
+        setData([])
       }
     }).catch((err) => {
       setData([]);

@@ -124,8 +124,8 @@ export class FabricReqCodeService {
         LEFT JOIN m3_fabric_content m3fc ON m3fc.m3_items_id = m3i.m3_items_id
         LEFT JOIN content c ON c.content_id = m3fc.content
         LEFT JOIN uom u ON u.id = m3i.weight_unit
-        LEFT JOIN uom uom ON uom.id = m3i.weight_unit
-        WHERE frc.status = 'completed'`
+        LEFT JOIN uom uom ON uom.id = m3i.width_unit
+        WHERE 1=1`
         if (req?.buyerId) {
           query = query + ` AND frc.buyer_id=${req.buyerId}`
         }

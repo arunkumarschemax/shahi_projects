@@ -476,8 +476,8 @@ export function M3TrimItemsForm({props}) {
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="hsnCode" label="Hsn Code" >
-                    <Input placeholder="Enter Hsn Code"/>
+                <Form.Item name="hsnCode" label="HSN Code" >
+                    <Input placeholder="Enter HSN Code"/>
                 </Form.Item>
             </Col>
             {mapData[0]?.structure === true ? (
