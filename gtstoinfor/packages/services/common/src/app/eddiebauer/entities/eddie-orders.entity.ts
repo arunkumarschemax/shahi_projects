@@ -18,37 +18,53 @@ export class EddieOrdersEntity {
     })
     poDate: string
 
-    @Column('text', {
-        name: "incoterm"
+    
+    @Column("varchar", {
+        name: "delivery_date",
     })
-    incoterm: string
+    deliveryDate: string
 
-    @Column('text', {
-        name: "ship_to_add"
+    @Column('varchar', {
+        name: "ex_factory_date"
     })
-    shipToAdd: string
+    exFactoryDate: string
+
+    // @Column('text', {
+    //     name: "incoterm"
+    // })
+    // incoterm: string
+
+    // @Column('text', {
+    //     name: "ship_to_add"
+    // })
+    // shipToAdd: string
 
 
-    @Column('text', {
-        name: "manufacture"
-    })
-    manufacture: string
+    // @Column('text', {
+    //     name: "manufacture"
+    // })
+    // manufacture: string
 
     @Column('text', {
         name: "buyer_address"
     })
     buyerAddress: string
 
-
-    @Column("varchar", {
-        name: "payment_terms",
+    @Column('text', {
+        name: "delivery_address"
     })
-    paymentTerms: string
+    deliveryAddress: string
 
-    @Column('varchar', {
-        name: "shipment_mode"
-    })
-    shipmentMode: string
+
+    // @Column("varchar", {
+    //     name: "payment_terms",
+    // })
+    // paymentTerms: string
+
+    // @Column('varchar', {
+    //     name: "shipment_mode"
+    // })
+    // shipmentMode: string
 
 
 
@@ -64,11 +80,16 @@ export class EddieOrdersEntity {
     buyerItem: string
 
 
+    // @Column('varchar', {
+    //     name: "short_description",
+
+    // })
+    // shortDescription: string
     @Column('varchar', {
-        name: "short_description",
+        name: "color",
 
     })
-    shortDescription: string
+    color: string
 
     @Column('varchar', {
         name: "currency",

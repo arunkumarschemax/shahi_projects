@@ -42,23 +42,29 @@ export default function EddiePdfTable() {
                     <tr className='ta-b'>
                         <th className='ta-b'>PO NUMBER</th> 
                         <th className='ta-b'>PO DATE</th>
-                        <th className='ta-b'>INCOTERM</th>
+                        <th className='ta-b'>DELIVERY DATE</th> 
+                        <th className='ta-b'>EX FACTORY DATE</th>
+                        {/* <th className='ta-b'>INCOTERM</th>
                         <th className='ta-b'>SHIPMENT MODE</th>
                         <th className='ta-b'>PAYMENT TERMS</th>
                         <th className='ta-b'>SHIP TO ADDRESS</th>
-                        <th className='ta-b'>MANUFACTURE</th>
-                        <th className='ta-b'>CONSIGNEE</th>
+                        <th className='ta-b'>MANUFACTURE</th> */}
+                        <th className='ta-b'>BUYER ADDRESS</th>
+                        <th className='ta-b'>DELIVERY ADDRESS</th>
                     </tr>
                     
                     <tr className='ta-b'>
                         <td className='ta-b'>{parsedData?.poNumber}</td>
                         <td className='ta-b'>{parsedData?.poDate}</td>
-                        <td className='ta-b'>{parsedData?.incoterm}</td>
+                        <td className='ta-b'>{parsedData?.deliveryDate}</td>
+                        <td className='ta-b'>{parsedData?.exFactoryDate}</td>
+                        {/* <td className='ta-b'>{parsedData?.incoterm}</td>
                         <td className='ta-b'>{parsedData?.shipmentMode}</td>
                         <td className='ta-b'>{parsedData?.paymentTerms}</td>
                         <td className='ta-b'>{parsedData?.shipToAdd}</td>
-                        <td className='ta-b'>{parsedData?.manufacture}</td>
+                        <td className='ta-b'>{parsedData?.manufacture}</td> */}
                         <td className='ta-b'>{parsedData?.buyerAddress}</td>
+                        <td className='ta-b'>{parsedData?.deliveryAddress}</td>
 
                     </tr>
                     {parsedData?.EddiepoItemDetails?.map((i) => {
@@ -67,7 +73,8 @@ export default function EddiePdfTable() {
                                 <th></th>
                                 <th className='ta-b'>PO LINE</th>
                                 <th className='ta-b'>BUYER ITEM</th>
-                                <th className='ta-b'>SHORT DESCRIPTION</th>
+                                {/* <th className='ta-b'>SHORT DESCRIPTION</th> */}
+                                <th className='ta-b'>COLOR</th>
                                 <th className='ta-b'>CURRENCY</th>
 
                             </tr>
@@ -75,7 +82,8 @@ export default function EddiePdfTable() {
                                 <td></td>
                                 <td className='ta-b'>{i.poLine}</td>
                                 <td className='ta-b'>{i.buyerItem}</td>
-                                <td className='ta-b'>{i.shortDescription}</td>
+                                {/* <td className='ta-b'>{i.shortDescription}</td> */}
+                                <td className='ta-b'>{i.color}</td>
                                 <td className='ta-b'>{i.currency}</td>
 
                             </tr>

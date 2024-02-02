@@ -44,23 +44,29 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     <tr className='ta-b'>
                         <th className='ta-b'>PO NUMBER</th> 
                         <th className='ta-b'>PO DATE</th>
-                        <th className='ta-b'>INCOTERM</th>
+                        <th className='ta-b'>DELIVERY DATE</th>
+                        <th className='ta-b'>EX FACTORY DATE</th>
+                        {/* <th className='ta-b'>INCOTERM</th>
                         <th className='ta-b'>SHIPMENT MODE</th>
                         <th className='ta-b'>PAYMENT TERMS</th>
                         <th className='ta-b'>SHIP TO ADDRESS</th>
-                        <th className='ta-b'>MANUFACTURE</th>
-                        <th className='ta-b'>CONSIGNEE</th>
+                        <th className='ta-b'>MANUFACTURE</th> */}
+                        <th className='ta-b'>BUYER ADDRESS</th>
+                        <th className='ta-b'>DELIVERY ADDRESS</th>
                     </tr>
                     
                     <tr className='ta-b'>
                         <td className='ta-b'>{pdfData?.poNumber}</td>
                         <td className='ta-b'>{pdfData?.poDate}</td>
-                        <td className='ta-b'>{pdfData?.incoterm}</td>
+                        <td className='ta-b'>{pdfData?.deliveryDate}</td>
+                        <td className='ta-b'>{pdfData?.exFactoryDate}</td>
+                        {/* <td className='ta-b'>{pdfData?.incoterm}</td>
                         <td className='ta-b'>{pdfData?.shipmentMode}</td>
                         <td className='ta-b'>{pdfData?.paymentTerms}</td>
                         <td className='ta-b'>{pdfData?.shipToAdd}</td>
-                        <td className='ta-b'>{pdfData?.manufacture}</td>
+                        <td className='ta-b'>{pdfData?.manufacture}</td> */}
                         <td className='ta-b'>{pdfData?.buyerAddress}</td>
+                        <td className='ta-b'>{pdfData?.deliveryAddress}</td>
 
                     </tr>
                     {pdfData?.EddiepoItemDetails?.map((i) => {
@@ -69,7 +75,8 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                 <th></th>
                                 <th className='ta-b'>PO LINE</th>
                                 <th className='ta-b'>BUYER ITEM</th>
-                                <th className='ta-b'>SHORT DESCRIPTION</th>
+                                {/* <th className='ta-b'>SHORT DESCRIPTION</th> */}
+                                <th className='ta-b'>COLOR</th>
                                 <th className='ta-b'>CURRENCY</th>
 
                             </tr>
@@ -77,7 +84,8 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                 <td></td>
                                 <td className='ta-b'>{i.poLine}</td>
                                 <td className='ta-b'>{i.buyerItem}</td>
-                                <td className='ta-b'>{i.shortDescription}</td>
+                                {/* <td className='ta-b'>{i.shortDescription}</td> */}
+                                <td className='ta-b'>{i.color}</td>
                                 <td className='ta-b'>{i.currency}</td>
 
                             </tr>
