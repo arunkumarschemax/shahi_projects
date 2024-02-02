@@ -10,7 +10,8 @@ const {Option} = Select
 export interface M3FabricFilterProps{
  formValues:any
  close: (value: any) => void;
- buyerId?: number
+ buyerId?: number;
+ screenType:string
 }
 const M3FabricFilters = (props:M3FabricFilterProps) => {
   const [form] = Form.useForm();
@@ -193,15 +194,17 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
   };
 
   const onFinish = (val) => {
-    const req = new m3FabricFiltersReq(undefined,val.fabricTypeId,val.weaveId,val.weightUomId,val.epiConstruction?val.epiConstruction:undefined,val.ppiConstruction?val.ppiConstruction:undefined,yarnType,val.widthUomId,val.finishId,val.shrinkage?val.shrinkage:undefined,val.hsnCode?val.hsnCode:undefined,val.content,val.weightValue?val.weightValue:undefined,val.widthValue?val.widthValue:undefined,val.m3Code?val.m3Code:undefined)
+    const req = new m3FabricFiltersReq(val.buyerId,val.fabricTypeId,val.weaveId,val.weightUomId,val.epiConstruction?val.epiConstruction:undefined,val.ppiConstruction?val.ppiConstruction:undefined,yarnType,val.widthUomId,val.finishId,val.shrinkage?val.shrinkage:undefined,val.hsnCode?val.hsnCode:undefined,val.content,val.weightValue?val.weightValue:undefined,val.widthValue?val.widthValue:undefined,val.m3Code?val.m3Code:undefined)
       props.formValues([req]);
       props.close(null);
      };
 
 
   const clearData = () => {
+    let buyId = form.getFieldValue("buyerId")
     setYarnType('')
     form.resetFields();
+    form.setFieldsValue({buyerId:buyId});
     console.log(yarnType)
     props.formValues(undefined)
     // props.close(null)
