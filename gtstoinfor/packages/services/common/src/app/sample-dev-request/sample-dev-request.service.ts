@@ -1537,7 +1537,7 @@ export class SampleRequestService {
             LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id
               LEFT JOIN style s ON s.style_id=sr.style_id left join brands bs on bs.brand_id=sr.brand_id 
               left join rack_position rp on rp.position_Id =sr.location_id  
-              LEFT JOIN purchae_order_items poi ON poi.sample_item_id =sb.sample_item_id WHERE (required_quantity-received_quantity-IF((st.quantity-st.allocatd_quantity-st.transfered_quantity) IS NULL, 0, (st.quantity-st.allocatd_quantity-st.transfered_quantity))-IF(po_quantity IS NOT NULL,po_quantity,0)) >0`
+              LEFT JOIN purchae_order_items poi ON poi.sample_item_id =sb.sample_item_id AND poi.item_type LIKE '%${req.tab}%' WHERE (required_quantity-received_quantity-IF((st.quantity-st.allocatd_quantity-st.transfered_quantity) IS NULL, 0, (st.quantity-st.allocatd_quantity-st.transfered_quantity))-IF(po_quantity IS NOT NULL,po_quantity,0)) >0`
         if(req.extRefNo){
           query1 = query1+ ` and b.external_ref_number = '${req.extRefNo}'`
         }
