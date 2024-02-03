@@ -325,4 +325,37 @@ export class EddieService {
       throw err
     }
   }
+
+  async getordersDataInfo(req?: EddieOrderFilter): Promise<CommonResponseModel> {
+    try {
+      const details = await this.EddieOrdersRepo.getordersDataInfo(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'No data Found');
+      }
+      const sizeDateMap = new Map<string, eddieOrderDataModel>();
+      for (const rec of details) {
+        if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
+          sizeDateMap.set(
+            `${rec.po_line},${rec.po_number}`,
+            new eddieOrderDataModel(rec.id, rec.po_number,rec.incoterm,rec.color, rec.delivery_date, rec.delivery_address, rec.buyer_address,rec.manufacture,rec.shipment_mode,rec.payment_terms,rec.po_line,rec.buyer_item,rec.short_description,rec.currency,rec.retail_price,rec.status,rec.ex_factory_date,[])
+          );
+
+        }
+        const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number}`).sizeWiseData;
+        const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.retailPrice === rec.retail_price);
+        if (!existingSizeData && rec.size !== null) {
+          sizeWiseData.push(new EddieSizeWiseModel(rec.size_code,rec.size,rec.upc,rec.sku,rec.quantity_per_inner_pack,rec.retail_price,rec.quantity,rec.unit_cost,rec.cost,rec.unit));
+        }
+      }
+      const dataModelArray: eddieOrderDataModel[] = Array.from(sizeDateMap.values());
+
+      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+
+
+
+    } catch (e) {
+      console.log(e, "errrrrrrrrr")
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
 }

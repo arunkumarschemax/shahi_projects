@@ -23,9 +23,6 @@ export class EddieOrdersRepository extends Repository<EddieOrdersEntity> {
             if(req.poNumber !== undefined){
                 query.andWhere(`o.po_number ='${req.poNumber}'`) 
             }
-            if(req.style !== undefined){
-                query.andWhere(`o.po_style LIKE :po_style`, { po_style: `%${req.style}%` });
-            }
             if (req.color !== undefined) {
                 query.andWhere(`o.color LIKE :color`, { color: `%${req.color}%` });
             }
@@ -43,6 +40,23 @@ export class EddieOrdersRepository extends Repository<EddieOrdersEntity> {
         
         return await query.getRawMany()
     }
-  
+    
+    async getordersDataInfo(req?:EddieOrderFilter): Promise<any[]> {
+        console.log(req)
+        const query = this.createQueryBuilder('o')
+            .select(`*`)
+            if(req.poNumber !== undefined){
+                query.andWhere(`o.po_number ='${req.poNumber}'`) 
+            }
+            if (req.color !== undefined) {
+                query.andWhere(`o.color LIKE :color`, { color: `%${req.color}%` });
+            }
+            if (req.deliveryDateStartDate !== undefined) {
+                query.andWhere(`STR_TO_DATE(o.delivery_date, '%Y-%m-%d') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+            }
+          
+        return await query.getRawMany()
+    }
+
     
 }

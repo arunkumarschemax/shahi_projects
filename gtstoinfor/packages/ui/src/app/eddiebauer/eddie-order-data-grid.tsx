@@ -79,9 +79,9 @@ import {
       // if (form.getFieldValue("style") !== undefined) {
       //   req.style = form.getFieldValue("style");
       // }
-      // if (form.getFieldValue("color") !== undefined) {
-      //   req.color = form.getFieldValue("color");
-      // }
+      if (form.getFieldValue("color") !== undefined) {
+        req.color = form.getFieldValue("color");
+      }
 
 
   
@@ -250,7 +250,7 @@ import {
         //  render: (text) => text ? text : "-",
   
         //   // fixed: "left",
-        //   // ...getColumnSearchProps('poNumber')
+        //   //C
         // },
         {
           title: "PO Line",
@@ -259,6 +259,8 @@ import {
           sorter: (a, b) => a.poLine.localeCompare(b.poLine),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
+          ...getColumnSearchProps('poLine')
+
          
   
         },
@@ -269,6 +271,7 @@ import {
            sorter: (a, b) => a.buyerItem.localeCompare(b.buyerItem),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
+          ...getColumnSearchProps('buyerItem')
          
   
         },
@@ -287,9 +290,11 @@ import {
           title: "Ex Factory Date",
           dataIndex: "exFactoryDate",
           width: 110,
-          // sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
-          // sortDirections: ["ascend", "descend"],
+          sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
+          sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
+          ...getColumnSearchProps('exFactoryDate')
+
          
   
         },
@@ -297,8 +302,8 @@ import {
           title: "Color",
           dataIndex: "color",
           width: 90,
-          // sorter: (a, b) => a.color.localeCompare(b.color),
-          // sortDirections: ["ascend", "descend"],
+          sorter: (a, b) => a.color.localeCompare(b.color),
+          sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
          
   
@@ -561,8 +566,8 @@ import {
         title: <div style={{textAlign:"center"}}>Buyer Address</div>,
           dataIndex: "buyerAddress",
           width: 150,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
+          sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          sortDirections: ["ascend", "descend"],
           render: (text) => (
             <Tooltip title={text || "-"}>
               {text ? `${text.substring(0, 20)}...` : "-"}
@@ -578,7 +583,7 @@ import {
           width: 150,
          sorter: (a, b) => a.shipToAdd.localeCompare(b.shipToAdd),
          sortDirections: ["ascend", "descend"],
-         ...getColumnSearchProps('shipToAdd'),
+        //  ...getColumnSearchProps('shipToAdd'),
           render: (text) => (
             <Tooltip title={text || "-"}>
               {text ? `${text.substring(0, 20)}...` : "-"}
@@ -1068,7 +1073,7 @@ import {
                   <Input placeholder="Enter Style " allowClear />
                 </Form.Item>
               </Col> */}
-              {/* <Col
+              <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
@@ -1078,7 +1083,7 @@ import {
                <Form.Item label="Color" name="color"  >
                   <Input placeholder="Enter Color "  allowClear />
                 </Form.Item>
-              </Col> */}
+              </Col>
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}

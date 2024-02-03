@@ -140,4 +140,16 @@ export class EddieController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getordersDataInfo')
+    @ApiBody({ type: EddieOrderFilter })
+    async getordersDataInfo(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            // console.log(req,"con")
+            return await this.Service.getordersDataInfo(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+ 
 }

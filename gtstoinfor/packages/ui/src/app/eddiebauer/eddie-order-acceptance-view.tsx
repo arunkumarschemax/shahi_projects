@@ -69,9 +69,9 @@ import {
         req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
       }
       
-      if (form.getFieldValue("style") !== undefined) {
-        req.style = form.getFieldValue("style");
-      }
+      // if (form.getFieldValue("style") !== undefined) {
+      //   req.style = form.getFieldValue("style");
+      // }
       if (form.getFieldValue("color") !== undefined) {
         req.color = form.getFieldValue("color");
       }
@@ -932,7 +932,7 @@ import {
                     <Input placeholder="Enter Style " allowClear />
                   </Form.Item>
                 </Col> */}
-                {/* <Col
+                <Col
                   xs={{ span: 24 }}
                   sm={{ span: 24 }}
                   md={{ span: 4 }}
@@ -942,7 +942,7 @@ import {
                  <Form.Item label="Color" name="color"  >
                     <Input placeholder="Enter Color "  allowClear />
                   </Form.Item>
-                </Col> */}
+                </Col>
                 <Col
                   xs={{ span: 24 }}
                   sm={{ span: 24 }}
