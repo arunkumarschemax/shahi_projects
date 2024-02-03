@@ -173,11 +173,12 @@ console.log(location?.state?.data)
         >
         <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }} >
         <Descriptions.Item label='PO Number' labelStyle={{ color: 'black', fontWeight: 'bold'}} >{location?.state?.data?.poNumber ? location?.state?.data?.poNumber : "--"}</Descriptions.Item>
-        <Descriptions.Item label='PO Date' labelStyle={{ color: 'black', fontWeight: 'bold'}} >{location?.state?.data?. poDate ? location?.state?.data?. poDate : "--"}</Descriptions.Item>
+         <Descriptions.Item label='PO Line' labelStyle={{ color: 'black', fontWeight: 'bold'}} >{location?.state?.data?. poLine ? location?.state?.data?. poLine : "--"}</Descriptions.Item> 
         <Descriptions.Item label='Buyer Item' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.buyerItem ? location?.state?.data?.buyerItem :"--"}</Descriptions.Item>
-        {/* <Descriptions.Item label='Color' labelStyle={{ color: 'black', fontWeight: 'bold',marginLeft:150 }} >{location?.state?.data?.color ? location?.state?.data?.color :"--"}</Descriptions.Item> */}
-        <Descriptions.Item label= 'Consignee' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.buyerAddress ? location?.state?.data?.buyerAddress :"--"}</Descriptions.Item>
-        {/* <Descriptions.Item label='Delivery Date' labelStyle={{ color: 'black', fontWeight: 'bold',marginLeft:150 }} >{location?.state?.data?.deliveryDate ? location?.state?.data?.deliveryDate :"--"}</Descriptions.Item> */}
+        <Descriptions.Item label='Color' labelStyle={{ color: 'black', fontWeight: 'bold'}} >{location?.state?.data?.color ? location?.state?.data?.color :"--"}</Descriptions.Item>
+        <Descriptions.Item label= 'Buyer Address' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.buyerAddress ? location?.state?.data?.buyerAddress :"--"}</Descriptions.Item>
+         <Descriptions.Item label='Delivery Date' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.deliveryDate ? location?.state?.data?.deliveryDate :"--"}</Descriptions.Item> 
+         <Descriptions.Item label='Ex Factory Date' labelStyle={{ color: 'black', fontWeight: 'bold'}} >{location?.state?.data?.exFactoryDate ? location?.state?.data?.exFactoryDate :"--"}</Descriptions.Item> 
         <Descriptions.Item label='Delivery Address' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipToAdd ? location?.state?.data?.shipToAdd :"--"}</Descriptions.Item>
 
 
