@@ -238,7 +238,7 @@ export function M3TrimsReqFile(props:M3Trimprps) {
 
   const onFinish = (value) => {
     console.log(value)
-    const req= new M3TrimFilterReq(undefined,undefined,undefined,value.categoryId,value.contentId,value.finishId,value.holeId,value.hsnCode?value.hsnCode:undefined,value.m3Code?value.m3Code:undefined,value.typeId)
+    const req= new M3TrimFilterReq(value.buyerId,undefined,undefined,value.categoryId,value.contentId,value.finishId,value.holeId,value.hsnCode?value.hsnCode:undefined,value.m3Code?value.m3Code:undefined,value.typeId)
     props.formValues([req])
     props.close(null)
   };
@@ -562,7 +562,7 @@ export function M3TrimsReqFile(props:M3Trimprps) {
         <Row>
             <Col span={24} style={{ textAlign: "right" }}>
                 <span style={{paddingRight:"10px"}}><Button type="primary" htmlType="submit" onClick={createReqCode}>Request</Button></span>
-                <span><Button type="primary" htmlType="submit">Submit</Button></span>
+                <span><Button type="primary" htmlType="submit">Search</Button></span>
                 <Button htmlType="button" style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
             </Col>
         </Row>
