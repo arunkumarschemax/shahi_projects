@@ -251,6 +251,8 @@ import { GrnItemsEntity } from "../../grn/entities/grn-items-entity";
 import { GrnEntity } from "../../grn/entities/grn-entity";
 import { SampleDevelopmentService } from "@project-management-system/shared-services";
 import { UploadFilesEntity } from "../entities/upload-files-entity";
+import { trimEntity } from "../../Trim Masters/trim/trim-entity";
+import { FabricType } from "../../fabric-types/fabric-type.entity";
 
 
 
@@ -277,10 +279,12 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .leftJoin(SamplingbomEntity, 'sb', 'sb.m3_item_id= srfi.fabric_code and sb.sample_request_id = srfi.sample_request_id and sb.colour_id = srfi.colour_id')
             // .leftJoin(RmCreationEntity, 'rm', ' rm.rm_item_id=srfi.fabric_code ')
             .leftJoin(M3ItemsEntity,'m3items','m3items.m3_items_Id  = srfi.fabric_code')
+            .leftJoin(FabricType,'ft','ft.fabric_type_id  = m3items.fabric_type')
             .leftJoin(StocksEntity,'st','st.m3_item=srfi.fabric_code and st.item_type = "fabric" and st.buyer_id=sr.buyer_id and grn_type = "INDENT"')
             .leftJoin(Colour,'c','c.colour_id=srfi.colour_id')
             .where(`srfi.sample_request_id = "${sampleId}"`)
             .groupBy(`srfi.fabric_info_id`)
+            .orderBy(`ft.fabric_type_name`,'ASC')
             .getRawMany();
             let respnse: any[] = []
             for(const rec of query)
@@ -306,11 +310,13 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .leftJoin(SampleRequest, 'sr', 'sr.sample_request_id= stri.sample_request_id ')
             .leftJoin(SamplingbomEntity, 'sb', 'sb.m3_item_id= stri.trim_code and sb.sample_request_id = stri.sample_request_id')
             .leftJoin(M3TrimsEntity, 'mt', 'mt.m3_trim_id=stri.trim_code ')
+            .leftJoin(trimEntity, 't', 't.trim_id=mt.trim_category_id ')
             .leftJoin(StocksEntity,'st','st.m3_item=stri.trim_code and sr.buyer_id=st.buyer_id and grn_type = "INDENT" and st.item_type = stri.trim_type')
             .leftJoin(GrnItemsEntity,'gi','gi.grn_item_id=st.grn_item_id')
             .leftJoin(GrnEntity,'g','g.grn_id=gi.grn_id and g.grn_type = "INDENT"')
             .where(`stri.sample_request_id = "${sampleId}"`)
             .groupBy(`st.buyer_id,stri.trim_info_id`)
+            .orderBy(`stri.trim_type,t.trim_category`,'ASC')
             .getRawMany()
             let respnse: any[] = []
             for(const recc of query)
