@@ -4,6 +4,20 @@ import { Button, Card, Descriptions } from "antd"
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
 
+export const getCssFromComponent = (fromDoc, toDoc) => {
+    Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
+      if (styleSheet.cssRules) {
+        // true for inline styles
+        const newStyleElement = toDoc.createElement("style");
+        Array.from(styleSheet.cssRules).forEach((cssRule: any) => {
+          newStyleElement.appendChild(toDoc.createTextNode(cssRule.cssText));
+        });
+        toDoc.head.appendChild(newStyleElement);
+      }
+    });
+  };
+
+
 export interface JokerTagPrintProps{
     info: any[]
 }
@@ -44,10 +58,47 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
 
     let grandTotal = 0
 
+    const handlePrint = () => {
+        const invoiceContent = document.getElementById("print");
+        if (invoiceContent) {
+            const devContent = invoiceContent.innerHTML;
+            const printWindow = window.open("", "PRINT", "height=900,width=1600");
+    
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <style>
+                            @page {
+                                size: legal;
+                                margin: 20;
+                            }
+                            body {
+                                margin: 0;
+                                transform: scale(1);
+                                transform-origin: top center;
+                                width:100%;
+                            }
+                            /* Additional styles for your content */
+                        </style>
+                    </head>
+                    <body>${devContent}</body>
+                </html>
+            `);
+    
+            getCssFromComponent(document, printWindow.document);
+    
+            printWindow.document.close();
+            setTimeout(function () {
+                printWindow.print();
+                printWindow.close();
+            }, 1000); // Add a delay to ensure all content is loaded
+        }
+    }
+
     return(
         <>
         <div id='print'>
-            <Card title={'Joker Tag'} extra={<span><Button>Print</Button></span>}>
+            <Card title={'Joker Tag'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
             <Descriptions >
                 <Descriptions.Item>{`Size wise details`}</Descriptions.Item>
             </Descriptions>
@@ -67,7 +118,7 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                     })
                 } */}
                  {
-                    bomInfo?.sizeWiseData.map(e => {
+                    bomInfo?.sizeWiseData?.map(e => {
                         grandTotal+= e.sizeQty
                         return(
                             <th>{e.sizeDescription}</th>
@@ -80,28 +131,28 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                 <td>{}</td>
                 <td>{bomInfo?.styleName}</td>
                 <td>{
-                    bomInfo?.bomInfo.map(e => {
+                    bomInfo?.bomInfo?.map((e,index) => {
+                        const len = bomInfo?.bomInfo?.length
                         return(
                             <>
-                            {e.imCode}/
+                            {`${e.imCode} ${index == len-1 ? '' : '/'}`}
+                            
                             </>
                         )
                     })
-                       
-                    
                     }</td>
                 <td>{}</td>
                 <td>{}</td>
                  {
-                    bomInfo?.sizeWiseData.map(e => {
+                    bomInfo?.sizeWiseData?.map(e => {
                         return(
-                            <th>{e.sizeQty}</th>
+                            <td>{e.sizeQty}</td>
                         )
                     })
                 }
                 <th>{grandTotal}</th>
             </tr>
-
+                                        
             </table>
             <br/>
             <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1}>
@@ -115,7 +166,7 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                 </tr>
                 
                     {
-                        bomInfo?.bomInfo.map(e => {
+                        bomInfo?.bomInfo?.map(e => {
                             return(
                                 <tr>
                                     <td>{}</td>
