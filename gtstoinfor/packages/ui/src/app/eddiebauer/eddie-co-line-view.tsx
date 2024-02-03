@@ -148,18 +148,27 @@ const EddieColineView = () => {
                 }
             },
             {
-                title: 'Rised User',
+                title: 'Raised User',
                 dataIndex: 'created_user',
                 render: (text, record) => {
                     return (record.created_user ? (record.created_user) : '-')
                 }
             },
             {
-                title: 'Rised Date',
+                title: 'Raised Date',
                 dataIndex: 'raised_date',
                 render: (text, record) => {
                     return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')) : '-')
                 }
+            },
+            {
+                title: 'CO Created Date',
+                dataIndex: 'updated_at',
+                render: (text, record) => {
+                    return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
+                },
+    
+    
             },
             {
                 title: 'Status',
@@ -441,10 +450,10 @@ const EddieColineView = () => {
                     
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                         <Form.Item>
-                            <Button htmlType="submit" icon={<SearchOutlined />} type="primary">SEARCH</Button>
+                            <Button htmlType="submit" icon={<SearchOutlined />} type="primary">Search</Button>
                             <Button htmlType='button' icon={<UndoOutlined />} type="primary" style={{ marginLeft: 10, marginTop: 8, position: "relative" }} onClick={resetHandler}
                             >
-                                RESET
+                                Reset
                             </Button>
                         </Form.Item>
                     </Col>

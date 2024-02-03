@@ -382,9 +382,9 @@ import {
   
         },
         {
-          title: "EX FACTORY DATE",
+          title: "Ex Factory Date",
           dataIndex: "exFactoryDate",
-          width: 90,
+          width: 130,
           // sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
           // sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
@@ -904,10 +904,10 @@ import {
                 lg={{ span: 4 }}
                 xl={{ span: 4 }}
               >
-                <Form.Item name="poNumber" label="Buyer Po number">
+                <Form.Item name="poNumber" label="PO Number">
                   <Select
                     showSearch
-                    placeholder="Select Buyer Po "
+                    placeholder="Select PO Number"
                     optionFilterProp="children"
                     allowClear
                   >
@@ -961,15 +961,16 @@ import {
                   md={{ span: 5 }}
                   lg={{ span: 5 }}
                   xl={{ span: 4 }}
+                  style={{marginTop:20,marginLeft:60}}
                 >
-                  <Form.Item style={{marginTop:20,marginLeft:60}}>
+                  <Form.Item >
                     <Button
                       htmlType="submit"
                       icon={<SearchOutlined />}
                       type="primary"
                       onClick={getorderacceptanceData}
                     >
-                      SEARCH
+                      Search
                     </Button>
                   
                   </Form.Item>
@@ -980,10 +981,11 @@ import {
                   md={{ span: 5 }}
                   lg={{ span: 5 }}
                   xl={{ span: 4 }}
+                  style={{ marginLeft: 80 }}
+
                 >
                   <Form.Item style={{marginTop:20}}>
                     <Button
-                      style={{ marginLeft: 120 }}
                       htmlType="submit"
                       type="primary"
                       onClick={onReset}
