@@ -8,6 +8,7 @@ import { StyleNumberReq } from "@project-management-system/shared-models";
 import AlertMessages from "../common/common-functions/alert-messages";
 import JokerTagPrint from "./trim-prints/joker-tag";
 import { stat } from "fs";
+import HangTag from "./trim-prints/hang-tag";
 import WasCarelabel from "./trim-prints/wash-care-label";
 
 
@@ -20,9 +21,11 @@ const [bomInfo,setBomInfo] = useState<any[]>([])
 const navigate = useNavigate()
 const [modalOpen,setModalOpen] = useState<boolean>(false)
 const [trimName,setTrimName] = useState<string>('')
+
 const componentsMapping = {
     "Joker Tag" : <JokerTagPrint info={bomInfo} />,
-    "Wash Care Label":<WasCarelabel />
+    "Hangtag":<HangTag info={bomInfo}/>,
+    "Wash Care Label":<WasCarelabel  />
 }
 
 useEffect(()=>{
