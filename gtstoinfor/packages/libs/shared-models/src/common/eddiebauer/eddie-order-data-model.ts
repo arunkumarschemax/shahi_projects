@@ -5,9 +5,9 @@ export class eddieOrderDataModel {
 
     id: number;
     poNumber: string;
-    poDate:string;
+    // poDate:string;
     incoterm:string;
-    style: string;
+    // style: string;
     color: string;
    
     deliveryDate: string;
@@ -30,9 +30,9 @@ export class eddieOrderDataModel {
     constructor(
         id: number,
         poNumber: string,
-        poDate:string,
+        // poDate:string,
         incoterm:string,
-        style: string,
+        // style: string,
         color: string,
       
         deliveryDate: string,
@@ -56,9 +56,9 @@ export class eddieOrderDataModel {
     ) {
         this.id = id
         this.poNumber = poNumber
-        this.poDate = poDate
+        // this.poDate = poDate
         this.incoterm=incoterm
-        this.style = style
+        // this.style = style
         this.color = color
       
         this.deliveryDate = deliveryDate

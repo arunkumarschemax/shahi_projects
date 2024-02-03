@@ -331,7 +331,7 @@ import {
           fixed: "left",
         },
         {
-          title: "Po Number",
+          title: "PO Number",
           dataIndex: "poNumber",
           width: 90,
          // sorter: (a, b) => a.custPo.localeCompare(b.custPo),
@@ -349,18 +349,18 @@ import {
           fixed: "left",
           // ...getColumnSearchProps('poNumber')
         },
-        {
-          title: "Po Date",
-          dataIndex: "poDate",
-          width: 90,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
+        // {
+        //   title: "Po Date",
+        //   dataIndex: "poDate",
+        //   width: 90,
+        //   // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+        //   // sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
          
   
-        },
+        // },
         {
-          title: "Po Line",
+          title: "PO Line",
           dataIndex: "poLine",
           width: 90,
           // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
@@ -437,16 +437,16 @@ import {
         // },
        
       
-        {
-          title: "Currency",
-          dataIndex: "currency",
-          width: 90,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
+        // {
+        //   title: "Currency",
+        //   dataIndex: "currency",
+        //   width: 90,
+        //   // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+        //   // sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
          
   
-        },
+        // },
       ];
   
       sizeHeaders?.forEach(version => {
@@ -713,14 +713,14 @@ import {
   
         // },
         {
-          title: "Consignee",
+          title: "Buyer Address",
           dataIndex: "buyerAddress",
-          width: 90,
+          width: 130,
           // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
           // sortDirections: ["ascend", "descend"],
           render: (text) => (
             <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 15)}...` : "-"}
+              {text ? `${text.substring(0, 25)}...` : "-"}
             </Tooltip>
           ),
          
@@ -728,21 +728,21 @@ import {
         },
        
         
-        // {
-        //   // title: "Address",
-        //   title: <div style={{textAlign:"center"}}>Delivery Address</div>,
+        {
+          // title: "Address",
+          title: <div style={{textAlign:"center"}}>Delivery Address</div>,
   
-        //   dataIndex: "shipToAdd",
-        //   width: 150,
-        //  sorter: (a, b) => a.shipToAdd.localeCompare(b.shipToAdd),
-        //  sortDirections: ["ascend", "descend"],
-        //  ...getColumnSearchProps('shipToAdd'),
-        //   render: (text) => (
-        //     <Tooltip title={text || "-"}>
-        //       {text ? `${text.substring(0, 20)}...` : "-"}
-        //     </Tooltip>
-        //   ),
-        // },
+          dataIndex: "shipToAdd",
+          width: 130,
+         sorter: (a, b) => a.shipToAdd.localeCompare(b.shipToAdd),
+         sortDirections: ["ascend", "descend"],
+         ...getColumnSearchProps('shipToAdd'),
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 25)}...` : "-"}
+            </Tooltip>
+          ),
+        },
         // {
         //   title: "Incoterm",
         //   dataIndex: "incoterm",
