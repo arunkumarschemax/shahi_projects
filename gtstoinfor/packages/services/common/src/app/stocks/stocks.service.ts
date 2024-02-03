@@ -167,16 +167,17 @@ export class StocksService {
             LEFT JOIN grn g ON g.grn_type=stocks.grn_type
             LEFT JOIN  uom u  ON u.id =stocks.uom_id
             LEFT JOIN rack_position r ON r.position_Id=stocks.location_id WHERE 1=1
-            GROUP BY  grn_item_id`
+            `
             if(req?.extRefNo){
                 data = data+` and b.external_ref_number = '${req.extRefNo}'`
             }
             if (req?.itemType) {
-                data= data+` and stocks.item_type LIKE '%${req.itemType}%'`
+                data= data+` and stocks.item_type ='${req.itemType}'`
             }
             if (req?.location !== undefined) {
                 data +=` and location_id ='${req.location}'`
             }
+            data +=`GROUP BY  grn_item_id`
             const details = await this.stocksRepository.query(data)
 
             if (details.length > 0) {

@@ -1012,7 +1012,7 @@ const renderButtons = (): ReactNode => {
             <Form.Item
               name="type"
               label="Type"
-              rules={[{ required: true, message: "" }]}
+              rules={[{ required: true, message: "Type is required" }]}
             >
               <Select
                 allowClear
@@ -1035,7 +1035,7 @@ const renderButtons = (): ReactNode => {
           <Form.Item
               name="subType"
               label="Sub Type"
-              rules={[{ required: true, message: "" }]}
+              rules={[{ required: true, message: "SubType is required" }]}
             >
               <Select
                 allowClear

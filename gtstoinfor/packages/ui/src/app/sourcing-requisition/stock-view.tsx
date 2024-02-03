@@ -148,12 +148,12 @@ export const StockView = () => {
     m3StyleDto.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     stockService.getAllStocks(m3StyleDto).then(res => {
       // console.log(res, "???????????????????????????????????");
-      if (res) {
+      if (res.status) {
         setData(res);
         AlertMessages.getSuccessMessage("Stock retrived successfully")
       } else {
         setData([]);
-        AlertMessages.getErrorMessage("Something went wrong. ")
+        AlertMessages.getErrorMessage("Data not found")
       }
     }).catch(err => {
       console.log(err);
