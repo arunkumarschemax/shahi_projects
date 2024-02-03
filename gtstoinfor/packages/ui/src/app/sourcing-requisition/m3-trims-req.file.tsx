@@ -29,6 +29,12 @@ export function M3TrimsReqFile(props:M3Trimprps) {
   const trimService = new TrimService();
   const paramsService = new TrimParamsMappingService()
   const m3TrimService = new M3TrimsService()
+  const structureService = new StructureService();
+  const qtyService = new QualitysService();
+  const thickService = new ThicknessService();
+  const varietyService = new VarietyService();
+  const uomService = new UomService();
+  const colorService = new ColourService();
 
   const [categoryData, setCategoryData] = useState<any[]>([]);
   const [contentData, setContentData] = useState<any[]>([]);
@@ -38,6 +44,12 @@ export function M3TrimsReqFile(props:M3Trimprps) {
   const [trimData, setTrimData] = useState<any[]>([]);
   const [mapData, setMapData] = useState<any[]>([])
   const [mapDataId, setMapDataId] = useState<any[]>([])
+  const [structureData, setStructureData] = useState<any[]>([]);
+  const [qtyData, setQtyData] = useState<any[]>([]);
+  const [thickData, setThickData] = useState<any[]>([]);
+  const [varietyData, setVarietyData] = useState<any[]>([]);
+  const [uomData, setUomData] = useState<any[]>([]);
+  const [colorData, setColorData] = useState<any[]>([]);
 
   const trimReqCodeService = new FabricRequestCodeService()
   useEffect(() =>{
@@ -80,6 +92,25 @@ export function M3TrimsReqFile(props:M3Trimprps) {
     if (mapData[0]?.hole === true) {
       getHoles();
     }
+    if (mapData[0]?.structure === true) {
+      getStructures();
+    }
+    if (mapData[0]?.quality === true) {
+      getQuality();
+    }
+    if (mapData[0]?.thickness === true) {
+      getThicks();
+    }
+    if (mapData[0]?.variety === true) {
+      getVarieties();
+    }
+    if (mapData[0]?.uom === true) {
+      getUom();
+    }
+    if (mapData[0]?.color === true) {
+      getColors();
+    }
+
   }, [mapData]);
 
   const getCategories = () => {
@@ -122,13 +153,80 @@ export function M3TrimsReqFile(props:M3Trimprps) {
     });
   };
 
+  const getStructures = () => {
+    structureService.getAllStructureInfo().then((res) => {
+      if (res.status) {
+        setStructureData(res.data);
+      }
+    });
+  };
+
+  const getQuality = () => {
+    qtyService.getAllQualitys().then((res) => {
+      if (res.status) {
+        setQtyData(res.data);
+      }
+    });
+  };
+
+  const getThicks = () => {
+    thickService.getAllThicknessInfo().then((res) => {
+      if (res.status) {
+        setThickData(res.data);
+      }
+    });
+  };
+
+  const getVarieties = () => {
+    varietyService.getAllVariety().then((res) => {
+      if (res.status) {
+        setVarietyData(res.data);
+      }
+    });
+  };
+
+  const getUom = () => {
+    uomService.getAllUoms().then((res) => {
+      if (res.status) {
+        setUomData(res.data);
+      }
+    });
+  };
+
+  const getColors = () => {
+    colorService.getAllColour().then((res) => {
+      if (res.status) {
+        setColorData(res.data);
+      }
+    });
+  };
+
+
+
+
   const createReqCode = () => {
-      const req = new TrimRequestCodeDto(form.getFieldValue('trimType'),form.getFieldValue('trimCategoryId'),form.getFieldValue('buyerId'),form.getFieldValue('typeId'),form.getFieldValue('holeId'),
-      form.getFieldValue('finishId'),form.getFieldValue('contentId'),form.getFieldValue('categoryId'),form.getFieldValue('m3Code'),form.getFieldValue('hsnCode'));
+    const fieldValues = form.getFieldsValue();
+  const excludedFields = ['buyerId', 'trimCategoryId', 'trimType'];
+  let hasAtLeastOneValue = false;
+
+  for (const key in fieldValues) {
+    if (!excludedFields.includes(key) && fieldValues[key]) {
+      hasAtLeastOneValue = true;
+      break;
+    }
+  }
+
+  if (!hasAtLeastOneValue) {
+    message.error("At least one field is required for the request", 2);
+    return;
+  }
+
+      const req = new TrimRequestCodeDto(form.getFieldValue('trimType'),form.getFieldValue('logo'),form.getFieldValue('part'),form.getFieldValue('trimCategoryId'),form.getFieldValue('buyerId'),form.getFieldValue('varietyId'),form.getFieldValue('uomId'),form.getFieldValue('typeId'),form.getFieldValue('thicknessId'),form.getFieldValue('structureId'),form.getFieldValue('qualityId'),form.getFieldValue('holeId'),
+      form.getFieldValue('finishId'),form.getFieldValue('contentId'),form.getFieldValue('categoryId'),form.getFieldValue('colorId'),form.getFieldValue('m3Code'),form.getFieldValue('hsnCode'));
       trimReqCodeService.createTrimRequestedCode(req).then((res) => {
         if (res.status) {
           message.success(res.internalMessage, 2);
-          navigate("/sample-development/trim-request-code-view");
+          // navigate("/sample-development/trim-request-code-view");
         } else {
           message.error(res.internalMessage, 2);
         }
@@ -171,10 +269,34 @@ export function M3TrimsReqFile(props:M3Trimprps) {
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="hsnCode" label="Hsn Code" >
-                    <Input placeholder="Enter Hsn Code"/>
+                <Form.Item name="hsnCode" label="HSN Code" >
+                    <Input placeholder="Enter HSN Code"/>
                 </Form.Item>
             </Col>
+            {mapData[0]?.structure === true ? (
+              <>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                  <Form.Item
+                    name="structureId"
+                    label="Structure"
+                    rules={[{ required: true, message: "Structure is required" }]}
+                  >
+                    <Select
+                      showSearch
+                      allowClear
+                      optionFilterProp="children"
+                      placeholder="Select Structure"
+                    >
+                      {structureData.map((e) => (
+                        <Option key={e.structureId} value={e.structureId}>
+                          {e.structure}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+              </>
+            ) : (<></>)}
             {mapData[0]?.category == true ? (
             <>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
@@ -238,9 +360,7 @@ export function M3TrimsReqFile(props:M3Trimprps) {
                         })}
                     </Select>
                 </Form.Item>
-               
             </Col>
-           
             </>
             ) : (<></>)}
 
@@ -291,14 +411,170 @@ export function M3TrimsReqFile(props:M3Trimprps) {
             </Col>
             </>
             ) : (<></>)}
+            {mapData[0]?.quality === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="qualityId" label="Quality" rules={[{ required: false, message: "Quality is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children" 
+                    placeholder="Select Quality"
+                    >
+                        {qtyData.map((e) => {
+                            return (
+                            <Option key={e.qualityId} value={e.qualityId}>
+                                {e.qualityName}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.thickness === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="thicknessId" label="Thickness" rules={[{ required: false, message: "Thickness is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children" 
+                    placeholder="Select Thickness"
+                    >
+                        {thickData.map((e) => {
+                            return (
+                            <Option key={e.thicknessId} value={e.thicknessId}>
+                                {e.thickness}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.variety === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="varietyId" label="Variety" rules={[{ required: false, message: "Variety is required" }]}>
+                    <Select 
+                    showSearch 
+                    allowClear 
+                    optionFilterProp="children" 
+                    placeholder="Select Variety"
+                    >
+                        {varietyData.map((e) => {
+                            return (
+                            <Option key={e.varietyId} value={e.varietyId}>
+                                {e.variety}-{e.varietyCode}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.uom === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="uomId" label="UOM" rules={[{ required: false, message: "UOM is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select UOM"
+                    >
+                        {uomData.map((e) => {
+                            return (
+                            <Option key={e.uomId} value={e.uomId}>
+                                {e.uom}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.color === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="colorId" label="Color" rules={[{ required: false, message: "Color is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Color"
+                    >
+                        {colorData.map((e) => {
+                            return (
+                            <Option key={e.colourId} value={e.colourId}>
+                                {e.colour}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+                        {mapData[0]?.logo === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="logo" label="Logo" rules={[{ required: false, message: "Logo is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Logo"
+                    >
+                        {Object.values(LogoEnum).map((val) => {
+                            return <Option key={val} value={val}>{LogoEnumDisplay.find((e)=>e.name == val)?.displayVal}</Option>
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.part === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="part" label="Part" rules={[{ required: false, message: "Part is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Part"
+                    >
+                        {Object.values(PartEnum).map((val) => {
+                            return <Option key={val} value={val}>{PartEnumDisplay.find((e)=>e.name == val)?.displayVal}</Option>
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
            
         </Row>
         <Row>
-            <Col span={24} style={{ textAlign: "right" }}>
-                <span style={{paddingRight:"10px"}}><Button type="primary" htmlType="submit" onClick={createReqCode}>Request</Button></span>
-                <span><Button type="primary" htmlType="submit">Search</Button></span>
-                <Button htmlType="button" style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
-            </Col>
+          <Col span={12} style={{ textAlign: "left" }}>
+            <Button type="primary" htmlType="submit" onClick={createReqCode}>
+              Request
+            </Button>
+          </Col>
+          <Col span={12} style={{ textAlign: "right" }}>
+            <span style={{ paddingRight: "10px" }}>
+              <Button type="primary" htmlType="submit">
+                Search
+              </Button>
+            </span>
+            <Button htmlType="button" style={{ margin: "0 14px" }} onClick={onReset}>
+              Reset
+            </Button>
+          </Col>
         </Row>
       </Form>
     </Card>

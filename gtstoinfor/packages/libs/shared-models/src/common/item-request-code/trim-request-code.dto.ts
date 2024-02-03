@@ -4,21 +4,21 @@ import { ItemTypeEnum, LogoEnum, PartEnum } from '@project-management-system/sha
 import { ItemType } from 'rc-menu/lib/interface';
 export class TrimRequestCodeDto {
     trimType: ItemTypeEnum;
-    // logo: LogoEnum;
-    // part: PartEnum;
+    logo: LogoEnum;
+    part: PartEnum;
     trimCategoryId:number
     buyerId:number
-    // varietyId:number
-    // uomId:number
+    varietyId:number
+    uomId:number
     typeId:number
-    // thicknessId:number
-    // structureId:number
-    // qualityId:number
+    thicknessId:number
+    structureId:number
+    qualityId:number
     holeId:number
     finishId:number
     contentId:number
     categoryId:number
-    // colorId:number
+    colorId:number
     m3Code?: string
     hsnCode?: string
     isActive: boolean
@@ -28,21 +28,21 @@ export class TrimRequestCodeDto {
 
     constructor(
         trimType: ItemTypeEnum,
-        // logo: LogoEnum,
-        // part: PartEnum,
+        part: PartEnum,
+        logo: LogoEnum,
         trimCategoryId:number,
         buyerId:number,
-        // varietyId:number,
-        // uomId:number,
+        varietyId:number,
+        uomId:number,
         typeId:number,
-        // thicknessId:number,
-        // structureId:number,
-        // qualityId:number,
+        thicknessId:number,
+        structureId:number,
+        qualityId:number,
         holeId:number,
         finishId:number,
         contentId:number,
         categoryId:number,
-        // colorId:number,
+        colorId:number,
         m3Code: string,
         hsnCode: string,
         isActive?: boolean,
@@ -64,6 +64,14 @@ export class TrimRequestCodeDto {
         this.createdUser = createdUser
         this.updatedUser = updatedUser
         this.versionFlag = versionFlag
+        this.logo = logo
+        this.part = part
+        this.varietyId = varietyId
+        this.colorId = colorId
+        this.structureId = structureId
+        this.uomId = uomId
+        this.thicknessId = thicknessId
+        this.qualityId = qualityId
     }
 }
 
