@@ -12,7 +12,7 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
 
     const bomData = useLocation()
     const bomservice = new BomService()
-    const [bomInfo,setBomInfo] = useState<any[]>([])
+    const [bomInfo,setBomInfo] = useState<any>([])
 
     // useEffect(() => {
     //     if(bomData.state.info){
@@ -26,17 +26,21 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
 
     // },[bomData.state])
 
-    // useEffect(() => {
-    //     if(props.info){
-    //         const req = new StyleNumberReq(props.info[0]?.styleNumber)
-    //         bomservice.getBomInfoAgainstStyle(req).then(res =>{
-    //             if(res.status){
-    //                 setBomInfo(res.data)
-    //             }
-    //         })
-    //     }
+    useEffect(() => {
+        if(props.info){
+            // const req = new StyleNumberReq(props.info[0]?.styleNumber)
+            // bomservice.getBomInfoAgainstStyle(req).then(res =>{
+            //     if(res.status){
+            //         setBomInfo(res.data)
+            //     }
+            // })
+            console.log(props.info)
+            setBomInfo(props.info)
+        }
 
-    // },[props.info])
+    },[props.info])
+
+    console.log(bomInfo.bomInfo,'----------')
 
     let grandTotal = 0
 
@@ -54,8 +58,16 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                 <th>IM#</th>
                 <th>REGION</th>
                 <th>SEASON</th>
-                {
+                {/* {
                     bomData?.state.info?.sizeWiseData.map(e => {
+                        grandTotal+= e.sizeQty
+                        return(
+                            <th>{e.sizeDescription}</th>
+                        )
+                    })
+                } */}
+                 {
+                    bomInfo?.sizeWiseData.map(e => {
                         grandTotal+= e.sizeQty
                         return(
                             <th>{e.sizeDescription}</th>
@@ -63,6 +75,31 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                     })
                 }
                 <th>Grand Total</th>
+            </tr>
+            <tr>
+                <td>{}</td>
+                <td>{bomInfo?.styleName}</td>
+                <td>{
+                    bomInfo?.bomInfo.map(e => {
+                        return(
+                            <>
+                            {e.imCode}/
+                            </>
+                        )
+                    })
+                       
+                    
+                    }</td>
+                <td>{}</td>
+                <td>{}</td>
+                 {
+                    bomInfo?.sizeWiseData.map(e => {
+                        return(
+                            <th>{e.sizeQty}</th>
+                        )
+                    })
+                }
+                <th>{grandTotal}</th>
             </tr>
 
             </table>
@@ -76,6 +113,21 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                     <th>TRIM</th>
                     <th>DESCRIPTION </th>
                 </tr>
+                
+                    {
+                        bomInfo?.bomInfo.map(e => {
+                            return(
+                                <tr>
+                                    <td>{}</td>
+                                    <td>{bomInfo?.styleName}</td>
+                                    <td>{}</td>
+                                    <td>{e.imCode}</td>
+                                    <td>{e.itemName}</td>
+                                    <td>{e.description}</td>
+                                </tr>
+                            )
+                        })
+                    }
             </table>
             </Card>
         </div>
