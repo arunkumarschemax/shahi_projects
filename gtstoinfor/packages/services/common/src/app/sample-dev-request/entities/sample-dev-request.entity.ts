@@ -57,13 +57,13 @@ export class SampleRequest {
   @JoinColumn({ name: 'buyer_id' })
   buyer: Buyers;
 
-  @ManyToOne(() => SampleTypes, sampleTypes => sampleTypes.sampleReq, { nullable: false })
-  @JoinColumn({ name: 'sample_type_id' })
-  sampleType: SampleTypes;
+  // @ManyToOne(() => SampleTypes, sampleTypes => sampleTypes.sampleReq, { nullable: true })
+  // @JoinColumn({ name: 'sample_type_id' })
+  // sampleType: SampleTypes;
 
-  @ManyToOne(() => SampleSubTypes, sampleSubType => sampleSubType.sampleReq, { nullable: false })
-  @JoinColumn({ name: 'sample_sub_type_id' })
-  sampleSubType: SampleSubTypes;
+  // @ManyToOne(() => SampleSubTypes, sampleSubType => sampleSubType.sampleReq, { nullable: true })
+  // @JoinColumn({ name: 'sample_sub_type_id' })
+  // sampleSubType: SampleSubTypes;
 
   @ManyToOne(() => Style, style => style.sampleReq, { nullable: false })
   @JoinColumn({ name: 'style_id' })
@@ -111,11 +111,11 @@ export class SampleRequest {
   })
   extension: string;
 
-  @Column("int", {
-    nullable: true,
-    name: "sam_value"
+  @Column('decimal',{
+    name:'sam_value',
+    nullable:true,
   })
-  samValue: number;
+  samValue : number;
 
   @ManyToOne(() => EmplyeeDetails, employee => employee.sampleReq, { nullable: false })
   @JoinColumn({ name: 'dmm_id' })
@@ -130,6 +130,17 @@ export class SampleRequest {
     name: "product"
   })
   product: number;
+
+  @Column("int", {
+    nullable: true,
+    name: "sample_type_id"
+  })
+  sampleTypeId: number;
+  @Column("int", {
+    nullable: true,
+    name: "sample_sub_type_id"
+  })
+  sampleSubTypeId: number;
 
   // @Column("varchar", {
   //   nullable: true,

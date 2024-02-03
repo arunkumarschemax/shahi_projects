@@ -383,12 +383,7 @@ import { config } from "packages/libs/shared-services/config";
         responsive: ["sm"],
         render: (text, object, index) => (page - 1) * 10 + (index + 1),
       },
-      {
-      title: <div style={{ textAlign: 'center' }}>M3 Trim Code</div>,
-        align:'center',
-        dataIndex: "trim_code",
-        ...getColumnSearchProps("trim_code"),
-      },
+      
       {
         title: <div style={{ textAlign: 'center' }}>Trim Type</div>,
         dataIndex: "trimType",
@@ -399,6 +394,12 @@ import { config } from "packages/libs/shared-services/config";
           return EnumObj ? EnumObj.displayVal : text;
         },
       },
+      {
+        title: <div style={{ textAlign: 'center' }}>M3 Trim Code</div>,
+          align:'center',
+          dataIndex: "trim_code",
+          ...getColumnSearchProps("trim_code"),
+        },
       {
                 title: <div style={{ textAlign: 'center' }}>Required Quantity</div>,
         dataIndex: "totalRequirement",

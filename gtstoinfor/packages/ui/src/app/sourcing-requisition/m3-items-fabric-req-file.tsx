@@ -167,13 +167,12 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
   }
 
   const createReqCode = () => {
-    const requiredFields = [
-      'fabricTypeId', 'weaveId', 'weightId', 'weightUomId', 'epiConstruction',
-      'ppiConstruction', 'yarnType', 'widthValue', 'widthUomId', 'finishId',
-      'content', 'shrinkage', 'm3Code', 'hsnCode',
-    ];
-  
-    // if (requiredFields.every(field => form.getFieldValue(field))) {
+    const oneValue = Object.keys(form.getFieldsValue()).some(key => key !== 'buyerId' && form.getFieldValue(key));
+
+  if (!oneValue) {
+    message.error("At least one field is required for the request", 2);
+    return;
+  }
       const req = new FabricRequestCodeDto(form.getFieldValue('buyerId'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('weightId'),form.getFieldValue('weightUomId'),
       form.getFieldValue('epiConstruction'),form.getFieldValue('ppiConstruction'),yarnType,form.getFieldValue('widthValue'),form.getFieldValue('widthUomId'),form.getFieldValue('finishId'),
       form.getFieldValue('content'),form.getFieldValue('shrinkage'),form.getFieldValue('m3Code'),form.getFieldValue('hsnCode')
@@ -188,9 +187,6 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
       }).catch(err => {
         AlertMessages.getErrorMessage(err.message);
       });
-    // } else {
-    //   message.error("All fields are required for requesting", 2);
-    // }
   };
 
   const onFinish = (val) => {
@@ -383,22 +379,26 @@ const onFabricTpe = (val) =>{
           {/* <Row gutter={16}> */}
             {/* </Row> */}
             <Row>
-            <Col span={24} style={{ textAlign: "right" }}>
-            <span style={{paddingRight:"10px"}}><Button type="primary" onClick={createReqCode}>
-              Request
-            </Button></span>
-            <Button type="primary" onClick={() => onFinish(form.getFieldsValue())}>
-              Search
-            </Button>
-              <Button
-                htmlType="button"
-                style={{ margin: "0 14px" }}
-                onClick={clearData}
-              >
-                Reset
-              </Button>
-            </Col>
-          </Row>
+              <Col span={12} style={{ textAlign: "left" }}>
+                <span style={{ paddingRight: "10px" }}>
+                  <Button type="primary" onClick={createReqCode}>
+                    Request
+                  </Button>
+                </span>
+              </Col>
+              <Col span={12} style={{ textAlign: "right" }}>
+                <Button type="primary" onClick={() => onFinish(form.getFieldsValue())}>
+                  Search
+                </Button>
+                <Button
+                  htmlType="button"
+                  style={{ margin: "0 14px" }}
+                  onClick={clearData}
+                >
+                  Reset
+                </Button>
+              </Col>
+            </Row>
         </Form>
       </Card>
     </div>

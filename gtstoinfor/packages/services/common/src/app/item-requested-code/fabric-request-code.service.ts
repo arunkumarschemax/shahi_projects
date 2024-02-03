@@ -104,7 +104,7 @@ export class FabricReqCodeService {
       }
 
       if(req.status === 'COMPLETED'){
-        query = `SELECT frc.fabric_request_code_id,frc.status,frc.fabric_type_id AS fabricTypeId,
+        query = `SELECT frc.fabric_request_code_id,frc.status,m3i.fabric_type AS fabricTypeId,
         ft.fabric_type_name AS fabricType,
         frc.buyer_id,b.buyer_name AS buyerName,
         m3i.weave AS weaveId, fw.fabric_weave_name AS fabricWeave,
@@ -117,15 +117,15 @@ export class FabricReqCodeService {
         m3i.hsn_code AS hsnCode,m3i.m3_code AS m3Code
         FROM fabric_request_code frc
         LEFT JOIN m3_items m3i ON m3i.m3_items_id = frc.m3_item_id
-        LEFT JOIN fabric_type ft ON ft.fabric_type_id = frc.fabric_type_id
+        LEFT JOIN fabric_type ft ON ft.fabric_type_id = m3i.fabric_type
         LEFT JOIN buyers b ON b.buyer_id = frc.buyer_id
         LEFT JOIN fabric_weave fw ON fw.fabric_weave_id = m3i.weave
         LEFT JOIN fabric_finish_types fft ON fft.fabric_finish_type_id = m3i.finish_id
         LEFT JOIN m3_fabric_content m3fc ON m3fc.m3_items_id = m3i.m3_items_id
         LEFT JOIN content c ON c.content_id = m3fc.content
         LEFT JOIN uom u ON u.id = m3i.weight_unit
-        LEFT JOIN uom uom ON uom.id = m3i.weight_unit
-        WHERE frc.status = 'completed'`
+        LEFT JOIN uom uom ON uom.id = m3i.width_unit
+        WHERE 1=1`
         if (req?.buyerId) {
           query = query + ` AND frc.buyer_id=${req.buyerId}`
         }

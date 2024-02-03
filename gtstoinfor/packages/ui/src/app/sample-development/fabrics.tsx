@@ -79,8 +79,10 @@ const FabricsForm = (props:FabricsFormProps) => {
 
   
 
-  const m3FabricFilters = () =>{
+  const m3FabricFilters = (key) =>{
+    console.log(key)
     setModal('fabricFilter')
+    setKeyValue(key)
     setVisibleModel(true)
     }
 
@@ -119,7 +121,7 @@ const FabricsForm = (props:FabricsFormProps) => {
   //   props(updatedData);
   // };
 
-  const getM3FabricStyleCodes = (buyer,request) => {
+  const getM3FabricStyleCodes = (buyer,request,keyValue) => {
     console.log(request)
      req= new m3FabricFiltersReq() 
      if(request != undefined){
@@ -141,6 +143,8 @@ const FabricsForm = (props:FabricsFormProps) => {
      }
       m3ItemsService.getM3FabricsByBuyer(req).then(res => {
         if(res.status){
+          console.log(keyValue)
+          props.form.setFieldValue(`fabricId${keyValue}`,undefined)
           setFabricCodeData(res.data)
         }
         else{
@@ -152,12 +156,14 @@ const FabricsForm = (props:FabricsFormProps) => {
   let req
   const handleFabricsfilterData = (data) => {
     console.log(data)
+    console.log(keyValue)
+
     if(data != undefined){
         req = new m3FabricFiltersReq(data[0].buyerId,data[0].fabricTypeId,data[0].weaveId,data[0].weightUnit,data[0].epiConstruction,data[0].ppiConstruction,data[0].yarnType,data[0].widthUnit,data[0].finishId,data[0].shrinkage,data[0].hsnCode,data[0].content,data[0].weightValue,data[0].widthValue,data[0].m3Code)
         console.log(req)
-        getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),req)
+        getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),req,keyValue)
     }else{
-         getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),undefined)
+         getM3FabricStyleCodes(sourcingForm.getFieldValue('buyer'),undefined,keyValue)
 
     }
   };
@@ -571,11 +577,11 @@ const FabricsForm = (props:FabricsFormProps) => {
             placeholder="Select Fabric Code"
             onChange={(e) => handleInputChange(e, record.key, 'fabricCode',0, record)}
             suffixIcon={<SearchOutlined
-              onClick={m3FabricFilters}
+              onClick={() => m3FabricFilters(record.key)}
                style={{ fontSize: '28px', marginLeft: '-7px' }} />}
                dropdownMatchSelectWidth={false}
           >
-          {/* <Option name={`fabricId${record.key}`} key={0} value={0}>Please Select Fabric</Option> */}
+            <Option name={`fabricId${record.key}`} key={0} value={undefined}>Please Select Fabric</Option>
             {fabricCodeData?.map(item => {
               return <Option name={`fabricId${record.key}`} key={item.m3ItemsId} valu={item.m3ItemsId}>{item.itemCode+ "-"+ item.description}</Option>;
             })}

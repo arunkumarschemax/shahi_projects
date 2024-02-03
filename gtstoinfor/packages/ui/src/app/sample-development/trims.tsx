@@ -842,7 +842,7 @@ const tableColumns = (val,fabindex) => {
     console.log(trimFilterData)
     let req
     if(trimFilterData != undefined){
-      req = new M3TrimFilterReq(undefined,undefined,undefined,trimFilterData[0].categoryId,trimFilterData[0].contentId,trimFilterData[0].finishId,trimFilterData[0].holeId,trimFilterData[0].hsnCode,trimFilterData[0].m3Code,trimFilterData[0].typeId,trimFilterData[0].trimMapId) 
+      req = new M3TrimFilterReq(trimFilterData.buyerId,undefined,undefined,trimFilterData[0].categoryId,trimFilterData[0].contentId,trimFilterData[0].finishId,trimFilterData[0].holeId,trimFilterData[0].hsnCode,trimFilterData[0].m3Code,trimFilterData[0].typeId,trimFilterData[0].trimMapId) 
       getM3TrimsTypes(undefined,req)
     }else{
       getM3TrimsTypes(undefined,undefined)

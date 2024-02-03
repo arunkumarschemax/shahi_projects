@@ -14,19 +14,19 @@ export class TrimRequestCodeEntity {
   })
   trimType: ItemTypeEnum;
 
-  // @Column('enum',{
-  //   name:'logo',
-  //   nullable: true,
-  //   enum:LogoEnum,
-  // })
-  // logo: LogoEnum;
+  @Column('enum',{
+    name:'logo',
+    nullable: true,
+    enum:LogoEnum,
+  })
+  logo: LogoEnum;
 
-  // @Column('enum',{
-  //   name:'part',
-  //   nullable: true,
-  //   enum:PartEnum,
-  // })
-  // part: PartEnum;
+  @Column('enum',{
+    name:'part',
+    nullable: true,
+    enum:PartEnum,
+  })
+  part: PartEnum;
 
   @Column('int',{
       name:'trim_category_id',
@@ -40,17 +40,17 @@ export class TrimRequestCodeEntity {
     })
     buyerId:number//
 
-    // @Column('int',{
-    //   name:'variety_id',
-    //   nullable:true,
-    // })
-    // varietyId:number
+    @Column('int',{
+      name:'variety_id',
+      nullable:true,
+    })
+    varietyId:number
 
-    // @Column('int',{
-    //   name:'uom_id',
-    //   nullable:true,
-    // })
-    // uomId:number
+    @Column('int',{
+      name:'uom_id',
+      nullable:true,
+    })
+    uomId:number
 
     @Column('int',{
       name:'type_id',
@@ -58,23 +58,23 @@ export class TrimRequestCodeEntity {
     })
     typeId:number//
 
-    // @Column('int',{
-    //   name:'thickness_id',
-    //   nullable:true,
-    // })
-    // thicknessId:number
+    @Column('int',{
+      name:'thickness_id',
+      nullable:true,
+    })
+    thicknessId:number
 
-    // @Column('int',{
-    //   name:'structure_id',
-    //   nullable:true,
-    // })
-    // structureId:number
+    @Column('int',{
+      name:'structure_id',
+      nullable:true,
+    })
+    structureId:number
 
-    // @Column('int',{
-    //   name:'quality_id',
-    //   nullable:true,
-    // })
-    // qualityId:number
+    @Column('int',{
+      name:'quality_id',
+      nullable:true,
+    })
+    qualityId:number
 
     @Column('int',{
       name:'hole_id',
@@ -102,11 +102,11 @@ export class TrimRequestCodeEntity {
     categoryId:number//
 
 
-    // @Column('int',{
-    //   name:'color_id',
-    //   nullable:true,
-    // })
-    // colorId:number
+    @Column('int',{
+      name:'color_id',
+      nullable:true,
+    })
+    colorId:number
 
     @Column('enum',{
       name:'status',
