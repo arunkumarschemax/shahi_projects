@@ -57,11 +57,11 @@ export class SampleRequest {
   @JoinColumn({ name: 'buyer_id' })
   buyer: Buyers;
 
-  @ManyToOne(() => SampleTypes, sampleTypes => sampleTypes.sampleReq, { nullable: false })
+  @ManyToOne(() => SampleTypes, sampleTypes => sampleTypes.sampleReq, { nullable: true })
   @JoinColumn({ name: 'sample_type_id' })
   sampleType: SampleTypes;
 
-  @ManyToOne(() => SampleSubTypes, sampleSubType => sampleSubType.sampleReq, { nullable: false })
+  @ManyToOne(() => SampleSubTypes, sampleSubType => sampleSubType.sampleReq, { nullable: true })
   @JoinColumn({ name: 'sample_sub_type_id' })
   sampleSubType: SampleSubTypes;
 
@@ -111,11 +111,11 @@ export class SampleRequest {
   })
   extension: string;
 
-  @Column("int", {
-    nullable: true,
-    name: "sam_value"
+  @Column('decimal',{
+    name:'sam_value',
+    nullable:true,
   })
-  samValue: number;
+  samValue : number;
 
   @ManyToOne(() => EmplyeeDetails, employee => employee.sampleReq, { nullable: false })
   @JoinColumn({ name: 'dmm_id' })

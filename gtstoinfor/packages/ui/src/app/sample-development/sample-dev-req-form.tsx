@@ -2,7 +2,7 @@ import { EyeOutlined, LoadingOutlined, PlusOutlined, UploadOutlined, UserSwitchO
 import { Res } from "@nestjs/common";
 import { BuyerRefNoRequest, CategoryEnumDisplay, DepartmentReq,SampleDevelopmentRequest, StyleIdReq, TypeIdReq } from "@project-management-system/shared-models";
 import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
-import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Tabs, Tooltip, message } from "antd";
+import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Modal, Row, Select, Tabs, Tooltip, message } from "antd";
 import { ReactNode, useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
 import Upload, { RcFile, UploadProps } from "antd/es/upload";
@@ -913,18 +913,17 @@ const renderButtons = (): ReactNode => {
               <Input placeholder="Enter Extn" />
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
+          <Col span={3} >
             <Form.Item
               name="sam"
               label="SAM"
               rules={[
                 {
-                  pattern: /^[0-9]*$/,
-                  message: `Only numbers are accepted`,
+                  required:false,
                 },
               ]}
             >
-              <Input placeholder="Enter SAM" />
+              <InputNumber placeholder="SAM" min={1} />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
@@ -1016,8 +1015,8 @@ const renderButtons = (): ReactNode => {
           <Col span={4} >
             <Form.Item
               name="type"
-              label="Type"
-              rules={[{ required: true, message: "" }]}
+              label="Sub Type"
+              rules={[{ required: false, message: "" }]}
             >
               <Select
                 allowClear
@@ -1039,8 +1038,8 @@ const renderButtons = (): ReactNode => {
           <Col span={4} >
           <Form.Item
               name="subType"
-              label="Sub Type"
-              rules={[{ required: true, message: "" }]}
+              label="Type"
+              rules={[{ required: false, message: "" }]}
             >
               <Select
                 allowClear
