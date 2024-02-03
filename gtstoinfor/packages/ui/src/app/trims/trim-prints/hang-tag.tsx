@@ -3,14 +3,33 @@ import { Button, Card, Col, Descriptions, Row } from "antd";
 import { useLocation } from "react-router-dom";
 import { Shahi } from "../SHAHI";
 import { HTTP } from "../http";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { StyleNumberReq } from "@project-management-system/shared-models";
+import { BomService } from "@project-management-system/shared-services";
+export interface HangTagPrintProps{
+    info:any[]
+}
+export const HangTag=(props:HangTagPrintProps)=> {
+    const bomData = useLocation()
+    const bomservice = new BomService()
+    const [bomInfo,setBomInfo] = useState<any[]>([])
 
-export function HangTag() {
-let totalqty = 100;
-let value =50;
+    useEffect(() => {
+        if(props.info){
+            const req = new StyleNumberReq(props.info[0]?.styleNumber)
+            bomservice.getBomInfoAgainstStyle(req).then(res =>{
+                if(res.status){
+                    setBomInfo(res.data)
+                }
+            })
+        }
+
+    },[props.info])
+
     return(
-        <Card>
-            {/* <Descriptions>{'NSW FOUNDATIONAL PRIMARY HANGTAG 2 SIDED'}</Descriptions> */}
+        <div id='print'>
+        <Card title={'Hangtag'} extra={<span><Button>Print</Button></span>}>
+            <Descriptions.Item>{'NSW FOUNDATIONAL PRIMARY HANGTAG 2 SIDED'}</Descriptions.Item>
         <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
         <tr>
         <th style={{width:'3%'}}>ITEM#</th>
@@ -30,6 +49,7 @@ let value =50;
       </table>
      
       </Card>
+      </div>
         
     )
 
