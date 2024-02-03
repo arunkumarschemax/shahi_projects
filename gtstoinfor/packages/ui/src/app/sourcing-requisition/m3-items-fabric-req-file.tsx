@@ -379,22 +379,26 @@ const onFabricTpe = (val) =>{
           {/* <Row gutter={16}> */}
             {/* </Row> */}
             <Row>
-            <Col span={24} style={{ textAlign: "right" }}>
-            <span style={{paddingRight:"10px"}}><Button type="primary" onClick={createReqCode}>
-              Request
-            </Button></span>
-            <Button type="primary" onClick={() => onFinish(form.getFieldsValue())}>
-              Search
-            </Button>
-              <Button
-                htmlType="button"
-                style={{ margin: "0 14px" }}
-                onClick={clearData}
-              >
-                Reset
-              </Button>
-            </Col>
-          </Row>
+              <Col span={12} style={{ textAlign: "left" }}>
+                <span style={{ paddingRight: "10px" }}>
+                  <Button type="primary" onClick={createReqCode}>
+                    Request
+                  </Button>
+                </span>
+              </Col>
+              <Col span={12} style={{ textAlign: "right" }}>
+                <Button type="primary" onClick={() => onFinish(form.getFieldsValue())}>
+                  Search
+                </Button>
+                <Button
+                  htmlType="button"
+                  style={{ margin: "0 14px" }}
+                  onClick={clearData}
+                >
+                  Reset
+                </Button>
+              </Col>
+            </Row>
         </Form>
       </Card>
     </div>

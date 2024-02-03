@@ -560,11 +560,21 @@ export function M3TrimsReqFile(props:M3Trimprps) {
            
         </Row>
         <Row>
-            <Col span={24} style={{ textAlign: "right" }}>
-                <span style={{paddingRight:"10px"}}><Button type="primary" htmlType="submit" onClick={createReqCode}>Request</Button></span>
-                <span><Button type="primary" htmlType="submit">Search</Button></span>
-                <Button htmlType="button" style={{ margin: "0 14px" }} onClick={onReset}>Reset</Button>
-            </Col>
+          <Col span={12} style={{ textAlign: "left" }}>
+            <Button type="primary" htmlType="submit" onClick={createReqCode}>
+              Request
+            </Button>
+          </Col>
+          <Col span={12} style={{ textAlign: "right" }}>
+            <span style={{ paddingRight: "10px" }}>
+              <Button type="primary" htmlType="submit">
+                Search
+              </Button>
+            </span>
+            <Button htmlType="button" style={{ margin: "0 14px" }} onClick={onReset}>
+              Reset
+            </Button>
+          </Col>
         </Row>
       </Form>
     </Card>
