@@ -33,9 +33,16 @@ useEffect(()=>{
 },[])
 
 const getBomInfoAgainstStyle = (styleNumber,trim)=>{
-    const req = new StyleNumberReq(styleNumber,trim)
+    const req = new StyleNumberReq(styleNumber.styleNumber,trim)
     service.getBomInfoAgainstStyle(req).then(res =>{
         if(res.status){
+            res.data.styleNumber = styleNumber.styleNumber;
+            res.data.poNumber = styleNumber.purchaseOrderNumber;
+            res.data.destinationCountry = styleNumber.destinationCountry;
+            res.data.destinationCountryCode = styleNumber.destinationCountryCode;
+            res.data.genderAgeDesc = styleNumber.genderAgeDesc;
+            res.data.geoCode = styleNumber.geoCode;
+            res.data.sizeWiseData=styleNumber.sizeWiseData
             setBomInfo(res.data)
         }
     })
@@ -64,7 +71,7 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
         setTrimName(val.item)
         setModalOpen(true)
         if(state.state.info){
-            getBomInfoAgainstStyle(state.state.info.styleNumber,val.item)
+            getBomInfoAgainstStyle(state.state.info,val.item)
         }
     }
 
