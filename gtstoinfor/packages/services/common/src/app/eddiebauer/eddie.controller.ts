@@ -151,5 +151,25 @@ export class EddieController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    
+    @Post('/updateItemNo')
+    async updateItemNo(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.updateItemNo(req);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    @Post('/deleteCoLine')
+    async deleteCoLine(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.deleteCoLine(req);
+        } catch (error) {
+            return error;
+        }
+    }
+
  
 }

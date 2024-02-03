@@ -803,6 +803,7 @@ import {
           align: "center",
           fixed: 'right',
           render: (text, record, index) => {
+            console.log(record,"ppp")
             return {
               children: (
   

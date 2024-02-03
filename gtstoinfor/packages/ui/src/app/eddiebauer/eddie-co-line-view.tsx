@@ -194,19 +194,19 @@ const EddieColineView = () => {
         excel.saveAs(`Co-Line-${currentDate}.xlsx`);
     }
 
-    // const onFinishEdit = (record: any) => {
-    //     const req = new ItemNoDto(editedId,editedValue)
-    //     service.updateItemNo(req).then(res => {
-    //         if (res.status) {
-    //             getData();
-    //             setEditingRow(null);
-    //             setEditedValue(null);
-    //             message.success("Updated SuccessFully");
-    //         } else {
-    //             message.error("Not Updated")
-    //         }
-    //     })
-    // };
+    const onFinishEdit = (record: any) => {
+        const req = new ItemNoDto(editedId,editedValue)
+        service.updateItemNo(req).then(res => {
+            if (res.status) {
+                getData();
+                setEditingRow(null);
+                setEditedValue(null);
+                message.success("Updated SuccessFully");
+            } else {
+                message.error("Not Updated")
+            }
+        })
+    };
 
     const onEditClick = (record) => {
         setEditingRow(record);
@@ -215,21 +215,21 @@ const EddieColineView = () => {
         console.log(record,"recccc")
     };
 
-    // const handleConfirmDelete = (record) => {
-    //     const req = new ItemNoDto(record.id)
-    //     service.deleteCoLine(req).then(res => {
-    //         if (res.status) {
-    //             getData();
-    //             AlertMessages.getSuccessMessage(res.internalMessage)
+    const handleConfirmDelete = (record) => {
+        const req = new ItemNoDto(record.id)
+        service.deleteCoLine(req).then(res => {
+            if (res.status) {
+                getData();
+                AlertMessages.getSuccessMessage(res.internalMessage)
 
-    //         } else {
-    //             AlertMessages.getErrorMessage(res.internalMessage)
-    //         }
-    //     })
-    //     // const deleteUpdatedData = data.filter(item => item !== record);
-    //     // message.success("Deleted Successfully");
-    //     // setData(deleteUpdatedData);
-    // };
+            } else {
+                AlertMessages.getErrorMessage(res.internalMessage)
+            }
+        })
+        // const deleteUpdatedData = data.filter(item => item !== record);
+        // message.success("Deleted Successfully");
+        // setData(deleteUpdatedData);
+    };
 
     const columns: ColumnProps<any>[] = [
         {
@@ -275,6 +275,7 @@ const EddieColineView = () => {
                                 value={editedValue}
                                 onChange={(e) => setEditedValue(e.target.value)}
                                 style={{ width: '60px', border: '1px solid rgb(217, 217, 217)', borderRadius: '5px', textAlign: "center" }}
+                                placeholder="Item No"
                             />
                         ) : (
                             <Input
@@ -352,7 +353,7 @@ const EddieColineView = () => {
                             {editingRow === record ? (
                                 <div>
                                     <Button type="primary" onClick={() =>
-                                        // onFinishEdit
+                                        onFinishEdit
                                          (record)}>Update</Button>
                                     &nbsp; &nbsp;
                                     <Button type="primary" danger onClick={() => setEditingRow(null)}>Cancel</Button>
@@ -363,8 +364,8 @@ const EddieColineView = () => {
                                     &nbsp; &nbsp;
                                     <Popconfirm
                                         title="Are you sure to Delete?"
-                                      //  onConfirm={() => handleConfirmDelete(record)}
-                                        // onCancel={() => message.info('Delete canceled')}
+                                       onConfirm={() => handleConfirmDelete(record)}
+                                        onCancel={() => message.info('Delete canceled')}
                                         okText="Yes"
                                         cancelText="No"
                                     >
