@@ -26,17 +26,17 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
 
     // },[bomData.state])
 
-    useEffect(() => {
-        if(props.info){
-            const req = new StyleNumberReq(props.info[0]?.styleNumber)
-            bomservice.getBomInfoAgainstStyle(req).then(res =>{
-                if(res.status){
-                    setBomInfo(res.data)
-                }
-            })
-        }
+    // useEffect(() => {
+    //     if(props.info){
+    //         const req = new StyleNumberReq(props.info[0]?.styleNumber)
+    //         bomservice.getBomInfoAgainstStyle(req).then(res =>{
+    //             if(res.status){
+    //                 setBomInfo(res.data)
+    //             }
+    //         })
+    //     }
 
-    },[props.info])
+    // },[props.info])
 
     let grandTotal = 0
 
