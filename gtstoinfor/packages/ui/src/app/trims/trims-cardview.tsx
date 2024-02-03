@@ -8,6 +8,7 @@ import { StyleNumberReq } from "@project-management-system/shared-models";
 import AlertMessages from "../common/common-functions/alert-messages";
 import JokerTagPrint from "./trim-prints/joker-tag";
 import { stat } from "fs";
+import WasCarelabel from "./trim-prints/wash-care-label";
 
 
 
@@ -21,6 +22,7 @@ const [modalOpen,setModalOpen] = useState<boolean>(false)
 const [trimName,setTrimName] = useState<string>('')
 const componentsMapping = {
     "Joker Tag" : <JokerTagPrint info={bomInfo} />,
+    "Wash Care Label":<WasCarelabel />
 }
 
 useEffect(()=>{
@@ -39,7 +41,7 @@ useEffect(() => {
     }
 
 },[state.state])
-
+console.log(trimName)
     const getAllTrims=()=>{
         service.getAllTrimInfo().then(res=>{
             if(res.status){
@@ -93,7 +95,7 @@ useEffect(() => {
     </div>
     </Card>
     <Modal open={modalOpen} onCancel={() => setModalOpen(false)} onOk={() => setModalOpen(false)} footer={[]} width={'85%'}>
-        {componentsMapping[trim]}       
+        {componentsMapping[trimName]}       
     </Modal>
    </> 
     )
