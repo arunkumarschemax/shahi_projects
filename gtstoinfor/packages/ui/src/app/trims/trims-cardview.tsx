@@ -4,10 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { BomService, trimService } from "@project-management-system/shared-services";
 import { useLocale } from "antd/es/locale";
 import { useLocation, useNavigate } from "react-router-dom";
-import { StyleNumberReq, TrimListObj } from "@project-management-system/shared-models";
+import { StyleNumberReq } from "@project-management-system/shared-models";
 import AlertMessages from "../common/common-functions/alert-messages";
 import JokerTagPrint from "./trim-prints/joker-tag";
 import { stat } from "fs";
+
 
 
 export const TrimList=({})=>{
@@ -18,6 +19,9 @@ const [bomInfo,setBomInfo] = useState<any[]>([])
 const navigate = useNavigate()
 const [modalOpen,setModalOpen] = useState<boolean>(false)
 const [trimName,setTrimName] = useState<string>('')
+const componentsMapping = {
+    "Joker Tag" : <JokerTagPrint info={bomInfo} />,
+}
 
 useEffect(()=>{
     getAllTrims();
@@ -56,8 +60,8 @@ useEffect(() => {
     // }
 
     const cardOnclick = (val) => {
+
         setTrimName(val.item)
-        console.log(TrimListObj)
         setModalOpen(true)
         // if(val.item === 'Joker Tag'){
         //    navigate('/bom/joker-tag',{state:{info:state.state.info}})
@@ -89,8 +93,7 @@ useEffect(() => {
     </div>
     </Card>
     <Modal open={modalOpen} onCancel={() => setModalOpen(false)} onOk={() => setModalOpen(false)} footer={[]} width={'85%'}>
-      
-        <JokerTagPrint info={state.state.info}/>        
+        {componentsMapping[trim]}       
     </Modal>
    </> 
     )
