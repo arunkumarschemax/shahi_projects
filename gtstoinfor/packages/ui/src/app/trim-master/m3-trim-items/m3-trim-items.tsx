@@ -210,7 +210,7 @@ export function M3TrimItemsForm({props}) {
       if (res.status) {
         console.log(props);
         if(props != undefined){
-          trimReqCodeService.updateTrimStatus({id:props.trimRequestCodeId}).then((res) => {
+          trimReqCodeService.updateTrimStatus({id:props.trimRequestCodeId, m3ItemsId:res.data?.m3TrimId}).then((res) => {
             if(res.status){
               AlertMessages.getSuccessMessage(res.internalMessage);
               navigate('/trim-master/m3-trim-items/m3-trim-items-view')
@@ -476,8 +476,8 @@ export function M3TrimItemsForm({props}) {
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name="hsnCode" label="Hsn Code" >
-                    <Input placeholder="Enter Hsn Code"/>
+                <Form.Item name="hsnCode" label="HSN Code" >
+                    <Input placeholder="Enter HSN Code"/>
                 </Form.Item>
             </Col>
             {mapData[0]?.structure === true ? (

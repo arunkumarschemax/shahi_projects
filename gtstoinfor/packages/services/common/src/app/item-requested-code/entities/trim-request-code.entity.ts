@@ -115,6 +115,12 @@ export class TrimRequestCodeEntity {
     })
     status: MaterialFabricEnum;
 
+    @Column('int', {
+      nullable: true,
+      name: 'm3_trim_id',
+    })
+    m3TrimId: number;
+
 
   @Column("boolean", {
     nullable: false,

@@ -60,7 +60,9 @@ export class TrimReqCodeService {
     // @LogActions({ isAsync: true })
     async getAllTrims(req?: TrimCodeReq): Promise<CommonResponseModel> {  
        try{
-        let query = `SELECT m3t.trim_type AS trimType,m3t.logo,m3t.part,
+        let query = ''
+        if(req.status ==='OPEN'){
+        query = `SELECT m3t.trim_type AS trimType,m3t.logo,m3t.part,
         m3t.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName,
         m3t.category_id AS categoryId,cg.category,
         m3t.color_id AS colorId,c.colour,
@@ -112,11 +114,48 @@ export class TrimReqCodeService {
           query = query + ` AND m3t.buyer_id=${req.buyerId}`
         }
         if (req?.trimType) {
-          query = query + ` AND m3t.buyer_id=${req.trimType}`
+          query = query + ` AND m3t.trim_type='${req.trimType}'`
         }
         if (req?.status) {
           query = query + ` AND m3t.status='${req.status}'`
         }
+        query = query + ` ORDER BY m3t.created_at`
+      }
+
+      if(req.status ==='COMPLETED'){
+        query = `SELECT trc.trim_request_code_id AS id, trc.trim_type trimType, trc.m3_trim_id AS m3TrimId,m3t.m3_code AS m3Code,m3t.hsn_code hsnCode,
+        trc.trim_category_id AS trimCategoryId,tr.trim_category AS trimCategory,
+        m3t.category_id AS categoryId,cg.category,
+        m3t.content_id AS contentId,c.content,
+        m3t.type_id AS typeId, t.type,
+        m3t.finish_id AS finishId,f.finish,
+        m3t.hole_id AS holeId, h.hole,
+        trc.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName
+        FROM trim_request_code trc
+        LEFT JOIN m3_trims m3t ON m3t.m3_trim_id = trc.m3_trim_id
+        LEFT JOIN category cg ON cg.category_id = m3t.category_id
+        LEFT JOIN content c ON c.content_id = m3t.content_id
+        LEFT JOIN type t ON t.type_id = m3t.type_id
+        LEFT JOIN finish f ON f.finish_id = m3t.finish_id
+        LEFT JOIN hole h ON h.hole_id = m3t.hole_id
+        LEFT JOIN buyers b ON b.buyer_id = trc.buyer_id
+        LEFT JOIN trim tr ON tr.trim_id = trc.trim_category_id 
+        WHERE 1=1`
+        if (req.ExternalRefNo && req.ExternalRefNo!=null){
+          query += ` AND b.external_ref_number = '${req.ExternalRefNo}'`
+        }
+        if (req?.buyerId) {
+          query = query + ` AND trc.buyer_id=${req.buyerId}`
+        }
+        if (req?.trimType) {
+          query = query + ` AND trc.trim_type='${req.trimType}'`
+        }
+        if (req?.status) {
+          query = query + ` AND trc.status='${req.status}'`
+        }
+        query = query + ` ORDER BY trc.updated_at`
+
+      }
         const data = await this.dataSource.query(query)
         if(data.length >0){
             return new CommonResponseModel(true,1,'Data retrieved successfully',data)

@@ -100,6 +100,7 @@ export class FabricReqCodeService {
         if (req?.status) {
           query = query + ` AND frc.status='${req.status}'`
         }
+        query = query + ` ORDER By frc.created_at`
       }
 
       if(req.status === 'COMPLETED'){
@@ -123,8 +124,8 @@ export class FabricReqCodeService {
         LEFT JOIN m3_fabric_content m3fc ON m3fc.m3_items_id = m3i.m3_items_id
         LEFT JOIN content c ON c.content_id = m3fc.content
         LEFT JOIN uom u ON u.id = m3i.weight_unit
-        LEFT JOIN uom uom ON uom.id = m3i.weight_unit
-        WHERE frc.status = 'completed'`
+        LEFT JOIN uom uom ON uom.id = m3i.width_unit
+        WHERE 1=1`
         if (req?.buyerId) {
           query = query + ` AND frc.buyer_id=${req.buyerId}`
         }
@@ -146,6 +147,7 @@ export class FabricReqCodeService {
         if (req?.status) {
           query = query + ` AND frc.status='${req.status}'`
         }
+        query = query + ` ORDER By frc.updated_at`
       }
         const data = await this.dataSource.query(query)
         let response:M3FabricsDTO[] = [];
@@ -297,11 +299,11 @@ export class FabricReqCodeService {
       }
     }
 
-    async updateTrimStatus(req:number):Promise<CommonResponseModel>{
+    async updateTrimStatus(req?:UpdateIdReq):Promise<CommonResponseModel>{
       try{
         console.log("req**********");
         console.log(req);
-        let query = `update trim_request_code set status='completed' where trim_request_code_id = ${req}`;
+        let query = `update trim_request_code set status='completed',m3_trim_id = ${req.m3ItemsId} where trim_request_code_id = ${req.id}`;
         const data = await this.dataSource.query(query)
         console.log(data);
         if(data.affectedRows > 0){
