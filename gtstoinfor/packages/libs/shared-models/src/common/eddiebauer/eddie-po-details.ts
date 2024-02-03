@@ -2,7 +2,7 @@ import { EddiePoItemDetails } from "./eddie-po-item-details";
 
 export class EddiePoDetails {
     poNumber: string;
-    poDate: string;
+    // poDate: string;
     deliveryDate: string;
     exFactoryDate: string;
     // incoterm: string;

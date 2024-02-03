@@ -110,7 +110,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             const reversedPoNumber = splittedPoNumber.reverse().join('-');
             poData.poNumber = reversedPoNumber;
 
-            poData.poDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX + 1].str
+            // poData.poDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX + 1].str
             poData.deliveryDate = firstPageContent[deliveryDateIndex + 2].str
             const deliveryDate = new Date(poData.deliveryDate);
             const exFactoryDate = new Date(deliveryDate);

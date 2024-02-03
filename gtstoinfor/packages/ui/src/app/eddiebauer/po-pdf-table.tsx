@@ -43,7 +43,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                 <table className='ta-b' style={{ width: '100%' }} >
                     <tr className='ta-b'>
                         <th className='ta-b'>PO NUMBER</th> 
-                        <th className='ta-b'>PO DATE</th>
+                        {/* <th className='ta-b'>PO DATE</th> */}
                         <th className='ta-b'>DELIVERY DATE</th>
                         <th className='ta-b'>EX FACTORY DATE</th>
                         {/* <th className='ta-b'>INCOTERM</th>
@@ -59,7 +59,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                     
                     <tr className='ta-b'>
                         <td className='ta-b'>{pdfData?.poNumber}</td>
-                        <td className='ta-b'>{pdfData?.poDate}</td>
+                        {/* <td className='ta-b'>{pdfData?.poDate}</td> */}
                         <td className='ta-b'>{pdfData?.deliveryDate}</td>
                         <td className='ta-b'>{pdfData?.exFactoryDate}</td>
                         {/* <td className='ta-b'>{pdfData?.incoterm}</td>

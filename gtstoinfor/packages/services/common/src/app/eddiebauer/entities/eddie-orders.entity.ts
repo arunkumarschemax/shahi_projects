@@ -13,10 +13,10 @@ export class EddieOrdersEntity {
     })
     poNumber: string
 
-    @Column("varchar", {
-        name: "po_date",
-    })
-    poDate: string
+    // @Column("varchar", {
+    //     name: "po_date",
+    // })
+    // poDate: string
 
     
     @Column("varchar", {

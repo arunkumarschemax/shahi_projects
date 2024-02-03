@@ -48,7 +48,7 @@ export class EddieService {
           console.log(orderData, "orderData")
           const entity = new EddieOrdersEntity();
           entity.poNumber = req.poNumber
-          entity.poDate = req.poDate
+          // entity.poDate = req.poDate
           entity.deliveryDate = req.deliveryDate
           entity.exFactoryDate = req.exFactoryDate
           // entity.incoterm = req.incoterm

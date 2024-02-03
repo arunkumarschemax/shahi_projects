@@ -41,7 +41,7 @@ export default function EddiePdfTable() {
                 <table className='ta-b' style={{ width: '100%' }} >
                     <tr className='ta-b'>
                         <th className='ta-b'>PO NUMBER</th> 
-                        <th className='ta-b'>PO DATE</th>
+                        {/* <th className='ta-b'>PO DATE</th> */}
                         <th className='ta-b'>DELIVERY DATE</th> 
                         <th className='ta-b'>EX FACTORY DATE</th>
                         {/* <th className='ta-b'>INCOTERM</th>
@@ -56,7 +56,7 @@ export default function EddiePdfTable() {
                     
                     <tr className='ta-b'>
                         <td className='ta-b'>{parsedData?.poNumber}</td>
-                        <td className='ta-b'>{parsedData?.poDate}</td>
+                        {/* <td className='ta-b'>{parsedData?.poDate}</td> */}
                         <td className='ta-b'>{parsedData?.deliveryDate}</td>
                         <td className='ta-b'>{parsedData?.exFactoryDate}</td>
                         {/* <td className='ta-b'>{parsedData?.incoterm}</td>

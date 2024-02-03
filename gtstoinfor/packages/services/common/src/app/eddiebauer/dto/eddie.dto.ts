@@ -8,8 +8,8 @@ export class EddieDto {
     @ApiProperty()
     poNumber: string
 
-    @ApiProperty()
-    poDate: string
+    // @ApiProperty()
+    // poDate: string
 
     @ApiProperty()
     deliveryDate: string
