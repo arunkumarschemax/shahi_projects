@@ -7,29 +7,29 @@ import React, { useEffect, useState } from "react";
 import { StyleNumberReq } from "@project-management-system/shared-models";
 import { BomService } from "@project-management-system/shared-services";
 export interface HangTagPrintProps{
-    info:any[]
+    // info:any[]
 }
 export const HangTag=(props:HangTagPrintProps)=> {
     const bomData = useLocation()
     const bomservice = new BomService()
     const [bomInfo,setBomInfo] = useState<any[]>([])
 
-    useEffect(() => {
-        if(props.info){
-            const req = new StyleNumberReq(props.info[0]?.styleNumber)
-            bomservice.getBomInfoAgainstStyle(req).then(res =>{
-                if(res.status){
-                    setBomInfo(res.data)
-                }
-            })
-        }
+    // useEffect(() => {
+    //     if(props.info){
+    //         const req = new StyleNumberReq(props.info[0]?.styleNumber)
+    //         bomservice.getBomInfoAgainstStyle(req).then(res =>{
+    //             if(res.status){
+    //                 setBomInfo(res.data)
+    //             }
+    //         })
+    //     }
 
-    },[props.info])
+    // },[props.info])
 
     return(
         <div id='print'>
         <Card title={'Hangtag'} extra={<span><Button>Print</Button></span>}>
-            <Descriptions.Item>{'NSW FOUNDATIONAL PRIMARY HANGTAG 2 SIDED'}</Descriptions.Item>
+        <Descriptions.Item><span style={{marginLeft: '40%',fontFamily:'bold'}}>{'NSW  FOUNDATIONAL  PRIMARY  HANGTAG  2  SIDED'}</span></Descriptions.Item>
         <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
         <tr>
         <th style={{width:'3%'}}>ITEM#</th>
