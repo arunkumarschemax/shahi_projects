@@ -1,5 +1,5 @@
 import { CentricPoDetails, CentricPoItemDetails, CentricPoItemVariant, SanmarPoDetails, SanmarPoItemDetails, SanmarPoItemVariant } from "@project-management-system/shared-models";
-import { EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, ITEM_NO_EXP, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, MANUFACTURE_1, MANUFACTURE_2, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SHIP_TO_ADDRESS, SPECIAL_INSTRUCTIONS } from "./sanmar-popdf-regex-expressions";
+import { EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, ITEM_NO_EXP, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, MANUFACTURE_1, MANUFACTURE_2, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SHIP_TO_ADDRESS, SPECIAL_INSTRUCTIONS, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_14, UNWANTED_TEXT_15, UNWANTED_TEXT_16, UNWANTED_TEXT_17, UNWANTED_TEXT_18, UNWANTED_TEXT_19, UNWANTED_TEXT_2, UNWANTED_TEXT_20, UNWANTED_TEXT_21, UNWANTED_TEXT_22, UNWANTED_TEXT_23, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./sanmar-popdf-regex-expressions";
 
 
 /** 
@@ -132,25 +132,28 @@ export const extractDataFromPoPdf = async (pdf) => {
             // using NOR operation for filtering   
             return !(
                 EMP_STR_EXP.test(val.str)
-                // || val.str.includes(UNWANTED_TEXT_1)
-                // || val.str.includes(UNWANTED_TEXT_2)
-                // || val.str.includes(UNWANTED_TEXT_3)
-                // || val.str.includes(UNWANTED_TEXT_4)
-                // || val.str.includes(UNWANTED_TEXT_5)
-                // || val.str.includes(UNWANTED_TEXT_6)
-                // || val.str.includes(UNWANTED_TEXT_7)
-                // || val.str.includes(UNWANTED_TEXT_8)  
-                // || val.str.includes(UNWANTED_TEXT_9)  
-                // || val.str.includes(UNWANTED_TEXT_10)  
-                // || val.str.includes(UNWANTED_TEXT_11)  
-                // || val.str.includes(UNWANTED_TEXT_12)  
-                // || val.str.includes(UNWANTED_TEXT_13)   
-                // || val.str.includes(UNWANTED_TEXT_14)  
-                // || val.str.includes(UNWANTED_TEXT_15)  
-                // || val.str.includes(UNWANTED_TEXT_16)  
-                // || val.str.includes(UNWANTED_TEXT_17)  
-                // || val.str.includes(UNWANTED_TEXT_18)  
-
+                || val.str.includes(UNWANTED_TEXT_1)
+                || val.str.includes(UNWANTED_TEXT_2)
+                || val.str.includes(UNWANTED_TEXT_3)
+                || val.str.includes(UNWANTED_TEXT_4)
+                || val.str.includes(UNWANTED_TEXT_5)
+                || val.str.includes(UNWANTED_TEXT_6)
+                || val.str.includes(UNWANTED_TEXT_7)
+                || val.str.includes(UNWANTED_TEXT_8)
+                || val.str.includes(UNWANTED_TEXT_9)
+                || val.str.includes(UNWANTED_TEXT_10)
+                || val.str.includes(UNWANTED_TEXT_11)
+                || val.str.includes(UNWANTED_TEXT_12)
+                || val.str.includes(UNWANTED_TEXT_13)
+                || val.str.includes(UNWANTED_TEXT_14)
+                || val.str.includes(UNWANTED_TEXT_15)
+                || val.str.includes(UNWANTED_TEXT_16)
+                || val.str.includes(UNWANTED_TEXT_17)
+                || val.str.includes(UNWANTED_TEXT_18)
+                || val.str.includes(UNWANTED_TEXT_19)
+                || val.str.includes(UNWANTED_TEXT_20)
+                || val.str.includes(UNWANTED_TEXT_22)
+                || val.str.includes(UNWANTED_TEXT_23)
             )
         })
         filteredData.push(...pageContent)
@@ -180,17 +183,15 @@ export const extractDataFromPoPdf = async (pdf) => {
         let itemVariantStartIndex;
         const itemDetailsObj = new SanmarPoItemDetails();
         console.log(rec.itemIndex, "iiiiiiiiiiiiii");
-
         // itemDetailsObj.style = filteredData[rec.itemIndex - 4].str;
         itemDetailsObj.poStyle = filteredData[rec.itemIndex - 4].str;
         itemDetailsObj.deliveryDate = filteredData[rec.itemIndex + 9].str.replace(/\d+-\d+-\d+\s+\//g, "");
         const collectIndex = filteredData.findIndex((data, ind) => ind > rec.itemIndex && data.str.includes("Collect -"));
         if (collectIndex !== -1) {
-            itemDetailsObj.currency = filteredData[collectIndex + 5].str.replace(/Unit Price /g, "").replace(/\(/g, "").replace(/\)/g, "");;
+            itemDetailsObj.currency = filteredData[collectIndex + 1].str.replace(/Unit Price /g, "").replace(/\(/g, "").replace(/\)/g, "");
+            itemTextEndIndex = collectIndex;
         }
 
-
-        itemTextEndIndex = rec.amountIndex;
         itemVariantStartIndex = itemTextEndIndex + 1;
 
         //     const itemVarinatsTextArr = [];
@@ -246,12 +247,15 @@ export const extractDataFromPoPdf = async (pdf) => {
 
         const itemVariantsArr = [];
 
+
+
         for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
             const itemVariantsObj = new SanmarPoItemVariant();
             const index = count * l;
 
             const productDescriptionIndex = itemVarinatsTextArr.indexOf('Ship Window Start Date', index);
-
+            const styleIndex = itemVarinatsTextArr.indexOf(itemDetailsObj.poStyle, index > 0 ? index - 5 : 0)
+            console.log(styleIndex)
             if (productDescriptionIndex !== -1) {
                 const sizeIndex = productDescriptionIndex + 7;
                 const size = itemVarinatsTextArr[sizeIndex];
@@ -259,7 +263,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 const colorIndex = productDescriptionIndex + 5;
                 const color = itemVarinatsTextArr[colorIndex];
 
-                const lineIndex = productDescriptionIndex - 14;
+                const lineIndex = styleIndex - 1;
                 const lineData = itemVarinatsTextArr[lineIndex];
                 const regexMatch = lineData.match(/PO-[0-9]{9}/);
 
@@ -284,51 +288,30 @@ export const extractDataFromPoPdf = async (pdf) => {
                 // } else {
                 //     itemVariantsObj.line = "-";
                 // }
-
-
                 // const unitPriceIndex = productDescriptionIndex - 4;
                 // const unitPrice = itemVarinatsTextArr[unitPriceIndex].match(/\d+(,|.|\d)\d+/g,"")||"-";
+                let m;
+                for (let i = 3; i < 10; i++) {
+                    const quantityIndex = styleIndex + i;
+                    const quantityMatch = itemVarinatsTextArr[quantityIndex].match(/\b\d+\s*EACH\b/g);
+                    if (quantityMatch) {
+                        const quantity = quantityMatch[0];
+                        const unit = quantity.match(/\s+\w+/)[0];
+                        itemVariantsObj.quantity = quantity.replace(/EACH/g, "");
+                        itemVariantsObj.unit = unit.match(/\w+/g, "");
+                        m = i + 1;
+                        break;
+                    } else {
+                        continue;
+                    }
+                }
 
-                const unitPriceIndex = productDescriptionIndex - 4;
+                const unitPriceIndex = styleIndex + m;
                 const unitPriceMatch = itemVarinatsTextArr[unitPriceIndex].match(/\d+(,|.|\d)\d+/g);
 
                 if (unitPriceMatch) {
                     const unitPrice = unitPriceMatch;
                     itemVariantsObj.unitPrice = unitPrice;
-                } else {
-                    const lastUnitPriceIndex = productDescriptionIndex - 31;
-                    const exactUnitPriceMatch = itemVarinatsTextArr[lastUnitPriceIndex].match(/\d+(,|.|\d)\d+/g);
-
-                    if (exactUnitPriceMatch) {
-                        const unitPriceMatching = exactUnitPriceMatch;
-                        itemVariantsObj.unitPrice = unitPriceMatching;
-                    } else {
-                        itemVariantsObj.unitPrice = "-";
-                    }
-                }
-
-
-                const quantityIndex = productDescriptionIndex - 5;
-                const quantityMatch = itemVarinatsTextArr[quantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
-
-                if (quantityMatch) {
-                    const quantity = quantityMatch[0];
-                    const unit = quantity.match(/\s+\w+/)[0];
-                    itemVariantsObj.quantity = quantity.replace(/EACH/g, "");
-                    itemVariantsObj.unit = unit.match(/\w+/g, "");
-                } else {
-                    const fallbackQuantityIndex = productDescriptionIndex - 32;
-                    const fallbackQuantityMatch = itemVarinatsTextArr[fallbackQuantityIndex].match(/\d+(,|.|\d|\d.\d)\d+\s+\w+/g);
-
-                    if (fallbackQuantityMatch) {
-                        const fallbackQuantity = fallbackQuantityMatch[0];
-                        const unit = fallbackQuantity.match(/\s+\w+/)[0];
-                        itemVariantsObj.quantity = fallbackQuantity.replace(/EACH/g, "");
-                        itemVariantsObj.unit = unit.match(/\w+/g, "");
-                    } else {
-                        itemVariantsObj.quantity = "-";
-                        itemVariantsObj.unit = "-";
-                    }
                 }
 
                 // if (quantityMatch) {
