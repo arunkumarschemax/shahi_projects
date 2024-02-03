@@ -21,8 +21,9 @@ export class eddieOrderDataModel {
      shortDescription:string;
      currency:string;
    
-    retailPrice:string
-    status:string
+    retailPrice:string;
+    status:string;
+    exFactoryDate:string;
     sizeWiseData: EddieSizeWiseModel[]
    
 
@@ -47,6 +48,7 @@ export class eddieOrderDataModel {
        
         retailPrice:string,
         status:string,
+        exFactoryDate:string,
         sizeWiseData: EddieSizeWiseModel[],
     
 
@@ -72,6 +74,7 @@ export class eddieOrderDataModel {
        
         this.retailPrice = retailPrice
         this. status=status
+        this.exFactoryDate=exFactoryDate
         this.sizeWiseData = sizeWiseData
   
        

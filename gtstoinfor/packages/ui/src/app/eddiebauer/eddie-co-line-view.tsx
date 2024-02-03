@@ -60,12 +60,12 @@ const EddieColineView = () => {
         if (form.getFieldValue('item') !== undefined) {
             req.itemNo = form.getFieldValue('item');
         }
-        // if (form.getFieldValue('deliveryDate') !== undefined) {
-        //     req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
-        // }
-        // if (form.getFieldValue('deliveryDate') !== undefined) {
-        //     req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
-        // }
+        if (form.getFieldValue('deliveryDate') !== undefined) {
+            req.deliveryDateStartDate = (form.getFieldValue('deliveryDate')[0]).format('YYYY-MM-DD');
+        }
+        if (form.getFieldValue('deliveryDate') !== undefined) {
+            req.deliveryDateEndDate = (form.getFieldValue('deliveryDate')[1]).format('YYYY-MM-DD');
+        }
 
         if (form.getFieldValue("co_number") !== undefined) {
             req.coNumber = form.getFieldValue("co_number");
@@ -117,13 +117,13 @@ const EddieColineView = () => {
             //         return (record.style ? (record.style) : '-')
             //     }
             // },
-            // {
-            //     title: 'Delivery Date',
-            //     dataIndex: 'delivery_date',
-            //     render: (text, record) => {
-            //         return (record.delivery_date ? (record.delivery_date) : '-')
-            //     }
-            // },
+            {
+                title: 'Delivery Date',
+                dataIndex: 'delivery_date',
+                render: (text, record) => {
+                    return (record.delivery_date ? (record.delivery_date) : '-')
+                }
+            },
 
             {
                 title: 'Item No',
@@ -246,13 +246,13 @@ const EddieColineView = () => {
         //     sorter: (a, b) => a.style.localeCompare(b.style),
         //     sortDirections: ["ascend", "descend"],
         // },
-        // {
-        //     title: 'Delivery Date',
-        //     dataIndex: 'delivery_date',
-        //     render: (text, record) => {
-        //         return (record.delivery_date ? (record.delivery_date) : '-')
-        //     }
-        // },
+        {
+            title: 'Delivery Date',
+            dataIndex: 'delivery_date',
+            render: (text, record) => {
+                return (record.delivery_date ? (record.delivery_date) : '-')
+            }
+        },
 
 
         {
@@ -415,7 +415,7 @@ const EddieColineView = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    {/* <Col
+                    <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
@@ -425,7 +425,7 @@ const EddieColineView = () => {
                <Form.Item label="Delivery Date" name="deliveryDate"  >
                   <RangePicker style={{width:180}}   />
                 </Form.Item>
-              </Col> */}
+              </Col>
               <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}

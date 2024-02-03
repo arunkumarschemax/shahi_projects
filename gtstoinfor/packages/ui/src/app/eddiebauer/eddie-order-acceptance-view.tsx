@@ -153,7 +153,7 @@ import {
       // req.style = record.style;
       req.itemNo = itemNoValue;
       req.buyer = 'Eddie Bauer LLC';
-      // req.deliveryDate = record.deliveryDate;
+      req.deliveryDate = record.deliveryDate;
     
       console.log("Request Payload:", req);
     
@@ -174,7 +174,7 @@ import {
       const roleWiseMapData = new Map<string, EddieOrderAcceptanceRequest[]>();
   
       tableData.forEach(rec => {
-        const key = `${rec.poNumber}_${rec.itemNo}`;
+        const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}`;
   
         if (!roleWiseMapData.has(key)) {
           roleWiseMapData.set(key, [rec]);
@@ -370,6 +370,38 @@ import {
   
         },
         {
+          title: "Delivery Date",
+          dataIndex: "deliveryDate",
+          width:90,
+          // fixed: "left",
+  
+          // sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          // ...getColumnSearchProps('deliveryDate')
+  
+        },
+        {
+          title: "EX FACTORY DATE",
+          dataIndex: "exFactoryDate",
+          width: 90,
+          // sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         
+  
+        },
+        {
+          title: "Color",
+          dataIndex: "color",
+          width: 90,
+          // sorter: (a, b) => a.color.localeCompare(b.color),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         
+  
+        },
+        {
           title: "Buyer Item",
           dataIndex: "buyerItem",
           width: 90,
@@ -379,30 +411,30 @@ import {
          
   
         },
-        {
-          title: "Manufacture",
-          dataIndex: "manufacture",
-          width: 130,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}...` : "-"}
-            </Tooltip>
-          ),
+        // {
+        //   title: "Manufacture",
+        //   dataIndex: "manufacture",
+        //   width: 130,
+        //   // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+        //   // sortDirections: ["ascend", "descend"],
+        //   render: (text) => (
+        //     <Tooltip title={text || "-"}>
+        //       {text ? `${text.substring(0, 20)}...` : "-"}
+        //     </Tooltip>
+        //   ),
          
   
-        },
-        {
-          title: "Shipment Mode",
-          dataIndex: "shipmentMode",
-          width: 90,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
+        // },
+        // {
+        //   title: "Shipment Mode",
+        //   dataIndex: "shipmentMode",
+        //   width: 90,
+        //   // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+        //   // sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
          
   
-        },
+        // },
        
       
         {
@@ -670,16 +702,16 @@ import {
           },
         },
 
-        {
-          title: "Short Description",
-          dataIndex: "shortDescription",
-          width: 130,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
+        // {
+        //   title: "Short Description",
+        //   dataIndex: "shortDescription",
+        //   width: 130,
+        //   // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+        //   // sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
          
   
-        },
+        // },
         {
           title: "Consignee",
           dataIndex: "buyerAddress",
@@ -696,46 +728,46 @@ import {
         },
        
         
-        {
-          // title: "Address",
-          title: <div style={{textAlign:"center"}}>Delivery Address</div>,
+        // {
+        //   // title: "Address",
+        //   title: <div style={{textAlign:"center"}}>Delivery Address</div>,
   
-          dataIndex: "shipToAdd",
-          width: 150,
-         sorter: (a, b) => a.shipToAdd.localeCompare(b.shipToAdd),
-         sortDirections: ["ascend", "descend"],
-         ...getColumnSearchProps('shipToAdd'),
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}...` : "-"}
-            </Tooltip>
-          ),
-        },
-        {
-          title: "Incoterm",
-          dataIndex: "incoterm",
-          width: 90,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 13)}...` : "-"}
-            </Tooltip>
-          ),
-        },
-        {
-          title: "Payment Terms",
-          dataIndex: "paymentTerms",
-          width: 120,
-          // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 10)}...` : "-"}
-            </Tooltip>
-          ),
+        //   dataIndex: "shipToAdd",
+        //   width: 150,
+        //  sorter: (a, b) => a.shipToAdd.localeCompare(b.shipToAdd),
+        //  sortDirections: ["ascend", "descend"],
+        //  ...getColumnSearchProps('shipToAdd'),
+        //   render: (text) => (
+        //     <Tooltip title={text || "-"}>
+        //       {text ? `${text.substring(0, 20)}...` : "-"}
+        //     </Tooltip>
+        //   ),
+        // },
+        // {
+        //   title: "Incoterm",
+        //   dataIndex: "incoterm",
+        //   width: 90,
+        //   // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+        //   // sortDirections: ["ascend", "descend"],
+        //   render: (text) => (
+        //     <Tooltip title={text || "-"}>
+        //       {text ? `${text.substring(0, 13)}...` : "-"}
+        //     </Tooltip>
+        //   ),
+        // },
+        // {
+        //   title: "Payment Terms",
+        //   dataIndex: "paymentTerms",
+        //   width: 120,
+        //   // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+        //   // sortDirections: ["ascend", "descend"],
+        //   render: (text) => (
+        //     <Tooltip title={text || "-"}>
+        //       {text ? `${text.substring(0, 10)}...` : "-"}
+        //     </Tooltip>
+        //   ),
   
-        },
+        // },
   
         {
           title: "Item status",
@@ -899,8 +931,8 @@ import {
                  <Form.Item label="Style" name="style"  >
                     <Input placeholder="Enter Style " allowClear />
                   </Form.Item>
-                </Col>
-                <Col
+                </Col> */}
+                {/* <Col
                   xs={{ span: 24 }}
                   sm={{ span: 24 }}
                   md={{ span: 4 }}
@@ -910,7 +942,7 @@ import {
                  <Form.Item label="Color" name="color"  >
                     <Input placeholder="Enter Color "  allowClear />
                   </Form.Item>
-                </Col>
+                </Col> */}
                 <Col
                   xs={{ span: 24 }}
                   sm={{ span: 24 }}
@@ -921,7 +953,7 @@ import {
                  <Form.Item label="Delivery Date" name="deliveryDate"  >
                     <RangePicker style={{width:180}}   />
                   </Form.Item>
-                </Col> */}
+                </Col>
                 <Row>
                 <Col
                   xs={{ span: 24 }}

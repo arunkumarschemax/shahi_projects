@@ -137,7 +137,7 @@ export class EddieService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.style},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.style},${rec.po_number},${rec.delivery_date},${rec.color}`,
-            new eddieOrderDataModel(rec.id, rec.po_number, rec.po_date,rec.incoterm, rec.po_style, rec.color, rec.delivery_date, rec.ship_to_add, rec.buyer_address,rec.manufacture,rec.shipment_mode,rec.payment_terms,rec.po_line,rec.buyer_item,rec.short_description,rec.currency,rec.retail_price,rec.status,[])
+            new eddieOrderDataModel(rec.id, rec.po_number, rec.po_date,rec.incoterm, rec.po_style, rec.color, rec.delivery_date, rec.ship_to_add, rec.buyer_address,rec.manufacture,rec.shipment_mode,rec.payment_terms,rec.po_line,rec.buyer_item,rec.short_description,rec.currency,rec.retail_price,rec.status,rec.ex_factory_date,[])
           );
 
         }
@@ -263,7 +263,7 @@ export class EddieService {
         return new CommonResponseModel(false, 0, 'Please enter Item No')
       };
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
-      const records = await this.EddieOrdersRepo.find({ where: { poNumber: req.poNumber} });
+      const records = await this.EddieOrdersRepo.find({ where: { poNumber: req.poNumber,deliveryDate: req.deliveryDate } });
       const empty = [];
 
       //console.log(rec,'reccccccccc')
@@ -273,7 +273,7 @@ export class EddieService {
       // entity.style = req.style;
       entity.itemNo = req?.itemNo;
       entity.status = 'Open';
-      // entity.deliveryDate = req.deliveryDate;
+      entity.deliveryDate = req.deliveryDate;
       entity.createdUser = 'admin';
       empty.push(entity)
 
@@ -284,7 +284,7 @@ export class EddieService {
 
       if (save) {
         const update = await this.EddieOrdersRepo.update(
-          { poNumber: req.poNumber}, // Conditions for updating
+          { poNumber: req.poNumber,deliveryDate: req.deliveryDate }, // Conditions for updating
           { status: StatusEnum.INPROGRESS }
         );
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)

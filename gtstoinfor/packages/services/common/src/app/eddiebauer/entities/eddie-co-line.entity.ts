@@ -22,10 +22,10 @@ export class EddieCOLineEntity {
     })
     poNumber: string;
     
-    // @Column('varchar', {
-    //     name: "delivery_date"
-    // })
-    // deliveryDate: string
+    @Column('varchar', {
+        name: "delivery_date"
+    })
+    deliveryDate: string
 
 
     // @Column('varchar', {

@@ -17,7 +17,7 @@ export class EddieCOLineRepository extends Repository<EddieCOLineEntity> {
 
     async getCoLineData(req: EddieOrderFilter): Promise<any[]> {
       const query = this.createQueryBuilder('co')
-        .select(`DISTINCT co.po_number, co.co_date, co.item_no, co.status, co.error_msg,
+        .select(`DISTINCT co.po_number,co.delivery_date, co.co_date, co.item_no, co.status, co.error_msg,
                  DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user, co.co_number,co.id`);
   
       if (req.poNumber !== undefined) {
@@ -29,9 +29,9 @@ export class EddieCOLineRepository extends Repository<EddieCOLineEntity> {
     //   if(req.style !== undefined){
     //     query.andWhere(`co.style LIKE :style`, { style: `%${req.style}%` });
     // }
-  //   if (req.deliveryDateStartDate !== undefined) {
-  //     query.andWhere(`STR_TO_DATE(co.delivery_date, '%Y-%m-%d') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
-  // }
+    if (req.deliveryDateStartDate !== undefined) {
+      query.andWhere(`STR_TO_DATE(co.delivery_date, '%Y-%m-%d') BETWEEN '${req.deliveryDateStartDate}' AND '${req.deliveryDateEndDate}'`)
+  }
    
     
 

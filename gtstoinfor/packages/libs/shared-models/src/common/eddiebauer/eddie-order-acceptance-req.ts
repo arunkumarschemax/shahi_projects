@@ -4,6 +4,6 @@ export class EddieOrderAcceptanceRequest {
     // style: number;
     itemNo: string;
     buyer: string;
-    // deliveryDate:string;
+     deliveryDate:string;
     
 }
