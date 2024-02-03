@@ -24,7 +24,7 @@ const [trimName,setTrimName] = useState<string>('')
 
 const componentsMapping = {
     "Joker Tag" : <JokerTagPrint info={bomInfo} />,
-    "Hangtag":<HangTag info={bomInfo}/>,
+    "Hangtag":<HangTag />,
     "Wash Care Label":<WasCarelabel  />
 }
 
