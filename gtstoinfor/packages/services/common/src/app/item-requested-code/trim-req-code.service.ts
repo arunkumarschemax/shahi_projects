@@ -20,21 +20,20 @@ export class TrimReqCodeService {
             const entity = new TrimRequestCodeEntity();
             entity.buyerId = dto.buyerId
             entity.trimType = dto.trimType
-            // entity.part = dto.part;
+            entity.part = dto.part;
             entity.categoryId = dto.categoryId;
-            // entity.colorId = dto.colorId;
+            entity.colorId = dto.colorId;
             entity.contentId = dto.contentId;
             entity.finishId = dto.finishId;
             entity.holeId = dto.holeId;
-            // entity.logo = dto.logo;
-            // entity.part = dto.part;
-            // entity.qualityId = dto.qualityId;
-            // entity.structureId = dto.structureId;
-            // entity.varietyId = dto.varietyId;
-            // entity.uomId = dto.uomId;
+            entity.logo = dto.logo;
+            entity.qualityId = dto.qualityId;
+            entity.structureId = dto.structureId;
+            entity.varietyId = dto.varietyId;
+            entity.uomId = dto.uomId;
             entity.typeId = dto.typeId;
             entity.trimCategoryId = dto.trimCategoryId;
-            // entity.thicknessId = dto.thicknessId;
+            entity.thicknessId = dto.thicknessId;
             entity.m3Code = dto.m3Code;
             entity.hsnCode= dto.hsnCode;
             entity.status = MaterialFabricEnum.OPEN
@@ -123,7 +122,12 @@ export class TrimReqCodeService {
       }
 
       if(req.status ==='COMPLETED'){
-        query = `SELECT trc.trim_request_code_id AS id, trc.trim_type trimType, trc.m3_trim_id AS m3TrimId,m3t.m3_code AS m3Code,m3t.hsn_code hsnCode,
+        query = `SELECT trc.trim_request_code_id AS id, trc.trim_type trimType, trc.m3_trim_id AS m3TrimId,m3t.m3_code AS m3Code,m3t.hsn_code hsnCode,m3t.logo,m3t.part,
+        m3t.variety_id AS varietyId,v.variety,
+        m3t.uom_id AS uomId,u.uom,
+        m3t.thickness_id AS thicknessId, th.thickness,
+        m3t.quality_id AS qualityId,q.quality_name AS qualityName,
+        m3t.color_id AS colorId, cl.colour AS color,
         trc.trim_category_id AS trimCategoryId,tr.trim_category AS trimCategory,
         m3t.category_id AS categoryId,cg.category,
         m3t.content_id AS contentId,c.content,
@@ -140,6 +144,12 @@ export class TrimReqCodeService {
         LEFT JOIN hole h ON h.hole_id = m3t.hole_id
         LEFT JOIN buyers b ON b.buyer_id = trc.buyer_id
         LEFT JOIN trim tr ON tr.trim_id = trc.trim_category_id 
+        LEFT JOIN variety v ON v.variety_id = m3t.variety_id
+        LEFT JOIN uom u ON u.id = m3t.uom_id
+        LEFT JOIN thickness th ON th.thickness_id = m3t.thickness_id
+        LEFT JOIN structure s ON s.structure_id = m3t.structure_id
+        LEFT JOIN qualitys q ON q.quality_id = m3t.quality_id
+        LEFT JOIN colour cl ON cl.colour_id = m3t.color_id
         WHERE 1=1`
         if (req.ExternalRefNo && req.ExternalRefNo!=null){
           query += ` AND b.external_ref_number = '${req.ExternalRefNo}'`

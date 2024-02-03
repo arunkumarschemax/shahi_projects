@@ -300,13 +300,14 @@ const onTabChange = (key) => {
     {
         title: "Weight",
         dataIndex: "weight",
+        ...getColumnSearchProps('weight'),
         render : (text,record) => {
-            return (
-                <span>
-                    {record.weightId ? `${record.weightId}-${record.weightUOM}`: '-'}
-                </span>
-            )
-        },
+              return (
+                  <span>
+                      {record.weightId ? `${record.weightId}-${record.weightUOM}`: '-'}
+                  </span>
+              )
+          },
     },
     {
         title: "Construction",
@@ -315,6 +316,7 @@ const onTabChange = (key) => {
           {
             title:'EPI',
             dataIndex:'epiConstruction',
+            ...getColumnSearchProps('epiConstruction'),
             render: (text, record) => (
                 <span>
                     {record.epiConstruction ? record.epiConstruction : '-'}
@@ -324,6 +326,7 @@ const onTabChange = (key) => {
           {
             title:'PPI',
             dataIndex:'ppiConstruction',
+            ...getColumnSearchProps('ppiConstruction'),
             render: (text, record) => (
                 <span>
                     {record.ppiConstruction ? record.ppiConstruction : '-'}
@@ -347,6 +350,7 @@ const onTabChange = (key) => {
     {
         title: "Width",
         dataIndex: "width",
+        ...getColumnSearchProps('width'),
         render : (text,record) => {
             return (
                 <span>
@@ -384,6 +388,7 @@ const onTabChange = (key) => {
         dataIndex: 'shrinkage',
         sorter: (a, b) => (a.shrinkage || '').localeCompare(b.shrinkage || ''),
         sortDirections: ['descend', 'ascend'],
+        ...getColumnSearchProps('shrinkage'),
         render: (text, record) => (
             <span>
                 {record.shrinkage ? record.shrinkage : '-'}

@@ -424,10 +424,12 @@ export const TrimReqCodeView = () => {
       key: "sno",
       responsive: ["sm"],
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      fixed:'left'
     },
     {
       title: <div style={{ textAlign: "center" }}>Buyer</div>,
       dataIndex: "buyerName",
+      fixed:'left',
       ...getColumnSearchProps("buyerName"),
       sorter: (a, b) => a.buyerName?.localeCompare(b.buyerName),
       sortDirections: ["descend", "ascend"],
@@ -440,6 +442,7 @@ export const TrimReqCodeView = () => {
     {
       title: <div style={{textAlign:"center"}}>Trim Type</div>,
       dataIndex: "trimType",
+      fixed:'left',
       // ...getColumnSearchProps("trimType"),
       sorter: (a, b) => a.trimType?.localeCompare(b.trimType),
       sortDirections: ["descend", "ascend"],
@@ -452,6 +455,7 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Trim Category</div>,
       dataIndex: "trimCategory",
       ...getColumnSearchProps("trimCategory"),
+      fixed:'left',
       sorter: (a, b) => a.trimCategory?.localeCompare(b.trimCategory),
       sortDirections: ["descend", "ascend"],
       render: (text, record) => (
@@ -460,13 +464,21 @@ export const TrimReqCodeView = () => {
         </span>
     ),
     },
-    // mapData[0]?.structure === true?{
-    //   title: <div style={{textAlign:"center"}}>Structure</div>,
-    //   dataIndex: "structure",
-    //   ...getColumnSearchProps("structure"),
-    //   sorter: (a, b) => a.structure.localeCompare(b.structure),
-    //   sortDirections: ["descend", "ascend"],
-    // }: {},
+    // mapData[0]?.structure === true?
+    {
+      title: <div style={{textAlign:"center"}}>Structure</div>,
+      dataIndex: "structure",
+      ...getColumnSearchProps("structure"),
+      sorter: (a, b) => a.structure?.localeCompare(b.structure),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.structure ? record.structure : '-'}
+        </span>
+    ),
+    }
+    // : {}
+    ,
     // mapData[0]?.category === true?
     {
       title: <div style={{textAlign:"center"}}>Category</div>,
@@ -541,55 +553,111 @@ export const TrimReqCodeView = () => {
     }
     // : {}
     ,
-    // mapData[0]?.quality === true?{
-    //   title: <div style={{textAlign:"center"}}>Quality</div>,
-    //   dataIndex: "qualityName",
-    //   ...getColumnSearchProps("qualityName"),
-    //   sorter: (a, b) => a.qualityName.localeCompare(b.qualityName),
-    //   sortDirections: ["descend", "ascend"],
-    // }: {},
-    // mapData[0]?.thickness === true?{
-    //   title: <div style={{textAlign:"center"}}>Thickness</div>,
-    //   dataIndex: "thickness",
-    //   ...getColumnSearchProps("thickness"),
-    //   sorter: (a, b) => a.thickness.localeCompare(b.thickness),
-    //   sortDirections: ["descend", "ascend"],
-    // }: {},
-    // mapData[0]?.variety === true?{
-    //   title: <div style={{textAlign:"center"}}>Variety</div>,
-    //   dataIndex: "variety",
-    //   ...getColumnSearchProps("variety"),
-    //   sorter: (a, b) => a.variety.localeCompare(b.variety),
-    //   sortDirections: ["descend", "ascend"],
-    // }: {},
-    // mapData[0]?.uom === true?{
-    //   title: <div style={{textAlign:"center"}}>UOM</div>,
-    //   dataIndex: "uom",
-    //   ...getColumnSearchProps("uom"),
-    //   sorter: (a, b) => a.uom.localeCompare(b.uom),
-    //   sortDirections: ["descend", "ascend"],
-    // }: {},
-    // mapData[0]?.color === true?{
-    //   title: <div style={{textAlign:"center"}}>Color</div>,
-    //   dataIndex: "color",
-    //   ...getColumnSearchProps("color"),
-    //   sorter: (a, b) => a.color.localeCompare(b.color),
-    //   sortDirections: ["descend", "ascend"],
-    // }: {},
-    // mapData[0]?.logo === true?{
-    //   title: <div style={{textAlign:"center"}}>Logo</div>,
-    //   dataIndex: "logo",
-    //   ...getColumnSearchProps("logo"),
-    //   sorter: (a, b) => a.logo.localeCompare(b.logo),
-    //   sortDirections: ["descend", "ascend"],
-    // }: {},
-    // mapData[0]?.part === true?{
-    //   title: <div style={{textAlign:"center"}}>Part</div>,
-    //   dataIndex: "part",
-    //   ...getColumnSearchProps("part"),
-    //   sorter: (a, b) => a.part.localeCompare(b.part),
-    //   sortDirections: ["descend", "ascend"],
-    // }:{},
+    // mapData[0]?.quality === true?
+    {
+      title: <div style={{textAlign:"center"}}>Quality</div>,
+      dataIndex: "qualityName",
+      ...getColumnSearchProps("qualityName"),
+      sorter: (a, b) => a.qualityName?.localeCompare(b.qualityName),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.qualityName ? record.qualityName : '-'}
+        </span>
+    ),
+    }
+    // : {}
+    ,
+    // mapData[0]?.thickness === true?
+    {
+      title: <div style={{textAlign:"center"}}>Thickness</div>,
+      dataIndex: "thickness",
+      ...getColumnSearchProps("thickness"),
+      sorter: (a, b) => a.thickness?.localeCompare(b.thickness),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.thickness ? record.thickness : '-'}
+        </span>
+    ),
+    }
+    // : {}
+    ,
+    // mapData[0]?.variety === true?
+    {
+      title: <div style={{textAlign:"center"}}>Variety</div>,
+      dataIndex: "variety",
+      ...getColumnSearchProps("variety"),
+      sorter: (a, b) => a.variety?.localeCompare(b.variety),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.variety ? record.variety : '-'}
+        </span>
+    ),
+    }
+    // : {}
+    ,
+    // mapData[0]?.uom === true?
+    {
+      title: <div style={{textAlign:"center"}}>UOM</div>,
+      dataIndex: "uom",
+      ...getColumnSearchProps("uom"),
+      sorter: (a, b) => a.uom?.localeCompare(b.uom),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.uom ? record.uom : '-'}
+        </span>
+    ),
+    }
+    // : {}
+    ,
+    // mapData[0]?.color === true?
+    {
+      title: <div style={{textAlign:"center"}}>Color</div>,
+      dataIndex: "color",
+      ...getColumnSearchProps("color"),
+      sorter: (a, b) => a.color?.localeCompare(b.color),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.color ? record.color : '-'}
+        </span>
+    ),
+    }
+    // : {}
+    ,
+    // mapData[0]?.logo === true?
+    {
+      title: <div style={{textAlign:"center"}}>Logo</div>,
+      dataIndex: "logo",
+      ...getColumnSearchProps("logo"),
+      sorter: (a, b) => a.logo?.localeCompare(b.logo),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.logo ? record.logo : '-'}
+        </span>
+    ),
+    }
+    // : {}
+    ,
+    // mapData[0]?.part === true?
+    {
+      title: <div style={{textAlign:"center"}}>Part</div>,
+      dataIndex: "part",
+      ...getColumnSearchProps("part"),
+      sorter: (a, b) => a.part?.localeCompare(b.part),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.part ? record.part : '-'}
+        </span>
+    ),
+    }
+    // :{}
+    ,
     {
       title: <div style={{textAlign:"center"}}>M3 Code</div>,
       dataIndex: "m3Code",
@@ -1037,6 +1105,7 @@ export const TrimReqCodeView = () => {
               dataSource={data}
               columns={tableColumns("1")}
               size="small"
+              scroll={{x:'max-content'}}
             />
         </TabPane>
         <TabPane tab="Completed" key="COMPLETED">
@@ -1045,6 +1114,7 @@ export const TrimReqCodeView = () => {
               dataSource={data}
               columns={tableColumns("2")}
               size="small"
+              scroll={{x:'max-content'}}
             />
         </TabPane>
       </Tabs>
