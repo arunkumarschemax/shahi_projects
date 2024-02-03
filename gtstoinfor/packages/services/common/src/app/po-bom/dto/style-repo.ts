@@ -26,7 +26,7 @@ export class StyleRepo extends Repository<StyleEntity> {
         .select(`sty.id as styleId,sty.style,sty.style_name,bom.item_name,bom.description,bom.im_code,bom.item_type,bom.use,stco.combination,stco.primary_color,stco.secondary_color,stco.logo_color,bom.id as bomId,stco.id as styleComboId,stco.color,bom.uom,bom.qty`)
         .leftJoin(BomEntity,'bom',`bom.style_id = sty.id`)
         .leftJoin(StyleComboEntity,'stco',`stco.bom_id = bom.id`)
-        .where(`sty.style = '${req.style}'`)
+        .where(`sty.style = '${req.style}' and item_name='${req.trimName}'`)
         return await query.getRawMany()
 
     }
