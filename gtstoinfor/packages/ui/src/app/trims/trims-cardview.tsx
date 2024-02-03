@@ -32,31 +32,14 @@ useEffect(()=>{
     getAllTrims();
 },[])
 
-// useEffect(() => {
-//     if(state.state.info && trimName != ''){
-//         console.log(state.state.info.styleNumber)
-//         const req = new StyleNumberReq(state.state.info.styleNumber,trimName)
-//          service.getBomInfoAgainstStyle(req).then(res =>{
-//             if(res.status){
-//                 setBomInfo(res.data)
-//             }
-//         })
-//     }
-
-// },[state.state])
-
-useEffect(() =>{
-    if(trimName != '' && state.state.info){
-        console.log(trimName)
-        console.log('55555555')
-        const req = new StyleNumberReq(state.state.info.styleNumber,trimName)
-        service.getBomInfoAgainstStyle(req).then(res =>{
-           if(res.status){
-               setBomInfo(res.data)
-           }
-       })
-    }
-})
+const getBomInfoAgainstStyle = (styleNumber,trim)=>{
+    const req = new StyleNumberReq(styleNumber,trim)
+    service.getBomInfoAgainstStyle(req).then(res =>{
+        if(res.status){
+            setBomInfo(res.data)
+        }
+    })
+}
 
     const getAllTrims=()=>{
         service.getAllTrimInfo().then(res=>{
@@ -80,7 +63,11 @@ useEffect(() =>{
     const cardOnclick = (val) => {
         setTrimName(val.item)
         setModalOpen(true)
+        if(state.state.info){
+            getBomInfoAgainstStyle(state.state.info.styleNumber,val.item)
+        }
     }
+
     const onCancel = () =>{
         setModalOpen(false)
         setTrimName('')
