@@ -42,7 +42,7 @@ export class StyleEntity {
     
     
     @Column('varchar',{
-        name:'factoryLo',
+        name:'factory_lo',
         nullable:false
     })
     factoryLo:string

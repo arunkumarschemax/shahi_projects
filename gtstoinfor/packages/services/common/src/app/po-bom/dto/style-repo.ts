@@ -17,7 +17,7 @@ export class StyleRepo extends Repository<StyleEntity> {
 
     async getStyelsData(): Promise<any[]> {
         const queryBuilder = this.createQueryBuilder('s')
-        .select(`id,style, style_name AS styleName,season,exp_no AS expNo,msc,factory_lo,status,file_data as fileData,null as bomData`)
+        .select(`id,style, style_name AS styleName,season,exp_no AS expNo,msc,s.factory_lo as factoryLo,status,file_data as fileData,null as bomData`)
         return await queryBuilder.getRawMany()
     }
 

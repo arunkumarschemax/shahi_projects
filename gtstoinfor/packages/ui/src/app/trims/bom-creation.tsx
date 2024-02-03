@@ -449,7 +449,7 @@ const bomservice = new BomService();
       }
     });
     columns.push({
-      title: 'Action', dataIndex: 'action', width: 120, align: 'center',
+      title: 'Action', dataIndex: 'action', width: 120, align: 'center',fixed:'right',
       render:(text,record)=>{
         return(
           <Button onClick={() => onGenerateBom(record)}>Generate BOM</Button>
@@ -459,7 +459,6 @@ const bomservice = new BomService();
     })
 
     const onGenerateBom = (record) => {
-      console.log(record,'***')
       navigate('/bom/trim-List',{state:{info:record}})
       // const req = new StyleNumberReq(record.styleNumber)
       // bomservice.getBomInfoAgainstStyle(req).then(res =>{
