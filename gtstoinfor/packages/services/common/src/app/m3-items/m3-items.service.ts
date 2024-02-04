@@ -103,51 +103,55 @@ export class M3ItemsService {
       console.log("*#################################")
       console.log(req)
 
-      let query = "Select m3_items_Id AS m3ItemsId, item_code AS itemCode, description AS description from m3_items where m3_items_Id >0"
+      let query = `Select m3i.m3_items_Id AS m3ItemsId, m3i.item_code AS itemCode, m3i.description AS description 
+      from m3_items m3i
+      LEFT JOIN m3_fabric_yarn m3fy ON m3fy.m3_items_id = m3i.m3_items_id
+      LEFT JOIN m3_fabric_content m3fc ON m3fc.m3_items_id = m3i.m3_items_id
+      where m3i.m3_items_Id >0`
       if(req.buyerId != undefined){
-        query=query+' and buyer_id='+req.buyerId+''
+        query=query+' and m3i.buyer_id='+req.buyerId+''
       }
       if(req.fabricTypeId != undefined){
-        query=query+' and fabric_type='+req.fabricTypeId+''
+        query=query+' and m3i.fabric_type='+req.fabricTypeId+''
       }
       if(req.weaveId != undefined){
-        query=query+' and weave='+req.weaveId+''
+        query=query+' and m3i.weave='+req.weaveId+''
       }
       if(req.epiConstruction != undefined){
-        query=query+' and epi_construction="'+req.epiConstruction+'"'
+        query=query+' and m3i.epi_construction="'+req.epiConstruction+'"'
       }
       if(req.ppiConstruction != undefined){
-        query=query+' and ppi_construction="'+req.ppiConstruction+'"'
+        query=query+' and m3i.ppi_construction="'+req.ppiConstruction+'"'
       }
       if(req.yarnType != '' && req.yarnType != undefined){
-        query=query+' and yarn_type="'+req.yarnType+'"'
+        query=query+' and m3i.yarn_type="'+req.yarnType+'"'
       }
       if(req.finishId != undefined){
-        query=query+' and finish='+req.finishId+''
+        query=query+' and m3i.finish='+req.finishId+''
       }
       if(req.shrinkage != undefined){
-        query=query+' and shrinkage="'+req.shrinkage+'"'
+        query=query+' and m3i.shrinkage="'+req.shrinkage+'"'
       }
       if(req.m3Code != undefined){
-        query=query+' and m3_code="'+req.m3Code+'"'
+        query=query+' and m3i.m3_code="'+req.m3Code+'"'
       }
       if(req.content != undefined){
-        query=query+' and content_id='+req.content+''
+        query=query+' and m3fc.content='+req.content+''
       }
       if(req.hsnCode != undefined){
-        query=query+' and hsn_code="'+req.hsnCode+'"'
+        query=query+' and m3i.hsn_code="'+req.hsnCode+'"'
       }
       if(req.weightUnit != undefined){
-        query=query+' and weight_unit='+req.weightUnit+''
+        query=query+' and m3i.weight_unit='+req.weightUnit+''
       }
       if(req.weightValue != undefined){
-        query=query+' and weight="'+req.weightValue+'"'
+        query=query+' and m3i.weight="'+req.weightValue+'"'
       }
       if(req.widthUnit != undefined){
-        query=query+' and width_unit='+req.widthUnit+''
+        query=query+' and m3i.width_unit='+req.widthUnit+''
       }
       if(req.widthValue != undefined){
-        query=query+' and width="'+req.widthValue+'"'
+        query=query+' and m3i.width="'+req.widthValue+'"'
       }
       
       const data = await this.datasource.query(query);
