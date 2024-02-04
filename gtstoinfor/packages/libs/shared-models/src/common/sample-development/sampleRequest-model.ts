@@ -14,7 +14,7 @@ export class SampleRequestInfoModel{
     ETD:Date
     extn:string
     conversion: string
-    dmm:string
+    dmmFirst:string
     product:string
     user:string
     description:string
@@ -31,7 +31,7 @@ export class SampleRequestInfoModel{
     sampleType?:string
         sampleSubType?:string
         category?:string
-    
+    dmmLast?:string
     constructor(
         sampleRequestNo: string,
         sampleRequestId:number,
@@ -46,7 +46,7 @@ export class SampleRequestInfoModel{
         ETD:Date,
         extn:string,
         conversion: string,
-        dmm:string,
+        dmmFirst:string,
         product:string,
         user:string,
         description:string,
@@ -63,7 +63,9 @@ export class SampleRequestInfoModel{
         location?:string,
         sampleType?:string,
         sampleSubType?:string,
-        category?:string
+        category?:string,
+        dmmLast?:string
+
 
 
     ){
@@ -82,7 +84,7 @@ export class SampleRequestInfoModel{
        this.employee = employee
        this.pch = pch
        this.ETD = ETD
-       this.dmm = dmm
+       this.dmmFirst = dmmFirst
        this.extn = extn
        this.description = description
        this.costRef = costRef
@@ -98,6 +100,7 @@ export class SampleRequestInfoModel{
        this.sampleType = sampleType
        this.sampleSubType = sampleSubType
        this.category =category
+       this.dmmLast =dmmLast
         }
 
 

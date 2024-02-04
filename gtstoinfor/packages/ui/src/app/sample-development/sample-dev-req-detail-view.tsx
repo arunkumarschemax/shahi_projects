@@ -387,7 +387,7 @@ return(
         <DescriptionsItem label='Contact No'>{data?.[0]?.contact?data?.[0]?.contact:'-'}</DescriptionsItem>
         <DescriptionsItem label='Extn'>{data?.[0]?.extn?data?.[0]?.extn:'-'}</DescriptionsItem>
         <DescriptionsItem label='Sam'>{data?.[0]?.sam?data?.[0]?.sam:'-'}</DescriptionsItem>
-        <DescriptionsItem label='DMM'>{data?.[0]?.dmm?data?.[0]?.dmm:'-'}</DescriptionsItem>
+        <DescriptionsItem label='DMM'>{data?.[0]?.dmmFirst?`${data?.[0]?.dmmFirst}-${data?.[0]?.dmmLast}`:'-'}</DescriptionsItem>
         {/* <DescriptionsItem label='Technician'>{data?.[0]?.employee?data?.[0]?.employee:'-'}</DescriptionsItem> */}
         <DescriptionsItem label='Product'>{data?.[0]?.product?data?.[0]?.product:'-'}</DescriptionsItem>
         {/* <DescriptionsItem label='Type'>{data?.[0]?.type?data?.[0]?.type:'-'}</DescriptionsItem> */}
