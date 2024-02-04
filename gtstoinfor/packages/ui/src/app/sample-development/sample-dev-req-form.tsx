@@ -505,10 +505,11 @@ const getBase64 = (img, callback) => {
       console.log(fileList);
       setFileList(fileList);
       setImageUrl('');
+      renderButtons()
     },
     beforeUpload: (file: any) => {
-      if (!file.name.match(/\.(pdf|xlsx|xls|png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
-        AlertMessages.getErrorMessage("Only pdf,xlsx,xls,png,jpeg,jpg files are allowed!");
+      if (!file.name.match(/\.(PDF|pdf|xlsx|xls|png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+        AlertMessages.getErrorMessage("Only PDF,pdf,xlsx,xls,png,jpeg,jpg files are allowed!");
         return true;
       }
       console.log(file);
@@ -520,6 +521,7 @@ const getBase64 = (img, callback) => {
         //   return true;
         // } else {
             setFileList([...fileList,file]);
+            renderButtons()
           
           return false;
         // }
@@ -533,7 +535,7 @@ const getBase64 = (img, callback) => {
       strokeWidth: 3,
       format: percent => `${parseFloat(percent.toFixed(2))}%`,
     },
-    fileList: fileList.length > 0?fileList:[],
+    // fileList: fileList.length > 0?fileList:[],
   };
   
   const handleFabricsDataUpdate = (updatedData) => {
@@ -563,15 +565,19 @@ const getBase64 = (img, callback) => {
 const renderButtons = (): ReactNode => {
   const buttons: ReactNode[] = [];
   console.log(fileList)
+  console.log(fileList.filter((f)=>f != undefined))
   if(fileList != undefined){
-    fileList?.forEach(res => {
+    (fileList.filter((f)=>f != undefined))?.forEach(res => {
       console.log(res)
-      if(res.type !="application/pdf" && res.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && res.type != "application/xlsx" ){
+      if(res.type !="application/xls" && res.type !="application/PDF" && res.type !="application/pdf" && res.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && res.type != "application/xlsx" && res != undefined){
         buttons.push(
             <Tooltip title={`${res.name} preview`}>
               <Button key={res.uid} id={res.uid} icon={<EyeOutlined />} onClick={() => onFabriView(res)}></Button>
             </Tooltip>
         );
+      }
+      else{
+        console.log("else")
       }
     });
   }
@@ -834,7 +840,7 @@ const renderButtons = (): ReactNode => {
               <Upload
                 style={{ width: '100%' }} 
                   {...uploadFabricProps}
-                  accept=".pdf, .xlsx, .xls, .png, .jpeg, .jpg, .pjpeg, .gif, .tiff, .x-tiff, .x-png"
+                  accept=".PDF,.pdf, .xlsx, .xls, .png, .jpeg, .jpg, .pjpeg, .gif, .tiff, .x-tiff, .x-png"
                   >
                   <Button
                       style={{ color: 'black', backgroundColor: '#7ec1ff' }}
@@ -844,9 +850,12 @@ const renderButtons = (): ReactNode => {
                       Upload
                   </Button>
               </Upload>
-              {renderButtons()}
           </Form.Item>
           </Col>
+          <Col span={4} style={{paddingTop:"25px"}}>
+            {renderButtons()}
+          </Col>
+
           <Col span={4} >
             {form.getFieldValue('styleId') !== undefined && (
               <Card style={{ maxHeight: '200px' }}>
