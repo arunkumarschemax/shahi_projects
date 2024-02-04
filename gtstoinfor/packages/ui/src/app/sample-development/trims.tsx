@@ -173,7 +173,7 @@ const uploadFabricProps = (keyValue:number): UploadProps =>  ({
     })
 }
 
-const getM3TrimsTypes = (value: number,request) => {
+const getM3TrimsTypes = (value: number,request:any,KeyValue:number) => {
   console.log(request)
   let req = new M3TrimFilterReq()
   req.buyerId=props.buyerId
@@ -195,6 +195,7 @@ const getM3TrimsTypes = (value: number,request) => {
   //  req = new M3TrimFilterReq(props.buyerId,value,itemType,undefined,undefined,undefined,undefined,undefined,undefined,undefined,undefined)
   service.getM3TrimsByBuyer(req).then(res => {
       if(res.status) {
+          props.form.setFieldValue(`trimCode${KeyValue}`,undefined)
           setM3Trims(res.data)
       }else{
         setM3Trims([])
@@ -205,7 +206,7 @@ const getM3TrimsTypes = (value: number,request) => {
 
 const getMappedTrims = (value, row) => {
   setSearchVisible(true)
-  getM3TrimsTypes(value,undefined)
+  getM3TrimsTypes(value,undefined,keyValue)
   const req = new TrimIdRequestDto(undefined,value)
   paramsService.getMappedParamsByTrim(req).then((res) => {
     if (res.status) {
@@ -520,10 +521,10 @@ const getMappedTrims = (value, row) => {
             optionFilterProp="children"
             placeholder="Select Trim Code"
             suffixIcon={searchVisible == true?<SearchOutlined
-            onClick={trimFilterFormVisible}
+            onClick={() => trimFilterFormVisible(record.key)}
              style={{ fontSize: '28px', marginLeft: '-7px' }} />:<></>}
           >
-            {/* <Option name={`trimCode${record.key}`} key={0} value={0}>Please Select Trim Code</Option> */}
+            <Option name={`trimCode${record.key}`} key={0} value={undefined}>Please Select Trim Code</Option>
             {m3Trims.map(item => {
               return <Option key={item.m3TrimsId} value={item.m3TrimsId}>{item.trimCode}</Option>;
             })}
@@ -835,17 +836,18 @@ const tableColumns = (val,fabindex) => {
   const closeModel = () =>{
     setVisibleModel(false)
   }
-  const trimFilterFormVisible =()=>{
+  const trimFilterFormVisible =(key)=>{
      setVisibleModel(true)
+     setKeyValue(key)
   }
   const handleTrimFilterData =(trimFilterData) =>{
     console.log(trimFilterData)
     let req
     if(trimFilterData != undefined){
       req = new M3TrimFilterReq(trimFilterData.buyerId,undefined,undefined,trimFilterData[0].categoryId,trimFilterData[0].contentId,trimFilterData[0].finishId,trimFilterData[0].holeId,trimFilterData[0].hsnCode,trimFilterData[0].m3Code,trimFilterData[0].typeId,trimFilterData[0].trimMapId) 
-      getM3TrimsTypes(undefined,req)
+      getM3TrimsTypes(undefined,req,keyValue)
     }else{
-      getM3TrimsTypes(undefined,undefined)
+      getM3TrimsTypes(undefined,undefined,keyValue)
     }
   }
   return (
