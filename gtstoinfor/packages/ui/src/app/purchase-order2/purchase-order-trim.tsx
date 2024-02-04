@@ -260,7 +260,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
         {
             title:' Indent Code',
             dataIndex:'indentCode',
-            width:'100px' 
+            // width:'100px' 
         },
         {
             title:'Trim Params',
@@ -270,12 +270,12 @@ const [sizeData, setSizeData]=useState<any[]>([])
         {
             title:'M3 Trim Code',
             dataIndex:'m3TrimCodeName',
-            width:'100px'
+            // width:'100px'
         },
         {
             title:'UOM',
             dataIndex:'quantityUomName',
-            width:'100px',
+            // width:'100px',
             render:(value,row)=>{
                 return<>{value ? value : row.trimUomName ? row.trimUomName:'NA' }</>
             }
@@ -292,18 +292,18 @@ const [sizeData, setSizeData]=useState<any[]>([])
         {
             title:'Po Quantity',
             dataIndex:'poQuantity',
-            width:'100px'
+            // width:'100px'
             
         },
         {
             title: 'Unit Price',
             dataIndex: 'unitPrice',
-            width:'100px'
+            // width:'100px'
         },
         {
             title: 'Discount',
             dataIndex: 'discount',
-            width:'100px'
+            // width:'100px'
         },
         {
             title: 'Tax Percentage',
@@ -835,7 +835,9 @@ const [sizeData, setSizeData]=useState<any[]>([])
                 <Row>
                 {trimtableVisible ? 
                 <Table 
-                scroll={{ x: 'max-content' }} 
+                bordered={true}
+                size="small"
+                scroll={{x:true}}
                 columns={tableColumns} 
                 dataSource={trimTableData}
                  pagination={{

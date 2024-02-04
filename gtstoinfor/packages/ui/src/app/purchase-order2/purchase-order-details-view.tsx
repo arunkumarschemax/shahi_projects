@@ -69,18 +69,20 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
   })
   const itemColumns: any = [
     {
-      title: 'S No',
+      title:<div style={{textAlign:'center'}}>S No</div> ,
       key: 'sno',
-      width: '70px',
+      // width: '70px',
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
       onCell: (record: any) => ({
         rowSpan: record.rowSpan,
       }),
       fixed: 'left',
+      align:'center',
+
     },
     {
-      title: 'Material Type',
+      title:<div style={{textAlign:'center'}}>Material Type</div>,
       key: 'Material Type',
       dataIndex: 'po_material_type',
       render: (text) => {
@@ -89,7 +91,7 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       },
     },
     {
-      title: 'Item Code',
+      title:<div style={{textAlign:'center'}}>Item Code</div>,
       key: 'Item Code',
       dataIndex: 'item_code',
       render: (m3FabricCode, row) => (
@@ -101,16 +103,19 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       ),
     },
     {
-      title: 'HSN Code',
+      title:<div style={{textAlign:'center'}}>HSN Code</div>,
       key: 'HSN Code',
       dataIndex: 'poHsnCode',
+      align:'center',
+
     },
     {
-      title: 'Size',
+      title:<div style={{textAlign:'center'}}>Size</div>,
       dataIndex: 'size',
     },
     {
-      title: 'PO Quantity',
+      title:<div style={{textAlign:'center'}}>PO Quantity</div>,
+      align:'right',
       key: 'PO Quantity',
       dataIndex: 'po_quantity',
       render: (text, record) => {
@@ -118,7 +123,8 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       }
     },
     {
-      title: 'GRN Quantity',
+      title:<div style={{textAlign:'center'}}>GRN Quantity</div> ,
+      align:'right',
       key: 'GRN Quantity',
       dataIndex: 'grn_quantity',
       render: (text, record) => {
@@ -127,56 +133,66 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
     },
 
     {
-      title: 'Unit Price',
+      title: <div style={{textAlign:'center'}}>Unit Price</div>,
       key: 'Unit Price',
       dataIndex: 'unit_price',
+      align:'center',
       render: (text,val) => {
         return (`${text}(${val.currencyName?val.currencyName:'-'})`) }
     },
     {
-      title: 'Discount %',
+      title: <div style={{textAlign:'center'}}>Discount %</div>,
       key: 'Discount',
       dataIndex: 'discount',
+      align:'right',
       render: (text) => {
         return text !== undefined && text !== null ? text : '-';
       },
     },
     {
-      title:'Transportation Amount',
+      title:<div style={{textAlign:'center'}}>Transportation Amount</div>,
       key:'transportation',
-      dataIndex:'transportation'
+      dataIndex:'transportation',
+      align:'right',
+
 
     },
     {
-      title: 'Tax %',
+      title: <div style={{textAlign:'center'}}>Tax %</div>,
       key: 'Tax %',
       dataIndex: 'taxPercentage',
+      align:'right',
+
     },
     {
-      title: 'Total Amount',
+      title: <div style={{textAlign:'center'}}>Total Amount</div>,
       key: 'Tax %',
       dataIndex: 'subjective_amount',
+      align:'right',
+
     },
 
   ]
   const itemColumns1: any = [
     {
-      title: 'S No',
+      title: <div style={{textAlign:'center'}}>S No</div>,
       key: 'sno',
-      width: '70px',
+      // width: '70px',
       responsive: ['sm'],
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
       onCell: (record: any) => ({
         rowSpan: record.rowSpan,
       }),
       fixed: 'left',
+      align:'center',
+
     },
     {
-      title: 'Sample Request No',
+      title: <div style={{textAlign:'center'}}>Sample Request No</div>,
       dataIndex: 'sample_req_no',
     },
     {
-      title: 'Material Type',
+      title: <div style={{textAlign:'center'}}>Material Type</div>,
       key: 'Material Type',
       dataIndex: 'po_material_type',
       render: (text) => {
@@ -185,7 +201,7 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       },
     },
     {
-      title: 'Item Code',
+      title: <div style={{textAlign:'center'}}>Item Code</div>,
       key: 'Item Code',
       dataIndex: 'item_code',
       render: (m3FabricCode, row) => (
@@ -197,25 +213,31 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
       ),
     },
     {
-      title: 'HSN Code',
+      title: <div style={{textAlign:'center'}}>HSN Code</div>,
       key: 'HSN Code',
       dataIndex: 'poHsnCode',
+      align:'center',
+
     },
     {
-      title: 'Size',
+      title: <div style={{textAlign:'center'}}>Size</div>,
       dataIndex: 'size',
+      align:'center',
+
     },
     {
-      title: 'PO Quantity',
+      title: <div style={{textAlign:'center'}}>PO Quantity</div>,
       key: 'PO Quantity',
+      align:'right',
       dataIndex: 'po_quantity',
       render: (text, record) => {
         return (<span>{`${record.po_quantity} ${record.uom!=null?`(${record.uom})`:""}`}</span>)
       }
     },
     {
-      title: 'GRN Quantity',
+      title: <div style={{textAlign:'center'}}>GRN Quantity</div>,
       key: 'GRN Quantity',
+      align:'right',
       dataIndex: 'grn_quantity',
       render: (text, record) => {
         return (<span>{record.grn_quantity > 0 ? record.grn_quantity : 0}</span>)
@@ -223,41 +245,48 @@ export const PurchaseOrderDetailsView = (props:PoDetailViewPagesProps) => {
     },
 
     {
-      title: 'Unit Price',
+      title: <div style={{textAlign:'center'}}>Unit Price</div>,
       key: 'Unit Price',
+      align:'center',
       dataIndex: 'unit_price',
       render: (text,val) => {
         return (`${text}(${val.currencyName?val.currencyName:'-'})`) }
     },
     {
-      title: 'Discount %',
+      title: <div style={{textAlign:'center'}}>Discount %</div>,
       key: 'Discount',
+      align:'right',
       dataIndex: 'discount',
       render: (text) => {
         return text !== undefined && text !== null ? text : '-';
       },
     },
     {
-      title:'Transportation Amount',
+      title:<div style={{textAlign:'center'}}>Transportation Amount</div>,
       key:'transportation',
+      align:'right',
       dataIndex:'transportation'
 
     },
     {
-      title: 'Tax %',
+      title: <div style={{textAlign:'center'}}>Tax %</div>,
       key: 'Tax %',
       dataIndex: 'taxPercentage',
+      align:'right',
+
     },
     {
-      title: 'Total Amount',
+      title: <div style={{textAlign:'center'}}>Total Amount</div>,
       key: 'Tax %',
       dataIndex: 'subjective_amount',
+      align:'right',
+
     },
 
   ]
   // const column1 : any =[
   //   {
-  //     title: 'S No',
+  //     title: <div style={{textAlign:'center'}}>S No',
   //     key: 'sno',
   //     width: '70px',
   //     responsive: ['sm'],
@@ -449,7 +478,7 @@ getCssFromComponent(document, element.document);
             </Form> */}
 
           <Card >
-          {data[0]?.po_against === 'Sample Order' ? (<Table
+          {data[0]?.po_against === 'Sample Order' ? (<Table bordered={true}
               rowKey={record => record.purchase_order_item_id}
               columns={itemColumns1}
               pagination={{
@@ -459,6 +488,7 @@ getCssFromComponent(document, element.document);
               }}
               dataSource={data}
             /> ):(<Table
+              bordered={true}
               rowKey={record => record.purchase_order_item_id}
               columns={itemColumns}
               pagination={{
