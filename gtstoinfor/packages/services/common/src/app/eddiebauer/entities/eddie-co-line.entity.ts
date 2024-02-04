@@ -21,6 +21,11 @@ export class EddieCOLineEntity {
         length: 15
     })
     poNumber: string;
+
+    @Column('varchar', {
+        name: "po_line",
+    })
+    poLine: string;
     
     @Column('varchar', {
         name: "delivery_date"
