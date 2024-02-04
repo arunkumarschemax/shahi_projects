@@ -1,7 +1,7 @@
 import { EyeOutlined, LoadingOutlined, PlusOutlined, UploadOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
 import { BuyerRefNoRequest, CategoryEnumDisplay, DepartmentReq,SampleDevelopmentRequest, StyleIdReq, TypeIdReq } from "@project-management-system/shared-models";
-import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
+import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProductService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Modal, Row, Select, Tabs, Tooltip, message } from "antd";
 import { ReactNode, useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
@@ -53,6 +53,7 @@ export const SampleDevForm = () => {
   const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
   const [qualities,setQualities] = useState<any[]>([])
   const [styleAginstPch,setStyleAginstPch] = useState<any[]>([])
+  const [productData, setProductData] = useState<any[]>([])
   const [sizeForm] = Form.useForm();
   const [fabricForm] = Form.useForm();
   const [trimForm] = Form.useForm();
@@ -72,13 +73,15 @@ export const SampleDevForm = () => {
   const fabSubTypeService = new FabricSubtypeservice()
   const m3ItemsService = new M3ItemsService()
   const qualityService = new QualityService()
+  const productService = new ProductService()
+
   const navigate = useNavigate();
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [imageUrl, setImageUrl] = useState('');
   const [imageName, setImageName] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
   const [modal, setModal] = useState('')
-  const [styleImage, setStyleImage] = useState(""); // Add this line
+  const [styleImage, setStyleImage] = useState("");
 
 
   useEffect(() => {
@@ -103,6 +106,7 @@ export const SampleDevForm = () => {
     getfabricType()
     getM3FabricStyleCodes()
     getQualities();
+    getAllProducts()
   }, []);
 
   const getM3FabricStyleCodes = () => {
@@ -137,6 +141,14 @@ const getBase64 = (img, callback) => {
   const handleChange = ({ fileList }) => {
     setFileList(fileList);
   };
+
+  const getAllProducts = () =>{
+    productService.getAllActiveProducts().then((res)=>{
+      if(res.status){
+        setProductData(res.data)
+      }
+    })
+  }
 
   const getM3StyleCode = () =>{
     sampleService.getM3StyleCode().then(res =>{
@@ -332,7 +344,7 @@ const getBase64 = (img, callback) => {
             if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
 
               // console.log('TTTTT')
-              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
+              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,val.productId,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
               // console.log(req.sizeData)
               console.log(req)
               console.log(data.fabricsData)
@@ -980,7 +992,7 @@ const renderButtons = (): ReactNode => {
                 optionFilterProp="children"
                 placeholder="Select Product"
               >
-                {licenceType.map((e) => {
+                {productData.map((e) => {
                   return (
                     <Option key={e.productId} value={e.productId}>
                       {e.product}
