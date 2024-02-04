@@ -539,7 +539,7 @@ const getMappedTrims = (value, row) => {
       width:"16%",
           
       render: (_, record) => (
-        <Form.Item name={`consumption${record.key}`} rules={[{ required: true, message: 'Missing Consumption' }]}>
+        <Form.Item name={`consumption${record.key}`} rules={[{ required: true,pattern: new RegExp(/^[0-9]+$/), message: 'Decimal values are not allowed' }]}>
         <InputNumber placeholder="Consumption" min={1}
         value={record.consumption}
         onChange={(e) => handleInputChange(e, record.key, 'consumption',record)}
