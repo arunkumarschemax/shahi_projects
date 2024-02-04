@@ -941,7 +941,7 @@ const renderButtons = (): ReactNode => {
                 {dmm.map((e) => {
                   return (
                     <Option key={e.employeeId} value={e.employeeId}>
-                      {`${e.employeeCode} - ${e.lastName}  ${e.firstName}`}
+                      {`${e.employeeCode} - ${e.firstName}  ${e.lastName}`}
                     </Option>
                   );
                 })}

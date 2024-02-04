@@ -5,12 +5,13 @@ import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import { EmployeeDetailsResponse, StyleDto, StyleIdReq, employeeIdReq } from '@project-management-system/shared-models';
+import { BuyerRefNoRequest, EmployeeDetailsResponse, StyleDto, StyleIdReq, buyerReq, employeeIdReq } from '@project-management-system/shared-models';
 import {  BuyersService, StyleService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import moment from 'moment';
 import dayjs from 'dayjs';
 import StyleForm from './style-form';
+import { useIAMClientState } from '../../common/iam-client-react';
 
 export interface EmployeeDetailsGridProps { }
 
@@ -29,6 +30,10 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
   const service = new StyleService();
   const [buyer, setBuyer] = useState<any[]>([]);
   const buyerService = new BuyersService();
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
+  const userrefNo = IAMClientAuthContext.user?.externalRefNo
+
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -87,8 +92,13 @@ export const StyleGrid = (props: EmployeeDetailsGridProps) => {
             : null
 })
 const getBuyers = () => {
-  buyerService.getAllActiveBuyers().then((res) => {
+  const req = new BuyerRefNoRequest()
+  req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+  
+  buyerService.getAllActiveBuyers(req).then((res) => {
     if (res.status) {
+      if(req.buyerRefNo != null)
+      {form.setFieldsValue({buyerId: res.data[0]?.buyerId})}
       setBuyer(res.data);
     }
   });
@@ -229,8 +239,10 @@ const getBuyers = () => {
     getAllStyles(form.getFieldValue("buyerId"))
   }
   const getAllStyles= (buyerId) => {
-
-    service.getAllStyle({buyerId:buyerId}).then(res => {
+    const req = new buyerReq()
+    req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    req.buyerId = buyerId
+    service.getAllStyle(req).then(res => {
       if (res.status) {
         setVariantData(res.data);
       } else
