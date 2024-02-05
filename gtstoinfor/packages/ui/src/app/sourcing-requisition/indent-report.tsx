@@ -5,9 +5,10 @@ import moment from 'moment';
 import { useEffect, useRef, useState } from 'react';
 import { useIAMClientState } from '../common/iam-client-react';
 import RolePermission from '../role-permissions';
-import { SearchOutlined } from '@ant-design/icons';
+import { DownloadOutlined, SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import React from 'react';
+import { Excel } from 'antd-table-saveas-excel';
 const { Option } = Select;
 
 export const IndentReport = () => {
@@ -426,9 +427,101 @@ export const IndentReport = () => {
     },
 
   ]
+  const excelColumns: any = [
+    {
+      title: 'S No',
+      key: 'sno',
+      render: (text, object, index) => (page - 1) * 10 + (index + 1),
+      onCell: (record: any) => ({
+        rowSpan: record.rowSpan,
+      }),
+    },
+    
+    {
+      title: "Indent Code",
+      dataIndex: "requestNo",
+      
+    },
+
+    {
+      title: "Style",
+      dataIndex: "style",
+      },
+    {
+      title: "Indent Date",
+      dataIndex: "indentDate",
+       render: (text, record) => { return record.indentDate !== null ? moment(record.indentDate).format('YYYY-MM-DD') : "" },
+
+    },
+    {
+      title: "Expected Date",
+      dataIndex: "expectedDate",
+      render: (text, record) => { return record.expectedDate !== null ? moment(record.expectedDate).format('YYYY-MM-DD') : "" },
+
+    },
+    {
+      title: 'Material Type',
+      dataIndex: "materialtype",
+      // render: (i_items, text) => {
+      //   console.log(i_items,'000');
+      //   console.log(text,'111111111111');
+      //   const val = text.i_items.map ((e)=>e.materialtype)
+      //   console.log(val[0]);
+      //   const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === val[0]);
+      //   console.log(EnumObj);
+        
+      //   return val?.[0]? ItemTypeEnumDisplay?.find((item) => item.name === val[0]).displayVal:'-'
+      // }
+    },
+    
+    {
+      title: 'Quantity',
+      dataIndex: "i_items",
+      },
+    {
+      title: 'M3 Code',
+      dataIndex: "i_items",
+     
+    },
+    
+    {
+      title: "Status",
+      dataIndex: "i_items", 
+
+    },
+
+  ]
+  const exportExcel = () => {
+      
+    const currentDate = new Date()
+    .toISOString()
+    .slice(0, 10)
+    .split("-")
+    .join("/");
+
+  const excel = new Excel();
+  
+excel
+  .addSheet('Indent-report')
+  .addColumns(excelColumns)
+  excel
+  .addDataSource(data, { str2num: true })
+  .saveAs(`Indent-report-${currentDate}.xlsx`);
+  console.log(excel,'[[[[[[[[');
+  
+
+}
   return (
     <div>
-      <Card title="Indent Report"     headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
+      <Card title="Indent Report"     headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  extra={
+          <div>
+            <Button icon={<DownloadOutlined />} onClick={() => { exportExcel(); }} style={{marginRight:30}}>
+              GET EXCEL
+            </Button>
+            {/* <Button icon={<FilePdfOutlined  />} onClick={() => { handleExportPDF(); }}>
+              Download PDF
+            </Button> */}
+          </div>}>
         <Form form={form}>
           <Row gutter={16}>
             <Col span={6}>
@@ -449,13 +542,13 @@ export const IndentReport = () => {
               <RangePicker />
             </Form.Item>
             </Col>
-            <Col span={6}>
+            <Col span={5}>
              
                 <Form.Item label="Expected Date" name="expectedDate">
               <RangePicker />
             </Form.Item>
             </Col>
-            <Col span={8}>
+            <Col span={6}>
               <Form.Item style={{ marginBottom: '10px' }}>
                 <Button
                   htmlType='submit'
