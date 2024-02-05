@@ -80,30 +80,32 @@ export const WasCarelabel = (props:washCareprops) =>{
                 <th style={{width:'3%'}}>WC</th>
                 <th style={{width:'3%'}}>DESTINATION</th>
                 <th style={{width:'3%'}}>TOTAL QTY</th>
-              </tr>    
+              </tr>   
+              
+ 
               <tr>
-               <td>{bomInfo.item}</td>
+              <td>
+  <div style={{ paddingTop: '200px' }}>{bomInfo.item}</div>
+</td>
                <td>{bomInfo.poNumber}</td>
                <td>{bomInfo.season}</td>
                <td>{bomInfo.styleNumber}</td> 
-               <td>
-                {
-                      bomInfo.bomInfo && Array.isArray(bomInfo.bomInfo) &&  bomInfo?.bomInfo?.map((e,index)=>{
-                        return(
-                        <>
-                            {e.imCode}
-                       {index < bomInfo.bomInfo.length - 1 && <hr />}
-                            <br></br>
-                            <br></br>
-                            <br></br>
-                            <br></br>
-                            <br></br>
-                            <br></br>
-                            <br></br>
-                        </>
-                        )
-                      })
-                }
+               <td >
+               <>
+  <div style={{ marginTop: '-40px' }}>
+    {bomInfo.bomInfo && Array.isArray(bomInfo.bomInfo) && bomInfo?.bomInfo?.map((e, index) => {
+      return (
+        <>
+          {e.imCode}
+          {index < bomInfo.bomInfo.length - 1 && <hr />}
+        </>
+      )
+    })}
+  </div>
+</>
+
+
+
                </td>
                <td>
                {
@@ -120,7 +122,10 @@ export const WasCarelabel = (props:washCareprops) =>{
                   })
               }
                </td>
-               <td>{}</td>
+<div  style={{ marginTop: '238px' }}>
+  <td>{}</td>
+  <hr />
+  </div>
                <td>{bomInfo.destinationCountryCode}</td>
             </tr>
         </table>
