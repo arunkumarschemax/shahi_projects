@@ -746,7 +746,7 @@ export class HbService {
           const year = currentDate.getFullYear().toString().slice(-2);
           const currentDateFormatted = `${day}-${month}-${year}`;
           if (coNo) {
-            const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+            const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted ,errorMsg:"-"});
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           } else {

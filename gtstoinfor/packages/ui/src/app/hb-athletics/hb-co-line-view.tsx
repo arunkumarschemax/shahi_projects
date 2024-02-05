@@ -148,17 +148,17 @@ const HbColineView = () => {
                 }
             },
             {
-                title: 'Rised User',
+                title: 'Raised User',
                 dataIndex: 'created_user',
                 render: (text, record) => {
                     return (record.created_user ? (record.created_user) : '-')
                 }
             },
             {
-                title: 'Rised Date',
+                title: 'Raised Date',
                 dataIndex: 'raised_date',
                 render: (text, record) => {
-                    return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')) : '-')
+                    return (record.raised_date ? (moment(record.raised_date).format('DD-MM-YYYY HH:mm')) : '-')
                 }
             },
             {
@@ -315,20 +315,11 @@ const HbColineView = () => {
             title: 'Raised Date',
             dataIndex: 'raised_date',
             render: (text, record) => {
-                return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')) : '-')
+                return (record.raised_date ? (moment(record.raised_date).format('DD-MM-YYYY HH:mm')) : '-')
             },
 
         },
 
-        {
-            title: 'CO Created Date',
-            dataIndex: 'updated_at',
-            render: (text, record) => {
-                return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
-            },
-
-
-        },
         {
             title: 'Status',
             dataIndex: 'status',
