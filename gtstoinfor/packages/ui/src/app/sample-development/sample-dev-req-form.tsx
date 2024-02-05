@@ -1,7 +1,7 @@
 import { EyeOutlined, LoadingOutlined, PlusOutlined, UploadOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Res } from "@nestjs/common";
 import { BuyerRefNoRequest, CategoryEnumDisplay, DepartmentReq,SampleDevelopmentRequest, StyleIdReq, TypeIdReq } from "@project-management-system/shared-models";
-import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
+import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProductService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Modal, Row, Select, Tabs, Tooltip, message } from "antd";
 import { ReactNode, useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
@@ -53,6 +53,7 @@ export const SampleDevForm = () => {
   const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
   const [qualities,setQualities] = useState<any[]>([])
   const [styleAginstPch,setStyleAginstPch] = useState<any[]>([])
+  const [productData, setProductData] = useState<any[]>([])
   const [sizeForm] = Form.useForm();
   const [fabricForm] = Form.useForm();
   const [trimForm] = Form.useForm();
@@ -72,13 +73,15 @@ export const SampleDevForm = () => {
   const fabSubTypeService = new FabricSubtypeservice()
   const m3ItemsService = new M3ItemsService()
   const qualityService = new QualityService()
+  const productService = new ProductService()
+
   const navigate = useNavigate();
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [imageUrl, setImageUrl] = useState('');
   const [imageName, setImageName] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
   const [modal, setModal] = useState('')
-  const [styleImage, setStyleImage] = useState(""); // Add this line
+  const [styleImage, setStyleImage] = useState("");
 
 
   useEffect(() => {
@@ -103,6 +106,7 @@ export const SampleDevForm = () => {
     getfabricType()
     getM3FabricStyleCodes()
     getQualities();
+    getAllProducts()
   }, []);
 
   const getM3FabricStyleCodes = () => {
@@ -137,6 +141,14 @@ const getBase64 = (img, callback) => {
   const handleChange = ({ fileList }) => {
     setFileList(fileList);
   };
+
+  const getAllProducts = () =>{
+    productService.getAllActiveProducts().then((res)=>{
+      if(res.status){
+        setProductData(res.data)
+      }
+    })
+  }
 
   const getM3StyleCode = () =>{
     sampleService.getM3StyleCode().then(res =>{
@@ -332,7 +344,7 @@ const getBase64 = (img, callback) => {
             if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
 
               // console.log('TTTTT')
-              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,1,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
+              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,val.productId,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
               // console.log(req.sizeData)
               console.log(req)
               console.log(data.fabricsData)
@@ -505,10 +517,11 @@ const getBase64 = (img, callback) => {
       console.log(fileList);
       setFileList(fileList);
       setImageUrl('');
+      renderButtons()
     },
     beforeUpload: (file: any) => {
-      if (!file.name.match(/\.(pdf|xlsx|xls|png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
-        AlertMessages.getErrorMessage("Only pdf,xlsx,xls,png,jpeg,jpg files are allowed!");
+      if (!file.name.match(/\.(PDF|pdf|xlsx|xls|png|jpeg|PNG|jpg|JPG|pjpeg|gif|tiff|x-tiff|x-png)$/)) {
+        AlertMessages.getErrorMessage("Only PDF,pdf,xlsx,xls,png,jpeg,jpg files are allowed!");
         return true;
       }
       console.log(file);
@@ -520,6 +533,7 @@ const getBase64 = (img, callback) => {
         //   return true;
         // } else {
             setFileList([...fileList,file]);
+            renderButtons()
           
           return false;
         // }
@@ -533,7 +547,7 @@ const getBase64 = (img, callback) => {
       strokeWidth: 3,
       format: percent => `${parseFloat(percent.toFixed(2))}%`,
     },
-    fileList: fileList.length > 0?fileList:[],
+    // fileList: fileList.length > 0?fileList:[],
   };
   
   const handleFabricsDataUpdate = (updatedData) => {
@@ -563,15 +577,19 @@ const getBase64 = (img, callback) => {
 const renderButtons = (): ReactNode => {
   const buttons: ReactNode[] = [];
   console.log(fileList)
+  console.log(fileList.filter((f)=>f != undefined))
   if(fileList != undefined){
-    fileList?.forEach(res => {
+    (fileList.filter((f)=>f != undefined))?.forEach(res => {
       console.log(res)
-      if(res.type !="application/pdf" && res.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && res.type != "application/xlsx" ){
+      if(res.type !="application/xls" && res.type !="application/PDF" && res.type !="application/pdf" && res.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && res.type != "application/xlsx" && res != undefined){
         buttons.push(
             <Tooltip title={`${res.name} preview`}>
               <Button key={res.uid} id={res.uid} icon={<EyeOutlined />} onClick={() => onFabriView(res)}></Button>
             </Tooltip>
         );
+      }
+      else{
+        console.log("else")
       }
     });
   }
@@ -834,7 +852,7 @@ const renderButtons = (): ReactNode => {
               <Upload
                 style={{ width: '100%' }} 
                   {...uploadFabricProps}
-                  accept=".pdf, .xlsx, .xls, .png, .jpeg, .jpg, .pjpeg, .gif, .tiff, .x-tiff, .x-png"
+                  accept=".PDF,.pdf, .xlsx, .xls, .png, .jpeg, .jpg, .pjpeg, .gif, .tiff, .x-tiff, .x-png"
                   >
                   <Button
                       style={{ color: 'black', backgroundColor: '#7ec1ff' }}
@@ -844,9 +862,12 @@ const renderButtons = (): ReactNode => {
                       Upload
                   </Button>
               </Upload>
-              {renderButtons()}
           </Form.Item>
           </Col>
+          <Col span={4} style={{paddingTop:"25px"}}>
+            {renderButtons()}
+          </Col>
+
           <Col span={4} >
             {form.getFieldValue('styleId') !== undefined && (
               <Card style={{ maxHeight: '200px' }}>
@@ -941,7 +962,7 @@ const renderButtons = (): ReactNode => {
                 {dmm.map((e) => {
                   return (
                     <Option key={e.employeeId} value={e.employeeId}>
-                      {`${e.employeeCode} - ${e.lastName}  ${e.firstName}`}
+                      {`${e.employeeCode} - ${e.firstName}  ${e.lastName}`}
                     </Option>
                   );
                 })}
@@ -980,7 +1001,7 @@ const renderButtons = (): ReactNode => {
                 optionFilterProp="children"
                 placeholder="Select Product"
               >
-                {licenceType.map((e) => {
+                {productData.map((e) => {
                   return (
                     <Option key={e.productId} value={e.productId}>
                       {e.product}
@@ -1016,7 +1037,7 @@ const renderButtons = (): ReactNode => {
             <Form.Item
               name="type"
               label="Sub Type"
-              rules={[{ required: false, message: "" }]}
+              rules={[{ required: false, message: "SubType is required" }]}
             >
               <Select
                 allowClear
@@ -1039,7 +1060,7 @@ const renderButtons = (): ReactNode => {
           <Form.Item
               name="subType"
               label="Type"
-              rules={[{ required: false, message: "" }]}
+              rules={[{ required: false, message: "Type is required" }]}
             >
               <Select
                 allowClear

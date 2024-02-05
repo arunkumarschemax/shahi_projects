@@ -299,8 +299,8 @@ const SampleRequestReport = () => {
     {
       title: "Material Type",
       dataIndex: "itemType",
-      sorter: (a, b) => a.itemType.localeCompare(b.itemType),
-      sortDirections: ['descend', 'ascend'],
+      // sorter: (a, b) => a.itemType.localeCompare(b.itemType),
+      // sortDirections: ['descend', 'ascend'],
       render: (text) => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
         return EnumObj ? EnumObj.displayVal : text;
@@ -315,14 +315,14 @@ const SampleRequestReport = () => {
     {
       title: "Color",
       dataIndex: "colourName",
-      sorter: (a, b) => a.colourName.localeCompare(b.colourName),
-      sortDirections: ['descend', 'ascend'],
+      // sorter: (a, b) => a.colourName.localeCompare(b.colourName),
+      // sortDirections: ['descend', 'ascend'],
     },  
     {
       title: "Required Qty",
       dataIndex: "bomQuantity",
-      sorter: (a, b) => a.bomQuantity.localeCompare(b.bomQuantity),
-      sortDirections: ['descend', 'ascend'],
+      // sorter: (a, b) => a.bomQuantity.localeCompare(b.bomQuantity),
+      // sortDirections: ['descend', 'ascend'],
     },
     
     // {
@@ -524,15 +524,15 @@ const SampleRequestReport = () => {
                   optionFilterProp="children"
                   placeholder="Select Request Number"
                 >
-                  {requestNo.map((e) => {
+                  {data.filter( (ele, ind) => ind === data.findIndex( elem => elem.sampleRequestid === ele.sampleRequestid)).map((e) => {
                     return (
                       <Option
-                        key={e.SampleRequestId}
-                        value={e.SampleRequestId}
-                        name={e.requestNo}
+                        key={e.sampleRequestid}
+                        value={e.sampleRequestid}
+                        name={e.sampleReqNo}
                       >
                         {" "}
-                        {e.requestNo}
+                        {e.sampleReqNo}
                       </Option>
                     );
                   })}
@@ -548,9 +548,9 @@ const SampleRequestReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {buyers.map((qc: any) => (
-                    <Select.Option key={qc.buyerName} value={qc.buyerId}>
-                      {qc.buyerName}
+                  {data.filter( (ele, ind) => ind === data.findIndex( elem => elem.buyerId === ele.buyerId)).map((qc: any) => (
+                    <Select.Option key={qc.buyername} value={qc.buyerId}>
+                      {qc.buyername}
                     </Select.Option>
                   ))}
                 </Select>
@@ -566,9 +566,9 @@ const SampleRequestReport = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {style.map((qc: any) => (
-                    <Select.Option key={qc.style} value={qc.styleId}>
-                      {qc.style}
+                  {data.filter( (ele, ind) => ind === data.findIndex( elem => elem.styleId === ele.styleId)).map((qc: any) => (
+                    <Select.Option key={qc.styleId} value={qc.styleId}>
+                      {qc.styleName}
                     </Select.Option>
                   ))}
                 </Select>

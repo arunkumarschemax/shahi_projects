@@ -221,6 +221,8 @@ import GrnReport from "./Reports/grn-report"
 import PurchaseOrderReport from "./Reports/purchase-order-report"
 import FabricRequestCodeView from "./item-request-code/fabric-request-code-view"
 import { TrimReqCodeView } from "./item-request-code/trim-request-code-view"
+import ProductGrid from "./masters/product/product-grid"
+import ProductForm from "./masters/product/product-form"
 
 
 
@@ -523,6 +525,12 @@ export const AppRoutes = () => {
                         isUpdate={false}
                         closeForm={() => { }}
                         updateROSLGroups={(undefined) => { }} />} />
+                    <Route path="product/product-view" element={<ProductGrid />} />
+                    <Route path='product/product-form' element={<ProductForm
+                        data={undefined}
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateProduct={(undefined) => { }} />} />
                     <Route path="buying-house/buying-house-view" element={<BuyingHouseGrid />} />
                     <Route path='buying-house/buying-house-form' element={<BuyingHouseForm
                         data={undefined}

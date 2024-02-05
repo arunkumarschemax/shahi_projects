@@ -245,21 +245,27 @@ const handleReset = (clearFilters: () => void) => {
         },
         {
           title:"Available Quantity",
-          dataIndex:"available_qty-uom",
+          dataIndex:"available_qty",
           width: '120px',
-          sorter: (a, b) => a.available_qty.localeCompare(b.available_qty),
-          sortDirections: ["descend", "ascend"],
+          
           render:(_,record)=>{
             return (
               <span>
                 {record.available_qty}-{record.uom}
               </span>
             );
-          }
+          },
+          sorter: (a, b) => {
+            const aQty = String(a.available_qty);
+            const bQty = String(b.available_qty);
+        
+            return aQty.localeCompare(bQty);
+          },
+          sortDirections: ["descend", "ascend"],
           
       },
       {
-        title: 'Aging',
+        title: 'Aging(GRN Date)',
         dataIndex: 'grn_date',
         width: '20px',
         align: 'right',
@@ -290,30 +296,69 @@ const handleReset = (clearFilters: () => void) => {
       setKey(key)
       
     }
-  
+    const excelColumns:any=[
+      {
+        title: 'S No',
+        key: 'sno',
+        render: (text, object, index) => (page - 1) * 10 + (index + 1),
+        onCell: (record: any) => ({
+          rowSpan: record.rowSpan,
+        }),
+      },
+        {
+            title:"Buyer",
+            dataIndex:"buyerName",
+        },
+        {
+          title:"Item Type",
+          dataIndex:"item_type",
+          render: (text) => {
+            const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+            return EnumObj ? EnumObj.displayVal : text;
+          },
+          
+      },
+        {
+            title:" Item Code",
+            dataIndex:"m3ItemCode",
+           
+        },
+        {
+            title:"Location",
+            dataIndex:"location",
+            },
+        {
+          title:"Available Quantity",
+          dataIndex:"available_qty",
+          render:(_,record)=>{
+            return  `${record.available_qty}-${record.uom}`
+              
+            
+          },
+          
+      },
+      
+    ]
     const exportExcel = () => {
+      
       const currentDate = new Date()
       .toISOString()
       .slice(0, 10)
       .split("-")
       .join("/");
 
-  // if (key === 'pop'){
     const excel = new Excel();
+    
   excel
     .addSheet('Stock-report')
-    .addColumns(Columns)
+    .addColumns(excelColumns)
+    console.log(stockData,'ooooooo');
+    excel
     .addDataSource(stockData, { str2num: true })
     .saveAs(`Stock-report-${currentDate}.xlsx`);
-  // } else {
-  //   const excel = new Excel();
-  //   excel
-  //     .addSheet('Stock-report')
-  //     .addColumns(Columns)
-  //     .addDataSource(stockData, { str2num: true })
-  //     .saveAs(`Stock-report-${currentDate}.xlsx`);
-  // }
-  
+    console.log(excel,'[[[[[[[[');
+    
+
 }
 
 // const handleExportPDF = async () => {

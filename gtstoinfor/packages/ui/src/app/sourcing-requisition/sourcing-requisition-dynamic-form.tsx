@@ -1280,7 +1280,9 @@ console.log(req)
                             <Select showSearch allowClear optionFilterProp="children" placeholder='Select Style' >
                                 {style.map(e => {
                                     return (
-                                        <Option key={e.styleId} value={e.styleId} name={e.buyerId}> {e.style}-{e.description}</Option>
+                                        <Option key={e.styleId} value={e.styleId} name={e.buyerId}>
+                                            {e.description ? `${e.style} - ${e.description}` : e.style}
+                                        </Option>
                                     );
                                 })}
                             </Select>

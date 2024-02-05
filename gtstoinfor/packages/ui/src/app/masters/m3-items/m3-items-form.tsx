@@ -21,6 +21,20 @@ const M3Items = ({props}) => {
   const [fabricType, setFabricType] = useState<any[]>([]);
   const [weight, setWeight] = useState<any[]>([])
   const [yarnRadio, setYarnRadio] = useState<Boolean>(false)
+  const [buyerDisable, setBuyerDisable] = useState<boolean>(false)
+  const [fabricTypeDisable, setFabricTypeDisable] = useState<boolean>(false)
+  const [weaveDisable, setWeaveDisable] = useState<boolean>(false)
+  const [weightDisable, setWeightDisable] = useState<boolean>(false)
+  const [weightUOMDisable, setWeightUOMDisable] = useState<boolean>(false)
+  const [widthDisabled, setWidthDisabled] = useState<boolean>(false)
+  const [widthUOMDisabled, setWidthUOMDisabled] = useState<boolean>(false)
+  const [epiDisabled, setEpiDisabled] = useState<boolean>(false)
+  const [ppiDisabled, setPpiDisabled] = useState<boolean>(false)
+  const [m3CodeDisabled, setM3CodeDisabled] = useState<boolean>(false)
+  const [hsnDisabled, setHsnDisabled] = useState<boolean>(false)
+  const [finishDisabled, setFinishDisabled] = useState<boolean>(false)
+  const [shrinkageDisabled, setShrinkageDisabled] = useState<boolean>(false)
+  const [yarnDisabled, setYarnDisabled] = useState<boolean>(false)
   const [fabricFinish, setFabricFinish] = useState<any[]>([])
   const [yarnType, setYarnType] = useState('');  
   const [epiData, setEPIData] = useState<any[]>([])
@@ -188,6 +202,7 @@ const M3Items = ({props}) => {
     console.log(props.buyer_id)
     
     if(props.fabricTypeId> 0){
+      setFabricTypeDisable(true)
       onFabricTpe(props.fabricTypeId);
     }
     if(props.weightId != null){
@@ -197,27 +212,49 @@ const M3Items = ({props}) => {
       onWeightUom(props.weightUnit)
     }
     if(props.width != null){
+      setWidthDisabled(true)
       onWidthChange(props.width)
     }
     if(props.widthUnit != null){
+      setWidthUOMDisabled(true)
       onWidthUomChange(props.onWidthUomChange)
     }
     if(props.epiConstruction != null){
+      setEpiDisabled(true)
       epiChange(props.epiConstruction)
     }
     if(props.ppiConstruction != null){
+      setPpiDisabled(true)
       ppiChange(props.ppiConstruction)
     }
     if(props.yarnType != null){
+      setYarnDisabled(true)
       yarnSelect(props.yarnType)
     }
-    // if(props.yarnType != undefined){
-    //   yarnSelect(props.yarnType)
-    // }
-    // if(props.buyerId != undefined){
-    //   console.log("LLLLLLLLL")
-    //   onBuyerChange(props.buyer_id,props.buyerName)
-    // }
+    if(props.weaveId != undefined){
+      setWeaveDisable(true)
+    }
+    if(props.buyerId != undefined){
+      setBuyerDisable(true)
+    }
+    if(props.weightId != undefined){
+      setWeightDisable(true)
+    }
+    if(props.weightUnit != undefined){
+      setWeightUOMDisable(true)
+    }
+    if(props.m3Code != undefined){
+      setM3CodeDisabled(true)
+    }
+    if(props.hsnCode != undefined){
+      setHsnDisabled(true)
+    }
+    if(props.finishId != undefined){
+      setFinishDisabled(true)
+    }
+    if(props.shrinkage != undefined){
+      setShrinkageDisabled(true)
+    }
     // onWidthChange(props.width)
     // onWidthUomChange(props.widthUnit)
     // epiChange(props.epi)
@@ -249,6 +286,7 @@ const M3Items = ({props}) => {
     form.setFieldsValue({finishId:props.finishId});
     form.setFieldsValue({shrinkage:props.shrinkage});
     form.setFieldsValue({yarnType:props.yarnType});
+    // form.setFieldsValue({content : props.fabricContentInfo})
     // form.setFieldsValue({content:props.fabricContentInfo});
     // form.setFieldsValue({buyerId:props.buyer_id,fabricTypeId:props.fabricTypeId,content:props.content_id,weaveId:props.weaveId,weightValue:props.weight,weightId:props.weight,weightUomId:props.weightUnitId,widthValue:props.width,width:props.width,widthUomId:props.widthUnit,epiConstruction:props.epi,construction:props.epi,ppiConstruction:props.ppi,hsnCode:props.hsnCode,finishId:props.finish_id,shrinkage:props.shrinkage,yarnType:props.yarnType})
   }
@@ -502,6 +540,7 @@ const handleYarnUnitChange = (index, value) => {
               optionFilterProp="children"
               placeholder="Select Buyer"
               onChange={onBuyerChange}
+              disabled={buyerDisable}
               >
                 {buyer.map((e) => {
                   return (<Option key={e.buyerId} value={e.buyerId} name={e.shortCode}>
@@ -516,10 +555,10 @@ const handleYarnUnitChange = (index, value) => {
               <Input />
             </Form.Item>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-            <Form.Item label=" Fabric Type" id="fabricTypeId" name="fabricTypeId" rules={[{ required: true, message: "Fabric Type is required" }]}>
+            <Form.Item label=" Fabric Type" id="fabricTypeId" name="fabricTypeId" rules={[{ required: true, message: "Fabric Type is required" }]} >
               <Select 
               placeholder=" Select Fabric Type" 
-              onChange={onFabricTpe}
+              onChange={onFabricTpe} disabled={fabricTypeDisable} 
               >
                 {fabricType.map((option) => (
                 <Option key={option.fabricTypeId} value={option.fabricTypeId}>
@@ -533,7 +572,7 @@ const handleYarnUnitChange = (index, value) => {
             <Form.Item label=" Weave" name="weaveId" id="weaveId" rules={[{ required: true, message: "Weave is required" }]}>
               <Select 
               placeholder=" Select Weave" 
-              onChange={generateItemCode}
+              onChange={generateItemCode} disabled={weaveDisable} 
               >
                 {weave.map((option) => (
                 <Option key={option.weaveId} value={option.weaveId}>
@@ -547,10 +586,10 @@ const handleYarnUnitChange = (index, value) => {
             <Form.Item label="Weight" htmlFor="weightId" name={"weightId"} rules={[{ required: true, message: "Weight is required" }]}>
             <Space.Compact>
               <Form.Item name='weightValue' id='weightValue'>
-              <Input placeholder="Enter Weight" allowClear onChange={(e)=>onWeightChange(e?.target?.value)} onBlur={generateItemCode}/>
+              <Input placeholder="Enter Weight" allowClear onChange={(e)=>onWeightChange(e?.target?.value)} onBlur={generateItemCode} disabled={weightDisable}/>
               </Form.Item>
               <Form.Item name='weightUomId' id='weightUomId'>
-                <Select allowClear placeholder="Select Unit" onChange={onWeightUom} onBlur={generateItemCode} style={{width:'180px'}}>
+                <Select allowClear placeholder="Select Unit" onChange={onWeightUom} onBlur={generateItemCode} style={{width:'180px'}} disabled={weightUOMDisable}>
                   {weightUomData.map((e) => (
                     <Option key={e.id} value={e.id} name={e.uom}>
                       {e.uom}
@@ -565,10 +604,10 @@ const handleYarnUnitChange = (index, value) => {
               <Form.Item label="Width" htmlFor="widthValue" name={"widthValue"} rules={[{ required: true, message: "Width is required" }]} >
                 <Space.Compact>
                   <Form.Item name="width" id="width" rules={[{ required: true, message: "Width is required" }]}>
-                  <Input placeholder="Enter Width" allowClear onChange={(e)=>onWidthChange(e?.target?.value)}/>
+                  <Input placeholder="Enter Width" allowClear onChange={(e)=>onWidthChange(e?.target?.value)} disabled={widthDisabled} />
                   </Form.Item>
                   <Form.Item name='widthUomId' id='widthUomId' rules={[{ required: true, message: "Width UOM is required" }]}>
-                  <Select  allowClear placeholder="Select Unit" onChange={onWidthUomChange} style={{width:'120px'}}>
+                  <Select  allowClear placeholder="Select Unit" onChange={onWidthUomChange} style={{width:'120px'}} disabled={widthUOMDisabled}>
                     {uom.map((e) => {
                       return (
                       <Option key={e.uomId} value={e.uomId}>
@@ -584,22 +623,22 @@ const handleYarnUnitChange = (index, value) => {
               <Form.Item label="Construction" htmlFor="construction"  rules={[{ required: true, message: "Construction is required" }]}>
                 <Space.Compact>
                   <Form.Item name='epiConstruction' id='epiConstruction'>
-                  <Input placeholder="Enter EPI" allowClear onChange={(e) => epiChange(e?.target?.value)}/>
+                  <Input placeholder="Enter EPI" allowClear onChange={(e) => epiChange(e?.target?.value)} disabled={epiDisabled} />
                   </Form.Item>
                   <Form.Item name='ppiConstruction' id='ppiConstruction'>
-                  <Input placeholder="Enter PPI" allowClear onChange={(e) => ppiChange(e?.target?.value)}/>
+                  <Input placeholder="Enter PPI" allowClear onChange={(e) => ppiChange(e?.target?.value)} disabled={ppiDisabled} />
                   </Form.Item>
                 </Space.Compact>
               </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name="m3Code" id="m3Code" label="M3 Code" >
-                    <Input placeholder="Enter M3 Code"/>
+                    <Input placeholder="Enter M3 Code" disabled={m3CodeDisabled}/>
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name="hsnCode" id="hsnCode" label="HSN Code" >
-                    <Input placeholder="Enter HSN Code"/>
+                    <Input placeholder="Enter HSN Code" disabled={hsnDisabled}/>
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
@@ -607,7 +646,7 @@ const handleYarnUnitChange = (index, value) => {
                   { required: true, message: 'Finish is required' },
                 ]}
               >
-                <Select  allowClear placeholder="Select Unit">
+                <Select  allowClear placeholder="Select Unit" disabled={finishDisabled}>
                     {fabricFinish.map((e) => {
                       return (
                       <Option key={e.fabricFinishTypeId} value={e.fabricFinishTypeId}>
@@ -619,7 +658,7 @@ const handleYarnUnitChange = (index, value) => {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
               <Form.Item label=" Shrinkage" name="shrinkage" id="shrinkage"  >
-                <Input placeholder=" Enter  Shrinkage"  onBlur={generateItemCode}/>
+                <Input placeholder=" Enter  Shrinkage"  onBlur={generateItemCode} disabled={shrinkageDisabled}/>
               </Form.Item>
             </Col>
             <Col span={6}>
@@ -648,7 +687,7 @@ const handleYarnUnitChange = (index, value) => {
                   id="yarnType"
                   style={{ marginTop: "25px" }}
                   onChange={(e) => yarnSelect(e?.target?.value)}
-                  onBlur={generateItemCode} value={"Weft"}
+                  onBlur={generateItemCode} value={"Weft"} disabled={yarnDisabled}
                 >
                   <Radio value="Warp">Warp</Radio>
                   <Radio value="Weft">Weft</Radio>
@@ -665,7 +704,7 @@ const handleYarnUnitChange = (index, value) => {
                   id="yarnType"
                   style={{ marginTop: "25px" }}
                   onChange={(e) => yarnSelect(e?.target?.value)}
-                  onBlur={generateItemCode} value={"Warp"}
+                  onBlur={generateItemCode} value={"Warp"} disabled={yarnDisabled}
                 >
                   <Radio value="Warp">Warp</Radio>
                   <Radio value="Weft">Weft</Radio>
@@ -762,7 +801,7 @@ const handleYarnUnitChange = (index, value) => {
           )}
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 9 }} xl={{ span: 9 }}>
               <Card>
-              <Form.List name="content" initialValue={[{ content: '', percentage: null }]}>
+              <Form.List name="content" initialValue={[{content: "", percentage: null}]}>
                 {(fields, { add, remove }) => (
                   <>
                     {fields.map((field, index) => (
@@ -781,6 +820,8 @@ const handleYarnUnitChange = (index, value) => {
                                   onChange={(value) => onContentChange(index, value)}
                                   onBlur={generateItemCode}
                                   style={{width: '290px'}}
+                                  value={props?.fabricContentInfo[0].content != null ? props?.fabricContentInfo[0].content:""}
+                                  disabled={props?.fabricContentInfo[0].content != null ? true : false}
                                 >
                                   {contentData.map((e) => (
                                     <Option key={e.contentId} value={e.contentId}>
