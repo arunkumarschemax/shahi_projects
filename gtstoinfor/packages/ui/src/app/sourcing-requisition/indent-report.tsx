@@ -9,6 +9,7 @@ import { DownloadOutlined, SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import React from 'react';
 import { Excel } from 'antd-table-saveas-excel';
+import AlertMessages from '../common/common-functions/alert-messages';
 const { Option } = Select;
 
 export const IndentReport = () => {
@@ -36,7 +37,6 @@ export const IndentReport = () => {
   }, []);
   const checkAccess = (buttonParam) => {  
     const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Reports,MenusAndScopesEnum.SubMenus['Indent Report'],buttonParam)
-     console.log(buttonParam,accessValue,'access');
     
     return accessValue
   }
@@ -72,6 +72,10 @@ export const IndentReport = () => {
     service.getIndentData(req).then((res) => {
       if (res.status) {
         setData(res.data);
+      }
+      else{
+                            AlertMessages.getErrorMessage(res.internalMessage);
+
       }
     });
   }
