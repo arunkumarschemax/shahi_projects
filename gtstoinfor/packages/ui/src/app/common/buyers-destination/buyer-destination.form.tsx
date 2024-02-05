@@ -709,7 +709,7 @@ import {
       });
     };
     const getColours = () => {
-      colorService.getAllActiveColour().then((res) => {
+      colorService.getAllActiveColour ().then((res) => {
         if (res.status) {
           setColours(res.data);
         } else {
