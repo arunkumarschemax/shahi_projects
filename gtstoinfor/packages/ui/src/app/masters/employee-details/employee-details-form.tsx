@@ -48,6 +48,7 @@ export const EmployeeDetsilsForm = (props:EmployeeDetailsFormProps) => {
     getAllDepartments();
   },[])
   const saveEmployee = (data: EmployeeDetailsResponse) => {
+    console.log(data,'-======-=-=-=-=-==--=---=-==-')
     data.employeeId = 0;
    if((props.isUpdate && data.mobileNumber == data.alterNativeMobileNumber) || (!props.isUpdate && data.mobileNumber == data.alterNativeMobileNumber)){
     message.info('Please Add alternate mobile number')
@@ -146,7 +147,7 @@ const getAllDepartments=()=>{
                 message: `Should contain only alphabets.`
               }
             ]}>
-          <Input />
+          <Input placeholder='Enter FirstName'/>
         </Form.Item>
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> <Form.Item
@@ -163,7 +164,7 @@ const getAllDepartments=()=>{
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Enter LastName'/>
         </Form.Item>
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}>
@@ -187,7 +188,7 @@ const getAllDepartments=()=>{
             },
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Contact Number'/>
           </Form.Item>
           </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}> 
@@ -205,7 +206,7 @@ const getAllDepartments=()=>{
             }
           ]}
         >
-          <Input onChange={alertNativeOnchange}/>
+          <Input onChange={alertNativeOnchange} placeholder='Enter Alternate Number'/>
         </Form.Item>
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:5}} style={{margin:'1%'}}> <Form.Item
@@ -221,14 +222,14 @@ const getAllDepartments=()=>{
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Email'/>
         </Form.Item>
         </Col>
        
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:4}} style={{margin:'1%'}}>
            <Form.Item
           name="pinCode"
-          label="Postalcode"
+          label="Postal Code"
           rules={[
             {
               required: true,
@@ -239,7 +240,7 @@ const getAllDepartments=()=>{
             }
           ]}
         >
-          <Input type='Number'/>
+          <Input type='Number' placeholder='Enter Postal Code'/>
         </Form.Item>
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}} style={{margin:'1%'}}> <Form.Item
@@ -252,7 +253,7 @@ const getAllDepartments=()=>{
             }
           ]}
         >
-          <Input.TextArea rows={1}/>
+          <Input.TextArea rows={1} placeholder='Enter Address'/>
         </Form.Item>
         </Col>
         <Col
@@ -263,7 +264,7 @@ const getAllDepartments=()=>{
                     xl={{ span: 7 }}
                   >
                     <Form.Item
-                      name="deptName"
+                      name="departments"
                       label="Department"
                     >
                        <Select
