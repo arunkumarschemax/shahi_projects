@@ -706,9 +706,9 @@ export class RLOrdersService {
       console.log(err, 'error');
       return new CommonResponseModel(false, 0, err)
     }
-    // finally {
-    //     driver.quit()
-    // }
+    finally {
+        driver.quit()
+    }
   }
 
   async isAlertPresent(driver) {

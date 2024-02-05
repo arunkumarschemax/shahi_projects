@@ -115,7 +115,8 @@ const ColineView = () => {
                 title: 'CO Date',
                 dataIndex: 'co_date',
                 render: (text, record) => {
-                    return (record.co_date ? (record.co_date) : '-')
+                    return (record.co_date ? (moment(record.co_date).format('DD/MM/YYYY')) : '-')
+                    
                 }
             },
             {
@@ -138,20 +139,20 @@ const ColineView = () => {
                 title: 'Raised Date',
                 dataIndex: 'created_at',
                 render: (text, record) => {
-                    return (record.created_at ? (moment(record.created_at).format('MM/DD/YYYY HH:mm')) : '-')
+                    return (record.created_at ? (moment(record.created_at).format('DD/MM/YYYY HH:mm')) : '-')
                 },
                
             },
     
-            {
-                title: 'CO Created Date',
-                dataIndex: 'updated_at',
-                render: (text, record) => {
-                    return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
-                },
+            // {
+            //     title: 'CO Created Date',
+            //     dataIndex: 'updated_at',
+            //     render: (text, record) => {
+            //         return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
+            //     },
               
     
-            },
+            // },
             {
                 title: 'Status',
                 dataIndex: 'status',
@@ -217,7 +218,7 @@ const ColineView = () => {
             title: 'CO Date',
             dataIndex: 'co_date',
             render: (text, record) => {
-                return (record.co_date ? (record.co_date) : '-')
+                return (record.co_date ? (moment(record.co_date).format('DD/MM/YYYY')) : '-')
             }
         },
         {
@@ -242,22 +243,22 @@ const ColineView = () => {
             title: 'Raised Date',
             dataIndex: 'created_at',
             render: (text, record) => {
-                return (record.created_at ? (moment(record.created_at).format('MM/DD/YYYY HH:mm')) : '-')
+                return (record.created_at ? (moment(record.created_at).format('DD/MM/YYYY HH:mm')) : '-')
             },
             sorter: (a, b) => a.created_at.localeCompare(b.created_at),
             sortDirections: ["ascend", "descend"],
         },
 
-        {
-            title: 'CO Created Date',
-            dataIndex: 'updated_at',
-            render: (text, record) => {
-                return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
-            },
-            sorter: (a, b) => a.updated_at.localeCompare(b.updated_at),
-            sortDirections: ["ascend", "descend"],
+        // {
+        //     title: 'CO Created Date',
+        //     dataIndex: 'updated_at',
+        //     render: (text, record) => {
+        //         return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
+        //     },
+        //     sorter: (a, b) => a.updated_at.localeCompare(b.updated_at),
+        //     sortDirections: ["ascend", "descend"],
 
-        },
+        // },
         {
             title: 'Status',
             dataIndex: 'status',
