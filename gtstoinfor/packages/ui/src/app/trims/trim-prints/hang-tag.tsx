@@ -7,12 +7,12 @@ import React, { useEffect, useState } from "react";
 import { StyleNumberReq } from "@project-management-system/shared-models";
 import { BomService } from "@project-management-system/shared-services";
 export interface HangTagPrintProps{
-    // info:any[]
+    info:any[]
 }
 export const HangTag=(props:HangTagPrintProps)=> {
     const bomData = useLocation()
     const bomservice = new BomService()
-    const [bomInfo,setBomInfo] = useState<any[]>([])
+    const [bomInfo,setBomInfo] = useState<any>([])
 
     // useEffect(() => {
     //     if(props.info){
@@ -25,7 +25,19 @@ export const HangTag=(props:HangTagPrintProps)=> {
     //     }
 
     // },[props.info])
+    useEffect(() => {
+        if(props.info){
+            // const req = new StyleNumberReq(props.info[0]?.styleNumber)
+            // bomservice.getBomInfoAgainstStyle(req).then(res =>{
+            //     if(res.status){
+            //         setBomInfo(res.data)
+            //     }
+            // })
+            console.log(props.info)
+            setBomInfo(props.info)
+        }
 
+    },[props.info])
     return(
         <div id='print'>
         <Card title={'Hangtag'} extra={<span><Button>Print</Button></span>}>
@@ -43,8 +55,25 @@ export const HangTag=(props:HangTagPrintProps)=> {
       
        
         </tr>
-        
-        
+        <tr>         
+        <td>{}</td>
+        <td>{bomInfo?.season}</td>
+ <td>{bomInfo?.style}</td>
+ <td>{}</td>
+ <td>{}</td>
+ <td>{
+                    bomInfo?.bomInfo?.map(e => {
+                        return(
+                            <>
+                            {e.imCode}/
+                            </>
+                        )
+                    })
+                       
+                    
+                    }</td>
+        </tr>
+       
 
       </table>
      

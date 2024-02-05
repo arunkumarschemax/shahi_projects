@@ -2,12 +2,14 @@ export class TrimInfoModel{
     styleId:number;
     style:string;
     styleName:string;
+    season:string;
     bomInfo:BomInfo[]
 
-    constructor(styleId:number,style:string,styleName:string,bomInfo:BomInfo[]){
+    constructor(styleId:number,style:string,styleName:string,season:string,bomInfo:BomInfo[]){
         this.styleId = styleId
         this.style = style
         this.styleName = styleName
+        this.season=season
         this.bomInfo = bomInfo
     }
 }
