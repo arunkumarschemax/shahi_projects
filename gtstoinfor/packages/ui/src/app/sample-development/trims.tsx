@@ -135,6 +135,39 @@ const uploadFabricProps = (keyValue:number): UploadProps =>  ({
   };
 
   useEffect(() =>{
+    console.log(props.sizeDetails)
+    if(props.sizeDetails != undefined){
+      const updatedData = data.map((record) => {
+        console.log(record);
+        const getColorQuantitySum = () => {
+          const totalQuantity = props.sizeDetails.reduce((sum, record) => {
+            const sizeInfoQuantitySum = record.sizeInfo.reduce(
+              (sizeSum, sizeInfo) => sizeSum + Number(sizeInfo.quantity),
+              0
+            );
+        
+            return sum + sizeInfoQuantitySum;
+          }, 0);
+        
+          return totalQuantity;
+        }
+        let totalQuantityForColor = 0
+         totalQuantityForColor += getColorQuantitySum()
+        console.log(totalQuantityForColor,'totalQuantityForColor')
+        props.form.setFieldValue(`totalRequirement${record.key}`,totalQuantityForColor)
+        let consumptionCal = Number(totalQuantityForColor) * Number(record.consumption);
+          let withPer = (Number(consumptionCal) * Number(record.wastage))/ 100;
+          console.log(consumptionCal);
+          console.log(withPer);
+         props.form.setFieldValue(`totalRequirement${record.key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+          return { ...record, [`totalCount`]:Number(totalQuantityForColor), [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
+      })
+      setData(updatedData);
+      props.data(updatedData);
+    }
+  },[props.sizeDetails])
+
+  useEffect(() =>{
     if(props.buyerId != null){
       getTrimTypes(props.buyerId)
     }
@@ -910,3 +943,4 @@ const tableColumns = (val,fabindex) => {
 };
 
 export default TrimsForm;
+
