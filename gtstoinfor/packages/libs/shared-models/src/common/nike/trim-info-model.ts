@@ -19,6 +19,8 @@ export class TrimInfoModel{
         this.poNumber = poNumber
         this.msc=msc
         this.gender=gender
+        this.season = season
+
     }
 }
 

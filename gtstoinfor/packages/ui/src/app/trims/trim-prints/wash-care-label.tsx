@@ -86,9 +86,13 @@ export const WasCarelabel = (props:washCareprops) =>{
                 <th style={{width:'3%'}}>WC</th>
                 <th style={{width:'3%'}}>DESTINATION</th>
                 <th style={{width:'3%'}}>TOTAL QTY</th>
-              </tr>    
+              </tr>   
+              
+ 
               <tr>
-               <td>{bomInfo.item}</td>
+              <td>
+  <div style={{ paddingTop: '200px' }}>{bomInfo.item}</div>
+</td>
                <td>{bomInfo.poNumber}</td>
                <td>{bomInfo.season}</td>
                <td>{bomInfo.styleNumber}</td> 
