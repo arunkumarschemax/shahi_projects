@@ -495,8 +495,10 @@ export class CentricService {
         coLine.currency = coData.currency
         coLine.destinations = coData.destinations
         const request = coData.destinations[0]?.name;
+        console.log(request,"request")
         const address = await this.addressService.getAddressInfoByCountry({ country: request });
         const addressData = address.data[0];
+        console.log(addressData,"address")
         styleNo = coData.styleNo
         buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 12;
         deliveryAddress = addressData?.deliveryCode
@@ -677,7 +679,7 @@ export class CentricService {
         }
       }
       await driver.sleep(10000)
-      // const element = await driver.findElement(By.id('OrderCreateID')).click();
+      const element = await driver.findElement(By.id('OrderCreateID')).click();
       await driver.wait(until.alertIsPresent(), 10000);
       // Switch to the alert and accept it (click "OK")
       const alert = await driver.switchTo().alert();

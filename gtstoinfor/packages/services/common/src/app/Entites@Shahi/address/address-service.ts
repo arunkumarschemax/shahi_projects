@@ -203,9 +203,10 @@ export class AddressService {
 
     async getAddressInfoByCountry(req: any): Promise<CommonResponseModel> {
         try {
+            const countryWithoutSpaces = req.country.replace(/\s/g, '%'); 
             const info = await this.repo.findOne({
                 where: {
-                    deliveryAddress: Like(`%${req.country}%`) // Assuming you want to find records where address includes the given string
+                    deliveryAddress: Like(`%${countryWithoutSpaces}%`) // Assuming you want to find records where address includes the given string
                 }
             })
             if (info) {
