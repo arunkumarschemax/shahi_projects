@@ -7,6 +7,7 @@ import { FileInterceptor } from "@nestjs/platform-express";
 import { EddieService } from "./eddie.service";
 import { CommonResponseModel, EddieOrderFilter } from "@project-management-system/shared-models";
 import { CentricDto } from "../centric-buyer/dto/centric.dto";
+import { EddieDetailsReq } from "./dto/eddie-order-details-req";
 
 
 
@@ -168,6 +169,16 @@ export class EddieController {
             return await this.Service.deleteCoLine(req);
         } catch (error) {
             return error;
+        }
+    }
+
+    @Post('/getOrderdataForCOline')
+    @ApiBody({ type: EddieDetailsReq })
+    async getOrderdataForCOline(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getOrderdataForCOline(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
     }
 

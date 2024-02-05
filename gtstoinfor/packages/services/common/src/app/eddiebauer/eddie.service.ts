@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import { CoLineRequest,CommonResponseModel, EddieOrderFilter, EddieSizeWiseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarCoLinereqModels, SanmarColorModel, SanmarCompareModel, SanmarDestinationModel, SanmarOrderFilter, SanmarSizeModel, SanmarSizeWiseModel, StatusEnum, eddieOrderDataModel, sanmarOrderDataModel } from "@project-management-system/shared-models";
+import { CoLineRequest,CommonResponseModel, EddieCoLinereqModels, EddieColorModel, EddieDestinationModel, EddieOrderFilter, EddieSizeModel, EddieSizeWiseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarCoLinereqModels, SanmarColorModel, SanmarCompareModel, SanmarDestinationModel, SanmarOrderFilter, SanmarSizeModel, SanmarSizeWiseModel, StatusEnum, eddieOrderDataModel, sanmarOrderDataModel } from "@project-management-system/shared-models";
 import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -11,6 +11,7 @@ import { EddiePdfRepo } from "./repositories/eddie-pdf.repo";
 import { EddieCOLineEntity } from "./entities/eddie-co-line.entity";
 import { EddieCOLineRepository } from "./repositories/eddie-co-line.repository";
 import { ItemNoDtos } from "../sanmar/dto/sanmar-item-no.dto";
+import { EddieDetailsReq } from "./dto/eddie-order-details-req";
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 const moment = require('moment');
@@ -393,5 +394,61 @@ export class EddieService {
       return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
     }
   }
+
+ 
+
+  async getOrderdataForCOline(req: EddieDetailsReq): Promise<CommonResponseModel> {
+    try {
+      const data = await this.EddieOrdersRepo.find({ where: { poNumber: req.PoNumber,poLine:req.PoLine } })
+      // po -> destination -> color -> sizes
+      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+      const poMap = new Map<string, EddieOrdersEntity>();
+      data.forEach(rec => {
+        poMap.set(`${rec.poLine},${rec.poNumber}`, rec)
+  
+        const dest = rec.deliveryAddress;
+
+        if (!destinationColSizesMap.has(`${rec.poLine},${rec.poNumber}`)) {
+          destinationColSizesMap.set(`${rec.poLine},${rec.poNumber}`, new Map<string, Map<string, []>>());
+        }
+        if (!destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).has(dest)) {
+          destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).set(dest, new Map<string, []>());
+        }
+        if (!destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).get(dest).has(rec.color)) {
+          destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).get(dest).set(rec.color, []);
+        }
+        destinationColSizesMap.get(`${rec.poLine},${rec.poNumber}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitCost });
+      });
+      const coData = []
+      destinationColSizesMap.forEach((destColorSize, poNumber) => {
+        const desArray = []
+        destColorSize.forEach((colorSizes, dest) => {
+          const ColArray = []
+          colorSizes.forEach((sizes, color) => {
+            const sizeArray = []
+            sizes.forEach((size) => {
+              const sizeObj = new EddieSizeModel(size.size, size.quantity, size.price);
+              sizeArray.push(sizeObj)
+            })
+            const col = new EddieColorModel(color, sizeArray);
+            ColArray.push(col)
+          });
+          const des = new EddieDestinationModel(dest, ColArray);
+          desArray.push(des)
+        });
+        const poInfo = poMap.get(poNumber)
+        const co = new EddieCoLinereqModels(poInfo.poNumber,poInfo.poLine,poInfo.unitCost,  poInfo.deliveryDate,poInfo.currency, desArray);
+        coData.push(co)
+      });
+      if (coData) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+  
 
 }
