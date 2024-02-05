@@ -538,7 +538,8 @@ export class HbService {
           coLine.currency = coData.currency
           coLine.destinations = coData.destinations
           const request = coData.destinations[0]?.name;
-          const address = await this.addressService.getAddressInfoByCountry({ country: request });
+          const addressSegment = request.split(',')
+          const address = await this.addressService.getAddressInfoByCountry({ country: addressSegment[0] });
           const addressData = address.data[0];
           console.log(addressData)
           buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 11;
@@ -706,11 +707,15 @@ export class HbService {
                       // Clear the existing value (if any) and fill it with the new price.
                       await inputField.clear();
                       await inputField.sendKeys(size.price);
+                    } else {
+                      /// update for if size is mismatch
+                      const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed', errorMsg: 'NO matching Size found' });
+                      return new CommonResponseModel(false, 0, 'NO matching Size found')
                     }
                   }
                   const inputId = `${size.name}:${color.name}:USA`.replace(/\*/g, '');
                   console.log(inputId)
-                  const input = await driver.wait(until.elementLocated(By.id(inputId)))
+                  const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
               }
@@ -752,9 +757,15 @@ export class HbService {
         }
       }
       return new CommonResponseModel(true, 1, `COline created successfully`)
-    } catch (err) {
-      console.log(err, 'error');
-      return new CommonResponseModel(false, 0, err)
+    } catch (error) {
+      console.log(error, 'error');
+      if (error.name === 'TimeoutError') {
+        const update = await this.hbCoLineRepo.update({ custPo:poDetails[0].cust_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+        return new CommonResponseModel(false, 0, 'Matching Color not found')
+      } else {
+        // Handle other types of errors
+        return new CommonResponseModel(false, 0, error)
+      }
     }
     finally {
       driver.quit()
