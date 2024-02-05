@@ -33,6 +33,7 @@ useEffect(()=>{
 },[])
 
 const getBomInfoAgainstStyle = (styleNumber,trim)=>{
+    console.log(styleNumber)
     const req = new StyleNumberReq(styleNumber.styleNumber,trim)
     service.getBomInfoAgainstStyle(req).then(res =>{
         if(res.status){
@@ -43,7 +44,7 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
             res.data.genderAgeDesc = styleNumber.genderAgeDesc;
             res.data.geoCode = styleNumber.geoCode;
             res.data.sizeWiseData=styleNumber.sizeWiseData;
-            res.data.itemname='1234'
+            res.data.item=styleNumber.item
             setBomInfo(res.data)
         }
     })

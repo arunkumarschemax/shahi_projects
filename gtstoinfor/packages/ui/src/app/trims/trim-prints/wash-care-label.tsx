@@ -80,20 +80,39 @@ export const WasCarelabel = (props:washCareprops) =>{
                 <th style={{width:'3%'}}>WC</th>
                 <th style={{width:'3%'}}>DESTINATION</th>
                 <th style={{width:'3%'}}>TOTAL QTY</th>
-            </tr>
-           
-            <tr>
-               <td>{bomInfo.itemname}</td>
+              </tr>    
+              <tr>
+               <td>{bomInfo.item}</td>
                <td>{bomInfo.poNumber}</td>
-               <td>{}</td>
-               <td>{bomInfo.styleName}</td> 
-               <td>{}</td>
+               <td>{bomInfo.season}</td>
+               <td>{bomInfo.styleNumber}</td> 
+               <td>
+                {
+                      bomInfo.bomInfo && Array.isArray(bomInfo.bomInfo) &&  bomInfo?.bomInfo?.map((e,index)=>{
+                        return(
+                        <>
+                            {e.imCode}
+                       {index < bomInfo.bomInfo.length - 1 && <hr />}
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                            <br></br>
+                        </>
+                        )
+                      })
+                }
+               </td>
                <td>
                {
-              bomInfo.bomInfo && Array.isArray(bomInfo.bomInfo) &&  bomInfo?.bomInfo?.map(e =>{
+              bomInfo.bomInfo && Array.isArray(bomInfo.bomInfo) &&  bomInfo?.bomInfo?.map((e,index )=>{
                     return(
                     <>
                         {e.description}
+                   {index < bomInfo.bomInfo.length - 1 && <hr />}
+
                         <br></br>
                         <br></br>
                     </>
@@ -102,10 +121,12 @@ export const WasCarelabel = (props:washCareprops) =>{
               }
                </td>
                <td>{}</td>
-               <td>{bomInfo.destinationCountry}</td>
-               
+               <td>{bomInfo.destinationCountryCode}</td>
             </tr>
         </table>
+
+           <br></br>
+
         <br></br>
         <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
         <tr>
