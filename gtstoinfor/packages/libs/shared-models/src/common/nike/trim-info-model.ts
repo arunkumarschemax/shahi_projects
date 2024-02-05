@@ -5,7 +5,8 @@ export class TrimInfoModel{
     season:string;
     bomInfo:BomInfo[];
     item:string;
-    poNumber:string
+    poNumber:string;
+    
 
     constructor(styleId:number,style:string,styleName:string,season:string,bomInfo:BomInfo[],item:string,poNumber:string){
         this.styleId = styleId
@@ -15,6 +16,7 @@ export class TrimInfoModel{
         this.bomInfo = bomInfo
         this.item = item
         this.poNumber = poNumber
+        this.season = season
     }
 }
 
