@@ -5,5 +5,6 @@ export class EddieOrderAcceptanceRequest {
     itemNo: string;
     buyer: string;
      deliveryDate:string;
+     poLine:string
     
 }

@@ -1,6 +1,6 @@
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
 // import { coLineRequest } from "@project-management-system/shared-models";
-import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, message } from "antd"
+import { Button, Card, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Table, Tooltip, message } from "antd"
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react";
@@ -111,6 +111,13 @@ const EddieColineView = () => {
                 }
             },
 
+            {
+                title: 'PO Line',
+                dataIndex: 'po_line',
+                render: (text, record) => {
+                    return (record.po_line ? (record.po_line) : '-')
+                }
+            },
             // {
             //     title: 'Style',
             //     dataIndex: 'style', render: (text, record) => {
@@ -246,6 +253,20 @@ const EddieColineView = () => {
             },
             sorter: (a, b) => a.po_number.localeCompare(b.po_number),
             sortDirections: ["ascend", "descend"],
+        },
+
+          {
+             title: "PO Line",
+          dataIndex: "po_line",
+          width: 120,
+          // sorter: (a, b) => a.po_line.localeCompare(b.po_line),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => (
+            <Tooltip title={text || "-"}>
+              {text ? `${text.substring(0, 10)}...` : "-"}
+            </Tooltip>
+          ),
+  
         },
         // {
         //     title: 'Style',

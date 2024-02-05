@@ -150,6 +150,7 @@ import {
       console.log(record,'hhhhhhhhhhhhhhhh');
       const req = new EddieOrderAcceptanceRequest();
       req.poNumber = record.poNumber;
+      req.poLine=record.poLine
       // req.style = record.style;
       req.itemNo = itemNoValue;
       req.buyer = 'Eddie Bauer LLC';

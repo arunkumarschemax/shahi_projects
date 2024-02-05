@@ -266,10 +266,12 @@ export class EddieService {
       };
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
       const records = await this.EddieOrdersRepo.find({ where: { poNumber: req.poNumber,deliveryDate: req.deliveryDate } });
+      const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
       const empty = [];
 
       //console.log(rec,'reccccccccc')
       const entity = new EddieCOLineEntity()
+      entity.poLine = uniquePoLines.join(',');
       entity.buyer = req.buyer
       entity.poNumber = req.poNumber;
       // entity.style = req.style;
