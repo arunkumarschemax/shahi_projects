@@ -203,9 +203,7 @@ export function M3TrimItemsForm({props}) {
   }
 
   const onFinish = (value) => {
-    // console.log(form.getFieldValue('m3Code'),'8888888888')
     const req = new M3trimsDTO(0,value.buyerId,"",value.categoryId,value.colorId,value.contentId,value.finishId,value.holeId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.typeId,value.uomId,value.varietyId,value.trimCategoryId,form.getFieldValue("trimMappingId"),form.getFieldValue("buyerCode"),value.trimType,value.description,"",'',value.m3Code,value.hsnCode)
-    console.log(req,'---------------------')
     m3TrimService.createM3Trims(req).then((res) => {
       if (res.status) {
         console.log(props);
@@ -213,19 +211,30 @@ export function M3TrimItemsForm({props}) {
           trimReqCodeService.updateTrimStatus({id:props.trimRequestCodeId, m3ItemsId:res.data?.m3TrimId}).then((res) => {
             if(res.status){
               AlertMessages.getSuccessMessage(res.internalMessage);
-              navigate('/trim-master/m3-trim-items/m3-trim-items-view')
-              onReset()
-            }
-            else {
-              AlertMessages.getErrorMessage(res.internalMessage);
-            }
-          })
-        }
-      } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
-      }
-    })
-  };
+           setTimeout(() => {
+             message.success("Submitted successfully")
+             navigate('/trim-master/m3-trim-items/m3-trim-items-view')
+           }, 500)
+         }
+         else {
+           AlertMessages.getErrorMessage(res.internalMessage);
+         }
+       })
+     }
+     else{
+       AlertMessages.getSuccessMessage(res.internalMessage);
+       setTimeout(() => {
+         message.success("Submitted successfully")
+         navigate('/trim-master/m3-trim-items/m3-trim-items-view')
+       }, 500)
+     }
+   }else{
+     AlertMessages.getWarningMessage(res.internalMessage);
+   }}).catch((err) => {
+     AlertMessages.getErrorMessage(err.message);
+   });
+};
+
 
   const onReset = () => {
     form.resetFields();
