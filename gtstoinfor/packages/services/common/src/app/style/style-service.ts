@@ -38,15 +38,15 @@ export class StyleService{
             const style= new Style()
             if (!isUpdate) {
                 const entity = await this.findDuplicate(req.style);
-                if (entity) {
-                  throw new AllStyleResponseModel(false,11104, 'Style already exists',[]);
+                                if (entity) {
+                  return new AllStyleResponseModel(false,11104, 'Style already exists',[]);
                 }
               }
               else{
                 const entity = await this.findDuplicate(req.style);
                 if (entity) {
                   if(entity.styleId!=req.styleId) {
-                    throw new AllStyleResponseModel(false,11104, 'Style already exists',[]);      
+                    return new AllStyleResponseModel(false,11104, 'Style already exists',[]);      
                 }
                 }
               }
@@ -61,8 +61,8 @@ export class StyleService{
             }else{
                 style.createdUser=req.createdUser
             }
-            const save = await this.styleRepo.save(style)
-            if(save){
+                        const save = await this.styleRepo.save(style)
+                        if(save){
             const style= new Style();
             this.insertDefaultOperation(save.styleId,req.style);
             return new AllStyleResponseModel(true,1,'Style created Sucessfully..',[save])
