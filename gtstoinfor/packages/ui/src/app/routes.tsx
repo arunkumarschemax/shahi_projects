@@ -184,7 +184,7 @@ export const AppRoutes = () => {
                     <Route path='joker-tag' key='/joker-tag' element={<JokerTagPrint info={[]}/>}/>
                     <Route path='trim-grid' element={<TrimsGrid/>} />
                     <Route path='trim-List' element={<TrimList/>} />
-                    <Route path='washcare-label' element={<WasCarelabel />}/>
+                    <Route path='washcare-label' element={<WasCarelabel bomInfo={[]} />}/>
                     <Route path='hang-tag' element={<HangTag/>} />
 
                 </Route>

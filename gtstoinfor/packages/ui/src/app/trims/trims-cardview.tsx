@@ -25,7 +25,7 @@ const [trimName,setTrimName] = useState<string>('')
 const componentsMapping = {
     "Joker Tag" : <JokerTagPrint info={bomInfo} />,
     "Hangtag":<HangTag />,
-    "Wash Care Label":<WasCarelabel  />
+    "Wash Care Label":<WasCarelabel  bomInfo={bomInfo}/>
 }
 
 useEffect(()=>{
@@ -42,7 +42,8 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
             res.data.destinationCountryCode = styleNumber.destinationCountryCode;
             res.data.genderAgeDesc = styleNumber.genderAgeDesc;
             res.data.geoCode = styleNumber.geoCode;
-            res.data.sizeWiseData=styleNumber.sizeWiseData
+            res.data.sizeWiseData=styleNumber.sizeWiseData;
+            res.data.itemname='1234'
             setBomInfo(res.data)
         }
     })
