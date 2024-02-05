@@ -24,7 +24,7 @@ export class StyleRepo extends Repository<StyleEntity> {
 
     async getBomInfoAgainstStyle(req:StyleNumberDto):Promise<any[]>{
         const query = this.createQueryBuilder('sty')
-        .select(`sty.id as styleId,sty.style,sty.style_name,sty.season,bom.item_name,bom.description,bom.im_code,bom.item_type,bom.use,stco.combination,stco.primary_color,stco.secondary_color,stco.logo_color,bom.id as bomId,stco.id as styleComboId,stco.color,bom.uom,bom.qty,dpom.po_number,dpom.item`)
+        .select(`sty.msc,sty.id as styleId,sty.style,sty.style_name,sty.season,bom.item_name,bom.description,bom.im_code,bom.item_type,bom.use,stco.combination,stco.primary_color,stco.secondary_color,stco.logo_color,bom.id as bomId,stco.id as styleComboId,stco.color,bom.uom,bom.qty,dpom.po_number,dpom.item,gender`)
         .leftJoin(BomEntity,'bom',`bom.style_id = sty.id`)
         .leftJoin(StyleComboEntity,'stco',`stco.bom_id = bom.id`)
         .leftJoin(DpomEntity,'dpom',`dpom.style_number = sty.style`)
