@@ -5,8 +5,9 @@ import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react'
 import dayjs from 'dayjs';
 import Highlighter from 'react-highlight-words';
-import { SearchOutlined } from '@ant-design/icons';
+import { FileExcelOutlined, SearchOutlined } from '@ant-design/icons';
 import { RolePermission } from '../role-permissions';
+import { Excel } from 'antd-table-saveas-excel';
 
  const GrnReport =() =>{
     const [form] =Form.useForm();
@@ -181,7 +182,7 @@ import { RolePermission } from '../role-permissions';
             }),
           },
           {
-            title: "Grn Date",
+            title: "GRN Date",
             dataIndex: "grndate",
             render:(_,record) =>{
               return(record.grndate?moment(record.grndate).format("YYYY-MM-DD"):'-')
@@ -189,38 +190,38 @@ import { RolePermission } from '../role-permissions';
         
           },
           {
-            title: "Grn Number",
+            title: "GRN Number",
             dataIndex: "grnNumber",
-            ...getColumnSearchProps('grnNumber'),
+            // ...getColumnSearchProps('grnNumber'),
         
           },
           {
-            title: "Grn Item Number",
+            title: "GRN Item Number",
             dataIndex: "grnItemNo",
-            ...getColumnSearchProps('grnItemNo')
+            // ...getColumnSearchProps('grnItemNo')
 
           },
           {
             title: "Style",
             dataIndex: "style",
-            ...getColumnSearchProps('style')
+            // ...getColumnSearchProps('style')
 
         },
           {
-              title: "Po Number",
+              title: "PO Number",
               dataIndex: "poNumber",
-            ...getColumnSearchProps('poNumber')
+            // ...getColumnSearchProps('poNumber')
 
           },
           {
-            title: "Grn Type",
+            title: "GRN Type",
             dataIndex: "poAgainst",
             ...getColumnSearchProps('poAgainst')
 
           },
           {
             title: "Indent /Sample Order Number",
-            ...getColumnSearchProps('indentNo'),
+            // ...getColumnSearchProps('indentNo'),
             render:(_,record) =>{
               return (record.indentNo != null ?record.indentNo:record.sampleReqNo)
              },
@@ -235,9 +236,9 @@ import { RolePermission } from '../role-permissions';
           {
             title: "Item Type",
             dataIndex: "itemType",
-            sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
+            sorter: (a, b) => a.itemType?.localeCompare(b.itemType),
             sortDirections: ["descend", "ascend"],
-            // ...getColumnSearchProps('itemType'),
+            ...getColumnSearchProps('itemType'),
             render: (text) => {
               const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
               return EnumObj ? EnumObj.displayVal : text;
@@ -273,7 +274,9 @@ import { RolePermission } from '../role-permissions';
           {
             title: "Required Quantity",
             dataIndex: "poQuantity",
-            ...getColumnSearchProps('poQuantity'),
+            sorter: (a, b) => a.poQuantity?.localeCompare(b.poQuantity),
+            sortDirections: ["descend", "ascend"],
+            // ...getColumnSearchProps('poQuantity'),
             render:(_,record)=>{
               let uom
               if(record.uom != null){
@@ -286,7 +289,7 @@ import { RolePermission } from '../role-permissions';
 
           },
           {
-            title: "Recived Quantity",
+            title: "Received Quantity",
             sorter: (a, b) => a.receivedQuantity.localeCompare(b.receivedQuantity),
             sortDirections: ["descend", "ascend"],
             ...getColumnSearchProps('receivedQuantity'),
@@ -302,7 +305,9 @@ import { RolePermission } from '../role-permissions';
           },
           {
             title: "Rejected Quantity",
-            ...getColumnSearchProps('rejectedQuantity'),
+            // ...getColumnSearchProps('rejectedQuantity'),
+            sorter: (a, b) => a.rejectedQuantity?.localeCompare(b.rejectedQuantity),
+            sortDirections: ["descend", "ascend"],
             render:(_,record)=>{
               let uom
               if(record.uom != null){
@@ -316,7 +321,14 @@ import { RolePermission } from '../role-permissions';
           },
           {
             title: "Unit price",
-            sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
+            sorter: (a, b) => {
+              const aPrice = parseFloat(a.unitPrice);
+              const bPrice = parseFloat(b.unitPrice);
+            
+              return !isNaN(aPrice) && !isNaN(bPrice)
+                ? aPrice - bPrice
+                : a.unitPrice?.localeCompare(b.unitPrice) || 0;
+            },
             sortDirections: ["descend", "ascend"],
             ...getColumnSearchProps('unitPrice'),
             render:(_,record) =>{
@@ -330,10 +342,10 @@ import { RolePermission } from '../role-permissions';
             }
           },
           {
-            title: "Grn Amount",
-            sorter: (a, b) => a.totalPoAmount.localeCompare(b.totalPoAmount),
+            title: "GRN Amount",
+            sorter: (a, b) => a.totalPoAmount?.localeCompare(b.totalPoAmount),
             sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('totalPoAmount'),
+            // ...getColumnSearchProps('totalPoAmount'),
             render:(_,record) =>{
               let unitPriceUom
               if(record.currencyName != null){
@@ -347,36 +359,48 @@ import { RolePermission } from '../role-permissions';
           {
             title: "Location Mapping Status",
             dataIndex: "locationMappedStatus",
-            fixed: 'right',  
+            fixed: 'right',
+            width:'100px',
             sorter: (a, b) => a.locationMappedStatus.localeCompare(b.locationMappedStatus),
             sortDirections: ["descend", "ascend"],
             ...getColumnSearchProps('locationMappedStatus')
           },
         
           {
-            title: "Po Status",
+            title: "PO Status",
             dataIndex: "poStatus",
             fixed: 'right',  
-            sorter: (a, b) => a.poQuantity.localeCompare(b.rejectedQuantity),
-            sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('poStatus')
+            // sorter: (a, b) => a.poQuantity.localeCompare(b.rejectedQuantity),
+            // sortDirections: ["descend", "ascend"],
+            // ...getColumnSearchProps('poStatus')
       
           },
     ]
     
     const onReset =() =>{
+      form.resetFields()
         getGrnReportData()
-        form.resetFields()
     }
+
+    const exportExcel = () => {
+      const excel = new Excel();
+      excel
+        .addSheet('GRN Report')
+        .addColumns(columns)
+        .addDataSource(grnData, { str2num: true })
+        .saveAs('GRN Report.xlsx');
+    }
+
     return(
         <div>
                    
-        <Card title={'Grn Report'}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}>
+        <Card title={'GRN Report'}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+        extra={grnData.length > 0 ? (<><Button type='default' onClick={() => exportExcel()} icon={<FileExcelOutlined />} style={{color:'green'}}>Get Excel</Button></>) : (<></>)}>
         <Form form={form} layout='vertical' onFinish={getGrnReportData}>
                 <Row gutter={24}>
                     <Col span={4}>
                         <Form.Item name='poNumber' label='Po Number'>
-                            <Select placeholder='Po Number'>
+                            <Select placeholder='Po Number'allowClear>
                                 {poData.map(e =>{
                                     return(<Option key={e.purchase_order_id} value={e.purchase_order_id}>{e.po_number}</Option>)
                                 })}
@@ -385,7 +409,7 @@ import { RolePermission } from '../role-permissions';
                     </Col>
                     <Col span={4}>
                         <Form.Item name='sampleId' label='Sample Order'>
-                            <Select placeholder='Sample Order'>
+                            <Select placeholder='Sample Order' allowClear>
                                 {sampleOrder.map(e =>{
                                     return(<Option key={e.sampleReqId} value={e.sampleReqId}>{e.requestNo}</Option>)
                                 })}
@@ -394,7 +418,7 @@ import { RolePermission } from '../role-permissions';
                     </Col>
                     <Col span={4}>
                         <Form.Item name='indentId' label='Indent Number'>
-                            <Select placeholder='Indent No'>
+                            <Select placeholder='Indent No' allowClear>
                                 {indentData.map(e =>{
                                     return(<Option key={e.indentId} value={e.indentId}>{e.indentNo}</Option>)
                                 })}
@@ -407,8 +431,8 @@ import { RolePermission } from '../role-permissions';
                         </Form.Item>
                     </Col>
                     <Col span={4}>
-                        <Form.Item name='poStatus' label='Po Status'>
-                            <Select placeholder='Po Status' showSearch allowClear>
+                        <Form.Item name='poStatus' label='PO Status'>
+                            <Select placeholder='PO Status' showSearch allowClear>
                                     {Object.values(PurchaseOrderStatus).map((key,value) =>{
                                         return <Option key={key} value={key}>{key}</Option>
                                     })
