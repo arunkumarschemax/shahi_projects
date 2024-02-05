@@ -439,6 +439,10 @@ const getBase64 = (img, callback) => {
     getStyles(value);
   }
 
+  const handleFabCal = (data) => {
+    console.log(data);
+    setSizeData(data)
+  }
     const handleSizeDataUpdate = (updatedData) => {
      
       console.log(updatedData)
@@ -1144,7 +1148,7 @@ const renderButtons = (): ReactNode => {
          <Card size='small'>
          <Tabs type={'card'} tabPosition={'top'}>
              <TabPane key="1" tab={<span><b>{`Size Detail`}</b></span>}> 
-             <SizeDetail props = {handleSizeDataUpdate} buyerId={selectedBuyerId} form={sizeForm}/>
+             <SizeDetail data = {handleSizeDataUpdate} buyerId={selectedBuyerId} form={sizeForm} fabricDetails={fabricsData} updateCal={handleFabCal}/>
              </TabPane>
              <TabPane key="2" tab={<span><b>{`Fabric`}</b></span>}>
              <FabricsForm data = {handleFabricsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData} form={fabricForm}/>
