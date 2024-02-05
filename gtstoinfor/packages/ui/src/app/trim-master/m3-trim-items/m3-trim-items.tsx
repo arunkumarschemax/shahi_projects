@@ -423,7 +423,7 @@ export function M3TrimItemsForm({props}) {
                     optionFilterProp="children"
                     placeholder="Select Buyer"
                     onChange={buyerOnChange}
-                    disabled={props.buyerId != null?true:false}
+                    disabled={props?.buyerId != null?true:false}
                     >
                         {buyerData.map((e) => {
                             return (
@@ -443,7 +443,7 @@ export function M3TrimItemsForm({props}) {
                     optionFilterProp="children"
                     placeholder="Select Trim Type"
                     onChange={trimTypeOnChange}
-                    disabled={props.trimType != null?true:false}
+                    disabled={props?.trimType != null?true:false}
                     >
                         {Object.values(ItemTypeEnumDisplay).filter((val) => val.displayVal !== ItemTypeEnum.FABRIC).map((val) => (
                             <Option key={val.name} value={val.name}>
@@ -461,7 +461,7 @@ export function M3TrimItemsForm({props}) {
                     optionFilterProp="children"
                     placeholder="Select Trim Category"
                     onChange={trimOnChange}
-                    disabled={props.trimCategory != null?true:false}
+                    disabled={props?.trimCategory != null?true:false}
                     >
                         {trimData.map((e) => {
                             return (
@@ -475,12 +475,12 @@ export function M3TrimItemsForm({props}) {
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name="m3Code" label="M3 Code" >
-                    <Input placeholder="Enter M3 Code" disabled={props.m3Code!=null?true:false}/>
+                    <Input placeholder="Enter M3 Code" disabled={props?.m3Code!=null?true:false}/>
                 </Form.Item>
             </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
                 <Form.Item name="hsnCode" label="HSN Code" >
-                    <Input placeholder="Enter HSN Code" disabled={props.hsnCode!=null?true:false}/>
+                    <Input placeholder="Enter HSN Code" disabled={props?.hsnCode!=null?true:false}/>
                 </Form.Item>
             </Col>
             {mapData[0]?.structure === true ? (
@@ -496,7 +496,7 @@ export function M3TrimItemsForm({props}) {
                       allowClear
                       optionFilterProp="children"
                       placeholder="Select Structure"
-                      onChange={generateItemCode} disabled={props.structure!=null?true:false}
+                      onChange={generateItemCode} disabled={props?.structure!=null?true:false}
                     >
                       {structureData.map((e) => (
                         <Option key={e.structureId} value={e.structureId}>
@@ -517,7 +517,7 @@ export function M3TrimItemsForm({props}) {
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Category"
-                    onChange={generateItemCode} disabled={props.category!=null?true:false}
+                    onChange={generateItemCode} disabled={props?.category!=null?true:false}
                     >
                         {categoryData.map((e) => {
                             return (
@@ -540,7 +540,7 @@ export function M3TrimItemsForm({props}) {
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Content"
-                    onChange={generateItemCode} disabled={props.contentId!= null?true:false}
+                    onChange={generateItemCode} disabled={props?.contentId!= null?true:false}
                     >
                         {contentData.map((e) => {
                             return (
@@ -563,7 +563,7 @@ export function M3TrimItemsForm({props}) {
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Type"
-                    onChange={generateItemCode} disabled={props.typeId!=null?true:false}
+                    onChange={generateItemCode} disabled={props?.typeId!=null?true:false}
                     >
                         {typeData.map((e) => {
                             return (
@@ -595,7 +595,7 @@ export function M3TrimItemsForm({props}) {
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Finish"
-                    onChange={generateItemCode} disabled={props.finishId != null?true:false}
+                    onChange={generateItemCode} disabled={props?.finishId != null?true:false}
                     >
                         {finishData.map((e) => {
                             return (
@@ -618,7 +618,7 @@ export function M3TrimItemsForm({props}) {
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Hole"
-                    onChange={generateItemCode} disabled={props.hole!=null?true:false}
+                    onChange={generateItemCode} disabled={props?.hole!=null?true:false}
                     >
                         {holeData.map((e) => {
                             return (
@@ -641,7 +641,7 @@ export function M3TrimItemsForm({props}) {
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Quality"
-                    onChange={generateItemCode} disabled={props.qualityId!=null?true:false}
+                    onChange={generateItemCode} disabled={props?.qualityId!=null?true:false}
                     >
                         {qtyData.map((e) => {
                             return (
@@ -664,7 +664,7 @@ export function M3TrimItemsForm({props}) {
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Thickness"
-                    onChange={generateItemCode} disabled={props.thicknessId!=null?true:false}
+                    onChange={generateItemCode} disabled={props?.thicknessId!=null?true:false}
                     >
                         {thickData.map((e) => {
                             return (
@@ -687,7 +687,7 @@ export function M3TrimItemsForm({props}) {
                     allowClear 
                     optionFilterProp="children" 
                     placeholder="Select Variety"
-                    onChange={generateItemCode} disabled={props.varietyId!=null?true:false}
+                    onChange={generateItemCode} disabled={props?.varietyId!=null?true:false}
                     >
                         {varietyData.map((e) => {
                             return (
@@ -710,7 +710,7 @@ export function M3TrimItemsForm({props}) {
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select UOM"
-                    onChange={generateItemCode} disabled={props.uom!=null?true:false}
+                    onChange={generateItemCode} disabled={props?.uom!=null?true:false}
                     >
                         {uomData.map((e) => {
                             return (
@@ -733,7 +733,7 @@ export function M3TrimItemsForm({props}) {
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Color"
-                    onChange={generateItemCode} disabled={props.colour!=null?true:false}
+                    onChange={generateItemCode} disabled={props?.colour!=null?true:false}
                     >
                         {colorData.map((e) => {
                             return (
@@ -756,7 +756,7 @@ export function M3TrimItemsForm({props}) {
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Logo"
-                    onChange={generateItemCode} disabled={props.logo != null?true:false}
+                    onChange={generateItemCode} disabled={props?.logo != null?true:false}
                     >
                         {Object.values(LogoEnum).map((val) => {
                             return <Option key={val} value={val}>{LogoEnumDisplay.find((e)=>e.name == val)?.displayVal}</Option>
@@ -775,7 +775,7 @@ export function M3TrimItemsForm({props}) {
                     allowClear
                     optionFilterProp="children"
                     placeholder="Select Part"
-                    onChange={generateItemCode} disabled={props.part!=null?true:false}
+                    onChange={generateItemCode} disabled={props?.part!=null?true:false}
                     >
                         {Object.values(PartEnum).map((val) => {
                             return <Option key={val} value={val}>{PartEnumDisplay.find((e)=>e.name == val)?.displayVal}</Option>
