@@ -1,4 +1,4 @@
-import { CommonResponseModel, DestinationreqModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, DestinationreqModel, StyleNumberReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -13,5 +13,14 @@ export class BomService extends CommonAxiosService {
     async getAllStylesData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllStylesData")
     }  
+    async getPpmPoLineData(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getPpmPoLineData")
+    }  
+    async getAllTrimInfo(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getAllTrimInfo")
+    }
 
+    async getBomInfoAgainstStyle(req:StyleNumberReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getBomInfoAgainstStyle",req)
+    }
 }

@@ -956,4 +956,13 @@ export class DpomRepository extends Repository<DpomEntity> {
             .groupBy(`dpom.planning_season_year`)
         return await query.getRawMany();
     }
+
+    async getPoLineData(): Promise<any[]> {
+        const query = this.createQueryBuilder('d')
+            .select(`id , po_number , po_line_item_number , style_number , planning_season_code  , planning_season_year , size_description ,size_qty , geo_code , po_and_line , destination_country_code, gender_age_desc,
+            destination_country`)
+            // .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED'`)
+            //  .groupBy(`po_and_line`)
+        return await query.getRawMany();
+    }
 }
