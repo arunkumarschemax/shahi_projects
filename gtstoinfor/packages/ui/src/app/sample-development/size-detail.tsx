@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form } from 'antd';
+import { Table, Button, Input, Select, Tooltip, message, Form, FormInstance } from 'antd';
 import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { BuyerDestinationService, ColourService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 
-const SizeDetail = ({props,buyerId,form}) => {
+export interface SizeDetailFormProps {
+  data: any;
+  buyerId: number;
+  form:FormInstance<any>
+  fabricDetails: any[]
+  updateCal: (sizeDetails: any[]) => void;
+}
+  const SizeDetail = (props:SizeDetailFormProps) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [color, setColor] = useState<any[]>([])
@@ -19,10 +26,10 @@ const SizeDetail = ({props,buyerId,form}) => {
   },[])
 
   useEffect(() =>{
-    if(buyerId != null){
-      getAllSizesAgainstBuyer(buyerId)
+    if(props.buyerId != null){
+      getAllSizesAgainstBuyer(props.buyerId)
     }
-  },[buyerId])
+  },[props.buyerId])
 
   const getColors = () => {
     // colorService.getAllActiveColour().then((res) => {
@@ -32,7 +39,7 @@ const SizeDetail = ({props,buyerId,form}) => {
     //   }
     // });
 
-    buyerDestinaytionService.getAllColorsAgainstBuyer({buyerId:buyerId}).then((res) => {
+    buyerDestinaytionService.getAllColorsAgainstBuyer({buyerId:props.buyerId}).then((res) => {
       if (res.status) {
         // console.log(res,'size data')
         setColor(res.data);
@@ -75,7 +82,7 @@ const SizeDetail = ({props,buyerId,form}) => {
     if(isDuplicate){
       console.log(updatedData);
       AlertMessages.getErrorMessage("Duplicate Size for same Color is not allowed. ")
-      form.setFieldValue(`sizeId${recordKey}`,null)
+      props.form.setFieldValue(`sizeId${recordKey}`,null)
       updatedData = data.map((record) => {
         if (record.key === recordKey) {
           return { ...record, [`sizeId`]:null };
@@ -103,7 +110,7 @@ const SizeDetail = ({props,buyerId,form}) => {
         
         if (duplicateRecord) {
           AlertMessages.getErrorMessage("Duplicate Color for same Size is not allowed. ")
-          form.setFieldValue(`colorId${recordKey}`,null)
+          props.form.setFieldValue(`colorId${recordKey}`,null)
           // console.log('Duplicate record found:', duplicateRecord);
         } else {
           console.log('No duplicate records found.');
@@ -128,7 +135,7 @@ const SizeDetail = ({props,buyerId,form}) => {
         
         if (duplicateRecord) {
           AlertMessages.getErrorMessage("Duplicate Size for same Color is not allowed. ")
-          form.setFieldValue(`sizeId${recordKey}`,null)
+          props.form.setFieldValue(`sizeId${recordKey}`,null)
           // console.log('Duplicate record found:', duplicateRecord);
         } else {
           console.log('No duplicate records found.');
@@ -145,6 +152,8 @@ const SizeDetail = ({props,buyerId,form}) => {
       //   });
       // }
       else if(name === "quantity"){
+        let fabricData = props.fabricDetails;
+        console.log(fabricData);
         updatedData = data.map((record) => {
           console.log(record);
           if (record.key === recordKey) {
@@ -159,6 +168,7 @@ const SizeDetail = ({props,buyerId,form}) => {
             } else {
               sizeInfoEntry.quantity = quantity;
             }
+            props.updateCal(sizeData)
             return { ...record, [`sizeInfo`]:sizeData };
           }
           return record
@@ -169,7 +179,7 @@ const SizeDetail = ({props,buyerId,form}) => {
       console.log(updatedData)
       setOnchangeData(updatedData); 
       setData(updatedData); 
-      props(updatedData)
+      props.data(updatedData)
     }
     };
 
@@ -179,7 +189,7 @@ const SizeDetail = ({props,buyerId,form}) => {
     const updatedData = data.filter((record) => record.key !== key);
     setOnchangeData(updatedData); 
     setData(updatedData);
-    props(updatedData)
+    props.data(updatedData)
   };
   // const add =()=>{
   //   form.validateFields().then((val) =>{
@@ -215,7 +225,7 @@ const SizeDetail = ({props,buyerId,form}) => {
               value={record[size.sizeId]}
               onChange={(e) =>
                 handleInputChange(
-                  form.getFieldValue(`colorId${record.key}`),
+                  props.form.getFieldValue(`colorId${record.key}`),
                   size.sizeId,
                   e.target.value,
                   record.key,'quantity'
@@ -316,8 +326,8 @@ const SizeDetail = ({props,buyerId,form}) => {
             // value={}
             onChange={(e) =>
               handleInputChange(
-                form.getFieldValue(`colorId${record.key}`),
-                form.getFieldValue(`sizeId${record.key}`),
+                props.form.getFieldValue(`colorId${record.key}`),
+                props.form.getFieldValue(`sizeId${record.key}`),
                 e.target.value,
                 record.key,'quantity'
               )
@@ -368,7 +378,7 @@ const SizeDetail = ({props,buyerId,form}) => {
 
   return (
     <div>
-      <Form  form={form}>
+      <Form  form={props.form}>
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
       <Table 
       dataSource={data} 
