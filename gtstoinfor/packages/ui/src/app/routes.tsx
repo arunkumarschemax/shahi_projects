@@ -171,7 +171,7 @@ export const AppRoutes = () => {
                     <Route path='backing-paper' element={<BackingPaper/>} />
                     {/* <Route path='trim-grid' element={<TrimsGrid/>} /> */}
                     <Route path='trim-columns' element={<TrimColumns/>} />
-                    <Route path='hang-tag' element={<HangTag />} />
+                    {/* <Route path='hang-tag' element={<HangTag />} /> */}
 
 
                 </Route>
@@ -185,7 +185,7 @@ export const AppRoutes = () => {
                     <Route path='trim-grid' element={<TrimsGrid/>} />
                     <Route path='trim-List' element={<TrimList/>} />
                     <Route path='washcare-label' element={<WasCarelabel bomInfo={[]} />}/>
-                    <Route path='hang-tag' element={<HangTag/>} />
+                    <Route path='hang-tag' element={<HangTag info={[]}/>} />
 
                 </Route>
 
