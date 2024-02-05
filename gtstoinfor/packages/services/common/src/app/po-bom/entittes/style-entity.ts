@@ -39,6 +39,12 @@ export class StyleEntity {
         nullable:false
     })
     msc:string
+
+    @Column('varchar',{
+        name:'gender',
+        nullable:false
+    })
+    gender:string
     
     
     @Column('varchar',{
