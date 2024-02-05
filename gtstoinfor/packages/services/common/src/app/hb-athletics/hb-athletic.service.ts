@@ -708,7 +708,6 @@ export class HbService {
                       await inputField.sendKeys(size.price);
                     }
                   }
-                  console.log(color.name)
                   const inputId = `${size.name}:${color.name}:USA`.replace(/\*/g, '');
                   console.log(inputId)
                   const input = await driver.wait(until.elementLocated(By.id(inputId)))
@@ -719,7 +718,7 @@ export class HbService {
           }
         }
         await driver.sleep(10000)
-        // const element = await driver.findElement(By.id('OrderCreateID')).click();
+        const element = await driver.findElement(By.id('OrderCreateID')).click();
         await driver.wait(until.alertIsPresent(), 10000);
         // Switch to the alert and accept it (click "OK")
         const alert = await driver.switchTo().alert();
