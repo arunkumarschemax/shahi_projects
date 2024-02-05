@@ -186,6 +186,8 @@ export const PurchaseOrderForm = () => {
         setTrimData(trimData)
     }
     const onReset = () => {
+        const indentAgainst = poForm.getFieldValue('indentAgainst')
+        poForm.setFieldsValue({indentAgainst})
         poForm.resetFields()
     }
 
