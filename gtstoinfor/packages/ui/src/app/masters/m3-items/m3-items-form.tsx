@@ -820,8 +820,8 @@ const handleYarnUnitChange = (index, value) => {
                                   onChange={(value) => onContentChange(index, value)}
                                   onBlur={generateItemCode}
                                   style={{width: '290px'}}
-                                  value={props.fabricContentInfo[0].content != null ? props.fabricContentInfo[0].content:""}
-                                  disabled={props.fabricContentInfo[0].content != null ? true : false}
+                                  value={props?.fabricContentInfo[0].content != null ? props?.fabricContentInfo[0].content:""}
+                                  disabled={props?.fabricContentInfo[0].content != null ? true : false}
                                 >
                                   {contentData.map((e) => (
                                     <Option key={e.contentId} value={e.contentId}>

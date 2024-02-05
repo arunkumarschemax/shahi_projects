@@ -349,8 +349,42 @@ sortDirections: ["descend", "ascend"],
 {
 title:"Po Item Status",
 dataIndex:"po_item_status",
-width:130
-
+width:130,
+onFilter: (value, record) => {
+  // Check if the record's item_type includes the selected material type
+  return record.po_item_status.includes(value);
+},
+filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+  <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+    <Checkbox
+      checked={selectedKeys.includes('OPEN')}
+      onChange={() => setSelectedKeys(selectedKeys.includes('OPEN') ? [] : ['OPEN'])}
+    >
+      <span style={{ color: 'green' }}>OPEN</span>
+    </Checkbox><br/>
+    <Checkbox
+      checked={selectedKeys.includes('PARTAILLY_RECEIVED')}
+      onChange={() => setSelectedKeys(selectedKeys.includes('PARTAILLY_RECEIVED') ? [] : ['PARTAILLY_RECEIVED'])}
+    >
+      <span style={{ color: 'red' }}>PARTAILLY RECEIVED</span>
+    </Checkbox><br/>
+    <Checkbox
+      checked={selectedKeys.includes('RECEIVED')}
+      onChange={() => setSelectedKeys(selectedKeys.includes('RECEIVED') ? [] : ['RECEIVED'])}
+    >
+      <span style={{ color: 'green' }}>RECEIVED</span>
+    </Checkbox>
+    <div className="custom-filter-dropdown-btns">
+      <Button onClick={() => clearFilters()} className="custom-reset-button">
+        Reset
+      </Button>
+      <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+        OK
+      </Button>
+    </div>
+  </div>
+),
+filterMultiple: false,
 },
 
 {
@@ -413,8 +447,47 @@ width:170
   {
     title:"Status",
     dataIndex:"status",
-    fixed:'right'
-    
+    fixed:'right',
+    onFilter: (value, record) => {
+      // Check if the record's item_type includes the selected material type
+      return record.status.includes(value);
+    },
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+        <Checkbox
+          checked={selectedKeys.includes('OPEN')}
+          onChange={() => setSelectedKeys(selectedKeys.includes('OPEN') ? [] : ['OPEN'])}
+        >
+          <span style={{ color: 'green' }}>OPEN</span>
+        </Checkbox><br/>
+        <Checkbox
+          checked={selectedKeys.includes('IN_PROGRESS')}
+          onChange={() => setSelectedKeys(selectedKeys.includes('IN_PROGRESS') ? [] : ['IN_PROGRESS'])}
+        >
+          <span style={{ color: 'red' }}>IN PROGRESS</span>
+        </Checkbox><br/>
+        <Checkbox
+          checked={selectedKeys.includes('CANCELLED')}
+          onChange={() => setSelectedKeys(selectedKeys.includes('CANCELLED') ? [] : ['CANCELLED'])}
+        >
+          <span style={{ color: 'green' }}>CANCELLED</span>
+          </Checkbox><br/>
+        <Checkbox
+          checked={selectedKeys.includes('CLOSED')}
+          onChange={() => setSelectedKeys(selectedKeys.includes('CLOSED') ? [] : ['CLOSED'])}
+        >
+          <span style={{ color: 'red' }}>CLOSED</span>
+        </Checkbox>        <div className="custom-filter-dropdown-btns">
+          <Button onClick={() => clearFilters()} className="custom-reset-button">
+            Reset
+          </Button>
+          <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+            OK
+          </Button>
+        </div>
+      </div>
+    ),
+    filterMultiple: false,
 },
     
 ]
