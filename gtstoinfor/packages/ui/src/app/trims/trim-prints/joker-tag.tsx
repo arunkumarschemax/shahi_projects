@@ -128,8 +128,8 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                 <th>Grand Total</th>
             </tr>
             <tr>
-                <td>{}</td>
-                <td>{bomInfo?.styleName}</td>
+                <td>{bomInfo?.item}</td>
+                <td>{bomInfo?.style}</td>
                 <td>{
                     bomInfo?.bomInfo?.map((e,index) => {
                         const len = bomInfo?.bomInfo?.length
@@ -141,8 +141,8 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                         )
                     })
                     }</td>
-                <td>{}</td>
-                <td>{}</td>
+                <td>{bomInfo?.geoCode}</td>
+                <td>{bomInfo?.season}</td>
                  {
                     bomInfo?.sizeWiseData?.map(e => {
                         return(
@@ -166,15 +166,19 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                 </tr>
                 
                     {
-                        bomInfo?.bomInfo?.map(e => {
+                        bomInfo?.bomInfo?.map((e,index) => {
+                        const len = bomInfo?.bomInfo?.length
                             return(
                                 <tr>
-                                    <td>{}</td>
-                                    <td>{bomInfo?.styleName}</td>
-                                    <td>{}</td>
-                                    <td>{e.imCode}</td>
+                                    { index == 0 ?  (   <>
+                                    <td rowSpan={len}>{bomInfo?.item}</td>
+                                    <td rowSpan={len}>{bomInfo?.style}</td>
+                                    <td rowSpan={len}>{bomInfo?.geoCode}</td>
+                                    </>) : (<></>) 
+                                    }
+                                    <td>{bomInfo?.geoCode != 'APA' ? 'A724610' : 'A728050'}</td>
                                     <td>{e.itemName}</td>
-                                    <td>{e.description}</td>
+                                    <td style={{width:'600px'}}>{e.description}</td>
                                 </tr>
                             )
                         })
