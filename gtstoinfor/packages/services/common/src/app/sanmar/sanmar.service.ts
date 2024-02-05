@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { DataSource } from "typeorm";
 import { SanmarOrdersRepository } from "./repositories/sanmar-orders.repo";
-import { CoLineRequest,CommonResponseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarCoLinereqModels, SanmarColorModel, SanmarCompareModel, SanmarDestinationModel, SanmarOrderFilter, SanmarSizeModel, SanmarSizeWiseModel, StatusEnum, sanmarOrderDataModel } from "@project-management-system/shared-models";
+import { CoLineRequest, CommonResponseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarCoLinereqModels, SanmarColorModel, SanmarCompareModel, SanmarDestinationModel, SanmarOrderFilter, SanmarSizeModel, SanmarSizeWiseModel, StatusEnum, sanmarOrderDataModel } from "@project-management-system/shared-models";
 import { SanmarOrdersEntity } from "./entity/sanmar-orders.entity";
 import { SanmarPdfInfoEntity } from "./entity/sanmar-pdf.entity";
 import { SanmarPdfRepo } from "./repositories/sanmar-pdf.repo";
@@ -136,7 +136,7 @@ export class SanmarService {
               );
 
               let po = (order?.poVersion) + 1
-            const entitys = new SanmarOrderschildEntity()
+              const entitys = new SanmarOrderschildEntity()
 
 
               entitys.buyerPo = req.buyerPo;
@@ -155,9 +155,9 @@ export class SanmarService {
               entitys.poVersion = po
               entitys.orderId = orderData.id
 
-            const savedChild = await transactionManager.getRepository(SanmarOrderschildEntity).save(entitys)
+              const savedChild = await transactionManager.getRepository(SanmarOrderschildEntity).save(entitys)
 
-  
+
               if (!update.affected) {
                 throw new Error('Update failed');
               }
@@ -166,7 +166,7 @@ export class SanmarService {
             // Only save if the record doesn't exist
             saved = await transactionManager.getRepository(SanmarOrdersEntity).save(entity);
             const entitys = new SanmarOrderschildEntity()
-            
+
             entitys.buyerPo = req.buyerPo;
             entitys.poDate = req.poDate;
             entitys.buyerAddress = req.buyerAddress;
@@ -184,7 +184,7 @@ export class SanmarService {
 
             const savedChild = await await transactionManager.getRepository(SanmarOrderschildEntity).save(entitys)
 
-  
+
             if (!saved) {
               throw new Error('Save failed');
             }
@@ -502,8 +502,8 @@ export class SanmarService {
     else
       return new CommonResponseModel(false, 0, 'No data found');
   }
-  
-  
+
+
   async getOrderdataForCOline(req: SanmarOrderDetailsReq): Promise<CommonResponseModel> {
     try {
       const data = await this.SanOrdersRepo.find({ where: { buyerPo: req.buyerPo } })
@@ -543,20 +543,20 @@ export class SanmarService {
               const sizeObj = new SanmarSizeModel(size.size, size.quantity, size.price);
               sizeArray.push(sizeObj)
 
-          //  below code is  added for  adding of all unit price which pushed to SanmarSizeModel
+              //  below code is  added for  adding of all unit price which pushed to SanmarSizeModel
               sizes.forEach((size) => {
                 const sizeKey = `${size.size}-${color}`; // Create a unique key based on size and color
-    
+
                 // Check if the size is unique, then calculate totalUnitPrice
                 if (!sizeSet.has(sizeKey)) {
-                  console.log(sizeKey,"pppoiiiii")
-            
+                  console.log(sizeKey, "pppoiiiii")
+
                   totalUnitPrice += parseFloat(size.price);
                   sizeSet.add(sizeKey); // Add the unique size to the set
                   totalSizeCount += 1;  // for total size count for Avg of unit price
 
                 }
-    
+
               });
 
             })
@@ -564,19 +564,19 @@ export class SanmarService {
 
             const col = new SanmarColorModel(color, sizeArray);
             ColArray.push(col)
-    
+
             sizeSet.clear();
-          });   
+          });
 
 
           const des = new SanmarDestinationModel(dest, ColArray);
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        console.log(totalSizeCount,"count")
-        console.log(totalUnitPrice,"totalUnitPrice")
+        console.log(totalSizeCount, "count")
+        console.log(totalUnitPrice, "totalUnitPrice")
 
-        
+
         const averageUnitPrice = totalSizeCount > 0 ? totalUnitPrice / totalSizeCount : 0;  // calculation of Avg unit price
 
         const co = new SanmarCoLinereqModels(poInfo.buyerPo, poInfo.poStyle, averageUnitPrice.toFixed(2).toString(), poInfo.deliveryDate, poInfo.currency, desArray);
@@ -683,7 +683,7 @@ export class SanmarService {
           const addressData = address.data[0];
           console.log(addressData)
           buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 10;
-          deliveryAddress = addressData?.deliveryCode ? addressData?.deliveryCode:11
+          deliveryAddress = addressData?.deliveryCode ? addressData?.deliveryCode : 11
           buyerValue1 = "SAN-SANMAR CORPORATION"
           buyerValue2 = "SAN00013-SANMAR CORPORATION"
           agent = "-NA"
@@ -856,7 +856,6 @@ export class SanmarService {
                   }
                   const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
                   const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
-                  console.log(input,'oo90876')
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
               }
@@ -878,9 +877,9 @@ export class SanmarService {
           await driver.navigate().refresh();
           await driver.quit();
         } else {
-          await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
-          const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[last()]/td[7]`));
-          const coNo = await coNoElement.getAttribute('innerText');
+          await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
+          const coNoElement = await driver.findElement(By.xpath('//*[@id="orno"]'));
+          const coNo = await coNoElement.getAttribute('value');
           const currentDate = new Date();
           const day = currentDate.getDate().toString().padStart(2, '0');
           const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
@@ -912,6 +911,7 @@ export class SanmarService {
       driver.quit()
     }
   }
+
   async getordercomparationData(req?: SanmarOrderFilter): Promise<CommonResponseModel> {
     try {
       const Originaldata = await this.SanOrdersRepo.getordercomparationData(req)
@@ -922,12 +922,12 @@ export class SanmarService {
       for (const rec of Originaldata) {
         const childData = await this.SanOrdersChildRepo.find({
           where: {
-            buyerPo: rec.buyer_po, poStyle: rec.po_style, color: rec.color,size:rec.size
+            buyerPo: rec.buyer_po, poStyle: rec.po_style, color: rec.color, size: rec.size
           }, order: { id: 'DESC' }, take: 1, skip: 1
         })
         if (childData.length > 0) {
           const oldData = childData[0];
-          console.log(childData,"ppppp")
+          console.log(childData, "ppppp")
 
           if (
             oldData.unitPrice !== rec.unit_price ||
@@ -935,8 +935,8 @@ export class SanmarService {
             oldData.quantity !== rec.quantity
           ) {
 
-          compareModel.push(new SanmarCompareModel(rec.buyer_po, rec.po_style, rec.color, rec.size, oldData.unitPrice, rec.unit_price, oldData.deliveryDate, rec.delivery_date, oldData.quantity, rec.quantity));
-        }
+            compareModel.push(new SanmarCompareModel(rec.buyer_po, rec.po_style, rec.color, rec.size, oldData.unitPrice, rec.unit_price, oldData.deliveryDate, rec.delivery_date, oldData.quantity, rec.quantity));
+          }
         }
       }
       if (compareModel) {
