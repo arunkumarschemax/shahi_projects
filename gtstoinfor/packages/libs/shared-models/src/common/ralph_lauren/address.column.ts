@@ -4,7 +4,8 @@ export const AddressColumns = [
     "delivery_address",
     "buyer_address",
     "buyer_code",
-    "delivery_code"
+    "delivery_code",
+    "revised_delivery_address"
 
   
 ]

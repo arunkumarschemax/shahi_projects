@@ -159,7 +159,7 @@ export class AddressService {
                     // dtoData = new AddressReq(data.Country,data.delivary_address,data.Buyeraddress,'admin')
                     const addObj = new AddressEntity()
                     addObj.destination = data.destination
-                    addObj.deliveryAddress = data.delivery_address
+                    addObj.deliveryAddress = data.revised_delivery_address
                     addObj.buyerAddress = data.buyer_address
                     addObj.buyerCode = data.buyer_code
                     addObj.deliveryCode = data.delivery_code

@@ -101,11 +101,11 @@ export const AddressUpload = () => {
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     
         // Specify the desired column names in the headers array
-        const headers = ['s_no', 'destination', 'buyer_code',"buyer_address","delivery_code","delivery_address"];
+        const headers = ['s_no', 'destination', 'buyer_code',"buyer_address","delivery_code","delivery_address","revised_delivery_address"];
     
         // Pass the headers array to the sheet_to_json function
         const json = XLSX.utils.sheet_to_json(worksheet, { header: headers });
-        json.splice(0, 2);
+         json.splice(0, 1);
         setData(json);
       };
     
