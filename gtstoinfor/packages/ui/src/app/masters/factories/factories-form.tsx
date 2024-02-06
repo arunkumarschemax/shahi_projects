@@ -30,6 +30,8 @@ export default function FactoriesForm(props:FactoriesFormProps) {
         if(res.status){
           form.resetFields()
           message.success(res.internalMessage)
+          navigate('/global/factories/factories-view')
+
         }else{
           message.error(res.internalMessage)
         }

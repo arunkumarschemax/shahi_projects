@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { CompanyDto } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { CompanyService } from '@project-management-system/shared-services';
@@ -19,6 +19,7 @@ export const CompanyForm = (props:CompanyFormProps) => {
 
   const service = new CompanyService();
   let history = useLocation();
+  const navigate = useNavigate();
 
   let createdUser="";
   // if(!props.isUpdate){
@@ -33,8 +34,8 @@ export const CompanyForm = (props:CompanyFormProps) => {
       setDisable(false)
         if (res.status) {
           AlertMessages.getSuccessMessage('Company Created Successfully');
-        //   location.push("/Currencies-view");
           onReset();
+          navigate('/global/company/company-grid')
         } else {
             AlertMessages.getErrorMessage(res.internalMessage);
         }

@@ -264,7 +264,7 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
         {
           title: "Brands Name",
           dataIndex: "brandName",
-          sorter: (a, b) => a.source.localeCompare(b.source),
+          sorter: (a, b) => a.brandName.localeCompare(b.brandName),
           sortDirections: ["ascend", "descend"],
           ...getColumnSearchProps("brandName"),
         },

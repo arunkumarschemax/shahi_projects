@@ -72,7 +72,7 @@ export class WarehouseService {
            return response
           } else {
             //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
-            throw new WarehouseResponseModel(false,11106,'warehouse saved but issue while transforming into DTO');
+            return new WarehouseResponseModel(false,11106,'warehouse saved but issue while transforming into DTO');
           }
         } catch (error) {
           // when error occures while saving the data , the execution will come to catch block.
@@ -137,6 +137,8 @@ export class WarehouseService {
         }
     }
       async activateOrDeactivateWarehouse(Req: any): Promise<WarehouseResponseModel> {
+        console.log(Req,'ooooooooooo');
+        
         try {
             const Exists = await this.getWarehouseById(Req.warehouseId);
             if (Exists) {
