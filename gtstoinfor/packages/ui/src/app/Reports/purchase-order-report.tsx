@@ -418,8 +418,6 @@ render: (_, record) => {
   );
 },
 width:120
-
-
 },
 // {
 // title:"Po Quantity",
@@ -438,15 +436,11 @@ render: (_, record) => {
   );
 },
 width:120
-
-
 },
 {
 title:"Request No",
 dataIndex:"request_no",
 width:170
-
-
 },
 {
   title: 'Aging',
@@ -470,10 +464,11 @@ width:170
     return age;
   },
 },
-  {
+{
     title:"Status",
     dataIndex:"status",
     fixed:'right',
+    width:'100px',
     onFilter: (value, record) => {
       // Check if the record's item_type includes the selected material type
       return record.status.includes(value);
@@ -661,6 +656,13 @@ const exportExcel = () => {
 
 if (key === 'pop'){
 const excel = new Excel();
+
+const sheet = excel.addSheet('Indent-report');
+sheet.setRowHeight(50);
+
+sheet.addColumns(excelColumns);
+
+sheet.addDataSource(data, { str2num: true });
 excel
 .addSheet('Purchase-order-report')
 .addColumns(Columns)

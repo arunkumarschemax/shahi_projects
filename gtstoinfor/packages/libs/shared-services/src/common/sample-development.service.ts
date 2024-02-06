@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DeliveryMethodDto, DeliveryMethodRequest } from 'packages/libs/shared-models/src/common/delivery-method';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, MaterialAllocationitemsIdreq, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq,SampleIdRequest, AllocatedLocationReq, RequestNoReq, AllocationApprovalReq, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, LocationReq, requestNoReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, MaterialAllocationitemsIdreq, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq, SampleIdRequest, AllocatedLocationReq, RequestNoReq, AllocationApprovalReq, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, LocationReq, requestNoReq } from '@project-management-system/shared-models';
 import { create } from 'domain';
 
 
@@ -64,73 +64,12 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/getAllSampleReqDropDown")
   }
 
-  async getIssuedSampleRequests(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getIssuedSampleRequests",req)
+  async getIssuedSampleRequests(req?: BuyerRefNoRequest): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getIssuedSampleRequests", req)
   }
 
-  async getSampleOrderDetails(req:SampleIdRequest): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getSampleOrderDetails",req)
-  }
-
-  async getSampleDevById(): Promise<any> {
-    const dummyData = [
-      {
-        id: "1",
-        requestNo: "REQ001",
-        date: "2023-08-01",
-        location: "A1F1",
-        pch: "PCH001",
-        user: "Admin",
-        sampleType: "Proto Sample",
-        buyer: "Eswar",
-        styleNo: "STL001",
-        sampleSubType: "T-Shirt",
-        style: "Casual",
-        description: "Plain white cotton t-shirt",
-        brand: "Nike",
-        costRef: "TC001",
-        m3StyleNo: "12345",
-        contactNo: "8885556666",
-        extn: "123",
-        sam: "4.5",
-        dmm: "Rajesh",
-        technician: "Suresh",
-        product: "Kurtha",
-        productType: "Apparel",
-        Conversion: "INR",
-        madeIn: "USA",
-        remarks: "Sample for approval",
-        fabricInfo: [
-          {
-            "fabricCode": "FAB001",
-            "description": "Cotton Fabric",
-            "color": "White",
-            "consumption": "10 meters",
-            "remarks": "High-quality"
-          },
-          {
-            "fabricCode": "FAB002",
-            "description": "Silk Fabric",
-            "color": "Blue",
-            "consumption": "5 meters",
-            "remarks": "Luxurious texture"
-          }
-        ],
-        trimInfo: [
-          {
-            "description": "Buttons",
-            "consumption": "20 pieces",
-            "remarks": "Metallic buttons"
-          },
-          {
-            "description": "Thread",
-            "consumption": "2 spools",
-            "remarks": "Matching color thread"
-          }
-        ]
-      }
-    ]
-    return dummyData
+  async getSampleOrderDetails(req: SampleIdRequest): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getSampleOrderDetails", req)
   }
   async getFabricCodes(): Promise<UploadResponse> {
     return await this.axiosPostCall(this.URL + '/getFabricCodes');
@@ -167,98 +106,102 @@ export class SampleDevelopmentService extends CommonAxiosService {
   }
 
   async createMapping(req: any): Promise<AllSampleDevReqResponseModel> {
-    console.log(req,'shared service')
+    console.log(req, 'shared service')
     return this.axiosPostCall(this.URL + "/createSampling", req)
 
   }
   async getAvailbelQuantityAginstBuyerAnditem(req: buyerandM3ItemIdReq): Promise<CommonResponseModel> {
-    console.log(req,'shared service')
+    console.log(req, 'shared service')
     return this.axiosPostCall(this.URL + "/getAvailbelQuantityAginstBuyerAnditem", req)
 
   }
   async creatematerialAlloction(req: Allocatematerial): Promise<CommonResponseModel> {
-    console.log(req,'shared service')
+    console.log(req, 'shared service')
     return this.axiosPostCall(this.URL + "/creatematerialAlloction", req)
 
   }
-  
-  async getAllMaterialAllocation(req?:buyerReq): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getAllMaterialAllocation",req )
+
+  async getAllMaterialAllocation(req?: buyerReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllMaterialAllocation", req)
 
   }
-  async updateStatus(req?:statusReq  ): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/updateStatus",req )
+  async updateStatus(req?: statusReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/updateStatus", req)
 
   }
-  async getTrimDetailsOfSample(req:sampleReqIdReq  ): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getTrimDetailsOfSample",req )
+  async getTrimDetailsOfSample(req: sampleReqIdReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getTrimDetailsOfSample", req)
 
   }
-  async getfabricDetailsOfSample(req:sampleReqIdReq  ): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getfabricDetailsOfSample",req )
-
-  }
-
-  async getallMaterialAllocationItemsById(req:MaterialAllocationitemsIdreq  ): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getallMaterialAllocationItemsById",req )
+  async getfabricDetailsOfSample(req: sampleReqIdReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getfabricDetailsOfSample", req)
 
   }
 
-  async getAllocatedBomInfo(req?:RequestNoReq): Promise<CommonResponseModel> {
-    console.log('----shared ser',req)
-    return this.axiosPostCall(this.URL + "/getAllocatedBomInfo",req )
+  async getallMaterialAllocationItemsById(req: MaterialAllocationitemsIdreq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getallMaterialAllocationItemsById", req)
+
   }
 
-  async allocatedLocationInfo(req:AllocatedLocationReq): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/allocatedLocationInfo" ,req)
+  async getAllocatedBomInfo(req?: RequestNoReq): Promise<CommonResponseModel> {
+    console.log('----shared ser', req)
+    return this.axiosPostCall(this.URL + "/getAllocatedBomInfo", req)
   }
 
-  async approvaAllocatedStock(req:AllocationApprovalReq): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/approvaAllocatedStock" ,req)
+  async allocatedLocationInfo(req: AllocatedLocationReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/allocatedLocationInfo", req)
   }
 
-  async getAllAllocatedRequestNo(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getAllAllocatedRequestNo",req )
+  async approvaAllocatedStock(req: AllocationApprovalReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/approvaAllocatedStock", req)
   }
 
-  async getAllApprovedRequestNo(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getAllApprovedRequestNo",req )
-  }
-  async updatedispatch(req?:lifeCycleStatusReq): Promise<CommonResponseModel> {
-    
-    return this.axiosPostCall(this.URL + "/updatedispatch" ,req)
+  async getAllAllocatedRequestNo(req?: BuyerRefNoRequest): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllAllocatedRequestNo", req)
   }
 
-  async getPickListInfo(req?:requestNoReq): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getPickListInfo",req )
+  async getAllApprovedRequestNo(req?: BuyerRefNoRequest): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllApprovedRequestNo", req)
+  }
+  async updatedispatch(req?: lifeCycleStatusReq): Promise<CommonResponseModel> {
+
+    return this.axiosPostCall(this.URL + "/updatedispatch", req)
+  }
+
+  async getPickListInfo(req?: requestNoReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getPickListInfo", req)
   }
 
   async getAllMaterialIssue(): Promise<CommonResponseModel> {
-    
-    return this.axiosPostCall(this.URL + "/getmaterialissue" )
+
+    return this.axiosPostCall(this.URL + "/getmaterialissue")
   }
-  async getbyID(req?:RequestNoReq): Promise<CommonResponseModel> {
-    
-    return this.axiosPostCall(this.URL + "/getbyID" ,req)
+  async getbyID(req?: RequestNoReq): Promise<CommonResponseModel> {
+
+    return this.axiosPostCall(this.URL + "/getbyID", req)
   }
 
-  async getRequestno(req?:RequestNoReq): Promise<CommonResponseModel> {
-    
-    return this.axiosPostCall(this.URL + "/getRequestno" ,req)
+  async getRequestno(req?: RequestNoReq): Promise<CommonResponseModel> {
+
+    return this.axiosPostCall(this.URL + "/getRequestno", req)
   }
-  async allocatedLocation(req:LocationReq): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/allocatedLocation" ,req)
+  async allocatedLocation(req: LocationReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/allocatedLocation", req)
   }
   async getPch(): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getPch" )
+    return this.axiosPostCall(this.URL + "/getPch")
   }
   async getStyle(): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getStyle" )
+    return this.axiosPostCall(this.URL + "/getStyle")
   }
-  async getAllSampleRequestsInfo(req:sampleReqIdReq): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getAllSampleRequestsInfo",req )
+  async getAllSampleRequestsInfo(req: sampleReqIdReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllSampleRequestsInfo", req)
   }
-  async getAllSampleRequestSizesInfo(req:sampleReqIdReq): Promise<CommonResponseModel> {
-    return this.axiosPostCall(this.URL + "/getAllSampleRequestSizesInfo",req )
+  async getAllSampleRequestSizesInfo(req: sampleReqIdReq): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllSampleRequestSizesInfo", req)
+  }
+
+  async getAllFilesDataByReqId(req: SampleIdRequest): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllFilesDataByReqId", req)
   }
 }

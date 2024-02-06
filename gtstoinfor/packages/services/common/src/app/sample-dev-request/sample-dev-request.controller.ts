@@ -31,7 +31,7 @@ export class SampleDevReqController {
   @Post('/getAllSampleDevData')
   @ApiBody({ type: SampleFilterRequest })
   async getAllSampleDevData(@Body() req?: any): Promise<AllSampleDevReqResponseModel> {
-    console.log(req,"cont")
+    console.log(req, "cont")
     try {
       return await this.sampleService.getAllSampleDevData(req);
     } catch (error) {
@@ -58,7 +58,7 @@ export class SampleDevReqController {
   }
 
   @Post('/getIssuedSampleRequests')
-  async getIssuedSampleRequests(@Body() req?:any): Promise<CommonResponseModel> {
+  async getIssuedSampleRequests(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getIssuedSampleRequests(req);
     } catch (error) {
@@ -66,7 +66,7 @@ export class SampleDevReqController {
     }
   }
 
-  
+
 
   @Post('/getAllSampleData')
   async getAllSampleData(): Promise<AllSampleDevReqResponseModel> {
@@ -77,7 +77,7 @@ export class SampleDevReqController {
     }
   }
 
-  
+
   @Post('/getmaterialissue')
   async getmaterialissue(): Promise<AllSampleDevReqResponseModel> {
     try {
@@ -86,7 +86,7 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
     }
   }
-  
+
   @Post('/cancelSampleReqById')
   @ApiBody({ type: SampleFilterRequest })
   async cancelSampleReqById(@Body() req: any): Promise<AllSampleDevReqResponseModel> {
@@ -150,56 +150,56 @@ export class SampleDevReqController {
   //     callback(null, true);
   //   },
   // }))
-  
+
   @Post('/fileUpload')
-    @UseInterceptors(FilesInterceptor('file', 10, {
-      storage: diskStorage({
-        // destination: './upload-files/manisha-123',
-        // destination: `./upload-files/PO-${req}`,
-        destination: (req, file, callback) => {
-          console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-          console.log(req.body);
+  @UseInterceptors(FilesInterceptor('file', 10, {
+    storage: diskStorage({
+      // destination: './upload-files/manisha-123',
+      // destination: `./upload-files/PO-${req}`,
+      destination: (req, file, callback) => {
+        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        console.log(req.body);
 
-          console.log(file);
+        console.log(file);
 
-          const destinationPath = `./upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`;
-          // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
+        const destinationPath = `./upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+        // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
 
-          // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
+        // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
 
-          try {
-            // Attempt to create the directory if it doesn't exist
-            fs.mkdirSync(destinationPath, { recursive: true });
-            callback(null, destinationPath);
-          } catch (error) {
-            console.error('Error creating directory:', error);
-            callback(error, null);
-          }
-        },
-        // destination: (req, file, callback) => {
-        //   callback(null, `./upload-files/PO-${req.body.customerPo}`);
-        // },
-        filename: (req, file, callback) => {
-          // console.log(req);
-          // console.log(file);
-          // console.log("************************************************************************************************");
-          const name = file.originalname.split('.')[0];
-          const fileExtName = extname(file.originalname);
-          const randomName = Array(4)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          callback(null, `${name}-${randomName}${fileExtName}`);
-        },
-      }),
-      fileFilter: (req, file, callback) => {
-        if (!file.originalname.match(/\.(xlsx|xls|pdf|jpg|png|jpeg|doc|PDF)$/)) {
-          return callback(new Error('Only xlsx,xls,pdf, jpg, png, doc, jpeg files are allowed!'), false);
+        try {
+          // Attempt to create the directory if it doesn't exist
+          fs.mkdirSync(destinationPath, { recursive: true });
+          callback(null, destinationPath);
+        } catch (error) {
+          console.error('Error creating directory:', error);
+          callback(error, null);
         }
-        callback(null, true);
       },
-    }))
-  async updateStylePath(@UploadedFiles() file:File[], @Body() uploadData: any): Promise<UploadResponse> {
+      // destination: (req, file, callback) => {
+      //   callback(null, `./upload-files/PO-${req.body.customerPo}`);
+      // },
+      filename: (req, file, callback) => {
+        // console.log(req);
+        // console.log(file);
+        // console.log("************************************************************************************************");
+        const name = file.originalname.split('.')[0];
+        const fileExtName = extname(file.originalname);
+        const randomName = Array(4)
+          .fill(null)
+          .map(() => Math.round(Math.random() * 16).toString(16))
+          .join('');
+        callback(null, `${name}-${randomName}${fileExtName}`);
+      },
+    }),
+    fileFilter: (req, file, callback) => {
+      if (!file.originalname.match(/\.(xlsx|xls|pdf|jpg|png|jpeg|doc|PDF)$/)) {
+        return callback(new Error('Only xlsx,xls,pdf, jpg, png, doc, jpeg files are allowed!'), false);
+      }
+      callback(null, true);
+    },
+  }))
+  async updateStylePath(@UploadedFiles() file: File[], @Body() uploadData: any): Promise<UploadResponse> {
     console.log(file, '-------file')
     try {
       return await this.sampleService.UpdateFilePath(file, uploadData.SampleRequestId)
@@ -209,54 +209,54 @@ export class SampleDevReqController {
   }
 
   @Post('/fabricUpload')
-    @UseInterceptors(FilesInterceptor('file', 10, {
-      storage: diskStorage({
-        // destination: './upload-files/manisha-123',
-        // destination: `./upload-files/PO-${req}`,
-        destination: (req, file, callback) => {
-          // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-          // console.log(req.body);
+  @UseInterceptors(FilesInterceptor('file', 10, {
+    storage: diskStorage({
+      // destination: './upload-files/manisha-123',
+      // destination: `./upload-files/PO-${req}`,
+      destination: (req, file, callback) => {
+        // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        // console.log(req.body);
 
-          console.log(file);
+        console.log(file);
 
-          const destinationPath = `./upload_files/Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
-          // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
+        const destinationPath = `./upload_files/Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+        // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
 
-          // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
+        // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
 
-          try {
-            // Attempt to create the directory if it doesn't exist
-            fs.mkdirSync(destinationPath, { recursive: true });
-            callback(null, destinationPath);
-          } catch (error) {
-            console.error('Error creating directory:', error);
-            callback(error, null);
-          }
-        },
-        // destination: (req, file, callback) => {
-        //   callback(null, `./upload-files/PO-${req.body.customerPo}`);
-        // },
-        filename: (req, file, callback) => {
-          // console.log(req);
-          // console.log(file);
-          // console.log("************************************************************************************************");
-          const name = file.originalname.split('.')[0];
-          const fileExtName = extname(file.originalname);
-          const randomName = Array(4)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          callback(null, `${name}-${randomName}${fileExtName}`);
-        },
-      }),
-      fileFilter: (req, file, callback) => {
-        if (!file.originalname.match(/\.(xlsx|xls|pdf|jpg|png|jpeg|doc|PDF)$/)) {
-          return callback(new Error('Only xlsx,xls,pdf, jpg, png, doc, jpeg files are allowed!'), false);
+        try {
+          // Attempt to create the directory if it doesn't exist
+          fs.mkdirSync(destinationPath, { recursive: true });
+          callback(null, destinationPath);
+        } catch (error) {
+          console.error('Error creating directory:', error);
+          callback(error, null);
         }
-        callback(null, true);
       },
-    }))
-  async fabricUpload(@UploadedFiles() file:File[], @Body() uploadData: any): Promise<UploadResponse> {
+      // destination: (req, file, callback) => {
+      //   callback(null, `./upload-files/PO-${req.body.customerPo}`);
+      // },
+      filename: (req, file, callback) => {
+        // console.log(req);
+        // console.log(file);
+        // console.log("************************************************************************************************");
+        const name = file.originalname.split('.')[0];
+        const fileExtName = extname(file.originalname);
+        const randomName = Array(4)
+          .fill(null)
+          .map(() => Math.round(Math.random() * 16).toString(16))
+          .join('');
+        callback(null, `${name}-${randomName}${fileExtName}`);
+      },
+    }),
+    fileFilter: (req, file, callback) => {
+      if (!file.originalname.match(/\.(xlsx|xls|pdf|jpg|png|jpeg|doc|PDF)$/)) {
+        return callback(new Error('Only xlsx,xls,pdf, jpg, png, doc, jpeg files are allowed!'), false);
+      }
+      callback(null, true);
+    },
+  }))
+  async fabricUpload(@UploadedFiles() file: File[], @Body() uploadData: any): Promise<UploadResponse> {
     try {
       return await this.sampleService.fabricUpload(file, uploadData.fabIds)
     } catch (error) {
@@ -265,54 +265,54 @@ export class SampleDevReqController {
   }
 
   @Post('/trimUpload')
-    @UseInterceptors(FilesInterceptor('file', 10, {
-      storage: diskStorage({
-        // destination: './upload-files/manisha-123',
-        // destination: `./upload-files/PO-${req}`,
-        destination: (req, file, callback) => {
-          // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-          // console.log(req.body);
+  @UseInterceptors(FilesInterceptor('file', 10, {
+    storage: diskStorage({
+      // destination: './upload-files/manisha-123',
+      // destination: `./upload-files/PO-${req}`,
+      destination: (req, file, callback) => {
+        // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        // console.log(req.body);
 
-          console.log(file);
+        console.log(file);
 
-          const destinationPath = `./upload_files/Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
-          // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
+        const destinationPath = `./upload_files/Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+        // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
 
-          // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
+        // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
 
-          try {
-            // Attempt to create the directory if it doesn't exist
-            fs.mkdirSync(destinationPath, { recursive: true });
-            callback(null, destinationPath);
-          } catch (error) {
-            console.error('Error creating directory:', error);
-            callback(error, null);
-          }
-        },
-        // destination: (req, file, callback) => {
-        //   callback(null, `./upload-files/PO-${req.body.customerPo}`);
-        // },
-        filename: (req, file, callback) => {
-          // console.log(req);
-          // console.log(file);
-          // console.log("************************************************************************************************");
-          const name = file.originalname.split('.')[0];
-          const fileExtName = extname(file.originalname);
-          const randomName = Array(4)
-            .fill(null)
-            .map(() => Math.round(Math.random() * 16).toString(16))
-            .join('');
-          callback(null, `${name}-${randomName}${fileExtName}`);
-        },
-      }),
-      fileFilter: (req, file, callback) => {
-        if (!file.originalname.match(/\.(xlsx|xls|pdf|jpg|png|jpeg|doc|PDF)$/)) {
-          return callback(new Error('Only xlsx,xls,pdf, jpg, png, doc, jpeg files are allowed!'), false);
+        try {
+          // Attempt to create the directory if it doesn't exist
+          fs.mkdirSync(destinationPath, { recursive: true });
+          callback(null, destinationPath);
+        } catch (error) {
+          console.error('Error creating directory:', error);
+          callback(error, null);
         }
-        callback(null, true);
       },
-    }))
-  async trimUpload(@UploadedFiles() file:File[], @Body() uploadData: any): Promise<UploadResponse> {
+      // destination: (req, file, callback) => {
+      //   callback(null, `./upload-files/PO-${req.body.customerPo}`);
+      // },
+      filename: (req, file, callback) => {
+        // console.log(req);
+        // console.log(file);
+        // console.log("************************************************************************************************");
+        const name = file.originalname.split('.')[0];
+        const fileExtName = extname(file.originalname);
+        const randomName = Array(4)
+          .fill(null)
+          .map(() => Math.round(Math.random() * 16).toString(16))
+          .join('');
+        callback(null, `${name}-${randomName}${fileExtName}`);
+      },
+    }),
+    fileFilter: (req, file, callback) => {
+      if (!file.originalname.match(/\.(xlsx|xls|pdf|jpg|png|jpeg|doc|PDF)$/)) {
+        return callback(new Error('Only xlsx,xls,pdf, jpg, png, doc, jpeg files are allowed!'), false);
+      }
+      callback(null, true);
+    },
+  }))
+  async trimUpload(@UploadedFiles() file: File[], @Body() uploadData: any): Promise<UploadResponse> {
     try {
       return await this.sampleService.trimUpload(file, uploadData.fabIds)
     } catch (error) {
@@ -321,7 +321,7 @@ export class SampleDevReqController {
   }
 
   @Post('/getSampleRequestReport')
-  async getSampleRequestReport(@Body() req?:any): Promise<CommonResponseModel> {
+  async getSampleRequestReport(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getSampleRequestReport(req);
     } catch (error) {
@@ -414,7 +414,7 @@ export class SampleDevReqController {
   }
 
   @Post('/getAvailbelQuantityAginstBuyerAnditem')
-  async getAvailbelQuantityAginstBuyerAnditem(@Body() req:any): Promise<CommonResponseModel> {
+  async getAvailbelQuantityAginstBuyerAnditem(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getAvailbelQuantityAginstBuyerAnditem(req)
     }
@@ -424,7 +424,7 @@ export class SampleDevReqController {
   }
 
   @Post('/getAllMaterialAllocation')
-  async getAllMaterialAllocation(@Body() req:any): Promise<AllSampleDevReqResponseModel> {
+  async getAllMaterialAllocation(@Body() req: any): Promise<AllSampleDevReqResponseModel> {
     try {
       return await this.sampleService.getAllMaterialAllocation(req);
     } catch (error) {
@@ -434,7 +434,7 @@ export class SampleDevReqController {
 
 
   @Post('/creatematerialAlloction')
-  async creatematerialAlloction(@Body() req:any): Promise<CommonResponseModel> {
+  async creatematerialAlloction(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.creatematerialAlloction(req)
     }
@@ -445,8 +445,8 @@ export class SampleDevReqController {
 
   @Post('/getallMaterialAllocationItemsById')
   @ApiBody({ type: MaterialallitemsReq })
-  
-  async getallMaterialAllocationItemsById(@Body() req:any): Promise<CommonResponseModel> {
+
+  async getallMaterialAllocationItemsById(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getallMaterialAllocationItemsById(req)
     }
@@ -457,7 +457,7 @@ export class SampleDevReqController {
 
   @Post('/updateStatus')
   async updateStatus(@Body() req: any): Promise<CommonResponseModel> {
-    console.log(req,"controll")
+    console.log(req, "controll")
     try {
       return await this.sampleService.updateStatus(req);
     } catch (error) {
@@ -466,7 +466,7 @@ export class SampleDevReqController {
   }
   @Post('/getSampleOrderDetails')
   async getSampleOrderDetails(@Body() req: any): Promise<CommonResponseModel> {
-    console.log(req,"controll")
+    console.log(req, "controll")
     try {
       return await this.sampleService.getSampleOrderDetails(req);
     } catch (error) {
@@ -474,9 +474,9 @@ export class SampleDevReqController {
     }
   }
 
-  
+
   @Post('/getfabricDetailsOfSample')
-  async getfabricDetailsOfSample(@Body() req:any): Promise<CommonResponseModel> {
+  async getfabricDetailsOfSample(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getfabricDetailsOfSample(req)
     }
@@ -485,7 +485,7 @@ export class SampleDevReqController {
     }
   }
   @Post('/getTrimDetailsOfSample')
-  async getTrimDetailsOfSample(@Body() req:any): Promise<CommonResponseModel> {
+  async getTrimDetailsOfSample(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getTrimDetailsOfSample(req)
     }
@@ -495,7 +495,7 @@ export class SampleDevReqController {
   }
 
   @Post('/getAllocatedBomInfo')
-  async getAllocatedBomInfo(@Body() req?:any): Promise<CommonResponseModel> {
+  async getAllocatedBomInfo(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getAllocatedBomInfo(req)
     }
@@ -506,7 +506,7 @@ export class SampleDevReqController {
 
   @Post('/allocatedLocationInfo')
   @ApiBody({ type: AllocatedLocationRequest })
-  async allocatedLocationInfo(@Body() req:any): Promise<CommonResponseModel> {
+  async allocatedLocationInfo(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.allocatedLocationInfo(req)
     }
@@ -517,7 +517,7 @@ export class SampleDevReqController {
 
   @Post('/approvaAllocatedStock')
   @ApiBody({ type: AllocationApprovalRequest })
-  async approvaAllocatedStock(@Body() req:any): Promise<CommonResponseModel> {
+  async approvaAllocatedStock(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.approveAllocatedStock(req)
     }
@@ -527,7 +527,7 @@ export class SampleDevReqController {
   }
 
   @Post('/getAllAllocatedRequestNo')
-  async getAllAllocatedRequestNo(@Body() req?:any): Promise<CommonResponseModel> {
+  async getAllAllocatedRequestNo(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getAllAllocatedRequestNo(req)
     }
@@ -537,7 +537,7 @@ export class SampleDevReqController {
   }
 
   @Post('/getAllApprovedRequestNo')
-  async getAllApprovedRequestNo(@Body() req?:any): Promise<CommonResponseModel> {
+  async getAllApprovedRequestNo(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getAllApprovedRequestNo(req)
     }
@@ -545,10 +545,10 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
-  
+
   @Post('/updatedispatch')
-  @ApiBody({type:lifeCycleStatusReq})
-  async updatedispatch(@Body() req?:any): Promise<CommonResponseModel> {
+  @ApiBody({ type: lifeCycleStatusReq })
+  async updatedispatch(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.updatedispatch(req)
     }
@@ -558,7 +558,7 @@ export class SampleDevReqController {
   }
 
   @Post('/getRequestno')
-  async getRequestNo(@Body() req?:any): Promise<CommonResponseModel> {
+  async getRequestNo(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getRequestNo()
     }
@@ -569,7 +569,7 @@ export class SampleDevReqController {
 
   @Post('/allocatedLocation')
   @ApiBody({ type: AllLocationRequest })
-  async allocatedLocation(@Body() req:any): Promise<CommonResponseModel> {
+  async allocatedLocation(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.allocatedLocation(req)
     }
@@ -578,10 +578,10 @@ export class SampleDevReqController {
     }
   }
   @Post('/getbyID')
-  @ApiBody({type:RequestNoReq})
-  async getbyID( @Body() req:any): Promise<AllSampleDevReqResponseModel> {
-    console.log(req,"constroller");
-    
+  @ApiBody({ type: RequestNoReq })
+  async getbyID(@Body() req: any): Promise<AllSampleDevReqResponseModel> {
+    console.log(req, "constroller");
+
     try {
       return await this.sampleService.getbyID(req);
     } catch (error) {
@@ -592,7 +592,7 @@ export class SampleDevReqController {
   //Mobile App API for material Issues
   @Post('/issueMaterial')
   @ApiBody({ type: MaterialIssueRequest })
-  async issueMaterial(@Body() req:any): Promise<CommonResponseModel> {
+  async issueMaterial(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.issueMaterial(req);
     } catch (error) {
@@ -603,7 +603,7 @@ export class SampleDevReqController {
   //Mobile App API for Roll codes in material issues screen
   @Post('/getGrnRollsForSampleOrder')
   @ApiBody({ type: SampleOrderIdRequest })
-  async getGrnRollsForSampleOrder(@Body() req:any): Promise<CommonResponseModel> {
+  async getGrnRollsForSampleOrder(@Body() req: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getGrnRollsForSampleOrder(req);
     } catch (error) {
@@ -611,10 +611,10 @@ export class SampleDevReqController {
     }
   }
 
-  
-  
+
+
   @Post('/getPickListInfo')
-  async getPickListInfo(@Body() req?:any): Promise<CommonResponseModel> {
+  async getPickListInfo(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getPickListInfo(req)
     }
@@ -624,7 +624,7 @@ export class SampleDevReqController {
   }
   @Post('/getSizeWiseOrders')
   @ApiBody({ type: SampleOrderIdRequest })
-  async getSizeWiseOrders(@Body() req?:any): Promise<CommonResponseModel> {
+  async getSizeWiseOrders(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getSizeWiseOrders(req)
     }
@@ -635,7 +635,7 @@ export class SampleDevReqController {
 
   @Post('/getOrderedSizes')
   @ApiBody({ type: SampleOrderIdRequest })
-  async getOrderedSizes(@Body() req?:any): Promise<CommonResponseModel> {
+  async getOrderedSizes(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getOrderedSizes(req)
     }
@@ -644,7 +644,7 @@ export class SampleDevReqController {
     }
   }
   @Post('/getPch')
-  async getPch(@Body() req?:any): Promise<CommonResponseModel> {
+  async getPch(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getPch()
     }
@@ -655,7 +655,7 @@ export class SampleDevReqController {
 
   @Post('/getOrderedColors')
   @ApiBody({ type: SampleOrderIdRequest })
-  async getOrderedColors(@Body() req?:any): Promise<CommonResponseModel> {
+  async getOrderedColors(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getOrderedColors(req)
     }
@@ -664,7 +664,7 @@ export class SampleDevReqController {
     }
   }
   @Post('/getStyle')
-  async getStyle(@Body() req?:any): Promise<CommonResponseModel> {
+  async getStyle(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getStyle()
     }
@@ -674,7 +674,7 @@ export class SampleDevReqController {
   }
   @Post('/getQuantityForSIzeAndColor')
   @ApiBody({ type: OrderQuantityRequset })
-  async getQuantityForSIzeAndColor(@Body() req?:any): Promise<CommonResponseModel> {
+  async getQuantityForSIzeAndColor(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getQuantityForSIzeAndColor(req)
     }
@@ -682,10 +682,10 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
-  
+
   @Post('/getAllSampleRequestsInfo')
   @ApiBody({ type: sampleReqIdReq })
-  async getAllSampleRequestsInfo(@Body() req?:any): Promise<CommonResponseModel> {
+  async getAllSampleRequestsInfo(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getAllSampleRequestsInfo(req)
     }
@@ -695,7 +695,7 @@ export class SampleDevReqController {
   }
   @Post('/getAllSampleRequestSizesInfo')
   @ApiBody({ type: sampleReqIdReq })
-  async getAllSampleRequestSizesInfo(@Body() req?:any): Promise<CommonResponseModel> {
+  async getAllSampleRequestSizesInfo(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getAllSampleRequestSizesInfo(req)
     }
@@ -731,9 +731,20 @@ export class SampleDevReqController {
   @Cron('0 20 * * *')
   @Post('/getUsageWhtsAppMsg')
   @ApiBody({ type: Date })
-  async getUsageWhtsAppMsg(@Body() req?:any): Promise<CommonResponseModel> {
+  async getUsageWhtsAppMsg(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getUsageWhtsAppMsg()
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  @Post('/getAllFilesDataByReqId')
+  @ApiBody({ type: SampleOrderIdRequest })
+  async getAllFilesDataByReqId(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAllFilesDataByReqId(req);
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);

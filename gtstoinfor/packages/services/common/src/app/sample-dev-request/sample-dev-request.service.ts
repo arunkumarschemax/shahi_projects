@@ -1,53 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { InjectDataSource, InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Not, QueryRunner, Raw, Repository } from 'typeorm';
-import { SampleRequest } from './entities/sample-dev-request.entity';
-import { AllSampleDevReqResponseModel, AllocateMaterial, AllocateMaterialResponseModel, CommonResponseModel, FabricInfoReq, MaterialAllocationitemsIdreq, MaterialIssueDto, MaterialStatusEnum, ProductGroupReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, allocateMaterialItems, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq ,SampleIdRequest, LifeCycleStatusEnum, RequestNoReq, BomStatusEnum, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, requestNoReq, RackPositionStatusEnum,ItemTypeEnum, SampleRequestInfoModel, SampleSizeInfoModel, MessageParameters, WhatsAppLogDto, GlobalVariables} from '@project-management-system/shared-models';
-import { SampleSizeRepo } from './repo/sample-dev-size-repo';
-import { Location } from '../locations/location.entity';
-import { Style } from '../style/dto/style-entity';
-import { ProfitControlHead } from '../profit-control-head/profit-control-head-entity';
-import { Buyers } from '../buyers/buyers.entity';
-import { SampleFabricRepo } from './repo/sample-dev-fabric-repo';
-import { SampleTrimRepo } from './repo/sample-dev-trim-repo';
-import { SampleTypes } from '../sample Types/sample-types.entity';
-import { SampleSubTypes } from '../sample-sub-types/sample-sub-types.entity';
-import { Brands } from '../master-brands/master-brands.entity';
-import { EmplyeeDetails } from '../employee-details/dto/employee-details-entity';
-import { SampleReqSizeEntity } from './entities/sample-requset-size-info-entity';
-import { SampleReqFabricinfoEntity } from './entities/sample-request-fabric-info-entity';
-import { SampleRequestTriminfoEntity } from './entities/sample-request-trim-info-entity';
-import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
-import { SampleRequestRepository } from './repo/sample-dev-req-repo';
-import { SamplingbomEntity } from './entities/sampling-bom-entity';
-import { SampleRequestDto } from './dto/samle-dev-req';
-import { sample } from 'rxjs';
-import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
-import { SampleInventoryLoqRepo } from './repo/sample-inventory-loe-repo';
-import { SampleInventoryLogEntity } from './entities/sample-inventory-log-entity';
-import { Size } from '../sizes/sizes-entity';
-import { OperationInventory } from '../operation-tracking/entity/operation-inventory-entity';
-import { GenericTransactionManager } from '../../typeorm-transactions';
-import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AllSampleDevReqResponseModel, BomStatusEnum, BuyerRefNoRequest, CommonResponseModel, FabricInfoReq, GlobalVariables, ItemTypeEnum, LifeCycleStatusEnum, MaterialStatusEnum, MessageParameters, ProductGroupReq, RackPositionStatusEnum, RequestNoReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleIdRequest, SampleRequestInfoModel, SampleSizeInfoModel, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, WhatsAppLogDto, buyerReq, buyerandM3ItemIdReq, lifeCycleStatusReq, requestNoReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
 import { IndentService, WhatsAppInfo, WhatsAppNotificationService } from '@project-management-system/shared-services';
-import { MaterialAllocationRepo } from './repo/material-allocation-repo';
-import { MaterialAllocationEntity } from './entities/material-allocation.entity';
+import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
+import { DataSource, Not, Repository } from 'typeorm';
+import { GenericTransactionManager } from '../../typeorm-transactions';
+import { Buyers } from '../buyers/buyers.entity';
+import { EmplyeeDetails } from '../employee-details/dto/employee-details-entity';
+import { Location } from '../locations/location.entity';
+import { M3TrimsEntity } from '../m3-trims/m3-trims.entity';
+import { Brands } from '../master-brands/master-brands.entity';
+import { OperationInventory } from '../operation-tracking/entity/operation-inventory-entity';
+import { ProfitControlHead } from '../profit-control-head/profit-control-head-entity';
+import { RackPositionEntity } from '../rm_locations/rack-position.entity';
+import { Size } from '../sizes/sizes-entity';
+import { StocksRepository } from '../stocks/repository/stocks.repository';
+import { StocksEntity } from '../stocks/stocks.entity';
+import { Style } from '../style/dto/style-entity';
+import { AllocatedLocationRequest } from './dto/allocated-location-req';
+import { AllocationApprovalRequest } from './dto/allocation-approval-req';
+import { AllLocationRequest } from './dto/location-req';
 import { MaterialAllocationDTO } from './dto/material-allocation-dto';
-import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-repo';
+import { MaterialIssueRequest } from './dto/material-issue.req';
+import { OrderQuantityRequset } from './dto/order-quantity-request';
+import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
+import { SampleOrderIdRequest } from './dto/sample-req-id';
 import { MaterialallitemsReq } from './dto/sample-req-size-req';
 import { MaterialAllocationItemsEntity } from './entities/material-allocation-items';
-import { StocksRepository } from '../stocks/repository/stocks.repository';
-import { AllocationApprovalRequest } from './dto/allocation-approval-req';
-import { AllocatedLocationRequest } from './dto/allocated-location-req';
-import { StocksEntity } from '../stocks/stocks.entity';
-import { MaterialIssueRequest } from './dto/material-issue.req';
-import { SampleOrderIdRequest } from './dto/sample-req-id';
-import { AllLocationRequest } from './dto/location-req';
-import { RackPositionEntity } from '../rm_locations/rack-position.entity';
-import { OrderQuantityRequset } from './dto/order-quantity-request';
-import { MaterialAllocationItemsDTO } from './dto/material-allocation-items-dto';
-import { M3TrimsEntity } from '../m3-trims/m3-trims.entity';
+import { MaterialAllocationEntity } from './entities/material-allocation.entity';
+import { SampleRequest } from './entities/sample-dev-request.entity';
+import { SampleInventoryLogEntity } from './entities/sample-inventory-log-entity';
+import { SampleReqFabricinfoEntity } from './entities/sample-request-fabric-info-entity';
+import { SampleRequestTriminfoEntity } from './entities/sample-request-trim-info-entity';
+import { SampleReqSizeEntity } from './entities/sample-requset-size-info-entity';
+import { SamplingbomEntity } from './entities/sampling-bom-entity';
 import { UploadFilesEntity } from './entities/upload-files-entity';
+import { MaterialAllocationItemsRepo } from './repo/material-allocation-items-repo';
+import { MaterialAllocationRepo } from './repo/material-allocation-repo';
+import { SampleFabricRepo } from './repo/sample-dev-fabric-repo';
+import { SampleRequestRepository } from './repo/sample-dev-req-repo';
+import { SampleSizeRepo } from './repo/sample-dev-size-repo';
+import { SampleTrimRepo } from './repo/sample-dev-trim-repo';
+import { SampleInventoryLoqRepo } from './repo/sample-inventory-loe-repo';
 import { UploadFilesRepository } from './repo/upload-files-repository';
 let moment = require('moment');
 
@@ -66,12 +60,12 @@ export class SampleRequestService {
     private bomRepo: Repository<SamplingbomEntity>,
     private logRepo: SampleInventoryLoqRepo,
     private indentService: IndentService,
-    private matAllRepo:MaterialAllocationRepo,
-    private matAllitemRepo:MaterialAllocationItemsRepo,
-    private stockrepo:StocksRepository,
+    private matAllRepo: MaterialAllocationRepo,
+    private matAllitemRepo: MaterialAllocationItemsRepo,
+    private stockrepo: StocksRepository,
     private wpService: WhatsAppNotificationService,
     private uploadFilesRepository: UploadFilesRepository,
-    
+
   ) { }
 
 
@@ -112,23 +106,23 @@ export class SampleRequestService {
 
 
   async getAllSampleReqNo(): Promise<CommonResponseModel> {
-    try{
-    const details = await this.sampleRepo.find({select:['requestNo'],order:{requestNo:'ASC'}});
-    if (details.length > 0) {
-    let request=[];
-    for ( const code of details){
-      request.push(new RequestNoReq ())
-    }
-      return new CommonResponseModel(true, 1, 'data retrieved', details)
-    } else {
-      return new CommonResponseModel(false, 0, 'data not found')
-    }
-   } catch (err) {
+    try {
+      const details = await this.sampleRepo.find({ select: ['requestNo'], order: { requestNo: 'ASC' } });
+      if (details.length > 0) {
+        let request = [];
+        for (const code of details) {
+          request.push(new RequestNoReq())
+        }
+        return new CommonResponseModel(true, 1, 'data retrieved', details)
+      } else {
+        return new CommonResponseModel(false, 0, 'data not found')
+      }
+    } catch (err) {
       throw err
     }
   }
 
- 
+
   async getPch(): Promise<CommonResponseModel> {
     const details = await this.sampleRepo.getPch();
     if (details.length > 0) {
@@ -138,7 +132,7 @@ export class SampleRequestService {
     }
   }
 
- 
+
   async getStyle(): Promise<CommonResponseModel> {
     const details = await this.sampleRepo.getStyle();
     if (details.length > 0) {
@@ -157,9 +151,9 @@ export class SampleRequestService {
     }
   }
 
-  async getIssuedSampleRequests(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
+  async getIssuedSampleRequests(req?: BuyerRefNoRequest): Promise<CommonResponseModel> {
     let buyerId = null
-    if(req?.buyerRefNo){
+    if (req?.buyerRefNo) {
       const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
       const res = await this.dataSource.query(buyerdata)
       buyerId = res[0].buyer_id
@@ -171,8 +165,8 @@ export class SampleRequestService {
       return new CommonResponseModel(false, 0, 'data not found')
     }
   }
-  
-  
+
+
 
   async cancelSampleReqById(request: SampleFilterRequest): Promise<AllSampleDevReqResponseModel> {
     try {
@@ -299,7 +293,7 @@ export class SampleRequestService {
   //     //   sampleTrimInfo.push(trimEntity)
   //     //   const trimInfoReq = new TrimInfoReq(trimObj.trimType,trimObj.trimCode,trimObj.consumption,trimObj.uomId,trimObj.remarks)
   //     //   indentTrimInfo.push(trimInfoReq);
-        
+
   //     // }
   //     // sampleReqEntity.sampleTrimInfo = sampleTrimInfo
   //     // for (const processObj of req.processInfo) {
@@ -336,7 +330,7 @@ export class SampleRequestService {
   //     //       bomEntity.sampleItemId = save.sampleReqFabricInfo.find((e) => e.fabricCode === fabricData.fabricCode && e. colourId === fabricData.colourId).fabricInfoId
   //     //       saveBomDetails = await manager.getRepository(SamplingbomEntity).save(bomEntity)
   //     //       // saveBomDetails = await this.bomRepo.save(bomEntity)
-            
+
   //     //       console.log("######################################################################")
   //     //       console.log(fabricData.allocatedStock);
   //     //       console.log(fabricData.allocatedStock.find((e)=>e.checkedStatus === 1));
@@ -414,7 +408,7 @@ export class SampleRequestService {
   //     //       else{
   //     //         console.log("else")
   //     //       }
-            
+
   //     //     }
   //     //   }
   //     //   let trimFlag = new Set<boolean>()
@@ -430,7 +424,7 @@ export class SampleRequestService {
   //     //       bomEntity.sampleItemId = save.sampleTrimInfo.find((e) => e.trimCode === trimData.trimCode).trimInfoId
   //     //       saveBomDetails = await manager.getRepository(SamplingbomEntity).save(bomEntity);
   //     //       // saveBomDetails = await this.bomRepo.save(bomEntity)
-          
+
   //     //       if(trimData.allocatedStock.find((e)=>e.checkedStatus === 1) != undefined)
   //     //       {
   //     //         let stockArray : any[] = []
@@ -620,7 +614,7 @@ export class SampleRequestService {
         }
       }
       sampleReqEntity.sampleReqSizeInfo = sampleSizeInfo;
-      let indentFabInfo : FabricInfoReq[] = [];
+      let indentFabInfo: FabricInfoReq[] = [];
       for (let fabricObj of req.fabricInfo) {
         const fabricEntity = new SampleReqFabricinfoEntity()
         fabricEntity.fabricCode = fabricObj.fabricCode
@@ -631,28 +625,28 @@ export class SampleRequestService {
         fabricEntity.totalRequirement = fabricObj.totalRequirement
         fabricEntity.wastage = fabricObj.wastage
         sampleFabricInfo.push(fabricEntity)
-        const fabricInfoReq = new FabricInfoReq(fabricObj.fabricCode,fabricObj.colourId,fabricObj.consumption,fabricObj.uomId,fabricObj.remarks)
+        const fabricInfoReq = new FabricInfoReq(fabricObj.fabricCode, fabricObj.colourId, fabricObj.consumption, fabricObj.uomId, fabricObj.remarks)
         indentFabInfo.push(fabricInfoReq);
       }
       sampleReqEntity.sampleReqFabricInfo = sampleFabricInfo;
-      let indentTrimInfo : TrimInfoReq[] = [];
+      let indentTrimInfo: TrimInfoReq[] = [];
       for (const trimObj of req.trimInfo) {
-        let m3Data : M3TrimsEntity
-        if(trimObj.uomStatus){
-          m3Data = await manager.getRepository(M3TrimsEntity).findOne({where:{m3TrimId:trimObj.trimCode}});
+        let m3Data: M3TrimsEntity
+        if (trimObj.uomStatus) {
+          m3Data = await manager.getRepository(M3TrimsEntity).findOne({ where: { m3TrimId: trimObj.trimCode } });
         }
         const trimEntity = new SampleRequestTriminfoEntity()
         trimEntity.trimCode = trimObj.trimCode
-        trimEntity.uomId = m3Data?.uomId != null ? m3Data?.uomId:null;
+        trimEntity.uomId = m3Data?.uomId != null ? m3Data?.uomId : null;
         trimEntity.consumption = trimObj.consumption
         trimEntity.trimType = trimObj.trimType
         trimEntity.remarks = trimObj.remarks
         trimEntity.totalRequirement = trimObj.totalRequirement
         trimEntity.wastage = trimObj.wastage
         sampleTrimInfo.push(trimEntity)
-        const trimInfoReq = new TrimInfoReq(trimObj.trimType,trimObj.trimCode,trimObj.consumption,trimObj.uomId,trimObj.remarks)
+        const trimInfoReq = new TrimInfoReq(trimObj.trimType, trimObj.trimCode, trimObj.consumption, trimObj.uomId, trimObj.remarks)
         indentTrimInfo.push(trimInfoReq);
-        
+
       }
       sampleReqEntity.sampleTrimInfo = sampleTrimInfo
       // for (const processObj of req.processInfo) {
@@ -668,8 +662,7 @@ export class SampleRequestService {
       console.log(save);
 
       // save = await this.sampleRepo.save(sampleReqEntity)
-      if (save) 
-      {
+      if (save) {
         let fabFlag = new Set<boolean>()
         if (req.fabricInfo) {
           let fabricAllocation;
@@ -678,51 +671,50 @@ export class SampleRequestService {
             const bomEntity = new SamplingbomEntity()
             bomEntity.sampleRequestId = save.SampleRequestId
             bomEntity.colourId = fabricData.colourId
-            bomEntity.m3ItemId=fabricData.fabricCode
-            bomEntity.itemType='Fabric';
+            bomEntity.m3ItemId = fabricData.fabricCode
+            bomEntity.itemType = 'Fabric';
             bomEntity.requiredQuantity = fabricData.totalRequirement
-            bomEntity.sampleItemId = save.sampleReqFabricInfo.find((e) => e.fabricCode === fabricData.fabricCode && e. colourId === fabricData.colourId).fabricInfoId
+            bomEntity.sampleItemId = save.sampleReqFabricInfo.find((e) => e.fabricCode === fabricData.fabricCode && e.colourId === fabricData.colourId).fabricInfoId
             saveBomDetails = await manager.getRepository(SamplingbomEntity).save(bomEntity)
             // saveBomDetails = await this.bomRepo.save(bomEntity)
-            
+
             console.log("######################################################################")
             console.log(fabricData.allocatedStock);
-            console.log(fabricData.allocatedStock.find((e)=>e.checkedStatus === 1));
+            console.log(fabricData.allocatedStock.find((e) => e.checkedStatus === 1));
 
-            if(fabricData.allocatedStock.find((e)=>e.checkedStatus === 1) != undefined)
-            {
-              let stockArray : any[] = [];
-              stockArray.push(fabricData.allocatedStock.find((e)=>e.checkedStatus === 1 && e.issuedQty > 0));
+            if (fabricData.allocatedStock.find((e) => e.checkedStatus === 1) != undefined) {
+              let stockArray: any[] = [];
+              stockArray.push(fabricData.allocatedStock.find((e) => e.checkedStatus === 1 && e.issuedQty > 0));
               console.log(stockArray);
               console.log("if")
               console.log(req)
               console.log(req.buyerId)
 
-              let totalAllocated = 0  
-              let item:MaterialAllocationItemsEntity[] = []
+              let totalAllocated = 0
+              let item: MaterialAllocationItemsEntity[] = []
               for (const stock of stockArray) {
                 console.log("7777")
-                  totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
-                  let itemData = new MaterialAllocationItemsEntity();
-                  itemData.locationId = stock.locationId;
-                  itemData.quantity = stock.quantity;
-                  itemData.stockId = stock.stockId;
-                  itemData.allocateQuantity = stock.issuedQty;
-                  item.push(itemData);
-                  let stockUpdate = await manager.getRepository(StocksEntity).update({id:stock.stockId},{allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}`});
-                  if(stockUpdate.affected === 0){
-                    await manager.releaseTransaction();
-                  }
+                totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
+                let itemData = new MaterialAllocationItemsEntity();
+                itemData.locationId = stock.locationId;
+                itemData.quantity = stock.quantity;
+                itemData.stockId = stock.stockId;
+                itemData.allocateQuantity = stock.issuedQty;
+                item.push(itemData);
+                let stockUpdate = await manager.getRepository(StocksEntity).update({ id: stock.stockId }, { allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}` });
+                if (stockUpdate.affected === 0) {
+                  await manager.releaseTransaction();
+                }
               }
               let materialAllocation = new MaterialAllocationEntity();
 
-              materialAllocation.buyerId = req.buyerId!= undefined?req.buyerId:0;
+              materialAllocation.buyerId = req.buyerId != undefined ? req.buyerId : 0;
               materialAllocation.itemType = ItemTypeEnum.FABRIC
               materialAllocation.m3ItemId = fabricData.fabricCode
               materialAllocation.totalIssueQty = totalAllocated
               materialAllocation.sampleOrderId = save.SampleRequestId;
               // materialAllocation.samplingBomId = saveBomDetails.samplingBomId;
-              materialAllocation.sampleItemId = save.sampleReqFabricInfo.find((e) => e.fabricCode === fabricData.fabricCode && e. colourId === fabricData.colourId).fabricInfoId;
+              materialAllocation.sampleItemId = save.sampleReqFabricInfo.find((e) => e.fabricCode === fabricData.fabricCode && e.colourId === fabricData.colourId).fabricInfoId;
               materialAllocation.materialAllocationinfo = item;
               console.log(materialAllocation);
               console.log(materialAllocation)
@@ -731,39 +723,39 @@ export class SampleRequestService {
 
               console.log(fabricAllocation);
               // fabricAllocation = await manager.getRepository(MaterialAllocationEntity).save(allocationEntity)
-              if(!fabricAllocation){
+              if (!fabricAllocation) {
                 fabFlag.add(false);
                 await manager.releaseTransaction();
                 return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
               }
-              else{
+              else {
                 console.log("&&&&&&&&&&")
                 console.log(fabricData.totalRequirement)
                 console.log(totalAllocated);
                 let fabBomStatus = BomStatusEnum.OPEN;
-                if(Number(fabricData.totalRequirement) === Number(totalAllocated)){
+                if (Number(fabricData.totalRequirement) === Number(totalAllocated)) {
                   fabBomStatus = BomStatusEnum.ALLOCATED
                   // fabFlag.add(true)
                 }
                 // else{
                 //   fabFlag.add(false)
                 // }
-                let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({samplingBomId:saveBomDetails.samplingBomId},{status:fabBomStatus,receivedQuantity : () => `received_quantity + ${totalAllocated}`})
-                if(updateSampleFabricInfo.affected === 0){
+                let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({ samplingBomId: saveBomDetails.samplingBomId }, { status: fabBomStatus, receivedQuantity: () => `received_quantity + ${totalAllocated}` })
+                if (updateSampleFabricInfo.affected === 0) {
                   fabFlag.add(false)
                   await manager.releaseTransaction();
                   return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
                 }
-                else{
+                else {
                   fabFlag.add(true)
                 }
               }
             }
-            else{
+            else {
               fabFlag.add(false);
               console.log("else")
             }
-            
+
           }
         }
         let trimFlag = new Set<boolean>()
@@ -772,21 +764,20 @@ export class SampleRequestService {
           for (const trimData of req.trimInfo) {
             const bomEntity = new SamplingbomEntity()
             bomEntity.sampleRequestId = save.SampleRequestId
-            bomEntity.itemType=trimData.trimType
-            bomEntity.m3ItemId=trimData.trimCode
+            bomEntity.itemType = trimData.trimType
+            bomEntity.m3ItemId = trimData.trimCode
             bomEntity.colourId = trimData.colourId
             bomEntity.requiredQuantity = trimData.totalRequirement
             bomEntity.sampleItemId = save.sampleTrimInfo.find((e) => e.trimCode === trimData.trimCode).trimInfoId
             saveBomDetails = await manager.getRepository(SamplingbomEntity).save(bomEntity);
             // saveBomDetails = await this.bomRepo.save(bomEntity)
-          
-            if(trimData.allocatedStock.find((e)=>e.checkedStatus === 1) != undefined)
-            {
-              let stockArray : any[] = []
-              stockArray.push(trimData.allocatedStock.find((e)=>e.checkedStatus === 1 && e.issuedQty > 0))
+
+            if (trimData.allocatedStock.find((e) => e.checkedStatus === 1) != undefined) {
+              let stockArray: any[] = []
+              stockArray.push(trimData.allocatedStock.find((e) => e.checkedStatus === 1 && e.issuedQty > 0))
               console.log(stockArray);
               let totalAllocated = 0
-              let item:MaterialAllocationItemsEntity[] = []
+              let item: MaterialAllocationItemsEntity[] = []
               for (const stock of stockArray) {
                 totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
                 let itemData = new MaterialAllocationItemsEntity();
@@ -795,12 +786,12 @@ export class SampleRequestService {
                 itemData.stockId = stock.stockId;
                 itemData.allocateQuantity = stock.issuedQty;
                 item.push(itemData);
-                let stockUpdate = await manager.getRepository(StocksEntity).update({id:stock.stockId},{allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}`});
-                  if(stockUpdate.affected === 0){
-                    console.log("1111111111111111111111111111111111111111111111111111111111111");
-                    trimFlag.add(false);
-                    await manager.releaseTransaction();
-                  }
+                let stockUpdate = await manager.getRepository(StocksEntity).update({ id: stock.stockId }, { allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}` });
+                if (stockUpdate.affected === 0) {
+                  console.log("1111111111111111111111111111111111111111111111111111111111111");
+                  trimFlag.add(false);
+                  await manager.releaseTransaction();
+                }
               }
               let materialAllocation = new MaterialAllocationEntity();
 
@@ -819,7 +810,7 @@ export class SampleRequestService {
               console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
               console.log(trimAllocation);
 
-              if(!trimAllocation){
+              if (!trimAllocation) {
                 console.log("222222222222222222222222222222222222222222222222222222222222");
 
                 trimFlag.add(false)
@@ -829,46 +820,46 @@ export class SampleRequestService {
               // else{
               //   trimFlag.add(true)
               // }
-              else{
+              else {
                 let trimBomStatus = BomStatusEnum.OPEN;
-                if(Number(trimData.totalRequirement) === Number(totalAllocated)){
+                if (Number(trimData.totalRequirement) === Number(totalAllocated)) {
                   trimBomStatus = BomStatusEnum.ALLOCATED
                   // trimFlag.add(true);
                 }
                 console.log(saveBomDetails)
-                let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({samplingBomId:saveBomDetails.samplingBomId},{status:trimBomStatus,receivedQuantity : () => `received_quantity + ${totalAllocated}`})
+                let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({ samplingBomId: saveBomDetails.samplingBomId }, { status: trimBomStatus, receivedQuantity: () => `received_quantity + ${totalAllocated}` })
                 console.log("updateSampleFabricInfo")
                 console.log(updateSampleFabricInfo)
 
-                if(updateSampleFabricInfo.affected === 0){
+                if (updateSampleFabricInfo.affected === 0) {
                   console.log("333333333333333333333333333333333333333333333333333333333333333333333");
                   trimFlag.add(false);
                   await manager.releaseTransaction();
                   return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
                 }
-                else{
+                else {
                   trimFlag.add(true);
                 }
               }
             }
-            else{
+            else {
               trimFlag.add(false);
             }
           }
         }
-        console.log(fabFlag.has(true) +"-"+ trimFlag.has(true))
-        console.log(fabFlag.has(false) +"-"+ trimFlag.has(false))
-        
-        if(fabFlag.has(true) && trimFlag.has(true)){
-          let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:save.SampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION})
+        console.log(fabFlag.has(true) + "-" + trimFlag.has(true))
+        console.log(fabFlag.has(false) + "-" + trimFlag.has(false))
+
+        if (fabFlag.has(true) && trimFlag.has(true)) {
+          let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({ SampleRequestId: save.SampleRequestId }, { lifeCycleStatus: LifeCycleStatusEnum.READY_FOR_PRODUCTION })
           console.log(updateSampleRequestStatus)
-            if(updateSampleRequestStatus.affected === 0){
-              await manager.releaseTransaction();
-              return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
-            }
+          if (updateSampleRequestStatus.affected === 0) {
+            await manager.releaseTransaction();
+            return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
+          }
         }
       }
-      else{
+      else {
         await manager.releaseTransaction();
         return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
       }
@@ -877,15 +868,15 @@ export class SampleRequestService {
         console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
         console.log(save);
 
-        for(const res of req.fabricInfo){
+        for (const res of req.fabricInfo) {
           save.sampleReqFabricInfo.find((rec) => rec.fabricCode === res.fabricCode && rec.colourId == res.colourId)["fabricUpload"] = res.fabricUpload;
 
         }
 
-        const req1 = new SourcingRequisitionReq(req.styleId,new Date(),"",new Date(),indentFabInfo,indentTrimInfo,save.SampleRequestId);
+        const req1 = new SourcingRequisitionReq(req.styleId, new Date(), "", new Date(), indentFabInfo, indentTrimInfo, save.SampleRequestId);
         // const raiseIndent = await this.indentService.createItems(req1);
         // if(raiseIndent.status){
-          return new AllSampleDevReqResponseModel(true, 1, 'SampleDevelopmentRequest created successfully', [save])
+        return new AllSampleDevReqResponseModel(true, 1, 'SampleDevelopmentRequest created successfully', [save])
         // }
         // else {
         //   return new AllSampleDevReqResponseModel(false, 0, 'SampleDevelopmentRequest creation Failed', [])
@@ -902,7 +893,7 @@ export class SampleRequestService {
     }
 
   }
-  
+
   async fabricUpload(filePath: any, data: any): Promise<UploadResponse> {
     console.log(filePath);
     console.log(data);
@@ -912,14 +903,14 @@ export class SampleRequestService {
     try {
       let flag = true;
       await manager.startTransaction();
-      for(const [index,value] of JSON.parse(data).entries()){
+      for (const [index, value] of JSON.parse(data).entries()) {
         console.log("********************")
         console.log(value);
         console.log(index);
 
-        const updateFilePath = await manager.getRepository(SampleReqFabricinfoEntity).update({fabricInfoId:value.fabricInfoId},{fileName: `${filePath[index].filename}`, filePath:`${filePath[index].path}`});
+        const updateFilePath = await manager.getRepository(SampleReqFabricinfoEntity).update({ fabricInfoId: value.fabricInfoId }, { fileName: `${filePath[index].filename}`, filePath: `${filePath[index].path}` });
         console.log(updateFilePath)
-        if(!(updateFilePath.affected > 0)){
+        if (!(updateFilePath.affected > 0)) {
           flag = false
         }
       }
@@ -931,7 +922,7 @@ export class SampleRequestService {
         await manager.releaseTransaction();
         return new UploadResponse(false, 11, 'uploaded failed', filePath);
       }
-    }catch (error) {
+    } catch (error) {
       await manager.releaseTransaction();
       console.log(error);
     }
@@ -946,14 +937,14 @@ export class SampleRequestService {
     try {
       let flag = true;
       await manager.startTransaction();
-      for(const [index,value] of JSON.parse(data).entries()){
+      for (const [index, value] of JSON.parse(data).entries()) {
         console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         console.log(value);
         console.log(index);
 
-        const updateFilePath = await manager.getRepository(SampleRequestTriminfoEntity).update({trimInfoId:value.trimInfoId},{fileName: `${filePath[index].filename}`, filePath:`${filePath[index].path}`});
+        const updateFilePath = await manager.getRepository(SampleRequestTriminfoEntity).update({ trimInfoId: value.trimInfoId }, { fileName: `${filePath[index].filename}`, filePath: `${filePath[index].path}` });
         console.log(updateFilePath)
-        if(!(updateFilePath.affected > 0)){
+        if (!(updateFilePath.affected > 0)) {
           flag = false
         }
       }
@@ -965,7 +956,7 @@ export class SampleRequestService {
         await manager.releaseTransaction();
         return new UploadResponse(false, 11, 'uploaded failed', filePath);
       }
-    }catch (error) {
+    } catch (error) {
       await manager.releaseTransaction();
       console.log(error);
     }
@@ -978,18 +969,18 @@ export class SampleRequestService {
       // let filePathUpdate;
       // filePathUpdate = await this.sampleRepo.update({ SampleRequestId: SampleRequestId }, { fileName: filename, filepath: filePath })
       let flag = true;
-      for(const res of filePath){
+      for (const res of filePath) {
         const entity = new UploadFilesEntity()
-        entity.fileName=res.filename
-        entity.filePath="/dist/packages/services/common/"+res.path
-        entity.sampleRequestId=SampleRequestId  
-        entity.createdUser="admin"
+        entity.fileName = res.filename
+        entity.filePath = "/dist/packages/services/common/" + res.path
+        entity.sampleRequestId = SampleRequestId
+        entity.createdUser = "admin"
         const uploadDoc = await this.uploadFilesRepository.save(entity);
-        if(!uploadDoc){
-            flag = false;
+        if (!uploadDoc) {
+          flag = false;
         }
       }
-   
+
       if (flag) {
         return new UploadResponse(true, 11, 'uploaded successfully', filePath);
       }
@@ -1000,6 +991,14 @@ export class SampleRequestService {
     catch (error) {
       console.log(error);
     }
+  }
+
+  async getAllFilesDataByReqId(req: SampleIdRequest): Promise<CommonResponseModel> {
+    const data = await this.uploadFilesRepository.find({ where: { sampleRequestId: req.sampleRequestId } });
+    if (data.length === 0) {
+      return new CommonResponseModel(false, 0, 'data not found', [])
+    }
+    return new CommonResponseModel(true, 123, '', data);
   }
 
   async getAllStyleNo(): Promise<CommonResponseModel> {
@@ -1062,7 +1061,7 @@ export class SampleRequestService {
   }
 
 
- 
+
 
   async getM3StyleCode(): Promise<CommonResponseModel> {
     const manager = this.dataSource;
@@ -1118,31 +1117,31 @@ export class SampleRequestService {
       return new CommonResponseModel(false, 0, 'No data found')
   }
 
-  async getAllAllocatedRequestNo(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
+  async getAllAllocatedRequestNo(req?: BuyerRefNoRequest): Promise<CommonResponseModel> {
     const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
     const res = await this.dataSource.query(buyerdata)
     const buyerId = res[0].buyer_id
-    console.log(buyerId,'buyerIdbuyerId')
-    const records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ALLOCATED,buyer:{buyerId:buyerId}}});
+    console.log(buyerId, 'buyerIdbuyerId')
+    const records = await this.sampleRepo.find({ where: { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ALLOCATED, buyer: { buyerId: buyerId } } });
     if (records.length)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
     else
       return new CommonResponseModel(false, 0, 'No data found')
   }
 
-  async getAllApprovedRequestNo(req?:BuyerRefNoRequest): Promise<CommonResponseModel> {
+  async getAllApprovedRequestNo(req?: BuyerRefNoRequest): Promise<CommonResponseModel> {
     let buyerId
-    if(req?.buyerRefNo){
+    if (req?.buyerRefNo) {
       const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
       const res = await this.dataSource.query(buyerdata)
       buyerId = res[0].buyer_id
     }
     let records
-    if(req?.buyerRefNo){
-      records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION,buyer:{buyerId:buyerId}}});
-      
-    }else{
-      records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION}});
+    if (req?.buyerRefNo) {
+      records = await this.sampleRepo.find({ where: { lifeCycleStatus: LifeCycleStatusEnum.READY_FOR_PRODUCTION, buyer: { buyerId: buyerId } } });
+
+    } else {
+      records = await this.sampleRepo.find({ where: { lifeCycleStatus: LifeCycleStatusEnum.READY_FOR_PRODUCTION } });
     }
     if (records.length)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
@@ -1150,7 +1149,7 @@ export class SampleRequestService {
       return new CommonResponseModel(false, 0, 'No data found')
   }
 
-  
+
 
   async createSampling(req: SampleInventoryLog): Promise<CommonResponseModel> {
     // console.log(req, 'service')
@@ -1219,11 +1218,11 @@ export class SampleRequestService {
         const date = item.created_at;
         const style = item.style;
         const unit = item.name;
-        const styleId=item.styleId
-        const requiredQuantity=item.requiredQuantity
-        const m3StleNo=item.m3StleNo
-        const  colourId=item.colourId
-        const rmItemId=item.rmItemId
+        const styleId = item.styleId
+        const requiredQuantity = item.requiredQuantity
+        const m3StleNo = item.m3StleNo
+        const colourId = item.colourId
+        const rmItemId = item.rmItemId
         if (!result[requestNo]) {
           result[requestNo] = {
             request_no: requestNo,
@@ -1232,11 +1231,11 @@ export class SampleRequestService {
             created_at: date,
             style: style,
             name: unit,
-            styleId:styleId,
-            requiredQuantity:requiredQuantity,
-            m3StleNo:m3StleNo,
-            colourId:colourId,
-            rmItemId:rmItemId,
+            styleId: styleId,
+            requiredQuantity: requiredQuantity,
+            m3StleNo: m3StleNo,
+            colourId: colourId,
+            rmItemId: rmItemId,
             sm: [],
           };
         }
@@ -1249,11 +1248,11 @@ export class SampleRequestService {
             consumption: item.required_quantity,
             quantity: item.quantity,
             color: item.colour,
-            styleId:item.styleId,
-            requiredQuantity:item.requiredQuantity,
-            m3StleNo:item.m3StleNo,
-            colourId:item.colourId,
-            rmItemId:item.rmItemId,
+            styleId: item.styleId,
+            requiredQuantity: item.requiredQuantity,
+            m3StleNo: item.m3StleNo,
+            colourId: item.colourId,
+            rmItemId: item.rmItemId,
             // style:item.style,
             // date:item.created_at,
           }
@@ -1268,10 +1267,10 @@ export class SampleRequestService {
 
     return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
   }
-  async creatematerialAlloction(req:MaterialAllocationDTO):Promise<CommonResponseModel>{
+  async creatematerialAlloction(req: MaterialAllocationDTO): Promise<CommonResponseModel> {
     const manager = new GenericTransactionManager(this.dataSource)
     const queryManager = this.dataSource;
-    try{
+    try {
       let save
       // const filteredData = req.filter(item => item.checkedStatus === 1);
       // const transformedData = filteredData.reduce((acc, item) => {
@@ -1283,7 +1282,7 @@ export class SampleRequestService {
       //       el.m3ItemId === item.m3ItemId &&
       //       el.buyerId ===item.buyerId
       //   );
-      
+
       //   if (foundIndex !== -1) {
       //     acc[foundIndex].itemData.push({
       //       quantity: item.quantity,
@@ -1310,102 +1309,102 @@ export class SampleRequestService {
       //       ]
       //     });
       //   }
-      
+
       //   return acc;
       // }, []);
       // // console.log(transformedData);
-      let materialitemdata:MaterialAllocationItemsEntity[] =[];
+      let materialitemdata: MaterialAllocationItemsEntity[] = [];
       // for(const mainData of transformedData ){
-         const entity = new MaterialAllocationEntity()
-         entity.buyerId=req.buyerId
-         entity.itemType=req.itemType
-         entity.sampleOrderId=req.sampleOrderId
-         entity.sampleItemId=req.sampleItemId
-         entity.m3ItemId=req.m3ItemId
-         entity.totalIssueQty=req.allocatioQuantity
-         entity.status=MaterialStatusEnum.MATERIAL_ALLOCATED
-         let totalQty = 0
-         for(const itemData of req.allocatedItems){
-          const itemEntity = new MaterialAllocationItemsEntity()
-              itemEntity.locationId=itemData.LocationId
-              itemEntity.stockId=itemData.stockId
-              itemEntity.quantity=itemData.quantity
-              itemEntity.allocateQuantity=itemData.allocatioQuantity
-              materialitemdata.push(itemEntity)
-              totalQty = Number(totalQty) + Number(itemData.allocatioQuantity)
-         }
-         entity.materialAllocationinfo=materialitemdata
-         console.log(entity)
-        await manager.startTransaction();
-        save = await manager.getRepository(MaterialAllocationEntity).save(entity)
+      const entity = new MaterialAllocationEntity()
+      entity.buyerId = req.buyerId
+      entity.itemType = req.itemType
+      entity.sampleOrderId = req.sampleOrderId
+      entity.sampleItemId = req.sampleItemId
+      entity.m3ItemId = req.m3ItemId
+      entity.totalIssueQty = req.allocatioQuantity
+      entity.status = MaterialStatusEnum.MATERIAL_ALLOCATED
+      let totalQty = 0
+      for (const itemData of req.allocatedItems) {
+        const itemEntity = new MaterialAllocationItemsEntity()
+        itemEntity.locationId = itemData.LocationId
+        itemEntity.stockId = itemData.stockId
+        itemEntity.quantity = itemData.quantity
+        itemEntity.allocateQuantity = itemData.allocatioQuantity
+        materialitemdata.push(itemEntity)
+        totalQty = Number(totalQty) + Number(itemData.allocatioQuantity)
+      }
+      entity.materialAllocationinfo = materialitemdata
+      console.log(entity)
+      await manager.startTransaction();
+      save = await manager.getRepository(MaterialAllocationEntity).save(entity)
       // }
       console.log(save)
       console.log('***********************************8')
       console.log(materialitemdata);
-      if(save){
+      if (save) {
         console.log("save done");
-        let updateStockFlag =true;
-        for(const itemData of materialitemdata){
+        let updateStockFlag = true;
+        for (const itemData of materialitemdata) {
           console.log(itemData);
-          const update = await manager.getRepository(StocksEntity).update({id:itemData.stockId},{allocateQuanty: () => `allocatd_quantity +  ${itemData.allocateQuantity}`})
+          const update = await manager.getRepository(StocksEntity).update({ id: itemData.stockId }, { allocateQuanty: () => `allocatd_quantity +  ${itemData.allocateQuantity}` })
           console.log(update);
           console.log("update Stock");
-          if(!update.affected){
+          if (!update.affected) {
             updateStockFlag = false
             await manager.releaseTransaction();
             break
           }
         }
-        let bomUpdateFlag =true;
+        let bomUpdateFlag = true;
         let bomStatus = BomStatusEnum.OPEN;
-        if(req.allocatioQuantity >= req.toBeProcured){
+        if (req.allocatioQuantity >= req.toBeProcured) {
           bomStatus = BomStatusEnum.ALLOCATED
         }
         // for(const mainData of transformedData ){
-          let updateBomStatus = await manager.getRepository(SamplingbomEntity).update({samplingBomId:req.samplingBomId},{status:bomStatus, receivedQuantity : () => `received_quantity + ${totalQty}`});
-          console.log("updateBomStatus");
-          console.log(updateBomStatus);
+        let updateBomStatus = await manager.getRepository(SamplingbomEntity).update({ samplingBomId: req.samplingBomId }, { status: bomStatus, receivedQuantity: () => `received_quantity + ${totalQty}` });
+        console.log("updateBomStatus");
+        console.log(updateBomStatus);
 
-          if(updateBomStatus.affected <1){
-            bomUpdateFlag = false;
-            await manager.releaseTransaction();
-          }
-          
+        if (updateBomStatus.affected < 1) {
+          bomUpdateFlag = false;
+          await manager.releaseTransaction();
+        }
+
         // }
         let updateSampleOrderStatus
-        let getBomStatusquery = "Select * from sampling_bom where status!= 'Allocated' and sample_request_id = "+req.sampleOrderId;
+        let getBomStatusquery = "Select * from sampling_bom where status!= 'Allocated' and sample_request_id = " + req.sampleOrderId;
         let getBomStatus = await queryManager.query(getBomStatusquery);
         // let getBomStatus = await manager.getRepository(SamplingbomEntity).find({where:{status: Not(BomStatusEnum.ALLOCATED),sampleRequestId: transformedData[0].sampleOrderId}});
         console.log("getBomStatus")
         console.log(getBomStatus)
 
-        if(getBomStatus.length-1 < 1){
-          updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:req.sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION});
+        if (getBomStatus.length - 1 < 1) {
+          updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({ SampleRequestId: req.sampleOrderId }, { lifeCycleStatus: LifeCycleStatusEnum.READY_FOR_PRODUCTION });
           console.log(updateSampleOrderStatus);
           console.log(bomUpdateFlag);
           console.log(updateStockFlag);
 
-          if(!updateSampleOrderStatus || !bomUpdateFlag || !updateStockFlag){
+          if (!updateSampleOrderStatus || !bomUpdateFlag || !updateStockFlag) {
             await manager.releaseTransaction();
-            return new CommonResponseModel(false,1,'Something Went Wrong',[])
+            return new CommonResponseModel(false, 1, 'Something Went Wrong', [])
           }
-          else{
+          else {
             await manager.completeTransaction();
-            return new CommonResponseModel(true,1,'Material Allocation Request Raise')
+            return new CommonResponseModel(true, 1, 'Material Allocation Request Raise')
           }
         }
-        else{
+        else {
           await manager.completeTransaction();
-          return new CommonResponseModel(true,1,'Material Allocation Request Raise')
+          return new CommonResponseModel(true, 1, 'Material Allocation Request Raise')
         }
-       
-      }else{
+
+      } else {
         await manager.releaseTransaction();
-        return new CommonResponseModel(false,1,'Something Went Wrong',[])
+        return new CommonResponseModel(false, 1, 'Something Went Wrong', [])
 
       }
     }
-    catch(err){
+    catch (err) {
       console.log(err);
       await manager.releaseTransaction();
       throw err
@@ -1414,8 +1413,8 @@ export class SampleRequestService {
 
 
 
-  async getSampleRequestReport(req?: SamplerawmaterialStausReq):Promise<CommonResponseModel>{
-    try{
+  async getSampleRequestReport(req?: SamplerawmaterialStausReq): Promise<CommonResponseModel> {
+    try {
       const manager = this.dataSource;
       // let query3
       // let query1=`SELECT required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity,srf.consumption-po_quantity AS sampleBalanceQuanty,srf.consumption AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,c.colour AS colourName, mi.item_code AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,st.quantity AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId FROM sampling_bom sb     
@@ -1469,7 +1468,7 @@ export class SampleRequestService {
       //   query2 = query2 + ' AND sr.style_id=' + req.styleId;
       //   query3 = query1 + ' UNION ALL ' + query2;
       // }
-      
+
 
       // const rmData = await manager.query(query3);
 
@@ -1501,7 +1500,7 @@ export class SampleRequestService {
       //         sm: [],
       //       };
       //     }
-  
+
       //     result[sampleReqNo].sm.push(
       //       {
       //         samplingBomId:item.samplingBomId,
@@ -1524,7 +1523,7 @@ export class SampleRequestService {
       //   return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
 
       //   }
-        let query1=`SELECT sb.sample_item_id AS sampleItemId,sb.sampling_bom_id AS samplingBomId,required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity, required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS sampleBalanceQuanty,sb.required_quantity AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,IF(sb.item_type = "Fabric",c.colour,tc.colour) AS colourName, IF(sb.item_type = "Fabric", CONCAT(mi.item_code,'-',mi.description), mt.trim_code) AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,(st.quantity-st.allocatd_quantity-st.transfered_quantity) AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId, IF(sb.item_type = "Fabric", mi.hsn_code, mt.hsn_code) AS hsnCode FROM sampling_bom sb     
+      let query1 = `SELECT sb.sample_item_id AS sampleItemId,sb.sampling_bom_id AS samplingBomId,required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity, required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS sampleBalanceQuanty,sb.required_quantity AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,IF(sb.item_type = "Fabric",c.colour,tc.colour) AS colourName, IF(sb.item_type = "Fabric", CONCAT(mi.item_code,'-',mi.description), mt.trim_code) AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,(st.quantity-st.allocatd_quantity-st.transfered_quantity) AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId, IF(sb.item_type = "Fabric", mi.hsn_code, mt.hsn_code) AS hsnCode FROM sampling_bom sb     
         LEFT JOIN  sample_request_fabric_info srf ON srf.sample_request_id=sb.sample_item_id AND sb.item_type='Fabric' 
         LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id=sb.sample_item_id AND sb.item_type!='Fabric'
         LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id  
@@ -1537,260 +1536,261 @@ export class SampleRequestService {
               LEFT JOIN style s ON s.style_id=sr.style_id left join brands bs on bs.brand_id=sr.brand_id 
               left join rack_position rp on rp.position_Id =sr.location_id  
               LEFT JOIN purchae_order_items poi ON poi.sample_item_id =sb.sample_item_id AND poi.item_type LIKE '%${req.tab}%' WHERE (required_quantity-received_quantity-IF((st.quantity-st.allocatd_quantity-st.transfered_quantity) IS NULL, 0, (st.quantity-st.allocatd_quantity-st.transfered_quantity))-IF(po_quantity IS NOT NULL,po_quantity,0)) >0`
-        if(req.extRefNo){
-          query1 = query1+ ` and b.external_ref_number = '${req.extRefNo}'`
-        }
-      
-        if (req.sampleReqNo != undefined) {
-          query1 = query1 + ' AND sr.sample_request_id=' + req.sampleReqNo;
-        }
-        if (req.buyerId != undefined) {
-          query1 = query1 + ' AND sr.buyer_id=' + req.buyerId;
-        }
-        if (req.styleId != undefined) {
-          query1 = query1 + ' AND sr.style_id=' + req.styleId;
-        }
-        if(req.tab != undefined){
-          query1 = query1 +` AND sb.item_type LIKE '%${req.tab}%'`
+      if (req.extRefNo) {
+        query1 = query1 + ` and b.external_ref_number = '${req.extRefNo}'`
       }
-        query1 = query1+ ` group by sb.sampling_bom_id order by sr.request_no, sb.item_type`;
-        const rmData = await manager.query(query1);
-        console.log(rmData)
-        console.log(rmData.length)
 
-        if(rmData.length > 0){
-          return new CommonResponseModel(true,1,"Sampling Bom data retrived successfully. ",rmData)
-        }
-        else{
-          return new CommonResponseModel(true,1,"Sampling Bom data retrived successfully. ",rmData)
-        }
+      if (req.sampleReqNo != undefined) {
+        query1 = query1 + ' AND sr.sample_request_id=' + req.sampleReqNo;
       }
-      catch(err){
-        throw err
+      if (req.buyerId != undefined) {
+        query1 = query1 + ' AND sr.buyer_id=' + req.buyerId;
+      }
+      if (req.styleId != undefined) {
+        query1 = query1 + ' AND sr.style_id=' + req.styleId;
+      }
+      if (req.tab != undefined) {
+        query1 = query1 + ` AND sb.item_type LIKE '%${req.tab}%'`
+      }
+      query1 = query1 + ` group by sb.sampling_bom_id order by sr.request_no, sb.item_type`;
+      const rmData = await manager.query(query1);
+      console.log(rmData)
+      console.log(rmData.length)
+
+      if (rmData.length > 0) {
+        return new CommonResponseModel(true, 1, "Sampling Bom data retrived successfully. ", rmData)
+      }
+      else {
+        return new CommonResponseModel(true, 1, "Sampling Bom data retrived successfully. ", rmData)
       }
     }
-
-    async getAvailbelQuantityAginstBuyerAnditem(req:buyerandM3ItemIdReq):Promise<CommonResponseModel>{
-      try{
-        const manager = this.dataSource;
-        //  const query='SELECT st.quantity-IF(st.issued_quantity IS NOT NULL,st.issued_quantity,0) AS totalAvailablequntity, mai.allocate_quantity AS materialAlloctedquantity,st.allocatd_quantity AS stockAllocatedQty,st.quantity AS stockQuantity,(st.quantity-st.allocatd_quantity) AS resultAvailableQuantity,st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId, st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, FALSE AS checkedStatus,date(g.grn_date) as grnDate FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id LEFT JOIN material_allocation_items mai ON mai.stock_id=st.id WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+'  AND st.item_type="'+req.itemType+'" AND (st.quantity-IF(st.issued_quantity IS NOT NULL,st.issued_quantity,0)) >0 order by g.grn_date'
-
-         const rawQuery = 'Select 0 AS issuedQty,st.buyer_id AS buyerId,st.location_id AS locationId,st.m3_item AS m3ItemId,st.item_type AS itemType,st.grn_item_id AS grnItemId, st.id AS stockId,(quantity-allocatd_quantity-transfered_quantity) AS quantity, g.grn_number AS grnNumber, date(g.grn_date) as grnDate, rp.rack_position_name AS location, FALSE AS checkedStatus, stock_bar_code AS stockBarCode from stocks st left join grn_items gi on gi.grn_item_id = st.grn_item_id left join rack_position rp on rp.position_id = st.location_id left join grn g on g.grn_id = gi.grn_id where id>0 and g.grn_type = "INDENT" and st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' AND st.item_type="'+req.itemType+'" and (quantity-allocatd_quantity-transfered_quantity) > 0';
-        // const queryy ='SELECT mai.allocate_quantity AS materialAlloctedquantity,st.allocatd_quantity AS stockAllocatedQty,st.quantity AS stockQuantity,(st.quantity-st.allocatd_quantity) AS resultAvailableQuantity,st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS checkedStatus FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  LEFT JOIN material_allocation_items mai ON mai.stock_id=st.id WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'" AND (st.quantity-st.allocatd_quantity)>0'
-        
-        const rmData = await manager.query(rawQuery);
-        // console.log(rmData)
-        if(rmData){
-          return new CommonResponseModel(true,1,'data',rmData)
-        }else{
-          return new CommonResponseModel(false,0,'no data',[])
-
-        }
-
-      }catch(err){
-        throw err
-      }
+    catch (err) {
+      throw err
     }
+  }
 
+  async getAvailbelQuantityAginstBuyerAnditem(req: buyerandM3ItemIdReq): Promise<CommonResponseModel> {
+    try {
+      const manager = this.dataSource;
+      //  const query='SELECT st.quantity-IF(st.issued_quantity IS NOT NULL,st.issued_quantity,0) AS totalAvailablequntity, mai.allocate_quantity AS materialAlloctedquantity,st.allocatd_quantity AS stockAllocatedQty,st.quantity AS stockQuantity,(st.quantity-st.allocatd_quantity) AS resultAvailableQuantity,st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId, st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, FALSE AS checkedStatus,date(g.grn_date) as grnDate FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id LEFT JOIN material_allocation_items mai ON mai.stock_id=st.id WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+'  AND st.item_type="'+req.itemType+'" AND (st.quantity-IF(st.issued_quantity IS NOT NULL,st.issued_quantity,0)) >0 order by g.grn_date'
 
+      const rawQuery = 'Select 0 AS issuedQty,st.buyer_id AS buyerId,st.location_id AS locationId,st.m3_item AS m3ItemId,st.item_type AS itemType,st.grn_item_id AS grnItemId, st.id AS stockId,(quantity-allocatd_quantity-transfered_quantity) AS quantity, g.grn_number AS grnNumber, date(g.grn_date) as grnDate, rp.rack_position_name AS location, FALSE AS checkedStatus, stock_bar_code AS stockBarCode from stocks st left join grn_items gi on gi.grn_item_id = st.grn_item_id left join rack_position rp on rp.position_id = st.location_id left join grn g on g.grn_id = gi.grn_id where id>0 and g.grn_type = "INDENT" and st.buyer_id=' + req.buyerId + ' AND st.m3_item= ' + req.m3ItemId + ' AND st.item_type="' + req.itemType + '" and (quantity-allocatd_quantity-transfered_quantity) > 0';
+      // const queryy ='SELECT mai.allocate_quantity AS materialAlloctedquantity,st.allocatd_quantity AS stockAllocatedQty,st.quantity AS stockQuantity,(st.quantity-st.allocatd_quantity) AS resultAvailableQuantity,st.item_type AS itemType,g.grn_number AS grnNumber,r.rack_position_name,st.id AS stockId,st.m3_item AS m3ItemId,st.buyer_id AS buyerId,st.item_type AS itemType, st.location_id AS locationId,st.quantity,st.grn_item_id AS grnItemId,stock_bar_code AS stockBarCode, false AS checkedStatus FROM stocks st LEFT JOIN rack_position r ON r.position_Id=st.location_id LEFT JOIN grn_items gi ON gi.grn_item_id=st.grn_item_id LEFT JOIN grn g ON g.grn_id=gi.grn_id  LEFT JOIN material_allocation_items mai ON mai.stock_id=st.id WHERE st.buyer_id='+req.buyerId+' AND st.m3_item= '+req.m3ItemId+' and st.item_type="'+req.itemType+'" AND (st.quantity-st.allocatd_quantity)>0'
 
-    // async getAllMaterialAllocation(req?:buyerReq) : Promise<CommonResponseModel> {
-    //   try{
-    //     const data = await this.matAllRepo.getallMaterialAllocation(req)
-    //     const map = new Map<number,AllocateMaterial >()
-    //     if(data.length == 0){
-    //       return new AllocateMaterialResponseModel(false,0,'No data found',[])
-    //     } else {
-    //       for(const rec of data){
-    //         if(!map.has(rec.material_allocation_id)){
-    //           map.set(rec.material_allocation_id,new AllocateMaterial(rec.material_allocation_id,rec.item_type,rec.sample_order_id,rec.sample_item_id,rec.m3_item_id,rec.buyer_id,rec.status,[],rec.buyer_name,"admin") )
-    //         }
+      const rmData = await manager.query(rawQuery);
+      // console.log(rmData)
+      if (rmData) {
+        return new CommonResponseModel(true, 1, 'data', rmData)
+      } else {
+        return new CommonResponseModel(false, 0, 'no data', [])
 
-    //         map.get(rec.material_allocation_id).materialAllocateIteminfo.push(new allocateMaterialItems(rec.material_allocation_items_id,rec.quantity,rec.stock_id,rec.location_id,rec.allocate_quantity,rec.material_allocation_id,rec.location_name,"admin") )
-    //     }
-    //     const allocateMaterial: AllocateMaterial[] = [];
-    //     map.forEach((e) => allocateMaterial.push(e))
-    //           return new AllocateMaterialResponseModel(true,1,'Data retrieved',allocateMaterial)
-    //   }
-
-      
-    //   } catch(err){
-    //     throw err
-    //   }
-    // }
-
-    async getAllMaterialAllocation(req?:buyerReq) : Promise<CommonResponseModel> {
-      try{
-        const data = await this.matAllRepo.getallMaterialAllocation(req)
-       
-        if(data){
-          return new CommonResponseModel(true,0,'Data retrived Successfully',data)
-        } else {
-          return new CommonResponseModel(false,1,'No Data Found',[])
-        }
-      } catch(err){
-        throw err
       }
-    }
 
-    async getallMaterialAllocationItemsById(req:MaterialallitemsReq) : Promise<CommonResponseModel> {
-      try{
-        const data = await this.matAllitemRepo.getallMaterialAllocationItemsById(req)
-       
-        if(data){
-          return new CommonResponseModel(true,0,'Data retrived Successfully',data)
-        } else {
-          return new CommonResponseModel(false,1,'No Data Found',[])
-        }
-      } catch(err){
-        throw err
+    } catch (err) {
+      throw err
+    }
+  }
+
+
+
+  // async getAllMaterialAllocation(req?:buyerReq) : Promise<CommonResponseModel> {
+  //   try{
+  //     const data = await this.matAllRepo.getallMaterialAllocation(req)
+  //     const map = new Map<number,AllocateMaterial >()
+  //     if(data.length == 0){
+  //       return new AllocateMaterialResponseModel(false,0,'No data found',[])
+  //     } else {
+  //       for(const rec of data){
+  //         if(!map.has(rec.material_allocation_id)){
+  //           map.set(rec.material_allocation_id,new AllocateMaterial(rec.material_allocation_id,rec.item_type,rec.sample_order_id,rec.sample_item_id,rec.m3_item_id,rec.buyer_id,rec.status,[],rec.buyer_name,"admin") )
+  //         }
+
+  //         map.get(rec.material_allocation_id).materialAllocateIteminfo.push(new allocateMaterialItems(rec.material_allocation_items_id,rec.quantity,rec.stock_id,rec.location_id,rec.allocate_quantity,rec.material_allocation_id,rec.location_name,"admin") )
+  //     }
+  //     const allocateMaterial: AllocateMaterial[] = [];
+  //     map.forEach((e) => allocateMaterial.push(e))
+  //           return new AllocateMaterialResponseModel(true,1,'Data retrieved',allocateMaterial)
+  //   }
+
+
+  //   } catch(err){
+  //     throw err
+  //   }
+  // }
+
+  async getAllMaterialAllocation(req?: buyerReq): Promise<CommonResponseModel> {
+    try {
+      const data = await this.matAllRepo.getallMaterialAllocation(req)
+
+      if (data) {
+        return new CommonResponseModel(true, 0, 'Data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 1, 'No Data Found', [])
       }
+    } catch (err) {
+      throw err
     }
+  }
 
+  async getallMaterialAllocationItemsById(req: MaterialallitemsReq): Promise<CommonResponseModel> {
+    try {
+      const data = await this.matAllitemRepo.getallMaterialAllocationItemsById(req)
 
-
-   
-
-    async updateStatus(req?:statusReq): Promise<CommonResponseModel> {
-      try {
-        const update = await this.matAllRepo.update(
-          { materialAllocationId: req.materialAllocationId },
-          { status: MaterialStatusEnum.MATERIAL_ISSUED }
-        );
-        if (update.affected && update.affected > 0) {
-          return new CommonResponseModel(true, 1, 'Material Issued Sucessfully');
-        } else {
-          return new CommonResponseModel(false, 1, 'some went wrong');
-        }
-      } catch (err) {
-        throw err;
+      if (data) {
+        return new CommonResponseModel(true, 0, 'Data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 1, 'No Data Found', [])
       }
+    } catch (err) {
+      throw err
     }
+  }
 
-    // async updatedispatch(req?:lifeCycleStatusReq):Promise<CommonResponseModel>{
-    //   console.log(req,"service");
-      
-    //   try{
-    //     const update=await this. sampleRepo.update(
-         
-    //         { SampleRequestId:req.sampleReqId},
-    //        {lifeCycleStatus:req.status},
-    //        {DispatchedDate:req.dipatchedDate}
-    //     );
-      
-    //   if(update.affected && update.affected >0 ){
-    //     return new CommonResponseModel(true, 1, 'Lifecyclestatus updated Sucessfully');
 
-    //   }else{
-    //     return new CommonResponseModel(false, 1, 'some went wrong');
 
-    //   }
-    //     } catch (err) {
-    //       throw err;
-    //     }
-    // }
-    async updatedispatch(req?: lifeCycleStatusReq): Promise<CommonResponseModel> {    
-      try {
-        const update = await this.sampleRepo.update(
-          
-          { SampleRequestId: req.sampleReqId},
-            {lifeCycleStatus: req.status,
-             DispatchedDate: req.dipatchedDate 
-          },
-       
-        );
-    
-        if (update.affected && update.affected >0 ) {
-          return new CommonResponseModel(true, 1, 'Lifecycle status updated successfully');
-        } else {
-          return new CommonResponseModel(false, 1, 'Something went wrong');
-        }
-      } catch (err) {
-        throw err;
+
+
+  async updateStatus(req?: statusReq): Promise<CommonResponseModel> {
+    try {
+      const update = await this.matAllRepo.update(
+        { materialAllocationId: req.materialAllocationId },
+        { status: MaterialStatusEnum.MATERIAL_ISSUED }
+      );
+      if (update.affected && update.affected > 0) {
+        return new CommonResponseModel(true, 1, 'Material Issued Sucessfully');
+      } else {
+        return new CommonResponseModel(false, 1, 'some went wrong');
       }
+    } catch (err) {
+      throw err;
     }
-    
+  }
+
+  // async updatedispatch(req?:lifeCycleStatusReq):Promise<CommonResponseModel>{
+  //   console.log(req,"service");
+
+  //   try{
+  //     const update=await this. sampleRepo.update(
+
+  //         { SampleRequestId:req.sampleReqId},
+  //        {lifeCycleStatus:req.status},
+  //        {DispatchedDate:req.dipatchedDate}
+  //     );
+
+  //   if(update.affected && update.affected >0 ){
+  //     return new CommonResponseModel(true, 1, 'Lifecyclestatus updated Sucessfully');
+
+  //   }else{
+  //     return new CommonResponseModel(false, 1, 'some went wrong');
+
+  //   }
+  //     } catch (err) {
+  //       throw err;
+  //     }
+  // }
+  async updatedispatch(req?: lifeCycleStatusReq): Promise<CommonResponseModel> {
+    try {
+      const update = await this.sampleRepo.update(
+
+        { SampleRequestId: req.sampleReqId },
+        {
+          lifeCycleStatus: req.status,
+          DispatchedDate: req.dipatchedDate
+        },
+
+      );
+
+      if (update.affected && update.affected > 0) {
+        return new CommonResponseModel(true, 1, 'Lifecycle status updated successfully');
+      } else {
+        return new CommonResponseModel(false, 1, 'Something went wrong');
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
 
 
-    async getSampleOrderDetails(req:SampleIdRequest):Promise<CommonResponseModel>{
-      const sizeDta = `SELECT  GROUP_CONCAT(DISTINCT  CONCAT('sum(IF(s.size_id = ''',size_id,''', s.quantity, 0)) AS ',sizes)) AS size_name FROM size s WHERE sizes != '' 
+
+  async getSampleOrderDetails(req: SampleIdRequest): Promise<CommonResponseModel> {
+    const sizeDta = `SELECT  GROUP_CONCAT(DISTINCT  CONCAT('sum(IF(s.size_id = ''',size_id,''', s.quantity, 0)) AS ',sizes)) AS size_name FROM size s WHERE sizes != '' 
       AND size_id IN(SELECT DISTINCT size_id FROM sample_request_size_info WHERE sample_request_id=${req.sampleRequestId}) ORDER BY  sizes`;
-      const res = await this.dataSource.query(sizeDta)
-      const sizesStr = res[0].size_name
-      console.log(sizesStr,'kkkkk')
+    const res = await this.dataSource.query(sizeDta)
+    const sizesStr = res[0].size_name
+    console.log(sizesStr, 'kkkkk')
 
-      console.log(req,'rehhhh')
-      const sampleDataQry = `SELECT sty.style,cl.colour,${sizesStr} FROM sample_request_size_info s 
+    console.log(req, 'rehhhh')
+    const sampleDataQry = `SELECT sty.style,cl.colour,${sizesStr} FROM sample_request_size_info s 
       left join sample_request sr on sr.sample_request_id = s.sample_request_id
       left join colour cl on cl.colour_id = s.colour_id
       left join style sty on sty.style_id = sr.style_id
       WHERE s.sample_request_id=${req.sampleRequestId} GROUP BY s.colour_id`
-      const finalres = await this.dataSource.query(sampleDataQry)
-      if(finalres.length > 0){
-        return new CommonResponseModel(true,1,'data retrived',finalres)
-      }else{
-        return new CommonResponseModel(false,0,'No data')
-      }
+    const finalres = await this.dataSource.query(sampleDataQry)
+    if (finalres.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retrived', finalres)
+    } else {
+      return new CommonResponseModel(false, 0, 'No data')
     }
-    
-    
-    
-    async getfabricDetailsOfSample(req:sampleReqIdReq):Promise<CommonResponseModel>{
-      try{
-        const manager = this.dataSource;
-        const query ='  SELECT srf.fabric_code as m3FabricCode, srf.colour_id as colourId,c.colour as colorName,request_no AS sampleReqNo, item_code AS itemCode,mi.description as description,fabric_info_id AS samplereFabId,(sb.required_quantity - sb.received_quantity) AS sampleQuantity,srf.sample_request_id AS sampleReqId,srf.uom_id,u.uom,sr.style_id as style,mi.hsn_code AS hsnCode FROM sample_request_fabric_info srf LEFT JOIN sample_request sr ON sr.sample_request_id=srf.sample_request_id LEFT JOIN sampling_bom sb on sb.sample_request_id = srf.sample_request_id and sb.m3_item_id = srf.fabric_code and sb.colour_id = srf.colour_id LEFT JOIN m3_items mi ON mi.m3_items_Id =srf.fabric_code left join colour c on c.colour_id=srf.colour_id left join uom u on u.id = srf.uom_id  where srf.sample_request_id in ('+req.sampleReqId+') and srf.fabric_info_id in ('+req.sampleItemId+')'
-        const rmData = await manager.query(query);
-        if(rmData){
-          return new CommonResponseModel(true,1,'data',rmData)
-        }else{
-          return new CommonResponseModel(false,0,'no data',[])
+  }
 
-        }
 
-      }catch(err){
-        throw err
+
+  async getfabricDetailsOfSample(req: sampleReqIdReq): Promise<CommonResponseModel> {
+    try {
+      const manager = this.dataSource;
+      const query = '  SELECT srf.fabric_code as m3FabricCode, srf.colour_id as colourId,c.colour as colorName,request_no AS sampleReqNo, item_code AS itemCode,mi.description as description,fabric_info_id AS samplereFabId,(sb.required_quantity - sb.received_quantity) AS sampleQuantity,srf.sample_request_id AS sampleReqId,srf.uom_id,u.uom,sr.style_id as style,mi.hsn_code AS hsnCode FROM sample_request_fabric_info srf LEFT JOIN sample_request sr ON sr.sample_request_id=srf.sample_request_id LEFT JOIN sampling_bom sb on sb.sample_request_id = srf.sample_request_id and sb.m3_item_id = srf.fabric_code and sb.colour_id = srf.colour_id LEFT JOIN m3_items mi ON mi.m3_items_Id =srf.fabric_code left join colour c on c.colour_id=srf.colour_id left join uom u on u.id = srf.uom_id  where srf.sample_request_id in (' + req.sampleReqId + ') and srf.fabric_info_id in (' + req.sampleItemId + ')'
+      const rmData = await manager.query(query);
+      if (rmData) {
+        return new CommonResponseModel(true, 1, 'data', rmData)
+      } else {
+        return new CommonResponseModel(false, 0, 'no data', [])
+
       }
+
+    } catch (err) {
+      throw err
     }
+  }
 
-    async getTrimDetailsOfSample(req:sampleReqIdReq):Promise<CommonResponseModel>{
-      try{
-        const manager = this.dataSource;
-        const query ='SELECT t.trim_code as m3TrimCode,mt.trim_code AS m3TrimCodeName,t.trim_type AS trimTupe,request_no AS sampleReqNo,trim_info_id AS sampleTrimInfoId,mt.uom_id AS uomId,u.uom as uomName,(sb.required_quantity - sb.received_quantity) AS sampleOrderQuantity,t.sample_request_id AS sampleReqId,tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part,sr.style_id AS styleId FROM sample_request_trim_info t LEFT JOIN sample_request sr ON sr.sample_request_id=t.sample_request_id LEFT JOIN m3_trims mt ON mt.m3_trim_Id=t.trim_code left join uom u on u.id = mt.uom_id LEFT JOIN sampling_bom sb on sb.sample_request_id = t.sample_request_id and m3_item_id = t.trim_code LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = mt.trim_mapping_id where t.sample_request_id in ('+req.sampleReqId+') and t.trim_info_id in('+req.sampleItemId+')'
-        const rmData = await manager.query(query);
-        if (rmData.length > 0) {
-          const modifiedRes = rmData.map(item => {
-              const trueValues = Object.keys(item)
-              .filter(key => ["structure", "category", "content", "type", "finish", "hole", "quality", "thickness", "variety", "uom", "color", "logo", "part"].includes(key) && item[key] === 1)
-              .map(key => key.toUpperCase());
+  async getTrimDetailsOfSample(req: sampleReqIdReq): Promise<CommonResponseModel> {
+    try {
+      const manager = this.dataSource;
+      const query = 'SELECT t.trim_code as m3TrimCode,mt.trim_code AS m3TrimCodeName,t.trim_type AS trimTupe,request_no AS sampleReqNo,trim_info_id AS sampleTrimInfoId,mt.uom_id AS uomId,u.uom as uomName,(sb.required_quantity - sb.received_quantity) AS sampleOrderQuantity,t.sample_request_id AS sampleReqId,tpm.structure, tpm.category, tpm.content, tpm.type, tpm.finish, tpm.hole, tpm.quality, tpm.thickness, tpm.variety, tpm.uom, tpm.color, tpm.logo, tpm.part,sr.style_id AS styleId FROM sample_request_trim_info t LEFT JOIN sample_request sr ON sr.sample_request_id=t.sample_request_id LEFT JOIN m3_trims mt ON mt.m3_trim_Id=t.trim_code left join uom u on u.id = mt.uom_id LEFT JOIN sampling_bom sb on sb.sample_request_id = t.sample_request_id and m3_item_id = t.trim_code LEFT JOIN trim_params_mapping tpm ON tpm.trim_mapping_id = mt.trim_mapping_id where t.sample_request_id in (' + req.sampleReqId + ') and t.trim_info_id in(' + req.sampleItemId + ')'
+      const rmData = await manager.query(query);
+      if (rmData.length > 0) {
+        const modifiedRes = rmData.map(item => {
+          const trueValues = Object.keys(item)
+            .filter(key => ["structure", "category", "content", "type", "finish", "hole", "quality", "thickness", "variety", "uom", "color", "logo", "part"].includes(key) && item[key] === 1)
+            .map(key => key.toUpperCase());
 
-              const concatenatedValues = trueValues.join('/');
-              const label = trueValues.length > 0 ? "BUYER/TRIM TYPE/TRIM CATEGORY/":""
+          const concatenatedValues = trueValues.join('/');
+          const label = trueValues.length > 0 ? "BUYER/TRIM TYPE/TRIM CATEGORY/" : ""
 
-              const trimParams = label + concatenatedValues
-              return { ...item, trimParams };
-          });
+          const trimParams = label + concatenatedValues
+          return { ...item, trimParams };
+        });
 
-          return new CommonResponseModel(true, 1, "Stock retrieved successfully", modifiedRes);
-  }else{
-          return new CommonResponseModel(false,0,'no data',[])
+        return new CommonResponseModel(true, 1, "Stock retrieved successfully", modifiedRes);
+      } else {
+        return new CommonResponseModel(false, 0, 'no data', [])
 
-        }
-
-      }catch(err){
-        throw err
       }
+
+    } catch (err) {
+      throw err
     }
+  }
 
-    async getAllocatedBomInfo(req?:RequestNoReq):Promise<CommonResponseModel>{
-      console.log(req)
-      let checkStatus
-      if(req.action == 'Issued'){
-        checkStatus = LifeCycleStatusEnum.READY_FOR_PRODUCTION
-      }
-      if(req.action == 'Approval'){
-        checkStatus = LifeCycleStatusEnum.MATERIAL_ALLOCATED
-      }
-      let fabricInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,c.colour,mi.item_code as itemCode,sf.consumption
+  async getAllocatedBomInfo(req?: RequestNoReq): Promise<CommonResponseModel> {
+    console.log(req)
+    let checkStatus
+    if (req.action == 'Issued') {
+      checkStatus = LifeCycleStatusEnum.READY_FOR_PRODUCTION
+    }
+    if (req.action == 'Approval') {
+      checkStatus = LifeCycleStatusEnum.MATERIAL_ALLOCATED
+    }
+    let fabricInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,c.colour,mi.item_code as itemCode,sf.consumption
       ,sf.total_requirement as BOM ,sf.sample_request_id as sampleRequestFabricId , sf.fabric_info_id as sampleFabricId,'Fabric' as type
        FROM sample_request sr 
             LEFT JOIN sample_request_fabric_info sf ON sf.sample_request_id = sr.sample_request_id
@@ -1800,15 +1800,15 @@ export class SampleRequestService {
             LEFT JOIN m3_items mi ON mi.m3_items_Id = sf.fabric_code
             LEFT JOIN colour c ON c.colour_id = sf.colour_id
             WHERE sr.life_cycle_status = '${checkStatus}'`;
-            if(req.requestNo){
-              fabricInfoQry += ' AND sr.sample_request_id = ' + req.requestNo ;
-            }
-            const fabricInfo = await this.dataSource.query(fabricInfoQry)
-            console.log()
-      // if(req.requestNo) {
+    if (req.requestNo) {
+      fabricInfoQry += ' AND sr.sample_request_id = ' + req.requestNo;
+    }
+    const fabricInfo = await this.dataSource.query(fabricInfoQry)
+    console.log()
+    // if(req.requestNo) {
 
-      // }
-      let trimInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,mi.trim_code as itemCode,st.consumption ,st.total_requirement as BOM, st.trim_info_id as sampleTrimInfoId , st.sample_request_id as sampleReqTrimId ,'Trim' as type
+    // }
+    let trimInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,mi.trim_code as itemCode,st.consumption ,st.total_requirement as BOM, st.trim_info_id as sampleTrimInfoId , st.sample_request_id as sampleReqTrimId ,'Trim' as type
       FROM sample_request sr 
 LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_request_id
       LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
@@ -1816,197 +1816,197 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
             LEFT JOIN brands br ON br.brand_id = sr.brand_id
             LEFT JOIN m3_trims mi ON mi.m3_trim_Id = st.trim_code
       WHERE sr.life_cycle_status = '${checkStatus}'`;
-      if(req.requestNo > 0){
-        trimInfoQry += ' AND sr.sample_request_id = ' + req.requestNo ;
-      }
-      const trimInfo = await this.dataSource.query(trimInfoQry)
-      
-      const combineData = [...fabricInfo, ...trimInfo]
-      let allocatedSampleReqInfo = {
-        fabricInfo:[],
-        trimInfo:[]
-      }
-      if(fabricInfo.length > 0){
-        allocatedSampleReqInfo.fabricInfo = fabricInfo
-      }
-      if(trimInfo.length > 0){
-        allocatedSampleReqInfo.trimInfo = trimInfo
-      }
-      if(fabricInfo.length > 0){
-        return new CommonResponseModel(true,1,'data retreived',combineData)
-      }else{
-        return new CommonResponseModel(false,0,'No data')
-      }
+    if (req.requestNo > 0) {
+      trimInfoQry += ' AND sr.sample_request_id = ' + req.requestNo;
+    }
+    const trimInfo = await this.dataSource.query(trimInfoQry)
+
+    const combineData = [...fabricInfo, ...trimInfo]
+    let allocatedSampleReqInfo = {
+      fabricInfo: [],
+      trimInfo: []
+    }
+    if (fabricInfo.length > 0) {
+      allocatedSampleReqInfo.fabricInfo = fabricInfo
+    }
+    if (trimInfo.length > 0) {
+      allocatedSampleReqInfo.trimInfo = trimInfo
+    }
+    if (fabricInfo.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retreived', combineData)
+    } else {
+      return new CommonResponseModel(false, 0, 'No data')
+    }
+  }
+
+  async allocatedLocationInfo(req: AllocatedLocationRequest) {
+    let checkStatus
+    let itemType
+    if (req.action == 'Issued') {
+      checkStatus = MaterialStatusEnum.READY_FOR_PRODUCTION
+    }
+    if (req.action == 'Approval') {
+      checkStatus = MaterialStatusEnum.MATERIAL_ALLOCATED
     }
 
-    async allocatedLocationInfo(req:AllocatedLocationRequest){
-      let checkStatus
-      let itemType
-      if(req.action == 'Issued'){
-        checkStatus = MaterialStatusEnum.READY_FOR_PRODUCTION
-      }
-      if(req.action == 'Approval'){
-        checkStatus = MaterialStatusEnum.MATERIAL_ALLOCATED
-      }
-      
-      let data
-      data = `SELECT ma.sample_item_id AS sampleItemId,rp.rack_position_name AS location,position_Id AS id,item_type AS itemType,mai.quantity
+    let data
+    data = `SELECT ma.sample_item_id AS sampleItemId,rp.rack_position_name AS location,position_Id AS id,item_type AS itemType,mai.quantity
       ,mai.allocate_quantity AS allocatedQty,mai.material_allocation_items_id as materialAllocationId  FROM material_allocation ma
       LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
       LEFT JOIN rack_position rp ON rp.position_Id = mai.location_id
        WHERE sample_item_id = ${req.sampleRequestItemId} and ma.status = '${checkStatus}'`
-       if(req.type == 'Fabric'){
-          data +=` and item_type = '${req.type}'`
-       }else{
-          data +=` and item_type != 'Fabric'`
-       }
-       const res = await this.dataSource.query(data)
-       if(res.length > 0){
-         return new CommonResponseModel(true,1,'data',res)
-       }else{
-        return new CommonResponseModel(false,0,'No data Found')
-
-       }
-    } 
-
-    async approveAllocatedStock(req:AllocationApprovalRequest):Promise<CommonResponseModel>{
-      console.log(req)
-      const manager = new GenericTransactionManager(this.dataSource)
-      try{
-        let sampleUpdateStatus
-        let sampleMaterialStatus
-        await manager.startTransaction()
-        if(req.action == 'Issued'){
-          sampleUpdateStatus = LifeCycleStatusEnum.MATERIAL_ISSUED
-          sampleMaterialStatus = MaterialStatusEnum.MATERIAL_ISSUED
-        }
-        if(req.action == 'Approval'){
-          sampleUpdateStatus = LifeCycleStatusEnum.READY_FOR_PRODUCTION
-          sampleMaterialStatus = MaterialStatusEnum.READY_FOR_PRODUCTION
-        }
-        const updateSamleReq = await manager.getRepository(SampleRequest).update({SampleRequestId:req.sampleRequestId},{lifeCycleStatus:sampleUpdateStatus})
-        if(updateSamleReq.affected){
-        const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({sampleOrderId:req.sampleRequestId},{status:sampleMaterialStatus})
-          if(updateAllocations.affected){
-            console.log('yess')
-            await manager.completeTransaction()
-            return new CommonResponseModel(true,1,req.action == 'Issued'?'Succefully Issued':'Successfully Approved')
-          }else{
-            await manager.releaseTransaction()
-            return new CommonResponseModel(false,0,'something went wrong')
-          }
-        }else{
-          await manager.releaseTransaction()
-          return new CommonResponseModel(false,0,'something went wrong')
-        }
-
-      }catch(err){
-        await manager.releaseTransaction()
-        return new CommonResponseModel(false,0,err)
-      }
-
+    if (req.type == 'Fabric') {
+      data += ` and item_type = '${req.type}'`
+    } else {
+      data += ` and item_type != 'Fabric'`
+    }
+    const res = await this.dataSource.query(data)
+    if (res.length > 0) {
+      return new CommonResponseModel(true, 1, 'data', res)
+    } else {
+      return new CommonResponseModel(false, 0, 'No data Found')
 
     }
-   
-    async issueMaterial(req:MaterialIssueRequest):Promise<CommonResponseModel>{
-      const manager = new GenericTransactionManager(this.dataSource)
-      try{
-        const grnInfo = `select grn_id,grn_type,item_type from grn where grn_id in(select grn_id from grn_items where grn_item_no = '${req.GRNItemNumber}')`;
-        const grnRes = await this.dataSource.query(grnInfo)
-        console.log(grnRes)
-        await manager.startTransaction()
-        if(grnRes.length > 0){
-          const grnItemInfo = `select sample_item_id as sampleItemId,indent_item_id as indentItemId,sample_req_id as sampleReqId,m3_item_code_id as m3ItemId from grn_items where grn_item_no = '${req.GRNItemNumber}'`;
-          const grnItemRes = await this.dataSource.query(grnItemInfo);
-          // let sampleItemId
-          // if(grnItemRes[0].sampleItemId > 0){
-          //   sampleItemId = grnItemRes[0].sampleItemId
-          // }
-          // if(grnItemRes[0].indentItemId > 0){
-          //   sampleItemId = grnItemRes[0].indentItemId
-          // }
-          const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({sampleOrderId:req.sampleRequestId,m3ItemId:grnItemRes[0].m3ItemId},{status:MaterialStatusEnum.MATERIAL_ISSUED})
-          if(updateAllocations.affected){
-            const checkAllIssuedOrNot = await manager.getRepository(MaterialAllocationEntity).find({where:{sampleOrderId:req.sampleRequestId,status:Not(MaterialStatusEnum.MATERIAL_ISSUED)}})
-            console.log('resddd',checkAllIssuedOrNot)
-            if(checkAllIssuedOrNot.length == 0){
-              const updateSamleReq = await manager.getRepository(SampleRequest).update({SampleRequestId:req.sampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ISSUED})
-              if(updateSamleReq.affected){
-                //location Status update
-                const allocatedLocationsQry = `SELECT SUM(quantity) AS stock,st.location_id as location FROM stocks st WHERE location_id IN(
+  }
+
+  async approveAllocatedStock(req: AllocationApprovalRequest): Promise<CommonResponseModel> {
+    console.log(req)
+    const manager = new GenericTransactionManager(this.dataSource)
+    try {
+      let sampleUpdateStatus
+      let sampleMaterialStatus
+      await manager.startTransaction()
+      if (req.action == 'Issued') {
+        sampleUpdateStatus = LifeCycleStatusEnum.MATERIAL_ISSUED
+        sampleMaterialStatus = MaterialStatusEnum.MATERIAL_ISSUED
+      }
+      if (req.action == 'Approval') {
+        sampleUpdateStatus = LifeCycleStatusEnum.READY_FOR_PRODUCTION
+        sampleMaterialStatus = MaterialStatusEnum.READY_FOR_PRODUCTION
+      }
+      const updateSamleReq = await manager.getRepository(SampleRequest).update({ SampleRequestId: req.sampleRequestId }, { lifeCycleStatus: sampleUpdateStatus })
+      if (updateSamleReq.affected) {
+        const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({ sampleOrderId: req.sampleRequestId }, { status: sampleMaterialStatus })
+        if (updateAllocations.affected) {
+          console.log('yess')
+          await manager.completeTransaction()
+          return new CommonResponseModel(true, 1, req.action == 'Issued' ? 'Succefully Issued' : 'Successfully Approved')
+        } else {
+          await manager.releaseTransaction()
+          return new CommonResponseModel(false, 0, 'something went wrong')
+        }
+      } else {
+        await manager.releaseTransaction()
+        return new CommonResponseModel(false, 0, 'something went wrong')
+      }
+
+    } catch (err) {
+      await manager.releaseTransaction()
+      return new CommonResponseModel(false, 0, err)
+    }
+
+
+  }
+
+  async issueMaterial(req: MaterialIssueRequest): Promise<CommonResponseModel> {
+    const manager = new GenericTransactionManager(this.dataSource)
+    try {
+      const grnInfo = `select grn_id,grn_type,item_type from grn where grn_id in(select grn_id from grn_items where grn_item_no = '${req.GRNItemNumber}')`;
+      const grnRes = await this.dataSource.query(grnInfo)
+      console.log(grnRes)
+      await manager.startTransaction()
+      if (grnRes.length > 0) {
+        const grnItemInfo = `select sample_item_id as sampleItemId,indent_item_id as indentItemId,sample_req_id as sampleReqId,m3_item_code_id as m3ItemId from grn_items where grn_item_no = '${req.GRNItemNumber}'`;
+        const grnItemRes = await this.dataSource.query(grnItemInfo);
+        // let sampleItemId
+        // if(grnItemRes[0].sampleItemId > 0){
+        //   sampleItemId = grnItemRes[0].sampleItemId
+        // }
+        // if(grnItemRes[0].indentItemId > 0){
+        //   sampleItemId = grnItemRes[0].indentItemId
+        // }
+        const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({ sampleOrderId: req.sampleRequestId, m3ItemId: grnItemRes[0].m3ItemId }, { status: MaterialStatusEnum.MATERIAL_ISSUED })
+        if (updateAllocations.affected) {
+          const checkAllIssuedOrNot = await manager.getRepository(MaterialAllocationEntity).find({ where: { sampleOrderId: req.sampleRequestId, status: Not(MaterialStatusEnum.MATERIAL_ISSUED) } })
+          console.log('resddd', checkAllIssuedOrNot)
+          if (checkAllIssuedOrNot.length == 0) {
+            const updateSamleReq = await manager.getRepository(SampleRequest).update({ SampleRequestId: req.sampleRequestId }, { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ISSUED })
+            if (updateSamleReq.affected) {
+              //location Status update
+              const allocatedLocationsQry = `SELECT SUM(quantity) AS stock,st.location_id as location FROM stocks st WHERE location_id IN(
                   SELECT location_id FROM material_allocation_items WHERE material_allocation_id IN(SELECT material_allocation_id FROM material_allocation
                   WHERE sample_order_id = ${req.sampleRequestId})) GROUP BY st.location_id`;
-                const locationsRes = await this.dataSource.query(allocatedLocationsQry)
-                for(const rec of locationsRes){
-                  if(rec.stock == 0){
-                    const updateLocation = await manager.getRepository(RackPositionEntity).update({positionId:rec.location},{status:RackPositionStatusEnum.NOTOCCUPIED})
-                    if(updateLocation.affected){
-                      await manager.completeTransaction()
-                      return new CommonResponseModel(true,1,'Material Issued successfully')
-                    }else{
-                      await manager.completeTransaction()
-                      return new CommonResponseModel(true,1,'Something went wrong in location update')
-                    }
-                  }else{
+              const locationsRes = await this.dataSource.query(allocatedLocationsQry)
+              for (const rec of locationsRes) {
+                if (rec.stock == 0) {
+                  const updateLocation = await manager.getRepository(RackPositionEntity).update({ positionId: rec.location }, { status: RackPositionStatusEnum.NOTOCCUPIED })
+                  if (updateLocation.affected) {
                     await manager.completeTransaction()
-                    return new CommonResponseModel(true,1,'Material Issued successfully')
+                    return new CommonResponseModel(true, 1, 'Material Issued successfully')
+                  } else {
+                    await manager.completeTransaction()
+                    return new CommonResponseModel(true, 1, 'Something went wrong in location update')
                   }
+                } else {
+                  await manager.completeTransaction()
+                  return new CommonResponseModel(true, 1, 'Material Issued successfully')
                 }
-                
-              }else{
-                await manager.releaseTransaction()
-                return new CommonResponseModel(false,0,'Something went wrong')
               }
-            }else{
-                await manager.completeTransaction()
-                return new CommonResponseModel(true,1,'Material Issued successfully')
-            }
-          }else{
-            await manager.releaseTransaction()
-             return new CommonResponseModel(false,0,'Something went wrong')
-          }
-          // let concatstr
-          // if(grnRes[0].grn_type == GRNTypeEnum.SAMPLE_ORDER){
-          //     if(grnRes[0].item_type == ItemTypeEnum.FABRIC){
-          //       concatstr = ` left join sample_request_fabric_info sf on si.fabric_info_id = gi.sample_item_id`
-          //     }else{
-          //       concatstr = ` left join sample_request_trim_info sf on si.trim_info_id = gi.sample_item_id`
-          //     }
-          // }else {
-          //     if(grnRes[0].item_type == ItemTypeEnum.FABRIC){
-          //       concatstr = ` left join indent_fabric ii on ii.ifabric_id = gi.sample_item_id`
-          //     }
-          // }
-        }else{
-          await manager.releaseTransaction()
-          return new CommonResponseModel(false,0,'Invalid Roll Barcode')
-        }
-      }catch(err){
-        await manager.releaseTransaction()
-        return new CommonResponseModel(false,0,err)
-      }
-      // const grnItemData = `select * from grn_items gi where grn_item_no = ${req.GRNItemNumber} `
-      
-      return
-    }
 
-    async getGrnRollsForSampleOrder(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
-      const grnInfoQry = `SELECT gi.grn_item_no as rollBarcode FROM material_allocation_items mai 
+            } else {
+              await manager.releaseTransaction()
+              return new CommonResponseModel(false, 0, 'Something went wrong')
+            }
+          } else {
+            await manager.completeTransaction()
+            return new CommonResponseModel(true, 1, 'Material Issued successfully')
+          }
+        } else {
+          await manager.releaseTransaction()
+          return new CommonResponseModel(false, 0, 'Something went wrong')
+        }
+        // let concatstr
+        // if(grnRes[0].grn_type == GRNTypeEnum.SAMPLE_ORDER){
+        //     if(grnRes[0].item_type == ItemTypeEnum.FABRIC){
+        //       concatstr = ` left join sample_request_fabric_info sf on si.fabric_info_id = gi.sample_item_id`
+        //     }else{
+        //       concatstr = ` left join sample_request_trim_info sf on si.trim_info_id = gi.sample_item_id`
+        //     }
+        // }else {
+        //     if(grnRes[0].item_type == ItemTypeEnum.FABRIC){
+        //       concatstr = ` left join indent_fabric ii on ii.ifabric_id = gi.sample_item_id`
+        //     }
+        // }
+      } else {
+        await manager.releaseTransaction()
+        return new CommonResponseModel(false, 0, 'Invalid Roll Barcode')
+      }
+    } catch (err) {
+      await manager.releaseTransaction()
+      return new CommonResponseModel(false, 0, err)
+    }
+    // const grnItemData = `select * from grn_items gi where grn_item_no = ${req.GRNItemNumber} `
+
+    return
+  }
+
+  async getGrnRollsForSampleOrder(req: SampleOrderIdRequest): Promise<CommonResponseModel> {
+    const grnInfoQry = `SELECT gi.grn_item_no as rollBarcode FROM material_allocation_items mai 
           LEFT JOIN stocks st ON st.id = mai.stock_id
           LEFT JOIN grn_items gi ON gi.grn_item_id = st.grn_item_id
           WHERE material_allocation_id IN
           (SELECT material_allocation_id FROM material_allocation WHERE sample_order_id = ${req.sampleRequestId})`
-          const res = await this.dataSource.query(grnInfoQry)
-          if(grnInfoQry.length > 0){
-            return new CommonResponseModel(true,1,'data retreived',res)
-          }else{
-            return new CommonResponseModel(false,0,'No data found')
-          }
+    const res = await this.dataSource.query(grnInfoQry)
+    if (grnInfoQry.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retreived', res)
+    } else {
+      return new CommonResponseModel(false, 0, 'No data found')
     }
+  }
 
-    async getmaterialissue(req?: RequestNoReq): Promise<CommonResponseModel> {
-      try {
-        const fabricInfoQry = `
+  async getmaterialissue(req?: RequestNoReq): Promise<CommonResponseModel> {
+    try {
+      const fabricInfoQry = `
           SELECT 
             sr.request_no AS requestNo,
             sr.sample_request_id ,
@@ -2049,136 +2049,136 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
 
           WHERE ma.item_type = 'fabric' AND sr.life_cycle_status = 'MATERIAL_ISSUED' 
           ${req?.requestNo ? `AND sr.request_no = ${req.requestNo}` : ''}
-          GROUP BY sr.request_no, sr.sample_request_id`        
-        const fabricInfo = await this.dataSource.query(fabricInfoQry);
-        // const trimInfo = await this.dataSource.query(trimInfoQry);
-    
-        const combineData = [...fabricInfo];
-    
-        if (combineData.length > 0) {
-          return new CommonResponseModel(true, 1, 'Data retrieved', combineData);
-        } else {
-          return new CommonResponseModel(false, 0, 'No data');
-        }
-      } catch (error) {
-        console.error('Error in getmaterialissue:', error);
-        return new CommonResponseModel(false, 0, 'Error fetching data');
-      }
-    }
+          GROUP BY sr.request_no, sr.sample_request_id`
+      const fabricInfo = await this.dataSource.query(fabricInfoQry);
+      // const trimInfo = await this.dataSource.query(trimInfoQry);
 
-    // async getmaterialissue(req?: RequestNoReq): Promise<CommonResponseModel> {
-    //   try {
-    //     const combinedInfoQry = `
-    //       SELECT 
-    //         sr.request_no AS requestNo,
-    //         sr.sample_request_id ,
-    //         rp.rack_position_name AS location,position_Id AS id,
-    //         sr.life_cycle_status AS STATUS,
-    //         sr.remarks,
-    //         sr.description,
-    //         sr.cost_ref,
-    //         sr.contact,
-    //         sr.expected_delivery_date,
-    //         sr.user,
-    //         sr.conversion,
-    //         s.style,
-    //         sf.fabric_code,
-    //         sf.total_requirement,
-    //         br.brand_name AS brandName,
-    //         b.buyer_name AS buyerName,
-    //         c.colour,
-    //         b.buyer_code,
-    //         sf.consumption,
-    //         ma.item_type As itemType,
-    //         mai.allocate_quantity,
-    //         pr.profit_control_head,
-    //         l.location_name AS location,
-    //         mi.item_code AS itemCode,
-    //         sf.fabric_info_id as sampleFabricId
-    //       FROM sample_request sr 
-    //         LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
-    //         LEFT JOIN style s ON s.style_id = sr.style_id
-    //         LEFT JOIN profit_control_head pr ON pr.profit_control_head_id = sr.profit_control_head_id
-    //         LEFT JOIN brands br ON br.brand_id = sr.brand_id
-    //         LEFT JOIN sample_request_fabric_info sf ON sf.sample_request_id = sr.sample_request_id
-    //         LEFT JOIN material_allocation ma ON ma.sample_item_id = sf.fabric_info_id
-    //         LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
-    //         LEFT JOIN m3_items mi ON mi.m3_items_Id = sf.fabric_code
-    //         LEFT JOIN colour c ON c.colour_id = sf.colour_id
-    //         LEFT JOIN location l ON l.location_id = mai.location_id
-    //         LEFT JOIN rack_position rp ON rp.position_Id = mai.location_id
-    //       WHERE ma.item_type = 'fabric' AND sr.life_cycle_status = 'MATERIAL_ISSUED' 
-    //         ${req?.requestNo ? `AND sr.request_no = ${req.requestNo}` : ''}
-    //       GROUP BY sr.request_no, sr.sample_request_id
-    
-    //       UNION
-    
-    //       SELECT 
-    //         sr.request_no AS requestNo,
-    //         sr.sample_request_id ,
-    //         rp.rack_position_name AS location,position_Id AS id,
-    //         sr.life_cycle_status AS STATUS,
-    //         sr.remarks,
-    //         sr.description,
-    //         sr.cost_ref,
-    //         sr.contact,
-    //         sr.expected_delivery_date,
-    //         sr.user,
-    //         sr.conversion,
-    //         s.style,
-    //         st.trim_code,
-    //         br.brand_name AS brandName, 
-    //         b.buyer_name AS buyerName,
-    //         c.colour,
-    //         b.buyer_code,
-    //         st.consumption,
-    //         ma.item_type AS itemType,
-    //         mai.allocate_quantity,
-    //         pr.profit_control_head,
-    //         l.location_name AS location,
-    //         mi.trim_code as itemCode,
-    //         st.trim_info_id as sampleTrimInfoId
-    //       FROM sample_request sr 
-    //         LEFT JOIN profit_control_head pr ON pr.profit_control_head_id = sr.profit_control_head_id
-    //         LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
-    //         LEFT JOIN style s ON s.style_id = sr.style_id
-    //         LEFT JOIN sample_request_fabric_info sf ON sf.sample_request_id = sr.sample_request_id
-    //         LEFT JOIN brands br ON br.brand_id = sr.brand_id
-    //         LEFT JOIN colour c ON c.colour_id = sf.colour_id
-    //         LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_request_id
-    //         LEFT JOIN material_allocation ma ON ma.sample_item_id = st.trim_info_id
-    //         LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
-    //         LEFT JOIN m3_trims mi ON mi.m3_trim_Id = st.trim_code
-    //         LEFT JOIN location l ON l.location_id = mai.location_id
-    //         LEFT JOIN rack_position rp ON rp.position_Id = mai.location_id
-    //       WHERE ma.item_type != 'fabric' AND sr.life_cycle_status = 'MATERIAL_ISSUED'
-    //         ${req?.requestNo ? `AND sr.request_no = ${req.requestNo}` : ''}
-    //       GROUP BY l.location_name, sr.request_no, sr.sample_request_id`;
-        
-    //     const combinedInfo = await this.dataSource.query(combinedInfoQry);
-        
-    //     if (combinedInfo.length > 0) {
-    //       return new CommonResponseModel(true, 1, 'Data retrieved', combinedInfo);
-    //     } else {
-    //       return new CommonResponseModel(false, 0, 'No data');
-    //     }
-    //   } catch (error) {
-    //     console.error('Error in getmaterialissue:', error);
-    //     return new CommonResponseModel(false, 0, 'Error fetching data');
-    //   }
-    // }
-    
-  
-  async getRequestNo(req?:RequestNoReq): Promise<CommonResponseModel> {
-   
-    const records = await this.sampleRepo.find({where:{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ISSUED}});
+      const combineData = [...fabricInfo];
+
+      if (combineData.length > 0) {
+        return new CommonResponseModel(true, 1, 'Data retrieved', combineData);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data');
+      }
+    } catch (error) {
+      console.error('Error in getmaterialissue:', error);
+      return new CommonResponseModel(false, 0, 'Error fetching data');
+    }
+  }
+
+  // async getmaterialissue(req?: RequestNoReq): Promise<CommonResponseModel> {
+  //   try {
+  //     const combinedInfoQry = `
+  //       SELECT 
+  //         sr.request_no AS requestNo,
+  //         sr.sample_request_id ,
+  //         rp.rack_position_name AS location,position_Id AS id,
+  //         sr.life_cycle_status AS STATUS,
+  //         sr.remarks,
+  //         sr.description,
+  //         sr.cost_ref,
+  //         sr.contact,
+  //         sr.expected_delivery_date,
+  //         sr.user,
+  //         sr.conversion,
+  //         s.style,
+  //         sf.fabric_code,
+  //         sf.total_requirement,
+  //         br.brand_name AS brandName,
+  //         b.buyer_name AS buyerName,
+  //         c.colour,
+  //         b.buyer_code,
+  //         sf.consumption,
+  //         ma.item_type As itemType,
+  //         mai.allocate_quantity,
+  //         pr.profit_control_head,
+  //         l.location_name AS location,
+  //         mi.item_code AS itemCode,
+  //         sf.fabric_info_id as sampleFabricId
+  //       FROM sample_request sr 
+  //         LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
+  //         LEFT JOIN style s ON s.style_id = sr.style_id
+  //         LEFT JOIN profit_control_head pr ON pr.profit_control_head_id = sr.profit_control_head_id
+  //         LEFT JOIN brands br ON br.brand_id = sr.brand_id
+  //         LEFT JOIN sample_request_fabric_info sf ON sf.sample_request_id = sr.sample_request_id
+  //         LEFT JOIN material_allocation ma ON ma.sample_item_id = sf.fabric_info_id
+  //         LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
+  //         LEFT JOIN m3_items mi ON mi.m3_items_Id = sf.fabric_code
+  //         LEFT JOIN colour c ON c.colour_id = sf.colour_id
+  //         LEFT JOIN location l ON l.location_id = mai.location_id
+  //         LEFT JOIN rack_position rp ON rp.position_Id = mai.location_id
+  //       WHERE ma.item_type = 'fabric' AND sr.life_cycle_status = 'MATERIAL_ISSUED' 
+  //         ${req?.requestNo ? `AND sr.request_no = ${req.requestNo}` : ''}
+  //       GROUP BY sr.request_no, sr.sample_request_id
+
+  //       UNION
+
+  //       SELECT 
+  //         sr.request_no AS requestNo,
+  //         sr.sample_request_id ,
+  //         rp.rack_position_name AS location,position_Id AS id,
+  //         sr.life_cycle_status AS STATUS,
+  //         sr.remarks,
+  //         sr.description,
+  //         sr.cost_ref,
+  //         sr.contact,
+  //         sr.expected_delivery_date,
+  //         sr.user,
+  //         sr.conversion,
+  //         s.style,
+  //         st.trim_code,
+  //         br.brand_name AS brandName, 
+  //         b.buyer_name AS buyerName,
+  //         c.colour,
+  //         b.buyer_code,
+  //         st.consumption,
+  //         ma.item_type AS itemType,
+  //         mai.allocate_quantity,
+  //         pr.profit_control_head,
+  //         l.location_name AS location,
+  //         mi.trim_code as itemCode,
+  //         st.trim_info_id as sampleTrimInfoId
+  //       FROM sample_request sr 
+  //         LEFT JOIN profit_control_head pr ON pr.profit_control_head_id = sr.profit_control_head_id
+  //         LEFT JOIN buyers b ON b.buyer_id = sr.buyer_id
+  //         LEFT JOIN style s ON s.style_id = sr.style_id
+  //         LEFT JOIN sample_request_fabric_info sf ON sf.sample_request_id = sr.sample_request_id
+  //         LEFT JOIN brands br ON br.brand_id = sr.brand_id
+  //         LEFT JOIN colour c ON c.colour_id = sf.colour_id
+  //         LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_request_id
+  //         LEFT JOIN material_allocation ma ON ma.sample_item_id = st.trim_info_id
+  //         LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
+  //         LEFT JOIN m3_trims mi ON mi.m3_trim_Id = st.trim_code
+  //         LEFT JOIN location l ON l.location_id = mai.location_id
+  //         LEFT JOIN rack_position rp ON rp.position_Id = mai.location_id
+  //       WHERE ma.item_type != 'fabric' AND sr.life_cycle_status = 'MATERIAL_ISSUED'
+  //         ${req?.requestNo ? `AND sr.request_no = ${req.requestNo}` : ''}
+  //       GROUP BY l.location_name, sr.request_no, sr.sample_request_id`;
+
+  //     const combinedInfo = await this.dataSource.query(combinedInfoQry);
+
+  //     if (combinedInfo.length > 0) {
+  //       return new CommonResponseModel(true, 1, 'Data retrieved', combinedInfo);
+  //     } else {
+  //       return new CommonResponseModel(false, 0, 'No data');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error in getmaterialissue:', error);
+  //     return new CommonResponseModel(false, 0, 'Error fetching data');
+  //   }
+  // }
+
+
+  async getRequestNo(req?: RequestNoReq): Promise<CommonResponseModel> {
+
+    const records = await this.sampleRepo.find({ where: { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ISSUED } });
     if (records.length)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
     else
       return new CommonResponseModel(false, 0, 'No data found')
   }
 
-  async allocatedLocation(req:AllLocationRequest){
+  async allocatedLocation(req: AllLocationRequest) {
     // let checkStatus
     // if(req.action == 'Issued'){
     //   checkStatus = MaterialStatusEnum.READY_FOR_PRODUCTION
@@ -2193,17 +2193,17 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
     LEFT JOIN material_allocation_items mai ON mai.material_allocation_id = ma.material_allocation_id
     LEFT JOIN rack_position rp ON rp.position_Id = mai.location_id
     `
-     const res = await this.dataSource.query(data)
-     if(res.length > 0){
-       return new CommonResponseModel(true,1,'data',res)
-     }else{
-      return new CommonResponseModel(false,0,'No data Found')
+    const res = await this.dataSource.query(data)
+    if (res.length > 0) {
+      return new CommonResponseModel(true, 1, 'data', res)
+    } else {
+      return new CommonResponseModel(false, 0, 'No data Found')
 
-     }
-  } 
-   async getbyID(req: RequestNoReq): Promise<CommonResponseModel> {
+    }
+  }
+  async getbyID(req: RequestNoReq): Promise<CommonResponseModel> {
     console.log(req, "service.....");
- 
+
     try {
       const fabricInfoQry = `
         SELECT 
@@ -2244,7 +2244,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
         WHERE sr.sample_request_id = ${req.sampreqId} AND 
         ma.item_type = 'fabric' AND sr.life_cycle_status = 'MATERIAL_ISSUED'
         GROUP BY sr.request_no`;
-  
+
       const trimInfoQry = `
         SELECT 
           sr.request_no AS requestNo,
@@ -2283,15 +2283,15 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
           LEFT JOIN location l ON l.location_id = mai.location_id
         WHERE sr.sample_request_id = ${req.sampreqId} AND ma.item_type != 'fabric' AND sr.life_cycle_status = 'MATERIAL_ISSUED'
         GROUP BY l.location_name, sr.request_no`;
-  
+
       console.log('Fabric Info Query:', fabricInfoQry);
       console.log('SQL Query:', trimInfoQry);
-  
+
       const fabricInfo = await this.dataSource.query(fabricInfoQry);
       const trimInfo = await this.dataSource.query(trimInfoQry);
-  
+
       const combineData = [...fabricInfo, ...trimInfo];
-  
+
       if (combineData.length > 0) {
         return new CommonResponseModel(true, 1, 'Data retrieved', combineData);
       } else {
@@ -2303,7 +2303,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
     }
   }
 
-  async getPickListInfo(req?:requestNoReq):Promise<CommonResponseModel>{
+  async getPickListInfo(req?: requestNoReq): Promise<CommonResponseModel> {
     let fabricInfoQry = `SELECT sr.request_no AS requestNo,br.brand_name AS brandName,b.buyer_name AS buyerName,s.style,c.colour,sf.total_requirement AS consumption,ma.item_type AS itemType,mai.allocate_quantity AS allocateQty,
     l.rack_position_name AS location,mi.item_code AS itemCode
     FROM sample_request sr 
@@ -2318,9 +2318,9 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
      LEFT JOIN rack_position l ON l.position_Id = mai.location_id
     WHERE  sr.sample_request_id= '${req.requestNo}' AND ma.item_type = 'FABRIC'
     order by mi.item_code`;
-      
-      const fabricInfo = await this.dataSource.query(fabricInfoQry)
-      let trimInfoQry = `SELECT sr.request_no AS requestNo,
+
+    const fabricInfo = await this.dataSource.query(fabricInfoQry)
+    let trimInfoQry = `SELECT sr.request_no AS requestNo,
       br.brand_name AS brandName,
 b.buyer_name AS buyerName,
 s.style,
@@ -2341,111 +2341,111 @@ FROM sample_request sr
 WHERE  sr.sample_request_id= '${req.requestNo}' AND  ma.item_type != 'FABRIC'
 order by mi.trim_code`;
 
-const trimInfo = await this.dataSource.query(trimInfoQry)
+    const trimInfo = await this.dataSource.query(trimInfoQry)
 
-const combineData = [...fabricInfo, ...trimInfo]
-return new CommonResponseModel(true,1,'data retreived',combineData)
+    const combineData = [...fabricInfo, ...trimInfo]
+    return new CommonResponseModel(true, 1, 'data retreived', combineData)
 
-// let allocatedSampleReqInfo = {
-//   fabricInfo:[],
-//   trimInfo:[]
-// }
-// if(fabricInfo.length > 0){
-//   allocatedSampleReqInfo.fabricInfo = fabricInfo
-// }
-// if(trimInfo.length > 0){
-//   allocatedSampleReqInfo.trimInfo = trimInfo
-// }
-// if(fabricInfo.length > 0){
-//   return new CommonResponseModel(true,1,'data retreived',combineData)
-// }else{
-//   return new CommonResponseModel(false,0,'No data')
-// }
-}
+    // let allocatedSampleReqInfo = {
+    //   fabricInfo:[],
+    //   trimInfo:[]
+    // }
+    // if(fabricInfo.length > 0){
+    //   allocatedSampleReqInfo.fabricInfo = fabricInfo
+    // }
+    // if(trimInfo.length > 0){
+    //   allocatedSampleReqInfo.trimInfo = trimInfo
+    // }
+    // if(fabricInfo.length > 0){
+    //   return new CommonResponseModel(true,1,'data retreived',combineData)
+    // }else{
+    //   return new CommonResponseModel(false,0,'No data')
+    // }
+  }
 
-//mobile APP API for operation reporting UI
-async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
-  const dataQry = `SELECT ss.quantity,sr.request_no as requestNo,c.colour,s.sizes FROM sample_request_size_info ss
+  //mobile APP API for operation reporting UI
+  async getSizeWiseOrders(req: SampleOrderIdRequest): Promise<CommonResponseModel> {
+    const dataQry = `SELECT ss.quantity,sr.request_no as requestNo,c.colour,s.sizes FROM sample_request_size_info ss
   LEFT JOIN sample_request sr ON sr.sample_request_id = ss.sample_request_id
   LEFT JOIN colour c ON c.colour_id = ss.colour_id
   LEFT JOIN size s ON s.size_id = ss.size_id where ss.sample_request_id = ${req.sampleRequestId}`
-  const data  = await this.dataSource.query(dataQry)
-  if(dataQry.length > 0){
-    return new CommonResponseModel(true,1,'data retreived',data)
-  }else{
-    return new CommonResponseModel(false,0,'No data')
+    const data = await this.dataSource.query(dataQry)
+    if (dataQry.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retreived', data)
+    } else {
+      return new CommonResponseModel(false, 0, 'No data')
+    }
   }
-}
 
-//Mobile App API for sizes dropdown for operation reporting for sample request
+  //Mobile App API for sizes dropdown for operation reporting for sample request
 
-  async getOrderedSizes(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
+  async getOrderedSizes(req: SampleOrderIdRequest): Promise<CommonResponseModel> {
     const sizesDataQry = `select distinct(ss.size_id) as sizeId,s.sizes as size from sample_request_size_info ss left join size s on s.size_id = ss.size_id where sample_request_id = ${req.sampleRequestId}`;
     const sizesData = await this.dataSource.query(sizesDataQry)
-    if(sizesData.length > 0){
-      return new CommonResponseModel(true,1,'data retrieved',sizesData)
-    }else{
-      return new CommonResponseModel(false,0,'NO data')
+    if (sizesData.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retrieved', sizesData)
+    } else {
+      return new CommonResponseModel(false, 0, 'NO data')
     }
   }
 
   //Mobile App API for Colors dropdown for operation reporting for sample request
 
-  async getOrderedColors(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
+  async getOrderedColors(req: SampleOrderIdRequest): Promise<CommonResponseModel> {
     const colorsDataQry = `select distinct(ss.colour_id) as colorId,c.colour as colour from sample_request_size_info ss left join colour c on c.colour_id = ss.colour_id where sample_request_id = ${req.sampleRequestId}`;
     const colorsData = await this.dataSource.query(colorsDataQry)
-    if(colorsData.length > 0){
-      return new CommonResponseModel(true,1,'data retrieved',colorsData)
-    }else{
-      return new CommonResponseModel(false,0,'NO data')
+    if (colorsData.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retrieved', colorsData)
+    } else {
+      return new CommonResponseModel(false, 0, 'NO data')
     }
   }
 
   //Mobile App API to get quantity for a colour and size operation reporting for sample request
 
-  async getQuantityForSIzeAndColor(req:OrderQuantityRequset):Promise<CommonResponseModel>{
+  async getQuantityForSIzeAndColor(req: OrderQuantityRequset): Promise<CommonResponseModel> {
     const sampleOrderDataQry = `select sample_req_size_id as SampleOrderInfoId,quantity from sample_request_size_info where sample_request_id = ${req.sampleRequestId} and colour_id = ${req.colourId} and size_id = ${req.sizeId}`
     const sampleOrderData = await this.dataSource.query(sampleOrderDataQry)
-    if(sampleOrderData.length == 1){
+    if (sampleOrderData.length == 1) {
       const checkOperationQry = `select operation,next_operation as nextOperation from operation_tracking where colour_id = ${req.colourId} and size_id = ${req.sizeId} and sample_req_id = ${req.sampleRequestId} ORDER BY operation_tracking_id DESC LIMIT 1`
       const nextOperationInfo = await this.dataSource.query(checkOperationQry)
       let nextOperation
-      if(nextOperationInfo.length > 0){
+      if (nextOperationInfo.length > 0) {
         nextOperation = nextOperationInfo[0].nextOperation
       }
-      const resData = {nextOperation:nextOperation,sampledata:sampleOrderData}
-      return new CommonResponseModel(true,1,'data retreived',resData)
+      const resData = { nextOperation: nextOperation, sampledata: sampleOrderData }
+      return new CommonResponseModel(true, 1, 'data retreived', resData)
     }
-    if(sampleOrderData.length > 1){
-      return new CommonResponseModel(false,0,'Something Went wrong')
-    }else{
-      return new CommonResponseModel(false,0,'No Quantity found')
+    if (sampleOrderData.length > 1) {
+      return new CommonResponseModel(false, 0, 'Something Went wrong')
+    } else {
+      return new CommonResponseModel(false, 0, 'No Quantity found')
     }
   }
 
-  async getAllSampleRequestSizesInfo(req?: sampleReqIdReq): Promise<CommonResponseModel> {    
+  async getAllSampleRequestSizesInfo(req?: sampleReqIdReq): Promise<CommonResponseModel> {
     const sizeDta = `SELECT  GROUP_CONCAT(DISTINCT  CONCAT('sum(IF(s.size_id = ''',size_id,''', s.quantity, 0)) AS ',sizes)) AS size_name FROM size s WHERE sizes != '' 
     AND size_id IN(SELECT DISTINCT size_id FROM sample_request_size_info WHERE sample_request_id=${req.sampleReqId}) ORDER BY  sizes`;
     const res = await this.dataSource.query(sizeDta)
     const sizesStr = res[0].size_name
-    console.log(sizesStr,'kkkkk')
+    console.log(sizesStr, 'kkkkk')
 
-    console.log(req,'rehhhh')
+    console.log(req, 'rehhhh')
     const sampleDataQry = `SELECT cl.colour,${sizesStr} FROM sample_request_size_info s 
     left join sample_request sr on sr.sample_request_id = s.sample_request_id
     left join colour cl on cl.colour_id = s.colour_id
     WHERE s.sample_request_id=${req.sampleReqId} GROUP BY s.colour_id`
     const finalres = await this.dataSource.query(sampleDataQry)
-    if(finalres.length > 0){
-      return new CommonResponseModel(true,1,'data retrived',finalres)
-    }else{
-      return new CommonResponseModel(false,0,'No data')
+    if (finalres.length > 0) {
+      return new CommonResponseModel(true, 1, 'data retrived', finalres)
+    } else {
+      return new CommonResponseModel(false, 0, 'No data')
     }
   }
 
 
-  async getAllSampleRequestsInfo(req?: sampleReqIdReq):Promise<CommonResponseModel>{
-    try{
+  async getAllSampleRequestsInfo(req?: sampleReqIdReq): Promise<CommonResponseModel> {
+    try {
       const manager = this.dataSource;
       const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,si.size_id,s.extension,s.cost_ref,s.description,s.dmm_id,s.user,lt.liscence_type AS product,m.country_name as made_in,s.remarks,s.file_name,srt.remarks AS trim_remarks,srf.remarks AS fab_remarks ,s.sam_value,
       st.style,pch.profit_control_head,mi.item_code as fabCode,mt.description as trimCode,e.first_name,s.contact,s.status,srs.quantity,srf.total_requirement as fabtotal_requirement,srf.wastage as fabwastage,srf.consumption as fabconsumption,uf.uom as fabuom,srt.total_requirement as trimtotal_requirement,srt.wastage as trimwastage,srt.consumption as trimconsumption,ut.uom as trimuom,cf.colour as fabcolour,ca.category,ed.first_name as dmmFirst,ed.last_name as dmmLast,sty.sample_type,sst.sample_sub_type,s.category as sampleCategory,
@@ -2475,142 +2475,142 @@ async getSizeWiseOrders(req:SampleOrderIdRequest):Promise<CommonResponseModel>{
       LEFT JOIN trim t ON  t.trim_id = mt.trim_category_id
 
       WHERE s.sample_request_id = ${req.sampleReqId}`
-      
-   
-        const info = await manager.query(rawQuery);
-         const MapData = new Map<string,SampleRequestInfoModel>()
-       
-         let sizedata = new Map <number,SampleSizeInfoModel>()
-
-        if(info.length > 0){
-            for(const rec of info){
-              if(!MapData.has(rec.requestNo)){
-                    MapData.set(rec.requestNo,new SampleRequestInfoModel(rec.request_no,rec.sample_request_id,rec.style,rec.brand_name,rec.buyer_name,rec.first_name,rec.status,rec.lifeCycleStatus,rec.contact,rec.profit_control_head,rec.expected_delivery_date,rec.extension,rec.conversion,rec.dmmFirst,rec.product,rec.user,rec.description,rec.cost_ref,rec.type,rec.made_in,rec.remarks,rec.file_name,rec.sam_value,[],[],rec.location,rec.sample_type,rec.sample_sub_type,rec.sampleCategory,rec.dmmLast))
-                }
-               
-        const existingTrim = MapData.get(rec.requestNo).trimInfo.find(
-          (trimInfo) => trimInfo.trimCode === rec.trimCode
-      );
-
-      if (!existingTrim) {
-          MapData.get(rec.requestNo).trimInfo.push({ 
-            trimCode: rec.trimCode, 
-            type: rec.trim_type ,
-            total:rec.trimtotal_requirement,
-          consumption:rec.trimconsumption,
-          wastage:rec.trimwastage,
-          uom:rec.trimuom,
-            category : rec.trim_category,
-            remarks:rec.trim_remarks
-          });
-      }
-      const existingFabric = MapData.get(rec.requestNo).fabInfo.find(
-        (fabInfo) => fabInfo.fabricCode === rec.fabCode
-    );
-
-    if (!existingFabric) {
-        MapData.get(rec.requestNo).fabInfo.push({ 
-          fabricCode: rec.fabCode,
-          total:rec.fabtotal_requirement,
-          consumption:rec.fabconsumption,
-          wastage:rec.fabwastage,
-          uom:rec.fabuom,
-          remarks:rec.fab_remarks,
-          colour :rec.fabcolour
-         });
-    }
-
-            }
-
-      const infoData: SampleRequestInfoModel[] = Array.from(MapData.values());
 
 
-            return new CommonResponseModel(true,1,'Data retrieved',infoData)
-        } else{
-            return new CommonResponseModel(false,0,'No data found')
+      const info = await manager.query(rawQuery);
+      const MapData = new Map<string, SampleRequestInfoModel>()
+
+      let sizedata = new Map<number, SampleSizeInfoModel>()
+
+      if (info.length > 0) {
+        for (const rec of info) {
+          if (!MapData.has(rec.requestNo)) {
+            MapData.set(rec.requestNo, new SampleRequestInfoModel(rec.request_no, rec.sample_request_id, rec.style, rec.brand_name, rec.buyer_name, rec.first_name, rec.status, rec.lifeCycleStatus, rec.contact, rec.profit_control_head, rec.expected_delivery_date, rec.extension, rec.conversion, rec.dmmFirst, rec.product, rec.user, rec.description, rec.cost_ref, rec.type, rec.made_in, rec.remarks, rec.file_name, rec.sam_value, [], [], rec.location, rec.sample_type, rec.sample_sub_type, rec.sampleCategory, rec.dmmLast))
+          }
+
+          const existingTrim = MapData.get(rec.requestNo).trimInfo.find(
+            (trimInfo) => trimInfo.trimCode === rec.trimCode
+          );
+
+          if (!existingTrim) {
+            MapData.get(rec.requestNo).trimInfo.push({
+              trimCode: rec.trimCode,
+              type: rec.trim_type,
+              total: rec.trimtotal_requirement,
+              consumption: rec.trimconsumption,
+              wastage: rec.trimwastage,
+              uom: rec.trimuom,
+              category: rec.trim_category,
+              remarks: rec.trim_remarks
+            });
+          }
+          const existingFabric = MapData.get(rec.requestNo).fabInfo.find(
+            (fabInfo) => fabInfo.fabricCode === rec.fabCode
+          );
+
+          if (!existingFabric) {
+            MapData.get(rec.requestNo).fabInfo.push({
+              fabricCode: rec.fabCode,
+              total: rec.fabtotal_requirement,
+              consumption: rec.fabconsumption,
+              wastage: rec.fabwastage,
+              uom: rec.fabuom,
+              remarks: rec.fab_remarks,
+              colour: rec.fabcolour
+            });
+          }
+
         }
 
-    }catch(err){
-        throw err
+        const infoData: SampleRequestInfoModel[] = Array.from(MapData.values());
+
+
+        return new CommonResponseModel(true, 1, 'Data retrieved', infoData)
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found')
+      }
+
+    } catch (err) {
+      throw err
     }
-}
+  }
 
-async getUsageWhtsAppMsg(): Promise<CommonResponseModel> {
-  try {
-    let date = moment().subtract(1, 'days').format('YYYY-MM-DD')
-    const manager = this.dataSource;
-    const sampleOrders = `SELECT COUNT(DISTINCT sample_request_id)AS COUNT FROM sample_request_size_info WHERE DATE(created_at) = '${date}'`
-    const indents = `SELECT COUNT(request_no) AS COUNT FROM indent WHERE DATE(created_at) = '${date}'`
-    const pos = `SELECT COUNT(po_number) AS COUNT FROM purchase_order WHERE DATE(created_at) = '${date}'`
-    const grns = `SELECT COUNT(grn_number) AS COUNT FROM grn WHERE DATE(created_at) = '${date}'`
-    const stock =`SELECT COUNT(id) AS COUNT FROM stocks WHERE DATE(created_at) = '${date}'    `
-    const location = `SELECT COUNT(stock_log_id)AS COUNT FROM stock_log WHERE DATE(created_at) = '${date}'`
-    const material = `SELECT COUNT(material_allocation_id) AS COUNT FROM material_allocation WHERE DATE(updated_at) = '${date}' AND STATUS = 'MATERIAL ISSUED'`
-    const operations = `SELECT COUNT(operation_tracking_id) AS COUNT FROM operation_tracking WHERE DATE(created_at) = '${date}'`
-    const sampleOrdersInfo = await manager.query(sampleOrders);
-    const indentsInfo = await manager.query(indents);
-    const posInfo = await manager.query(pos);
-    const grnsInfo = await manager.query(grns);
-    const stockInfo = await manager.query(stock);
-    const operationsInfo = await manager.query(operations);
-    const materialInfo = await manager.query(material);
-    const locationInfo = await manager.query(location);
-     
+  async getUsageWhtsAppMsg(): Promise<CommonResponseModel> {
+    try {
+      let date = moment().subtract(1, 'days').format('YYYY-MM-DD')
+      const manager = this.dataSource;
+      const sampleOrders = `SELECT COUNT(DISTINCT sample_request_id)AS COUNT FROM sample_request_size_info WHERE DATE(created_at) = '${date}'`
+      const indents = `SELECT COUNT(request_no) AS COUNT FROM indent WHERE DATE(created_at) = '${date}'`
+      const pos = `SELECT COUNT(po_number) AS COUNT FROM purchase_order WHERE DATE(created_at) = '${date}'`
+      const grns = `SELECT COUNT(grn_number) AS COUNT FROM grn WHERE DATE(created_at) = '${date}'`
+      const stock = `SELECT COUNT(id) AS COUNT FROM stocks WHERE DATE(created_at) = '${date}'    `
+      const location = `SELECT COUNT(stock_log_id)AS COUNT FROM stock_log WHERE DATE(created_at) = '${date}'`
+      const material = `SELECT COUNT(material_allocation_id) AS COUNT FROM material_allocation WHERE DATE(updated_at) = '${date}' AND STATUS = 'MATERIAL ISSUED'`
+      const operations = `SELECT COUNT(operation_tracking_id) AS COUNT FROM operation_tracking WHERE DATE(created_at) = '${date}'`
+      const sampleOrdersInfo = await manager.query(sampleOrders);
+      const indentsInfo = await manager.query(indents);
+      const posInfo = await manager.query(pos);
+      const grnsInfo = await manager.query(grns);
+      const stockInfo = await manager.query(stock);
+      const operationsInfo = await manager.query(operations);
+      const materialInfo = await manager.query(material);
+      const locationInfo = await manager.query(location);
 
-          const datetime = moment().subtract(1, 'days').format('MMMM Do, YYYY')
 
-          // for (const ic of data) {
-          //     let msgContent = '\\n' + ic.lifecycle_status + ' : ' + ic.COUNT
-          //     vehiclelifecycle += msgContent;
-          //     //   const status = ic.lifecycle_status;
-          //     //   const count = ic.COUNT;
-          //     // console.log(ic.lifecycle_status, '{}')
-          // }
-          
-          const parameters = [
-              { "type": "text", "text": datetime },
-              { "type": "text", "text":  sampleOrdersInfo?.[0]?.COUNT},
-              { "type": "text", "text":  indentsInfo?.[0]?.COUNT},
-              { "type": "text", "text":  posInfo?.[0]?.COUNT},
-              { "type": "text", "text":  grnsInfo?.[0]?.COUNT},
-              { "type": "text", "text":  locationInfo?.[0]?.COUNT},
-              { "type": "text", "text":  stockInfo?.[0]?.COUNT},
-              { "type": "text", "text":  materialInfo?.[0]?.COUNT},
-              { "type": "text", "text":  operationsInfo?.[0]?.COUNT}
-          ];
-          // console.log(parameters, 'Parameter-----------')
+      const datetime = moment().subtract(1, 'days').format('MMMM Do, YYYY')
 
-          const contacts = WhatsAppInfo.contacts;
-          let statusFlag = true
-          let whatsappres
-          for (const contact of contacts) {
+      // for (const ic of data) {
+      //     let msgContent = '\\n' + ic.lifecycle_status + ' : ' + ic.COUNT
+      //     vehiclelifecycle += msgContent;
+      //     //   const status = ic.lifecycle_status;
+      //     //   const count = ic.COUNT;
+      //     // console.log(ic.lifecycle_status, '{}')
+      // }
 
-              whatsappres = await new MessageParameters(contact, 'sampling_usage', parameters, 'en_us')
-              const messageStatus = await this.wpService.sendMessageThroughFbApi(whatsappres);
+      const parameters = [
+        { "type": "text", "text": datetime },
+        { "type": "text", "text": sampleOrdersInfo?.[0]?.COUNT },
+        { "type": "text", "text": indentsInfo?.[0]?.COUNT },
+        { "type": "text", "text": posInfo?.[0]?.COUNT },
+        { "type": "text", "text": grnsInfo?.[0]?.COUNT },
+        { "type": "text", "text": locationInfo?.[0]?.COUNT },
+        { "type": "text", "text": stockInfo?.[0]?.COUNT },
+        { "type": "text", "text": materialInfo?.[0]?.COUNT },
+        { "type": "text", "text": operationsInfo?.[0]?.COUNT }
+      ];
+      // console.log(parameters, 'Parameter-----------')
 
-              if (!messageStatus.status) {
-                  statusFlag = false
-                  break
-              } else {
-                  statusFlag = true
-                  const whatsapplogDto = new WhatsAppLogDto(contact,'sampling_usage','Shahi',GlobalVariables.whastAppBiCompanyId,GlobalVariables.whastAppBiModuleId)
+      const contacts = WhatsAppInfo.contacts;
+      let statusFlag = true
+      let whatsappres
+      for (const contact of contacts) {
 
-                  // const whatsapplogDto = new WhatsAppLogDto(contact, 'usage_report', 'Sampling', 23, 27)
-                  await this.wpService.createWhatappLog(whatsapplogDto)
+        whatsappres = await new MessageParameters(contact, 'sampling_usage', parameters, 'en_us')
+        const messageStatus = await this.wpService.sendMessageThroughFbApi(whatsappres);
 
-              }
+        if (!messageStatus.status) {
+          statusFlag = false
+          break
+        } else {
+          statusFlag = true
+          const whatsapplogDto = new WhatsAppLogDto(contact, 'sampling_usage', 'Shahi', GlobalVariables.whastAppBiCompanyId, GlobalVariables.whastAppBiModuleId)
 
-              
-          }
-          // if (data) {
-          return new CommonResponseModel(true, 1, 'Data Retrived Successfully', whatsappres)
+          // const whatsapplogDto = new WhatsAppLogDto(contact, 'usage_report', 'Sampling', 23, 27)
+          await this.wpService.createWhatappLog(whatsapplogDto)
+
+        }
+
+
+      }
+      // if (data) {
+      return new CommonResponseModel(true, 1, 'Data Retrived Successfully', whatsappres)
 
       //     } else {
       //     return new CommonResponseModel(false, 0, 'No Data Found..', undefined)
       // }
-  }
-  catch (err) {
+    }
+    catch (err) {
       throw err
+    }
   }
-}
 }
