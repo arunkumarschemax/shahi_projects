@@ -1,4 +1,4 @@
-import { CommonResponseModel, FileIdReq, OrderAcceptanceRequest, OrderRevertModel, PoOrderFilter, SaveOrderDto, StatusSharedDto } from "@project-management-system/shared-models"
+import { CommonResponseModel, FileIdReq, ItemNoDto, OrderAcceptanceRequest, OrderRevertModel, PoOrderFilter, SaveOrderDto, StatusSharedDto } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
 import { AxiosInstance } from "../axios-instance";
 
@@ -73,7 +73,14 @@ export class RLOrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.rlordersController + "/getPoNumber",)
     }
 
-    async revertProjectionFileData(req:OrderRevertModel): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.rlordersController + "/revertProjectionFileData",req)
+    async revertProjectionFileData(req: OrderRevertModel): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.rlordersController + "/revertProjectionFileData", req)
+    }
+
+    async updateItemNo(payload?: ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.rlordersController + "/updateItemNo", payload)
+    }
+    async deleteCoLine(payload?: ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.rlordersController + "/deleteCoLine", payload)
     }
 }

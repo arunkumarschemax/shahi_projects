@@ -20,6 +20,7 @@ import { StatusDto } from "./dto/pdf-file-status.dto";
 import { OrdersChildEntity } from "../orders/entities/orders-child.entity";
 import { OrdersEntity } from "../orders/entities/orders.entity";
 import { FileUploadEntity } from "../orders/entities/upload-file.entity";
+import { ItemNoDtos } from "./dto/item-no.dto";
 const fs = require('fs');
 const path = require('path')
 
@@ -931,6 +932,40 @@ export class RLOrdersService {
             return new CommonResponseModel(false, 0, 'failed to revert file data')
         }
     }
+
+    async updateItemNo(req: ItemNoDtos): Promise<CommonResponseModel> {
+      console.log(req, "reqq");
+      try {
+          const update = await this.coLineRepo.update(
+              { id: Number(req.id) },
+              { itemNo: req.itemNo }
+          );
+
+          if (update) {
+              return new CommonResponseModel(true, 1, "Update Successfully");
+          } else {
+              return new CommonResponseModel(false, 0, "Something Went Wrong", []);
+          }
+      } catch (error) {
+          return new CommonResponseModel(false, 0, "Error Occurred While Updating ", error);
+      }
+  }
+
+
+  async deleteCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
+      console.log(req, "reqq");
+      try {
+          const deletedItem = await this.coLineRepo.delete({ id: Number(req.id) });
+
+          if (deletedItem && deletedItem.affected) {
+              return new CommonResponseModel(true, 1, "Deleted Successfully");
+          } else {
+              return new CommonResponseModel(false, 0, "Something Went Wrong", []);
+          }
+      } catch (error) {
+          return new CommonResponseModel(false, 0, "Error Occurred While Deleting", error);
+      }
+  }
 
 
 

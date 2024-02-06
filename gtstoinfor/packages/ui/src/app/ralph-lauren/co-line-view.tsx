@@ -1,8 +1,8 @@
 
 
 import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
-import { coLineRequest } from "@project-management-system/shared-models";
-import { Button, Card, Col, Form, Row, Select, Table } from "antd"
+import { AlertMessages, ItemNoDto, coLineRequest } from "@project-management-system/shared-models";
+import { Button, Card, Col, Form, Input, Popconfirm, Row, Select, Table, message } from "antd"
 import { IExcelColumn } from "antd-table-saveas-excel/app";
 import { ColumnProps } from "antd/es/table";
 import { useEffect, useState } from "react";
@@ -20,6 +20,9 @@ const ColineView = () => {
     const [item, setItem] = useState<any>([]);
     const [form] = Form.useForm();
     const { Option } = Select;
+    const [editedValue, setEditedValue] = useState('');
+    const [editedId, setEditedId] = useState('');
+    const [editingRow, setEditingRow] = useState(null);
 
 
     useEffect(() => {
@@ -78,6 +81,43 @@ const ColineView = () => {
         getData();
 
     }
+
+    const onFinishEdit = (record: any) => {
+        const req = new ItemNoDto(editedId,editedValue)
+        service.updateItemNo(req).then(res => {
+            if (res.status) {
+                getData();
+                setEditingRow(null);
+                setEditedValue(null);
+                message.success("Updated SuccessFully");
+            } else {
+                message.error("Not Updated")
+            }
+        })
+    };
+
+    const onEditClick = (record) => {
+        setEditingRow(record);
+        setEditedValue(record.itemNo);
+        setEditedId(record.id);
+        console.log(record,"recccc")
+    };
+
+    const handleConfirmDelete = (record) => {
+        const req = new ItemNoDto(record.id)
+        service.deleteCoLine(req).then(res => {
+            if (res.status) {
+                getData();
+                AlertMessages.getSuccessMessage(res.internalMessage)
+
+            } else {
+                AlertMessages.getErrorMessage(res.internalMessage)
+            }
+        })
+        // const deleteUpdatedData = data.filter(item => item !== record);
+        // message.success("Deleted Successfully");
+        // setData(deleteUpdatedData);
+    };
 
     const handleExport = (e: any) => {
         e.preventDefault();
@@ -168,6 +208,7 @@ const ColineView = () => {
                 }
             },
             
+            
 
         ]
 
@@ -208,11 +249,25 @@ const ColineView = () => {
         {
             title: 'Item No',
             dataIndex: 'item_no',
-            render: (text, record) => {
-                return (record.item_no ? (record.item_no) : '-')
-            },
-            sorter: (a, b) => a.item_no.localeCompare(b.item_no),
-            sortDirections: ["ascend", "descend"],
+            render: (text, record, index) => {
+                return (
+                    <div>
+                        {editingRow === record ? (
+                            <Input
+                                value={editedValue}
+                                onChange={(e) => setEditedValue(e.target.value)}
+                                style={{ width: '60px', border: '1px solid rgb(217, 217, 217)', borderRadius: '5px', textAlign: "center" }}
+                            />
+                        ) : (
+                            <Input
+                                value={text}
+                                readOnly
+                                style={{ width: '60px', border: '1px solid rgb(217, 217, 217)', borderRadius: '5px', textAlign: "center" }}
+                            />
+                        )}
+                    </div>
+                );
+            }
         },
         {
             title: 'CO Date',
@@ -272,7 +327,44 @@ const ColineView = () => {
             render: (text, record) => {
                 return (record.error_msg ? (record.error_msg) : '-')
             }
-        }
+        },
+        {
+            title: 'Actions',
+            dataIndex: 'actions',
+            render: (text, record) => {
+                if (record.status && record.status.toLowerCase() === 'failed') {
+                    return (
+                        <div>
+                            {editingRow === record ? (
+                                <div>
+                                    <Button type="primary" onClick={() => onFinishEdit(record)}>Update</Button>
+                                    &nbsp; &nbsp;
+                                    <Button type="primary" danger onClick={() => setEditingRow(null)}>Cancel</Button>
+                                </div>
+                            ) : (
+                                <div>
+                                    <Button type="primary" onClick={() => onEditClick(record)}>Edit</Button>
+                                    &nbsp; &nbsp;
+                                    <Popconfirm
+                                        title="Are you sure to Delete?"
+                                        onConfirm={() => handleConfirmDelete(record)}
+                                        // onCancel={() => message.info('Delete canceled')}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
+                                        <Button type="primary" danger>Delete</Button>
+                                    </Popconfirm>
+                                </div>
+                            )}
+                        </div>
+                    );
+                } else {
+                    return <span>-</span>;
+                }
+            },
+        },
+   
+       
     ]
 
     return (
