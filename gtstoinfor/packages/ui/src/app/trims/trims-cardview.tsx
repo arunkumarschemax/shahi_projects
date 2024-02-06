@@ -39,10 +39,10 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
         if(res.status){
             res.data.styleNumber = styleNumber.styleNumber;
             res.data.poNumber = styleNumber.purchaseOrderNumber;
-            res.data.destinationCountry = styleNumber.destinationCountry;
+            // res.data.destinationCountry = styleNumber.destinationCountry;
             res.data.destinationCountryCode = styleNumber.destinationCountryCode;
             res.data.genderAgeDesc = styleNumber.genderAgeDesc;
-            res.data.geoCode = styleNumber.geoCode;
+            // res.data.geoCode = styleNumber.geoCode;
             res.data.sizeWiseData=styleNumber.sizeWiseData;
             res.data.item=styleNumber.item
             setBomInfo(res.data)

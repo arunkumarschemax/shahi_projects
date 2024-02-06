@@ -9,8 +9,11 @@ export class TrimInfoModel{
     msc?:string
     gender?:string
     shipToAddress?: string
+    geoCode?:string
+    destinationCountry?:string
 
-    constructor(styleId:number,style:string,styleName:string,season:string,bomInfo:BomInfo[],item:string,poNumber:string,msc?:string,gender?:string,shipToAddress?: string){
+    constructor(styleId:number,style:string,styleName:string,season:string,bomInfo:BomInfo[],item:string,poNumber:string,msc?:string,gender?:string,shipToAddress?: string, geoCode?:string,
+        destinationCountry?:string){
         this.styleId = styleId
         this.style = style
         this.styleName = styleName
@@ -22,6 +25,8 @@ export class TrimInfoModel{
         this.gender=gender
         this.season = season
         this.shipToAddress = shipToAddress
+        this.geoCode=geoCode
+        this.destinationCountry=destinationCountry
 
     }
 }
