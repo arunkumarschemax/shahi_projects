@@ -128,9 +128,9 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                 <th>Grand Total</th>
             </tr>
             <tr>
-                <td>{}</td>
-                <td>{bomInfo?.styleName}</td>
-                <td>{
+                <td style={{textAlign:'center'}}>{bomInfo?.item}</td>
+                <td style={{textAlign:'center'}}>{bomInfo?.style}</td>
+                <td style={{textAlign:'center'}}>{
                     bomInfo?.bomInfo?.map((e,index) => {
                         const len = bomInfo?.bomInfo?.length
                         return(
@@ -141,16 +141,16 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                         )
                     })
                     }</td>
-                <td>{}</td>
-                <td>{}</td>
+                <td style={{textAlign:'center'}}>{bomInfo?.geoCode}</td>
+                <td style={{textAlign:'center'}}>{bomInfo?.season}</td>
                  {
                     bomInfo?.sizeWiseData?.map(e => {
                         return(
-                            <td>{e.sizeQty}</td>
+                            <td style={{textAlign:'right'}}>{e.sizeQty}</td>
                         )
                     })
                 }
-                <th>{grandTotal}</th>
+                <th style={{textAlign:'right'}}>{grandTotal}</th>
             </tr>
                                         
             </table>
@@ -166,15 +166,19 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                 </tr>
                 
                     {
-                        bomInfo?.bomInfo?.map(e => {
+                        bomInfo?.bomInfo?.map((e,index) => {
+                        const len = bomInfo?.bomInfo?.length
                             return(
                                 <tr>
-                                    <td>{}</td>
-                                    <td>{bomInfo?.styleName}</td>
-                                    <td>{}</td>
-                                    <td>{e.imCode}</td>
-                                    <td>{e.itemName}</td>
-                                    <td>{e.description}</td>
+                                    { index == 0 ?  (   <>
+                                    <td rowSpan={len} style={{textAlign:'center'}}>{bomInfo?.item}</td>
+                                    <td rowSpan={len} style={{textAlign:'center'}}>{bomInfo?.style}</td>
+                                    <td rowSpan={len} style={{textAlign:'center'}}>{bomInfo?.geoCode}</td>
+                                    </>) : (<></>) 
+                                    }
+                                    <td style={{textAlign:'center'}}>{bomInfo?.geoCode != 'APA' ? 'A724610' : 'A728050'}</td>
+                                    <td style={{textAlign:'center'}}>{e.itemName}</td>
+                                    <td style={{width:'600px'}}>{e.description}</td>
                                 </tr>
                             )
                         })

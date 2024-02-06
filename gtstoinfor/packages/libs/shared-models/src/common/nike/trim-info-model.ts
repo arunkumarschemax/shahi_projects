@@ -5,9 +5,17 @@ export class TrimInfoModel{
     season:string;
     bomInfo:BomInfo[];
     item:string;
-    poNumber:string
+    poNumber:string;
+    msc?:string
+    gender?:string
+    shipToAddress?: string
+    geoCode?:string
+    destinationCountry?:string
+    plant?:string
+    styleType?:string
 
-    constructor(styleId:number,style:string,styleName:string,season:string,bomInfo:BomInfo[],item:string,poNumber:string){
+    constructor(styleId:number,style:string,styleName:string,season:string,bomInfo:BomInfo[],item:string,poNumber:string,msc?:string,gender?:string,shipToAddress?: string, geoCode?:string,
+        destinationCountry?:string,plant?:string,styleType?:string){
         this.styleId = styleId
         this.style = style
         this.styleName = styleName
@@ -15,6 +23,15 @@ export class TrimInfoModel{
         this.bomInfo = bomInfo
         this.item = item
         this.poNumber = poNumber
+        this.msc=msc
+        this.gender=gender
+        this.season = season
+        this.shipToAddress = shipToAddress
+        this.geoCode=geoCode
+        this.destinationCountry=destinationCountry
+        this.plant=plant
+        this.styleType=styleType
+
     }
 }
 

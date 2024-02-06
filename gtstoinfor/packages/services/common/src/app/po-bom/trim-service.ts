@@ -54,7 +54,7 @@ export class TrimService{
                 bomInfoMap.forEach(e => {
                     bomInfoModel.push(e)
                 })
-                const infoModel = new TrimInfoModel(data[0]?.styleId,data[0]?.style,data[0]?.style_name,data[0]?.season,bomInfoModel,data[0].item,data[0].po_number)
+                const infoModel = new TrimInfoModel(data[0]?.styleId,data[0]?.style,data[0]?.style_name,data[0]?.season,bomInfoModel,data[0].item,data[0].po_number,data[0].msc,data[0].gender,data[0].ship_to_address_legal_po,data[0].geo_code,data[0].destination_country,data[0].plant,data[0].styleType)
                 return new CommonResponseModel(true,1,'Data retrieved',infoModel)
             }else{
                 return new CommonResponseModel(false,0,'No data found')
