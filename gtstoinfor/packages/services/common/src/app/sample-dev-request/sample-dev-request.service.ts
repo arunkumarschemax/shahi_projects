@@ -1269,7 +1269,6 @@ export class SampleRequestService {
     return new CommonResponseModel(false, 0, 'Data Not retrieved', []);
   }
   async creatematerialAlloction(req:MaterialAllocationDTO):Promise<CommonResponseModel>{
-    // console.log(req)
     const manager = new GenericTransactionManager(this.dataSource)
     const queryManager = this.dataSource;
     try{
@@ -1381,7 +1380,7 @@ export class SampleRequestService {
         console.log(getBomStatus)
 
         if(getBomStatus.length-1 < 1){
-          updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:req[0].sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION});
+          updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:req.sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION});
           console.log(updateSampleOrderStatus);
           console.log(bomUpdateFlag);
           console.log(updateStockFlag);
