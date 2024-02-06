@@ -124,6 +124,7 @@ export class EddieService {
             entitys.unit = variant.unit
             entitys.unitCost = variant.unitCost
             entitys.cost = variant.cost
+            entitys.orderId = orderData.id
 
             entitys.poVersion = po.toString()
             const savedChild = await this.eddieOrdersChildRepository.save(entitys)
@@ -156,6 +157,7 @@ export class EddieService {
             entitys.unit = variant.unit
             entitys.unitCost = variant.unitCost
             entitys.cost = variant.cost
+            entitys.orderId = saved.id
 
             const savedChild = await this.eddieOrdersChildRepository.save(entitys)
 
