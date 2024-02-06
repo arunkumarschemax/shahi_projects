@@ -182,5 +182,14 @@ export class EddieController {
         }
     }
 
+    @Post('/getordercomparationData')
+    async getordercomparationData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.getordercomparationData(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
  
 }

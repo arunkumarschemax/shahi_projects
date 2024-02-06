@@ -761,7 +761,8 @@ export class EddieService {
             oldData.unitCost !== rec.unit_cost ||
             oldData.deliveryDate !== rec.delivery_date ||
             oldData.quantity !== rec.quantity
-          ) {
+          ) 
+          {
             // Only push if there are changes
             compareModel.push(new
               CompareModel(

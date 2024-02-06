@@ -75,6 +75,7 @@ import EddieOrderAcceptanceGrid from "./eddiebauer/eddie-order-acceptance-view"
 import EddieColineView from "./eddiebauer/eddie-co-line-view"
 import EddiePdfTable from "./eddiebauer/eddie-pdf-detail-view"
 import EddieOrdersDetailView from "./eddiebauer/eedie-order-detail-view"
+import EddieComparisionReport from "./eddiebauer/eedie-comparision-report"
 
 
 export const AppRoutes = () => {
@@ -278,6 +279,7 @@ export const AppRoutes = () => {
                    <Route path='eddiebauer-order-data-detail-view' element={<EddieOrdersDetailView />} />
                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
+                   <Route path="eddiebauer-comparision-report" element={<EddieComparisionReport/>}/>
 
 
 

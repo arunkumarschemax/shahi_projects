@@ -54,4 +54,8 @@ export class EddieService extends CommonAxiosService {
     async deleteCoLine(payload?: ItemNoDto): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.eddierOrdersController + "/deleteCoLine", payload)
     }
+
+    async getordercomparationData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.eddierOrdersController + "/getordercomparationData", req)
+    }
 }
