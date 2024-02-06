@@ -95,6 +95,8 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
         AlertMessages.getSuccessMessage('Updated Successfully');
         // getAllCurrencys();
         setDrawerVisible(false);
+        getAllMasterBrands();
+        
       } else {
       
         AlertMessages.getErrorMessage(res.internalMessage);
