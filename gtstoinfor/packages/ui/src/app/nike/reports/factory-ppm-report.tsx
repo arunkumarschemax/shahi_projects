@@ -1150,20 +1150,23 @@ const FactoryPPMReport = () => {
                 },
             },
             {
-                title: 'Item Vas Text', dataIndex: 'itemVasText', width: 70,
-                align: 'center', render: (text, record) => {
-                    if (!text || text?.trim() === '') {
-                        return '-';
-                    } else {
-                        return text;
-                    }
-                },
-            },
-            {
-                title: 'Item Text', dataIndex: 'itemText', width: 220, render: (text, record) => {
+                title: 'Item Vas Text', dataIndex: 'itemVasText', width: 220,
+                render: (text, record) => {
                     return (
                         <>
-                            {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+                            {record.itemVasText?.length > 30 ? (<><Tooltip title='Cilck to open full item Vas Text'><p><span onClick={() => handleTextClick(record.itemVasText)} style={{ cursor: 'pointer' }}>
+                                {record.itemVasText.length > 30 ? `${record.itemVasText?.substring(0, 30)}....` : record.itemVasText}
+                            </span></p></Tooltip></>) : (<>{record.itemVasText}</>)}
+                        </>
+                    )
+                }
+            },
+            {
+                title: 'Item Text', dataIndex: 'itemText', width: 220,
+                render: (text, record) => {
+                    return (
+                        <>
+                            {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full item Text'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
                                 {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
                             </span></p></Tooltip></>) : (<>{record.itemText}</>)}
                         </>
