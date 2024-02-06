@@ -375,9 +375,9 @@ const ColineView = () => {
                 style={{ color: 'green' }}
                 onClick={handleExport}
                 icon={<FileExcelFilled />}>Download Excel</Button> : null}>
-            <Form onFinish={getData} form={form} layout='vertical'>
+            <Form onFinish={getData} form={form} >
                 <Row gutter={24}>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5}} >
                         <Form.Item name='buyerPo' label='Buyer PO' >
                             <Select
                                 showSearch
@@ -393,7 +393,7 @@ const ColineView = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5}} >
                         <Form.Item name='item' label='Item' >
                             <Select
                                 showSearch
@@ -409,7 +409,7 @@ const ColineView = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 5 }} >
                         <Form.Item name='orderNo' label='CO Number' >
                             <Select
                                 showSearch
@@ -425,12 +425,12 @@ const ColineView = () => {
                             </Select>
                         </Form.Item>
                     </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} >
                         <Form.Item>
-                            <Button htmlType="submit" icon={<SearchOutlined />} type="primary">SEARCH</Button>
-                            <Button htmlType='button' icon={<UndoOutlined />} type="primary" style={{ marginLeft: 10, marginTop: 8, position: "relative" }} onClick={resetHandler}
+                            <Button htmlType="submit" icon={<SearchOutlined />} type="primary" style={{ marginLeft: 30, position: "relative" }}>Search</Button>
+                            <Button htmlType='button' icon={<UndoOutlined />} type="primary" style={{ marginLeft: 30, position: "relative" }} onClick={resetHandler}
                             >
-                                RESET
+                                Reset
                             </Button>
                         </Form.Item>
                     </Col>

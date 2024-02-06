@@ -26,9 +26,10 @@ export class RLOrdersController {
     }
 
     @Post('/getPdfFileInfo')
-    async getPdfFileInfo(): Promise<CommonResponseModel> {
+    @ApiBody({ type: PoOrderFilter })
+    async getPdfFileInfo(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.rlOrdersService.getPdfFileInfo();
+            return this.rlOrdersService.getPdfFileInfo(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }

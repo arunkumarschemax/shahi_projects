@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { config } from "packages/libs/shared-services/config";
-import { OrderRevertModel, StatusTypeEnum } from "@project-management-system/shared-models";
+import { OrderRevertModel, PoOrderFilter, StatusTypeEnum } from "@project-management-system/shared-models";
 
 
 export function PdFInfoGrid() {
@@ -32,8 +32,14 @@ export function PdFInfoGrid() {
     }, [])
 
     const getPdfFileInfo = () => {
-        service.getPdfFileInfo().then(res => {
+        const req = new PoOrderFilter();
+        if (form.getFieldValue("poNumber") !== undefined) {
+          req.poNumber = form.getFieldValue("poNumber");
+        }
+        service.getPdfFileInfo(req).then(res => {
+            if(res.status){
             setPdfData(res.data)
+               }
         })
     }
     const onReset = () => {
@@ -234,7 +240,7 @@ export function PdFInfoGrid() {
                 <Button type="primary" onClick={() => setMoreData(record)}>More Info</Button>
                 <br></br>&nbsp;&nbsp;
                 <Tooltip title="PDF download">
-                <Button icon={<FilePdfOutlined onClick={()=>download(record.filePath)}/>} >{value}</Button>
+                <Button icon={<FilePdfOutlined  style={{color:"red"}}onClick={()=>download(record.filePath)}/>} >{value}</Button>
                 </Tooltip>
                 <br></br> &nbsp;&nbsp;
 
@@ -311,36 +317,75 @@ export function PdFInfoGrid() {
     return (
         <>
             <Card title="PDF History" headStyle={{ fontWeight: 'bold' }}>
-                {/* <Form
-            // onFinish={getOrderAcceptanceData}
+                <Form
+             onFinish={getPdfFileInfo}
             form={form}
-            layout='vertical'>
+            >
             <Row gutter={24}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-                    <Form.Item name='poandLine' label='PO Number' >
-                        <Select
-                            showSearch
-                            placeholder="Select Po+Line"
-                            optionFilterProp="children"
-                            allowClear
-                        >
-                            {poLine.map((inc: any) => {
-                                return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
-                            })
-                            }
-                        </Select>
-                    </Form.Item>
-                </Col>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 40, }} >
-                    <Form.Item>
-                        <Button htmlType="submit"
-                            icon={<SearchOutlined />}
-                            type="primary">SEARCH</Button>
-                        <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>Reset</Button>
-                    </Form.Item>
-                </Col>
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 4 }}
+              lg={{ span: 4 }}
+              xl={{ span: 6 }}
+            >
+              <Form.Item name="poNumber" label="PO Number">
+                <Select
+                  showSearch
+                  placeholder="Select PO Number"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {pdfData.map((inc: any) => {
+                    return (
+                      <Option key={inc.poNumber} value={inc.poNumber}>
+                        {inc.poNumber}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 8 }}
+              lg={{ span: 8 }}
+              xl={{ span: 4 }}
+            >
+              <Form.Item>
+                <Button
+                  style={{ marginLeft: 40 }}
+                  htmlType="submit"
+                  icon={<SearchOutlined />}
+                  type="primary"
+                >
+                  Search
+                </Button>
+              </Form.Item>
+            </Col>
+
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 5 }}
+              lg={{ span: 5 }}
+              xl={{ span: 4 }}
+            >
+              <Form.Item>
+                <Button
+                //   style={{ marginLeft: 0 }}
+                  htmlType="submit"
+                  type="primary"
+                  onClick={onReset}
+                  icon={<UndoOutlined />}
+                >
+                  Reset
+                </Button>
+              </Form.Item>
+            </Col>
             </Row>
-        </Form> */}
+        </Form>
                 <Table
                     columns={columns}
                     dataSource={pdfData}

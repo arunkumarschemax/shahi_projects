@@ -640,16 +640,17 @@ const OrderAcceptanceGrid = () => {
               md={{ span: 8 }}
               lg={{ span: 8 }}
               xl={{ span: 4 }}
+              style={{ marginLeft: 20 }}
+
             >
               <Form.Item>
                 <Button
-                  style={{ marginLeft: 20 }}
                   htmlType="submit"
                   icon={<SearchOutlined />}
                   type="primary"
                   onClick={getorderData}
                 >
-                  SEARCH
+                  Search
                 </Button>
               </Form.Item>
             </Col>
@@ -660,10 +661,11 @@ const OrderAcceptanceGrid = () => {
               md={{ span: 5 }}
               lg={{ span: 5 }}
               xl={{ span: 4 }}
+              style={{ marginLeft: 70 }}
+
             >
               <Form.Item>
                 <Button
-                  style={{ marginLeft: 70 }}
                   htmlType="submit"
                   type="primary"
                   onClick={onReset}

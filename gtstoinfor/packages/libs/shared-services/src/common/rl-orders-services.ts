@@ -9,8 +9,8 @@ export class RLOrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.rlordersController + "/saveOrdersDataFromPDF", req)
     }
 
-    async getPdfFileInfo(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.rlordersController + "/getPdfFileInfo")
+    async getPdfFileInfo(req?:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.rlordersController + "/getPdfFileInfo",req)
     }
 
     async getorderData(req?: PoOrderFilter): Promise<CommonResponseModel> {

@@ -149,10 +149,10 @@ export class RLOrdersService {
   }
 
 
-  async getPdfFileInfo(): Promise<CommonResponseModel> {
+  async getPdfFileInfo(req?:PoOrderFilter): Promise<CommonResponseModel> {
     // eslint-disable-next-line no-useless-catch
     try {
-      const data = await this.pdfrepo.find()
+      const data = await this.pdfrepo.find({ where: {poNumber: req.poNumber}})
       // const data = await this.pdfrepo.find({ where: { status: StatusTypeEnum.NOT_CANCELLED } });
       if (data) {
         return new CommonResponseModel(true, 1, 'data retrieved Successfully', data);
