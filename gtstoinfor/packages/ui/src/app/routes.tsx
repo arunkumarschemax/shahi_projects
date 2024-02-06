@@ -56,6 +56,7 @@ import JokerTagPrint from "./trims/trim-prints/joker-tag"
 import WasCarelabel from "./trims/trim-prints/wash-care-label"
 import  { HangTag } from "./trims/trim-prints/hang-tag"
 import LayoutTwo from "./layout/basic-layout/pro-layout"
+import ItemInfo from "./trims/item-info"
 
 
 export const AppRoutes = () => {
@@ -187,6 +188,8 @@ export const AppRoutes = () => {
                     <Route path='trim-List' element={<TrimList/>} />
                     <Route path='washcare-label' element={<WasCarelabel bomInfo={[]} />}/>
                     <Route path='hang-tag' element={<HangTag info={[]}/>} />
+                    <Route path='item-info' element={<ItemInfo />} />
+
 
                 </Route>
 
