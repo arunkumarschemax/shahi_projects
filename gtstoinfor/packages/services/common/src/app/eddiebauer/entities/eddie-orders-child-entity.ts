@@ -146,7 +146,7 @@ export class EddieChildEntity {
         name: "quantity",
 
     })
-    quantity: string
+    quantity: number
 
 
     @Column('varchar', {

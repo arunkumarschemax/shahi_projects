@@ -58,5 +58,14 @@ export class EddieOrdersRepository extends Repository<EddieOrdersEntity> {
         return await query.getRawMany()
     }
 
+    async getordercomparationData(req?: EddieOrderFilter): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`*`)
+        if (req.poNumber !== undefined) {
+            query.andWhere(`o.po_number ='${req.poNumber}'`)
+        }
+
+        return await query.getRawMany()
+    }
     
 }
