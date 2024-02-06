@@ -119,7 +119,9 @@ export function CentricOrderAcceptanceGrid() {
     const dataTobeReturned = [];
     const roleWiseMapData = new Map<string, CentricOrderAcceptanceRequest[]>();
     tableData.forEach(rec => {
-      const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}_${rec.style}_${rec.shipToAddress}`;
+      const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}_${rec.style}`;
+      // const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}_${rec.style}_${rec.shipToAddress}`;
+
       if (!roleWiseMapData.has(key)) {
         roleWiseMapData.set(key, [rec]);
       } else {
