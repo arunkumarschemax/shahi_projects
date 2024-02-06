@@ -38,6 +38,7 @@ import { DestinationReq } from '../address/destination-req.dto';
 import * as Excel from 'exceljs';
 import { diff_match_patch } from 'diff-match-patch'
 import { ItemNoDtos } from './dto/co-item-no.dto';
+import { DivertEntity } from './entites/divert.entity';
 
 
 @Injectable()
@@ -1900,6 +1901,65 @@ export class DpomService {
         }
     }
 
+    async saveDivertData(req: any): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource);
+        try {
+            await transactionManager.startTransaction();
+            const divertArr: DivertEntity[] = []
+            for (const data of req) {
+                const entity = new DivertEntity()
+                entity.orequestDate = data.newpo[0].orequestDate
+                entity.oItem = data.oldPo[0].item
+                entity.oFactory = data.oldPo[0].factory
+                entity.oPlant = data.oldPo[0].Plant
+                entity.oProductCode = data.oldPo[0].productCode
+                entity.oLineItemStatus = data.oldPo[0].LineStatus
+                entity.oDocumentDate = moment(data.oldPo[0].DocumentDate).format('YYYY-MM-DD')
+                entity.oPurchaseOrderNumber = data.oldPo[0].poNumber
+                entity.oPoLineItemNumber = data.oldPo[0].poLine
+                entity.oldVal = data.oldPo[0].oldVal
+                entity.oTotalItemQty = data.oldPo[0].Quantity
+                entity.oDestination = data.oldPo[0].destination
+                entity.oShipmentType = data.oldPo[0].shipmentType
+                entity.oOGAC = data.oldPo[0].ogac
+                entity.oGAC = data.oldPo[0].gac
+                entity.oInventorySegmentCode = data.oldPo[0].inventorySegmentCode
+                entity.oItemVasText = data.oldPo[0].itemVasText
+                entity.oFOBPrice = data.oldPo[0].gross_price_fob
+                entity.oTradingCoNetIncDis = data.oldPo[0].trading_net_inc_disc
+                entity.nOGAC = data.newpo[0].nogac
+                entity.nGAC = data.newpo[0].ngac
+                entity.nItem = data.newpo[0].item
+                entity.nFactory = data.newpo[0].factory
+                entity.nPlant = data.newpo[0].nPlant
+                entity.nProductCode = data.newpo[0].nproductCode
+                entity.nLineItemStatus = data.newpo[0].nLineStatus
+                entity.nDocumentDate = moment(data.newpo[0].nDocumentDate).format('YYYY-MM-DD')
+                entity.nPurchaseOrderNumber = data.newpo[0].npoNumber
+                entity.nPoLineItemNumber = data.newpo[0].npoLine
+                entity.nTotalItemQty = data.newpo[0].nQuantity
+                entity.nDestination = data.newpo[0].ndestination
+                entity.nInventorySegmentCode = data.newpo[0].ninventorySegmentCode
+                entity.nItemVasText = data.newpo[0].nitemVasText
+                entity.nShipmentType = data.newpo[0].nshipmentType
+                entity.nFOBPrice = data.newpo[0].gross_price_fob
+                entity.nTradingCoNetIncDis = data.newpo[0].trading_net_inc_disc
+                divertArr.push(entity)
+            }
+            const save = await transactionManager.getRepository(DivertEntity).save(divertArr);
+            if (save) {
+                await transactionManager.completeTransaction();
+                return new CommonResponseModel(true, 1, 'Data retrieved and saved successfully');
+            } else {
+                await transactionManager.releaseTransaction();
+                return new CommonResponseModel(false, 0, 'Something went wrong');
+            }
+        } catch (error) {
+            await transactionManager.releaseTransaction();
+            return new CommonResponseModel(false, 0, error.message || 'Something went wrong');
+        }
+    }
+
     async getDivertReportData(): Promise<CommonResponseModel> {
         try {
             const reports = await this.dpomRepository.getDivertReport();
@@ -1955,7 +2015,10 @@ export class DpomService {
                 }
             }
             if (divertModelData.length > 0) {
-                return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
+                const res = await this.saveDivertData(divertModelData)
+                if (res.status) {
+                    return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
+                }
             } else {
                 return new CommonResponseModel(false, 0, 'No Data Found', []);
             }
