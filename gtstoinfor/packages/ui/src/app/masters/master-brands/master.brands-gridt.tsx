@@ -75,7 +75,7 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
     masterBrandService.ActivateDeActivateBrand(BrandsViewData).then(res => {
       console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Success');
+        AlertMessages.getSuccessMessage(BrandsViewData.isActive === true ? 'Brand activated successfully': 'Brand de-activated successfully');
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
