@@ -2015,10 +2015,7 @@ export class DpomService {
                 }
             }
             if (divertModelData.length > 0) {
-                const res = await this.saveDivertData(divertModelData)
-                if (res.status) {
-                    return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
-                }
+                return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
             } else {
                 return new CommonResponseModel(false, 0, 'No Data Found', []);
             }
