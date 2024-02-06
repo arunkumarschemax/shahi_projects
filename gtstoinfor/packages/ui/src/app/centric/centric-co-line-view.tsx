@@ -150,7 +150,7 @@ const CentriColineView = () => {
                 title: 'CO Date',
                 dataIndex: 'co_date',
                 render: (text, record) => {
-                    return (record.co_date ? (record.co_date) : '-')
+                    return (record.co_date ? (moment(record.co_date).format('DD-MM-YYYY')) : '-')
                 }
             },
             {
@@ -172,15 +172,7 @@ const CentriColineView = () => {
                 title: 'Raised Date',
                 dataIndex: 'raised_date',
                 render: (text, record) => {
-                    return (record.raised_date ? (record.raised_date) : '-')
-                }
-            },
-            {
-                title: 'CO Created Date',
-                dataIndex: 'updated_at',
-                render: (text, record) => {
-                    return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
-
+                    return (record.raised_date ? (moment(record.raised_date).format('DD-MM-YYYY HH:mm')) : '-')
                 }
             },
             {
@@ -323,7 +315,7 @@ const CentriColineView = () => {
             title: 'CO Date',
             dataIndex: 'co_date',
             render: (text, record) => {
-                return (record.co_date ? (record.co_date) : '-')
+                return (record.co_date ? (moment(record.co_date).format('DD-MM-YYYY')) : '-')
             }
         },
         {
@@ -351,15 +343,6 @@ const CentriColineView = () => {
 
         },
 
-        {
-            title: 'CO Created Date',
-            dataIndex: 'updated_at',
-            render: (text, record) => {
-                return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
-            },
-
-
-        },
         {
             title: 'Status',
             dataIndex: 'status',
