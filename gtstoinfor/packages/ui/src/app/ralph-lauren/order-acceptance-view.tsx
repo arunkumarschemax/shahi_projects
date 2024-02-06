@@ -485,7 +485,7 @@ const OrderAcceptanceGrid = () => {
             onClick={() => createCOLine(record, index)}
             disabled={record.itemStatus === 'INPROGRESS' ? true : !isEnabled}
           >
-            {record.itemStatus === 'ACCEPTED' ? 'Accepted' : 'Accept'}
+            {record.itemStatus === 'INPROGRESS' ? 'Accepted' : 'Accept'}
           </Button>
         );
       },
