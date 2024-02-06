@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Select, Input, Card, Form, Col, Row, Divider, Button, Popconfirm, message, InputNumber } from 'antd';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { TaxCategoriesEnum, TaxesDto } from '@project-management-system/shared-models';
 import { TaxesService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
@@ -28,6 +28,7 @@ labelCol:{span:8}
 
   export function TaxesForm(props: TaxesFormProps) {
     const [form] = Form.useForm();
+    const navigate = useNavigate()
     const [disable, setDisable] = useState<boolean>(false)
     const service = new TaxesService();
     const { Option } = Select;
@@ -61,7 +62,7 @@ const save = (taxesData: TaxesDto) => {
     setDisable(false)
     if (res.status) {
       AlertMessages.getSuccessMessage('Tax Created Successfully');
-      // history.push("/taxes-view");
+      navigate('/global/taxes/taxes-grid')
       onReset();
     } else {
       if (res.status) {
@@ -164,7 +165,7 @@ const onBlur=() =>{
                 onBlur={onBlur}
                 onSearch={onSearch}
               >
-                <Option key={0} value={null}>Select State Category</Option>
+                {/* <Option key={0} value={null}>Select State Category</Option> */}
                 <Option key={TaxCategoriesEnum.Central} value={TaxCategoriesEnum.Central}>Central</Option>
                 <Option key={TaxCategoriesEnum.State} value={TaxCategoriesEnum.State}>State</Option>
                
