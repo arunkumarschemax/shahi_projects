@@ -24,14 +24,6 @@ export const StoreIssueDetailed = () => {
         getData()
     },[])
 
-    // const getSampleDevById = () => {
-    //     service.getSampleDevById(req).then(res => {
-    //       if(res){
-    //         setId(res)
-    //       }
-    //     })
-    //   }
-
     const getData = ()=>{
         service.getAllSampleData().then((res)=>{
             setData(res.data)

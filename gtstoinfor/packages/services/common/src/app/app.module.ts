@@ -118,7 +118,7 @@ console.log(join(__dirname, '..', 'sampling', 'gtstoinfor', 'dist', 'packages', 
       // username: "root",
       // password: "",
       // database: "sampling_test",
-            autoLoadEntities: true,
+      autoLoadEntities: true,
       synchronize: false,
       logging: true,
       extra: {
@@ -126,8 +126,13 @@ console.log(join(__dirname, '..', 'sampling', 'gtstoinfor', 'dist', 'packages', 
       }
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', '..', '..', 'dist','packages','services','common','upload_files'),
+      // rootPath: join(__dirname, '..', '..', '..', '..', 'dist','packages','services','common','upload_files'),
+      rootPath: join(__dirname, '../../../../', 'upload_files'),
       serveRoot: '/static',
+      serveStaticOptions: {
+        redirect: false,
+        index: false
+      }
     }),
     FactoriesModule,
     QualitysModule,
@@ -181,7 +186,7 @@ console.log(join(__dirname, '..', 'sampling', 'gtstoinfor', 'dist', 'packages', 
     CategoryModule,
     StructureModule,
     ScheduleModule.forRoot(),
-    AuthModule, JwtModule,EmployeeDetailsModule,ItemsModule,VendorsModule,BuyersModule,CompanyModule,AccountControlObjectModule,OperationGroupsModule,CountriesModule,GarmentCategoriesModule,StyleModule,PaymentMethodModule ,ComponentMappingModule,ProfitControlHeadModule,CountriesModule,GarmentCategoriesModule,StyleModule,ComponentMappingModule,WarehouseModule,TaxesModule,SettingsModule,ColourModule,UomModule,DestinationModule,SampleTypesModule,SampleSubTypesModule,OperationSequenceModule,FabricWeaveModule,M3MastersModule,FabricDevelopmentModule,SkuGenerationModule,SampleDevReqModule,StyleOrderModule,OperationTrackingModule,MaterialIssueModule,IndentModule,RackPositionModule,StocksModule,GrnModule,LocationMappingModule,M3TrimsModule,ReclassificationModule,varietyModule,trimModule,FinishModule,HoleModule,TrimParamsMappingModule,WeightModule,RequestCodeModule,ProductModule],
+    AuthModule, JwtModule, EmployeeDetailsModule, ItemsModule, VendorsModule, BuyersModule, CompanyModule, AccountControlObjectModule, OperationGroupsModule, CountriesModule, GarmentCategoriesModule, StyleModule, PaymentMethodModule, ComponentMappingModule, ProfitControlHeadModule, CountriesModule, GarmentCategoriesModule, StyleModule, ComponentMappingModule, WarehouseModule, TaxesModule, SettingsModule, ColourModule, UomModule, DestinationModule, SampleTypesModule, SampleSubTypesModule, OperationSequenceModule, FabricWeaveModule, M3MastersModule, FabricDevelopmentModule, SkuGenerationModule, SampleDevReqModule, StyleOrderModule, OperationTrackingModule, MaterialIssueModule, IndentModule, RackPositionModule, StocksModule, GrnModule, LocationMappingModule, M3TrimsModule, ReclassificationModule, varietyModule, trimModule, FinishModule, HoleModule, TrimParamsMappingModule, WeightModule, RequestCodeModule, ProductModule],
   controllers: [AppController],
   providers: [AppService],
 })

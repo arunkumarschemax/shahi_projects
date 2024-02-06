@@ -30,15 +30,6 @@ export const MarketIssueDetail = () => {
   },[])
 
 
-
-  // const getSampleDevById = () => {
-  //     service.getSampleDevById(req).then(res => {
-  //       if(res){
-  //         setId(res)
-  //       }
-  //     })
-  //   }
-
   const getData = () => {
     service.getAllSampleDevData().then((res) => {
       if(res.status){

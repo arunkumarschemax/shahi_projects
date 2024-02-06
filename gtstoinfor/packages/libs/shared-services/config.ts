@@ -4,7 +4,7 @@ export const config = {
     whatsapp_broadcast_url: 'http://206.189.138.212:3232/api',
     upload_file_path: 'http://165.22.220.143/crm/gtstoinfor/dist/packages/services/common/upload-files/',
     APP_PROJECT_MANAGEMENT_URL: "https://sampling-backend.shahiapps.in/api",
-    file_upload_path:'https://sampling-backend.shahiapps.in/static/',
+    file_upload_path:'https://sampling-backend.shahiapps.in/static',
 
 
     //  APP_PROJECT_MANAGEMENT_URL: "http://localhost:8005/api",
