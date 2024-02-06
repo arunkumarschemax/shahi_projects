@@ -790,7 +790,7 @@ export function CentricOrderAcceptanceGrid() {
                 onClick={() => createCOLine(record, index)}
                 disabled={record.status === 'INPROGRESS' ? true : !isEnabled}
               >
-                {record.status === 'INPROGRESS' ? "Accept" : "Accept"}
+                {record.status === 'INPROGRESS' ? "Accepted" : "Accept"}
               </Button>
             ),
             props: {
