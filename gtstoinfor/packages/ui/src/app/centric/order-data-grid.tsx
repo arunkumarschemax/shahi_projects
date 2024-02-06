@@ -906,7 +906,7 @@ import {
                     icon={<SearchOutlined />}
                     type="primary"
                   >
-                    SEARCH
+                    Search
                   </Button>
                 
                 </Form.Item>

@@ -854,7 +854,7 @@ export function CentricOrderAcceptanceGrid() {
         <Form
           onFinish={getCentricorderData}
           form={form}
-        // layout='vertical'
+        layout='vertical'
         >
           <Row gutter={24}>
             <Col
@@ -862,12 +862,12 @@ export function CentricOrderAcceptanceGrid() {
               sm={{ span: 24 }}
               md={{ span: 4 }}
               lg={{ span: 4 }}
-              xl={{ span: 6 }}
+              xl={{ span: 4}}
             >
               <Form.Item name="poNumber" label="PO Number">
                 <Select
                   showSearch
-                  placeholder="Select PO number"
+                  placeholder="Select PO Number"
                   optionFilterProp="children"
                   allowClear
                 >
@@ -912,7 +912,7 @@ export function CentricOrderAcceptanceGrid() {
                 md={{ span: 5 }}
                 lg={{ span: 5 }}
                 xl={{ span: 4 }}
-                //style={{marginTop:20,marginLeft:60}}
+                style={{marginTop:20,marginLeft:60}}
               >
                 <Form.Item>
                   <Button
@@ -921,7 +921,7 @@ export function CentricOrderAcceptanceGrid() {
                     type="primary"
                     onClick={getCentricorderData}
                   >
-                    SEARCH
+                    Search
                   </Button>
                 </Form.Item>
               {/* </Col>

@@ -204,6 +204,10 @@ export function CentricPdFInfoGrid() {
             width: 90,
             sorter: (a, b) => a.upload_date.localeCompare(b.upload_date),
             sortDirections: ["ascend", "descend"],
+            render: (text, record) => {
+              return (record.upload_date ? (moment(record.upload_date).format('DD-MM-YYYY HH:mm')) : '-')
+          },
+
 
 
         },
@@ -305,7 +309,7 @@ export function CentricPdFInfoGrid() {
                     type="primary"
                     // onClick={getPdfFileInfo}
                   >
-                    SEARCH
+                    Search
                   </Button>
                 </Form.Item>
               </Col>
