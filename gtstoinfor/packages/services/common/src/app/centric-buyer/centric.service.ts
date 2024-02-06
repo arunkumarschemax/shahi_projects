@@ -495,10 +495,10 @@ export class CentricService {
         coLine.currency = coData.currency
         coLine.destinations = coData.destinations
         const request = coData.destinations[0]?.name;
-        console.log(request,"request")
+        console.log(request, "request")
         const address = await this.addressService.getAddressInfoByCountry({ country: request });
         const addressData = address.data[0];
-        console.log(addressData,"address")
+        console.log(addressData, "address")
         styleNo = coData.styleNo
         buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 12;
         deliveryAddress = addressData?.deliveryCode
@@ -639,6 +639,9 @@ export class CentricService {
                     ele.length > 0 ? fileteredElements.push(labelElement) : '';
                   }
                   let tabIndex = 1; // Default to 1 if no match
+                  if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
+                    tabIndex = 2
+                  }
                   const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
                   const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
                   await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
