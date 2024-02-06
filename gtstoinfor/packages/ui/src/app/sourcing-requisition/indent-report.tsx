@@ -11,6 +11,7 @@ import React from 'react';
 import { Excel } from 'antd-table-saveas-excel';
 import AlertMessages from '../common/common-functions/alert-messages';
 const { Option } = Select;
+import { CSVLink } from 'react-csv';
 
 export const IndentReport = () => {
   const service = new IndentService();
@@ -465,33 +466,81 @@ export const IndentReport = () => {
     },
     {
       title: 'Material Type',
-      dataIndex: "materialtype",
-      // render: (i_items, text) => {
-      //   console.log(i_items,'000');
-      //   console.log(text,'111111111111');
-      //   const val = text.i_items.map ((e)=>e.materialtype)
-      //   console.log(val[0]);
-      //   const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === val[0]);
-      //   console.log(EnumObj);
-        
-      //   return val?.[0]? ItemTypeEnumDisplay?.find((item) => item.name === val[0]).displayVal:'-'
-      // }
+      dataIndex: "i_items",
+      render: (i_items) => {
+          // Recursive function to flatten and stringify tree structure
+          const flattenTree = (items, level = 0) => {
+            let result = '';
+            items.forEach((item) => {
+              result += `${'  '.repeat(level)}${item.materialtype}\n`;
+              if (item.children) {
+                result += flattenTree(item.children, level + 1);
+              }
+            });
+            return result;
+          };
+      
+          return flattenTree(i_items);
+        },
     },
     
     {
       title: 'Quantity',
-      dataIndex: "i_items",
+      dataIndex: 'i_items',
+      render: (i_items) => {
+        // Recursive function to flatten and stringify tree structure
+        const flattenTree = (items, level = 0) => {
+          let result = '';
+          items.forEach((item) => {
+            result += `${'  '.repeat(level)}${item.quantity}\n`;
+            if (item.children) {
+              result += flattenTree(item.children, level + 1);
+            }
+          });
+          return result;
+        };
+    
+        return flattenTree(i_items);
       },
+    },
     {
       title: 'M3 Code',
       dataIndex: "i_items",
-     
+      render: (i_items) => {
+        // Recursive function to flatten and stringify tree structure
+        const flattenTree = (items, level = 0) => {
+          let result = '';
+          items.forEach((item) => {
+            result += `${'  '.repeat(level)}${item.m3Code}\n`;
+            if (item.children) {
+              result += flattenTree(item.children, level + 1);
+            }
+          });
+          return result;
+        };
+    
+        return flattenTree(i_items);
+      },
     },
     
     {
       title: "Status",
       dataIndex: "i_items", 
-
+      render: (i_items) => {
+        // Recursive function to flatten and stringify tree structure
+        const flattenTree = (items, level = 0) => {
+          let result = '';
+          items.forEach((item) => {
+            result += `${'  '.repeat(level)}${item.status}\n`;
+            if (item.children) {
+              result += flattenTree(item.children, level + 1);
+            }
+          });
+          return result;
+        };
+    
+        return flattenTree(i_items);
+      }
     },
 
   ]
@@ -519,6 +568,8 @@ excel
     <div>
       <Card title="Indent Report"     headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  extra={
           <div>
+            {/* <Button><CSVLink filename={"indent.csv"} data={data} columns={columns}>Get Excel </CSVLink></Button> */}
+
             <Button icon={<DownloadOutlined />} onClick={() => { exportExcel(); }} style={{marginRight:30}}>
               GET EXCEL
             </Button>
