@@ -930,7 +930,7 @@ export class CentricService {
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new CoLinereqModel(poInfo.poNumber, null, poInfo.unitPrice, poInfo.currency, poInfo.deliveryDate, poInfo.material, desArray);
+        const co = new CoLinereqModel(poInfo.poNumber, null, poInfo.unitPrice, poInfo.currency, poInfo.deliveryDate, poInfo.style, desArray);
         coData.push(co)
       });
       if (coData) {
