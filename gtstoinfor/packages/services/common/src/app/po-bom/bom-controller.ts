@@ -70,4 +70,31 @@ export class BomController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
+
+    @Post('/getItemInfo')
+    async getItemInfo(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return this.trimService.getItemInfo(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+
+    @Post('/getItemDropdownByCreatedAt')
+    async getItemDropdownByCreatedAt(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return this.trimService.getItemDropdownByCreatedAt(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+
+    @Post('/getRegionDropdownByCreatedAt')
+    async getRegionDropdownByCreatedAt(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return this.trimService.getRegionDropdownByCreatedAt(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
 }
