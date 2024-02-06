@@ -66,7 +66,7 @@ export class TrimService{
 
     async getItemInfo(req:ItemInfoFilterReq):Promise<CommonResponseModel>{
         try{
-            let query = `SELECT  id,LEFT(item,4) as item,style_number,geo_code,destination_country_code,destination_country,po_number,po_line_item_number 
+            let query = `SELECT  id,LEFT(item,4) as item,style_number,geo_code,destination_country_code,destination_country,po_number,po_line_item_number,total_item_qty
             FROM dpom WHERE created_at BETWEEN '${req.fromDate}' AND '${req.toDate}' AND item IS NOT NULL`
             if(req.item){
                 query += ` AND item = '${req.item}'`

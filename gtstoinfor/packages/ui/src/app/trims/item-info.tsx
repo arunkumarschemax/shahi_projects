@@ -48,6 +48,10 @@ export const ItemInfo = () => {
         {
             title:'Destination',
             dataIndex:'destination_country'
+        },
+        {
+            title:'Quantity',
+            dataIndex:'total_item_qty'
         }
     ]
 
@@ -165,7 +169,7 @@ export const ItemInfo = () => {
                     <Button onClick={onGenerate} disabled={selectedRowKeys.length > 0 ? false : true} type='primary'>Generate</Button>
                 </Row>
                 <br/>
-                <Table rowKey={record => record.id} columns={columns} dataSource={itemInfo} 
+                <Table rowKey={record => record} columns={columns} dataSource={itemInfo} 
             rowSelection={rowSelection}
             size='small' bordered
             pagination={{
@@ -175,7 +179,8 @@ export const ItemInfo = () => {
                 setPageSize(pageSize);
               }
             }}
-            scroll={{ x: 'max-content', y: 450 }}/>
+            scroll={{  y: 450 }}
+            />
             </>) : (<></>) }
 
         </Card>
