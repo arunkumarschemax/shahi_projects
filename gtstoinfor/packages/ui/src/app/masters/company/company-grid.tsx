@@ -32,7 +32,7 @@ export const CompanyGrid = (props: CompanyGridProps) => {
   // const { formatMessage: fm } = useIntl();
   const service = new CompanyService();
   const Dservice = new DivisionService();
-
+let createdUser = ''
 
   /**
    * used for column filter
@@ -350,6 +350,8 @@ export const CompanyGrid = (props: CompanyGridProps) => {
         AlertMessages.getSuccessMessage('Division Created Successfully');
         //   location.push("/Currencies-view");
         onReset();
+        navigate('/global/company/division-grid')
+
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
       }
@@ -393,6 +395,9 @@ export const CompanyGrid = (props: CompanyGridProps) => {
               <Form.Item style={{ display: 'none' }} label="Company Id" name="companyId" initialValue={selectedData.companyId}>
                 <Input disabled />
               </Form.Item>
+              <Form.Item style={{ display: 'none' }} name="createdUser" initialValue={createdUser}>
+          <Input hidden />
+          </Form.Item>
             </Col>
             <Col span={4}>
               <Form.Item label="Division Name" name="divisionName">

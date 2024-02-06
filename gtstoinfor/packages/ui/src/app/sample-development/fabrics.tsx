@@ -76,7 +76,6 @@ const FabricsForm = (props:FabricsFormProps) => {
     
   };
 
-
   
 
   const m3FabricFilters = (key) =>{
@@ -95,9 +94,42 @@ const FabricsForm = (props:FabricsFormProps) => {
       fabricCode(props.buyerId)
     }
   },[props.buyerId])
-
   useEffect(() =>{
     console.log(props.sizeDetails)
+    if(props.sizeDetails != undefined){
+      const updatedData = data.map((record) => {
+        console.log(record);
+        const getColorQuantitySum = (colorId) => {
+          console.log(colorId)
+          const colorRecords = props.sizeDetails.filter((record) => record.colorId === colorId);
+          console.log(colorRecords)
+        
+          const totalQuantity = colorRecords.reduce((sum, record) => {
+            const sizeInfoQuantitySum = record.sizeInfo.reduce(
+              (sizeSum, sizeInfo) => sizeSum + Number(sizeInfo.quantity),
+              0
+            );
+        
+            return sum + sizeInfoQuantitySum;
+          }, 0);
+        
+          return totalQuantity;
+        }
+        let totalQuantityForColor = 0
+         totalQuantityForColor += getColorQuantitySum(record.colourId)
+        console.log(totalQuantityForColor,'totalQuantityForColor')
+        props.form.setFieldValue(`totalRequirement${record.key}`,totalQuantityForColor)
+        let consumptionCal = Number(totalQuantityForColor) * Number(record.consumption);
+          let withPer = (Number(consumptionCal) * Number(record.wastage))/ 100;
+          console.log(consumptionCal);
+          console.log(withPer);
+         props.form.setFieldValue(`totalRequirement${record.key}`,(Number(consumptionCal) + Number(withPer)).toFixed(2));
+          return { ...record, [`totalCount`]:Number(totalQuantityForColor), [`totalRequirement`]:Number(Number(consumptionCal) + Number(withPer)).toFixed(2) };
+      })
+      setData(updatedData);
+      setOnchangeData(updatedData)
+      props.data(updatedData);
+    }
   },[props.sizeDetails])
   useEffect(() =>{
       getUom()

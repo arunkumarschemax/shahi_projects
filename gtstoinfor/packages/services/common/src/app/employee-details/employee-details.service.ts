@@ -41,10 +41,9 @@ export class EmployeeDetailsService {
             } else {
                 employeeEntity.createdUser = req.createdUser;
             }
-          
             const save = await this.employeeDetailsRepo.save(employeeEntity)
             if (save) {
-                return new AllEmployeeDetailsResponseModel(true, 0, isUpdate ? 'Employee Updated Sucessfully' : 'Employee creted sucessfuly', [])
+                return new AllEmployeeDetailsResponseModel(true, 0, isUpdate ? 'Employee Updated Successfully' : 'Employee creted successfuly', [])
             }
         } catch (err) {
             throw err
@@ -52,9 +51,12 @@ export class EmployeeDetailsService {
     }
 
     async getAllEmploee():Promise<AllEmployeeDetailsResponseModel>{
-        const employee = await this.employeeDetailsRepo.find({order:{employeeId:'DESC'}})
+        const employee = await this.employeeDetailsRepo.find({
+            order:{employeeId:'DESC'},
+            relations:['Department']
+        })
         if(employee.length >0){
-            return new AllEmployeeDetailsResponseModel(true,1,'Employees Retrived Sucessfully',employee)
+            return new AllEmployeeDetailsResponseModel(true,1,'Employees Retrieved Successfully',employee)
         }else{
             return new AllEmployeeDetailsResponseModel(false,0,'No  Employees Found ')
 
@@ -67,7 +69,7 @@ export class EmployeeDetailsService {
             where:{isActive:true},
             order:{lastName:'ASC',firstName:'ASC'}})
         if(employee.length >0){
-            return new AllEmployeeDetailsResponseModel(true,1,'Employees Retrived Sucessfully',employee)
+            return new AllEmployeeDetailsResponseModel(true,1,'Employees Retrieved Successfully',employee)
         }else{
             return new AllEmployeeDetailsResponseModel(false,0,'No  Employees Found ')
 

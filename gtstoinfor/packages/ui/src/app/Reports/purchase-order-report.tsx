@@ -10,6 +10,7 @@ import { FilterConfirmProps,ColumnType } from 'antd/es/table/interface';
 import moment from 'moment';
 import { Content } from 'antd/es/layout/layout';
 import RolePermission from '../role-permissions';
+import AlertMessages from '../common/common-functions/alert-messages';
 
 
 const PurchaseOrderReport = () => {
@@ -73,10 +74,13 @@ const PurchaseOrderReport = () => {
           }
         service.getPodetails(req).then(res => {
           
-            if(res){
+            if(res.status){
                 setData(res.data);
         
             }
+            else{
+                    AlertMessages.getErrorMessage(res.internalMessage);
+}
         })
       };
 
@@ -349,8 +353,42 @@ sortDirections: ["descend", "ascend"],
 {
 title:"Po Item Status",
 dataIndex:"po_item_status",
-width:130
-
+width:130,
+onFilter: (value, record) => {
+  // Check if the record's item_type includes the selected material type
+  return record.po_item_status.includes(value);
+},
+filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+  <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+    <Checkbox
+      checked={selectedKeys.includes('OPEN')}
+      onChange={() => setSelectedKeys(selectedKeys.includes('OPEN') ? [] : ['OPEN'])}
+    >
+      <span style={{ color: 'green' }}>OPEN</span>
+    </Checkbox><br/>
+    <Checkbox
+      checked={selectedKeys.includes('PARTAILLY_RECEIVED')}
+      onChange={() => setSelectedKeys(selectedKeys.includes('PARTAILLY_RECEIVED') ? [] : ['PARTAILLY_RECEIVED'])}
+    >
+      <span style={{ color: 'red' }}>PARTAILLY RECEIVED</span>
+    </Checkbox><br/>
+    <Checkbox
+      checked={selectedKeys.includes('RECEIVED')}
+      onChange={() => setSelectedKeys(selectedKeys.includes('RECEIVED') ? [] : ['RECEIVED'])}
+    >
+      <span style={{ color: 'green' }}>RECEIVED</span>
+    </Checkbox>
+    <div className="custom-filter-dropdown-btns">
+      <Button onClick={() => clearFilters()} className="custom-reset-button">
+        Reset
+      </Button>
+      <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+        OK
+      </Button>
+    </div>
+  </div>
+),
+filterMultiple: false,
 },
 
 {
@@ -410,11 +448,207 @@ width:170
 
 
 },
+{
+  title: 'Aging',
+  dataIndex: 'expected_delivery_date',
+  width: '50px',
+  fixed: 'right',
+  align: 'right',
+  render: (text, record) => {
+    const daysDifference = moment(record.expected_delivery_date).diff(moment(), 'days');
+    
+    const age = {
+      children: daysDifference,
+      props: {
+        style: {
+          background: daysDifference > 0 ? '#3BC744' : '#FF0000',
+          color: 'black',
+        },
+      },
+    };
+    
+    return age;
+  },
+},
   {
     title:"Status",
     dataIndex:"status",
-    fixed:'right'
+    fixed:'right',
+    onFilter: (value, record) => {
+      // Check if the record's item_type includes the selected material type
+      return record.status.includes(value);
+    },
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+        <Checkbox
+          checked={selectedKeys.includes('OPEN')}
+          onChange={() => setSelectedKeys(selectedKeys.includes('OPEN') ? [] : ['OPEN'])}
+        >
+          <span style={{ color: 'green' }}>OPEN</span>
+        </Checkbox><br/>
+        <Checkbox
+          checked={selectedKeys.includes('IN_PROGRESS')}
+          onChange={() => setSelectedKeys(selectedKeys.includes('IN_PROGRESS') ? [] : ['IN_PROGRESS'])}
+        >
+          <span style={{ color: 'red' }}>IN PROGRESS</span>
+        </Checkbox><br/>
+        <Checkbox
+          checked={selectedKeys.includes('CANCELLED')}
+          onChange={() => setSelectedKeys(selectedKeys.includes('CANCELLED') ? [] : ['CANCELLED'])}
+        >
+          <span style={{ color: 'green' }}>CANCELLED</span>
+          </Checkbox><br/>
+        <Checkbox
+          checked={selectedKeys.includes('CLOSED')}
+          onChange={() => setSelectedKeys(selectedKeys.includes('CLOSED') ? [] : ['CLOSED'])}
+        >
+          <span style={{ color: 'red' }}>CLOSED</span>
+        </Checkbox>        <div className="custom-filter-dropdown-btns">
+          <Button onClick={() => clearFilters()} className="custom-reset-button">
+            Reset
+          </Button>
+          <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+            OK
+          </Button>
+        </div>
+      </div>
+    ),
+    filterMultiple: false,
+},
     
+]
+const excelColumns:any=[
+  {
+    title: 'S No',
+    key: 'sno',
+    
+    render: (text, object, index) => (page - 1) * 10 + (index + 1),
+    onCell: (record: any) => ({
+      rowSpan: record.rowSpan,
+    }),
+  },
+    {
+        title:"Po No",
+        dataIndex:"po_number",
+          },
+    {
+      title: "Material Type",
+      dataIndex: "item_type",
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text ? text : '-';
+      },
+    },
+    
+    
+  {
+    title: "Po Against",
+    dataIndex: "po_against",
+    width: 130,
+    render: (po_against, rowData) => (
+    
+        po_against ? po_against : '-'
+    )
+  },
+  
+    {
+        title:"Item Code",
+        dataIndex:"item_code",
+         },
+    
+          {
+      title:"VendorName",
+       dataIndex:"vendor_name",
+      },
+    {
+      title:"Currency",
+    
+      dataIndex: "currency_name-total_amount",
+      render: (_, record) => {
+        return (
+            `${record.currency_name}-${record.total_amount}`
+        );
+      },
+      },
+  {
+    title:"Expected DeliveryDate",
+    dataIndex:"expected_delivery_date",
+
+
+    render: (_, record) => {
+      return record.expected_delivery_date
+        ? moment(record.expected_delivery_date).format("YYYY-MM-DD")
+        : "-";
+    },
+},
+{
+  title:"Purchase OrderDate",
+  dataIndex:"purchase_order_date",
+ 
+  render: (_, record) => {
+    return record.purchase_order_date
+      ? moment(record.purchase_order_date).format("YYYY-MM-DD")
+      : "-";
+  },
+  
+},
+{
+title:"Total Amount",
+dataIndex:"total_amount",
+
+},
+{
+title:"Po Item Status",
+dataIndex:"po_item_status",
+
+},
+
+{
+title:"Factory",
+dataIndex:"factory",
+
+
+},
+{
+title:"Tax Name",
+dataIndex:"tax_name",
+
+},
+{
+title:"Po Quantity",
+dataIndex:"uom-po_quantity",
+// ...getColumnSearchProps("uom")
+render: (_, record) => {
+  return (
+    
+      `${record.uom}-${record.po_quantity}`
+
+  );
+},
+
+},
+{
+title:"Grn Quantity",
+dataIndex:"uom-grn_quantity",
+render: (_, record) => {
+  return (
+     `${record.uom}-${record.grn_quantity}`
+  );
+},
+width:120
+
+
+},
+{
+title:"Request No",
+dataIndex:"request_no",
+
+
+},
+  {
+    title:"Status",
+    dataIndex:"status",
+  
 },
     
 ]
@@ -436,7 +670,7 @@ excel
 const excel = new Excel();
 excel
   .addSheet('Purchase-order-report')
-  .addColumns(Columns)
+  .addColumns(excelColumns)
   .addDataSource(data, { str2num: true })
   .saveAs(`Purchase-order-report-${currentDate}.xlsx`);
 }

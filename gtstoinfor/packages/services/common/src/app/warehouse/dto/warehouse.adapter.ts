@@ -11,12 +11,15 @@ export class WareHouseAdapter {
    * @returns 
    */
   public convertDtoToEntity(  Dto: WarehouseDTO,  isUpdate: boolean = false ): Warehouse {
+    console.log(Dto,'dto');
+    
     const warehouse = new Warehouse();
     warehouse.warehouseId=Dto.warehouseId;
     warehouse.warehouseName=Dto.warehouseName;
     warehouse.warehouseCode=Dto.warehouseCode;
     // company.isActive = statesDto.isActive == undefined ? true : statesDto.isActive;
     warehouse.isActive=Dto.isActive==undefined?true:Dto.isActive;
+    warehouse.category = Dto.category
     if (isUpdate) {
         warehouse.updatedUser = Dto.updatedUser;
     } else {
@@ -36,6 +39,7 @@ export class WareHouseAdapter {
     warehouseDto.createdUser = Wobject.createdUser;
     warehouseDto.updatedUser = Wobject.updatedUser;
     warehouseDto.versionFlag = Wobject.versionFlag;
+    warehouseDto.category = Wobject.category;
     return warehouseDto;
   }
 }

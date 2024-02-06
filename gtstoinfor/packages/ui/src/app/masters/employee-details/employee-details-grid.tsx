@@ -110,6 +110,11 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
         width:'60px',
         sorter: (a, b) => a.employeeCode.localeCompare(b.employeeCode),
       ...getColumnSearchProps("employeeCode"),
+      render: (text, record) => (
+        <span>
+            {record.employeeCode ? record.employeeCode : '-'}
+        </span>
+        ),
       },
     {
       title: "Name",
@@ -126,20 +131,30 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
         title: "Mobile Number",
         dataIndex: "mobileNumber",
       width:'60px',
-        sorter: (a, b) => a.mobileNumber.localeCompare(b.mobileNumber),
+        sorter: (a, b) => a.mobileNumber?.localeCompare(b.mobileNumber),
       ...getColumnSearchProps("mobileNumber"),
+      render: (text, record) => (
+        <span>
+            {record.mobileNumber ? record.mobileNumber : '-'}
+        </span>
+        ),
       },
       {
         title: "Alternate Number",
         dataIndex: "alterNativeMobileNumber",
        width:'60px',
-        sorter: (a, b) => a.alterNativeMobileNumber.length-(b.alterNativeMobileNumber.length),
+        sorter: (a, b) => a.alterNativeMobileNumber?.length-(b.alterNativeMobileNumber.length),
       ...getColumnSearchProps("alterNativeMobileNumber"),
+      render: (text, record) => (
+        <span>
+            {record.alterNativeMobileNumber ? record.alterNativeMobileNumber : '-'}
+        </span>
+        ),
       },
     {
         title: "Date of Birth",
         dataIndex: "dateOfBirth",
-        sorter: (a, b) => a.dateOfBirth.localeCompare(b.dateOfBirth),
+        sorter: (a, b) => a.dateOfBirth?.localeCompare(b.dateOfBirth),
         render: (text, record) => {
             return (<span>{record.dateOfBirth? moment(record.dateOfBirth).format("YYYY-MM-DD"): "-"}</span>)
           },
@@ -147,20 +162,33 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
       {
         title: "Pin Code",
         dataIndex: "pinCode",
-        sorter: (a, b) => a.pinCode-(b.pinCode),
+        sorter: (a, b) => a.pinCode?.localeCompare(b.pinCode),
       ...getColumnSearchProps("pinCode"),
+      render: (text, record) => (
+        <span>
+            {record.pinCode ? record.pinCode : '-'}
+        </span>
+        ),
       },
       {
         title: "Address",
         dataIndex: "address",
-        sorter: (a, b) => a.address.localeCompare(b.address),
-    
+        sorter: (a, b) => a.address?.localeCompare(b.address),
+        render: (text, record) => (
+          <span>
+              {record.address ? record.address : '-'}
+          </span>
+          ),
       },
       {
         title: "Departments",
-        dataIndex: "deptName",
-        sorter: (a, b) => a.deptName.localeCompare(b.deptName),
-    
+        dataIndex: ["Department", "deptName"],
+        sorter: (a, b) => a.Department?.deptName?.localeCompare(b.Department?.deptName),
+        render: (text, record) => (
+          <span>
+              {record.Department?.deptName ? record.Department?.deptName : '-'}
+          </span>
+          ),
       },
     
     {

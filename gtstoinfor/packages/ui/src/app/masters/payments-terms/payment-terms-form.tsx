@@ -130,7 +130,7 @@ export function PaymentTermsForm(props:PaymentTermsFormProps) {
             }
           ]}
         >
-          <Input  />
+          <Input  placeholder='Enter Payment Term'/>
         </Form.Item>
         </Col>
         </Row>

@@ -674,10 +674,10 @@ export class PurchaseOrderService {
         LEFT JOIN m3_items mi ON mi.m3_items_Id = poi.m3_item_id  AND  p.po_material_type ='FABRIC' where 1 =1`
         
         if (req.PoFromDate) {
-            PoType += ` AND p.purchase_order_date between '${req.PoFromDate}'  and '${req.PoToDate}'`;
+            PoType += ` AND DATE(p.purchase_order_date) between '${req.PoFromDate}'  and '${req.PoToDate}'`;
         }
           if (req.ETDfromDate) {
-            PoType += ` AND p.expected_delivery_date between '${req.ETDfromDate}' and '${req.ETDtoDate}'`;
+            PoType += ` AND DATE(p.expected_delivery_date) between '${req.ETDfromDate}' and '${req.ETDtoDate}'`;
         }
         if(req.poId){
             PoType += ` AND p.purchase_order_id ='${req.poId}'`

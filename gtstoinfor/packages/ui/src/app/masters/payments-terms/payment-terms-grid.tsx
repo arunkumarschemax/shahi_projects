@@ -194,6 +194,12 @@ export function PaymentTermsGrid(
           </div>
         </div>
       ),
+      render: (text, record) => (
+        <span>
+            {record.paymentTermsCategory ? record.paymentTermsCategory : '-'}
+        </span>
+        ),
+
     },
     
     {
@@ -202,7 +208,12 @@ export function PaymentTermsGrid(
       //  responsive: ['lg'],
        sorter: (a, b) => a.paymentTermsName.length - b.paymentTermsName.length,
        sortDirections: ['descend', 'ascend'],
-        ...getColumnSearchProps('paymentTermsName')
+        ...getColumnSearchProps('paymentTermsName'),
+        render: (text, record) => (
+          <span>
+              {record.paymentTermsName ? record.paymentTermsName : '-'}
+          </span>
+          ),
     },
        {
       title: 'Status',

@@ -1,6 +1,7 @@
 import {Column,Entity,Index,JoinColumn,JoinTable,ManyToMany,ManyToOne,OneToMany,OneToOne,PrimaryColumn,PrimaryGeneratedColumn,RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn} from "typeorm";
 import { Settings } from "../settings/settings.entity";
 import { StyleOrder } from "../style-order/style-order.entity";
+import { categoryEnum } from "@project-management-system/shared-models";
 
 
 @Entity('warehouse')
@@ -24,6 +25,14 @@ export class Warehouse {
     })
 // @Index({ unique: true })
 warehouseCode:string;
+
+
+@Column('enum',{
+  name:'category',
+  nullable:false,
+  enum:categoryEnum
+})
+  category:categoryEnum
 
   @Column("boolean",{
     nullable:false,
