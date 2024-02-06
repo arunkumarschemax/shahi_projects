@@ -147,8 +147,8 @@ export const StockView = () => {
   const getData = async (m3StyleDto: M3ItemsDTO) => {
     m3StyleDto.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
     stockService.getAllStocks(m3StyleDto).then(res => {
-      // console.log(res, "???????????????????????????????????");
-      if (res.status) {
+      console.log(res, "???????????????????????????????????");
+      if (res) {
         setData(res);
         AlertMessages.getSuccessMessage("Stock retrived successfully")
       } else {
@@ -752,7 +752,7 @@ export const StockView = () => {
         
       <Table
         className="custom-table-wrapper"
-        dataSource={data.length > 0 ? data : []}
+        dataSource={data}
         columns={columns}
         size="small"
         pagination={{

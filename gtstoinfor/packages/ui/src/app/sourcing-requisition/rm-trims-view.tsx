@@ -562,7 +562,7 @@ export const RmTrimsView = () => {
       }
       else{
         setData([]);
-        AlertMessages.getWarningMessage(res.internalMessage);
+        AlertMessages.getErrorMessage(res.internalMessage);
       }
     })
     .catch((err) => {

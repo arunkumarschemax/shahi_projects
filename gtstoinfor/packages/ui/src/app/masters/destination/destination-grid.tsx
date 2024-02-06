@@ -118,9 +118,23 @@ export const DestinationGrid = (props: DestinationGridProps) => {
     {
       title: "Destination Name",
       dataIndex: "destination",
-      sorter: (a, b) => a.source.localeCompare(b.source),
+      sorter: (a, b) => a.destination.localeCompare(b.destination),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("destination"),
+    },
+    {
+      title: "Destination Code",
+      dataIndex: "destinationCode",
+      sorter: (a, b) => a.destinationCode.localeCompare(b.destinationCode),
+      sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps("destinationCode"),
+    },
+    {
+      title: "Operation Group",
+      dataIndex: "operationGroup",
+      sorter: (a, b) => a.operationGroup.localeCompare(b.operationGroup),
+      sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps("operationGroup"),
     },
     {
       title: 'Status',

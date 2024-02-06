@@ -153,6 +153,8 @@ export class M3ItemsService {
       if(req.widthValue != undefined){
         query=query+' and m3i.width="'+req.widthValue+'"'
       }
+
+        query=query+' group by m3i.m3_items_Id'
       
       const data = await this.datasource.query(query);
       // console.log(data)

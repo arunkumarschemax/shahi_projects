@@ -224,7 +224,7 @@ const service = new StyleService()
                             optionFilterProp="children"
                             placeholder="Select Location"
                           >
-                            <Option key={300} value={300}>{'300'}</Option>
+                            <Option key={340} value={340}>{'340'}</Option>
                           </Select>
                         </Form.Item>
                 </Col>
