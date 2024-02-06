@@ -14,6 +14,10 @@ export class DestinationAdapter {
     const destination = new Destination();
     destination.destinationId = destinationDto.destinationId;
     destination.destination = destinationDto.destination;
+    destination.description = destinationDto.description;
+    destination.operationGroup = destinationDto.operationGroup;
+    destination.divisionId = destinationDto.divisionId
+    destination.destinationCode = destinationDto.destinationCode
     // company.isActive = statesDto.isActive == undefined ? true : statesDto.isActive;
     destination.isActive = destinationDto.isActive == undefined ? true : destinationDto.isActive;
     if (isUpdate) {
@@ -34,6 +38,10 @@ export class DestinationAdapter {
     destinationDto.createdUser = destinationObject.createdUser;
     destinationDto.updatedUser = destinationObject.updatedUser;
     destinationDto.versionFlag = destinationObject.versionFlag;
+    destinationDto.divisionId = destinationObject.divisionId;
+    destinationDto.description = destinationObject.description;
+    destinationDto.operationGroup = destinationObject.operationGroup;
+    destinationDto.destinationCode = destinationObject.destinationCode
     return destinationDto;
   }
 }

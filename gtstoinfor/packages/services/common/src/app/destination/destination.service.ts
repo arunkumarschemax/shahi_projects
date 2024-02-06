@@ -32,6 +32,8 @@ export class DestinationService {
   }
 
   async createDestination(Dto: DestinationDTO, isUpdate: boolean): Promise<DestinationResponseModel> {
+    console.log(Dto,'oooooooooooooooo');
+    
     try {
       let previousValue
       // to check whether State exists with the passed  State code or not. if isUpdate is false, a check will be done whether a record with the passed Statecode is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed State code then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
