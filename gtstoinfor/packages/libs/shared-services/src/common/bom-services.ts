@@ -1,4 +1,4 @@
-import { CommonResponseModel, DestinationreqModel, StyleNumberReq } from "@project-management-system/shared-models";
+import { CommonResponseModel, DestinationreqModel, ItemInfoFilterReq, StyleNumberReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -22,5 +22,17 @@ export class BomService extends CommonAxiosService {
 
     async getBomInfoAgainstStyle(req:StyleNumberReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getBomInfoAgainstStyle",req)
+    }
+
+    async getItemInfo(req:ItemInfoFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getItemInfo",req)
+    }
+
+    async getItemDropdownByCreatedAt(req:ItemInfoFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getItemDropdownByCreatedAt",req)
+    }
+
+    async getRegionDropdownByCreatedAt(req:ItemInfoFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getRegionDropdownByCreatedAt",req)
     }
 }
