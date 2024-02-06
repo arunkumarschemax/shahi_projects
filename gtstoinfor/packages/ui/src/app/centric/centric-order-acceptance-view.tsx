@@ -101,6 +101,7 @@ export function CentricOrderAcceptanceGrid() {
     req.deliveryDate = record.deliveryDate;
     req.style = record.style;
     req.material=record.material
+    //req.shipToAddress=record.shipToAddress
 
     service.coLineCreationReq(req).then((res) => {
       if (res.status) {
@@ -118,7 +119,7 @@ export function CentricOrderAcceptanceGrid() {
     const dataTobeReturned = [];
     const roleWiseMapData = new Map<string, CentricOrderAcceptanceRequest[]>();
     tableData.forEach(rec => {
-      const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}_${rec.style}`;
+      const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}_${rec.style}_${rec.shipToAddress}`;
       if (!roleWiseMapData.has(key)) {
         roleWiseMapData.set(key, [rec]);
       } else {
@@ -670,7 +671,7 @@ export function CentricOrderAcceptanceGrid() {
         ),
       },
       {
-        title: "Address",
+        title: "Ship To Address",
         dataIndex: "shipToAddress",
         width: 150,
         sorter: (a, b) => a.shipToAddress.localeCompare(b.shipToAddress),

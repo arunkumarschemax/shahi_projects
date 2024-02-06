@@ -7,4 +7,5 @@ export class CentricOrderAcceptanceRequest {
     deliveryDate:string;
     style:string;
     material:string;
+    shipToAddress:string;
 }
