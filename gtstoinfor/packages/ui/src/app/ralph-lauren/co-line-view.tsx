@@ -257,6 +257,7 @@ const ColineView = () => {
                                 value={editedValue}
                                 onChange={(e) => setEditedValue(e.target.value)}
                                 style={{ width: '60px', border: '1px solid rgb(217, 217, 217)', borderRadius: '5px', textAlign: "center" }}
+                                placeholder="Item No"
                             />
                         ) : (
                             <Input
