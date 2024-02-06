@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, Raw, getConnection } from 'typeorm';
+import { Repository, Raw, getConnection, DataSource } from 'typeorm';
 import { DestinationDTO } from '../destination/dto/destination.dto';
 import { Destination } from '../destination/destination.entity';
 import { DestinationAdapter } from '../destination/dto/destination.adapter';
-import { AllDestinationResponseModel, DestinationResponseModel } from '@project-management-system/shared-models';
+import { AllDestinationResponseModel, CommonResponseModel, DestinationResponseModel } from '@project-management-system/shared-models';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DestinationRequest } from './dto/destination.request';
 import { UserRequestDto } from './dto/user-log-dto';
@@ -17,6 +17,8 @@ export class DestinationService {
     @InjectRepository(Destination)
     private Repository: Repository<Destination>,
     private Adapter: DestinationAdapter,
+    private dataSource: DataSource,
+
   ) { }
 
   async getDestinationDetailsWithoutRelations(Name: string): Promise<Destination> {
@@ -102,6 +104,24 @@ export class DestinationService {
       return err;
     }
   }
+//   async getAllDestination(req?: UserRequestDto): Promise<CommonResponseModel> {
+//     try{
+// let data= `SELECT d.destination_id,d.destination,d.division_id,d.destination_Code,d.option_Group,d.created_at,d.created_user
+// ,d.is_active,d.updated_at,d.updated_user,d.version_flag FROM destination d
+// LEFT JOIN division di ON di.division_id = d.division_id`
+// const Res = await this.dataSource.query(data)
+       
+// if(Res.length > 0){
+//     // PoDetails.fabricInfo = podatares
+//     // PoDetails.trimInfo = poTrimdatares
+//     return new CommonResponseModel(true,1,'data retreived',Res)
+// }else{
+//     return new CommonResponseModel(false,0,'No data')
+// }
+//     } catch(err){
+//     return
+//   } 
+//   }
   async getAllActiveDestination(): Promise<AllDestinationResponseModel> {
     // const page: number = 1;
     try {
@@ -129,10 +149,10 @@ export class DestinationService {
     }
   }
   async activateOrDeactivateDestination(Req: any): Promise<DestinationResponseModel> {
-    try {
+        try {
       const Exists = await this.getDestinationById(Req.destinationId);
-      if (Exists) {
-        if (Req.versionFlag !== Exists.versionFlag) {
+            if (Exists) {
+                if (Req.versionFlag !== Exists.versionFlag) {
           throw new DestinationResponseModel(false, 10113, 'Someone updated the current destination information.Refresh and try again');
         } else {
 
