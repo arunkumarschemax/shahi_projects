@@ -5,7 +5,6 @@ export class ColourService extends CommonAxiosService{
     URL ="/colurs";
 
     async createColour(colour: ColourDto): Promise<ColourResponseModel> {
-        console.log('testss',colour)
         return this.axiosPostCall(this.URL + "/createColour", colour)
     }
   

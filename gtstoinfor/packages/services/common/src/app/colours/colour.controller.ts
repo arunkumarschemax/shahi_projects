@@ -18,7 +18,7 @@ export class ColourController{
         ) {}
 
         @Post('/createColour')
-        async createColour(@Body() colourDto:ColourDTO,isUpdate:boolean=false): Promise<ColourResponseModel> {
+        async createColour(@Body() colourDto:any,isUpdate:boolean=false): Promise<ColourResponseModel> {
         try {
             return await this.colourService.createColour(colourDto, false);
         } catch (error) {
