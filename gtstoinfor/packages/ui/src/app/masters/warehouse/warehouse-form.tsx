@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // import './currencies-form.css';
-import {  WarehouseDto } from '@project-management-system/shared-models';
+import {  WarehouseDto, categoryEnum, categoryEnumDisplay } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { WarehouseService } from '@project-management-system/shared-services';
 
@@ -39,6 +39,8 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
 
   const service = new WarehouseService();
   let history = useLocation();
+  const navigate = useNavigate();
+  const { Option } = Select
 
   let createdUser="";
   if(!props.isUpdate){
@@ -50,11 +52,15 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
     setDisable(true)
     Data.warehouseId = 0;
     service.createWarehouse(Data).then((res) => {
+      console.log(Data,'uuuuuu');
+      
       setDisable(false)
         if (res.status) {
           AlertMessages.getSuccessMessage('Warehouse Created Successfully');
         //   location.push("/Currencies-view");
           onReset();
+          navigate('/global/warehouse/warehouse-grid')
+
         } else {
             AlertMessages.getErrorMessage(res.internalMessage);
         }
@@ -69,6 +75,8 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
    * @param values //Dto values
    */
   const saveData = (values: WarehouseDto) => {
+    console.log(values,'ooooooooooo');
+    
     setDisable(false)
     // console.log(values);
 
@@ -120,7 +128,8 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
           rules={[
             {
               required: true,
-              message:'Warehouse Name Is Required'
+              message:'Warehouse Name should contain letters and numbers only',
+              // pattern: /^*$/,
             }
           ]}
         >
@@ -133,13 +142,38 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
           rules={[
             {
               required: true,
-              message:'Warehouse Code Is Required'
+              message:'Warehouse Code should contain letters and numbers only',
+              // pattern: /^[a-zA-Z0-9!@#$%^&*()-_+=<>?/\\.,;:'"[\]{}|]+$/, 
+
             }
           ]}
         >
           <Input />
         </Form.Item>
         </Col>
+        <Col span={6}>
+            <Form.Item label="Category	" name="category"  rules={[
+            {
+              required: true,
+              message:'category is required'
+            }
+          ]}>
+            <Select showSearch allowClear optionFilterProp="children" placeholder='Select category'>   
+            {categoryEnumDisplay.map(e => {
+            return (
+                <Option key={e.name} value={e.displayVal} > {e.displayVal}</Option>
+            )
+        })}</Select>
+            {/* <Select
+                mode="multiple"
+                tagRender={tagRender}
+                defaultValue={['OPEN', 'IN PROGRESS']}
+                style={{ width: '100%' }}
+                options={options}
+                
+              /> */} 
+             </Form.Item>
+          </Col>
         </Row>
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>

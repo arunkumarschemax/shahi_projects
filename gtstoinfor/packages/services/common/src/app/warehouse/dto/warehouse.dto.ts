@@ -1,6 +1,7 @@
 import {IsInt, IsEmail, IsString, IsDateString, IsNumber, IsDate,IsAlphanumeric, MaxLength, Matches, IsOptional, IsNotEmpty, ValidateNested } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { OneToMany } from 'typeorm';
+import { categoryEnum } from '@project-management-system/shared-models';
 export class WarehouseDTO {
   @ApiProperty()
   @IsNotEmpty({message:"warehouseId should not be empty"})
@@ -39,6 +40,8 @@ export class WarehouseDTO {
   @ApiProperty()
   versionFlag : number;
 
+  @ApiProperty()
+  category: categoryEnum;
   // @OneToMany(type=>EndCustomers, endCustomers=>endCustomers.currencyInfo,{cascade: true})
   // endCustomerInfo:EndCustomers[];
 }

@@ -27,10 +27,13 @@ export class CompanyService {
   ) { }
 
 
-  async getCompanyDetailsWithoutRelations(companyName: string): Promise<Company> {
+  async getCompanyDetailsWithoutRelations(companyName: string): 
+  Promise<Company> {
+    console.log(companyName,'ooooooooo');
+    
     // tslint:disable-next-line: typedef
     const companyResponse = await this.companyRepository.findOne({
-      where: { companyId: Raw(alias => `company_name = '${companyName}'`) },
+      where: { companyName: Raw(alias => `company_name = '${companyName}'`) },
     });
     if (companyResponse) {
       return companyResponse;
@@ -42,6 +45,7 @@ export class CompanyService {
       async createCompany(companyDto: CompanyDTO, isUpdate: boolean): Promise<CompanyResponseModel> {
         try {
           let previousValue
+          console.log(isUpdate,'pppppppppp');
           if (!isUpdate) {
             const companyEntity = await this.getCompanyDetailsWithoutRelations(companyDto.companyName);
             // console.log(companyEntity,'-------------------------------------------')
@@ -53,7 +57,11 @@ export class CompanyService {
             const certificatePrevious = await this.companyRepository.findOne({where:{companyId:companyDto.companyId}})
             previousValue = certificatePrevious.companyName
             const companyEntity = await this.getCompanyDetailsWithoutRelations(companyDto.companyName);
+            console.log(companyEntity,'outtttttttt');
+
             if (companyEntity) {
+                          console.log(companyEntity,'innnnnnn');
+
               if(companyEntity.companyId!=companyDto.companyId) {
                 throw new CompanyResponseModel(false,11104, 'Company already exists');      
               }

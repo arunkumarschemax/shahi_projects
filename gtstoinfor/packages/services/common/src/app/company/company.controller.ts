@@ -25,9 +25,9 @@ export class CompanyController {
       }
     }
     @Post('/updateCompany')
-  async updateCompany(@Body() companyDto: CompanyDTO,@Req() request:Request): Promise<CompanyResponseModel> {
+    @ApiBody({type:CompanyDTO})
+  async updateCompany(@Body() companyDto: any,@Req() request:Request): Promise<CompanyResponseModel> {
     try {
-      console.log('update Company');
       console.log(request);
       return await this.companyService.createCompany(companyDto, true);
     } catch (error) {

@@ -125,9 +125,16 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
     }, {
         title: "Warehouse Code",
         dataIndex: "warehouseCode",
-        sorter: (a, b) => a.source.localeCompare(b.source),
+        sorter: (a, b) => a.warehouseCode.localeCompare(b.warehouseCode),
         sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps("warehouseCode"),
+      },
+      {
+        title: "Category",
+        dataIndex: "category",
+        sorter: (a, b) => a.category.localeCompare(b.category),
+        sortDirections: ["ascend", "descend"],
+        ...getColumnSearchProps("category"),
       },
     {
       title: 'Status',
@@ -171,7 +178,8 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
           />
 
           <Divider type="vertical" />
-          <Popconfirm onConfirm={e => { deleteVariant(rowData); }}
+          <Popconfirm onConfirm={e => 
+          { console.log(rowData); deleteVariant(rowData); }}
             title={
               rowData.isActive
                 ? 'Are you sure to Deactivate this Warehouse ?'
@@ -269,11 +277,10 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
   const updateWarehouse = (Data: WarehouseDto) => {
     Data.updatedUser = JSON.parse(localStorage.getItem('username'))
     service.updateWareHouse(Data).then(res => {
-      console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Updated Successfully');
-        // getAllCurrencys();
+        AlertMessages.getSuccessMessage(res.internalMessage);
         setDrawerVisible(false);
+        getAllwarehouse()
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -290,16 +297,15 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
    * @param ViewData 
    */
   const deleteVariant = (ViewData: WarehouseDto) => {
+    console.log(ViewData.isActive,'jjjjj');
+    
     ViewData.isActive = ViewData.isActive ? false : true;
     service.ActivatedeActivateWarehouse(ViewData).then(res => {
-      console.log(res);
+      console.log(ViewData);
       if (res.status) {
-        // getAllCurrencys();
-        AlertMessages.getSuccessMessage('Success');
+        AlertMessages.getSuccessMessage(res.internalMessage);
       } else {
-        // if (res.intlCode) {
-        //   AlertMessages.getErrorMessage(res.internalMessage);
-        // } else {
+        
         AlertMessages.getErrorMessage(res.internalMessage);
         // }
       }

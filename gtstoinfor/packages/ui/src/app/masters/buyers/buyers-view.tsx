@@ -1,7 +1,7 @@
 import { ProColumns, ProTable } from '@ant-design/pro-components'
 import { BuyerIdReq, BuyerRequest, BuyersDto, FactoryActivateDeactivateDto, FactoryDto, OperationGroupsDto } from '@project-management-system/shared-models'
 import { BuyersService, FactoryService } from '@project-management-system/shared-services'
-import { Alert, Button, Card, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Radio, Row, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
+import { Alert, Button, Card, Checkbox, Col, Divider, Drawer, Form, Input, Modal, Popconfirm, Radio, Row, Space, Switch, Table, Tag, Tooltip, message } from 'antd'
 import { forEachObject } from 'for-each'
 import { useNavigate } from 'react-router-dom'
 import TableActions from '../../common/table-actions/table-actions'
@@ -248,23 +248,36 @@ export const  BuyersView = () => {
             
           </>
       ),
-        filters: [
-          {
-            text: 'Active',
-            value: true,
-          },
-          {
-            text: 'InActive',
-            value: false,
-          },
-        ],
-        filterMultiple: false,
-        onFilter: (value, record) => 
-        {
-          // === is not work
-          return record.isActive === value;
+    
+      filterMultiple: false,
+      onFilter: (value, record) => {
+        // Check if the record's item_type includes the selected material type
+        return record.isActive === value
       },
-        
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+          <Checkbox
+            checked={selectedKeys.includes(1)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(1) ? [] : [1])}
+          >
+            <span style={{ color: 'green' }}>Active</span>
+          </Checkbox><br/>
+          <Checkbox
+            checked={selectedKeys.includes(0)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(0) ? [] : [0])}
+          >
+            <span style={{ color: 'red' }}>IN Active</span>
+          </Checkbox>        
+          <div className="custom-filter-dropdown-btns">
+            <Button onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          </div>
+        </div>
+      ),
       },
       {
         title:`Action`,

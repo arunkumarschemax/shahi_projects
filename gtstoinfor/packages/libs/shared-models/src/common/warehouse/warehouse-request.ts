@@ -1,3 +1,5 @@
+import { categoryEnum } from "../../enum";
+
 export class WarehouseDto{
     warehouseId:number;
     warehouseName:string;
@@ -5,6 +7,7 @@ export class WarehouseDto{
     createdUser:string;
     updatedUser:string;
     isActive:boolean;
+    category:categoryEnum;
 
     /**
      * 
@@ -16,12 +19,13 @@ export class WarehouseDto{
      * @param isActive This is a boolean
      */
     
-    constructor(warehouseId:number,warehouseName:string,warehouseCode:string,createdUser:string,updatedUser:string,isActive:boolean){
+    constructor(warehouseId:number,warehouseName:string,warehouseCode:string,createdUser:string,updatedUser:string,isActive:boolean,category:categoryEnum){
         this.warehouseId = warehouseId;
         this.warehouseName = warehouseName;
         this.warehouseCode = warehouseCode
         this.createdUser = createdUser;
         this.updatedUser = updatedUser;
         this.isActive = isActive;
+        this.category = category;
     }
 }

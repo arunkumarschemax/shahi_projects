@@ -15,10 +15,8 @@ export class WarehouseService extends CommonAxiosService{
     return this.axiosPostCall(this.URL + '/getAllWarehouse',req)
   }
 
-  async ActivatedeActivateWarehouse(
-    warehouseDto: WarehouseDto
-  ): Promise<WarehouseResponseModel> {
-    return this.axiosPostCall(this.URL + '/ActivatedeActivateWarehouse', warehouseDto)
+  async ActivatedeActivateWarehouse(warehouseDto: WarehouseDto): Promise<WarehouseResponseModel> {
+    return this.axiosPostCall(this.URL + '/activateOrDeactivateWarehouse', warehouseDto)
 
   }
   async getAllActiveWarehouse(): Promise<AllWarehouseResponseModel> {

@@ -1,4 +1,4 @@
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { Controller, Post, Body, Logger, Get, UseGuards,Req} from '@nestjs/common';
 import {ApplicationExceptionHandler} from "packages/libs/backend-utils/src/"
 import { WarehouseDTO } from './dto/warehouse.dto';
@@ -16,7 +16,8 @@ export class WarehouseController{
         private readonly applicationExceptionHandler: ApplicationExceptionHandler
     ){}
     @Post('/createWarehouse')
-    async createWarehouse(@Body() Dto:WarehouseDTO,isUpdate:boolean=false): Promise<WarehouseResponseModel> {
+    @ApiBody({type:WarehouseDTO})
+    async createWarehouse(@Body() Dto:any,isUpdate:boolean=false): Promise<WarehouseResponseModel> {
     try {
       console.log('createWarehouse',Dto)
         return await this.warehouseService.createWarehouse(Dto, false);
@@ -25,7 +26,8 @@ export class WarehouseController{
       }
     }
     @Post('/updateWarehouse')
-  async updateWarehouse(@Body() dto: WarehouseDTO,@Req() request:Request): Promise<WarehouseResponseModel> {
+    @ApiBody({type:WarehouseDTO})
+  async updateWarehouse(@Body() dto: any,@Req() request:Request): Promise<WarehouseResponseModel> {
     try {
       console.log(request);
       return await this.warehouseService.createWarehouse(dto, true);
@@ -35,7 +37,7 @@ export class WarehouseController{
   }
   @Post('/getAllWarehouse')
   // @UseGuards(AuthGuard('jwt'))
-  async getAllWarehouse(@Body() req?:UserRequestDto): Promise<AllWarehouseResponseModel> {
+  async getAllWarehouse(@Body() req?:any): Promise<AllWarehouseResponseModel> {
     try {
       return await this.warehouseService.getAllWarehouse(req);
     } catch (error) {
@@ -59,7 +61,7 @@ export class WarehouseController{
       }
   }
   @Post('/getWarehouseById')
-  async getWarehouseById(@Body() req: WarehouseRequest): Promise<WarehouseResponseModel> {
+  async getWarehouseById(@Body() req: any): Promise<WarehouseResponseModel> {
       try {
           return await this.warehouseService.getActiveWarehouseById(req);
       } catch (err) {
