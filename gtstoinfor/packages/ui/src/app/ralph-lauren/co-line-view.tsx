@@ -333,7 +333,7 @@ const ColineView = () => {
             title: 'Actions',
             dataIndex: 'actions',
             render: (text, record) => {
-                if (record.status && record.status.toLowerCase() === 'failed'||record.status && record.status.toLowerCase() === 'Open') {
+                if (record.status && record.status.toLowerCase() === 'failed'||record.status && record.status.toLowerCase() === 'open') {
                     return (
                         <div>
                             {editingRow === record ? (
