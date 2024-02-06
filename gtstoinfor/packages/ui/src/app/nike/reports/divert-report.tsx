@@ -149,7 +149,7 @@ const DivertReport = () => {
     const execlData = items
     let i = 1;
     const data = [
-        { title: 'S No', dataIndex: 'sNo', render: (text, object, index) => { return i++; } },
+        { title: 'S No', dataIndex: 'sNo', render: (text, object, index) => { return index + 1 } },
         { title: 'Request Date', dataIndex: ['newpo', 'orequestDate'], render: (text, record) => { return record.newpo[0].orequestDate; } },
         { title: 'O.From Item', dataIndex: ['oldPo', 'item'], render: (text, record) => { return record.oldPo[0].item ? record.oldPo[0].item : '-'; } },
         { title: 'O.Unit', dataIndex: ['oldPo', 'factory'], render: (text, record) => { return record.oldPo[0].factory ? record.oldPo[0].factory : '-'; } },
@@ -681,77 +681,78 @@ const DivertReport = () => {
                     }
                 },
                 {
-                    title: 'CO-update', width: 70,
-                    children: [
-                        {
-                            title: 'Approve',
-                            dataIndex: '', width: 70,
-                            render: (text, rowData) => (
-                                <span>
-                                    <Form.Item>
-                                        <Checkbox value={'yes'}
-                                        // checked={rowData.selectedLevel === 'L1'}
-                                        //onChange={() => handleCheckboxChange('L1', rowData.qResponseId)}
-                                        ></Checkbox>
-                                    </Form.Item>
-                                </span>
-                            )
-                        },
-                        {
-                            title: 'Edit',
-                            dataIndex: 'id', width: 70,
-                            render: (text, rowData) => (
-                                <span>
-                                    <Form.Item>
-                                        <Checkbox
-                                            onChange={() => handleCheckboxChange(rowData.id)}
-                                            checked={expandedRows[rowData.id] || false}
-                                        ></Checkbox>
-                                    </Form.Item>
-                                </span>
-                            ),
-                        },
-                        {
-                            title: 'Manual Type Item',
-                            dataIndex: 'id', width: 70,
-                            render: (text, rowData) => (
-                                <div>
-                                    {expandedRows[rowData.id] ? (
-                                        <div style={{ display: 'flex', alignItems: 'center' }}>
-                                            <Input
-                                                allowClear
-                                                style={{ marginRight: '10px' }}
-                                                placeholder="Enter text"
-                                                value={textareaValues[rowData.id] || ''}
-                                                onChange={e =>
-                                                    handleTextareaChange(rowData.id, e.target.value)
-                                                }
-                                            />
-                                            <Button
-                                                type="primary"
-                                                onClick={() => handleSubmit(rowData.id)}
-                                            >
-                                                Submit
-                                            </Button>
-                                        </div>
-                                    ) : (
-                                        <Button
-                                            type="link"
-                                            onClick={() =>
-                                                setExpandedRows(prevExpandedRows => ({
-                                                    ...prevExpandedRows,
-                                                    [rowData.id]: true,
-                                                }))
-                                            }
-                                        >
-                                            Manual Edit
-                                        </Button>
-                                    )}
-                                </div>
-                            ),
-                        },
-                    ]
-                }
+                    title: 'Trims Change',
+                    dataIndex: '', width: 70,
+                    render: (text, rowData) => (
+                        <span>
+                            <Form.Item>
+                                <Input
+                                    allowClear
+                                    style={{ marginRight: '10px' }}
+                                    placeholder="Enter text"
+                                    value={textareaValues[rowData.id] || ''}
+                                    onChange={e =>
+                                        handleTextareaChange(rowData.id, e.target.value)
+                                    }
+                                />
+                            </Form.Item>
+                        </span>
+                    )
+                },
+                {
+                    title: 'Surcharge',
+                    dataIndex: 'id', width: 70,
+                    render: (text, rowData) => (
+                        <span>
+                            <Form.Item>
+                                <Input
+                                    allowClear
+                                    style={{ marginRight: '10px' }}
+                                    placeholder="Enter text"
+                                    value={textareaValues[rowData.id] || ''}
+                                    onChange={e =>
+                                        handleTextareaChange(rowData.id, e.target.value)
+                                    }
+                                />
+                            </Form.Item>
+                        </span>
+                    ),
+                },
+                {
+                    title: 'Insert Row',
+                    dataIndex: 'id', width: 70,
+                    render: (text, rowData) => (
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <Button
+                                type="link"
+                                onClick={() =>
+                                    setExpandedRows(prevExpandedRows => ({
+                                        ...prevExpandedRows,
+                                        [rowData.id]: true,
+                                    }))
+                                }
+                            >
+                                Insert Row
+                            </Button>
+                        </div>
+                    ),
+                },
+                {
+                    title: 'Action',
+                    dataIndex: 'id', width: 70,
+                    render: (text, rowData) => (
+                        <span>
+                            <Form.Item>
+                                <Button
+                                    type="primary"
+                                    onClick={() => handleSubmit(rowData.id)}
+                                >
+                                    Submit
+                                </Button>
+                            </Form.Item>
+                        </span>
+                    ),
+                },
             ] as unknown as null,
         }
     ]

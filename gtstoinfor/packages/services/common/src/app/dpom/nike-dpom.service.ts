@@ -612,11 +612,9 @@ export class DpomService {
             if (await this.isAlertPresent(driver)) {
                 const alert = await driver.switchTo().alert();
                 const alertText = await alert.getText();
-                const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText });
-                await alert.accept();
-                await driver.sleep(5000)
-                await driver.navigate().refresh();
-                await driver.quit();
+                const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText, isActive: false });
+                await this.updateCOLineStatus({ poNumber: po.buyer_po, poLineItemNumber: po.line_item_no, status: 'Failed' })
+                return new CommonResponseModel(false, 0, alertText)
             } else {
                 if (po.buyer == 'Uniqlo-U12') {
                     await driver.sleep(10000)
@@ -1678,9 +1676,9 @@ export class DpomService {
                 hanger = 'NO'
             }
             if (isPresent3) {
-                itemVasPDF = instructions?.replace(/"/g, '')
+                itemVasPDF = instructions2?.replace(/"/g, '')
             } else {
-                itemVasPDF = instructions
+                itemVasPDF = instructions2
             }
             let diffOfShipToAdd
             if (rec.ship_to_address_legal_po && rec.ship_to_address_dia) {
@@ -1886,11 +1884,12 @@ export class DpomService {
                 if (report.diverted_to_pos) {
                     for (const PoLine of divertedPos) {
                         const [po, line] = PoLine.split('/');
+                        const poLine2 = po + '-' + line
                         {/* Check if this Po/line combination has already been processed*/ }
                         const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line]);
                         const model = new DivertModel([report], newPoData);
                         const inputText = report.itemText
-                        const regex = new RegExp(`${PoLine} at (\\d{2}/\\d{2}/\\d{4})`, 'g');
+                        const regex = new RegExp(`${PoLine} at (\\d{2}/\\d{2}/\\d{4})|${poLine2}\s+/\d{1,2}\/\d{2}\/\d{4}/`, 'g');
                         let match;
                         let dateAfterPattern
                         while ((match = regex.exec(inputText)) !== null) {

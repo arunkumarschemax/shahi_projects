@@ -1,20 +1,19 @@
 import { DataSource, Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
-import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
 import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
-import { DpomChildEntity } from "../entites/dpom-child.entity";
-import { FobPriceDiffRequest, PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
+import { FobPriceDiffRequest, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { FobEntity } from "../../fob-price-list/fob.entity";
 import { FabricContent } from "../../fabric-content/fabric-content.entity";
 
 @Injectable()
 export class DpomRepository extends Repository<DpomEntity> {
 
-    constructor(@InjectRepository(DpomEntity) private dpomRepository: Repository<DpomEntity>
-    ) {
-        super(dpomRepository.target, dpomRepository.manager, dpomRepository.queryRunner);
+    constructor(private dataSource: DataSource) {
+        super(DpomEntity, dataSource.createEntityManager());
+
     }
 
     async getBuyerPOs(): Promise<any[]> {
@@ -301,7 +300,6 @@ export class DpomRepository extends Repository<DpomEntity> {
             dpm.trading_net_inc_disc, od.old_val as oldVal`)
             .leftJoin(DpomDifferenceEntity, 'od', `od.po_number = dpm.po_number AND od.po_line_item_number = dpm.po_line_item_number AND od.column_name='total_item_qty' AND dpm.total_item_qty = od.new_val`)
             .where(`diverted_to_pos IS NOT NULL AND ocr_status IS NULL `)
-            // .andWhere(` od.column_name='total_item_qty' `)
             .groupBy(`po_and_line  `)
         return await query.getRawMany()
     }
@@ -580,14 +578,19 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     ///-------------------------------------------------------------------------------------------------------------->ppm marketing
     async getMarketingPpmData(req: PpmDateFilterRequest): Promise<any[]> {
+        const latestDiff: any = this.dataSource.createQueryBuilder()
+            .select(`Max(od.created_at) AS created_at,od.po_number,od.po_line_item_number`)
+            .from(DpomDifferenceEntity, "od")
+            .groupBy(`od.po_line_item_number,od.po_number`);
         const query = this.createQueryBuilder('dpom')
             .select(`dpom.po_and_line,dpom.last_modified_date,dpom.item,dpom.factory,dpom.document_date,dpom.po_number,dpom.po_line_item_number,dpom.dpom_item_line_status,dpom.style_number,dpom.product_code, dpom.product_name, dpom.color_desc,dpom.customer_order,dpom.po_final_approval_date,dpom.plan_no,dpom.lead_time,dpom.category_code,dpom.category_desc,dpom.vendor_code,dpom.gcc_focus_code,dpom.gcc_focus_desc,dpom.gender_age_code,dpom.gender_age_desc,dpom.destination_country_code,dpom.destination_country,dpom.plant,dpom.plant_name,dpom.trading_co_po_no,dpom.upc,dpom.direct_ship_so_no,dpom.direct_ship_so_item_no,dpom.customer_po,dpom.ship_to_customer_no,dpom.ship_to_customer_name,dpom.planning_season_code,dpom.planning_season_year , dpom.pcd,dpom.doc_type_code, dpom.doc_type_desc,dpom.mrgac,dpom.ogac,dpom.gac,dpom.truck_out_date,dpom.origin_receipt_date,dpom.factory_delivery_date,dpom.gac_reason_code,dpom.gac_reason_desc,dpom.shipping_type,dpom.planning_priority_code,dpom.planning_priority_desc,dpom.launch_code,dpom.mode_of_transport_code,dpom.inco_terms,dpom.inventory_segment_code,dpom.purchase_group_code,dpom.purchase_group_name,dpom.total_item_qty,dpom.actual_shipped_qty,dpom.vas_size,dpom.item_vas_text, dpom.item_vas_pdf, dpom.item_text, dpom.legal_po_price, dpom.legal_po_currency, dpom.co_price, dpom.co_price_currency, dpom.ship_to_address_legal_po,dpom.ship_to_address_dia,dpom.cab_code,dpom.gross_price_fob,dpom.ne_inc_disc,dpom.trading_net_inc_disc,dpom.actual_unit,dpom.allocated_quantity,dpom.size_description,dpom.size_qty,dpom.trading_co_po_no,dpom.net_inc_disc_currency_code, dpom.crm_co_qty, dpom.trading_net_currency_code, dpom.final_destination,
            dpom.fob_currency_code,dpom.hanger,dpom.legal_po_qty, dpom.geo_code, fob.shahi_confirmed_gross_price, fob.shahi_confirmed_gross_price_currency_code, fc.fabric_content, GROUP_CONCAT(DISTINCT od.display_name SEPARATOR ', ') AS displayName `)
-            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number')
+            .leftJoin(`(${latestDiff.getQuery()})`, `odMax`, `odMax.po_number = dpom.po_number and odMax.po_line_item_number=dpom.po_line_item_number`)
+            .leftJoin(DpomDifferenceEntity, 'od', `od.po_number = dpom.po_number and od.po_line_item_number=dpom.po_line_item_number and od.created_at=odMax.created_at`)
             .leftJoin(FobEntity, 'fob', `fob.color_code = SUBSTRING_INDEX(dpom.product_code, '-', -1) AND fob.style_number = dpom.style_number AND fob.size_description = dpom.size_description AND fob.planning_season_code = dpom.planning_season_code`)
             .leftJoin(FabricContent, 'fc', `fc.style = dpom.style_number`)
             .groupBy(`dpom.id`)
-            .where(`dpom.ocr_status IS NULL`)
+            .where(` dpom.ocr_status IS NULL `)
         // .groupBy(`dpom.po_number AND dpom.po_line_item_number AND dpom.size_description`)
         if (req.lastModifedStartDate !== undefined) {
             query.andWhere(`Date(dpom.last_modified_date) BETWEEN '${req.lastModifedStartDate}' AND '${req.lastModifedEndtDate}'`)
