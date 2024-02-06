@@ -113,6 +113,15 @@ export class RLOrdersController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+    
+    @Post('/getBuyerPoNumber')
+    async getBuyerPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return await this.rlOrdersService.getBuyerPoNumber();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 
     @Post('/getColineItem')
     async getColineItem(): Promise<CommonResponseModel> {

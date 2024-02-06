@@ -737,6 +737,15 @@ export class RLOrdersService {
       return new CommonResponseModel(false, 0, 'No data found');
   }
 
+  async getBuyerPoNumber(): Promise<CommonResponseModel> {
+    const data = await this.pdfrepo.getBuyerPoNumber()
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
+  
+
   async getColineItem(): Promise<CommonResponseModel> {
     const data = await this.coLineRepo.getItem()
     if (data.length > 0)

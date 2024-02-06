@@ -37,6 +37,10 @@ export class RLOrdersService extends CommonAxiosService {
         return this.axiosPostCall(this.rlordersController + "/getBuyerPo")
     }
 
+    async getBuyerPoNumber(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.rlordersController + "/getBuyerPoNumber")
+    }
+
     async getColineItem(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.rlordersController + "/getColineItem")
     }

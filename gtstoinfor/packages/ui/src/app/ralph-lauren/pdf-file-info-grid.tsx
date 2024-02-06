@@ -25,11 +25,22 @@ export function PdFInfoGrid() {
     const [form] = Form.useForm();
     const { Option } = Select;
     const [isModalOpen1, setIsModalOpen1] = useState(false);
+    const [buyer, setBuyer] = useState<any>([]);
+
 
 
     useEffect(() => {
         getPdfFileInfo()
+        BuyerPo()
     }, [])
+
+    const BuyerPo = () => {
+        service.getBuyerPoNumber().then(res => {
+            if (res.status) {
+                setBuyer(res.data)
+            }
+        })
+    }
 
     const getPdfFileInfo = () => {
         const req = new PoOrderFilter();
@@ -336,10 +347,10 @@ export function PdFInfoGrid() {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {pdfData.map((inc: any) => {
+                  {buyer.map((inc: any) => {
                     return (
-                      <Option key={inc.poNumber} value={inc.poNumber}>
-                        {inc.poNumber}
+                      <Option key={inc.po_number} value={inc.po_number}>
+                        {inc.po_number}
                       </Option>
                     );
                   })}
