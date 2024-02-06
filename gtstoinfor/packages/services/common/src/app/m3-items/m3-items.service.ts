@@ -161,6 +161,9 @@ export class M3ItemsService {
       if(data.length > 0){
         return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)
       }
+      else{
+        return new CommonResponseModel(false, 1010, "No data found. ",)
+      }
     }catch (error) {
       return new CommonResponseModel(false, 0, error)
     }

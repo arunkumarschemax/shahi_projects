@@ -180,6 +180,7 @@ const FabricsForm = (props:FabricsFormProps) => {
           setFabricCodeData(res.data)
         }
         else{
+          props.form.setFieldValue(`fabricId${keyValue}`,undefined)
           setFabricCodeData([])
             message.info('No M3 Fabric Data Found')
         }
