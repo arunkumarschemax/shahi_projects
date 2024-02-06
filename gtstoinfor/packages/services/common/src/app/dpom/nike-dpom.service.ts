@@ -753,13 +753,22 @@ export class DpomService {
                 const itemText = orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails.join(',') : null;
                 const search = 'diverted to'
                 const present = itemText?.includes(search)
+                const present2 = itemText?.includes('moved to Line')
                 const matches = [];
+                let match;
                 if (present) {
                     const pattern = /diverted to.*?Purchase Order (\d+ \/ \d+)/g;
-                    let match;
                     if (itemText !== null) {
                         while ((match = pattern.exec(itemText)) !== null) {
                             matches.push(match[1]);
+                        }
+                    }
+                } else if (present2) {
+                    const pattern = /moved to Line (\d+)/g;
+                    if (itemText !== null) {
+                        while ((match = pattern.exec(itemText)) !== null) {
+                            const poAndLine = orderDetail.poHeader.poNumber + ' / ' + match[1]
+                            matches.push(poAndLine);
                         }
                     }
                 }
@@ -1573,10 +1582,27 @@ export class DpomService {
             }
             const sizeDateMap = new Map<string, FactoryReportModel>();
             for (const rec of details) {
+                let itemVasText;
+                let hanger;
+                const instructions = rec.item_vas_text;
+                const searchString = 'SPECIAL VAS PACKING INSTRUCTIONS';
+                const search2 = 'HANGING IS REQUIRED'
+                const isPresent = instructions?.includes(searchString);
+                const isPresent2 = instructions?.includes(search2);
+                if (isPresent) {
+                    itemVasText = instructions?.replace(/"/g, '')
+                } else {
+                    itemVasText = instructions
+                }
+                if (isPresent2) {
+                    hanger = 'YES'
+                } else {
+                    hanger = 'NO'
+                }
                 if (!sizeDateMap.has(rec.po_and_line)) {
                     sizeDateMap.set(
                         rec.po_and_line,
-                        new FactoryReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.legal_po_price, rec.co_price, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.gross_price_fob, rec.ne_inc_disc, rec.trading_net_inc_disc, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.fobCurrCode, rec.netIncDisCurrency, rec.tradingNetCurrencyCode, rec.hanger, rec.quantity, rec.geo_code, [])
+                        new FactoryReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, itemVasText, rec.item_text, rec.legal_po_price, rec.co_price, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.gross_price_fob, rec.ne_inc_disc, rec.trading_net_inc_disc, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.fobCurrCode, rec.netIncDisCurrency, rec.tradingNetCurrencyCode, hanger, rec.quantity, rec.geo_code, [])
                     );
                 }
                 const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
@@ -1884,18 +1910,44 @@ export class DpomService {
                 if (report.diverted_to_pos) {
                     for (const PoLine of divertedPos) {
                         const [po, line] = PoLine.split('/');
-                        const poLine2 = po + '-' + line
+                        const po1 = po.replace(/\s/g, '')
+                        const line1 = line.replace(/\s/g, '')
                         {/* Check if this Po/line combination has already been processed*/ }
-                        const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line]);
+                        const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po1, line1]);
                         const model = new DivertModel([report], newPoData);
                         const inputText = report.itemText
-                        const regex = new RegExp(`${PoLine} at (\\d{2}/\\d{2}/\\d{4})|${poLine2}\s+/\d{1,2}\/\d{2}\/\d{4}/`, 'g');
+                        const regex1 = new RegExp(`${PoLine} at (\\d{2}/\\d{2}/\\d{4})`, 'g');
+                        const regex2 = /Divert to PO# (\d+-\d+).+?(\d{1,2}\/\d{1,2}\/\d{2,4})/g;
+                        const regex3 = /Quantity (\d+) moved to Line (\d+) on (\d{2}\/\d{2}\/\d{4})/;
+
                         let match;
                         let dateAfterPattern
-                        while ((match = regex.exec(inputText)) !== null) {
-                            dateAfterPattern = match[1];
+                        // Check regex1
+                        while ((match = regex1.exec(inputText)) !== null) {
+                            if (match[1]) {
+                                dateAfterPattern = match[1];
+                                break;  // Break out of the loop if a match is found
+                            }
                         }
-                        model.newpo[0].orequestDate = dateAfterPattern ? moment(dateAfterPattern, ['MM/DD/YYYY', 'DD.MM.YYYY']).format('MM/DD/YYYY') : "-"
+                        // Check regex2 if not found by regex1
+                        if (!dateAfterPattern) {
+                            while ((match = regex2.exec(inputText)) !== null) {
+                                if (match[2]) {
+                                    dateAfterPattern = match[2];
+                                    break;  // Break out of the loop if a match is found
+                                }
+                            }
+                        }
+                        // Check regex3 if not found by regex1 or regex2
+                        if (!dateAfterPattern) {
+                            while ((match = regex3.exec(inputText)) !== null) {
+                                if (match[3]) {
+                                    dateAfterPattern = match[3];
+                                    break;  // Break out of the loop if a match is found
+                                }
+                            }
+                        }
+                        model.newpo[0].orequestDate = dateAfterPattern ? moment(dateAfterPattern, ['MM/DD/YYYY', 'DD.MM.YYYY', 'M/DD/YY']).format('MM/DD/YYYY') : "-"
                         divertModelData.push(model);
                         // Mark this Po/line combination as processed
                         processedPoLineSet.add(PoLine);

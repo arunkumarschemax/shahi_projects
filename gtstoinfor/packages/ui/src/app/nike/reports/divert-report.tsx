@@ -135,11 +135,22 @@ const DivertReport = () => {
     const getData = () => {
         service.getDivertReportData().then(res => {
             if (res.status) {
+                function formatDate(date) {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    return `${month}/${day}/${year}`;
+                }
+
                 const sortedData = res.data.sort((a, b) => {
                     const dateA = new Date(a.newpo[0].orequestDate);
                     const dateB = new Date(b.newpo[0].orequestDate);
-                    return dateA.getTime() - dateB.getTime();
-                })
+
+                    const formattedDateA = formatDate(dateA);
+                    const formattedDateB = formatDate(dateB);
+
+                    return new Date(formattedDateA).getTime() - new Date(formattedDateB).getTime();
+                });
                 setItems(sortedData);
             }
         })
