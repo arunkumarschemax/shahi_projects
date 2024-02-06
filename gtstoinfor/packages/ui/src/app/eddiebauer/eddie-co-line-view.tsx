@@ -165,18 +165,10 @@ const EddieColineView = () => {
                 title: 'Raised Date',
                 dataIndex: 'raised_date',
                 render: (text, record) => {
-                    return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')) : '-')
+                    return (record.raised_date ? (moment(record.raised_date).format('DD-MM-YYYY HH:mm')) : '-')
                 }
             },
-            {
-                title: 'CO Created Date',
-                dataIndex: 'updated_at',
-                render: (text, record) => {
-                    return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
-                },
-    
-    
-            },
+          
             {
                 title: 'Status',
                 dataIndex: 'status',
@@ -263,7 +255,7 @@ const EddieColineView = () => {
           // sortDirections: ["ascend", "descend"],
           render: (text) => (
             <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 10)}...` : "-"}
+              {text ? `${text.substring(0, 30)}...` : "-"}
             </Tooltip>
           ),
   
@@ -336,18 +328,8 @@ const EddieColineView = () => {
             title: 'Raised Date',
             dataIndex: 'raised_date',
             render: (text, record) => {
-                return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')) : '-')
+                return (record.raised_date ? (moment(record.raised_date).format('DD-MM-YYYY HH:mm')) : '-')
             },
-
-        },
-
-        {
-            title: 'CO Created Date',
-            dataIndex: 'updated_at',
-            render: (text, record) => {
-                return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
-            },
-
 
         },
         {
