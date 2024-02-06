@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { DataSource } from "typeorm";
-import { CoLineRequest,CommonResponseModel, EddieCoLinereqModels, EddieColorModel, EddieDestinationModel, EddieOrderFilter, EddieSizeModel, EddieSizeWiseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarCoLinereqModels, SanmarColorModel, SanmarCompareModel, SanmarDestinationModel, SanmarOrderFilter, SanmarSizeModel, SanmarSizeWiseModel, StatusEnum, eddieOrderDataModel, sanmarOrderDataModel } from "@project-management-system/shared-models";
+import { CoLineRequest, CommonResponseModel, EddieCoLinereqModels, EddieColorModel, EddieDestinationModel, EddieOrderFilter, EddieSizeModel, EddieSizeWiseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarCoLinereqModels, SanmarColorModel, SanmarCompareModel, SanmarDestinationModel, SanmarOrderFilter, SanmarSizeModel, SanmarSizeWiseModel, StatusEnum, eddieOrderDataModel, sanmarOrderDataModel } from "@project-management-system/shared-models";
 import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -12,6 +12,8 @@ import { EddieCOLineEntity } from "./entities/eddie-co-line.entity";
 import { EddieCOLineRepository } from "./repositories/eddie-co-line.repository";
 import { ItemNoDtos } from "../sanmar/dto/sanmar-item-no.dto";
 import { EddieDetailsReq } from "./dto/eddie-order-details-req";
+import { EddieOrdersChildRepository } from "./repositories/eddie-orders-child.repo";
+import { EddieChildEntity } from "./entities/eddie-orders-child-entity";
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 const moment = require('moment');
@@ -26,8 +28,9 @@ export class EddieService {
     private dataSource: DataSource,
     private EddieOrdersRepo: EddieOrdersRepository,
     private pdfRepo: EddiePdfRepo,
-    private eddieCoLineRepo:EddieCOLineRepository
-   
+    private eddieCoLineRepo: EddieCOLineRepository,
+    private eddieOrdersChildRepository: EddieOrdersChildRepository
+
 
   ) { }
 
@@ -47,6 +50,7 @@ export class EddieService {
         console.log(poLine, "poLine")
         for (const variant of item.EddiepoItemVariantDetails) {
           const orderData = await this.EddieOrdersRepo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
+          const order = await this.eddieOrdersChildRepository.findOne({ where: { poNumber: req.PoNumber, poLine: poLine, size: variant.size }, order: { poVersion: 'DESC' } })
           console.log(orderData, "orderData")
           const entity = new EddieOrdersEntity();
           entity.poNumber = req.poNumber
@@ -82,12 +86,79 @@ export class EddieService {
 
 
           if (orderData) {
-            const update = await this.EddieOrdersRepo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {})
+            const update = await this.EddieOrdersRepo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
+              deliveryDate: req.deliveryDate, exFactoryDate: req.exFactoryDate, buyerAddress: req.buyerAddress, deliveryAddress: req.deliveryAddress,
+              currency: req.currency, buyerItem: item.buyerItem, color: item.color,
+              sizeCode: variant.sizeCode,
+              upc: variant.upc,
+              sku: variant.sku,
+              quantityPerInnerPack: variant.quantityPerInnerPack,
+              retailPrice: variant.retailPrice,
+              quantity: variant.quantity,
+              unit: variant.unit,
+              unitCost: variant.unitCost,
+              cost: variant.cost,
+
+            })
+            let po = parseInt(order?.poVersion) + 1
+            const entitys = new EddieChildEntity()
+
+            entitys.poNumber = req.poNumber
+            entitys.deliveryDate = req.deliveryDate
+            entitys.exFactoryDate = req.exFactoryDate
+            entitys.buyerAddress = req.buyerAddress
+            entitys.deliveryAddress = req.deliveryAddress
+            entitys.currency = req.currency
+
+            entitys.poLine = item.poLine
+            entitys.buyerItem = item.buyerItem
+            entitys.color = item.color
+
+            entitys.sizeCode = variant.sizeCode
+            entitys.size = variant.size
+            entitys.upc = variant.upc
+            entitys.sku = variant.sku
+            entitys.quantityPerInnerPack = variant.quantityPerInnerPack
+            entitys.retailPrice = variant.retailPrice
+            entitys.quantity = variant.quantity
+            entitys.unit = variant.unit
+            entitys.unitCost = variant.unitCost
+            entitys.cost = variant.cost
+
+            entitys.poVersion = po.toString()
+            const savedChild = await this.eddieOrdersChildRepository.save(entitys)
+
             if (!update.affected) {
               throw new Error('Update failed');
             }
           } else {
             saved = await this.EddieOrdersRepo.save(entity)
+            const entitys = new EddieChildEntity()
+
+            entitys.poNumber = req.poNumber
+            entitys.deliveryDate = req.deliveryDate
+            entitys.exFactoryDate = req.exFactoryDate
+            entitys.buyerAddress = req.buyerAddress
+            entitys.deliveryAddress = req.deliveryAddress
+            entitys.currency = req.currency
+
+            entitys.poLine = item.poLine
+            entitys.buyerItem = item.buyerItem
+            entitys.color = item.color
+
+            entitys.sizeCode = variant.sizeCode
+            entitys.size = variant.size
+            entitys.upc = variant.upc
+            entitys.sku = variant.sku
+            entitys.quantityPerInnerPack = variant.quantityPerInnerPack
+            entitys.retailPrice = variant.retailPrice
+            entitys.quantity = variant.quantity
+            entitys.unit = variant.unit
+            entitys.unitCost = variant.unitCost
+            entitys.cost = variant.cost
+
+            const savedChild = await this.eddieOrdersChildRepository.save(entitys)
+
             // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
             if (!saved) {
               throw new Error('Save failed')
@@ -101,6 +172,224 @@ export class EddieService {
       return new CommonResponseModel(false, 0, 'Failed', err)
     }
   }
+
+
+  // async saveCentricOrder(req: any): Promise<CommonResponseModel> {
+  //   // const transactionManager = new GenericTransactionManager(this.dataSource)
+  //   try {
+  //     let saved
+  //     // await transactionManager.startTransaction()
+  //     for (const item of req.CentricpoItemDetails) {
+  //       const match = item.poLine.match(/\d+/);
+  //       // Check if a match is found and convert it to an integer
+  //       // const poLine = match ? parseInt(match[0], 10) : null;
+  //       const poLine = match
+
+
+  //       for (const variant of item.CentricpoItemVariantDetails) {
+  //         const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
+  //         const order = await this.childrepo.findOne({ where: { poNumber: req.PoNumber, poLine: poLine, size: variant.size }, order: { poVersion: 'DESC' } })
+  //         // console.log(order,'NNNNNNNNNN')
+  //         const entity = new CentricEntity();
+  //         entity.poNumber = req.poNumber
+  //         entity.shipment = req.shipment
+  //         entity.season = req.season
+  //         entity.portOfExport = req.portOfExport
+  //         entity.portOfEntry = req.portOfEntry
+  //         entity.Refrence = req.Refrence
+  //         entity.paymentTermDescription = req.paymentTermDescription
+  //         entity.specialInstructions = req.specialInstructions
+  //         entity.division = req.division
+  //         entity.incoterm = req.incoterm
+  //         entity.shipToAdd = req.shipToAdd
+  //         entity.manufacture = req.manufacture
+  //         entity.poDate = req.poDate
+  //         entity.buyerAddress = req.buyerAddress
+
+
+  //         entity.poLine = item.poLine
+  //         entity.material = item.material
+  //         entity.color = item.color
+  //         entity.gender = item.gender
+  //         entity.shortDescription = item.shortDescription
+  //         entity.packMethod = item.packMethod
+  //         entity.vendorBookingFlag = item.vendorBookingFlag
+  //         entity.ppkupc = item.ppkupc
+  //         entity.currency = item.currency
+  //         entity.totalQuantity = item.totalQuantity
+  //         entity.style = item.style
+  //         entity.poType = item.poType
+
+  //         entity.size = variant.size
+  //         entity.upc = variant.upc
+  //         entity.label = variant.label
+  //         entity.quantity = variant.quantity
+  //         entity.unitPrice = variant.unitPrice
+  //         entity.exFactory = variant.exFactory
+  //         entity.exPort = variant.exPort
+  //         entity.deliveryDate = variant.deliveryDate
+  //         entity.retialPrice = variant.retialPrice
+  //         entity.comptMaterial = variant.comptMaterial
+  //         entity.ratio = variant.ratio
+  //         entity.eachPerCarton = variant.eachPerCarton
+
+
+  //         if (orderData) {
+
+  //           const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
+
+  //             shipment: req.shipment,
+  //             season: req.season,
+  //             portOfExport: req.portOfExport,
+  //             portOfEntry: req.portOfEntry,
+  //             Refrence: req.Refrence,
+  //             paymentTermDescription: req.paymentTermDescription,
+  //             specialInstructions: req.specialInstructions,
+  //             division: req.division,
+  //             incoterm: req.incoterm,
+  //             shipToAdd: req.shipToAdd,
+  //             manufacture: req.manufacture,
+  //             poDate: req.poDate,
+  //             buyerAddress: req.buyerAddress,
+
+
+  //             material: item.material,
+  //             color: item.color,
+  //             gender: item.gender,
+  //             shortDescription: item.shortDescription,
+  //             packMethod: item.packMethod,
+  //             vendorBookingFlag: item.vendorBookingFlag,
+  //             ppkupc: item.ppkupc,
+  //             currency: item.currency,
+  //             totalQuantity: item.totalQuantity,
+  //             style: item.style,
+
+  //             upc: variant.upc,
+  //             label: variant.label,
+  //             quantity: variant.quantity,
+  //             unitPrice: variant.unitPrice,
+  //             exFactory: variant.exFactory,
+  //             exPort: variant.exPort,
+  //             deliveryDate: variant.deliveryDate,
+  //             retialPrice: variant.retialPrice,
+  //             comptMaterial: variant.comptMaterial,
+  //             ratio: variant.ratio,
+  //             eachPerCarton: variant.eachPerCarton,
+
+  //           })
+  //           let po = parseInt(order?.poVersion) + 1
+
+  //           // console.log(po,',,,,,,')
+  //           const entitys = new CentricChildEntity();
+  //           entitys.poNumber = req.poNumber
+  //           entitys.shipment = req.shipment
+  //           entitys.season = req.season
+  //           entitys.portOfExport = req.portOfExport
+  //           entitys.portOfEntry = req.portOfEntry
+  //           entitys.Refrence = req.Refrence
+  //           entitys.paymentTermDescription = req.paymentTermDescription
+  //           entitys.specialInstructions = req.specialInstructions
+  //           entitys.division = req.division
+  //           entitys.incoterm = req.incoterm
+  //           entitys.shipToAdd = req.shipToAdd
+  //           entitys.manufacture = req.manufacture
+  //           entitys.poDate = req.poDate
+  //           entitys.buyerAddress = req.buyerAddress
+
+
+  //           entitys.poLine = item.poLine
+  //           entitys.material = item.material
+  //           entitys.color = item.color
+  //           entitys.gender = item.gender
+  //           entitys.shortDescription = item.shortDescription
+  //           entitys.packMethod = item.packMethod
+  //           entitys.vendorBookingFlag = item.vendorBookingFlag
+  //           entitys.ppkupc = item.ppkupc
+  //           entitys.currency = item.currency
+  //           entitys.totalQuantity = item.totalQuantity
+  //           entitys.style = item.style
+  //           entitys.poType = item.poType
+
+  //           entitys.size = variant.size
+  //           entitys.upc = variant.upc
+  //           entitys.label = variant.label
+  //           entitys.quantity = variant.quantity
+  //           entitys.unitPrice = variant.unitPrice
+  //           entitys.exFactory = variant.exFactory
+  //           entitys.exPort = variant.exPort
+  //           entitys.deliveryDate = variant.deliveryDate
+  //           entitys.retialPrice = variant.retialPrice
+  //           entitys.comptMaterial = variant.comptMaterial
+  //           entitys.ratio = variant.ratio
+  //           entitys.eachPerCarton = variant.eachPerCarton
+  //           entitys.orderId = orderData.id
+
+  //           entitys.poVersion = po.toString()
+  //           const savedChild = await this.childrepo.save(entitys)
+
+  //           if (!update.affected) {
+  //             throw new Error('Update failed');
+  //           }
+  //         } else {
+  //           saved = await this.Repo.save(entity)
+  //           const entitys = new CentricChildEntity();
+  //           entitys.poNumber = req.poNumber
+  //           entitys.shipment = req.shipment
+  //           entitys.season = req.season
+  //           entitys.portOfExport = req.portOfExport
+  //           entitys.portOfEntry = req.portOfEntry
+  //           entitys.Refrence = req.Refrence
+  //           entitys.paymentTermDescription = req.paymentTermDescription
+  //           entitys.specialInstructions = req.specialInstructions
+  //           entitys.division = req.division
+  //           entitys.incoterm = req.incoterm
+  //           entitys.shipToAdd = req.shipToAdd
+  //           entitys.manufacture = req.manufacture
+  //           entitys.poDate = req.poDate
+  //           entitys.buyerAddress = req.buyerAddress
+
+
+  //           entitys.poLine = item.poLine
+  //           entitys.material = item.material
+  //           entitys.color = item.color
+  //           entitys.gender = item.gender
+  //           entitys.shortDescription = item.shortDescription
+  //           entitys.packMethod = item.packMethod
+  //           entitys.vendorBookingFlag = item.vendorBookingFlag
+  //           entitys.ppkupc = item.ppkupc
+  //           entitys.currency = item.currency
+  //           entitys.totalQuantity = item.totalQuantity
+  //           entitys.style = item.style
+  //           entitys.poType = item.poType
+
+  //           entitys.size = variant.size
+  //           entitys.upc = variant.upc
+  //           entitys.label = variant.label
+  //           entitys.quantity = variant.quantity
+  //           entitys.unitPrice = variant.unitPrice
+  //           entitys.exFactory = variant.exFactory
+  //           entitys.exPort = variant.exPort
+  //           entitys.deliveryDate = variant.deliveryDate
+  //           entitys.retialPrice = variant.retialPrice
+  //           entitys.comptMaterial = variant.comptMaterial
+  //           entitys.ratio = variant.ratio
+  //           entitys.eachPerCarton = variant.eachPerCarton
+  //           entitys.orderId = entity.id
+  //           const savedChild = await this.childrepo.save(entitys)
+
+
+  //           if (!saved) {
+  //             throw new Error('Save failed')
+  //           }
+  //         }
+  //       }
+  //     }
+  //     // await transactionManager.completeTransaction()
+  //     return new CommonResponseModel(true, 1, 'Data saved successfully', saved)
+  //   } catch (err) {
+  //     return new CommonResponseModel(false, 0, 'Failed', err)
+  //   }
+  // }
 
   async updatePath(req: any, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
     console.log(poNumber, "pppppioooooo");
@@ -139,14 +428,14 @@ export class EddieService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`,
-            new eddieOrderDataModel(rec.id, rec.po_number,rec.incoterm,rec.color, rec.delivery_date, rec.delivery_address, rec.buyer_address,rec.manufacture,rec.shipment_mode,rec.payment_terms,rec.po_line,rec.buyer_item,rec.short_description,rec.currency,rec.retail_price,rec.status,rec.ex_factory_date,[])
+            new eddieOrderDataModel(rec.id, rec.po_number, rec.incoterm, rec.color, rec.delivery_date, rec.delivery_address, rec.buyer_address, rec.manufacture, rec.shipment_mode, rec.payment_terms, rec.po_line, rec.buyer_item, rec.short_description, rec.currency, rec.retail_price, rec.status, rec.ex_factory_date, [])
           );
 
         }
         const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`).sizeWiseData;
         const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.retailPrice === rec.retail_price);
         if (!existingSizeData && rec.size !== null) {
-          sizeWiseData.push(new EddieSizeWiseModel(rec.size_code,rec.size,rec.upc,rec.sku,rec.quantity_per_inner_pack,rec.retail_price,rec.quantity,rec.unit_cost,rec.cost,rec.unit));
+          sizeWiseData.push(new EddieSizeWiseModel(rec.size_code, rec.size, rec.upc, rec.sku, rec.quantity_per_inner_pack, rec.retail_price, rec.quantity, rec.unit_cost, rec.cost, rec.unit));
         }
       }
       const dataModelArray: eddieOrderDataModel[] = Array.from(sizeDateMap.values());
@@ -265,7 +554,7 @@ export class EddieService {
         return new CommonResponseModel(false, 0, 'Please enter Item No')
       };
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
-      const records = await this.EddieOrdersRepo.find({ where: { poNumber: req.poNumber,deliveryDate: req.deliveryDate } });
+      const records = await this.EddieOrdersRepo.find({ where: { poNumber: req.poNumber, deliveryDate: req.deliveryDate } });
       const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
       const empty = [];
 
@@ -288,7 +577,7 @@ export class EddieService {
 
       if (save) {
         const update = await this.EddieOrdersRepo.update(
-          { poNumber: req.poNumber,deliveryDate: req.deliveryDate }, // Conditions for updating
+          { poNumber: req.poNumber, deliveryDate: req.deliveryDate }, // Conditions for updating
           { status: StatusEnum.INPROGRESS }
         );
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
@@ -301,7 +590,7 @@ export class EddieService {
     }
   }
 
-  async getCoLineData(req?:EddieOrderFilter ): Promise<CommonResponseModel> {
+  async getCoLineData(req?: EddieOrderFilter): Promise<CommonResponseModel> {
     const data = await this.eddieCoLineRepo.getCoLineData(req)
     if (data.length > 0)
       return new CommonResponseModel(true, 1, 'data retrived', data)
@@ -341,14 +630,14 @@ export class EddieService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number}`,
-            new eddieOrderDataModel(rec.id, rec.po_number,rec.incoterm,rec.color, rec.delivery_date, rec.delivery_address, rec.buyer_address,rec.manufacture,rec.shipment_mode,rec.payment_terms,rec.po_line,rec.buyer_item,rec.short_description,rec.currency,rec.retail_price,rec.status,rec.ex_factory_date,[])
+            new eddieOrderDataModel(rec.id, rec.po_number, rec.incoterm, rec.color, rec.delivery_date, rec.delivery_address, rec.buyer_address, rec.manufacture, rec.shipment_mode, rec.payment_terms, rec.po_line, rec.buyer_item, rec.short_description, rec.currency, rec.retail_price, rec.status, rec.ex_factory_date, [])
           );
 
         }
         const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number}`).sizeWiseData;
         const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.retailPrice === rec.retail_price);
         if (!existingSizeData && rec.size !== null) {
-          sizeWiseData.push(new EddieSizeWiseModel(rec.size_code,rec.size,rec.upc,rec.sku,rec.quantity_per_inner_pack,rec.retail_price,rec.quantity,rec.unit_cost,rec.cost,rec.unit));
+          sizeWiseData.push(new EddieSizeWiseModel(rec.size_code, rec.size, rec.upc, rec.sku, rec.quantity_per_inner_pack, rec.retail_price, rec.quantity, rec.unit_cost, rec.cost, rec.unit));
         }
       }
       const dataModelArray: eddieOrderDataModel[] = Array.from(sizeDateMap.values());
@@ -397,17 +686,17 @@ export class EddieService {
     }
   }
 
- 
+
 
   async getOrderdataForCOline(req: EddieDetailsReq): Promise<CommonResponseModel> {
     try {
-      const data = await this.EddieOrdersRepo.find({ where: { poNumber: req.PoNumber,poLine:req.PoLine } })
+      const data = await this.EddieOrdersRepo.find({ where: { poNumber: req.PoNumber, poLine: req.PoLine } })
       // po -> destination -> color -> sizes
       const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
       const poMap = new Map<string, EddieOrdersEntity>();
       data.forEach(rec => {
         poMap.set(`${rec.poLine},${rec.poNumber}`, rec)
-  
+
         const dest = rec.deliveryAddress;
 
         if (!destinationColSizesMap.has(`${rec.poLine},${rec.poNumber}`)) {
@@ -439,7 +728,7 @@ export class EddieService {
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new EddieCoLinereqModels(poInfo.poNumber,poInfo.poLine,poInfo.unitCost,  poInfo.deliveryDate,poInfo.currency, desArray);
+        const co = new EddieCoLinereqModels(poInfo.poNumber, poInfo.poLine, poInfo.unitCost, poInfo.deliveryDate, poInfo.currency, desArray);
         coData.push(co)
       });
       if (coData) {
@@ -451,6 +740,6 @@ export class EddieService {
       throw err
     }
   }
-  
+
 
 }
