@@ -15,6 +15,13 @@ export class Destination {
   })
   // @Index({ unique: true })
   destination: string;
+  @Column("char", {
+    nullable: false,
+    length: 50,
+    name: "destination_Code"
+  })
+  // @Index({ unique: true })
+  destinationCode: string;
 
   @Column("boolean", {
     nullable: false,
@@ -57,6 +64,28 @@ export class Destination {
   })
   versionFlag: number;
 
+  @Column("varchar",{
+    nullable: true,
+    length:250,
+    name:"description"
+
+})
+description:string;
+
+@Column("varchar",{
+  nullable: false,
+  length:30,
+  name:"option_Group"
+
+})
+operationGroup:string;
+
+@Column("int",{
+  nullable: false,
+  name:"division_id"
+
+})
+divisionId:number;
 
     @OneToMany(type=>BuyersDestionations, vendor=>vendor.buyerDesInfo,{cascade: true})
     destinationInfo:BuyersDestionations[];

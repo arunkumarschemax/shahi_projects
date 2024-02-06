@@ -14,6 +14,9 @@ export class DestinationDTO {
   destination: string;
 
   @ApiProperty()
+   destinationCode: string;
+
+  @ApiProperty()
   isActive: boolean;
 
   createdAt: Date;
@@ -34,6 +37,14 @@ export class DestinationDTO {
   @ApiProperty()
   versionFlag: number;
 
+  @ApiProperty()
+  description: string;
+
+  @ApiProperty()
+  operationGroup: string;
+
+  @ApiProperty()
+  divisionId: number;
   // @OneToMany(type=>EndCustomers, endCustomers=>endCustomers.currencyInfo,{cascade: true})
   // endCustomerInfo:EndCustomers[];
 }
