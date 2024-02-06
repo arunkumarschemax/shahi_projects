@@ -21,7 +21,7 @@ export class WarehouseService {
     async getWarehouseDetailsWithoutRelations(warehouseName: string): Promise<Warehouse> {
         // tslint:disable-next-line: typedef
         const Response = await this.Repository.findOne({
-          where: {warehouseId: Raw(alias => `warehouse_name = '${warehouseName}'`)},
+          where: {warehouseName: Raw(alias => `warehouse_name = '${warehouseName}'`)},
         });
         if (Response) {
           return Response;
@@ -137,7 +137,6 @@ export class WarehouseService {
         }
     }
       async activateOrDeactivateWarehouse(Req: any): Promise<WarehouseResponseModel> {
-        console.log(Req,'ooooooooooo');
         
         try {
             const Exists = await this.getWarehouseById(Req.warehouseId);
