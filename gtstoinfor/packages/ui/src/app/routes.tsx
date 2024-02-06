@@ -55,6 +55,7 @@ import TrimList from "./trims/trims-cardview"
 import JokerTagPrint from "./trims/trim-prints/joker-tag"
 import WasCarelabel from "./trims/trim-prints/wash-care-label"
 import  { HangTag } from "./trims/trim-prints/hang-tag"
+import LayoutTwo from "./layout/basic-layout/pro-layout"
 
 
 export const AppRoutes = () => {
