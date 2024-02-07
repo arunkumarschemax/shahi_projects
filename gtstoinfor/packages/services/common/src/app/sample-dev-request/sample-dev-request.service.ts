@@ -778,25 +778,31 @@ export class SampleRequestService {
             // saveBomDetails = await this.bomRepo.save(bomEntity)
 
             if (trimData.allocatedStock.find((e) => e.checkedStatus === 1) != undefined) {
-              let stockArray: any[] = []
-              stockArray.push(trimData.allocatedStock.filter((e) => e.checkedStatus === 1 && e.issuedQty > 0))
+              const stockArray = trimData.allocatedStock.filter((e) => e.checkedStatus === 1 && e.issuedQty > 0)
+              // stockArray.push(trimData.allocatedStock.filter((e) => e.checkedStatus === 1 && e.issuedQty > 0))
+              // console.log("*******")
+              // console.log(trimData.allocatedStock.filter((e) => e.checkedStatus === 1 && e.issuedQty > 0));
+              // console.log("*******")
               console.log(stockArray);
               let totalAllocated = 0
               let item: MaterialAllocationItemsEntity[] = []
               for (const stock of stockArray) {
-                totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
-                let itemData = new MaterialAllocationItemsEntity();
-                itemData.locationId = stock.locationId;
-                itemData.quantity = stock.quantity;
-                itemData.stockId = stock.stockId;
-                itemData.allocateQuantity = stock.issuedQty;
-                item.push(itemData);
-                let stockUpdate = await manager.getRepository(StocksEntity).update({ id: stock.stockId }, { allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}` });
-                if (stockUpdate.affected === 0) {
-                  console.log("1111111111111111111111111111111111111111111111111111111111111");
-                  trimFlag.add(false);
-                  await manager.releaseTransaction();
-                }
+                console.log(stock);
+                // for (const stk of stock) {
+                  totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
+                  let itemData = new MaterialAllocationItemsEntity();
+                  itemData.locationId = stock.locationId;
+                  itemData.quantity = stock.quantity;
+                  itemData.stockId = stock.stockId;
+                  itemData.allocateQuantity = stock.issuedQty;
+                  item.push(itemData);
+                  let stockUpdate = await manager.getRepository(StocksEntity).update({ id: stock.stockId }, { allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}` });
+                  if (stockUpdate.affected === 0) {
+                    console.log("1111111111111111111111111111111111111111111111111111111111111");
+                    trimFlag.add(false);
+                    await manager.releaseTransaction();
+                  }
+                // }
               }
               let materialAllocation = new MaterialAllocationEntity();
 
