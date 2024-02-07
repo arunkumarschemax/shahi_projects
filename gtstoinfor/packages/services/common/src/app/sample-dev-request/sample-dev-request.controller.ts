@@ -159,7 +159,7 @@ export class SampleDevReqController {
         console.log(req.body);
 
         console.log(file);
-        const destinationPath = join(__dirname, '../../../../', 'upload_files')
+        const destinationPath = join(__dirname, '../../../../',`upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`)
         console.log(destinationPath)
         // const destinationPath = `upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`;
         // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
