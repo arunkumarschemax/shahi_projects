@@ -6,7 +6,7 @@ import { ApplicationExceptionHandler } from '@project-management-system/backend-
 import { AllSampleDevReqResponseModel, CommonResponseModel, RequestNoReq, SampleFilterRequest, UploadResponse, lifeCycleStatusReq, sampleReqIdReq } from '@project-management-system/shared-models';
 import * as fs from 'fs';
 import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { extname, join } from 'path';
 import { AllocatedLocationRequest } from './dto/allocated-location-req';
 import { AllocationApprovalRequest } from './dto/allocation-approval-req';
 import { AllLocationRequest } from './dto/location-req';
@@ -159,8 +159,9 @@ export class SampleDevReqController {
         console.log(req.body);
 
         console.log(file);
-
-        const destinationPath = `upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+        const destinationPath = join(__dirname, '../../../../', 'upload_files')
+        console.log(destinationPath)
+        // const destinationPath = `upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`;
         // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
 
         // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
