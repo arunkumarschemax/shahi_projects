@@ -45,7 +45,8 @@ export class BomInfo{
     uom: string;
     qty:number;
     styleComboInfo:StyleComboInfo[]
-    constructor(bomId:number,itemName:string,description:string,imCode:string,itemType:string,use:string,uom:string,qty:number,styleComboInfo:StyleComboInfo[]){
+    trimInfo?:string
+    constructor(bomId:number,itemName:string,description:string,imCode:string,itemType:string,use:string,uom:string,qty:number,styleComboInfo:StyleComboInfo[],trimInfo?:string){
     this.bomId = bomId
     this.itemName = itemName
     this.description = description
@@ -55,6 +56,7 @@ export class BomInfo{
     this.uom = uom
     this.qty = qty
     this.styleComboInfo = styleComboInfo
+    this.trimInfo=trimInfo
     }
 }
 

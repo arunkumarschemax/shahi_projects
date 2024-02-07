@@ -1,10 +1,11 @@
-import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip } from "antd";
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, Tooltip, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 import { BomService, NikeService } from "@project-management-system/shared-services";
 import React from "react";
 
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
+import { PageContainer } from "@ant-design/pro-layout";
 
 
 export function BomView() {
@@ -25,8 +26,12 @@ export function BomView() {
     }, [])
 
     const getPdfFileInfo = () => {
-        service.getAllStylesData().then(res => {
-            setPdfData(res.data)
+        service.getStylesData().then(res => {
+            if (res.status) {
+                setPdfData(res.data)
+            } else {
+                message.info("No data found", 3)
+            }
         })
     }
 
@@ -45,43 +50,43 @@ export function BomView() {
         {
             title: 'Style Name',
             dataIndex: 'styleName',
-            
+
         },
         {
             title: 'MSC',
             dataIndex: 'msc',
-            
+
         },
         {
             title: 'Season',
             dataIndex: 'season',
             align: 'center',
-            
-        
+
+
         },
         {
             title: 'Factory LO',
             dataIndex: 'factoryLo',
             align: 'center',
-            
+
         },
         {
             title: 'Status',
             dataIndex: 'status',
             align: 'center',
-            
+
         },
         {
             title: 'EXP',
             dataIndex: 'expNo',
             align: 'center',
-            
+
         },
         {
             title: 'Action',
             dataIndex: 'action',
             align: 'center',
-            
+
             render: (value, record) => (
                 <>
                     <Button onClick={() => setMoreData(record)} type="primary">More Info</Button>
@@ -92,18 +97,18 @@ export function BomView() {
     ]
 
 
-const setMoreData = (record) => {
-    navigate('/bom/bom-pdf-info-detail-view', {
-     state: { data: record },
-   });
- };
+    const setMoreData = (record) => {
+        navigate('/bom/bom-pdf-info-detail-view', {
+            state: { data: record },
+        });
+    };
     return (
         <>
-            <Card title="Style Info" headStyle={{ fontWeight: 'bold' }}>
+            <PageContainer title={'Styles'}>
                 <Table
                     columns={columns}
                     dataSource={pdfData}
-                    bordered
+                    
                     size="small"
                     className="custom-table-wrapper"
                     pagination={{
@@ -113,10 +118,10 @@ const setMoreData = (record) => {
                             setPageSize(pageSize);
                         },
                     }}
-                >
-                </Table>
+                />
+            </PageContainer>
 
-            </Card>
+
         </>
     )
 }

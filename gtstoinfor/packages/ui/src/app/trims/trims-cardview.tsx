@@ -10,6 +10,7 @@ import JokerTagPrint from "./trim-prints/joker-tag";
 import { stat } from "fs";
 import HangTag from "./trim-prints/hang-tag";
 import WasCarelabel from "./trim-prints/wash-care-label";
+import { CountryStickerPrint } from "./trim-prints/country-sticker";
 
 
 
@@ -25,7 +26,9 @@ const [trimName,setTrimName] = useState<string>('')
 const componentsMapping = {
     "Joker Tag" : <JokerTagPrint info={bomInfo} />,
     "Hangtag":<HangTag info={bomInfo} />,
-    "Wash Care Label":<WasCarelabel  bomInfo={bomInfo}/>
+    "Wash Care Label":<WasCarelabel  bomInfo={bomInfo}/>,
+    "Country Sticker":<CountryStickerPrint  info={bomInfo}/>
+
 }
 
 useEffect(()=>{

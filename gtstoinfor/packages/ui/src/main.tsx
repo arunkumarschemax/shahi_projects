@@ -4,7 +4,7 @@ import App from './app/app';
 import { config } from 'packages/libs/shared-services/config';
 import { IAMClientProvider } from './app/nike/iam-client-react';
 import { ConfigProvider, theme } from 'antd';
-
+import './styles.css'
 const authServerUrl = config.APP_IAM_SERVER_URL;
 const clientId = config.APP_IAM_CLIENT_ID;
 
