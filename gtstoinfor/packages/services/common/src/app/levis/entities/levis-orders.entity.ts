@@ -14,21 +14,84 @@ export class LevisOrdersEntity {
     poNumber: string
 
 
-    @Column("varchar", {
-        name: "delivery_date",
-    })
-    deliveryDate: string
-
-
-    @Column('text', {
-        name: "buyer_address"
-    })
-    buyerAddress: string
-
     @Column('text', {
         name: "delivery_address"
     })
     deliveryAddress: string
+
+    @Column("varchar", {
+        name: "transmode",
+    })
+    transMode: string
+
+    @Column("varchar", {
+        name: "currency",
+    })
+    currency: string
+
+    @Column("varchar", {
+        name: "po_line",
+    })
+    poLine: string
+
+    @Column("varchar", {
+        name: "material",
+    })
+    material: string
+
+
+    @Column("varchar", {
+        name: "total_unit_price",
+    })
+    totalUnitPrice: string
+
+
+    @Column("varchar", {
+        name: "original_date",
+    })
+    originalDate: string
+
+
+
+
+    
+    @Column("varchar", {
+        name: "product",
+    })
+    product: string
+
+    @Column("varchar", {
+        name: "size",
+    })
+    size: string
+
+    
+    @Column("varchar", {
+        name: "upc",
+    })
+    upc: string
+
+    @Column("varchar", {
+        name: "planned_ex_factory_date",
+    })
+    plannedExFactoryDate: string
+
+    @Column("varchar", {
+        name: "ex_factory_date",
+    })
+    exFactoryDate: string
+
+    @Column("varchar", {
+        name: "quantity",
+    })
+    quantity: string
+
+    
+    @Column("varchar", {
+        name: "unit_price",
+    })
+    unitPrice: string
+
 
 
     @Column({
