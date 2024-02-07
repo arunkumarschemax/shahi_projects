@@ -79,6 +79,7 @@ const PurchaseOrderReport = () => {
         
             }
             else{
+              setData([])
                     AlertMessages.getErrorMessage(res.internalMessage);
 }
         })
@@ -768,10 +769,9 @@ const onFinish = () => {
           <Col xs={12} sm={6} md={4} lg={3} xl={2}>
             <Form.Item>
               <Button
+                htmlType='submit'
                 type="primary"
-                htmlType="submit"
-                style={{ background: "green", width: "100%" }}
-              >
+                style={{ width: '80px', marginRight: "10px" }}>
                 Search
               </Button>
             </Form.Item>
