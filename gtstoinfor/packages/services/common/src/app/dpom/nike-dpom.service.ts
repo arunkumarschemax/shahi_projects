@@ -1962,6 +1962,77 @@ export class DpomService {
         }
     }
 
+    async updateDivertData(req: any): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource);
+        try {
+            await transactionManager.startTransaction();
+            const divertData = await this.divertRepository.findOne({ where: { oPurchaseOrderNumber: req.oldPoNumber, oPoLineItemNumber: req.oldPoLineItemNo, nPurchaseOrderNumber: req.newPoNumber, nPoLineItemNumber: req.newPoLineItemNo } })
+            if (divertData) {
+                const update = await this.divertRepository.update({ oPurchaseOrderNumber: req.oldPoNumber, oPoLineItemNumber: req.oldPoLineItemNo, nPurchaseOrderNumber: req.newPoNumber, nPoLineItemNumber: req.newPoLineItemNo }, {
+                    orequestDate: req.requestDate, oldVal: req.oldQty, oTotalItemQty: req.totalQty
+                })
+                if (update.affected) {
+                    await transactionManager.completeTransaction();
+                    return new CommonResponseModel(true, 1, 'Data updated successfully');
+                } else {
+                    await transactionManager.releaseTransaction();
+                    return new CommonResponseModel(false, 0, 'Something went wrong');
+                }
+            } else {
+                const oldData = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: req.oldPoNumber, poLineItemNumber: req.oldPoLineItemNo } })
+                const newData = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: req.newPoNumber, poLineItemNumber: req.newPoLineItemNo } })
+                const entity = new DivertEntity()
+                entity.orequestDate = req.requestDate
+                entity.oItem = oldData.item
+                entity.oFactory = oldData.factory
+                entity.oPlant = oldData.plant
+                entity.oProductCode = oldData.productCode
+                entity.oLineItemStatus = oldData.DPOMLineItemStatus
+                entity.oDocumentDate = moment(oldData.documentDate).format('YYYY-MM-DD')
+                entity.oPurchaseOrderNumber = req.oldPoNumber
+                entity.oPoLineItemNumber = req.oldPoLineItemNo
+                entity.oldVal = req.oldQty
+                entity.oTotalItemQty = req.totalQty
+                entity.oDestination = oldData.destinationCountry
+                entity.oShipmentType = oldData.shippingType
+                entity.oOGAC = oldData.OGAC
+                entity.oGAC = oldData.GAC
+                entity.oInventorySegmentCode = oldData.inventorySegmentCode
+                entity.oItemVasText = oldData.itemVasText
+                entity.oFOBPrice = oldData.grossPriceFOB
+                entity.oTradingCoNetIncDis = oldData.trCoNetIncludingDisc
+                entity.nOGAC = newData.OGAC
+                entity.nGAC = newData.GAC
+                entity.nItem = newData.item
+                entity.nFactory = newData.factory
+                entity.nPlant = newData.plant
+                entity.nProductCode = newData.productCode
+                entity.nLineItemStatus = newData.DPOMLineItemStatus
+                entity.nDocumentDate = moment(newData.documentDate).format('YYYY-MM-DD')
+                entity.nPurchaseOrderNumber = req.newPoNumber
+                entity.nPoLineItemNumber = req.newPoLineItemNo
+                entity.nTotalItemQty = newData.totalItemQty
+                entity.nDestination = newData.destinationCountry
+                entity.nInventorySegmentCode = newData.inventorySegmentCode
+                entity.nItemVasText = newData.itemVasText
+                entity.nShipmentType = newData.shippingType
+                entity.nFOBPrice = newData.grossPriceFOB
+                entity.nTradingCoNetIncDis = newData.trCoNetIncludingDisc
+                const save = await transactionManager.getRepository(DivertEntity).save(entity);
+                if (save) {
+                    await transactionManager.completeTransaction();
+                    return new CommonResponseModel(true, 1, 'Data retrieved and saved successfully');
+                } else {
+                    await transactionManager.releaseTransaction();
+                    return new CommonResponseModel(false, 0, 'Something went wrong');
+                }
+            }
+        } catch (error) {
+            await transactionManager.releaseTransaction();
+            return new CommonResponseModel(false, 0, error.message || 'Something went wrong');
+        }
+    }
+
     async getDivertReportData(): Promise<CommonResponseModel> {
         try {
             const reports = await this.dpomRepository.getDivertReport();

@@ -1,13 +1,8 @@
-import { FileExcelFilled, RightSquareOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { FactoryUpdateRequest, MarketingModel, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from '@project-management-system/shared-models';
+import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect, Tooltip, Checkbox, Popconfirm, Switch } from 'antd';
-import { CSVLink } from "react-csv";
 import React, { useEffect, useRef, useState } from 'react'
-import CountUp from 'react-countup';
-import Highlighter from 'react-highlight-words';
 import { Link, useNavigate } from 'react-router-dom';
-const { diff_match_patch: DiffMatchPatch } = require('diff-match-patch');
 
 
 const DivertDataEntry = () => {
@@ -16,45 +11,23 @@ const DivertDataEntry = () => {
     const [filteredData, setFilteredData] = useState<any[]>([]);
     const service = new NikeService();
     const [filterData, setFilterData] = useState<any>([])
-    const [productCode, setProductCode] = useState<any>([]);
     const { RangePicker } = DatePicker;
-    const { Option } = Select;
-    const [countryDestination, setCountryDestination] = useState<any>([]);
-    const [plantCode, setPlantCode] = useState<any>([]);
-    const [item, setItem] = useState<any>([]);
-    const [factory, setFactory] = useState<any>([]);
-    const [poNumber, setPoNumber] = useState<any>([]);
-    const [docType, setDocType] = useState<any>([]);
-    const [poLineItemNumber, setPoLineItemNumber] = useState<any>([]);
-    const [styleNumber, setStyleNumber] = useState<any>([]);
-    const [planSesCode, setPlanSesCode] = useState<any>([]);
-    const [planSesYear, setPlanSesYear] = useState<any>([]);
-    const [geoCode, setGeoCode] = useState<any>([]);
-    const [hideChildren, setHideChildren] = useState(true);
-    let navigate = useNavigate()
-    const [isModalOpen1, setIsModalOpen1] = useState(false);
-    const [poLineProp, setPoLineProp] = useState<any>([]);
-    const [itemText, setRemarks] = useState<string>('')
-    const [textareaValuesActualUnit, setTextareaValuesActualUnit] = useState({});
 
     useEffect(() => {
 
     }, [])
 
-    const handleTextareaChange = (column, poAndLine, value) => {
-        if (column === 'ActualUnit') {
-            setTextareaValuesActualUnit((prevValues) => ({
-                ...prevValues,
-                [poAndLine]: value,
-            }));
-        }
-        //  else if (column === 'QuantityAllocation') {
-        //     setTextareaValuesQuantityAllocation((prevValues) => ({
-        //         ...prevValues,
-        //         [poAndLine]: value,
-        //     }));
-        // }
-    };
+    const submitData = () => {
+        const req = form.getFieldsValue()
+        service.updateDivertData(req).then(res => {
+            if (res.status) {
+                onReset()
+                message.success(res.internalMessage)
+            } else {
+                message.error(res.internalMessage)
+            }
+        })
+    }
 
     const onReset = () => {
         form.resetFields()
@@ -63,17 +36,11 @@ const DivertDataEntry = () => {
         setFilteredData([])
     }
 
-
-    const showModal1 = (record: any) => {
-        setPoLineProp(record)
-        setIsModalOpen1(true);
-    };
-
     return (
         <>
             <Card title="Divert Report Data Insertion" headStyle={{ color: 'black', fontWeight: 'bold' }}>
                 <Form
-                    //   onFinish={}
+                    onFinish={submitData}
                     form={form}
                     layout='vertical'>
                     <Card>

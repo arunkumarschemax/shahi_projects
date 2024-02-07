@@ -203,6 +203,15 @@ export class DpomController {
         }
     }
 
+    @Post('/updateDivertData')
+    async updateDivertData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.updateDivertData(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
     @Post('/getFabricTrackerReport')
     @ApiBody({ type: PpmDateFilterRequest })
     async getFabricTrackerReport(@Body() req: any): Promise<CommonResponseModel> {
