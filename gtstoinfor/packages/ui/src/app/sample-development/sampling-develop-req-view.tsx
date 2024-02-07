@@ -734,7 +734,7 @@ export const SampleDevNewView = () => {
         createZipFile(res.data.map(file => {
           return {
             ['name']: file.fileName,
-            ['url']: `${config.file_upload_path}/${file.fileName}`,
+            ['url']: `${config.file_upload_path}/${file.filePath.split('upload_files')[1]}`,
           }
         }), sampleRequestNo);
       }
