@@ -1,24 +1,22 @@
-import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
-import { Any } from 'typeorm';
-import { SampleRequestService } from './sample-dev-request.service';
+import { Body, Controller, Post, Req, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { FilesInterceptor } from '@nestjs/platform-express';
+import { Cron } from '@nestjs/schedule';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllROSLGroupsResponseModel, AllSampleDevReqResponseModel, CommonResponseModel, MaterailViewDto, ProductGroupReq, ROSLGroupsResponseModel, RequestNoDto, RequestNoReq, SampleDevDto, SampleFilterRequest, SampleReqResponseModel, SampleRequestFilter, UploadResponse, lifeCycleStatusReq, requestNoReq, sampleReqIdReq } from '@project-management-system/shared-models';
-import { SampleRequestDto } from './dto/samle-dev-req';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { Body, Controller, Get, Post, Req, UploadedFile, UploadedFiles, UseInterceptors } from "@nestjs/common";
+import { AllSampleDevReqResponseModel, CommonResponseModel, RequestNoReq, SampleFilterRequest, UploadResponse, lifeCycleStatusReq, sampleReqIdReq } from '@project-management-system/shared-models';
+import * as fs from 'fs';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
-import { MaterialallitemsReq } from './dto/sample-req-size-req';
-import { AllocationApprovalRequest } from './dto/allocation-approval-req';
 import { AllocatedLocationRequest } from './dto/allocated-location-req';
+import { AllocationApprovalRequest } from './dto/allocation-approval-req';
 import { AllLocationRequest } from './dto/location-req';
 import { MaterialIssueRequest } from './dto/material-issue.req';
-import { SampleOrderIdRequest } from './dto/sample-req-id';
 import { OrderQuantityRequset } from './dto/order-quantity-request';
-import * as fs from 'fs';
-// import { exec } from 'child_process';
-import { Cron } from '@nestjs/schedule';
+import { SampleRequestDto } from './dto/samle-dev-req';
+import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
+import { SampleOrderIdRequest } from './dto/sample-req-id';
+import { MaterialallitemsReq } from './dto/sample-req-size-req';
+import { SampleRequestService } from './sample-dev-request.service';
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -162,7 +160,7 @@ export class SampleDevReqController {
 
         console.log(file);
 
-        const destinationPath = `./upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+        const destinationPath = `upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`;
         // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
 
         // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
@@ -219,7 +217,7 @@ export class SampleDevReqController {
 
         console.log(file);
 
-        const destinationPath = `./upload_files/Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+        const destinationPath = `upload_files/Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
         // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
 
         // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
@@ -275,7 +273,7 @@ export class SampleDevReqController {
 
         console.log(file);
 
-        const destinationPath = `./upload_files/Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+        const destinationPath = `upload_files/Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
         // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
 
         // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;

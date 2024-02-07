@@ -969,18 +969,19 @@ export class SampleRequestService {
       // let filePathUpdate;
       // filePathUpdate = await this.sampleRepo.update({ SampleRequestId: SampleRequestId }, { fileName: filename, filepath: filePath })
       let flag = true;
+      const entities=[]
       for (const res of filePath) {
         const entity = new UploadFilesEntity()
         entity.fileName = res.filename
-        entity.filePath = "/dist/packages/services/common/" + res.path
+        entity.filePath = res.path
         entity.sampleRequestId = SampleRequestId
         entity.createdUser = "admin"
-        const uploadDoc = await this.uploadFilesRepository.save(entity);
-        if (!uploadDoc) {
-          flag = false;
-        }
+        entities.push(entity);
       }
-
+      const uploadDoc = await this.uploadFilesRepository.save(entities);
+      if (!uploadDoc) {
+        flag = false;
+      }
       if (flag) {
         return new UploadResponse(true, 11, 'uploaded successfully', filePath);
       }
