@@ -6,7 +6,7 @@ import { DpomRepository } from "../dpom/repositories/dpom.repository";
 import { InjectRepository } from "@nestjs/typeorm";
 import Item from "antd/es/list/Item";
 import { ItemEntity } from "./entittes/item-entity";
-import { BomInfo, CommonResponseModel, ItemInfoFilterReq, StyleComboInfo, TrimInfoModel } from "@project-management-system/shared-models";
+import { BomInfo, BomInfoModel, BomPrintFilterReq, BomPrintInfoModel, CommonResponseModel, ItemInfoFilterReq, SizeInfo, StyleComboInfo, TrimInfoModel } from "@project-management-system/shared-models";
 import { StyleDto } from "./dto/style-dto";
 import { StyleRepo } from "./dto/style-repo";
 import { StyleNumberDto } from "./dto/style-number-dto";
@@ -116,4 +116,56 @@ export class TrimService{
             throw err
         }
     }
+
+    async getBomPrintInfo(req:BomPrintFilterReq):Promise<CommonResponseModel>{
+        try{
+            const query = `SELECT style_number,geo_code,destination_country_code,destination_country,po_number,po_line_item_number,LEFT(item,4) AS item,id,size_description,SUM(size_qty) as size_qty
+            FROM dpom WHERE LEFT(item,4) IN ('016L','012H')
+            GROUP BY LEFT(item,4),style_number,geo_code,size_description ORDER BY LEFT(item,4)`
+            const data = await this.dataSource.query(query)
+            if(data){
+                // const itemMap = new Map<any,BomPrintInfoModel>()
+                // let sizeData : SizeInfo[] = []
+                // for(const rec of data){
+                //     if(!itemMap.has(`${rec.style_number}-${rec.item}`)){
+                //         sizeData= []
+                //         itemMap.set(`${rec.style_number}-${rec.item}`,new BomPrintInfoModel(rec.item,rec.geo_code,rec.destination_country,null,rec.style_number,null,rec.season,rec.po_number,rec.msc,null,rec.plant,null,[],[]))
+                //     }
+                //     sizeData.push(new SizeInfo(rec.size_description,rec.size_qty))
+                //     itemMap.get(`${rec.style_number}-${rec.item}`).sizeInfo.push(sizeData)
+                    
+                // }
+                // const dataModel : BomPrintInfoModel[] = []
+                // itemMap.forEach(e => dataModel.push(e))
+                // console.log(dataModel,'============')
+                const sizeDateMap = new Map<string, BomPrintInfoModel>();
+    
+                for (const rec of data) {
+                    let sizeData = sizeDateMap.get(`${rec.style_number}-${rec.item}-${rec.geo_code}`);
+            
+                    if (!sizeData) {
+                        sizeData = new BomPrintInfoModel(rec.item,rec.geo_code,rec.destination_country,null,rec.style_number,null,rec.season,rec.po_number,rec.msc,null,rec.plant,null,[],[]
+                        );
+            
+                        sizeDateMap.set(`${rec.style_number}-${rec.item}-${rec.geo_code}`, sizeData);
+                    }
+            
+                    if (!sizeData.sizeInfo) {
+                        sizeData.sizeInfo = [];
+                    }
+            
+                    sizeData.sizeInfo.push(new SizeInfo(rec.size_description, rec.size_qty));
+                }
+            
+                const dataModelArray: BomPrintInfoModel[] = [];
+                sizeDateMap.forEach(sizeData => dataModelArray.push(sizeData));
+                console.log(dataModelArray,'==========')
+                return new CommonResponseModel(true,1,'Data retrieved',dataModelArray)
+            }
+
+        }catch(err){
+            throw err
+        }
+    }
+
 }

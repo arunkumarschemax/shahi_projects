@@ -5,9 +5,12 @@ import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
 import { DpomChildEntity } from "../entites/dpom-child.entity";
-import { FobPriceDiffRequest, PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
+import { BomPrintFilterReq, FobPriceDiffRequest, PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
 import { FobEntity } from "../../fob-price-list/fob.entity";
 import { FabricContent } from "../../fabric-content/fabric-content.entity";
+import { StyleEntity } from "../../po-bom/entittes/style-entity";
+import { BomEntity } from "../../po-bom/entittes/bom-entity";
+import { StyleComboEntity } from "../../po-bom/entittes/style-combo-entity";
 
 @Injectable()
 export class DpomRepository extends Repository<DpomEntity> {
@@ -964,5 +967,17 @@ export class DpomRepository extends Repository<DpomEntity> {
             // .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED'`)
             //  .groupBy(`po_and_line`)
         return await query.getRawMany();
+    }
+
+    async getBomInfoAgainstItemStyle(req:BomPrintFilterReq):Promise<any[]>{
+        // const items = (req.item).JOIN()
+        const itemsParam = req.item.map(item => `'${item}'`).join(',');
+        // const styleParam = req.style.map(style => `'${style}'`).join(',');
+        const query = this.createQueryBuilder('dpom')
+        .select(`style_number,geo_code,destination_country_code,destination_country,po_number,po_line_item_number,LEFT(item,4) AS item,id,size_description,SUM(size_qty) as size_qty`)
+        .where(`LEFT(dpom.item,4) IN (${itemsParam})'`) 
+        .groupBy(`LEFT(item,4),style_number,geo_code,size_description`)
+        .orderBy(`LEFT(item,4)`)
+        return await query.getRawMany()
     }
 }

@@ -22,6 +22,8 @@ export const ItemInfo = () => {
     const [itemDropdownData,setItemDropdownData] = useState<any[]>([])
     const [regionDropdownData,setRegionDropdownData] = useState<any[]>([])
     const navigate = useNavigate()
+    const [styleNumberArray,setStyleNumberArray] = useState<any[]>([])
+    const [itemArray,setItemArray] = useState<any[]>([])
 
 
     const columns:any[] = [
@@ -74,9 +76,10 @@ export const ItemInfo = () => {
         })
     }
 
-    const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
-        console.log(newSelectedRowKeys,'===============')
+    const onSelectChange = (newSelectedRowKeys: any) => {
         setSelectedRowKeys(newSelectedRowKeys);
+        setStyleNumberArray([...styleNumberArray,newSelectedRowKeys[0].style_number])
+        setItemArray([...itemArray,newSelectedRowKeys[0].item])
       };
 
       const rowSelection = {
@@ -87,6 +90,7 @@ export const ItemInfo = () => {
     const onReset = () => {
         form.resetFields()
         setItemInfo([])
+        setSelectedRowKeys([])
     } 
 
     const createdDateHandler = (val) => {
@@ -110,7 +114,7 @@ export const ItemInfo = () => {
     }
 
     const onGenerate = () => {
-        navigate('/bom/trim-List',{state:{info:selectedRowKeys}})
+        navigate('/bom/trim-List',{state:{info:selectedRowKeys,styleNumbers:styleNumberArray,items:itemArray,createdDate:form.getFieldValue('createdAt')}})
     }
 
 

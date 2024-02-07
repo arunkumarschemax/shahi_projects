@@ -97,4 +97,14 @@ export class BomController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
+
+    @Post('/getBomPrintInfo')
+    async getBomPrintInfo(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return this.trimService.getBomPrintInfo(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+
 }

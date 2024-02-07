@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { BomService, trimService } from "@project-management-system/shared-services";
 import { useLocale } from "antd/es/locale";
 import { useLocation, useNavigate } from "react-router-dom";
-import { StyleNumberReq } from "@project-management-system/shared-models";
+import { BomPrintFilterReq, StyleNumberReq } from "@project-management-system/shared-models";
 import AlertMessages from "../common/common-functions/alert-messages";
 import JokerTagPrint from "./trim-prints/joker-tag";
 import { stat } from "fs";
@@ -50,6 +50,15 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
     })
 }
 
+const getBomInfoAgainstItemStyle = (trim) => {
+    const req = new BomPrintFilterReq(state.state.items,state.state.styleNumbers,trim)
+    service.getBomPrintInfo(req).then(res => {
+        if(res.status){
+
+        }
+    })
+}
+
     const getAllTrims=()=>{
         service.getAllTrimInfo().then(res=>{
             if(res.status){
@@ -72,8 +81,10 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
     const cardOnclick = (val) => {
         setTrimName(val.item)
         setModalOpen(true)
-        if(state.state.info){
-            getBomInfoAgainstStyle(state.state.info,val.item)
+        if(state.state){
+            console.log(state.state)
+            // getBomInfoAgainstStyle(state.state.info,val.item)
+            getBomInfoAgainstItemStyle(val.item)
         }
     }
 
