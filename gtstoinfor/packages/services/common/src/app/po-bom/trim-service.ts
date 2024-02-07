@@ -73,10 +73,6 @@ export class TrimService {
                     trimsInfo.push(poInfo)
                 }
 
-                for (const style of trimsInfo) {
-                    console.log(style.bomInfo)
-                }
-
                 //---------------------------------------------------------------------------------------------------------//
                 return new CommonResponseModel(true, 1, 'Data retrieved', trimsInfo)
             } else {
