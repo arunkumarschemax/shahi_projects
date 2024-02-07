@@ -330,9 +330,9 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getItemforfactory(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(` dpom.item,dpom.id`)
+            .select(` DISTINCT LEFT(dpom.item, 4) as item`)
             .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED' AND dpom.item <> ' '`)
-            .groupBy(`dpom.item`)
+        // .groupBy(`dpom.item`)
         return await query.getRawMany();
     }
 
