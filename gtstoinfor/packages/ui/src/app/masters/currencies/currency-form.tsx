@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 // import './currencies-form.css';
 import { CurrencyDto } from '@project-management-system/shared-models';
@@ -37,6 +37,7 @@ export const CurrenciesForm = (props:CurrenciesFormProps) => {
   const [form] = Form.useForm();
   const [disable, setDisable] = useState<boolean>(false)
 
+  const navigate = useNavigate();
   const service = new CurrencyService();
   let history = useLocation();
 
@@ -53,6 +54,7 @@ export const CurrenciesForm = (props:CurrenciesFormProps) => {
       setDisable(false)
         if (res.status) {
           AlertMessages.getSuccessMessage('Currency Created Successfully');
+          navigate('/global/currencies/currency-view')
         //   location.push("/Currencies-view");
           onReset();
         } else {
@@ -93,8 +95,8 @@ export const CurrenciesForm = (props:CurrenciesFormProps) => {
     form.resetFields();
   };
   return (
-<Card title={<span style={{color:'white'}}>Currencies</span>}
-    style={{textAlign:'center'}} 
+<Card title={<span>Currency</span>}
+    headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
      extra={props.isUpdate==true?"":<Link to='/global/currencies/currency-view' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
       >
 

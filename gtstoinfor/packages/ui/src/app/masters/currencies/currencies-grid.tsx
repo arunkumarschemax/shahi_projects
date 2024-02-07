@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -390,41 +390,26 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
 
   // ]
   return (
-
       <>
-      <Row gutter={40}>
-        <Col>
-          <Card title={'Total Currencies: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
-        </Col>
-        <Col>
-          <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>
-        </Col>
-        <Col>
-          <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
-        </Col>
-        <Col>
-        <span><Button onClick={() => navigate('/global/currencies/currency-form')}
-              type={'primary'}>New</Button></span>
-        </Col>
-      </Row><br></br>
-      <Card >
-        {/* <GetCumulatives cumulativeColumns={cumulativeSkelton} data={variantData}/> */}
-        {/* <ProTable
-          request={getAllCurrencys}
-          bordered size='small'
-          cardBordered
-          editable={{
-            type: 'multiple',
-          }}
-          // cardProps={{
-          //   extra: <span><Button onClick={() => navigate('/global/currencies/currency-form')}
-          //     type={'primary'}>New</Button></span>
-          // }}
-          search={false} headerTitle={'Currencies'}
-          columns={columnsSkelton}
-
-        /> */}
-
+       <Card title={<span>Currencies</span>}  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+                extra={<Button
+                    onClick={() => navigate('/global/currencies/currency-form')}
+                    type="primary"
+                >New</Button>
+                }>
+      <Row gutter={24}>
+      <Col span={4}></Col>
+      <Col span={5}>
+        <Alert type='success' message={'Total Racks: ' + variantData.length} style={{fontSize:'15px'}} />
+      </Col>
+      <Col span={5}>
+        <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+      </Col>
+      <Col span={5}>
+        <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+      </Col>
+      </Row>
+      <br></br>
         <Table
         size='small'
           // rowKey={record => record.variantId}
@@ -438,7 +423,6 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
           scroll={{x:true}}
           onChange={onChange}
           bordered />
-      </Card>
       <Drawer bodyStyle={{ paddingBottom: 80 }} title='Update' width={window.innerWidth > 768 ? '50%' : '85%'}
         onClose={closeDrawer} visible={drawerVisible} closable={true}>
         <Card headStyle={{ textAlign: 'center', fontWeight: 500, fontSize: 16 }} size='small'>
@@ -450,8 +434,9 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
             closeForm={closeDrawer} />
         </Card>
       </Drawer>
+      </Card>
       </>
-  );
+  )
 }
 
 
