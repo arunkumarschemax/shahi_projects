@@ -41,10 +41,10 @@ import FabricContentForm from "./masters/fabric-content/fabric-content-form"
 import { Suspense, lazy } from "react"
 import AddressView from "./masters/address/address-view"
 import AddressUpload from "./masters/address/address-excel-upload"
-import BomPdfUpload from "./bom-pdf-extraction/pdf-upload"
+import BomPdfUpload from "./bom-automation/bom-details-upload/pdf-upload"
 import BackingPaper from "./trims/trim-prints/backing-paper"
-import BomView from "./bom-pdf-extraction/bom-view"
-import BomPdfInfoDetailView from "./bom-pdf-extraction/deatiled-view"
+import BomView from "./bom-automation/bom-details/bom-view"
+import BomPdfInfoDetailView from "./bom-automation/bom-pdf-extraction/deatiled-view"
 import ButtonPrint, { Button1Print } from "./trims/trim-prints/button-print"
 import Button2Print from "./trims/trim-prints/button2-print"
 import Button3Print from "./trims/trim-prints/button3-print"
@@ -57,8 +57,9 @@ import WasCarelabel from "./trims/trim-prints/wash-care-label"
 import  { HangTag } from "./trims/trim-prints/hang-tag"
 import LayoutTwo from "./layout/basic-layout/pro-layout"
 import ItemInfo from "./trims/item-info"
+import ProLayout from "@ant-design/pro-layout"
 
-
+// import BasicLayout  from '@ant-design/pro-layout';
 export const AppRoutes = () => {
     const router = createBrowserRouter(createRoutesFromElements(
         <Route  >
@@ -120,13 +121,7 @@ export const AppRoutes = () => {
     return (
 
         <Routes>
-            <Route path='/' element={
-                <>
-                    <>
-                        <BasicLayout />
-                    </>
-                </>
-            } >
+            <Route path='/' element={ <BasicLayout /> } >
                 <Route path="/user-management/users-from" element={<Suspense fallback={<div>Loading...</div>}><UserCreationForm /></Suspense>} />
                 <Route path='/user-management/users-view' element={<UsersView />} />
                 <Route path='/masters'>
@@ -189,8 +184,6 @@ export const AppRoutes = () => {
                     <Route path='washcare-label' element={<WasCarelabel bomInfo={[]} />}/>
                     <Route path='hang-tag' element={<HangTag info={[]}/>} />
                     <Route path='item-info' element={<ItemInfo />} />
-
-
                 </Route>
 
                 <Route path='/reports'>
@@ -208,9 +201,7 @@ export const AppRoutes = () => {
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
                     <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
                     <Route path='po-detailed-view' element={<PoDetailedview data={undefined} />} />
-
                 </Route>
-             
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             <Route path="/print">
