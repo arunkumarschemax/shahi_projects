@@ -583,12 +583,12 @@
 
 import {
     // BuyerExtrnalRefIdReq,
-    BuyerIdReq,
+    // BuyerIdReq,
     BuyersDestinationDto,
     // BuyersDestinationModel,
-    BuyersDestinationRequest,
-    BuyersDestinationResponseModel,
-    MappingResponseModel,
+    // BuyersDestinationRequest,
+    // BuyersDestinationResponseModel,
+    // MappingResponseModel,
     // MenusAndScopesEnum,
   } from "@project-management-system/shared-models";
   import {
@@ -605,21 +605,23 @@ import {
     Col,
     Select,
     Checkbox,
-    Descriptions,
+    // Descriptions,
     Form,
     message,
-    Collapse,
-    Table,
+    // Collapse,
+    // Table,
   } from "antd";
-  import style from "antd/es/alert/style";
-  import { useEffect, useId, useState } from "react";
+  // import style from "antd/es/alert/style";
+  import { useEffect,
+    //  useId,
+      useState } from "react";
   import { useNavigate } from "react-router-dom";
   import AlertMessages from "../common-functions/alert-messages";
-  import { SizeInfoModel } from "packages/libs/shared-models/src/common/Buyers Destination/size-info-model";
-  import { DestinationInfoModel } from "packages/libs/shared-models/src/common/Buyers Destination/destination-info-model";
-  import { ColourInfoModel } from "packages/libs/shared-models/src/common/Buyers Destination/colour-info-model";
+  // import { SizeInfoModel } from "packages/libs/shared-models/src/common/Buyers Destination/size-info-model";
+  // import { DestinationInfoModel } from "packages/libs/shared-models/src/common/Buyers Destination/destination-info-model";
+  // import { ColourInfoModel } from "packages/libs/shared-models/src/common/Buyers Destination/colour-info-model";
   import { ColumnProps } from "antd/es/table";
-  import { MappedData } from "packages/libs/shared-models/src/common/Buyers Destination/mapped-data-model";
+  // import { MappedData } from "packages/libs/shared-models/src/common/Buyers Destination/mapped-data-model";
   import { MappedDetails } from "packages/libs/shared-models/src/common/Buyers Destination/mapped-details-model";
   
   export const BuyersDestinationForm = () => {
@@ -765,7 +767,7 @@ import {
     };
   
     const handleCheckboxChange = (isChecked, checkboxName) => {
-      console.log(isChecked,checkboxName,'checkkk');
+      // console.log(isChecked,checkboxName,'checkkk');
       
       setIsSizeEnabled(checkboxName === "Size" ? isChecked : false);
       setIsDestinationEnabled(checkboxName === "Destination" ? isChecked : false);
@@ -830,7 +832,7 @@ import {
           sizedata.push(...mappedSizeData);
           map.push(...map, ...sizedata);
           tableData = [...tableData, ...size];
-          console.log(...map, "............map");
+          // console.log(...map, "............map");
           mappingDetails.push({ checkBoxName: "Size", map });
         } else {
           message.error("Please select at least one size");
@@ -870,11 +872,11 @@ import {
       if (tableData.length === 0) {
         message.error("Please select at least one option");
       } else {
-        console.log(tableData, "==============");
+        // console.log(tableData, "==============");
         setSelectedOptions(tableData);
       }
       TotalData = [...sizedata, ...Desdata, ...colourData];
-      console.log(TotalData);
+      // console.log(TotalData);
     };
   
     let mappingData: MappedDetails[] = [];
@@ -905,7 +907,7 @@ import {
           colourData.push(...mappedColourData);
           mappingData.push({ mappedAgainst: colorCheck, mappedData: colourData });
         }
-        console.log(mappingData, "Mapped Data=========5556320");
+        // console.log(mappingData, "Mapped Data=========5556320");
   
         const req = new BuyersDestinationDto(
           0,
@@ -916,7 +918,7 @@ import {
           1,
           mappingData
         );
-        console.log(req, "req-----");
+        // console.log(req, "req-----");
   
         service.create(req).then((res) => {
           if (res.status) {
