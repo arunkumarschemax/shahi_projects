@@ -1,8 +1,7 @@
-import { CheckCircleOutlined, CloseCircleOutlined, EditOutlined, RightSquareOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Card, Divider, Input, Popconfirm, Radio, Switch, Table, Tag, Tooltip } from 'antd'
+import {  SearchOutlined } from '@ant-design/icons';
+import { Button, Card, Input, Table } from 'antd'
 import React, { useEffect, useRef, useState } from 'react'
 import AlertMessages from '../common/common-functions/alert-messages';
-import FormItem from 'antd/es/form/FormItem';
 import Highlighter from 'react-highlight-words';
 import { SampleDevelopmentService } from '@project-management-system/shared-services';
 

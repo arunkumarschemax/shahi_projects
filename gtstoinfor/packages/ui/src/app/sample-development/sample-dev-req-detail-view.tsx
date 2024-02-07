@@ -1,9 +1,7 @@
-import { CloseOutlined, EyeOutlined, SearchOutlined } from "@ant-design/icons"
-import { Button, Card, Descriptions, Divider, Input, Modal, Tooltip } from "antd"
-import style from "antd/es/alert/style"
+import {  SearchOutlined } from "@ant-design/icons"
+import { Button, Card, Descriptions,  Input, Modal, Tooltip } from "antd"
 import DescriptionsItem from "antd/es/descriptions/Item"
 import Table from "antd/lib/table"
-import { type } from "os"
 import { SampleDevelopmentService } from "packages/libs/shared-services/src/common"
 import React, { useEffect, useRef } from "react"
 import { useState } from "react"
@@ -38,7 +36,7 @@ export const SampleReqDetailView = () =>{
         service.getAllSampleRequestsInfo(req).then((res) => {
             if (res.status) {
               setData(res.data);
-              console.log(res.data.filter((e)=>e.trimInfo));
+              // console.log(res.data.filter((e)=>e.trimInfo));
               
               res.data.map((e)=>setFabData(e.fabInfo))
               res.data.map((e)=>setTrimData(e.trimInfo))

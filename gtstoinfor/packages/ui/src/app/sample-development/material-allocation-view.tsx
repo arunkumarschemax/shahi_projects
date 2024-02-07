@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react'
-import { ColumnProps, ColumnsType } from 'antd/lib/table';
-import { Button, Card, Table } from 'antd';
+import React from 'react'
+import { ColumnsType } from 'antd/lib/table';
+import {  Card, Table } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { GRNLocationPropsRequest } from '@project-management-system/shared-models';
 import { LocationMappingService } from '@project-management-system/shared-services';
