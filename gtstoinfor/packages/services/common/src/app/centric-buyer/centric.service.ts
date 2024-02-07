@@ -691,10 +691,15 @@ export class CentricService {
         const alert = await driver.switchTo().alert();
         const alertText = await alert.getText();
         const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: alertText });
+    
+        await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+
         await alert.accept();
         await driver.sleep(5000)
         await driver.navigate().refresh();
         await driver.quit();
+        return new CommonResponseModel(false, 0, alertText)
+
       } else {
         await driver.sleep(10000)
         await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
@@ -706,11 +711,20 @@ export class CentricService {
         const year = currentDate.getFullYear().toString().slice(-2);
         const currentDateFormatted = `${day}-${month}-${year}`;
         if (coNo) {
+     
+
           const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+          await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.SUCCESS})
+
+       
           // await driver.navigate().refresh();
           await driver.sleep(10000)
         } else {
+     
+
           const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed' });
+          await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+
           // await driver.navigate().refresh();
           await driver.sleep(10000)
         }
@@ -721,6 +735,8 @@ export class CentricService {
       console.log(error, 'error');
       if (error.name === 'TimeoutError') {
         const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+        await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+
         return new CommonResponseModel(false, 0, 'Matching Color not found')
       } else {
         // Handle other types of errors
@@ -1171,6 +1187,29 @@ export class CentricService {
       return new CommonResponseModel(false, 0, "Error Occurred", error);
     }
   }
+
+
+async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
+  console.log(req, "reqqqqqqqponumnbbb");
+  try {
+      const poLines = req.poLine.split(","); // Split poLine string into an array
+
+      // Iterate over each poLine and update its status
+      for (const poLine of poLines) {
+          await this.Repo.update(
+              { poNumber: req.poNumber, poLine: poLine.trim() }, // Trim to remove any extra spaces
+              { status: req.status }
+          );
+      }
+
+      return new CommonResponseModel(true, 1, 'Success'); // Return success response with the number of lines updated
+  } catch (error) {
+      console.error("Error updating CO line status:", error);
+      return new CommonResponseModel(false, 0, 'Failed');
+  }
+}
+
+
 
 
 
