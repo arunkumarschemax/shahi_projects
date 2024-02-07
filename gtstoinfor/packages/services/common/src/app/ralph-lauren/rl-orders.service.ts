@@ -656,6 +656,9 @@ export class RLOrdersService {
                       // Clear the existing value (if any) and fill it with the new price.
                       await inputField.clear();
                       await inputField.sendKeys(size.price);
+                    } else {
+                      const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: 'NO matching Size found' });
+                      return new CommonResponseModel(false, 0, 'NO matching Size found')
                     }
                   }
                   const inputId = `${size.name}:${color.name}:US`.replace(/\*/g, '');
@@ -705,7 +708,15 @@ export class RLOrdersService {
       return new CommonResponseModel(true, 1, `COline created successfully`)
     } catch (err) {
       console.log(err, 'error');
+      if (err.name === 'TimeoutError' ){
+        const update = await this.coLineRepo.update({ buyerPo: poDetails[0].buyer_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+        return new CommonResponseModel(false, 0, 'Matching Color not found')
+
+      } else {
       return new CommonResponseModel(false, 0, err)
+         
+      }
+ 
     }
     finally {
         driver.quit()
