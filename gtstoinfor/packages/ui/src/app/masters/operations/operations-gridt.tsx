@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space } from 'antd';
-import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
+import {  Divider, Table, Popconfirm, Card, Switch,Input,Button,Tag,Row, Col, Drawer, Alert, Space, message, Checkbox } from 'antd';
+import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
-import { TimeoutError } from 'rxjs';
 import { OperationsService } from '@project-management-system/shared-services';
 import { OperationsDTO } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
@@ -65,13 +64,13 @@ export function OperationsGrid(
   
   const deleteOperation = (operationData: OperationsDTO) => {
     operationData.isActive = operationData.isActive? false : true;
-    operationsService.ActivateDeActivateOperation(operationData).then(res => {console.log(res);
+    operationsService.ActivateDeActivateOperation(operationData).then(res => {
+      // console.log(res);
     if(res.status){
       getAllOperationsData();
-      AlertMessages.getSuccessMessage('Success');
+      message.success(res.internalMessage,2);
     }else {
-      AlertMessages.getErrorMessage(res.internalMessage);
-
+      message.error(res.internalMessage);
     }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message);
@@ -212,34 +211,41 @@ export function OperationsGrid(
         ...getColumnSearchProps("m3OperationCode"),
       },
       {
-        title: 'Status',
+        title:<div style={{textAlign:'center'}}>Status</div>,
         dataIndex: 'isActive',
-        align:"center",
-        ...getColumnSearchProps('isActive'),
-        sorter: (a, b) => a.operationCode.localeCompare(b.operationCode),
-        sortDirections: ["ascend", "descend"],
+        align:'center',
         render: (isActive, rowData) => (
           <>
             {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
             
           </>
-        ),
-        // filters: [
-        //   {
-        //     text: 'Active',
-        //     value: true,
-        //   },
-        //   {
-        //     text: 'InActive',
-        //     value: false,
-        //   },
-        // ],
-        // filterMultiple: false,
-        // onFilter: (value, record) => 
-        // {
-        //   // === is not work
-        //   return record.isActive === value;
-        // },
+      ),
+        onFilter: (value, record) => record.isActive === value,
+          filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+      <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+        <Checkbox
+          checked={selectedKeys.includes(true)}
+          onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+        >
+          <span style={{color:'green'}}>Active</span>
+        </Checkbox>
+        <Checkbox
+          checked={selectedKeys.includes(false)}
+          onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+        >
+          <span style={{color:'red'}}>Inactive</span>
+        </Checkbox>
+        <div className="custom-filter-dropdown-btns" >
+        <Button  onClick={() => clearFilters()} className="custom-reset-button">
+            Reset
+          </Button>
+          <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+            OK
+          </Button>
+        
+        </div>
+      </div>
+           ),
         
       },
       

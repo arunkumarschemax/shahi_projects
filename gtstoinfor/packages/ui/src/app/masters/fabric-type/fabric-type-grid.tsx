@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert, Checkbox, message } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -108,7 +108,7 @@ const getAllFabricType=()=>{
     service.getAllFabricType().then(res=>{
         if(res.status){
             setVariantData(res.data)
-            console.log(res,'dataaaaaaaaaaaaa')
+            // console.log(res,'dataaaaaaaaaaaaa')
         }else{
             AlertMessages.getErrorMessage(res.internalMessage);
         }
@@ -139,7 +139,7 @@ service.createFabricType(variantData).then(res=>{
         if(res.status){
             AlertMessages.getSuccessMessage('Updated Successfully');
             setDrawerVisible(false);
-
+          getAllFabricType()
         }else{
             AlertMessages.getErrorMessage(res.internalMessage);
 
@@ -150,15 +150,16 @@ service.createFabricType(variantData).then(res=>{
   }
   const deleteFabricType = (fabricTypeData:FabricTypesDto) => {
     fabricTypeData.isActive=fabricTypeData.isActive?false:true;
-    service.activateOrDeactivateFabricType(fabricTypeData).then(res => { console.log(res);
+    service.activateOrDeactivateFabricType(fabricTypeData).then(res => { 
+      // console.log(res);
       if (res.status) {
         // getAllPaymentmethod();
-        AlertMessages.getSuccessMessage('Success'); 
+        message.success(res.internalMessage,2)
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
         // } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage,2)
         }
       
     }).catch(err => {
@@ -192,23 +193,33 @@ service.createFabricType(variantData).then(res=>{
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
               </>
             ),
-            filters: [
-              {
-                text: 'Active',
-                value: true,
-              },
-              {
-                text: 'InActive',
-                value: false,
-              },
-            ],
-            filterMultiple: false,
-            onFilter: (value, record) => 
-            {
-              // === is not work
-              return record.isActive === value;
-            },
-            
+            onFilter: (value, record) => record.isActive === value,
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+             ),
+              
           },
     {
         title:`Action`,
