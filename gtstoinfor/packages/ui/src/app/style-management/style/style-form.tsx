@@ -1,9 +1,15 @@
 
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Card, Row, Col, Space, message, Upload, Typography, UploadProps } from 'antd';
-import { LoadingOutlined, MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import TextArea from 'antd/lib/input/TextArea';
+import { Form, Input, Button, Select, Card, Row, Col,
+  //  Space, message,
+    Upload,
+    //  Typography,
+      UploadProps } from 'antd';
+import { LoadingOutlined,
+  //  MinusCircleOutlined, UploadOutlined
+    PlusOutlined } from '@ant-design/icons';
+// import { Link } from 'react-router-dom';
+// import TextArea from 'antd/lib/input/TextArea';
 import { StyleDto } from '@project-management-system/shared-models';
 import { BuyersService, ProfitControlHeadService, StyleService } from '@project-management-system/shared-services';
 import { useNavigate } from 'react-router-dom';
@@ -131,10 +137,10 @@ const service = new StyleService()
   const saveEmployee = (data: StyleDto) => {
     service.creteStyle(data).then((res) => {
         if (res.status) {
-          console.log(data,"dd")
+          // console.log(data,"dd")
           AlertMessages.getSuccessMessage('Style Created Successfully');
           if(filelist.length >0){
-            console.log(res)
+            // console.log(res)
             const formData = new FormData();
             filelist.forEach((file: any) => {
                 formData.append('file', file);
@@ -158,7 +164,7 @@ const service = new StyleService()
    
   };
   const saveData = (values: StyleDto) => {
-    console.log(values)
+    // console.log(values)
       if (props.isUpdate) {
         props.updateDetails(values,filelist);
       } else {
@@ -224,7 +230,7 @@ const service = new StyleService()
                             optionFilterProp="children"
                             placeholder="Select Location"
                           >
-                            <Option key={300} value={300}>{'300'}</Option>
+                            <Option key={340} value={340}>{'340'}</Option>
                           </Select>
                         </Form.Item>
                 </Col>

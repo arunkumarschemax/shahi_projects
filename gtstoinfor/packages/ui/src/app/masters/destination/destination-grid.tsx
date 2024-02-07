@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card,Checkbox, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -118,9 +118,23 @@ export const DestinationGrid = (props: DestinationGridProps) => {
     {
       title: "Destination Name",
       dataIndex: "destination",
-      sorter: (a, b) => a.source.localeCompare(b.source),
+      sorter: (a, b) => a.destination.localeCompare(b.destination),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("destination"),
+    },
+    {
+      title: "Destination Code",
+      dataIndex: "destinationCode",
+      sorter: (a, b) => a.destinationCode.localeCompare(b.destinationCode),
+      sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps("destinationCode"),
+    },
+    {
+      title: "Operation Group",
+      dataIndex: "operationGroup",
+      sorter: (a, b) => a.operationGroup.localeCompare(b.operationGroup),
+      sortDirections: ["ascend", "descend"],
+      ...getColumnSearchProps("operationGroup"),
     },
     {
       title: 'Status',
@@ -130,22 +144,36 @@ export const DestinationGrid = (props: DestinationGridProps) => {
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
-      filters: [
-        {
-          text: 'Active',
-          value: true,
-        },
-        {
-          text: 'InActive',
-          value: false,
-        },
-      ],
       filterMultiple: false,
       onFilter: (value, record) => {
-        // === is not work
-        return record.isActive === value;
-      },
 
+        // Check if the record's item_type includes the selected material type
+        return record.isActive === value
+      },
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{ color: 'green' }}>Active</span>
+          </Checkbox><br/>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{ color: 'red' }}>IN Active</span>
+          </Checkbox>        
+          <div className="custom-filter-dropdown-btns">
+            <Button onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          </div>
+        </div>
+      ),
     },
     {
       title: `Action`,
@@ -305,6 +333,9 @@ export const DestinationGrid = (props: DestinationGridProps) => {
   return (
 
     <>
+        <Card title='Destination' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/global/destination/destination-form')}
+            type={'primary'}>New</Button></span>}>
+
       <Row gutter={40}>
         <Col>
           <Card title={'Total Destination: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
@@ -315,10 +346,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-        <Col>
-          <span><Button onClick={() => navigate('/global/destination/destination-form')}
-            type={'primary'}>New</Button></span>
-        </Col>
+       
       </Row><br></br>
       <Card >
         <Table
@@ -346,6 +374,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
             closeForm={closeDrawer} />
         </Card>
       </Drawer>
+      </Card>
     </>
   );
 }

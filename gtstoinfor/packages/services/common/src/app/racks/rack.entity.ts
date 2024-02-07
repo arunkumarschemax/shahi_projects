@@ -21,7 +21,7 @@ export class RacksEntity {
   rackCode: number;
 
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 30,
     name: 'unit',
   })
@@ -36,24 +36,24 @@ export class RacksEntity {
 
   @Column('int',{
     name:'levels',
-    nullable:false,
+    nullable:true,
   })
   levels:number
 
   @Column('int',{
     name:'columns',
-    nullable:false,
+    nullable:true,
   })
   columns:number
 
   @Column('int',{
     name:'priority',
-    nullable:false,
+    nullable:true,
   })
   priority:number
   
   @Column('varchar', {
-    nullable: false,
+    nullable: true,
     length: 30,
     name: 'barcode_id',
   })

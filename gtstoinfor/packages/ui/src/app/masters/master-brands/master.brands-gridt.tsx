@@ -75,7 +75,7 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
     masterBrandService.ActivateDeActivateBrand(BrandsViewData).then(res => {
       console.log(res);
       if (res.status) {
-        AlertMessages.getSuccessMessage('Success');
+        AlertMessages.getSuccessMessage(BrandsViewData.isActive === true ? 'Brand activated successfully': 'Brand de-activated successfully');
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -95,6 +95,8 @@ const deleteVariant = (BrandsViewData: MasterBrandsDto) => {
         AlertMessages.getSuccessMessage('Updated Successfully');
         // getAllCurrencys();
         setDrawerVisible(false);
+        getAllMasterBrands();
+        
       } else {
       
         AlertMessages.getErrorMessage(res.internalMessage);

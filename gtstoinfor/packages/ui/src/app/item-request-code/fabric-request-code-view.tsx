@@ -299,8 +299,8 @@ const onTabChange = (key) => {
     },
     {
         title: "Weight",
-        dataIndex: "weight",
-        ...getColumnSearchProps('weight'),
+        dataIndex: "weightId",
+        ...getColumnSearchProps('weightId'),
         render : (text,record) => {
               return (
                   <span>

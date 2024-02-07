@@ -33,8 +33,8 @@ export class IndentRepository extends Repository<Indent> {
             .leftJoin(Style, 's', ' s.style_id =  i.style')
           .leftJoin (Buyers, 'b' , 'b.buyer_id = i.buyer_id')
           .leftJoin(M3TrimsEntity,'mt','mt.m3_trim_Id = it.trim_code')
-            .leftJoin(UomEntity,'uf','uf.`id` = mi.`uom_id`')
-            .leftJoin(UomEntity,'ut','ut.`id` = mt.`uom_id`')
+            .leftJoin(UomEntity,'uf','uf.`id` = ifa.quantity_unit')
+            .leftJoin(UomEntity,'ut','ut.`id` = it.quantity_unit')
             if (req.requestNo) {
                 query.where(`i.request_no = '${req.requestNo}'`)
             }

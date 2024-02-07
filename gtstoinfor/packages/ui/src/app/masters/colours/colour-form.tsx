@@ -33,7 +33,7 @@ export const ColourForm=(props:ColourFromProps)=>{
         service.createColour(colourData).then((res) => {
           setDisable(false)
             if (res.status) {
-              AlertMessages.getSuccessMessage('Color Created Successfully');
+              AlertMessages.getSuccessMessage('Colour Created Successfully');
             //   location.push("/Currencies-view");
               onReset();
             } else {

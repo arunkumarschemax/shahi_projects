@@ -7,7 +7,6 @@ import { BuyersAdapter } from './dto/buyers.adapter';
 import { BuyersDTO } from './dto/buyers.dto';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { AllBuyersResponseModel, BuyerIdReq, BuyersDto, BuyersResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
-import { UserRequestDto } from '../currencies/dto/user-logs-dto';
 import { Address } from './address.entity';
 import { BuyerRepository } from './buyers.repository';
 import { AddressDto } from 'packages/libs/shared-models/src/common/buyers/address-dto';

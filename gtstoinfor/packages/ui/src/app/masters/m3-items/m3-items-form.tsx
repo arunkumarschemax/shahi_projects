@@ -601,7 +601,7 @@ const handleYarnUnitChange = (index, value) => {
             </Form.Item>
           </Col>
             <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item label="Width" htmlFor="widthValue" name={"widthValue"} rules={[{ required: true, message: "Width is required" }]} >
+              <Form.Item label="Width" htmlFor="widthValue" name={"widthValue"}>
                 <Space.Compact>
                   <Form.Item name="width" id="width" rules={[{ required: true, message: "Width is required" }]}>
                   <Input placeholder="Enter Width" allowClear onChange={(e)=>onWidthChange(e?.target?.value)} disabled={widthDisabled} />

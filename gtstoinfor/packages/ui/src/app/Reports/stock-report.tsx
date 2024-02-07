@@ -493,9 +493,9 @@ const handleReset = (clearFilters: () => void) => {
           <Col xs={12} sm={6} md={4} lg={3} xl={2}>
             <Form.Item>
               <Button
-                type="primary"
-                htmlType="submit"
-                style={{ background: "green", width: "100%" }}
+                 htmlType='submit'
+                  type="primary"
+                  style={{ width: '80px', marginRight: "10px" }}
               >
                 Search
               </Button>

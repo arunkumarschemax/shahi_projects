@@ -226,7 +226,7 @@ export function M3TrimsReqFile(props:M3Trimprps) {
       trimReqCodeService.createTrimRequestedCode(req).then((res) => {
         if (res.status) {
           message.success(res.internalMessage, 2);
-          // navigate("/sample-development/trim-request-code-view");
+          navigate("/sample-development/trim-request-code-view");
         } else {
           message.error(res.internalMessage, 2);
         }

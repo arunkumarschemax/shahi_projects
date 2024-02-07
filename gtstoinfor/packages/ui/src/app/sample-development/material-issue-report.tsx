@@ -284,7 +284,7 @@ const MaterialIssueReport = () => {
                     htmlType='submit'
                     type="primary"
                     style={{ width: '80px', marginRight: "10px" }}
-                  >Submit</Button>
+                  >Search</Button>
                   <Button htmlType='reset' danger style={{ width: '80px' }} onClick={resetHandler}>Reset</Button>
                 </Form.Item>
               </Col>

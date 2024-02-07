@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ColumnProps, ColumnsType } from 'antd/lib/table';
+import {  ColumnsType } from 'antd/lib/table';
 import { Button, Card, Descriptions, Table } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { GRNLocationPropsRequest, ItemTypeEnumDisplay, MaterialAllocationitemsIdreq } from '@project-management-system/shared-models';
@@ -18,9 +18,9 @@ export const MaterialAllocationDetailView = () => {
 
     const navigate = useNavigate();
     const location = useLocation()
-    console.log(location.state,"loo")
+    // console.log(location.state,"loo")
      const service = new SampleDevelopmentService();
-     console.log(data,data)
+    //  console.log(data,data)
 
 
   
@@ -66,7 +66,7 @@ export const MaterialAllocationDetailView = () => {
     ];
 
     const onChange = (pagination, filters, sorter, extra) => {
-        console.log('params', pagination, filters, sorter, extra);
+        // console.log('params', pagination, filters, sorter, extra);
     }
     
   
