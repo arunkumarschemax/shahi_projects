@@ -3,6 +3,8 @@ import { BomService } from "@project-management-system/shared-services"
 import { Button, Card, Descriptions } from "antd"
 import { useEffect, useState } from "react"
 import { useLocation } from "react-router-dom"
+import { Malaysia } from "./malasia-sticker"
+import Indonesia, { Philippines } from "./philippines"
 
 
 export const getCssFromComponent = (fromDoc, toDoc) => {
@@ -21,31 +23,33 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
     info: any[]
     
 }
+const countryToIMCodeMapping = {
+    Indonesia: '574080',
+    Philippines: '658749',
+    Malaysia: '520460'
+  };
 export const CountryStickerPrint=(props:CountrystickerPrintProps)=>{
+    
     const bomData = useLocation()
     const bomservice = new BomService()
     const [bomInfo,setBomInfo] = useState<any>([])
-
+    
     useEffect(() => {
-        if(props.info){
-            // const req = new StyleNumberReq(props.info[0]?.styleNumber)
-            // bomservice.getBomInfoAgainstStyle(req).then(res =>{
-            //     if(res.status){
-            //         setBomInfo(res.data)
-            //     }
-            // })
-            console.log(props.info)
+        if(props.info.length>=0){
+            console.log(props.info,'oooo');
             setBomInfo(props.info)
         }
 
     },[props.info])
 
-    console.log(bomInfo.bomInfo,'----------')
-
-    const isValidCountry = (country: string) => {
-        const allowedCountries = ["Malaysia", "Philippines", "Indonesia"];
-        return allowedCountries.includes(country);
-    };
+    console.log(bomInfo);
+    
+    useEffect(()=>{ 
+        // console.log(bomInfo[0].destinationCountry,'oooooooooo');
+        
+        isValidCountry(bomInfo.destination_country) },[])
+    
+    console.log(bomInfo,'----------')
     
     const handlePrint = () => {
         const invoiceContent = document.getElementById("print");
@@ -59,7 +63,7 @@ export const CountryStickerPrint=(props:CountrystickerPrintProps)=>{
                         <style>
                             @page {
                                 size: legal;
-                                margin: 20;
+                                margin: 0;
                             }
                             body {
                                 margin: 0;
@@ -83,11 +87,19 @@ export const CountryStickerPrint=(props:CountrystickerPrintProps)=>{
             }, 1000); // Add a delay to ensure all content is loaded
         }
     }
+    const isValidCountry = (country: string) => {
+        console.log(country,'ooooo');
+        
+        const allowedCountries = ["Malaysia", "Philippines", "Indonesia"];
+        return allowedCountries.includes(country);
+    };
 return (
     <>
     <div id='print'>
         
-        {/* <Card title={'Country Sticker'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
+    {bomInfo.destination_country === 'Malaysia' || 'Philippines' ||  'Indonesia' ? (
+
+    <Card title={'Country Sticker'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
 
         <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1}>
             <tr>
@@ -98,47 +110,24 @@ return (
                 <th>QTY IN PCS#</th>
             </tr>
             <tr>
-                {/* {
-                    bomInfo?.bomInfo?.map((e,index)=>{ */}
-                {/* <td>{bomInfo?.destinationCountry}</td>
-                <td>{bomInfo?.imCode}</td>
-                <td>{bomInfo?.item}</td>
-                <td>{bomInfo?.style}</td>
-                <td>{}</td>
-
-                    
+                <td>{bomInfo[0]?.destination_country}</td>
+                <td>{countryToIMCodeMapping[bomInfo[0]?.destination_country]}</td>
+                <td>{bomInfo[0]?.item}</td>
+                <td>{bomInfo[0]?.style_number}</td>
+                <td>{bomInfo[0]?.total_item_qty}</td>
             </tr>
-           </table>):(
+        </table>
+        {bomInfo[0]?.destination_country === "Malaysia" && <Malaysia />}
+        {bomInfo[0]?.destination_country === "Philippines" && <Philippines />}
+        {/* <h1><Malaysia/></h1>
+        <h1><Indonesia/></h1> */}
+    </Card>
+ ) : (
+    <div>Invalid destination country</div>
+)} 
 
-           )
-        </Card> */} 
-         <Card title={'Country Sticker'} extra={<Button onClick={handlePrint}>Print</Button>}>
-                    {isValidCountry(bomInfo.destinationCountry) ? (
-                        <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%', border: '2px solid black' }} border={1}>
-                            <thead>
-                                <tr>
-                                    <th>COUNTRY#</th>
-                                    <th>IM#</th>
-                                    <th>ITEM#</th>
-                                    <th>STYLE#</th>
-                                    <th>QTY IN PCS#</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>{bomInfo.destinationCountry}</td>
-                                    <td>{bomInfo.imCode}</td>
-                                    <td>{bomInfo.item}</td>
-                                    <td>{bomInfo.style}</td>
-                                    <td>{/* You should specify the quantity here */}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    ) : (
-                        <div>Invalid destination country</div>
-                    )}
-                </Card>
-    </div>
-    </>
+  
+</div>
+</>
 )
 }

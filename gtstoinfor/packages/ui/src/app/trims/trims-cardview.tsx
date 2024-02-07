@@ -18,8 +18,7 @@ export const TrimList=({})=>{
 const service = new BomService();
 const [trim,setTrim]=useState<any>([]);
 const state = useLocation()
-const [bomInfo,setBomInfo] = useState<any[]>([])
-const navigate = useNavigate()
+const [bomInfo, setBomInfo] = useState<any>([]);
 const [modalOpen,setModalOpen] = useState<boolean>(false)
 const [trimName,setTrimName] = useState<string>('')
 
@@ -27,11 +26,13 @@ const componentsMapping = {
     "Joker Tag" : <JokerTagPrint info={bomInfo} />,
     "Hangtag":<HangTag info={bomInfo} />,
     "Wash Care Label":<WasCarelabel  bomInfo={bomInfo}/>,
-    "Country Sticker":<CountryStickerPrint  info={bomInfo}/>
+    "Country Sticker":<CountryStickerPrint  info={bomInfo} />
 
 }
 
 useEffect(()=>{
+    setBomInfo(state.state.info)
+
     getAllTrims();
 },[])
 
@@ -39,7 +40,10 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
     console.log(styleNumber)
     const req = new StyleNumberReq(styleNumber.styleNumber,trim)
     service.getBomInfoAgainstStyle(req).then(res =>{
+        
         if(res.status){
+            console.log(res.data,"kkkkkkkkkkkk");
+
             res.data.styleNumber = styleNumber.styleNumber;
             res.data.poNumber = styleNumber.purchaseOrderNumber;
             // res.data.destinationCountry = styleNumber.destinationCountry;
@@ -52,6 +56,7 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
         }
     })
 }
+console.log(state.state.info,"infodata..");
 
     const getAllTrims=()=>{
         service.getAllTrimInfo().then(res=>{
@@ -73,6 +78,9 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
     // }
 
     const cardOnclick = (val) => {
+        console.log(val);
+        console.log(state.state.info)
+        
         setTrimName(val.item)
         setModalOpen(true)
         if(state.state.info){
@@ -84,6 +92,11 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
         setModalOpen(false)
         setTrimName('')
     }
+    const isValidCountry = (country) => {
+        const allowedCountries = ["Malaysia", "Philippines", "Indonesia"];
+        return allowedCountries.includes(country);
+    };
+    
     return(
    <>
    <Card title="TRIMS" headStyle={{ color: 'black', fontWeight: 'bold',fontSize:'20px' }}>
@@ -111,6 +124,10 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
     </Card>
     <Modal open={modalOpen} onCancel={onCancel} onOk={() => setModalOpen(false)} footer={[]} width={'85%'}>
         {componentsMapping[trimName]}       
+        {/* {trimName === "Country Sticker" && isValidCountry(bomInfo.destinationCountry) ?
+                    <CountryStickerPrint info={bomInfo} /> :
+                    <div>{isValidCountry(bomInfo.destinationCountry) ? "Invalid Trim" : "Invalid destination country"}</div>
+                } */}
     </Modal>
    </> 
     )
