@@ -684,7 +684,7 @@ export class SampleRequestService {
 
             if (fabricData.allocatedStock.find((e) => e.checkedStatus === 1) != undefined) {
               let stockArray: any[] = [];
-              stockArray.push(fabricData.allocatedStock.find((e) => e.checkedStatus === 1 && e.issuedQty > 0));
+              stockArray.push(fabricData.allocatedStock.filter((e) => e.checkedStatus === 1 && e.issuedQty > 0));
               console.log(stockArray);
               console.log("if")
               console.log(req)
@@ -692,18 +692,23 @@ export class SampleRequestService {
 
               let totalAllocated = 0
               let item: MaterialAllocationItemsEntity[] = []
-              for (const stock of stockArray) {
-                console.log("7777")
-                totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
-                let itemData = new MaterialAllocationItemsEntity();
-                itemData.locationId = stock.locationId;
-                itemData.quantity = stock.quantity;
-                itemData.stockId = stock.stockId;
-                itemData.allocateQuantity = stock.issuedQty;
-                item.push(itemData);
-                let stockUpdate = await manager.getRepository(StocksEntity).update({ id: stock.stockId }, { allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}` });
-                if (stockUpdate.affected === 0) {
-                  await manager.releaseTransaction();
+              for(const stock of stockArray) {
+                for(const stk of stock) {
+                  console.log(stk);
+                  console.log("7777")
+                  console.log(stock);
+
+                  totalAllocated = Number(totalAllocated) + Number(stk.issuedQty);
+                  let itemData = new MaterialAllocationItemsEntity();
+                  itemData.locationId = stk.locationId;
+                  itemData.quantity = stk.quantity;
+                  itemData.stockId = stk.stockId;
+                  itemData.allocateQuantity = stk.issuedQty;
+                  item.push(itemData);
+                  let stockUpdate = await manager.getRepository(StocksEntity).update({ id: stk.stockId }, { allocateQuanty: () => `allocatd_quantity +  ${stk.issuedQty}` });
+                  if (stockUpdate.affected === 0) {
+                    await manager.releaseTransaction();
+                  }
                 }
               }
               let materialAllocation = new MaterialAllocationEntity();
@@ -774,7 +779,7 @@ export class SampleRequestService {
 
             if (trimData.allocatedStock.find((e) => e.checkedStatus === 1) != undefined) {
               let stockArray: any[] = []
-              stockArray.push(trimData.allocatedStock.find((e) => e.checkedStatus === 1 && e.issuedQty > 0))
+              stockArray.push(trimData.allocatedStock.filter((e) => e.checkedStatus === 1 && e.issuedQty > 0))
               console.log(stockArray);
               let totalAllocated = 0
               let item: MaterialAllocationItemsEntity[] = []
