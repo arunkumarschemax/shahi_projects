@@ -10,8 +10,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.module';
 import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
-import { EddieModule } from './eddiebauer/eddie.module';
-import { AddressModule } from './Entites@Shahi/address/address-module';
+import { LevisModule } from './levis/levis.module';
+
 
 @Module({
   imports: [
@@ -32,7 +32,7 @@ import { AddressModule } from './Entites@Shahi/address/address-module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,EddieModule,AddressModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,LevisModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
