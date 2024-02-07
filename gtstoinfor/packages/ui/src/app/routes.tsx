@@ -76,6 +76,7 @@ import EddieColineView from "./eddiebauer/eddie-co-line-view"
 import EddiePdfTable from "./eddiebauer/eddie-pdf-detail-view"
 import EddieOrdersDetailView from "./eddiebauer/eedie-order-detail-view"
 import EddieComparisionReport from "./eddiebauer/eedie-comparision-report"
+import LevisOrdersGrid from "./levis/levis-order-data-grid"
 
 
 export const AppRoutes = () => {
@@ -285,6 +286,11 @@ export const AppRoutes = () => {
 
                   
               
+                </Route>
+                <Route path='/levis'>
+                   
+                   <Route path='levis-order-data-info-grid' element={<LevisOrdersGrid />} />
+            
                 </Route>
 
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
