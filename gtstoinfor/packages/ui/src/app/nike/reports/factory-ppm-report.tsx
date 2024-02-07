@@ -1349,6 +1349,7 @@ const FactoryPPMReport = () => {
                                     placeholder="Select Item"
                                     optionFilterProp="children"
                                     allowClear
+                                    mode='multiple'
                                 >
                                     {item?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
@@ -1375,7 +1376,6 @@ const FactoryPPMReport = () => {
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
                             <Form.Item label="Document Date" name="documentDate">
                                 <RangePicker />
-
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} >
@@ -1385,7 +1385,7 @@ const FactoryPPMReport = () => {
                                     placeholder="Select Po Number"
                                     optionFilterProp="children"
                                     allowClear
-
+                                    mode='multiple'
                                 >
                                     {poNumber?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
@@ -1401,6 +1401,7 @@ const FactoryPPMReport = () => {
                                     placeholder="Select poLineItemNumber"
                                     optionFilterProp="children"
                                     allowClear
+                                    mode='multiple'
                                 >
                                     {poLineItemNumber?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.po_line_item_number}>{inc.po_line_item_number}</Option>

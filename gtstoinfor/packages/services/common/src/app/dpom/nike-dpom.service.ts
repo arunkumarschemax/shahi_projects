@@ -704,7 +704,7 @@ export class DpomService {
         return sendMail
     }
 
-    // @Cron('0 4 * * *')
+    @Cron('0 4 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
         try {
