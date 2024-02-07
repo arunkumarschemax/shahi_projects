@@ -45,10 +45,10 @@ export const ItemInfo = () => {
             title:'Region',
             dataIndex:'geo_code'
         },
-        {
-            title:'Destination',
-            dataIndex:'destination_country'
-        },
+        // {
+        //     title:'Destination',
+        //     dataIndex:'destination_country'
+        // },
         {
             title:'Quantity',
             dataIndex:'total_item_qty'
