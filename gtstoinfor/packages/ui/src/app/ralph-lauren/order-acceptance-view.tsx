@@ -446,6 +446,14 @@ const OrderAcceptanceGrid = () => {
           text: 'INPROGRESS',
           value: 'INPROGRESS',
         },
+        {
+          text: 'FAILED',
+          value: 'FAILED',
+        },
+        {
+          text: 'SUCCESS',
+          value: 'SUCCESS',
+        },
   
       ],
       onFilter: (value,record) =>{ return record.itemStatus.toLowerCase() === value.toLowerCase()}
@@ -463,7 +471,7 @@ const OrderAcceptanceGrid = () => {
             <Input
               placeholder="Enter Item No"
               onChange={(e) => handleItemNoChange(e.target.value, record, index)}
-              disabled={record.itemStatus == 'INPROGRESS' ? true : false}
+              disabled={record.itemStatus == 'OPEN' ? false : true}
             />
           </Form.Item>
         );
@@ -483,9 +491,9 @@ const OrderAcceptanceGrid = () => {
           <Button
             style={{ position: "relative", top: "-7.5px" }}
             onClick={() => createCOLine(record, index)}
-            disabled={record.itemStatus === 'INPROGRESS' ? true : !isEnabled}
+            disabled={record.itemStatus === 'OPEN' ? !isEnabled : true }
           >
-            {record.itemStatus === 'INPROGRESS' ? 'Accepted' : 'Accept'}
+            {record.itemStatus === 'OPEN' ? 'Accept' : 'Accepted'}
           </Button>
         );
       },

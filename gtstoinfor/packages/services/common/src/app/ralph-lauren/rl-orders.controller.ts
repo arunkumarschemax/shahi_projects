@@ -250,4 +250,15 @@ export class RLOrdersController {
             return error;
         }
     }
+
+    @Post('/updateCOLineStatus')
+    async updateCOLineStatus(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.rlOrdersService.updateCOLineStatus(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+
 }

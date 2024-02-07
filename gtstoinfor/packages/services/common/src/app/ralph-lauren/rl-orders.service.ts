@@ -679,6 +679,9 @@ export class RLOrdersService {
           const alert = await driver.switchTo().alert();
           const alertText = await alert.getText();
           const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText });
+          await this.updateCOLineStatus({buyerPo: po.buyer_po, lineItemNo: po.line_item_no , itemStatus: ItemStatusEnum.FAILED})
+          return new CommonResponseModel(false, 0, alertText)
+
           await alert.accept();
           await driver.sleep(5000)
           await driver.navigate().refresh();
@@ -696,10 +699,14 @@ export class RLOrdersService {
           const currentDateFormatted = `${day}-${month}-${year}`;
           if (coNo) {
             const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+          await this.updateCOLineStatus({buyerPo: po.buyer_po, lineItemNo: po.line_item_no , itemStatus: ItemStatusEnum.SUCCESS})
+
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           } else {
             const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed' });
+          await this.updateCOLineStatus({buyerPo: po.buyer_po, lineItemNo: po.line_item_no , itemStatus: ItemStatusEnum.FAILED})
+
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           }
@@ -986,6 +993,19 @@ export class RLOrdersService {
           return new CommonResponseModel(false, 0, "Error Occurred While Deleting", error);
       }
   }
+
+  async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
+    const update = await this.rlOrdersRepo.update({
+      poNumber: req.poNumber, poItem: req.poLineItemNumber
+    }, {
+      itemStatus: req.itemStatus
+    })
+    if (update.affected) {
+        return new CommonResponseModel(true, 1, 'Success')
+    } else {
+        return new CommonResponseModel(false, 0, 'Failed')
+    }
+}
 
 
 
