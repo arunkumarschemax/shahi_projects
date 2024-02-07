@@ -5,7 +5,7 @@ import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
 import { DpomChildEntity } from "../entites/dpom-child.entity";
-import { FobPriceDiffRequest, PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
+import { FobPriceDiffRequest, ItemInfoFilterReq, PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
 import { FobEntity } from "../../fob-price-list/fob.entity";
 import { FabricContent } from "../../fabric-content/fabric-content.entity";
 
@@ -965,4 +965,17 @@ export class DpomRepository extends Repository<DpomEntity> {
             //  .groupBy(`po_and_line`)
         return await query.getRawMany();
     }
+    async getPoLineDataForCihinaInserttag(req:ItemInfoFilterReq): Promise<any[]> {
+        const query = this.createQueryBuilder('d')
+            .select(`ogac,LEFT(item,4) AS item,id , po_number , po_line_item_number ,
+            style_number , planning_season_code  , planning_season_year , size_description ,sum(size_qty) , 
+            geo_code , po_and_line , destination_country_code, gender_age_desc,
+                       destination_country`)
+            .where(`created_at BETWEEN '${req.fromDate}' AND '${req.toDate}' AND item IS NOT NULL AND LEFT(item,4) = '${req.item}' AND geo_code = '${req.region}'`)
+            .groupBy(`LEFT(item,4),style_number,geo_code,ogac`)
+           return await query.getRawMany();
+    }
+
+
+
 }

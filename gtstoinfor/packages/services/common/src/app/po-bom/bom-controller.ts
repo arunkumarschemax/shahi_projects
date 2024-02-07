@@ -97,4 +97,12 @@ export class BomController{
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
+    @Post('/getPoLineDataForCihinaInserttag')
+    async getPoLineDataForCihinaInserttag(@Body() req:any):Promise<CommonResponseModel>{
+        try{
+            return this.bomService.getPoLineDataForCihinaInserttag(req)
+        }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
 }

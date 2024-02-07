@@ -35,4 +35,8 @@ export class BomService extends CommonAxiosService {
     async getRegionDropdownByCreatedAt(req:ItemInfoFilterReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getRegionDropdownByCreatedAt",req)
     }
+    async getPoLineDataForCihinaInserttag(req:ItemInfoFilterReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getPoLineDataForCihinaInserttag",req)
+    }
+    
 }
