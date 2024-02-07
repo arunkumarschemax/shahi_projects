@@ -95,7 +95,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
   const openFormWithData=(viewData: DepartmentsDtos)=>{
     setDrawerVisible(true);
     setSelectedVariant(viewData);
-  }
+      }
 
   const onChange = (pagination, filters, sorter, extra) => {
     console.log('params', pagination, filters, sorter, extra);
@@ -137,7 +137,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
             if(res.status){
                 AlertMessages.getSuccessMessage('Updated Successfully');
                 setDrawerVisible(false);
-    
+                getAllDepartment()
             }else{
                 AlertMessages.getErrorMessage(res.internalMessage);
     
