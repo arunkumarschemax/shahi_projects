@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { BomService, trimService } from "@project-management-system/shared-services";
 import { useLocale } from "antd/es/locale";
 import { useLocation, useNavigate } from "react-router-dom";
-import { StyleNumberReq } from "@project-management-system/shared-models";
+import { BomPrintFilterReq, StyleNumberReq } from "@project-management-system/shared-models";
 import AlertMessages from "../common/common-functions/alert-messages";
 import JokerTagPrint from "./trim-prints/joker-tag";
 import { stat } from "fs";
@@ -25,7 +25,7 @@ const [trimName,setTrimName] = useState<string>('')
 const componentsMapping = {
     "Joker Tag" : <JokerTagPrint info={bomInfo} />,
     "Hangtag":<HangTag info={bomInfo} />,
-    "Wash Care Label":<WasCarelabel  bomInfo={bomInfo}/>,
+    "Wash Care Label" : <WasCarelabel  bomInfo={bomInfo}/>,
     "Country Sticker":<CountryStickerPrint  info={bomInfo} />
 
 }
@@ -52,6 +52,15 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
             // res.data.geoCode = styleNumber.geoCode;
             res.data.sizeWiseData=styleNumber.sizeWiseData;
             res.data.item=styleNumber.item
+            // setBomInfo(res.data)
+        }
+    })
+}
+
+const getBomInfoAgainstItemStyle = (trim) => {
+    const req = new BomPrintFilterReq(state.state.items,state.state.styleNumbers,trim)
+    service.getBomPrintInfo(req).then(res => {
+        if(res.status){
             setBomInfo(res.data)
         }
     })
@@ -83,8 +92,10 @@ console.log(state.state.info,"infodata..");
         
         setTrimName(val.item)
         setModalOpen(true)
-        if(state.state.info){
-            getBomInfoAgainstStyle(state.state.info,val.item)
+        if(state.state){
+            console.log(state.state)
+            // getBomInfoAgainstStyle(state.state.info,val.item)
+            getBomInfoAgainstItemStyle(val.item)
         }
     }
 

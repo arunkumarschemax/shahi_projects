@@ -1,4 +1,5 @@
-import { BomInfo } from "@project-management-system/shared-models";
+import { BomInfo, ItemInfoFilterReq } from "@project-management-system/shared-models";
+import { BomService } from "@project-management-system/shared-services";
 import { Button, Card } from "antd"
 import { useEffect, useState } from "react"
 
@@ -21,17 +22,32 @@ export const WasCarelabel = (props:washCareprops) =>{
     console.log(props.bomInfo)
     const [bomInfo,setBomInfo] = useState<any>([])
     const [vCode, setVCode] = useState('')
+    const [sizeData, setSizeData] = useState<any>([])
+    const  bomService  = new BomService()
     let grandTotal = 0
-    // let vCode
+    let chinaGgrandTotal =0
+    
+    const sizeWiseDataForFormutpleOgac =() =>{
+        bomService.getPoLineDataForCihinaInserttag({fromDate:'2024-01-03',toDate:'2024-01-05',region:'EMEA',item:'009L'}).then(res =>{
+            if(res.status){
+                setSizeData(res.data)
+            }else{
+                setSizeData([])
+            }
+        })
+    }
+
     useEffect(() => {
-        console.log(props.bomInfo)
         if(props.bomInfo){
+        console.log(props.bomInfo)
+
             setBomInfo(props.bomInfo)
         }
-
+        // sizeWiseDataForFormutpleOgac()
     },[props.bomInfo])
 
     useEffect(() =>{
+        console.log(bomInfo)
         if(bomInfo.destinationCountry === 'ARGENTINA '){
             if(bomInfo.shipToAddress.includes('Nike Trading')){
                 setVCode('50')
@@ -42,11 +58,7 @@ export const WasCarelabel = (props:washCareprops) =>{
             if(bomInfo.shipToAddress.includes('RT Clothing')){
                 setVCode('35')
             }
-        }
-        // else{
-        //     setVCode('Not Destined To Brazil')
-        // }
-       
+        }       
     },[bomInfo])
 
     const handlePrint = () => {
@@ -85,6 +97,7 @@ export const WasCarelabel = (props:washCareprops) =>{
             }, 1000); // Add a delay to ensure all content is loaded
         }
     }
+console.log(sizeData)
     return (
         <div  id='print'>
             <Card title={'WashCare Label'} 
@@ -118,74 +131,41 @@ export const WasCarelabel = (props:washCareprops) =>{
          
             <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
             <tr>
-                <th style={{width:'3%'}}>ITEM#</th>
-                <th style={{width:'3%'}}>PO NO</th>
-                <th style={{width:'3%'}}>SEASON</th>
-                <th style={{width:'3%'}}>STYLE</th>
-                <th style={{width:'3%'}}>IM#</th>
+                <th style={{width:'1%'}}>ITEM#</th>
+                <th style={{width:'1%'}}>PO NO</th>
+                <th style={{width:'1%'}}>SEASON</th>
+                <th style={{width:'1%'}}>STYLE</th>
+                <th style={{width:'1%'}}>IM#</th>
                 <th style={{width:'5%'}}>DESCRIPTION</th>
-                <th style={{width:'3%'}}>WC</th>
-                <th style={{width:'3%'}}>DESTINATION</th>
-                <th style={{width:'3%'}}>TOTAL QTY</th>
-              </tr>        
- 
-              <tr>
-              <td>
-        <div style={{ paddingTop: '200px' }}>{bomInfo.item}</div>
-        </td>
-               <td>{bomInfo.poNumber}</td>
-               <td>{bomInfo.season}</td>
-               <td>{bomInfo.styleNumber}</td> 
-               <td>
-                <>
-                <div style={{marginTop:'-40px'}}>
-                {
-                      bomInfo.bomInfo && Array.isArray(bomInfo.bomInfo) &&  bomInfo?.bomInfo?.map((e,index)=>{
-                        return(
-                        <>
-                            {bomInfo.geoCode == 'EMEA' ?'1009915' :e.imCode}
-                       {index < bomInfo.bomInfo.length - 1 && <hr />}
-                        </>
-                        )
-                      })
-                }
-                </div>
-                </>
-               </td>
-               <td>
-               {
-              bomInfo.bomInfo && Array.isArray(bomInfo.bomInfo) &&  bomInfo?.bomInfo?.map((e,index )=>{
-                    return(
-                    <>
-                        {e.description}
-                   {index < bomInfo.bomInfo.length - 1 && <hr />}
-                        <br></br>
-                        <br></br>
-                    </>
-                    )
-                  })
-              }
-               </td>
-               <td>{
-                bomInfo.bomInfo && Array.isArray(bomInfo.bomInfo) &&  bomInfo?.bomInfo?.map((e,index )=>{
-                    return(
-                    <>
-                        {e.trimInfo}
-                   {index < bomInfo.bomInfo.length - 1 && <hr />}
-                        <br></br>
-                        <br></br>
-                    </>
-                    )
-                  })
-                }</td>
-             
-               <td>{bomInfo.geoCode}</td>
+                <th style={{width:'1%'}}>WC</th>
+                <th style={{width:'1%'}}>DESTINATION</th>
+                <th style={{width:'1%'}}>TOTAL QTY</th>
+            </tr>        
+            <tr>
+                <td style={{textAlign:'center'}} rowSpan={bomInfo?.bomInfo?.length}>{bomInfo.item}</td>
+                <td style={{textAlign:'center'}}  rowSpan={4}>{bomInfo.poNumber}</td>
+                <td style={{textAlign:'center'}}  rowSpan={4}>{bomInfo.season}</td>
+                <td style={{textAlign:'center'}}  rowSpan={4}>{bomInfo.styleNumber}</td> 
+                <td>{bomInfo?.bomInfo[0]?.geoCode == 'EMEA' ?'1009915' : bomInfo?.bomInfo[0].imCode}</td>
+                <td>{bomInfo?.bomInfo[0]?.description}</td>
+                <td>{bomInfo?.bomInfo[0]?.trimInfo}</td>
+                <td style={{textAlign:'center'}}  rowSpan={4}>{bomInfo.geoCode}</td>
+                <td style={{textAlign:'center'}}  rowSpan={4}>0</td>
             </tr>
+                {
+                    bomInfo?.bomInfo?.map((e,index)=>{
+                            return index > 0 ? <tr>
+                                <td>{bomInfo.geoCode == 'EMEA' ?'1009915' :e.imCode}</td>
+                                <td>{e.description}</td>
+                                <td>{e.trimInfo}</td>
+                            </tr> : <></>;
+                    })
+                }
         </table>
            <br></br> 
-        <div>
-            {
-                bomInfo.geoCode === 'APA' && bomInfo?.styleType === 'MENS TOP' ?
+        <div 
+        //  style={{display:bomInfo.geoCode === 'APA' && bomInfo?.styleType === 'MENS TOP' ?'unset':'none'}}
+          > 
             <>
         <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
         <tr>
@@ -194,7 +174,7 @@ export const WasCarelabel = (props:washCareprops) =>{
                 <th>SIZE MATRIX TYPE</th>
                 <th>STYLE TYPE</th>
                 <th>SEASON</th>
-                {bomInfo.sizeWiseData && Array.isArray(bomInfo.sizeWiseData) && bomInfo?.sizeWiseData?.map(e =>{
+                {sizeData?.sizeWiseData?.map(e =>{
                      grandTotal+= e.sizeQty
                      return(
                         <th>{e.sizeDescription}</th>
@@ -210,7 +190,7 @@ export const WasCarelabel = (props:washCareprops) =>{
                 <td  style={{textAlign:'center'}}>{bomInfo.genderAgeDesc}</td>
                 <td style={{textAlign:'center'}}>{bomInfo.season}</td>
                 {
-                    bomInfo?.sizeWiseData?.map(e => {
+                    sizeData?.sizeWiseData?.map(e => {
                         return(
                             <td>{e.sizeQty}</td>
                         )
@@ -219,7 +199,10 @@ export const WasCarelabel = (props:washCareprops) =>{
                 <th>{grandTotal}</th>
             </tr>
         </table>
-        <br></br>       
+        
+        <br></br>     
+       
+            <br></br>
         <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
             <tr>
                 <td style={{textAlign:'center'}}>{'BUY'}</td>
@@ -378,8 +361,32 @@ export const WasCarelabel = (props:washCareprops) =>{
             </tr>
         </table>
         </>
-        :<></>
-        }
+        </div>
+        <div style={{display:bomInfo.destinationCountry === 'CHINA' && bomInfo. plant != '1076' && bomInfo.plant != '1077'?'unset':'none'}}>
+        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'60%'}} border={1} cellSpacing="0" cellPadding='0'>
+            <tr>
+                <th style={{color:'red'}}>CHINA INSERT</th>
+                {bomInfo.sizeWiseData && Array.isArray(bomInfo.sizeWiseData) && bomInfo?.sizeWiseData?.map(e =>{
+                     chinaGgrandTotal+= e.sizeQty
+                     return(
+                        <th>{e.sizeDescription}</th>
+                    )
+                })  
+                }
+                <th>Total</th>
+            </tr>
+            <tr>
+                <th>#IM110044</th>
+                {
+                    bomInfo?.sizeWiseData?.map(e => {
+                        return(
+                            <td>{e.sizeQty}</td>
+                        )
+                    })
+                }
+                <th>{grandTotal}</th>
+            </tr>
+            </table>  
         </div>
             </Card>
       

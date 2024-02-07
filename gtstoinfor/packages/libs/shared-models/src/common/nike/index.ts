@@ -38,4 +38,6 @@ export * from './bom-size-modal.req';
 export * from './bom-report-modal.req';
 export * from './trim-info-model';
 export * from './style-number.req';
-export * from './item-info-filter-req'
+export * from './item-info-filter-req';
+export * from './bom-print-filter-info-req';
+export * from './bom-print-info-model'
