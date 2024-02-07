@@ -1,7 +1,7 @@
 import { Button, Card, Col, Descriptions, Form, Row, Select } from 'antd';
 import { useEffect, useState } from 'react';
 import { ColourService, DestinationService, ItemsService, SKUGenerationService, SizeService } from '@project-management-system/shared-services';
-import { ItemSKusReq, SKUGenerationReq, SkuStatusEnum } from '@project-management-system/shared-models';
+import { ItemSKusReq,  SkuStatusEnum } from '@project-management-system/shared-models';
 import AlertMessages from '../common/common-functions/alert-messages';
 
 const { Option } = Select;
@@ -152,7 +152,7 @@ export const SKUGeneration = () => {
   }
 
   const onItemCodeChange = (key,option) => {
-    console.log(option)
+    // console.log(option)
     setitemId(option?.itemId)
   }
 
