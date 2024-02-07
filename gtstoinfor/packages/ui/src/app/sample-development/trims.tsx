@@ -231,6 +231,7 @@ const getM3TrimsTypes = (value: number,request:any,KeyValue:number) => {
           props.form.setFieldValue(`trimCode${KeyValue}`,undefined)
           setM3Trims(res.data)
       }else{
+        props.form.setFieldValue(`trimCode${KeyValue}`,undefined)
         setM3Trims([])
         message.info('No Data Found')
       }

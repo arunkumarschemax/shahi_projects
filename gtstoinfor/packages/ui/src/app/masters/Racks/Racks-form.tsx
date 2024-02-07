@@ -16,11 +16,7 @@ const onFinish = (rackDto: RackDTO) => {
     service.createRacks(rackDto).then(res => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage)
-        setTimeout(() => {
-          message.success('Submitted successfully');
-          window.location.reload();
-          navigate("/masters/rack-view")
-        }, 500);;
+        navigate("/masters/rack-view")
       }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message);

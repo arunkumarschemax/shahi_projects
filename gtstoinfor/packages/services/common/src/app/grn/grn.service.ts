@@ -1,5 +1,5 @@
 import { Injectable, Query } from '@nestjs/common';
-import { CommonResponseModel, CustomerOrderStatusEnum, GRNTypeEnum, GrnReq, PoItemEnum, PurchaseOrderStatus, grnReportReq } from '@project-management-system/shared-models';
+import { CommonResponseModel, CustomerOrderStatusEnum, GRNTypeEnum, GrnReq, LifeCycleStatusEnum, PoItemEnum, PurchaseOrderStatus, grnReportReq } from '@project-management-system/shared-models';
 import { GrnRepository } from './dto/grn-repository';
 import { GrnAdapter } from './dto/grn-adapter';
 import { GrnDto, PurchaseOrderReq } from './dto/grn-dto';
@@ -15,6 +15,7 @@ import { IndentRepository } from '../indent/dto/indent-repository';
 import { FabricIndentRepository } from '../indent/dto/fabric-indent-repository';
 import { TrimIndentRepository } from '../indent/dto/trim-indent-repository';
 import { PurchaseOrderItemsEntity } from '../purchase-order/entities/purchase-order-items-entity';
+import { SampleRequest } from '../sample-dev-request/entities/sample-dev-request.entity';
 
 let moment = require('moment');
 
@@ -36,7 +37,8 @@ export class GrnService {
         private readonly indentTrimRepo: TrimIndentRepository,
         @InjectRepository(PurchaseOrderItemsEntity)
         private poItemRepo: Repository<PurchaseOrderItemsEntity>,
-
+        @InjectRepository(SampleRequest)
+        private readonly sampleRepo: Repository<SampleRequest>,
 
 
     ) { }
@@ -283,6 +285,12 @@ export class GrnService {
                     await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.CLOSED,grnQuantity: () => `grn_quantity + ${totGrnQty}` })
                 } else {
                     await this.poRepo.update({ purchaseOrderId: req.poId }, { status: PurchaseOrderStatus.IN_PROGRESS,grnQuantity: () => `grn_quantity + ${totGrnQty}` })
+                }
+                if(req.grnType === "SAMPLE ORDER"){
+                    for (const item of req.grnItemInfo) {
+                        let updateSampleOrder = await this.sampleRepo.update({SampleRequestId:item.sampleRequestId},{lifeCycleStatus:LifeCycleStatusEnum.GRN})
+                        console.log(updateSampleOrder);
+                    }
                 }
 
                 // await transactionalEntityManager.completeTransaction();
