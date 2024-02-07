@@ -996,7 +996,7 @@ export class RLOrdersService {
 
   async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
     const update = await this.rlOrdersRepo.update({
-      poNumber: req.poNumber, poItem: req.poLineItemNumber
+      poNumber: req.buyerPo, poItem: req.lineItemNo
     }, {
       itemStatus: req.itemStatus
     })
