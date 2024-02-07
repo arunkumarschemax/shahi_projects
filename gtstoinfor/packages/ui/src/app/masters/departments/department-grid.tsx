@@ -152,7 +152,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
         service.ActivateorDeactivateDepartment(depart).then(res => { console.log(res);
           if (res.status) {
             // getAllPaymentmethod();
-            AlertMessages.getSuccessMessage('Success'); 
+            AlertMessages.getSuccessMessage(res.internalMessage); 
           } else {
             // if (res.intlCode) {
             //   AlertMessages.getErrorMessage(res.internalMessage);

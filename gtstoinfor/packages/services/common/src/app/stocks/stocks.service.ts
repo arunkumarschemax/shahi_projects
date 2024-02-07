@@ -177,7 +177,7 @@ export class StocksService {
             if (req?.location !== undefined) {
                 data +=` and location_id ='${req.location}'`
             }
-            data +=`GROUP BY  grn_item_id`
+            data +=`GROUP BY  stocks.location_id,grn_item_id ORDER BY item_type`
             const details = await this.stocksRepository.query(data)
 
             if (details.length > 0) {
