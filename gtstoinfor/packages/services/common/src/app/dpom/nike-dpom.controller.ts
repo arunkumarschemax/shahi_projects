@@ -194,6 +194,15 @@ export class DpomController {
         }
     }
 
+    @Post('/getDivertReportDataFromDivertTable')
+    async getDivertReportDataFromDivertTable(): Promise<CommonResponseModel> {
+        try {
+            return await this.dpomService.getDivertReportDataFromDivertTable();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
     @Post('/getFabricTrackerReport')
     @ApiBody({ type: PpmDateFilterRequest })
     async getFabricTrackerReport(@Body() req: any): Promise<CommonResponseModel> {

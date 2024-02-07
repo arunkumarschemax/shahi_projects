@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, Table, Row, Input, Col, Form, Button, Checkbox } from 'antd';
+import { Card, Table, Row, Input, Col, Form, Button, Checkbox, Modal, Tooltip } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { FileExcelFilled, SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -7,14 +7,8 @@ import Highlighter from 'react-highlight-words';
 import { Excel } from 'antd-table-saveas-excel';
 import { NikeService } from '@project-management-system/shared-services';
 import { diffChars } from 'diff';
+import DivertDataEntry from './divert-data-entry';
 
-
-
-interface IExcelColumn {
-    title: string;
-    dataIndex: string;
-    //    children?: CustomExcelColumn[];
-}
 
 interface ExpandedRows {
     [key: string]: boolean;
@@ -27,11 +21,13 @@ const DivertReport = () => {
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const searchInput = useRef<any>(null);
-    const [dataLength, setDataLength] = useState<any[]>([]);
     const [items, setItems] = useState<any[]>([]);
     const service = new NikeService();
     const [expandedRows, setExpandedRows] = useState<ExpandedRows>({});
     const [textareaValues, setTextareaValues] = useState<{ [key: string]: string }>({});
+    const [isModalOpen1, setIsModalOpen1] = useState(false);
+    const [remarkModal, setRemarkModal] = useState<boolean>(false)
+    const [itemText, setRemarks] = useState<string>('')
 
     useEffect(() => {
         getData();
@@ -123,35 +119,18 @@ const DivertReport = () => {
             ),
     });
 
-    const getCount = () => {
-        service.getCountForDivertReport().then(res => {
-
-            if (res.status) {
-                setDataLength(res.data)
-            }
-        })
+    const handleTextClick = (remarks) => {
+        setRemarks(remarks)
+        setRemarkModal(true)
+    }
+    const onRemarksModalOk = () => {
+        setRemarkModal(false)
     }
 
     const getData = () => {
-        service.getDivertReportData().then(res => {
+        service.getDivertReportDataFromDivertTable().then(res => {
             if (res.status) {
-                function formatDate(date) {
-                    const year = date.getFullYear();
-                    const month = String(date.getMonth() + 1).padStart(2, '0');
-                    const day = String(date.getDate()).padStart(2, '0');
-                    return `${month}/${day}/${year}`;
-                }
-
-                const sortedData = res.data.sort((a, b) => {
-                    const dateA = new Date(a.newpo[0].orequestDate);
-                    const dateB = new Date(b.newpo[0].orequestDate);
-
-                    const formattedDateA = formatDate(dateA);
-                    const formattedDateB = formatDate(dateB);
-
-                    return new Date(formattedDateA).getTime() - new Date(formattedDateB).getTime();
-                });
-                setItems(sortedData);
+                setItems(res.data);
             }
         })
     }
@@ -374,88 +353,81 @@ const DivertReport = () => {
                 },
                 {
                     title: "Request Date",
-                    dataIndex: ['newpo', 0, 'orequestDate'],
+                    dataIndex: 'orequestDate',
                     width: 70
                 },
                 {
                     title: "From Item",
-                    dataIndex: ['oldPo', 0, 'item'], align: 'center',
-                    width: 70, render: (text) => (text !== null ? text : '-')
+                    dataIndex: 'oItem',
+                    align: 'center',
+                    width: 70,
                 },
                 {
                     title: "Unit",
-                    dataIndex: ['oldPo', 0, 'factory'], width: 70, render: (text) => (text !== null ? text : '-')
+                    dataIndex: 'oFactory',
+                    width: 70,
                 },
                 {
                     title: "Plant",
-                    dataIndex: ['oldPo', 0, 'Plant'], width: 70, render: (text) => (text !== null ? text : '-')
+                    dataIndex: 'oPlant',
+                    width: 70,
                 },
                 {
                     title: "Product Code",
-                    dataIndex: ['oldPo', 0, 'productCode'],
-                    // sorter: (a, b) => a.oldPo.productCode?.localeCompare(b.oldPo.productCode),
-                    // sortDirections: ["descend", "ascend"],
-                    width: 70, render: (text) => (text !== null ? text : '-')
-                    //  fixed:'left'
+                    dataIndex: 'oProductCode',
+                    width: 70,
                 },
                 {
                     title: "Line Status",
-                    dataIndex: ['oldPo', 0, 'LineStatus'], width: 70, render: (text) => (text !== null ? text : '-')
+                    dataIndex: 'oLineItemStatus',
+                    width: 70,
                     // ...getColumnSearchProps("lineStatus"),
                 },
                 {
                     title: 'Document Date',
-                    dataIndex: ['oldPo', 0, 'DocumentDate'], width: 70,
+                    dataIndex: 'oDocumentDate',
+                    width: 70,
                     render: (text, record) => {
-                        return record.oldPo[0].DocumentDate ? moment(record.oldPo[0].DocumentDate).format('MM/DD/YYYY') : "-";
+                        return record.oDocumentDate ? moment(record.oDocumentDate).format('MM/DD/YYYY') : "-";
                     }
                 },
                 {
                     title: 'Old Po',
-                    dataIndex: ['oldPo', 0, 'poNumber'], render: (text) => (text !== null ? text : '-')
-                    // sorter: (a, b) => a.oldPo.poNumber?.localeCompare(b.oldPo.poNumber),
-                    // sortDirections: ["descend", "ascend"]
-                    , width: 70,
+                    dataIndex: 'oPurchaseOrderNumber',
+                    width: 70,
                 },
                 {
                     title: 'Old Po Line',
-                    dataIndex: ['oldPo', 0, 'poLine'], render: (text) => (text !== null ? text : '-')
-                    // sorter: (a, b) => a.oldPo.poLine - b.oldPo.poLine,
-                    // sortDirections: ["descend", "ascend"],
-                    , width: 70,
+                    dataIndex: 'oPoLineItemNumber',
+                    width: 70,
                 },
                 {
                     title: 'Old Qantity',
-                    dataIndex: ['oldPo', 0, 'oldVal'],
-                    width: 70, align: 'right', render: (text, record) => {
-                        const oldVal = Number(record.oldPo[0].oldVal)
-                        return record.oldPo[0].LineStatus == 'Cancelled' ? record.oldPo[0].Quantity : oldVal
-                    }
+                    dataIndex: 'oTotalItemQty',
+                    width: 70, align: 'right',
+                    // render: (text, record) => {
+                    //     const oldVal = Number(record.oTotalItemQty)
+                    //     return record.oLineItemStatus == 'Cancelled' ? record.oTotalItemQty : oldVal
+                    // }
                 },
                 {
                     title: 'Balance Qty',
-                    // from dpom
-                    dataIndex: ['oldPo', 0, 'Quantity'],
-                    // sorter: (a, b) => a.oquantity.localeCompare(b.oquantity),
-                    // sortDirections: ["descend", "ascend"],
+                    dataIndex: 'oldVal',
                     width: 70, align: 'right',
-                    render: (text, record) => {
-                        return record.oldPo[0].LineStatus == 'Cancelled' ? 0 : text ? text : '-'
-                    }
+                    // render: (text, record) => {
+                    //     return record.oldPo[0].LineStatus == 'Cancelled' ? 0 : text ? text : '-'
+                    // }
                 },
                 {
                     title: 'Destination',
-                    dataIndex: ['oldPo', 0, 'destination'],
-                    // sorter: (a, b) => a.oldPo.destination.localeCompare(b.oldPo.destination),
-                    // sortDirections: ["descend", "ascend"],
-                    width: 75, render: (text) => (text !== null ? text : '-')
+                    dataIndex: 'oDestination',
+                    width: 75
                 },
                 {
                     title: 'Shipment Type',
-                    dataIndex: ['oldPo', 0, 'shipmentType'],
-                    // sorter: (a, b) => a.oldPo.shipmentType.localeCompare(b.oldPo.shipmentType),
-                    // sortDirections: ["descend", "ascend"],
-                    width: 70, render: (text) => {
+                    dataIndex: 'oShipmentType',
+                    width: 70,
+                    render: (text) => {
                         // Replace underscores (_) with spaces
                         const transformedText = text ? text.replace(/_/g, ' ') : '-';
                         return transformedText;
@@ -463,45 +435,50 @@ const DivertReport = () => {
                 },
                 {
                     title: 'OLD OGAC',
-                    dataIndex: ['oldPo', 0, 'ogac'], width: 70,
+                    dataIndex: 'oOGAC',
+                    width: 70,
                     render: (text, record) => {
-                        return record.oldPo[0].ogac ? moment(record.oldPo[0].ogac).format('MM/DD/YYYY') : "-";
+                        return record.oOGAC ? moment(record.oOGAC).format('MM/DD/YYYY') : "-";
                     }
                 },
                 {
                     title: 'OLD GAC',
-                    dataIndex: ['oldPo', 0, 'gac'], width: 70,
+                    dataIndex: 'oGAC', width: 70,
                     render: (text, record) => {
-                        return record.oldPo[0].gac ? moment(record.oldPo[0].gac).format('MM/DD/YYYY') : "-";
+                        return record.oGAC ? moment(record.oGAC).format('MM/DD/YYYY') : "-";
                     }
                 },
                 {
                     title: 'Inventory Segment Code',
-                    dataIndex: ['oldPo', 0, 'inventorySegmentCode'], width: 70, render: (text) => (text !== null ? text : '-')
-                    // sorter: (a, b) => a.oldPo.inventorySegmentCode.localeCompare(b.oldPo.inventorySegmentCode),
-                    // sortDirections: ["descend", "ascend"],
-
+                    dataIndex: 'oInventorySegmentCode',
+                    width: 70
                 },
                 {
                     title: 'GAC Difference',
                     dataIndex: '', width: 70, align: 'right',
                     render: (text, record) => {
-                        if (record.oldPo[0].ogac && record.newpo[0].nogac) {
-                            const ogacDate = moment(record.oldPo[0].ogac, 'YYYY-MM-DD');
-                            const nogacDate = moment(record.newpo[0].nogac, 'YYYY-MM-DD');
+                        if (record.oGAC && record.nGAC) {
+                            const ogacDate = moment(record.oGAC, 'YYYY-MM-DD');
+                            const nogacDate = moment(record.nGAC, 'YYYY-MM-DD');
                             const daysDifference = nogacDate.diff(ogacDate, 'days');
                             return daysDifference + ' days';
                         } else {
                             return "-";
                         }
                     },
-                    // sorter: (a, b) => a.daysDifference.localeCompare(b.daysDifference),
-                    // sortDirections: ["descend", "ascend"],
                 },
                 {
-                    title: 'Item Vas', width: 70,
-                    dataIndex: ['oldPo', 0, 'itemVasText'], render: (text) => (text !== null ? text : '-')
-
+                    title: 'Item Vas', width: 80,
+                    dataIndex: 'oItemVasText',
+                    render: (_text, record) => {
+                        return (
+                            <>
+                                {record.oItemVasText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.oItemVasText)} style={{ cursor: 'pointer' }}>
+                                    {record.oItemVasText.length > 30 ? `${record.oItemVasText?.substring(0, 30)}....` : record.oItemVasText}
+                                </span></p></Tooltip></>) : (<>{record.oItemVasText}</>)}
+                            </>
+                        )
+                    }
                 },
             ] as unknown as null,
         },
@@ -514,25 +491,25 @@ const DivertReport = () => {
             children: [
                 {
                     title: 'OGAC Date',
-                    dataIndex: ['newpo', 0, 'nogac'], width: 70,
+                    dataIndex: 'nOGAC', width: 70,
                     render: (text, record) => {
-                        return record.newpo[0].nogac ? moment(record.newpo[0].nogac).format('MM/DD/YYYY') : "-";
+                        return record.nOGAC ? moment(record.nOGAC).format('MM/DD/YYYY') : "-";
                     }
                 },
                 {
                     title: 'GAC Date',
-                    dataIndex: ['newpo', 0, 'ngac'], width: 70,
+                    dataIndex: 'nGAC', width: 70,
                     render: (text, record) => {
-                        return record.newpo[0].ngac ? moment(record.newpo[0].ngac).format('MM/DD/YYYY') : "-";
+                        return record.nGAC ? moment(record.nGAC).format('MM/DD/YYYY') : "-";
                     }
                 },
                 {
                     title: "No of Days to GAC",
                     align: 'right', width: 70,
                     render: (text, record) => {
-                        if (record.newpo[0].nogac) {
+                        if (record.nOGAC) {
                             const dpomCreatedDate = moment();
-                            const nogacDate = moment(record.newpo[0].nogac);
+                            const nogacDate = moment(record.nOGAC);
                             const daysDifference = nogacDate.diff(dpomCreatedDate, 'days');
                             return (daysDifference + 1) + ' days';
                         } else {
@@ -542,67 +519,70 @@ const DivertReport = () => {
                 },
                 {
                     title: "To item",
-                    dataIndex: ['newpo', 0, 'item'], align: 'center', width: 70, render: (text, record) => (record.newpo[0].item ? record.newpo[0].item : record.oldPo[0].item)
-
+                    dataIndex: 'nItem',
+                    align: 'center', width: 70, render: (text, record) => (record.nItem ? record.nItem : record.oItem)
                 },
                 {
                     title: "Unit",
-                    dataIndex: ['newpo', 'factory'], width: 70, align: 'center', render: (text, record) => (record.newpo[0].factory ? record.newpo[0].factory : record.oldPo[0].factory)
-
+                    dataIndex: 'nFactory', width: 70, align: 'center',
+                    render: (text, record) => (record.nFactory ? record.nFactory : record.oFactory)
                 },
-
                 {
                     title: "Plant",
-                    dataIndex: ['newpo', 0, 'nPlant'], width: 70, align: 'center', render: (text) => (text !== null ? text : '-')
+                    dataIndex: 'nPlant', width: 70, align: 'center'
                 },
                 {
                     title: "Product Code",
-                    dataIndex: ['newpo', 0, 'nproductCode'], render: (text) => (text !== null ? text : '-'),
-                    // sorter: (a, b) => a.newpo.nproductCode.localeCompare(b.newpo.nproductCode),
-                    // sortDirections: ["descend", "ascend"],
+                    dataIndex: 'nProductCode',
                     width: 70,
-
                 },
                 {
                     title: "Line Status",
-                    dataIndex: ['newpo', 0, 'nLineStatus'], width: 70, render: (text) => (text !== null ? text : '-')
-
+                    dataIndex: 'nLineItemStatus', width: 70
                 },
                 {
                     title: 'Document Date',
-                    dataIndex: ['newpo', 0, 'nDocumentDate'], width: 70,
+                    dataIndex: 'nDocumentDate', width: 70,
                     render: (text, record) => {
-                        return record.newpo[0].nDocumentDate ? moment(record.newpo[0].nDocumentDate).format("MM/DD/YYYY") : "-";
+                        return record.nDocumentDate ? moment(record.nDocumentDate).format("MM/DD/YYYY") : "-";
                     }
                 },
                 {
                     title: 'New Po', width: 70,
-                    dataIndex: ['newpo', 0, 'npoNumber'], render: (text) => (text !== null ? text : '-')
+                    dataIndex: 'nPurchaseOrderNumber'
                 },
                 {
                     title: 'New Po Line', width: 70,
-                    dataIndex: ['newpo', 0, 'npoLine'], align: 'center', render: (text) => (text !== null ? text : '-')
+                    dataIndex: 'nPoLineItemNumber', align: 'center'
                 },
                 {
                     title: 'Quantity', width: 70,
-                    dataIndex: ['newpo', 0, 'nQuantity'], align: 'right', render: (text) => (text !== null ? text : '-')
+                    dataIndex: 'nTotalItemQty', align: 'right'
                 },
                 {
                     title: 'Destination', width: 70,
-                    dataIndex: ['newpo', 0, 'ndestination'], render: (text) => (text !== null ? text : '-')
+                    dataIndex: 'nDestination'
                 },
                 {
                     title: 'Inventory Segment Code', width: 70,
-                    dataIndex: ['newpo', 0, 'ninventorySegmentCode'], render: (text) => (text !== null ? text : '-')
+                    dataIndex: 'nInventorySegmentCode'
                 },
                 {
-                    title: 'Item Vas', width: 70,
-                    dataIndex: ['newpo', 0, 'nitemVasText'], render: (text) => (text !== null ? text : '-')
+                    title: 'Item Vas', width: 80,
+                    dataIndex: 'nItemVasText',
+                    render: (_text, record) => {
+                        return (
+                            <>
+                                {record.nItemVasText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.nItemVasText)} style={{ cursor: 'pointer' }}>
+                                    {record.nItemVasText.length > 30 ? `${record.nItemVasText?.substring(0, 30)}....` : record.nItemVasText}
+                                </span></p></Tooltip></>) : (<>{record.nItemVasText}</>)}
+                            </>
+                        )
+                    }
                 },
-
                 {
                     title: 'Shipment Type', width: 70,
-                    dataIndex: ['newpo', 0, 'nshipmentType'], render: (text) => {
+                    dataIndex: 'nShipmentType', render: (text) => {
                         const transformedText = text ? text.replace(/_/g, ' ') : '-';
                         return transformedText;
                     },
@@ -611,14 +591,26 @@ const DivertReport = () => {
                     title: 'Item Vas Diff Check', width: 70,
                     dataIndex: '',
                     render: (text, record) => {
-                        const text1 = record.oldPo[0].itemVasText
-                        const text2 = record.newpo[0].nitemVasText
+                        const text1 = record.oItemVasText
+                        const text2 = record.nItemVasText
                         if (text1 == null && text2 == null) {
                             return '-';
                         } else if (text1 == null) {
-                            return text2
+                            return (
+                                <>
+                                    {text2?.length > 30 ? (<><Tooltip title='Cilck to open full Text'><p><span onClick={() => handleTextClick(text2)} style={{ cursor: 'pointer' }}>
+                                        {text2.length > 30 ? `${text2?.substring(0, 30)}....` : text2}
+                                    </span></p></Tooltip></>) : (<>{text2}</>)}
+                                </>
+                            )
                         } else if (text2 == null) {
-                            return text1
+                            return (
+                                <>
+                                    {text1?.length > 30 ? (<><Tooltip title='Cilck to open full Text'><p><span onClick={() => handleTextClick(text1)} style={{ cursor: 'pointer' }}>
+                                        {text1.length > 30 ? `${text1?.substring(0, 30)}....` : text1}
+                                    </span></p></Tooltip></>) : (<>{text1}</>)}
+                                </>
+                            )
                         } else {
                             const normalizeText = (text) => text.toLowerCase().replace(/\s/g, '');
                             const normalizedText1 = normalizeText(text1);
@@ -635,7 +627,13 @@ const DivertReport = () => {
                                         </span>
                                     );
                                 });
-                            return result ? result : '-'
+                            return (
+                                <>
+                                    {result?.length > 30 ? (<><Tooltip title='Cilck to open full Text'><p><span onClick={() => handleTextClick(result)} style={{ cursor: 'pointer' }}>
+                                        {result.length > 30 ? `${result?.substring(0, 30)}....` : result}
+                                    </span></p></Tooltip></>) : (<>{result}</>)}
+                                </>
+                            )
                         }
                     },
                 },
@@ -645,9 +643,9 @@ const DivertReport = () => {
                     dataIndex: '',
                     align: 'right',
                     render: (text, record) => {
-                        if (record.oldPo[0].Quantity !== null) {
-                            const oldQuantity = Number(record.oldPo[0].Quantity);
-                            const newQuantity = Number(record.newpo[0].nQuantity);
+                        if (record.oTotalItemQty !== null) {
+                            const oldQuantity = Number(record.oTotalItemQty);
+                            const newQuantity = Number(record.nTotalItemQty);
                             const QtyTally = oldQuantity - newQuantity;
                             if (QtyTally === 0) {
                                 return <span style={{ color: 'green' }}>Matching</span>;
@@ -663,8 +661,8 @@ const DivertReport = () => {
                     title: 'Price-Fob Tally-Check',
                     dataIndex: '', width: 70,
                     render: (text, record) => {
-                        const oldprice = Number(record.oldPo[0].gross_price_fob);
-                        const newprice = Number(record.newpo[0].gross_price_fob);
+                        const oldprice = Number(record.oFOBPrice);
+                        const newprice = Number(record.nFOBPrice);
                         const priceTally = oldprice - newprice;
                         if (priceTally === 0) {
                             return <span style={{ color: 'green' }}>Matching</span>;
@@ -681,8 +679,8 @@ const DivertReport = () => {
                     title: 'Price-Trading Co Net Including Discount Tally-Check',
                     dataIndex: '', width: 100,
                     render: (text, record) => {
-                        const oldTradingcO = Number(record.oldPo[0].trading_net_inc_disc);
-                        const newTradingcO = Number(record.newpo[0].trading_net_inc_disc);
+                        const oldTradingcO = Number(record.oTradingCoNetIncDis);
+                        const newTradingcO = Number(record.nTradingCoNetIncDis);
                         const COTally = oldTradingcO - newTradingcO;
                         if (COTally === 0) {
                             return <span style={{ color: 'green' }}>Matching</span>;
@@ -735,13 +733,7 @@ const DivertReport = () => {
                     render: (text, rowData) => (
                         <div style={{ display: 'flex', alignItems: 'center' }}>
                             <Button
-                                type="link"
-                                onClick={() =>
-                                    setExpandedRows(prevExpandedRows => ({
-                                        ...prevExpandedRows,
-                                        [rowData.id]: true,
-                                    }))
-                                }
+                                onClick={() => showModal1()}
                             >
                                 Insert Row
                             </Button>
@@ -768,6 +760,15 @@ const DivertReport = () => {
         }
     ]
 
+    const showModal1 = () => {
+        setIsModalOpen1(true);
+    };
+
+    const cancelHandle = () => {
+        setIsModalOpen1(false);
+
+    };
+
     return (
         <>
             <Card title="Divert Report" headStyle={{ fontWeight: 'bold' }}
@@ -777,29 +778,19 @@ const DivertReport = () => {
                     onClick={exportExcel}
                     icon={<FileExcelFilled />}>Download Excel</Button>}>
                 <Row gutter={70}>
-                    {/* <Col >
-                    <Card title={'Total Line Status Count  : ' + Number(dataLength[0]?.totalCount)} style={{ textAlign: 'left', width: 280, height: 38, backgroundColor: ' lightblue' }}></Card>
-                </Col>
-                <Col>
-                    <Card title={'Accepted  : ' + Number(dataLength[0]?.acceptedCount)} style={{ textAlign: 'left', width: 200, height: 38, backgroundColor: 'lightblue' }}></Card>
-                </Col>
-                <Col>
-                    <Card title={'Unaccepted : ' +Number(dataLength[0]?.unacceptedCount)} style={{ textAlign: 'left', width: 180, height: 38, backgroundColor: 'lightblue' }}></Card>
-                </Col>  */}
-
                 </Row><br></br>
                 <Card >
                     <Table
                         columns={columns}
                         className="custom-table-wrapper"
                         dataSource={items}
-                        // pagination={{
-                        //     onChange(current, pageSize) {
-                        //         setPage(current);
-                        //         setPageSize(pageSize)
-                        //     },
-                        // }}
-                        pagination={false}
+                        pagination={{
+                            onChange(current, pageSize) {
+                                setPage(current);
+                                setPageSize(pageSize)
+                            },
+                        }}
+                        // pagination={false}
                         scroll={{ x: 'max-content', y: 500 }}
                         bordered
                         size='small'
@@ -807,6 +798,26 @@ const DivertReport = () => {
                     />
                 </Card>
             </Card>
+            <Modal
+                className='print-docket-modal'
+                key={'modal1' + Date.now()}
+                width={'1000px'}
+                style={{ top: 30, alignContent: 'center' }}
+                open={isModalOpen1}
+                title={<React.Fragment>
+                </React.Fragment>}
+                onCancel={cancelHandle}
+                footer={[]}
+            >
+                {isModalOpen1 ? <DivertDataEntry /> : <></>}
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <Button onClick={cancelHandle} style={{ color: 'white', backgroundColor: 'red', flexDirection: 'column-reverse' }}>Close</Button></div>
+            </Modal>
+            <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
+                <Card>
+                    <p>{itemText}</p>
+                </Card>
+            </Modal>
         </>
     )
 }

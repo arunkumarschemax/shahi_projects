@@ -39,6 +39,7 @@ import * as Excel from 'exceljs';
 import { diff_match_patch } from 'diff-match-patch'
 import { ItemNoDtos } from './dto/co-item-no.dto';
 import { DivertEntity } from './entites/divert.entity';
+import { DivertRepository } from './repositories/divert.repository';
 
 
 @Injectable()
@@ -52,6 +53,7 @@ export class DpomService {
         private dpomChildAdapter: DpomChildAdapter,
         private fileUploadRepo: NikeFileUploadRepository,
         private coLineRepository: COLineRepository,
+        private divertRepository: DivertRepository,
         private addressService: AddressService,
         @InjectDataSource()
         private dataSource: DataSource,
@@ -2023,6 +2025,18 @@ export class DpomService {
             console.error('Error in getDivertReportData:', error);
             return new CommonResponseModel(false, 0, 'Error retrieving data', []);
         }
+    }
+
+    async getDivertReportDataFromDivertTable(): Promise<CommonResponseModel> {
+        const data = await this.divertRepository.find({
+            order: {
+                orequestDate: 'ASC',
+            },
+        })
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     ///////////////////--------------------------------------------------------------------------------factory

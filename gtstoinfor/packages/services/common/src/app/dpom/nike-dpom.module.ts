@@ -21,6 +21,7 @@ import { AddressService } from '../address/address.service';
 import { AddressRepository } from '../address/address.repo';
 import { AddressEntity } from '../address/address.entity';
 import { DivertEntity } from './entites/divert.entity';
+import { DivertRepository } from './repositories/divert.repository';
 
 
 @Module({
@@ -37,6 +38,6 @@ import { DivertEntity } from './entites/divert.entity';
       DivertEntity
     ])],
   controllers: [DpomController],
-  providers: [DpomService, AddressService, AddressRepository, ApplicationExceptionHandler, DpomRepository, DpomChildRepository, DpomAdapter, DpomChildAdapter, DpomDifferenceRepository, NikeFileUploadRepository, COLineRepository]
+  providers: [DpomService, AddressService, AddressRepository, ApplicationExceptionHandler, DpomRepository, DpomChildRepository, DpomAdapter, DpomChildAdapter, DpomDifferenceRepository, NikeFileUploadRepository, COLineRepository, DivertRepository]
 })
 export class DpomModule { }
