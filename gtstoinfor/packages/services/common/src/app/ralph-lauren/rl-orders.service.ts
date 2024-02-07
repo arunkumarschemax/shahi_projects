@@ -678,14 +678,15 @@ export class RLOrdersService {
         if (await this.isAlertPresent(driver)) {
           const alert = await driver.switchTo().alert();
           const alertText = await alert.getText();
+          console.log(alertText,"alertText")
           const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText });
           await this.updateCOLineStatus({buyerPo: po.buyer_po, lineItemNo: po.line_item_no , itemStatus: ItemStatusEnum.FAILED})
-          return new CommonResponseModel(false, 0, alertText)
-
           await alert.accept();
           await driver.sleep(5000)
           await driver.navigate().refresh();
           await driver.quit();
+          return new CommonResponseModel(false, 0, alertText)
+
         } else {
           await driver.sleep(10000)
           await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
@@ -717,6 +718,8 @@ export class RLOrdersService {
       console.log(err, 'error');
       if (err.name === 'TimeoutError' ){
         const update = await this.coLineRepo.update({ buyerPo: poDetails[0].buyer_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+        await this.updateCOLineStatus({buyerPo: poDetails[0].buyer_po, lineItemNo: poDetails[0].line_item_no , itemStatus: ItemStatusEnum.FAILED})
+
         return new CommonResponseModel(false, 0, 'Matching Color not found')
 
       } else {
@@ -995,6 +998,7 @@ export class RLOrdersService {
   }
 
   async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
+    console.log(req,"tttttttttt")
     const update = await this.rlOrdersRepo.update({
       poNumber: req.buyerPo, poItem: req.lineItemNo
     }, {
