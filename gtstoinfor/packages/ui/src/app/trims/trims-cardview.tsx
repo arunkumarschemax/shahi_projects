@@ -26,7 +26,7 @@ const [trimName,setTrimName] = useState<string>('')
 const componentsMapping = {
     "Joker Tag" : <JokerTagPrint info={bomInfo} />,
     "Hangtag":<HangTag info={bomInfo} />,
-    "Wash Care Label":<WasCarelabel  bomInfo={bomInfo}/>,
+    "Wash Care Label" : <WasCarelabel  bomInfo={bomInfo}/>,
     "Country Sticker":<CountryStickerPrint  info={bomInfo}/>
 
 }
@@ -48,7 +48,7 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
             // res.data.geoCode = styleNumber.geoCode;
             res.data.sizeWiseData=styleNumber.sizeWiseData;
             res.data.item=styleNumber.item
-            setBomInfo(res.data)
+            // setBomInfo(res.data)
         }
     })
 }
@@ -57,7 +57,7 @@ const getBomInfoAgainstItemStyle = (trim) => {
     const req = new BomPrintFilterReq(state.state.items,state.state.styleNumbers,trim)
     service.getBomPrintInfo(req).then(res => {
         if(res.status){
-
+            setBomInfo(res.data)
         }
     })
 }
