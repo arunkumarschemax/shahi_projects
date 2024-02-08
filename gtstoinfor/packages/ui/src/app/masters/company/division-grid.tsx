@@ -1,12 +1,11 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal } from 'antd';
+import { Divider, Table, Popconfirm, Card, Form, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
-import { ProColumns, ProTable } from '@ant-design/pro-components';
+import {  useNavigate } from 'react-router-dom';
+// import { ProColumns, ProTable } from '@ant-design/pro-components';
 import {  DivisionDto } from '@project-management-system/shared-models';
 import {  DivisionService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
@@ -353,7 +352,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
   const updateDivision = (Data: DivisionDto) => {
     Data.updatedUser = JSON.parse(localStorage.getItem('username'))
     service.updateDivision(Data).then(res => {
-      console.log(res);
+      // console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
         //  getAllDivision();
@@ -376,7 +375,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
   const deleteVariant = (ViewData: DivisionDto) => {
     ViewData.isActive = ViewData.isActive ? false : true;
     service.ActivatedeActivateDivision(ViewData).then(res => {
-      console.log(res);
+      // console.log(res);
       if (res.status) {
         //  getAllDivision();
         AlertMessages.getSuccessMessage('Success');

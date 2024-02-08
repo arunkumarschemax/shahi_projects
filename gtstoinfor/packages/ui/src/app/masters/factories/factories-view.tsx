@@ -143,7 +143,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
     });
   };
   
-  console.log(data,"kkkk")
+  // console.log(data,"kkkk")
 
 
   const closeDrawer = () => {

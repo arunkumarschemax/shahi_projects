@@ -1,8 +1,6 @@
 import { Injectable, Req } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager, Raw, Repository } from 'typeorm';
-import axios from 'axios';
-import { truncate } from 'fs';
 import { UserRequestDto } from '../currencies/dto/user-logs-dto';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { Operations } from './operation.entity';
@@ -10,7 +8,6 @@ import { OperationsAdapter } from './dto/operation.adapter';
 import { OperationDTO } from './dto/operations.dto';
 import { AllOperationsResponseModel, OperationsRequest, OperationsResponseModel } from '@project-management-system/shared-models';
 import { OperationRequest } from './dto/operation.request';
-
 
 
 @Injectable()
@@ -23,11 +20,9 @@ export class OperationsService {
     ){}
 
     async getOperationsWithoutRelations(operationName: string): Promise<Operations> {
-        //  console.log(employeeId);
         const response = await this.OperationsRepository.findOne({
             where: { operationId: Raw(alias => `operation_name = "${operationName}"`) },
         });
-        // console.log(response);
         if (response) {
             return response;
         } else {
@@ -35,15 +30,12 @@ export class OperationsService {
         }
     }
 
-    async createOperations(operationsDto: OperationDTO, isUpdate: boolean): Promise<OperationsResponseModel> {
-        console.log(operationsDto,'nnnnnh');
-        
+    async createOperations(operationsDto: OperationDTO, isUpdate: boolean): Promise<OperationsResponseModel> {        
         try {
           let previousValue
           // to check whether State exists with the passed  State code or not. if isUpdate is false, a check will be done whether a record with the passed Statecode is existing or not. if a record exists then a return message wil be send with out saving the data.  if record is not existing with the passed State code then a new record will be created. if isUpdate is true, then no check will be performed and  record will be updated(if record exists with the passed cluster code) or created.
           if (!isUpdate) {
             const operationsEntity = await this.getOperationsWithoutRelations(operationsDto.operationName);
-            console.log(operationsDto,"hiiiiiiiiiiiiiiii")
             if (operationsEntity) {
               //return new InformationMessageError(11104, "State already exists");
               throw new OperationsResponseModel(false,11104, 'operation already exists');
@@ -64,7 +56,6 @@ export class OperationsService {
             convertedOperationEntity
           );
           const savedOperationsDto: OperationDTO = this.operationsAdapter.convertEntityToDto(convertedOperationEntity);
-            // console.log(savedStateDto);
           if (savedOperationsDto) {
             const presentValue = savedOperationsDto.operationName;
            // generating resposnse
@@ -74,7 +65,6 @@ export class OperationsService {
            const userName = isUpdate? savedOperationsDto.updatedUser :savedOperationsDto.createdUser;
           //  const newLogDto = new LogsDto(1,name, 'Currencies', savedBrandsDto.currencyId, true, displayValue,userName,previousValue,presentValue)
           //  let res = await this.logService.createLog(newLogDto);
-          //  console.log(res);
            return response
           } else {
             //return new InformationMessageError(11106, "State saved but issue while transforming into DTO");
@@ -93,7 +83,6 @@ export class OperationsService {
           const OperationsDtos: OperationDTO[] = [];
           //retrieves all companies
           const operationsEntities: Operations[] = await this.OperationsRepository.find({order :{'operationName':'ASC'}, relations:["operationGroupInfo"]});
-          //console.log(statesEntities);
           if (operationsEntities) {
             // converts the data fetched from the database which of type companies array to type StateDto array.
             operationsEntities.forEach(OperationsEntity => {
@@ -106,7 +95,6 @@ export class OperationsService {
             // if(req?.createdUser){
             //   const newLogDto = new LogsDto(0,'view', 'Currencies', 0, true, 'Currencies retrieved successfully',req.createdUser,"","")
             //   let res = await this.logService.createLog(newLogDto);
-            //   console.log(res);
             // }
             return response;
           } else {
@@ -149,7 +137,6 @@ export class OperationsService {
 
   async activateOrDeactivateOperations(operationReq: OperationRequest): Promise<OperationsResponseModel> {
     try {
-      console.log(operationReq.isActive,'service-----------')
         const operationExists = await this.getOperationById(operationReq.operationId);
         if (operationExists) {
             if (!operationExists) {
@@ -161,17 +148,17 @@ export class OperationsService {
                     { isActive: operationReq.isActive, updatedUser: operationReq.updatedUser });
                 if (operationExists.isActive) {
                     if (operationStatus.affected) {
-                        const operationResponse: OperationsResponseModel = new OperationsResponseModel(true, 10115, 'operation is de-activated successfully');
+                        const operationResponse: OperationsResponseModel = new OperationsResponseModel(true, 10115, 'Operation is deactivated successfully');
                         return operationResponse;
                     } else {
-                        throw new OperationsResponseModel(false,10111, 'operation is already deactivated');
+                        throw new OperationsResponseModel(false,10111, 'Operation is already deactivated');
                     }
                 } else {
                     if (operationStatus.affected) {
                         const brandResponse: OperationsResponseModel = new OperationsResponseModel(true, 10114, 'Operation is activated successfully');
                         return brandResponse;
                     } else {
-                        throw new OperationsResponseModel(false,10112, 'Brand is already  activated');
+                        throw new OperationsResponseModel(false,10112, 'Operation is already  activated');
                     }
                 }
                 // }
@@ -205,11 +192,9 @@ export class OperationsService {
     }
 
     async getOperationById(operationId: number): Promise<Operations> {
-        //  console.log(employeeId);
             const Response = await this.OperationsRepository.findOne({
             where: {operationId: operationId},
             });
-            // console.log(employeeResponse);
             if (Response) {
             return Response;
             } else {

@@ -74,7 +74,9 @@ export const IndentReport = () => {
         setData(res.data);
       }
       else{
-                            AlertMessages.getErrorMessage(res.internalMessage);
+                       
+        setData([])
+        AlertMessages.getErrorMessage(res.internalMessage);
 
       }
     });
@@ -610,7 +612,7 @@ excel
                   style={{ width: '80px', marginRight: "10px" }}
 
                   onClick={getIndentData}
-                >Submit</Button>
+                >Search</Button>
                 <Button htmlType='reset' danger style={{ width: '80px' }} onClick={resetHandler}>Reset</Button>
               </Form.Item>
             </Col>

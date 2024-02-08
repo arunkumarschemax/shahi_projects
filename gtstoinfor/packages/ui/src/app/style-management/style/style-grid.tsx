@@ -2,14 +2,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Form, Select, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { ColumnProps } from 'antd/es/table';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
-import { BuyerRefNoRequest, EmployeeDetailsResponse, StyleDto, StyleIdReq, buyerReq, employeeIdReq } from '@project-management-system/shared-models';
+// import { ColumnProps } from 'antd/es/table';
+import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined,  EditOutlined, SearchOutlined, UndoOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import { BuyerRefNoRequest,  StyleDto, StyleIdReq, buyerReq} from '@project-management-system/shared-models';
 import {  BuyersService, StyleService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
-import moment from 'moment';
-import dayjs from 'dayjs';
+// import moment from 'moment';
+// import dayjs from 'dayjs';
 import StyleForm from './style-form';
 import { useIAMClientState } from '../../common/iam-client-react';
 
@@ -266,7 +266,7 @@ const getBuyers = () => {
   }
 
   const openFormWithData = (viewdata: StyleDto) => {
-    console.log(viewdata)
+    // console.log(viewdata)
     setDrawerVisible(true);
     setSelectedVariant(viewdata);
   }
@@ -275,16 +275,16 @@ const getBuyers = () => {
   const updateStyle = (data: StyleDto,filelist:any) => {
     // data.updateUser = JSON.parse(localStorage.getItem('username'))
     service.updateStyle(data).then(res => {
-      console.log(res);
+      // console.log(res);
       if (res.status) {
-        console.log(res.data[0].styleId,'updatee')
+        // console.log(res.data[0].styleId,'updatee')
         if (filelist.length > 0) {
           const formData = new FormData();
           filelist.forEach((file: any) => {
             formData.append('file', file);
           });
           formData.append('styleId', `${res.data[0].styleId}`)
-          console.log(formData)
+          // console.log(formData)
           service.fileUpload(formData).then(fileres => {
             res.data[0].styleFilePath = fileres.data;
             getAllStyles(undefined);
@@ -304,7 +304,7 @@ const getBuyers = () => {
   const deleteStyle = (data:StyleIdReq ) => {
     data.isActive = data.isActive ? false : true;
     service.ActivateOrDeactivateStyle(data).then(res => {
-      console.log(res);
+      // console.log(res);
       if (res.status) {
         getAllStyles(undefined);
         AlertMessages.getSuccessMessage(res.internalMessage);

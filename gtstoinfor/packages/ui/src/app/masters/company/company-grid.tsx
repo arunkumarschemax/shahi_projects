@@ -1,16 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card,Checkbox, Tooltip, Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal } from 'antd';
+import { Divider, Table, Popconfirm, Card,Checkbox
+  // , Tooltip
+  , Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { ColumnProps } from 'antd/es/table';
+// import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
-import { ProColumns, ProTable } from '@ant-design/pro-components';
+import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined,
+  //  EyeOutlined,
+    EditOutlined, SearchOutlined
+    // , FileTextOutlined 
+  } from '@ant-design/icons';
+import { 
+  // Link,
+   useNavigate } from 'react-router-dom';
+// import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { CompanyDto, DivisionDto } from '@project-management-system/shared-models';
 import { CompanyService, DivisionService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import CompanyForm from './company-form';
-import DivisionForm from './division-form';
+// import DivisionForm from './division-form';
 
 export interface CompanyGridProps { }
 
@@ -150,7 +158,7 @@ let createdUser = ''
       title: 'Status',
       dataIndex: 'isActive',
       render: (isActive, rowData) => {
-        console.log(isActive)
+        // console.log(isActive)
        return( 
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
@@ -306,7 +314,7 @@ let createdUser = ''
   const updateCompany = (Data: CompanyDto) => {
     Data.updatedUser = JSON.parse(localStorage.getItem('username'))
     service.updateCompany(Data).then(res => {
-      console.log(res);
+      // console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
         getAllCompany();
@@ -329,7 +337,7 @@ let createdUser = ''
   const deleteVariant = (ViewData: CompanyDto) => {
     ViewData.isActive = ViewData.isActive ? false : true;
     service.ActivatedeActivateCompany(ViewData).then(res => {
-      console.log(res);
+      // console.log(res);
       if (res.status) {
         // getAllCompany();
         AlertMessages.getSuccessMessage('  Company Activated Successfully');
@@ -418,12 +426,40 @@ let createdUser = ''
           </Form.Item>
             </Col>
             <Col span={4}>
-              <Form.Item label="Division Name" name="divisionName">
+              {/* <Form.Item label="Division Name" name="divisionName" rules={[
+                  {
+                    required: true,
+                  
+                    pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z\\0-9\[\]()@#$_\-+/`~{}:";'<>,.?|\s-]*$/,
+                    message: `Invalid Division Name`
+                  }
+                ]}>
                 <Input />
               </Form.Item>
+            </Col> */}
+            <Form.Item
+  label="Division Name"
+  name="divisionName"
+  rules={[
+    {
+      required: true,
+      pattern: /^[^-\s]+$/, 
+      message: 'Invalid Division Name - Spaces not allowed',
+    },
+  ]}
+>
+  <Input />
+</Form.Item>
+
             </Col>
             <Col span={4}>
-              <Form.Item label="Division Code" name="divisionCode">
+              <Form.Item label="Division Code" name="divisionCode"  rules={[
+    {
+      required: true,
+      pattern: /^[^-\s]+$/, 
+      message: 'Invalid Division Code - Spaces not allowed',
+    },
+  ]}>
                 <Input />
               </Form.Item>
             </Col>

@@ -177,43 +177,35 @@ export const CategoryView = () => {
                 
               </>
           ),
-            filters: [
-              {
-                text: 'Active',
-                value: true,
-              },
-              {
-                text: 'InActive',
-                value: false,
-              },
-            ],
-            filterMultiple: false,
-            onFilter: (value, record) => record.isActive === value,
-            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
-        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
-          <Checkbox
-            checked={selectedKeys.includes(true)}
-            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
-          >
-            <span style={{color:'green'}}>Active</span>
-          </Checkbox>
-          <Checkbox
-            checked={selectedKeys.includes(false)}
-            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
-          >
-            <span style={{color:'red'}}>Inactive</span>
-          </Checkbox>
-          <div className="custom-filter-dropdown-btns" >
-          <Button  onClick={() => clearFilters()} className="custom-reset-button">
-              Reset
-            </Button>
-            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
-              OK
-            </Button>
-          
-          </div>
-        </div>
-             ),
+          filterMultiple: false,
+          onFilter: (value, record) => {
+            // Check if the record's item_type includes the selected material type
+            return record.isActive === value
+          },
+          filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }:any) => (
+            <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+              <Checkbox
+                checked={selectedKeys.includes(true)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+              >
+                <span style={{ color: 'green' }}>Active</span>
+              </Checkbox><br/>
+              <Checkbox
+                checked={selectedKeys.includes(false)}
+                onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+              >
+                <span style={{ color: 'red' }}>IN Active</span>
+              </Checkbox>        
+              <div className="custom-filter-dropdown-btns">
+                <Button onClick={() => clearFilters()} className="custom-reset-button">
+                  Reset
+                </Button>
+                <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+                  OK
+                </Button>
+              </div>
+            </div>
+          ),
           
             
           },

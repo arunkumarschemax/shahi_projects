@@ -4,12 +4,12 @@ import { Raw, Repository } from 'typeorm';
 import { AllColourResponseModel, AllProfitControlHeadResponseModel } from '@project-management-system/shared-models';
 import { ProfitControlHeadResponseModel } from '@project-management-system/shared-models';
 import {ColourResponseModel} from '@project-management-system/shared-models'
-import { UserRequestDto } from '../currencies/dto/user-logs-dto';
+// import { UserRequestDto } from '../currencies/dto/user-logs-dto';
 import { ColourAdapter } from './dto/colour-adapter';
 import { Colour } from './colour.entity';
 import { ColourRequest } from './dto/colour-request';
-import { ColourRequestDto } from '@project-management-system/shared-models';
-import { Console } from 'console';
+// import { ColourRequestDto } from '@project-management-system/shared-models';
+// import { Console } from 'console';
 import { ColourDTO } from './dto/colour-dto';
 
 @Injectable()
@@ -34,7 +34,7 @@ export class ColourService{
 
 
       async createColour(colourDto: ColourDTO, isUpdate: boolean): Promise<ColourResponseModel>{
-        console.log('ertyudfghjk============',isUpdate)
+        // console.log('ertyudfghjk============',isUpdate)
         // const response = new ProfitControlHeadResponseModel();
         try{
           let previousValue
@@ -44,17 +44,17 @@ export class ColourService{
 
             const colourEntity = await this.getColourWithoutRelations(colourDto.colour);
             if (colourEntity){
-                console.log(colourEntity,'------')
+                // console.log(colourEntity,'------')
               throw new ColourResponseModel(false,11104, 'Colour already exists'); 
             }
           }
           else{
-            console.log('ertyudfghjk============')
+            // console.log('ertyudfghjk============')
 
             const certificatePrevious = await this.ColourRepository.findOne({where:{colourId:colourDto.colourId}})
             previousValue =(certificatePrevious.colour)
             const ColourEntity = await this.getColourWithoutRelations(colourDto.colour);
-            console.log('ertyudfghjk============',certificatePrevious)
+            // console.log('ertyudfghjk============',certificatePrevious)
             if (ColourEntity){
               if(ColourEntity.colour != colourDto.colour ){
                 throw new ColourResponseModel(false,11104, 'Colour already exists'); 
@@ -63,11 +63,11 @@ export class ColourService{
           }
           const convertedColourEntity: Colour = this.ColourAdapter.convertDtoToEntity(colourDto,isUpdate);
 
-          console.log(convertedColourEntity);
+          // console.log(convertedColourEntity);
         const savedColourEntity: Colour = await this.ColourRepository.save(convertedColourEntity);
         const savedHeadDto: ColourDTO = this.ColourAdapter.convertEntityToDto(savedColourEntity);
         ColourDtos.push(savedColourEntity)
-          console.log(savedColourEntity,'saved');
+          // console.log(savedColourEntity,'saved');
         if (savedColourEntity) {
           const presentValue = colourDto.colour;
           //generating resposnse
@@ -77,7 +77,7 @@ export class ColourService{
           const userName = isUpdate? savedHeadDto.updatedUser :savedHeadDto.createdUser;
             // const newLogDto = new LogsDto(1,name, 'Profit Control Head', savedProfitCenterDto.profitCenter, true, displayValue,userName,previousValue,presentValue)
             // let res = await this.logService.createLog(newLogDto);
-            console.log(response,'9999999999999999');
+            // console.log(response,'9999999999999999');
             // const response = new AllProfitCenterResponseModel(true,1000,isUpdate? 'Profit Control Head Updated Successfully': Profit Control Head Created Successfully');
           return response;
         } else {

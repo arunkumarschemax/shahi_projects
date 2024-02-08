@@ -1,5 +1,5 @@
 import { ApiBody, ApiTags } from '@nestjs/swagger';
-import { Controller, Post, Body, Logger, Get, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Body, Req } from '@nestjs/common';
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
 import { DestinationDTO } from './dto/destination.dto';
 import { DestinationService } from './destination.service';
@@ -18,10 +18,10 @@ export class DestinationController {
   @Post('/createDestination')
   @ApiBody({type:DestinationDTO})
   async createDestination(@Body() Destination: any, isUpdate: boolean = false): Promise<DestinationResponseModel> {
-    console.log(Destination);
+    // console.log(Destination);
     
     try {
-      console.log('createDestination', Destination)
+      // console.log('createDestination', Destination)
       return await this.Service.createDestination(Destination, false);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(DestinationResponseModel, error);
@@ -30,8 +30,8 @@ export class DestinationController {
   @Post('/updateDestination')
   async updateDestination(@Body() Destination: DestinationDTO, @Req() request: Request): Promise<DestinationResponseModel> {
     try {
-      console.log('update Destination');
-      console.log(request);
+      // console.log('update Destination');
+      // console.log(request);
       return await this.Service.createDestination(Destination, true);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(DestinationResponseModel, error);
