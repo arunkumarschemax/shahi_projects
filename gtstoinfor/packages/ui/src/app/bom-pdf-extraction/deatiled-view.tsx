@@ -103,11 +103,70 @@
                                 <th className='ta-b'>USE</th>
                                 <th className='ta-b'>QTY</th>
                                 <th className='ta-b'>UOM</th>
-                                <th className='ta-b'>{parsedData.style === "CJ4456" || parsedData.style === "FN3894" ? "@010" : "@010"}</th>
-                                <th className='ta-b'>{parsedData.style === "CJ4456" || parsedData.style === "FN3894" ? "@063" : "@077"}</th>
-                                <th className='ta-b'>{parsedData.style === "CJ4456" || parsedData.style === "FN3894" ? "@072" : "113"}</th>
-                                <th className='ta-b'>{parsedData.style === "CJ4456" || parsedData.style === "FN3894" ? "@100" : "@410"}</th>
+                                {/* combo1 */}
+                                <th className='ta-b'>
+                                    {parsedData.style === "CJ4456" ? "@010" :
+                                     parsedData.style === "DZ5366" ? "@010" :
+                                     parsedData.style === "FN3894" ? "*@010" :
+                                     parsedData.style === "FZ8078" ? "*010" :
+                                     parsedData.style === "DC5094" ? "@010" :
+                                     parsedData.style === "DQ5174" ? "@010  " :
+                                     parsedData.style === "DH0857" ? "@010  " :
+                                     parsedData.style === "DJ4167" ? "@010 " :
+                                     parsedData.style === "DH0858" ? "@010 " :
+                                     parsedData.style === "FD1322" ? "@010 " :
 
+                                     null}
+                                 </th>
+
+                                 {/* combo2 */}
+                                 <th className='ta-b'>
+                                    {parsedData.style === "CJ4456" ? "@063" :
+                                     parsedData.style === "DZ5366" ? "@077" :
+                                     parsedData.style === "FN3894" ? "@063" :
+                                     parsedData.style === "FZ8078" ? "*121" :
+                                     parsedData.style === "DC5094" ? "@063 " :
+                                     parsedData.style === "DQ5174" ? "051" :
+                                     parsedData.style === "DH0857" ? "@100" :
+                                     parsedData.style === "DJ4167" ? "@100 " :
+                                     parsedData.style === "DH0858" ? "@100 " :
+                                     parsedData.style === "FD1322" ? "@100 " :
+
+                                     null}
+                                 </th>
+
+                                 {/* combo3 */}
+                                 <th className='ta-b'>
+                                    {parsedData.style === "CJ4456" ? "@072" :
+                                     parsedData.style === "DZ5366" ? "@113" :
+                                     parsedData.style === "FN3894" ? "@100" :
+                                     parsedData.style === "FZ8078" ? "-" :
+                                     parsedData.style === "DC5094" ? "@100" :
+                                     parsedData.style === "DQ5174" ? "@063" :
+                                     parsedData.style === "DH0857" ? "*370" :
+                                     parsedData.style === "DJ4167" ? "*370 " :
+                                     parsedData.style === "DH0858" ? "370" :
+                                     parsedData.style === "FD1322" ? "@599 " :
+
+                                     null}
+                                 </th>
+
+                                 {/* combo4 */}
+                                 <th className='ta-b'>
+                                    {parsedData.style === "CJ4456" ? "@100" :
+                                     parsedData.style === "DZ5366" ? "@410" :
+                                     parsedData.style === "FN3894" ? "*224" :
+                                     parsedData.style === "FZ8078" ? "-" :
+                                     parsedData.style === "DC5094" ? "@345" :
+                                     parsedData.style === "DQ5174" ? "451" :
+                                     parsedData.style === "DH0857" ? "@451" :
+                                     parsedData.style === "DJ4167" ? "@451 " :
+                                     parsedData.style === "DH0858" ? "@451 " :
+                                     parsedData.style === "FD1322" ? "-" :
+
+                                     null}
+                                 </th>
+                                
                             </tr>
                             {
                                 i.BompoItemVariantDetails.map((j) => {
