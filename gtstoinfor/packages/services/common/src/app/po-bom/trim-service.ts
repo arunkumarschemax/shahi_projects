@@ -177,21 +177,24 @@ export class TrimService {
                 const dataModelArray: BomPrintInfoModel[] = [];
                 trimPrintInfoMap.forEach(e => dataModelArray.push(e));
                 for(const rec of dataModelArray){
-                    // console.log(styleWiseBomInfoData.get(rec.style)?.bomInfo,'styleWiseBomInfoData----')
-                    if(styleWiseBomInfoData.has(rec.style)){
-                        const bomInfoModel: BomInfo[] = []
-                        const bomInfo = styleWiseBomInfoData.get(rec.style)[0]
-                        for (const [_, bomValue] of bomInfo) {
-                            bomInfoModel.push(bomValue)
+                    console.log(styleWiseBomInfoData,'styleWiseBomInfoData----')
+                    if(styleWiseBomInfoData != undefined){
+
+                        if(styleWiseBomInfoData.has(rec.style)){
+                            const bomInfoModel: BomInfo[] = []
+                            const bomInfo = styleWiseBomInfoData.get(rec.style)[0]
+                            for (const [_, bomValue] of bomInfo) {
+                                bomInfoModel.push(bomValue)
+                            }
+                            const poInfo = styleWiseBomInfoData.get(rec.style)[1]
+                            rec.gender = poInfo.gender
+                            rec.msc = poInfo.msc
+                            rec.plant = poInfo.plant
+                            rec.season = poInfo.season
+                            rec.styleType = poInfo.styleType
+                            rec.styleName = poInfo.styleName
+                            rec.bomInfo.push(bomInfoModel)
                         }
-                        const poInfo = styleWiseBomInfoData.get(rec.style)[1]
-                        rec.gender = poInfo.gender
-                        rec.msc = poInfo.msc
-                        rec.plant = poInfo.plant
-                        rec.season = poInfo.season
-                        rec.styleType = poInfo.styleType
-                        rec.styleName = poInfo.styleName
-                        rec.bomInfo.push(bomInfoModel)
                     }
 
                 }
