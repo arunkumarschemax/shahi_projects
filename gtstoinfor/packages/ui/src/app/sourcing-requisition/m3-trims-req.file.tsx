@@ -243,13 +243,14 @@ export function M3TrimsReqFile(props:M3Trimprps) {
     props.close(null)
   };
 
-  const onReset = () => {
+  const clearData = () => {
+    let buyId = form.getFieldValue("buyerId")
+    console.log(buyId)
     form.resetFields();
-    props.formValues(undefined)
-    props.close(null)
+    form.setFieldsValue({buyerId:buyId});
+    props.formValues([form.getFieldsValue()])
+    // props.close(null)
   };
-
-
 
   return (
     <Card 
@@ -571,7 +572,7 @@ export function M3TrimsReqFile(props:M3Trimprps) {
                 Search
               </Button>
             </span>
-            <Button htmlType="button" style={{ margin: "0 14px" }} onClick={onReset}>
+            <Button htmlType="button" style={{ margin: "0 14px" }} onClick={clearData}>
               Reset
             </Button>
           </Col>
