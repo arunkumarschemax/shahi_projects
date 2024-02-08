@@ -519,6 +519,12 @@ const FabricsForm = (props:FabricsFormProps) => {
       }
       console.log(fileList)
 
+      const updateFileAtIndex = (fileList, newIndex, newFile) => {
+        // Create a new array with the updated file at the specified index
+        const updatedFileList = [...fileList];
+        updatedFileList[newIndex] = newFile;
+        return updatedFileList;
+      };
       // var reader = new FileReader();
       // reader.readAsArrayBuffer(file);
       // reader.onload = data => {
@@ -526,9 +532,8 @@ const FabricsForm = (props:FabricsFormProps) => {
         //   AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
         //   return true;
         // } else {
-          console.log(fileList)
-          setFileList([...fileList,file]);
-          console.log(fileList,"****")
+          const updatedFileList = updateFileAtIndex(fileList, keyValue, file);
+          setFileList(updatedFileList);
           // getBase64(file, imageUrl =>
           //   setImageUrl(imageUrl)
           // );
