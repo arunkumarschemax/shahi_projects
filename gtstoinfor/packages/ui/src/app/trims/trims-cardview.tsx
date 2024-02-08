@@ -37,26 +37,32 @@ export const TrimList = ({ }) => {
         getAllTrims();
     }, [])
 
-    const getBomInfoAgainstStyle = (styleNumber, trim) => {
-        console.log(styleNumber)
-        const req = new StyleNumberReq(styleNumber.styleNumber, trim)
-        service.getBomInfoAgainstStyle(req).then(res => {
+const getBomInfoAgainstStyle = (styleNumber,trim)=>{
+    const req = new StyleNumberReq(styleNumber.styleNumber,trim)
+    service.getBomInfoAgainstStyle(req).then(res =>{
+        
+        if(res.status){
+            res.data.styleNumber = styleNumber.styleNumber;
+            res.data.poNumber = styleNumber.purchaseOrderNumber;
+            // res.data.destinationCountry = styleNumber.destinationCountry;
+            res.data.destinationCountryCode = styleNumber.destinationCountryCode;
+            res.data.genderAgeDesc = styleNumber.genderAgeDesc;
+            // res.data.geoCode = styleNumber.geoCode;
+            res.data.sizeWiseData=styleNumber.sizeWiseData;
+            res.data.item=styleNumber.item
+            // setBomInfo(res.data)
+        }
+    })
+}
 
-            if (res.status) {
-                console.log(res.data, "kkkkkkkkkkkk");
-
-                res.data.styleNumber = styleNumber.styleNumber;
-                res.data.poNumber = styleNumber.purchaseOrderNumber;
-                // res.data.destinationCountry = styleNumber.destinationCountry;
-                res.data.destinationCountryCode = styleNumber.destinationCountryCode;
-                res.data.genderAgeDesc = styleNumber.genderAgeDesc;
-                // res.data.geoCode = styleNumber.geoCode;
-                res.data.sizeWiseData = styleNumber.sizeWiseData;
-                res.data.item = styleNumber.item
-                // setBomInfo(res.data)
-            }
-        })
-    }
+// const getBomInfoAgainstItemStyle = (trim) => {
+//     const req = new BomPrintFilterReq(state.state.items,state.state.styleNumbers,trim)
+//     service.getBomPrintInfo(req).then(res => {
+//         if(res.status){
+//             setBomInfo(res.data)
+//         }
+//     })
+// }
 
     const getBomInfoAgainstItemStyle = (trim) => {
         const req = new BomPrintFilterReq(state.state.items, state.state.styleNumbers, trim)
@@ -88,13 +94,9 @@ export const TrimList = ({ }) => {
     // }
 
     const cardOnclick = (val) => {
-        console.log(val);
-        console.log(state.state.info)
-
         setTrimName(val.item)
         setModalOpen(true)
-        if (state.state) {
-            console.log(state.state)
+        if(state.state){
             // getBomInfoAgainstStyle(state.state.info,val.item)
             getBomInfoAgainstItemStyle(val.item)
         }

@@ -97,36 +97,69 @@ return (
     <>
     <div id='print'>
         
-    {bomInfo.destination_country === 'Malaysia' || 'Philippines' ||  'Indonesia' ? (
-
+    {/* {bomInfo.destination_country === 'Malaysia' || 'Philippines' ||  'Indonesia' ? ( */}
     <Card title={'Country Sticker'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
+{bomInfo?.map(e=>{
+    return(
+        e?.regionInfo?.map(rec => {
+            return(
+                rec.destinationCountry === 'Malaysia' || 'Philippines' ||  'Indonesia' ? (<>
+    {console.log(rec,'-------------------------------')}
+                    <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1}>
+                        <tr>
+                            <th>COUNTRY#</th>
+                            <th>IM#</th>
+                            <th>ITEM#</th>
+                            <th>STYLE#</th>
+                            <th>QTY IN PCS#</th>
+                        </tr>
+                        <tr>
+                            <td>{rec?.destinationCountry}</td>
+                            <td>{countryToIMCodeMapping[rec?.destinationCountry]}</td>
+                            <td>{e?.item}</td>
+                            <td>{e?.styleNumber}</td>
+                            <td style={{textAlign:'right'}}>{e?.totalItemQty}</td>
+                        </tr>
+                    </table>
+                    {rec?.destinationCountry === "Malaysia" && <Malaysia />}
+                    {rec?.destinationCountry === "Philippines" && <Philippines />}
+                    {/* <h1><Malaysia/></h1>
+                    <h1><Indonesia/></h1> */}
+                </>):(<></>)
+            )
+        })
+        )
+    })
+    
+}
+    {/* <Card title={'Country Sticker'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
 
-        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1}>
-            <tr>
-                <th>COUNTRY#</th>
-                <th>IM#</th>
-                <th>ITEM#</th>
-                <th>STYLE#</th>
-                <th>QTY IN PCS#</th>
+<table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1}>
+<tr>
+<th>COUNTRY#</th>
+<th>IM#</th>
+<th>ITEM#</th>
+<th>STYLE#</th>
+<th>QTY IN PCS#</th>
+</tr>
+<tr>
+<td>{bomInfo[0]?.destination_country}</td>
+<td>{countryToIMCodeMapping[bomInfo[0]?.destination_country]}</td>
+<td>{bomInfo[0]?.item}</td>
+<td>{bomInfo[0]?.style_number}</td>
+<td>{bomInfo[0]?.total_item_qty}</td>
             </tr>
-            <tr>
-                <td>{bomInfo[0]?.destination_country}</td>
-                <td>{countryToIMCodeMapping[bomInfo[0]?.destination_country]}</td>
-                <td>{bomInfo[0]?.item}</td>
-                <td>{bomInfo[0]?.style_number}</td>
-                <td>{bomInfo[0]?.total_item_qty}</td>
-            </tr>
-        </table>
-        {bomInfo[0]?.destination_country === "Malaysia" && <Malaysia />}
-        {bomInfo[0]?.destination_country === "Philippines" && <Philippines />}
-        {/* <h1><Malaysia/></h1>
-        <h1><Indonesia/></h1> */}
-    </Card>
- ) : (
-    <div>Invalid destination country</div>
-)} 
+            </table>
+            {bomInfo[0]?.destination_country === "Malaysia" && <Malaysia />}
+            {bomInfo[0]?.destination_country === "Philippines" && <Philippines />}
+            
+            </Card>
+            ) : (
+                <div>Invalid destination country</div>
+            )}  */}
 
   
+            </Card>
 </div>
 </>
 )
