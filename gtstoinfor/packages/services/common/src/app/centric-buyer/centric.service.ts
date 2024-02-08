@@ -732,11 +732,12 @@ export class CentricService {
       // }
       return new CommonResponseModel(true, 1, `COline created successfully`)
     } catch (error) {
+      
       console.log(error, 'error');
       if (error.name === 'TimeoutError') {
         const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found' });
         await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
-
+        driver.quit()
         return new CommonResponseModel(false, 0, 'Matching Color not found')
       } else {
         // Handle other types of errors
@@ -841,12 +842,16 @@ export class CentricService {
         })
       }, 1000);
 
-      const directoryPath = 'F:/centric-buyers-unread-files/';
-      const destinationDirectory = 'F:/centric-buyers-read-files/';
+      // const directoryPath = 'F:/centric-buyers-unread-files/';
+      // const destinationDirectory = 'F:/centric-buyers-read-files/';
+
+      //live directory paths:
+      const directoryPath = 'D:/Centric-POs/New POs';
+      const destinationDirectory = 'D:/Centric-POs/Read POs';
 
       const files = fs.readdirSync(directoryPath);
       if (files.length === 0) {
-
+        page.close()
         return new CommonResponseModel(false, 0, "No Files Found")
       }
       for (const file of files) {
