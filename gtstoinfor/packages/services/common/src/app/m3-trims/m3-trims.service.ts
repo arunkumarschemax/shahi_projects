@@ -1,10 +1,10 @@
 import { Injectable } from "@nestjs/common";
 import { InjectDataSource, InjectRepository } from "@nestjs/typeorm";
-import { Repository, Not, DataSource } from "typeorm";
+import { Not, DataSource } from "typeorm";
 import { M3TrimsEntity } from "./m3-trims.entity";
 import { M3TrimsAdapter } from "./m3-trims.adaptor";
 import { M3TrimsRepo } from "./m3-trims.repository";
-import { BuyerIdReq, BuyerRefNoRequest, CommonResponseModel, ItemTypeEnum, M3TrimFilterReq, M3TrimType, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
+import {  BuyerRefNoRequest, CommonResponseModel, ItemTypeEnum, M3TrimFilterReq, M3TrimType, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
 import { M3TrimsDTO } from "./m3-trims.dto";
 
 @Injectable()
@@ -44,7 +44,7 @@ export class M3TrimsService {
 
   async getM3TrimsByBuyer(req: M3TrimFilterReq): Promise<CommonResponseModel> {
     try{
-      console.log(req,'#############################')
+      // console.log(req,'#############################')
       
       let query = `Select m3.m3_trim_Id as m3TrimsId,m3.trim_code AS trimCode,m3.trim_type AS trimType, uom_id AS uomId, u.uom AS uom, c.colour_id AS colorId, c.colour AS colorName from m3_trims m3 left join uom u on u.id = m3.uom_id left join colour c on c.colour_id = m3.color_id where m3.m3_trim_Id>0`
       if (req.buyerId != undefined) {
@@ -82,8 +82,8 @@ export class M3TrimsService {
       }
       query = query + ` group by m3.m3_trim_Id`
       const data = await this.datasource.query(query);
-      console.log(data);
-      console.log(data.length);
+      // console.log(data);
+      // console.log(data.length);
 
       if(data.length > 0){
         return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)

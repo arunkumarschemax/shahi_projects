@@ -1,6 +1,5 @@
-import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
-import { TypeReq, TypeResponseModel, TypeModel, TypeActivateReq, CommonResponseModel } from "@project-management-system/shared-models";
+import {  TypeResponseModel,  CommonResponseModel } from "@project-management-system/shared-models";
 import { TrimParamsMappingRepository } from "./trim-params-mapping.repo";
 import { TrimParamsMapping } from "./trim-params-mapping.entity";
 import { TrimParamsMappingRequest } from "./trim-params-mapping.req";

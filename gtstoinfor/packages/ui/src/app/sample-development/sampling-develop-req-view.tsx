@@ -102,7 +102,7 @@ export const SampleDevNewView = () => {
 
   useEffect(() => {
     if (data) {
-      console.log(tableData)
+      // console.log(tableData)
       setTableData(data);
     }
   }, [data]);
@@ -132,7 +132,7 @@ export const SampleDevNewView = () => {
     service.getAllSampleDevData(req).then((res) => {
       if (res.status) {
         setData(res.data);
-        console.log(res.data, "rrrrr")
+        // console.log(res.data, "rrrrr")
         setFilterData(res.data);
       } else {
         AlertMessages.getErrorMessage(res.internalMessage);
@@ -242,7 +242,7 @@ export const SampleDevNewView = () => {
 
 
   const createAllocation = (dto: any) => {
-    console.log(dto)
+    // console.log(dto)
     let materailDataItems: allocateMaterialItems[] = []
     let totalQty = 0;
     for (const data of dto.allocatedStock) {
@@ -251,7 +251,7 @@ export const SampleDevNewView = () => {
       materailDataItems.push(item);
     }
     const req = new Allocatematerial((dto.itemType).toUpperCase(), dto.sampleRequestid, ((dto.itemType).toUpperCase() === "FABRIC" ? dto.fabric_info_id : dto.trim_info_id), ((dto.itemType).toUpperCase() === "FABRIC" ? dto.m3ItemFabricId : dto.trimCode), 0, 0, 0, dto.buyerId, totalQty, materailDataItems, dto.tobeProcured, dto.samplingBomId);
-    console.log(req);
+    // console.log(req);
     service.creatematerialAlloction(req).then(res => {
       if (res.status) {
         message.success(res.internalMessage)
@@ -342,7 +342,7 @@ export const SampleDevNewView = () => {
       align: 'center',
       fixed: 'right',
       render: (text, record) => {
-        console.log(record, 'ppppppppppppppppppppp');
+        // console.log(record, 'ppppppppppppppppppppp');
 
         return (
           <>
@@ -455,7 +455,7 @@ export const SampleDevNewView = () => {
     if (val === undefined) {
       AlertMessages.getWarningMessage("Please give required consumption. ");
     }
-    console.log(val);
+    // console.log(val);
     const renderColumnForFabric: any = [
       {
         title: <div style={{ textAlign: 'center' }}>S No</div>,
@@ -538,7 +538,7 @@ export const SampleDevNewView = () => {
     return [...renderColumnForFabric]
   }
   const allocateQuantity = () => {
-    console.log(allocatedStock)
+    // console.log(allocatedStock)
     createAllocation(allocatedStock)
 
   }
@@ -546,14 +546,14 @@ export const SampleDevNewView = () => {
     setChecked(true)
   }
   const setAllocatedQty = (index, rowData, value, fabindex, sampleReqId, itemId, colorId) => {
-    console.log(tableData);
-    console.log(index);
-    console.log(rowData);
-    console.log(value);
-    console.log(fabindex);
-    console.log(sampleReqId);
-    console.log(itemId);
-    console.log(colorId);
+    // console.log(tableData);
+    // console.log(index);
+    // console.log(rowData);
+    // console.log(value);
+    // console.log(fabindex);
+    // console.log(sampleReqId);
+    // console.log(itemId);
+    // console.log(colorId);
 
     if (value === 0 || value === null || value < 0 || value === undefined) {
       AlertMessages.getErrorMessage('Issued Quantity should be greater than zero')
@@ -574,21 +574,21 @@ export const SampleDevNewView = () => {
       stockData = itemData?.find((f) => f.trim_info_id === itemId);
       stockListData = stockData?.allocatedStock;
     }
-    console.log(itemData);
-    console.log(stockData);
-    console.log(stockListData);
+    // console.log(itemData);
+    // console.log(stockData);
+    // console.log(stockListData);
     let stockRecord = stockListData?.find((s) => s.stockId === rowData.stockId);
-    console.log(stockRecord);
+    // console.log(stockRecord);
     stockRecord.issuedQty = value;
     // stockRecord.checkedStatus = 1;
-    console.log(tableData);
+    // console.log(tableData);
     const sum = stockListData.reduce((accumulator, object) => {
-      console.log(accumulator);
-      console.log(object.issuedQty);
+      // console.log(accumulator);
+      // console.log(object.issuedQty);
       return accumulator + (object.issuedQty != undefined ? Number(object.issuedQty) : 0);
     }, 0);
-    console.log(sum);
-    console.log(stockData?.tobeProcured)
+    // console.log(sum);
+    // console.log(stockData?.tobeProcured)
     if (Number(sum) > Number(stockData?.tobeProcured)) {
       AlertMessages.getErrorMessage('Issued Quantity should not exceed total required. ')
       stockForm.setFieldValue(`allocatedQuantity${fabindex}-${index}`, 0)
@@ -608,9 +608,9 @@ export const SampleDevNewView = () => {
   const handleDispatchClick = (index) => {
     // console.log(index,"rrr")
     const date = new Date()
-    console.log(date, 'oooooooooooo');
+    // console.log(date, 'oooooooooooo');
     const record = moment(date).format('YYYY-MM-DD')
-    console.log(moment(date).format('YYYY-MM-DD'), 'hello');
+    // console.log(moment(date).format('YYYY-MM-DD'), 'hello');
 
     const req = new lifeCycleStatusReq(index, LifeCycleStatusEnum.CLOSED, record)
     service.updatedispatch(req).then(res => {
@@ -643,9 +643,9 @@ export const SampleDevNewView = () => {
         stockData = itemData?.find((f) => f.trim_info_id === itemId);
         stockListData = stockData?.allocatedStock;
       }
-      console.log(itemData);
-      console.log(stockData);
-      console.log(stockListData);
+      // console.log(itemData);
+      // console.log(stockData);
+      // console.log(stockListData);
 
       if (Number(rowData.issuedQty) > 0) {
         rowData.checkedStatus = 1;
@@ -673,9 +673,9 @@ export const SampleDevNewView = () => {
         stockData = itemData?.find((f) => f.trim_info_id === itemId);
         stockListData = stockData?.allocatedStock;
       }
-      console.log(itemData);
-      console.log(stockData);
-      console.log(stockListData);
+      // console.log(itemData);
+      // console.log(stockData);
+      // console.log(stockListData);
 
       // let stock = allocatedStock?.allocatedStock;
       // let stockRecord = stock?.find((e)=> e.stockId === rowData.stockId)
@@ -686,12 +686,12 @@ export const SampleDevNewView = () => {
       else {
         setbtnEnable(false);
       }
-      console.log("")
+      // console.log("")
     }
   };
   const setIndex = (expanded, record) => {
-    console.log(expanded);
-    console.log(record);
+    // console.log(expanded);
+    // console.log(record);
 
     const expandedRows = []
     if (expanded) {
@@ -721,7 +721,7 @@ export const SampleDevNewView = () => {
   };
 
   const showModal = (rowData) => {
-    console.log(rowData, 'ppppppppppppp');
+    // console.log(rowData, 'ppppppppppppp');
 
     setIsModalOpen(true);
     setRow(rowData)
@@ -751,7 +751,7 @@ export const SampleDevNewView = () => {
       const response = await axios.get(fileUrl, { responseType: 'blob' });
       zip.file(fileName, response.data);
     } catch (error) {
-      console.error(`Error fetching file ${fileName}:`, error);
+      // console.error(`Error fetching file ${fileName}:`, error);
     }
   };
 
@@ -768,12 +768,12 @@ export const SampleDevNewView = () => {
 
 
   const handleFabDownload = (file) => {
-    console.log('0000000', 'ooooooooo');
+    // console.log('0000000', 'ooooooooo');
 
-    console.log(file, 'filepath');
+    // console.log(file, 'filepath');
     // console.log(file.substr(12))  
     if (file !== null) {
-      console.log('0000000');
+      // console.log('0000000');
 
       fetch(config.file_upload_path + `${file.substr(12)}`)
         .then((response) => {
@@ -789,7 +789,7 @@ export const SampleDevNewView = () => {
         });
     }
     else {
-      console.log('000000022222222222222');
+      // console.log('000000022222222222222');
       AlertMessages.getErrorMessage("File Not uploaded ");
     }
   }
@@ -867,14 +867,14 @@ export const SampleDevNewView = () => {
 
   const MarketIssueDetailView = (rowData, cancel?) => {
     const navigateData = filterData.filter(req => req.sample_request_id === rowData)
-    console.log("MarketIssueDetailView", rowData)
+    // console.log("MarketIssueDetailView", rowData)
     return navigate(`/sample-development/store-issue-detail`, { state: { data: navigateData, cancelVisible: cancel } });
     // return navigate(`/sample-development/store-issue-detail`, { state: { data: [rowData], cancelVisible : cancel } });
 
   };
 
   const renderItems = (record: any, index: any) => {
-    console.log(record);
+    // console.log(record);
     return <Table
       dataSource={record.allocatedStock}
       columns={tableColumns(record.totalRequirement, index, record.sampleRequestid, (record.itemType).toUpperCase() === "FABRIC" ? record.fabric_info_id : record.trim_info_id, record.colour_id)}
@@ -1211,7 +1211,8 @@ export const SampleDevNewView = () => {
                       expandedRowRender={renderItems}
                       expandable={{
                         defaultExpandAllRows: false, rowExpandable: (record) => {
-                          console.log(record); return (
+                          // console.log(record)
+                          ; return (
                             record.status != BomStatusEnum.ALLOCATED && record.resltantavaliblequantity > 0 &&
                             checkAccess(MenusAndScopesEnum.Scopes.allocation))
                         }

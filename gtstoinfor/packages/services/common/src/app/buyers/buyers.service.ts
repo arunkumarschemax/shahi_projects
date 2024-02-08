@@ -285,7 +285,7 @@ export class BuyersService {
 
     async getAllActiveBuyersInfo(req?:any): Promise<CommonResponseModel>{
         try{
-            console.log(req,'ooooo')
+            // console.log(req,'ooooo')
             const buyerInfo = await this.buyersRepository.getBuyerInfo(req.buyerRefNo)
             const buyerMap = new Map<number,BuyersDto>()
             if(buyerInfo.length == 0){

@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { BuyerIdReq, CommonResponseModel, M3TrimType, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
+import {  CommonResponseModel, M3TrimType, M3trimsDTO } from "@project-management-system/shared-models";
 import { M3TrimsDTO } from "./m3-trims.dto";
 import { M3TrimsService } from "./m3-trims.service";
 

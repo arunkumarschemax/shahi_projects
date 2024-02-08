@@ -1,6 +1,6 @@
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { Body, Controller, Post, Req } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { FabricRequestCodeDto } from './dtos/fabric-request-code.dto';
 import { CommonResponseModel, FabricCodeReq, M3TrimType, M3trimsDTO, TrimCodeReq } from '@project-management-system/shared-models';
 import { FabricReqCodeService } from './fabric-request-code.service';
@@ -255,7 +255,7 @@ async updateFabStatus(@Body() req?:any): Promise<CommonResponseModel> {
 @Post('/updateTrimStatus')
 async updateTrimStatus(@Body() req?:any): Promise<CommonResponseModel> {
   try {
-    console.log(req);
+    // console.log(req);
     return await this.fabReqService.updateTrimStatus(req);
   } catch (error) {
     return this.applicationExceptionHandler.returnException(CommonResponseModel, error)
