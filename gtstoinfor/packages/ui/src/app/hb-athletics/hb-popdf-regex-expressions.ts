@@ -1,10 +1,11 @@
 import exp from "constants"
 
 export const EMP_STR_EXP = /^\s*$/
-export const ITEM_NO_EXP = "Women's"
-export const ITEM_NO_EXP1 = "Men’s"
+export const ITEM_NO_EXP = "Women's,"
+export const ITEM_NO_EXP1 = "Men's,"
+export const ITEM_NO_EXP2 = "Women’s,"
 export const ITEM_NO_INDEX = 0
-export const ITEM_MATERIAL_INDEX = "Women's"
+export const ITEM_MATERIAL_INDEX = ""
 // export const ITEM_DESCRIPTION_INDEX = ITEM_MATERIAL_INDEX + 1 // 2
 // export const ITEM_DELIVERYDATE_INDEX = ITEM_DESCRIPTION_INDEX + 1 // 3
 // export const ITEM_MODE_INDEX = ITEM_DELIVERYDATE_INDEX + 1 // 4
@@ -56,8 +57,10 @@ export const PO_NUMBER_TEXT = 'Cust PO #'
 export const PO_NUMBER_INDEX = 1
 // export const SELLER_ADDRESS_START_TEXT = "SELLER:"
 // export const SELLER_ADDRESS_END_TEXT = "BUYER:"
-export const ITEM_VARIANT_START_TEXT = "Women's"
-export const ITEM_VARIANT_START_TEXT1 = "Men’s"
+export const ITEM_VARIANT_START_TEXT = "Women's,"
+export const ITEM_VARIANT_START_TEXT1 = "Men's,"
+export const ITEM_VARIANT_START_TEXT2 = "Women’s,"
+
 
 
 // Jaswanth Chnages 2nd format// 
