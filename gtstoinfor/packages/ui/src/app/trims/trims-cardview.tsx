@@ -37,13 +37,10 @@ useEffect(()=>{
 },[])
 
 const getBomInfoAgainstStyle = (styleNumber,trim)=>{
-    console.log(styleNumber)
     const req = new StyleNumberReq(styleNumber.styleNumber,trim)
     service.getBomInfoAgainstStyle(req).then(res =>{
         
         if(res.status){
-            console.log(res.data,"kkkkkkkkkkkk");
-
             res.data.styleNumber = styleNumber.styleNumber;
             res.data.poNumber = styleNumber.purchaseOrderNumber;
             // res.data.destinationCountry = styleNumber.destinationCountry;
@@ -65,7 +62,6 @@ const getBomInfoAgainstItemStyle = (trim) => {
         }
     })
 }
-console.log(state.state.info,"infodata..");
 
     const getAllTrims=()=>{
         service.getAllTrimInfo().then(res=>{
@@ -87,13 +83,9 @@ console.log(state.state.info,"infodata..");
     // }
 
     const cardOnclick = (val) => {
-        console.log(val);
-        console.log(state.state.info)
-        
         setTrimName(val.item)
         setModalOpen(true)
         if(state.state){
-            console.log(state.state)
             // getBomInfoAgainstStyle(state.state.info,val.item)
             getBomInfoAgainstItemStyle(val.item)
         }
