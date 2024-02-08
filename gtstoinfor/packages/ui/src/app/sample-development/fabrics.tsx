@@ -818,7 +818,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             <Button key={record.key} name={`fabricUpload${record.key}`}
               style={{ color: 'black', backgroundColor: '#7ec1ff' }}
               // icon={<UploadOutlined />}
-              disabled={(fileList[record.key] != undefined) ? true : false}
+              disabled={(fileList != undefined && fileList[record.key] != undefined) ? true : false}
             >
               <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
             </Button>

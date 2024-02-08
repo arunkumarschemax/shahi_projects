@@ -683,7 +683,7 @@ const getMappedTrims = (value, row) => {
             <Button key={record.key} name={`trimUpload${record.key}`}
                 style={{ color: 'black', backgroundColor: '#7ec1ff' }}
                 // icon={<UploadOutlined />}
-                disabled={(fileList[record.key] != undefined)? true:false}
+                disabled={(fileList != undefined && fileList[record.key] != undefined)? true:false}
             >
                 <Tooltip title="Upload Trim"><UploadOutlined /></Tooltip>
             </Button>
