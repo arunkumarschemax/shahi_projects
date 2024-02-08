@@ -41,11 +41,22 @@ export const ItemInfo = () => {
         },
         {
             title:'Style',
-            dataIndex:'style_number'
+            dataIndex:'styleNumber'
         },
         {
             title:'Region',
-            dataIndex:'geo_code'
+            dataIndex:'regionInfo',
+            render : (text,record) => {
+                const info = []
+                {record.regionInfo.map(e => {
+                    info.push(e.geoCode)
+                })}
+                return(
+                    <>
+                    {info.join(' / ')}
+                    </>
+                )
+            }
         },
         // {
         //     title:'Destination',
@@ -53,7 +64,7 @@ export const ItemInfo = () => {
         // },
         {
             title:'Quantity',
-            dataIndex:'total_item_qty'
+            dataIndex:'totalItemQty'
         }
     ]
 
@@ -79,11 +90,11 @@ export const ItemInfo = () => {
     const onSelectChange = (newSelectedRowKeys: any) => {
         const len = newSelectedRowKeys.length
         setSelectedRowKeys(newSelectedRowKeys);
-          if(!(styleNumberArray.includes(newSelectedRowKeys[len-1].style_number))){
-              setStyleNumberArray([...styleNumberArray,newSelectedRowKeys[len-1].style_number])
+          if(!(styleNumberArray.includes(newSelectedRowKeys[len-1]?.styleNumber))){
+              setStyleNumberArray([...styleNumberArray,newSelectedRowKeys[len-1]?.styleNumber])
           }
-          if(!(itemArray.includes(newSelectedRowKeys[len-1].item))){
-              setItemArray([...itemArray,newSelectedRowKeys[len-1].item])
+          if(!(itemArray.includes(newSelectedRowKeys[len-1]?.item))){
+              setItemArray([...itemArray,newSelectedRowKeys[len-1]?.item])
           }
       };
 

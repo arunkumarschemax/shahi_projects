@@ -172,7 +172,7 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                             </tr>
                             
                                 {
-                                    rec?.bomInfo[0]?.map((e,index) => {
+                                    rec?.bomInfo ? (rec?.bomInfo[0]?.map((e,index) => {
                                     const len = rec?.bomInfo[0]?.length
                                         return(
                                             <tr>
@@ -187,7 +187,7 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                                                 <td style={{width:'600px'}}>{e.description}</td>
                                             </tr>
                                         )
-                                    })
+                                    })) : (<></>)
                                 }
                         </table>
                             </>
