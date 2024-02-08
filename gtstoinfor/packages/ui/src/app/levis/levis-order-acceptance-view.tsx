@@ -24,9 +24,8 @@ import {
     
     AlertMessages,
     EddieOrderAcceptanceRequest,
-    EddieOrderFilter,
-    HbPoOrderFilter,
-    SanmarOrderFilter,
+    LevisOrderAcceptanceRequest,
+    LevisOrderFilter,
   } from "@project-management-system/shared-models";
   import { useIAMClientState } from "../nike/iam-client-react";
   
@@ -57,7 +56,7 @@ import {
   
   
     const getorderacceptanceData = () => {
-      const req = new EddieOrderFilter();
+      const req = new LevisOrderFilter();
   
       if (form.getFieldValue("poNumber") !== undefined) {
         req.poNumber = form.getFieldValue("poNumber");
@@ -148,34 +147,34 @@ import {
       const formValues = form.getFieldsValue();
       const itemNoValue = formValues[index]?.itemNo;
       console.log(record,'hhhhhhhhhhhhhhhh');
-      const req = new EddieOrderAcceptanceRequest();
+      const req = new LevisOrderAcceptanceRequest();
       req.poNumber = record.poNumber;
-      req.poLine=record.poLine
+      // req.poLine=record.poLine
       // req.style = record.style;
       req.itemNo = itemNoValue;
-      req.buyer = 'Eddie Bauer LLC';
-      req.deliveryDate = record.deliveryDate;
+      req.buyer = 'LEVIS';
+      // req.deliveryDate = record.deliveryDate;
     
       console.log("Request Payload:", req);
     
-      // service.coLineCreationReq(req).then((res) => {
-      //   if (res.status) {
-      //       getorderacceptanceData();
-      //     setItemNoValues({});
-      //     form.setFieldsValue({ [index]: { itemNo: undefined } });
-      //     message.success(res.internalMessage);
-      //   } else {
-      //     message.error(res.internalMessage);
-      //   }
-      // });
+      service.coLineCreationReq(req).then((res) => {
+        if (res.status) {
+            getorderacceptanceData();
+          setItemNoValues({});
+          form.setFieldsValue({ [index]: { itemNo: undefined } });
+          message.success(res.internalMessage);
+        } else {
+          message.error(res.internalMessage);
+        }
+      });
     };
     
-    const processData = (tableData: EddieOrderAcceptanceRequest[]) => {
+    const processData = (tableData: LevisOrderAcceptanceRequest[]) => {
       const dataTobeReturned = [];
-      const roleWiseMapData = new Map<string, EddieOrderAcceptanceRequest[]>();
+      const roleWiseMapData = new Map<string, LevisOrderAcceptanceRequest[]>();
   
       tableData.forEach(rec => {
-        const key = `${rec.poNumber}_${rec.itemNo}_${rec.deliveryDate}`;
+        const key = `${rec.poNumber}_${rec.itemNo}`;
   
         if (!roleWiseMapData.has(key)) {
           roleWiseMapData.set(key, [rec]);

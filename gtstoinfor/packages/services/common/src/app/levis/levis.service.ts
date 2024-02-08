@@ -6,7 +6,9 @@ import { LevisOrdersRepository } from "./repositories/levis-orders.repo";
 import { LevisPdfRepo } from "./repositories/levis-pdf.repo";
 import { LevisOrdersEntity } from "./entities/levis-orders.entity";
 import { LevisPdfInfoEntity } from "./entities/levis-pdf.entity";
-import { CommonResponseModel, LevisOrderFilter, LevisSizeWiseModel, levisOrderDataModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, LevisOrderFilter, LevisSizeWiseModel, StatusEnum, levisOrderDataModel } from "@project-management-system/shared-models";
+import { LevisCOLineEntity } from "./entities/levis-co-line.entity";
+import { LevisCOLineRepository } from "./repositories/levis-co-line.repository";
 
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
@@ -22,6 +24,7 @@ export class LevisService {
     private dataSource: DataSource,
     private LevisOrdersRepo: LevisOrdersRepository,
     private pdfRepo: LevisPdfRepo,
+    private levisCoLineRepo:LevisCOLineRepository,
 
 
   ) { }
@@ -149,6 +152,80 @@ export class LevisService {
   async getPoNumber(): Promise<CommonResponseModel> {
     try {
       const data = await this.LevisOrdersRepo.getPoNumber()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
+
+
+  async coLineCreationReq(req: any): Promise<CommonResponseModel> {
+    try {
+      // console.log(req,'req')
+      if (req.itemNo == undefined || null) {
+        return new CommonResponseModel(false, 0, 'Please enter Item No')
+      };
+      // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
+      const records = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber} });
+      // const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
+      const empty = [];
+
+      //console.log(rec,'reccccccccc')
+      const entity = new LevisCOLineEntity()
+      // entity.poLine = uniquePoLines.join(',');
+      entity.buyer = req.buyer
+      entity.poNumber = req.poNumber;
+      // entity.style = req.style;
+      entity.itemNo = req?.itemNo;
+      entity.status = 'Open';
+      // entity.deliveryDate = req.deliveryDate;
+      entity.createdUser = 'admin';
+      empty.push(entity)
+
+      // console.log(empty,'emptyyyyy')
+      const save = await this.levisCoLineRepo.save(empty);
+
+
+
+      if (save) {
+        const update = await this.LevisOrdersRepo.update(
+          { poNumber: req.poNumber}, // Conditions for updating
+          { status: StatusEnum.INPROGRESS }
+        );
+        return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
+      } else {
+        return new CommonResponseModel(false, 0, 'CO-Line request failed')
+      }
+    } catch (err) {
+      //  console.log(err,',,,,,,,,,,,,,,,')
+      return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
+    }
+  }
+
+
+  async getCoLineData(req?: LevisOrderFilter): Promise<CommonResponseModel> {
+    const data = await this.levisCoLineRepo.getCoLineData(req)
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
+
+  async getCoPoNumber(): Promise<CommonResponseModel> {
+    const data = await this.levisCoLineRepo.getCoPoNumber()
+    if (data.length > 0)
+      return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found');
+  }
+
+  async getItem(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.levisCoLineRepo.getItem()
       if (data) {
         return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
       } else {

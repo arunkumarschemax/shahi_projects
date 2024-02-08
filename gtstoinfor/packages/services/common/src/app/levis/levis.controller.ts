@@ -85,5 +85,43 @@ export class LevisController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+
+
+    @Post('/coLineCreationReq')
+    async coLineCreationReq(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.coLineCreationReq(req)
+        } catch (error) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
+
+    @Post('/getCoLineData')
+    async getCoLineData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.getCoLineData(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getItem')
+    async getItem(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getItem();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    @Post('/getCoPoNumber')
+    async getCoPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getCoPoNumber();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
  
 }

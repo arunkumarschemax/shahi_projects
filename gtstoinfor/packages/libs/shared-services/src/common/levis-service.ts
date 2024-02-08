@@ -17,8 +17,23 @@ export class LevisService extends CommonAxiosService {
         return this.axiosPostCall(this.levisOrdersController + "/getorderacceptanceData", req)
     }
 
+    async coLineCreationReq(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/coLineCreationReq", req)
+    }
+
     async getPoNumber(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.levisOrdersController + "/getPoNumber")
+    }
+
+    async getCoLineData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/getCoLineData", req)
+    }
+
+    async getItem(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/getItem")
+    }
+    async getCoPoNumber(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/getCoPoNumber")
     }
 
 
