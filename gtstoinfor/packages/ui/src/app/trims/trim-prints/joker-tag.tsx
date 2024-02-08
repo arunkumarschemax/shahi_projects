@@ -161,7 +161,7 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                     </>) : (<></>)}
                        
                         <br/>
-                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1}>
+                        {rec?.bomInfo?.length > 0 ? ( <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1}>
                             <tr>
                                 <th>ITEM#</th>
                                 <th>STYLE#</th>
@@ -189,7 +189,8 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
                                         )
                                     })) : (<></>)
                                 }
-                        </table>
+                        </table>) : (<></>)}
+                       
                             </>
                         )
                     })
