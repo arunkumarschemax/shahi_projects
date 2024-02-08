@@ -33,5 +33,13 @@ export class LevisOrdersRepository extends Repository<LevisOrdersEntity> {
         return await query.getRawMany()
     }
 
+    async getPoNumber(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`DISTINCT po_number`)
+        
+        return await query.getRawMany()
+    }
+    
+
     
 }

@@ -123,7 +123,7 @@ export class LevisService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`,
-            new levisOrderDataModel(rec.id,rec.po_number,rec.delivery_address,rec.transmode,rec.currency,rec.po_line,rec.material,rec.total_unit_price,rec.original_date,[])
+            new levisOrderDataModel(rec.id,rec.po_number,rec.delivery_address,rec.transmode,rec.currency,rec.po_line,rec.material,rec.total_unit_price,rec.original_date,rec.status,[])
           );
 
         }
@@ -142,6 +142,20 @@ export class LevisService {
     } catch (e) {
       console.log(e, "errrrrrrrrr")
       return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
+
+
+  async getPoNumber(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.LevisOrdersRepo.getPoNumber()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
     }
   }
   

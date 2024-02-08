@@ -13,6 +13,14 @@ export class LevisService extends CommonAxiosService {
         return this.axiosPostCall(this.levisOrdersController + "/fileUpload", formData)
     }
 
+    async getorderacceptanceData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/getorderacceptanceData", req)
+    }
+
+    async getPoNumber(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/getPoNumber")
+    }
+
 
  
 }

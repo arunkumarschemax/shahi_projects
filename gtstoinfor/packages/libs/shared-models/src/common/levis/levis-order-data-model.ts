@@ -12,6 +12,7 @@ export class levisOrderDataModel {
     material: string;
     totalUnitPrice: string;
     originalDate: string;
+    status:string;
     sizeWiseData: LevisSizeWiseModel[]
 
 
@@ -25,6 +26,7 @@ export class levisOrderDataModel {
         material: string,
         totalUnitPrice: string,
         originalDate: string,
+        status:string,
         sizeWiseData: LevisSizeWiseModel[],
 
 
@@ -39,6 +41,7 @@ export class levisOrderDataModel {
         this.material = material
         this.totalUnitPrice = totalUnitPrice
         this.originalDate = originalDate
+        this.status=status
         this.sizeWiseData = sizeWiseData
 
 
