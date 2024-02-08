@@ -1,5 +1,5 @@
-import { Button, Card, Checkbox, Col, DatePicker, Descriptions, Divider, Form, Input, Modal, Popconfirm, Row, Segmented, Select, Space, Table, Tabs, Tag, Tooltip, message} from "antd";
-import {CloseOutlined,CreditCardOutlined,EditOutlined,EyeOutlined,HomeOutlined,PlusCircleOutlined,SearchOutlined,UndoOutlined,  } from "@ant-design/icons";
+import { Button, Card, Checkbox, Col, DatePicker, Descriptions, Divider, Form, Input, Modal, Popconfirm, Row, Segmented, Select, Space, Table, Tabs, Tag, Tooltip, message } from "antd";
+import { CloseOutlined, CreditCardOutlined, EditOutlined, EyeOutlined, HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined, } from "@ant-design/icons";
 import { useEffect, useRef, useState } from "react";
 import { BomService, trimService } from "@project-management-system/shared-services";
 import { useLocale } from "antd/es/locale";
@@ -11,65 +11,66 @@ import { stat } from "fs";
 import HangTag from "./trim-prints/hang-tag";
 import WasCarelabel from "./trim-prints/wash-care-label";
 import { CountryStickerPrint } from "./trim-prints/country-sticker";
+import { PageContainer } from "@ant-design/pro-layout";
 
 
 
-export const TrimList=({})=>{
-const service = new BomService();
-const [trim,setTrim]=useState<any>([]);
-const state = useLocation()
-const [bomInfo, setBomInfo] = useState<any>([]);
-const [modalOpen,setModalOpen] = useState<boolean>(false)
-const [trimName,setTrimName] = useState<string>('')
+export const TrimList = ({ }) => {
+    const service = new BomService();
+    const [trim, setTrim] = useState<any>([]);
+    const state = useLocation()
+    const [bomInfo, setBomInfo] = useState<any>([]);
+    const [modalOpen, setModalOpen] = useState<boolean>(false)
+    const [trimName, setTrimName] = useState<string>('')
 
-const componentsMapping = {
-    "Joker Tag" : <JokerTagPrint info={bomInfo} />,
-    "Hangtag":<HangTag info={bomInfo} />,
-    "Wash Care Label" : <WasCarelabel  bomInfo={bomInfo}/>,
-    "Country Sticker":<CountryStickerPrint  info={bomInfo} />
+    const componentsMapping = {
+        "Joker Tag": <JokerTagPrint info={bomInfo} />,
+        "Hangtag": <HangTag info={bomInfo} />,
+        "Wash Care Label": <WasCarelabel bomInfo={bomInfo} />,
+        "Country Sticker": <CountryStickerPrint info={bomInfo} />
 
-}
+    }
 
-useEffect(()=>{
-    setBomInfo(state.state.info)
+    useEffect(() => {
+        setBomInfo(state.state.info)
 
-    getAllTrims();
-},[])
+        getAllTrims();
+    }, [])
 
-const getBomInfoAgainstStyle = (styleNumber,trim)=>{
-    console.log(styleNumber)
-    const req = new StyleNumberReq(styleNumber.styleNumber,trim)
-    service.getBomInfoAgainstStyle(req).then(res =>{
-        
-        if(res.status){
-            console.log(res.data,"kkkkkkkkkkkk");
+    const getBomInfoAgainstStyle = (styleNumber, trim) => {
+        console.log(styleNumber)
+        const req = new StyleNumberReq(styleNumber.styleNumber, trim)
+        service.getBomInfoAgainstStyle(req).then(res => {
 
-            res.data.styleNumber = styleNumber.styleNumber;
-            res.data.poNumber = styleNumber.purchaseOrderNumber;
-            // res.data.destinationCountry = styleNumber.destinationCountry;
-            res.data.destinationCountryCode = styleNumber.destinationCountryCode;
-            res.data.genderAgeDesc = styleNumber.genderAgeDesc;
-            // res.data.geoCode = styleNumber.geoCode;
-            res.data.sizeWiseData=styleNumber.sizeWiseData;
-            res.data.item=styleNumber.item
-            // setBomInfo(res.data)
-        }
-    })
-}
+            if (res.status) {
+                console.log(res.data, "kkkkkkkkkkkk");
 
-const getBomInfoAgainstItemStyle = (trim) => {
-    const req = new BomPrintFilterReq(state.state.items,state.state.styleNumbers,trim)
-    service.getBomPrintInfo(req).then(res => {
-        if(res.status){
-            setBomInfo(res.data)
-        }
-    })
-}
-console.log(state.state.info,"infodata..");
+                res.data.styleNumber = styleNumber.styleNumber;
+                res.data.poNumber = styleNumber.purchaseOrderNumber;
+                // res.data.destinationCountry = styleNumber.destinationCountry;
+                res.data.destinationCountryCode = styleNumber.destinationCountryCode;
+                res.data.genderAgeDesc = styleNumber.genderAgeDesc;
+                // res.data.geoCode = styleNumber.geoCode;
+                res.data.sizeWiseData = styleNumber.sizeWiseData;
+                res.data.item = styleNumber.item
+                // setBomInfo(res.data)
+            }
+        })
+    }
 
-    const getAllTrims=()=>{
-        service.getAllTrimInfo().then(res=>{
-            if(res.status){
+    const getBomInfoAgainstItemStyle = (trim) => {
+        const req = new BomPrintFilterReq(state.state.items, state.state.styleNumbers, trim)
+        service.getBomPrintInfo(req).then(res => {
+            if (res.status) {
+                setBomInfo(res.data)
+            }
+        })
+    }
+    console.log(state.state.info, "infodata..");
+
+    const getAllTrims = () => {
+        service.getAllTrimInfo().then(res => {
+            if (res.status) {
                 setTrim(res.data);
             }
         })
@@ -89,17 +90,17 @@ console.log(state.state.info,"infodata..");
     const cardOnclick = (val) => {
         console.log(val);
         console.log(state.state.info)
-        
+
         setTrimName(val.item)
         setModalOpen(true)
-        if(state.state){
+        if (state.state) {
             console.log(state.state)
             // getBomInfoAgainstStyle(state.state.info,val.item)
             getBomInfoAgainstItemStyle(val.item)
         }
     }
 
-    const onCancel = () =>{
+    const onCancel = () => {
         setModalOpen(false)
         setTrimName('')
     }
@@ -107,41 +108,42 @@ console.log(state.state.info,"infodata..");
         const allowedCountries = ["Malaysia", "Philippines", "Indonesia"];
         return allowedCountries.includes(country);
     };
-    
-    return(
-   <>
-   <Card title="TRIMS" headStyle={{ color: 'black', fontWeight: 'bold',fontSize:'20px' }}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
-           {trim.length > 0 && trim.map((e, index) => (
-        <Card key={index} hoverable style={{
-            width: "20%",
-            height: "100%",
-            backgroundColor: "#8ab0ab",
-            marginRight: "20px",
-            marginBottom: "20px",}}
-            onClick={() => cardOnclick(e)}
-            >
-            <div>
-                <Descriptions
-                    key={index}
-                    style={{ fontSize:'10px !important', textAlign: "center" }}
-                    title={<span style={{ fontSize: '20px', textAlign: "center" ,fontFamily:'revert-layer'}}>{e.item}</span>}                     
-                >
-                 </Descriptions>
-            </div>
-        </Card>
-    ))}
-    </div>
-    </Card>
-    <Modal open={modalOpen} onCancel={onCancel} onOk={() => setModalOpen(false)} footer={[]} width={'85%'}>
-        {componentsMapping[trimName]}       
-        {/* {trimName === "Country Sticker" && isValidCountry(bomInfo.destinationCountry) ?
+
+    return (
+        <>
+            <PageContainer title="Trims">
+                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                    {trim.length > 0 && trim.map((e, index) => (
+                        <Card key={index} hoverable style={{
+                            width: "20%",
+                            height: "100%",
+                            backgroundColor: "#8ab0ab",
+                            marginRight: "20px",
+                            marginBottom: "20px",
+                        }}
+                            onClick={() => cardOnclick(e)}
+                        >
+                            <div>
+                                <Descriptions
+                                    key={index}
+                                    style={{ fontSize: '10px !important', textAlign: "center" }}
+                                    title={<span style={{ fontSize: '20px', textAlign: "center", fontFamily: 'revert-layer' }}>{e.item}</span>}
+                                >
+                                </Descriptions>
+                            </div>
+                        </Card>
+                    ))}
+                </div>
+            </PageContainer>
+            <Modal open={modalOpen} onCancel={onCancel} onOk={() => setModalOpen(false)} footer={[]} width={'85%'}>
+                {componentsMapping[trimName]}
+                {/* {trimName === "Country Sticker" && isValidCountry(bomInfo.destinationCountry) ?
                     <CountryStickerPrint info={bomInfo} /> :
                     <div>{isValidCountry(bomInfo.destinationCountry) ? "Invalid Trim" : "Invalid destination country"}</div>
                 } */}
-    </Modal>
-   </> 
+            </Modal>
+        </>
     )
-   
+
 }
 export default TrimList;
