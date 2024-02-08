@@ -159,7 +159,7 @@ const CentricPdfUpload: React.FC<IPdfUploadProps> = (props) => {
         <Card title='Order Upload'>
             {resultProps === undefined &&
                 <Row gutter={24} >
-                {/* <Col
+                 <Col
                         xs={{ span: 24 }}
                         sm={{ span: 24 }}
                         md={{ span: 5 }}
@@ -167,9 +167,9 @@ const CentricPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                         xl={{ span: 4 }}
                     >
                         <Form.Item>
-                            <Button type='primary' onClick={centricBot}>Upload Bot</Button>
+                            <Button type='primary' onClick={centricBot}>Auto Upload Bot</Button>
                         </Form.Item>
-                    </Col> */}
+                    </Col> 
                     <Col span={24}>
                         <Dragger {...uploadProps} >
                             <p className="ant-upload-drag-icon">
