@@ -177,7 +177,6 @@ export class TrimService {
                 const dataModelArray: BomPrintInfoModel[] = [];
                 trimPrintInfoMap.forEach(e => dataModelArray.push(e));
                 for(const rec of dataModelArray){
-                    console.log(styleWiseBomInfoData,'styleWiseBomInfoData----')
                     if(styleWiseBomInfoData != undefined){
 
                         if(styleWiseBomInfoData.has(rec.style)){
