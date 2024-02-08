@@ -13,7 +13,7 @@ export class BomRepo extends Repository<BomEntity> {
 
     async getBomData(styleId:number): Promise<any[]> {
         const queryBuilder = this.createQueryBuilder('s')
-        .select(`style_id as styleId,id AS bomId,item_name AS itemName,DESCRIPTION,im_code AS imCode,item_type AS itemType`)
+        .select(`style_id as styleId,id AS bomId,item_name AS itemName,description,im_code AS imCode,item_type AS itemType`)
         .where(`style_id=${styleId}`)
         return await queryBuilder.getRawMany()
     }

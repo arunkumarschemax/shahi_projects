@@ -278,7 +278,7 @@ export class BomService {
             const combo = await this.styleComboRepo.getStyleComboData(bom.bomId)
             let styleCombosArray: StyleComboDto[] = []
             for (const rec of combo) {
-                styleCombosArray.push(new StyleComboDto(rec.combination, rec.primaryColor, rec.secondaryColor, rec.logoColor))
+                styleCombosArray.push(new StyleComboDto(rec.combination, rec.primaryColor, rec.secondaryColor, rec.logoColor,rec.color))
             }
             bomdetailsArray.push(new BomDto(bom.itemName, bom.description, bom.imCode, bom.itemType, bom.use, styleCombosArray, bom.bomId, bom.styleId))
         }

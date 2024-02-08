@@ -25,6 +25,11 @@ export class StyleComboDto {
 
     @ApiProperty()
     styleComboid: number;
+
+    @ApiProperty()
+    color : string
+    
+    constructor(combination: string, primaryColor: string, secondaryColor: string, logoColor: string, color?: string);
     constructor(
         combination:string,
         primaryColor:string,
@@ -34,6 +39,7 @@ export class StyleComboDto {
         styleComboid?: number,
         styleId?:number,
         bomId?:number,
+        color?:string
     ){
         this.combination=combination
         this.primaryColor=primaryColor
@@ -43,6 +49,7 @@ export class StyleComboDto {
         this.styleComboid=styleComboid
         this.styleId=styleId
         this.bomId=bomId
+        this.color = color
     }
 
 }
