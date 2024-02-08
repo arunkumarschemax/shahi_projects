@@ -45,6 +45,8 @@ import AddressUpload from "./masters/address/address-excel-upload"
 import PdfDetailViewTable from "./ralph-lauren/pdf-detail.view"
 import TradeLinkView from "./ralph-lauren/pdf-reader/trade-link-view"
 import OrderComparisionReport from "./ralph-lauren/order-comparsion-report"
+import ColorUpload from "./masters/color/color-excel-upload"
+import ColorView from "./masters/color/color-view"
 
 
 export const AppRoutes = () => {
@@ -188,6 +190,8 @@ export const AppRoutes = () => {
                    <Route path='pdf-detail-view' element={<PdfDetailViewTable data={new LegalPoDetails}/>} />
                    <Route path='trade-link-view' element={<TradeLinkView />} />
                    <Route path = 'orders-comparsion-report' element={<OrderComparisionReport />} />
+                   <Route path='masters/color/color-excel-upload' key='/color/color-excel-upload' element={<ColorUpload/>} />
+                   <Route path='masters/color/color-view' key='/color/color-view' element={<ColorView/>} />
                    
 
 
