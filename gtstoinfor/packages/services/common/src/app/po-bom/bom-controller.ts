@@ -6,6 +6,7 @@ import { ApplicationExceptionHandler } from "@project-management-system/backend-
 import { StyleDto } from "./dto/style-dto";
 import { TrimService } from "./trim-service";
 import { StyleNumberDto } from "./dto/style-number-dto";
+import { StyleIdReq } from "./dto/api-requests";
 
 @ApiTags('bom')
 @Controller('bom')
@@ -100,7 +101,7 @@ export class BomController {
 
 
     @Post('/getStylesData')
-    async getStylesData(@Body() req: any): Promise<CommonResponseModel> {
+    async getStylesData(): Promise<CommonResponseModel> {
         try {
             return this.bomService.getStylesData()
         } catch (err) {
@@ -121,6 +122,16 @@ export class BomController {
         try{
             return this.trimService.getBomPrintInfo(req)
         }catch(err){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+
+    @ApiBody({ type: StyleIdReq })
+    @Post('/getBomDataForStyle')
+    async getBomDataForStyle(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.getBomDataForStyle(req)
+        } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }

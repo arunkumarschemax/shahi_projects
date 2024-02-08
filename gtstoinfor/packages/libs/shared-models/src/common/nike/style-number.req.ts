@@ -7,3 +7,11 @@ export class StyleNumberReq{
         this.trimName = trimName
     }
 }
+
+export class StyleIdReq {
+    styleId : number
+
+    constructor(styleId: number) {
+        this.styleId = styleId;
+    }
+}
