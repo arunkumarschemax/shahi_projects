@@ -79,6 +79,7 @@ import EddieComparisionReport from "./eddiebauer/eedie-comparision-report"
 import LevisOrdersGrid from "./levis/levis-order-data-grid"
 import LevisPdfUpload from "./levis/pdf-upload"
 import LevisOrderAcceptanceGrid from "./levis/levis-order-acceptance-view"
+import LevisColineView from "./levis/levis-co-line-view"
 
 
 export const AppRoutes = () => {
@@ -294,6 +295,7 @@ export const AppRoutes = () => {
                    <Route path='levis-order-data-info-grid' element={<LevisOrdersGrid />} />
                    <Route path='levis-pdf-upload' element={<LevisPdfUpload />} />
                    <Route path="levis-order-acceptance" element={<LevisOrderAcceptanceGrid/>}/>
+                   <Route path="levis-co-line-view" element={<LevisColineView/>}/>
 
             
                 </Route>

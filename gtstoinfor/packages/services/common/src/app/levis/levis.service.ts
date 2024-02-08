@@ -9,6 +9,7 @@ import { LevisPdfInfoEntity } from "./entities/levis-pdf.entity";
 import { CommonResponseModel, LevisOrderFilter, LevisSizeWiseModel, StatusEnum, levisOrderDataModel } from "@project-management-system/shared-models";
 import { LevisCOLineEntity } from "./entities/levis-co-line.entity";
 import { LevisCOLineRepository } from "./repositories/levis-co-line.repository";
+import { ItemNoDtos } from "../sanmar/dto/sanmar-item-no.dto";
 
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
@@ -233,6 +234,41 @@ export class LevisService {
       }
     } catch (err) {
       throw err
+    }
+  }
+
+
+  async updateItemNo(req: ItemNoDtos): Promise<CommonResponseModel> {
+    console.log(req, "reqq");
+    try {
+      const update = await this.levisCoLineRepo.update(
+        { id: Number(req.id) },
+        { itemNo: req.itemNo }
+      );
+
+      if (update) {
+        return new CommonResponseModel(true, 1, "ItemNo Update Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while updating ItemNo", error);
+    }
+  }
+
+
+  async deleteCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
+    console.log(req, "reqq");
+    try {
+      const deletedItem = await this.levisCoLineRepo.delete({ id: Number(req.id) });
+
+      if (deletedItem && deletedItem.affected) {
+        return new CommonResponseModel(true, 1, "ItemNo Deleted Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
     }
   }
   

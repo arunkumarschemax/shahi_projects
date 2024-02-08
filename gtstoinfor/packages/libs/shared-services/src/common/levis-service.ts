@@ -1,5 +1,6 @@
-import { CommonResponseModel } from "@project-management-system/shared-models"
+import { CommonResponseModel, ItemNoDto } from "@project-management-system/shared-models"
 import { CommonAxiosService } from "../common-axios-service-prs"
+
 
 export class LevisService extends CommonAxiosService {
     private levisOrdersController = "/levis"
@@ -36,6 +37,13 @@ export class LevisService extends CommonAxiosService {
         return this.axiosPostCall(this.levisOrdersController + "/getCoPoNumber")
     }
 
+    async updateItemNo(payload?: ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/updateItemNo", payload)
+    }
+
+    async deleteCoLine(payload?: ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/deleteCoLine", payload)
+    }
 
  
 }
