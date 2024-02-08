@@ -7,7 +7,7 @@ const { Dragger } = Upload;
 import { Document, pdfjs } from 'react-pdf';
 
 import { DiaPDFModel, LegalPoPdfModel } from '@project-management-system/shared-models';
-import { AdobeAcrobatApiService, CentricService, NikeService, RLOrdersService } from '@project-management-system/shared-services';
+import { AdobeAcrobatApiService,  LevisService} from '@project-management-system/shared-services';
 import PoPdfTable from './po-pdf-table';
 import { extractDataFromPoPdf } from './po-pdf-extraction-helper'
 // import { DiaPdfDataExtractor } from './dia-pdf-extraction-helper';
@@ -48,7 +48,7 @@ const LevisPdfUpload: React.FC<IPdfUploadProps> = (props) => {
 
 
     const [diaPDfForm] = Form.useForm()
-    const centricService = new CentricService();
+    const levisService = new LevisService();
     const adobeAcrobatApi = new AdobeAcrobatApiService()
 
     const uploadProps: UploadProps = {
@@ -103,18 +103,18 @@ const LevisPdfUpload: React.FC<IPdfUploadProps> = (props) => {
     }
 
     const savePdfFields = () => {
-        centricService.saveCentricOrder(poPdfData).then((res) => {
+        levisService.saveLevisOrder(poPdfData).then((res) => {
             if (res.status) {
                 onReset()
                 if (fileList) {
                     const formData = new FormData();
                     fileList.forEach((file: any) => {
                         formData.append('file', file);
-                        formData.append('PoNumber', poPdfData?.poNumber);
+                        formData.append('poNumber', poPdfData?.poNumber);
                         formData.append('jsonData',JSON.stringify(poPdfData))
                     })
                     console.log(formData, "form")
-                    centricService.fileUpload(formData).then((res) => {
+                    levisService.fileUpload(formData).then((res) => {
                         if (res.status) {
                             message.success(res.internalMessage)
                         }
