@@ -41,10 +41,10 @@ import FabricContentForm from "./masters/fabric-content/fabric-content-form"
 import { Suspense, lazy } from "react"
 import AddressView from "./masters/address/address-view"
 import AddressUpload from "./masters/address/address-excel-upload"
-import BomPdfUpload from "./bom-pdf-extraction/pdf-upload"
+import BomPdfUpload from "./bom-automation/bom-details-upload/pdf-upload"
 import BackingPaper from "./trims/trim-prints/backing-paper"
-import BomView from "./bom-pdf-extraction/bom-view"
-import BomPdfInfoDetailView from "./bom-pdf-extraction/deatiled-view"
+import BomView from "./bom-automation/bom-details/bom-view"
+import BomPdfInfoDetailView from "./bom-automation/bom-pdf-extraction/deatiled-view"
 import ButtonPrint, { Button1Print } from "./trims/trim-prints/button-print"
 import Button2Print from "./trims/trim-prints/button2-print"
 import Button3Print from "./trims/trim-prints/button3-print"
@@ -54,9 +54,13 @@ import BomCreation from "./trims/bom-creation"
 import TrimList from "./trims/trims-cardview"
 import JokerTagPrint from "./trims/trim-prints/joker-tag"
 import WasCarelabel from "./trims/trim-prints/wash-care-label"
-import HANGTAG, { HangTag } from "./trims/trim-prints/hang-tag"
+import  { HangTag } from "./trims/trim-prints/hang-tag"
+import { CountryStickerPrint } from "./trims/trim-prints/country-sticker"
+import ItemInfo from "./trims/item-info"
+import ProLayout from "@ant-design/pro-layout"
+import LayoutTwo from "./layout/basic-layout/pro-layout"
 
-
+// import BasicLayout  from '@ant-design/pro-layout';
 export const AppRoutes = () => {
     const router = createBrowserRouter(createRoutesFromElements(
         <Route  >
@@ -118,13 +122,7 @@ export const AppRoutes = () => {
     return (
 
         <Routes>
-            <Route path='/' element={
-                <>
-                    <>
-                        <BasicLayout />
-                    </>
-                </>
-            } >
+            <Route path='/' element={ <LayoutTwo /> } >
                 <Route path="/user-management/users-from" element={<Suspense fallback={<div>Loading...</div>}><UserCreationForm /></Suspense>} />
                 <Route path='/user-management/users-view' element={<UsersView />} />
                 <Route path='/masters'>
@@ -171,20 +169,24 @@ export const AppRoutes = () => {
                     <Route path='backing-paper' element={<BackingPaper/>} />
                     {/* <Route path='trim-grid' element={<TrimsGrid/>} /> */}
                     <Route path='trim-columns' element={<TrimColumns/>} />
-                    <Route path='hang-tag' element={<HangTag/>} />
+                    {/* <Route path='hang-tag' element={<HangTag />} /> */}
 
 
                 </Route>
                 
                 <Route path='/bom'>
-                    <Route path='bom-pdf-upload' element={<BomPdfUpload />} />
-                    <Route path='bom-view' element={<BomView />} />
-                    <Route path='bom-pdf-info-detail-view' element={<BomPdfInfoDetailView />} />
+                    <Route path='bom-pdf-upload' key='bom-pdf-upload' element={<BomPdfUpload />} />
+                    <Route path='bom-view' key={'bom-view'} element={<BomView />} />
+                    <Route path='bom-pdf-info-detail-view/:styleId' key={'bom-pdf-info-detail-view'} element={<BomPdfInfoDetailView />} />
                     <Route path='bom-creation' key='/bom-creation' element={<BomCreation />} />
                     <Route path='joker-tag' key='/joker-tag' element={<JokerTagPrint info={[]}/>}/>
                     <Route path='trim-grid' element={<TrimsGrid/>} />
                     <Route path='trim-List' element={<TrimList/>} />
-                    <Route path='washcare-label' element={<WasCarelabel />}/>
+                    <Route path='washcare-label' element={<WasCarelabel bomInfo={[]} />}/>
+                    <Route path='hang-tag' element={<HangTag info={[]}/>} />
+                    <Route path='item-info' element={<ItemInfo />} />
+                    <Route path='country-sticker' element={<CountryStickerPrint info={[]}/>} />
+
                 </Route>
 
                 <Route path='/reports'>
@@ -202,9 +204,7 @@ export const AppRoutes = () => {
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
                     <Route path='fob-price-variation-report' element={<FOBPriceVariationReport />} />
                     <Route path='po-detailed-view' element={<PoDetailedview data={undefined} />} />
-
                 </Route>
-             
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
             <Route path="/print">

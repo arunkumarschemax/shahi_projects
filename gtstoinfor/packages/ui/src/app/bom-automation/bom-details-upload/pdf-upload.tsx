@@ -10,8 +10,8 @@ import { Document, pdfjs } from 'react-pdf';
 
 import { DiaPDFModel, LegalPoPdfModel } from '@project-management-system/shared-models';
 import { AdobeAcrobatApiService } from '@project-management-system/shared-services';
-import { extractDataFromPoPdf } from './bom-pdf-extraction-helper';
-import PoPdfTable from './bom-pdf-table';
+import { extractDataFromPoPdf } from '../bom-pdf-extraction/bom-pdf-extraction-helper';
+import PoPdfTable from '../bom-pdf-extraction/bom-pdf-table';
 
 // import { DiaPdfDataExtractor } from './dia-pdf-extraction-helper';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
