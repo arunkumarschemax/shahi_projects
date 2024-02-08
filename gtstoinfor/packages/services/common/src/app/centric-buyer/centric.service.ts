@@ -625,7 +625,7 @@ export class CentricService {
                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
               }
             }
-          } else if ((await tab.getAttribute('innerText')) == 'ASORTED') {
+          } else if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
             await driver.executeScript('arguments[0].click();', tab);
             for (let [colorIndex, color] of dest.colors.entries()) {
               for (let [sizeIndex, size] of color.sizes.entries()) {
@@ -673,7 +673,7 @@ export class CentricService {
                     return new CommonResponseModel(false, 0, 'NO matching Size found')
                   }
                 }
-                const inputId = `${size.name}:${color.name}:ASORTED`.replace(/\*/g, '');
+                const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
                 const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
               }
@@ -858,7 +858,7 @@ export class CentricService {
 
         await page.waitForSelector('button.ant-btn-primary')
         await page.click('button.ant-btn-primary');
-        await page.waitForTimeout(16000)
+        await page.waitForTimeout(10000)
 
         const sourceFilePath = path.join(directoryPath, file);
         const destinationFilePath = path.join(destinationDirectory, file);
