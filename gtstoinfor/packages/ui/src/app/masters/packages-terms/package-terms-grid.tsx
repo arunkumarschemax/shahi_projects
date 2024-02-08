@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Checkbox } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
-import { ColumnProps } from 'antd/lib/table';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Highlighter from 'react-highlight-words';
 import { PackageTermsDto } from '@project-management-system/shared-models';
 import { PackageTermsService,  UserRequestDto } from '@project-management-system/shared-services';
@@ -17,7 +16,6 @@ export function PackageTermsGrid() {
   const searchInput = useRef(null);
   const [page, setPage] = React.useState(1);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const navigate = useNavigate()
   const service = new PackageTermsService();
   const [selectedPackageTermsData, setSelectedPackageTermsData] = useState<any>(undefined);
   const [packageTermsData, setPackageTermsData] = useState<PackageTermsDto[]>([]);
@@ -114,10 +112,10 @@ export function PackageTermsGrid() {
  
   const deleteTerm = (Data:PackageTermsDto) => {
     Data.isActive=Data.isActive?false:true;
-    service.activateOrDeactivatePackageTerms(Data).then(res => { console.log(res);
+    service.activateOrDeactivatePackageTerms(Data).then(res => { 
+      // console.log(res);
       if (res.status) {
         getAll();
-        // AlertMessages.getSuccessMessage('Success');
         message.success(res.internalMessage)
 
       } else {
@@ -157,23 +155,32 @@ export function PackageTermsGrid() {
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
-      filters: [
-        {
-          text: 'Active',
-          value: true,
-        },
-        {
-          text: 'InActive',
-          value: false,
-        },
-      ],
-      filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-      
-        return record.isActive === value;
-      },
-      
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+  <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+    <Checkbox
+      checked={selectedKeys.includes(true)}
+      onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+    >
+      <span style={{color:'green'}}>Active</span>
+    </Checkbox>
+    <Checkbox
+      checked={selectedKeys.includes(false)}
+      onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+    >
+      <span style={{color:'red'}}>Inactive</span>
+    </Checkbox>
+    <div className="custom-filter-dropdown-btns" >
+    <Button  onClick={() => clearFilters()} className="custom-reset-button">
+        Reset
+      </Button>
+      <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+        OK
+      </Button>
+    
+    </div>
+  </div>
+       ),      
     },
     {
       title:`Action`,
@@ -186,7 +193,7 @@ export function PackageTermsGrid() {
               onClick={() => {
                 if (rowData.isActive) {
                    openFormWithData(rowData);
-                   console.log(rowData,"rowData")
+                  //  console.log(rowData,"rowData")
                 } else {
                    AlertMessages.getErrorMessage('You Cannot Edit Deactivated Package term');
                 }
@@ -219,7 +226,8 @@ export function PackageTermsGrid() {
 
   const updateTerm = (Data: PackageTermsDto) => {
     Data.updatedUser= JSON.parse(localStorage.getItem('username'))
-    service.updatePackageTerms(Data).then(res => { console.log(res,"update");
+    service.updatePackageTerms(Data).then(res => { 
+      // console.log(res,"update");
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
         getAll();
@@ -240,12 +248,14 @@ export function PackageTermsGrid() {
     setDrawerVisible(false);
   }
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
+    // console.log('params', pagination, filters, sorter, extra);
   }
 
   return (
     <Card title = "Package Terms"
-    style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/global/package-terms/package-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
+    style={{textAlign:'left'}} 
+    headStyle={{ backgroundColor: '#69c0ff' }} 
+    extra={<Link to = "/global/package-terms/package-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
     >
      <br></br>
       <Row gutter={40}>
@@ -263,6 +273,7 @@ export function PackageTermsGrid() {
           </Row> 
           <br></br>
           <Table
+          size='small'
           columns={columnsSkelton}
           dataSource={packageTermsData}
           scroll={{x:true}}
