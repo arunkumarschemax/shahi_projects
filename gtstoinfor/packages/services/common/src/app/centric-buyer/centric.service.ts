@@ -1215,13 +1215,23 @@ async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
   }
 }
 
-
-
-
-
-
-
-
+async updateStatusInOrder(req: any): Promise<CommonResponseModel> {
+ console.log(req,"req")
+  try {
+    const poLines = req.poLine.split(","); // Split poLine string into an array
+    for (const poLine of poLines) {
+      await this.Repo.update(
+          { poNumber: req.poNumber, poLine: poLine.trim() }, // Trim to remove any extra spaces
+          { status: StatusEnum.OPEN }
+      );
+  }
+  
+      return new CommonResponseModel(true, 1, " Updated Successfully");
+ 
+  } catch (error) {
+    return new CommonResponseModel(false, 0, "Error Occurred", error);
+  }
+}
 
 
 

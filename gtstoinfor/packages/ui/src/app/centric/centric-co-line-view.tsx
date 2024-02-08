@@ -221,10 +221,18 @@ const CentriColineView = () => {
     };
 
     const handleConfirmDelete = (record) => {
+        console.log(record,"deeeeeeeeeee")
         const req = new ItemNoDto(record.id)
+        const req1 = new ItemNoDto(null,null,record.po_number,record.po_line)
         service.deleteCoLine(req).then(res => {
             if (res.status) {
                 getData();
+                service.updateStatusInOrder(req1).then((res) => {
+                    if (res.status) {
+                        message.success(res.internalMessage)
+                    }
+                })
+                
                 AlertMessages.getSuccessMessage(res.internalMessage)
 
             } else {

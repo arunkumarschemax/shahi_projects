@@ -78,4 +78,8 @@ export class CentricService extends CommonAxiosService {
     async centricBot(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.centricOrdersController + "/centricBot")
     }
+
+    async updateStatusInOrder(req:ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.centricOrdersController + "/updateStatusInOrder",req)
+    }
 }
