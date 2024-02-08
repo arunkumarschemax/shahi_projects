@@ -470,6 +470,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     console.log(updatedData);
     if(updatedData.length === 0){
       setData([]);
+      setOnchangeData([])
       props.data([])
     }
     else{
