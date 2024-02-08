@@ -810,7 +810,7 @@ export class CentricService {
   // }
 
 
-  @Cron('0 * * * *', {})
+  @Cron('1 * * * *')
   async centricBot() {
     try {
       const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
