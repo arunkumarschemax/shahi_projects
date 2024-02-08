@@ -68,6 +68,7 @@ export class HbService {
           entity.quantity = variant.quantity
           entity.unitPrice = variant.unitPrice
 
+
           pdfData.push(entity)
 
 
@@ -746,7 +747,7 @@ export class HbService {
           const year = currentDate.getFullYear().toString().slice(-2);
           const currentDateFormatted = `${day}-${month}-${year}`;
           if (coNo) {
-            const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted ,errorMsg:"-"});
+            const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted, errorMsg: "-" });
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           } else {
@@ -760,7 +761,7 @@ export class HbService {
     } catch (error) {
       console.log(error, 'error');
       if (error.name === 'TimeoutError') {
-        const update = await this.hbCoLineRepo.update({ custPo:poDetails[0].cust_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+        const update = await this.hbCoLineRepo.update({ custPo: poDetails[0].cust_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
         return new CommonResponseModel(false, 0, 'Matching Color not found')
       } else {
         // Handle other types of errors
@@ -837,9 +838,9 @@ export class HbService {
       );
 
       if (update) {
-        return new CommonResponseModel(true, 1, "ItemNo Update Successfully");
+        return new CommonResponseModel(true, 1, "Updated Successfully");
       } else {
-        return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+        return new CommonResponseModel(false, 0, "Something Went Wrong", []);
       }
     } catch (error) {
       return new CommonResponseModel(false, 0, "Error occurred while updating ItemNo", error);
@@ -853,9 +854,9 @@ export class HbService {
       const deletedItem = await this.hbCoLineRepo.delete({ id: Number(req.id) });
 
       if (deletedItem && deletedItem.affected) {
-        return new CommonResponseModel(true, 1, "ItemNo Deleted Successfully");
+        return new CommonResponseModel(true, 1, "Deleted Successfully");
       } else {
-        return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+        return new CommonResponseModel(false, 0, "Something Went Wrong", []);
       }
     } catch (error) {
       return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
@@ -863,6 +864,21 @@ export class HbService {
   }
 
 
-
+  async updateStatusInOrder(req: any): Promise<CommonResponseModel> {
+    console.log(req,"reqOpenStatus")
+    try {
+      const update = await this.HbOrdersRepo.update(
+        { custPo:req.custPo},
+        { status:StatusEnum.OPEN }
+      );
+      if (update) {
+        return new CommonResponseModel(true, 1, "Updated Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
+    }
+  }
 
 }

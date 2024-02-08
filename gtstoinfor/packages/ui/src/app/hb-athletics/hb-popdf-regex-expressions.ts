@@ -28,6 +28,8 @@ export const SPECIAL_INSTRUCTIONS = 'Special Instructions'
 
 export const ITEM_TEXT_END_TEXT = 'Amount'
 export const ITEM_TEXT_END_TEXT2 = 'Merchandise Amount'
+export const PAGE_DATE = 'Page 1'
+export const PAGE_DATE_INDEX = 1
 // export const UNWANTED_TEXT_1 = 'Acceptance of this HB Athletic Inc. - Globe-Tex purchase order constitutes Vendors agreement to:' 
 // export const UNWANTED_TEXT_2 = "1. Manufacture all product on this Purchases Order…- Globe-Tex and the license holder of the branded"
 // export const UNWANTED_TEXT_3 = "product being ordered on this Purchase Order. Fail… will result in the cancellation of this Purchase"

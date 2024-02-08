@@ -207,11 +207,18 @@ const HbColineView = () => {
     };
 
     const handleConfirmDelete = (record) => {
+        console.log(record,"rrrrrrrre")
         const req = new ItemNoDto(record.id)
+        const req1 = new ItemNoDto(null,null,record.cust_po)
         service.deleteCoLine(req).then(res => {
             if (res.status) {
                 getData();
                 AlertMessages.getSuccessMessage(res.internalMessage)
+                service.updateStatusInOrder(req1).then((res) => {
+                    if (res.status) {
+                        message.success(res.internalMessage)
+                    }
+                })
 
             } else {
                 AlertMessages.getErrorMessage(res.internalMessage)
