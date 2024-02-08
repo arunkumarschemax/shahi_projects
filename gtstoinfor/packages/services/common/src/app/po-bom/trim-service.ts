@@ -50,13 +50,13 @@ export class TrimService {
                     if (!styleWiseMap.has(rec.style)) {
                         const trimInfoModel = new TrimInfoModel(rec?.styleId, rec?.style, rec?.style_name, rec?.season, [], rec.item, rec.po_number, rec.msc, rec.gender, rec.ship_to_address_legal_po, rec.geo_code, rec.destination_country, rec.plant, rec.styleType)
                         styleWiseMap.set(rec.style, [new Map<number, BomInfo>(), trimInfoModel]);
-                    }
-                    const bomInfoMap = styleWiseMap.get(rec.style)[0];
-                    // console.log(bomInfoMap,'------------bominfomap----------')
-                    if (!bomInfoMap.has(rec.bomId)) {
-                        // console.log('bom id doest not exist')
-                        bomInfoMap.set(rec.bomId, new BomInfo(rec.bomId, rec.item_name, rec.description, rec.im_code, rec.item_type, rec.use, rec.uom, rec.qty, [], rec.trimInfo));
-                        bomInfoMap.get(rec.bomId).styleComboInfo.push(new StyleComboInfo(rec.styleComboId, rec.combination, rec.primary_color, rec.secondary_color, rec.logo_color, rec.color));
+                        const bomInfoMap = styleWiseMap.get(rec.style)[0];
+                        // console.log(bomInfoMap,'------------bominfomap----------')
+                        if (!bomInfoMap.has(rec.bomId)) {
+                            // console.log('bom id doest not exist')
+                            bomInfoMap.set(rec.bomId, new BomInfo(rec.bomId, rec.item_name, rec.description, rec.im_code, rec.item_type, rec.use, rec.uom, rec.qty, [], rec.trimInfo));
+                            bomInfoMap.get(rec.bomId).styleComboInfo.push(new StyleComboInfo(rec.styleComboId, rec.combination, rec.primary_color, rec.secondary_color, rec.logo_color, rec.color));
+                        }
                     }
                 }
 
@@ -85,7 +85,7 @@ export class TrimService {
 
     async getItemInfo(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
         try {
-            let query = `SELECT  id,LEFT(item,4) as item,style_number,geo_code,destination_country_code,destination_country,po_number,po_line_item_number,total_item_qty
+            let query = `SELECT  id,LEFT(item,4) as item,style_number,geo_code,destination_country_code,destination_country,po_number,po_line_item_number,sum(total_item_qty) as total_item_qty
             FROM dpom WHERE created_at BETWEEN '${req.fromDate}' AND '${req.toDate}' AND item IS NOT NULL`
             if (req.item) {
                 query += ` AND LEFT(item,4) = '${req.item}'`
