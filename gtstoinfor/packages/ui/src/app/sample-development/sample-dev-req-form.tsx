@@ -336,14 +336,14 @@ export const SampleDevForm = () => {
         // }
         trimForm.validateFields().then(trim => {
           console.log(sizeForm.getFieldsValue())
-          const data = sizeForm.getFieldsValue()
+          const sizedata = sizeForm.getFieldsValue()
           console.log(fabricForm.getFieldsValue())
           const fabData = fabricForm.getFieldsValue()
-          const colorIdKeys = Object.keys(data)
+          const colorIdKeys = Object.keys(sizedata)
                 .filter(key => key.includes('colorId'));
                 
           console.log(colorIdKeys)
-          const uniqueColorIds = [...new Set(colorIdKeys.map(key => data[key]))];
+          const uniqueColorIds = [...new Set(colorIdKeys.map(key => sizedata[key]))];
           console.log(uniqueColorIds);
 
           const fabColorIdKeys = Object.keys(fabData)
@@ -365,7 +365,7 @@ export const SampleDevForm = () => {
               // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
               if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
 
-                // console.log('TTTTT')
+                console.log('TTTTT')
                 const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,val.productId,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
                 // console.log(req.sizeData)
                 console.log(req)
