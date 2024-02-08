@@ -975,7 +975,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         // const styleParam = req.style.map(style => `'${style}'`).join(',');
         const query = this.createQueryBuilder('dpom')
         .select(`style_number,geo_code,destination_country_code,destination_country,po_number,po_line_item_number,LEFT(item,4) AS item,id,size_description,SUM(size_qty) as size_qty`)
-        .where(`LEFT(dpom.item,4) IN (${itemsParam})'`) 
+        .where(`LEFT(dpom.item,4) IN (${itemsParam})`) 
         .groupBy(`LEFT(item,4),style_number,geo_code,size_description`)
         .orderBy(`LEFT(item,4)`)
         return await query.getRawMany()

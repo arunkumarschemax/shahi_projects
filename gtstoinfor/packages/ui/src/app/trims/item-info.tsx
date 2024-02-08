@@ -77,9 +77,14 @@ export const ItemInfo = () => {
     }
 
     const onSelectChange = (newSelectedRowKeys: any) => {
+        const len = newSelectedRowKeys.length
         setSelectedRowKeys(newSelectedRowKeys);
-        setStyleNumberArray([...styleNumberArray,newSelectedRowKeys[0].style_number])
-        setItemArray([...itemArray,newSelectedRowKeys[0].item])
+          if(!(styleNumberArray.includes(newSelectedRowKeys[len-1].style_number))){
+              setStyleNumberArray([...styleNumberArray,newSelectedRowKeys[len-1].style_number])
+          }
+          if(!(itemArray.includes(newSelectedRowKeys[len-1].item))){
+              setItemArray([...itemArray,newSelectedRowKeys[len-1].item])
+          }
       };
 
       const rowSelection = {

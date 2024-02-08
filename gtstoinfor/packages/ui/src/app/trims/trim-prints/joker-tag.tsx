@@ -26,12 +26,12 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
 
     const bomData = useLocation()
     const bomservice = new BomService()
-    const [bomInfo,setBomInfo] = useState<any>([])
+    const [data,setData] = useState<any>([])
 
     // useEffect(() => {
     //     if(bomData.state.info){
     //         const req = new StyleNumberReq(bomData.state.info?.styleNumber)
-    //         bomservice.getBomInfoAgainstStyle(req).then(res =>{
+    //         bomservice.getbomInfoAgainstStyle(req).then(res =>{
     //             if(res.status){
     //                 setBomInfo(res.data)
     //             }
@@ -49,12 +49,11 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
             //     }
             // })
             console.log(props.info)
-            setBomInfo(props.info)
+            setData(props.info)
         }
 
     },[props.info])
 
-    console.log(bomInfo.bomInfo,'----------')
 
     let grandTotal = 0
 
@@ -99,91 +98,102 @@ export const JokerTagPrint = (props:JokerTagPrintProps) => {
         <>
         <div id='print'>
             <Card title={'Joker Tag'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
-            <Descriptions >
-                <Descriptions.Item>{`Size wise details`}</Descriptions.Item>
-            </Descriptions>
-            <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1}>
-            <tr>
-                <th>ITEM#</th>
-                <th>STYLE#</th>
-                <th>IM#</th>
-                <th>REGION</th>
-                <th>SEASON</th>
-                {/* {
-                    bomData?.state.info?.sizeWiseData.map(e => {
-                        grandTotal+= e.sizeQty
-                        return(
-                            <th>{e.sizeDescription}</th>
-                        )
-                    })
-                } */}
-                 {
-                    bomInfo?.sizeWiseData?.map(e => {
-                        grandTotal+= e.sizeQty
-                        return(
-                            <th>{e.sizeDescription}</th>
-                        )
-                    })
-                }
-                <th>Grand Total</th>
-            </tr>
-            <tr>
-                <td style={{textAlign:'center'}}>{bomInfo?.item}</td>
-                <td style={{textAlign:'center'}}>{bomInfo?.style}</td>
-                <td style={{textAlign:'center'}}>{
-                    bomInfo?.bomInfo?.map((e,index) => {
-                        const len = bomInfo?.bomInfo?.length
+                {
+                    data.map(rec => {
                         return(
                             <>
-                            {`${e.imCode} ${index == len-1 ? '' : '/'}`}
+                             {rec.geoCode === 'APA' ? (<>
+                        <Descriptions >
+                            <Descriptions.Item>{`Size wise details`}</Descriptions.Item>
+                        </Descriptions>
+                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1}>
+                        <tr>
+                            <th>ITEM#</th>
+                            <th>STYLE#</th>
+                            <th>IM#</th>
+                            <th>REGION</th>
+                            <th>SEASON</th>
+                            {/* {
+                                bomData?.state.info?.sizeWiseData.map(e => {
+                                    grandTotal+= e.sizeQty
+                                    return(
+                                        <th>{e.size}</th>
+                                    )
+                                })
+                            } */}
+                            {
+                                rec?.sizeInfo?.map(e => {
+                                    grandTotal+= e.quantity
+                                    return(
+                                        <th>{e.size}</th>
+                                    )
+                                })
+                            }
+                            <th>Grand Total</th>
+                        </tr>
+                        <tr>
+                            <td style={{textAlign:'center'}}>{rec?.item}</td>
+                            <td style={{textAlign:'center'}}>{rec?.style}</td>
+                            <td style={{textAlign:'center'}}>{
+                                rec?.rec?.map((e,index) => {
+                                    const len = rec?.rec?.length
+                                    return(
+                                        <>
+                                        {`${e.imCode} ${index == len-1 ? '' : '/'}`}
+                                        
+                                        </>
+                                    )
+                                })
+                                }</td>
+                            <td style={{textAlign:'center'}}>{rec?.geoCode}</td>
+                            <td style={{textAlign:'center'}}>{rec?.season}</td>
+                            {
+                                rec?.sizeInfo?.map(e => {
+                                    return(
+                                        <td style={{textAlign:'right'}}>{e.quantity}</td>
+                                    )
+                                })
+                            }
+                            <th style={{textAlign:'right'}}>{grandTotal}</th>
+                        </tr>
+                                                    
+                        </table>
+                    </>) : (<></>)}
+                       
+                        <br/>
+                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1}>
+                            <tr>
+                                <th>ITEM#</th>
+                                <th>STYLE#</th>
+                                <th>REGION</th>
+                                <th>IM#</th>
+                                <th>TRIM</th>
+                                <th>DESCRIPTION </th>
+                            </tr>
                             
+                                {
+                                    rec?.bomInfo[0]?.map((e,index) => {
+                                    const len = rec?.bomInfo[0]?.length
+                                        return(
+                                            <tr>
+                                                { index == 0 ?  (   <>
+                                                <td rowSpan={len} style={{textAlign:'center'}}>{rec?.item}</td>
+                                                <td rowSpan={len} style={{textAlign:'center'}}>{rec?.style}</td>
+                                                <td rowSpan={len} style={{textAlign:'center'}}>{rec?.geoCode}</td>
+                                                </>) : (<></>) 
+                                                }
+                                                <td style={{textAlign:'center'}}>{rec?.geoCode != 'APA' ? 'A724610' : 'A728050'}</td>
+                                                <td style={{textAlign:'center'}}>{e.trimInfo}</td>
+                                                <td style={{width:'600px'}}>{e.description}</td>
+                                            </tr>
+                                        )
+                                    })
+                                }
+                        </table>
                             </>
                         )
                     })
-                    }</td>
-                <td style={{textAlign:'center'}}>{bomInfo?.geoCode}</td>
-                <td style={{textAlign:'center'}}>{bomInfo?.season}</td>
-                 {
-                    bomInfo?.sizeWiseData?.map(e => {
-                        return(
-                            <td style={{textAlign:'right'}}>{e.sizeQty}</td>
-                        )
-                    })
                 }
-                <th style={{textAlign:'right'}}>{grandTotal}</th>
-            </tr>
-                                        
-            </table>
-            <br/>
-            <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1}>
-                <tr>
-                    <th>ITEM#</th>
-                    <th>STYLE#</th>
-                    <th>REGION</th>
-                    <th>IM#</th>
-                    <th>TRIM</th>
-                    <th>DESCRIPTION </th>
-                </tr>
-                
-                    {
-                        bomInfo?.bomInfo?.map((e,index) => {
-                        const len = bomInfo?.bomInfo?.length
-                            return(
-                                <tr>
-                                    { index == 0 ?  (   <>
-                                    <td rowSpan={len} style={{textAlign:'center'}}>{bomInfo?.item}</td>
-                                    <td rowSpan={len} style={{textAlign:'center'}}>{bomInfo?.style}</td>
-                                    <td rowSpan={len} style={{textAlign:'center'}}>{bomInfo?.geoCode}</td>
-                                    </>) : (<></>) 
-                                    }
-                                    <td style={{textAlign:'center'}}>{bomInfo?.geoCode != 'APA' ? 'A724610' : 'A728050'}</td>
-                                    <td style={{textAlign:'center'}}>{e.itemName}</td>
-                                    <td style={{width:'600px'}}>{e.description}</td>
-                                </tr>
-                            )
-                        })
-                    }
-            </table>
             </Card>
         </div>
         </>
