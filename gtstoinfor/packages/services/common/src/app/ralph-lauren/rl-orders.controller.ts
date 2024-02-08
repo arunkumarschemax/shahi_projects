@@ -260,5 +260,14 @@ export class RLOrdersController {
         }
     }
 
+    @Post('/updateStatusInOrder')
+    async updateStatusInOrder(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.rlOrdersService.updateStatusInOrder(req);
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+
 
 }

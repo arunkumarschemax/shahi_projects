@@ -104,19 +104,25 @@ const ColineView = () => {
     };
 
     const handleConfirmDelete = (record) => {
+        console.log(record,"reddd")
         const req = new ItemNoDto(record.id)
+        const req1 = new ItemNoDto(null,null,record.buyer_po,record.line_item_no)
+        
         service.deleteCoLine(req).then(res => {
             if (res.status) {
                 getData();
+                service.updateStatusInOrder(req1).then((res) => {
+                    if (res.status) {
+                        message.success(res.internalMessage)
+                    }
+                })
                 AlertMessages.getSuccessMessage(res.internalMessage)
 
             } else {
                 AlertMessages.getErrorMessage(res.internalMessage)
             }
         })
-        // const deleteUpdatedData = data.filter(item => item !== record);
-        // message.success("Deleted Successfully");
-        // setData(deleteUpdatedData);
+      
     };
 
     const handleExport = (e: any) => {

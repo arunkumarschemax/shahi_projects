@@ -87,4 +87,8 @@ export class RLOrdersService extends CommonAxiosService {
     async deleteCoLine(payload?: ItemNoDto): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.rlordersController + "/deleteCoLine", payload)
     }
+
+    async updateStatusInOrder(req:ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.rlordersController + "/updateStatusInOrder",req)
+    }
 }

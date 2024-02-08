@@ -1012,6 +1012,28 @@ export class RLOrdersService {
 }
 
 
+async updateStatusInOrder(req: any): Promise<CommonResponseModel> {
+  console.log(req,"req")
+   try {
+
+    const update = await this.rlOrdersRepo.update({
+      poNumber: req. poNumber, poItem: req.poLine
+    }, {
+      itemStatus: ItemStatusEnum.OPEN
+    })
+    
+    if (update.affected) {
+      return new CommonResponseModel(true, 1, 'Updated Successfully')
+  } else {
+      return new CommonResponseModel(false, 0, 'Failed')
+  }
+  
+   } catch (error) {
+     return new CommonResponseModel(false, 0, "Error Occurred", error);
+   }
+ }
+
+
 
 
 }
