@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Checkbox } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -136,31 +136,46 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
         sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps("category"),
       },
-    {
-      title: 'Status',
-      dataIndex: 'isActive',
-      render: (isActive, rowData) => (
-        <>
-          {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-        </>
-      ),
-      filters: [
-        {
-          text: 'Active',
-          value: true,
-        },
-        {
-          text: 'InActive',
-          value: false,
-        },
-      ],
-      filterMultiple: false,
-      onFilter: (value, record) => {
-        // === is not work
-        return record.isActive === value;
+      {
+        title: 'Status',
+        dataIndex: 'isActive',
+        // sorter: (a, b) => a.locationName.localeCompare(b.locationName),
+        //  sortDirections: ['descend', 'ascend'],
+        //  ...getColumnSearchProps('locationName'),
+        
+         render: (isActive, rowData) => (
+          <>
+            {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+          </>
+        ),
+        onFilter: (value, record) => record.isActive === value,
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+    <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+      <Checkbox
+        checked={selectedKeys.includes(true)}
+        onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+      >
+        <span style={{color:'green'}}>Active</span>
+      </Checkbox>
+      <Checkbox
+        checked={selectedKeys.includes(false)}
+        onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+      >
+        <span style={{color:'red'}}>Inactive</span>
+      </Checkbox>
+      <div className="custom-filter-dropdown-btns" >
+      <Button  onClick={() => clearFilters()} className="custom-reset-button">
+          Reset
+        </Button>
+        <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+          OK
+        </Button>
+      
+      </div>
+    </div>
+         ),
+        
       },
-
-    },
     {
       title: `Action`,
       dataIndex: 'action',
@@ -330,7 +345,11 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
 
   // ]
   return (
-
+<Card title={<span >WareHouse</span>}
+    style={{textAlign:'left'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
+    extra={<Link to='/global/warehouse/warehouse-form' >
+      <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
+      </Link>} >
       <>
       <Row gutter={40}>
         <Col>
@@ -342,10 +361,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-        <Col>
-        <span><Button onClick={() => navigate('/global/warehouse/warehouse-form')}
-              type={'primary'}>New</Button></span>
-        </Col>
+        
       </Row><br></br>
       <Card >
         {/* <GetCumulatives cumulativeColumns={cumulativeSkelton} data={variantData}/> */}
@@ -391,6 +407,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
         </Card>
       </Drawer>
       </>
+      </Card>
   );
 }
 
