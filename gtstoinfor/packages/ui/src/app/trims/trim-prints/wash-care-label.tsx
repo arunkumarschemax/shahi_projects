@@ -23,6 +23,7 @@ export const WasCarelabel = (props:washCareprops) =>{
     const [bomInfo,setBomInfo] = useState<any>([])
     const [vCode, setVCode] = useState('')
     const [sizeData, setSizeData] = useState<any>([])
+    const [gender, setGender] = useState<boolean>(false)
     const  bomService  = new BomService()
     let grandTotal = 0
     let chinaGgrandTotal =0
@@ -37,6 +38,10 @@ export const WasCarelabel = (props:washCareprops) =>{
         })
     }
 
+    // useEffect(() =>{
+    //     sizeWiseDataForFormutpleOgac()
+    // },[])
+
     useEffect(() => {
         if(props.bomInfo){
         console.log(props.bomInfo)
@@ -46,19 +51,34 @@ export const WasCarelabel = (props:washCareprops) =>{
         // sizeWiseDataForFormutpleOgac()
     },[props.bomInfo])
 
+    const bommap = () =>{
+        // bomInfo.map(e =>{
+        //     console.log(e.style)
+        // })
+       const data= bomInfo.some(item =>item.item == '012H'  && item.geoCode === 'EMEA')
+       console.log(data)
+       if(data){
+        setGender(true)
+       }
+    }
+
     useEffect(() =>{
         console.log(bomInfo)
-        if(bomInfo.destinationCountry === 'ARGENTINA '){
-            if(bomInfo.shipToAddress.includes('Nike Trading')){
-                setVCode('50')
-            }
-            if(bomInfo.shipToAddress.includes('Nike Golf')){
-                setVCode('02')
-            }
-            if(bomInfo.shipToAddress.includes('RT Clothing')){
-                setVCode('35')
-            }
-        }       
+        for(const rec of bomInfo){
+            if(bomInfo.destinationCountry === 'ARGENTINA '){
+                if(bomInfo.shipToAddress.includes('Nike Trading')){
+                    setVCode('50')
+                }
+                if(bomInfo.shipToAddress.includes('Nike Golf')){
+                    setVCode('02')
+                }
+                if(bomInfo.shipToAddress.includes('RT Clothing')){
+                    setVCode('35')
+                }
+            }     
+        }
+       
+        bommap()  
     },[bomInfo])
 
     const handlePrint = () => {
@@ -97,25 +117,93 @@ export const WasCarelabel = (props:washCareprops) =>{
             }, 1000); // Add a delay to ensure all content is loaded
         }
     }
-console.log(sizeData)
+
+    const vCodemap = (e) =>{
+    console.log(e)
+    if(e?.shipToAddress?.includes('Nike Trading')){
+        return '50'
+    }
+    if(e?.shipToAddress?.includes('Nike Golf')){
+        return '02'
+    }
+    if(e?.shipToAddress?.includes('RT Clothing')){
+        return '35'
+    }
+    return ''
+    }
+
+    const sizewisedatamap =(bomInfo) =>{
+        const data= bomInfo.some(item =>item.geoCode == 'APA' && item?.styleType === 'MENS TOP')
+        if(data ){
+            return(
+                <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
+                <tr>
+                        <th>REGION</th>
+                        <th>MANUFACTORY SHIP DATE</th>
+                        <th>SIZE MATRIX TYPE</th>
+                        <th>STYLE TYPE</th>
+                        <th>SEASON</th>
+                        {bomInfo?.sizeInfo?.map(e =>{
+                             grandTotal+= e.quantity
+                             return(
+                                <th>{e.size}</th>
+                            )
+                        })  
+                        }
+                        <th>Total</th>
+                    </tr>
+                    <tr>
+                        <td style={{textAlign:'center'}}>{bomInfo.geoCode}</td>
+                        <td style={{textAlign:'center'}}>{}</td>
+                        <td style={{textAlign:'center'}}>{'9687'}</td>
+                        <td  style={{textAlign:'center'}}>{bomInfo.genderAgeDesc}</td>
+                        <td style={{textAlign:'center'}}>{bomInfo.season}</td>
+                        {
+                            sizeData?.sizeWiseData?.map(e => {
+                                return(
+                                    <td>{e.sizeQty}</td>
+                                )
+                            })
+                        }
+                        <th>{grandTotal}</th>
+                    </tr>
+                </table>
+            )
+        }
+        return <>
+        </>
+    
+    }
+   console.log(bomInfo)
+
     return (
         <div  id='print'>
             <Card title={'WashCare Label'} 
             extra={<span><Button onClick={handlePrint}>Print</Button></span>}
             >
                 <div>
-                <h2 style={{color:'red',display:(bomInfo.gender == 'BOY' || bomInfo.gender == 'GIRL' && bomInfo.geoCode === 'EMEA')?'unset':'none'}}>FIRE WARNING LABEL</h2>
-                </div>
-              
+                <div style={{display:gender === true?'unset':'none'}}>
+                      <h2 style={{color:'red'}}>FIRE WARNING LABEL</h2>
                 <br></br>
-                <div style={{display: bomInfo.geoCode === 'AAO'?'unset':'none'}}>
-                    {
-                        <h2>{bomInfo.destinationCountry != 'BRAZIL' ?'PLEASE MENTION V-CODE-V315'+vCode+' WHILE ORDERING':'NOT DESTINED TO BRAZIL'}</h2>
-                    }
                 </div>
-                <br></br>
-                <div>
-                    {bomInfo.destinationCountry === 'BRAZIL' ?
+                    {bomInfo.map((e,index) =>{   
+                        return (
+                            
+                        <>
+                        {console.log(e.bomInfo)}
+                        <div style={{display: e.geoCode === 'AAO'?'unset':'none'}}>
+                        {
+                            <><h2>
+                                {e.destinationCountry === 'ARGENTINA' ? 'PLEASE MENTION V-CODE-V315' + vCodemap(e) + ' WHILE ORDERING' : ''}
+                              </h2>
+                              {e.destinationCountry != 'BRAZIL' && e.destinationCountry === 'ARGENTINA' ? 'NOT DESTINED TO BRAZIL':''}
+                             <h2>
+                                </h2></>
+                        }
+                      <br></br>
+                        </div>
+                        <div>
+                    {e.destinationCountry === 'BRAZIL' ?
                     <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'15%'}} border={1} cellSpacing="0" cellPadding='0' >
                         <tr>
                             <th>DESTINATION</th>
@@ -126,83 +214,86 @@ console.log(sizeData)
                             <td style={{textAlign:'center'}}>4992098</td>
                         </tr>
                     </table>:<></>
-                        }      
-                </div>
-         
-            <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
-            <tr>
-                <th style={{width:'1%'}}>ITEM#</th>
-                <th style={{width:'1%'}}>PO NO</th>
-                <th style={{width:'1%'}}>SEASON</th>
-                <th style={{width:'1%'}}>STYLE</th>
-                <th style={{width:'1%'}}>IM#</th>
-                <th style={{width:'5%'}}>DESCRIPTION</th>
-                <th style={{width:'1%'}}>WC</th>
-                <th style={{width:'1%'}}>DESTINATION</th>
-                <th style={{width:'1%'}}>TOTAL QTY</th>
-            </tr>        
-            <tr>
-                <td style={{textAlign:'center'}} rowSpan={bomInfo?.bomInfo?.length}>{bomInfo.item}</td>
-                <td style={{textAlign:'center'}}  rowSpan={4}>{bomInfo.poNumber}</td>
-                <td style={{textAlign:'center'}}  rowSpan={4}>{bomInfo.season}</td>
-                <td style={{textAlign:'center'}}  rowSpan={4}>{bomInfo.styleNumber}</td> 
-                <td>{bomInfo?.bomInfo[0]?.geoCode == 'EMEA' ?'1009915' : bomInfo?.bomInfo[0].imCode}</td>
-                <td>{bomInfo?.bomInfo[0]?.description}</td>
-                <td>{bomInfo?.bomInfo[0]?.trimInfo}</td>
-                <td style={{textAlign:'center'}}  rowSpan={4}>{bomInfo.geoCode}</td>
-                <td style={{textAlign:'center'}}  rowSpan={4}>0</td>
-            </tr>
-                {
-                    bomInfo?.bomInfo?.map((e,index)=>{
-                            return index > 0 ? <tr>
-                                <td>{bomInfo.geoCode == 'EMEA' ?'1009915' :e.imCode}</td>
-                                <td>{e.description}</td>
-                                <td>{e.trimInfo}</td>
-                            </tr> : <></>;
-                    })
-                }
-        </table>
-           <br></br> 
-        <div 
-        //  style={{display:bomInfo.geoCode === 'APA' && bomInfo?.styleType === 'MENS TOP' ?'unset':'none'}}
-          > 
-            <>
-        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
-        <tr>
+                        }   
+                <br></br>
+                       </div>
+                       {e?.bomInfo ?
+                        <>
+                        {e.bomInfo.length >0 ?
+                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
+                        <tr>
+                            <th style={{width:'1%'}}>ITEM#</th>
+                            <th style={{width:'1%'}}>PO NO</th>
+                            <th style={{width:'1%'}}>SEASON</th>
+                            <th style={{width:'1%'}}>STYLE</th>
+                            <th style={{width:'1%'}}>IM#</th>
+                            <th style={{width:'5%'}}>DESCRIPTION</th>
+                            <th style={{width:'1%'}}>WC</th>
+                            <th style={{width:'1%'}}>DESTINATION</th>
+                            <th style={{width:'1%'}}>TOTAL QTY</th>
+                        </tr>   
+                        {
+                            e.bomInfo ? (e?.bomInfo[0]?.map((rec,index) => {
+                                const len = e?.bomInfo[0]?.length
+                                return(
+                                    <tr>
+                                        {index == 0?(<>
+                                            <td style={{textAlign:'center'}} rowSpan={len}>{e.item}</td>
+                                            <td style={{textAlign:'center'}}  rowSpan={len}>{e.poNumber}</td>
+                                            <td style={{textAlign:'center'}}  rowSpan={len}>{e.season}</td>
+                                            <td style={{textAlign:'center'}}  rowSpan={len}>{e.style}</td> 
+                                        </>):(<></>)}
+                                        <td>{e?.geoCode == "EMEA" ?"1009915" : rec.imCode}</td>
+                                        <td>{ rec.description}</td>
+                                        <td>{ rec.trimInfo}</td>
+                                    </tr>
+                                )
+                                  }
+                                ))
+                                :(<></>)
+                        }
+                        </table>
+                        :<></>}
+                        </>
+                        :<></>
+                       }
+                      
+                     <br></br>
+                     <div style={{display:e.geoCode === 'APA' && e?.styleType === 'MENS TOP' ?'unset':'none'}} > 
+                    <>
+                    <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
+                    <tr>
                 <th>REGION</th>
                 <th>MANUFACTORY SHIP DATE</th>
                 <th>SIZE MATRIX TYPE</th>
                 <th>STYLE TYPE</th>
                 <th>SEASON</th>
-                {sizeData?.sizeWiseData?.map(e =>{
-                     grandTotal+= e.sizeQty
+                {e?.sizeInfo?.map(e =>{
+                     grandTotal+= e.quantity
                      return(
-                        <th>{e.sizeDescription}</th>
+                        <th>{e.size}</th>
                     )
                 })  
                 }
                 <th>Total</th>
             </tr>
             <tr>
-                <td style={{textAlign:'center'}}>{bomInfo.geoCode}</td>
+                <td style={{textAlign:'center'}}>{e.geoCode}</td>
                 <td style={{textAlign:'center'}}>{}</td>
                 <td style={{textAlign:'center'}}>{'9687'}</td>
-                <td  style={{textAlign:'center'}}>{bomInfo.genderAgeDesc}</td>
-                <td style={{textAlign:'center'}}>{bomInfo.season}</td>
+                <td  style={{textAlign:'center'}}>{e.genderAgeDesc}</td>
+                <td style={{textAlign:'center'}}>{e.season}</td>
                 {
-                    sizeData?.sizeWiseData?.map(e => {
+                    e?.sizeInfo?.map(e => {
                         return(
-                            <td>{e.sizeQty}</td>
+                            <td>{e.quantity}</td>
                         )
                     })
                 }
                 <th>{grandTotal}</th>
             </tr>
         </table>
-        
         <br></br>     
-       
-            <br></br>
         <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
             <tr>
                 <td style={{textAlign:'center'}}>{'BUY'}</td>
@@ -236,7 +327,7 @@ console.log(sizeData)
             <tr>
                 <td style={{textAlign:'center'}}>{'OCT'}</td>
                 <td style={{textAlign:'center'}}>{'ID'}</td>
-                <td style={{textAlign:'center'}}>{bomInfo.style}</td>
+                <td style={{textAlign:'center'}}>{'546789'}</td>
                 <td style={{textAlign:'center'}}>{'AS MENS TOP'}</td>
                 <td style={{textAlign:'center'}}>{'XS'}</td>
                 <td style={{textAlign:'center'}}>{'MENS TOP'}</td>
@@ -361,8 +452,14 @@ console.log(sizeData)
             </tr>
         </table>
         </>
-        </div>
-        <div style={{display:bomInfo.destinationCountry === 'CHINA' && bomInfo. plant != '1076' && bomInfo.plant != '1077'?'unset':'none'}}>
+                     </div>
+                    </>
+                        )
+                    })}
+                </div>
+                <br></br>   
+    
+        {/* <div style={{display:bomInfo.destinationCountry === 'CHINA' && bomInfo. plant != '1076' && bomInfo.plant != '1077'?'unset':'none'}}>
         <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'60%'}} border={1} cellSpacing="0" cellPadding='0'>
             <tr>
                 <th style={{color:'red'}}>CHINA INSERT</th>
@@ -387,7 +484,7 @@ console.log(sizeData)
                 <th>{grandTotal}</th>
             </tr>
             </table>  
-        </div>
+        </div> */}
             </Card>
       
         </div>

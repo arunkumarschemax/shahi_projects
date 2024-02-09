@@ -41,7 +41,7 @@ export default function LayoutTwo() {
             routes: item.subMenuData.map((subItem) => ({
                 path: subItem.path,
                 name: subItem.subMenuName,
-                icon:  <LogoutOutlined />,
+                icon: <LogoutOutlined />,
             })),
         }));
         setOriginalMenu(routes);
@@ -105,16 +105,16 @@ export default function LayoutTwo() {
     }
     return (
 
-        <ProConfigProvider dark={!dark}>
-            <ConfigProvider
-                locale={{ locale: 'en-US' }}
-            // theme={{
-            //     algorithm: theme.compactAlgorithm,
-            //     token: {
-            //         colorPrimary: 'plum',
-            //     }
-            // }}
-            >
+        <ConfigProvider
+            locale={{ locale: 'en-US' }}
+            theme={{
+                algorithm: theme.compactAlgorithm,
+                token: {
+                    colorPrimary: '#1890ff',
+                }
+            }}
+        >
+            <ProConfigProvider dark={!dark}>
                 <div
                     id="main-layout"
                     style={{
@@ -176,7 +176,7 @@ export default function LayoutTwo() {
                         </div>
                     </ProLayout>
                 </div>
-            </ConfigProvider>
-        </ProConfigProvider>
+            </ProConfigProvider>
+        </ConfigProvider>
     )
 }

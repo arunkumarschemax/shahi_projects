@@ -58,6 +58,7 @@ import  { HangTag } from "./trims/trim-prints/hang-tag"
 import { CountryStickerPrint } from "./trims/trim-prints/country-sticker"
 import ItemInfo from "./trims/item-info"
 import ProLayout from "@ant-design/pro-layout"
+import LayoutTwo from "./layout/basic-layout/pro-layout"
 
 // import BasicLayout  from '@ant-design/pro-layout';
 export const AppRoutes = () => {
@@ -121,7 +122,7 @@ export const AppRoutes = () => {
     return (
 
         <Routes>
-            <Route path='/' element={ <BasicLayout /> } >
+            <Route path='/' element={ <LayoutTwo /> } >
                 <Route path="/user-management/users-from" element={<Suspense fallback={<div>Loading...</div>}><UserCreationForm /></Suspense>} />
                 <Route path='/user-management/users-view' element={<UsersView />} />
                 <Route path='/masters'>
@@ -174,9 +175,9 @@ export const AppRoutes = () => {
                 </Route>
                 
                 <Route path='/bom'>
-                    <Route path='bom-pdf-upload' element={<BomPdfUpload />} />
-                    <Route path='bom-view' element={<BomView />} />
-                    <Route path='bom-pdf-info-detail-view' element={<BomPdfInfoDetailView />} />
+                    <Route path='bom-pdf-upload' key='bom-pdf-upload' element={<BomPdfUpload />} />
+                    <Route path='bom-view' key={'bom-view'} element={<BomView />} />
+                    <Route path='bom-pdf-info-detail-view/:styleId' key={'bom-pdf-info-detail-view'} element={<BomPdfInfoDetailView />} />
                     <Route path='bom-creation' key='/bom-creation' element={<BomCreation />} />
                     <Route path='joker-tag' key='/joker-tag' element={<JokerTagPrint info={[]}/>}/>
                     <Route path='trim-grid' element={<TrimsGrid/>} />
