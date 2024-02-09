@@ -98,7 +98,7 @@ export function BomView() {
 
 
     const setMoreData = (record) => {
-        navigate('/bom/bom-pdf-info-detail-view', {
+        navigate(`/bom/bom-pdf-info-detail-view/${record.id}`, {
             state: { data: record },
         });
     };

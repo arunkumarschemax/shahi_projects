@@ -13,7 +13,7 @@ export class StyleComboRepo extends Repository<StyleComboEntity> {
 
     async getStyleComboData(bomId:number): Promise<any[]> {
         const queryBuilder = this.createQueryBuilder('sc')
-        .select(`id AS styleComboId,bom_id AS bomId,style_id AS sstyleId,combination,primary_color AS primaryColor,secondary_color AS secondaryColor,logo_color AS logoColor`)
+        .select(`id AS styleComboId,bom_id AS bomId,style_id AS sstyleId,combination,primary_color AS primaryColor,secondary_color AS secondaryColor,logo_color AS logoColor,color`)
         .where(`bom_id=${bomId}`)
         return await queryBuilder.getRawMany()
     }

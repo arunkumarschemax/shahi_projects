@@ -38,9 +38,9 @@ export const WasCarelabel = (props:washCareprops) =>{
         })
     }
 
-    useEffect(() =>{
-        sizeWiseDataForFormutpleOgac()
-    },[])
+    // useEffect(() =>{
+    //     sizeWiseDataForFormutpleOgac()
+    // },[])
 
     useEffect(() => {
         if(props.bomInfo){
@@ -174,7 +174,7 @@ export const WasCarelabel = (props:washCareprops) =>{
         </>
     
     }
-
+   console.log(bomInfo)
 
     return (
         <div  id='print'>
@@ -187,8 +187,10 @@ export const WasCarelabel = (props:washCareprops) =>{
                 <br></br>
                 </div>
                     {bomInfo.map((e,index) =>{   
-                        return index >0 ?
+                        return (
+                            
                         <>
+                        {console.log(e.bomInfo)}
                         <div style={{display: e.geoCode === 'AAO'?'unset':'none'}}>
                         {
                             <><h2>
@@ -200,7 +202,7 @@ export const WasCarelabel = (props:washCareprops) =>{
                         }
                       <br></br>
                         </div>
-                    <div>
+                        <div>
                     {e.destinationCountry === 'BRAZIL' ?
                     <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'15%'}} border={1} cellSpacing="0" cellPadding='0' >
                         <tr>
@@ -214,8 +216,10 @@ export const WasCarelabel = (props:washCareprops) =>{
                     </table>:<></>
                         }   
                 <br></br>
-                </div>
-
+                       </div>
+                       {e?.bomInfo ?
+                        <>
+                        {e.bomInfo.length >0 ?
                         <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
                         <tr>
                             <th style={{width:'1%'}}>ITEM#</th>
@@ -227,34 +231,38 @@ export const WasCarelabel = (props:washCareprops) =>{
                             <th style={{width:'1%'}}>WC</th>
                             <th style={{width:'1%'}}>DESTINATION</th>
                             <th style={{width:'1%'}}>TOTAL QTY</th>
-                        </tr>        
-                        <tr>
-                            <td style={{textAlign:'center'}} rowSpan={e?.bomInfo?.length}>{e.item}</td>
-                            <td style={{textAlign:'center'}}  rowSpan={e?.bomInfo?.length}>{e.poNumber}</td>
-                            <td style={{textAlign:'center'}}  rowSpan={e?.bomInfo?.length}>{e.season}</td>
-                            <td style={{textAlign:'center'}}  rowSpan={e?.bomInfo?.length}>{e.style}</td> 
-                            <td>{'bomInfo?.bomInfo[0]?.geoCode == "EMEA" ?"1009915" : bomInfo?.bomInfo[0].imCode'}                                </td>
-                            <td>{'bomInfo?.bomInfo[0]?.description'}</td>
-                            <td>{'bomInfo?.bomInfo[0]?.trimInfo'}</td>
-                            <td style={{textAlign:'center'}}  rowSpan={4}>{e.geoCode}</td>
-                            <td style={{textAlign:'center'}}  rowSpan={4}>0</td>
-                          </tr>
-                             {
-                                e?.bomInfo?.map((e,index)=>{
-                                        return index > 0 ? <tr>
-                                            <td>{bomInfo.geoCode == 'EMEA' ?'1009915' :e.imCode}</td>
-                                            <td>{e.description}</td>
-                                            <td>{e.trimInfo}</td>
-                                        </tr> : <></>;
-                                })
-                            } 
-                            
-                     </table>
+                        </tr>   
+                        {
+                            e.bomInfo ? (e?.bomInfo[0]?.map((rec,index) => {
+                                const len = e?.bomInfo[0]?.length
+                                return(
+                                    <tr>
+                                        {index == 0?(<>
+                                            <td style={{textAlign:'center'}} rowSpan={len}>{e.item}</td>
+                                            <td style={{textAlign:'center'}}  rowSpan={len}>{e.poNumber}</td>
+                                            <td style={{textAlign:'center'}}  rowSpan={len}>{e.season}</td>
+                                            <td style={{textAlign:'center'}}  rowSpan={len}>{e.style}</td> 
+                                        </>):(<></>)}
+                                        <td>{e?.geoCode == "EMEA" ?"1009915" : rec.imCode}</td>
+                                        <td>{ rec.description}</td>
+                                        <td>{ rec.trimInfo}</td>
+                                    </tr>
+                                )
+                                  }
+                                ))
+                                :(<></>)
+                        }
+                        </table>
+                        :<></>}
+                        </>
+                        :<></>
+                       }
+                      
                      <br></br>
                      <div style={{display:e.geoCode === 'APA' && e?.styleType === 'MENS TOP' ?'unset':'none'}} > 
-         <>
-        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
-        <tr>
+                    <>
+                    <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
+                    <tr>
                 <th>REGION</th>
                 <th>MANUFACTORY SHIP DATE</th>
                 <th>SIZE MATRIX TYPE</th>
@@ -444,10 +452,9 @@ export const WasCarelabel = (props:washCareprops) =>{
             </tr>
         </table>
         </>
-        </div>
+                     </div>
                     </>
-                    :
-                    <></>
+                        )
                     })}
                 </div>
                 <br></br>   
