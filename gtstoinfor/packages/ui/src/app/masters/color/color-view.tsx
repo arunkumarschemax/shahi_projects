@@ -207,12 +207,14 @@ export const ColorView = () => {
             <br/>
             <Table className="custom-table-wrapper" columns={columns} dataSource={data} size='small'
               scroll={{x:true}}
-              pagination={{
-               pageSize:50,
-               onChange(current) {
-                 setPage(current);
-               }
-             }}
+            //   pagination={{
+            //    pageSize:50,
+            //    onChange(current) {
+            //      setPage(current);
+            //    }
+            //  }}
+            pagination={false}
+        
             />
         </Card>
     )
