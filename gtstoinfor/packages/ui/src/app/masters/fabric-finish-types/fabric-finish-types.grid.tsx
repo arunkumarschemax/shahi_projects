@@ -258,7 +258,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
 
   return (
 <>
-<Card title='Fabric Finish Type' extra={<span><Button onClick={() => navigate('/masters/fabric-finish-type/fabric-finish-type-form')} type={'primary'}>New</Button></span>}>
+<Card title='Fabric Finish Type' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  extra={<span><Button onClick={() => navigate('/masters/fabric-finish-type/fabric-finish-type-form')} type={'primary'}>New</Button></span>}>
  <br></br>
       <Row gutter={40}>
       <Col>

@@ -146,10 +146,11 @@ export function LocationsForm(
             Reset
           </Button>} */}
 
-          {(props.isUpdate===false) && 
+          {/* {(props.isUpdate===false) &&  */}
           <Button htmlType="button" style={{ margin: '0 8px' }} onClick={onReset}>
             Reset
-          </Button>}
+          </Button>
+          {/* } */}
          
           </Col>
           </Row>
