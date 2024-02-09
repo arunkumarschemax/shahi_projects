@@ -27,12 +27,12 @@ export const TrimList = ({ }) => {
         "Joker Tag": <JokerTagPrint info={bomInfo} />,
         "Hangtag": <HangTag info={bomInfo} />,
         "Wash Care Label": <WasCarelabel bomInfo={bomInfo} />,
-        "Country Sticker": <CountryStickerPrint info={bomInfo} />
+        "Country Sticker":<CountryStickerPrint  info={state?.state?.info} />
 
     }
 
     useEffect(() => {
-        setBomInfo(state.state.info)
+        // setBomInfo(state.state.info)
 
         getAllTrims();
     }, [])
