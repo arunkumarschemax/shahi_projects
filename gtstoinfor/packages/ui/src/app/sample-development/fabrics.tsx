@@ -470,6 +470,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     console.log(updatedData);
     if(updatedData.length === 0){
       setData([]);
+      setOnchangeData([])
       props.data([])
     }
     else{
@@ -519,6 +520,12 @@ const FabricsForm = (props:FabricsFormProps) => {
       }
       console.log(fileList)
 
+      const updateFileAtIndex = (fileList, newIndex, newFile) => {
+        // Create a new array with the updated file at the specified index
+        const updatedFileList = [...fileList];
+        updatedFileList[newIndex] = newFile;
+        return updatedFileList;
+      };
       // var reader = new FileReader();
       // reader.readAsArrayBuffer(file);
       // reader.onload = data => {
@@ -526,9 +533,8 @@ const FabricsForm = (props:FabricsFormProps) => {
         //   AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
         //   return true;
         // } else {
-          console.log(fileList)
-          setFileList([...fileList,file]);
-          console.log(fileList,"****")
+          const updatedFileList = updateFileAtIndex(fileList, keyValue, file);
+          setFileList(updatedFileList);
           // getBase64(file, imageUrl =>
           //   setImageUrl(imageUrl)
           // );
@@ -813,7 +819,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             <Button key={record.key} name={`fabricUpload${record.key}`}
               style={{ color: 'black', backgroundColor: '#7ec1ff' }}
               // icon={<UploadOutlined />}
-              disabled={(fileList[record.key] != undefined) ? true : false}
+              disabled={(fileList != undefined && fileList[record.key] != undefined) ? true : false}
             >
               <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
             </Button>

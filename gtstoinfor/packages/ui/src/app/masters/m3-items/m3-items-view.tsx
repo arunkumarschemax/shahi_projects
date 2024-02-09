@@ -98,7 +98,7 @@ const stockService = new StockService();
         req.yarnCount = form.getFieldValue("yarnCount")
       }
 
-      console.log(form.getFieldValue("weight"),"req")
+      // console.log(form.getFieldValue("weight"),"req")
       // console.log(weightUnitValue,"req")
 
         service.getM3Items(req).then(res => {

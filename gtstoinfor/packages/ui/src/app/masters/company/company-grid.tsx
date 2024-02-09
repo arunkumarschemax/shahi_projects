@@ -426,12 +426,40 @@ let createdUser = ''
           </Form.Item>
             </Col>
             <Col span={4}>
-              <Form.Item label="Division Name" name="divisionName">
+              {/* <Form.Item label="Division Name" name="divisionName" rules={[
+                  {
+                    required: true,
+                  
+                    pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z\\0-9\[\]()@#$_\-+/`~{}:";'<>,.?|\s-]*$/,
+                    message: `Invalid Division Name`
+                  }
+                ]}>
                 <Input />
               </Form.Item>
+            </Col> */}
+            <Form.Item
+  label="Division Name"
+  name="divisionName"
+  rules={[
+    {
+      required: true,
+      pattern: /^[^-\s]+$/, 
+      message: 'Invalid Division Name - Spaces not allowed',
+    },
+  ]}
+>
+  <Input />
+</Form.Item>
+
             </Col>
             <Col span={4}>
-              <Form.Item label="Division Code" name="divisionCode">
+              <Form.Item label="Division Code" name="divisionCode"  rules={[
+    {
+      required: true,
+      pattern: /^[^-\s]+$/, 
+      message: 'Invalid Division Code - Spaces not allowed',
+    },
+  ]}>
                 <Input />
               </Form.Item>
             </Col>

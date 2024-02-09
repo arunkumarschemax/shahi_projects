@@ -198,11 +198,12 @@ const M3FabricFilters = (props:M3FabricFilterProps) => {
 
   const clearData = () => {
     let buyId = form.getFieldValue("buyerId")
+    console.log(buyId)
     setYarnType('')
     form.resetFields();
     form.setFieldsValue({buyerId:buyId});
     console.log(yarnType)
-    props.formValues(undefined)
+    props.formValues([form.getFieldsValue()])
     // props.close(null)
   };
 

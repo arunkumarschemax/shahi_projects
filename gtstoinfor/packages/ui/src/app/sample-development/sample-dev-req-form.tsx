@@ -335,84 +335,117 @@ export const SampleDevForm = () => {
         //   }
         // }
         trimForm.validateFields().then(trim => {
+          console.log(sizeForm.getFieldsValue())
+          const sizedata = sizeForm.getFieldsValue()
+          console.log(fabricForm.getFieldsValue())
+          const fabData = fabricForm.getFieldsValue()
+          const colorIdKeys = Object.keys(sizedata)
+                .filter(key => key.includes('colorId'));
+                
+          console.log(colorIdKeys)
+          const uniqueColorIds = [...new Set(colorIdKeys.map(key => sizedata[key]))];
+          console.log(uniqueColorIds);
+
+          const fabColorIdKeys = Object.keys(fabData)
+                .filter(key => key.includes('colorId'));
+                
+          console.log(fabColorIdKeys)
+          const fabuniqueColorIds = [...new Set(fabColorIdKeys.map(key => fabData[key]))];
+          console.log(fabuniqueColorIds);
+
+          const difference = uniqueColorIds.filter(value => !fabuniqueColorIds.includes(value));
+
+          console.log(difference);
+          console.log(difference.length);
+
           console.log(data);
-          if (data != undefined) {
-            // console.log('hoii')
-            // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
-            if (data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined) {
+          if(difference.length === 0){
+            if(data != undefined){
+              // console.log('hoii')
+              // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
+              if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
 
-              // console.log('TTTTT')
-              const req = new SampleDevelopmentRequest(val.sampleRequestId, val.locationId, val.requestNo, (val.expectedCloseDate).format("YYYY-MM-DD"), val.pchId, val.user, val.buyerId, val.sampleSubTypeId, val.sampleSubTypeId, val.styleId, val.description, val.brandId, val.costRef, val.m3Style, val.contact, val.extension, val.sam, val.dmmId, val.technicianId, val.productId, val.type, val.conversion, val.madeIn, val.remarks, data.sizeData, data.fabricsData, data.trimsData, data.processData, undefined, undefined, undefined, val.category, val.subType)
-              // console.log(req.sizeData)
-              console.log(req)
-              console.log(data.fabricsData)
-              console.log(data.trimsData)
+                console.log('TTTTT')
+                const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,val.productId,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
+                // console.log(req.sizeData)
+                console.log(req)
+                console.log(data.fabricsData)
+                console.log(data.trimsData)
 
-
-
-
-              sampleService.createSampleDevelopmentRequest(req).then((res) => {
-                if (res.status) {
-                  console.log(fileList);
-                  message.success(res.internalMessage, 2);
-                  if (fileList?.length > 0) {
-                    const formData = new FormData();
-                    const files = fileList;
-                    console.log(files);
-                    if (files.length) {
-                      formData.append('reqNo', `${res.data[0].requestNo}`);
-                      formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
-                      for (let i = 0; i < files.length; i++) {
-                        console.log(files[i])
-                        formData.append('file', files[i]);
+                  sampleService.createSampleDevelopmentRequest(req).then((res) => {
+                    if (res.status) {
+                      console.log(fileList);
+                      message.success(res.internalMessage, 2);
+                      if (fileList?.length > 0) {    
+                        const formData = new FormData();
+                        const files = fileList;
+                        console.log(files);
+                        if (files) {
+                          formData.append('reqNo', `${res.data[0].requestNo}`);
+                          formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
+                          for (let i = 0; i < files.length; i++) {
+                          console.log(files[i])
+                          // files[i]["reqNo"] = `${res.data[0].requestNo}`
+                            formData.append('file', files[i]);
+                          }
+                        }
+                        console.log(formData)
+                        // fileList?.forEach((file) => {
+                        //   // console.log(file.originFileObj)
+                        //   formData.append('file', file.originFileObj);
+                        // });
+                        
+                        console.log(res.data[0].SampleRequestId)
+                        // console.log(formData);
+                        sampleService.fileUpload(formData).then((file) => {
+                          // console.log(file.data)
+                          res.data[0].filepath = file.data;
+                        });
                       }
-                      console.log(formData)
-                      sampleService.fileUpload(formData).then((file) => {
-                        // console.log(file.data)
-                        res.data[0].filepath = file.data;
-                      });
-                    }
-                  }
-                  if (data.fabricsData.find((res) => res.fabricUpload != undefined) != undefined) {
-                    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-                    const formData = new FormData();
-                    formData.append('reqNo', `${res.data[0].requestNo}`);
-                    formData.append('fabIds', JSON.stringify(res.data[0].sampleReqFabricInfo));
-                    for (let i = 0; i < data.fabricsData.length; i++) {
-                      formData.append('file', data.fabricsData[i].fabricUpload);
-                    }
-                    sampleService.fabricUpload(formData).then((file) => {
-                      res.data[0].filepath = file.data;
-                    });
-                  }
+                      if(data.fabricsData.find((res) => res.fabricUpload != undefined) != undefined){
+                        console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                        const formData = new FormData();
+                        formData.append('reqNo', `${res.data[0].requestNo}`);
+                        formData.append('fabIds', JSON.stringify(res.data[0].sampleReqFabricInfo));
+                        for (let i = 0; i < data.fabricsData.length; i++) {
+                            formData.append('file', data.fabricsData[i].fabricUpload);
+                          }
+                          sampleService.fabricUpload(formData).then((file) => {
+                            res.data[0].filepath = file.data;
+                          });
+                      }
 
-                  if (data.trimsData.find((res) => res.trimUpload != undefined) != undefined) {
-                    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-                    const formData = new FormData();
-                    formData.append('reqNo', `${res.data[0].requestNo}`);
-                    formData.append('fabIds', JSON.stringify(res.data[0].sampleTrimInfo));
-                    for (let i = 0; i < data.trimsData.length; i++) {
-                      formData.append('file', data.trimsData[i].trimUpload);
-                    }
-                    sampleService.trimUpload(formData).then((file) => {
-                      res.data[0].filepath = file.data;
-                    });
-                  }
+                      if(data.trimsData.find((res) => res.trimUpload != undefined) != undefined){
+                        console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                        const formData = new FormData();
+                        formData.append('reqNo', `${res.data[0].requestNo}`);
+                        formData.append('fabIds', JSON.stringify(res.data[0].sampleTrimInfo));
+                        for (let i = 0; i < data.trimsData.length; i++) {
+                            formData.append('file', data.trimsData[i].trimUpload);
+                          }
+                          sampleService.trimUpload(formData).then((file) => {
+                            res.data[0].filepath = file.data;
+                          });
+                      }
 
-                  navigate("/sample-development/sample-requests")
-                } else {
-                  message.success(res.internalMessage, 2);
-                }
-              });
-              console.log(req.sizeData);
-            } else {
-              // console.log('ddddddd')
-              message.error('Please Fill The Size,Fabric, Trim And process Details')
+                      navigate("/sample-development/sample-requests")
+                    } else {
+                      message.success(res.internalMessage, 2);
+                    }
+                  });
+                  console.log(req.sizeData);
+              }else{
+                // console.log('ddddddd')
+                message.error('Please Fill The Size,Fabric, Trim And process Details')
+              }
+              
+            }else{
+              // console.log('********')
+              message.error('Please Fill The Below Details')
             }
-
-          } else {
-            // console.log('********')
-            message.error('Please Fill The Below Details')
+          }
+          else{
+            AlertMessages.getErrorMessage("please add fabric for all colors.")
           }
         }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0]) });
       }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0]) });

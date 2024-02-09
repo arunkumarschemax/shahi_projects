@@ -123,28 +123,28 @@ const M3Items = ({props}) => {
     });
     const concatenatedContent = contentInfo?.join(' ')
     
-    console.log(concatenatedContent);
-    console.log(buyerDetails)
-    console.log(fabricTypeDetails)
-    console.log(weaveDetails)
-    console.log(yarnDetails)
-    console.log(epiInfo)
-    console.log(ppiInfo)
-    console.log(finishInfo)
-    console.log(shrinkageInfo)
-    console.log(weightInfo)
-    console.log(weightUomInfo)
+    // console.log(concatenatedContent);
+    // console.log(buyerDetails)
+    // console.log(fabricTypeDetails)
+    // console.log(weaveDetails)
+    // console.log(yarnDetails)
+    // console.log(epiInfo)
+    // console.log(ppiInfo)
+    // console.log(finishInfo)
+    // console.log(shrinkageInfo)
+    // console.log(weightInfo)
+    // console.log(weightUomInfo)
   
     const itemCode = `${buyerDetails}${fabricTypeDetails}${weaveDetails}${yarnDetails}...${concatenatedContent}${finishInfo}${resultInfo}${shrinkageInfo}${weightInfo}${weightUomInfo}`;
   const cleanItemCode = itemCode.replace(/(\.\.\.)+$/, '...');
 
-  console.log(cleanItemCode);
+  // console.log(cleanItemCode);
   getVarcodeDefaultValue(cleanItemCode);
   };
   
 
   const getVarcodeDefaultValue = (defaultCode: string) => {
-    console.log(defaultCode);
+    // console.log(defaultCode);
     // if(code==''){
     form.setFieldsValue({
       description: defaultCode,
@@ -168,7 +168,7 @@ const M3Items = ({props}) => {
         setFabricType([]);
       }
     }).catch((err) => {
-      console.log(err.message);
+      // console.log(err.message);
     });
   };
 
@@ -181,7 +181,7 @@ const M3Items = ({props}) => {
           setWeave([]);
         }
       }).catch((err) => {
-        console.log(err.message);
+        // console.log(err.message);
       });
   };
 
@@ -192,14 +192,14 @@ const M3Items = ({props}) => {
   }
 
   useEffect(() => {
-    console.log("********************")
-    console.log(props)
-    console.log(`"`+props?.yarnType+`"`)
+    // console.log("********************")
+    // console.log(props)
+    // console.log(`"`+props?.yarnType+`"`)
 
    if(props != undefined){
     form.resetFields();
-    console.log("********************")
-    console.log(props.buyer_id)
+    // console.log("********************")
+    // console.log(props.buyer_id)
     
     if(props.fabricTypeId> 0){
       setFabricTypeDisable(true)
@@ -341,15 +341,15 @@ const M3Items = ({props}) => {
   }
 
   const onBuyerChange = (val,option)=>{
-    console.log("hi")
+    // console.log("hi")
     generateItemCode()
     form.setFieldValue('buyerCode', option?.name)
   }
 
   const onFinish = (val) => {
-    console.log("val");
-    console.log(val);
-    console.log(yarnType);
+    // console.log("val");
+    // console.log(val);
+    // console.log(yarnType);
 
 
     const contentIsNull = formData.some((item) => item.content === '');
@@ -376,10 +376,10 @@ const M3Items = ({props}) => {
     }
   }
      const req = new M3FabricsDTO(0,val.buyerId,val.itemCode,val.fabricTypeId,val.weaveId,weightChange,weightUom,epiData,ppiData,(yarnType).replace(/""/g, '"'),widthChange,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code,val.hsnCode,yarn,formData,undefined,undefined,undefined,undefined,val.remarks)
-     console.log(req,"LLLLLLLLLLLLLLLLLLLL");
+    //  console.log(req,"LLLLLLLLLLLLLLLLLLLL");
     service.createM3Items(req).then((res) => {
       if (res.status) {
-        console.log(props);
+        // console.log(props);
         if(props != undefined){
           trimReqCodeService.updateFabStatus({id:props.m3ItemsId,m3ItemsId:res.data?.m3ItemsId}).then((res) => {
             if(res.status){
@@ -417,39 +417,39 @@ const M3Items = ({props}) => {
   };
 
   const yarnSelect = (val) =>{
-    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-    console.log(val)
+    // console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+    // console.log(val)
     setYarnRadio(true)
     setYarnType(val)
   }
 
   const epiChange = (val)=>{
-    console.log(val,'epi change')
+    // console.log(val,'epi change')
     setEPIData(val)
   }
 
   const ppiChange =(val)=>{
-    console.log(val,'ppi change')
+    // console.log(val,'ppi change')
     setPPIData(val)
   }
 
   const onWeightChange =(val)=>{
-    console.log(val,'weight change')
+    // console.log(val,'weight change')
     setWeightChange(val)
   }
 
   const onWeightUom =(val)=>{
-    console.log(val,'weight uom change')
+    // console.log(val,'weight uom change')
     setWeightUom(val)
   }
 
   const onWidthChange =(val)=>{
-    console.log(val,'width change')
+    // console.log(val,'width change')
     setWidthChange(val)
   }
 
   const onWidthUomChange =(val)=>{
-    console.log(val,'width uom change')
+    // console.log(val,'width uom change')
     setWidthUom(val)
   }
 
@@ -481,7 +481,7 @@ const M3Items = ({props}) => {
     const updatedFormData = [...formData];
     updatedFormData.splice(index, 1); // Remove the item from the array
     setFormData(updatedFormData); // Update the state with the modified array
-  console.log(updatedFormData,'-------------')
+  // console.log(updatedFormData,'-------------')
   };
   // console.log(formData,'==-=-=-')
 
