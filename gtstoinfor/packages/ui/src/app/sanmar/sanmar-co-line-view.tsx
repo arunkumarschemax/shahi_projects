@@ -208,9 +208,15 @@ const SanmarColineView = () => {
 
     const handleConfirmDelete = (record) => {
         const req = new ItemNoDto(record.id)
+        const req1 = new ItemNoDto(null,null,record.buyer_po)
         service.deleteCoLine(req).then(res => {
             if (res.status) {
                 getData();
+                service.updateStatusInOrder(req1).then((res) => {
+                    if (res.status) {
+                        message.success(res.internalMessage)
+                    }
+                })
                 AlertMessages.getSuccessMessage(res.internalMessage)
 
             } else {

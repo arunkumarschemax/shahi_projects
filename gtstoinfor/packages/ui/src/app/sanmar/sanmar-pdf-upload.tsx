@@ -177,7 +177,7 @@ const SanmarPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                         xl={{ span: 4 }}
                     >
                         <Form.Item>
-                            <Button type='primary' onClick={sanmarBot}>Upload Bot</Button>
+                            <Button type='primary' onClick={sanmarBot}>Auto Upload Bot</Button>
                         </Form.Item>
                     </Col>
                     <Col span={24}>

@@ -204,4 +204,13 @@ export class SanmarController {
         }
     }
 
+    @Post('/updateStatusInOrder')
+    async updateStatusInOrder(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.updateStatusInOrder(req);
+        } catch (error) {
+            return error
+        }
+    }
+
 }
