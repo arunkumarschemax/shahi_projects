@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { CommonResponseModel } from "@project-management-system/shared-models";
-import { TrimBuyerService } from "./trim-buyer-service";
+import { TrimBuyerService } from "./trim-buyer.service";
 import { TrimBuyerDto } from "./trim-buyer.dto";
 
 @ApiTags('trim-buyer')

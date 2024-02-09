@@ -18,15 +18,16 @@ export class M3TrimsDTO {
 
     @ApiProperty()
     trimType: ItemTypeEnum;
+
     @ApiProperty()
     logo: LogoEnum;
 
     @ApiProperty()
     part: PartEnum;
 
-
     @ApiProperty()
     trimCategoryId:number
+
     @ApiProperty()
     buyerId:number
 
@@ -63,10 +64,8 @@ export class M3TrimsDTO {
     @ApiProperty()
     contentId:number
 
-
     @ApiProperty()
     categoryId:number
-
 
     @ApiProperty()
     colorId:number
@@ -91,6 +90,31 @@ export class M3TrimsDTO {
 
     @ApiProperty()
     hsnCode?: string;
+
+    @ApiProperty()
+    trimBuyerId:number
+
+    @ApiProperty()
+    lengthId:number
+
+    @ApiProperty()
+    lineId:number
+
+    @ApiProperty()
+    partsId:number
+
+    @ApiProperty()
+    plyId:number
+
+    @ApiProperty()
+    shapeId:number
+
+    @ApiProperty()
+    sliderId:number
+
+    @ApiProperty()
+    sizeId:number
+
 
 }
 
