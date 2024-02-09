@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, Pri
 import { Settings } from "../settings/settings.entity";
 import { StyleOrder } from "../style-order/style-order.entity";
 import { RackPositionEntity } from "../rm_locations/rack-position.entity";
+import { ItemTypeEnum } from "@project-management-system/shared-models";
 
 @Entity('trim_params_mapping')
 export class TrimParamsMapping{
@@ -113,6 +114,52 @@ export class TrimParamsMapping{
   })
   isActive:boolean;
 
+  
+  @Column("boolean",{
+    nullable:false,
+    default:false,
+    name:"shape"
+  })
+  shape:boolean;
+  @Column("boolean",{
+    nullable:false,
+    default:false,
+    name:"line"
+  })
+  line:boolean;
+  @Column("boolean",{
+    nullable:false,
+    default:false,
+    name:"ply"
+  })
+  ply:boolean;
+  @Column("boolean",{
+    nullable:false,
+    default:false,
+    name:"buyer"
+  })
+  buyer:boolean;
+  @Column("boolean",{
+    nullable:false,
+    default:false,
+    name:"length"
+  })
+  length:boolean;
+
+  
+  @Column("boolean",{
+    nullable:false,
+    default:false,
+    name:"slider"
+  })
+  slider:boolean;
+  
+  @Column("boolean",{
+    nullable:false,
+    default:false,
+    name:"parts"
+  })
+  parts:boolean;
   @CreateDateColumn({
     name: "created_at",
     type:"datetime"
@@ -148,6 +195,13 @@ export class TrimParamsMapping{
   versionFlag: number;
 
 
+
+@Column('enum', {
+  name: 'trim_type',
+  nullable: false,
+  enum: ItemTypeEnum
+})
+trimType: ItemTypeEnum;
   @OneToMany(type=>TrimParamsMapping, map=>map.trimMappingId,{cascade: true})
   trimMappingInfo:TrimParamsMapping;
 

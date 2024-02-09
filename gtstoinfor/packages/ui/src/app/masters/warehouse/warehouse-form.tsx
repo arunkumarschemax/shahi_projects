@@ -101,8 +101,8 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
     form.resetFields();
   };
   return (
-<Card title={<span style={{color:'white'}}>Warehouse</span>}
-    style={{textAlign:'center'}} 
+<Card title={<span >WareHouse</span>}
+     style={{textAlign:'left'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  
      extra={props.isUpdate==true?"":<Link to='/global/warehouse/warehouse-grid' ><span ><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
       >
 
@@ -121,8 +121,8 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
         <Form.Item style={{ display: 'none' }} name="createdUser" initialValue={createdUser}>
           <Input hidden />
         </Form.Item>
-        <Row>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}> <Form.Item
+        <Row gutter={12}>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}} > <Form.Item
           name="warehouseName"
           label="WareHouse Name"
           rules={[
@@ -136,7 +136,7 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
           <Input />
         </Form.Item>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}> <Form.Item
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}> <Form.Item
           name="warehouseCode"
           label="WareHouse Code"
           rules={[
@@ -151,7 +151,7 @@ export const WarehouseForm = (props:WarehouseFormProps) => {
           <Input />
         </Form.Item>
         </Col>
-        <Col span={6}>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}>
             <Form.Item label="Category	" name="category"  rules={[
             {
               required: true,
