@@ -213,7 +213,7 @@ export const TrimReqCodeView = () => {
     const req = new BuyerRefNoRequest()
     req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
       trimReqCodeService.getAllBuyers(req).then((res) => {
-      console.log(res,'ppppppppppp');
+      // console.log(res,'ppppppppppp');
       
       if (res.status) {
         setBuyerData(res.data);
@@ -262,7 +262,7 @@ export const TrimReqCodeView = () => {
   }
 
   const getAllTrims = (key?) =>{
-    console.log(key,'llllllllllllllll')
+    // console.log(key,'llllllllllllllll')
     const req = new TrimCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('trimType'),key,externalRefNo)  
     trimReqCodeService.getAllTrims(req).then((res) => {
       if (res.status) {
@@ -297,7 +297,7 @@ export const TrimReqCodeView = () => {
 
   
   const setModel = (val) => {
-    console.log(val);
+    // console.log(val);
     // setVisibleModel(val);
   }
   const handleCancel = () => {
@@ -412,7 +412,7 @@ export const TrimReqCodeView = () => {
   };
 
   const createItem = (rowData: any) => {
-    console.log(rowData)
+    // console.log(rowData)
     setModalVisible(true)
     setRequestData(rowData);
   }

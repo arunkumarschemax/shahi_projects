@@ -202,7 +202,7 @@ export const M3TrimsView = () => {
     const req = new BuyerRefNoRequest()
     const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null   
     req.buyerRefNo = refNo
-    console.log(refNo,'=========')
+    // console.log(refNo,'=========')
     service.getAllBuyers(req).then((res) => {
       if (res.status) {
         setBuyerData(res.data);
@@ -352,7 +352,7 @@ export const M3TrimsView = () => {
 
   
   const setModel = (val) => {
-    console.log(val);
+    // console.log(val);
     // setVisibleModel(val);
   }
 

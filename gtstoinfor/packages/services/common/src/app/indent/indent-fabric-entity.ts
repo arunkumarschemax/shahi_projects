@@ -142,7 +142,10 @@ export class IndentFabricEntity {
     })
     xlNo: string;
     @Column('decimal', {
+      nullable: false,
       name: 'quantity',
+      precision: 10,
+      scale: 2,
     })
     quantity: number
 
@@ -220,8 +223,11 @@ export class IndentFabricEntity {
   versionFlag: number;
 
   @Column('decimal', {
+    nullable: false,
     name: 'received_quantity',
     default: 0,
+    precision: 10,
+    scale: 2,
   })
   recivedQuantity:number
 

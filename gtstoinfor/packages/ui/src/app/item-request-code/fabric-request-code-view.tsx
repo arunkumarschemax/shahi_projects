@@ -68,10 +68,10 @@ const onTabChange = (key) => {
   });
 };
   const getAllFabrics= (val?) => {
-    console.log(val,'88888');
+    // console.log(val,'88888');
     const req = new FabricCodeReq(form.getFieldValue('buyerId'),form.getFieldValue('hsnCode'),form.getFieldValue('fabricTypeId'),form.getFieldValue('weaveId'),form.getFieldValue('finishTypeId'),form.getFieldValue('contentId'),val,externalRefNo)
     requestCodeService.getAllFabrics(req).then(res => {
-      console.log(res,'ppppppppppppp');
+      // console.log(res,'ppppppppppppp');
       
       if (res.status) {
         setReqCodeData(res.data);
@@ -431,12 +431,12 @@ const onTabChange = (key) => {
 }
 
   const createItem = (rowData: any) => {
-    console.log(rowData)
+    // console.log(rowData)
     setModalVisible(true)
     setData(rowData);
   }
   const modalView = (rowData:any) => {
-    console.log("********%%%%%%")
+    // console.log("********%%%%%%")
     return  (
   //   <Modal
   //     className='rm-'
@@ -462,7 +462,6 @@ const onTabChange = (key) => {
    * @param extra 
    */
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
   }
 
   const onReset = () => {

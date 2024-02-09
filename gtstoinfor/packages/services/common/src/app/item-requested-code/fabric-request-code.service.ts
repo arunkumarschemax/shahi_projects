@@ -55,7 +55,7 @@ export class FabricReqCodeService {
     // @LogActions({ isAsync: true })
     async getAllFabrics(req?:FabricCodeReq): Promise<FabricRequestResponseModel> {  
        try{
-        console.log(req.status,',,,,,,,,,,,,,,')
+        // console.log(req.status,',,,,,,,,,,,,,,')
         let query =''
         if(req.status ==='OPEN'){
         query =`SELECT frc.fabric_request_code_id AS fabricRequestCodeId,frc.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricType,
@@ -286,7 +286,7 @@ export class FabricReqCodeService {
 
     async updateFabStatus(req?:UpdateIdReq):Promise<CommonResponseModel>{
       try{
-        console.log(req,'---------')
+        // console.log(req,'---------')
         let query = `update fabric_request_code set status='completed', m3_item_id = ${req.m3ItemsId} where fabric_request_code_id = ${req.id}`;
         const data = await this.dataSource.query(query)
         if(data.affectedRows > 0){
@@ -301,11 +301,11 @@ export class FabricReqCodeService {
 
     async updateTrimStatus(req?:UpdateIdReq):Promise<CommonResponseModel>{
       try{
-        console.log("req**********");
-        console.log(req);
+        // console.log("req**********");
+        // console.log(req);
         let query = `update trim_request_code set status='completed',m3_trim_id = ${req.m3ItemsId} where trim_request_code_id = ${req.id}`;
         const data = await this.dataSource.query(query)
-        console.log(data);
+        // console.log(data);
         if(data.affectedRows > 0){
           return new CommonResponseModel(true,1,'Status Updated successfully',data)
       }else{
