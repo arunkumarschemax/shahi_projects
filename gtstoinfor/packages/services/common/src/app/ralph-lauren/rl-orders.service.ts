@@ -21,6 +21,7 @@ import { OrdersChildEntity } from "../orders/entities/orders-child.entity";
 import { OrdersEntity } from "../orders/entities/orders.entity";
 import { FileUploadEntity } from "../orders/entities/upload-file.entity";
 import { ItemNoDtos } from "./dto/item-no.dto";
+import { ColorRepository } from "../Entites@Shahi/color/color.repo";
 const fs = require('fs');
 const path = require('path')
 
@@ -32,7 +33,8 @@ export class RLOrdersService {
     private coLineRepo: COLineRepository,
     private dataSource: DataSource,
     private addressService: AddressService,
-    private orderChildRepo: RLOrdersChildRepository
+    private orderChildRepo: RLOrdersChildRepository,
+    private colorRepo:ColorRepository
 
 
   ) { }
@@ -232,12 +234,12 @@ export class RLOrdersService {
   async getOrderDetails(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
       const data = await this.rlOrdersRepo.find({ where: { poNumber: req.poNumber } })
-      //  const data = await this.repo.find()
-      let destinationMap = new Map<string, Destination>();
+
       // po -> destination -> color -> sizes
       const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: number, price: string }[]>>>();
       const poMap = new Map<string, RLOrdersEntity>();
       data.forEach(rec => {
+      
         poMap.set(rec.poNumber, rec)
         const destCountry = rec.shipToAddress.slice(-2).trim();
         const parts = rec.shipToAddress.split(',')
@@ -249,6 +251,8 @@ export class RLOrdersService {
         if (!destinationColSizesMap.get(rec.poNumber).has(dest)) {
           destinationColSizesMap.get(rec.poNumber).set(dest, new Map<string, []>());
         }
+
+        
         if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(rec.color)) {
           destinationColSizesMap.get(rec.poNumber).get(dest).set(rec.color, []);
         }
@@ -1032,8 +1036,6 @@ async updateStatusInOrder(req: any): Promise<CommonResponseModel> {
      return new CommonResponseModel(false, 0, "Error Occurred", error);
    }
  }
-
-
 
 
 }

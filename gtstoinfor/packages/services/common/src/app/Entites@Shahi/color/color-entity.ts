@@ -27,7 +27,7 @@ export class ColorEntity {
         nullable:false,
        
     })
-    rlField: number
+    rlField: string
 
     @Column('varchar',{
         name:'crm_field',

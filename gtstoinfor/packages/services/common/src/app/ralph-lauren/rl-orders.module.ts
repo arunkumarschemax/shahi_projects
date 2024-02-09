@@ -16,6 +16,9 @@ import { AddressEntity } from '../Entites@Shahi/address/address-entity';
 import { RLOrderschildEntity } from './entities/rl-orders-child.entity';
 import { RLOrdersChildRepository } from './repositories/rl-orders-child.repo';
 import { tradeEntity } from './entities/trade-link.entity';
+import { ColorEntity } from '../Entites@Shahi/color/color-entity';
+import { ColorRepository } from '../Entites@Shahi/color/color.repo';
+import { ColorService } from '../Entites@Shahi/color/color-service';
 
 
 @Module({
@@ -28,8 +31,9 @@ import { tradeEntity } from './entities/trade-link.entity';
             AddressEntity,
             RLOrderschildEntity,
             tradeEntity,
+            ColorEntity
         ])],
     controllers: [RLOrdersController],
-    providers: [RLOrdersService, PdfFileUploadRepository, RLOrdersRepository, COLineRepository, ApplicationExceptionHandler, AddressRepository, AddressService,RLOrdersChildRepository]
+    providers: [RLOrdersService, PdfFileUploadRepository, RLOrdersRepository, COLineRepository, ApplicationExceptionHandler, AddressRepository, AddressService,RLOrdersChildRepository,ColorRepository,ColorService]
 })
 export class RLOrdersModule { }
