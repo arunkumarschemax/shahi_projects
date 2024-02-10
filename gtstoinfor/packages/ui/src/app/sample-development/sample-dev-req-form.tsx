@@ -1,6 +1,6 @@
 import { EyeOutlined, UploadOutlined } from "@ant-design/icons";
 import { BuyerRefNoRequest, CategoryEnumDisplay, DepartmentReq, SampleDevelopmentRequest, StyleIdReq, TypeIdReq } from "@project-management-system/shared-models";
-import { BuyersService, CountryService, CurrencyService, EmployeeDetailsService, FabricSubtypeservice, FabricTypeService, LiscenceTypeService, LocationsService, M3ItemsService, MasterBrandsService, ProductService, ProfitControlHeadService, QualityService, SampleDevelopmentService, SampleSubTypesService, SampleTypesService, StyleService } from "@project-management-system/shared-services";
+import { BuyersService, CountryService, CurrencyService, EmployeeDetailsService, FabricSubtypeservice, FabricTypeService, LiscenceTypeService, LocationsService, M3ItemsService, MasterBrandsService, MasterLocationsService, ProductService, ProfitControlHeadService, QualityService, SampleDevelopmentService, SampleSubTypesService, SampleTypesService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Modal, Row, Select, Tabs, Tooltip, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import Upload, { UploadProps } from "antd/es/upload";
@@ -48,18 +48,16 @@ export const SampleDevForm = () => {
   const [qualities, setQualities] = useState<any[]>([])
   const [styleAginstPch, setStyleAginstPch] = useState<any[]>([])
   const [productData, setProductData] = useState<any[]>([])
-
   const [imageUrl, setImageUrl] = useState('');
   const [imageName, setImageName] = useState('');
   const [loading, setLoading] = useState<boolean>(false);
   const [modal, setModal] = useState('')
   const [styleImage, setStyleImage] = useState("");
-
   const [sizeForm] = Form.useForm();
   const [fabricForm] = Form.useForm();
   const [trimForm] = Form.useForm();
-
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
+  const [locationDropDown, setLocationsDropDown] = useState<any>([]);
 
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
@@ -78,6 +76,7 @@ export const SampleDevForm = () => {
   const m3ItemsService = new M3ItemsService()
   const qualityService = new QualityService()
   const productService = new ProductService()
+  const locationsService = new MasterLocationsService()
 
   const navigate = useNavigate();
 
@@ -90,6 +89,7 @@ export const SampleDevForm = () => {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
     const loginUser = userData?.user?.userName
     form.setFieldsValue({ "user": loginUser })
+    getAllLocations()
     getLocations();
     getPCHData();
     getBuyers();
@@ -172,6 +172,16 @@ export const SampleDevForm = () => {
     });
   };
 
+  const getAllLocations = () => {
+    locationsService.getAllActivelocations().then((res) => {
+      
+      if (res.status) {
+        console.log(res);
+        setLocationsDropDown(res.data);
+      }
+    });
+  };
+
   const getfabricType = () => {
     fabricTypeService.getAllActiveFabricType().then((res) => {
       if (res.status) {
@@ -238,6 +248,8 @@ export const SampleDevForm = () => {
     styleService.getstyleaginstpch(req).then((res) => {
       if (res.status) {
         form.setFieldValue('pchId', res.data?.pchId)
+        form.setFieldValue('description', res.data?.description)
+
       }
     })
   }
@@ -366,7 +378,7 @@ export const SampleDevForm = () => {
               if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
 
                 console.log('TTTTT')
-                const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,val.productId,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
+                const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,val.productId,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType,val.locationsId)
                 // console.log(req.sizeData)
                 console.log(req)
                 console.log(data.fabricsData)
@@ -628,7 +640,7 @@ export const SampleDevForm = () => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="locationId"
-              label="Location"
+              label="Warehouse"
               rules={[{ required: true, message: "Location is required" }]}
             >
               <Select
@@ -724,7 +736,7 @@ export const SampleDevForm = () => {
               >
                 {pch.map((e) => {
                   return (
-                    <Option key={e.profitControlHeadId} value={e.profitControlHeadId}>
+                    <Option key={e.locationId} value={e.profitControlHeadId}>
                       {e.profitControlHead}
                     </Option>
                   );
@@ -856,7 +868,7 @@ export const SampleDevForm = () => {
             //   },
             // ]}
             >
-              <TextArea rows={2} placeholder="Enter Description" />
+              <TextArea rows={2} placeholder="Enter Description" disabled/>
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
@@ -1006,7 +1018,7 @@ export const SampleDevForm = () => {
             <Form.Item
               name="productId"
               label="Product"
-            // rules={[{ required: true, message: "Please Select Product" }]}
+            rules={[{ required: true, message: "Please Select Product" }]}
             >
               <Select
                 allowClear
@@ -1144,6 +1156,30 @@ export const SampleDevForm = () => {
             </Select>
           </Form.Item>
           {/* </Col> */}
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            <Form.Item
+              name="locationsId"
+              label="Location"
+              // dependencies={['styleId']}
+              rules={[{ required: true, message: "Location is required" }]}
+            >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Location"
+                // disabled
+              >
+                {locationDropDown?.map((e) => {
+                  return (
+                    <Option key={e.locationId} value={e.locationId}>
+                      {e.locationName}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
             <Form.Item
               name="remarks"

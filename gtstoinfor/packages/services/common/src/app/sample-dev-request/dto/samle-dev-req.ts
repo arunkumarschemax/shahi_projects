@@ -55,6 +55,8 @@ export class SampleRequestDto {
   @ApiProperty()
   facilityId: number;
   @ApiProperty()
+  locationsId: number;
+  @ApiProperty()
   remarks: string;
   @ApiProperty()
   status: SampleDevelopmentStatusEnum;
@@ -95,7 +97,8 @@ export class SampleRequestDto {
     sampleReqSizeInfo: SampleSizeReq[],
     sampleReqFabricInfo: SamplefabricReq[],
     sampleTrimInfo: SampleTrimReq[],
-    sampleProcessInfo: SampleProcessInfoReq[]
+    sampleProcessInfo: SampleProcessInfoReq[],
+    locationsId:number
   ) {
     this.SampleRequestId = SampleRequestId
     this.locationId = locationId
@@ -126,6 +129,6 @@ export class SampleRequestDto {
     this.sampleReqFabricInfo = sampleReqFabricInfo
     this.sampleTrimInfo = sampleTrimInfo
     this.sampleProcessInfo = sampleProcessInfo
-
+    this.locationsId = locationsId
   }
 }

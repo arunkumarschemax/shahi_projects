@@ -272,7 +272,12 @@ const service = new StyleService()
                         </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
-                        <Form.Item name='description' label='Description'>
+                        <Form.Item name='description' label='Description'  rules={[
+                          {
+                            required: true,
+                            message:'Description Is Required'
+                          }
+                        ]}>
                             <Input.TextArea rows={1}  placeholder="Enter Description"/>
                         </Form.Item>
                 </Col>
