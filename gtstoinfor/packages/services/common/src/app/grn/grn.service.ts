@@ -272,7 +272,7 @@ export class GrnService {
                         if(req.grnType != GRNTypeEnum.SAMPLE_ORDER){
                             const indentId = await this.getIndentid(req.materialtype, item.indentItemId)
                             const indentData = await this.getAllIndentDataUPdateStatus(req.materialtype, indentId.data[0].indentId)
-                            if (indentData.data.length == 0) {
+                            if (indentData.data.length != 0) {
                                 await this.indentRepo.update({ indentId: indentId.data[0].indentId }, { status: CustomerOrderStatusEnum.CLOSED })
                             } else {
                                 await this.indentRepo.update({ indentId: indentId.data[0].indentId }, { status: CustomerOrderStatusEnum.IN_PROGRESS })
