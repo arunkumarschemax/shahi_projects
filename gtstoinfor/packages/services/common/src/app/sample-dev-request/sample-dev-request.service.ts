@@ -600,6 +600,7 @@ export class SampleRequestService {
       sampleReqEntity.remarks = req.remarks
       sampleReqEntity.status = req.status
       sampleReqEntity.category = req.category
+      sampleReqEntity.locationsId = req.locationsId
       let sampleSizeInfo = []
       let sampleFabricInfo = []
       let sampleTrimInfo = []
