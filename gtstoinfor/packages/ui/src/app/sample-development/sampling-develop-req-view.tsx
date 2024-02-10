@@ -128,7 +128,9 @@ export const SampleDevNewView = () => {
       req.pch = sourcingForm.getFieldValue("pch");
     }
     req.extRefNumber = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
-
+    if (checkAccess(MenusAndScopesEnum.Scopes.userData)) {
+      req.user = IAMClientAuthContext.user?.userName ? IAMClientAuthContext.user?.userName : null
+    }
     service.getAllSampleDevData(req).then((res) => {
       if (res.status) {
         setData(res.data);
@@ -941,6 +943,7 @@ export const SampleDevNewView = () => {
     >
       <Form form={sourcingForm} onFinish={getAll} layout="vertical">
         <Row gutter={8}>
+          {/* {checkAccess(MenusAndScopesEnum.Scopes.userData)?(<Button hidden/>):''} */}
           {/* <Form.Item name="dispatched date" style={{display:'none'}}>
     <DatePicker value={moment}/>
     </Form.Item> */}

@@ -113,16 +113,15 @@ export class TrimParamsMappingService {
             console.log(entity,'ppppppp');
             
             const savedEntity = await this.repo.save(entity);
-            return new CommonResponseModel(true, 1, isUpdate ? 'Type Updated successfully' : 'Type Saved successfully', [savedEntity]);
+            return new CommonResponseModel(true, 1, isUpdate ? 'Trim params mapping Updated successfully' : 'Trim params mapping Saved successfully', [savedEntity]);
         } catch (err) {
             throw err;
         }
     }
     
-    async getMappedParamsByTrim(req:TrimIdRequest):Promise<CommonResponseModel>{
+    async getAllMappedTrimParams():Promise<CommonResponseModel>{
         try{
-            const data = await this.repo.find({where:{trimId:req.trimId,trimMappingId: req.trimMapId}})
-            console.log(data);
+            const data = await this.repo.getAll()
             if(data.length > 0){
                 return new CommonResponseModel(true,1,'Data retrieved',data)
             } else{
@@ -134,4 +133,18 @@ export class TrimParamsMappingService {
             throw err
         }
    }
+   async getMappedParamsByTrim(req:TrimIdRequest):Promise<CommonResponseModel>{
+    try{
+        const data = await this.repo.find({where:{trimId:req.trimId,trimMappingId: req.trimMapId}})
+        if(data.length > 0){
+            return new CommonResponseModel(true,1,'Data retrieved',data)
+        } else{
+            return new CommonResponseModel(false,0,'No data found',data)
+        }
+        
+
+    } catch(err){
+        throw err
+    }
+}
 }
