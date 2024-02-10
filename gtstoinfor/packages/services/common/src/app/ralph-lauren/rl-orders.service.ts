@@ -231,63 +231,136 @@ export class RLOrdersService {
     }
   }
 
+  // async getOrderDetails(req: OrderDetailsReq): Promise<CommonResponseModel> {
+  //   try {
+  //     const data = await this.rlOrdersRepo.find({ where: { poNumber: req.poNumber } })
+
+  //     // po -> destination -> color -> sizes
+  //     const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: number, price: string }[]>>>();
+  //     const poMap = new Map<string, RLOrdersEntity>();
+  //     data.forEach(rec => {
+      
+  //       poMap.set(rec.poNumber, rec)
+  //       const destCountry = rec.shipToAddress.slice(-2).trim();
+  //       const parts = rec.shipToAddress.split(',')
+  //       const destAdd = parts[0].trim();
+  //       const dest = destAdd + ',' + destCountry;
+  //       if (!destinationColSizesMap.has(rec.poNumber)) {
+  //         destinationColSizesMap.set(rec.poNumber, new Map<string, Map<string, []>>());
+  //       }
+  //       if (!destinationColSizesMap.get(rec.poNumber).has(dest)) {
+  //         destinationColSizesMap.get(rec.poNumber).set(dest, new Map<string, []>());
+  //       }
+            
+  //       if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(rec.color)) {
+  //         destinationColSizesMap.get(rec.poNumber).get(dest).set(rec.color, []);
+  //       }
+  //       destinationColSizesMap.get(rec.poNumber).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.price });
+  //     });
+  //     const coData = []
+  //     destinationColSizesMap.forEach((destColorSize, poNumber) => {
+  //       const desArray = []
+  //       destColorSize.forEach((colorSizes, dest) => {
+  //         const ColArray = []
+  //         colorSizes.forEach((sizes, color) => {
+  //           const sizeArray = []
+  //           sizes.forEach((size) => {
+  //             const sizeObj = new Size(size.size, size.quantity, size.price);
+  //             sizeArray.push(sizeObj)
+  //           })
+  //           const col = new Color(color, sizeArray);
+  //           ColArray.push(col)
+  //         });
+  //         const des = new Destination(dest, ColArray);
+  //         desArray.push(des)
+  //       });
+  //       const poInfo = poMap.get(poNumber)
+  //       const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price, poInfo.currency, poInfo.handoverDate, poInfo.materialNo, desArray);
+  //       coData.push(co)
+  //     });
+  //     if (coData) {
+  //       return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
+  //     } else {
+  //       return new CommonResponseModel(false, 0, 'No data found');
+  //     }
+  //   } catch (err) {
+  //     throw err
+  //   }
+  // }
+
+
   async getOrderDetails(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
-      const data = await this.rlOrdersRepo.find({ where: { poNumber: req.poNumber } })
+        const data = await this.rlOrdersRepo.find({ where: { poNumber: req.poNumber } });
 
-      // po -> destination -> color -> sizes
-      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: number, price: string }[]>>>();
-      const poMap = new Map<string, RLOrdersEntity>();
-      data.forEach(rec => {
-      
-        poMap.set(rec.poNumber, rec)
-        const destCountry = rec.shipToAddress.slice(-2).trim();
-        const parts = rec.shipToAddress.split(',')
-        const destAdd = parts[0].trim();
-        const dest = destAdd + ',' + destCountry;
-        if (!destinationColSizesMap.has(rec.poNumber)) {
-          destinationColSizesMap.set(rec.poNumber, new Map<string, Map<string, []>>());
-        }
-        if (!destinationColSizesMap.get(rec.poNumber).has(dest)) {
-          destinationColSizesMap.get(rec.poNumber).set(dest, new Map<string, []>());
+        // po -> destination -> color -> sizes
+        const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: number, price: string }[]>>>();
+        const poMap = new Map<string, RLOrdersEntity>();
+
+        for (const rec of data) {
+            poMap.set(rec.poNumber, rec);
+            const destCountry = rec.shipToAddress.slice(-2).trim();
+            const parts = rec.shipToAddress.split(',');
+            const destAdd = parts[0].trim();
+            const dest = destAdd + ',' + destCountry;
+
+            if (!destinationColSizesMap.has(rec.poNumber)) {
+                destinationColSizesMap.set(rec.poNumber, new Map<string, Map<string, { size: string, quantity: number, price: string }[]>>());
+            }
+            if (!destinationColSizesMap.get(rec.poNumber).has(dest)) {
+                destinationColSizesMap.get(rec.poNumber).set(dest, new Map<string, { size: string, quantity: number, price: string }[]>());
+            }
+
+            const check = await this.colorRepo.find({
+                where: {
+                    poNumber: rec.poNumber,
+                    style: rec.materialNo,
+                    rlField: rec.color
+                }
+            });
+
+            if (Array.isArray(check) && check.length > 0) {
+                const crmField = check[0].crmField;
+                if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(crmField)) {
+                    destinationColSizesMap.get(rec.poNumber).get(dest).set(crmField, []);
+                }
+                destinationColSizesMap.get(rec.poNumber).get(dest).get(crmField).push({ size: rec.size, quantity: rec.quantity, price: rec.price });
+            } else {
+                if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(rec.color)) {
+                    destinationColSizesMap.get(rec.poNumber).get(dest).set(rec.color, []);
+                }
+                destinationColSizesMap.get(rec.poNumber).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.price });
+            }
         }
 
-        
-        if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(rec.color)) {
-          destinationColSizesMap.get(rec.poNumber).get(dest).set(rec.color, []);
-        }
-        destinationColSizesMap.get(rec.poNumber).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.price });
-      });
-      const coData = []
-      destinationColSizesMap.forEach((destColorSize, poNumber) => {
-        const desArray = []
-        destColorSize.forEach((colorSizes, dest) => {
-          const ColArray = []
-          colorSizes.forEach((sizes, color) => {
-            const sizeArray = []
-            sizes.forEach((size) => {
-              const sizeObj = new Size(size.size, size.quantity, size.price);
-              sizeArray.push(sizeObj)
-            })
-            const col = new Color(color, sizeArray);
-            ColArray.push(col)
-          });
-          const des = new Destination(dest, ColArray);
-          desArray.push(des)
+        const coData = [];
+        destinationColSizesMap.forEach((destColorSize, poNumber) => {
+            const desArray = [];
+            destColorSize.forEach((colorSizes, dest) => {
+                const ColArray = [];
+                colorSizes.forEach((sizes, color) => {
+                    const sizeArray = sizes.map(size => new Size(size.size, size.quantity, size.price));
+                    const col = new Color(color, sizeArray);
+                    ColArray.push(col);
+                });
+                const des = new Destination(dest, ColArray);
+                desArray.push(des);
+            });
+            const poInfo = poMap.get(poNumber);
+            const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price, poInfo.currency, poInfo.handoverDate, poInfo.materialNo, desArray);
+            coData.push(co);
         });
-        const poInfo = poMap.get(poNumber)
-        const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price, poInfo.currency, poInfo.handoverDate, poInfo.materialNo, desArray);
-        coData.push(co)
-      });
-      if (coData) {
-        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
-      } else {
-        return new CommonResponseModel(false, 0, 'No data found');
-      }
+
+        if (coData.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', coData);
+        } else {
+            return new CommonResponseModel(false, 0, 'No data found');
+        }
     } catch (err) {
-      throw err
+        throw err;
     }
-  }
+}
+
 
   async coLineCreationReq(req: any): Promise<CommonResponseModel> {
     try {
@@ -703,7 +776,7 @@ export class RLOrdersService {
           const year = currentDate.getFullYear().toString().slice(-2);
           const currentDateFormatted = `${day}-${month}-${year}`;
           if (coNo) {
-            const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted });
+            const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted ,errorMsg:"-" });
           await this.updateCOLineStatus({buyerPo: po.buyer_po, lineItemNo: po.line_item_no , itemStatus: ItemStatusEnum.SUCCESS})
 
             // await driver.navigate().refresh();
