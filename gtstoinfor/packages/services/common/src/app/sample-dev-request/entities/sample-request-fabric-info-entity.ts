@@ -22,6 +22,12 @@ export class SampleReqFabricinfoEntity{
       colourId:number
 
       @Column('int',{
+        name:'fab_colour_id',
+        nullable:false,
+      })
+      fabColourId:number
+
+      @Column('int',{
         name:'uom_id',
         nullable:false,
       })

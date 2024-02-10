@@ -624,6 +624,7 @@ export class SampleRequestService {
         fabricEntity.remarks = fabricObj.remarks
         fabricEntity.totalRequirement = fabricObj.totalRequirement
         fabricEntity.wastage = fabricObj.wastage
+        fabricEntity.fabColourId = fabricObj.fabricColorId
         sampleFabricInfo.push(fabricEntity)
         const fabricInfoReq = new FabricInfoReq(fabricObj.fabricCode, fabricObj.colourId, fabricObj.consumption, fabricObj.uomId, fabricObj.remarks)
         indentFabInfo.push(fabricInfoReq);
@@ -1535,13 +1536,14 @@ export class SampleRequestService {
       //   return new CommonResponseModel(true, 1111, 'Data retrieved', Object.values(groupedData));
 
       //   }
-      let query1 = `SELECT sb.sample_item_id AS sampleItemId,sb.sampling_bom_id AS samplingBomId,required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity, required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS sampleBalanceQuanty,sb.required_quantity AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,IF(sb.item_type = "Fabric",c.colour,tc.colour) AS colourName, IF(sb.item_type = "Fabric", CONCAT(mi.item_code,'-',mi.description), mt.trim_code) AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,(st.quantity-st.allocatd_quantity-st.transfered_quantity) AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId, IF(sb.item_type = "Fabric", mi.hsn_code, mt.hsn_code) AS hsnCode FROM sampling_bom sb     
-        LEFT JOIN  sample_request_fabric_info srf ON srf.sample_request_id=sb.sample_item_id AND sb.item_type='Fabric' 
-        LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id=sb.sample_item_id AND sb.item_type!='Fabric'
+      let query1 = `SELECT fc.colour_id,sb.sample_item_id AS sampleItemId,sb.sampling_bom_id AS samplingBomId,required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS bomQuantity, required_quantity-received_quantity-IF(po_quantity IS NOT NULL,po_quantity,0) AS sampleBalanceQuanty,sb.required_quantity AS sampleQuantity,poi.po_quantity AS poquantity, rp.rack_position_name as locationName ,sr.location_id as location,brand_name as brandName, s.style AS styleName,sr.life_cycle_status AS lifeCycleStatus,b.buyer_name AS buyername,sr.request_no AS sampleReqNo,IF(sb.item_type = "Fabric",c.colour,tc.colour) AS colourName, IF(sb.item_type = "Fabric", CONCAT(mi.item_code,'-',mi.description), mt.trim_code) AS itemCode,sb.sample_request_id AS sampleRequestid,sb.item_type AS itemType,sb.m3_item_id AS m3ItemId,sb.required_quantity AS requiredQuantity, sb.received_quantity AS receivedQuantity,sb.colour_id AS colorId,(st.quantity-st.allocatd_quantity-st.transfered_quantity) AS avilableQuantity, sr.style_id AS styleId,sr.buyer_id AS buyerId, IF(sb.item_type = "Fabric", mi.hsn_code, mt.hsn_code) AS hsnCode, fc.colour AS fabColor FROM sampling_bom sb     
+        LEFT JOIN  sample_request_fabric_info srf ON srf.sample_request_id = sb.sample_request_id and srf.fabric_info_id=sb.sample_item_id AND sb.item_type='Fabric' 
+        LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id=sb.sample_request_id and srt.trim_info_id=sb.sample_item_id AND sb.item_type!='Fabric'
         LEFT JOIN sample_request sr ON sr.sample_request_id=sb.sample_request_id  
           LEFT JOIN stocks st ON st.m3_item =sb.m3_item_id AND sr.buyer_id=st.buyer_id AND st.item_type = sb.item_type and st.grn_type = "INDENT"
             LEFT JOIN m3_items mi ON mi.m3_items_Id=sb.m3_item_id and sb.item_type = "Fabric" 
             LEFT JOIN m3_trims mt ON mt.m3_trim_Id=sb.m3_item_id and sb.item_type != "Fabric"
+            LEFT JOIN colour fc ON fc.colour_id=srf.fab_colour_id
             LEFT JOIN colour c ON c.colour_id=sb.colour_id and sb.item_type = "Fabric"
             LEFT JOIN colour tc ON tc.colour_id=mt.color_id and sb.item_type != "Fabric"
             LEFT JOIN buyers b ON b.buyer_id=sr.buyer_id
@@ -1750,7 +1752,7 @@ export class SampleRequestService {
   async getfabricDetailsOfSample(req: sampleReqIdReq): Promise<CommonResponseModel> {
     try {
       const manager = this.dataSource;
-      const query = '  SELECT srf.fabric_code as m3FabricCode, srf.colour_id as colourId,c.colour as colorName,request_no AS sampleReqNo, item_code AS itemCode,mi.description as description,fabric_info_id AS samplereFabId,(sb.required_quantity - sb.received_quantity) AS sampleQuantity,srf.sample_request_id AS sampleReqId,srf.uom_id,u.uom,sr.style_id as style,mi.hsn_code AS hsnCode FROM sample_request_fabric_info srf LEFT JOIN sample_request sr ON sr.sample_request_id=srf.sample_request_id LEFT JOIN sampling_bom sb on sb.sample_request_id = srf.sample_request_id and sb.m3_item_id = srf.fabric_code and sb.colour_id = srf.colour_id LEFT JOIN m3_items mi ON mi.m3_items_Id =srf.fabric_code left join colour c on c.colour_id=srf.colour_id left join uom u on u.id = srf.uom_id  where srf.sample_request_id in (' + req.sampleReqId + ') and srf.fabric_info_id in (' + req.sampleItemId + ')'
+      const query = '  SELECT fc.colour_id AS colourId, fc.colour AS colorName,srf.fabric_code as m3FabricCode, srf.colour_id as garColourId,c.colour as garColorName,request_no AS sampleReqNo, item_code AS itemCode,mi.description as description,fabric_info_id AS samplereFabId,(sb.required_quantity - sb.received_quantity) AS sampleQuantity,srf.sample_request_id AS sampleReqId,srf.uom_id,u.uom,sr.style_id as style,mi.hsn_code AS hsnCode FROM sample_request_fabric_info srf LEFT JOIN sample_request sr ON sr.sample_request_id=srf.sample_request_id LEFT JOIN sampling_bom sb on sb.sample_request_id = srf.sample_request_id and sb.m3_item_id = srf.fabric_code and sb.colour_id = srf.colour_id LEFT JOIN m3_items mi ON mi.m3_items_Id =srf.fabric_code left join colour c on c.colour_id=srf.colour_id left join colour fc on fc.colour_id=srf.fab_colour_id left join uom u on u.id = srf.uom_id  where srf.sample_request_id in (' + req.sampleReqId + ') and srf.fabric_info_id in (' + req.sampleItemId + ')'
       const rmData = await manager.query(query);
       if (rmData) {
         return new CommonResponseModel(true, 1, 'data', rmData)
@@ -2460,7 +2462,7 @@ order by mi.trim_code`;
     try {
       const manager = this.dataSource;
       const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,si.size_id,s.extension,s.cost_ref,s.description,s.dmm_id,s.user,lt.liscence_type AS product,m.country_name as made_in,s.remarks,s.file_name,srt.remarks AS trim_remarks,srf.remarks AS fab_remarks ,s.sam_value,
-      st.style,pch.profit_control_head,mi.item_code as fabCode,mt.description as trimCode,e.first_name,s.contact,s.status,srs.quantity,srf.total_requirement as fabtotal_requirement,srf.wastage as fabwastage,srf.consumption as fabconsumption,uf.uom as fabuom,srt.total_requirement as trimtotal_requirement,srt.wastage as trimwastage,srt.consumption as trimconsumption,ut.uom as trimuom,cf.colour as fabcolour,ca.category,ed.first_name as dmmFirst,ed.last_name as dmmLast,sty.sample_type,sst.sample_sub_type,s.category as sampleCategory,
+      st.style,pch.profit_control_head,mi.item_code as fabCode,mt.description as trimCode,e.first_name,s.contact,s.status,srs.quantity,srf.total_requirement as fabtotal_requirement,srf.wastage as fabwastage,srf.consumption as fabconsumption,uf.uom as fabuom,srt.total_requirement as trimtotal_requirement,srt.wastage as trimwastage,srt.consumption as trimconsumption,ut.uom as trimuom,fc.colour AS fabColour ,cf.colour as garmentcolour,ca.category,ed.first_name as dmmFirst,ed.last_name as dmmLast,sty.sample_type,sst.sample_sub_type,s.category as sampleCategory,
       s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date,rp.rack_position_name ,s.location_id as location,t.trim_category FROM sample_request s
       LEFT JOIN brands b ON b.brand_id = s.brand_id
       LEFT JOIN buyers bu ON bu.buyer_id = s.buyer_id
@@ -2478,6 +2480,7 @@ order by mi.trim_code`;
       LEFT JOIN uom ut ON ut.id = srt.uom_id
       LEFT JOIN employee_details ed ON ed.employee_id = s.dmm_id
       LEFT JOIN colour cf ON cf.colour_id = srf.colour_id
+      LEFT JOIN colour fc ON fc.colour_id = srf.fab_colour_id
       LEFT JOIN countries m ON m.country_id = s.made_in
       LEFT JOIN category ca ON ca.category_id = mt.category_id
       LEFT JOIN liscence_type lt ON lt.liscence_type_id = s.product
@@ -2496,6 +2499,7 @@ order by mi.trim_code`;
 
       if (info.length > 0) {
         for (const rec of info) {
+          console.log(rec);
           if (!MapData.has(rec.requestNo)) {
             MapData.set(rec.requestNo, new SampleRequestInfoModel(rec.request_no, rec.sample_request_id, rec.style, rec.brand_name, rec.buyer_name, rec.first_name, rec.status, rec.lifeCycleStatus, rec.contact, rec.profit_control_head, rec.expected_delivery_date, rec.extension, rec.conversion, rec.dmmFirst, rec.product, rec.user, rec.description, rec.cost_ref, rec.type, rec.made_in, rec.remarks, rec.file_name, rec.sam_value, [], [], rec.location, rec.sample_type, rec.sample_sub_type, rec.sampleCategory, rec.dmmLast))
           }
@@ -2528,12 +2532,12 @@ order by mi.trim_code`;
               wastage: rec.fabwastage,
               uom: rec.fabuom,
               remarks: rec.fab_remarks,
-              colour: rec.fabcolour
+              colour: rec.garmentcolour,
+              fabcolour: rec.fabColour
             });
           }
 
         }
-
         const infoData: SampleRequestInfoModel[] = Array.from(MapData.values());
 
 
