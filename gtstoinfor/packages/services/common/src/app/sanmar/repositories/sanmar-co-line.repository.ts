@@ -17,7 +17,7 @@ export class SanmarCOLineRepository extends Repository<SanmarCOLineEntity> {
     async getSanmarCoLineData(req: SanmarOrderFilter): Promise<any[]> {
       const query = this.createQueryBuilder('co')
         .select(`DISTINCT co.buyer_po, co.delivery_date, co.co_date, co.style, co.item_no, co.status, co.error_msg,
-                 DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user, co.co_number,co.id`);
+                 DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user, co.co_number,co.id,co.updated_at`);
   
       if (req.buyerPo !== undefined) {
         query.andWhere(`co.buyer_po = :buyerPo`, { buyerPo: req.buyerPo });
