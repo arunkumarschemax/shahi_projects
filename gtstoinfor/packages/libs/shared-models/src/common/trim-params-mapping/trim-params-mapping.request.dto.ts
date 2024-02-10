@@ -28,7 +28,8 @@ export class TrimParamsMappingRequestDto{
     isActive: boolean;  
     updatedUser: string;
     versionFlag: number;
-trimType:ItemTypeEnum
+trimType:ItemTypeEnum;
+size:boolean;
     constructor( trimParamsMapping: number,
         category:boolean,
         trimId:number,
@@ -55,7 +56,8 @@ trimType:ItemTypeEnum
     slider:boolean,
     buyer:boolean,
         versionFlag: number,
-        trimType:ItemTypeEnum
+        trimType:ItemTypeEnum,
+size:boolean
 ){
             this.trimParamsMapping = trimParamsMapping;
             this.category = category;
@@ -84,5 +86,6 @@ trimType:ItemTypeEnum
             this.shape = shape
             this.slider = slider
             this.trimType = trimType
+            this.size = size
     }
 }

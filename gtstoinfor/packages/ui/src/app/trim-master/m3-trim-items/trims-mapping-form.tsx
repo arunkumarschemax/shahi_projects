@@ -58,7 +58,7 @@ export const TrimParamsMapping = (props: mappingProps) => {
   };
 
   const create = (val) => {
-    const req = new TrimParamsMappingRequestDto(undefined, val.category, val.trimCategoryId, val.color, val.content, val.finish, val.hole, val.logo, val.part, val.quality, val.structure, val.thickness, val.type, val.uom, val.variety, undefined, undefined, undefined, val.ply, val.parts, val.shape, val.length, val.line, val.slider, val.buyer, undefined, val.trimType)
+    const req = new TrimParamsMappingRequestDto(undefined, val.category, val.trimCategoryId, val.color, val.content, val.finish, val.hole, val.logo, val.part, val.quality, val.structure, val.thickness, val.type, val.uom, val.variety, undefined, undefined, undefined, val.ply, val.parts, val.shape, val.length, val.line, val.slider, val.buyer, undefined, val.trimType,val.size)
     services.createMapping(req).then((res) => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage)
@@ -320,7 +320,7 @@ export const TrimParamsMapping = (props: mappingProps) => {
                 disabled={props?.mappingData?.shape} />
             </Form.Item>
           </Col>
-          {/* <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }}>
+          <Col xs={{ span: 8 }} sm={{ span: 8 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }}>
             <Form.Item name="size" label="Size">
             
 <Switch size="default"  
@@ -329,7 +329,7 @@ export const TrimParamsMapping = (props: mappingProps) => {
            defaultChecked={props?.mappingData?.size}
            disabled={props?.mappingData?.size }          />           
             </Form.Item>
-            </Col> */}
+            </Col>
         </Row>
         <Row>
           <Col span={24} style={{ textAlign: "right" }}>

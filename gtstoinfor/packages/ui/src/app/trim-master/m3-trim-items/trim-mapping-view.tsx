@@ -49,7 +49,7 @@ export const TrimsParamsMappingView = () => {
   }
   const updateDetails = (val) => {
     const updatedUser = JSON.parse(localStorage.getItem('username'))
-    const req = new TrimParamsMappingRequestDto(undefined, val.category, val.trimCategoryId, val.color, val.content, val.finish, val.hole, val.logo, val.part, val.quality, val.structure, val.thickness, val.type, val.uom, val.variety, undefined, undefined, updatedUser, val.ply, val.parts, val.shape, val.length, val.line, val.slider, val.buyer, undefined, val.trimType)
+    const req = new TrimParamsMappingRequestDto(undefined, val.category, val.trimCategoryId, val.color, val.content, val.finish, val.hole, val.logo, val.part, val.quality, val.structure, val.thickness, val.type, val.uom, val.variety, undefined, undefined, updatedUser, val.ply, val.parts, val.shape, val.length, val.line, val.slider, val.buyer, undefined, val.trimType,val.size)
     services.updateMapping(req).then((res) => {
       if (res.status) {
         AlertMessages.getSuccessMessage(res.internalMessage)
