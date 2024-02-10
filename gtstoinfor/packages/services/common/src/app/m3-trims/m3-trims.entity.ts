@@ -134,55 +134,55 @@ export class M3TrimsEntity {
 
     @Column('int',{
       name:'trim_buyer_id',
-      nullable:false,
+      nullable:true,
     })
     trimBuyerId:number
 
 
     @Column('int',{
       name:'length_id',
-      nullable:false,
+      nullable:true,
     })
     lengthId:number
 
     @Column('int',{
       name:'line_id',
-      nullable:false,
+      nullable:true,
     })
     lineId:number
 
 
     @Column('int',{
       name:'parts_id',
-      nullable:false,
+      nullable:true,
     })
     partsId:number
 
     @Column('int',{
       name:'ply_id',
-      nullable:false,
+      nullable:true,
     })
     plyId:number
 
 
     @Column('int',{
       name:'shape_id',
-      nullable:false,
+      nullable:true,
     })
     shapeId:number
 
     @Column('int',{
       name:'slider_id',
-      nullable:false,
+      nullable:true,
     })
     sliderId:number
 
 
     @Column('int',{
-      name:'size_id',
-      nullable:false,
+      name:'trim_size_id',
+      nullable:true,
     })
-    sizeId:number
+    trimSizeId:number
 
 
   @Column("boolean", {

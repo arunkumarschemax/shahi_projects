@@ -65,6 +65,7 @@ export class TrimParamsMappingRequest {
     @IsOptional()
      @IsNumber()
     versionFlag: number;
-
+    @ApiProperty()
+    size:boolean
 
 }

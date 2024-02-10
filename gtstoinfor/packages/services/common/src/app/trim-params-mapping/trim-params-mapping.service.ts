@@ -85,7 +85,7 @@ export class TrimParamsMappingService {
                 if (!entity) {
                     return new TypeResponseModel(false, 0, 'Trim Mapping not found');
                 }
-                console.log(req,'pppppppppppp');
+                // console.log(req,'pppppppppppp');
                 
                 entity.updatedUser = req.createdUser;
             }
@@ -110,7 +110,8 @@ export class TrimParamsMappingService {
             entity.parts = req.parts;
             entity.shape = req.shape;
             entity.slider = req.slider;
-            console.log(entity,'ppppppp');
+            entity.size = req.size
+            // console.log(entity,'ppppppp');
             
             const savedEntity = await this.repo.save(entity);
             return new CommonResponseModel(true, 1, isUpdate ? 'Type Updated successfully' : 'Type Saved successfully', [savedEntity]);
