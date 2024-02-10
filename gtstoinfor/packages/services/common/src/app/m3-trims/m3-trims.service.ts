@@ -27,7 +27,7 @@ export class M3TrimsService {
       const count: M3TrimsEntity = await this.repository.save(entity);
       const saveDto: M3TrimsDTO = this.adapter.convertEntityToDto(count);
 
-      return new CommonResponseModel(true, 1, 'Data saved successfully', saveDto);
+      return new CommonResponseModel(true, 1, 'Trim created successfully', saveDto);
     } catch (error) {
       return new CommonResponseModel(false, 0, error)
     }
