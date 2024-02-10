@@ -872,6 +872,7 @@ export class SanmarService {
           const alert = await driver.switchTo().alert();
           const alertText = await alert.getText();
           const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed', errorMsg: alertText });
+          await this.updateCOLineStatus({buyerPo: po.buyerPo, status: StatusEnum.FAILED})
           await alert.accept();
           await driver.sleep(5000)
           await driver.navigate().refresh();
@@ -887,10 +888,12 @@ export class SanmarService {
           const currentDateFormatted = `${day}-${month}-${year}`;
           if (coNo) {
             const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted, errorMsg: "-" });
+            await this.updateCOLineStatus({buyerPo: po.buyer_po, status: StatusEnum.SUCCESS})
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           } else {
             const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed' });
+            await this.updateCOLineStatus({buyerPo: po.buyer_po, status: StatusEnum.FAILED})
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           }
@@ -901,6 +904,8 @@ export class SanmarService {
       console.log(error, 'error');
       if (error.name === 'TimeoutError') {
         const update = await this.sanmarCoLineRepo.update({ buyerPo: poDetails[0].buyer_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+        await this.updateCOLineStatus({buyerPo: poDetails[0].buyer_po, status: StatusEnum.FAILED})
+        driver.quit()
         return new CommonResponseModel(false, 0, 'Matching Color not found')
       } else {
         // Handle other types of errors
@@ -956,6 +961,23 @@ export class SanmarService {
       const update = await this.SanOrdersRepo.update(
         { buyerPo: req.buyerPo },
         { status: StatusEnum.OPEN }
+      );
+      if (update) {
+        return new CommonResponseModel(true, 1, "Updated Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
+    }
+  }
+
+  async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
+    console.log(req, "reqOpenStatus")
+    try {
+      const update = await this.SanOrdersRepo.update(
+        {buyerPo:req.buyerPo},
+        {status:req.status}
       );
       if (update) {
         return new CommonResponseModel(true, 1, "Updated Successfully");
