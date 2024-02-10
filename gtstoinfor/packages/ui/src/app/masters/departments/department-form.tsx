@@ -77,7 +77,7 @@ onFinish={saveData}>
 <FormItem name="createdUser"  initialValue={createdUser} style={{display:'none'}}>
     <Input hidden/>
 </FormItem>
-<Row>
+<Row gutter={24}>
 <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
      <Form.Item
           name="deptName"
