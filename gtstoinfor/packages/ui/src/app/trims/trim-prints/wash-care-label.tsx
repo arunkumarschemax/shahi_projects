@@ -118,18 +118,22 @@ export const WasCarelabel = (props:washCareprops) =>{
         }
     }
 
-    const vCodemap = (e) =>{
-    console.log(e)
-    if(e?.shipToAddress?.includes('Nike Trading')){
-        return '50'
-    }
-    if(e?.shipToAddress?.includes('Nike Golf')){
-        return '02'
-    }
-    if(e?.shipToAddress?.includes('RT Clothing')){
-        return '35'
-    }
-    return ''
+    const vCodemap = (eArray) =>{
+        for(const e of eArray){
+            if(e.bomInfo && e.bomInfo.length >0){
+                if(e?.shipToAddress?.includes('Nike Trading')){
+                    return '50'
+                }
+                if(e?.shipToAddress?.includes('Nike Golf')){
+                    return '02'
+                }
+                if(e?.shipToAddress?.includes('RT Clothing')){
+                    return '35'
+                }
+                return ''
+            }
+        }
+        return ''
     }
 
     const sizewisedatamap =(bomInfo) =>{
@@ -182,15 +186,14 @@ export const WasCarelabel = (props:washCareprops) =>{
             extra={<span><Button onClick={handlePrint}>Print</Button></span>}
             >
                 <div>
-                <div style={{display:gender === true?'unset':'none'}}>
-                      <h2 style={{color:'red'}}>FIRE WARNING LABEL</h2>
-                <br></br>
-                </div>
                     {bomInfo.map((e,index) =>{   
-                        return (
-                            
+                        {console.log(e)}
+                        return (  
                         <>
-                        {console.log(e.bomInfo)}
+                       {e?.bomInfo ?
+                        <>
+                        {e.bomInfo.length >0 ?
+                        <div>
                         <div style={{display: e.geoCode === 'AAO'?'unset':'none'}}>
                         {
                             <><h2>
@@ -200,11 +203,11 @@ export const WasCarelabel = (props:washCareprops) =>{
                              <h2>
                                 </h2></>
                         }
-                      <br></br>
+                        <br></br>
                         </div>
                         <div>
                     {e.destinationCountry === 'BRAZIL' ?
-                    <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'15%'}} border={1} cellSpacing="0" cellPadding='0' >
+                    <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'15%',border:'2px solid black'}} border={1} cellSpacing="0" cellPadding='0' >
                         <tr>
                             <th>DESTINATION</th>
                             <th>BRAZIL</th>
@@ -215,12 +218,13 @@ export const WasCarelabel = (props:washCareprops) =>{
                         </tr>
                     </table>:<></>
                         }   
-                <br></br>
+                    <br></br>
                        </div>
-                       {e?.bomInfo ?
-                        <>
-                        {e.bomInfo.length >0 ?
-                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
+                            <div style={{display:gender === true?'unset':'none'}}>
+                            <h2 style={{color:'red'}}>FIRE WARNING LABEL</h2>
+                      <br></br>
+                      </div>
+                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1} cellSpacing="0" cellPadding='0'>
                         <tr>
                             <th style={{width:'1%'}}>ITEM#</th>
                             <th style={{width:'1%'}}>PO NO</th>
@@ -246,6 +250,13 @@ export const WasCarelabel = (props:washCareprops) =>{
                                         <td>{e?.geoCode == "EMEA" ?"1009915" : rec.imCode}</td>
                                         <td>{ rec.description}</td>
                                         <td>{ rec.trimInfo}</td>
+                                        {index == 0 ?
+                                        (
+                                            <>
+                                             <td style={{textAlign:'center'}}  rowSpan={len}>{e.geoCode}</td> 
+                                            <td style={{textAlign:'center'}}  rowSpan={len}>{0}</td> 
+                                            </>
+                                        ):(<></>)}
                                     </tr>
                                 )
                                   }
@@ -253,15 +264,12 @@ export const WasCarelabel = (props:washCareprops) =>{
                                 :(<></>)
                         }
                         </table>
-                        :<></>}
-                        </>
-                        :<></>
-                       }
-                      
-                     <br></br>
-                     <div style={{display:e.geoCode === 'APA' && e?.styleType === 'MENS TOP' ?'unset':'none'}} > 
+                        <br></br>
+                     <div 
+                     style={{display:e.geoCode === 'APA' && e?.styleType === 'MENS TOP' ?'unset':'none'}}
+                      > 
                     <>
-                    <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
+                    <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1} cellSpacing="0" cellPadding='0'>
                     <tr>
                 <th>REGION</th>
                 <th>MANUFACTORY SHIP DATE</th>
@@ -269,7 +277,7 @@ export const WasCarelabel = (props:washCareprops) =>{
                 <th>STYLE TYPE</th>
                 <th>SEASON</th>
                 {e?.sizeInfo?.map(e =>{
-                     grandTotal+= e.quantity
+                    //  grandTotal+= e.quantity
                      return(
                         <th>{e.size}</th>
                     )
@@ -285,6 +293,7 @@ export const WasCarelabel = (props:washCareprops) =>{
                 <td style={{textAlign:'center'}}>{e.season}</td>
                 {
                     e?.sizeInfo?.map(e => {
+                        grandTotal += Number(e.quantity)
                         return(
                             <td>{e.quantity}</td>
                         )
@@ -327,7 +336,7 @@ export const WasCarelabel = (props:washCareprops) =>{
             <tr>
                 <td style={{textAlign:'center'}}>{'OCT'}</td>
                 <td style={{textAlign:'center'}}>{'ID'}</td>
-                <td style={{textAlign:'center'}}>{'546789'}</td>
+                <td style={{textAlign:'center'}}>{e.style}</td>
                 <td style={{textAlign:'center'}}>{'AS MENS TOP'}</td>
                 <td style={{textAlign:'center'}}>{'XS'}</td>
                 <td style={{textAlign:'center'}}>{'MENS TOP'}</td>
@@ -453,6 +462,13 @@ export const WasCarelabel = (props:washCareprops) =>{
         </table>
         </>
                      </div>
+                        </div>
+                        :<></>}
+                        </>
+                        :<></>
+                       }
+                      
+                   
                     </>
                         )
                     })}
