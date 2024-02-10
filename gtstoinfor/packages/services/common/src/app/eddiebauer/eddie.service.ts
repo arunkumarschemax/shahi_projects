@@ -14,6 +14,7 @@ import { ItemNoDtos } from "../sanmar/dto/sanmar-item-no.dto";
 import { EddieDetailsReq } from "./dto/eddie-order-details-req";
 import { EddieOrdersChildRepository } from "./repositories/eddie-orders-child.repo";
 import { EddieChildEntity } from "./entities/eddie-orders-child-entity";
+import { EddieItemNoDtos } from "./dto/eddie-item-no.dto";
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 const moment = require('moment');
@@ -654,7 +655,7 @@ export class EddieService {
     }
   }
 
-  async updateItemNo(req: ItemNoDtos): Promise<CommonResponseModel> {
+  async updateItemNo(req: EddieItemNoDtos): Promise<CommonResponseModel> {
     console.log(req, "reqq");
     try {
       const update = await this.eddieCoLineRepo.update(
@@ -663,9 +664,9 @@ export class EddieService {
       );
 
       if (update) {
-        return new CommonResponseModel(true, 1, "ItemNo Update Successfully");
+        return new CommonResponseModel(true, 1, "Update Successfully");
       } else {
-        return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+        return new CommonResponseModel(false, 0, "Something went wrong", []);
       }
     } catch (error) {
       return new CommonResponseModel(false, 0, "Error occurred while updating ItemNo", error);
@@ -673,15 +674,15 @@ export class EddieService {
   }
 
 
-  async deleteCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
+  async deleteCoLine(req: EddieItemNoDtos): Promise<CommonResponseModel> {
     console.log(req, "reqq");
     try {
       const deletedItem = await this.eddieCoLineRepo.delete({ id: Number(req.id) });
 
       if (deletedItem && deletedItem.affected) {
-        return new CommonResponseModel(true, 1, "ItemNo Deleted Successfully");
+        return new CommonResponseModel(true, 1, "Deleted Successfully");
       } else {
-        return new CommonResponseModel(false, 0, "Item No: Something went wrong", []);
+        return new CommonResponseModel(false, 0, "Something Went Wrong", []);
       }
     } catch (error) {
       return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
@@ -790,4 +791,22 @@ export class EddieService {
     }
   }
 
+
+  async updateStatusInOrder(req: any): Promise<CommonResponseModel> {
+    console.log(req, "reqq");
+    try {
+      const update = await this.EddieOrdersRepo.update(
+        { poNumber:req.poNumber},
+        { status:StatusEnum.OPEN}
+      );
+
+      if (update) {
+        return new CommonResponseModel(true, 1, "Updated Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Something Went Wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while updating ItemNo", error);
+    }
+  }
 }

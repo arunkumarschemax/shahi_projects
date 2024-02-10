@@ -8,7 +8,7 @@ import { Excel } from "antd-table-saveas-excel";
 import { CentricService, EddieService, HbService, SanmarService } from "@project-management-system/shared-services";
 import { centricCoLineRequest } from "packages/libs/shared-models/src/common/centric/centric-coLine.req";
 import moment from "moment";
-import { AlertMessages, EddieOrderFilter, HbPoOrderFilter, ItemNoDto, SanmarOrderFilter, hbCoLineRequest } from "@project-management-system/shared-models";
+import { AlertMessages, EddieItemNoDto, EddieOrderFilter, HbPoOrderFilter, ItemNoDto, SanmarOrderFilter, hbCoLineRequest } from "@project-management-system/shared-models";
 
 const EddieColineView = () => {
     const [page, setPage] = useState<number>(1);
@@ -194,7 +194,7 @@ const EddieColineView = () => {
     }
 
     const onFinishEdit = (record: any) => {
-        const req = new ItemNoDto(editedId,editedValue)
+        const req = new EddieItemNoDto(editedId,editedValue)
         service.updateItemNo(req).then(res => {
             if (res.status) {
                 getData();
@@ -215,10 +215,16 @@ const EddieColineView = () => {
     };
 
     const handleConfirmDelete = (record) => {
-        const req = new ItemNoDto(record.id)
+        const req = new EddieItemNoDto(record.id)
+        const req1 = new EddieItemNoDto(null,null,record.po_number)
         service.deleteCoLine(req).then(res => {
             if (res.status) {
                 getData();
+                service.updateStatusInOrder(req1).then((res) => {
+                    if (res.status) {
+                        message.success(res.internalMessage)
+                    }
+                })
                 AlertMessages.getSuccessMessage(res.internalMessage)
 
             } else {

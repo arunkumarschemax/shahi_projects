@@ -171,7 +171,7 @@ const EddiePdfUpload: React.FC<IPdfUploadProps> = (props) => {
                         xl={{ span: 4 }}
                     >
                         <Form.Item>
-                            <Button type='primary' onClick={EddieBot}>Upload Bot</Button>
+                            <Button type='primary' onClick={EddieBot}>Auto Upload Bot</Button>
                         </Form.Item>
                     </Col>
                     <Col span={24}>

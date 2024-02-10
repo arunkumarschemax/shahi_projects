@@ -58,4 +58,8 @@ export class EddieService extends CommonAxiosService {
     async getordercomparationData(req: any): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.eddierOrdersController + "/getordercomparationData", req)
     }
+
+    async updateStatusInOrder(req:ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.eddierOrdersController + "/updateStatusInOrder",req)
+    }
 }
