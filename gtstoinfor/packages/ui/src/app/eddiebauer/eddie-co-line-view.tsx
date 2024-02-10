@@ -168,7 +168,13 @@ const EddieColineView = () => {
                     return (record.raised_date ? (moment(record.raised_date).format('DD-MM-YYYY HH:mm')) : '-')
                 }
             },
-          
+            {
+                title: 'CO Status Date',
+                dataIndex: 'updated_at',
+                render: (text, record) => {
+                    return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
+                }
+            },
             {
                 title: 'Status',
                 dataIndex: 'status',
@@ -194,7 +200,7 @@ const EddieColineView = () => {
     }
 
     const onFinishEdit = (record: any) => {
-        const req = new EddieItemNoDto(editedId,editedValue)
+        const req = new EddieItemNoDto(editedId, editedValue)
         service.updateItemNo(req).then(res => {
             if (res.status) {
                 getData();
@@ -211,12 +217,12 @@ const EddieColineView = () => {
         setEditingRow(record);
         setEditedValue(record.itemNo);
         setEditedId(record.id);
-        console.log(record,"recccc")
+        console.log(record, "recccc")
     };
 
     const handleConfirmDelete = (record) => {
         const req = new EddieItemNoDto(record.id)
-        const req1 = new EddieItemNoDto(null,null,record.po_number)
+        const req1 = new EddieItemNoDto(null, null, record.po_number)
         service.deleteCoLine(req).then(res => {
             if (res.status) {
                 getData();
@@ -253,18 +259,18 @@ const EddieColineView = () => {
             sortDirections: ["ascend", "descend"],
         },
 
-          {
-             title: "PO Line",
-          dataIndex: "po_line",
-          width: 120,
-          // sorter: (a, b) => a.po_line.localeCompare(b.po_line),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 30)}...` : "-"}
-            </Tooltip>
-          ),
-  
+        {
+            title: "PO Line",
+            dataIndex: "po_line",
+            width: 120,
+            // sorter: (a, b) => a.po_line.localeCompare(b.po_line),
+            // sortDirections: ["ascend", "descend"],
+            render: (text) => (
+                <Tooltip title={text || "-"}>
+                    {text ? `${text.substring(0, 30)}...` : "-"}
+                </Tooltip>
+            ),
+
         },
         // {
         //     title: 'Style',
@@ -339,6 +345,13 @@ const EddieColineView = () => {
 
         },
         {
+            title: 'CO Status Date',
+            dataIndex: 'updated_at',
+            render: (text, record) => {
+                return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
+            }
+        },
+        {
             title: 'Status',
             dataIndex: 'status',
             render: (text, record) => {
@@ -356,14 +369,14 @@ const EddieColineView = () => {
             title: 'Actions',
             dataIndex: 'actions',
             render: (text, record) => {
-                if (record.status === 'Open'||record.status === 'Failed') {
+                if (record.status === 'Open' || record.status === 'Failed') {
                     return (
                         <div>
                             {editingRow === record ? (
                                 <div>
                                     <Button type="primary" onClick={() =>
                                         onFinishEdit
-                                         (record)}>Update</Button>
+                                            (record)}>Update</Button>
                                     &nbsp; &nbsp;
                                     <Button type="primary" danger onClick={() => setEditingRow(null)}>Cancel</Button>
                                 </div>
@@ -373,7 +386,7 @@ const EddieColineView = () => {
                                     &nbsp; &nbsp;
                                     <Popconfirm
                                         title="Are you sure to Delete?"
-                                       onConfirm={() => handleConfirmDelete(record)}
+                                        onConfirm={() => handleConfirmDelete(record)}
                                         onCancel={() => message.info('Delete canceled')}
                                         okText="Yes"
                                         cancelText="No"
@@ -435,29 +448,29 @@ const EddieColineView = () => {
                         </Form.Item>
                     </Col>
                     <Col
-                xs={{ span: 24 }}
-                sm={{ span: 24 }}
-                md={{ span: 4 }}
-                lg={{ span: 4 }}
-                xl={{ span: 4 }}
-              >
-               <Form.Item label="Delivery Date" name="deliveryDate"  >
-                  <RangePicker style={{width:180}}   />
-                </Form.Item>
-              </Col>
-              <Col
-                xs={{ span: 24 }}
-                sm={{ span: 24 }}
-                md={{ span: 4 }}
-                lg={{ span: 4 }}
-                xl={{ span: 4 }}
-                style={{marginLeft:30}}
-              >
-               <Form.Item label="Co number" name="co_number"  >
-                  <Input placeholder="Enter Co number "  allowClear />
-                </Form.Item>
-              </Col>
-                    
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 4 }}
+                        lg={{ span: 4 }}
+                        xl={{ span: 4 }}
+                    >
+                        <Form.Item label="Delivery Date" name="deliveryDate"  >
+                            <RangePicker style={{ width: 180 }} />
+                        </Form.Item>
+                    </Col>
+                    <Col
+                        xs={{ span: 24 }}
+                        sm={{ span: 24 }}
+                        md={{ span: 4 }}
+                        lg={{ span: 4 }}
+                        xl={{ span: 4 }}
+                        style={{ marginLeft: 30 }}
+                    >
+                        <Form.Item label="Co number" name="co_number"  >
+                            <Input placeholder="Enter Co number " allowClear />
+                        </Form.Item>
+                    </Col>
+
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                         <Form.Item>
                             <Button htmlType="submit" icon={<SearchOutlined />} type="primary">Search</Button>

@@ -18,7 +18,7 @@ export class EddieCOLineRepository extends Repository<EddieCOLineEntity> {
     async getCoLineData(req: EddieOrderFilter): Promise<any[]> {
       const query = this.createQueryBuilder('co')
         .select(`DISTINCT co.po_number,co.po_line,co.delivery_date, co.co_date, co.item_no, co.status, co.error_msg,
-                 DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user, co.co_number,co.id`);
+                 DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user, co.co_number,co.id,co.updated_at`);
   
       if (req.poNumber !== undefined) {
         query.andWhere(`co.po_number = :poNumber`, { poNumber: req.poNumber });
