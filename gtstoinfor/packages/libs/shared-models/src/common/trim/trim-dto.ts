@@ -8,6 +8,7 @@ export class TrimDtos {
     updatedAt : Date | any;
     updatedUser : string;
     versionFlag : number;
+
 }
 
 export const TrimDtoDefault : TrimDtos = {

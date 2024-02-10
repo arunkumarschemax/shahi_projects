@@ -31,7 +31,7 @@ export class StructureService {
             }
             const save = await this.repo.save(entity)
             const convertedData = new StructureModel(save.structureId,save.structure,save.isActive,save.versionFlag)
-            return new StructureResponseModel(true,1,isUpdate ? 'structure Updated successfully' : 'structure Saved successfully',[convertedData])
+            return new StructureResponseModel(true,1,isUpdate ? 'structure Updated successfully' : 'structure created successfully',[convertedData])
 
         } catch(err){
             throw err

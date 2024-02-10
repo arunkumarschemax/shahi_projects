@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert, Checkbox } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined,EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -164,7 +164,8 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
           {
             title: "Variety",
             dataIndex: "variety",
-            width:130,
+            // // width:180,
+            // align:"center",
             sorter: (a, b) => a.variety.localeCompare(b.variety),
             sortDirections: ["ascend", "descend"],
             ...getColumnSearchProps("variety"),
@@ -172,38 +173,53 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
           {
               title: "Variety Code",
               dataIndex: "varietyCode",
-            width:130,
+              align:"center",
+           // width:130,
               sorter: (a, b) => a.varietyCode.localeCompare(b.varietyCode),
               sortDirections: ["ascend", "descend"],
               ...getColumnSearchProps("varietyCode"),
             },
-        {
-            title: 'Status',
-            dataIndex: 'isActive',
-            align:"center",
-            render: (isActive, rowData) => (
-              <>
-                {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
-              </>
-            ),
-            filters: [
-              {
-                text: 'Active',
-                value: true,
-              },
-              {
-                text: 'InActive',
-                value: false,
-              },
-            ],
-            filterMultiple: false,
-            onFilter: (value, record) => 
             {
-              // === is not work
-              return record.isActive === value;
-            },
+              title: 'Status',
+              dataIndex: 'isActive',
+              align:"center",
+              // sorter: (a, b) => a.locationName.localeCompare(b.locationName),
+              //  sortDirections: ['descend', 'ascend'],
+              //  ...getColumnSearchProps('locationName'),
+              
+               render: (isActive, rowData) => (
+                <>
+                  {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+                </>
+              ),
+              onFilter: (value, record) => record.isActive === value,
+              filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+          <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+            <Checkbox
+              checked={selectedKeys.includes(true)}
+              onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+            >
+              <span style={{color:'green'}}>Active</span>
+            </Checkbox>
+            <Checkbox
+              checked={selectedKeys.includes(false)}
+              onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+            >
+              <span style={{color:'red'}}>Inactive</span>
+            </Checkbox>
+            <div className="custom-filter-dropdown-btns" >
+            <Button  onClick={() => clearFilters()} className="custom-reset-button">
+                Reset
+              </Button>
+              <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+                OK
+              </Button>
             
-          },
+            </div>
+          </div>
+               ),
+              
+            },
           {
             title:`Action`,
             dataIndex: 'action',

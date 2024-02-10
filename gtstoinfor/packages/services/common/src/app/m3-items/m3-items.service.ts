@@ -78,7 +78,7 @@ export class M3ItemsService {
         query += ` AND m3i.weave = ${req.weave}`
       }
       if (req.finish!== undefined){
-        query += ` AND m3i.finish = '${req.finish}'`
+        query += ` AND m3i.finish_id = '${req.finish}'`
       }
       // if (req.width!== undefined){
       //   query += ` AND m3.width = ${req.width}`

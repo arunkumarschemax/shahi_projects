@@ -202,7 +202,7 @@ export const M3TrimsView = () => {
     const req = new BuyerRefNoRequest()
     const refNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null   
     req.buyerRefNo = refNo
-    console.log(refNo,'=========')
+    // console.log(refNo,'=========')
     service.getAllBuyers(req).then((res) => {
       if (res.status) {
         setBuyerData(res.data);
@@ -352,7 +352,7 @@ export const M3TrimsView = () => {
 
   
   const setModel = (val) => {
-    console.log(val);
+    // console.log(val);
     // setVisibleModel(val);
   }
 
@@ -566,7 +566,7 @@ export const M3TrimsView = () => {
     {
       title: <div style={{textAlign:"center"}}>Description</div>,
       dataIndex: "trimCode",
-      ...getColumnSearchProps("description"),
+      ...getColumnSearchProps("trimCode"),
       // sorter: (a, b) => a.description?.localeCompare(b.description),
       sortDirections: ["descend", "ascend"],
       render: (text) => (text ? text : ' - '),

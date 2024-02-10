@@ -546,8 +546,8 @@ export class SampleRequestService {
   // }
   async createSampleDevelopmentRequest(req: SampleDevelopmentRequest): Promise<AllSampleDevReqResponseModel> {
     const manager = new GenericTransactionManager(this.dataSource)
-    console.log(req)
-    console.log(req.subType)
+    // console.log(req)
+    // console.log(req.subType)
 
     // console.log(req.sizeData[0].sizeInfo,'#####')
     let save
@@ -659,8 +659,8 @@ export class SampleRequestService {
       // sampleReqEntity.sampleProcessInfo = sampleProcessInfo
 
       save = await manager.getRepository(SampleRequest).save(sampleReqEntity);
-      console.log("$############################################################");
-      console.log(save);
+      // console.log("$############################################################");
+      // console.log(save);
 
       // save = await this.sampleRepo.save(sampleReqEntity)
       if (save) {
@@ -679,25 +679,25 @@ export class SampleRequestService {
             saveBomDetails = await manager.getRepository(SamplingbomEntity).save(bomEntity)
             // saveBomDetails = await this.bomRepo.save(bomEntity)
 
-            console.log("######################################################################")
-            console.log(fabricData.allocatedStock);
-            console.log(fabricData.allocatedStock.find((e) => e.checkedStatus === 1));
+            // console.log("######################################################################")
+            // console.log(fabricData.allocatedStock);
+            // console.log(fabricData.allocatedStock.find((e) => e.checkedStatus === 1));
 
             if (fabricData.allocatedStock.find((e) => e.checkedStatus === 1) != undefined) {
               let stockArray: any[] = [];
               stockArray.push(fabricData.allocatedStock.filter((e) => e.checkedStatus === 1 && e.issuedQty > 0));
-              console.log(stockArray);
-              console.log("if")
-              console.log(req)
-              console.log(req.buyerId)
+              // console.log(stockArray);
+              // console.log("if")
+              // console.log(req)
+              // console.log(req.buyerId)
 
               let totalAllocated = 0
               let item: MaterialAllocationItemsEntity[] = []
               for(const stock of stockArray) {
                 for(const stk of stock) {
-                  console.log(stk);
-                  console.log("7777")
-                  console.log(stock);
+                  // console.log(stk);
+                  // console.log("7777")
+                  // console.log(stock);
 
                   totalAllocated = Number(totalAllocated) + Number(stk.issuedQty);
                   let itemData = new MaterialAllocationItemsEntity();
@@ -722,12 +722,12 @@ export class SampleRequestService {
               // materialAllocation.samplingBomId = saveBomDetails.samplingBomId;
               materialAllocation.sampleItemId = save.sampleReqFabricInfo.find((e) => e.fabricCode === fabricData.fabricCode && e.colourId === fabricData.colourId).fabricInfoId;
               materialAllocation.materialAllocationinfo = item;
-              console.log(materialAllocation);
-              console.log(materialAllocation)
+              // console.log(materialAllocation);
+              // console.log(materialAllocation)
               fabricAllocation = await manager.getRepository(MaterialAllocationEntity).save(materialAllocation);
               // fabricAllocation = await this.creatematerialAlloction(materialAllocation);
 
-              console.log(fabricAllocation);
+              // console.log(fabricAllocation);
               // fabricAllocation = await manager.getRepository(MaterialAllocationEntity).save(allocationEntity)
               if (!fabricAllocation) {
                 fabFlag.add(false);
@@ -735,9 +735,9 @@ export class SampleRequestService {
                 return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
               }
               else {
-                console.log("&&&&&&&&&&")
-                console.log(fabricData.totalRequirement)
-                console.log(totalAllocated);
+                // console.log("&&&&&&&&&&")
+                // console.log(fabricData.totalRequirement)
+                // console.log(totalAllocated);
                 let fabBomStatus = BomStatusEnum.OPEN;
                 if (Number(fabricData.totalRequirement) === Number(totalAllocated)) {
                   fabBomStatus = BomStatusEnum.ALLOCATED
@@ -759,7 +759,7 @@ export class SampleRequestService {
             }
             else {
               fabFlag.add(false);
-              console.log("else")
+              // console.log("else")
             }
 
           }
@@ -784,11 +784,11 @@ export class SampleRequestService {
               // console.log("*******")
               // console.log(trimData.allocatedStock.filter((e) => e.checkedStatus === 1 && e.issuedQty > 0));
               // console.log("*******")
-              console.log(stockArray);
+              // console.log(stockArray);
               let totalAllocated = 0
               let item: MaterialAllocationItemsEntity[] = []
               for (const stock of stockArray) {
-                console.log(stock);
+                // console.log(stock);
                 // for (const stk of stock) {
                   totalAllocated = Number(totalAllocated) + Number(stock.issuedQty);
                   let itemData = new MaterialAllocationItemsEntity();
@@ -799,7 +799,7 @@ export class SampleRequestService {
                   item.push(itemData);
                   let stockUpdate = await manager.getRepository(StocksEntity).update({ id: stock.stockId }, { allocateQuanty: () => `allocatd_quantity +  ${stock.issuedQty}` });
                   if (stockUpdate.affected === 0) {
-                    console.log("1111111111111111111111111111111111111111111111111111111111111");
+                    // console.log("1111111111111111111111111111111111111111111111111111111111111");
                     trimFlag.add(false);
                     await manager.releaseTransaction();
                   }
@@ -815,15 +815,15 @@ export class SampleRequestService {
               // materialAllocation.samplingBomId = saveBomDetails.samplingBomId;
               materialAllocation.sampleItemId = save.sampleTrimInfo.find((e) => e.trimCode === trimData.trimCode).trimInfoId;
               materialAllocation.materialAllocationinfo = item;
-              console.log(materialAllocation);
+              // console.log(materialAllocation);
               // trimAllocation = await this.creatematerialAlloction(materialAllocation);
               trimAllocation = await manager.getRepository(MaterialAllocationEntity).save(materialAllocation);
 
-              console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-              console.log(trimAllocation);
+              // console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+              // console.log(trimAllocation);
 
               if (!trimAllocation) {
-                console.log("222222222222222222222222222222222222222222222222222222222222");
+                // console.log("222222222222222222222222222222222222222222222222222222222222");
 
                 trimFlag.add(false)
                 await manager.releaseTransaction();
@@ -838,13 +838,13 @@ export class SampleRequestService {
                   trimBomStatus = BomStatusEnum.ALLOCATED
                   // trimFlag.add(true);
                 }
-                console.log(saveBomDetails)
+                // console.log(saveBomDetails)
                 let updateSampleFabricInfo = await manager.getRepository(SamplingbomEntity).update({ samplingBomId: saveBomDetails.samplingBomId }, { status: trimBomStatus, receivedQuantity: () => `received_quantity + ${totalAllocated}` })
-                console.log("updateSampleFabricInfo")
-                console.log(updateSampleFabricInfo)
+                // console.log("updateSampleFabricInfo")
+                // console.log(updateSampleFabricInfo)
 
                 if (updateSampleFabricInfo.affected === 0) {
-                  console.log("333333333333333333333333333333333333333333333333333333333333333333333");
+                  // console.log("333333333333333333333333333333333333333333333333333333333333333333333");
                   trimFlag.add(false);
                   await manager.releaseTransaction();
                   return new AllSampleDevReqResponseModel(false, 0, 'Material Allocation Failed', [])
@@ -859,8 +859,8 @@ export class SampleRequestService {
             }
           }
         }
-        console.log(fabFlag.has(true) + "-" + trimFlag.has(true))
-        console.log(fabFlag.has(false) + "-" + trimFlag.has(false))
+        // console.log(fabFlag.has(true) + "-" + trimFlag.has(true))
+        // console.log(fabFlag.has(false) + "-" + trimFlag.has(false))
 
         if (fabFlag.has(true) && trimFlag.has(true)) {
           let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({ SampleRequestId: save.SampleRequestId }, { lifeCycleStatus: LifeCycleStatusEnum.READY_FOR_PRODUCTION })
@@ -877,8 +877,8 @@ export class SampleRequestService {
       }
       if (save && saveBomDetails) {
         await manager.completeTransaction();
-        console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-        console.log(save);
+        // console.log("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+        // console.log(save);
 
         for (const res of req.fabricInfo) {
           save.sampleReqFabricInfo.find((rec) => rec.fabricCode === res.fabricCode && rec.colourId == res.colourId)["fabricUpload"] = res.fabricUpload;
@@ -907,21 +907,21 @@ export class SampleRequestService {
   }
 
   async fabricUpload(filePath: any, data: any): Promise<UploadResponse> {
-    console.log(filePath);
-    console.log(data);
-    console.log(JSON.parse(data));
+    // console.log(filePath);
+    // console.log(data);
+    // console.log(JSON.parse(data));
 
     const manager = new GenericTransactionManager(this.dataSource)
     try {
       let flag = true;
       await manager.startTransaction();
       for (const [index, value] of JSON.parse(data).entries()) {
-        console.log("********************")
-        console.log(value);
-        console.log(index);
+        // console.log("********************")
+        // console.log(value);
+        // console.log(index);
 
         const updateFilePath = await manager.getRepository(SampleReqFabricinfoEntity).update({ fabricInfoId: value.fabricInfoId }, { fileName: `${filePath[index].filename}`, filePath: `${filePath[index].path}` });
-        console.log(updateFilePath)
+        // console.log(updateFilePath)
         if (!(updateFilePath.affected > 0)) {
           flag = false
         }
@@ -941,21 +941,21 @@ export class SampleRequestService {
   }
 
   async trimUpload(filePath: any, data: any): Promise<UploadResponse> {
-    console.log(filePath);
-    console.log(data);
-    console.log(JSON.parse(data));
+    // console.log(filePath);
+    // console.log(data);
+    // console.log(JSON.parse(data));
 
     const manager = new GenericTransactionManager(this.dataSource)
     try {
       let flag = true;
       await manager.startTransaction();
       for (const [index, value] of JSON.parse(data).entries()) {
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        console.log(value);
-        console.log(index);
+        // console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        // console.log(value);
+        // console.log(index);
 
         const updateFilePath = await manager.getRepository(SampleRequestTriminfoEntity).update({ trimInfoId: value.trimInfoId }, { fileName: `${filePath[index].filename}`, filePath: `${filePath[index].path}` });
-        console.log(updateFilePath)
+        // console.log(updateFilePath)
         if (!(updateFilePath.affected > 0)) {
           flag = false
         }
@@ -975,8 +975,8 @@ export class SampleRequestService {
   }
 
   async UpdateFilePath(filePath: any, SampleRequestId: number): Promise<UploadResponse> {
-    console.log('upload service id---------------', filePath)
-    console.log('upload service id---------------', SampleRequestId)
+    // console.log('upload service id---------------', filePath)
+    // console.log('upload service id---------------', SampleRequestId)
     try {
       // let filePathUpdate;
       // filePathUpdate = await this.sampleRepo.update({ SampleRequestId: SampleRequestId }, { fileName: filename, filepath: filePath })
@@ -1134,7 +1134,7 @@ export class SampleRequestService {
     const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
     const res = await this.dataSource.query(buyerdata)
     const buyerId = res[0].buyer_id
-    console.log(buyerId, 'buyerIdbuyerId')
+    // console.log(buyerId, 'buyerIdbuyerId')
     const records = await this.sampleRepo.find({ where: { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ALLOCATED, buyer: { buyerId: buyerId } } });
     if (records.length)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
@@ -1219,12 +1219,12 @@ export class SampleRequestService {
     rawData = rawData + ' group by sb.sampling_bom_id '
 
     const rmData = await manager.query(rawData);
-    console.log(rmData, "4444444444")
-    console.log("**********************************************************************")
+    // console.log(rmData, "4444444444")
+    // console.log("**********************************************************************")
 
     if (rmData.length > 0) {
       const groupedData = rmData.reduce((result, item) => {
-        console.log(item, "ittttteemmmm")
+        // console.log(item, "ittttteemmmm")
         const samplerequestid = item.sample_request_id;
         const requestNo = item.requestNo;
         const buyers = item.buyer_name;
@@ -1347,21 +1347,21 @@ export class SampleRequestService {
         totalQty = Number(totalQty) + Number(itemData.allocatioQuantity)
       }
       entity.materialAllocationinfo = materialitemdata
-      console.log(entity)
+      // console.log(entity)
       await manager.startTransaction();
       save = await manager.getRepository(MaterialAllocationEntity).save(entity)
       // }
-      console.log(save)
-      console.log('***********************************8')
-      console.log(materialitemdata);
+      // console.log(save)
+      // console.log('***********************************8')
+      // console.log(materialitemdata);
       if (save) {
-        console.log("save done");
+        // console.log("save done");
         let updateStockFlag = true;
         for (const itemData of materialitemdata) {
-          console.log(itemData);
+          // console.log(itemData);
           const update = await manager.getRepository(StocksEntity).update({ id: itemData.stockId }, { allocateQuanty: () => `allocatd_quantity +  ${itemData.allocateQuantity}` })
-          console.log(update);
-          console.log("update Stock");
+          // console.log(update);
+          // console.log("update Stock");
           if (!update.affected) {
             updateStockFlag = false
             await manager.releaseTransaction();
@@ -1375,8 +1375,8 @@ export class SampleRequestService {
         }
         // for(const mainData of transformedData ){
         let updateBomStatus = await manager.getRepository(SamplingbomEntity).update({ samplingBomId: req.samplingBomId }, { status: bomStatus, receivedQuantity: () => `received_quantity + ${totalQty}` });
-        console.log("updateBomStatus");
-        console.log(updateBomStatus);
+        // console.log("updateBomStatus");
+        // console.log(updateBomStatus);
 
         if (updateBomStatus.affected < 1) {
           bomUpdateFlag = false;
@@ -1388,14 +1388,14 @@ export class SampleRequestService {
         let getBomStatusquery = "Select * from sampling_bom where status!= 'Allocated' and sample_request_id = " + req.sampleOrderId;
         let getBomStatus = await queryManager.query(getBomStatusquery);
         // let getBomStatus = await manager.getRepository(SamplingbomEntity).find({where:{status: Not(BomStatusEnum.ALLOCATED),sampleRequestId: transformedData[0].sampleOrderId}});
-        console.log("getBomStatus")
-        console.log(getBomStatus)
+        // console.log("getBomStatus")
+        // console.log(getBomStatus)
 
         if (getBomStatus.length - 1 < 1) {
           updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({ SampleRequestId: req.sampleOrderId }, { lifeCycleStatus: LifeCycleStatusEnum.READY_FOR_PRODUCTION });
-          console.log(updateSampleOrderStatus);
-          console.log(bomUpdateFlag);
-          console.log(updateStockFlag);
+          // console.log(updateSampleOrderStatus);
+          // console.log(bomUpdateFlag);
+          // console.log(updateStockFlag);
 
           if (!updateSampleOrderStatus || !bomUpdateFlag || !updateStockFlag) {
             await manager.releaseTransaction();
@@ -1568,8 +1568,8 @@ export class SampleRequestService {
       }
       query1 = query1 + ` group by sb.sampling_bom_id order by sr.request_no, sb.item_type`;
       const rmData = await manager.query(query1);
-      console.log(rmData)
-      console.log(rmData.length)
+      // console.log(rmData)
+      // console.log(rmData.length)
 
       if (rmData.length > 0) {
         return new CommonResponseModel(true, 1, "Sampling Bom data retrived successfully. ", rmData)
@@ -1731,9 +1731,9 @@ export class SampleRequestService {
       AND size_id IN(SELECT DISTINCT size_id FROM sample_request_size_info WHERE sample_request_id=${req.sampleRequestId}) ORDER BY  sizes`;
     const res = await this.dataSource.query(sizeDta)
     const sizesStr = res[0].size_name
-    console.log(sizesStr, 'kkkkk')
+    // console.log(sizesStr, 'kkkkk')
 
-    console.log(req, 'rehhhh')
+    // console.log(req, 'rehhhh')
     const sampleDataQry = `SELECT sty.style,cl.colour,${sizesStr} FROM sample_request_size_info s 
       left join sample_request sr on sr.sample_request_id = s.sample_request_id
       left join colour cl on cl.colour_id = s.colour_id
@@ -1796,7 +1796,7 @@ export class SampleRequestService {
   }
 
   async getAllocatedBomInfo(req?: RequestNoReq): Promise<CommonResponseModel> {
-    console.log(req)
+    // console.log(req)
     let checkStatus
     if (req.action == 'Issued') {
       checkStatus = LifeCycleStatusEnum.READY_FOR_PRODUCTION
@@ -1818,7 +1818,7 @@ export class SampleRequestService {
       fabricInfoQry += ' AND sr.sample_request_id = ' + req.requestNo;
     }
     const fabricInfo = await this.dataSource.query(fabricInfoQry)
-    console.log()
+    // console.log()
     // if(req.requestNo) {
 
     // }
@@ -1884,7 +1884,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
   }
 
   async approveAllocatedStock(req: AllocationApprovalRequest): Promise<CommonResponseModel> {
-    console.log(req)
+    // console.log(req)
     const manager = new GenericTransactionManager(this.dataSource)
     try {
       let sampleUpdateStatus
@@ -1902,7 +1902,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
       if (updateSamleReq.affected) {
         const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({ sampleOrderId: req.sampleRequestId }, { status: sampleMaterialStatus })
         if (updateAllocations.affected) {
-          console.log('yess')
+          // console.log('yess')
           await manager.completeTransaction()
           return new CommonResponseModel(true, 1, req.action == 'Issued' ? 'Succefully Issued' : 'Successfully Approved')
         } else {
@@ -1927,7 +1927,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
     try {
       const grnInfo = `select grn_id,grn_type,item_type from grn where grn_id in(select grn_id from grn_items where grn_item_no = '${req.GRNItemNumber}')`;
       const grnRes = await this.dataSource.query(grnInfo)
-      console.log(grnRes)
+      // console.log(grnRes)
       await manager.startTransaction()
       if (grnRes.length > 0) {
         const grnItemInfo = `select sample_item_id as sampleItemId,indent_item_id as indentItemId,sample_req_id as sampleReqId,m3_item_code_id as m3ItemId from grn_items where grn_item_no = '${req.GRNItemNumber}'`;
@@ -1942,7 +1942,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
         const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({ sampleOrderId: req.sampleRequestId, m3ItemId: grnItemRes[0].m3ItemId }, { status: MaterialStatusEnum.MATERIAL_ISSUED })
         if (updateAllocations.affected) {
           const checkAllIssuedOrNot = await manager.getRepository(MaterialAllocationEntity).find({ where: { sampleOrderId: req.sampleRequestId, status: Not(MaterialStatusEnum.MATERIAL_ISSUED) } })
-          console.log('resddd', checkAllIssuedOrNot)
+          // console.log('resddd', checkAllIssuedOrNot)
           if (checkAllIssuedOrNot.length == 0) {
             const updateSamleReq = await manager.getRepository(SampleRequest).update({ SampleRequestId: req.sampleRequestId }, { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ISSUED })
             if (updateSamleReq.affected) {
@@ -2200,7 +2200,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
     // if(req.action == 'Approval'){
     //   checkStatus = MaterialStatusEnum.MATERIAL_ALLOCATED
     // }
-    console.log('Sample Request Item ID:', req.sampleRequestItemId);
+    // console.log('Sample Request Item ID:', req.sampleRequestItemId);
 
     const data = `SELECT ma.sample_item_id AS sampleItemId,rp.rack_position_name AS location,position_Id AS id,item_type AS itemType,mai.quantity
     ,mai.allocate_quantity AS allocatedQty,mai.material_allocation_items_id as materialAllocationId  FROM material_allocation ma
@@ -2216,7 +2216,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
     }
   }
   async getbyID(req: RequestNoReq): Promise<CommonResponseModel> {
-    console.log(req, "service.....");
+    // console.log(req, "service.....");
 
     try {
       const fabricInfoQry = `
@@ -2298,8 +2298,8 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
         WHERE sr.sample_request_id = ${req.sampreqId} AND ma.item_type != 'fabric' AND sr.life_cycle_status = 'MATERIAL_ISSUED'
         GROUP BY l.location_name, sr.request_no`;
 
-      console.log('Fabric Info Query:', fabricInfoQry);
-      console.log('SQL Query:', trimInfoQry);
+      // console.log('Fabric Info Query:', fabricInfoQry);
+      // console.log('SQL Query:', trimInfoQry);
 
       const fabricInfo = await this.dataSource.query(fabricInfoQry);
       const trimInfo = await this.dataSource.query(trimInfoQry);
@@ -2442,9 +2442,9 @@ order by mi.trim_code`;
     AND size_id IN(SELECT DISTINCT size_id FROM sample_request_size_info WHERE sample_request_id=${req.sampleReqId}) ORDER BY  sizes`;
     const res = await this.dataSource.query(sizeDta)
     const sizesStr = res[0].size_name
-    console.log(sizesStr, 'kkkkk')
+    // console.log(sizesStr, 'kkkkk')
 
-    console.log(req, 'rehhhh')
+    // console.log(req, 'rehhhh')
     const sampleDataQry = `SELECT cl.colour,${sizesStr} FROM sample_request_size_info s 
     left join sample_request sr on sr.sample_request_id = s.sample_request_id
     left join colour cl on cl.colour_id = s.colour_id

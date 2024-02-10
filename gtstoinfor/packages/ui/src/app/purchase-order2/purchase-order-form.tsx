@@ -186,9 +186,15 @@ export const PurchaseOrderForm = () => {
         setTrimData(trimData)
     }
     const onReset = () => {
-        const indentAgainst = poForm.getFieldValue('indentAgainst')
-        poForm.setFieldsValue({indentAgainst})
-        poForm.resetFields()
+        const poAgainst = poForm.getFieldValue('indentAgainst');
+        const indentId = poForm.getFieldValue('indentId');
+        const poMaterialType = poForm.getFieldValue('poMaterialType');
+    
+        poForm.resetFields();
+    
+        poForm.setFieldsValue({ indentAgainst: poAgainst });
+        poForm.setFieldsValue({ indentId: indentId });
+        poForm.setFieldsValue({ poMaterialType: poMaterialType });
     }
 
     const indentOnClear = () => {

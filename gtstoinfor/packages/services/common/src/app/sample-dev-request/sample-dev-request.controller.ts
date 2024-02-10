@@ -89,7 +89,7 @@ export class SampleDevReqController {
   @ApiBody({ type: SampleFilterRequest })
   async cancelSampleReqById(@Body() req: any): Promise<AllSampleDevReqResponseModel> {
     try {
-      console.log(req, 'controller')
+      // console.log(req, 'controller')
       return await this.sampleService.cancelSampleReqById(req);
     } catch (error) {
       return this.applicationExceptionHandler.returnException(AllSampleDevReqResponseModel, error);
@@ -155,12 +155,12 @@ export class SampleDevReqController {
       // destination: './upload-files/manisha-123',
       // destination: `./upload-files/PO-${req}`,
       destination: (req, file, callback) => {
-        console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-        console.log(req.body);
+        // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        // console.log(req.body);
 
-        console.log(file);
+        // console.log(file);
         const destinationPath = join(__dirname, '../../../../',`upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`)
-        console.log(destinationPath)
+        // console.log(destinationPath)
         // const destinationPath = `upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`;
         // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
 
@@ -171,7 +171,7 @@ export class SampleDevReqController {
           fs.mkdirSync(destinationPath, { recursive: true });
           callback(null, destinationPath);
         } catch (error) {
-          console.error('Error creating directory:', error);
+          // console.error('Error creating directory:', error);
           callback(error, null);
         }
       },
@@ -199,7 +199,7 @@ export class SampleDevReqController {
     },
   }))
   async updateStylePath(@UploadedFiles() file: File[], @Body() uploadData: any): Promise<UploadResponse> {
-    console.log(file, '-------file')
+    // console.log(file, '-------file')
     try {
       return await this.sampleService.UpdateFilePath(file, uploadData.SampleRequestId)
     } catch (error) {
@@ -216,7 +216,7 @@ export class SampleDevReqController {
         // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         // console.log(req.body);
 
-        console.log(file);
+        // console.log(file);
 
         const destinationPath = `upload_files/Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
         // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
@@ -272,7 +272,7 @@ export class SampleDevReqController {
         // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
         // console.log(req.body);
 
-        console.log(file);
+        // console.log(file);
 
         const destinationPath = `upload_files/Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
         // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
@@ -456,7 +456,7 @@ export class SampleDevReqController {
 
   @Post('/updateStatus')
   async updateStatus(@Body() req: any): Promise<CommonResponseModel> {
-    console.log(req, "controll")
+    // console.log(req, "controll")
     try {
       return await this.sampleService.updateStatus(req);
     } catch (error) {
@@ -465,7 +465,7 @@ export class SampleDevReqController {
   }
   @Post('/getSampleOrderDetails')
   async getSampleOrderDetails(@Body() req: any): Promise<CommonResponseModel> {
-    console.log(req, "controll")
+    // console.log(req, "controll")
     try {
       return await this.sampleService.getSampleOrderDetails(req);
     } catch (error) {
@@ -579,7 +579,7 @@ export class SampleDevReqController {
   @Post('/getbyID')
   @ApiBody({ type: RequestNoReq })
   async getbyID(@Body() req: any): Promise<AllSampleDevReqResponseModel> {
-    console.log(req, "constroller");
+    // console.log(req, "constroller");
 
     try {
       return await this.sampleService.getbyID(req);
