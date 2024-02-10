@@ -3,7 +3,7 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { TrimBuyerEntity } from "./trim-buyer-entity";
 import { TrimBuyerController } from "./trim-buyer.controller";
-import { TrimBuyerService } from "./trim-buyer-service";
+import { TrimBuyerService } from "./trim-buyer.service";
 
 @Module({
     imports:[TypeOrmModule.forFeature([TrimBuyerEntity])],

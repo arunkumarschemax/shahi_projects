@@ -36,7 +36,7 @@ export class MasterLocationsService {
         }
     }
 
-    async createMasterLocation(masterLocationsDto: LocationsDTO, isUpdate: boolean): Promise<MasterLocationsResponseModel> {
+    async createMasterLocation(masterLocationsDto:LocationsDTO, isUpdate: boolean): Promise<MasterLocationsResponseModel> {
         console.log(masterLocationsDto,'nnnnnh');
         
         try {
