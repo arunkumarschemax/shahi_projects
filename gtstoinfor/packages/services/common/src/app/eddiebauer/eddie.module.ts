@@ -14,15 +14,16 @@ import { AddressEntity } from "../Entites@Shahi/address/address-entity";
 import { AddressRepository } from "../Entites@Shahi/address/address.repo";
 import { EddieChildEntity } from "./entities/eddie-orders-child-entity";
 import { EddieOrdersChildRepository } from "./repositories/eddie-orders-child.repo";
+import { AddressService } from "../Entites@Shahi/address/address-service";
 
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-        EddieOrdersEntity,EddiePdfInfoEntity,EddieCOLineEntity,AddressEntity,EddieChildEntity
+        EddieOrdersEntity,EddiePdfInfoEntity,EddieCOLineEntity,AddressEntity,EddieChildEntity,AddressEntity
     ])],
   controllers: [EddieController],
-  providers: [EddieService,ApplicationExceptionHandler,EddieOrdersRepository,EddiePdfRepo,EddieCOLineRepository,AddressRepository,EddieOrdersChildRepository]
+  providers: [EddieService,ApplicationExceptionHandler,EddieOrdersRepository,EddiePdfRepo,EddieCOLineRepository,AddressRepository,EddieOrdersChildRepository,AddressRepository,AddressService]
 })
 export class EddieModule { }
