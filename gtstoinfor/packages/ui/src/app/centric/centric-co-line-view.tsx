@@ -176,6 +176,13 @@ const CentriColineView = () => {
                 }
             },
             {
+                title: 'CO Status Date',
+                dataIndex: 'updated_at',
+                render: (text, record) => {
+                    return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
+                }
+            },
+            {
                 title: 'Status',
                 dataIndex: 'status',
                 render: (text, record) => {
@@ -221,9 +228,9 @@ const CentriColineView = () => {
     };
 
     const handleConfirmDelete = (record) => {
-        console.log(record,"deeeeeeeeeee")
+        console.log(record, "deeeeeeeeeee")
         const req = new ItemNoDto(record.id)
-        const req1 = new ItemNoDto(null,null,record.po_number,record.po_line)
+        const req1 = new ItemNoDto(null, null, record.po_number, record.po_line)
         service.deleteCoLine(req).then(res => {
             if (res.status) {
                 getData();
@@ -232,7 +239,7 @@ const CentriColineView = () => {
                         message.success(res.internalMessage)
                     }
                 })
-                
+
                 AlertMessages.getSuccessMessage(res.internalMessage)
 
             } else {
@@ -350,6 +357,13 @@ const CentriColineView = () => {
             },
 
         },
+        {
+            title: 'CO Status Date',
+            dataIndex: 'updated_at',
+            render: (text, record) => {
+                return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
+            }
+        },
 
         {
             title: 'Status',
@@ -369,32 +383,32 @@ const CentriColineView = () => {
             title: 'Actions',
             dataIndex: 'actions',
             render: (text, record) => {
-                if (record.status  === 'Open'||record.status  === 'Failed') {
-                return (
-                    <div>
-                        {editingRow === record ? (
-                            <div>
-                                <Button type="primary" onClick={() => onFinishEdit(record)}>Update</Button>
-                                &nbsp; &nbsp;
-                                <Button type="primary" danger onClick={() => setEditingRow(null)}>Cancel</Button>
-                            </div>
-                        ) : (
-                            <div>
-                                <Button type="primary" onClick={() => onEditClick(record)}>Edit</Button>
-                                &nbsp; &nbsp;
-                                <Popconfirm
-                                    title="Are you sure to Delete?"
-                                    onConfirm={() => handleConfirmDelete(record)}
-                                    // onCancel={() => message.info('Delete canceled')}
-                                    okText="Yes"
-                                    cancelText="No"
-                                >
-                                    <Button type="primary" danger>Delete</Button>
-                                </Popconfirm>
-                            </div>
-                        )}
-                    </div>
-                );
+                if (record.status === 'Open' || record.status === 'Failed') {
+                    return (
+                        <div>
+                            {editingRow === record ? (
+                                <div>
+                                    <Button type="primary" onClick={() => onFinishEdit(record)}>Update</Button>
+                                    &nbsp; &nbsp;
+                                    <Button type="primary" danger onClick={() => setEditingRow(null)}>Cancel</Button>
+                                </div>
+                            ) : (
+                                <div>
+                                    <Button type="primary" onClick={() => onEditClick(record)}>Edit</Button>
+                                    &nbsp; &nbsp;
+                                    <Popconfirm
+                                        title="Are you sure to Delete?"
+                                        onConfirm={() => handleConfirmDelete(record)}
+                                        // onCancel={() => message.info('Delete canceled')}
+                                        okText="Yes"
+                                        cancelText="No"
+                                    >
+                                        <Button type="primary" danger>Delete</Button>
+                                    </Popconfirm>
+                                </div>
+                            )}
+                        </div>
+                    );
                 } else {
                     return <span>-</span>;
                 }
