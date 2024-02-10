@@ -45,5 +45,9 @@ export class LevisService extends CommonAxiosService {
         return this.axiosPostCall(this.levisOrdersController + "/deleteCoLine", payload)
     }
 
+    async getorderDataForInfo(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/getorderDataForInfo", req)
+    }
+
  
 }

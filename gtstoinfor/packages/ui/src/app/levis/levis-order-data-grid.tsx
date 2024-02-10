@@ -16,6 +16,7 @@ import {
       CentricService,
     EddieService,
     HbService,
+    LevisService,
     NikeService,
     RLOrdersService,
     SanmarService,
@@ -38,7 +39,7 @@ import {
   import { Excel } from "antd-table-saveas-excel";
   
   export function LevisOrdersGrid() {
-    const service = new EddieService();
+    const service = new LevisService();
 
 
     const navigate = useNavigate();
@@ -58,8 +59,8 @@ import {
     const { RangePicker } = DatePicker;
   
     useEffect(() => {
-      // getorderData();
-      //  getPoNumber()
+      getorderData();
+       getPoNumber()
     }, []);
 
   
@@ -204,8 +205,10 @@ import {
     });
   
     const setMoreData = (record) => {
-      navigate("/eddiebauer/eddiebauer-order-data-detail-view", {
+      
+      navigate("/levis/levis-order-data-detail-view", {
         state: { data: record },
+        
       });
     };
 
@@ -265,44 +268,55 @@ import {
   
         },
         {
-          title: "Buyer Item",
-          dataIndex: "buyerItem",
+          title: "Transport Mode",
+          dataIndex: "transMode",
           width: 90,
-           sorter: (a, b) => a.buyerItem.localeCompare(b.buyerItem),
+           sorter: (a, b) => a.transMode.localeCompare(b.transMode),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
-          ...getColumnSearchProps('buyerItem')
+          ...getColumnSearchProps('transMode')
          
   
         },
     
         {
-          title: "Delivery Date",
-          dataIndex: "deliveryDate",
+          title: "Currency",
+          dataIndex: "currency",
           width: 110,
-          sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
+          sorter: (a, b) => a.currency.localeCompare(b.currency),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
           // ...getColumnSearchProps('material')
   
         },
         {
-          title: "Ex Factory Date",
-          dataIndex: "exFactoryDate",
+          title: "Material",
+          dataIndex: "material",
           width: 110,
-          sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
+          sorter: (a, b) => a.material.localeCompare(b.material),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
-          ...getColumnSearchProps('exFactoryDate')
+          ...getColumnSearchProps('material')
 
          
   
         },
         {
-          title: "Color",
-          dataIndex: "color",
+          title: "Total Unit Price",
+          dataIndex: "totalUnitPrice",
           width: 90,
-          sorter: (a, b) => a.color.localeCompare(b.color),
+          sorter: (a, b) => a.totalUnitPrice.localeCompare(b.totalUnitPrice),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         
+  
+        },
+
+        {
+          title: "Original Date",
+          dataIndex: "originalDate",
+          width: 90,
+          sorter: (a, b) => a.originalDate.localeCompare(b.originalDate),
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
          
@@ -321,7 +335,7 @@ import {
           align: 'center',
           children: [
             {
-              title: 'Size Code',
+              title: 'Product',
               dataIndex: '',
               key: '',
               width: 70,
@@ -331,7 +345,7 @@ import {
                 console.log()
                 if (sizeData) {
                   if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.sizeCode) ? (sizeData?.sizeCode) : "-"
+                    const formattedQty = (sizeData?.product) ? (sizeData?.product) : "-"
   
                     return (
                       formattedQty
@@ -375,7 +389,7 @@ import {
               }
             },
             {
-              title: 'SKU',
+              title: 'Planned Ex Factory Date',
               dataIndex: '',
               key: '',
               width: 130,
@@ -385,7 +399,7 @@ import {
                 console.log()
                 if (sizeData) {
                   if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.sku) ? (sizeData?.sku) : "-"
+                    const formattedQty = (sizeData?.plannedExFactoryDate) ? (sizeData?.plannedExFactoryDate) : "-"
   
                     return (
                       formattedQty
@@ -402,7 +416,7 @@ import {
               }
             },
             {
-              title: 'Quantity Per Inner Pack',
+              title: 'Ex Factory Date',
               dataIndex: '',
               key: '',
               width: 70,
@@ -412,7 +426,7 @@ import {
                 console.log()
                 if (sizeData) {
                   if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.quantityPerInnerPack) ? (sizeData?.quantityPerInnerPack) : "-"
+                    const formattedQty = (sizeData?.exFactoryDate) ? (sizeData?.exFactoryDate) : "-"
   
                     return (
                       formattedQty
@@ -429,7 +443,7 @@ import {
               }
             },
             {
-              title: 'Retail Price',
+              title: 'Quantity',
               dataIndex: '',
               key: '',
               width: 70,
@@ -439,7 +453,7 @@ import {
                 console.log()
                 if (sizeData) {
                   if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) : "-"
+                    const formattedQty = (sizeData?.quantity) ? (sizeData?.quantity) : "-"
   
                     return (
                       formattedQty
@@ -457,7 +471,7 @@ import {
             },
 
             {
-              title: 'Quantity',
+              title: 'Unit Price',
               dataIndex: '',
               key: '',
               width: 70,
@@ -467,7 +481,7 @@ import {
                 console.log()
                 if (sizeData) {
                   if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.quantity) ? (sizeData?.quantity) : "-"
+                    const formattedQty = (sizeData?.unitPrice) ? (sizeData?.unitPrice) : "-"
                     // const formattedQty = (sizeData?.quantity) ? String(sizeData?.quantity).replace(/,/g, '') : "-";
 
   
@@ -485,60 +499,60 @@ import {
                 }
               }
             },
-            {
-              title: 'Unit Cost',
-              dataIndex: '',
-              key: '',
-              width: 70,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.unitCost) ? (sizeData?.unitCost) : "-"
-                    // const formattedQty = (sizeData?.amount)
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            // {
+            //   title: 'Unit Cost',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 70,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.unitCost) ? (sizeData?.unitCost) : "-"
+            //         // const formattedQty = (sizeData?.amount)
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
-            {
-              title: 'Cost',
-              dataIndex: '',
-              key: '',
-              width: 70,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.cost) ? (sizeData?.cost) : "-"
-                    // const formattedQty = (sizeData?.amount)
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
+            // {
+            //   title: 'Cost',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 70,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.cost) ? (sizeData?.cost) : "-"
+            //         // const formattedQty = (sizeData?.amount)
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
           ]
         });
       })
@@ -552,38 +566,38 @@ import {
           width: 90,
           render: (text, record) => {
             let sum = 0;
-            const unit = record.sizeWiseData[0].unit
+            // const unit = record.sizeWiseData[0].unit
             record.sizeWiseData.forEach((r) => {
               // Convert to number before summing
               sum += parseFloat(r.quantity) || 0;
             });
-            return `${sum} ${unit}`;
+            return `${sum}`;
           },
         },
   
        
-       {
-        title: <div style={{textAlign:"center"}}>Buyer Address</div>,
-          dataIndex: "buyerAddress",
-          width: 150,
-          sorter: (a, b) => a.poLine.localeCompare(b.poLine),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => (
-            <Tooltip title={text || "-"}>
-              {text ? `${text.substring(0, 20)}...` : "-"}
-            </Tooltip>
-          ),
+      //  {
+      //   title: <div style={{textAlign:"center"}}>Buyer Address</div>,
+      //     dataIndex: "buyerAddress",
+      //     width: 150,
+      //     sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+      //     sortDirections: ["ascend", "descend"],
+      //     render: (text) => (
+      //       <Tooltip title={text || "-"}>
+      //         {text ? `${text.substring(0, 20)}...` : "-"}
+      //       </Tooltip>
+      //     ),
          
   
-        },
+      //   },
         {
           title: <div style={{textAlign:"center"}}>Delivery Address</div>,
   
-          dataIndex: "shipToAdd",
+          dataIndex: "deliveryAddress",
           width: 150,
-         sorter: (a, b) => a.shipToAdd.localeCompare(b.shipToAdd),
+         sorter: (a, b) => a.deliveryAddress.localeCompare(b.deliveryAddress),
          sortDirections: ["ascend", "descend"],
-        //  ...getColumnSearchProps('shipToAdd'),
+        //  ...getColumnSearchProps('deliveryAddress'),
           render: (text) => (
             <Tooltip title={text || "-"}>
               {text ? `${text.substring(0, 20)}...` : "-"}
@@ -686,10 +700,10 @@ import {
         
               },
               {
-                title: "Buyer Item",
-                dataIndex: "buyerItem",
+                title: "Transport Mode",
+                dataIndex: "transMode",
                 width: 90,
-                 sorter: (a, b) => a.buyerItem.localeCompare(b.buyerItem),
+                 sorter: (a, b) => a.transMode.localeCompare(b.transMode),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-",
                
@@ -697,25 +711,33 @@ import {
               },
           
               {
-                title: "Delivery Date",
-                dataIndex: "deliveryDate",
+                title: "Currency",
+                dataIndex: "currency",
                 width: 110,
-                sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
+                sorter: (a, b) => a.currency.localeCompare(b.currency),
                 sortDirections: ["ascend", "descend"],
                 render: (text) => text ? text : "-",
         
               },
               {
-                title: "Ex Factory Date",
-                dataIndex: "exFactoryDate",
+                title: "Material",
+                dataIndex: "material",
                 width: 110,
                 render: (text) => text ? text : "-",
                
         
               },
               {
-                title: "Color",
-                dataIndex: "color",
+                title: "Total Unit Price",
+                dataIndex: "totalUnitPrice",
+                width: 90,
+                render: (text) => text ? text : "-",
+               
+        
+              },
+              {
+                title: "Original Date",
+                dataIndex: "originalDate",
                 width: 90,
                 render: (text) => text ? text : "-",
                
@@ -742,7 +764,7 @@ import {
               children: [
     
                 {
-                  title: 'Size Code',
+                  title: 'Product',
                   dataIndex: '',
                   key: '',
                   width: 70,
@@ -752,7 +774,7 @@ import {
                     console.log()
                     if (sizeData) {
                       if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.sizeCode) ? (sizeData?.sizeCode) : "-"
+                        const formattedQty = (sizeData?.product) ? (sizeData?.product) : "-"
       
                         return (
                           formattedQty
@@ -796,7 +818,7 @@ import {
                   }
                 },
                 {
-                  title: 'SKU',
+                  title: '	Planned Ex Factory Date',
                   dataIndex: '',
                   key: '',
                   width: 130,
@@ -806,7 +828,7 @@ import {
                     console.log()
                     if (sizeData) {
                       if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.sku) ? (sizeData?.sku) : "-"
+                        const formattedQty = (sizeData?.plannedExFactoryDate) ? (sizeData?.plannedExFactoryDate) : "-"
       
                         return (
                           formattedQty
@@ -823,7 +845,7 @@ import {
                   }
                 },
                 {
-                  title: 'Quantity Per Inner Pack',
+                  title: 'Ex Factory Date',
                   dataIndex: '',
                   key: '',
                   width: 70,
@@ -833,7 +855,7 @@ import {
                     console.log()
                     if (sizeData) {
                       if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.quantityPerInnerPack) ? (sizeData?.quantityPerInnerPack) : "-"
+                        const formattedQty = (sizeData?.exFactoryDate) ? (sizeData?.exFactoryDate) : "-"
       
                         return (
                           formattedQty
@@ -850,7 +872,7 @@ import {
                   }
                 },
                 {
-                  title: 'Retail Price',
+                  title: 'Quantity',
                   dataIndex: '',
                   key: '',
                   width: 70,
@@ -860,7 +882,7 @@ import {
                     console.log()
                     if (sizeData) {
                       if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) : "-"
+                        const formattedQty = (sizeData?.quantity) ? (sizeData?.quantity) : "-"
       
                         return (
                           formattedQty
@@ -878,7 +900,7 @@ import {
                 },
     
                 {
-                  title: 'Quantity',
+                  title: 'Unit Price',
                   dataIndex: '',
                   key: '',
                   width: 70,
@@ -888,7 +910,7 @@ import {
                     console.log()
                     if (sizeData) {
                       if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.quantity) ? (sizeData?.quantity) : "-"
+                        const formattedQty = (sizeData?.unitPrice) ? (sizeData?.unitPrice) : "-"
                         // const formattedQty = (sizeData?.quantity) ? String(sizeData?.quantity).replace(/,/g, '') : "-";
     
       
@@ -906,60 +928,60 @@ import {
                     }
                   }
                 },
-                {
-                  title: 'Unit Cost',
-                  dataIndex: '',
-                  key: '',
-                  width: 70,
-                  className: "center",
-                  render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                      if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.unitCost) ? (sizeData?.unitCost) : "-"
-                        // const formattedQty = (sizeData?.amount)
-                        return (
-                          formattedQty
-                        );
-                      } else {
+                // {
+                //   title: 'Unit Cost',
+                //   dataIndex: '',
+                //   key: '',
+                //   width: 70,
+                //   className: "center",
+                //   render: (text, record) => {
+                //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+                //     console.log()
+                //     if (sizeData) {
+                //       if (sizeData.size !== null) {
+                //         const formattedQty = (sizeData?.unitCost) ? (sizeData?.unitCost) : "-"
+                //         // const formattedQty = (sizeData?.amount)
+                //         return (
+                //           formattedQty
+                //         );
+                //       } else {
       
-                        return (
-                          '-'
-                        );
-                      }
-                    } else {
-                      return '-';
-                    }
-                  }
-                },
-                {
-                  title: 'Cost',
-                  dataIndex: '',
-                  key: '',
-                  width: 70,
-                  className: "center",
-                  render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                      if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.cost) ? (sizeData?.cost) : "-"
-                        // const formattedQty = (sizeData?.amount)
-                        return (
-                          formattedQty
-                        );
-                      } else {
+                //         return (
+                //           '-'
+                //         );
+                //       }
+                //     } else {
+                //       return '-';
+                //     }
+                //   }
+                // },
+                // {
+                //   title: 'Cost',
+                //   dataIndex: '',
+                //   key: '',
+                //   width: 70,
+                //   className: "center",
+                //   render: (text, record) => {
+                //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+                //     console.log()
+                //     if (sizeData) {
+                //       if (sizeData.size !== null) {
+                //         const formattedQty = (sizeData?.cost) ? (sizeData?.cost) : "-"
+                //         // const formattedQty = (sizeData?.amount)
+                //         return (
+                //           formattedQty
+                //         );
+                //       } else {
       
-                        return (
-                          '-'
-                        );
-                      }
-                    } else {
-                      return '-';
-                    }
-                  }
-                },
+                //         return (
+                //           '-'
+                //         );
+                //       }
+                //     } else {
+                //       return '-';
+                //     }
+                //   }
+                // },
               ]
             });
         })
@@ -971,33 +993,33 @@ import {
             width: 90,
             render: (text, record) => {
               let sum = 0;
-              const unit = record.sizeWiseData[0].unit
+             // const unit = record.sizeWiseData[0].unit
               record.sizeWiseData.forEach((r) => {
                 // Convert to number before summing
                 sum += parseFloat(r.quantity) || 0;
               });
-              return `${sum} ${unit}`;
+              return `${sum}`;
             },
           },
     
          
-         {
-          title:"Buyer Address",
-            dataIndex: "buyerAddress",
-            width: 300,
-            render: (text) => text ? text : "-",
+        //  {
+        //   title:"Buyer Address",
+        //     dataIndex: "buyerAddress",
+        //     width: 300,
+        //     render: (text) => text ? text : "-",
 
            
     
-          },
+        //   },
           {
             title:"Delivery Address",
     
-            dataIndex: "shipToAdd",
+            dataIndex: "deliveryAddress",
             width: 300,
-           sorter: (a, b) => a.shipToAdd.localeCompare(b.shipToAdd),
+           sorter: (a, b) => a.deliveryAddress.localeCompare(b.deliveryAddress),
            sortDirections: ["ascend", "descend"],
-           ...getColumnSearchProps('shipToAdd'),
+           ...getColumnSearchProps('deliveryAddress'),
            render: (text) => text ? text : "-",
 
           },
@@ -1073,7 +1095,7 @@ import {
                   <Input placeholder="Enter Style " allowClear />
                 </Form.Item>
               </Col> */}
-              <Col
+              {/* <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
@@ -1083,8 +1105,8 @@ import {
                <Form.Item label="Color" name="color"  >
                   <Input placeholder="Enter Color "  allowClear />
                 </Form.Item>
-              </Col>
-              <Col
+              </Col> */}
+              {/* <Col
                 xs={{ span: 24 }}
                 sm={{ span: 24 }}
                 md={{ span: 4 }}
@@ -1094,7 +1116,7 @@ import {
                <Form.Item label="Delivery Date" name="deliveryDate"  >
                   <RangePicker style={{width:180}}   />
                 </Form.Item>
-              </Col>
+              </Col> */}
               {/* <Row> */}
               <Col
                 xs={{ span: 24 }}

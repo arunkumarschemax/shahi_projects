@@ -80,6 +80,7 @@ import LevisOrdersGrid from "./levis/levis-order-data-grid"
 import LevisPdfUpload from "./levis/pdf-upload"
 import LevisOrderAcceptanceGrid from "./levis/levis-order-acceptance-view"
 import LevisColineView from "./levis/levis-co-line-view"
+import LevisOrdersDetailView from "./levis/levis-order-detail-view"
 
 
 export const AppRoutes = () => {
@@ -296,6 +297,7 @@ export const AppRoutes = () => {
                    <Route path='levis-pdf-upload' element={<LevisPdfUpload />} />
                    <Route path="levis-order-acceptance" element={<LevisOrderAcceptanceGrid/>}/>
                    <Route path="levis-co-line-view" element={<LevisColineView/>}/>
+                   <Route path='levis-order-data-detail-view' element={<LevisOrdersDetailView />} />
 
             
                 </Route>

@@ -140,5 +140,17 @@ export class LevisController {
             return error;
         }
     }
+
+    @Post('/getorderDataForInfo')
+    @ApiBody({ type: LevisOrderFilter })
+    async getorderDataForInfo(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            // console.log(req,"con")
+            return await this.Service.getorderDataForInfo(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
  
 }
