@@ -175,13 +175,13 @@ const CentriColineView = () => {
                     return (record.raised_date ? (moment(record.raised_date).format('DD-MM-YYYY HH:mm')) : '-')
                 }
             },
-            {
-                title: 'CO Status Date',
-                dataIndex: 'updated_at',
-                render: (text, record) => {
-                    return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
-                }
-            },
+            // {
+            //     title: 'CO Status Date',
+            //     dataIndex: 'updated_at',
+            //     render: (text, record) => {
+            //         return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
+            //     }
+            // },
             {
                 title: 'Status',
                 dataIndex: 'status',
@@ -357,13 +357,13 @@ const CentriColineView = () => {
             },
 
         },
-        {
-            title: 'CO Status Date',
-            dataIndex: 'updated_at',
-            render: (text, record) => {
-                return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
-            }
-        },
+        // {
+        //     title: 'CO Status Date',
+        //     dataIndex: 'updated_at',
+        //     render: (text, record) => {
+        //         return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
+        //     }
+        // },
 
         {
             title: 'Status',
