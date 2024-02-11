@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AllSampleDevReqResponseModel, BomStatusEnum, BuyerRefNoRequest, CommonResponseModel, FabricInfoReq, GlobalVariables, ItemTypeEnum, LifeCycleStatusEnum, MaterialStatusEnum, MessageParameters, ProductGroupReq, RackPositionStatusEnum, RequestNoReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleIdRequest, SampleRequestInfoModel, SampleSizeInfoModel, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, WhatsAppLogDto, buyerReq, buyerandM3ItemIdReq, lifeCycleStatusReq, requestNoReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, BomStatusEnum, BuyerRefNoRequest, CommonResponseModel, FabricInfoReq, GlobalVariables, ItemTypeEnum, LifeCycleStatusEnum, MaterialStatusEnum, MessageParameters, ProductGroupReq, RackPositionStatusEnum, RequestNoReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleIdRequest, SampleProcessInfoReq, SampleRequestInfoModel, SampleSizeInfoModel, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, WhatsAppLogDto, buyerReq, buyerandM3ItemIdReq, lifeCycleStatusReq, requestNoReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
 import { IndentService, WhatsAppInfo, WhatsAppNotificationService } from '@project-management-system/shared-services';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { DataSource, Not, Repository } from 'typeorm';
@@ -43,6 +43,7 @@ import { SampleSizeRepo } from './repo/sample-dev-size-repo';
 import { SampleTrimRepo } from './repo/sample-dev-trim-repo';
 import { SampleInventoryLoqRepo } from './repo/sample-inventory-loe-repo';
 import { UploadFilesRepository } from './repo/upload-files-repository';
+import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
 let moment = require('moment');
 
 
@@ -614,6 +615,16 @@ export class SampleRequestService {
         }
       }
       sampleReqEntity.sampleReqSizeInfo = sampleSizeInfo;
+      let indentProcessInfo: SampleProcessInfoReq[] = []
+      for (let processObj of req.processInfo) {
+        const processEntity = new SampleRequestProcessInfoEntity()
+        processEntity.operation = processObj.operation
+        processEntity.sequence = processObj.sequence
+        sampleProcessInfo.push(processEntity);
+        const processInfoReq = new SampleProcessInfoReq(processEntity.operation,processEntity.sequence)
+        indentProcessInfo.push(processInfoReq);
+      }
+      sampleReqEntity.sampleProcessInfo = sampleProcessInfo;
       let indentFabInfo: FabricInfoReq[] = [];
       for (let fabricObj of req.fabricInfo) {
         const fabricEntity = new SampleReqFabricinfoEntity()
