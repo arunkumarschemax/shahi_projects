@@ -224,6 +224,7 @@ import { TrimReqCodeView } from "./item-request-code/trim-request-code-view"
 import ProductGrid from "./masters/product/product-grid"
 import ProductForm from "./masters/product/product-form"
 import TrimParamsMapping from "./trim-master/m3-trim-items/trims-mapping-form"
+import TrimsParamsMappingView from "./trim-master/m3-trim-items/trim-mapping-view"
 
 
 
@@ -713,10 +714,9 @@ export const AppRoutes = () => {
                 <Route  path='/trim-master'>
                 <Route path='trim-params-mapping' element={<TrimParamsMapping mappingData={undefined} updateDetails={function (column: TrimParamsMappingRequestDto): void {
                         throw new Error("Function not implemented.")
-                    } } isUpdate={false} closeForm={function (): void {
-                        throw new Error("Function not implemented.")
-                    } } />} />
-
+                    } } isUpdate={false} closeForm={()=>{}}
+                    />} />
+                <Route path = 'trim-params-mapping-view' element={<TrimsParamsMappingView/>}/>  
                     <Route path='variety/variety-form' element ={<VarietyForm varietyData={new VarietyDtos} updateItem={function (VarietyDto: VarietyDtos): void {
                         throw new Error("Function not implemented.")
                     } } isUpdate={false} closeForm={function (): void {

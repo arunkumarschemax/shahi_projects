@@ -8,15 +8,17 @@ export class SampleFilterRequest{
     status?: SampleDevelopmentStatusEnum
     sampleId?: number
     extRefNumber?: string
+    user?:string
     
     
-    constructor( reqNo?:string,pch?: string, styleNo?: string, status?: SampleDevelopmentStatusEnum, sampleId?: number,extRefNumber?: string){
+    constructor( reqNo?:string,pch?: string, styleNo?: string, status?: SampleDevelopmentStatusEnum, sampleId?: number,extRefNumber?: string,user?:string){
         this.reqNo = reqNo;
         this.pch = pch
         this.styleNo = styleNo
         this.status = status
         this.sampleId = sampleId
         this.extRefNumber = extRefNumber
+        this.user = user
     }
 }
 
