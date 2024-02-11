@@ -443,7 +443,6 @@ export const TrimReqCodeView = () => {
       title: <div style={{textAlign:"center"}}>Trim Type</div>,
       dataIndex: "trimType",
       fixed:'left',
-      // ...getColumnSearchProps("trimType"),
       sorter: (a, b) => a.trimType?.localeCompare(b.trimType),
       sortDirections: ["descend", "ascend"],
       render: (text) => {
@@ -464,7 +463,6 @@ export const TrimReqCodeView = () => {
         </span>
     ),
     },
-    // mapData[0]?.structure === true?
     {
       title: <div style={{textAlign:"center"}}>Structure</div>,
       dataIndex: "structure",
@@ -475,11 +473,8 @@ export const TrimReqCodeView = () => {
         <span>
             {record.structure ? record.structure : '-'}
         </span>
-    ),
-    }
-    // : {}
-    ,
-    // mapData[0]?.category === true?
+        ),
+    },
     {
       title: <div style={{textAlign:"center"}}>Category</div>,
       dataIndex: "category",
@@ -490,11 +485,8 @@ export const TrimReqCodeView = () => {
         <span>
             {record.category ? record.category : '-'}
         </span>
-    ),
-    }
-    // :{}
-    ,
-    // mapData[0]?.content === true?
+        ),
+    },
     {
       title: <div style={{textAlign:"center"}}>Content</div>,
       dataIndex: "content",
@@ -505,11 +497,8 @@ export const TrimReqCodeView = () => {
         <span>
             {record.content ? record.content : '-'}
         </span>
-    ),
-    }
-    // :{}
-    ,
-    // mapData[0]?.type === true?
+        ),
+    },
     {
       title: <div style={{textAlign:"center"}}>Type</div>,
       dataIndex: "type",
@@ -520,10 +509,7 @@ export const TrimReqCodeView = () => {
         const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
         return EnumObj ? EnumObj.displayVal : (text || '-');
       },
-    }    
-      // : {}
-      ,
-    // mapData[0]?.finish === true?
+    },
     {
       title: <div style={{textAlign:"center"}}>Finish</div>,
       dataIndex: "finish",
@@ -534,11 +520,8 @@ export const TrimReqCodeView = () => {
         <span>
             {record.finish ? record.finish : '-'}
         </span>
-    ),
-    }
-    // : {}
-    ,
-    // mapData[0]?.hole === true?
+        ),
+    },
     {
       title: <div style={{textAlign:"center"}}>Hole</div>,
       dataIndex: "hole",
@@ -549,11 +532,8 @@ export const TrimReqCodeView = () => {
         <span>
             {record.hole ? record.hole : '-'}
         </span>
-    ),
-    }
-    // : {}
-    ,
-    // mapData[0]?.quality === true?
+        ),
+    },
     {
       title: <div style={{textAlign:"center"}}>Quality</div>,
       dataIndex: "qualityName",
@@ -564,11 +544,8 @@ export const TrimReqCodeView = () => {
         <span>
             {record.qualityName ? record.qualityName : '-'}
         </span>
-    ),
-    }
-    // : {}
-    ,
-    // mapData[0]?.thickness === true?
+        ),
+    },
     {
       title: <div style={{textAlign:"center"}}>Thickness</div>,
       dataIndex: "thickness",
@@ -579,11 +556,8 @@ export const TrimReqCodeView = () => {
         <span>
             {record.thickness ? record.thickness : '-'}
         </span>
-    ),
-    }
-    // : {}
-    ,
-    // mapData[0]?.variety === true?
+        ),
+    },
     {
       title: <div style={{textAlign:"center"}}>Variety</div>,
       dataIndex: "variety",
@@ -594,11 +568,8 @@ export const TrimReqCodeView = () => {
         <span>
             {record.variety ? record.variety : '-'}
         </span>
-    ),
-    }
-    // : {}
-    ,
-    // mapData[0]?.uom === true?
+        ),
+    },
     {
       title: <div style={{textAlign:"center"}}>UOM</div>,
       dataIndex: "uom",
@@ -609,11 +580,8 @@ export const TrimReqCodeView = () => {
         <span>
             {record.uom ? record.uom : '-'}
         </span>
-    ),
-    }
-    // : {}
-    ,
-    // mapData[0]?.color === true?
+        ),
+    },
     {
       title: <div style={{textAlign:"center"}}>Color</div>,
       dataIndex: "color",
@@ -624,11 +592,8 @@ export const TrimReqCodeView = () => {
         <span>
             {record.color ? record.color : '-'}
         </span>
-    ),
-    }
-    // : {}
-    ,
-    // mapData[0]?.logo === true?
+        ),
+    },
     {
       title: <div style={{textAlign:"center"}}>Logo</div>,
       dataIndex: "logo",
@@ -639,11 +604,8 @@ export const TrimReqCodeView = () => {
         <span>
             {record.logo ? record.logo : '-'}
         </span>
-    ),
-    }
-    // : {}
-    ,
-    // mapData[0]?.part === true?
+        ),
+    },
     {
       title: <div style={{textAlign:"center"}}>Part</div>,
       dataIndex: "part",
@@ -654,10 +616,72 @@ export const TrimReqCodeView = () => {
         <span>
             {record.part ? record.part : '-'}
         </span>
-    ),
-    }
-    // :{}
-    ,
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Buyer</div>,
+      dataIndex: "trimBuyer",
+      ...getColumnSearchProps("trimBuyer"),
+      sorter: (a, b) => a.trimBuyer?.localeCompare(b.trimBuyer),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Length</div>,
+      dataIndex: "length",
+      ...getColumnSearchProps("length"),
+      sorter: (a, b) => a.length?.localeCompare(b.length),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Line</div>,
+      dataIndex: "line",
+      ...getColumnSearchProps("line"),
+      sorter: (a, b) => a.line?.localeCompare(b.line),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Parts</div>,
+      dataIndex: "parts",
+      ...getColumnSearchProps("parts"),
+      sorter: (a, b) => a.parts?.localeCompare(b.parts),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Ply</div>,
+      dataIndex: "ply",
+      ...getColumnSearchProps("ply"),
+      sorter: (a, b) => a.ply?.localeCompare(b.ply),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Shape</div>,
+      dataIndex: "shape",
+      ...getColumnSearchProps("shape"),
+      sorter: (a, b) => a.shape?.localeCompare(b.shape),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Slider</div>,
+      dataIndex: "slider",
+      ...getColumnSearchProps("slider"),
+      sorter: (a, b) => a.slider?.localeCompare(b.slider),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Size</div>,
+      dataIndex: "trimSize",
+      ...getColumnSearchProps("trimSize"),
+      sorter: (a, b) => a.trimSize?.localeCompare(b.trimSize),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
     {
       title: <div style={{textAlign:"center"}}>M3 Code</div>,
       dataIndex: "m3Code",
@@ -666,7 +690,7 @@ export const TrimReqCodeView = () => {
         <span>
             {record.m3Code ? record.m3Code : '-'}
         </span>
-    ),
+        ),
     },
     {
       title: <div style={{textAlign:"center"}}>HSN Code</div>,
@@ -676,7 +700,7 @@ export const TrimReqCodeView = () => {
         <span>
             {record.hsnCode ? record.hsnCode : '-'}
         </span>
-    ),
+        ),
     },
     // {
     //   title: <div style={{textAlign:"center"}}>Status</div>,

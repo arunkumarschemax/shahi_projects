@@ -1,4 +1,4 @@
-import {BuyersService,CategoryService,ColourService,ContentService,FabricRequestCodeService,FabricStructuresService,FinishService,HoleService,M3ItemsService,M3TrimsService,QualitysService,StructureService,ThicknessService,TrimParamsMappingService,TrimService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
+import {BuyersService,CategoryService,ColourService,ContentService,FabricRequestCodeService,FabricStructuresService,FinishService,HoleService,LengthService,LineService,M3ItemsService,M3TrimsService,PartsService,PlyService,QualitysService,ShapeService,SliderService,StructureService,ThicknessService,TrimBuyerService,TrimParamsMappingService,TrimService,TrimSizeService,TypeService,UomService,VarietyService} from "@project-management-system/shared-services";
 import { Button, Card, Col, Form, Input, Row, Select, message } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -35,6 +35,14 @@ export function M3TrimsReqFile(props:M3Trimprps) {
   const varietyService = new VarietyService();
   const uomService = new UomService();
   const colorService = new ColourService();
+  const trimBuyerService = new TrimBuyerService()
+  const partsService = new PartsService()
+  const plyService = new PlyService()
+  const lengthService = new LengthService()
+  const lineService = new LineService()
+  const shapeService = new ShapeService()
+  const sliderService = new SliderService()
+  const trimSizeService = new TrimSizeService()
 
   const [categoryData, setCategoryData] = useState<any[]>([]);
   const [contentData, setContentData] = useState<any[]>([]);
@@ -50,6 +58,14 @@ export function M3TrimsReqFile(props:M3Trimprps) {
   const [varietyData, setVarietyData] = useState<any[]>([]);
   const [uomData, setUomData] = useState<any[]>([]);
   const [colorData, setColorData] = useState<any[]>([]);
+  const [trimBuyerData, setTrimBuyerData] = useState<any[]>([])
+  const [partsData, setPartsData] = useState<any[]>([]);
+  const [plyData, setPlyData] = useState<any[]>([]);
+  const [lengthData, setLengthData] = useState<any[]>([]);
+  const [lineData, setLineData] = useState<any[]>([])
+  const [shapeData, setShapeData] = useState<any[]>([])
+  const [sliderData, setSliderData] = useState<any[]>([])
+  const [trimSizeData, setTrimSizeData] = useState<any[]>([])
 
   const trimReqCodeService = new FabricRequestCodeService()
   useEffect(() =>{
@@ -110,6 +126,31 @@ export function M3TrimsReqFile(props:M3Trimprps) {
     if (mapData[0]?.color === true) {
       getColors();
     }
+    if (mapData[0]?.buyer === true) {
+      getAllTrimBuyers();
+    }
+    if (mapData[0]?.length === true) {
+      getAllLength();
+    }
+    if (mapData[0]?.line === true) {
+      getAllLine();
+    }
+    if (mapData[0]?.parts === true) {
+      getAllParts();
+    }
+    if (mapData[0]?.ply === true) {
+      getAllPly();
+    }
+    if (mapData[0]?.shape === true) {
+      getAllShape();
+    }
+    if (mapData[0]?.slider === true) {
+      getAllSlider();
+    }
+    if (mapData[0]?.size === true) {
+      getAllTrimSize();
+    }
+
 
   }, [mapData]);
 
@@ -201,6 +242,55 @@ export function M3TrimsReqFile(props:M3Trimprps) {
     });
   };
 
+  const getAllTrimBuyers = ()=>{
+    trimBuyerService.getAllActiveTrimBuyers().then((res)=>{
+      setTrimBuyerData(res.data)
+    })
+  }
+
+  const getAllLength = ()=>{
+    lengthService.getAllActiveLengths().then((res)=>{
+      setLengthData(res.data)
+    })
+  }
+
+  const getAllLine = ()=>{
+    lineService.getAllActiveLines().then((res)=>{
+      setLineData(res.data)
+    })
+  }
+
+  const getAllParts = ()=>{
+    partsService.getAllActiveParts().then((res)=>{
+      setPartsData(res.data)
+    })
+  }
+
+  const getAllPly = ()=>{
+    plyService.getAllActivePly().then((res)=>{
+      setPlyData(res.data)
+    })
+  }
+
+  const getAllShape = ()=>{
+    shapeService.getAllActiveShape().then((res)=>{
+      setShapeData(res.data)
+    })
+  }
+
+  const getAllSlider = ()=>{
+    sliderService.getAllSliders().then((res)=>{
+      setSliderData(res.data)
+    })
+  }
+
+  const getAllTrimSize = ()=>{
+    trimSizeService.getAllActiveTrimSizes().then((res)=>{
+      setTrimSizeData(res.data)
+    })
+  }
+
+
 
 
 
@@ -222,7 +312,7 @@ export function M3TrimsReqFile(props:M3Trimprps) {
   }
 
       const req = new TrimRequestCodeDto(form.getFieldValue('trimType'),form.getFieldValue('logo'),form.getFieldValue('part'),form.getFieldValue('trimCategoryId'),form.getFieldValue('buyerId'),form.getFieldValue('varietyId'),form.getFieldValue('uomId'),form.getFieldValue('typeId'),form.getFieldValue('thicknessId'),form.getFieldValue('structureId'),form.getFieldValue('qualityId'),form.getFieldValue('holeId'),
-      form.getFieldValue('finishId'),form.getFieldValue('contentId'),form.getFieldValue('categoryId'),form.getFieldValue('colorId'),form.getFieldValue('m3Code'),form.getFieldValue('hsnCode'));
+      form.getFieldValue('finishId'),form.getFieldValue('contentId'),form.getFieldValue('categoryId'),form.getFieldValue('colorId'),form.getFieldValue('m3Code'),form.getFieldValue('hsnCode'),undefined,undefined,undefined,undefined,form.getFieldValue('trimBuyerId'),form.getFieldValue('lengthId'),form.getFieldValue('lineId'),form.getFieldValue('partsId'),form.getFieldValue('plyId'),form.getFieldValue('shapeId'),form.getFieldValue('sliderId'),form.getFieldValue('trimSizeId'));
       trimReqCodeService.createTrimRequestedCode(req).then((res) => {
         if (res.status) {
           message.success(res.internalMessage, 2);
@@ -238,7 +328,7 @@ export function M3TrimsReqFile(props:M3Trimprps) {
 
   const onFinish = (value) => {
     console.log(value)
-    const req= new M3TrimFilterReq(value.buyerId,undefined,undefined,value.categoryId,value.contentId,value.finishId,value.holeId,value.hsnCode?value.hsnCode:undefined,value.m3Code?value.m3Code:undefined,value.typeId)
+    const req= new M3TrimFilterReq(value.buyerId,undefined,undefined,value.categoryId,value.contentId,value.finishId,value.holeId,value.hsnCode?value.hsnCode:undefined,value.m3Code?value.m3Code:undefined,value.typeId,undefined,value.colorId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.uomId,value.varietyId,value.trimBuyerId,value.lengthId,value.lineId,value.partsId,value.plyId,value.shapeId,value.sliderId,value.trimSizeId)
     props.formValues([req])
     props.close(null)
   };
@@ -280,7 +370,7 @@ export function M3TrimsReqFile(props:M3Trimprps) {
                   <Form.Item
                     name="structureId"
                     label="Structure"
-                    rules={[{ required: true, message: "Structure is required" }]}
+                    rules={[{ required: false, message: "Structure is required" }]}
                   >
                     <Select
                       showSearch
@@ -552,6 +642,182 @@ export function M3TrimsReqFile(props:M3Trimprps) {
                     >
                         {Object.values(PartEnum).map((val) => {
                             return <Option key={val} value={val}>{PartEnumDisplay.find((e)=>e.name == val)?.displayVal}</Option>
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.buyer === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="trimBuyerId" label="Buyer" rules={[{ required: false, message: "Buyer is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Buyer"
+                    >
+                        {trimBuyerData.map((e) => {
+                            return (
+                            <Option key={e.trimBuyerId} value={e.trimBuyerId}>
+                                {e.trimBuyer}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.length === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="lengthId" label="Length" rules={[{ required: false, message: "Length is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Length"
+                    >
+                        {lengthData.map((e) => {
+                            return (
+                            <Option key={e.lengthId} value={e.lengthId}>
+                                {e.length}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.line === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="lineId" label="Line" rules={[{ required: false, message: "Line is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Line"
+                    >
+                        {lineData.map((e) => {
+                            return (
+                            <Option key={e.lineId} value={e.lineId}>
+                                {e.line}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.parts === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="partsId" label="Parts" rules={[{ required: false, message: "Parts is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Parts"
+                    >
+                        {partsData.map((e) => {
+                            return (
+                            <Option key={e.partsId} value={e.partsId}>
+                                {e.parts}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.ply === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="plyId" label="Ply" rules={[{ required: false, message: "Ply is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Ply"
+                    >
+                        {plyData.map((e) => {
+                            return (
+                            <Option key={e.plyId} value={e.plyId}>
+                                {e.ply}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.shape === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="shapeId" label="Shape" rules={[{ required: false, message: "Shape is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Shape"
+                    >
+                        {shapeData.map((e) => {
+                            return (
+                            <Option key={e.shapeId} value={e.shapeId}>
+                                {e.shape}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.slider === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="sliderId" label="Slider" rules={[{ required: false, message: "Slider is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Slider"
+                    >
+                        {sliderData.map((e) => {
+                            return (
+                            <Option key={e.sliderId} value={e.sliderId}>
+                                {e.slider}
+                            </Option>
+                            );
+                        })}
+                    </Select>
+                </Form.Item>
+            </Col>
+            </>
+            ) : (<></>)}
+            {mapData[0]?.size === true ? (
+              <>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                <Form.Item name="trimSizeId" label="Size" rules={[{ required: false, message: "Size is required" }]}>
+                    <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
+                    placeholder="Select Size"
+                    >
+                        {trimSizeData.map((e) => {
+                            return (
+                            <Option key={e.trimSizeId} value={e.trimSizeId}>
+                                {e.trimSize}
+                            </Option>
+                            );
                         })}
                     </Select>
                 </Form.Item>

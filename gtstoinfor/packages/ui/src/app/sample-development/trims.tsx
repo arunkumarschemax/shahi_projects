@@ -226,6 +226,22 @@ const getM3TrimsTypes = (value: number,request:any,KeyValue:number) => {
     req.m3Code=request.m3Code
     req.typeId=request.typeId
     req.trimMapId=request.trimMapId
+    req.colorId = request.colorId
+    req.logo = request.logo
+    req.part = request.part
+    req.qualityId = request.qualityId
+    req.structureId = request.structureId
+    req.thicknessId = request.thicknessId
+    req.uomId = request.uomId
+    req.varietyId = request.varietyId
+    req.trimBuyerId = request.trimBuyerId
+    req.lengthId = request.lengthId
+    req.lineId = request.lineId
+    req.partsId = request.partsId
+    req.plyId = request.plyId
+    req.shapeId = request.shapeId
+    req.sliderId = request.sliderId
+    req.trimSizeId = request.trimSizeId
   }
 
   console.log(req)
@@ -880,10 +896,11 @@ const tableColumns = (val,fabindex) => {
      setKeyValue(key)
   }
   const handleTrimFilterData =(trimFilterData) =>{
-    console.log(trimFilterData)
+    // console.log(trimFilterData)
     let req
     if(trimFilterData != undefined){
-      req = new M3TrimFilterReq(trimFilterData.buyerId,undefined,undefined,trimFilterData[0].categoryId,trimFilterData[0].contentId,trimFilterData[0].finishId,trimFilterData[0].holeId,trimFilterData[0].hsnCode,trimFilterData[0].m3Code,trimFilterData[0].typeId,trimFilterData[0].trimMapId) 
+      req = new M3TrimFilterReq(trimFilterData.buyerId,undefined,undefined,trimFilterData[0].categoryId,trimFilterData[0].contentId,trimFilterData[0].finishId,trimFilterData[0].holeId,trimFilterData[0].hsnCode,trimFilterData[0].m3Code,trimFilterData[0].typeId,trimFilterData[0].trimMapId,trimFilterData[0].colorId,trimFilterData[0].logo,trimFilterData[0].part,trimFilterData[0].qualityId,trimFilterData[0].structureId,trimFilterData[0].thicknessId,trimFilterData[0].uomId,trimFilterData[0].varietyId,trimFilterData[0].trimBuyerId,trimFilterData[0].lengthId,trimFilterData[0].lineId,trimFilterData[0].partsId,trimFilterData[0].plyId,trimFilterData[0].shapeId,trimFilterData[0].sliderId,trimFilterData[0].trimSizeId)
+      console.log(req,'..............')
       getM3TrimsTypes(undefined,req,keyValue)
     }else{
       getM3TrimsTypes(undefined,undefined,keyValue)

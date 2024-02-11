@@ -79,5 +79,30 @@ export class TrimRequestCodeDto {
     @ApiProperty()
     m3TrimId: number;
 
+    @ApiProperty()
+    trimBuyerId:number
+
+    @ApiProperty()
+    lengthId:number
+
+    @ApiProperty()
+    lineId:number
+
+    @ApiProperty()
+    partsId:number
+
+    @ApiProperty()
+    plyId:number
+
+    @ApiProperty()
+    shapeId:number
+
+    @ApiProperty()
+    sliderId:number
+
+    @ApiProperty()
+    trimSizeId:number
+
+
 }
 

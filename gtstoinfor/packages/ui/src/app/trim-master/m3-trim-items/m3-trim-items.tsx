@@ -54,15 +54,14 @@ export function M3TrimItemsForm({props}) {
   const [mapData, setMapData] = useState<any[]>([])
   const [mapDataId, setMapDataId] = useState<any[]>([])
   const [buyerCode, setBuyerCode] = useState<any[]>([])
-  const [trimBuyer, setTrimBuyer] = useState<any[]>([])
+  const [trimBuyerData, setTrimBuyerData] = useState<any[]>([])
   const [partsData, setPartsData] = useState<any[]>([]);
   const [plyData, setPlyData] = useState<any[]>([]);
   const [lengthData, setLengthData] = useState<any[]>([]);
   const [lineData, setLineData] = useState<any[]>([])
   const [shapeData, setShapeData] = useState<any[]>([])
   const [sliderData, setSliderData] = useState<any[]>([])
-  const [sizeData, setSizeData] = useState<any[]>([])
-  const [trimSize, setTrimSize] = useState<any[]>([])
+  const [trimSizeData, setTrimSizeData] = useState<any[]>([])
 
   useEffect(() => {
     if (mapData[0]?.structure === true) {
@@ -232,7 +231,7 @@ export function M3TrimItemsForm({props}) {
 
   const getAllTrimBuyers = ()=>{
     trimBuyerService.getAllActiveTrimBuyers().then((res)=>{
-      setTrimBuyer(res.data)
+      setTrimBuyerData(res.data)
     })
   }
 
@@ -274,7 +273,7 @@ export function M3TrimItemsForm({props}) {
 
   const getAllTrimSize = ()=>{
     trimSizeService.getAllActiveTrimSizes().then((res)=>{
-      setTrimSize(res.data)
+      setTrimSizeData(res.data)
     })
   }
 
@@ -292,7 +291,7 @@ export function M3TrimItemsForm({props}) {
   }
 
   const onFinish = (value) => {
-    // console.log(value,'...............')
+    console.log(value,'...............')
     const req = new M3trimsDTO(0,value.buyerId,"",value.categoryId,value.colorId,value.contentId,value.finishId,value.holeId,value.logo,value.part,value.qualityId,value.structureId,value.thicknessId,value.typeId,value.uomId,value.varietyId,value.trimCategoryId,form.getFieldValue("trimMappingId"),form.getFieldValue("buyerCode"),value.trimType,value.description,"",'',value.m3Code,value.hsnCode,value.trimBuyerId,value.lengthId,value.lineId,value.partsId,value.plyId,value.shapeId,value.sliderId,value.trimSizeId)
     m3TrimService.createM3Trims(req).then((res) => {
       if (res.status) {
@@ -432,7 +431,47 @@ export function M3TrimItemsForm({props}) {
     part = form.getFieldValue("part") != undefined ? form.getFieldValue("part") : "";
     }
 
-    let mainDal = `${buyersData}${trimType}${trimCategoryDal}${structureDal}${categoryDal}${contentDal}${typeDal}${finishDal}${holeDal}${qualityDal}${thickDal}${varietyDal}${uomDal}${colorDal}${logo}${part}`;
+    if (mapData[0]?.buyer === true) {
+      let tBuyerDetails = trimBuyerData.find((e) => e.trimBuyerId === form.getFieldValue("trimBuyerId"))?.trimBuyer;
+      trimBuyer = tBuyerDetails != undefined ? tBuyerDetails + '/' : ""  ;
+    }
+
+    if (mapData[0]?.length === true) {
+      let lengthDetails = lengthData.find((e) => e.lengthId === form.getFieldValue("lengthId"))?.length;
+      length = lengthDetails != undefined ? lengthDetails + '/' : ""  ;
+    }
+
+    if (mapData[0]?.line === true) {
+      let lineDetails = lineData.find((e) => e.lineId === form.getFieldValue("lineId"))?.line;
+      line = lineDetails != undefined ? lineDetails + '/' : ""  ;
+    }
+
+    if (mapData[0]?.parts === true) {
+      let partsDetails = partsData.find((e) => e.partsId === form.getFieldValue("partsId"))?.parts;
+      parts = partsDetails != undefined ? partsDetails + '/' : ""  ;
+    }
+
+    if (mapData[0]?.ply === true) {
+      let plyDetails = plyData.find((e) => e.plyId === form.getFieldValue("plyId"))?.ply;
+      ply = plyDetails != undefined ? plyDetails + '/' : ""  ;
+    }
+
+    if (mapData[0]?.shape === true) {
+      let shapeDetails = shapeData.find((e) => e.shapeId === form.getFieldValue("shapeId"))?.shape;
+      shape = shapeDetails != undefined ? shapeDetails + '/' : ""  ;
+    }
+
+    if (mapData[0]?.slider === true) {
+      let sliderDetails = sliderData.find((e) => e.sliderId === form.getFieldValue("sliderId"))?.slider;
+      slider = sliderDetails != undefined ? sliderDetails + '/' : ""  ;
+    }
+
+    if (mapData[0]?.size === true) {
+      let trimSizeDetails = trimSizeData.find((e) => e.trimSizeId === form.getFieldValue("trimSizeId"))?.trimSize;
+      trimSize = trimSizeDetails != undefined ? trimSizeDetails + '/' : ""  ;
+    }
+
+    let mainDal = `${buyersData}${trimType}${trimCategoryDal}${structureDal}${categoryDal}${contentDal}${typeDal}${finishDal}${holeDal}${qualityDal}${thickDal}${varietyDal}${uomDal}${colorDal}${logo}${part}${trimBuyer}${length}${line}${parts}${ply}${shape}${slider}${trimSize}`;
 
     mainDal = mainDal.replace(/\/$/, '');
 
@@ -456,7 +495,8 @@ export function M3TrimItemsForm({props}) {
 
   useEffect(() => {
     if(props != undefined){
-      console.log(props);
+      console.log(props,'==========');
+      console.log(props.trimBuyerId,'-----==-======-=-=-=-=--')
       if(props.trimCategoryId != null){
         trimOnChange(props.trimCategoryId)
       }
@@ -505,6 +545,30 @@ export function M3TrimItemsForm({props}) {
       }
       if (props.partStatus === 1) {
         form.setFieldsValue({part:props.part})
+      }
+      if (props.trimBuyerStatus === 1) {
+        form.setFieldsValue({trimBuyerId:props.trimBuyerId})
+      }
+      if (props.lengthStatus === 1) {
+        form.setFieldsValue({lengthId:props.lengthId})
+      }
+      if (props.lineStatus === 1) {
+        form.setFieldsValue({lineId:props.lineId})
+      }
+      if (props.partsStatus === 1) {
+        form.setFieldsValue({partsId:props.partsId})
+      }
+      if (props.plyStatus === 1) {
+        form.setFieldsValue({plyId:props.plyId})
+      }
+      if (props.shapeStatus === 1) {
+        form.setFieldsValue({shapeId:props.shapeId})
+      }
+      if (props.sliderStatus === 1) {
+        form.setFieldsValue({sliderId:props.sliderId})
+      }
+      if (props.trimSizeStatus === 1) {
+        form.setFieldsValue({trimSizeId:props.trimSizeId})
       }
       generateItemCode()
     }
@@ -904,7 +968,7 @@ export function M3TrimItemsForm({props}) {
                     onChange={generateItemCode} 
                     disabled={props?.trimBuyer!=null?true:false}
                     >
-                        {trimBuyer.map((e) => {
+                        {trimBuyerData.map((e) => {
                             return (
                             <Option key={e.trimBuyerId} value={e.trimBuyerId}>
                                 {e.trimBuyer}
@@ -1072,7 +1136,7 @@ export function M3TrimItemsForm({props}) {
                     onChange={generateItemCode} 
                     disabled={props?.trimSize!=null?true:false}
                     >
-                        {trimSize.map((e) => {
+                        {trimSizeData.map((e) => {
                             return (
                             <Option key={e.trimSizeId} value={e.trimSizeId}>
                                 {e.trimSize}

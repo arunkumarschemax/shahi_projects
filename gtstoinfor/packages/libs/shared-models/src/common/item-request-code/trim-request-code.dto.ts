@@ -25,6 +25,14 @@ export class TrimRequestCodeDto {
     createdUser: string
     updatedUser: string
     versionFlag: number
+    trimBuyerId?: number
+    lengthId?: number
+    lineId?: number
+    partsId?: number
+    plyId?: number
+    shapeId?: number
+    sliderId?: number
+    trimSizeId?: number
 
     constructor(
         trimType: ItemTypeEnum,
@@ -48,7 +56,15 @@ export class TrimRequestCodeDto {
         isActive?: boolean,
         createdUser?: string,
         updatedUser?: string,
-        versionFlag?: number
+        versionFlag?: number,
+        trimBuyerId?: number,
+        lengthId?: number,
+        lineId?: number,
+        partsId?: number,
+        plyId?: number,
+        shapeId?: number,
+        sliderId?: number,
+        trimSizeId?: number
     ){
         this.trimType = trimType
         this.trimCategoryId  = trimCategoryId
@@ -72,6 +88,14 @@ export class TrimRequestCodeDto {
         this.uomId = uomId
         this.thicknessId = thicknessId
         this.qualityId = qualityId
+        this.trimBuyerId = trimBuyerId
+        this.lengthId = lengthId
+        this.lineId = lineId
+        this.partsId = partsId
+        this.plyId = plyId
+        this.shapeId = shapeId
+        this.sliderId = sliderId
+        this.trimSizeId = trimSizeId
     }
 }
 
