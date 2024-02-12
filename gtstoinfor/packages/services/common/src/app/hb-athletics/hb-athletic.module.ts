@@ -15,6 +15,9 @@ import { HbCOLineRepository } from "./repositories/hb-co-line.repository";
 import { HbCOLineEntity } from "./entity/hb-co-line.entity";
 import { HbOrdersChildEntity } from "./entity/hb-orders-child.entity";
 import { HbOrdersChildRepository } from "./repositories/hb-order-child.repo";
+import { ColorEntity } from "../Entites@Shahi/color/color-entity";
+import { ColorService } from "../Entites@Shahi/color/color-service";
+import { ColorRepository } from "../Entites@Shahi/color/color-repo";
 
 
 
@@ -22,9 +25,9 @@ import { HbOrdersChildRepository } from "./repositories/hb-order-child.repo";
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-     AddressEntity,HbOrdersEntity,HbPdfFileInfoEntity,HbCOLineEntity,HbOrdersChildEntity
+     AddressEntity,HbOrdersEntity,HbPdfFileInfoEntity,HbCOLineEntity,HbOrdersChildEntity,ColorEntity
     ])],
   controllers: [HbController],
-  providers: [AddressRepository, AddressService, HbService, HbOrdersRepository, ApplicationExceptionHandler, HbPdfRepo, HbCOLineRepository,HbOrdersChildRepository]
+  providers: [AddressRepository, AddressService, HbService, HbOrdersRepository, ApplicationExceptionHandler, HbPdfRepo, HbCOLineRepository,HbOrdersChildRepository,ColorService,ColorRepository]
 })
 export class HbModule { }
