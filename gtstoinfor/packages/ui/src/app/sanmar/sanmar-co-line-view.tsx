@@ -161,13 +161,13 @@ const SanmarColineView = () => {
                     return (record.raised_date ? (moment(record.raised_date).format('DD-MM-YYYY HH:mm')) : '-')
                 }
             },
-            // {
-            //     title: 'CO Status Date',
-            //     dataIndex: 'updated_at',
-            //     render: (text, record) => {
-            //         return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
-            //     }
-            // },
+            {
+                title: 'Raised Date',
+                dataIndex: 'updated_at',
+                render: (text, record) => {
+                    return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY HH:mm')) : '-')
+                }
+            },
             {
                 title: 'Status',
                 dataIndex: 'status',
@@ -333,13 +333,13 @@ const SanmarColineView = () => {
             },
 
         },
-        // {
-        //     title: 'CO Status Date',
-        //     dataIndex: 'updated_at',
-        //     render: (text, record) => {
-        //         return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
-        //     }
-        // },
+        {
+            title: 'CO Status Date',
+            dataIndex: 'updated_at',
+            render: (text, record) => {
+                return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
+            }
+        },        
         {
             title: 'Status',
             dataIndex: 'status',
