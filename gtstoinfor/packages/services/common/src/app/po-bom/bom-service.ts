@@ -107,7 +107,7 @@ export class BomService {
 
 
 
-    async getAll(): Promise<CommonResponseModel> {
+async getAll(): Promise<CommonResponseModel> {
         try {
             const query = 'SELECT b.use,s.id as styeleId,s.style, s.style_name AS styleName,s.season,s.exp_no AS expNo,b.id AS bomId,b.style_id as bstyleId,b.item_name AS itemName,b.DESCRIPTION,b.im_code AS imCode,b.item_type AS itemType ,sc.id AS styleComboId,sc.bom_id AS sbomId,sc.style_id AS sstyleId,sc.combination,sc.primary_color AS primaryColor,sc.secondary_color AS secondaryColor,sc.logo_color AS logoColor FROM styles s  LEFT JOIN bom b ON b.style_id=s.id LEFT JOIN style_combos sc ON sc.bom_id=b.id'
             const result = await this.dataSource.query(query)
@@ -136,7 +136,7 @@ export class BomService {
             throw err
         }
     }
-
+  
     // async getPpmPoLineData(): Promise<CommonResponseModel> {
     //     const details = await this.dpomRepo.getPoLineData();
     //     if (details.length < 0) {
@@ -270,19 +270,33 @@ export class BomService {
             return new CommonResponseModel(false, 1110, "No data found")
         }
     }
-
+  
     async getBomDataForStyle(req: StyleIdReq): Promise<CommonResponseModel> {
-        const bomData = await this.bomRepo.getBomData(req.styleId)
-        const bomdetailsArray: BomDto[] = []
-        for (const bom of bomData) {
-            const combo = await this.styleComboRepo.getStyleComboData(bom.bomId)
-            let styleCombosArray: StyleComboDto[] = []
-            for (const rec of combo) {
-                styleCombosArray.push(new StyleComboDto(rec.combination, rec.primaryColor, rec.secondaryColor, rec.logoColor,rec.color))
+        // const bomData = await this.bomRepo.getBomData(req.styleId)
+        // const bomdetailsArray: BomDto[] = []
+        // for (const bom of bomData) {
+        //     const combo = await this.styleComboRepo.getStyleComboData(bom.bomId)
+        //     let styleCombosArray: StyleComboDto[] = []
+        //     for (const rec of combo) {
+        //         styleCombosArray.push(new StyleComboDto(rec.combination, rec.primaryColor, rec.secondaryColor, rec.logoColor,rec.color))
+        //     }
+        //     bomdetailsArray.push(new BomDto(bom.itemName, bom.description, bom.imCode, bom.itemType, bom.use, styleCombosArray, bom.bomId, bom.styleId))
+        // }
+        const bomData = await this.bomRepo.getAllBomData(req.styleId)
+
+        const bomMap = new Map<number, BomDto>()
+        for(const rec of bomData){
+            if(!bomMap.has(rec.bomId)){
+                bomMap.set(rec.bomId,new BomDto(rec.itemName, rec.description, rec.imCode, rec.itemType, rec.use, [], rec.bomId, rec.styleId))  
             }
-            bomdetailsArray.push(new BomDto(bom.itemName, bom.description, bom.imCode, bom.itemType, bom.use, styleCombosArray, bom.bomId, bom.styleId))
+            bomMap.get(rec.bomId).styleCombo.push(new StyleComboDto(rec.combination, rec.primaryColor, rec.secondaryColor, rec.logoColor,rec.color))
         }
-        return new CommonResponseModel(true, 11111, "Data retreived sucessfully", bomdetailsArray)
+        const bomInfo: BomDto[] = []
+        bomMap.forEach(rec =>{
+            bomInfo.push(rec)
+        })
+        return new CommonResponseModel(true, 11111, "Data retreived sucessfully", bomInfo)
+
     }
 
 
