@@ -232,7 +232,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemDetailsObj.style = filteredData[rec.itemIndex - 5].str;
         }
 
-        itemDetailsObj.color = filteredData[rec.itemIndex + 2].str;
+        itemDetailsObj.color = filteredData[rec.itemIndex + 2].str.replace(/\d+\s+/g,"").trim();
 
         itemTextEndIndex = rec.amountIndex;
         itemVariantStartIndex = itemTextEndIndex + 1;
