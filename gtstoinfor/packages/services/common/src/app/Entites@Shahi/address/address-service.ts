@@ -197,20 +197,38 @@ export class AddressService {
         }
     }
 
+    // async getAddressInfoByCountry(req: any): Promise<CommonResponseModel> {
+    //     try {
+    //         const info = await this.repo.findOne({
+    //             where: {
+    //                 deliveryAddress: Like(`%${req.country}%`) // Assuming you want to find records where address includes the given string
+    //             }
+    //         })
+    //         if (info) {
+    //             return new CommonResponseModel(true, 1, 'Data retrieved', [info])
+    //         } else {
+    //             return new CommonResponseModel(false, 0, 'No data found',[])
+    //         }
+    //     } catch (err) {
+    //         return new CommonResponseModel(false, 0, 'Something went wrong', err)
+    //     }
+    // }
     async getAddressInfoByCountry(req: any): Promise<CommonResponseModel> {
         try {
+            const countryWithoutSpaces = req.country.replace(/\s/g, '%'); // Replace spaces with %
             const info = await this.repo.findOne({
                 where: {
-                    deliveryAddress: Like(`%${req.country}%`) // Assuming you want to find records where address includes the given string
+                    deliveryAddress: Like(`%${countryWithoutSpaces}%`) // Search for the modified country string
                 }
-            })
+            });
             if (info) {
-                return new CommonResponseModel(true, 1, 'Data retrieved', [info])
+                return new CommonResponseModel(true, 1, 'Data retrieved', [info]);
             } else {
-                return new CommonResponseModel(false, 0, 'No data found',[])
+                return new CommonResponseModel(false, 0, 'No data found');
             }
         } catch (err) {
-            return new CommonResponseModel(false, 0, 'Something went wrong', err)
+            return new CommonResponseModel(false, 0, 'Something went wrong', err);
         }
     }
+    
 }

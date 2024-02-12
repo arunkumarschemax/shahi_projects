@@ -704,8 +704,12 @@ export class EddieService {
       const poMap = new Map<string, EddieOrdersEntity>();
       data.forEach(rec => {
         poMap.set(`${rec.poLine},${rec.poNumber}`, rec)
+    
 
-        const dest = rec.deliveryAddress;
+        const parts = rec.deliveryAddress.split(',')
+        const destAdd = parts[2].trim();
+        // console.log(destAdd,"tetetete")
+        const dest = destAdd;
 
         if (!destinationColSizesMap.has(`${rec.poLine},${rec.poNumber}`)) {
           destinationColSizesMap.set(`${rec.poLine},${rec.poNumber}`, new Map<string, Map<string, []>>());
@@ -835,6 +839,7 @@ export class EddieService {
       const frame = await driver.findElement(By.id('mainFrame'));
       await driver.switchTo().frame(frame)
       for (const po of poDetails) {
+        console.log(po,'pooooo')
         const coLine = new CoLineRequest();
         let buyerValue1;
         let buyerValue2;
@@ -847,7 +852,7 @@ export class EddieService {
           const response = await this.getOrderdataForCOline({ poNumber: po.po_number,poLine:po.po_line})
           console.log(response.data[0],"test")
           const coData = response.data[0];
-          coLine.buyerPo = coData.buyerPo;
+          coLine.buyerPo = coData.poNumber;
           const inputDate = new Date(coData.deliveryDate)
           // Calculate the date 7 days before the GAC date
           const sevenDaysBefore = new Date(inputDate);
@@ -859,16 +864,20 @@ export class EddieService {
           coLine.currency = coData.currency
           coLine.destinations = coData.destinations
           const request = coData.destinations[0]?.name;
+          console.log(request,"request")
           const address = await this.addressService.getAddressInfoByCountry({ country: request });
+          console.log(address,"addd")
           const addressData = address.data[0];
-          console.log(addressData)
-          buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 10;
-          deliveryAddress = addressData?.deliveryCode ? addressData?.deliveryCode : 11
+          console.log(addressData,"uuuuuuuuuuuuuu")
+          buyerAddress = 10;
+          deliveryAddress =  11
           buyerValue1 = "SGC-SHAHI GROUP OF COMPANIES"
-          buyerValue2 = "SEPLB200-SHAHI EXPORTS PVT LTD UN"
+          buyerValue2 = "SEPLB200-Shahi Exports Pvt Ltd Unit 12"
           agent = "-NA"
           pkgTerms = "FP1-WITHOUT HANGER"
-          paymentTerms = "031-TRDE CARD45 Day"
+          paymentTerms = "031-Trde Card45 Day"
+      
+
         }
         const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
         const allApps = await apps.findElements(By.tagName('span'));
@@ -902,9 +911,12 @@ export class EddieService {
         await driver.executeScript(`arguments[0].value = '${agent}';`, agentDropDown)
         await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
         await driver.findElement(By.name('dojo.EXFACTORYDATE')).clear();
+        console.log(coLine.exFactoryDate,"ex faccccccccccccc")
+         
         await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
         await driver.wait(until.elementLocated(By.name('dojo.delydt')));
         await driver.findElement(By.name('dojo.delydt')).clear();
+        console.log(coLine.deliveryDate,"deliverydatejjjjjjjjjj")
         await driver.findElement(By.name('dojo.delydt')).sendKeys(coLine.deliveryDate);
         await driver.wait(until.elementLocated(By.name('byd')));
         const dropdown = await driver.findElement(By.name('byd'));
@@ -1043,7 +1055,7 @@ export class EddieService {
           }
         }
         await driver.sleep(10000)
-        const element = await driver.findElement(By.id('OrderCreateID')).click();
+        // const element = await driver.findElement(By.id('OrderCreateID')).click();
         await driver.wait(until.alertIsPresent(), 10000);
         // Switch to the alert and accept it (click "OK")
         const alert = await driver.switchTo().alert();
@@ -1092,9 +1104,9 @@ export class EddieService {
         return new CommonResponseModel(false, 0, error)
       }
     }
-    finally {
-      driver.quit()
-    }
+    // finally {
+    //   driver.quit()
+    // }
   }
 
   async isAlertPresent(driver) {
