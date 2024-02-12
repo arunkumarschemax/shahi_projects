@@ -282,11 +282,12 @@ import { Excel } from 'antd-table-saveas-excel';
 
           // },  
      
+         
           {
             title: "Item Type",
             dataIndex: "itemType",
             align: "center",
-            width:120,
+            width: 120,
             render: (text) => (
               <>
                 {text === 'FABRIC' ? (
@@ -294,33 +295,29 @@ import { Excel } from 'antd-table-saveas-excel';
                 ) : text === 'SEWING_TRIM' ? (
                   'Sewing Trim'
                 ) : text === 'PACKING_TRIM' ? (
-                 ' Packing Trim'
+                  'Packing Trim'
                 ) : (
                   <Tag>{text}</Tag>
                 )}
               </>
             ),
-            onFilter: (value, record) => record.itemType === value,
+            onFilter: (value, record) => record.itemType.includes(value), // Modify the filter condition
             filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
               <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
-                <Checkbox
-                  checked={selectedKeys.includes('FABRIC')}
-                  onChange={() => setSelectedKeys(selectedKeys.includes('FABRIC') ? [] : ['FABRIC'])}
-                >
-                  <span >Fabric</span>
-                </Checkbox>
-                <Checkbox
-                  checked={selectedKeys.includes('SEWING_TRIM')}
-                  onChange={() => setSelectedKeys(selectedKeys.includes('SEWING_TRIM') ? [] : ['SEWING_TRIM'])}
-                >
-                  <span >Sewing Trim</span>
-                </Checkbox>
-                <Checkbox
-                  checked={selectedKeys.includes('PACKING_TRIM')}
-                  onChange={() => setSelectedKeys(selectedKeys.includes('PACKING_TRIM') ? [] : ['PACKING_TRIM'])}
-                >
-                  <span >Packing Trim</span>
-                </Checkbox>
+                {['FABRIC', 'SEWING_TRIM', 'PACKING_TRIM'].map((type) => (
+                  <Checkbox
+                    key={type}
+                    checked={selectedKeys.includes(type)}
+                    onChange={() => {
+                      const newSelectedKeys = selectedKeys.includes(type)
+                        ? selectedKeys.filter((key) => key !== type)
+                        : [...selectedKeys, type];
+                      setSelectedKeys(newSelectedKeys);
+                    }}
+                  >
+                    <span>{type === 'PACKING_TRIM' ? 'Packing Trim' : type}</span>
+                  </Checkbox>
+                ))}
                 <div className="custom-filter-dropdown-btns">
                   <Button onClick={() => clearFilters()} className="custom-reset-button">
                     Reset
@@ -510,6 +507,34 @@ import { Excel } from 'antd-table-saveas-excel';
           //   onFilter: (value, record) => record.locationMappedStatus === value,
       
           // },
+          // {
+          //   title: "PO Status",
+          //   dataIndex: "poStatus",
+          //   fixed: 'right',  
+          //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+          //     <div className="custom-filter-dropdown" style={{ flexDirection: 'column', marginLeft: 10 }}>
+          //       {['OPEN', 'CANCELLED', 'IN PROGRESS', 'CLOSED'].map((status) => (
+          //         <Checkbox
+          //           key={status}
+          //           checked={selectedKeys.includes(status)}
+          //           onChange={() => setSelectedKeys(selectedKeys.includes(status) ? [] : [status])}
+          //         >
+          //           <span>{status}</span>
+          //         </Checkbox>
+          //       ))}
+          //       <div className="custom-filter-dropdown-btns">
+          //         <Button onClick={() => clearFilters()} className="custom-reset-button">
+          //           Reset
+          //         </Button>
+          //         <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+          //           OK
+          //         </Button>
+          //       </div>
+          //     </div>
+          //   ),
+          //   onFilter: (value, record) => record.poStatus === value,
+          // },
+          //this is working for single selection only please check it if multiple selection is not working
           {
             title: "PO Status",
             dataIndex: "poStatus",
@@ -520,7 +545,12 @@ import { Excel } from 'antd-table-saveas-excel';
                   <Checkbox
                     key={status}
                     checked={selectedKeys.includes(status)}
-                    onChange={() => setSelectedKeys(selectedKeys.includes(status) ? [] : [status])}
+                    onChange={() => {
+                      const newSelectedKeys = selectedKeys.includes(status)
+                        ? selectedKeys.filter((key) => key !== status)
+                        : [...selectedKeys, status];
+                      setSelectedKeys(newSelectedKeys);
+                    }}
                   >
                     <span>{status}</span>
                   </Checkbox>
@@ -537,6 +567,7 @@ import { Excel } from 'antd-table-saveas-excel';
             ),
             onFilter: (value, record) => record.poStatus === value,
           },
+          
           
     ]
     
