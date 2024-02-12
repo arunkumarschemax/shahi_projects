@@ -145,7 +145,7 @@ export class DivisionService {
             const divisionExists = await this.getdivisionById(divisionReq.divisionId);
             if (divisionExists) {
                 if (divisionReq.versionFlag !== divisionExists.versionFlag) {
-                    throw new DivisionResponseModel(false,10113, 'Someone updated the current  information.Refresh and try again');
+                    throw new DivisionResponseModel(false,10113, 'Someone updated the current information.Refresh and try again');
                 } else {
                     
                         const divisionStatus =  await this.divisionRepository.update(
@@ -157,7 +157,7 @@ export class DivisionService {
                                 const divisionResponse: DivisionResponseModel = new DivisionResponseModel(true, 10115, 'Division is de-activated successfully');
                                 return divisionResponse;
                             } else {
-                                throw new DivisionResponseModel(false,10111, 'division is already deactivated');
+                                throw new DivisionResponseModel(false,10111, 'Division is already deactivated');
                             }
                         } else {
                             if (divisionStatus.affected) {

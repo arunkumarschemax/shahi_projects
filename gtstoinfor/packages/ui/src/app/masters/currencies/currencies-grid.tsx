@@ -191,7 +191,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
     {
       title: "Currency Name",
       dataIndex: "currencyName",
-      sorter: (a, b) => a.source.localeCompare(b.source),
+      sorter: (a, b) => a.currencyName.localeCompare(b.currencyName),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("currencyName"),
     },
@@ -375,7 +375,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
       console.log(res);
       if (res.status) {
         // getAllCurrencys();
-        AlertMessages.getSuccessMessage('Success');
+        AlertMessages.getSuccessMessage(res.internalMessage);
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -426,6 +426,7 @@ export const CurrenciesGrid = (props: CurrenciesGridProps) => {
       <br></br>
         <Table
         size='small'
+        className="custom-table-wrapper"
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}

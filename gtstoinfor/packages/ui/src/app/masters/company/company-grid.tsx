@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Divider, Table, Popconfirm, Card,Checkbox
   // , Tooltip
-  , Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal } from 'antd';
+  , Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 // import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -135,7 +135,7 @@ let createdUser = ''
     {
       title: "Company Name",
       dataIndex: "companyName",
-      sorter: (a, b) => a.source.localeCompare(b.source),
+      sorter: (a, b) => a.companyName.localeCompare(b.companyName),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("companyName"),
     },
@@ -143,14 +143,14 @@ let createdUser = ''
     {
       title: "Company Code",
       dataIndex: "companyCode",
-      sorter: (a, b) => a.source.localeCompare(b.source),
+      sorter: (a, b) => a.companyCode.localeCompare(b.companyCode),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("companyCode"),
     }, ,
     {
       title: "Organisation Name",
       dataIndex: "organizationCode",
-      sorter: (a, b) => a.source.localeCompare(b.source),
+      sorter: (a, b) => a.organizationCode.localeCompare(b.organizationCode),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("organizationCode"),
     },
@@ -484,7 +484,7 @@ let createdUser = ''
 
     <>
     <Card title='Company' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/global/company/company-form')} type={'primary'}>New</Button></span>}>
-   <Row gutter={40}>
+   {/* <Row gutter={40}>
         <Col>
           <Card title={'Total Company: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -494,13 +494,31 @@ let createdUser = ''
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-        {/* <Col>
+         <Col>
           <span><Button onClick={() => navigate('/global/company/company-form')}
             type={'primary'}>New</Button></span>
-        </Col> */}
-      </Row><br></br>
+        </Col> 
+      </Row><br></br> */}
+      <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+    
+           <Alert type='success' message={'Total Company: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
       <Card >
         <Table
+          className="custom-table-wrapper"
           size='small'
           // rowKey={record => record.variantId}
           columns={columnsSkelton}

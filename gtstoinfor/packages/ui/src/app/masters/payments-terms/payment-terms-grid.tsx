@@ -377,7 +377,7 @@ export function PaymentTermsGrid(
           size="small"
           columns={columnsSkelton}
           dataSource={paymentTermsData}
-
+          className="custom-table-wrapper"
           scroll={{x:true,y:500}}
            pagination={{
             pageSize:50,

@@ -367,6 +367,7 @@ export const  BuyersView = () => {
           
      <Card>
     <Table columns={columnsSkelton} 
+    className="custom-table-wrapper"
     dataSource={buyersData} 
     scroll={{x:true,y:500}}
            pagination={{

@@ -54,7 +54,7 @@ import RolePermission from "../role-permissions";
     const checkAccess = (buttonParam) => {   
       console.log(buttonParam,'access');
 
-      const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus.Grn,buttonParam)
+      const accessValue = RolePermission(null,MenusAndScopesEnum.Menus.Procurment,MenusAndScopesEnum.SubMenus.GRN,buttonParam)
        console.log(accessValue,'access');
       
       return accessValue

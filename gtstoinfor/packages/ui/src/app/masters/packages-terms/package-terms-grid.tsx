@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Checkbox } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, message, Checkbox, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import Highlighter from 'react-highlight-words';
@@ -258,7 +258,7 @@ export function PackageTermsGrid() {
     extra={<Link to = "/global/package-terms/package-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
     >
      <br></br>
-      <Row gutter={40}>
+      {/* <Row gutter={40}>
          <Col>
          <Card title={'Total Package Terms: ' + packageTermsData.length} style={{textAlign: 'left', width: 230, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
@@ -271,9 +271,27 @@ export function PackageTermsGrid() {
            <Col>
         </Col>
           </Row> 
+          <br></br> */}
+          <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+    
+           <Alert type='success' message={'Total Package Terms: ' + packageTermsData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + packageTermsData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + packageTermsData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
           <br></br>
           <Table
           size='small'
+          className="custom-table-wrapper"
           columns={columnsSkelton}
           dataSource={packageTermsData}
           scroll={{x:true}}
