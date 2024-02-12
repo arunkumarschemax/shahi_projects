@@ -17,6 +17,7 @@ import { CentricChildEntity } from "./entity/centric-child.entity";
 import { CentricOrdersChildRepository } from "./repositories/centric-child.repo";
 import { ColorEntity } from "../Entites@Shahi/color/color-entity";
 import { ColorRepository } from "../Entites@Shahi/color/color-repo";
+import { ColorService } from "../Entites@Shahi/color/color-service";
 
 
 @Module({
@@ -26,6 +27,6 @@ import { ColorRepository } from "../Entites@Shahi/color/color-repo";
       CentricEntity, CentricPdfFileUploadEntity, CentricCOLineEntity, AddressEntity,CentricChildEntity,ColorEntity
     ])],
   controllers: [CentricController],
-  providers: [CentricService, CentricRepository, ApplicationExceptionHandler, CentricPdfRepository, CentricCOLineRepository, AddressRepository, AddressService,CentricOrdersChildRepository,ColorRepository]
+  providers: [CentricService, CentricRepository, ApplicationExceptionHandler, CentricPdfRepository, CentricCOLineRepository, AddressRepository, AddressService,CentricOrdersChildRepository,ColorRepository,ColorService]
 })
 export class CentricModule { }
