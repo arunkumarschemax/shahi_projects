@@ -53,6 +53,8 @@ import CentriColineView from "./centric/centric-co-line-view"
 import SolidPOReport from "./centric/solid-pack-po-report"
 import PdfInfoDetailView from "./centric/pdf-info-detail-view"
 import CentricOrderComparisionReport from "./centric/centric-comparision-report"
+import ColorView from "./masters/color/color-view"
+import ColorUpload from "./masters/color/color-excel-upload"
 
 
 export const AppRoutes = () => {
@@ -211,6 +213,9 @@ export const AppRoutes = () => {
                    <Route path='solid-pack-po-report' element={<SolidPOReport />} />
                    <Route path='pdf-info-detail-view' element={<PdfInfoDetailView />} />
                    <Route path='order-comparision-report' element={<CentricOrderComparisionReport />} />
+
+                   <Route path='masters/color/color-excel-upload' key='/color/color-excel-upload' element={<ColorUpload/>} />
+                   <Route path='masters/color/color-view' key='/color/color-view' element={<ColorView/>} />
 
 
                     

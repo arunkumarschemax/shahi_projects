@@ -9,3 +9,4 @@ export * from './fabric-content-fe-services';
 export * from './rl-orders-services'
 export * from './address-service'
 export * from './centric-service'
+export * from './color-service'

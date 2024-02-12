@@ -13,6 +13,7 @@ import { AppDataSource } from './app-datasource';
 import { RLOrdersModule } from './ralph-lauren/rl-orders.module';
 import { AddressModule } from './Entites@Shahi/address/address-module';
 import { CentricModule } from './centric-buyer/centric.module';
+import { ColorModule } from './Entites@Shahi/color/color-module';
 
 
 @Module({
@@ -34,7 +35,7 @@ import { CentricModule } from './centric-buyer/centric.module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,CentricModule,AddressModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,CentricModule,AddressModule,ColorModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
