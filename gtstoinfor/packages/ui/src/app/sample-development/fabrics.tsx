@@ -678,7 +678,7 @@ const FabricsForm = (props:FabricsFormProps) => {
       ),
     },
     {
-      title: 'Fabrid Color',
+      title: 'Fabric Color',
       dataIndex: 'fabriccolor',
       width:"25%",
 
