@@ -383,58 +383,58 @@ export function RLOrdersGrid() {
             }
           },
 
-          {
-            title: 'MSRP',
-            dataIndex: '',
-            key: '',
-            width: 70,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.msrpPrice)
-                  return (
-                    formattedQty
-                  );
-                } else {
+          // {
+          //   title: 'MSRP',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 70,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     console.log()
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.msrpPrice)
+          //         return (
+          //           formattedQty
+          //         );
+          //       } else {
 
-                  return (
-                    '-'
-                  );
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
-          {
-            title: 'Customer Selling Price',
-            dataIndex: '',
-            key: '',
-            width: 100,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.csprice)
-                  return (
-                    formattedQty
-                  );
-                } else {
+          //         return (
+          //           '-'
+          //         );
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
+          // {
+          //   title: 'Customer Selling Price',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 100,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     console.log()
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.csprice)
+          //         return (
+          //           formattedQty
+          //         );
+          //       } else {
 
-                  return (
-                    '-'
-                  );
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
+          //         return (
+          //           '-'
+          //         );
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
           {
             title: 'Price',
             dataIndex: '',
@@ -564,35 +564,35 @@ export function RLOrdersGrid() {
         },
       },
       
-      {
-        title: "Total Amount",
-        dataIndex: "",
-        align: "center",
-        width: 90,
-        sorter: (a, b) => {
-          const sumA = a.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.amount) || 0, 0);
-          const sumB = b.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.amount) || 0, 0);
+      // {
+      //   title: "Total Amount",
+      //   dataIndex: "",
+      //   align: "center",
+      //   width: 90,
+      //   sorter: (a, b) => {
+      //     const sumA = a.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.amount) || 0, 0);
+      //     const sumB = b.sizeWiseData.reduce((acc, r) => acc + parseFloat(r.amount) || 0, 0);
       
-          return sumA - sumB;
-        },
-        render: (text, record) => {
-          let sum = 0;
-          record.sizeWiseData.forEach((r) => {
-            // Convert to number before summing
-            sum += parseFloat(r.amount) || 0;
-          });
-          // return sum.toLocaleString("en-IN") ;
-          const formattedSum = sum.toFixed(2);
-          const currency = record.currency  // Default to USD if currency is not available
+      //     return sumA - sumB;
+      //   },
+      //   render: (text, record) => {
+      //     let sum = 0;
+      //     record.sizeWiseData.forEach((r) => {
+      //       // Convert to number before summing
+      //       sum += parseFloat(r.amount) || 0;
+      //     });
+      //     // return sum.toLocaleString("en-IN") ;
+      //     const formattedSum = sum.toFixed(2);
+      //     const currency = record.currency  // Default to USD if currency is not available
 
-          return (
-            <>
-              <span>{formattedSum} {currency}</span>
+      //     return (
+      //       <>
+      //         <span>{formattedSum} {currency}</span>
               
-            </>
-          );
-        },
-      },
+      //       </>
+      //     );
+      //   },
+      // },
       {
         title: "Delivery Date",
         dataIndex: "handOverDate",
@@ -620,7 +620,7 @@ export function RLOrdersGrid() {
         width: 120,
         render: (value, record) => (
           <>
-            <Button onClick={() => setMoreData(record)}>More Info</Button>
+            <Button  type="primary" onClick={() => setMoreData(record)}>More Info</Button>
           </>
         ),
       }
@@ -827,58 +827,58 @@ export function RLOrdersGrid() {
             }
           },
 
-          {
-            title: 'MSRP',
-            dataIndex: '',
-            key: '',
-            width: 70,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.msrpPrice)
-                  return (
-                    formattedQty
-                  );
-                } else {
+          // {
+          //   title: 'MSRP',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 70,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     console.log()
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.msrpPrice)
+          //         return (
+          //           formattedQty
+          //         );
+          //       } else {
 
-                  return (
-                    '-'
-                  );
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
-          {
-            title: 'Customer Selling Price',
-            dataIndex: '',
-            key: '',
-            width: 100,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.csprice)
-                  return (
-                    formattedQty
-                  );
-                } else {
+          //         return (
+          //           '-'
+          //         );
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
+          // {
+          //   title: 'Customer Selling Price',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 100,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     console.log()
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.csprice)
+          //         return (
+          //           formattedQty
+          //         );
+          //       } else {
 
-                  return (
-                    '-'
-                  );
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
+          //         return (
+          //           '-'
+          //         );
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
           {
             title: 'Price',
             dataIndex: '',
@@ -1000,24 +1000,24 @@ export function RLOrdersGrid() {
         },
       },
       
-      {
-        title: "Total Amount",
-        dataIndex: "",
-        align: "center",
-        width: 130,
-        render: (text, record) => {
-          let sum = 0;
-          const currency = record.currency 
-          record.sizeWiseData.forEach((r) => {
-            // Convert to number before summing
-            sum += parseFloat(r.amount) || 0;
-          });
-          return  `${sum.toFixed(2)}  ${currency} `;
+      // {
+      //   title: "Total Amount",
+      //   dataIndex: "",
+      //   align: "center",
+      //   width: 130,
+      //   render: (text, record) => {
+      //     let sum = 0;
+      //     const currency = record.currency 
+      //     record.sizeWiseData.forEach((r) => {
+      //       // Convert to number before summing
+      //       sum += parseFloat(r.amount) || 0;
+      //     });
+      //     return  `${sum.toFixed(2)}  ${currency} `;
 
 
        
-        },
-      },
+      //   },
+      // },
       {
         title: "Delivery Date",
         dataIndex: "handOverDate",
@@ -1123,10 +1123,11 @@ export function RLOrdersGrid() {
               md={{ span: 8 }}
               lg={{ span: 8 }}
               xl={{ span: 4 }}
+              style={{ marginLeft: 20 }}
+
             >
               <Form.Item>
                 <Button
-                  style={{ marginLeft: 20 }}
                   htmlType="submit"
                   icon={<SearchOutlined />}
                   type="primary"
@@ -1142,10 +1143,11 @@ export function RLOrdersGrid() {
               md={{ span: 5 }}
               lg={{ span: 5 }}
               xl={{ span: 4 }}
+              style={{ marginLeft: 70 }}
+
             >
               <Form.Item>
                 <Button
-                  style={{ marginLeft: 70 }}
                   htmlType="submit"
                   type="primary"
                   onClick={onReset}

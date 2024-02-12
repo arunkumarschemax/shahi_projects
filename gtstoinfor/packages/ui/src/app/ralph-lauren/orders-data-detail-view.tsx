@@ -360,21 +360,21 @@ const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
 
 
-useEffect(() => {
-    getorderData();
-  }, []);
+// useEffect(() => {
+//     getorderData();
+//   }, []);
 
-  const getorderData = () => {
-    const req = new PoOrderFilter(location?.state?.data?.poNumber);
-    req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
-    service.getorderDataByPoNumber(req).then((res) => {
-      if (res.status) {
-        setOrderData(res.data);
-      } else {
-        message.error(res.internalMessage)
-      }
-    });
-  };
+//   const getorderData = () => {
+//     const req = new PoOrderFilter(location?.state?.data?.poNumber);
+//     req.externalRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+//     service.getorderDataByPoNumber(req).then((res) => {
+//       if (res.status) {
+//         setOrderData(res.data);
+//       } else {
+//         message.error(res.internalMessage)
+//       }
+//     });
+//   };
 
 
  console.log(location?.state?.data,"yyyyyyyyyyyyy")
@@ -386,7 +386,7 @@ useEffect(() => {
             title: "S.No",
             key: "sno",
             align:"center",
-            // width: 25,
+            width: 110,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
             // fixed: 'left'
         },
@@ -394,7 +394,7 @@ useEffect(() => {
             // title: <div style={{textAlign:"center"}}>Size</div>,4
             title:"Size",
             dataIndex: 'size',
-            // align:"center",
+            align:"center",
             // width: 60,
             sorter: (a, b) => a.size.localeCompare(b.size),
             render: (text) => text ? text : "-",
@@ -402,28 +402,28 @@ useEffect(() => {
         },
         {
             title: 'UPC/EAN',
-            dataIndex: 'upc_ean',
-            // align:"center",
-            // width: 60,
-            sorter: (a, b) => a.upc_ean.localeCompare(b.upc_ean),
+            dataIndex: 'upcEan',
+            align:"center",
+             width: 180,
+            sorter: (a, b) => a.upc_ean.localeCompare(b.upcEan),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-"
             // ...getColumnSearchProps('purchaseOrderNumber')
         },
-        {
-            title: 'MSRP',
-            dataIndex: 'msrp_price',
-            // width: 60,
-            // align:"center",
-            sorter: (a, b) => a.msrp_price.localeCompare(b.msrp_price),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
-            // ...getColumnSearchProps('purchaseOrderNumber')
-        },
+        // {
+        //     title: 'MSRP',
+        //     dataIndex: 'msrp_price',
+        //     // width: 60,
+        //     // align:"center",
+        //     sorter: (a, b) => a.msrp_price.localeCompare(b.msrp_price),
+        //     sortDirections: ["ascend", "descend"],
+        //     render: (text) => text ? text : "-"
+        //     // ...getColumnSearchProps('purchaseOrderNumber')
+        // },
         {
             title: 'Price',
             dataIndex: 'price',
-            // width: 60,
+            width: 180,
             // align:"center",
             sorter: (a, b) => a.price.localeCompare(b.price),
             sortDirections: ["ascend", "descend"],
@@ -450,7 +450,7 @@ useEffect(() => {
         {
             title: 'Quantity',
             dataIndex: 'quantity',
-            // width: 60,
+             width: 160,
             // align:"center",
             sorter: (a, b) => a.quantity.localeCompare(b.quantity),
             sortDirections: ["ascend", "descend"],
@@ -459,7 +459,7 @@ useEffect(() => {
         {
             title: 'Amount',
             dataIndex: 'amount',
-            // width: 60,
+             width: 160,
             // align:"center",
             sorter: (a, b) => a.amount.localeCompare(b.amount),
             sortDirections: ["ascend", "descend"],
@@ -470,7 +470,7 @@ useEffect(() => {
    
 
     const getTotalAmountAndQuantity = () => {
-        const total = orderData.reduce(
+        const total = location?.state?.data?.sizeWiseData.reduce(
           (accumulator, item) => {
             accumulator.amount += parseFloat(item.amount) || 0;
             accumulator.quantity += parseInt(item.quantity, 10) || 0;
@@ -491,8 +491,8 @@ useEffect(() => {
 
 
     return (
-        <Card title="Order Detail View"
-        extra ={<Link to='/ralph-lauren/order-data-info-grid' ><Button className='panel_button' >View </Button></Link>}
+        <Card title="Order Details"
+        extra ={<Link to='/ralph-lauren/order-data-info-grid' ><Button className='panel_button' type="primary" >View </Button></Link>}
         >
         <Descriptions size="small" column={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 2 }} >
         <Descriptions.Item label='Material Number'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.materialNo ? location.state.data.materialNo : "--"}</Descriptions.Item>
@@ -504,9 +504,9 @@ useEffect(() => {
         <Descriptions.Item label='Season Code'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.seasonCode ? location?.state?.data?.seasonCode :"--"}</Descriptions.Item>
         <Descriptions.Item label='Board Code'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.boardCode ? location?.state?.data?.boardCode :"--"}</Descriptions.Item>
         <Descriptions.Item label='Color'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.color ? location?.state?.data?.color :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Division'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.division ? location?.state?.data?.division :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Ship Mode'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipMode ? location?.state?.data?.shipMode :"--"}</Descriptions.Item>
-        <Descriptions.Item label='Ship Date'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipDate ? location?.state?.data?.shipDate :"--"}</Descriptions.Item>
+        {/* <Descriptions.Item label='Division'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.division ? location?.state?.data?.division :"--"}</Descriptions.Item> */}
+        {/* <Descriptions.Item label='Ship Mode'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipMode ? location?.state?.data?.shipMode :"--"}</Descriptions.Item> */}
+        {/* <Descriptions.Item label='Ship Date'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipDate ? location?.state?.data?.shipDate :"--"}</Descriptions.Item> */}
         <Descriptions.Item label='Ship To Address'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.shipToAddress ? location?.state?.data?.shipToAddress :"--"}</Descriptions.Item>
         <Descriptions.Item label='Agent'labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.agent ? location?.state?.data?.agent :"--"}</Descriptions.Item>
        
@@ -517,7 +517,7 @@ useEffect(() => {
                      <Table
                         size="small"
                         columns={columns}
-                        dataSource={orderData}
+                        dataSource={location?.state?.data?.sizeWiseData}
                         className="custom-table-wrapper"
                         // pagination={{
                         // pageSize: 50,
@@ -532,8 +532,8 @@ useEffect(() => {
                         <>
                             <Table.Summary.Row className="tableFooter">
                                 
-                                    <Table.Summary.Cell index={1} colSpan={5}>
-                                    <span style={{ marginLeft:600 }}>
+                                    <Table.Summary.Cell index={1} colSpan={4}>
+                                    <span style={{ marginLeft:450 }}>
                                         <b>PO Line Total</b>
                                     </span>
                                 
@@ -543,11 +543,11 @@ useEffect(() => {
                                         <b>{Number(totalQuantity)}</b>
                                     </span>
                                     </Table.Summary.Cell>
-                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    {/* <Table.Summary.Cell index={1} colSpan={1}>
                                     <span>
                                         <b>{Number(totalAmount)} {location?.state?.data?.currency} </b>
                                     </span>
-                                    </Table.Summary.Cell>
+                                    </Table.Summary.Cell> */}
                                     
 
                                     <Table.Summary.Cell index={1} colSpan={1}>
@@ -557,22 +557,22 @@ useEffect(() => {
                                 </Table.Summary.Row>
                                 <Table.Summary.Row className="tableFooter">
                                 
-                                    <Table.Summary.Cell index={1} colSpan={5}>
+                                    {/* <Table.Summary.Cell index={1} colSpan={5}>
                                     <span style={{ marginLeft:600 }}>
                                         <b>Purchase Order Total</b>
                                     </span>
                                 
-                                    </Table.Summary.Cell>
-                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    </Table.Summary.Cell> */}
+                                    {/* <Table.Summary.Cell index={1} colSpan={1}>
                                     <span>
                                         <b>{Number(totalQuantity)}</b>
                                     </span>
-                                    </Table.Summary.Cell>
-                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    </Table.Summary.Cell> */}
+                                    {/* <Table.Summary.Cell index={1} colSpan={1}>
                                     <span>
                                         <b>{Number(totalAmount)} {location?.state?.data?.currency} </b>
                                     </span>
-                                    </Table.Summary.Cell>
+                                    </Table.Summary.Cell> */}
                                     
 
                                     <Table.Summary.Cell index={1} colSpan={1}>
