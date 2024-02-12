@@ -272,6 +272,8 @@ const [sizeData, setSizeData]=useState<any[]>([])
                     m3FabricCode: defaultFabricFormData.m3FabricCode,
                     colourId: defaultFabricFormData.colourId,
                     colorName: defaultFabricFormData.colorName,
+                    garColourId:defaultFabricFormData.garcolourId,
+                    garColorName:defaultFabricFormData.garColorName,
                 shahiFabricCode: defaultFabricFormData.shahiFabricCode,
                 itemCode:defaultFabricFormData.itemCode,
                 quantityUomId: defaultFabricFormData.quantityUomId,
@@ -445,8 +447,12 @@ const [sizeData, setSizeData]=useState<any[]>([])
             }
         },
         {
-            title: 'Color',
+            title: 'Fabric Color',
             dataIndex: 'colorName',
+        },
+        {
+            title: 'Garment Color',
+            dataIndex: 'garColorName',
         },
         {
             title: 'HSN Code',
@@ -650,6 +656,8 @@ const [sizeData, setSizeData]=useState<any[]>([])
         <Card title={<span style={{ color: 'blue', fontSize: '17px' }} >Fabric Details</span>}>
             <Form form={fabricForm} layout="vertical" onFinish={onFabricAdd}>
                 <Row gutter={24}>
+                    <Form.Item name='garColorName' hidden><Input ></Input></Form.Item>
+                    <Form.Item name='garcolourId' hidden><Input ></Input></Form.Item>
                     <Form.Item name='colorName' hidden><Input ></Input></Form.Item>
                     <Form.Item name='indentQuantity' hidden><Input></Input></Form.Item>
                     <Form.Item name={'indentFabricId'} hidden><Input></Input></Form.Item>

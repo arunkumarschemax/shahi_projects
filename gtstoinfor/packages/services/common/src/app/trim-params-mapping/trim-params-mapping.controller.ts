@@ -45,4 +45,12 @@ export class TrimParamsMappingController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
       }
+      @Post('/getAllMappedTrimParams')
+      async getAllMappedTrimParams(): Promise<CommonResponseModel> {
+        try {
+            return await this.trimParamsMappingService.getAllMappedTrimParams();
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+        }
+      }
 }

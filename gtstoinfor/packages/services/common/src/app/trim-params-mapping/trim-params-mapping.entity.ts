@@ -160,6 +160,14 @@ export class TrimParamsMapping{
     name:"parts"
   })
   parts:boolean;
+
+  @Column("boolean",{
+    nullable:false,
+    default:false,
+    name:"size"
+  })
+  size:boolean;
+  
   @CreateDateColumn({
     name: "created_at",
     type:"datetime"
