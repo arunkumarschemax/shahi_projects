@@ -183,6 +183,13 @@ export const extractDataFromPoPdf = async (pdf) => {
         if (deliveryDate === '00.00.0000') {
             continue; 
         }
+        
+        // const itemVariantsObj = new PoItemDetailsDto();
+        const itemVariantsObj = new PoItemVariantDto();
+        const unitPrice = itemVariantsObj.unitPrice;
+        if (unitPrice === 'Each Still to be delivered') {
+            continue; 
+        }
         //-------------------------------------------------------------
         // check if ship to data exists
         let isShipToTextExist = false
@@ -347,6 +354,21 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemVariantsObj.uom = itemVarinatsTextArr[(6 * l) + 0];
         
             const unitPriceWithCurrency = itemVarinatsTextArr[(6 * l) + 1] + ' ' + itemVarinatsTextArr[(6 * l) + 2];
+
+            //Each still to be delivery starts here ----
+        
+            if (unitPriceWithCurrency.includes("Each Still to be delivered")) {
+                itemDetailsObj.itemNo = null;
+                itemDetailsObj.matrial=null;
+                itemDetailsObj.description = null;
+                itemDetailsObj.deliveryDate = null;
+                itemDetailsObj.mode = null;
+                itemDetailsObj.acceptanceDate = null;
+                break;
+            }
+
+            ////// to this -------
+    
             const usdIndex = unitPriceWithCurrency.indexOf('USD');
         
             if (usdIndex !== -1) {
@@ -390,6 +412,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemVariantsObj.qunatity = numberWithoutComma;
             itemVariantsObj.amount = itemVarinatsTextArr[(6 * l) + 5];
             console.log(itemVariantsObj);
+            
             itemVariantsArr.push(itemVariantsObj);
         }
         
