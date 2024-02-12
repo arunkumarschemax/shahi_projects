@@ -60,6 +60,8 @@ import HBOrdersGrid from "./hb-athletics/hb-order-data-grid"
 import HBOrdersDetailView from "./hb-athletics/hb-order-data-details-view"
 import HbColineView from "./hb-athletics/hb-co-line-view"
 import OrderComparisionReport from "./hb-athletics/hb-order-comparsion-report"
+import ColorUpload from "./masters/color/color-excel-upload"
+import ColorView from "./masters/color/color-view"
 
 
 export const AppRoutes = () => {
@@ -237,6 +239,9 @@ export const AppRoutes = () => {
 
                    <Route path='hb-co-line-view' element={<HbColineView />} />
                    <Route path='hb-order-comparision-report' element={<OrderComparisionReport />} />
+
+                   <Route path='masters/color/color-excel-upload' key='/color/color-excel-upload' element={<ColorUpload/>} />
+                   <Route path='masters/color/color-view' key='/color/color-view' element={<ColorView/>} />
 
 
 
