@@ -645,6 +645,13 @@ export class DpomEntity {
     })
     leadTime: string;
 
+    @Column("varchar", {
+        name: "bom_item",
+        length: 10,
+        nullable: true
+    })
+    bomItem: string;
+
     @Column("date", {
         name: "record_date",
         nullable: true

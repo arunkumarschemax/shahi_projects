@@ -59,6 +59,7 @@ import { CountryStickerPrint } from "./trims/trim-prints/country-sticker"
 import ItemInfo from "./trims/item-info"
 import ProLayout from "@ant-design/pro-layout"
 import LayoutTwo from "./layout/basic-layout/pro-layout"
+import PoItemNoUpdate from "./nike/components/po-update"
 
 // import BasicLayout  from '@ant-design/pro-layout';
 export const AppRoutes = () => {
@@ -107,6 +108,7 @@ export const AppRoutes = () => {
                     <Route path='fabrick-tracker-report1' element={<FabricTrackerReport1 />} />
                     <Route path='fabrick-tracker-report2' element={<FabricTrackerReport2 />} />
                     <Route path='order-acceptance' element={<OrderAcceptance />} />
+                    <Route path='update-po-item-no' element={<PoItemNoUpdate />} />
                     <Route path='shipment-planning-chart' element={<ShipmentPlanningChart />} />
                     <Route path='shipment-report' element={<ShipmentTrackerReport />} />
 
