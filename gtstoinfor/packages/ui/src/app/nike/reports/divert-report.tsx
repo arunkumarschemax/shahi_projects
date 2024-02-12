@@ -354,7 +354,10 @@ const DivertReport = () => {
                 {
                     title: "Request Date",
                     dataIndex: 'orequestDate',
-                    width: 70
+                    width: 70,
+                    render: (text, record) => {
+                        return record.orequestDate ? moment(record.orequestDate).format('MM/DD/YYYY') : "-";
+                    }
                 },
                 {
                     title: "From Item",
@@ -691,7 +694,7 @@ const DivertReport = () => {
                 },
                 {
                     title: 'Trims Change',
-                    dataIndex: '', width: 70,
+                    dataIndex: '', width: 120,
                     render: (text, rowData) => (
                         <span>
                             <Form.Item>
@@ -710,7 +713,7 @@ const DivertReport = () => {
                 },
                 {
                     title: 'Surcharge',
-                    dataIndex: 'id', width: 70,
+                    dataIndex: 'id', width: 80,
                     render: (text, rowData) => (
                         <span>
                             <Form.Item>

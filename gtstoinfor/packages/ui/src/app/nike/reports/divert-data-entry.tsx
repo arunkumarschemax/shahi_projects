@@ -2,16 +2,11 @@ import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, message, Space, Tag, Statistic, Modal, TreeSelect, Tooltip, Checkbox, Popconfirm, Switch } from 'antd';
 import React, { useEffect, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
 
 
 const DivertDataEntry = () => {
     const [form] = Form.useForm();
-    const [gridData, setGridData] = useState<any[]>([]);
-    const [filteredData, setFilteredData] = useState<any[]>([]);
     const service = new NikeService();
-    const [filterData, setFilterData] = useState<any>([])
-    const { RangePicker } = DatePicker;
 
     useEffect(() => {
 
@@ -31,9 +26,6 @@ const DivertDataEntry = () => {
 
     const onReset = () => {
         form.resetFields()
-        setGridData([])
-        setFilterData([])
-        setFilteredData([])
     }
 
     return (

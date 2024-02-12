@@ -1909,44 +1909,49 @@ export class DpomService {
             await transactionManager.startTransaction();
             const divertArr: DivertEntity[] = []
             for (const data of req) {
-                const entity = new DivertEntity()
-                entity.orequestDate = data.newpo[0].orequestDate
-                entity.oItem = data.oldPo[0].item
-                entity.oFactory = data.oldPo[0].factory
-                entity.oPlant = data.oldPo[0].Plant
-                entity.oProductCode = data.oldPo[0].productCode
-                entity.oLineItemStatus = data.oldPo[0].LineStatus
-                entity.oDocumentDate = moment(data.oldPo[0].DocumentDate).format('YYYY-MM-DD')
-                entity.oPurchaseOrderNumber = data.oldPo[0].poNumber
-                entity.oPoLineItemNumber = data.oldPo[0].poLine
-                entity.oldVal = data.oldPo[0].oldVal
-                entity.oTotalItemQty = data.oldPo[0].Quantity
-                entity.oDestination = data.oldPo[0].destination
-                entity.oShipmentType = data.oldPo[0].shipmentType
-                entity.oOGAC = data.oldPo[0].ogac
-                entity.oGAC = data.oldPo[0].gac
-                entity.oInventorySegmentCode = data.oldPo[0].inventorySegmentCode
-                entity.oItemVasText = data.oldPo[0].itemVasText
-                entity.oFOBPrice = data.oldPo[0].gross_price_fob
-                entity.oTradingCoNetIncDis = data.oldPo[0].trading_net_inc_disc
-                entity.nOGAC = data.newpo[0].nogac
-                entity.nGAC = data.newpo[0].ngac
-                entity.nItem = data.newpo[0].item
-                entity.nFactory = data.newpo[0].factory
-                entity.nPlant = data.newpo[0].nPlant
-                entity.nProductCode = data.newpo[0].nproductCode
-                entity.nLineItemStatus = data.newpo[0].nLineStatus
-                entity.nDocumentDate = moment(data.newpo[0].nDocumentDate).format('YYYY-MM-DD')
-                entity.nPurchaseOrderNumber = data.newpo[0].npoNumber
-                entity.nPoLineItemNumber = data.newpo[0].npoLine
-                entity.nTotalItemQty = data.newpo[0].nQuantity
-                entity.nDestination = data.newpo[0].ndestination
-                entity.nInventorySegmentCode = data.newpo[0].ninventorySegmentCode
-                entity.nItemVasText = data.newpo[0].nitemVasText
-                entity.nShipmentType = data.newpo[0].nshipmentType
-                entity.nFOBPrice = data.newpo[0].gross_price_fob
-                entity.nTradingCoNetIncDis = data.newpo[0].trading_net_inc_disc
-                divertArr.push(entity)
+                const divertData = await this.divertRepository.findOne({ where: { oPurchaseOrderNumber: data.oldPo[0].poNumber, oPoLineItemNumber: data.oldPo[0].poLine, nPurchaseOrderNumber: data.newpo[0].npoNumber, nPoLineItemNumber: data.newpo[0].npoLine } })
+                if (divertData) {
+                    continue;
+                } else {
+                    const entity = new DivertEntity()
+                    entity.orequestDate = data.newpo[0].orequestDate != '-' ? moment(data.newpo[0].orequestDate, 'MM/DD/YYYY').format('YYYY-MM-DD') : null
+                    entity.oItem = data.oldPo[0].item
+                    entity.oFactory = data.oldPo[0].factory
+                    entity.oPlant = data.oldPo[0].Plant
+                    entity.oProductCode = data.oldPo[0].productCode
+                    entity.oLineItemStatus = data.oldPo[0].LineStatus
+                    entity.oDocumentDate = moment(data.oldPo[0].DocumentDate).format('YYYY-MM-DD')
+                    entity.oPurchaseOrderNumber = data.oldPo[0].poNumber
+                    entity.oPoLineItemNumber = data.oldPo[0].poLine
+                    entity.oldVal = data.oldPo[0].oldVal
+                    entity.oTotalItemQty = data.oldPo[0].Quantity
+                    entity.oDestination = data.oldPo[0].destination
+                    entity.oShipmentType = data.oldPo[0].shipmentType
+                    entity.oOGAC = data.oldPo[0].ogac
+                    entity.oGAC = data.oldPo[0].gac
+                    entity.oInventorySegmentCode = data.oldPo[0].inventorySegmentCode
+                    entity.oItemVasText = data.oldPo[0].itemVasText
+                    entity.oFOBPrice = data.oldPo[0].gross_price_fob
+                    entity.oTradingCoNetIncDis = data.oldPo[0].trading_net_inc_disc
+                    entity.nOGAC = data.newpo[0].nogac
+                    entity.nGAC = data.newpo[0].ngac
+                    entity.nItem = data.newpo[0].item
+                    entity.nFactory = data.newpo[0].factory
+                    entity.nPlant = data.newpo[0].nPlant
+                    entity.nProductCode = data.newpo[0].nproductCode
+                    entity.nLineItemStatus = data.newpo[0].nLineStatus
+                    entity.nDocumentDate = moment(data.newpo[0].nDocumentDate).format('YYYY-MM-DD')
+                    entity.nPurchaseOrderNumber = data.newpo[0].npoNumber
+                    entity.nPoLineItemNumber = data.newpo[0].npoLine
+                    entity.nTotalItemQty = data.newpo[0].nQuantity
+                    entity.nDestination = data.newpo[0].ndestination
+                    entity.nInventorySegmentCode = data.newpo[0].ninventorySegmentCode
+                    entity.nItemVasText = data.newpo[0].nitemVasText
+                    entity.nShipmentType = data.newpo[0].nshipmentType
+                    entity.nFOBPrice = data.newpo[0].gross_price_fob
+                    entity.nTradingCoNetIncDis = data.newpo[0].trading_net_inc_disc
+                    divertArr.push(entity)
+                }
             }
             const save = await transactionManager.getRepository(DivertEntity).save(divertArr);
             if (save) {
@@ -1982,9 +1987,9 @@ export class DpomService {
                 const oldData = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: req.oldPoNumber, poLineItemNumber: req.oldPoLineItemNo } })
                 const newData = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: req.newPoNumber, poLineItemNumber: req.newPoLineItemNo } })
                 const entity = new DivertEntity()
-                entity.orequestDate = req.requestDate
-                entity.oItem = oldData.item
-                entity.oFactory = oldData.factory
+                entity.orequestDate = moment(req.requestDate).format('MM/DD/YYYY')
+                entity.oItem = oldData.item ? oldData.item : '-'
+                entity.oFactory = oldData.factory ? oldData.factory : '-'
                 entity.oPlant = oldData.plant
                 entity.oProductCode = oldData.productCode
                 entity.oLineItemStatus = oldData.DPOMLineItemStatus
@@ -1992,7 +1997,7 @@ export class DpomService {
                 entity.oPurchaseOrderNumber = req.oldPoNumber
                 entity.oPoLineItemNumber = req.oldPoLineItemNo
                 entity.oldVal = req.oldQty
-                entity.oTotalItemQty = req.totalQty
+                entity.oTotalItemQty = req.balQty
                 entity.oDestination = oldData.destinationCountry
                 entity.oShipmentType = oldData.shippingType
                 entity.oOGAC = oldData.OGAC
@@ -2003,8 +2008,8 @@ export class DpomService {
                 entity.oTradingCoNetIncDis = oldData.trCoNetIncludingDisc
                 entity.nOGAC = newData.OGAC
                 entity.nGAC = newData.GAC
-                entity.nItem = newData.item
-                entity.nFactory = newData.factory
+                entity.nItem = newData.item ? newData.item : '-'
+                entity.nFactory = newData.factory ? newData.factory : '-'
                 entity.nPlant = newData.plant
                 entity.nProductCode = newData.productCode
                 entity.nLineItemStatus = newData.DPOMLineItemStatus
@@ -2088,7 +2093,12 @@ export class DpomService {
                 }
             }
             if (divertModelData.length > 0) {
-                return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
+                const save = await this.saveDivertData(divertModelData)
+                if (save.status) {
+                    return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
+                } else {
+                    return new CommonResponseModel(false, 0, 'Failed to save');
+                }
             } else {
                 return new CommonResponseModel(false, 0, 'No Data Found', []);
             }
