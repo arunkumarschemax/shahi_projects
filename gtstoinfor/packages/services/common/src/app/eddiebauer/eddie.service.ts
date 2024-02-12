@@ -1,5 +1,5 @@
 import { Injectable } from "@nestjs/common";
-import { DataSource } from "typeorm";
+import { DataSource, In } from "typeorm";
 import { CoLineRequest, CommonResponseModel, CompareModel, EddieCoLinereqModels, EddieColorModel, EddieDestinationModel, EddieOrderFilter, EddieSizeModel, EddieSizeWiseModel, HbOrderDataModel, HbPoOrderFilter, HbSizeWiseModel, SanmarCoLinereqModels, SanmarColorModel, SanmarCompareModel, SanmarDestinationModel, SanmarOrderFilter, SanmarSizeModel, SanmarSizeWiseModel, StatusEnum, eddieOrderDataModel, sanmarOrderDataModel } from "@project-management-system/shared-models";
 import * as puppeteer from 'puppeteer';
 import * as fs from 'fs';
@@ -697,7 +697,8 @@ export class EddieService {
 
   async getOrderdataForCOline(req: EddieDetailsReq): Promise<CommonResponseModel> {
     try {
-      const data = await this.EddieOrdersRepo.find({ where: { poNumber: req.PoNumber, poLine: req.PoLine } })
+      const poLineValues = req.poLine.split(',')
+      const data = await this.EddieOrdersRepo.find({ where: { poNumber: req.poNumber, poLine: In(poLineValues) } })
       // po -> destination -> color -> sizes
       const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
       const poMap = new Map<string, EddieOrdersEntity>();
@@ -842,9 +843,9 @@ export class EddieService {
         let deliveryAddress;
         let pkgTerms;
         let paymentTerms;
-        if (po.buyer === '') {
-          const response = await this.getOrderdataForCOline({ PoNumber: po.po_number,PoLine:po.po_line})
-          console.log(response.data[0])
+        if (po.buyer === 'Eddie Bauer LLC') {
+          const response = await this.getOrderdataForCOline({ poNumber: po.po_number,poLine:po.po_line})
+          console.log(response.data[0],"test")
           const coData = response.data[0];
           coLine.buyerPo = coData.buyerPo;
           const inputDate = new Date(coData.deliveryDate)
@@ -863,11 +864,11 @@ export class EddieService {
           console.log(addressData)
           buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 10;
           deliveryAddress = addressData?.deliveryCode ? addressData?.deliveryCode : 11
-          buyerValue1 = "SAN-SANMAR CORPORATION"
-          buyerValue2 = "SAN00013-SANMAR CORPORATION"
+          buyerValue1 = "SGC-SHAHI GROUP OF COMPANIES"
+          buyerValue2 = "SEPLB200-SHAHI EXPORTS PVT LTD UN"
           agent = "-NA"
-          pkgTerms = "BOX-BOXES"
-          paymentTerms = "030-Trde Card30 Day"
+          pkgTerms = "FP1-WITHOUT HANGER"
+          paymentTerms = "031-TRDE CARD45 Day"
         }
         const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
         const allApps = await apps.findElements(By.tagName('span'));
@@ -1093,6 +1094,15 @@ export class EddieService {
     }
     finally {
       driver.quit()
+    }
+  }
+
+  async isAlertPresent(driver) {
+    try {
+      await driver.switchTo().alert();
+      return true;
+    } catch (e) {
+      return false;
     }
   }
 

@@ -200,5 +200,16 @@ export class EddieController {
         }
     }
 
+    
+ @Post('/createCOline')
+ async createCOline(@Body() req: any): Promise<CommonResponseModel> {
+     try {
+         return await this.Service.createCOline(req)
+     } catch (error) {
+         return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+     }
+ }
+
+
  
 }
