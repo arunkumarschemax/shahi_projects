@@ -162,10 +162,10 @@ const SanmarColineView = () => {
                 }
             },
             {
-                title: 'Raised Date',
+                title: 'CO Status Date',
                 dataIndex: 'updated_at',
                 render: (text, record) => {
-                    return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY HH:mm')) : '-')
+                    return (record.updated_at ? (moment.utc(record.updated_at).format('DD-MM-YYYY')) : '-')
                 }
             },
             {
@@ -337,9 +337,9 @@ const SanmarColineView = () => {
             title: 'CO Status Date',
             dataIndex: 'updated_at',
             render: (text, record) => {
-                return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')) : '-')
+                return (record.updated_at ? (moment.utc(record.updated_at).format('DD-MM-YYYY')) : '-')
             }
-        },        
+        },      
         {
             title: 'Status',
             dataIndex: 'status',
