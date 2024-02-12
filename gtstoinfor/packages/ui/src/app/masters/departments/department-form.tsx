@@ -61,7 +61,7 @@ export const DepartmentForm=(props:DepartmentFromProps)=>{
       
 
       return(
-        <Card title={<span>Profit Control Head</span>} style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
+        <Card title={<span>Department</span>} style={{textAlign:'left'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} 
         extra={props.isUpdate==true?"":<Link to='/masters/department/department-view' ><span style={{color:'white'}}><Button className='panel_button' type={'primary'} >View </Button> </span></Link>}
        >
 <Form
@@ -85,7 +85,7 @@ onFinish={saveData}>
           rules={[
             {
               required: true,
-              message:' Department Is Required'
+              message:' Department is Required'
             },
             {
               pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
@@ -93,7 +93,7 @@ onFinish={saveData}>
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Department'/>
         </Form.Item>
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
@@ -103,7 +103,7 @@ onFinish={saveData}>
           rules={[
             {
               required: true,
-              message:' Department Head Is Required'
+              message:' Department Head is Required'
             },
             {
               pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
@@ -111,7 +111,7 @@ onFinish={saveData}>
             }
           ]}
         >
-          <Input />
+          <Input placeholder='Enter Department Head'/>
         </Form.Item>
         </Col>
 </Row>
