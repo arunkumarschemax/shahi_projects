@@ -165,7 +165,7 @@ const HbColineView = () => {
                 title: 'CO Status Date',
                 dataIndex: 'updated_at',
                 render: (text, record) => {
-                    return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')): '-')
+                    return (record.updated_at ? (moment.utc(record.updated_at).format('DD-MM-YYYY')) : '-')
                 }
             },
             {
@@ -337,7 +337,7 @@ const HbColineView = () => {
             title: 'CO Status Date',
             dataIndex: 'updated_at',
             render: (text, record) => {
-                return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')): '-')
+                return (record.updated_at ? (moment.utc(record.updated_at).format('DD-MM-YYYY')) : '-')
             }
         },
         {
