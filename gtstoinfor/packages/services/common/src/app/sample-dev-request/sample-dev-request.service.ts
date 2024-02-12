@@ -874,7 +874,7 @@ export class SampleRequestService {
         // console.log(fabFlag.has(false) + "-" + trimFlag.has(false))
 
         if (fabFlag.has(true) && trimFlag.has(true)) {
-          let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({ SampleRequestId: save.SampleRequestId }, { lifeCycleStatus: LifeCycleStatusEnum.READY_FOR_PRODUCTION })
+          let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({ SampleRequestId: save.SampleRequestId }, { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ALLOCATED })
           console.log(updateSampleRequestStatus)
           if (updateSampleRequestStatus.affected === 0) {
             await manager.releaseTransaction();
@@ -1403,7 +1403,7 @@ export class SampleRequestService {
         // console.log(getBomStatus)
 
         if (getBomStatus.length - 1 < 1) {
-          updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({ SampleRequestId: req.sampleOrderId }, { lifeCycleStatus: LifeCycleStatusEnum.READY_FOR_PRODUCTION });
+          updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({ SampleRequestId: req.sampleOrderId }, { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ALLOCATED });
           // console.log(updateSampleOrderStatus);
           // console.log(bomUpdateFlag);
           // console.log(updateStockFlag);
