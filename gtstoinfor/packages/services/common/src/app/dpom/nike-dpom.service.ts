@@ -2038,6 +2038,32 @@ export class DpomService {
         }
     }
 
+    async updateDivertDataValues(req: any): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource);
+        try {
+            await transactionManager.startTransaction();
+            const divertData = await this.divertRepository.findOne({ where: { id: req.id } })
+            if (divertData) {
+                const update = await this.divertRepository.update({ id: req.id }, {
+                    trimsChange: req.trimsChange, surcharge: req.surcharge
+                })
+                if (update.affected) {
+                    await transactionManager.completeTransaction();
+                    return new CommonResponseModel(true, 1, 'Data updated successfully');
+                } else {
+                    await transactionManager.releaseTransaction();
+                    return new CommonResponseModel(false, 0, 'Something went wrong');
+                }
+            } else {
+                await transactionManager.releaseTransaction();
+                return new CommonResponseModel(false, 0, 'Record not found');
+            }
+        } catch (error) {
+            await transactionManager.releaseTransaction();
+            return new CommonResponseModel(false, 0, error.message || 'Something went wrong');
+        }
+    }
+
     async getDivertReportData(): Promise<CommonResponseModel> {
         try {
             const reports = await this.dpomRepository.getDivertReport();

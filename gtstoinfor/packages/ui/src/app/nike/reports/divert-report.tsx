@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Card, Table, Row, Input, Col, Form, Button, Checkbox, Modal, Tooltip } from 'antd';
+import { Card, Table, Row, Input, Col, Form, Button, Checkbox, Modal, Tooltip, message } from 'antd';
 import { ColumnProps } from 'antd/lib/table';
 import { FileExcelFilled, SearchOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -23,31 +23,37 @@ const DivertReport = () => {
     const searchInput = useRef<any>(null);
     const [items, setItems] = useState<any[]>([]);
     const service = new NikeService();
-    const [expandedRows, setExpandedRows] = useState<ExpandedRows>({});
-    const [textareaValues, setTextareaValues] = useState<{ [key: string]: string }>({});
+    const [trimsChange, setTrimsChange] = useState<{ [key: string]: string }>({});
+    const [surcharge, setSurcharge] = useState<{ [key: string]: string }>({});
     const [isModalOpen1, setIsModalOpen1] = useState(false);
     const [remarkModal, setRemarkModal] = useState<boolean>(false)
     const [itemText, setRemarks] = useState<string>('')
 
     useEffect(() => {
         getData();
-        // getCount();
     }, [])
 
-    const handleCheckboxChange = (id: string) => {
-        if (expandedRows[id]) {
-            setExpandedRows(prevExpandedRows => ({ ...prevExpandedRows, [id]: false }));
-        } else {
-            setExpandedRows(prevExpandedRows => ({ ...prevExpandedRows, [id]: true }));
-        }
+    const handleTrimsChange = (id: string, value: string) => {
+        setTrimsChange(prevTextareaValues => ({ ...prevTextareaValues, [id]: value }));
     };
 
-    const handleTextareaChange = (id: string, value: string) => {
-        setTextareaValues(prevTextareaValues => ({ ...prevTextareaValues, [id]: value }));
+    const handleSurcharge = (id: string, value: string) => {
+        setSurcharge(prevTextareaValues => ({ ...prevTextareaValues, [id]: value }));
     };
 
     const handleSubmit = (id: string) => {
-        console.log(`Textarea value for ID ${id}:`, textareaValues[id]);
+        console.log(`Textarea value for ID ${id}:`, trimsChange[id], surcharge[id]);
+        service.updateDivertDataValues({ id: id, trimsChange: trimsChange[id], surcharge: surcharge[id] }).then(res => {
+            if (res.status) {
+                setTrimsChange(null)
+                setSurcharge(null)
+                getData();
+                message.success(res.internalMessage)
+            } else {
+                message.error(res.internalMessage)
+            }
+        })
+
     }
 
     const handleSearch = (selectedKeys: any, confirm: any, dataIndex: string) => {
@@ -694,40 +700,40 @@ const DivertReport = () => {
                 },
                 {
                     title: 'Trims Change',
-                    dataIndex: '', width: 120,
+                    dataIndex: 'trimsChange', width: 120,
                     render: (text, rowData) => (
-                        <span>
-                            <Form.Item>
-                                <Input
-                                    allowClear
-                                    style={{ marginRight: '10px' }}
-                                    placeholder="Enter text"
-                                    value={textareaValues[rowData.id] || ''}
-                                    onChange={e =>
-                                        handleTextareaChange(rowData.id, e.target.value)
-                                    }
-                                />
-                            </Form.Item>
-                        </span>
+                        rowData.trimsChange ? rowData.trimsChange :
+                            <span>
+                                <Form.Item>
+                                    <Input
+                                        allowClear
+                                        style={{ marginRight: '10px' }}
+                                        placeholder="Enter text"
+                                        onChange={e =>
+                                            handleTrimsChange(rowData.id, e.target.value)
+                                        }
+                                    />
+                                </Form.Item>
+                            </span>
                     )
                 },
                 {
                     title: 'Surcharge',
-                    dataIndex: 'id', width: 80,
+                    dataIndex: 'surcharge', width: 80,
                     render: (text, rowData) => (
-                        <span>
-                            <Form.Item>
-                                <Input
-                                    allowClear
-                                    style={{ marginRight: '10px' }}
-                                    placeholder="Enter text"
-                                    value={textareaValues[rowData.id] || ''}
-                                    onChange={e =>
-                                        handleTextareaChange(rowData.id, e.target.value)
-                                    }
-                                />
-                            </Form.Item>
-                        </span>
+                        rowData.surcharge ? rowData.surcharge :
+                            <span>
+                                <Form.Item>
+                                    <Input
+                                        allowClear
+                                        style={{ marginRight: '10px' }}
+                                        placeholder="Enter text"
+                                        onChange={e =>
+                                            handleSurcharge(rowData.id, e.target.value)
+                                        }
+                                    />
+                                </Form.Item>
+                            </span>
                     ),
                 },
                 {
@@ -747,9 +753,11 @@ const DivertReport = () => {
                     title: 'Action',
                     dataIndex: 'id', width: 70,
                     render: (text, rowData) => (
+
                         <span>
                             <Form.Item>
                                 <Button
+                                    disabled={rowData.trimsChange && rowData.surcharge}
                                     type="primary"
                                     onClick={() => handleSubmit(rowData.id)}
                                 >
