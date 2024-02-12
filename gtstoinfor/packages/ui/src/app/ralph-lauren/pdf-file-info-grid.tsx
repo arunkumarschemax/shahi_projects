@@ -191,7 +191,7 @@ export function PdFInfoGrid() {
             sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-",
-            ...getColumnSearchProps('poNumber')
+            // ...getColumnSearchProps('poNumber')
         },
         // {
         //     title: 'File Name',

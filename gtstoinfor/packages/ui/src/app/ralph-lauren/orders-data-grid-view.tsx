@@ -39,7 +39,7 @@ export function RLOrdersGrid() {
   const [pageSize, setPageSize] = useState(1);
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
-  const [poNumber, setPoNumber] = useState("");
+  const [poNumber, setPoNumber] = useState([]);
   const [form] = Form.useForm();
   const { Option } = Select;
   const [isModalOpen1, setIsModalOpen1] = useState(false);
@@ -48,6 +48,7 @@ export function RLOrdersGrid() {
 
   useEffect(() => {
     getorderData();
+    getPoNumber();
   }, []);
   // console.log(IAMClientAuthContext.user.userName,"oooooo")
 
@@ -80,6 +81,16 @@ export function RLOrdersGrid() {
        AlertMessages.getErrorMessage(err.message);
      })
   };
+
+  const getPoNumber = () => {
+    service.getPoNumber().then((res) => {
+      if (res.status) {
+        setPoNumber(res.data);
+      
+      }
+    });
+  };
+
   const onReset = () => {
     form.resetFields();
     getorderData();
@@ -1084,10 +1095,10 @@ export function RLOrdersGrid() {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {orderData.map((inc: any) => {
+                  {poNumber.map((inc: any) => {
                     return (
-                      <Option key={inc.poNumber} value={inc.poNumber}>
-                        {inc.poNumber}
+                      <Option key={inc.po_number} value={inc.po_number}>
+                        {inc.po_number}
                       </Option>
                     );
                   })}

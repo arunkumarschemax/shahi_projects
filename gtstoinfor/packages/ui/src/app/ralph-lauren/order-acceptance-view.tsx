@@ -32,12 +32,15 @@ const OrderAcceptanceGrid = () => {
   const [orderData, setOrderData] = useState<any>([]);
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
   const [itemNoValues, setItemNoValues] = useState({});
+  const [poNumber, setPoNumber] = useState([]);
+
 
 
   const { Text } = Typography
 
   useEffect(() => {
     getorderData();
+    getPoNumber();
   }, []);
 
   const getorderData = () => {
@@ -56,6 +59,15 @@ const OrderAcceptanceGrid = () => {
     service.getorderDataforAcceptance(req).then((res) => {
       if (res.status) {
         setOrderData(res.data);
+      }
+    });
+  };
+
+  const getPoNumber = () => {
+    service.getPoNumber().then((res) => {
+      if (res.status) {
+        setPoNumber(res.data);
+      
       }
     });
   };
@@ -609,10 +621,10 @@ const OrderAcceptanceGrid = () => {
                   optionFilterProp="children"
                   allowClear
                 >
-                  {orderData.map((inc: any) => {
+                  {poNumber.map((inc: any) => {
                     return (
-                      <Option key={inc.poNumber} value={inc.poNumber}>
-                        {inc.poNumber}
+                      <Option key={inc.po_number} value={inc.po_number}>
+                        {inc.po_number}
                       </Option>
                     );
                   })}
