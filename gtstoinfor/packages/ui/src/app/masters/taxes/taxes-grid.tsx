@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button, Row, Col, Drawer, Tag, } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button, Row, Col, Drawer, Tag, Checkbox, } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
 import {RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined,CheckCircleOutlined,CloseCircleOutlined } from '@ant-design/icons';
@@ -183,50 +183,97 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
     {
       title:'Tax Category',
       dataIndex:'taxCategory',
-      filters: [
-        {
-          text: 'State',
-          value: 'State',
-        },
-        {
-          text: 'Central',
-          value: 'Central',
-        },
-      ],
-      filterMultiple: false,
-      onFilter: (value, record) => 
-      {
+      // filters: [
+      //   {
+      //     text: 'State',
+      //     value: 'State',
+      //   },
+      //   {
+      //     text: 'Central',
+      //     value: 'Central',
+      //   },
+      // ],
+      // filterMultiple: false,
+      // onFilter: (value, record) => 
+      // {
      
-        return record.taxCategory === value;
-      },
+      //   return record.taxCategory === value;
+      // },
       // sorter: (a,b) => a.taxCategory - b.taxCategory,
       // sortDirections: ['descend', 'ascend'],
       // ...getColumnSearchProps('taxCategory')
     },
+    // {
+    //   title: 'Tax Category',
+    //   dataIndex: 'taxCategory',
+    //   filters: [
+    //     { text: 'State', value: 'State' },
+    //     { text: 'Central', value: 'Central' },
+    //   ],
+    //   onFilter: (value, record) => record.taxCategory === value,
+    //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+    //     <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+    //       <Checkbox
+    //         checked={selectedKeys.includes('State')}
+    //         onChange={() => setSelectedKeys(selectedKeys.includes('State') ? [] : ['State'])}
+    //       >
+    //         <span style={{ color: 'green' }}>State</span>
+    //       </Checkbox>
+    //       <Checkbox
+    //         checked={selectedKeys.includes('Central')}
+    //         onChange={() => setSelectedKeys(selectedKeys.includes('Central') ? [] : ['Central'])}
+    //       >
+    //         <span style={{ color: 'red' }}>Central</span>
+    //       </Checkbox>
+    //       <div className="custom-filter-dropdown-btns">
+    //         <Button onClick={() => clearFilters()} className="custom-reset-button">
+    //           Reset
+    //         </Button>
+    //         <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+    //           OK
+    //         </Button>
+    //       </div>
+    //     </div>
+    //   ),
+    // },
+    
     {
       title: 'Status',
       dataIndex: 'isActive',
+      align:"center",
+
+      
        render: (isActive, rowData) => (
         <>
           {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
       ),
-      filters: [
-        {
-          text: 'Active',
-          value: true,
-        },
-        {
-          text: 'InActive',
-          value: false,
-        },
-      ],
-      filterMultiple: false,
-      onFilter: (value, record) => 
-      {
-        // === is not work
-        return record.isActive === value;
-      },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+  <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+    <Checkbox
+      checked={selectedKeys.includes(true)}
+      onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+    >
+      <span style={{color:'green'}}>Active</span>
+    </Checkbox>
+    <Checkbox
+      checked={selectedKeys.includes(false)}
+      onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+    >
+      <span style={{color:'red'}}>Inactive</span>
+    </Checkbox>
+    <div className="custom-filter-dropdown-btns" >
+    <Button  onClick={() => clearFilters()} className="custom-reset-button">
+        Reset
+      </Button>
+      <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+        OK
+      </Button>
+    
+    </div>
+  </div>
+       ),
       
     },
     {
@@ -290,7 +337,7 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
 
   return (
     <>
-    <Card title={'Taxes'}
+    <Card title={'Taxes'}       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
    extra={<Link to='/global/taxes/taxes-form' ><span style={{color:'white'}} >{<Button className='panel_button' type={'primary'}>New </Button>}</span></Link>} >
   
     <Row gutter={40}>

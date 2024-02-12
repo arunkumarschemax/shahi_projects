@@ -1,15 +1,12 @@
 export class SampleProcessInfoReq {
-    process: string
-    description: false
-    processInfoId?: number
+    operation: number
+    sequence: number
     constructor(
-        process: string,
-        description: false,
-        processInfoId?: number,
+        operation: number,
+        sequence: number,
     ) {
-        this.process = process
-        this.description = description
-        this.processInfoId = processInfoId
+        this.operation = operation
+        this.sequence = sequence
     }
 
 }

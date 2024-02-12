@@ -161,6 +161,18 @@ export const SampleReqDetailView = () =>{
           align:'center',
 
          }, 
+         {
+          title: <div style={{ textAlign: 'center' }}>Garment Color</div>,
+          dataIndex: "colour",
+          align:'center',
+
+        }, 
+        {
+          title: <div style={{ textAlign: 'center' }}>Fabric Color</div>,
+        dataIndex: "fabColour",
+        align:'center',
+
+        }, 
         {
                   title: <div style={{ textAlign: 'center' }}>Total Requirment</div>,
           dataIndex: "total",

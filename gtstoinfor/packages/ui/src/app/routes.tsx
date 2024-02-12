@@ -714,9 +714,10 @@ export const AppRoutes = () => {
                 <Route  path='/trim-master'>
                 <Route path='trim-params-mapping' element={<TrimParamsMapping mappingData={undefined} updateDetails={function (column: TrimParamsMappingRequestDto): void {
                         throw new Error("Function not implemented.")
-                    } } isUpdate={false} closeForm={()=>{}}
-                    />} />
-                <Route path = 'trim-params-mapping-view' element={<TrimsParamsMappingView/>}/>  
+                    } } isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    } } />} />
+                <Route path='/trim-master/trim-params-mapping-view' element={<TrimsParamsMappingView/>}/>
                     <Route path='variety/variety-form' element ={<VarietyForm varietyData={new VarietyDtos} updateItem={function (VarietyDto: VarietyDtos): void {
                         throw new Error("Function not implemented.")
                     } } isUpdate={false} closeForm={function (): void {

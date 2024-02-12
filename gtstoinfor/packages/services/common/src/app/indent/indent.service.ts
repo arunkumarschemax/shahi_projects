@@ -80,10 +80,10 @@ export class IndentService {
             const savedindentDto: IndentDto = this.indentAdapter.convertEntityToDto(savedindentEntity);
             if (savedindentDto) {
                 // generating resposnse
-                const response = new CommonResponseModel(true, 1, isUpdate ? 'indent Updated Successfully' : 'indent Created Successfully', savedindentDto);
+                const response = new CommonResponseModel(true, 1, isUpdate ? 'Indent Updated Successfully' : 'Indent Created Successfully', savedindentDto);
                 return response;
             } else {
-                throw new ErrorResponse(11106, 'indent saved but issue while transforming into DTO');
+                throw new ErrorResponse(11106, 'Indent saved but issue while transforming into DTO');
             }
         } catch (error) {
             return error;

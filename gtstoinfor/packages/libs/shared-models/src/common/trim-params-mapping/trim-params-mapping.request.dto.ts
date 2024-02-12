@@ -29,7 +29,7 @@ export class TrimParamsMappingRequestDto{
     updatedUser: string;
     versionFlag: number;
 trimType:ItemTypeEnum;
-size:boolean;
+size:boolean
     constructor( trimParamsMapping: number,
         category:boolean,
         trimId:number,
@@ -57,7 +57,7 @@ size:boolean;
     buyer:boolean,
         versionFlag: number,
         trimType:ItemTypeEnum,
-size:boolean
+        size:boolean
 ){
             this.trimParamsMapping = trimParamsMapping;
             this.category = category;

@@ -61,7 +61,7 @@ export const TrimsParamsMappingView = () => {
     }
     )
   }
-  const columnsSkelton: any = [
+const columnsSkelton: any = [
     {
       title: 'S No',
       key: 'sno',
@@ -304,7 +304,7 @@ export const TrimsParamsMappingView = () => {
     },
 
     {
-      title: `Action`,
+      title: 'Action',
       dataIndex: 'action',
       align: "center",
       fixed: 'right',

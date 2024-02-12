@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
-  Button,Card,Table,Input,Alert,Skeleton,Space} from "antd";
+  Button,Card,Table,Input,Alert,Skeleton,Space, Checkbox} from "antd";
 import { ColumnType, ColumnsType } from "antd/lib/table";
 import { SearchOutlined} from "@ant-design/icons";
 import { FilterConfirmProps } from "antd/es/table/interface";
@@ -121,35 +121,77 @@ const getColumnSearchProps = (dataIndex: any): ColumnType<string> => ({
       width:10,
       render: (text, object, index) => (page - 1) * 10 + (index + 1),
     },
-    {
-      title: <div style={{textAlign:"center"}}>UOM Category</div>,
-      dataIndex: "uomCategory",
-      width:70,
-      sorter: (a, b) => a.uom.localeCompare(b.model),
-      sortDirections: ["ascend", "descend"],
+    // {
+    //   title: <div style={{textAlign:"center"}}>UOM Category</div>,
+    //   dataIndex: "uomCategory",
+    //   width:70,
+    //   sorter: (a, b) => a.uom.localeCompare(b.model),
+    //   sortDirections: ["ascend", "descend"],
       
 
-      filters: [
-        {
-          text: 'Area',
-          value: 'Area',
-        },
-        {
-          text: 'Length',
-          value: 'Length',
-        },
-        {
-          text: 'Weight',
-          value: 'Weight',
-        },
-        {
-          text: 'Volume',
-          value: 'Volume',
-        },
-      ],
-      onFilter: (value,record) =>{ return record.uomCategory === value}
+    //   filters: [
+    //     {
+    //       text: 'Area',
+    //       value: 'Area',
+    //     },
+    //     {
+    //       text: 'Length',
+    //       value: 'Length',
+    //     },
+    //     {
+    //       text: 'Weight',
+    //       value: 'Weight',
+    //     },
+    //     {
+    //       text: 'Volume',
+    //       value: 'Volume',
+    //     },
+    //   ],
+    //   onFilter: (value,record) =>{ return record.uomCategory === value}
       
+    // },
+    {
+      title: <div style={{ textAlign: "center" }}>UOM Category</div>,
+      dataIndex: "uomCategory",
+      width: 70,
+      sorter: (a, b) => a.uom.localeCompare(b.model),
+      sortDirections: ["ascend", "descend"],
+      filters: [
+        { text: 'Area', value: 'Area' },
+        { text: 'Length', value: 'Length' },
+        { text: 'Weight', value: 'Weight' },
+        { text: 'Volume', value: 'Volume' },
+      ],
+      onFilter: (value, record) => record.uomCategory === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+          {['Area', 'Length', 'Weight', 'Volume'].map((category) => (
+            <Checkbox
+              key={category}
+              checked={selectedKeys.includes(category)}
+              onChange={() => {
+                const newSelectedKeys = selectedKeys.includes(category)
+                  ? selectedKeys.filter((key) => key !== category)
+                  : [...selectedKeys, category];
+                setSelectedKeys(newSelectedKeys);
+              }}
+            >
+              <span>{category}</span>
+            </Checkbox>
+          ))}
+          <div className="custom-filter-dropdown-btns">
+            <Button onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          </div>
+        </div>
+      ),
     },
+    
+    
     {
       title: "UOM",
       dataIndex: "uom",

@@ -517,15 +517,15 @@ const stockService = new StockService();
                 rules={[{ required: false, message: "Field is required" }]}
                 
               >
-                <Select placeholder=" Select Weave"  allowClear
+                <Select placeholder=" Select Weave"  allowClear  showSearch optionFilterProp="children"
                 >
                   {weave.map((option) => (
-                    <option
+                    <Option
                       key={option.weave}
                       value={option.weave}
                     >
                       {option.fabricWeave}
-                    </option>
+                    </Option>
                   ))}
                 </Select>
               </Form.Item>
@@ -655,12 +655,12 @@ const stockService = new StockService();
                   { required: false, message: 'Field is required' },
                 ]}
               >
-                <Select allowClear placeholder="Select Finish">
+                <Select allowClear placeholder="Select Finish"  showSearch optionFilterProp="children"  >
               {finishData.map((e) => {
                     return (
-                      <option key={e.finish} value={e.finish}>
+                      <Option key={e.finish} value={e.finish}>
                         {e.fabricFinish}
-                      </option>
+                      </Option>
                     );
                   })}
          </Select>

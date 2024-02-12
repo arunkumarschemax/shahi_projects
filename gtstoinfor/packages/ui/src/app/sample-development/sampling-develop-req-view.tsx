@@ -280,9 +280,17 @@ export const SampleDevNewView = () => {
 
     },
     {
-      title: <div style={{ textAlign: 'center' }}>Color</div>,
+      title: <div style={{ textAlign: 'center' }}>Garment Color</div>,
       dataIndex: "colour",
       ...getColumnSearchProps("colour"),
+      align: 'center',
+
+    },
+
+    {
+      title: <div style={{ textAlign: 'center' }}>Fabric Color</div>,
+      dataIndex: "fabColor",
+      ...getColumnSearchProps("fabColor"),
       align: 'center',
 
     },

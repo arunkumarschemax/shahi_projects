@@ -60,6 +60,8 @@ export class TrimParamsMappingRequest {
     @IsOptional()
     updatedUser: string;
 
+    @ApiProperty()
+    size:boolean
 
     @ApiProperty()
     @IsOptional()

@@ -7,16 +7,16 @@ export class SampleRequestProcessInfoEntity{
         name:'process_info_id'
     })
     processInfoId:number
-    @Column('text',{
-        name:'process',
+    @Column('int',{
+        name:'operation',
         nullable:false
     })
-    process:string
-    @Column('text',{
-        name:'description',
-        nullable:true
+    operation:number
+    @Column('int',{
+        name:'sequence',
+        nullable:false
     })
-    description:false
+    sequence:number
     @ManyToOne(type =>SampleRequest,sampleReq =>sampleReq.sampleProcessInfo)
     @JoinColumn({name:'sample_request_id'})
     sampleReq:SampleRequest
