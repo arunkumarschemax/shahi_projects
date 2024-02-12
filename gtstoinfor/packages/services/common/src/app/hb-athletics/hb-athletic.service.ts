@@ -544,7 +544,7 @@ export class HbService {
           const addressData = address.data[0];
           console.log(addressData)
           buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 11;
-          deliveryAddress = addressData?.deliveryCode
+          deliveryAddress = addressData?.deliveryCode? addressData?.deliveryCode: 10
           buyerValue1 = "DIB-DICK'S BRAND"
           buyerValue2 = "HBA00001-HB ATHLETIC INC"
           agent = "NA-DIRECT CUSTOMER"
