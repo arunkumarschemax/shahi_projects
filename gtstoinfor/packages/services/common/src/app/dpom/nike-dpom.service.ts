@@ -5,11 +5,11 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { ChangePoandLineModel, CoLineRequest, Colors, CommonResponseModel, Destinations, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, MarketingReportModel, MarketingReportSizeModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, Sizes, TotalQuantityChangeModel, coLineRequest, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
+import { ChangePoandLineModel, CoLineRequest, Colors, CommonResponseModel, Destinations, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, ItemNoDto, MarketingReportModel, MarketingReportSizeModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, Sizes, TotalQuantityChangeModel, coLineRequest, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { Between, DataSource } from 'typeorm';
+import { Between, DataSource, UpdateResult } from 'typeorm';
 import { DpomChildEntity } from './entites/dpom-child.entity';
 import { DpomDifferenceEntity } from './entites/dpom-difference.entity';
 import { DpomChildAdapter } from './dto/dpom-child.adapter';
@@ -1379,7 +1379,7 @@ export class DpomService {
                 if (!sizeDateMap.has(rec.po_and_line)) {
                     sizeDateMap.set(
                         rec.po_and_line,
-                        new FactoryReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.legal_po_price, rec.co_price, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.gross_price_fob, rec.ne_inc_disc, rec.trading_net_inc_disc, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.fobCurrCode, rec.netIncDisCurrency, rec.tradingNetCurrencyCode, rec.hanger, rec.quantity, rec.geo_code, [], rec.co_line_status)
+                        new FactoryReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.legal_po_price, rec.co_price, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.gross_price_fob, rec.ne_inc_disc, rec.trading_net_inc_disc, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.fobCurrCode, rec.netIncDisCurrency, rec.tradingNetCurrencyCode, rec.hanger, rec.quantity, rec.geo_code, [], rec.co_line_status, rec.dpom_id)
                     );
                 }
                 const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
@@ -2593,6 +2593,21 @@ export class DpomService {
         }
     }
 
+
+    async updateDomItme(req: ItemNoDto[]): Promise<CommonResponseModel> {
+        try {
+            let updatedItems: UpdateResult
+            for (const rec of req) {
+                updatedItems = await this.dataSource.getRepository(DpomEntity).update({ id: Number(rec.id) }, { bomItem: rec.itemNo });
+            }
+            if (updatedItems && updatedItems.affected) {
+                return new CommonResponseModel(true, 1, "ItemNo Updated Successfully");
+            };
+        } catch (error) {
+            return new CommonResponseModel(false, 0, "Error occurred while Update ItemNo", error);
+
+        }
+    }
 
 }
 
