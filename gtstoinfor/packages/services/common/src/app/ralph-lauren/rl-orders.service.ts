@@ -34,7 +34,7 @@ export class RLOrdersService {
     private dataSource: DataSource,
     private addressService: AddressService,
     private orderChildRepo: RLOrdersChildRepository,
-    private colorRepo:ColorRepository
+    private colorRepo: ColorRepository
 
 
   ) { }
@@ -151,10 +151,10 @@ export class RLOrdersService {
   }
 
 
-  async getPdfFileInfo(req?:PoOrderFilter): Promise<CommonResponseModel> {
+  async getPdfFileInfo(req?: PoOrderFilter): Promise<CommonResponseModel> {
     // eslint-disable-next-line no-useless-catch
     try {
-      const data = await this.pdfrepo.find({ where: {poNumber: req.poNumber}})
+      const data = await this.pdfrepo.find({ where: { poNumber: req.poNumber } })
       // const data = await this.pdfrepo.find({ where: { status: StatusTypeEnum.NOT_CANCELLED } });
       if (data) {
         return new CommonResponseModel(true, 1, 'data retrieved Successfully', data);
@@ -177,7 +177,7 @@ export class RLOrdersService {
         if (!sizeDateMap.has(`${rec.po_number},${rec.po_item}`)) {
           sizeDateMap.set(
             `${rec.po_number},${rec.po_item}`,
-            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [], rec.item_status,rec.handover_date)
+            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [], rec.item_status, rec.handover_date)
           );
         }
         const sizeWiseData = sizeDateMap.get(`${rec.po_number},${rec.po_item}`).sizeWiseData;
@@ -203,7 +203,7 @@ export class RLOrdersService {
         if (!sizeDateMap.has(`${rec.po_number},${rec.po_item}`)) {
           sizeDateMap.set(
             `${rec.po_number},${rec.po_item}`,
-            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [], rec.item_status,rec.handover_date)
+            new OrderDataModel(rec.id, rec.po_number, rec.po_item, rec.ship_to_address, rec.agent, rec.purchase_group, rec.supplier, rec.revision_no, rec.po_upload_date, rec.status, rec.division, rec.ship_to, rec.season_code, rec.board_code, rec.style, rec.material_no, rec.rl_style_no, rec.color, rec.size, rec.total_qty, rec.ship_date, rec.ship_mode, rec.msrp_price, rec.msrp_currency, rec.c_s_price, rec.c_s_currency, rec.amount, rec.total_amount, rec.price, rec.currency, rec.quantity, rec.upc_ean, [], rec.item_status, rec.handover_date)
           );
         }
         const sizeWiseData = sizeDateMap.get(`${rec.po_number},${rec.po_item}`).sizeWiseData;
@@ -239,7 +239,7 @@ export class RLOrdersService {
   //     const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: number, price: string }[]>>>();
   //     const poMap = new Map<string, RLOrdersEntity>();
   //     data.forEach(rec => {
-      
+
   //       poMap.set(rec.poNumber, rec)
   //       const destCountry = rec.shipToAddress.slice(-2).trim();
   //       const parts = rec.shipToAddress.split(',')
@@ -251,7 +251,7 @@ export class RLOrdersService {
   //       if (!destinationColSizesMap.get(rec.poNumber).has(dest)) {
   //         destinationColSizesMap.get(rec.poNumber).set(dest, new Map<string, []>());
   //       }
-            
+
   //       if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(rec.color)) {
   //         destinationColSizesMap.get(rec.poNumber).get(dest).set(rec.color, []);
   //       }
@@ -291,75 +291,75 @@ export class RLOrdersService {
 
   async getOrderDetails(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
-        const data = await this.rlOrdersRepo.find({ where: { poNumber: req.poNumber } });
+      const data = await this.rlOrdersRepo.find({ where: { poNumber: req.poNumber } });
 
-        // po -> destination -> color -> sizes
-        const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: number, price: string }[]>>>();
-        const poMap = new Map<string, RLOrdersEntity>();
+      // po -> destination -> color -> sizes
+      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: number, price: string }[]>>>();
+      const poMap = new Map<string, RLOrdersEntity>();
 
-        for (const rec of data) {
-            poMap.set(rec.poNumber, rec);
-            const destCountry = rec.shipToAddress.slice(-2).trim();
-            const parts = rec.shipToAddress.split(',');
-            const destAdd = parts[0].trim();
-            const dest = destAdd + ',' + destCountry;
+      for (const rec of data) {
+        poMap.set(rec.poNumber, rec);
+        const destCountry = rec.shipToAddress.slice(-2).trim();
+        const parts = rec.shipToAddress.split(',');
+        const destAdd = parts[0].trim();
+        const dest = destAdd + ',' + destCountry;
 
-            if (!destinationColSizesMap.has(rec.poNumber)) {
-                destinationColSizesMap.set(rec.poNumber, new Map<string, Map<string, { size: string, quantity: number, price: string }[]>>());
-            }
-            if (!destinationColSizesMap.get(rec.poNumber).has(dest)) {
-                destinationColSizesMap.get(rec.poNumber).set(dest, new Map<string, { size: string, quantity: number, price: string }[]>());
-            }
-
-            const check = await this.colorRepo.find({
-                where: {
-                    poNumber: rec.poNumber,
-                    style: rec.materialNo,
-                    rlField: rec.color
-                }
-            });
-
-            if (Array.isArray(check) && check.length > 0) {
-                const crmField = check[0].crmField;
-                if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(crmField)) {
-                    destinationColSizesMap.get(rec.poNumber).get(dest).set(crmField, []);
-                }
-                destinationColSizesMap.get(rec.poNumber).get(dest).get(crmField).push({ size: rec.size, quantity: rec.quantity, price: rec.price });
-            } else {
-                if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(rec.color)) {
-                    destinationColSizesMap.get(rec.poNumber).get(dest).set(rec.color, []);
-                }
-                destinationColSizesMap.get(rec.poNumber).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.price });
-            }
+        if (!destinationColSizesMap.has(rec.poNumber)) {
+          destinationColSizesMap.set(rec.poNumber, new Map<string, Map<string, { size: string, quantity: number, price: string }[]>>());
+        }
+        if (!destinationColSizesMap.get(rec.poNumber).has(dest)) {
+          destinationColSizesMap.get(rec.poNumber).set(dest, new Map<string, { size: string, quantity: number, price: string }[]>());
         }
 
-        const coData = [];
-        destinationColSizesMap.forEach((destColorSize, poNumber) => {
-            const desArray = [];
-            destColorSize.forEach((colorSizes, dest) => {
-                const ColArray = [];
-                colorSizes.forEach((sizes, color) => {
-                    const sizeArray = sizes.map(size => new Size(size.size, size.quantity, size.price));
-                    const col = new Color(color, sizeArray);
-                    ColArray.push(col);
-                });
-                const des = new Destination(dest, ColArray);
-                desArray.push(des);
-            });
-            const poInfo = poMap.get(poNumber);
-            const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price, poInfo.currency, poInfo.handoverDate, poInfo.materialNo, desArray);
-            coData.push(co);
+        const check = await this.colorRepo.find({
+          where: {
+            poNumber: rec.poNumber,
+            style: rec.materialNo,
+            rlField: rec.color
+          }
         });
 
-        if (coData.length > 0) {
-            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', coData);
+        if (Array.isArray(check) && check.length > 0) {
+          const crmField = check[0].crmField;
+          if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(crmField)) {
+            destinationColSizesMap.get(rec.poNumber).get(dest).set(crmField, []);
+          }
+          destinationColSizesMap.get(rec.poNumber).get(dest).get(crmField).push({ size: rec.size, quantity: rec.quantity, price: rec.price });
         } else {
-            return new CommonResponseModel(false, 0, 'No data found');
+          if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(rec.color)) {
+            destinationColSizesMap.get(rec.poNumber).get(dest).set(rec.color, []);
+          }
+          destinationColSizesMap.get(rec.poNumber).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.price });
         }
+      }
+
+      const coData = [];
+      destinationColSizesMap.forEach((destColorSize, poNumber) => {
+        const desArray = [];
+        destColorSize.forEach((colorSizes, dest) => {
+          const ColArray = [];
+          colorSizes.forEach((sizes, color) => {
+            const sizeArray = sizes.map(size => new Size(size.size, size.quantity, size.price));
+            const col = new Color(color, sizeArray);
+            ColArray.push(col);
+          });
+          const des = new Destination(dest, ColArray);
+          desArray.push(des);
+        });
+        const poInfo = poMap.get(poNumber);
+        const co = new CoLineModel(poInfo.poNumber, poInfo.poItem, poInfo.price, poInfo.currency, poInfo.handoverDate, poInfo.materialNo, desArray);
+        coData.push(co);
+      });
+
+      if (coData.length > 0) {
+        return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', coData);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
     } catch (err) {
-        throw err;
+      throw err;
     }
-}
+  }
 
 
   async coLineCreationReq(req: any): Promise<CommonResponseModel> {
@@ -738,8 +738,9 @@ export class RLOrdersService {
                       return new CommonResponseModel(false, 0, 'NO matching Size found')
                     }
                   }
+                  console.log(color.name)
                   const inputId = `${size.name}:${color.name}:US`.replace(/\*/g, '');
-                  const input = await driver.wait(until.elementLocated(By.id(inputId)))
+                  const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
               }
@@ -755,15 +756,13 @@ export class RLOrdersService {
         if (await this.isAlertPresent(driver)) {
           const alert = await driver.switchTo().alert();
           const alertText = await alert.getText();
-          console.log(alertText,"alertText")
           const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText });
-          await this.updateCOLineStatus({buyerPo: po.buyer_po, lineItemNo: po.line_item_no , itemStatus: ItemStatusEnum.FAILED})
+          await this.updateCOLineStatus({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no, itemStatus: ItemStatusEnum.FAILED })
           await alert.accept();
           await driver.sleep(5000)
           await driver.navigate().refresh();
           await driver.quit();
           return new CommonResponseModel(false, 0, alertText)
-
         } else {
           await driver.sleep(10000)
           await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
@@ -776,15 +775,13 @@ export class RLOrdersService {
           const year = currentDate.getFullYear().toString().slice(-2);
           const currentDateFormatted = `${day}-${month}-${year}`;
           if (coNo) {
-            const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted ,errorMsg:"-" });
-          await this.updateCOLineStatus({buyerPo: po.buyer_po, lineItemNo: po.line_item_no , itemStatus: ItemStatusEnum.SUCCESS})
-
+            const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted, errorMsg: "-" });
+            await this.updateCOLineStatus({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no, itemStatus: ItemStatusEnum.SUCCESS })
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           } else {
             const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed' });
-          await this.updateCOLineStatus({buyerPo: po.buyer_po, lineItemNo: po.line_item_no , itemStatus: ItemStatusEnum.FAILED})
-
+            await this.updateCOLineStatus({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no, itemStatus: ItemStatusEnum.FAILED })
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           }
@@ -793,20 +790,16 @@ export class RLOrdersService {
       return new CommonResponseModel(true, 1, `COline created successfully`)
     } catch (err) {
       console.log(err, 'error');
-      if (err.name === 'TimeoutError' ){
+      if (err.name === 'TimeoutError') {
         const update = await this.coLineRepo.update({ buyerPo: poDetails[0].buyer_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
-        await this.updateCOLineStatus({buyerPo: poDetails[0].buyer_po, lineItemNo: poDetails[0].line_item_no , itemStatus: ItemStatusEnum.FAILED})
-
+        await this.updateCOLineStatus({ buyerPo: poDetails[0].buyer_po, lineItemNo: poDetails[0].line_item_no, itemStatus: ItemStatusEnum.FAILED })
         return new CommonResponseModel(false, 0, 'Matching Color not found')
-
       } else {
-      return new CommonResponseModel(false, 0, err)
-         
+        return new CommonResponseModel(false, 0, err)
       }
- 
     }
     finally {
-        driver.quit()
+      driver.quit()
     }
   }
 
@@ -842,7 +835,7 @@ export class RLOrdersService {
     else
       return new CommonResponseModel(false, 0, 'No data found');
   }
-  
+
 
   async getColineItem(): Promise<CommonResponseModel> {
     const data = await this.coLineRepo.getItem()
@@ -965,150 +958,152 @@ export class RLOrdersService {
   }
 
   async revertProjectionFileData(req: OrderRevertModel): Promise<CommonResponseModel> {
-    console.log(req,"ooojjjj")
-        if (req) {
-      
-            const latestFileId = await this.pdfrepo.update({ id: req.pdfId, poNumber: req.poNumber }, { isActive: false });
+    console.log(req, "ooojjjj")
+    if (req) {
 
-            if (!latestFileId.affected) {
-                return new CommonResponseModel(false, 0, 'Something went wrong in File update')
-            } 
-            // else{
-            //   return new CommonResponseModel(true, 0, 'File update')
+      const latestFileId = await this.pdfrepo.update({ id: req.pdfId, poNumber: req.poNumber }, { isActive: false });
 
-            // }
-        }
-        if (req) {
-      
-            const childData = await this.orderChildRepo.find({ where:{ poNumber:req.poNumber}, order: {ordersChildId: 'DESC'}, take: 1, skip: 1})
-            console.log(childData,"kkk")
-            const deleteChildData = await this.orderChildRepo.delete({ poNumber: childData[0].poNumber,poVersion: childData[0].poVersion })
-            const deleteOrdersData = await this.rlOrdersRepo.delete({ poNumber: childData[0].poNumber, versionFlag: 1 })
-            
+      if (!latestFileId.affected) {
+        return new CommonResponseModel(false, 0, 'Something went wrong in File update')
+      }
+      // else{
+      //   return new CommonResponseModel(true, 0, 'File update')
 
-        }
-    
-    
-        // const updatedData = await manager.getRepository(OrdersChildEntity).find({
-        //     select: ['fileId'],
-        //     order: { id: 'DESC' }, take: 1
-        // })
+      // }
+    }
+    if (req) {
 
-        const updatedData = await this.orderChildRepo.find({ where:{
-          poNumber:req.poNumber
-        }, order: {ordersChildId: 'DESC'}, take: 1, skip: 1})
-        
-        const flag = new Set()
-        let data = []
-        if (updatedData.length > 0) {
-            // data = await manager.getRepository(OrdersChildEntity).find({ where: { fileId: updatedData[0]?.fileId } })
-            data = await this.orderChildRepo.find({ where: { ordersChildId: updatedData[0]?.ordersChildId } })
-            // this.ordersChildRepo.find({
-            //     where: { fileId: updatedData[0]?.fileId },
-            //     // relations: ['orders']
-            // })
-        } else {
-            flag.add(true)
-        }
+      const childData = await this.orderChildRepo.find({ where: { poNumber: req.poNumber }, order: { ordersChildId: 'DESC' }, take: 1, skip: 1 })
+      console.log(childData, "kkk")
+      const deleteChildData = await this.orderChildRepo.delete({ poNumber: childData[0].poNumber, poVersion: childData[0].poVersion })
+      const deleteOrdersData = await this.rlOrdersRepo.delete({ poNumber: childData[0].poNumber, versionFlag: 1 })
 
-        if (data.length > 0) {
 
-            for (const dtoData of data) {
-                // const prodPlanId = new OrdersEntity();
-                // prodPlanId.productionPlanId = dtoData.orders.productionPlanId
-                // const updateOrder = await manager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber }, {
-                //     year: dtoData.year, planningSsn: dtoData.planningSsn, biz: dtoData.biz, coreCategory: dtoData.coreCategory, planningSum: dtoData.planningSum, coeff: dtoData.coeff, publishFlagForFactory: dtoData.publishFlagForFactory, orderPlanQty: dtoData.orderPlanQty, orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff, prodPlanType: dtoData.prodPlanType, wh: dtoData.wh, exfEtd: dtoData.exfEtd, etdWh: dtoData.etdWh, sample: dtoData.sample, version: dtoData.version, fileId: dtoData.fileId, updatedUser: dtoData.createdUser
-                // })
-
-                // if (updateOrder.affected) {
-                //     flag.add(true)
-                // } else {
-                //     flag.add(false)
-                //     // await manager.releaseTransaction()
-                //     return new CommonResponseModel(false, 0, 'Something went wrong in order update', updateOrder)
-                // }
-            }
-        } else {
-            flag.add(true)
-        }
-        if (flag.has(true)) {
-            // await manager.completeTransaction()
-            return new CommonResponseModel(true, 1, 'File Reverted Successfully')
-        } else {
-            // await manager.releaseTransaction()
-            return new CommonResponseModel(false, 0, 'failed to revert file data')
-        }
     }
 
-    async updateItemNo(req: ItemNoDtos): Promise<CommonResponseModel> {
-      console.log(req, "reqq");
-      try {
-          const update = await this.coLineRepo.update(
-              { id: Number(req.id) },
-              { itemNo: req.itemNo }
-          );
 
-          if (update) {
-              return new CommonResponseModel(true, 1, "Update Successfully");
-          } else {
-              return new CommonResponseModel(false, 0, "Something Went Wrong", []);
-          }
-      } catch (error) {
-          return new CommonResponseModel(false, 0, "Error Occurred While Updating ", error);
+    // const updatedData = await manager.getRepository(OrdersChildEntity).find({
+    //     select: ['fileId'],
+    //     order: { id: 'DESC' }, take: 1
+    // })
+
+    const updatedData = await this.orderChildRepo.find({
+      where: {
+        poNumber: req.poNumber
+      }, order: { ordersChildId: 'DESC' }, take: 1, skip: 1
+    })
+
+    const flag = new Set()
+    let data = []
+    if (updatedData.length > 0) {
+      // data = await manager.getRepository(OrdersChildEntity).find({ where: { fileId: updatedData[0]?.fileId } })
+      data = await this.orderChildRepo.find({ where: { ordersChildId: updatedData[0]?.ordersChildId } })
+      // this.ordersChildRepo.find({
+      //     where: { fileId: updatedData[0]?.fileId },
+      //     // relations: ['orders']
+      // })
+    } else {
+      flag.add(true)
+    }
+
+    if (data.length > 0) {
+
+      for (const dtoData of data) {
+        // const prodPlanId = new OrdersEntity();
+        // prodPlanId.productionPlanId = dtoData.orders.productionPlanId
+        // const updateOrder = await manager.getRepository(OrdersEntity).update({ orderPlanNumber: dtoData.orderPlanNumber }, {
+        //     year: dtoData.year, planningSsn: dtoData.planningSsn, biz: dtoData.biz, coreCategory: dtoData.coreCategory, planningSum: dtoData.planningSum, coeff: dtoData.coeff, publishFlagForFactory: dtoData.publishFlagForFactory, orderPlanQty: dtoData.orderPlanQty, orderPlanQtyCoeff: dtoData.orderPlanQtyCoeff, prodPlanType: dtoData.prodPlanType, wh: dtoData.wh, exfEtd: dtoData.exfEtd, etdWh: dtoData.etdWh, sample: dtoData.sample, version: dtoData.version, fileId: dtoData.fileId, updatedUser: dtoData.createdUser
+        // })
+
+        // if (updateOrder.affected) {
+        //     flag.add(true)
+        // } else {
+        //     flag.add(false)
+        //     // await manager.releaseTransaction()
+        //     return new CommonResponseModel(false, 0, 'Something went wrong in order update', updateOrder)
+        // }
       }
+    } else {
+      flag.add(true)
+    }
+    if (flag.has(true)) {
+      // await manager.completeTransaction()
+      return new CommonResponseModel(true, 1, 'File Reverted Successfully')
+    } else {
+      // await manager.releaseTransaction()
+      return new CommonResponseModel(false, 0, 'failed to revert file data')
+    }
+  }
+
+  async updateItemNo(req: ItemNoDtos): Promise<CommonResponseModel> {
+    console.log(req, "reqq");
+    try {
+      const update = await this.coLineRepo.update(
+        { id: Number(req.id) },
+        { itemNo: req.itemNo }
+      );
+
+      if (update) {
+        return new CommonResponseModel(true, 1, "Update Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Something Went Wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error Occurred While Updating ", error);
+    }
   }
 
 
   async deleteCoLine(req: ItemNoDtos): Promise<CommonResponseModel> {
-      console.log(req, "reqq");
-      try {
-          const deletedItem = await this.coLineRepo.delete({ id: Number(req.id) });
+    console.log(req, "reqq");
+    try {
+      const deletedItem = await this.coLineRepo.delete({ id: Number(req.id) });
 
-          if (deletedItem && deletedItem.affected) {
-              return new CommonResponseModel(true, 1, "Deleted Successfully");
-          } else {
-              return new CommonResponseModel(false, 0, "Something Went Wrong", []);
-          }
-      } catch (error) {
-          return new CommonResponseModel(false, 0, "Error Occurred While Deleting", error);
+      if (deletedItem && deletedItem.affected) {
+        return new CommonResponseModel(true, 1, "Deleted Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Something Went Wrong", []);
       }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error Occurred While Deleting", error);
+    }
   }
 
   async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
-    console.log(req,"tttttttttt")
+    console.log(req, "tttttttttt")
     const update = await this.rlOrdersRepo.update({
       poNumber: req.buyerPo, poItem: req.lineItemNo
     }, {
       itemStatus: req.itemStatus
     })
     if (update.affected) {
-        return new CommonResponseModel(true, 1, 'Success')
+      return new CommonResponseModel(true, 1, 'Success')
     } else {
-        return new CommonResponseModel(false, 0, 'Failed')
-    }
-}
-
-
-async updateStatusInOrder(req: any): Promise<CommonResponseModel> {
-  console.log(req,"req")
-   try {
-
-    const update = await this.rlOrdersRepo.update({
-      poNumber: req. poNumber, poItem: req.poLine
-    }, {
-      itemStatus: ItemStatusEnum.OPEN
-    })
-    
-    if (update.affected) {
-      return new CommonResponseModel(true, 1, 'Updated Successfully')
-  } else {
       return new CommonResponseModel(false, 0, 'Failed')
+    }
   }
-  
-   } catch (error) {
-     return new CommonResponseModel(false, 0, "Error Occurred", error);
-   }
- }
+
+
+  async updateStatusInOrder(req: any): Promise<CommonResponseModel> {
+    console.log(req, "req")
+    try {
+
+      const update = await this.rlOrdersRepo.update({
+        poNumber: req.poNumber, poItem: req.poLine
+      }, {
+        itemStatus: ItemStatusEnum.OPEN
+      })
+
+      if (update.affected) {
+        return new CommonResponseModel(true, 1, 'Updated Successfully')
+      } else {
+        return new CommonResponseModel(false, 0, 'Failed')
+      }
+
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error Occurred", error);
+    }
+  }
 
 
 }
