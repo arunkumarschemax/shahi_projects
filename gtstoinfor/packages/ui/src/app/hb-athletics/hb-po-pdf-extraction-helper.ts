@@ -1,5 +1,5 @@
 import { CentricPoDetails, CentricPoItemDetails, CentricPoItemVariant, HbPoDetails, HbPoItemDetails } from "@project-management-system/shared-models";
-import { EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, ITEM_NO_EXP, ITEM_NO_EXP1, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, ITEM_VARIANT_START_TEXT1, MANUFACTURE_1, MANUFACTURE_2, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SPECIAL_INSTRUCTIONS } from "./hb-popdf-regex-expressions";
+import { EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, ITEM_NO_EXP, ITEM_NO_EXP1, ITEM_NO_EXP2, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, ITEM_VARIANT_START_TEXT1, ITEM_VARIANT_START_TEXT2, MANUFACTURE_1, MANUFACTURE_2, PAGE_DATE, PAGE_DATE_INDEX, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SPECIAL_INSTRUCTIONS } from "./hb-popdf-regex-expressions";
 
 
 /** 
@@ -43,6 +43,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             let paymentTermDescriptionIndex;
             let refrenceIndex;
             let specialInstructionsIndex;
+            let pageDateIndex;
             for (const [ind, ele] of firstPageContent.entries()) {
                 if (ele.str == PO_NUMBER_TEXT) {
                     poNumberTextIndex = ind
@@ -82,6 +83,9 @@ export const extractDataFromPoPdf = async (pdf) => {
                 if (ele.str == SPECIAL_INSTRUCTIONS) {
                     specialInstructionsIndex = ind
                 }
+                // if (ele.str == PAGE_DATE) {
+                //     pageDateIndex = ind
+                // }
 
                 const currencySymbolToText = {
                     '$': 'USD',
@@ -89,22 +93,50 @@ export const extractDataFromPoPdf = async (pdf) => {
                 };
                 const match = /([$₹])\d+(,|\.|\d)\d+(\.|,|\d)\d+/.exec(ele.str);
                 if (match) {
-                    const currencySymbol = match[0][0]||'-';
-                    poData.currency = match[0].replace(currencySymbol, currencySymbolToText[currencySymbol]).replace(/\d+(,|\.|\d)\d+(\.|,|\d)\d+/g, "")||'-';
+                    const currencySymbol = match[0][0] || '-';
+                    poData.currency = match[0].replace(currencySymbol, currencySymbolToText[currencySymbol]).replace(/\d+(,|\.|\d)\d+(\.|,|\d)\d+/g, "") || '-';
                     break;
                 }
             }
-            poData.custPo = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX].str
-            // poData.exitFactoryDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX - 6].str
-            const exitFactoryDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX - 6].str;
-            const [month, day, twoDigitYear] = exitFactoryDate.split('/');
-            const currentYear = new Date().getFullYear();
-            const centuryPrefix = Math.floor(currentYear / 100) * 100;
-            const fourDigitYear = centuryPrefix + parseInt(twoDigitYear);
-            const paddedDay = day.padStart(2, '0');
-            const paddedMonth = month.padStart(2, '0');
-            const formattedDate = `${paddedDay}-${paddedMonth}-${fourDigitYear}`;
-            poData.exitFactoryDate = formattedDate;
+            poData.custPo = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX].str;
+            const regexDateIndex = /\d{1,2}\/\d{1,2}\/\d{2}/;
+            if (regexDateIndex.test(firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX - 6].str)) {
+                const originalDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX - 6].str;
+                const dateComponents = originalDate.split('/');
+                poData.exitFactoryDate = `${dateComponents[1]}-${dateComponents[0]}-20${dateComponents[2]}`;
+            } else {
+                const pageOneDataIndex = firstPageContent.findIndex(item => item.str === "Page 1");
+                if (pageOneDataIndex !== -1) {
+                    const nextIdIndex = pageOneDataIndex + 1;
+                    if (nextIdIndex < firstPageContent.length) {
+                        // Original date in MM/DD/YY format
+                        const originalDate = firstPageContent[nextIdIndex].str;
+                        const dateComponents = originalDate.split('/');
+                        poData.exitFactoryDate = `${dateComponents[1]}-${dateComponents[0]}-20${dateComponents[2]}`;
+                    } else {
+                        console.log("Data associated with nextId not found.");
+                    }
+                }
+            }
+
+            // const exitFactoryDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX - 6]?.str;
+            // if (exitFactoryDate) {
+            //     const [month, day, twoDigitYear] = exitFactoryDate.split('/');
+            //     if (month && day && twoDigitYear) {
+            //         const currentYear = new Date().getFullYear();
+            //         const centuryPrefix = Math.floor(currentYear / 100) * 100;
+            //         const fourDigitYear = centuryPrefix + parseInt(twoDigitYear);
+            //         const paddedDay = day.padStart(2, '0');
+            //         const paddedMonth = month.padStart(2, '0');
+            //         const formattedDate = `${paddedDay}-${paddedMonth}-${fourDigitYear}`;
+            //         poData.exitFactoryDate = formattedDate;
+            //     } else {
+            //         console.error("Invalid date format:", exitFactoryDate);
+            //     }
+            // } else {
+            //     console.error("exitFactoryDate is undefined.");
+            // }
+
 
             let foundExitFactory = false;
             let foundShipVia = false;
@@ -172,10 +204,10 @@ export const extractDataFromPoPdf = async (pdf) => {
     let isSecondFormat = false;
     for (const [index, rec] of filteredData.entries()) {
 
-        if (rec.str.match(ITEM_NO_EXP) || rec.str.match(ITEM_NO_EXP1)) {
+        if (rec.str.match(ITEM_NO_EXP) || rec.str.match(ITEM_NO_EXP1) || rec.str.match(ITEM_NO_EXP2)) {
             prevItemIndex = index
         }
-        if (rec.str.includes(ITEM_VARIANT_START_TEXT) || rec.str.includes(ITEM_VARIANT_START_TEXT1)) {
+        if (rec.str.includes(ITEM_VARIANT_START_TEXT) || rec.str.includes(ITEM_VARIANT_START_TEXT1) || rec.str.includes(ITEM_VARIANT_START_TEXT2)) {
             itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
         }
 
@@ -191,8 +223,16 @@ export const extractDataFromPoPdf = async (pdf) => {
         const itemDetailsObj = new HbPoItemDetails();
         console.log(rec.itemIndex, "iiiiiiiiiiiiii");
 
-        itemDetailsObj.style = filteredData[rec.itemIndex - 4].str;
-        itemDetailsObj.color = filteredData[rec.itemIndex - 1].str;
+        const styleRegex = /[0-9]{6}/;
+        const styleStr = filteredData[rec.itemIndex - 4].str;
+
+        if (styleRegex.test(styleStr)) {
+            itemDetailsObj.style = styleStr;
+        } else {
+            itemDetailsObj.style = filteredData[rec.itemIndex - 5].str;
+        }
+
+        itemDetailsObj.color = filteredData[rec.itemIndex + 2].str.replace(/\d+\s+/g,"").trim();
 
         itemTextEndIndex = rec.amountIndex;
         itemVariantStartIndex = itemTextEndIndex + 1;

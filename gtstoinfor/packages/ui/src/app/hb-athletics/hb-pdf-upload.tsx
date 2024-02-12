@@ -180,7 +180,7 @@ const HbPdfUpload: React.FC<IPdfUploadProps> = (props) => {
                         xl={{ span: 4 }}
                     >
                         <Form.Item>
-                            <Button type='primary' onClick={hbAthleticBot}>Upload Bot</Button>
+                            <Button type='primary' onClick={hbAthleticBot}>Auto Upload Bot</Button>
                         </Form.Item>
                     </Col>
                     <Col span={24}>

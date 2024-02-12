@@ -148,17 +148,24 @@ const HbColineView = () => {
                 }
             },
             {
-                title: 'Rised User',
+                title: 'Raised User',
                 dataIndex: 'created_user',
                 render: (text, record) => {
                     return (record.created_user ? (record.created_user) : '-')
                 }
             },
             {
-                title: 'Rised Date',
+                title: 'Raised Date',
                 dataIndex: 'raised_date',
                 render: (text, record) => {
-                    return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')) : '-')
+                    return (record.raised_date ? (moment(record.raised_date).format('DD-MM-YYYY HH:mm')) : '-')
+                }
+            },
+            {
+                title: 'CO Status Date',
+                dataIndex: 'updated_at',
+                render: (text, record) => {
+                    return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')): '-')
                 }
             },
             {
@@ -207,11 +214,18 @@ const HbColineView = () => {
     };
 
     const handleConfirmDelete = (record) => {
+        console.log(record,"rrrrrrrre")
         const req = new ItemNoDto(record.id)
+        const req1 = new ItemNoDto(null,null,record.cust_po)
         service.deleteCoLine(req).then(res => {
             if (res.status) {
                 getData();
                 AlertMessages.getSuccessMessage(res.internalMessage)
+                service.updateStatusInOrder(req1).then((res) => {
+                    if (res.status) {
+                        message.success(res.internalMessage)
+                    }
+                })
 
             } else {
                 AlertMessages.getErrorMessage(res.internalMessage)
@@ -315,19 +329,16 @@ const HbColineView = () => {
             title: 'Raised Date',
             dataIndex: 'raised_date',
             render: (text, record) => {
-                return (record.raised_date ? (moment(record.raised_date).format('MM/DD/YYYY HH:mm')) : '-')
+                return (record.raised_date ? (moment(record.raised_date).format('DD-MM-YYYY HH:mm')) : '-')
             },
 
         },
-
         {
-            title: 'CO Created Date',
+            title: 'CO Status Date',
             dataIndex: 'updated_at',
             render: (text, record) => {
-                return (record.updated_at ? (moment(record.updated_at).format('MM/DD/YYYY')) : '-')
-            },
-
-
+                return (record.updated_at ? (moment(record.updated_at).format('DD-MM-YYYY')): '-')
+            }
         },
         {
             title: 'Status',

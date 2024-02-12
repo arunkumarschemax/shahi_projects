@@ -16,7 +16,7 @@ export class HbCOLineRepository extends Repository<HbCOLineEntity> {
     async getHbCoLineData(req: HbPoOrderFilter): Promise<any[]> {
       const query = this.createQueryBuilder('co')
         .select(`DISTINCT co.cust_po, co.exit_factory_date, co.co_date, co.style, co.item_no, co.status, co.error_msg,
-                 DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user, co.co_number,co.id`);
+                 DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user, co.co_number,co.id,co.updated_at`);
   
       if (req.custPo !== undefined) {
         query.andWhere(`co.cust_po = :custPo`, { custPo: req.custPo });
