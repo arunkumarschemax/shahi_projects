@@ -189,16 +189,13 @@ const ColineView = () => {
                 },
                
             },
-    
-            // {
-            //     title: 'CO Status Date',
-            //     dataIndex: 'updated_at',
-            //     render: (text, record) => {
-            //         return (record.updated_at ? (moment(record.updated_at).format('DD/MM/YYYY')) : '-')
-            //     },
-              
-    
-            // },
+            {
+                title: 'CO Status Date',
+                dataIndex: 'updated_at',
+                render: (text, record) => {
+                    return (record.updated_at ? (moment.utc(record.updated_at).format('DD/MM/YYYY')) : '-')
+                }
+            },
             {
                 title: 'Status',
                 dataIndex: 'status',
@@ -310,17 +307,13 @@ const ColineView = () => {
             sorter: (a, b) => a.created_at.localeCompare(b.created_at),
             sortDirections: ["ascend", "descend"],
         },
-
-        // {
-        //     title: 'CO Status Date',
-        //     dataIndex: 'updated_at',
-        //     render: (text, record) => {
-        //         return (record.updated_at ? (moment(record.updated_at).format('DD/MM/YYYY')) : '-')
-        //     },
-        //     sorter: (a, b) => a.updated_at.localeCompare(b.updated_at),
-        //     sortDirections: ["ascend", "descend"],
-
-        // },
+        {
+            title: 'CO Status Date',
+            dataIndex: 'updated_at',
+            render: (text, record) => {
+                return (record.updated_at ? (moment.utc(record.updated_at).format('DD/MM/YYYY')) : '-')
+            }
+        },
         {
             title: 'Status',
             dataIndex: 'status',
