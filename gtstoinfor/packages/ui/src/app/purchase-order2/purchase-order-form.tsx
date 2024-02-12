@@ -187,12 +187,14 @@ export const PurchaseOrderForm = () => {
         const poAgainst = poForm.getFieldValue('indentAgainst');
         const indentId = poForm.getFieldValue('indentId');
         const poMaterialType = poForm.getFieldValue('poMaterialType');
-    
+        const totalAmount = poForm.getFieldValue('totalAmount');
+
         poForm.resetFields();
     
         poForm.setFieldsValue({ indentAgainst: poAgainst });
         poForm.setFieldsValue({ indentId: indentId });
         poForm.setFieldsValue({ poMaterialType: poMaterialType });
+        poForm.setFieldsValue({ totalAmount: totalAmount });
     }
     
 
