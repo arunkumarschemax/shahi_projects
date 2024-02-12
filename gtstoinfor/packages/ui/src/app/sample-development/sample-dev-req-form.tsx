@@ -1011,7 +1011,7 @@ export const SampleDevForm = () => {
             <Form.Item
               name="productId"
               label="Product"
-            // rules={[{ required: true, message: "Please Select Product" }]}
+            rules={[{ required: true, message: "Please Select Product" }]}
             >
               <Select
                 allowClear
