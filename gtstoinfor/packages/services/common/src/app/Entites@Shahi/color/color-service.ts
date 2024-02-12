@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectDataSource } from "@nestjs/typeorm";
 import { DataSource, Like } from "typeorm";
 import { GenericTransactionManager } from "../../../typeorm-transactions";
-import {   CommonResponseModel } from "@project-management-system/shared-models";
+import {   ColorColumns, CommonResponseModel } from "@project-management-system/shared-models";
 import { ColorEntity } from "./color-entity";
 import { ColorRepository } from "./color-repo";
 
@@ -31,7 +31,7 @@ export class ColorService {
                 }
                 return updatedObj;
             })
-            const difference = columnArray.filter((element) =>(element));
+            const difference = columnArray.filter((element) => !ColorColumns.includes(element));
             console.log(difference,"diff")
             if (difference.length > 0) {
                 await transactionManager.releaseTransaction();
