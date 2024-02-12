@@ -684,12 +684,12 @@ const FabricsForm = (props:FabricsFormProps) => {
 
       render: (_, record) => (
         <>
-        <Form.Item name={`fabriccolorId${record.key}`}
+        <Form.Item name={`fabricColorId${record.key}`}
         rules={[{ required: true, message: 'Missing Color' }]}
         >
           <Select
             value={record.colourId}
-            onChange={(e) => handleInputChange(e, record.key, 'fabriccolorId', 0,record)}
+            onChange={(e) => handleInputChange(e, record.key, 'fabricColorId', 0,record)}
             style={{ width: "100%" }}
             allowClear
             showSearch
@@ -698,7 +698,7 @@ const FabricsForm = (props:FabricsFormProps) => {
           >
             {color.map((e) => {
               return (
-                <Option name={`fabriccolorId${record.key}`} key={e.colourId} value={e.colourId}>
+                <Option name={`fabricColorId${record.key}`} key={e.colourId} value={e.colourId}>
                   {e.colour}
                 </Option>
               );
