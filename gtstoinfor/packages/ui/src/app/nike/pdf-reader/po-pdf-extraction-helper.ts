@@ -58,6 +58,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 }
                 if (ele.str === "SHIP TO:") {
                     if (shipToCount === 0) {
+                        console.log(ind,'IiIiIiIi')
                         // Found the first "ship to"
                         shipToAddStartIndex = ind;
                         buyerAddEndIndex = ind
@@ -74,6 +75,12 @@ export const extractDataFromPoPdf = async (pdf) => {
                 if (ele.str.includes(UNWANTED_TEXT_1)) {
                     shipToAddEndIndex = ind
                 }
+                if(shipToAddEndIndex< shipToAddStartIndex){
+                    if (ele.str.includes("BUYER:")) {
+                        shipToAddEndIndex = ind
+                    }  
+                }
+                console.log(shipToAddEndIndex,'EEEEEEEEEEEEE')
             }
             let poNumber;
             poData.poDocDate = firstPageContent[poDocDateIndex + PO_DOC_DATE_INDEX].str
@@ -102,10 +109,12 @@ export const extractDataFromPoPdf = async (pdf) => {
                 buyerAddress += firstPageContent[b].str + ','
             }
             poData.buyerAddress = buyerAddress;
+            console.log(shipToAddStartIndex,'SHHHHHHHHHH')
             let shipToAddress = ''
             for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) {
                 shipToAddress += firstPageContent[c].str + ','
             }
+            console.log(shipToAddress,'SSSSSSSSSSSSSSSS')
             poData.shipToAddress = shipToAddress;
 
         }
