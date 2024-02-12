@@ -68,6 +68,8 @@ import SanmarPdfTable from "./sanmar/sanmar-pdf-detail-view"
 import SanmarOrderAcceptanceGrid from "./sanmar/sanmar-order-acceptance-view"
 import SanmarColineView from "./sanmar/sanmar-co-line-view"
 import SanmarOrderComparisionReport from "./sanmar/sanmar-order-comparsion-report"
+import ColorUpload from "./masters/color/color-excel-upload"
+import ColorView from "./masters/color/color-view"
 
 
 export const AppRoutes = () => {
@@ -258,6 +260,9 @@ export const AppRoutes = () => {
                    <Route path='sanmar-order-comparision-report' element={<SanmarOrderComparisionReport />} />
                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
+
+                   <Route path='masters/color/color-excel-upload' key='/color/color-excel-upload' element={<ColorUpload/>} />
+                   <Route path='masters/color/color-view' key='/color/color-view' element={<ColorView/>} />
               
                 </Route>
 
