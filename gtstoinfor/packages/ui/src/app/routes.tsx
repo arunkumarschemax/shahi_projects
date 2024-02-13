@@ -81,6 +81,8 @@ import LevisPdfUpload from "./levis/pdf-upload"
 import LevisOrderAcceptanceGrid from "./levis/levis-order-acceptance-view"
 import LevisColineView from "./levis/levis-co-line-view"
 import LevisOrdersDetailView from "./levis/levis-order-detail-view"
+import ColorUpload from "./masters/color/color-excel-upload"
+import ColorView from "./masters/color/color-view"
 
 
 export const AppRoutes = () => {
@@ -300,6 +302,8 @@ export const AppRoutes = () => {
                    <Route path='levis-order-data-detail-view' element={<LevisOrdersDetailView />} />
                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
+                   <Route path='masters/color/color-excel-upload' key='/color/color-excel-upload' element={<ColorUpload/>} />
+                   <Route path='masters/color/color-view' key='/color/color-view' element={<ColorView/>} />
 
             
                 </Route>

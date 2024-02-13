@@ -13,6 +13,9 @@ import { LevisCOLineEntity } from "./entities/levis-co-line.entity";
 import { AddressService } from "../Entites@Shahi/address/address-service";
 import { AddressRepository } from "../Entites@Shahi/address/address.repo";
 import { AddressEntity } from "../Entites@Shahi/address/address-entity";
+import { ColorService } from "../Entites@Shahi/color/color-service";
+import { ColorRepository } from "../Entites@Shahi/color/color-repo";
+import { ColorEntity } from "../Entites@Shahi/color/color-entity";
 
 
 
@@ -20,9 +23,9 @@ import { AddressEntity } from "../Entites@Shahi/address/address-entity";
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-        LevisOrdersEntity,LevisPdfInfoEntity,LevisCOLineEntity,AddressEntity
+        LevisOrdersEntity,LevisPdfInfoEntity,LevisCOLineEntity,AddressEntity,ColorEntity
     ])],
   controllers: [LevisController],
-  providers: [LevisService,ApplicationExceptionHandler,LevisOrdersRepository,LevisPdfRepo,LevisCOLineRepository,AddressService,AddressRepository]
+  providers: [LevisService,ApplicationExceptionHandler,LevisOrdersRepository,LevisPdfRepo,LevisCOLineRepository,AddressService,AddressRepository,ColorService,ColorRepository]
 })
 export class LevisModule { }

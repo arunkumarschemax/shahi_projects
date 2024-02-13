@@ -12,6 +12,7 @@ import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
 import { LevisModule } from './levis/levis.module';
 import { AddressModule } from './Entites@Shahi/address/address-module';
+import { ColorModule } from './Entites@Shahi/color/color-module';
 
 
 @Module({
@@ -33,7 +34,7 @@ import { AddressModule } from './Entites@Shahi/address/address-module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,LevisModule,AddressModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,LevisModule,AddressModule,ColorModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
