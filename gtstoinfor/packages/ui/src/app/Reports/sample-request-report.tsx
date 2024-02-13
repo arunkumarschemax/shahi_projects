@@ -312,7 +312,7 @@ const SampleRequestReport = () => {
       // sortDirections: ['descend', 'ascend'],
     },
     {
-      title: "Color",
+      title: "Garment Color",
       dataIndex: "colourName",
       // sorter: (a, b) => a.colourName.localeCompare(b.colourName),
       // sortDirections: ['descend', 'ascend'],

@@ -68,7 +68,7 @@ const ProcessForm = (props:ProcessFormProps) => {
             }
             return record;
           });
-          props.form.setFieldValue(`sequence${key}`,undefined)
+          props.form.setFieldValue(`sequence${key}`,null)
           props.form.validateFields().then(process => {
 
           })
