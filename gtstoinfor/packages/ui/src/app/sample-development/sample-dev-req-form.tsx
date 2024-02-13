@@ -1,6 +1,6 @@
 import { EyeOutlined, UploadOutlined } from "@ant-design/icons";
 import { BuyerRefNoRequest, CategoryEnumDisplay, DepartmentReq, SampleDevelopmentRequest, StyleIdReq, TypeIdReq } from "@project-management-system/shared-models";
-import { BuyersService, CountryService, CurrencyService, EmployeeDetailsService, FabricSubtypeservice, FabricTypeService, LiscenceTypeService, LocationsService, M3ItemsService, MasterBrandsService, ProductService, ProfitControlHeadService, QualityService, SampleDevelopmentService, SampleSubTypesService, SampleTypesService, StyleService } from "@project-management-system/shared-services";
+import { BuyersService, CountryService, CurrencyService, EmployeeDetailsService, FabricSubtypeservice, FabricTypeService, LiscenceTypeService, LocationsService, M3ItemsService, MasterBrandsService, MasterLocationsService, ProductService, ProfitControlHeadService, QualityService, SampleDevelopmentService, SampleSubTypesService, SampleTypesService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Modal, Row, Select, Tabs, Tooltip, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import Upload, { UploadProps } from "antd/es/upload";
@@ -61,7 +61,7 @@ export const SampleDevForm = () => {
   const [trimForm] = Form.useForm();
   const [processForm] = Form.useForm();
 
-
+  const [locationDropDown, setLocationsDropDown] = useState<any>([]);
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   const pchService = new ProfitControlHeadService();
@@ -81,7 +81,7 @@ export const SampleDevForm = () => {
   const m3ItemsService = new M3ItemsService()
   const qualityService = new QualityService()
   const productService = new ProductService()
-
+  const locationsService = new MasterLocationsService()
   const navigate = useNavigate();
 
 
@@ -93,6 +93,7 @@ export const SampleDevForm = () => {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
     const loginUser = userData?.user?.userName
     form.setFieldsValue({ "user": loginUser })
+    getAllLocations()
     getLocations();
     getPCHData();
     getBuyers();
@@ -109,6 +110,15 @@ export const SampleDevForm = () => {
     getQualities();
     getAllProducts()
   }, []);
+  const getAllLocations = () => {
+    locationsService.getAllActivelocations().then((res) => {
+      
+      if (res.status) {
+        console.log(res);
+        setLocationsDropDown(res.data);
+      }
+    });
+  };
 
   const getM3FabricStyleCodes = () => {
     m3ItemsService.getM3Items().then(res => {
@@ -241,7 +251,7 @@ export const SampleDevForm = () => {
     styleService.getstyleaginstpch(req).then((res) => {
       if (res.status) {
         form.setFieldValue('pchId', res.data?.pchId)
-      }
+        form.setFieldValue('description', res.data?.description)      }
     })
   }
   const styleOnChange = (value, option) => {
@@ -633,14 +643,14 @@ export const SampleDevForm = () => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="locationId"
-              label="Location"
-              rules={[{ required: true, message: "Location is required" }]}
+              label="Warehouse"
+              rules={[{ required: true, message: "Warehouse is required" }]}
             >
               <Select
                 allowClear
                 showSearch
                 optionFilterProp="children"
-                placeholder="Select Location"
+                placeholder="Select Warehouse"
               >
                 <Option key={340} value={340}>{'340'}</Option>
                 {/* {locations.map((e) => {
@@ -861,7 +871,7 @@ export const SampleDevForm = () => {
             //   },
             // ]}
             >
-              <TextArea rows={2} placeholder="Enter Description" />
+              <TextArea rows={2} placeholder="Enter Description" disabled />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
@@ -1011,7 +1021,7 @@ export const SampleDevForm = () => {
             <Form.Item
               name="productId"
               label="Product"
-            rules={[{ required: true, message: "Please Select Product" }]}
+            rules={[{ required: true, message: "Please Select Product"}]}
             >
               <Select
                 allowClear
@@ -1118,6 +1128,31 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
+            <Form.Item
+              name="locationsId"
+              label="Location"
+              // dependencies={['styleId']}
+              rules={[{ required: true, message: "Location is required" }]}
+            >
+              <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Location"
+                // disabled
+              >
+                {locationDropDown?.map((e) => {
+                  return (
+                    <Option key={e.locationId} value={e.locationId}>
+                      {e.locationName}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </Form.Item>
+          </Col>
+
           {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
           <Form.Item
             name="conversion"
