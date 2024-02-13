@@ -210,10 +210,10 @@ export function M3TrimItemsForm({props}) {
         if(props != undefined){
           trimReqCodeService.updateTrimStatus({id:props.trimRequestCodeId, m3ItemsId:res.data?.m3TrimId}).then((res) => {
             if(res.status){
-              AlertMessages.getSuccessMessage(res.internalMessage);
+              // AlertMessages.getSuccessMessage(res.internalMessage);
            setTimeout(() => {
-             message.success("Submitted successfully")
-             navigate('/trim-master/m3-trim-items/m3-trim-items-view')
+            AlertMessages.getSuccessMessage(res.internalMessage);
+            navigate('/trim-master/m3-trim-items/m3-trim-items-view')
            }, 500)
          }
          else {
