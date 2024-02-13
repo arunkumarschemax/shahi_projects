@@ -21,11 +21,11 @@ export class AddressEntity {
     buyerAddress: string
 
     @Column('int', {
-        name: 'buyer_code',
+        name: 'buyer_address_code',
         nullable: false,
 
     })
-    buyerCode: number
+    buyerAddressCode: number
 
     @Column('text', {
         name: 'delivery_address',
@@ -34,11 +34,11 @@ export class AddressEntity {
     deliveryAddress: string
 
     @Column('int', {
-        name: 'delivery_code',
+        name: 'delivery_address_code',
         nullable: false,
 
     })
-    deliveryCode: number
+    deliveryAddressCode: number
 
 
     @Column({

@@ -64,8 +64,8 @@ export class AddressService {
                     const addObj = new AddressEntity()
                     addObj.buyerAddress = data.BuyerAddress
                     addObj.deliveryAddress = data.DeliveryAddress
-                    addObj.buyerCode = data.BuyerCode
-                    addObj.deliveryCode = data.DeliveryCode
+                    addObj.buyerAddressCode = data.BuyerAddressCode
+                    addObj.deliveryAddressCode = data.DeliveryAddressCode
                     addObj.destination = data.Destination
                     const addSave = await transactionManager.getRepository(AddressEntity).save(addObj)
                     if (addSave) {

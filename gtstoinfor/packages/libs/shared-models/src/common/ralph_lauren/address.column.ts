@@ -1,9 +1,9 @@
 export const AddressColumns = [
     "SNo",
     "Destination",
-    'DeliveryCode', 
+    'DeliveryAddressCode', 
     'DeliveryAddress',
-    'BuyerCode', 
+    'BuyerAddressCode', 
     'BuyerAddress',
 
   
