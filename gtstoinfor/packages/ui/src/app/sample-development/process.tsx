@@ -73,7 +73,7 @@ const ProcessForm = (props:ProcessFormProps) => {
 
           })
           .catch(err => {
-            AlertMessages.getErrorMessage("errr")
+            // AlertMessages.getErrorMessage("errr")
           })
           setData(updatedData);
           props.data(updatedData)
@@ -103,7 +103,7 @@ const ProcessForm = (props:ProcessFormProps) => {
           props.form.setFieldValue(`operation${key}`,undefined)
           props.form.validateFields().then(process => {
           }) .catch(err => {
-            AlertMessages.getErrorMessage("errr")
+            // AlertMessages.getErrorMessage("errr")
           })
           setData(updatedData);
           props.data(updatedData)
