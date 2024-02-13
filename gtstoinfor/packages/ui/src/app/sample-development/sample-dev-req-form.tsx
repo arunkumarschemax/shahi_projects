@@ -609,7 +609,7 @@ export const SampleDevForm = () => {
     if (fileList != undefined) {
       (fileList.filter((f) => f != undefined))?.forEach(res => {
         console.log(res)
-        if (res.type != "application/xls" && res.type != "application/PDF" && res.type != "application/pdf" && res.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && res.type != "application/xlsx" && res != undefined && res.type != "pplication/vnd.ms-excel") {
+        if (res.type != "application/xls" && res.type != "application/PDF" && res.type != "application/pdf" && res.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && res.type != "application/xlsx" && res != undefined && res.type != "application/vnd.ms-excel") {
           buttons.push(
             <Tooltip title={`${res.name} preview`}>
               <Button key={res.uid} id={res.uid} icon={<EyeOutlined />} onClick={() => onFabriView(res)}></Button>
