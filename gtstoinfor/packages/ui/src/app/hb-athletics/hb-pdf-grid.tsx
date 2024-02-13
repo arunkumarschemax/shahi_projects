@@ -328,7 +328,7 @@ export function HbPdFInfoGrid() {
                     icon={<SearchOutlined />}
                     type="primary"
                   >
-                    SEARCH
+                    Search
                   </Button>
                 
                 </Form.Item>
@@ -350,7 +350,7 @@ export function HbPdFInfoGrid() {
                     onClick={onReset}
                     icon={<UndoOutlined />}
                   >
-                    RESET
+                    Reset
                   </Button>
                 </Form.Item>
               </Col>

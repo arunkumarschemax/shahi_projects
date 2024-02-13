@@ -1159,7 +1159,7 @@ import { Excel } from "antd-table-saveas-excel";
                     type="primary"
                     onClick={getorderData}
                   >
-                    SEARCH
+                    Search
                   </Button>
                 
                 </Form.Item>

@@ -725,6 +725,7 @@ export class HbService {
         }
         await driver.sleep(10000)
         const element = await driver.findElement(By.id('OrderCreateID')).click();
+        console.log("haiiiiii")
         await driver.wait(until.alertIsPresent(), 10000);
         // Switch to the alert and accept it (click "OK")
         const alert = await driver.switchTo().alert();
@@ -738,15 +739,26 @@ export class HbService {
           await driver.sleep(5000)
           await driver.navigate().refresh();
           await driver.quit();
-        } else {
-          await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
-          const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[last()]/td[7]`));
-          const coNo = await coNoElement.getAttribute('innerText');
+        // } else {
+        //   await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
+        //   const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[last()]/td[7]`));
+        //   const coNo = await coNoElement.getAttribute('innerText');
+        //   const currentDate = new Date();
+        //   const day = currentDate.getDate().toString().padStart(2, '0');
+        //   const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
+        //   const year = currentDate.getFullYear().toString().slice(-2);
+        //   const currentDateFormatted = `${day}-${month}-${year}`;
+         } else {
+          await driver.sleep(10000)
+          await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
+          const coNoElement = await driver.findElement(By.xpath('//*[@id="orno"]'));
+          const coNo = await coNoElement.getAttribute('value');
+          await driver.sleep(5000)
           const currentDate = new Date();
           const day = currentDate.getDate().toString().padStart(2, '0');
           const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
           const year = currentDate.getFullYear().toString().slice(-2);
-          const currentDateFormatted = `${day}-${month}-${year}`;
+          const currentDateFormatted =` ${day}-${month}-${year}`;
           if (coNo) {
             const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted, errorMsg: "-" });
             await this.updateCOLineStatus({custPo: po.cust_po, status: StatusEnum.SUCCESS})

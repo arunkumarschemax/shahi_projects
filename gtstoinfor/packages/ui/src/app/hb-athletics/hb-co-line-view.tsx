@@ -461,10 +461,10 @@ const HbColineView = () => {
 
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
                         <Form.Item>
-                            <Button htmlType="submit" icon={<SearchOutlined />} type="primary">SEARCH</Button>
-                            <Button htmlType='button' icon={<UndoOutlined />} type="primary" style={{ marginLeft: 10, marginTop: 8, position: "relative" }} onClick={resetHandler}
+                            <Button htmlType="submit" icon={<SearchOutlined />} type="primary">Search</Button>
+                            <Button htmlType='button' icon={<UndoOutlined />} type="primary" style={{ marginLeft: 30, marginTop: 8, position: "relative" }} onClick={resetHandler}
                             >
-                                RESET
+                                Reset
                             </Button>
                         </Form.Item>
                     </Col>

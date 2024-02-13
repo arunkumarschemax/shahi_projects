@@ -535,6 +535,16 @@ export function HbOrderAcceptanceGrid() {
             text: 'INPROGRESS',
             value: 'INPROGRESS',
           },
+          {
+            text: 'FAILED',
+            value: 'FAILED',
+          },
+          {
+            text: 'SUCCESS',
+            value: 'SUCCESS',
+          },
+        
+
         ],
         onFilter: (value, record) => record.status.toLowerCase() === value.toLowerCase(),
       },
@@ -554,7 +564,7 @@ export function HbOrderAcceptanceGrid() {
                   style={{ width: '95px' }}
                   placeholder="Enter Item No"
                   onChange={(e) => handleItemNoChange(e.target.value, record, index)}
-                  disabled={record.status == 'INPROGRESS' ? true : false}
+                  disabled={record.status == 'OPEN' ? false : true}
                 />
               </Form.Item>
 
@@ -579,9 +589,9 @@ export function HbOrderAcceptanceGrid() {
               <Button
                 style={{ position: "relative", top: "-7.5px" }}
                 onClick={() => createCOLine(record, index)}
-                disabled={record.status === 'INPROGRESS' ? true : !isEnabled}
+                disabled={record.status === 'OPEN'  ? !isEnabled : true}
               >
-                {record.status === 'INPROGRESS' ? "Accepted" : "Accept"}
+                {record.status === 'OPEN' ? "Accept" : "Accepted"}
               </Button>
             ),
             props: {
@@ -704,15 +714,16 @@ export function HbOrderAcceptanceGrid() {
                 md={{ span: 5 }}
                 lg={{ span: 5 }}
                 xl={{ span: 4 }}
+                style={{marginTop:20,marginLeft:60}}
               >
-                <Form.Item style={{marginTop:20,marginLeft:60}}>
+                <Form.Item >
                   <Button
                     htmlType="submit"
                     icon={<SearchOutlined />}
                     type="primary"
                     onClick={getHborderData}
                   >
-                    SEARCH
+                    Search
                   </Button>
                 
                 </Form.Item>
@@ -723,10 +734,11 @@ export function HbOrderAcceptanceGrid() {
                 md={{ span: 5 }}
                 lg={{ span: 5 }}
                 xl={{ span: 4 }}
+                style={{ marginLeft: 60 }}
               >
                 <Form.Item style={{marginTop:20}}>
                   <Button
-                    style={{ marginLeft: 120 }}
+                   
                     htmlType="submit"
                     type="primary"
                     onClick={onReset}
