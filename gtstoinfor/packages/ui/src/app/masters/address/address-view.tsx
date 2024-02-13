@@ -200,10 +200,10 @@ export const AddressView = () => {
          
         }, 
         { title: 'Destination', dataIndex: 'destination',width: 100,render:(text:any,record:any) => {return record.destination ? record.destination : '-'} },  
-        { title: 'Buyer Address Code', dataIndex: 'buyerAddressCode',width: 100,render:(text:any,record:any) => {return record.buyerAddressCode ? record.buyerAddressCode : '-'} },
-        { title: 'Buyer Address', dataIndex: 'buyerAddress',width: 500,render:(text:any,record:any) => {return record.buyerAddress ? record.buyerAddress : '-'} },     
-        { title: 'Delivery Address Code', dataIndex: 'deliveryAddressCode',width: 100,render:(text:any,record:any) => {return record.deliveryAddressCode ? record.deliveryAddressCode : '-'} },
-        { title: 'Delivery Address', dataIndex: 'deliveryAddress',width: 500,render:(text:any,record:any) => {return record.deliveryAddress ? record.deliveryAddress : '-'} },
+        { title: 'Buyer address code', dataIndex: 'buyerAddressCode',width: 100,render:(text:any,record:any) => {return record.buyerAddressCode ? record.buyerAddressCode : '-'} },
+        { title: 'Buyer address', dataIndex: 'buyerAddress',width: 500,render:(text:any,record:any) => {return record.buyerAddress ? record.buyerAddress : '-'} },     
+        { title: 'Delivery address code', dataIndex: 'deliveryAddressCode',width: 100,render:(text:any,record:any) => {return record.deliveryAddressCode ? record.deliveryAddressCode : '-'} },
+        { title: 'Delivery address', dataIndex: 'deliveryAddress',width: 500,render:(text:any,record:any) => {return record.deliveryAddress ? record.deliveryAddress : '-'} },
         
 
     ]
@@ -232,7 +232,9 @@ export const AddressView = () => {
             >
                 Download Excel
             </Button>
+           
             </Row>
+            <br/>
             <Table className="custom-table-wrapper" columns={columns} dataSource={data} size='small'
             pagination={{
                 pageSize: 100, 

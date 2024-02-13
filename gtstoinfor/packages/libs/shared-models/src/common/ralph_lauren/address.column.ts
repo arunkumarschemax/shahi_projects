@@ -1,10 +1,10 @@
 export const AddressColumns = [
     "SNo",
     "Destination",
-    'DeliveryAddressCode', 
-    'DeliveryAddress',
-    'BuyerAddressCode', 
-    'BuyerAddress',
+    'Deliveryaddresscode', 
+    'Deliveryaddress',
+    'Buyeraddresscode', 
+    'Buyeraddress',
 
   
 ]
