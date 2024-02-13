@@ -221,7 +221,11 @@ export class SampleRequest {
   })
   locationsId:number
 
-
+  @Column('int',{
+    name:'pattern_id',
+    nullable:true
+  })
+  patternId:number
   @OneToMany(type => SampleReqSizeEntity, sampleReqSize => sampleReqSize.samplerReqEntity, { cascade: true })
   sampleReqSizeInfo: SampleReqSizeEntity[]
 

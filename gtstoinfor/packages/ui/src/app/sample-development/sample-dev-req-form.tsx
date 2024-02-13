@@ -380,7 +380,7 @@ export const SampleDevForm = () => {
                 if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined && data.processData != undefined){
 
                   console.log('TTTTT')
-                  const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,val.productId,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType,val.locationsId)
+                  const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,val.productId,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType,val.locationsId,val.patternId)
                   // console.log(req.sizeData)
                   console.log(req)
                   console.log(data.fabricsData)
@@ -1152,7 +1152,22 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-
+ <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > 
+<Form.Item
+            name="patternId"
+            label="Pattern"
+            // rules={[{ required: false, message: "" }]} 
+          >
+             <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Pattern"
+              >
+                <Option key={1} value={1}>{'pattern'}</Option>
+                </Select>
+                </Form.Item>
+          </Col>
           {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
           <Form.Item
             name="conversion"

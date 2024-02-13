@@ -602,6 +602,7 @@ export class SampleRequestService {
       sampleReqEntity.status = req.status
       sampleReqEntity.category = req.category
       sampleReqEntity.locationsId = req.locationsId
+      sampleReqEntity.patternId = req.patternId
       let sampleSizeInfo = []
       let sampleFabricInfo = []
       let sampleTrimInfo = []

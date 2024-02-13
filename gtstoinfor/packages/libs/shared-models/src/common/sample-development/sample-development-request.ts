@@ -40,6 +40,7 @@ export class SampleDevelopmentRequest {
     category?:CategoryEnum
     subType?:number
     locationsId?:number
+    patternId?:number
 
     constructor(
         sampleRequestId: number,
@@ -75,7 +76,9 @@ export class SampleDevelopmentRequest {
         filePath?:string,
         category?:CategoryEnum,
         subType?: number,
-        locationsId?:number
+        locationsId?:number,
+        patternId?:number
+
 
     ) {
         this.sampleRequestId = sampleRequestId
@@ -112,5 +115,6 @@ export class SampleDevelopmentRequest {
         this.category = category
         this.subType = subType
         this.locationsId = locationsId
+        this.patternId = patternId
     }
 }
