@@ -13,6 +13,7 @@ import { AppDataSource } from './app-datasource';
 import { LevisModule } from './levis/levis.module';
 import { AddressModule } from './Entites@Shahi/address/address-module';
 import { ColorModule } from './Entites@Shahi/color/color-module';
+import { SizeModule } from './Entites@Shahi/size/size-module';
 
 
 @Module({
@@ -34,7 +35,7 @@ import { ColorModule } from './Entites@Shahi/color/color-module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,LevisModule,AddressModule,ColorModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,LevisModule,AddressModule,ColorModule,SizeModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
