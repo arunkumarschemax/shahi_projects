@@ -1043,6 +1043,8 @@ export class EddieService {
                     } else {
                       // update added for if sizes mismatch
                       const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number,poLine:po.po_line}, { status: 'Failed', errorMsg: 'NO matching Size found' });
+                      await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED})
+
                       return new CommonResponseModel(false, 0, 'NO matching Size found')
                     }
                   }
@@ -1064,7 +1066,7 @@ export class EddieService {
           const alert = await driver.switchTo().alert();
           const alertText = await alert.getText();
           const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number,poLine:po.po_line}, { status: 'Failed', errorMsg: alertText });
-          // await this.updateCOLineStatus({buyerPo: po.buyerPo, status: StatusEnum.FAILED})
+          await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED})
           await alert.accept();
           await driver.sleep(5000)
           await driver.navigate().refresh();
@@ -1080,12 +1082,12 @@ export class EddieService {
           const currentDateFormatted = `${day}-${month}-${year}`;
           if (coNo) {
             const update = await this.eddieCoLineRepo.update({  poNumber: po.po_number,poLine:po.po_line }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted, errorMsg: "-" });
-            // await this.updateCOLineStatus({buyerPo: po.buyer_po, status: StatusEnum.SUCCESS})
+            await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.SUCCESS})
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           } else {
             const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number,poLine:po.po_line}, { status: 'Failed' });
-            // await this.updateCOLineStatus({buyerPo: po.buyer_po, status: StatusEnum.FAILED})
+             await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED})
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           }
@@ -1095,8 +1097,8 @@ export class EddieService {
     } catch (error) {
       console.log(error, 'error');
       if (error.name === 'TimeoutError') {
-        const update = await this.eddieCoLineRepo.update({  poNumber: poDetails[0].po_number,poLine:poDetails[0].po_line}, { status: 'Failed', errorMsg: 'NO matching Color found' });
-        // await this.updateCOLineStatus({buyerPo: poDetails[0].buyer_po, status: StatusEnum.FAILED})
+        const update = await this.eddieCoLineRepo.update({  poNumber: poDetails[0].po_number, poLine:poDetails[0].po_line}, { status: 'Failed', errorMsg: 'NO matching Color found' });
+         await this.updateCOLineStatus({poNumber: poDetails[0].buyer_po, poLine:poDetails[0].po_line,  status: StatusEnum.FAILED})
         driver.quit()
         return new CommonResponseModel(false, 0, 'Matching Color not found')
       } else {
@@ -1104,9 +1106,9 @@ export class EddieService {
         return new CommonResponseModel(false, 0, error)
       }
     }
-    // finally {
-    //   driver.quit()
-    // }
+    finally {
+      driver.quit()
+    }
   }
 
   async isAlertPresent(driver) {
@@ -1117,6 +1119,29 @@ export class EddieService {
       return false;
     }
   }
+
+
+
+async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
+  console.log(req, "reqqqqqqqponumnbbb");
+  try {
+      const poLines = req.poLine.split(","); // Split poLine string into an array
+
+      // Iterate over each poLine and update its status
+      for (const poLine of poLines) {
+          await this.EddieOrdersRepo.update(
+              { poNumber: req.poNumber, poLine: poLine.trim() }, // Trim to remove any extra spaces
+              { status: req.status }
+          );
+      }
+
+      return new CommonResponseModel(true, 1, 'Success'); // Return success response with the number of lines updated
+  } catch (error) {
+      console.error("Error updating CO line status:", error);
+      return new CommonResponseModel(false, 0, 'Failed');
+  }
+}
+
 
 
 }
