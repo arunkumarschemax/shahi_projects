@@ -120,7 +120,7 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
     service.ActivateOrDeactivateTax(taxesDto).then(res => { console.log(res);
       if (res.status) {
         getAllTaxes();
-        AlertMessages.getSuccessMessage('Success');
+        AlertMessages.getSuccessMessage(res.internalMessage);
       } else {
         if (res.status) {
           AlertMessages.getErrorMessage(res.internalMessage);
