@@ -992,13 +992,15 @@ export class EddieService {
                     }
                   }
                   const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
+                  console.log(inputId,"pppid")
                   const input = await driver.wait(until.elementLocated(By.id(inputId)))
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
               }
             } else if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
-              // console.log(dest.colors[1],'kuuuuuu')
-              // console.log(dest.colors[1].sizes,'kuuuuuusizes')
+              console.log("Hai")
+              console.log(dest.colors,'kuuuuuu')
+              console.log(dest.colors[0].sizes,'kuuuuuusizes')
 
               await driver.executeScript('arguments[0].click();', tab);
               // console.log(dest.colors,'kuuuuuu')
@@ -1015,6 +1017,7 @@ export class EddieService {
                     }
                     let tabIndex = 1; // Default to 1 if no match
                     const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
+                    console.log(po.item_no,"iii")
                     const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
                     await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
                     const dropdown = await driver.findElement(By.id(`bydline/${string}`));
@@ -1035,7 +1038,9 @@ export class EddieService {
                       if (label.length)
                         sizeToInputMap[label] = inputElements[i];
                     }
+                    console.log(sizeToInputMap,"sizeToInputMap")
                     const inputField = await sizeToInputMap[size.name.trim().toUpperCase().toString()];
+                    console.log(inputField,"inputfield")
                     if (inputField) {
                       // Clear the existing value (if any) and fill it with the new price.
                       await inputField.clear();
@@ -1044,6 +1049,7 @@ export class EddieService {
                       // update added for if sizes mismatch
                       const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number,poLine:po.po_line}, { status: 'Failed', errorMsg: 'NO matching Size found' });
                       await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED})
+                      console.log("sizes")
 
                       return new CommonResponseModel(false, 0, 'NO matching Size found')
                     }
