@@ -11,6 +11,7 @@ import { AdobeAcrobatApiModule } from './adobe-acrobat-api/adobe-acrobat-api.mod
 import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
 import { LevisModule } from './levis/levis.module';
+import { AddressModule } from './Entites@Shahi/address/address-module';
 
 
 @Module({
@@ -32,7 +33,7 @@ import { LevisModule } from './levis/levis.module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,LevisModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,LevisModule,AddressModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,

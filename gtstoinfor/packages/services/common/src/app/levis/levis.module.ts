@@ -10,6 +10,9 @@ import { LevisOrdersRepository } from "./repositories/levis-orders.repo";
 import { LevisPdfRepo } from "./repositories/levis-pdf.repo";
 import { LevisCOLineRepository } from "./repositories/levis-co-line.repository";
 import { LevisCOLineEntity } from "./entities/levis-co-line.entity";
+import { AddressService } from "../Entites@Shahi/address/address-service";
+import { AddressRepository } from "../Entites@Shahi/address/address.repo";
+import { AddressEntity } from "../Entites@Shahi/address/address-entity";
 
 
 
@@ -17,9 +20,9 @@ import { LevisCOLineEntity } from "./entities/levis-co-line.entity";
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-        LevisOrdersEntity,LevisPdfInfoEntity,LevisCOLineEntity
+        LevisOrdersEntity,LevisPdfInfoEntity,LevisCOLineEntity,AddressEntity
     ])],
   controllers: [LevisController],
-  providers: [LevisService,ApplicationExceptionHandler,LevisOrdersRepository,LevisPdfRepo,LevisCOLineRepository]
+  providers: [LevisService,ApplicationExceptionHandler,LevisOrdersRepository,LevisPdfRepo,LevisCOLineRepository,AddressService,AddressRepository]
 })
 export class LevisModule { }

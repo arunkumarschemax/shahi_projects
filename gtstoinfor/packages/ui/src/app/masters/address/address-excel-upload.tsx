@@ -124,7 +124,7 @@ export const AddressUpload = () => {
                     setLoading(true);
                     if(res.status){
                         AlertMessages.getSuccessMessage(res.internalMessage)
-                        navigate("/eddiebauer/masters/address/address-view")
+                        navigate("/levis/masters/address/address-view")
 
                     } else{
                         AlertMessages.getErrorMessage(res.internalMessage)
@@ -138,7 +138,7 @@ export const AddressUpload = () => {
           }
       }
     return(
-        <Card title='Address' extra={<Link to='/eddiebauer/masters/address/address-view' >
+        <Card title='Address' extra={<Link to='/levis/masters/address/address-view' >
         <span style={{color:'white'}} ><Button type={'primary'} >View</Button> </span>
         </Link>}>
             <Form>

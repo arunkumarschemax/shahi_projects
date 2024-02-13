@@ -298,6 +298,8 @@ export const AppRoutes = () => {
                    <Route path="levis-order-acceptance" element={<LevisOrderAcceptanceGrid/>}/>
                    <Route path="levis-co-line-view" element={<LevisColineView/>}/>
                    <Route path='levis-order-data-detail-view' element={<LevisOrdersDetailView />} />
+                   <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
+                   <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
 
             
                 </Route>
