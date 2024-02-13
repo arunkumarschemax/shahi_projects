@@ -554,6 +554,15 @@ import {
               text: 'INPROGRESS',
               value: 'INPROGRESS',
             },
+            {
+              text: 'FAILED',
+              value: 'FAILED',
+            },
+            {
+              text: 'SUCCESS',
+              value: 'SUCCESS',
+            },
+          
           ],
           onFilter: (value, record) => record.status.toLowerCase() === value.toLowerCase(),
         },
@@ -573,7 +582,8 @@ import {
                     style={{ width: '95px' }}
                     placeholder="Enter Item No"
                     onChange={(e) => handleItemNoChange(e.target.value, record, index)}
-                    disabled={record.status == 'INPROGRESS' ? true : false}
+                    // disabled={record.status == 'INPROGRESS' ? true : false}
+                    disabled={record.status == 'OPEN' ? false : true}
                   />
                 </Form.Item>
   
@@ -598,9 +608,12 @@ import {
                 <Button
                   style={{ position: "relative", top: "-7.5px" }}
                   onClick={() => createCOLine(record, index)}
-                  disabled={record.status === 'INPROGRESS' ? true : !isEnabled}
+                //   disabled={record.status === 'INPROGRESS' ? true : !isEnabled}
+                // >
+                //   {record.status === 'INPROGRESS' ? "Accepted" : "Accept"}
+                disabled={record.status === 'OPEN'  ? !isEnabled : true}
                 >
-                  {record.status === 'INPROGRESS' ? "Accepted" : "Accept"}
+                  {record.status === 'OPEN' ? "Accept" : "Accepted"}
                 </Button>
               ),
               props: {
@@ -731,7 +744,7 @@ import {
                       type="primary"
                       onClick={getorderacceptanceData}
                     >
-                      SEARCH
+                      Search
                     </Button>
                   
                   </Form.Item>
