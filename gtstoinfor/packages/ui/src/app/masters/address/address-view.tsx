@@ -135,18 +135,18 @@ export const AddressView = () => {
        
        
         {
-          title: 'Buyer Code',
-          dataIndex: 'buyerCode',
+          title: 'Buyer Address Code',
+          dataIndex: 'buyerAddressCode',
           width:130,
           align:"center",
           sorter: (a, b) => {
-              const codeA = (a.buyerCode || "").toString();
-              const codeB = (b.buyerCode || "").toString();
+              const codeA = (a.buyerAddressCode || "").toString();
+              const codeB = (b.buyerAddressCode || "").toString();
               return codeA.localeCompare(codeB);
           },
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
-          ...getColumnSearchProps('buyerCode')
+          ...getColumnSearchProps('buyerAddressCode')
       },
       {
           // title:'Buyer Address',
@@ -160,18 +160,18 @@ export const AddressView = () => {
          
       },
       {
-        title: 'Delivery Code',  
-        dataIndex: 'deliveryCode',
+        title: 'Delivery Address Code',  
+        dataIndex: 'deliveryAddressCode',
         width:130,
         align:"center",
         sorter: (a, b) => {
-            const codeA = (a.deliveryCode || "").toString();
-            const codeB = (b.deliveryCode || "").toString();
+            const codeA = (a.deliveryAddressCode || "").toString();
+            const codeB = (b.deliveryAddressCode || "").toString();
             return codeA.localeCompare(codeB);
         },
         sortDirections: ["ascend", "descend"],
         render: (text) => text ? text : "-",
-        ...getColumnSearchProps('deliveryCode')
+        ...getColumnSearchProps('deliveryAddressCode')
     },
     {
         // title:'Delivery Address',
@@ -200,9 +200,9 @@ export const AddressView = () => {
          
         }, 
         { title: 'Destination', dataIndex: 'destination',width: 100,render:(text:any,record:any) => {return record.destination ? record.destination : '-'} },  
-        { title: 'Buyer Code', dataIndex: 'buyerCode',width: 100,render:(text:any,record:any) => {return record.buyerCode ? record.buyerCode : '-'} },
+        { title: 'Buyer Address Code', dataIndex: 'buyerAddressCode',width: 100,render:(text:any,record:any) => {return record.buyerAddressCode ? record.buyerAddressCode : '-'} },
         { title: 'Buyer Address', dataIndex: 'buyerAddress',width: 500,render:(text:any,record:any) => {return record.buyerAddress ? record.buyerAddress : '-'} },     
-        { title: 'Delivery Code', dataIndex: 'deliveryCode',width: 100,render:(text:any,record:any) => {return record.deliveryCode ? record.deliveryCode : '-'} },
+        { title: 'Delivery Address Code', dataIndex: 'deliveryAddressCode',width: 100,render:(text:any,record:any) => {return record.deliveryAddressCode ? record.deliveryAddressCode : '-'} },
         { title: 'Delivery Address', dataIndex: 'deliveryAddress',width: 500,render:(text:any,record:any) => {return record.deliveryAddress ? record.deliveryAddress : '-'} },
         
 
