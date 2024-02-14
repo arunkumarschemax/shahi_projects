@@ -251,7 +251,7 @@ export const SampleDevForm = () => {
   }
   const getStyleImage = (value) => {
     console.log(value);
-    const imagePath = config.file_upload_path + value;
+    const imagePath = config.file_upload_path +'/'+ value;
     setStyleImage(imagePath)
   }
 

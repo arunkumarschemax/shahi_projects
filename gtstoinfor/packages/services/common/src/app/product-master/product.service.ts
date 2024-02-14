@@ -14,27 +14,31 @@ export class ProductService {
         @InjectRepository(Product)
         private repo: Repository<Product>,
       ){}
-
-      async createProduct(dto: ProductDto, isUpdate: boolean = false): Promise<CommonResponseModel> {
-        try {
-          const entity = new Product();
-          entity.product = dto.product;
-          entity.isActive = dto.isActive === undefined || dto.isActive === null ? true : dto.isActive;
       
-          if (isUpdate) {
-            entity.productId = dto.productId;
-            entity.updatedUser = dto.updatedUser;
-          } else {
-            entity.createdUser = dto.createdUser;
-          }
-      
-          const data = await this.repo.save(entity);
-          return new CommonResponseModel(true, 1, 'Product created successfully', data);
-        } catch (error) {
-          return error
+      async createProduct(dto: ProductDto, isUpdate: boolean): Promise<CommonResponseModel>{
+        try{
+            if(!isUpdate) {
+                const existing = await this.repo.findOne({ where: { product: dto.product }})
+                if(existing) {
+                    throw new Error('Product already exists');
+                }
+            }
+            const entityData = new Product()
+            entityData.product = dto.product
+            entityData.isActive = dto.isActive === undefined || dto.isActive === null ? true : dto.isActive;
+            
+            if (isUpdate) {
+                entityData.productId = dto.productId;
+                entityData.updatedUser = dto.updatedUser;
+            } else {
+                entityData.createdUser = dto.createdUser;
+            }
+            const data = await this.repo.save(entityData);
+            return new CommonResponseModel(true, 1, isUpdate ? 'Product updated successfully' : 'Product created successfully', data)
+        }catch(err){
+            throw(err)
         }
-      }
-      
+    }
       
       
 

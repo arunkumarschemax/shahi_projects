@@ -13,6 +13,7 @@ import {
   Col,
   Drawer,
   message,
+  Alert,
 } from "antd";
 import {
   CheckCircleOutlined,
@@ -331,40 +332,13 @@ export function ProductGrid(props: ProductProps) {
       <br></br>
       <Row gutter={40}>
         <Col>
-          <Card
-            title={"Total Products: " + productData.length}
-            style={{
-              textAlign: "left",
-              width: 220,
-              height: 41,
-              backgroundColor: "#bfbfbf",
-            }}
-          ></Card>
+          <Alert type="success" message={'Total Products' +productData.length} style={{fontSize:"15px"}}/>
         </Col>
         <Col>
-          <Card
-            title={"Active: " + productData.filter((el) => el.isActive).length}
-            style={{
-              textAlign: "left",
-              width: 200,
-              height: 41,
-              backgroundColor: "#52c41a",
-            }}
-          ></Card>
+          <Alert type="warning" message={'Active' + productData.filter(el=> el.isActive).length} style={{fontSize:"15px"}}/>
         </Col>
         <Col>
-          <Card
-            title={
-              "In-Active: " +
-              productData.filter((el) => el.isActive == false).length
-            }
-            style={{
-              textAlign: "left",
-              width: 200,
-              height: 41,
-              backgroundColor: "#f5222d",
-            }}
-          ></Card>
+          <Alert type="info" message={'InActive' + productData.filter(el=> el.isActive == false).length} style={{fontSize:'15px'}}></Alert>
         </Col>
       </Row>
       <br></br>

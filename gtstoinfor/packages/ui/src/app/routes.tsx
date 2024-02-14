@@ -225,6 +225,8 @@ import ProductGrid from "./masters/product/product-grid"
 import ProductForm from "./masters/product/product-form"
 import TrimParamsMapping from "./trim-master/m3-trim-items/trims-mapping-form"
 import TrimsParamsMappingView from "./trim-master/m3-trim-items/trim-mapping-view"
+import PatternForm from "./masters/pattern/pattern-form"
+import PatternView from "./masters/pattern/pattern-view"
 
 
 
@@ -295,7 +297,12 @@ export const AppRoutes = () => {
                 {/* <Route path='/stack-report' element={<StockReport/>}/> */}
                 <Route path='/masters'>
                
-
+                    <Route path="pattern-form" element={<PatternForm 
+                    isUpdate={false}
+                    closeForm={()=>{}}
+                    updatePattern={(undefined)=>{}}
+                    data={undefined}/>}/>
+                    <Route path="pattern-view" element={<PatternView/>}/>
                     <Route path='quality-form' element={<QualityForm />} />
                     <Route path='quality-view' element={<QualityView />} />
                     <Route path='rack-form' element={<RackForm />} />

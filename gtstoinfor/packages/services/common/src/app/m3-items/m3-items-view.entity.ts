@@ -2,7 +2,7 @@ import { ViewEntity, ViewColumn  } from "typeorm"
 @ViewEntity({
     expression: `
     SELECT m3_items_Id AS m3ItemsId,ft.fabric_type_id AS fabricTypeId,ft.fabric_type_name AS fabricTypeName, fw.fabric_weave_id as fabricWeaveId,fw.fabric_weave_name as fabricWeaveName,
-    m3Items.weight AS weight, u.id AS uomId,u.uom AS uomName, m3Items.construction AS construction,m3Items.yarn_count AS yarnCount,m3Items.yarn_unit AS yarnUnit,
+    m3Items.weight AS weight, u.id AS uomId,u.uom AS uomName,
     m3Items.finish AS finish, m3Items.shrinkage AS shrinkage, m3Items.is_active AS isActive,b.buyer_id AS buyerId,b.buyer_name AS buyerName,m3Items.description AS description,
     m3Items.width AS width, m3Items.width_unit AS widthUnit, ic.item_category_id AS itemCategoryId,ic.item_category AS itemCategory,
     fs.finish_id AS finishId,fs.finish AS finishName,hl.hole_id AS holeId,hl.hole AS holeName, m3Items.logo AS logoType,m3Items.part AS partType,ql.quality_Id AS qualityId,
