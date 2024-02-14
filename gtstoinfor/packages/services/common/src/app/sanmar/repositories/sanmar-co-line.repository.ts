@@ -66,7 +66,7 @@ export class SanmarCOLineRepository extends Repository<SanmarCOLineEntity> {
         const query = this.createQueryBuilder('co')
             .select(`co.id, co.buyer_po, co.item_no, co.buyer`)
             .where(` status != 'Success' AND status != 'Inprogress' AND is_active = true`)
-            .orderBy(` created_at`, 'ASC')
+            // .orderBy(` created_at`, 'ASC')
         return await query.getRawMany();
     }
 
