@@ -734,7 +734,7 @@ export class RLOrdersService {
                       await inputField.clear();
                       await inputField.sendKeys(size.price);
                     } else {
-                      const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: 'NO matching Size found' });
+                      const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
                       return new CommonResponseModel(false, 0, 'NO matching Size found')
                     }
                   }
@@ -756,7 +756,7 @@ export class RLOrdersService {
         if (await this.isAlertPresent(driver)) {
           const alert = await driver.switchTo().alert();
           const alertText = await alert.getText();
-          const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText });
+          const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText,isActive:false });
           await this.updateCOLineStatus({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no, itemStatus: ItemStatusEnum.FAILED })
           await alert.accept();
           await driver.sleep(5000)
@@ -780,7 +780,7 @@ export class RLOrdersService {
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           } else {
-            const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed' });
+            const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed',isActive:false });
             await this.updateCOLineStatus({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no, itemStatus: ItemStatusEnum.FAILED })
             // await driver.navigate().refresh();
             await driver.sleep(10000)
@@ -791,7 +791,7 @@ export class RLOrdersService {
     } catch (err) {
       console.log(err, 'error');
       if (err.name === 'TimeoutError') {
-        const update = await this.coLineRepo.update({ buyerPo: poDetails[0].buyer_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+        const update = await this.coLineRepo.update({ buyerPo: poDetails[0].buyer_po }, { status: 'Failed', errorMsg: 'NO matching Color found' ,isActive:false });
         await this.updateCOLineStatus({ buyerPo: poDetails[0].buyer_po, lineItemNo: poDetails[0].line_item_no, itemStatus: ItemStatusEnum.FAILED })
         return new CommonResponseModel(false, 0, 'Matching Color not found')
       } else {
