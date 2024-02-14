@@ -723,6 +723,10 @@ export class EddieService {
         destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitCost });
       });
       const coData = []
+      // let totalUnitPrice = 0;
+      // let totalSizeCount = 0;
+      // const sizeSet = new Set<string>();
+
       destinationColSizesMap.forEach((destColorSize, poNumber) => {
         const desArray = []
         destColorSize.forEach((colorSizes, dest) => {
@@ -733,13 +737,39 @@ export class EddieService {
               const sizeObj = new EddieSizeModel(size.size, size.quantity, size.price);
               sizeArray.push(sizeObj)
             })
+
+            //
+            //  sizes.forEach((size) => {
+            //     const sizeKey = `${size.size}-${color}`; // Create a unique key based on size and color
+
+            //     // Check if the size is unique, then calculate totalUnitPrice
+            //     if (!sizeSet.has(sizeKey)) {
+            //       console.log(sizeKey, "pppoiiiii")
+
+            //       totalUnitPrice += parseFloat(size.price);
+            //       sizeSet.add(sizeKey); // Add the unique size to the set
+            //       totalSizeCount += 1;  // for total size count for Avg of unit price
+
+            //     }
+
+            //   });
+
+
             const col = new EddieColorModel(color, sizeArray);
             ColArray.push(col)
+            // sizeSet.clear();
           });
           const des = new EddieDestinationModel(dest, ColArray);
           desArray.push(des)
         });
+
+
         const poInfo = poMap.get(poNumber)
+        // console.log(totalSizeCount, "count")
+        // console.log(totalUnitPrice, "totalUnitPrice")
+        // const averageUnitPrice = totalSizeCount > 0 ? totalUnitPrice / totalSizeCount : 0;  // calculation of Avg unit price
+        // console.log(averageUnitPrice,"avg price")
+
         const co = new EddieCoLinereqModels(poInfo.poNumber, poInfo.poLine, poInfo.unitCost, poInfo.deliveryDate, poInfo.currency, desArray);
         coData.push(co)
       });
