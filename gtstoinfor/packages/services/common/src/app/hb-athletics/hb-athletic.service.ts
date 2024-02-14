@@ -711,6 +711,7 @@ export class HbService {
                     } else {
                       /// update for if size is mismatch
                       const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed', errorMsg: 'NO matching Size found', isActive:false });
+                      await this.updateCOLineStatus({custPo: poDetails[0].cust_po, status: StatusEnum.FAILED})
                        return new CommonResponseModel(false, 0, 'NO matching Size found') 
                     }
                   }
