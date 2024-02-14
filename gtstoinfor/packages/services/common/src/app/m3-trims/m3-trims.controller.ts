@@ -15,6 +15,7 @@ export class M3TrimsController {
   @ApiBody({type:M3TrimsDTO})
   async createM3Trims(@Body() createDto: any): Promise<CommonResponseModel> {
     try {
+      // console.log(createDto,',-,--,-,-,--,-,-,-,,--,-,-,-,')
       return await this.Service.createM3Trims(createDto);
     } catch (error) {
       return this.applicationExeptionhandler.returnException(CommonResponseModel, error)

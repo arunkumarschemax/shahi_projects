@@ -601,6 +601,8 @@ export class SampleRequestService {
       sampleReqEntity.remarks = req.remarks
       sampleReqEntity.status = req.status
       sampleReqEntity.category = req.category
+      sampleReqEntity.locationsId = req.locationsId
+      sampleReqEntity.patternId = req.patternId
       let sampleSizeInfo = []
       let sampleFabricInfo = []
       let sampleTrimInfo = []
@@ -1142,11 +1144,11 @@ export class SampleRequestService {
   }
 
   async getAllAllocatedRequestNo(req?: BuyerRefNoRequest): Promise<CommonResponseModel> {
-    const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
-    const res = await this.dataSource.query(buyerdata)
-    const buyerId = res[0].buyer_id
+    // const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
+    // const res = await this.dataSource.query(buyerdata)
+    // const buyerId = res[0].buyer_id
     // console.log(buyerId, 'buyerIdbuyerId')
-    const records = await this.sampleRepo.find({ where: { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ALLOCATED, buyer: { buyerId: buyerId } } });
+    const records = await this.sampleRepo.find({ where: { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ALLOCATED} });
     if (records.length)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
     else

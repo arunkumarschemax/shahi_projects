@@ -15,7 +15,6 @@ export class TrimParamsMappingService extends CommonAxiosService{
     async getMappedParamsByTrim(req:TrimIdRequestDto): Promise<CommonResponseModel> {
       return this.axiosPostCall(this.URL + "/getMappedParamsByTrim", req)
     }
-
     async getAllMappedTrimParams(): Promise<CommonResponseModel> {
       return this.axiosPostCall(this.URL + "/getAllMappedTrimParams")
     }

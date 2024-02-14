@@ -37,6 +37,14 @@ export class TrimReqCodeService {
             entity.m3Code = dto.m3Code;
             entity.hsnCode= dto.hsnCode;
             entity.status = MaterialFabricEnum.OPEN
+            entity.trimBuyerId = dto.trimBuyerId
+            entity.lengthId = dto.lengthId
+            entity.lineId = dto.lineId
+            entity.partsId = dto.partsId
+            entity.plyId = dto.plyId
+            entity.shapeId = dto.shapeId
+            entity.sliderId = dto.sliderId
+            entity.trimSizeId = dto.trimSizeId
         
             const saveTrimReq = await this.trimReqRepo.save(entity)
        
@@ -77,6 +85,14 @@ export class TrimReqCodeService {
         m3t.trim_category_id AS trimCategoryId,tr.trim_category AS trimCategory,
         m3t.m3_code AS m3Code,
         m3t.hsn_code AS hsnCode,m3t.status,
+        m3t.trim_buyer_id AS trimBuyerId,tb.trim_buyer AS trimBuyer,
+        m3t.length_id AS lengthId,l.length,
+        m3t.line_id AS lineId,line.line,
+        m3t.parts_id AS partsId,p.parts,
+        m3t.ply_id AS plyId,ply.ply,
+        m3t.shape_id AS shapeId,sh.shape,
+        m3t.slider_id AS sliderId,sl.slider,
+        m3t.trim_size_id AS trimSizeId,ts.trim_size AS trimSize,  
         tpm.structure AS structureStatus,
         tpm.category AS categoryStatus,
         tpm.content AS contentStatus,
@@ -89,7 +105,8 @@ export class TrimReqCodeService {
         tpm.uom AS uomStatus,
         tpm.color AS colorStatus,
         tpm.logo AS logoStatus,
-        tpm.part AS partStatus, m3t.trim_request_code_id AS trimRequestCodeId
+        tpm.part AS partStatus, tpm.buyer as buyerStatus,tpm.length as lengthStatus,tpm.line as lineStatus,tpm.parts as partsStatus,tpm.ply as plyStatus, tpm.shape as shapeStatus,tpm.slider as sliderStatus, tpm.size as sizeStatus,
+        m3t.trim_request_code_id AS trimRequestCodeId
         FROM trim_request_code m3t
         LEFT JOIN trim_params_mapping tpm ON tpm.trim_id = m3t.trim_category_id
         LEFT JOIN buyers b ON b.buyer_id = m3t.buyer_id
@@ -105,6 +122,14 @@ export class TrimReqCodeService {
         LEFT JOIN uom u ON u.id = m3t.uom_id
         LEFT JOIN variety v ON v.variety_id = m3t.variety_id
         LEFT JOIN trim tr ON tr.trim_id = m3t.trim_category_id
+        LEFT JOIN trim_buyer tb ON tb.trim_buyer_id = m3t.trim_buyer_id
+        LEFT JOIN length l ON l.length_id = m3t.length_id
+        LEFT JOIN line line ON line.line_id = m3t.line_id
+        LEFT JOIN parts p ON p.parts_id = m3t.parts_id
+        LEFT JOIN ply ply ON ply.ply_id = m3t.ply_id
+        LEFT JOIN shape sh ON sh.shape_id = m3t.shape_id
+        LEFT JOIN slider sl ON sl.slider_id = m3t.slider_id
+        LEFT JOIN trim_size ts ON ts.trim_size_id = m3t.trim_size_id  
         WHERE 1=1`
         if (req.ExternalRefNo && req.ExternalRefNo!=null){
           query += ` AND b.external_ref_number = '${req.ExternalRefNo}'`
@@ -134,7 +159,15 @@ export class TrimReqCodeService {
         m3t.type_id AS typeId, t.type,
         m3t.finish_id AS finishId,f.finish,
         m3t.hole_id AS holeId, h.hole,
-        trc.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName
+        trc.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName,\
+        m3t.trim_buyer_id AS trimBuyerId,tb.trim_buyer AS trimBuyer,
+        m3t.length_id AS lengthId,l.length,
+        m3t.line_id AS lineId,line.line,
+        m3t.parts_id AS partsId,p.parts,
+        m3t.ply_id AS plyId,ply.ply,
+        m3t.shape_id AS shapeId,sh.shape,
+        m3t.slider_id AS sliderId,sl.slider,
+        m3t.trim_size_id AS trimSizeId,ts.trim_size AS trimSize  
         FROM trim_request_code trc
         LEFT JOIN m3_trims m3t ON m3t.m3_trim_id = trc.m3_trim_id
         LEFT JOIN category cg ON cg.category_id = m3t.category_id
@@ -150,6 +183,14 @@ export class TrimReqCodeService {
         LEFT JOIN structure s ON s.structure_id = m3t.structure_id
         LEFT JOIN qualitys q ON q.quality_id = m3t.quality_id
         LEFT JOIN colour cl ON cl.colour_id = m3t.color_id
+        LEFT JOIN trim_buyer tb ON tb.trim_buyer_id = m3t.trim_buyer_id
+        LEFT JOIN length l ON l.length_id = m3t.length_id
+        LEFT JOIN line line ON line.line_id = m3t.line_id
+        LEFT JOIN parts p ON p.parts_id = m3t.parts_id
+        LEFT JOIN ply ply ON ply.ply_id = m3t.ply_id
+        LEFT JOIN shape sh ON sh.shape_id = m3t.shape_id
+        LEFT JOIN slider sl ON sl.slider_id = m3t.slider_id
+        LEFT JOIN trim_size ts ON ts.trim_size_id = m3t.trim_size_id  
         WHERE 1=1`
         if (req.ExternalRefNo && req.ExternalRefNo!=null){
           query += ` AND b.external_ref_number = '${req.ExternalRefNo}'`

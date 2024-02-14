@@ -39,6 +39,8 @@ export class SampleDevelopmentRequest {
     createdAt:string
     category?:CategoryEnum
     subType?:number
+    locationsId?:number
+    patternId?:number
 
     constructor(
         sampleRequestId: number,
@@ -73,7 +75,11 @@ export class SampleDevelopmentRequest {
         fileName?:string,
         filePath?:string,
         category?:CategoryEnum,
-        subType?: number
+        subType?: number,
+        locationsId?:number,
+        patternId?:number
+
+
     ) {
         this.sampleRequestId = sampleRequestId
         this.locationId = locationId
@@ -108,5 +114,7 @@ export class SampleDevelopmentRequest {
         this.filePath=filePath
         this.category = category
         this.subType = subType
+        this.locationsId = locationsId
+        this.patternId = patternId
     }
 }

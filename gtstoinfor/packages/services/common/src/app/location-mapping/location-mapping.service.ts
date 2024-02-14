@@ -382,7 +382,7 @@ export class LocationMappingService {
                                 if(updateBomStatus.affected > 0){
                                     
                                     if(Number(getBomStatus.length) - Number(1) < 1){
-                                        let updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:grnDetails[0].sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.READY_FOR_PRODUCTION});
+                                        let updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({SampleRequestId:grnDetails[0].sampleOrderId},{lifeCycleStatus:LifeCycleStatusEnum.MATERIAL_ALLOCATED});
                                         if(updateSampleOrderStatus.affected > 0){
                                             let updateAllocatedStock = await manager.getRepository(MaterialAllocationEntity).update({sampleOrderId:grnDetails[0].sampleOrderId},{status:MaterialStatusEnum.READY_FOR_PRODUCTION})
                                             if(updateAllocatedStock.affected > 0){

@@ -113,7 +113,7 @@ export class M3TrimsDTO {
     sliderId:number
 
     @ApiProperty()
-    sizeId:number
+    trimSizeId:number
 
 
 }

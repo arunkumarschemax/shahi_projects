@@ -7,8 +7,7 @@ import { Buyers } from "../buyers/buyers.entity";
 export class M3TrimsAdapter {
 
     convertDtoToEntity(dto: M3TrimsDTO): M3TrimsEntity {
-        console.log("***********************************************");
-        console.log(dto);
+        // console.log(dto,"***********************************************");
         const entity = new M3TrimsEntity();
         let buyer = new Buyers();
         buyer.buyerId = dto.buyerId;
@@ -42,7 +41,7 @@ export class M3TrimsAdapter {
         entity.plyId = dto.plyId
         entity.shapeId = dto.shapeId
         entity.sliderId = dto.sliderId
-        entity.sizeId = dto.sizeId
+        entity.trimSizeId = dto.trimSizeId
 
         if (dto.m3TrimId) {
             entity.m3TrimId = dto.m3TrimId;
@@ -79,7 +78,7 @@ export class M3TrimsAdapter {
         dto.plyId = entity.plyId
         dto.shapeId = entity.shapeId
         dto.sliderId = entity.sliderId
-        dto.sizeId = entity.sizeId
+        dto.trimSizeId = entity.trimSizeId
         return dto;
     }
 

@@ -563,6 +563,70 @@ export const M3TrimsView = () => {
       sortDirections: ["descend", "ascend"],
       render: (text) => (text ? text : ' - '),
     }:{},
+    mapData[0]?.buyer === true?{
+      title: <div style={{textAlign:"center"}}>Buyer</div>,
+      dataIndex: "trimBuyer",
+      ...getColumnSearchProps("trimBuyer"),
+      sorter: (a, b) => a.trimBuyer?.localeCompare(b.trimBuyer),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    }: {},
+    mapData[0]?.length === true?{
+      title: <div style={{textAlign:"center"}}>Length</div>,
+      dataIndex: "length",
+      ...getColumnSearchProps("length"),
+      sorter: (a, b) => a.length?.localeCompare(b.length),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    }: {},
+    mapData[0]?.line === true?{
+      title: <div style={{textAlign:"center"}}>Line</div>,
+      dataIndex: "line",
+      ...getColumnSearchProps("line"),
+      sorter: (a, b) => a.line?.localeCompare(b.line),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    }: {},
+    mapData[0]?.parts === true?{
+      title: <div style={{textAlign:"center"}}>Parts</div>,
+      dataIndex: "parts",
+      ...getColumnSearchProps("parts"),
+      sorter: (a, b) => a.parts?.localeCompare(b.parts),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    }: {},
+    mapData[0]?.ply === true?{
+      title: <div style={{textAlign:"center"}}>Ply</div>,
+      dataIndex: "ply",
+      ...getColumnSearchProps("ply"),
+      sorter: (a, b) => a.ply?.localeCompare(b.ply),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    }:{},
+    mapData[0]?.shape === true?{
+      title: <div style={{textAlign:"center"}}>Shape</div>,
+      dataIndex: "shape",
+      ...getColumnSearchProps("shape"),
+      sorter: (a, b) => a.shape?.localeCompare(b.shape),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    }: {},
+    mapData[0]?.slider === true?{
+      title: <div style={{textAlign:"center"}}>Slider</div>,
+      dataIndex: "slider",
+      ...getColumnSearchProps("slider"),
+      sorter: (a, b) => a.slider?.localeCompare(b.slider),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    }: {},
+    mapData[0]?.size === true?{
+      title: <div style={{textAlign:"center"}}>Size</div>,
+      dataIndex: "trimSize",
+      ...getColumnSearchProps("trimSize"),
+      sorter: (a, b) => a.trimSize?.localeCompare(b.trimSize),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    }:{},
     {
       title: <div style={{textAlign:"center"}}>Description</div>,
       dataIndex: "trimCode",
@@ -587,6 +651,7 @@ export const M3TrimsView = () => {
       sortDirections: ["descend", "ascend"],
       render: (text) => (text ? text : ' - '),
     },
+    
   ]
 
   const filteredColumns = columnsSkelton.filter((column) => Object.keys(column).length > 0);

@@ -387,6 +387,9 @@ if(req){
     if(req.extRefNumber){
         query.andWhere(` b.external_ref_number = '${req.extRefNumber}'`)
     }
+    if(req.user!== undefined){
+        query.andWhere(`sr.user = '${req.user}'`)
+    }
 }
         
         query.groupBy(`sr.sample_request_id`)

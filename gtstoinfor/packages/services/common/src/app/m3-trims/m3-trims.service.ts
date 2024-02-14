@@ -27,7 +27,7 @@ export class M3TrimsService {
       const count: M3TrimsEntity = await this.repository.save(entity);
       const saveDto: M3TrimsDTO = this.adapter.convertEntityToDto(count);
 
-      return new CommonResponseModel(true, 1, 'Trim code created successfully', saveDto);
+      return new CommonResponseModel(true, 1, 'Trim created successfully', saveDto);
     } catch (error) {
       return new CommonResponseModel(false, 0, error)
     }
@@ -125,6 +125,14 @@ export class M3TrimsService {
       m3t.uom_id as uomId,u.uom,
       m3t.variety_id as varietyId,v.variety,
       m3t.trim_category_id as trimCategoryId,tr.trim_category as trimCategory,
+      m3t.trim_buyer_id AS trimBuyerId,tb.trim_buyer AS trimBuyer,
+      m3t.length_id AS lengthId,l.length,
+      m3t.line_id AS lineId,line.line,
+      m3t.parts_id AS partsId,p.parts,
+      m3t.ply_id AS plyId,ply.ply,
+      m3t.shape_id AS shapeId,sh.shape,
+      m3t.slider_id AS sliderId,sl.slider,
+      m3t.trim_size_id AS trimSizeId,ts.trim_size AS trimSize,
       m3t.trim_mapping_id as trimMappingId,
       m3t.m3_code as m3Code,
       m3t.hsn_code as hsnCode
@@ -143,6 +151,14 @@ export class M3TrimsService {
       left join variety v on v.variety_id = m3t.variety_id
       left join trim tr on tr.trim_id = m3t.trim_category_id
       left join trim_params_mapping tpm on tpm.trim_mapping_id = m3t.trim_mapping_id
+      LEFT JOIN trim_buyer tb ON tb.trim_buyer_id = m3t.trim_buyer_id
+      LEFT JOIN length l ON l.length_id = m3t.length_id
+      LEFT JOIN line line ON line.line_id = m3t.line_id
+      LEFT JOIN parts p ON p.parts_id = m3t.parts_id
+      LEFT JOIN ply ply ON ply.ply_id = m3t.ply_id
+      LEFT JOIN shape sh ON sh.shape_id = m3t.shape_id
+      LEFT JOIN slider sl ON sl.slider_id = m3t.slider_id
+      LEFT JOIN trim_size ts ON ts.trim_size_id = m3t.trim_size_id
       WHERE 1=1`
       if (req?.buyerId) {
         query = query + ` AND m3t.buyer_id=${req.buyerId}`
@@ -191,6 +207,30 @@ export class M3TrimsService {
       }
       if (req?.part) {
         query = query + ` AND m3t.part='${req.part}'`
+      }
+      if (req?.trimBuyerId) {
+        query = query + ` AND m3t.trim_buyer_id=${req.trimBuyerId}`
+      }
+      if (req?.lengthId) {
+        query = query + ` AND m3t.length_id=${req.lengthId}`
+      }
+      if (req?.lineId) {
+        query = query + ` AND m3t.line_id=${req.lineId}`
+      }
+      if (req?.partsId) {
+        query = query + ` AND m3t.parts_id=${req.partsId}`
+      }
+      if (req?.plyId) {
+        query = query + ` AND m3t.ply_id=${req.plyId}`
+      }
+      if (req?.shapeId) {
+        query = query + ` AND m3t.shape_id=${req.shapeId}`
+      }
+      if (req?.sliderId) {
+        query = query + ` AND m3t.slider_id='${req.sliderId}'`
+      }
+      if (req?.trimSizeId) {
+        query = query + ` AND m3t.trim_size_id='${req.trimSizeId}'`
       }
       const data = await this.datasource.query(query)
       if(data.length > 0){
