@@ -1,4 +1,7 @@
+import { ItemTypeEnum } from "../../enum";
+
 export class TrimParamsMappingRequestDto{
+    
     trimParamsMapping: number;
     category:boolean
     trimId:number;
@@ -14,11 +17,19 @@ export class TrimParamsMappingRequestDto{
     type:boolean
     uom:boolean
     variety:boolean
+    ply:boolean
+    parts:boolean
+    shape:boolean
+    length:boolean
+    line:boolean
+    slider:boolean
+    buyer:boolean
     createdUser: string;
     isActive: boolean;  
     updatedUser: string;
     versionFlag: number;
-
+trimType:ItemTypeEnum;
+size:boolean
     constructor( trimParamsMapping: number,
         category:boolean,
         trimId:number,
@@ -37,7 +48,17 @@ export class TrimParamsMappingRequestDto{
         createdUser: string,
         isActive: boolean,  
         updatedUser: string,
-        versionFlag: number){
+        ply:boolean,
+    parts:boolean,
+    shape:boolean,
+    length:boolean,
+    line:boolean,
+    slider:boolean,
+    buyer:boolean,
+        versionFlag: number,
+        trimType:ItemTypeEnum,
+        size:boolean
+){
             this.trimParamsMapping = trimParamsMapping;
             this.category = category;
             this.trimId = trimId;
@@ -57,5 +78,14 @@ export class TrimParamsMappingRequestDto{
             this.isActive = isActive;  
             this.updatedUser = updatedUser;
             this.versionFlag = versionFlag;
+            this.buyer = buyer;
+            this.length = length
+            this.line = line
+            this.ply = ply
+            this.parts = parts
+            this.shape = shape
+            this.slider = slider
+            this.trimType = trimType
+            this.size = size
     }
 }

@@ -27,6 +27,14 @@ export class M3trimsDTO {
     itemType?: string
     m3Code?:string
     hsnCode?:string
+    trimBuyerId?: number
+    lengthId?: number
+    lineId?: number
+    partsId?: number
+    plyId?: number
+    shapeId?: number
+    sliderId?: number
+    trimSizeId?: number
 
     constructor(m3ItemsId:number,buyerId:number,
         itemCode:string,
@@ -51,7 +59,16 @@ export class M3trimsDTO {
         extRefNumber?: string,
         itemType?: string,
         m3Code?:string,
-        hsnCode?:string
+        hsnCode?:string,
+        trimBuyerId?: number,
+        lengthId?: number,
+        lineId?: number,
+        partsId?: number,
+        plyId?: number,
+        shapeId?: number,
+        sliderId?: number,
+        trimSizeId?: number
+    
     ) {
         this.m3ItemsId=m3ItemsId;
         this.buyerId=buyerId;
@@ -75,9 +92,17 @@ export class M3trimsDTO {
         this.trimType = trimType
         this.description = description
         this.extRefNumber = extRefNumber
-       this.itemType = itemType
-       this.m3Code = m3Code
-       this.hsnCode = hsnCode
+        this.itemType = itemType
+        this.m3Code = m3Code
+        this.hsnCode = hsnCode
+        this.trimBuyerId = trimBuyerId
+        this.lengthId = lengthId
+        this.lineId = lineId
+        this.partsId = partsId
+        this.plyId = plyId
+        this.shapeId = shapeId
+        this.sliderId = sliderId
+        this.trimSizeId = trimSizeId
        
     }
 }

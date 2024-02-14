@@ -1,14 +1,12 @@
 import { BuyersService, CurrencyService, FactoryService, IndentService, PurchaseOrderservice, SampleDevelopmentService, StyleService, VendorsService } from "@project-management-system/shared-services";
-import { Button, Card, Col, DatePicker, Form, Input, Row, Segmented, Select, Space, Tabs, message, notification } from "antd"
-import TabPane from "antd/es/tabs/TabPane";
+import { Button, Card, Col, DatePicker, Form, Input, Row, Select, message, notification } from "antd"
 import { useState, useEffect } from "react";
 import PurchaseOrderfabricForm from "./purchase-order-fabric";
 import PurchaseOrderTrim from "./purchase-order-trim";
-import { BuyerRefNoRequest, GlobalVariables, PoItemDetailsDto, PoItemEnum, PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrderTrimDto } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, GlobalVariables, PoItemDetailsDto, PurchaseOrderDto, PurchaseOrderFbricDto, PurchaseOrderTrimDto } from "@project-management-system/shared-models";
 import moment from "moment";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { faB } from "@fortawesome/free-solid-svg-icons";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useIAMClientState } from "../common/iam-client-react";
 
@@ -16,33 +14,33 @@ export const PurchaseOrderForm = () => {
     const { Option } = Select
     const [poForm] = Form.useForm()
     const [style, setStyle] = useState<any[]>([])
-    const [tabName, setTabName] = useState<string>('Fabric')
+    // const [tabName, setTabName] = useState<string>('Fabric')
     const [fabricData, setFabricData] = useState<any[]>([])
     const [trimData, setTrimData] = useState<any[]>([])
-    const [activeForm, setActiveForm] = useState(1);
-    const [indexVal, setIndexVal] = useState(1)
+    // const [activeForm, setActiveForm] = useState(1);
+    // const [indexVal, setIndexVal] = useState(1)
     const [indenData, setIndentData] = useState<any[]>([])
     const [vendordata, setVendorData] = useState<any[]>([])
     const [indentId, setIndentId] = useState<any>([])
     const [sampleId, setSampleId] = useState<any>([])
-    const [sampleItemId, setSampleItemId] = useState<any>([])
+    // const [sampleItemId, setSampleItemId] = useState<any>([])
 
     const [poType, setPoType] = useState<any>('')
     const [itemData, setItemData] = useState<any[]>([])
-    const [submitDisbale, setSubmitDisable] = useState<boolean>(true)
+    // const [submitDisbale, setSubmitDisable] = useState<boolean>(true)
     const [buyer, setBuyer] = useState<any[]>([]);
     const [samplereqNo, setSamplereqNo] = useState<any[]>([])
     const [navigateData, setnavigateData] = useState<any>([])
-    const [totalAmount ,setTotalAmount] = useState('')
+    // const [totalAmount ,setTotalAmount] = useState('')
     const [indentDropDownVisible, setIndentDropDownVisible] = useState<boolean>(false)
     const [sampleDropDownVisible, setSampleDropDownVisible] = useState<boolean>(false)
     const [currencydata, setCurrencyData] = useState([])
     const [activeFactoryData, setActiveFactoryData] = useState<any[]>([])
-    let fabricInfo: PurchaseOrderFbricDto[] = [];
-    let trimInfo: PurchaseOrderTrimDto[] = [];
+    // let fabricInfo: PurchaseOrderFbricDto[] = [];
+    // let trimInfo: PurchaseOrderTrimDto[] = [];
     const navigate = useNavigate()
 
-    const date = moment()
+    // const date = moment()
     const now = dayjs().add(GlobalVariables.poExpectedDeliveryDays, 'days');
     const styleService = new StyleService()
     const purchaseOrderService = new PurchaseOrderservice()
@@ -121,9 +119,9 @@ export const PurchaseOrderForm = () => {
     }
     useEffect(() => {
         if (stateData != undefined) {
-            console.log(stateData)
+            // console.log(stateData)
             if (stateData.type == 'Indent') {
-                console.log(stateData)
+                // console.log(stateData)
                 setIndentDropDownVisible(true)
                 poForm.setFieldsValue({ indentId: stateData.data.indentId })
                 poForm.setFieldsValue({ indentAgainst: 'Indent' })
@@ -142,7 +140,7 @@ export const PurchaseOrderForm = () => {
                 }
             }
             if (stateData.type == 'Sampling') {
-                console.log(stateData.data[3])
+                // console.log(stateData.data[3])
                 // console.log(stateData.data[2].m3itemid)
                 setnavigateData(stateData)
                 // setSampleItemId(stateData.data[2].m3itemid)
@@ -177,26 +175,35 @@ export const PurchaseOrderForm = () => {
 
 
     const handleFabricOnchange = (fabricdata) => {
-        console.log(fabricdata)
+        // console.log(fabricdata)
         setFabricData(fabricdata)
     }
     
     const handleTrim = (trimData) => {
-        console.log(trimData)
+        // console.log(trimData)
         setTrimData(trimData)
     }
     const onReset = () => {
-        const indentAgainst = poForm.getFieldValue('indentAgainst')
-        poForm.setFieldsValue({indentAgainst})
-        poForm.resetFields()
+        const poAgainst = poForm.getFieldValue('indentAgainst');
+        const indentId = poForm.getFieldValue('indentId');
+        const poMaterialType = poForm.getFieldValue('poMaterialType');
+        const totalAmount = poForm.getFieldValue('totalAmount');
+
+        poForm.resetFields();
+    
+        poForm.setFieldsValue({ indentAgainst: poAgainst });
+        poForm.setFieldsValue({ indentId: indentId });
+        poForm.setFieldsValue({ poMaterialType: poMaterialType });
+        poForm.setFieldsValue({ totalAmount: totalAmount });
     }
+    
 
     const indentOnClear = () => {
-        console.log('Indent cleared!');
+        // console.log('Indent cleared!');
         setFabricData([])
         setTrimData([])
-        console.log('Fabric Data:', fabricData);
-        console.log('Trim Data:', trimData);
+        // console.log('Fabric Data:', fabricData);
+        // console.log('Trim Data:', trimData);
     };
     
 
@@ -221,9 +228,9 @@ export const PurchaseOrderForm = () => {
         })
     }
     const onFinish = () => {
-        console.log(fabricData)
-        console.log(trimData)
-        console.log(poForm.getFieldsValue())
+        // console.log(fabricData)
+        // console.log(trimData)
+        // console.log(poForm.getFieldsValue())
         if(poForm.getFieldValue('currencyId') === undefined  || poForm.getFieldValue('totalAmount') === undefined){
             return notification.info({message:'Some input fields are missing in purchase order'})
         }
@@ -240,16 +247,16 @@ export const PurchaseOrderForm = () => {
                 poItemDetails.push(trim)
             }
         }
-        console.log(poItemDetails)
+        // console.log(poItemDetails)
         const poItemFilter = poItemDetails.filter(e => e.poQuantity >0)
         if(poItemFilter.length === poItemDetails.length){
 
             const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'),[poForm.getFieldValue('indentId')], poForm.getFieldValue('buyerId'), poItemDetails,poForm.getFieldValue('currencyId'),poForm.getFieldValue('exchangeRate'),poForm.getFieldValue('totalAmount'),poForm.getFieldValue('deliveryAddress'), poForm.getFieldValue('indentAgainst'))
-            console.log(poDto)
+            // console.log(poDto)
             if (poDto.poItemInfo.length > 0) {
                 purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
                     if (res.status) {
-                        console.log(res.data,"9999")
+                        // console.log(res.data,"9999")
                         message.success(`Purchase Order ${res?.data?.poNumber} Created Successfully`);
                         navigate('/purchase-view');
                         setTimeout(() => {
@@ -268,7 +275,7 @@ export const PurchaseOrderForm = () => {
     }
 
     const indentOnchange = (value) => {
-        console.log(value.length,'------------------------')
+        // console.log(value.length,'------------------------')
         if(value.length == 0){
         setIndentId(undefined)
         }

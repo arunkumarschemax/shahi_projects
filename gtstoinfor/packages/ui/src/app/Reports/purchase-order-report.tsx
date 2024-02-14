@@ -79,6 +79,7 @@ const PurchaseOrderReport = () => {
         
             }
             else{
+              setData([])
                     AlertMessages.getErrorMessage(res.internalMessage);
 }
         })
@@ -418,8 +419,6 @@ render: (_, record) => {
   );
 },
 width:120
-
-
 },
 // {
 // title:"Po Quantity",
@@ -438,15 +437,11 @@ render: (_, record) => {
   );
 },
 width:120
-
-
 },
 {
 title:"Request No",
 dataIndex:"request_no",
 width:170
-
-
 },
 {
   title: 'Aging',
@@ -470,10 +465,11 @@ width:170
     return age;
   },
 },
-  {
+{
     title:"Status",
     dataIndex:"status",
     fixed:'right',
+    width:'100px',
     onFilter: (value, record) => {
       // Check if the record's item_type includes the selected material type
       return record.status.includes(value);
@@ -661,6 +657,13 @@ const exportExcel = () => {
 
 if (key === 'pop'){
 const excel = new Excel();
+
+const sheet = excel.addSheet('Indent-report');
+sheet.setRowHeight(50);
+
+sheet.addColumns(excelColumns);
+
+sheet.addDataSource(data, { str2num: true });
 excel
 .addSheet('Purchase-order-report')
 .addColumns(Columns)
@@ -766,10 +769,9 @@ const onFinish = () => {
           <Col xs={12} sm={6} md={4} lg={3} xl={2}>
             <Form.Item>
               <Button
+                htmlType='submit'
                 type="primary"
-                htmlType="submit"
-                style={{ background: "green", width: "100%" }}
-              >
+                style={{ width: '80px', marginRight: "10px" }}>
                 Search
               </Button>
             </Form.Item>

@@ -84,6 +84,12 @@ const uploadFabricProps = (keyValue:number): UploadProps =>  ({
     }
     console.log(fileList)
 
+    const updateFileAtIndex = (fileList, newIndex, newFile) => {
+      // Create a new array with the updated file at the specified index
+      const updatedFileList = [...fileList];
+      updatedFileList[newIndex] = newFile;
+      return updatedFileList;
+    };
     // var reader = new FileReader();
     // reader.readAsArrayBuffer(file);
     // reader.onload = data => {
@@ -91,9 +97,8 @@ const uploadFabricProps = (keyValue:number): UploadProps =>  ({
       //   AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
       //   return true;
       // } else {
-        console.log(fileList)
-        setFileList([...fileList,file]);
-        console.log(fileList,"****")
+        const updatedFileList = updateFileAtIndex(fileList, keyValue, file);
+        setFileList(updatedFileList);
         // getBase64(file, imageUrl =>
         //   setImageUrl(imageUrl)
         // );
@@ -221,6 +226,22 @@ const getM3TrimsTypes = (value: number,request:any,KeyValue:number) => {
     req.m3Code=request.m3Code
     req.typeId=request.typeId
     req.trimMapId=request.trimMapId
+    req.colorId = request.colorId
+    req.logo = request.logo
+    req.part = request.part
+    req.qualityId = request.qualityId
+    req.structureId = request.structureId
+    req.thicknessId = request.thicknessId
+    req.uomId = request.uomId
+    req.varietyId = request.varietyId
+    req.trimBuyerId = request.trimBuyerId
+    req.lengthId = request.lengthId
+    req.lineId = request.lineId
+    req.partsId = request.partsId
+    req.plyId = request.plyId
+    req.shapeId = request.shapeId
+    req.sliderId = request.sliderId
+    req.trimSizeId = request.trimSizeId
   }
 
   console.log(req)
@@ -231,6 +252,7 @@ const getM3TrimsTypes = (value: number,request:any,KeyValue:number) => {
           props.form.setFieldValue(`trimCode${KeyValue}`,undefined)
           setM3Trims(res.data)
       }else{
+        props.form.setFieldValue(`trimCode${KeyValue}`,undefined)
         setM3Trims([])
         message.info('No Data Found')
       }
@@ -677,7 +699,7 @@ const getMappedTrims = (value, row) => {
             <Button key={record.key} name={`trimUpload${record.key}`}
                 style={{ color: 'black', backgroundColor: '#7ec1ff' }}
                 // icon={<UploadOutlined />}
-                disabled={(fileList[record.key] != undefined)? true:false}
+                disabled={(fileList != undefined && fileList[record.key] != undefined)? true:false}
             >
                 <Tooltip title="Upload Trim"><UploadOutlined /></Tooltip>
             </Button>
@@ -874,10 +896,11 @@ const tableColumns = (val,fabindex) => {
      setKeyValue(key)
   }
   const handleTrimFilterData =(trimFilterData) =>{
-    console.log(trimFilterData)
+    // console.log(trimFilterData)
     let req
     if(trimFilterData != undefined){
-      req = new M3TrimFilterReq(trimFilterData.buyerId,undefined,undefined,trimFilterData[0].categoryId,trimFilterData[0].contentId,trimFilterData[0].finishId,trimFilterData[0].holeId,trimFilterData[0].hsnCode,trimFilterData[0].m3Code,trimFilterData[0].typeId,trimFilterData[0].trimMapId) 
+      req = new M3TrimFilterReq(trimFilterData.buyerId,undefined,undefined,trimFilterData[0].categoryId,trimFilterData[0].contentId,trimFilterData[0].finishId,trimFilterData[0].holeId,trimFilterData[0].hsnCode,trimFilterData[0].m3Code,trimFilterData[0].typeId,trimFilterData[0].trimMapId,trimFilterData[0].colorId,trimFilterData[0].logo,trimFilterData[0].part,trimFilterData[0].qualityId,trimFilterData[0].structureId,trimFilterData[0].thicknessId,trimFilterData[0].uomId,trimFilterData[0].varietyId,trimFilterData[0].trimBuyerId,trimFilterData[0].lengthId,trimFilterData[0].lineId,trimFilterData[0].partsId,trimFilterData[0].plyId,trimFilterData[0].shapeId,trimFilterData[0].sliderId,trimFilterData[0].trimSizeId)
+      console.log(req,'..............')
       getM3TrimsTypes(undefined,req,keyValue)
     }else{
       getM3TrimsTypes(undefined,undefined,keyValue)

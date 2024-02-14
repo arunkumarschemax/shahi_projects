@@ -78,7 +78,7 @@ export class M3ItemsService {
         query += ` AND m3i.weave = ${req.weave}`
       }
       if (req.finish!== undefined){
-        query += ` AND m3i.finish = '${req.finish}'`
+        query += ` AND m3i.finish_id = '${req.finish}'`
       }
       // if (req.width!== undefined){
       //   query += ` AND m3.width = ${req.width}`
@@ -160,6 +160,9 @@ export class M3ItemsService {
       // console.log(data)
       if(data.length > 0){
         return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)
+      }
+      else{
+        return new CommonResponseModel(false, 1010, "No data found. ",)
       }
     }catch (error) {
       return new CommonResponseModel(false, 0, error)

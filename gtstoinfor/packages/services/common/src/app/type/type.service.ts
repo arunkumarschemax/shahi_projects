@@ -1,4 +1,3 @@
-import { InjectRepository } from "@nestjs/typeorm";
 import { Injectable } from "@nestjs/common";
 
 import { TypeRepository } from "./type.repo";

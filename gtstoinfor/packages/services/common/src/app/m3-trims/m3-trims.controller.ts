@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { BuyerIdReq, CommonResponseModel, M3TrimType, M3TrimTypeRequest, M3trimsDTO } from "@project-management-system/shared-models";
+import {  CommonResponseModel, M3TrimType, M3trimsDTO } from "@project-management-system/shared-models";
 import { M3TrimsDTO } from "./m3-trims.dto";
 import { M3TrimsService } from "./m3-trims.service";
 
@@ -15,6 +15,7 @@ export class M3TrimsController {
   @ApiBody({type:M3TrimsDTO})
   async createM3Trims(@Body() createDto: any): Promise<CommonResponseModel> {
     try {
+      // console.log(createDto,',-,--,-,-,--,-,-,-,,--,-,-,-,')
       return await this.Service.createM3Trims(createDto);
     } catch (error) {
       return this.applicationExeptionhandler.returnException(CommonResponseModel, error)

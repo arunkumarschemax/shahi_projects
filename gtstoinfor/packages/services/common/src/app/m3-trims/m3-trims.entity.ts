@@ -132,6 +132,58 @@ export class M3TrimsEntity {
     })
     colorId:number
 
+    @Column('int',{
+      name:'trim_buyer_id',
+      nullable:true,
+    })
+    trimBuyerId:number
+
+
+    @Column('int',{
+      name:'length_id',
+      nullable:true,
+    })
+    lengthId:number
+
+    @Column('int',{
+      name:'line_id',
+      nullable:true,
+    })
+    lineId:number
+
+
+    @Column('int',{
+      name:'parts_id',
+      nullable:true,
+    })
+    partsId:number
+
+    @Column('int',{
+      name:'ply_id',
+      nullable:true,
+    })
+    plyId:number
+
+
+    @Column('int',{
+      name:'shape_id',
+      nullable:true,
+    })
+    shapeId:number
+
+    @Column('int',{
+      name:'slider_id',
+      nullable:true,
+    })
+    sliderId:number
+
+
+    @Column('int',{
+      name:'trim_size_id',
+      nullable:true,
+    })
+    trimSizeId:number
+
 
   @Column("boolean", {
     nullable: false,

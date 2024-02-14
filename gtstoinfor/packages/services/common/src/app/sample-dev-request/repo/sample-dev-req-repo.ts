@@ -274,7 +274,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
 
     async sampleFabric(sampleId: string) {
         const query = await this.dataSource.createQueryBuilder(SampleReqFabricinfoEntity, 'srfi')
-            .select(`sb.sampling_bom_id AS samplingBomId,IF(sb.received_quantity IS NULL, 0, sb.received_quantity) AS receivedQty,(srfi.total_requirement - (IF(sb.received_quantity IS NULL, 0, sb.received_quantity))) AS tobeProcured,(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,sum(st.quantity) AS availableQuantity,"fabric" as itemType,sr.sample_request_id as sampleRequestid,st.m3_item as stockM3ItemId,sr.buyer_id as buyerId,fabric_info_id,srfi.sample_request_id,c.colour,srfi.fabric_info_id,srfi.fabric_code as m3ItemFabricId,srfi.colour_id,srfi.remarks AS fab_remarks,srfi.consumption AS fabric_consumption,srfi.sample_request_id AS fabric_sample_request_id,CONCAT(m3items.item_code,"-",m3items.description) AS itemCode,Group_concat(st.id) AS stockIds,srfi.total_requirement,sb.status AS status, srfi.file_path AS filePath`)
+            .select(`sb.sampling_bom_id AS samplingBomId,IF(sb.received_quantity IS NULL, 0, sb.received_quantity) AS receivedQty,(srfi.total_requirement - (IF(sb.received_quantity IS NULL, 0, sb.received_quantity))) AS tobeProcured,(sum(st.quantity)-sum(st.allocatd_quantity)) AS resltantavaliblequantity,sum(st.allocatd_quantity) as consumedQty,sum(st.quantity) AS availableQuantity,"fabric" as itemType,sr.sample_request_id as sampleRequestid,st.m3_item as stockM3ItemId,sr.buyer_id as buyerId,fabric_info_id,srfi.sample_request_id,c.colour,srfi.fabric_info_id,srfi.fabric_code as m3ItemFabricId,srfi.colour_id,srfi.remarks AS fab_remarks,srfi.consumption AS fabric_consumption,srfi.sample_request_id AS fabric_sample_request_id,CONCAT(m3items.item_code,"-",m3items.description) AS itemCode,Group_concat(st.id) AS stockIds,srfi.total_requirement,sb.status AS status, srfi.file_path AS filePath, fc.colour AS fabColor`)
             .leftJoin(SampleRequest, 'sr', ' sr.sample_request_id=srfi.sample_request_id ')
             .leftJoin(SamplingbomEntity, 'sb', 'sb.m3_item_id= srfi.fabric_code and sb.sample_request_id = srfi.sample_request_id and sb.colour_id = srfi.colour_id')
             // .leftJoin(RmCreationEntity, 'rm', ' rm.rm_item_id=srfi.fabric_code ')
@@ -282,6 +282,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
             .leftJoin(FabricType,'ft','ft.fabric_type_id  = m3items.fabric_type')
             .leftJoin(StocksEntity,'st','st.m3_item=srfi.fabric_code and st.item_type = "fabric" and st.buyer_id=sr.buyer_id and grn_type = "INDENT"')
             .leftJoin(Colour,'c','c.colour_id=srfi.colour_id')
+            .leftJoin(Colour,'fc','fc.colour_id=srfi.fab_colour_id')
             .where(`srfi.sample_request_id = "${sampleId}"`)
             .groupBy(`srfi.fabric_info_id`)
             .orderBy(`ft.fabric_type_name`,'ASC')
@@ -292,8 +293,7 @@ export class SampleRequestRepository extends Repository<SampleRequest> {
                 let req = new  buyerandM3ItemIdReq(rec.buyerId,rec.m3ItemFabricId,rec.itemType)
                 let stockdata = await this.sampleService.getAvailbelQuantityAginstBuyerAnditem(req)
                 let data = {
-                    fabric_info_id: rec.fabric_info_id,fabric_item_code:rec.fabric_item_code, m3ItemFabricId: rec.m3ItemFabricId, fabric_description: rec.fabric_description, colour_id: rec.colour_id, fab_remarks: rec.fab_remarks, fabric_consumption: rec.fabric_consumption, fabric_sample_request_id: rec.fabric_sample_request_id,colour :rec.colour,item_code:rec.itemCode,stockM3ItemId:rec.stockM3ItemId,buyerId:rec.buyerId,sampleRequestid:rec.sampleRequestid,itemType:rec.itemType,availableQuantity:rec.availableQuantity,stockIds:rec.stockIds,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,totalRequirement:rec.total_requirement,status:rec.status,receivedQty:rec.receivedQty,tobeProcured:rec.tobeProcured,allocatedStock:stockdata.data,samplingBomId:rec.samplingBomId,filePath:rec.filePath
-
+                    fabric_info_id: rec.fabric_info_id,fabric_item_code:rec.fabric_item_code, m3ItemFabricId: rec.m3ItemFabricId, fabric_description: rec.fabric_description, colour_id: rec.colour_id, fab_remarks: rec.fab_remarks, fabric_consumption: rec.fabric_consumption, fabric_sample_request_id: rec.fabric_sample_request_id,colour :rec.colour,item_code:rec.itemCode,stockM3ItemId:rec.stockM3ItemId,buyerId:rec.buyerId,sampleRequestid:rec.sampleRequestid,itemType:rec.itemType,availableQuantity:rec.availableQuantity,stockIds:rec.stockIds,resltantavaliblequantity:rec.resltantavaliblequantity,consumedQty:rec.consumedQty,totalRequirement:rec.total_requirement,status:rec.status,receivedQty:rec.receivedQty,tobeProcured:rec.tobeProcured,allocatedStock:stockdata.data,samplingBomId:rec.samplingBomId,filePath:rec.filePath,fabColor:rec.fabColor
                 };
                 console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
                 console.log(data)
@@ -386,6 +386,9 @@ if(req){
     }
     if(req.extRefNumber){
         query.andWhere(` b.external_ref_number = '${req.extRefNumber}'`)
+    }
+    if(req.user!== undefined){
+        query.andWhere(`sr.user = '${req.user}'`)
     }
 }
         

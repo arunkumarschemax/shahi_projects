@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { ColumnProps, ColumnType, ColumnsType } from "antd/lib/table";
+import {  ColumnType, ColumnsType } from "antd/lib/table";
 import {
   Button,
   Card,
@@ -12,7 +12,6 @@ import {
   Select,
   Space,
   Table,
-  Tabs,
   Tooltip,
   message,
 } from "antd";
@@ -24,7 +23,6 @@ import {
   ItemTypeEnumDisplay,
   MaterialIssueLogrequest,
   MaterialStatusEnum,
-  StockupdateRequest,
   buyerReq,
   statusReq,
 } from "@project-management-system/shared-models";
@@ -35,7 +33,6 @@ import {
   SampleDevelopmentService,
   StockService,
 } from "@project-management-system/shared-services";
-import TabPane from "antd/es/tabs/TabPane";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
@@ -107,7 +104,7 @@ export const MaterialAllocationGrid = () => {
   };
 
   const onApprove = (rowData) => {
-    console.log(rowData,"rrrrrrrr")
+    // console.log(rowData,"rrrrrrrr")
     // console.log(rowData.material_allocation_id,"rrrrrrrr")
     const req = new statusReq(
       rowData?.material_allocation_id,
@@ -134,7 +131,7 @@ export const MaterialAllocationGrid = () => {
   
 
   const onIssuematerial = (rowData) => {
-    console.log(rowData, "issuematerial");
+    // console.log(rowData, "issuematerial");
     const req = new MaterialIssueLogrequest(
       null,
       rowData.material_allocation_id,
@@ -245,7 +242,7 @@ export const MaterialAllocationGrid = () => {
 
   const showModal = (rowData) => {
     setIsModalOpen(true);
-    console.log(rowData.material_allocation_id,"rr")
+    // console.log(rowData.material_allocation_id,"rr")
     setRow(rowData.material_allocation_id)
   };
 
@@ -369,7 +366,7 @@ export const MaterialAllocationGrid = () => {
               <Tooltip placement="top" title="Detail View">
               <EyeOutlined
                 onClick={() => {
-                  console.log(rowData);
+                  // console.log(rowData);
 
                   navigate(
                     "/sample-development/material-allocation-detail-view",
@@ -472,7 +469,7 @@ export const MaterialAllocationGrid = () => {
             <Tooltip placement="top" title="Detail View">
               <EyeOutlined
                 onClick={() => {
-                  console.log(rowData);
+                  // console.log(rowData);
 
                   navigate(
                     "/sample-development/material-allocation-detail-view",
@@ -495,7 +492,7 @@ export const MaterialAllocationGrid = () => {
   ];
 
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log("params", pagination, filters, sorter, extra);
+    // console.log("params", pagination, filters, sorter, extra);
   };
 
   const getBuyersData = () => {

@@ -1,10 +1,9 @@
 import { UndoOutlined } from "@ant-design/icons";
-import { ItemTypeEnumDisplay, MenusAndScopesEnum, SampleRequestFilter, SamplerawmaterialStausReq } from "@project-management-system/shared-models";
+import { ItemTypeEnumDisplay, MenusAndScopesEnum,  SamplerawmaterialStausReq } from "@project-management-system/shared-models";
 import { BuyersService, SampleDevelopmentService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Checkbox, Col, Form, Row, Select, Table } from "antd";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import AlertMessages from "../common/common-functions/alert-messages";
 import { useIAMClientState } from "../common/iam-client-react";
 import { RolePermission } from "../role-permissions";
@@ -51,7 +50,7 @@ const SampleRequestReport = () => {
 
   const checkAccess = (buttonParam) => {  
     const accessValue = RolePermission(null,MenusAndScopesEnum.Menus["Sample Development"],MenusAndScopesEnum.SubMenus["Sample Material Status"],buttonParam)
-     console.log(buttonParam,accessValue,'access');
+    //  console.log(buttonParam,accessValue,'access');
     
     return accessValue
 }
@@ -313,8 +312,14 @@ const SampleRequestReport = () => {
       // sortDirections: ['descend', 'ascend'],
     },
     {
-      title: "Color",
+      title: "Garment Color",
       dataIndex: "colourName",
+      // sorter: (a, b) => a.colourName.localeCompare(b.colourName),
+      // sortDirections: ['descend', 'ascend'],
+    },  
+    {
+      title: "Fabric Color",
+      dataIndex: "fabColor",
       // sorter: (a, b) => a.colourName.localeCompare(b.colourName),
       // sortDirections: ['descend', 'ascend'],
     },  
@@ -434,12 +439,12 @@ const SampleRequestReport = () => {
   const dataa=[];
 
   const onCheck = (e, sampleRequestid, fabricType, value, rowData, index) => {
-    console.log(e.target.checked);
-    console.log(sampleRequestid);
-    console.log(fabricType);
-    console.log(rowData);
+    // console.log(e.target.checked);
+    // console.log(sampleRequestid);
+    // console.log(fabricType);
+    // console.log(rowData);
 
-    console.log(selectedRowData);
+    // console.log(selectedRowData);
 
     if(e.target.checked){
       
@@ -456,25 +461,25 @@ const SampleRequestReport = () => {
         setSelectedRowData(rowsData)
         setbtnEnable(true)
       // }
-      console.log(data)
+      // console.log(data)
     }
     else{
-      console.log(rowData)
-      console.log(selectedRowData)
+      // console.log(rowData)
+      // console.log(selectedRowData)
       let itemsArray = [...selectedRowData];
       let index = itemsArray.findIndex((e) => e.samplingBomId === rowData.samplingBomId);
       itemsArray.splice(index, 1);
-      console.log(itemsArray)
+      // console.log(itemsArray)
       // let newArray = [...itemsArray]
       setSelectedRowData(itemsArray);
-      console.log(selectedRowData)
+      // console.log(selectedRowData)
       samplingPO.setFieldsValue({[`checkStatus${index}`]:false})
-      console.log(selectedRowData.length)
+      // console.log(selectedRowData.length)
       selectedRowData.length - Number(1) > 0 ? setbtnEnable(true) : setbtnEnable(false)
     }
     
     const checkboxValue = e.target.checked;
-    console.log(rowData)
+    // console.log(rowData)
 
 
     setType(fabricType)
@@ -482,16 +487,16 @@ const SampleRequestReport = () => {
     ? selectedIndentIds
     : [...selectedIndentIds, sampleRequestid];
     setSelectedIndentIds(updatedIndentIds);
-    console.log(selectedIndentIds)
+    // console.log(selectedIndentIds)
     // setbtnEnable(true)
 
     const updated1 = selectItemIds.push(rowData.sampleItemId)
   ? selectItemIds
   : [...selectItemIds, rowData.sampleItemId];
-  console.log(updated1);
+  // console.log(updated1);
     setSelectItemIds(updated1);
 
-    console.log(selectedRowData)
+    // console.log(selectedRowData)
     let type
     if(e.target.checked){
       type = selectedRowData[0]?.itemType === undefined ? rowData.itemType:selectedRowData[0]?.itemType;
@@ -501,7 +506,7 @@ const SampleRequestReport = () => {
     }
     
     const resultArray = [{materialType:type}, { sampleReqIds: updatedIndentIds },{m3itemid:updated1}, {buyerId: rowData.buyerId}];
-    console.log(resultArray)
+    // console.log(resultArray)
     setSelectedItems(resultArray)
 
   };

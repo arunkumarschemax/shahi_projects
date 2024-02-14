@@ -56,7 +56,7 @@ export default function FactoriesForm(props:FactoriesFormProps) {
                 <Input hidden/>
               </Form.Item>
               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-                <Form.Item name='name' label='Name'>
+                <Form.Item name='name' label='Factory Name' rules={[{required: true, message: 'Name is required'}]}>
                   <Input  placeholder ="Enter Name"/>
                 </Form.Item>
               </Col>

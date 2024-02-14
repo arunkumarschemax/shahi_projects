@@ -53,7 +53,7 @@ export const StructureView = () => {
 
     const updateStructure = (data) => {
         const req = new StructureReq(data.structure,'admin',data.structureId)
-        service.createStructure(req).then(res => {
+        service.updateStructure(req).then(res => {
             if(res.status){
               setDrawerVisible(false)
               getAllData()
@@ -155,12 +155,12 @@ export const StructureView = () => {
             render: (text, object, index) => (page-1) * 10 +(index+1)
         },
         {
-            dataIndex:'structure',
-            title:<div style={{textAlign:'center'}}>Column</div>,
-            sorter: (a, b) => a.column?.localeCompare(b.column),
-            sortDirections: ['descend', 'ascend'],
-            ...getColumnSearchProps('structure')
-        },
+          dataIndex: 'structure',
+          title: <div style={{ textAlign: 'center' }}>Column</div>,
+          sorter: (a, b) => a.structure.localeCompare(b.structure),
+          sortDirections: ['descend', 'ascend'],
+          ...getColumnSearchProps('structure')
+      },      
         {
             title:<div style={{textAlign:'center'}}>Status</div>,
             dataIndex: 'isActive',

@@ -179,10 +179,10 @@ export function PaymentTermsGrid(
             <span>Vendor</span>
           </Checkbox>
           <Checkbox
-            checked={selectedKeys.includes(PaymentTermsCategory)}
-            onChange={() => setSelectedKeys(selectedKeys.includes(PaymentTermsCategory) ? [] : [PaymentTermsCategory])}
+            checked={selectedKeys.includes(PaymentTermsCategory.Customer)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(PaymentTermsCategory.Customer) ? [] : [PaymentTermsCategory.Customer])}
           >
-            <span >Buyer</span>
+            <span >Customer</span>
           </Checkbox>
           <div className="custom-filter-dropdown-btns">
             <Button onClick={() => clearFilters()} className="custom-reset-button">
@@ -336,12 +336,13 @@ export function PaymentTermsGrid(
     setDrawerVisible(false);
   }
   const onChange=(pagination, filters, sorter, extra)=> {
-    console.log('params', pagination, filters, sorter, extra);
+    // console.log('params', pagination, filters, sorter, extra);
   }
 
   return (
     <Card title ="Payment Terms"
-     headStyle={{ border: 0 }} extra={<Link to = "/global/payment-terms/payment-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
+     headStyle={{ backgroundColor: '#69c0ff' }} 
+     extra={<Link to = "/global/payment-terms/payment-terms-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} 
 
     >
      <br></br>

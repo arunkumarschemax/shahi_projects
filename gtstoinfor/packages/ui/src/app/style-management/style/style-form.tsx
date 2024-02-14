@@ -1,9 +1,15 @@
 
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Card, Row, Col, Space, message, Upload, Typography, UploadProps } from 'antd';
-import { LoadingOutlined, MinusCircleOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import TextArea from 'antd/lib/input/TextArea';
+import { Form, Input, Button, Select, Card, Row, Col,
+  //  Space, message,
+    Upload,
+    //  Typography,
+      UploadProps } from 'antd';
+import { LoadingOutlined,
+  //  MinusCircleOutlined, UploadOutlined
+    PlusOutlined } from '@ant-design/icons';
+// import { Link } from 'react-router-dom';
+// import TextArea from 'antd/lib/input/TextArea';
 import { StyleDto } from '@project-management-system/shared-models';
 import { BuyersService, ProfitControlHeadService, StyleService } from '@project-management-system/shared-services';
 import { useNavigate } from 'react-router-dom';
@@ -131,10 +137,10 @@ const service = new StyleService()
   const saveEmployee = (data: StyleDto) => {
     service.creteStyle(data).then((res) => {
         if (res.status) {
-          console.log(data,"dd")
+          // console.log(data,"dd")
           AlertMessages.getSuccessMessage('Style Created Successfully');
           if(filelist.length >0){
-            console.log(res)
+            // console.log(res)
             const formData = new FormData();
             filelist.forEach((file: any) => {
                 formData.append('file', file);
@@ -158,7 +164,7 @@ const service = new StyleService()
    
   };
   const saveData = (values: StyleDto) => {
-    console.log(values)
+    // console.log(values)
       if (props.isUpdate) {
         props.updateDetails(values,filelist);
       } else {
@@ -266,7 +272,12 @@ const service = new StyleService()
                         </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:12 }}>
-                        <Form.Item name='description' label='Description'>
+                        <Form.Item name='description' label='Description'  rules={[
+                          {
+                            required: true,
+                            message:'Description Is Required'
+                          }
+                        ]}>
                             <Input.TextArea rows={1}  placeholder="Enter Description"/>
                         </Form.Item>
                 </Col>

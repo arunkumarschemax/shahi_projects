@@ -180,6 +180,7 @@ const FabricsForm = (props:FabricsFormProps) => {
           setFabricCodeData(res.data)
         }
         else{
+          props.form.setFieldValue(`fabricId${keyValue}`,undefined)
           setFabricCodeData([])
             message.info('No M3 Fabric Data Found')
         }
@@ -469,6 +470,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     console.log(updatedData);
     if(updatedData.length === 0){
       setData([]);
+      setOnchangeData([])
       props.data([])
     }
     else{
@@ -518,6 +520,12 @@ const FabricsForm = (props:FabricsFormProps) => {
       }
       console.log(fileList)
 
+      const updateFileAtIndex = (fileList, newIndex, newFile) => {
+        // Create a new array with the updated file at the specified index
+        const updatedFileList = [...fileList];
+        updatedFileList[newIndex] = newFile;
+        return updatedFileList;
+      };
       // var reader = new FileReader();
       // reader.readAsArrayBuffer(file);
       // reader.onload = data => {
@@ -525,9 +533,8 @@ const FabricsForm = (props:FabricsFormProps) => {
         //   AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
         //   return true;
         // } else {
-          console.log(fileList)
-          setFileList([...fileList,file]);
-          console.log(fileList,"****")
+          const updatedFileList = updateFileAtIndex(fileList, keyValue, file);
+          setFileList(updatedFileList);
           // getBase64(file, imageUrl =>
           //   setImageUrl(imageUrl)
           // );
@@ -638,7 +645,7 @@ const FabricsForm = (props:FabricsFormProps) => {
     //   ),
     // },
     {
-      title: 'Color',
+      title: 'Garment Color',
       dataIndex: 'color',
       width:"25%",
 
@@ -660,6 +667,38 @@ const FabricsForm = (props:FabricsFormProps) => {
             {color.map((e) => {
               return (
                 <Option name={`colorId${record.key}`} key={e.colourId} value={e.colourId}>
+                  {e.colour}
+                </Option>
+              );
+            })}
+          </Select>
+        </Form.Item>
+        </>
+      
+      ),
+    },
+    {
+      title: 'Fabric Color',
+      dataIndex: 'fabriccolor',
+      width:"25%",
+
+      render: (_, record) => (
+        <>
+        <Form.Item name={`fabricColorId${record.key}`}
+        rules={[{ required: true, message: 'Missing Color' }]}
+        >
+          <Select
+            value={record.colourId}
+            onChange={(e) => handleInputChange(e, record.key, 'fabricColorId', 0,record)}
+            style={{ width: "100%" }}
+            allowClear
+            showSearch
+            optionFilterProp="children"
+            placeholder="Select Fabric Color"
+          >
+            {color.map((e) => {
+              return (
+                <Option name={`fabricColorId${record.key}`} key={e.colourId} value={e.colourId}>
                   {e.colour}
                 </Option>
               );
@@ -812,7 +851,7 @@ const FabricsForm = (props:FabricsFormProps) => {
             <Button key={record.key} name={`fabricUpload${record.key}`}
               style={{ color: 'black', backgroundColor: '#7ec1ff' }}
               // icon={<UploadOutlined />}
-              disabled={(fileList[record.key] != undefined) ? true : false}
+              disabled={(fileList != undefined && fileList[record.key] != undefined) ? true : false}
             >
               <Tooltip title="Upload Fabric"><UploadOutlined /></Tooltip>
             </Button>

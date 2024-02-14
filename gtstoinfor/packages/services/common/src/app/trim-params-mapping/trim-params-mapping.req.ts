@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { ItemTypeEnum } from "@project-management-system/shared-models";
 import { IsNotEmpty, IsNumber, IsOptional } from "class-validator";
 
 export class TrimParamsMappingRequest {
@@ -34,6 +35,22 @@ export class TrimParamsMappingRequest {
     @ApiProperty()
     variety:boolean
     @ApiProperty()
+    ply:boolean
+    @ApiProperty()
+    length:boolean
+    @ApiProperty()
+    line:boolean
+    @ApiProperty()
+    parts:boolean
+    @ApiProperty()
+    buyer:boolean
+    @ApiProperty()
+    shape:boolean
+    @ApiProperty()
+    slider:boolean
+    @ApiProperty()
+    trimType:ItemTypeEnum
+    @ApiProperty()
     createdUser: string;
 
     @ApiProperty()
@@ -43,11 +60,13 @@ export class TrimParamsMappingRequest {
     @IsOptional()
     updatedUser: string;
 
+    @ApiProperty()
+    size:boolean
 
     @ApiProperty()
     @IsOptional()
      @IsNumber()
     versionFlag: number;
-
+ 
 
 }

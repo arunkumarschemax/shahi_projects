@@ -3,7 +3,6 @@ import { AllSizeResponseModel } from '@project-management-system/shared-models';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
-import { Any } from 'typeorm';
 import { SizeService } from './sizes-service';
 import { SizeRequest } from './dto/sizes-request';
 import { SizeDto } from './dto/sizes-dto';

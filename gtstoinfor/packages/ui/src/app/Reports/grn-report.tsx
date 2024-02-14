@@ -1,11 +1,11 @@
 import { ItemTypeEnumDisplay, MenusAndScopesEnum, PurchaseOrderStatus, grnReportReq } from '@project-management-system/shared-models';
 import { GRNService, PurchaseOrderservice } from '@project-management-system/shared-services';
-import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Statistic, Table, message } from 'antd'
+import { Button, Card, Checkbox, Col, DatePicker, Form, Input, Row, Select, Statistic, Table, Tag, message } from 'antd'
 import moment from 'moment';
 import React, { useEffect, useRef, useState } from 'react'
 import dayjs from 'dayjs';
 import Highlighter from 'react-highlight-words';
-import { FileExcelOutlined, SearchOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, CloseCircleOutlined, FileExcelOutlined, SearchOutlined } from '@ant-design/icons';
 import { RolePermission } from '../role-permissions';
 import { Excel } from 'antd-table-saveas-excel';
 
@@ -22,6 +22,8 @@ import { Excel } from 'antd-table-saveas-excel';
     const {Option} = Select
     const grnService = new GRNService()
     const poService = new PurchaseOrderservice()
+    // const [selectedKeys, setSelectedKeys] = useState<any>('');
+    // let selectedKeys = '';
     useEffect(() =>{
       getGrnReportData()
       getPoNumber()
@@ -213,12 +215,44 @@ import { Excel } from 'antd-table-saveas-excel';
             // ...getColumnSearchProps('poNumber')
 
           },
+          // {
+          //   title: "GRN Type",
+          //   dataIndex: "poAgainst",
+          //   ...getColumnSearchProps('poAgainst')
+
+
+          // },
           {
             title: "GRN Type",
             dataIndex: "poAgainst",
-            ...getColumnSearchProps('poAgainst')
-
-          },
+            // ...getColumnSearchProps('poAgainst'),
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+              <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+                <Checkbox
+                  checked={selectedKeys.includes('Sample Order')}
+                  onChange={() => setSelectedKeys(selectedKeys.includes('Sample Order') ? [] : ['Sample Order'])}
+                >
+                  Sample Order
+                </Checkbox>
+                <Checkbox
+                  checked={selectedKeys.includes('Indent')}
+                  onChange={() => setSelectedKeys(selectedKeys.includes('Indent') ? [] : ['Indent'])}
+                >
+                  Indent
+                </Checkbox>
+                <div className="custom-filter-dropdown-btns">
+                  <Button onClick={() => clearFilters()} className="custom-reset-button">
+                    Reset
+                  </Button>
+                  <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+                    OK
+                  </Button>
+                </div>
+              </div>
+            ),
+            onFilter: (value, record) => record.poAgainst === value,
+          },          
+          
           {
             title: "Indent /Sample Order Number",
             // ...getColumnSearchProps('indentNo'),
@@ -228,24 +262,74 @@ import { Excel } from 'antd-table-saveas-excel';
 
 
           },
+          {
+            title: "Sample Order",
+            dataIndex: "sampleReqNo",width:120,align:'center',
+            ...getColumnSearchProps('sampleReqNo'),
+            render: (text) => (text ? text : '-'),
+          },
+          
           // {
-          //   title: "Sample Order",
-          //   dataIndex: "sampleReqNo",
-          //   ...getColumnSearchProps('sampleReqNo')
-          // },
+          //   title: "Item Type",
+          //   dataIndex: "itemType",
+          //   sorter: (a, b) => a.itemType?.localeCompare(b.itemType),
+          //   sortDirections: ["descend", "ascend"],
+          //   ...getColumnSearchProps('itemType'),
+          //   render: (text) => {
+          //     const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+          //     return EnumObj ? EnumObj.displayVal : text;
+          //   },
+
+          // },  
+     
+         
           {
             title: "Item Type",
             dataIndex: "itemType",
-            sorter: (a, b) => a.itemType?.localeCompare(b.itemType),
-            sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('itemType'),
-            render: (text) => {
-              const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
-              return EnumObj ? EnumObj.displayVal : text;
-            },
-
-      
-          },   
+            align: "center",
+            width: 120,
+            render: (text) => (
+              <>
+                {text === 'FABRIC' ? (
+                  'Fabric'
+                ) : text === 'SEWING_TRIM' ? (
+                  'Sewing Trim'
+                ) : text === 'PACKING_TRIM' ? (
+                  'Packing Trim'
+                ) : (
+                  <Tag>{text}</Tag>
+                )}
+              </>
+            ),
+            onFilter: (value, record) => record.itemType.includes(value), // Modify the filter condition
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+              <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+                {['FABRIC', 'SEWING_TRIM', 'PACKING_TRIM'].map((type) => (
+                  <Checkbox
+                    key={type}
+                    checked={selectedKeys.includes(type)}
+                    onChange={() => {
+                      const newSelectedKeys = selectedKeys.includes(type)
+                        ? selectedKeys.filter((key) => key !== type)
+                        : [...selectedKeys, type];
+                      setSelectedKeys(newSelectedKeys);
+                    }}
+                  >
+                    <span>{type === 'PACKING_TRIM' ? 'Packing Trim' : type}</span>
+                  </Checkbox>
+                ))}
+                <div className="custom-filter-dropdown-btns">
+                  <Button onClick={() => clearFilters()} className="custom-reset-button">
+                    Reset
+                  </Button>
+                  <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+                    OK
+                  </Button>
+                </div>
+              </div>
+            ),
+          },
+          
           // {
           //   title: "Fabric Item",
           //   dataIndex: "m3ItemDescription",
@@ -356,25 +440,135 @@ import { Excel } from 'antd-table-saveas-excel';
               return record.totalPoAmount+unitPriceUom
             }
           },
+          // {
+          //   title: "Location Mapping Status",
+          //   dataIndex: "locationMappedStatus",
+          //   fixed: 'right',
+          //   width:'100px',
+          //   sorter: (a, b) => a.locationMappedStatus.localeCompare(b.locationMappedStatus),
+          //   sortDirections: ["descend", "ascend"],
+          //   ...getColumnSearchProps('locationMappedStatus')
+          // },
           {
             title: "Location Mapping Status",
             dataIndex: "locationMappedStatus",
             fixed: 'right',
-            width:'100px',
-            sorter: (a, b) => a.locationMappedStatus.localeCompare(b.locationMappedStatus),
-            sortDirections: ["descend", "ascend"],
-            ...getColumnSearchProps('locationMappedStatus')
+            width: 120,
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+              <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+                {['OPEN', 'COMPLETED'].map((status) => (
+                  <Checkbox
+                    key={status}
+                    checked={selectedKeys.includes(status)}
+                    onChange={() => setSelectedKeys(selectedKeys.includes(status) ? [] : [status])}
+                  >
+                    <span>{status}</span>
+                  </Checkbox>
+                ))}
+                <div className="custom-filter-dropdown-btns">
+                  <Button onClick={() => clearFilters()} className="custom-reset-button">
+                    Reset
+                  </Button>
+                  <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+                    OK
+                  </Button>
+                </div>
+              </div>
+            ),
+            onFilter: (value, record) => record.locationMappedStatus === value,
           },
-        
+          ,
+          
+          // {
+          //   title: "PO Status",
+          //   dataIndex: "poStatus",
+          //   fixed: 'right',  
+          //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+          //     <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+          //       {['OPEN', 'CANCELLED','IN PROGRESS','CLOSED'].map((status) => (
+          //         <Checkbox
+          //           key={status}
+          //           checked={selectedKeys.includes(status)}
+          //           onChange={() => setSelectedKeys(selectedKeys.includes(status) ? [] : [status])}
+          //         >
+          //           <span>{status}</span>
+          //         </Checkbox>
+          //       ))}
+          //       <div className="custom-filter-dropdown-btns">
+          //         <Button onClick={() => clearFilters()} className="custom-reset-button">
+          //           Reset
+          //         </Button>
+          //         <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+          //           OK
+          //         </Button>
+          //       </div>
+          //     </div>
+          //   ),
+          //   onFilter: (value, record) => record.locationMappedStatus === value,
+      
+          // },
+          // {
+          //   title: "PO Status",
+          //   dataIndex: "poStatus",
+          //   fixed: 'right',  
+          //   filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+          //     <div className="custom-filter-dropdown" style={{ flexDirection: 'column', marginLeft: 10 }}>
+          //       {['OPEN', 'CANCELLED', 'IN PROGRESS', 'CLOSED'].map((status) => (
+          //         <Checkbox
+          //           key={status}
+          //           checked={selectedKeys.includes(status)}
+          //           onChange={() => setSelectedKeys(selectedKeys.includes(status) ? [] : [status])}
+          //         >
+          //           <span>{status}</span>
+          //         </Checkbox>
+          //       ))}
+          //       <div className="custom-filter-dropdown-btns">
+          //         <Button onClick={() => clearFilters()} className="custom-reset-button">
+          //           Reset
+          //         </Button>
+          //         <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+          //           OK
+          //         </Button>
+          //       </div>
+          //     </div>
+          //   ),
+          //   onFilter: (value, record) => record.poStatus === value,
+          // },
+          //this is working for single selection only please check it if multiple selection is not working
           {
             title: "PO Status",
             dataIndex: "poStatus",
             fixed: 'right',  
-            // sorter: (a, b) => a.poQuantity.localeCompare(b.rejectedQuantity),
-            // sortDirections: ["descend", "ascend"],
-            // ...getColumnSearchProps('poStatus')
-      
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
+              <div className="custom-filter-dropdown" style={{ flexDirection: 'column', marginLeft: 10 }}>
+                {['OPEN', 'CANCELLED', 'IN PROGRESS', 'CLOSED'].map((status) => (
+                  <Checkbox
+                    key={status}
+                    checked={selectedKeys.includes(status)}
+                    onChange={() => {
+                      const newSelectedKeys = selectedKeys.includes(status)
+                        ? selectedKeys.filter((key) => key !== status)
+                        : [...selectedKeys, status];
+                      setSelectedKeys(newSelectedKeys);
+                    }}
+                  >
+                    <span>{status}</span>
+                  </Checkbox>
+                ))}
+                <div className="custom-filter-dropdown-btns">
+                  <Button onClick={() => clearFilters()} className="custom-reset-button">
+                    Reset
+                  </Button>
+                  <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+                    OK
+                  </Button>
+                </div>
+              </div>
+            ),
+            onFilter: (value, record) => record.poStatus === value,
           },
+          
+          
     ]
     
     const onReset =() =>{

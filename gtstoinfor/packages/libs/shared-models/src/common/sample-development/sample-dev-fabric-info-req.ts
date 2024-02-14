@@ -9,7 +9,7 @@ export class SampleFabricReq {
     wastage: number;
     allocatedStock:any[];
     fabricUpload?:any;
-
+    fabricColorId?:number;
     constructor(
         fabricCode: number,
         colourId: number,
@@ -20,7 +20,8 @@ export class SampleFabricReq {
         wastage: number,
         allocatedStock:any[],
         fabricInfoId?: number,
-        fabricUpload?:any
+        fabricUpload?:any,
+        fabricColorId?:number
     ) {
         this.fabricCode = fabricCode
         this.colourId = colourId
@@ -32,6 +33,7 @@ export class SampleFabricReq {
         this.fabricInfoId = fabricInfoId
         this.allocatedStock = allocatedStock
         this.fabricUpload = fabricUpload
+        this.fabricColorId = fabricColorId
     }
 
 }

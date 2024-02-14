@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Alert, Button, Card, Col, Divider, Popconfirm, Radio, Row, Switch, Table, Tag, message } from 'antd'
+import { Alert, Button, Card, Checkbox, Col, Divider, Popconfirm, Radio, Row, Switch, Table, Tag, message } from 'antd'
 import { useNavigate } from 'react-router-dom'
 import { QualityService } from '@project-management-system/shared-services'
 import AlertMessages from '../../common/common-functions/alert-messages'
@@ -88,56 +88,33 @@ const active = (rowData: any) => {
               )}
           </>
       ),
-      filterDropdown: ({
-          setSelectedKeys,
-          selectedKeys,
-          confirm,
-          clearFilters,
-      }) => (
-          <div style={{ padding: 7 }}>
-              <FormItem>
-                  <Radio.Group
-                      onChange={(e) => {
-                          setSelectedKeys([e.target.value.toString()]);
-                      }}
-                  >
-                      <Radio
-                          style={{ marginRight: "11px", marginLeft: "20px" }}
-                          value={true}
-                      >
-                          Active
-                      </Radio>
-                      <Radio value={false}>InActive</Radio>
-                  </Radio.Group>
-              </FormItem>
-              <Button
-                  type="primary"
-                  onClick={() => {
-                      confirm();
-                      setSearchText(selectedKeys[0]);
-                      setSearchedColumn("isActive");
-                  }}
-                  size="small"
-                  style={{ width: 90, marginRight: 2, marginTop: 1 }}
-              >
-                  OK
-              </Button>
-              <Button
-                  onClick={() => {
-                      handleReset(clearFilters);
-                      confirm();
-                  }}
-                  size="small"
-                  style={{ width: 90 }}
-              >
-                  Reset
-              </Button>
-          </div>
-      ),
-      onFilter: (value, record) => {
-          return record.isActive.toString() === value;
-      },
-  },
+      onFilter: (value, record) => record.isActive === value,
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+  <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+    <Checkbox
+      checked={selectedKeys.includes(true)}
+      onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+    >
+      <span style={{color:'green'}}>Active</span>
+    </Checkbox>
+    <Checkbox
+      checked={selectedKeys.includes(false)}
+      onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+    >
+      <span style={{color:'red'}}>Inactive</span>
+    </Checkbox>
+    <div className="custom-filter-dropdown-btns" >
+    <Button  onClick={() => clearFilters()} className="custom-reset-button">
+        Reset
+      </Button>
+      <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+        OK
+      </Button>
+    
+    </div>
+  </div>
+       ),
+},
   {
     title: `Action`,
     dataIndex: "action",

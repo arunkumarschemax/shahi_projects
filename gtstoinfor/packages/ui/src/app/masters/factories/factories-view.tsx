@@ -109,8 +109,17 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
 
   async function onSwitchClick(item: any) { 
     const dto = new FactoryActivateDeactivateDto(item.id, !item.isActive, item.versionFlag, 'admin')
-    await factoryService.activateOrDeactivate(dto);
-    window.location.reload();
+    factoryService.activateOrDeactivate(dto).then(res => {
+      console.log(res)
+      if (res.status) {
+        getData();
+        message.success(res.internalMessage);
+      } else {
+        message.error(res.internalMessage);
+      }
+    }).catch(err => {
+      message.error(err.message);
+    })
   }
 
 
@@ -134,7 +143,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
     });
   };
   
-  console.log(data,"kkkk")
+  // console.log(data,"kkkk")
 
 
   const closeDrawer = () => {

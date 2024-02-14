@@ -48,9 +48,9 @@ export function SampleSubTypesGrid(
   }
 
   const updateSampleSubType = (Data:SampleSubTypesDTO) => {
-    console.log(Data,"rrrrrrrrrrr")
+    // console.log(Data,"rrrrrrrrrrr")
     Service.updateSampleSubType(Data).then(res => {
-      console.log(res,"================");
+      // console.log(res,"================");
       if(res.status){
         getAllSampleSubTypeData();
         setDrawerVisible(false);

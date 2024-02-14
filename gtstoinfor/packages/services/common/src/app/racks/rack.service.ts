@@ -19,11 +19,7 @@ export class RacksService {
 
   async createRacks(createDto: RacksDTO): Promise<CommonResponseModel> {
     try {
-      const recordName = await this.repository.findOne({ where: { rackName: createDto.rackName } });
-      if (recordName) {
-        return new CommonResponseModel(false, 0, 'Record already exists with this rack position name');
-      }
-      const record = await this.repository.findOne({ where: { rackCode: createDto.rackCode } });
+      const record = await this.repository.findOne({ where: { rackName: createDto.rackName,rackCode: createDto.rackCode, rackType: createDto.rackType } });
       if (record) {
         return new CommonResponseModel(false, 0, 'Record already exists with this rack position code');
       }
@@ -38,7 +34,7 @@ export class RacksService {
   }
 
   async getRacks(): Promise<CommonResponseModel> {
-    const records = await this.repository.find();
+    const records = await this.repository.find({order:{"rackType":"ASC"}});
     if (records.length)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
     else

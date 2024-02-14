@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, message } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
@@ -55,10 +55,9 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
     service.activateOrDeactivateFabricFinishTypes(Data).then(res => { console.log(res);
       if (res.status) {
         getAll();
-        AlertMessages.getSuccessMessage('Success'); 
+        message.success(res.internalMessage,2)
       } else {
-        AlertMessages.getErrorMessage(res.internalMessage);
-
+        message.error(res.internalMessage,2)
       }
     }).catch(err => {
       AlertMessages.getErrorMessage(err.message);
@@ -259,7 +258,7 @@ export function FabricFinishTypesGrid(props: FabricFinishTypesGridProps) {
 
   return (
 <>
-<Card title='Fabric Structure' extra={<span><Button onClick={() => navigate('/masters/fabric-finish-type/fabric-finish-type-form')} type={'primary'}>New</Button></span>}>
+<Card title='Fabric Finish Type' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  extra={<span><Button onClick={() => navigate('/masters/fabric-finish-type/fabric-finish-type-form')} type={'primary'}>New</Button></span>}>
  <br></br>
       <Row gutter={40}>
       <Col>

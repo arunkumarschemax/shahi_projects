@@ -298,11 +298,10 @@
 
 
 import { BgColorsOutlined, EnvironmentOutlined, SearchOutlined, SkinOutlined, UndoOutlined } from "@ant-design/icons"
-import { BuyerIdReq, BuyersDestinationRequest } from "@project-management-system/shared-models"
+import {  BuyersDestinationRequest } from "@project-management-system/shared-models"
 import { BuyerDestinationService, BuyersService, ColourService, DestinationService, SizeService } from "@project-management-system/shared-services"
 import { Button, Row, Col, Select, Table,Form, Modal, Divider } from "antd"
 import Card from "antd/es/card/Card"
-import form from "antd/es/form"
 import { ColumnProps } from "antd/es/table"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"

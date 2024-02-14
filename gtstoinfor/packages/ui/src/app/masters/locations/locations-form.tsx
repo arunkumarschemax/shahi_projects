@@ -91,7 +91,7 @@ export function LocationsForm(
       <Form.Item style={{ display: 'none' }} name="createdUser">
         <Input hidden />
       </Form.Item>
-      <Row>
+      <Row gutter={16}>
       
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
         <Form.Item
@@ -109,7 +109,7 @@ export function LocationsForm(
             }
           ]}
         >
-          <Input/>
+          <Input placeholder='Enter Location'/>
         </Form.Item>
         </Col>
         <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:8}}>
@@ -128,7 +128,7 @@ export function LocationsForm(
             }
           ]}
         >
-          <Input/>
+          <Input placeholder='Enter Location Code'/>
         </Form.Item>
         </Col>
         </Row>
@@ -146,10 +146,11 @@ export function LocationsForm(
             Reset
           </Button>} */}
 
-          {(props.isUpdate===false) && 
+          {/* {(props.isUpdate===false) &&  */}
           <Button htmlType="button" style={{ margin: '0 8px' }} onClick={onReset}>
             Reset
-          </Button>}
+          </Button>
+          {/* } */}
          
           </Col>
           </Row>

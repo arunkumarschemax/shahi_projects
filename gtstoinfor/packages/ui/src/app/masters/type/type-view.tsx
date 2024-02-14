@@ -262,7 +262,7 @@ export const TypeView = () => {
       // style={{ textAlign: "center" }}
       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
       extra={
-        <Link to="/masters/Type/Type-form">
+        <Link to="/trim-master/Type/Type-form">
           <span 
           // style={{ color: "white" }}
           >

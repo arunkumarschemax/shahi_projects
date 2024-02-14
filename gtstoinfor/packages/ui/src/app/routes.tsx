@@ -16,7 +16,7 @@ import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
 import CompanyForm from "./masters/company/company-form"
 import CompanyGrid from "./masters/company/company-grid"
-import { ColourDto, ContentDtos, CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, PurchaseViewDto, TrimDtos, VarietyDtos } from "@project-management-system/shared-models"
+import { ColourDto, ContentDtos, CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, PurchaseViewDto, TrimDtos, TrimParamsMappingRequestDto, VarietyDtos } from "@project-management-system/shared-models"
 import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
@@ -223,6 +223,8 @@ import FabricRequestCodeView from "./item-request-code/fabric-request-code-view"
 import { TrimReqCodeView } from "./item-request-code/trim-request-code-view"
 import ProductGrid from "./masters/product/product-grid"
 import ProductForm from "./masters/product/product-form"
+import TrimParamsMapping from "./trim-master/m3-trim-items/trims-mapping-form"
+import TrimsParamsMappingView from "./trim-master/m3-trim-items/trim-mapping-view"
 
 
 
@@ -710,6 +712,12 @@ export const AppRoutes = () => {
                 </Route>
 
                 <Route  path='/trim-master'>
+                <Route path='trim-params-mapping' element={<TrimParamsMapping mappingData={undefined} updateDetails={function (column: TrimParamsMappingRequestDto): void {
+                        throw new Error("Function not implemented.")
+                    } } isUpdate={false} closeForm={function (): void {
+                        throw new Error("Function not implemented.")
+                    } } />} />
+                <Route path='/trim-master/trim-params-mapping-view' element={<TrimsParamsMappingView/>}/>
                     <Route path='variety/variety-form' element ={<VarietyForm varietyData={new VarietyDtos} updateItem={function (VarietyDto: VarietyDtos): void {
                         throw new Error("Function not implemented.")
                     } } isUpdate={false} closeForm={function (): void {

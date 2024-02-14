@@ -1,23 +1,19 @@
-import { EyeOutlined, LoadingOutlined, PlusOutlined, UploadOutlined, UserSwitchOutlined } from "@ant-design/icons";
-import { Res } from "@nestjs/common";
-import { BuyerRefNoRequest, CategoryEnumDisplay, DepartmentReq,SampleDevelopmentRequest, StyleIdReq, TypeIdReq } from "@project-management-system/shared-models";
-import {BuyersService,CountryService,CurrencyService,EmployeeDetailsService,FabricSubtypeservice,FabricTypeService,LiscenceTypeService,LocationsService,M3ItemsService,MasterBrandsService,ProductService,ProfitControlHeadService,QualityService,SampleDevelopmentService,SampleSubTypesService,SampleTypesService,StyleService } from "@project-management-system/shared-services";
+import { EyeOutlined, UploadOutlined } from "@ant-design/icons";
+import { BuyerRefNoRequest, CategoryEnumDisplay, DepartmentReq, SampleDevelopmentRequest, StyleIdReq, TypeIdReq } from "@project-management-system/shared-models";
+import { BuyersService, CountryService, CurrencyService, EmployeeDetailsService, FabricSubtypeservice, FabricTypeService, LiscenceTypeService, LocationsService, M3ItemsService, MasterBrandsService, MasterLocationsService, ProductService, ProfitControlHeadService, QualityService, SampleDevelopmentService, SampleSubTypesService, SampleTypesService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Modal, Row, Select, Tabs, Tooltip, message } from "antd";
-import { ReactNode, useEffect, useState } from "react";
 import TextArea from "antd/es/input/TextArea";
-import Upload, { RcFile, UploadProps } from "antd/es/upload";
-import SampleDevTabs from "./sample-dev-tabs";
-import { Console } from "console";
+import Upload, { UploadProps } from "antd/es/upload";
+import { config } from "packages/libs/shared-services/config";
 import TabPane from "rc-tabs/lib/TabPanelList/TabPane";
-import SizeDetail from "./size-detail";
+import { ReactNode, useEffect, useState } from "react";
+import { Link, useNavigate } from 'react-router-dom';
+import AlertMessages from "../common/common-functions/alert-messages";
+import { useIAMClientState } from "../common/iam-client-react";
 import FabricsForm from "./fabrics";
+import SizeDetail from "./size-detail";
 import TrimsForm from "./trims";
 import ProcessForm from "./process";
-import { useNavigate } from 'react-router-dom';
-import { Link } from "react-router-dom";
-import { useIAMClientState } from "../common/iam-client-react";
-import AlertMessages from "../common/common-functions/alert-messages";
-import { config } from "packages/libs/shared-services/config";
 
 
 const { Option } = Select;
@@ -27,7 +23,7 @@ export const SampleDevForm = () => {
   const [pch, setPch] = useState<any[]>([]);
   const [fabricType, setFabricType] = useState<any[]>([]);
   const [locations, setLocations] = useState<any[]>([]);
-  const [dmm,setDMM] = useState<any[]>([])
+  const [dmm, setDMM] = useState<any[]>([])
   const [technicians, setTechnicians] = useState<any[]>([]);
   const [buyer, setBuyer] = useState<any[]>([]);
   const [sampleTypes, setSampleTypes] = useState<any[]>([]);
@@ -35,28 +31,39 @@ export const SampleDevForm = () => {
   const [styles, setStyles] = useState<any[]>([]);
   const [brands, setBrands] = useState<any[]>([]);
   const [currency, setCurrency] = useState<any[]>([]);
-  const [country, setCountry] = useState <any[]>([]);
+  const [country, setCountry] = useState<any[]>([]);
   const [licenceType, setLicenceType] = useState<any[]>([]);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
-  const [previewTitle, setPreviewTitle] = useState("");
   const [fileList, setFileList] = useState<any[]>([]);
-  const [tabsData,setTabsData] = useState<any>()
+  const [tabsData, setTabsData] = useState<any>()
   const [selectedBuyerId, setSelectedBuyerId] = useState(null)
   const [m3StleCode, setM3StleCode] = useState<any[]>([])
-  const [fabSubType, setFabSubType]=useState<any[]>([])
+  const [fabSubType, setFabSubType] = useState<any[]>([])
   const [sizeData, setSizeData] = useState([]);
   const [processData, setProcessData] = useState([]);
   const [fabricsData, setFabricsData] = useState([]);
   const [trimsData, setTrimsData] = useState([]);
   const [data, setData] = useState<any>();
-  const [fabricM3Code,setFabricM3Code] = useState<any[]>([])
-  const [qualities,setQualities] = useState<any[]>([])
-  const [styleAginstPch,setStyleAginstPch] = useState<any[]>([])
+  const [fabricM3Code, setFabricM3Code] = useState<any[]>([])
+  const [qualities, setQualities] = useState<any[]>([])
+  const [styleAginstPch, setStyleAginstPch] = useState<any[]>([])
   const [productData, setProductData] = useState<any[]>([])
+
+  const [imageUrl, setImageUrl] = useState('');
+  const [imageName, setImageName] = useState('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [modal, setModal] = useState('')
+  const [styleImage, setStyleImage] = useState("");
+
   const [sizeForm] = Form.useForm();
   const [fabricForm] = Form.useForm();
   const [trimForm] = Form.useForm();
+  const [processForm] = Form.useForm();
+
+  const [locationDropDown, setLocationsDropDown] = useState<any>([]);
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
+
   const pchService = new ProfitControlHeadService();
   const styleService = new StyleService();
   const brandService = new MasterBrandsService();
@@ -74,24 +81,19 @@ export const SampleDevForm = () => {
   const m3ItemsService = new M3ItemsService()
   const qualityService = new QualityService()
   const productService = new ProductService()
-
+  const locationsService = new MasterLocationsService()
   const navigate = useNavigate();
-  const { IAMClientAuthContext, dispatch } = useIAMClientState();
-  const [imageUrl, setImageUrl] = useState('');
-  const [imageName, setImageName] = useState('');
-  const [loading, setLoading] = useState<boolean>(false);
-  const [modal, setModal] = useState('')
-  const [styleImage, setStyleImage] = useState("");
 
 
   useEffect(() => {
     console.log(sizeForm.getFieldsValue())
-  },[sizeData])
+  }, [sizeData])
 
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
     const loginUser = userData?.user?.userName
-    form.setFieldsValue({"user":loginUser})
+    form.setFieldsValue({ "user": loginUser })
+    getAllLocations()
     getLocations();
     getPCHData();
     getBuyers();
@@ -108,20 +110,29 @@ export const SampleDevForm = () => {
     getQualities();
     getAllProducts()
   }, []);
+  const getAllLocations = () => {
+    locationsService.getAllActivelocations().then((res) => {
+      
+      if (res.status) {
+        console.log(res);
+        setLocationsDropDown(res.data);
+      }
+    });
+  };
 
   const getM3FabricStyleCodes = () => {
     m3ItemsService.getM3Items().then(res => {
-        if(res.status){
-            setFabricM3Code(res.data)
-        }
+      if (res.status) {
+        setFabricM3Code(res.data)
+      }
     })
-}
+  }
 
-const getBase64 = (img, callback) => {
-  const reader = new FileReader();
-  reader.addEventListener('load', () => callback(reader.result));
-  reader.readAsDataURL(img);
-}
+  const getBase64 = (img, callback) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => callback(reader.result));
+    reader.readAsDataURL(img);
+  }
 
   // const handlePreview = async (file) => {
   //   if (!file.url && !file.preview) {
@@ -133,7 +144,7 @@ const getBase64 = (img, callback) => {
   //   setPreviewTitle(file.name || "Image");
   // };
 
-  const fabricTypeOnchange =(value) =>{
+  const fabricTypeOnchange = (value) => {
     getFabricSubType(value)
   }
 
@@ -142,25 +153,25 @@ const getBase64 = (img, callback) => {
     setFileList(fileList);
   };
 
-  const getAllProducts = () =>{
-    productService.getAllActiveProducts().then((res)=>{
-      if(res.status){
+  const getAllProducts = () => {
+    productService.getAllActiveProducts().then((res) => {
+      if (res.status) {
         setProductData(res.data)
       }
     })
   }
 
-  const getM3StyleCode = () =>{
-    sampleService.getM3StyleCode().then(res =>{
-      if(res.status){
+  const getM3StyleCode = () => {
+    sampleService.getM3StyleCode().then(res => {
+      if (res.status) {
         setM3StleCode(res.data)
       }
     })
   }
 
-  const getFabricSubType = (value) =>{
-    fabSubTypeService.getFabricSubTypeAginstType({fabricTypeId:value}).then(res =>{
-      if(res.status){
+  const getFabricSubType = (value) => {
+    fabSubTypeService.getFabricSubTypeAginstType({ fabricTypeId: value }).then(res => {
+      if (res.status) {
         setFabSubType(res.data)
       }
     })
@@ -187,7 +198,7 @@ const getBase64 = (img, callback) => {
       if (res.status) {
         setPch(res.data);
       }
-      else{
+      else {
         setPch([]);
       }
     });
@@ -195,13 +206,13 @@ const getBase64 = (img, callback) => {
 
   const getBuyers = () => {
     const req = new BuyerRefNoRequest()
-    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null 
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
     buyerService.getAllActiveBuyers(req).then((res) => {
       if (res.status) {
         setBuyer(res.data);
-        if(req.buyerRefNo != null){
-          form.setFieldsValue({buyerId: res.data[0]?.buyerId})
-           buyerOnchange(res.data[0]?.buyerId,res.data[0]?.buyerName)
+        if (req.buyerRefNo != null) {
+          form.setFieldsValue({ buyerId: res.data[0]?.buyerId })
+          buyerOnchange(res.data[0]?.buyerId, res.data[0]?.buyerName)
         }
 
       }
@@ -226,49 +237,49 @@ const getBase64 = (img, callback) => {
   };
 
   const getStyles = (buyer) => {
-    styleService.getAllStyle({buyerId:buyer}).then((res) => {
+    styleService.getAllStyle({ buyerId: buyer }).then((res) => {
       if (res.status) {
         setStyles(res.data);
       }
     });
   };
 
-  const getstyleaginstpch=(value)=>{
-    console.log(value,'.,,,,,,,,,,,,,,,,,,,,')
+  const getstyleaginstpch = (value) => {
+    console.log(value, '.,,,,,,,,,,,,,,,,,,,,')
     const req = new StyleIdReq(value)
-    console.log(req,'===================')
-    styleService.getstyleaginstpch(req).then((res)=>{
+    console.log(req, '===================')
+    styleService.getstyleaginstpch(req).then((res) => {
       if (res.status) {
-        form.setFieldValue('pchId',res.data?.pchId)
-      }
+        form.setFieldValue('pchId', res.data?.pchId)
+        form.setFieldValue('description', res.data?.description)      }
     })
   }
-  const styleOnChange=(value,option)=>{
+  const styleOnChange = (value, option) => {
     console.log(option);
     getstyleaginstpch(value)
     getStyleImage(option?.name)
   }
-  const getStyleImage=(value)=>{
+  const getStyleImage = (value) => {
     console.log(value);
-    const imagePath = config.file_upload_path+value;
+    const imagePath = config.file_upload_path + value;
     setStyleImage(imagePath)
   }
 
   // console.log(styleImage,'----')
 
-  const onStyleView =() =>{
+  const onStyleView = () => {
     setModal('styleImage')
     setPreviewVisible(true)
   }
 
-  const renderStyle =()=>{
-    return(<EyeOutlined onClick={onStyleView}/>)
+  const renderStyle = () => {
+    return (<EyeOutlined onClick={onStyleView} />)
     // return(<Button icon={<EyeOutlined />} onClick={onStyleView}></Button>)
   }
 
   const getBrands = () => {
     brandService.getAllBrands().then((res) => {
-      if (res.status) { 
+      if (res.status) {
         setBrands(res.data);
       }
     });
@@ -307,7 +318,7 @@ const getBase64 = (img, callback) => {
     });
   };
 
-  const getQualities = () =>{
+  const getQualities = () => {
     qualityService.getQuality().then((res) => {
       if (res.status) {
         setQualities(res.data);
@@ -319,7 +330,7 @@ const getBase64 = (img, callback) => {
   };
 
 
-  const onFinish = (val) =>{
+  const onFinish = (val) => {
     sizeForm.validateFields().then(size => {
       fabricForm.validateFields().then(fab => {
         console.log(fab)
@@ -337,103 +348,130 @@ const getBase64 = (img, callback) => {
         //   }
         // }
         trimForm.validateFields().then(trim => {
-          console.log(data);
-          if(data != undefined){
-            // console.log('hoii')
-            // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
-            if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined){
+          processForm.validateFields().then(process => {
+            console.log(sizeForm.getFieldsValue())
+            const sizedata = sizeForm.getFieldsValue()
+            console.log(fabricForm.getFieldsValue())
+            const fabData = fabricForm.getFieldsValue()
+            const colorIdKeys = Object.keys(sizedata)
+                  .filter(key => key.includes('colorId'));
+                  
+            console.log(colorIdKeys)
+            const uniqueColorIds = [...new Set(colorIdKeys.map(key => sizedata[key]))];
+            console.log(uniqueColorIds);
 
-              // console.log('TTTTT')
-              const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,val.productId,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType)
-              // console.log(req.sizeData)
-              console.log(req)
-              console.log(data.fabricsData)
-              console.log(data.trimsData)
+            const fabColorIdKeys = Object.keys(fabData)
+                  .filter(key => key.includes('colorId'));
+                  
+            console.log(fabColorIdKeys)
+            const fabuniqueColorIds = [...new Set(fabColorIdKeys.map(key => fabData[key]))];
+            console.log(fabuniqueColorIds);
 
+            const difference = uniqueColorIds.filter(value => !fabuniqueColorIds.includes(value));
 
+            console.log(difference);
+            console.log(difference.length);
 
-            
-                sampleService.createSampleDevelopmentRequest(req).then((res) => {
-                  if (res.status) {
-                    console.log(fileList);
-                    message.success(res.internalMessage, 2);
-                    if (fileList?.length > 0) {    
-                      const formData = new FormData();
-                      const files = fileList;
-                      console.log(files);
-                      if (files) {
-                        formData.append('reqNo', `${res.data[0].requestNo}`);
-                        formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
-                        for (let i = 0; i < files.length; i++) {
-                        console.log(files[i])
-                        // files[i]["reqNo"] = `${res.data[0].requestNo}`
-                          formData.append('file', files[i]);
+            console.log(data);
+            if(difference.length === 0){
+              if(data != undefined){
+                // console.log('hoii')
+                // if(data.sizeData != undefined && data.trimsData != undefined  && data.processData != undefined && data.trimsData != undefined){
+                if(data.sizeData != undefined && data.trimsData != undefined && data.trimsData != undefined && data.processData != undefined){
+
+                  console.log('TTTTT')
+                  const req = new SampleDevelopmentRequest(val.sampleRequestId,val.locationId,val.requestNo,(val.expectedCloseDate).format("YYYY-MM-DD"),val.pchId,val.user,val.buyerId,val.sampleSubTypeId,val.sampleSubTypeId,val.styleId,val.description,val.brandId,val.costRef,val.m3Style,val.contact,val.extension,val.sam,val.dmmId,val.technicianId,val.productId,val.type,val.conversion,val.madeIn,val.remarks,data.sizeData,data.fabricsData,data.trimsData,data.processData,undefined,undefined,undefined,val.category,val.subType,val.locationsId,val.patternId)
+                  // console.log(req.sizeData)
+                  console.log(req)
+                  console.log(data.fabricsData)
+                  console.log(data.trimsData)
+
+                    sampleService.createSampleDevelopmentRequest(req).then((res) => {
+                      if (res.status) {
+                        console.log(fileList);
+                        message.success(res.internalMessage, 2);
+                        if (fileList?.length > 0) {    
+                          const formData = new FormData();
+                          const files = fileList;
+                          console.log(files);
+                          if (files) {
+                            formData.append('reqNo', `${res.data[0].requestNo}`);
+                            formData.append('SampleRequestId', `${res.data[0].SampleRequestId}`);
+                            for (let i = 0; i < files.length; i++) {
+                            console.log(files[i])
+                            // files[i]["reqNo"] = `${res.data[0].requestNo}`
+                              formData.append('file', files[i]);
+                            }
+                          }
+                          console.log(formData)
+                          // fileList?.forEach((file) => {
+                          //   // console.log(file.originFileObj)
+                          //   formData.append('file', file.originFileObj);
+                          // });
+                          
+                          console.log(res.data[0].SampleRequestId)
+                          // console.log(formData);
+                          sampleService.fileUpload(formData).then((file) => {
+                            // console.log(file.data)
+                            res.data[0].filepath = file.data;
+                          });
                         }
+                        if(data.fabricsData.find((res) => res.fabricUpload != undefined) != undefined){
+                          console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                          const formData = new FormData();
+                          formData.append('reqNo', `${res.data[0].requestNo}`);
+                          formData.append('fabIds', JSON.stringify(res.data[0].sampleReqFabricInfo));
+                          for (let i = 0; i < data.fabricsData.length; i++) {
+                              formData.append('file', data.fabricsData[i].fabricUpload);
+                            }
+                            sampleService.fabricUpload(formData).then((file) => {
+                              res.data[0].filepath = file.data;
+                            });
+                        }
+
+                        if(data.trimsData.find((res) => res.trimUpload != undefined) != undefined){
+                          console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
+                          const formData = new FormData();
+                          formData.append('reqNo', `${res.data[0].requestNo}`);
+                          formData.append('fabIds', JSON.stringify(res.data[0].sampleTrimInfo));
+                          for (let i = 0; i < data.trimsData.length; i++) {
+                              formData.append('file', data.trimsData[i].trimUpload);
+                            }
+                            sampleService.trimUpload(formData).then((file) => {
+                              res.data[0].filepath = file.data;
+                            });
+                        }
+
+                        navigate("/sample-development/sample-requests")
+                      } else {
+                        message.success(res.internalMessage, 2);
                       }
-                      console.log(formData)
-                      // fileList?.forEach((file) => {
-                      //   // console.log(file.originFileObj)
-                      //   formData.append('file', file.originFileObj);
-                      // });
-                      
-                      console.log(res.data[0].SampleRequestId)
-                      // console.log(formData);
-                      sampleService.fileUpload(formData).then((file) => {
-                        // console.log(file.data)
-                        res.data[0].filepath = file.data;
-                      });
-                    }
-                    if(data.fabricsData.find((res) => res.fabricUpload != undefined) != undefined){
-                      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-                      const formData = new FormData();
-                      formData.append('reqNo', `${res.data[0].requestNo}`);
-                      formData.append('fabIds', JSON.stringify(res.data[0].sampleReqFabricInfo));
-                      for (let i = 0; i < data.fabricsData.length; i++) {
-                          formData.append('file', data.fabricsData[i].fabricUpload);
-                        }
-                        sampleService.fabricUpload(formData).then((file) => {
-                          res.data[0].filepath = file.data;
-                        });
-                    }
-
-                    if(data.trimsData.find((res) => res.trimUpload != undefined) != undefined){
-                      console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&")
-                      const formData = new FormData();
-                      formData.append('reqNo', `${res.data[0].requestNo}`);
-                      formData.append('fabIds', JSON.stringify(res.data[0].sampleTrimInfo));
-                      for (let i = 0; i < data.trimsData.length; i++) {
-                          formData.append('file', data.trimsData[i].trimUpload);
-                        }
-                        sampleService.trimUpload(formData).then((file) => {
-                          res.data[0].filepath = file.data;
-                        });
-                    }
-
-                    navigate("/sample-development/sample-requests")
-                  } else {
-                    message.success(res.internalMessage, 2);
-                  }
-                });
-                console.log(req.sizeData);
-            }else{
-              // console.log('ddddddd')
-              message.error('Please Fill The Size,Fabric, Trim And process Details')
+                    });
+                    console.log(req.sizeData);
+                }else{
+                  // console.log('ddddddd')
+                  message.error('Please Fill The Size,Fabric, Trim And process Details')
+                }
+                
+              }else{
+                // console.log('********')
+                message.error('Please Fill The Below Details')
+              }
             }
-            
-          }else{
-            // console.log('********')
-            message.error('Please Fill The Below Details')
-          }
-        }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0])   });
+            else{
+              AlertMessages.getErrorMessage("please add fabric for all colors.")
+            }
+          }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0]) });
+        }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0]) });
       }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0]) });
-    }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0])  });
+    }).catch((err) => { AlertMessages.getErrorMessage(err.errorFields[0].errors[0]) });
   }
 
   const handleSubmit = (data) => {
     setTabsData(data)
   }
-  const buyerOnchange =(value,option) =>{
-     form.setFieldsValue({buyerName:option})
+  const buyerOnchange = (value, option) => {
+    form.setFieldsValue({ buyerName: option })
 
     setSelectedBuyerId(value)
     getStyles(value);
@@ -443,30 +481,30 @@ const getBase64 = (img, callback) => {
     console.log(data);
     setSizeData(data)
   }
-    const handleSizeDataUpdate = (updatedData) => {
-     
-      console.log(updatedData)
-      // var valueArr = updatedData.map(function(item){ return item.colour });
-      // console.log(valueArr)
-      // var isDuplicate = valueArr.some(function(item, idx){ 
-      //   console.log(item);
-      //   console.log(idx);
-      //   return valueArr.indexOf(item) != idx 
-      // });
-      // console.log(isDuplicate)
-      // if(!isDuplicate){
-        console.log(sizeForm.getFieldsValue());
-        setData((prevData) => ({ ...prevData, sizeData: updatedData }));
-        setSizeData(updatedData);
-      // }
-      // else{
-      //   AlertMessages.getErrorMessage("Duplicate color is not allowed. ")
-      // }
+  const handleSizeDataUpdate = (updatedData) => {
+
+    console.log(updatedData)
+    // var valueArr = updatedData.map(function(item){ return item.colour });
+    // console.log(valueArr)
+    // var isDuplicate = valueArr.some(function(item, idx){ 
+    //   console.log(item);
+    //   console.log(idx);
+    //   return valueArr.indexOf(item) != idx 
+    // });
+    // console.log(isDuplicate)
+    // if(!isDuplicate){
+    console.log(sizeForm.getFieldsValue());
+    setData((prevData) => ({ ...prevData, sizeData: updatedData }));
+    setSizeData(updatedData);
+    // }
+    // else{
+    //   AlertMessages.getErrorMessage("Duplicate color is not allowed. ")
+    // }
   };
 
   const handleProcessDataUpdate = (updatedData) => {
-      setData((prevData) => ({ ...prevData, processData: updatedData }));
-      setProcessData(updatedData);
+    setData((prevData) => ({ ...prevData, processData: updatedData }));
+    setProcessData(updatedData);
   };
 
   // const uploadFabricProps: UploadProps = {
@@ -511,15 +549,9 @@ const getBase64 = (img, callback) => {
     // alert();
     multiple: true,
     onRemove: file => {
-      console.log(file);
-      console.log(fileList);
-      console.log(fileList.splice(0,1));
-      const index = (fileList || []).findIndex((f) => f.uid === file.uid);
-      if (index !== -1) {
-        fileList[index] = undefined;
-      }
-      console.log(fileList);
-      setFileList(fileList);
+      setFileList(prev => {
+        return prev.filter(rec => rec.uid !== file.uid)
+      });
       setImageUrl('');
       renderButtons()
     },
@@ -528,20 +560,12 @@ const getBase64 = (img, callback) => {
         AlertMessages.getErrorMessage("Only PDF,pdf,xlsx,xls,png,jpeg,jpg files are allowed!");
         return true;
       }
-      console.log(file);
-      // var reader = new FileReader();
-      // reader.readAsArrayBuffer(file);
-      // reader.onload = data => {
-        // if (fileList.length == 1) {
-        //   AlertMessages.getErrorMessage("You Cannot Upload More Than One File At A Time");
-        //   return true;
-        // } else {
-            setFileList([...fileList,file]);
-            renderButtons()
-          
-          return false;
-        // }
-      // }
+
+      setFileList((prev) => {
+        return [...prev, file];
+      });
+      renderButtons()
+      return false;
     },
     progress: {
       strokeColor: {
@@ -551,9 +575,9 @@ const getBase64 = (img, callback) => {
       strokeWidth: 3,
       format: percent => `${parseFloat(percent.toFixed(2))}%`,
     },
-    // fileList: fileList.length > 0?fileList:[],
+    fileList: fileList,
   };
-  
+
   const handleFabricsDataUpdate = (updatedData) => {
     setData((prevData) => ({ ...prevData, fabricsData: updatedData }));
     setFabricsData(updatedData);
@@ -561,55 +585,55 @@ const getBase64 = (img, callback) => {
 
   const handleTrimsDataUpdate = (updatedData) => {
     console.log(updatedData)
-      setData((prevData) => ({ ...prevData, trimsData: updatedData }));
-      setTrimsData(updatedData);
+    setData((prevData) => ({ ...prevData, trimsData: updatedData }));
+    setTrimsData(updatedData);
   };
   const disabledDate = (current) => {
     // console.log(current.valueOf(), 'current');
-     return current.valueOf() < Date.now();
- };
+    return current.valueOf() < Date.now();
+  };
 
- const onFabriView =(res) =>{
-  setModal('fileUpload')
-  setPreviewVisible(true)
-  setImageName(res.name)
-  getBase64(res, imageUrl =>
-    setImageUrl(imageUrl)
-  );
-  
-}
-const renderButtons = (): ReactNode => {
-  const buttons: ReactNode[] = [];
-  console.log(fileList)
-  console.log(fileList.filter((f)=>f != undefined))
-  if(fileList != undefined){
-    (fileList.filter((f)=>f != undefined))?.forEach(res => {
-      console.log(res)
-      if(res.type !="application/xls" && res.type !="application/PDF" && res.type !="application/pdf" && res.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && res.type != "application/xlsx" && res != undefined){
-        buttons.push(
+  const onFabriView = (res) => {
+    setModal('fileUpload')
+    setPreviewVisible(true)
+    setImageName(res.name)
+    getBase64(res, imageUrl =>
+      setImageUrl(imageUrl)
+    );
+
+  }
+  const renderButtons = (): ReactNode => {
+    const buttons: ReactNode[] = [];
+    console.log(fileList)
+    console.log(fileList.filter((f) => f != undefined))
+    if (fileList != undefined) {
+      (fileList.filter((f) => f != undefined))?.forEach(res => {
+        console.log(res)
+        if (res.type != "application/xls" && res.type != "application/PDF" && res.type != "application/pdf" && res.type != "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" && res.type != "application/xlsx" && res != undefined && res.type != "application/vnd.ms-excel") {
+          buttons.push(
             <Tooltip title={`${res.name} preview`}>
               <Button key={res.uid} id={res.uid} icon={<EyeOutlined />} onClick={() => onFabriView(res)}></Button>
             </Tooltip>
-        );
-      }
-      else{
-        console.log("else")
-      }
-    });
-  }
-  return buttons;
-};
+          );
+        }
+        else {
+          console.log("else")
+        }
+      });
+    }
+    return buttons;
+  };
 
 
   return (
-    <Card title='Sample Development Request' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}  
-    extra={ JSON.parse(localStorage.getItem('currentUser'))?.user.roles != "samplinguser" ?
-      <Link to="/sample-development/sample-requests">
-        <span style={{ color: "white" }}>
-          <Button type={"primary"}>View </Button>{" "}
-        </span>
-      </Link>:""
-    }
+    <Card title='Sample Development Request' headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
+      extra={JSON.parse(localStorage.getItem('currentUser'))?.user.roles != "samplinguser" ?
+        <Link to="/sample-development/sample-requests">
+          <span style={{ color: "white" }}>
+            <Button type={"primary"}>View </Button>{" "}
+          </span>
+        </Link> : ""
+      }
     >
       <Form layout="vertical" form={form} onFinish={onFinish}>
         <Form.Item name="sampleRequestId" style={{ display: "none" }}>
@@ -619,14 +643,14 @@ const renderButtons = (): ReactNode => {
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
               name="locationId"
-              label="Location"
-              rules={[{ required: true, message: "Location is required" }]}
+              label="Warehouse"
+              rules={[{ required: true, message: "Warehouse is required" }]}
             >
               <Select
                 allowClear
                 showSearch
                 optionFilterProp="children"
-                placeholder="Select Location"
+                placeholder="Select Warehouse"
               >
                 <Option key={340} value={340}>{'340'}</Option>
                 {/* {locations.map((e) => {
@@ -662,18 +686,18 @@ const renderButtons = (): ReactNode => {
               </Select>
             </Form.Item>
           </Col>
-          <Col xs={{ span: 24 }}sm={{ span: 24 }}md={{ span: 8 }}lg={{ span: 8 }}xl={{ span: 4 }} style={{display:'none'}}>
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} style={{ display: 'none' }}>
             <Form.Item
               name="requestNo"
               label="Request No"
-              // rules={[
-              //   {
-              //    required:true
+            // rules={[
+            //   {
+            //    required:true
 
-              //   },
-              // ]}
+            //   },
+            // ]}
             >
-              <Input disabled/>
+              <Input disabled />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
@@ -729,7 +753,7 @@ const renderButtons = (): ReactNode => {
               label="User"
               rules={[
                 {
-                  required:true,
+                  required: true,
                   pattern: /^[0-9a-zA-Z]*$/,
                   message: `User Name is Required`,
                 },
@@ -738,7 +762,7 @@ const renderButtons = (): ReactNode => {
               <Input placeholder="Enter User" />
             </Form.Item>
           </Col>
-          
+
           {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="sampleTypeId"
@@ -789,7 +813,7 @@ const renderButtons = (): ReactNode => {
               </Select>
             </Form.Item>
           </Col> */}
-         
+
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="brandId"
@@ -813,62 +837,62 @@ const renderButtons = (): ReactNode => {
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
-                    <Form.Item name='expectedCloseDate' label='Expected Close Date' rules={[{required:true,message:'Expected Close Date is required'}]}>
-                    <DatePicker style={{ width: '93%', marginLeft: 5 }}  disabledDate={disabledDate}/>
-                    </Form.Item>
-              </Col>
-          
-          
-          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} hidden> */}
-            <Form.Item
-              name="costRef"
-              label="Cost Ref"
-              rules={[
-                {
-                  pattern: /^[0-9]*$/,
-                  message: `Only numbers are accepted`,
-                },
-              ]} hidden
-            >
-              <Input placeholder="Enter Cost Ref" />
+            <Form.Item name='expectedCloseDate' label='Expected Close Date' rules={[{ required: true, message: 'Expected Close Date is required' }]}>
+              <DatePicker style={{ width: '93%', marginLeft: 5 }} disabledDate={disabledDate} />
             </Form.Item>
+          </Col>
+
+
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} hidden> */}
+          <Form.Item
+            name="costRef"
+            label="Cost Ref"
+            rules={[
+              {
+                pattern: /^[0-9]*$/,
+                message: `Only numbers are accepted`,
+              },
+            ]} hidden
+          >
+            <Input placeholder="Enter Cost Ref" />
+          </Form.Item>
           {/* </Col> */}
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }} >
             <Form.Item
               name="description"
               label="Description"
-              // rules={[
-              //   {
-              //     required: false,
-              //   },
-              //   {
-              //     pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
-              //     message: `Don't Allow Spaces`,
-              //   },
-              // ]}
+            // rules={[
+            //   {
+            //     required: false,
+            //   },
+            //   {
+            //     pattern: /^[^-\s][a-zA-Z0-9_\s-]*$/,
+            //     message: `Don't Allow Spaces`,
+            //   },
+            // ]}
             >
-              <TextArea rows={2} placeholder="Enter Description" />
+              <TextArea rows={2} placeholder="Enter Description" disabled />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}
           >
             <Form.Item name="image" label='Upload Tech Pack' >
               <Upload
-                style={{ width: '100%' }} 
-                  {...uploadFabricProps}
-                  accept=".PDF,.pdf, .xlsx, .xls, .png, .jpeg, .jpg, .pjpeg, .gif, .tiff, .x-tiff, .x-png"
-                  >
-                  <Button
-                      style={{ color: 'black', backgroundColor: '#7ec1ff' }}
-                      icon={<UploadOutlined />}
-                      // disabled={fileList.length == 1? true:false}
-                  >
-                      Upload
-                  </Button>
+                style={{ width: '100%' }}
+                {...uploadFabricProps}
+                accept=".PDF,.pdf, .xlsx, .xls, .png, .jpeg, .jpg, .pjpeg, .gif, .tiff, .x-tiff, .x-png"
+              >
+                <Button
+                  style={{ color: 'black', backgroundColor: '#7ec1ff' }}
+                  icon={<UploadOutlined />}
+                // disabled={fileList.length == 1? true:false}
+                >
+                  Upload
+                </Button>
               </Upload>
-          </Form.Item>
+            </Form.Item>
           </Col>
-          <Col span={4} style={{paddingTop:"25px"}}>
+          <Col span={4} style={{ paddingTop: "25px" }}>
             {renderButtons()}
           </Col>
 
@@ -880,14 +904,14 @@ const renderButtons = (): ReactNode => {
                     src={styleImage}
                     alt="Preview"
                     width={'500px'}
-                    style={{ width: '100%', objectFit: 'contain', height:'100%' }}
+                    style={{ width: '100%', objectFit: 'contain', height: '100%' }}
                   />
                 </Form.Item>
               </Card>
             )}
           </Col>
-          
-              {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
+
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }}>
                     <Form.Item name='quality' label='Quality' >
                     <Select
                 allowClear
@@ -913,15 +937,15 @@ const renderButtons = (): ReactNode => {
               rules={[
                 {
                   required: true,
-                  message:'MobileNumber Is Required'
+                  message: 'MobileNumber Is Required'
                 },
                 {
-                  pattern: /^[0-9]{10}$/, 
-                  message:'Invalid phone number'
+                  pattern: /^[0-9]{10}$/,
+                  message: 'Invalid phone number'
                 },
               ]}
             >
-              <Input placeholder="Enter Contact"/>
+              <Input placeholder="Enter Contact" />
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
@@ -944,7 +968,7 @@ const renderButtons = (): ReactNode => {
               label="SAM"
               rules={[
                 {
-                  required:false,
+                  required: false,
                 },
               ]}
             >
@@ -973,31 +997,31 @@ const renderButtons = (): ReactNode => {
               </Select>
             </Form.Item>
           </Col>
-            <Form.Item
-              name="technicianId"
-              label="Technician"
-              rules={[{ required: false, message: "Please Select Technician" }]} hidden
+          <Form.Item
+            name="technicianId"
+            label="Technician"
+            rules={[{ required: false, message: "Please Select Technician" }]} hidden
+          >
+            <Select
+              allowClear
+              showSearch
+              optionFilterProp="children"
+              placeholder="Select Technician"
             >
-              <Select
-                allowClear
-                showSearch
-                optionFilterProp="children"
-                placeholder="Select Technician"
-              >
-                {technicians.map((e) => {
-                  return (
-                    <Option key={e.employeeId} value={e.employeeId}>
-                      {`${e.employeeCode} - ${e.lastName}  ${e.firstName}`}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </Form.Item>
+              {technicians.map((e) => {
+                return (
+                  <Option key={e.employeeId} value={e.employeeId}>
+                    {`${e.employeeCode} - ${e.lastName}  ${e.firstName}`}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
           <Col span={4} >
             <Form.Item
               name="productId"
               label="Product"
-              // rules={[{ required: true, message: "Please Select Product" }]}
+            rules={[{ required: true, message: "Please Select Product"}]}
             >
               <Select
                 allowClear
@@ -1061,7 +1085,7 @@ const renderButtons = (): ReactNode => {
             </Form.Item>
           </Col>
           <Col span={4} >
-          <Form.Item
+            <Form.Item
               name="subType"
               label="Type"
               rules={[{ required: false, message: "Type is required" }]}
@@ -1104,68 +1128,108 @@ const renderButtons = (): ReactNode => {
               </Select>
             </Form.Item>
           </Col>
-          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
+          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
             <Form.Item
-              name="conversion"
-              label="Conversion"
-              rules={[{ required: false, message: "" }]} hidden
-            >
-              <Input placeholder="Enter Conversion" />
-            </Form.Item>
-          {/* </Col> */}
-          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
-            <Form.Item
-              name="madeIn"
-              label="Made In"
-              rules={[{ required: false, message: "" }]} hidden
+              name="locationsId"
+              label="Location"
+              // dependencies={['styleId']}
+              rules={[{ required: true, message: "Location is required" }]}
             >
               <Select
                 allowClear
                 showSearch
                 optionFilterProp="children"
-                placeholder="Select Made In"
+                placeholder="Select Location"
+                // disabled
               >
-                {country.map((e) => {
+                {locationDropDown?.map((e) => {
                   return (
-                    <Option key={e.countryId} value={e.countryId}>
-                      {e.countryName}
+                    <Option key={e.locationId} value={e.locationId}>
+                      {e.locationName}
                     </Option>
                   );
                 })}
               </Select>
             </Form.Item>
+          </Col>
+ <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > 
+<Form.Item
+            name="patternId"
+            label="Pattern"
+            // rules={[{ required: false, message: "" }]} 
+          >
+             <Select
+                allowClear
+                showSearch
+                optionFilterProp="children"
+                placeholder="Select Pattern"
+              >
+                <Option key={1} value={1}>{'pattern'}</Option>
+                </Select>
+                </Form.Item>
+          </Col>
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
+          <Form.Item
+            name="conversion"
+            label="Conversion"
+            rules={[{ required: false, message: "" }]} hidden
+          >
+            <Input placeholder="Enter Conversion" />
+          </Form.Item>
+          {/* </Col> */}
+          {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > */}
+          <Form.Item
+            name="madeIn"
+            label="Made In"
+            rules={[{ required: false, message: "" }]} hidden
+          >
+            <Select
+              allowClear
+              showSearch
+              optionFilterProp="children"
+              placeholder="Select Made In"
+            >
+              {country.map((e) => {
+                return (
+                  <Option key={e.countryId} value={e.countryId}>
+                    {e.countryName}
+                  </Option>
+                );
+              })}
+            </Select>
+          </Form.Item>
           {/* </Col> */}
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 8 }} >
             <Form.Item
               name="remarks"
               label="Remarks"
             >
-            <TextArea rows={2} placeholder="Enter Remarks"/>
+              <TextArea rows={2} placeholder="Enter Remarks" />
             </Form.Item>
           </Col>
         </Row>
         {selectedBuyerId != null ?
-         <Card size='small'>
-         <Tabs type={'card'} tabPosition={'top'}>
-             <TabPane key="1" tab={<span><b>{`Size Detail`}</b></span>}> 
-             <SizeDetail data = {handleSizeDataUpdate} buyerId={selectedBuyerId} form={sizeForm} fabricDetails={fabricsData} updateCal={handleFabCal}/>
+          <Card size='small'>
+            <Tabs type={'card'} tabPosition={'top'}>
+              <TabPane key="1" tab={<span><b>{`Size Detail`}</b></span>}>
+                <SizeDetail data={handleSizeDataUpdate} buyerId={selectedBuyerId} form={sizeForm} fabricDetails={fabricsData} updateCal={handleFabCal} />
+              </TabPane>
+              <TabPane key="2" tab={<span><b>{`Fabric`}</b></span>}>
+                <FabricsForm data={handleFabricsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData} form={fabricForm} />
+              </TabPane>
+              <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
+                <TrimsForm data={handleTrimsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData} form={trimForm} />
+              </TabPane>
+              <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
+                <ProcessForm data={handleProcessDataUpdate} processDetails={processData} form={processForm} sizeDetails={sizeData}/>
              </TabPane>
-             <TabPane key="2" tab={<span><b>{`Fabric`}</b></span>}>
-             <FabricsForm data = {handleFabricsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData} form={fabricForm}/>
-             </TabPane>
-             <TabPane key="3" tab={<span><b>{`Trims`}</b></span>}>
-             <TrimsForm data = {handleTrimsDataUpdate} buyerId={selectedBuyerId} sizeDetails={sizeData} form={trimForm}/>
-             </TabPane>
-             {/* <TabPane key="4" tab={<span><b>{`Process`}</b></span>}>
-             <ProcessForm props={handleProcessDataUpdate}/>
-             </TabPane> */}
-             {/* <TabPane key="5" tab={<span><b>{`Remarks`}</b></span>}>
+              {/* <TabPane key="5" tab={<span><b>{`Remarks`}</b></span>}>
                  
              </TabPane> */}
-         </Tabs>
-     </Card>:''
+            </Tabs>
+          </Card> : ''
 
-        // <SampleDevTabs handleSubmit={handleSubmit} buyerId={selectedBuyerId}/>:''
+          // <SampleDevTabs handleSubmit={handleSubmit} buyerId={selectedBuyerId}/>:''
         }
         <Row>
           <Col span={24} style={{ textAlign: "right" }}>
@@ -1194,20 +1258,20 @@ const renderButtons = (): ReactNode => {
           footer={null}
           onCancel={() => setPreviewVisible(false)}
         >
-          {modal == 'fileUpload' ?<>
+          {modal == 'fileUpload' ? <>
             <Card style={{ height: '250px' }}>
-                                                <Form.Item>
-                                                <img
-                                                    src={imageUrl}
-                                                    alt="Preview"
-                                                    height={'200px'}
-                                                    width={'500px'}
-                                                    style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
-                                                />
-                                                </Form.Item>
-                                            </Card>
-               </>: <img alt="example" style={{ width: "100%" }} src={previewImage} />}
-         
+              <Form.Item>
+                <img
+                  src={imageUrl}
+                  alt="Preview"
+                  height={'200px'}
+                  width={'500px'}
+                  style={{ width: '100%', objectFit: 'contain', marginRight: '100px' }}
+                />
+              </Form.Item>
+            </Card>
+          </> : <img alt="example" style={{ width: "100%" }} src={previewImage} />}
+
         </Modal>
       </Form>
     </Card>

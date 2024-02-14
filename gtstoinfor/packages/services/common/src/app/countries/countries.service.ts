@@ -129,7 +129,7 @@ export class CountriesService {
             //retrieves all companies
             const CountriesEntities: Countries[] = await this.countriesRepository.find({ order: { 'countryName': 'ASC' },where:{isActive:true},
            });
-         console.log(CountriesEntities)
+        //  console.log(CountriesEntities)
             if (CountriesEntities) {
                 // converts the data fetched from the database which of type companies array to type StateDto array.
                 CountriesEntities.forEach(countriesEntity => {

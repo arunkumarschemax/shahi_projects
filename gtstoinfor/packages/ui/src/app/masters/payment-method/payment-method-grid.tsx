@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Checkbox } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -101,7 +101,7 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
     setSelectedVariant(viewData);
   }
   const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
+    // console.log('params', pagination, filters, sorter, extra);
   }
   useEffect(() => {getAllPaymentMethods();}, [])
 
@@ -109,7 +109,7 @@ const getAllPaymentMethods=()=>{
     service.getAllPaymentMethods().then(res=>{
         if(res.status){
             setVariantData(res.data)
-            console.log(res,'dataaaaaaaaaaaaa')
+            // console.log(res,'dataaaaaaaaaaaaa')
         }else{
             AlertMessages.getErrorMessage(res.internalMessage);
         }
@@ -151,15 +151,16 @@ service.createPaymentMethod(variantData).then(res=>{
   }
   const deletePaymentmode = (paymentmethodData:PaymentMethodDto) => {
     paymentmethodData.isActive=paymentmethodData.isActive?false:true;
-    service.activateDeActivatePaymentMethod(paymentmethodData).then(res => { console.log(res);
+    service.activateDeActivatePaymentMethod(paymentmethodData).then(res => { 
+      // console.log(res);
       if (res.status) {
         // getAllPaymentmethod();
-        AlertMessages.getSuccessMessage('Success'); 
+        message.success(res.internalMessage,2); 
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
         // } else {
-          AlertMessages.getErrorMessage(res.internalMessage);
+          message.error(res.internalMessage,2);
         }
       
     }).catch(err => {
@@ -191,23 +192,32 @@ service.createPaymentMethod(variantData).then(res=>{
                 {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
               </>
             ),
-            filters: [
-              {
-                text: 'Active',
-                value: true,
-              },
-              {
-                text: 'InActive',
-                value: false,
-              },
-            ],
-            filterMultiple: false,
-            onFilter: (value, record) => 
-            {
-              // === is not work
-              return record.isActive === value;
-            },
-            
+            onFilter: (value, record) => record.isActive === value,
+            filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
+        <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{color:'green'}}>Active</span>
+          </Checkbox>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{color:'red'}}>Inactive</span>
+          </Checkbox>
+          <div className="custom-filter-dropdown-btns" >
+          <Button  onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{margin:10}} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          
+          </div>
+        </div>
+             ),
           },
     {
         title:`Action`,
@@ -249,12 +259,12 @@ service.createPaymentMethod(variantData).then(res=>{
 
 return (
   <Card title={<span>Payment Method</span>}
-  style={{textAlign:'center'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/global/paymentmethod/paymentmethod-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
+  style={{textAlign:'left'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/global/paymentmethod/paymentmethod-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
   <br></br>
     <>
     <Row gutter={40}>
     <Col>
-          <Card title={'Total PaymentMethods: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
+          <Card title={'Total PaymentMethods: ' + variantData.length} style={{ textAlign: 'left', width: 250, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
         <Col>
           <Card title={'Active: ' + variantData.filter(el => el.isActive).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#52c41a' }}></Card>

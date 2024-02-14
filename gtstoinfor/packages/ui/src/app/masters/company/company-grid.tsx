@@ -1,16 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal } from 'antd';
+import { Divider, Table, Popconfirm, Card,Checkbox
+  // , Tooltip
+  , Form, Switch, Input, Button, Tag, Row, Col, Drawer, Modal } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { ColumnProps } from 'antd/es/table';
+// import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
-import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
-import { Link, useNavigate } from 'react-router-dom';
-import { ProColumns, ProTable } from '@ant-design/pro-components';
+import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined,
+  //  EyeOutlined,
+    EditOutlined, SearchOutlined
+    // , FileTextOutlined 
+  } from '@ant-design/icons';
+import { 
+  // Link,
+   useNavigate } from 'react-router-dom';
+// import { ProColumns, ProTable } from '@ant-design/pro-components';
 import { CompanyDto, DivisionDto } from '@project-management-system/shared-models';
 import { CompanyService, DivisionService } from '@project-management-system/shared-services';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import CompanyForm from './company-form';
-import DivisionForm from './division-form';
+// import DivisionForm from './division-form';
 
 export interface CompanyGridProps { }
 
@@ -149,26 +157,44 @@ let createdUser = ''
     {
       title: 'Status',
       dataIndex: 'isActive',
-      render: (isActive, rowData) => (
+      render: (isActive, rowData) => {
+        // console.log(isActive)
+       return( 
         <>
           {isActive ? <Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag> : <Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
         </>
-      ),
-      filters: [
-        {
-          text: 'Active',
-          value: true,
-        },
-        {
-          text: 'InActive',
-          value: false,
-        },
-      ],
+       )
+       },
       filterMultiple: false,
       onFilter: (value, record) => {
-        // === is not work
-        return record.isActive === value;
+
+        // Check if the record's item_type includes the selected material type
+        return record.isActive === value
       },
+      filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+        <div className="custom-filter-dropdown" style={{ flexDirection: 'row', marginLeft: 10 }}>
+          <Checkbox
+            checked={selectedKeys.includes(true)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(true) ? [] : [true])}
+          >
+            <span style={{ color: 'green' }}>Active</span>
+          </Checkbox><br/>
+          <Checkbox
+            checked={selectedKeys.includes(false)}
+            onChange={() => setSelectedKeys(selectedKeys.includes(false) ? [] : [false])}
+          >
+            <span style={{ color: 'red' }}>IN Active</span>
+          </Checkbox>        
+          <div className="custom-filter-dropdown-btns">
+            <Button onClick={() => clearFilters()} className="custom-reset-button">
+              Reset
+            </Button>
+            <Button type="primary" style={{ margin: 10 }} onClick={() => confirm()} className="custom-ok-button">
+              OK
+            </Button>
+          </div>
+        </div>
+      ),
 
     },
     {
@@ -288,7 +314,7 @@ let createdUser = ''
   const updateCompany = (Data: CompanyDto) => {
     Data.updatedUser = JSON.parse(localStorage.getItem('username'))
     service.updateCompany(Data).then(res => {
-      console.log(res);
+      // console.log(res);
       if (res.status) {
         AlertMessages.getSuccessMessage('Updated Successfully');
         getAllCompany();
@@ -311,7 +337,7 @@ let createdUser = ''
   const deleteVariant = (ViewData: CompanyDto) => {
     ViewData.isActive = ViewData.isActive ? false : true;
     service.ActivatedeActivateCompany(ViewData).then(res => {
-      console.log(res);
+      // console.log(res);
       if (res.status) {
         // getAllCompany();
         AlertMessages.getSuccessMessage('  Company Activated Successfully');
@@ -400,12 +426,40 @@ let createdUser = ''
           </Form.Item>
             </Col>
             <Col span={4}>
-              <Form.Item label="Division Name" name="divisionName">
+              {/* <Form.Item label="Division Name" name="divisionName" rules={[
+                  {
+                    required: true,
+                  
+                    pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z\\0-9\[\]()@#$_\-+/`~{}:";'<>,.?|\s-]*$/,
+                    message: `Invalid Division Name`
+                  }
+                ]}>
                 <Input />
               </Form.Item>
+            </Col> */}
+            <Form.Item
+  label="Division Name"
+  name="divisionName"
+  rules={[
+    {
+      required: true,
+      pattern: /^[^-\s]+$/, 
+      message: 'Invalid Division Name - Spaces not allowed',
+    },
+  ]}
+>
+  <Input />
+</Form.Item>
+
             </Col>
             <Col span={4}>
-              <Form.Item label="Division Code" name="divisionCode">
+              <Form.Item label="Division Code" name="divisionCode"  rules={[
+    {
+      required: true,
+      pattern: /^[^-\s]+$/, 
+      message: 'Invalid Division Code - Spaces not allowed',
+    },
+  ]}>
                 <Input />
               </Form.Item>
             </Col>
@@ -429,7 +483,7 @@ let createdUser = ''
   return (
 
     <>
-    <Card title='Company' extra={<span><Button onClick={() => navigate('/global/company/company-form')} type={'primary'}>New</Button></span>}>
+    <Card title='Company' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/global/company/company-form')} type={'primary'}>New</Button></span>}>
    <Row gutter={40}>
         <Col>
           <Card title={'Total Company: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
