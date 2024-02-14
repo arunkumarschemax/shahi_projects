@@ -185,7 +185,7 @@ const ColineView = () => {
                 title: 'Raised Date',
                 dataIndex: 'created_at',
                 render: (text, record) => {
-                    return (record.created_at ? (moment(record.created_at).format('DD/MM/YYYY HH:mm')) : '-')
+                    return (record.created_at ? (moment.utc(record.created_at).format('DD/MM/YYYY HH:mm')) : '-')
                 },
                
             },
@@ -302,7 +302,7 @@ const ColineView = () => {
             title: 'Raised Date',
             dataIndex: 'created_at',
             render: (text, record) => {
-                return (record.created_at ? (moment(record.created_at).format('DD/MM/YYYY HH:mm')) : '-')
+                return (record.created_at ? (moment.utc(record.created_at).format('DD/MM/YYYY HH:mm')) : '-')
             },
             sorter: (a, b) => a.created_at.localeCompare(b.created_at),
             sortDirections: ["ascend", "descend"],

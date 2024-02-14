@@ -735,6 +735,7 @@ export class RLOrdersService {
                       await inputField.sendKeys(size.price);
                     } else {
                       const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
+                      await this.updateCOLineStatus({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no, itemStatus: ItemStatusEnum.FAILED })
                       return new CommonResponseModel(false, 0, 'NO matching Size found')
                     }
                   }
