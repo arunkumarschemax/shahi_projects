@@ -670,10 +670,12 @@ export class CentricService {
                     await inputField.sendKeys(size.price);
                   } else {
                     const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
+                    await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
                     return new CommonResponseModel(false, 0, 'NO matching Size found')
                   }
                 }
                 const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
+                console.log(inputId,"ppppp")
                 const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
               }
