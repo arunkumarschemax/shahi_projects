@@ -669,7 +669,7 @@ export class CentricService {
                     await inputField.clear();
                     await inputField.sendKeys(size.price);
                   } else {
-                    const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Size found' });
+                    const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
                     return new CommonResponseModel(false, 0, 'NO matching Size found')
                   }
                 }
@@ -690,7 +690,7 @@ export class CentricService {
       if (await this.isAlertPresent(driver)) {
         const alert = await driver.switchTo().alert();
         const alertText = await alert.getText();
-        const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: alertText });
+        const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: alertText ,isActive:false });
     
         await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
 
@@ -722,7 +722,7 @@ export class CentricService {
         } else {
      
 
-          const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed' });
+          const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed',isActive:false });
           await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
 
           // await driver.navigate().refresh();
@@ -735,7 +735,7 @@ export class CentricService {
       
       console.log(error, 'error');
       if (error.name === 'TimeoutError') {
-        const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+        const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found', isActive:false });
         await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
         driver.quit()
         return new CommonResponseModel(false, 0, 'Matching Color not found')
