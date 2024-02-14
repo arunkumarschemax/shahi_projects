@@ -165,6 +165,7 @@ export const PurchaseOrderForm = () => {
         if(fabricData.length){
             poForm.setFieldsValue({totalAmount : fabricData[0]?.subjectiveAmount})
         }
+        console.log(fabricData[0]?.subjectiveAmount,'.,,,,,,,,<<<<>>>>>>>')
     },[fabricData]);
 
     useEffect(()=>{

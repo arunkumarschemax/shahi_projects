@@ -9,6 +9,7 @@ import { CheckCircleOutlined, CloseCircleOutlined, SearchOutlined } from '@ant-d
 import FactoriesForm from './factories-form'
 import { useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words'
+import AlertMessages from '../../common/common-functions/alert-messages'
 
 export default function FactoriesView() {
   const navigate = useNavigate()
@@ -106,21 +107,40 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
     }
 
   }
-
-  async function onSwitchClick(item: any) { 
-    const dto = new FactoryActivateDeactivateDto(item.id, !item.isActive, item.versionFlag, 'admin')
-    factoryService.activateOrDeactivate(dto).then(res => {
-      console.log(res)
+  const onSwitchClick = (item: FactoryActivateDeactivateDto) => {
+    item.isActive = item.isActive ? false : true;
+    factoryService.activateOrDeactivate(item).then(res => {
+      console.log(res);
       if (res.status) {
-        getData();
-        message.success(res.internalMessage);
+        // getAllCurrencys();
+        AlertMessages.getSuccessMessage(res.internalMessage);
       } else {
-        message.error(res.internalMessage);
+        // if (res.intlCode) {
+        //   AlertMessages.getErrorMessage(res.internalMessage);
+        // } else {
+        AlertMessages.getErrorMessage(res.internalMessage);
+        // }
       }
     }).catch(err => {
-      message.error(err.message);
+      AlertMessages.getErrorMessage(err.message);
     })
   }
+  // const delete=(item: any)=>{ 
+  //   console.log(item,'iiiiiiiii');
+    
+  //   const dto = new FactoryActivateDeactivateDto(item.id, !item.isActive, item.versionFlag, 'admin')
+  //   factoryService.activateOrDeactivate(dto).then(res => {
+  //     console.log(res)
+  //     if (res.status) {
+  //       getData();
+  //       message.success(res.internalMessage);
+  //     } else {
+  //       message.error(res.internalMessage);
+  //     }
+  //   }).catch(err => {
+  //     message.error(err.message);
+  //   })
+  // }
 
 
   // const getData = async (params = {}, sort, filter) => {
@@ -272,8 +292,8 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
           <br></br>
           <Card>
     <Table
-    
-       size='small'
+          className="custom-table-wrapper"
+          size='small'
        dataSource={data}
       columns={columns}
       scroll={{x:true,y:500}}

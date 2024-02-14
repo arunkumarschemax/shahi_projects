@@ -321,7 +321,7 @@ export function VendorsView(
           dataIndex:"city",
           title:"City",
           // responsive: ['lg'],
-          sorter: (a, b) => a.deptName.length - b.deptName.length,
+          sorter: (a, b) => a.city.localeCompare(b.city),
           sortDirections: ['descend', 'ascend'],
           // ...getColumnSearchProps('city')
         },
@@ -622,6 +622,7 @@ export function VendorsView(
           <Card>
           <Table
           rowKey={record => record.deptId}
+          className="custom-table-wrapper"
           columns={columnsSkelton}
           dataSource={vendorsData}
           scroll={{x:true,y:500}}

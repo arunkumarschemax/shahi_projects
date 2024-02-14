@@ -2,7 +2,7 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { CommonResponseModel } from "@project-management-system/shared-models";
-import { ShapeService } from "./shape-service";
+import { ShapeService } from "./shape.service";
 import { ShapeDto } from "./shape-dto";
 
 @ApiTags('shape')

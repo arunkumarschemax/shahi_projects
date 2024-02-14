@@ -527,7 +527,7 @@ const onReset = () => {
                 </Row>
 
             </Form>
-            <Table columns={columns} pagination={{pageSize:50}} scroll = {{x:true,y:500}}
+            <Table columns={columns} pagination={{pageSize:50}} scroll = {{x:true,y:500}} className="custom-table-wrapper"
                     dataSource={data} size="small" bordered />
             <Modal
       visible={sizeModalVisible}

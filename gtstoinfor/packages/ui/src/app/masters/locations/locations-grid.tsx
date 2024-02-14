@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, Checkbox, message } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button,Tag,Row, Col, Drawer, Space, Checkbox, message, Alert } from 'antd';
 import {CheckCircleOutlined,CloseCircleOutlined,RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined } from '@ant-design/icons';
 import { ColumnProps, ColumnType } from 'antd/lib/table';
 import Highlighter from 'react-highlight-words';
@@ -279,9 +279,25 @@ export function LocationsGrid(props: LocationsGridProps) {
 
   return (
 <>
-<Card title='Locations' extra={<span><Button onClick={() => navigate('/global/locations/locations-form')} type={'primary'}>New</Button></span>}>
- <br></br>
-      <Row gutter={40}>
+<Card title='Locations' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/global/locations/locations-form')} type={'primary'}>New</Button></span>}>
+ <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+    
+           <Alert type='success' message={'Total Locations: ' + locationData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + locationData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + locationData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+      {/* <Row gutter={40}>
       <Col>
           <Card title={'Total Locations: ' + locationData.length} style={{textAlign: 'left', width: 250, height: 41,backgroundColor:'#bfbfbf'}}></Card>
           </Col>
@@ -292,9 +308,10 @@ export function LocationsGrid(props: LocationsGridProps) {
            <Card title={'In-Active: ' + locationData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 200, height: 41,backgroundColor:'#f5222d'}}></Card>
           </Col>
           </Row> 
-          <br></br>
+          <br></br> */}
           <Table
           size='small'
+          className="custom-table-wrapper"
           rowKey={record => record.Id}
           columns={columnsSkelton}
           dataSource={locationData}

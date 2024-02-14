@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Form, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card, Form, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 // import { useIntl } from 'react-intl';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined, FileTextOutlined } from '@ant-design/icons';
@@ -198,7 +198,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
     {
       title: "Division Name",
       dataIndex: "divisionName",
-      sorter: (a, b) => a.source.localeCompare(b.source),
+      sorter: (a, b) => a.divisionName.localeCompare(b.divisionName),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("divisionName"),
     },
@@ -206,7 +206,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
     {
       title: "Division Code",
       dataIndex: "divisionCode",
-      sorter: (a, b) => a.source.localeCompare(b.source),
+      sorter: (a, b) => a.divisionCode.localeCompare(b.divisionCode),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("divisionCode"),
     },
@@ -245,7 +245,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
               if (rowData.isActive) {
                 openFormWithData(rowData);
               } else {
-                AlertMessages.getErrorMessage('You Cannot Edit Deactivated Company');
+                AlertMessages.getErrorMessage('You Cannot Edit Deactivated Division');
               }
             }}
             style={{ color: '#1890ff', fontSize: '14px' }}
@@ -255,8 +255,8 @@ export const DivisionGrid = (props: DivisionGridProps) => {
           <Popconfirm onConfirm={e => { deleteVariant(rowData); }}
             title={
               rowData.isActive
-                ? 'Are you sure to Deactivate this Company ?'
-                : 'Are you sure to Activate this Company ?'
+                ? 'Are you sure to Deactivate this Division ?'
+                : 'Are you sure to Activate this Division ?'
             }
           >
             <Switch size="default"
@@ -378,7 +378,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
       // console.log(res);
       if (res.status) {
         //  getAllDivision();
-        AlertMessages.getSuccessMessage('Success');
+        AlertMessages.getSuccessMessage(res.internalMessage);
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -440,7 +440,26 @@ export const DivisionGrid = (props: DivisionGridProps) => {
   return (
 
     <>
-      <Row gutter={40}>
+        <Card title='Division' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} >
+
+    <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+    
+           <Alert type='success' message={'Total Divisiond: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+      {/* <Row gutter={40}>
         <Col>
           <Card title={'Total Division: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -450,11 +469,11 @@ export const DivisionGrid = (props: DivisionGridProps) => {
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-        {/* <Col>
+         <Col>
           <span><Button onClick={() => navigate('/masters/company/company-form')}
             type={'primary'}>New</Button></span>
-        </Col> */}
-      </Row><br></br>
+        </Col> 
+      </Row><br></br> */}
       <Card >
         {/* <GetCumulatives cumulativeColumns={cumulativeSkelton} data={variantData}/> */}
         {/* <ProTable
@@ -475,6 +494,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
 
         <Table
           size='small'
+          className="custom-table-wrapper"
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
@@ -498,6 +518,7 @@ export const DivisionGrid = (props: DivisionGridProps) => {
           closeForm={closeDrawer} />
       </Card>
     </Drawer>
+    </Card>
      </>
   );
 }

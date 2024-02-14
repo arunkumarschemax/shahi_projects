@@ -67,6 +67,8 @@ export class FactoriesService {
     }
 
     async activateOrDeactivate(req: FactoryActivateDeactivateDto): Promise<FactoryResponseModel> {
+      console.log(req,'pppppp');
+      
         const factoryExists = await this.factoryRepository.findOne({ where: { id: req.id } })
         if (factoryExists) {
             if (factoryExists.versionFlag != req.versionFlag) {

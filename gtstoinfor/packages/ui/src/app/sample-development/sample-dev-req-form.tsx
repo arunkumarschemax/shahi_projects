@@ -1,6 +1,6 @@
 import { EyeOutlined, UploadOutlined } from "@ant-design/icons";
 import { BuyerRefNoRequest, CategoryEnumDisplay, DepartmentReq, SampleDevelopmentRequest, StyleIdReq, TypeIdReq } from "@project-management-system/shared-models";
-import { BuyersService, CountryService, CurrencyService, EmployeeDetailsService, FabricSubtypeservice, FabricTypeService, LiscenceTypeService, LocationsService, M3ItemsService, MasterBrandsService, MasterLocationsService, ProductService, ProfitControlHeadService, QualityService, SampleDevelopmentService, SampleSubTypesService, SampleTypesService, StyleService } from "@project-management-system/shared-services";
+import { BuyersService, CountryService, CurrencyService, EmployeeDetailsService, FabricSubtypeservice, FabricTypeService, LiscenceTypeService, LocationsService, M3ItemsService, MasterBrandsService, MasterLocationsService, PatternService, ProductService, ProfitControlHeadService, QualityService, SampleDevelopmentService, SampleSubTypesService, SampleTypesService, StyleService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Form, Input, InputNumber, Modal, Row, Select, Tabs, Tooltip, message } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import Upload, { UploadProps } from "antd/es/upload";
@@ -55,6 +55,7 @@ export const SampleDevForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [modal, setModal] = useState('')
   const [styleImage, setStyleImage] = useState("");
+  const [ patternData, setPatternData] = useState<any[]>([])
 
   const [sizeForm] = Form.useForm();
   const [fabricForm] = Form.useForm();
@@ -82,6 +83,7 @@ export const SampleDevForm = () => {
   const qualityService = new QualityService()
   const productService = new ProductService()
   const locationsService = new MasterLocationsService()
+  const patternService = new PatternService() 
   const navigate = useNavigate();
 
 
@@ -109,6 +111,7 @@ export const SampleDevForm = () => {
     getM3FabricStyleCodes()
     getQualities();
     getAllProducts()
+    getPattern()
   }, []);
   const getAllLocations = () => {
     locationsService.getAllActivelocations().then((res) => {
@@ -244,6 +247,14 @@ export const SampleDevForm = () => {
     });
   };
 
+  const getPattern = ()=>{
+    patternService.getAllActivePatterns().then((res)=>{
+      if(res.status){
+        setPatternData(res.data)
+      }
+    })
+  }
+
   const getstyleaginstpch = (value) => {
     console.log(value, '.,,,,,,,,,,,,,,,,,,,,')
     const req = new StyleIdReq(value)
@@ -261,7 +272,7 @@ export const SampleDevForm = () => {
   }
   const getStyleImage = (value) => {
     console.log(value);
-    const imagePath = config.file_upload_path + value;
+    const imagePath = config.file_upload_path +'/'+ value;
     setStyleImage(imagePath)
   }
 
@@ -1164,7 +1175,13 @@ export const SampleDevForm = () => {
                 optionFilterProp="children"
                 placeholder="Select Pattern"
               >
-                <Option key={1} value={1}>{'pattern'}</Option>
+                {patternData?.map((e) => {
+                  return (
+                    <Option key={e.patternId} value={e.patternId}>
+                      {e.patternName}
+                    </Option>
+                  );
+                })}
                 </Select>
                 </Form.Item>
           </Col>
