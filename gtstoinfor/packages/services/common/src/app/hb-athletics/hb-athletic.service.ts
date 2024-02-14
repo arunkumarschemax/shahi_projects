@@ -487,7 +487,7 @@ export class HbService {
     }
   }
 
-
+  
   async createCOline(req: any): Promise<CommonResponseModel> {
     const poDetails = await this.hbCoLineRepo.getDataforCOLineCreation();
     if (!poDetails.length) {
@@ -710,8 +710,8 @@ export class HbService {
                       await inputField.sendKeys(size.price);
                     } else {
                       /// update for if size is mismatch
-                      const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed', errorMsg: 'NO matching Size found' });
-                      return new CommonResponseModel(false, 0, 'NO matching Size found')
+                      const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed', errorMsg: 'NO matching Size found', isActive:false });
+                       return new CommonResponseModel(false, 0, 'NO matching Size found') 
                     }
                   }
                   const inputId = `${size.name}:${color.name}:USA`.replace(/\*/g, '');
@@ -733,7 +733,7 @@ export class HbService {
         if (await this.isAlertPresent(driver)) {
           const alert = await driver.switchTo().alert();
           const alertText = await alert.getText();
-          const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed', errorMsg: alertText });
+          const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed', errorMsg: alertText, isActive:false });
           await this.updateCOLineStatus({custPo: po.custPo, status: StatusEnum.FAILED})
           await alert.accept();
           await driver.sleep(5000)
@@ -765,7 +765,7 @@ export class HbService {
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           } else {
-            const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed' });
+            const update = await this.hbCoLineRepo.update({ custPo: po.cust_po }, { status: 'Failed', isActive:false });
             await this.updateCOLineStatus({custPo: po.cust_po , status: StatusEnum.FAILED})
             // await driver.navigate().refresh();
             await driver.sleep(10000)
@@ -776,7 +776,7 @@ export class HbService {
     } catch (error) {
       console.log(error, 'error');
       if (error.name === 'TimeoutError') {
-        const update = await this.hbCoLineRepo.update({ custPo: poDetails[0].cust_po }, { status: 'Failed', errorMsg: 'NO matching Color found' });
+        const update = await this.hbCoLineRepo.update({ custPo: poDetails[0].cust_po }, { status: 'Failed', errorMsg: 'NO matching Color found', isActive:false});
         await this.updateCOLineStatus({custPo: poDetails[0].cust_po  , status: StatusEnum.FAILED})
         driver.quit()
         return new CommonResponseModel(false, 0, 'Matching Color not found')
