@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Checkbox } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Checkbox, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -119,7 +119,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
     {
       title: "Warehouse Name",
       dataIndex: "warehouseName",
-      sorter: (a, b) => a.source.localeCompare(b.source),
+      sorter: (a, b) => a.warehouseName.localeCompare(b.warehouseName),
       sortDirections: ["ascend", "descend"],
       ...getColumnSearchProps("warehouseName"),
     }, {
@@ -351,7 +351,24 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
       <span style={{color:'white'}} ><Button type={'primary'} >New </Button> </span>
       </Link>} >
       <>
-      <Row gutter={40}>
+      <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+    
+           <Alert type='success' message={'Total Warehouse: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+      {/* <Row gutter={40}>
         <Col>
           <Card title={'Total Warehouse: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -362,7 +379,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
         
-      </Row><br></br>
+      </Row><br></br> */}
       <Card >
         {/* <GetCumulatives cumulativeColumns={cumulativeSkelton} data={variantData}/> */}
         {/* <ProTable
@@ -383,6 +400,7 @@ export const WarehouseGrid = (props: WarehouseGridProps) => {
 
         <Table
         size='small'
+        className="custom-table-wrapper"
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}

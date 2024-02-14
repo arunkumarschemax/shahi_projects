@@ -1,7 +1,7 @@
 
 
 import React, { useState, useEffect, useRef } from 'react';
-import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button, Row, Col, Drawer, Tag, Checkbox, } from 'antd';
+import {  Divider, Table, Popconfirm, Card, Tooltip, Switch,Input,Button, Row, Col, Drawer, Tag, Checkbox, Alert, } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/lib/table';
 import {RightSquareOutlined,EyeOutlined,EditOutlined,SearchOutlined,CheckCircleOutlined,CloseCircleOutlined } from '@ant-design/icons';
@@ -120,7 +120,7 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
     service.ActivateOrDeactivateTax(taxesDto).then(res => { console.log(res);
       if (res.status) {
         getAllTaxes();
-        AlertMessages.getSuccessMessage('Success');
+        AlertMessages.getSuccessMessage(res.internalMessage);
       } else {
         if (res.status) {
           AlertMessages.getErrorMessage(res.internalMessage);
@@ -340,7 +340,24 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
     <Card title={'Taxes'}       headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
    extra={<Link to='/global/taxes/taxes-form' ><span style={{color:'white'}} >{<Button className='panel_button' type={'primary'}>New </Button>}</span></Link>} >
   
-    <Row gutter={40}>
+  <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+    
+           <Alert type='success' message={'Total Taxes: ' + taxesData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + taxesData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + taxesData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+    {/* <Row gutter={40}>
      
          <Card title={'Total Taxes: ' + taxesData.length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#bfbfbf',marginLeft:'20px'}}></Card>
          
@@ -348,10 +365,11 @@ export const TaxesGrid = (props:  TaxesGridProps) => {
          
           <Card title={'In-Active: ' + taxesData.filter(el => el.isActive == false).length} style={{textAlign: 'left', width: 150, height: 41,backgroundColor:'#f5222d'}}></Card>
          
-         </Row><br></br>
+         </Row><br></br> */}
      <Card>
      <Table
             rowKey={record => record.stateId}
+            className="custom-table-wrapper"
             columns={sampleTypeColumns}
             scroll = {{x:true}}
             dataSource={taxesData}

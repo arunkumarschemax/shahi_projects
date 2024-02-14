@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Checkbox } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Checkbox, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -262,7 +262,24 @@ return (
   style={{textAlign:'left'}} headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<Link to = "/global/paymentmethod/paymentmethod-form"  ><span><Button type={'primary'} >New </Button> </span></Link>} >
   <br></br>
     <>
-    <Row gutter={40}>
+    <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+    
+           <Alert type='success' message={'Total Payment Methods: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+    {/* <Row gutter={40}>
     <Col>
           <Card title={'Total PaymentMethods: ' + variantData.length} style={{ textAlign: 'left', width: 250, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -272,14 +289,15 @@ return (
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-        {/* <Col>
+        <Col>
         <span><Button onClick={() => navigate('/global/paymentmethod/paymentmethod-form')}
               type={'primary'}>New</Button></span>
-        </Col> */}
-    </Row>
+        </Col>
+    </Row> */}
     <Card>
   <Table
         size='small'
+        className="custom-table-wrapper"
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}

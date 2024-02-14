@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Checkbox } from 'antd';
+import { Divider, Table, Popconfirm, Card, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, message, Checkbox, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 import { CheckCircleOutlined, CloseCircleOutlined, RightSquareOutlined, EyeOutlined, EditOutlined, SearchOutlined } from '@ant-design/icons';
@@ -143,8 +143,8 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
         title: "Alternate Number",
         dataIndex: "alterNativeMobileNumber",
        width:'60px',
-        sorter: (a, b) => a.alterNativeMobileNumber?.length-(b.alterNativeMobileNumber.length),
-      ...getColumnSearchProps("alterNativeMobileNumber"),
+       sorter: (a, b) => a.alterNativeMobileNumber?.localeCompare(b.alterNativeMobileNumber),
+       ...getColumnSearchProps("alterNativeMobileNumber"),
       render: (text, record) => (
         <span>
             {record.alterNativeMobileNumber ? record.alterNativeMobileNumber : '-'}
@@ -347,9 +347,28 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
 
   return (
       <>
-      <Card title='Employees' extra={<span><Button onClick={() => navigate('/global/employee-details/employee-details-form')}
+      <Card title='Employees' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/global/employee-details/employee-details-form')}
               type={'primary'}>New</Button></span>}>
-      <Row gutter={40}>
+
+                
+ <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+    
+           <Alert type='success' message={'Total Employees: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+      {/* <Row gutter={40}>
         <Col>
           <Card title={'Total Employees: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -359,9 +378,10 @@ export const EmployeeDetailsGrid = (props: EmployeeDetailsGridProps) => {
         <Col>
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
-      </Row><br></br>
+      </Row><br></br> */}
       <Card >
         <Table
+        className="custom-table-wrapper"
         size='small'
           // rowKey={record => record.variantId}
           columns={columnsSkelton}

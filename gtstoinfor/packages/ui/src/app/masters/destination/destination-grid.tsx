@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Divider, Table, Popconfirm, Card,Checkbox, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer } from 'antd';
+import { Divider, Table, Popconfirm, Card,Checkbox, Tooltip, Switch, Input, Button, Tag, Row, Col, Drawer, Alert } from 'antd';
 import Highlighter from 'react-highlight-words';
 import { ColumnProps } from 'antd/es/table';
 // import { useIntl } from 'react-intl';
@@ -317,7 +317,7 @@ export const DestinationGrid = (props: DestinationGridProps) => {
       console.log(res);
       if (res.status) {
         getAlldestination();
-        AlertMessages.getSuccessMessage('Success');
+        AlertMessages.getSuccessMessage(res.internalMessage);
       } else {
         // if (res.intlCode) {
         //   AlertMessages.getErrorMessage(res.internalMessage);
@@ -335,8 +335,25 @@ export const DestinationGrid = (props: DestinationGridProps) => {
     <>
         <Card title='Destination' headStyle={{ backgroundColor: '#69c0ff', border: 0 }} extra={<span><Button onClick={() => navigate('/global/destination/destination-form')}
             type={'primary'}>New</Button></span>}>
-
-      <Row gutter={40}>
+ 
+ <Row gutter={24}>
+      <Col span={4}></Col>
+     <Col span={5}>
+    
+           <Alert type='success' message={'Total Destination: ' + variantData.length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='warning' message={'Active: ' + variantData.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
+        </Col>
+        <Col span={5}>
+          <Alert type='info' message={'Inactive: ' + variantData.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+        
+           
+           
+        </Col>
+          </Row> 
+          <br></br>
+      {/* <Row gutter={40}>
         <Col>
           <Card title={'Total Destination: ' + variantData.length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#bfbfbf' }}></Card>
         </Col>
@@ -347,10 +364,11 @@ export const DestinationGrid = (props: DestinationGridProps) => {
           <Card title={'In-Active: ' + variantData.filter(el => el.isActive == false).length} style={{ textAlign: 'left', width: 200, height: 41, backgroundColor: '#f5222d' }}></Card>
         </Col>
        
-      </Row><br></br>
+      </Row><br></br> */}
       <Card >
         <Table
           size='small'
+          className="custom-table-wrapper"
           // rowKey={record => record.variantId}
           columns={columnsSkelton}
           dataSource={variantData}
