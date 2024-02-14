@@ -851,7 +851,9 @@ export class SanmarService {
                     } else {
                       // update added for if sizes mismatch
                       const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed', errorMsg: 'NO matching Size found', isActive:false });
+                      await this.updateCOLineStatus({buyerPo: poDetails[0].buyer_po, status: StatusEnum.FAILED})
                       return new CommonResponseModel(false, 0, 'NO matching Size found')
+                      
                     }
                   }
                   const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
