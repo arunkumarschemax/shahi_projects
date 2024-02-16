@@ -97,6 +97,13 @@ export class EddieOrdersEntity {
     })
     color: string
 
+    @Column('varchar', {
+        name: "buyer_style",
+
+    })
+    buyerStyle: string
+
+
     // @Column('varchar', {
     //     name: "currency",
 

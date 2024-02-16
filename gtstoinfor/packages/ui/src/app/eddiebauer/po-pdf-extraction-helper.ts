@@ -172,7 +172,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                     firstPageContent[materialIndex + 35]?.str;
             }
 
-            poData.currency = firstPageContent[currencyIndex + 2].str.replace(/Unit Price\s+\(/g,"").replace(/\)/g,"");
+            poData.currency = firstPageContent[currencyIndex + 2].str.replace(/Unit Price\s+\(/g, "").replace(/\)/g, "");
 
         }
 
@@ -254,7 +254,7 @@ export const extractDataFromPoPdf = async (pdf) => {
         console.log(rec.itemIndex, "iiiiiiiiiiiiii");
 
         const regex = /^\d{3}-\d{4}$/;
-        const colorRegex =/\d+\s+\w+/
+        const colorRegex = /\d+\s+\w+/
         const matchIndex = filteredData.findIndex((data, index) => index >= rec.itemIndex && regex.test(data.str));
         if (matchIndex !== -1 && matchIndex < filteredData.length - 1) {
             itemDetailsObj.poLine = filteredData[matchIndex - 1].str;
@@ -267,6 +267,9 @@ export const extractDataFromPoPdf = async (pdf) => {
                 }
                 currentIndex++;
             }
+            const buyerStyleRegex = /Buyer's Style #/
+            const buyerStyleMatchingIndex = filteredData.findIndex((data, index) => index >= rec.itemIndex && buyerStyleRegex.test(data.str));
+            itemDetailsObj.buyerStyle = filteredData[buyerStyleMatchingIndex + 1].str;
 
             // const quantityRegex = /\d+(,|.|\d)\d+/;
             // if (quantityRegex.test(filteredData[matchIndex + 2].str)) {

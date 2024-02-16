@@ -76,6 +76,7 @@ export class EddieService {
           entity.buyerItem = item.buyerItem
           // entity.shortDescription = item.shortDescription
           entity.color = item.color
+          entity.buyerStyle = item.buyerStyle
           // entity.currency = item.currency
 
           entity.sizeCode = variant.sizeCode
@@ -93,7 +94,7 @@ export class EddieService {
           if (orderData) {
             const update = await this.EddieOrdersRepo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
               deliveryDate: req.deliveryDate, exFactoryDate: req.exFactoryDate, buyerAddress: req.buyerAddress, deliveryAddress: req.deliveryAddress,
-              currency: req.currency, buyerItem: item.buyerItem, color: item.color,
+              currency: req.currency, buyerItem: item.buyerItem, color: item.color,buyerStyle:item.buyerStyle,
               sizeCode: variant.sizeCode,
               upc: variant.upc,
               sku: variant.sku,
@@ -118,6 +119,7 @@ export class EddieService {
             entitys.poLine = item.poLine
             entitys.buyerItem = item.buyerItem
             entitys.color = item.color
+            entitys.buyerStyle = item.buyerStyle
 
             entitys.sizeCode = variant.sizeCode
             entitys.size = variant.size
@@ -151,6 +153,7 @@ export class EddieService {
             entitys.poLine = item.poLine
             entitys.buyerItem = item.buyerItem
             entitys.color = item.color
+            entitys.buyerStyle = item.buyerStyle
 
             entitys.sizeCode = variant.sizeCode
             entitys.size = variant.size

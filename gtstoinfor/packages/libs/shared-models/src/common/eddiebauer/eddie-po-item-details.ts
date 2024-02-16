@@ -6,6 +6,7 @@ export class EddiePoItemDetails {
     buyerItem: string;
     shortDescription: string;
     color: string;
+    buyerStyle:string;
     // currency: string;
     
     EddiepoItemVariantDetails: EddiePoItemVariant[]

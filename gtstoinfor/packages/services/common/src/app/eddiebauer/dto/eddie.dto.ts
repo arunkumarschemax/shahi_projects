@@ -51,8 +51,13 @@ export class EddieDto {
     @ApiProperty()
     color: string
 
+    
+    @ApiProperty()
+    buyerStyle: string
+
     @ApiProperty()
     currency: string
+
 
 
 
