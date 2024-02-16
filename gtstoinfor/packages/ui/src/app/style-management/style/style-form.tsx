@@ -10,10 +10,11 @@ import { LoadingOutlined,
     PlusOutlined } from '@ant-design/icons';
 // import { Link } from 'react-router-dom';
 // import TextArea from 'antd/lib/input/TextArea';
-import { StyleDto } from '@project-management-system/shared-models';
+import { BuyerRefNoRequest, StyleDto } from '@project-management-system/shared-models';
 import { BuyersService, ProfitControlHeadService, StyleService } from '@project-management-system/shared-services';
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
+import { useIAMClientState } from '../../common/iam-client-react';
 
 
 const { Option } = Select;
@@ -35,6 +36,7 @@ export function StyleForm(props: StyleFormProps) {
   const [buyer, setBuyer] = useState<any[]>([]);
   const [pch, setPch] = useState<any[]>([]);
   const pchService = new ProfitControlHeadService();
+  const { IAMClientAuthContext, dispatch } = useIAMClientState();
 
   const [filelist, setfilelist] = useState<any>(props.isUpdate?[{
     name: props.styleData.styleFileName,
@@ -69,13 +71,17 @@ const service = new StyleService()
   );
 
   const getBuyers = () => {
-    buyerService.getAllActiveBuyers().then((res) => {
+    const req = new BuyerRefNoRequest()
+    req.buyerRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo : null
+    buyerService.getAllActiveBuyers(req).then((res) => {
       if (res.status) {
         setBuyer(res.data);
+        form.setFieldsValue({ buyerId: res.data[0]?.buyerId })
+
       }
     });
   };
-
+ 
   const getPCHData = () => {
     pchService.getAllActiveProfitControlHead().then((res) => {
       if (res.status) {
