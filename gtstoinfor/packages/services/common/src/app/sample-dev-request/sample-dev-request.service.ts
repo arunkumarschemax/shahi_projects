@@ -1747,7 +1747,7 @@ export class SampleRequestService {
     // console.log(sizesStr, 'kkkkk')
 
     // console.log(req, 'rehhhh')
-    const sampleDataQry = `SELECT sty.style,cl.colour,${sizesStr} FROM sample_request_size_info s 
+    const sampleDataQry = `SELECT s.colour_id AS colorId,sr.style_id AS sizeId, sty.style,cl.colour,${sizesStr} FROM sample_request_size_info s 
       left join sample_request sr on sr.sample_request_id = s.sample_request_id
       left join colour cl on cl.colour_id = s.colour_id
       left join style sty on sty.style_id = sr.style_id
@@ -2645,10 +2645,12 @@ order by mi.trim_code`;
   async getProcessAgainstSampleOrder(req?: SampleOrderIdRequest): Promise<CommonResponseModel> {
     try{
       const manager = this.dataSource;
-      let query ="select opg.operation_group_code operationName, opg.operation_group_id AS operationGroupId, sp.sequence AS sequence from sample_request_process_info sp left join operation_groups opg on opg.operation_group_id = sp.operation where sample_request_id="+req.sampleRequestId+" order by sp.sequence ASC";
+      let query ="select opg.operation_group_name AS operationGroupName, opg.operation_group_code AS operationName, opg.operation_group_id AS operationGroupId, sp.sequence AS sequence from sample_request_process_info sp left join operation_groups opg on opg.operation_group_id = sp.operation where sample_request_id="+req.sampleRequestId+" order by sp.sequence ASC";
       const queryResult = await manager.query(query);
+      console.log("**************queryResult*******************")
+      console.log(queryResult)
       if(queryResult.length > 0){
-        return new CommonResponseModel(true,1001,"Data retrived successfully. ",[])
+        return new CommonResponseModel(true,1001,"Data retrived successfully. ",queryResult)
       }
       else{
         return new CommonResponseModel(false,1010,"No data found. ",[])
