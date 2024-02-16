@@ -5,16 +5,20 @@ export class CoLinereqModel {
     currency: string;
     deliveryDate: any;
     styleNo: string;
+    exfactoryDate:any
     destinations: DestinationModel[]
 
-    constructor(buyerPo: string, itemNumber: string, salesPrice: string, currency: string, deliveryDate: any, styleNo: string, destinations: DestinationModel[]) {
+
+    constructor(buyerPo: string, itemNumber: string, salesPrice: string, currency: string, deliveryDate: any, styleNo: string,exfactoryDate:any, destinations: DestinationModel[]) {
         this.buyerPo = buyerPo
         this.itemNumber = itemNumber
         this.salesPrice = salesPrice
         this.currency = currency
         this.deliveryDate = deliveryDate
         this.styleNo = styleNo
+        this.exfactoryDate = exfactoryDate
         this.destinations = destinations
+        
     }
 }
 

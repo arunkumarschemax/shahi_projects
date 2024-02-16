@@ -486,14 +486,19 @@ export class CentricService {
         coLine.buyerPo = coData.buyerPo;
         const inputDate = new Date(coData.deliveryDate)
         // Calculate the date 7 days before the GAC date
-        const sevenDaysBefore = new Date(inputDate);
-        sevenDaysBefore.setDate(inputDate.getDate() - 7);
-        const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBefore);
+        // const sevenDaysBefore = new Date(inputDate);
+        // sevenDaysBefore.setDate(inputDate.getDate() - 7);
+        // const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBefore);
         coLine.deliveryDate = moment(coData.deliveryDate).format("DD/MM/YYYY")
-        coLine.exFactoryDate = exFactoryDate
+        // coLine.exFactoryDate = exFactoryDate
         coLine.salesPrice = coData.salesPrice
         coLine.currency = coData.currency
         coLine.destinations = coData.destinations
+        coLine.exFactoryDate = moment(coData.exfactoryDate).format("DD/MM/YYYY")
+
+        console.log(coLine.exFactoryDate,"exFactoryDate")
+        console.log(coLine.deliveryDate,"deliveryDate")
+
         const request = coData.destinations[0]?.name;
         console.log(request, "request")
         const address = await this.addressService.getAddressInfoByCountry({ country: request });
@@ -957,7 +962,8 @@ export class CentricService {
           desArray.push(des)
         });
         const poInfo = poMap.get(poNumber)
-        const co = new CoLinereqModel(poInfo.poNumber, null, poInfo.unitPrice, poInfo.currency, poInfo.deliveryDate, poInfo.style, desArray);
+        console.log(poInfo,"jjjj")
+        const co = new CoLinereqModel(poInfo.poNumber, null, poInfo.unitPrice, poInfo.currency, poInfo.deliveryDate, poInfo.style,poInfo.exFactory,desArray);
         coData.push(co)
       });
       if (coData) {
