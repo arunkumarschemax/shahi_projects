@@ -33,7 +33,7 @@ export class Style {
 
   @Column("varchar",{
     nullable:false,
-    length:100,
+    length:255,
     name:"description"
     })
   description:string;

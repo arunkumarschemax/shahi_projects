@@ -420,6 +420,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => (
                 <span>
                     <Tooltip placement="top" title='Edit'>
@@ -837,7 +838,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
                 <Table 
                 bordered={true}
                 size="small"
-                scroll={{x:true}}
+                scroll={{x:true,y:500}}
                 columns={tableColumns} 
                 dataSource={trimTableData}
                  pagination={{

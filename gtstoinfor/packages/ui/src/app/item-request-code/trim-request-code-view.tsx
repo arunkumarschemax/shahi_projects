@@ -1130,6 +1130,11 @@ export const TrimReqCodeView = () => {
               columns={tableColumns("1")}
               size="small"
               scroll={{x:'max-content'}}
+              pagination={{
+                onChange(current) {
+                  setPage(current);
+                }
+              }}
             />
         </TabPane>
         <TabPane tab="Completed" key="COMPLETED">
@@ -1138,6 +1143,11 @@ export const TrimReqCodeView = () => {
               dataSource={data}
               columns={tableColumns("2")}
               size="small"
+              pagination={{
+                onChange(current) {
+                  setPage(current);
+                }
+              }}
               scroll={{x:'max-content'}}
             />
         </TabPane>
