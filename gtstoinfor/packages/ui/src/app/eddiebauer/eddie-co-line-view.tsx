@@ -118,12 +118,12 @@ const EddieColineView = () => {
                     return (record.po_line ? (record.po_line) : '-')
                 }
             },
-            // {
-            //     title: 'Style',
-            //     dataIndex: 'style', render: (text, record) => {
-            //         return (record.style ? (record.style) : '-')
-            //     }
-            // },
+            {
+                title: 'Style',
+                dataIndex: 'buyer_style', render: (text, record) => {
+                    return (record.buyer_style ? (record.buyer_style) : '-')
+                }
+            },
             {
                 title: 'Delivery Date',
                 dataIndex: 'delivery_date',
@@ -272,14 +272,14 @@ const EddieColineView = () => {
             ),
 
         },
-        // {
-        //     title: 'Style',
-        //     dataIndex: 'style', render: (text, record) => {
-        //         return (record.style ? (record.style) : '-')
-        //     },
-        //     sorter: (a, b) => a.style.localeCompare(b.style),
-        //     sortDirections: ["ascend", "descend"],
-        // },
+        {
+            title: 'Style',
+            dataIndex: 'buyer_style', render: (text, record) => {
+                return (record.buyer_style ? (record.buyer_style) : '-')
+            },
+            sorter: (a, b) => a.buyer_style.localeCompare(b.buyer_style),
+            sortDirections: ["ascend", "descend"],
+        },
         {
             title: 'Delivery Date',
             dataIndex: 'delivery_date',
