@@ -25,6 +25,7 @@ export class eddieOrderDataModel {
     status:string;
     exFactoryDate:string;
     sizeWiseData: EddieSizeWiseModel[]
+    buyerStyle?: string;
    
 
     constructor(
@@ -50,6 +51,7 @@ export class eddieOrderDataModel {
         status:string,
         exFactoryDate:string,
         sizeWiseData: EddieSizeWiseModel[],
+        buyerStyle?: string
     
 
         
@@ -76,6 +78,7 @@ export class eddieOrderDataModel {
         this. status=status
         this.exFactoryDate=exFactoryDate
         this.sizeWiseData = sizeWiseData
+        this.buyerStyle=buyerStyle
   
        
        

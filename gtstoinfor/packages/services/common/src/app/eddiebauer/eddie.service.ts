@@ -438,7 +438,7 @@ export class EddieService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`,
-            new eddieOrderDataModel(rec.id, rec.po_number, rec.incoterm, rec.color, rec.delivery_date, rec.delivery_address, rec.buyer_address, rec.manufacture, rec.shipment_mode, rec.payment_terms, rec.po_line, rec.buyer_item, rec.short_description, rec.currency, rec.retail_price, rec.status, rec.ex_factory_date, [])
+            new eddieOrderDataModel(rec.id, rec.po_number, rec.incoterm, rec.color, rec.delivery_date, rec.delivery_address, rec.buyer_address, rec.manufacture, rec.shipment_mode, rec.payment_terms, rec.po_line, rec.buyer_item, rec.short_description, rec.currency, rec.retail_price, rec.status, rec.ex_factory_date, [],rec.buyer_style)
           );
 
         }
@@ -573,7 +573,7 @@ export class EddieService {
       entity.poLine = uniquePoLines.join(',');
       entity.buyer = req.buyer
       entity.poNumber = req.poNumber;
-      // entity.style = req.style;
+      entity.buyerStyle = req.buyerStyle;
       entity.itemNo = req?.itemNo;
       entity.status = 'Open';
       entity.deliveryDate = req.deliveryDate;

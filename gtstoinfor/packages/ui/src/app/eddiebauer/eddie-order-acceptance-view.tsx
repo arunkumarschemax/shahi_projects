@@ -155,6 +155,7 @@ import {
       req.itemNo = itemNoValue;
       req.buyer = 'Eddie Bauer LLC';
       req.deliveryDate = record.deliveryDate;
+      req.buyerStyle=record.buyerStyle;
     
       console.log("Request Payload:", req);
     
@@ -365,6 +366,16 @@ import {
           dataIndex: "poLine",
           width: 90,
           // sorter: (a, b) => a.poLine.localeCompare(b.poLine),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         
+  
+        },
+        {
+          title: "Style",
+          dataIndex: "buyerStyle",
+          width: 90,
+          // sorter: (a, b) => a.buyerStyle.localeCompare(b.buyerStyle),
           // sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
          

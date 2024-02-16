@@ -16,6 +16,12 @@ export class EddieCOLineEntity {
     buyer: string;
 
     @Column('varchar', {
+        name: "buyer_style",
+
+    })
+    buyerStyle: string
+
+    @Column('varchar', {
         nullable: false,
         name: "po_number",
         length: 15
