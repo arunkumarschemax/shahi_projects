@@ -29,7 +29,9 @@ export class OperationTrackingDto{
     jobNumber?:string;
     operationInventoryId?:number;
     sampleRequestId?:number
-
+    colorId?:number
+    sizeId?:number
+    reporterId?:string
     constructor(
         fabricCode: string,
         styleId: number,
@@ -56,8 +58,10 @@ export class OperationTrackingDto{
         operationTrackingId?:number,
         jobNumber?:string,
         operationInventoryId?:number,
-        sampleRequestId?:number
-    
+        sampleRequestId?:number,
+        colorId?:number,
+        sizeId?:number,
+        reporterId?:string
     ){
         this.fabricCode = fabricCode
         this.operationTrackingId = operationTrackingId
@@ -85,6 +89,10 @@ export class OperationTrackingDto{
         this.updatedUser = updatedUser
         this.versionFlag = versionFlag
         this.sampleRequestId = sampleRequestId
+        this.colorId = colorId
+        this.sizeId = sizeId
+        this.reporterId = reporterId
+
     }
     
 
