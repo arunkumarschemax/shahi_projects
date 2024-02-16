@@ -506,7 +506,7 @@ import {
                         }
                     },
                     {
-                        title: 'Tot PO Qty in PC',
+                        title: 'PO Qty in PC',
                         dataIndex: '',
                         key: '',
                         width: 70,
@@ -646,17 +646,18 @@ import {
       columns.push(
         {
           title: "Total Quantity",
-          dataIndex: "",
+          dataIndex: "totalQuantity",
           align: "right",
           width: 90,
-          render: (text, record) => {
-            let sum = 0;
-            record.sizeWiseData.forEach((r) => {
-              // Convert to number before summing
-              sum += parseFloat(r.totalQuantity) || 0;
-            });
-            return sum;
-          },
+          // render: (text, record) => {
+          //   let sum = 0;
+          //   record.sizeWiseData.forEach((r) => {
+          //     // Convert to number before summing
+          //     sum += parseFloat(r.totalQuantity) || 0;
+          //   });
+          //   return sum;
+          // },
+          render: (text) => text ? text : "-",
         },
         {
           title: "Special Instructions",

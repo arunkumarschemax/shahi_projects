@@ -287,25 +287,30 @@ export function CentricOrderAcceptanceGrid() {
       },
       {
         title: 'Delivery Date',
-        dataIndex: 'deliveryDate',
-        key: '',
+        dataIndex: "deliveryDate",
         width: 90,
-        className: "center",
-        render: (text, record) => {
-          const sizeData = record.sizeWiseData.find(item => item.size);
-          if (sizeData) {
-            if (sizeData.size !== null) {
-              const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) : "-"
-              return (
-                formattedQty
-              );
-            } else {
-              return '-'
-            }
-          } else {
-            return '-';
-          }
-        }
+        // sorter: (a, b) => a.deliveryDate.localeCompare(b.deliveryDate),
+        // sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-",
+  
+      },
+      {
+        title: 'Ex Factory',
+        dataIndex: "exFactoryDate",
+        width: 90,
+        // sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
+        // sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-",
+  
+      },
+      {
+        title: 'Ex Port',
+        dataIndex: "exPortDate",
+        width: 90,
+        // sorter: (a, b) => a.exPortDate.localeCompare(b.exPortDate),
+        // sortDirections: ["ascend", "descend"],
+        render: (text) => text ? text : "-",
+  
       },
       {
         title: "Material",
@@ -465,72 +470,72 @@ export function CentricOrderAcceptanceGrid() {
         width: 70,
         align: 'center',
         children: [
+          // {
+          //   title: 'Ratio',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 70,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.ratio) ? (sizeData?.ratio) : "-"
+          //         return formattedQty;
+          //       } else {
+          //         return '-';
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
+          // {
+          //   title: 'UPC',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 90,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     console.log()
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
+          //         // const formattedQty = (sizeData?.amount)
+          //         return formattedQty;
+          //       } else {
+          //         return '-';
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
+          // {
+          //   title: 'label',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 70,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     console.log()
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.label) ? (sizeData?.label) : "-"
+          //         // const formattedQty = (sizeData?.amount)
+          //         return formattedQty;
+          //       } else {
+          //         return '-'
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
           {
-            title: 'Ratio',
-            dataIndex: '',
-            key: '',
-            width: 70,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.ratio) ? (sizeData?.ratio) : "-"
-                  return formattedQty;
-                } else {
-                  return '-';
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
-          {
-            title: 'UPC',
-            dataIndex: '',
-            key: '',
-            width: 90,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
-                  // const formattedQty = (sizeData?.amount)
-                  return formattedQty;
-                } else {
-                  return '-';
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
-          {
-            title: 'label',
-            dataIndex: '',
-            key: '',
-            width: 70,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.label) ? (sizeData?.label) : "-"
-                  // const formattedQty = (sizeData?.amount)
-                  return formattedQty;
-                } else {
-                  return '-'
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
-          {
-            title: 'FOB Price',
+            title: 'Unit Price',
             dataIndex: '',
             key: '',
             width: 70,
@@ -571,107 +576,107 @@ export function CentricOrderAcceptanceGrid() {
               }
             }
           },
-          {
-            title: 'Retail Price(USD) ',
-            dataIndex: '',
-            key: '',
-            width: 70,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) : "-"
-                  return formattedQty
-                } else {
-                  return '-'
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
-          {
-            title: 'Ex-factory Date ',
-            dataIndex: '',
-            key: '',
-            width: 100,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.exfactory) ? (sizeData?.exfactory) : '-'
-                  return formattedQty
-                } else {
-                  return '-'
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
-          {
-            title: 'Export Date ',
-            dataIndex: '',
-            key: '',
-            width: 100,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.exportDate) ? (sizeData?.exportDate) : "-"
-                  return formattedQty
-                } else {
-                  return '-'
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
-          {
-            title: 'Delivery Date',
-            dataIndex: '',
-            key: '',
-            width: 100,
-            className: "center",
-            render: (text, record) => {
-              const sizeData = record.sizeWiseData.find(item => item.size === version);
-              console.log()
-              if (sizeData) {
-                if (sizeData.size !== null) {
-                  const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) : "-"
-                  return formattedQty
-                } else {
-                  return '-'
-                }
-              } else {
-                return '-';
-              }
-            }
-          },
+          // {
+          //   title: 'Retail Price(USD) ',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 70,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     console.log()
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) : "-"
+          //         return formattedQty
+          //       } else {
+          //         return '-'
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
+          // {
+          //   title: 'Ex-factory Date ',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 100,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.exfactory) ? (sizeData?.exfactory) : '-'
+          //         return formattedQty
+          //       } else {
+          //         return '-'
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
+          // {
+          //   title: 'Export Date ',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 100,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     console.log()
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.exportDate) ? (sizeData?.exportDate) : "-"
+          //         return formattedQty
+          //       } else {
+          //         return '-'
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
+          // {
+          //   title: 'Delivery Date',
+          //   dataIndex: '',
+          //   key: '',
+          //   width: 100,
+          //   className: "center",
+          //   render: (text, record) => {
+          //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+          //     console.log()
+          //     if (sizeData) {
+          //       if (sizeData.size !== null) {
+          //         const formattedQty = (sizeData?.deliveryDate) ? (sizeData?.deliveryDate) : "-"
+          //         return formattedQty
+          //       } else {
+          //         return '-'
+          //       }
+          //     } else {
+          //       return '-';
+          //     }
+          //   }
+          // },
         ]
       });
     })
 
     columns.push(
-      {
-        title: "Incoterm",
-        dataIndex: "incoterm",
-        width: 150,
-        sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
-        sortDirections: ["ascend", "descend"],
-        ...getColumnSearchProps('incoterm'),
-        render: (text) => (
-          <Tooltip title={text || "-"}>
-            {text ? `${text.substring(0, 20)}...` : "-"}
-          </Tooltip>
-        ),
-      },
+      // {
+      //   title: "Incoterm",
+      //   dataIndex: "incoterm",
+      //   width: 150,
+      //   sorter: (a, b) => a.incoterm.localeCompare(b.incoterm),
+      //   sortDirections: ["ascend", "descend"],
+      //   ...getColumnSearchProps('incoterm'),
+      //   render: (text) => (
+      //     <Tooltip title={text || "-"}>
+      //       {text ? `${text.substring(0, 20)}...` : "-"}
+      //     </Tooltip>
+      //   ),
+      // },
       {
         title: "Ship To Address",
         dataIndex: "shipToAddress",
@@ -684,6 +689,12 @@ export function CentricOrderAcceptanceGrid() {
             {text ? `${text.substring(0, 20)}...` : "-"}
           </Tooltip>
         ),
+      },
+      {
+        title: "TotalQuantity",
+        dataIndex: "totalQuantity",
+        width: 130,
+        render: (text) => text ? text : "-"
       },
 
       // {
@@ -706,19 +717,19 @@ export function CentricOrderAcceptanceGrid() {
       //   onFilter: (value,record) =>{ return record.status.toLowerCase() === value.toLowerCase()}
       // },
   
-      {
-        title: "Consignee",
-        dataIndex: "consignee",
-        width: 150,
-        sorter: (a, b) => a.consignee.localeCompare(b.consignee),
-        sortDirections: ["ascend", "descend"],
-        ...getColumnSearchProps('consignee'),
-        render: (text) => (
-          <Tooltip title={text || "-"}>
-            {text ? `${text.substring(0, 20)}...` : "-"}
-          </Tooltip>
-        ),
-      },
+      // {
+      //   title: "Consignee",
+      //   dataIndex: "consignee",
+      //   width: 150,
+      //   sorter: (a, b) => a.consignee.localeCompare(b.consignee),
+      //   sortDirections: ["ascend", "descend"],
+      //   ...getColumnSearchProps('consignee'),
+      //   render: (text) => (
+      //     <Tooltip title={text || "-"}>
+      //       {text ? `${text.substring(0, 20)}...` : "-"}
+      //     </Tooltip>
+      //   ),
+      // },
 
 
       {
