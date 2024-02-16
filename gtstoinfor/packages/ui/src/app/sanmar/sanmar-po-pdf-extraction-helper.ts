@@ -280,7 +280,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 let m;
                 for (let i = 3; i < 10; i++) {
                     const quantityIndex = styleIndex + i;
-                    const quantityMatch = itemVarinatsTextArr[quantityIndex].match(/\b\d+\s*EACH\b/g);
+                    const quantityMatch = itemVarinatsTextArr[quantityIndex].match(/\b\d(.|,|\d+)+\s*EACH\b/g);
                     if (quantityMatch) {
                         const quantity = quantityMatch[0];
                         const unit = quantity.match(/\s+\w+/)[0];
