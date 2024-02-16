@@ -350,13 +350,13 @@ export function CentricOrderAcceptanceGrid() {
         render: (text) => text ? text : "-",
         ...getColumnSearchProps('shipmentMethod')
       },
-      {
-        title: "PPK UPC",
-        dataIndex: "ppkUpc",
-        width: 90,
-        render: (text) => text ? text : "-",
-        ...getColumnSearchProps('ppkUpc')
-      },
+      // {
+      //   title: "PPK UPC",
+      //   dataIndex: "ppkUpc",
+      //   width: 90,
+      //   render: (text) => text ? text : "-",
+      //   ...getColumnSearchProps('ppkUpc')
+      // },
       {
         title: "Color",
         dataIndex: "color",
