@@ -2642,4 +2642,20 @@ order by mi.trim_code`;
       throw err
     }
   }
+  async getProcessAgainstSampleOrder(req?: SampleOrderIdRequest): Promise<CommonResponseModel> {
+    try{
+      const manager = this.dataSource;
+      let query ="select opg.operation_group_code operationName, opg.operation_group_id AS operationGroupId, sp.sequence AS sequence from sample_request_process_info sp left join operation_groups opg on opg.operation_group_id = sp.operation where sample_request_id="+req.sampleRequestId+" order by sp.sequence ASC";
+      const queryResult = await manager.query(query);
+      if(queryResult.length > 0){
+        return new CommonResponseModel(true,1001,"Data retrived successfully. ",[])
+      }
+      else{
+        return new CommonResponseModel(false,1010,"No data found. ",[])
+      }
+    }
+    catch (err) {
+      throw err
+    }
+  }
 }

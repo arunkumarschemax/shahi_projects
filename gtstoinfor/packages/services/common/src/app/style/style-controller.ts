@@ -5,7 +5,7 @@ import { StyleService } from "./style-service";
 import { ApiBody, ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express'
 import { diskStorage } from 'multer';
-import { extname } from 'path';
+import { extname, join } from 'path';
 import { BuyerRequest } from "./dto/buyer.request";
 import { type } from "os";
 import { StyleReq } from "./dto/style-dto";
@@ -58,7 +58,9 @@ export class StyleController{
     @UseInterceptors(FileInterceptor('file', {
         limits: { files: 1 },
         storage: diskStorage({
-            destination: './upload_files',
+          destination : join(__dirname, '../../../../',`upload_files`),
+
+            // destination: './upload_files',
             filename: (req, file, callback) => {
                 console.log(file.originalname);
                 const name = file.originalname;

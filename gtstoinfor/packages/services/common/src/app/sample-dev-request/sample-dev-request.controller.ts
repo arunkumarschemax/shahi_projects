@@ -217,8 +217,9 @@ export class SampleDevReqController {
         // console.log(req.body);
 
         // console.log(file);
+        const destinationPath = join(__dirname, '../../../../',`upload_files/Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}`)
 
-        const destinationPath = `upload_files/Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+        // const destinationPath = `upload_files/Fabric-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
         // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
 
         // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
@@ -274,7 +275,9 @@ export class SampleDevReqController {
 
         // console.log(file);
 
-        const destinationPath = `upload_files/Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+        const destinationPath = join(__dirname, '../../../../',`upload_files/Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}`)
+
+        // const destinationPath = `upload_files/Trim-SD-${(req.body.reqNo).replace(/\//g, "_")}`;
         // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
 
         // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
@@ -749,4 +752,16 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  @Post('/getProcessAgainstSampleOrder')
+  @ApiBody({ type: SampleOrderIdRequest })
+  async getProcessAgainstSampleOrder(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getProcessAgainstSampleOrder(req);
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
 }
