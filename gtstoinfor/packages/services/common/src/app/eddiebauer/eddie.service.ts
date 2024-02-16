@@ -1351,9 +1351,9 @@ export class EddieService {
                     ele.length > 0 ? fileteredElements.push(labelElement) : '';
                   }
                   let tabIndex = 1; // Default to 1 if no match
-                  // if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
-                  //   tabIndex = 2
-                  // }
+                  if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
+                    tabIndex = 2
+                  }
                   const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
                   const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
                   await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
