@@ -168,265 +168,294 @@ const SampleRequestReport = () => {
   //     }
   //   }
   // ]
-  const Columns:any  = [
-    // { title: 'S.no', render: (text: any, object: any, index: any) => (page - 1) * 10 + (index + 1), },
+  const tableColumns = () => {
+    console.log(checkAccess(MenusAndScopesEnum.Scopes.fabricTab))
+    console.log(checkAccess(MenusAndScopesEnum.Scopes.trimTab))
 
-    // {
-    //   title: "Request No",
-    //   dataIndex: "sampleReqNo",
-    //   sorter: (a, b) => a.sampleReqNo.localeCompare(b.sampleReqNo),
-    //   sortDirections: ['descend', 'ascend'],
-    // },
-    {
-      title: 'Sample Request No',
-      dataIndex: 'sampleReqNo',
-      key: 'sampleReqNo',
-      render: (text, record, index) => {
-        if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
-          const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
-          return {
-            children: record.sampleReqNo,
-            props: {
-              rowSpan: rowSpan,
-            },
-          };
-        } else {
-          return {
-            children: null,
-            props: {
-              rowSpan: 0,
-            },
-          };
-        }
+    const Columns:any  = [
+      // { title: 'S.no', render: (text: any, object: any, index: any) => (page - 1) * 10 + (index + 1), },
+  
+      // {
+      //   title: "Request No",
+      //   dataIndex: "sampleReqNo",
+      //   sorter: (a, b) => a.sampleReqNo.localeCompare(b.sampleReqNo),
+      //   sortDirections: ['descend', 'ascend'],
+      // },
+      {
+        title: 'Sample Request No',
+        dataIndex: 'sampleReqNo',
+        key: 'sampleReqNo',
+        render: (text, record, index) => {
+          if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
+            const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
+            return {
+              children: record.sampleReqNo,
+              props: {
+                rowSpan: rowSpan,
+              },
+            };
+          } else {
+            return {
+              children: null,
+              props: {
+                rowSpan: 0,
+              },
+            };
+          }
+        },
+     
       },
-   
-    },
-    {
-      title: 'Buyer',
-      dataIndex: 'buyername',
-      key: 'buyername',
-      render: (text, record, index) => {
-        if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
-          const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
-          return {
-            children: record.buyername,
-            props: {
-              rowSpan: rowSpan,
-            },
-          };
-        } else {
-          return {
-            children: null,
-            props: {
-              rowSpan: 0,
-            },
-          };
-        }
+      {
+        title: 'Buyer',
+        dataIndex: 'buyername',
+        key: 'buyername',
+        render: (text, record, index) => {
+          if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
+            const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
+            return {
+              children: record.buyername,
+              props: {
+                rowSpan: rowSpan,
+              },
+            };
+          } else {
+            return {
+              children: null,
+              props: {
+                rowSpan: 0,
+              },
+            };
+          }
+        },
+     
       },
-   
-    },
-    {
-      title: 'Brand',
-      dataIndex: 'brandName',
-      key: 'brandName',
-      render: (text, record, index) => {
-        if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
-          const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
-          return {
-            children: record.brandName,
-            props: {
-              rowSpan: rowSpan,
-            },
-          };
-        } else {
-          return {
-            children: null,
-            props: {
-              rowSpan: 0,
-            },
-          };
-        }
+      {
+        title: 'Brand',
+        dataIndex: 'brandName',
+        key: 'brandName',
+        render: (text, record, index) => {
+          if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
+            const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
+            return {
+              children: record.brandName,
+              props: {
+                rowSpan: rowSpan,
+              },
+            };
+          } else {
+            return {
+              children: null,
+              props: {
+                rowSpan: 0,
+              },
+            };
+          }
+        },
       },
-    },
-    {
-      title: 'Location',
-      dataIndex: 'location',
-      key: 'location',
-      render: (text, record, index) => {
-        if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
-          const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
-          return {
-            children: record.location,
-            props: {
-              rowSpan: rowSpan,
-            },
-          };
-        } else {
-          return {
-            children: null,
-            props: {
-              rowSpan: 0,
-            },
-          };
-        }
+      {
+        title: 'Location',
+        dataIndex: 'location',
+        key: 'location',
+        render: (text, record, index) => {
+          if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
+            const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
+            return {
+              children: record.location,
+              props: {
+                rowSpan: rowSpan,
+              },
+            };
+          } else {
+            return {
+              children: null,
+              props: {
+                rowSpan: 0,
+              },
+            };
+          }
+        },
       },
-    },
-    {
-      title: 'Style',
-      dataIndex: 'styleName',
-      key: 'styleName',
-      render: (text, record, index) => {
-        if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
-          const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
-          return {
-            children: record.styleName,
-            props: {
-              rowSpan: rowSpan,
-            },
-          };
-        } else {
-          return {
-            children: null,
-            props: {
-              rowSpan: 0,
-            },
-          };
-        }
+      {
+        title: 'Style',
+        dataIndex: 'styleName',
+        key: 'styleName',
+        render: (text, record, index) => {
+          if (index === 0 || record.sampleReqNo !== data[index - 1].sampleReqNo) {
+            const rowSpan = data.filter(item => item.sampleReqNo === record.sampleReqNo).length;
+            return {
+              children: record.styleName,
+              props: {
+                rowSpan: rowSpan,
+              },
+            };
+          } else {
+            return {
+              children: null,
+              props: {
+                rowSpan: 0,
+              },
+            };
+          }
+        },
+     
       },
-   
-    },
-    {
-      title: "Material Type",
-      dataIndex: "itemType",
-      // sorter: (a, b) => a.itemType.localeCompare(b.itemType),
-      // sortDirections: ['descend', 'ascend'],
-      render: (text) => {
-        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
-        return EnumObj ? EnumObj.displayVal : text;
+      {
+        title: "Material Type",
+        dataIndex: "itemType",
+        // sorter: (a, b) => a.itemType.localeCompare(b.itemType),
+        // sortDirections: ['descend', 'ascend'],
+        render: (text) => {
+          const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+          return EnumObj ? EnumObj.displayVal : text;
+        },
       },
-    },
-    {
-      title: "Item",
-      dataIndex: "itemCode",
-      // sorter: (a, b) => a.itemCode.localeCompare(b.itemCode),
-      // sortDirections: ['descend', 'ascend'],
-    },
-    {
-      title: "Garment Color",
-      dataIndex: "colourName",
-      // sorter: (a, b) => a.colourName.localeCompare(b.colourName),
-      // sortDirections: ['descend', 'ascend'],
-    },  
-    {
-      title: "Fabric Color",
-      dataIndex: "fabColor",
-      // sorter: (a, b) => a.colourName.localeCompare(b.colourName),
-      // sortDirections: ['descend', 'ascend'],
-    },  
-    {
-      title: "Required Qty",
-      dataIndex: "bomQuantity",
-      // sorter: (a, b) => a.bomQuantity.localeCompare(b.bomQuantity),
-      // sortDirections: ['descend', 'ascend'],
-    },
-    
-    // {
-    //   title: "Style",
-    //   dataIndex: "stylename",
-    //   sorter: (a, b) => a.stylename.localeCompare(b.stylename),
-    //   sortDirections: ['descend', 'ascend'],
-    // },
+      {
+        title: "Item",
+        dataIndex: "itemCode",
+        // sorter: (a, b) => a.itemCode.localeCompare(b.itemCode),
+        // sortDirections: ['descend', 'ascend'],
+      },
+    ]
+    const trimColor:any  = [
 
-    
-   
-    // {
-    //   title: <div style={{ textAlign: "center" }}>Material Type</div>,
-    //   dataIndex: "sm",
-    //   key: "sm",
-    //   align: "center",
-    //   render: (sm, text) => {
-    //     renderCellData(text);
-    //     return (
-    //       <Table
-    //         dataSource={sm}
-    //         columns={[{
-    //           dataIndex: "fabricType",
-    //           key: "fabricType",
-    //           align: "center",
-    //           render: (text) => {
-    //             const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
-    //             return EnumObj ? EnumObj.displayVal : text;
-    //           },
-    //         }]}
-    //         pagination={false}
-    //       />
-    //     );
-    //   },
-    // },
- 
-    // {
-    //   title: <div style={{ textAlign: "center" }}>Item</div>,
-    //   dataIndex: "sm",
-    //   key: "sm",
-    //   align: "center",
-    //   render: (sm, text) => {
-    //     renderCellData(text);
-    //     return (
-    //       <Table
-    //         dataSource={sm}
-    //         columns={[
-    //           {
-    //             dataIndex: "itemCode",
-    //             key: "itemCode",
-    //             align: "center",
-    //           },
-    //         ]}
-    //         pagination={false}
-    //       />
-    //     );
-    //   },
-    // },
-    // {
-    //   title: <div style={{ textAlign: "center" }}>Required Qty</div>,
-    //   dataIndex: "sm",
-    //   key: "sm",
-    //   align: "center",
-    //   render: (sm) => {
-    //     return (
-    //       <Table
-    //         dataSource={sm}
-    //         columns={[
-    //           {
-    //             dataIndex: "bomQuantity",
-    //             key: "bomQuantity",
-    //             align: "center",
-    //           },
-    //         ]}
-    //         pagination={false}
-    //       />
-    //     );
-    //   },
-    // },
-    {
-      title: <div style={{ textAlign: "center" }}>{btnEnable  && checkAccess(MenusAndScopesEnum.Scopes.createPo)?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
-      dataIndex: "checkStatus",
-      key: "checkStatus",
-      align: "left",
-      render: (text, record, index) => {
-        return (
-
-          <Form form={samplingPO} layout="vertical">
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
-              <Form.Item name={`checkStatus${index}`}  >
-              {checkAccess(MenusAndScopesEnum.Scopes.createPo)? <Checkbox name={`checkStatus${index}`} onClick={checkboxonclick} onChange={(e) => onCheck(e, record.sampleRequestid, record.fabricType, text, record, index)}/>:'-'}
-              </Form.Item>
-            </Col>
-          </Form>
-                 
-        );
+      {
+        title: "Color",
+        dataIndex: "colourName",
+        // sorter: (a, b) => a.colourName.localeCompare(b.colourName),
+        // sortDirections: ['descend', 'ascend'],
       },
-    },
-  ];
+    ]
+    const colorColumns:any  = [
+
+      {
+        title: "Garment Color",
+        dataIndex: "colourName",
+        // sorter: (a, b) => a.colourName.localeCompare(b.colourName),
+        // sortDirections: ['descend', 'ascend'],
+      },  
+      {
+        title: "Fabric Color",
+        dataIndex: "fabColor",
+        // sorter: (a, b) => a.colourName.localeCompare(b.colourName),
+        // sortDirections: ['descend', 'ascend'],
+      }, 
+    ]
+    const QtyColumns:any  = [
+      {
+        title: "Required Qty",
+        dataIndex: "bomQuantity",
+        // sorter: (a, b) => a.bomQuantity.localeCompare(b.bomQuantity),
+        // sortDirections: ['descend', 'ascend'],
+      },
+      
+      // {
+      //   title: "Style",
+      //   dataIndex: "stylename",
+      //   sorter: (a, b) => a.stylename.localeCompare(b.stylename),
+      //   sortDirections: ['descend', 'ascend'],
+      // },
+  
+      
+     
+      // {
+      //   title: <div style={{ textAlign: "center" }}>Material Type</div>,
+      //   dataIndex: "sm",
+      //   key: "sm",
+      //   align: "center",
+      //   render: (sm, text) => {
+      //     renderCellData(text);
+      //     return (
+      //       <Table
+      //         dataSource={sm}
+      //         columns={[{
+      //           dataIndex: "fabricType",
+      //           key: "fabricType",
+      //           align: "center",
+      //           render: (text) => {
+      //             const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+      //             return EnumObj ? EnumObj.displayVal : text;
+      //           },
+      //         }]}
+      //         pagination={false}
+      //       />
+      //     );
+      //   },
+      // },
+   
+      // {
+      //   title: <div style={{ textAlign: "center" }}>Item</div>,
+      //   dataIndex: "sm",
+      //   key: "sm",
+      //   align: "center",
+      //   render: (sm, text) => {
+      //     renderCellData(text);
+      //     return (
+      //       <Table
+      //         dataSource={sm}
+      //         columns={[
+      //           {
+      //             dataIndex: "itemCode",
+      //             key: "itemCode",
+      //             align: "center",
+      //           },
+      //         ]}
+      //         pagination={false}
+      //       />
+      //     );
+      //   },
+      // },
+      // {
+      //   title: <div style={{ textAlign: "center" }}>Required Qty</div>,
+      //   dataIndex: "sm",
+      //   key: "sm",
+      //   align: "center",
+      //   render: (sm) => {
+      //     return (
+      //       <Table
+      //         dataSource={sm}
+      //         columns={[
+      //           {
+      //             dataIndex: "bomQuantity",
+      //             key: "bomQuantity",
+      //             align: "center",
+      //           },
+      //         ]}
+      //         pagination={false}
+      //       />
+      //     );
+      //   },
+      // },
+      {
+        title: <div style={{ textAlign: "center" }}>{btnEnable  && checkAccess(MenusAndScopesEnum.Scopes.createPo)?<Button  type="primary" onClick={() =>generatePo()} >Generate Po</Button>:'Genereate PO'}</div>,
+        dataIndex: "checkStatus",
+        key: "checkStatus",
+        align: "left",
+        render: (text, record, index) => {
+          return (
+  
+            <Form form={samplingPO} layout="vertical">
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }}>
+                <Form.Item name={`checkStatus${index}`}  >
+                {checkAccess(MenusAndScopesEnum.Scopes.createPo)? <Checkbox name={`checkStatus${index}`} onClick={checkboxonclick} onChange={(e) => onCheck(e, record.sampleRequestid, record.fabricType, text, record, index)}/>:'-'}
+                </Form.Item>
+              </Col>
+            </Form>
+                   
+          );
+        },
+      },
+    ];
+    if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab)){
+      return [...Columns,...colorColumns,...QtyColumns]
+    }
+    else if(checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
+      return [...Columns,...trimColor,...QtyColumns]
+    }
+    else{
+      return [...Columns,...colorColumns,...QtyColumns]
+    }
+  }
+  
 
   const checkboxonclick =() =>{
     setChecked(true)
@@ -607,7 +636,7 @@ const SampleRequestReport = () => {
         </Form>
         <Table
           pagination={false}
-          columns={Columns}
+          columns={tableColumns()}
           dataSource={data}
           rowKey="id"
         />
