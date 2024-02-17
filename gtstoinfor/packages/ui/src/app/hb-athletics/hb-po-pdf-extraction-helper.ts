@@ -259,7 +259,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemVariantsObj.unitPrice = itemVarinatsTextArr[sizeIndex - 1];
             }
             if (sizeIndex > 0) {
-                itemVariantsObj.quantity = itemVarinatsTextArr[sizeIndex - 2];
+                itemVariantsObj.quantity = itemVarinatsTextArr[sizeIndex - 2].replace(/,/g, "");
             }
             console.log(itemVariantsObj);
             itemVariantsArr.push(itemVariantsObj);
