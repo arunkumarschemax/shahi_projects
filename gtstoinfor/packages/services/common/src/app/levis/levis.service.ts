@@ -306,6 +306,24 @@ export class LevisService {
       return new CommonResponseModel(false, 0, 'failed', e);
     }
   }
+
+
+  async updateStatusInOrder(req: any): Promise<CommonResponseModel> {
+    console.log(req,"reqOpenStatus")
+    try {
+      const update = await this.LevisOrdersRepo.update(
+        { poNumber:req.poNumber},
+        { status:StatusEnum.OPEN }
+      );
+      if (update) {
+        return new CommonResponseModel(true, 1, "Updated Successfully");
+      } else {
+        return new CommonResponseModel(false, 0, "Something went wrong", []);
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
+    }
+  }
   
 
 }

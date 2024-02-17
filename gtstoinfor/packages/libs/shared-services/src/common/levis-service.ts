@@ -49,5 +49,8 @@ export class LevisService extends CommonAxiosService {
         return this.axiosPostCall(this.levisOrdersController + "/getorderDataForInfo", req)
     }
 
+    async updateStatusInOrder(req:ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/updateStatusInOrder",req)
+    }
  
 }
