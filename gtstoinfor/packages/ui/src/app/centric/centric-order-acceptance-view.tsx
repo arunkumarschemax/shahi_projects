@@ -691,9 +691,9 @@ export function CentricOrderAcceptanceGrid() {
         ),
       },
       {
-        title: "TotalQuantity",
+        title: "Total Quantity",
         dataIndex: "totalQuantity",
-        width: 130,
+        width: 100,
         render: (text) => text ? text : "-"
       },
 
