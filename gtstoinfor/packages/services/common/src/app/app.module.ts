@@ -13,6 +13,7 @@ import { AppDataSource } from './app-datasource';
 import { EddieModule } from './eddiebauer/eddie.module';
 import { AddressModule } from './Entites@Shahi/address/address-module';
 import { ColorModule } from './Entites@Shahi/color/color-module';
+import { SizeModule } from './Entites@Shahi/size/size-module';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { ColorModule } from './Entites@Shahi/color/color-module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,EddieModule,AddressModule,ColorModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,EddieModule,AddressModule,ColorModule,SizeModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,

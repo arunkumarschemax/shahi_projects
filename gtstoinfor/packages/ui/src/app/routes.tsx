@@ -78,6 +78,8 @@ import EddieOrdersDetailView from "./eddiebauer/eedie-order-detail-view"
 import EddieComparisionReport from "./eddiebauer/eedie-comparision-report"
 import ColorUpload from "./masters/color/color-excel-upload"
 import ColorView from "./masters/color/color-view"
+import SizeUpload from "./masters/size/size-excel-upload"
+import SizeView from "./masters/size/size-view"
 
 
 export const AppRoutes = () => {
@@ -285,6 +287,8 @@ export const AppRoutes = () => {
 
                    <Route path='masters/color/color-excel-upload' key='/color/color-excel-upload' element={<ColorUpload/>} />
                    <Route path='masters/color/color-view' key='/color/color-view' element={<ColorView/>} />
+                   <Route path='masters/size/size-excel-upload' key='/size/size-excel-upload' element={<SizeUpload/>} />
+                   <Route path='masters/size/size-view' key='/size/size-view' element={<SizeView/>} />
 
 
 
