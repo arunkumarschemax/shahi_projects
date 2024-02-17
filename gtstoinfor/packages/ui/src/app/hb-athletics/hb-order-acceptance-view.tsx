@@ -418,7 +418,7 @@ export function HbOrderAcceptanceGrid() {
           //   }
           // },
           {
-            title: 'QUANTITY',
+            title: 'Quantity',
             dataIndex: '',
             key: '',
             width: 70,
@@ -445,7 +445,7 @@ export function HbOrderAcceptanceGrid() {
             }
           },
           {
-            title: 'UNIT PRICE',
+            title: 'Unit Price',
             dataIndex: '',
             key: '',
             width: 70,
@@ -484,7 +484,7 @@ export function HbOrderAcceptanceGrid() {
 
      
       {
-        title: "SHIP TO ADDRESS",
+        title: "Ship To Address",
         dataIndex: "shipToAdd",
         width: 150,
        // sorter: (a, b) => a.shipToAdd.localeCompare(b.shipToAdd),
@@ -495,6 +495,20 @@ export function HbOrderAcceptanceGrid() {
             {text ? `${text.substring(0, 20)}...` : "-"}
           </Tooltip>
         ),
+      },
+      {
+        title: "Total Quantity",
+        dataIndex: "",
+        align: "right",
+        width: 90,
+        render: (text, record) => {
+          let sum = 0;
+          record.sizeWiseData.forEach((r) => {
+            // Convert to number before summing
+            sum += parseFloat(r.quantity) || 0;
+          });
+          return sum;
+        }
       },
       // {
       //   title: "Status",
