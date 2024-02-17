@@ -284,7 +284,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                     if (quantityMatch) {
                         const quantity = quantityMatch[0];
                         const unit = quantity.match(/\s+\w+/)[0];
-                        itemVariantsObj.quantity = quantity.replace(/EACH/g, "");
+                        itemVariantsObj.quantity = quantity.replace(/EACH/g, "").replace(/,/g, "");
                         itemVariantsObj.unit = unit.match(/\w+/g, "");
                         m = i + 1;
                         break;
