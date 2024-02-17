@@ -52,6 +52,8 @@ const M3Items = ({props}) => {
   const [weightUomData, setWeightUomData] = useState<any[]>([])
   const [yarnUom, setYarnUom]= useState<any[]>([])
   const [selectedContentValues, setSelectedContentValues] = useState([]);
+  const [selectedContentValue, setSelectedContentValue] = useState(undefined);
+
   const trimReqCodeService = new FabricRequestCodeService()
   const service = new M3ItemsService();
   const uomService = new UomService();
@@ -286,6 +288,7 @@ const M3Items = ({props}) => {
     form.setFieldsValue({finishId:props.finishId});
     form.setFieldsValue({shrinkage:props.shrinkage});
     form.setFieldsValue({yarnType:props.yarnType});
+    setFormData(props.fabricContentInfo)
     // form.setFieldsValue({content : props.fabricContentInfo})
     // form.setFieldsValue({content:props.fabricContentInfo});
     // form.setFieldsValue({buyerId:props.buyer_id,fabricTypeId:props.fabricTypeId,content:props.content_id,weaveId:props.weaveId,weightValue:props.weight,weightId:props.weight,weightUomId:props.weightUnitId,widthValue:props.width,width:props.width,widthUomId:props.widthUnit,epiConstruction:props.epi,construction:props.epi,ppiConstruction:props.ppi,hsnCode:props.hsnCode,finishId:props.finish_id,shrinkage:props.shrinkage,yarnType:props.yarnType})
@@ -349,7 +352,7 @@ const M3Items = ({props}) => {
   const onFinish = (val) => {
     // console.log("val");
     // console.log(val);
-    // console.log(yarnType);
+    console.log(formData);
 
 
     const contentIsNull = formData.some((item) => item.content === '');
@@ -454,6 +457,7 @@ const M3Items = ({props}) => {
   }
 
   const onContentChange = (index, value) => {
+    setSelectedContentValue(value);
     setFormData((prevData) => {
       const updatedFormData = [...prevData];
       if (updatedFormData[index]) {
@@ -820,7 +824,7 @@ const handleYarnUnitChange = (index, value) => {
                                   onChange={(value) => onContentChange(index, value)}
                                   onBlur={generateItemCode}
                                   // style={{width: '290px'}}
-                                  value={props?.fabricContentInfo[0].content != null ? props?.fabricContentInfo[0].content:""}
+                                  value={props?.fabricContentInfo[0].content != null ? props?.fabricContentInfo[0].content:selectedContentValue}
                                   disabled={props?.fabricContentInfo[0].content != null ? true : false}
                                 >
                                   {contentData.map((e) => (
