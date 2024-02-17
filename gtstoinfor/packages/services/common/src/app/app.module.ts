@@ -12,6 +12,7 @@ import { DataSource } from 'typeorm';
 import { AppDataSource } from './app-datasource';
 import { EddieModule } from './eddiebauer/eddie.module';
 import { AddressModule } from './Entites@Shahi/address/address-module';
+import { ColorModule } from './Entites@Shahi/color/color-module';
 
 @Module({
   imports: [
@@ -32,7 +33,7 @@ import { AddressModule } from './Entites@Shahi/address/address-module';
       }
     }),
     UsersModule,
-    AuthModule, JwtModule, AdobeAcrobatApiModule,EddieModule,AddressModule],
+    AuthModule, JwtModule, AdobeAcrobatApiModule,EddieModule,AddressModule,ColorModule],
   controllers: [AppController],
   providers: [AppService, {
     provide: DataSource,
