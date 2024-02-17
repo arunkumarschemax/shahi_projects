@@ -4,14 +4,16 @@ export class EddieCoLinereqModels {
     salesPrice: string;
     deliveryDate: any;
     currency:string;
+    style:string;
     destinations: EddieDestinationModel[]
 
-    constructor(poNumber: string,poLine:string ,salesPrice: string,deliveryDate: any, currency:string, destinations: EddieDestinationModel[]) {
+    constructor(poNumber: string,poLine:string ,salesPrice: string,deliveryDate: any, currency:string,style:string, destinations: EddieDestinationModel[]) {
         this.poNumber = poNumber
         this.poLine = poLine
         this.salesPrice = salesPrice
         this.deliveryDate = deliveryDate
         this.currency = currency
+        this.style = style
         this.destinations = destinations
     }
 }

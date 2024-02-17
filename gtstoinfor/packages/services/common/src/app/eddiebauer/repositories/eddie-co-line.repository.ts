@@ -65,7 +65,7 @@ export class EddieCOLineRepository extends Repository<EddieCOLineEntity> {
 
     async getDataforCOLineCreation(): Promise<any> {
         const query = this.createQueryBuilder('co')
-            .select(`co.id, co.po_number,co.po_line,co.buyer,co.item_no`)
+            .select(`co.id, co.po_number,co.po_line,co.buyer,co.item_no,co.buyer_style`)
             .where(` status != 'Success' AND status != 'Inprogress' AND is_active = true`)
             // .orderBy(` created_at`, 'ASC')
         return await query.getRawMany();

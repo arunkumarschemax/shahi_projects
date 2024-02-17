@@ -773,7 +773,7 @@ export class EddieService {
         // const averageUnitPrice = totalSizeCount > 0 ? totalUnitPrice / totalSizeCount : 0;  // calculation of Avg unit price
         // console.log(averageUnitPrice,"avg price")
 
-        const co = new EddieCoLinereqModels(poInfo.poNumber, poInfo.poLine, poInfo.unitCost, poInfo.deliveryDate, poInfo.currency, desArray);
+        const co = new EddieCoLinereqModels(poInfo.poNumber, poInfo.poLine, poInfo.unitCost, poInfo.deliveryDate, poInfo.currency, poInfo.buyerStyle,desArray);
         coData.push(co)
       });
       if (coData) {
@@ -1179,7 +1179,7 @@ export class EddieService {
       let deliveryAddress;
       let pkgTerms;
       let paymentTerms;
-      // let styleNo;
+      let styleNo;
       if (po.buyer === 'Eddie Bauer LLC') {
         const response = await this.getOrderdataForCOline({ poNumber: po.po_number, poLine: po.po_line })
         console.log(response.data[0])
@@ -1200,7 +1200,7 @@ export class EddieService {
         const address = await this.addressService.getAddressInfoByCountry({ country: request });
         const addressData = address.data[0];
         console.log(addressData, "address")
-        // styleNo = coData.styleNo
+          styleNo = coData.style
         // buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 12;
         // deliveryAddress = addressData?.deliveryCode
         // buyerValue1 = "FIN-FINISHED GOODS - KY"
@@ -1249,7 +1249,7 @@ export class EddieService {
       await driver.wait(until.elementLocated(By.id('bus')))
       await driver.findElement(By.id('bus')).clear();
 
-      // await driver.findElement(By.id('bus')).sendKeys(styleNo);
+       await driver.findElement(By.id('bus')).sendKeys(styleNo);
       await driver.wait(until.elementLocated(By.id('agnt')));
       const agentDropDown = await driver.findElement(By.id('agnt'));
       await driver.executeScript(`arguments[0].value = '${agent}';`, agentDropDown)
@@ -1333,7 +1333,10 @@ export class EddieService {
                   }
                 }
                 const inputId = `${size.name}:${color.name}:${dest.name}`.replace(/\*/g, '');
+                console.log(inputId,"inputId")
                 const input = await driver.wait(until.elementLocated(By.id(inputId)))
+                console.log(input,"input")
+
                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
               }
             }
@@ -1354,9 +1357,9 @@ export class EddieService {
                     ele.length > 0 ? fileteredElements.push(labelElement) : '';
                   }
                   let tabIndex = 1; // Default to 1 if no match
-                  if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
-                    tabIndex = 2
-                  }
+                  // if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
+                  //   tabIndex = 2
+                  // }
                   const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
                   const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
                   await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
@@ -1384,8 +1387,10 @@ export class EddieService {
                     await inputField.clear();
                     await inputField.sendKeys(size.price);
                   } else {
-                    // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Size found' });
-                    // return new CommonResponseModel(false, 0, 'NO matching Size found')
+                    const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
+                   await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+
+                    return new CommonResponseModel(false, 0, 'NO matching Size found')
                   }
                 }
                 const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
@@ -1405,9 +1410,9 @@ export class EddieService {
       if (await this.isAlertPresent(driver)) {
         const alert = await driver.switchTo().alert();
         const alertText = await alert.getText();
-        // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: alertText });
+        const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: alertText , isActive:false });
     
-        // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+        await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
 
         await alert.accept();
         await driver.sleep(5000)
@@ -1428,8 +1433,8 @@ export class EddieService {
         if (coNo) {
      
 
-          // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted,errorMsg:"-" });
-          // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.SUCCESS})
+          const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted,errorMsg:"-" });
+          await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.SUCCESS})
 
        
           // await driver.navigate().refresh();
@@ -1437,8 +1442,8 @@ export class EddieService {
         } else {
      
 
-          // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed' });
-          // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+          const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed',isActive:false });
+          await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
 
           // await driver.navigate().refresh();
           await driver.sleep(10000)
@@ -1450,8 +1455,8 @@ export class EddieService {
       
       console.log(error, 'error');
       if (error.name === 'TimeoutError') {
-        // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found' });
-        // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+        const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found',isActive:false });
+        await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
         driver.quit()
         return new CommonResponseModel(false, 0, 'Matching Color not found')
       } else {
