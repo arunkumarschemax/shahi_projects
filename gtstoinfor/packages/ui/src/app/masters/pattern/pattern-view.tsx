@@ -151,14 +151,14 @@ const PatternView = () => {
         },
         {
           title: 'Location',
-          dataIndex: 'name',
-          sorter: (a, b) => a.name.localeCompare(b.name),
+          dataIndex: ['factoryInfo','name'],
+          sorter: (a, b) => a.factoryInfo?.name.localeCompare(b.factoryInfo?.name),
           sortDirections: ['descend', 'ascend'],
           ...getColumnSearchProps('name')
         },
         {
           title: 'Pattern',
-          dataIndex: 'pattern_name',
+          dataIndex: 'patternName',
           // responsive: ['lg'],
           sorter: (a, b) => a.patternName.localeCompare(b.patternName),
           sortDirections: ['descend', 'ascend'],
@@ -174,13 +174,13 @@ const PatternView = () => {
         },
         {
           title: 'Status',
-          dataIndex: 'is_active',
+          dataIndex: 'isActive',
            render: (isActive, rowData) => (
             <>
-              {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">In Active</Tag>}
+              {isActive?<Tag icon={<CheckCircleOutlined />} color="#87d068">Active</Tag>:<Tag icon={<CloseCircleOutlined />} color="#f50">InActive</Tag>}
             </>
           ),
-          onFilter: (value, record) => record.is_active === value,
+          onFilter: (value, record) => record.isActive === value,
           filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters } : any) => (
             <div className="custom-filter-dropdown" style={{flexDirection:'row',marginLeft:10}}>
                 <Checkbox
@@ -215,10 +215,10 @@ const PatternView = () => {
             <span>         
                 <EditOutlined  className={'editSampleTypeIcon'}  type="edit" 
                   onClick={() => {
-                    if (rowData.is_active) {
+                    if (rowData.isActive) {
                       openFormWithData(rowData);
                     } else {
-                      message.error('You Cannot Edit Deactivated Finish',2);
+                      message.error('You Cannot Edit Deactivated Pattern',2);
                     }
                   }}
                   style={{ color: '#1890ff', fontSize: '14px' }}
@@ -227,16 +227,16 @@ const PatternView = () => {
               <Divider type="vertical" />
                 <Popconfirm onConfirm={e =>{activateDeactivate(rowData);}}
                 title={
-                  rowData.is_active
-                    ? 'Are you sure to Deactivate Finish ?'
-                    :  'Are you sure to Activate Finish ?'
+                  rowData.isActive
+                    ? 'Are you sure to Deactivate Pattern ?'
+                    :  'Are you sure to Activate Pattern ?'
                 }
               >
                 <Switch  size="default"
-                    className={ rowData.is_active ? 'toggle-activated' : 'toggle-deactivated' }
+                    className={ rowData.isActive ? 'toggle-activated' : 'toggle-deactivated' }
                     checkedChildren={<RightSquareOutlined type="check" />}
                     unCheckedChildren={<RightSquareOutlined type="close" />}
-                    checked={rowData.is_active}
+                    checked={rowData.isActive}
                   />
                 
               </Popconfirm>
@@ -261,7 +261,7 @@ const PatternView = () => {
                 <Alert type='warning' message={'Active: ' + data.filter(el => el.isActive).length} style={{fontSize:'15px'}} />
               </Col>
               <Col span={5}>
-                <Alert type='info' message={'Inactive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
+                <Alert type='info' message={'InActive: ' + data.filter(el => el.isActive == false).length} style={{fontSize:'15px'}} />
               </Col>
             </Row> 
             <br></br>

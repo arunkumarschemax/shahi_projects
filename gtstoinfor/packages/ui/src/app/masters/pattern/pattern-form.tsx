@@ -22,12 +22,11 @@ const PatternForm = (props: PatternProps) => {
 
     const [ factoryData, setFactoryData ] = useState<any[]>([])
     
-    useEffect(()=>{
-        getAllFactories()
-    },[])
+    useEffect(() => {
+        getAllFactories();
+    }, []);    
 
     const createPattern = (req: PatternDto) =>{
-        console.log(req,'-------------------')
         service.createPattern(req).then((res)=>{
             if(res.status){
                 message.success(res.internalMessage,2)
@@ -66,7 +65,7 @@ const PatternForm = (props: PatternProps) => {
         headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
         extra={
             props.isUpdate == true?"" :
-            <Link to= ''>
+            <Link to= '/masters/pattern-view'>
                 <span style={{color:'white'}}>
                     <Button type='primary'>
                         View
@@ -116,7 +115,7 @@ const PatternForm = (props: PatternProps) => {
                                 message: 'Pattern is required'
                             },
                             {
-                                pattern: /^[A-Za-z]+$/,
+                                pattern: /^[A-Za-z\s]+$/,
                                 message: `Should contain only alphabets.`
                             }
                         ]}
