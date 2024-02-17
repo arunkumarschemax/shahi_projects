@@ -318,7 +318,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemVariantsObj.quantityPerInnerPack = itemVarinatsTextArr[upcIndex + 3]; /* quantityPerInnerPack */
                 // itemVariantsObj.ratio = itemVarinatsTextArr[upcIndex - 1];
                 itemVariantsObj.retailPrice = itemVarinatsTextArr[upcIndex + 4] /* po retail price */
-                itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 6] /* item quantity */
+                itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 6].replace(/,/g, "") /* item quantity */
                 itemVariantsObj.unit = itemVarinatsTextArr[upcIndex + 7] /* unit */
                 itemVariantsObj.unitCost = itemVarinatsTextArr[upcIndex + 8] /* unit price */
                 itemVariantsObj.cost = itemVarinatsTextArr[upcIndex + 9] /* cost  */
