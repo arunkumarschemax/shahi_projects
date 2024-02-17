@@ -85,6 +85,8 @@ import ColorUpload from "./masters/color/color-excel-upload"
 import ColorView from "./masters/color/color-view"
 import SizeUpload from "./masters/size/size-excel-upload"
 import SizeView from "./masters/size/size-view"
+import LevisPdFInfoGrid from "./levis/levis-pdf-grid"
+import LevisPdfInfoDetailView from "./levis/levis-pdf-info-detail-view"
 
 
 export const AppRoutes = () => {
@@ -289,6 +291,7 @@ export const AppRoutes = () => {
                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
                    <Route path="eddiebauer-comparision-report" element={<EddieComparisionReport/>}/>
+                   
 
 
 
@@ -308,6 +311,8 @@ export const AppRoutes = () => {
                    <Route path='masters/color/color-view' key='/color/color-view' element={<ColorView/>} />
                    <Route path='masters/size/size-excel-upload' key='/size/size-excel-upload' element={<SizeUpload/>} />
                    <Route path='masters/size/size-view' key='/size/size-view' element={<SizeView/>} />
+                   <Route path='pdf-info' element={<LevisPdFInfoGrid />} />
+                   <Route path='pdf-info-detail-view' element={<LevisPdfInfoDetailView />} />
 
             
                 </Route>

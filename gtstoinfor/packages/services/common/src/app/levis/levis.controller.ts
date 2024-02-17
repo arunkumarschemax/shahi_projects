@@ -160,5 +160,14 @@ export class LevisController {
         }
     }
 
+    @Post('/getPdfFileInfo')
+    async getPdfFileInfo(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getPdfFileInfo();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
  
 }

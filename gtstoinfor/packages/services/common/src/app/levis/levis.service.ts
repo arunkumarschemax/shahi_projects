@@ -324,6 +324,19 @@ export class LevisService {
       return new CommonResponseModel(false, 0, "Error occurred while deleting ItemNo", error);
     }
   }
+
+  async getPdfFileInfo(): Promise<CommonResponseModel> {
+    try {
+      const data = await this.pdfRepo.getPDFInfo()
+      if (data) {
+        return new CommonResponseModel(true, 1, 'data retrived Successfully', data)
+      } else {
+        return new CommonResponseModel(false, 0, 'No Data Found', [])
+      }
+    } catch (err) {
+      throw err
+    }
+  }
   
 
 }
