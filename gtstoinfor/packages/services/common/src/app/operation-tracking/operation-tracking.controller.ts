@@ -80,9 +80,10 @@ export class OperationIssuingController{
     }
 //mobile app  API for operation codes dropdown for operation reporting
     @Post('/getOperationCodes')
-    async getOperationCodes(): Promise<CommonResponseModel> {
+    @ApiBody({type: SampleIdRequest})
+    async getOperationCodes(@Body() req: any): Promise<CommonResponseModel> {
     try {
-        return await this.operationGroupsService.getOperationCodes();
+        return await this.operationGroupsService.getOperationCodes(req);
       } catch (error) {
         return this.applicationExceptionHandler.returnException(CommonResponseModel, error);
       }
