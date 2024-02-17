@@ -76,6 +76,8 @@ import EddieColineView from "./eddiebauer/eddie-co-line-view"
 import EddiePdfTable from "./eddiebauer/eddie-pdf-detail-view"
 import EddieOrdersDetailView from "./eddiebauer/eedie-order-detail-view"
 import EddieComparisionReport from "./eddiebauer/eedie-comparision-report"
+import ColorUpload from "./masters/color/color-excel-upload"
+import ColorView from "./masters/color/color-view"
 
 
 export const AppRoutes = () => {
@@ -280,6 +282,9 @@ export const AppRoutes = () => {
                    <Route path='masters/address/address-excel-upload' key='/address/address-excel-upload' element={<AddressUpload/>} />
                    <Route path='masters/address/address-view' key='/address/address-view' element={<AddressView/>} />
                    <Route path="eddiebauer-comparision-report" element={<EddieComparisionReport/>}/>
+
+                   <Route path='masters/color/color-excel-upload' key='/color/color-excel-upload' element={<ColorUpload/>} />
+                   <Route path='masters/color/color-view' key='/color/color-view' element={<ColorView/>} />
 
 
 
