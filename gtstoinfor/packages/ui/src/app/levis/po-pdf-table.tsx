@@ -51,7 +51,8 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                 </tr>
                 <tr className='ta-b'>
                     <td className='ta-b'>{pdfData?.poNumber}</td>
-                    <td className='ta-b'>{pdfData?.transMode}</td>
+                    {/* <td className='ta-b'>{pdfData?.transMode}</td> */}
+                    <td className='ta-b' style={{ textAlign: 'center' }}>{pdfData?.transMode}</td>
                     <td className='ta-b'>{pdfData?.deliveryAddress}</td>
                     <td className='ta-b'>{pdfData?.currency}</td>
                 </tr>

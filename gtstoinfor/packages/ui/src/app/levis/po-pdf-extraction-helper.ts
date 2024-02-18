@@ -1,5 +1,6 @@
 import { LevisPoDetails, LevisPoItemDetails, LevisPoItemVariant } from "@project-management-system/shared-models";
-import { DELIVERY_ADDRESS, EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD,  ITEM_NO_EXP, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT,  PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_INDEXING, PO_NUMBER_TEXT, TRANSMODE_INDEX, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./popdf-regex-expressions";
+import { CURRENCY_INDEX, DELIVERY_ADDRESS, DELIVERY_ADDRESS_MX, EMP_STR_EXP, FORMAT1, FORMAT2, FORMAT3, FORMAT_SEPARATION_KEYWORD, FORMAT_SEPARATION_KEYWORD1, ITEM_NO_EXP, ITEM_NO_EXP1, ITEM_NO_EXP2, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_TEXT_END_TEXT2, ITEM_VARIANT_START_TEXT, ITEM_VARIANT_START_TEXT1, ITEM_VARIANT_START_TEXT2, LSE_FORMAT_KEY, MX_FORMAT_KEY, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_INDEXING, PO_NUMBER_INDEXING_LSE, PO_NUMBER_TEXT, PO_NUMBER_TEXT1, PO_NUMBER_TEXT_LSE, TRANSMODE_INDEX, TRANSMODE_INDEX_LSE, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./popdf-regex-expressions";
+import moment from "moment";
 
 
 /** 
@@ -23,139 +24,433 @@ export const extractDataFromPoPdf = async (pdf) => {
         const textContent: any = await page.getTextContent();
         // console.log(textContent) 
         //parsing  po data  
-        // po details exists only in first data of pdf ,so using only first page for extracting po details 
-        if (i == 1) {
-            const firstPageContent: any[] = textContent.items.filter((v) => {
-                return !EMP_STR_EXP.test(v.str)
-            })
-            console.log(firstPageContent)
-            // find indexes of all the po data fields 
-            let poNumberTextIndex
-            let sellerStartIndex
-            let sellerEndIndex
-            let buyerAddStartIndex
-            let buyerAddEndIndex
-            let shipToAddStartIndex;
-            let poNumberIndex;
-            let transModeIndex;
-            let deliveryAddressIndex;
-            for (const [ind, ele] of firstPageContent.entries()) {
-                if (ele.str == PO_NUMBER_TEXT) {
-                    poNumberTextIndex = ind
-                }
-
-                if (ele.str == 'GREENSBORO') {
-                    shipToAddStartIndex = ind + 3;
-                    buyerAddEndIndex = ind + 4
-                }
-                if (ele.str === 'PLAN LES OUATES') {
-                    shipToAddStartIndex = ind + 2;
-                    buyerAddEndIndex = ind + 3
-                }
-                if (ele.str == 'TORONTO') {
-                    shipToAddStartIndex = ind + 3;
-                    buyerAddEndIndex = ind + 4
-                }
-                if (ele.str === 'SEOUL') {
-                    shipToAddStartIndex = ind + 2;
-                    buyerAddEndIndex = ind + 3
-                }
-                if (ele.str == PO_NUMBER_INDEXING) {
-                    poNumberIndex = ind
-                }
-                if (ele.str == TRANSMODE_INDEX) {
-                    transModeIndex = ind
-                }
-                if (ele.str == DELIVERY_ADDRESS) {
-                    deliveryAddressIndex = ind
-                }
-
+        // po details exists only in first data of pdf ,so using only first page for extracting po details
+        let isPdfFormatSeparationFlag = false;
+        let isPdfFormatSeparationFlag1 = false;
+        const firstPageContent: any[] = textContent.items.filter((v) => {
+            return !EMP_STR_EXP.test(v.str)
+        })
+        for (const [index, rec] of firstPageContent.entries()) {
+            if (rec.str.includes(FORMAT_SEPARATION_KEYWORD)) {
+                isPdfFormatSeparationFlag = true;
             }
-            poData.poNumber = firstPageContent[poNumberIndex - 20].str
-            poData.currency = firstPageContent[poNumberIndex - 7].str
-            poData.transMode = firstPageContent[transModeIndex + 2].str
-            poData.deliveryAddress = 
-            firstPageContent[deliveryAddressIndex - 5].str + " " +
-            firstPageContent[deliveryAddressIndex - 4].str + " " +
-            firstPageContent[deliveryAddressIndex - 3].str + " " +
-            firstPageContent[deliveryAddressIndex - 1].str;
 
-            // poData.poDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX + 1].str
-            // poData.shipment = firstPageContent[frieghtPayMethodIndex - 1].str
-            // poData.season = firstPageContent[dateSentIndex + 4].str
-            // poData.portOfExport = firstPageContent[dateSentIndex + 2].str
-            // poData.portOfEntry = firstPageContent[dateSentIndex + 3].str
-            // if (firstPageContent.length > refrenceIndex + 1) {
-            //     const referenceContentWithAlphabets = firstPageContent[refrenceIndex + 1].str;
-            //     if (/[a-zA-Z]/.test(referenceContentWithAlphabets)) {
-            //         poData.Refrence = referenceContentWithAlphabets;
-            //     } else {
-            //         poData.Refrence = "-";
-            //     }
-            // }
-            // // poData.Refrence = firstPageContent[dateSentIndex + 10].str
-            // poData.poPrint = firstPageContent[dateSentIndex + 7].str
-            // poData.paymentTermDescription = firstPageContent[paymentTermDescriptionIndex + 2].str
-            // // poData.specialInstructions = firstPageContent[specialInstructionsIndex + 1]?.str || '';
-            // if (typeof poData.specialInstructions === 'undefined') {
-            //     poData.specialInstructions = '';
-            // }
-            // for (let i = specialInstructionsIndex + 1; i < firstPageContent.length; i++) {
-            //     if (firstPageContent[i]?.str.includes("PO History")) {
-            //         poData.specialInstructions += firstPageContent[i]?.str.split("PO History")[0];
-            //         break;
-            //     } else {
-            //         poData.specialInstructions += firstPageContent[i]?.str || '';
-            //     }
-            // }
-            // poData.division = firstPageContent[dateSentIndex + 5].str
-            // poData.incoterm = firstPageContent[dateSentIndex - 8].str + firstPageContent[dateSentIndex - 7].str + " " + firstPageContent[dateSentIndex - 6].str + firstPageContent[dateSentIndex - 5].str.replace(/\d+|\w+/g, "")
-
-            // let buyerAddressStartingIndex = "";
-            // let currentIndex = materialIndex;
-            // while (currentIndex < firstPageContent.length) {
-            //     const currentId = firstPageContent[currentIndex]?.str;
-            //     if (currentId && currentId.trim() === 'C') {
-            //         break;
-            //     }
-            //     buyerAddressStartingIndex += (currentId ? currentId + " " : "");
-            //     currentIndex++;
-            // }
-            // poData.buyerAddress = buyerAddressStartingIndex.trim();
-
-
-            // const shipToAddIndexHasNumber = /^\d+$/.test(firstPageContent[materialIndex + 48]?.str);
-            // if (shipToAddIndexHasNumber) {
-            //     poData.shipToAdd = firstPageContent[materialIndex + 49]?.str + " " +
-            //         firstPageContent[materialIndex + 50]?.str + " " +
-            //         firstPageContent[materialIndex + 51]?.str + " " +
-            //         firstPageContent[materialIndex + 52]?.str;
-            // } else {
-            //     poData.shipToAdd = firstPageContent[materialIndex + 48]?.str + " " +
-            //         firstPageContent[materialIndex + 49]?.str + " " +
-            //         firstPageContent[materialIndex + 50]?.str + " " +
-            //         firstPageContent[materialIndex + 51]?.str;
-            // }
-
-            // poData.manufacture = firstPageContent[materialIndex + 36].str + " " + firstPageContent[materialIndex + 37].str + " " +
-            //     firstPageContent[materialIndex + 38].str + " " + firstPageContent[materialIndex + 39].str + " " + firstPageContent[materialIndex + 40].str
-
-            // let selleraddress = '';
-            // for (let a = sellerStartIndex + 1; a < sellerEndIndex; a++) {
-            //     selleraddress += firstPageContent[a].str + ','
-            // }
-            // poData.sellerAddress = selleraddress
-
-            // let shipToAddress = ''
-            // for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) {
-            //     if (c < shipToAddEndIndex - 1)
-            //         shipToAddress += firstPageContent[c].str + ','
-            //     else
-            //         shipToAddress += firstPageContent[c].str
-            // }
-            // poData.shipToAddress = shipToAddress;
+            if (rec.str.includes(FORMAT_SEPARATION_KEYWORD1)) {
+                isPdfFormatSeparationFlag1 = true;
+            }
         }
 
+        /* LSE */
+        if (FORMAT2 === "Material Description" && isPdfFormatSeparationFlag) {
+            if (i == 1) {
+                const firstPageContent: any[] = textContent.items.filter((v) => {
+                    return !EMP_STR_EXP.test(v.str)
+                })
+                console.log(firstPageContent)
+                // find indexes of all the po data fields 
+                let poNumberTextLseIndex
+                let sellerStartIndex
+                let sellerEndIndex
+                let buyerAddStartIndex
+                let buyerAddEndIndex
+                let shipToAddStartIndex;
+                let currencyLseIndex;
+                let transModeLseIndex;
+                let deliveryAddressIndex;
+                for (const [ind, ele] of firstPageContent.entries()) {
+                    if (ele.str == PO_NUMBER_TEXT_LSE) {
+                        poNumberTextLseIndex = ind
+                    }
+
+                    if (ele.str == 'GREENSBORO') {
+                        shipToAddStartIndex = ind + 3;
+                        buyerAddEndIndex = ind + 4
+                    }
+                    if (ele.str === 'PLAN LES OUATES') {
+                        shipToAddStartIndex = ind + 2;
+                        buyerAddEndIndex = ind + 3
+                    }
+                    if (ele.str == 'TORONTO') {
+                        shipToAddStartIndex = ind + 3;
+                        buyerAddEndIndex = ind + 4
+                    }
+                    if (ele.str === 'SEOUL') {
+                        shipToAddStartIndex = ind + 2;
+                        buyerAddEndIndex = ind + 3
+                    }
+                    if (ele.str == PO_NUMBER_INDEXING_LSE) {
+                        currencyLseIndex = ind
+                    }
+                    if (ele.str == TRANSMODE_INDEX_LSE) {
+                        transModeLseIndex = ind
+                    }
+                    if (ele.str == DELIVERY_ADDRESS) {
+                        deliveryAddressIndex = ind
+                    }
+
+                }
+                poData.poNumber = firstPageContent[poNumberTextLseIndex - 1].str;
+                poData.currency = firstPageContent[currencyLseIndex + 1].str;
+                poData.transMode =
+                    (firstPageContent[transModeLseIndex + 2].str + " " +
+                        firstPageContent[transModeLseIndex + 3].str).replace(/\s+\w+/g, "").trim();
+
+
+                // poData.deliveryAddress =
+                //     firstPageContent[deliveryAddressIndex - 5].str + " " +
+                //     firstPageContent[deliveryAddressIndex - 4].str + " " +
+                //     firstPageContent[deliveryAddressIndex - 3].str + " " +
+                //     firstPageContent[deliveryAddressIndex - 1].str;
+
+                // poData.poDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX + 1].str
+                // poData.shipment = firstPageContent[frieghtPayMethodIndex - 1].str
+                // poData.season = firstPageContent[dateSentIndex + 4].str
+                // poData.portOfExport = firstPageContent[dateSentIndex + 2].str
+                // poData.portOfEntry = firstPageContent[dateSentIndex + 3].str
+                // if (firstPageContent.length > refrenceIndex + 1) {
+                //     const referenceContentWithAlphabets = firstPageContent[refrenceIndex + 1].str;
+                //     if (/[a-zA-Z]/.test(referenceContentWithAlphabets)) {
+                //         poData.Refrence = referenceContentWithAlphabets;
+                //     } else {
+                //         poData.Refrence = "-";
+                //     }
+                // }
+                // // poData.Refrence = firstPageContent[dateSentIndex + 10].str
+                // poData.poPrint = firstPageContent[dateSentIndex + 7].str
+                // poData.paymentTermDescription = firstPageContent[paymentTermDescriptionIndex + 2].str
+                // // poData.specialInstructions = firstPageContent[specialInstructionsIndex + 1]?.str || '';
+                // if (typeof poData.specialInstructions === 'undefined') {
+                //     poData.specialInstructions = '';
+                // }
+                // for (let i = specialInstructionsIndex + 1; i < firstPageContent.length; i++) {
+                //     if (firstPageContent[i]?.str.includes("PO History")) {
+                //         poData.specialInstructions += firstPageContent[i]?.str.split("PO History")[0];
+                //         break;
+                //     } else {
+                //         poData.specialInstructions += firstPageContent[i]?.str || '';
+                //     }
+                // }
+                // poData.division = firstPageContent[dateSentIndex + 5].str
+                // poData.incoterm = firstPageContent[dateSentIndex - 8].str + firstPageContent[dateSentIndex - 7].str + " " + firstPageContent[dateSentIndex - 6].str + firstPageContent[dateSentIndex - 5].str.replace(/\d+|\w+/g, "")
+
+                // let buyerAddressStartingIndex = "";
+                // let currentIndex = materialIndex;
+                // while (currentIndex < firstPageContent.length) {
+                //     const currentId = firstPageContent[currentIndex]?.str;
+                //     if (currentId && currentId.trim() === 'C') {
+                //         break;
+                //     }
+                //     buyerAddressStartingIndex += (currentId ? currentId + " " : "");
+                //     currentIndex++;
+                // }
+                // poData.buyerAddress = buyerAddressStartingIndex.trim();
+
+
+                // const shipToAddIndexHasNumber = /^\d+$/.test(firstPageContent[materialIndex + 48]?.str);
+                // if (shipToAddIndexHasNumber) {
+                //     poData.shipToAdd = firstPageContent[materialIndex + 49]?.str + " " +
+                //         firstPageContent[materialIndex + 50]?.str + " " +
+                //         firstPageContent[materialIndex + 51]?.str + " " +
+                //         firstPageContent[materialIndex + 52]?.str;
+                // } else {
+                //     poData.shipToAdd = firstPageContent[materialIndex + 48]?.str + " " +
+                //         firstPageContent[materialIndex + 49]?.str + " " +
+                //         firstPageContent[materialIndex + 50]?.str + " " +
+                //         firstPageContent[materialIndex + 51]?.str;
+                // }
+
+                // poData.manufacture = firstPageContent[materialIndex + 36].str + " " + firstPageContent[materialIndex + 37].str + " " +
+                //     firstPageContent[materialIndex + 38].str + " " + firstPageContent[materialIndex + 39].str + " " + firstPageContent[materialIndex + 40].str
+
+                // let selleraddress = '';
+                // for (let a = sellerStartIndex + 1; a < sellerEndIndex; a++) {
+                //     selleraddress += firstPageContent[a].str + ','
+                // }
+                // poData.sellerAddress = selleraddress
+
+                // let shipToAddress = ''
+                // for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) {
+                //     if (c < shipToAddEndIndex - 1)
+                //         shipToAddress += firstPageContent[c].str + ','
+                //     else
+                //         shipToAddress += firstPageContent[c].str
+                // }
+                // poData.shipToAddress = shipToAddress;
+            }
+        }
+
+        /* BR */
+        else if (FORMAT1 === "Product Description" && isPdfFormatSeparationFlag1) {
+            if (i == 1) {
+                const firstPageContent: any[] = textContent.items.filter((v) => {
+                    return !EMP_STR_EXP.test(v.str)
+                })
+                console.log(firstPageContent)
+                // find indexes of all the po data fields 
+                let poNumberTextIndex
+                let sellerStartIndex
+                let sellerEndIndex
+                let buyerAddStartIndex
+                let buyerAddEndIndex
+                let shipToAddStartIndex;
+                let poNumberIndex;
+                let transModeIndex;
+                let deliveryAddressIndex;
+                for (const [ind, ele] of firstPageContent.entries()) {
+                    if (ele.str == PO_NUMBER_TEXT) {
+                        poNumberTextIndex = ind
+                    }
+
+                    if (ele.str == 'GREENSBORO') {
+                        shipToAddStartIndex = ind + 3;
+                        buyerAddEndIndex = ind + 4
+                    }
+                    if (ele.str === 'PLAN LES OUATES') {
+                        shipToAddStartIndex = ind + 2;
+                        buyerAddEndIndex = ind + 3
+                    }
+                    if (ele.str == 'TORONTO') {
+                        shipToAddStartIndex = ind + 3;
+                        buyerAddEndIndex = ind + 4
+                    }
+                    if (ele.str === 'SEOUL') {
+                        shipToAddStartIndex = ind + 2;
+                        buyerAddEndIndex = ind + 3
+                    }
+                    if (ele.str == PO_NUMBER_INDEXING) {
+                        poNumberIndex = ind
+                    }
+                    if (ele.str == TRANSMODE_INDEX) {
+                        transModeIndex = ind
+                    }
+                    if (ele.str == DELIVERY_ADDRESS) {
+                        deliveryAddressIndex = ind
+                    }
+
+                }
+                poData.poNumber = firstPageContent[poNumberIndex - 20].str
+                poData.currency = firstPageContent[poNumberIndex - 7].str
+                poData.transMode = firstPageContent[transModeIndex + 2].str
+                poData.deliveryAddress =
+                    firstPageContent[deliveryAddressIndex - 5].str + " " +
+                    firstPageContent[deliveryAddressIndex - 4].str + " " +
+                    firstPageContent[deliveryAddressIndex - 3].str + " " +
+                    firstPageContent[deliveryAddressIndex - 1].str;
+
+                // poData.poDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX + 1].str
+                // poData.shipment = firstPageContent[frieghtPayMethodIndex - 1].str
+                // poData.season = firstPageContent[dateSentIndex + 4].str
+                // poData.portOfExport = firstPageContent[dateSentIndex + 2].str
+                // poData.portOfEntry = firstPageContent[dateSentIndex + 3].str
+                // if (firstPageContent.length > refrenceIndex + 1) {
+                //     const referenceContentWithAlphabets = firstPageContent[refrenceIndex + 1].str;
+                //     if (/[a-zA-Z]/.test(referenceContentWithAlphabets)) {
+                //         poData.Refrence = referenceContentWithAlphabets;
+                //     } else {
+                //         poData.Refrence = "-";
+                //     }
+                // }
+                // // poData.Refrence = firstPageContent[dateSentIndex + 10].str
+                // poData.poPrint = firstPageContent[dateSentIndex + 7].str
+                // poData.paymentTermDescription = firstPageContent[paymentTermDescriptionIndex + 2].str
+                // // poData.specialInstructions = firstPageContent[specialInstructionsIndex + 1]?.str || '';
+                // if (typeof poData.specialInstructions === 'undefined') {
+                //     poData.specialInstructions = '';
+                // }
+                // for (let i = specialInstructionsIndex + 1; i < firstPageContent.length; i++) {
+                //     if (firstPageContent[i]?.str.includes("PO History")) {
+                //         poData.specialInstructions += firstPageContent[i]?.str.split("PO History")[0];
+                //         break;
+                //     } else {
+                //         poData.specialInstructions += firstPageContent[i]?.str || '';
+                //     }
+                // }
+                // poData.division = firstPageContent[dateSentIndex + 5].str
+                // poData.incoterm = firstPageContent[dateSentIndex - 8].str + firstPageContent[dateSentIndex - 7].str + " " + firstPageContent[dateSentIndex - 6].str + firstPageContent[dateSentIndex - 5].str.replace(/\d+|\w+/g, "")
+
+                // let buyerAddressStartingIndex = "";
+                // let currentIndex = materialIndex;
+                // while (currentIndex < firstPageContent.length) {
+                //     const currentId = firstPageContent[currentIndex]?.str;
+                //     if (currentId && currentId.trim() === 'C') {
+                //         break;
+                //     }
+                //     buyerAddressStartingIndex += (currentId ? currentId + " " : "");
+                //     currentIndex++;
+                // }
+                // poData.buyerAddress = buyerAddressStartingIndex.trim();
+
+
+                // const shipToAddIndexHasNumber = /^\d+$/.test(firstPageContent[materialIndex + 48]?.str);
+                // if (shipToAddIndexHasNumber) {
+                //     poData.shipToAdd = firstPageContent[materialIndex + 49]?.str + " " +
+                //         firstPageContent[materialIndex + 50]?.str + " " +
+                //         firstPageContent[materialIndex + 51]?.str + " " +
+                //         firstPageContent[materialIndex + 52]?.str;
+                // } else {
+                //     poData.shipToAdd = firstPageContent[materialIndex + 48]?.str + " " +
+                //         firstPageContent[materialIndex + 49]?.str + " " +
+                //         firstPageContent[materialIndex + 50]?.str + " " +
+                //         firstPageContent[materialIndex + 51]?.str;
+                // }
+
+                // poData.manufacture = firstPageContent[materialIndex + 36].str + " " + firstPageContent[materialIndex + 37].str + " " +
+                //     firstPageContent[materialIndex + 38].str + " " + firstPageContent[materialIndex + 39].str + " " + firstPageContent[materialIndex + 40].str
+
+                // let selleraddress = '';
+                // for (let a = sellerStartIndex + 1; a < sellerEndIndex; a++) {
+                //     selleraddress += firstPageContent[a].str + ','
+                // }
+                // poData.sellerAddress = selleraddress
+
+                // let shipToAddress = ''
+                // for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) {
+                //     if (c < shipToAddEndIndex - 1)
+                //         shipToAddress += firstPageContent[c].str + ','
+                //     else
+                //         shipToAddress += firstPageContent[c].str
+                // }
+                // poData.shipToAddress = shipToAddress;
+            }
+        }
+
+        /* MX */
+        else if (FORMAT3 === "Variant Material") {
+            if (i == 1) {
+                const firstPageContent: any[] = textContent.items.filter((v) => {
+                    return !EMP_STR_EXP.test(v.str)
+                })
+                console.log(firstPageContent)
+                // find indexes of all the po data fields 
+                let mxPoNumberTextIndex
+                let sellerStartIndex
+                let sellerEndIndex
+                let buyerAddStartIndex
+                let buyerAddEndIndex
+                let shipToAddStartIndex;
+                let currencyIndex;
+                let transModeIndex;
+                let deliveryAddressIndexMx;
+                for (const [ind, ele] of firstPageContent.entries()) {
+                    // if (ele.str == PO_NUMBER_TEXT) {
+                    //     poNumberTextIndex = ind
+                    // }
+                    if (ele.str == PO_NUMBER_TEXT1) {
+                        mxPoNumberTextIndex = ind
+                    }
+
+                    if (ele.str == 'GREENSBORO') {
+                        shipToAddStartIndex = ind + 3;
+                        buyerAddEndIndex = ind + 4
+                    }
+                    if (ele.str === 'PLAN LES OUATES') {
+                        shipToAddStartIndex = ind + 2;
+                        buyerAddEndIndex = ind + 3
+                    }
+                    if (ele.str == 'TORONTO') {
+                        shipToAddStartIndex = ind + 3;
+                        buyerAddEndIndex = ind + 4
+                    }
+                    if (ele.str === 'SEOUL') {
+                        shipToAddStartIndex = ind + 2;
+                        buyerAddEndIndex = ind + 3
+                    }
+                    if (ele.str == CURRENCY_INDEX) {
+                        currencyIndex = ind
+                    }
+                    if (ele.str == TRANSMODE_INDEX) {
+                        transModeIndex = ind
+                    }
+                    if (ele.str == DELIVERY_ADDRESS_MX) {
+                        deliveryAddressIndexMx = ind
+                    }
+
+                }
+                poData.poNumber = firstPageContent[mxPoNumberTextIndex + 1].str.replace(/#/g, "").trim();
+                poData.currency = firstPageContent[currencyIndex + 1].str
+                poData.transMode = '-'
+                poData.deliveryAddress =
+                    firstPageContent[deliveryAddressIndexMx + 8].str + " " +
+                    firstPageContent[deliveryAddressIndexMx + 9].str + " " +
+                    firstPageContent[deliveryAddressIndexMx + 10].str + " " +
+                    firstPageContent[deliveryAddressIndexMx + 11].str;
+
+                // poData.poDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX + 1].str
+                // poData.shipment = firstPageContent[frieghtPayMethodIndex - 1].str
+                // poData.season = firstPageContent[dateSentIndex + 4].str
+                // poData.portOfExport = firstPageContent[dateSentIndex + 2].str
+                // poData.portOfEntry = firstPageContent[dateSentIndex + 3].str
+                // if (firstPageContent.length > refrenceIndex + 1) {
+                //     const referenceContentWithAlphabets = firstPageContent[refrenceIndex + 1].str;
+                //     if (/[a-zA-Z]/.test(referenceContentWithAlphabets)) {
+                //         poData.Refrence = referenceContentWithAlphabets;
+                //     } else {
+                //         poData.Refrence = "-";
+                //     }
+                // }
+                // // poData.Refrence = firstPageContent[dateSentIndex + 10].str
+                // poData.poPrint = firstPageContent[dateSentIndex + 7].str
+                // poData.paymentTermDescription = firstPageContent[paymentTermDescriptionIndex + 2].str
+                // // poData.specialInstructions = firstPageContent[specialInstructionsIndex + 1]?.str || '';
+                // if (typeof poData.specialInstructions === 'undefined') {
+                //     poData.specialInstructions = '';
+                // }
+                // for (let i = specialInstructionsIndex + 1; i < firstPageContent.length; i++) {
+                //     if (firstPageContent[i]?.str.includes("PO History")) {
+                //         poData.specialInstructions += firstPageContent[i]?.str.split("PO History")[0];
+                //         break;
+                //     } else {
+                //         poData.specialInstructions += firstPageContent[i]?.str || '';
+                //     }
+                // }
+                // poData.division = firstPageContent[dateSentIndex + 5].str
+                // poData.incoterm = firstPageContent[dateSentIndex - 8].str + firstPageContent[dateSentIndex - 7].str + " " + firstPageContent[dateSentIndex - 6].str + firstPageContent[dateSentIndex - 5].str.replace(/\d+|\w+/g, "")
+
+                // let buyerAddressStartingIndex = "";
+                // let currentIndex = materialIndex;
+                // while (currentIndex < firstPageContent.length) {
+                //     const currentId = firstPageContent[currentIndex]?.str;
+                //     if (currentId && currentId.trim() === 'C') {
+                //         break;
+                //     }
+                //     buyerAddressStartingIndex += (currentId ? currentId + " " : "");
+                //     currentIndex++;
+                // }
+                // poData.buyerAddress = buyerAddressStartingIndex.trim();
+
+
+                // const shipToAddIndexHasNumber = /^\d+$/.test(firstPageContent[materialIndex + 48]?.str);
+                // if (shipToAddIndexHasNumber) {
+                //     poData.shipToAdd = firstPageContent[materialIndex + 49]?.str + " " +
+                //         firstPageContent[materialIndex + 50]?.str + " " +
+                //         firstPageContent[materialIndex + 51]?.str + " " +
+                //         firstPageContent[materialIndex + 52]?.str;
+                // } else {
+                //     poData.shipToAdd = firstPageContent[materialIndex + 48]?.str + " " +
+                //         firstPageContent[materialIndex + 49]?.str + " " +
+                //         firstPageContent[materialIndex + 50]?.str + " " +
+                //         firstPageContent[materialIndex + 51]?.str;
+                // }
+
+                // poData.manufacture = firstPageContent[materialIndex + 36].str + " " + firstPageContent[materialIndex + 37].str + " " +
+                //     firstPageContent[materialIndex + 38].str + " " + firstPageContent[materialIndex + 39].str + " " + firstPageContent[materialIndex + 40].str
+
+                // let selleraddress = '';
+                // for (let a = sellerStartIndex + 1; a < sellerEndIndex; a++) {
+                //     selleraddress += firstPageContent[a].str + ','
+                // }
+                // poData.sellerAddress = selleraddress
+
+                // let shipToAddress = ''
+                // for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) {
+                //     if (c < shipToAddEndIndex - 1)
+                //         shipToAddress += firstPageContent[c].str + ','
+                //     else
+                //         shipToAddress += firstPageContent[c].str
+                // }
+                // poData.shipToAddress = shipToAddress;
+            }
+        }
         // const buyerAddressHasNumber = /C/.test(firstPageContent[materialIndex + 0]?.str);
         // if (buyerAddressHasNumber) {
         //     poData.buyerAddress =
@@ -179,12 +474,12 @@ export const extractDataFromPoPdf = async (pdf) => {
         let startFlag = false; // Initialize startFlag to false  
         let endFlag = false;   // Initialize endFlag to false 
         const pageContent = textContent.items.filter((val, index) => {
-            if (val.str == 'PO Line') { startFlag = true; }
+            if (val.str === 'PO Line') { startFlag = true; }
             if (endFlag) {
                 startFlag = false;
                 endFlag = false;
             }
-            if (val.str == "Total Eaches") { endFlag = true; }
+            if (val.str === "Total Eaches") { endFlag = true; }
             // using NOR operation for filtering   
             return !(
                 EMP_STR_EXP.test(val.str)
@@ -216,24 +511,28 @@ export const extractDataFromPoPdf = async (pdf) => {
     let prevItemIndex = 0
     let prevColorIndex = 0;
     let isSecondFormat = false;
+    let isSecondFormat1 = false;
     for (const [index, rec] of filteredData.entries()) {
-        if (rec.str.match(ITEM_NO_EXP)) {
+        if (rec.str.match(ITEM_NO_EXP1)) {
             prevItemIndex = index
         }
-        if (rec.str.includes(ITEM_VARIANT_START_TEXT)) {
+        if (rec.str.includes(ITEM_VARIANT_START_TEXT1)) {
             itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
         }
         if (rec.str.includes(FORMAT_SEPARATION_KEYWORD)) {
             isSecondFormat = true;
         }
+        if (rec.str.includes(FORMAT_SEPARATION_KEYWORD1)) {
+            isSecondFormat1 = true;
+        }
 
     }
-
     console.log(itemsArr, 'AAAAAAAAA')
 
 
-    /* 2nd format */
-    // if (ITEM_TEXT_END_TEXT1 === "Per Pack" && isSecondFormat) {
+    /* 2nd format LSE */
+    if (LSE_FORMAT_KEY === "Material Description" && isSecondFormat) {
+
         for (const rec of itemsArr) {
             let shipToEndIndex = 0;
             let itemTextEndIndex = 0;
@@ -241,96 +540,25 @@ export const extractDataFromPoPdf = async (pdf) => {
             let itemVariantStartIndex
             const itemDetailsObj = new LevisPoItemDetails();
             console.log(rec.itemIndex, "iiiiiiiiiiiiii")
-            itemDetailsObj.poLine = '-'
-            itemDetailsObj.material = '-'
-            itemDetailsObj.totalUnitPrice = '-'
-            itemDetailsObj.originalDate = '-'
-            
-            // let totalQuantityIndex;
-            // for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
-            //     const currentInfo = filteredData[i].str;
 
-            //     if (currentInfo.includes("Mens") || currentInfo.includes("Womens")) {
-            //         totalQuantityIndex = i + 3; 
-            //         break;
-            //     }
-            // }
-            // if (totalQuantityIndex !== -1 && totalQuantityIndex < filteredData.length) {
-            //     itemDetailsObj.totalQuantity = filteredData[totalQuantityIndex].str;
-            // }
+            itemDetailsObj.poLine = filteredData[rec.itemIndex + 1].str
+            itemDetailsObj.material = filteredData[rec.itemIndex + 2].str
+            let unitPriceIndex = -1;
+            let foundFirstTransMode = false;
+            filteredData.forEach((item, index) => {
+                if (/Trans. Mode/.test(item.str)) {
+                    if (!foundFirstTransMode) {
+                        foundFirstTransMode = true;
+                        unitPriceIndex = index - 3;
+                        return;
+                    }
+                }
+            });
 
-            // const poLineIndex = filteredData.findIndex((item, index) => index >= rec.itemIndex + 11);
-            // if (poLineIndex !== -1) {
-            //     itemDetailsObj.currency = filteredData[poLineIndex - 1].str.replace(/Cost\(/g, '').replace(/\)/g, '');
-            // }
+            if (unitPriceIndex >= 0 && unitPriceIndex < filteredData.length) {
+                itemDetailsObj.totalUnitPrice = filteredData[unitPriceIndex].str;
+            }
 
-            // for (let i = rec.itemIndex + 15; i < filteredData.length; i++) {
-            //     if (filteredData[i].str.includes("Mens")) {
-            //         itemDetailsObj.color = itemDetailsObj.color.split("Mens")[0];
-            //         break;
-            //     } else if (filteredData[i].str.includes("Womens")) {
-            //         itemDetailsObj.color = itemDetailsObj.color.split("Womens")[0];
-            //         break;
-            //     } else {
-            //         itemDetailsObj.color += filteredData[i].str;
-            //     }
-            // }
-            // let foundMens = false;
-            // for (let i = rec.itemIndex + 16; i < filteredData.length; i++) {
-            //     const currentInfo = filteredData[i].str;
-            //     if (currentInfo.includes("Mens" || "Womens")) {
-            //         itemDetailsObj.gender = currentInfo;
-            //         foundMens = true;
-            //         break;
-            //     }
-            // }
-            // if (!foundMens) {
-            //     for (let i = rec.itemIndex; i < filteredData.length; i++) {
-            //         const currentInfo = filteredData[i].str;
-
-            //         if (currentInfo.includes("Mens" || "Womens")) {
-            //             itemDetailsObj.gender = currentInfo;
-            //             break;
-            //         }
-            //     }
-            // }
-            // let shortDescriptionMatching;
-            // let vendorBookingFlagMatching;
-            // let packMethodMatching;
-
-            // filteredData.forEach(item => {
-            //     if (/Short/.test(item.str)) {
-            //         shortDescriptionMatching = item;
-            //         return;
-            //     }
-            // });
-
-            // if (shortDescriptionMatching) {
-            //     itemDetailsObj.shortDescription = shortDescriptionMatching.str.replace(/Short Description: /g, "");
-            // }
-
-            // filteredData.forEach(item => {
-            //     if (/Vendor Booking Flag =/.test(item.str)) {
-            //         vendorBookingFlagMatching = item;
-            //         return;
-            //     }
-            // });
-
-            // if (vendorBookingFlagMatching) {
-            //     itemDetailsObj.vendorBookingFlag = vendorBookingFlagMatching.str.replace(/Vendor Booking Flag =/g, "");
-            // }
-
-
-            // filteredData.forEach(item => {
-            //     if (/Pack Method: /.test(item.str)) {
-            //         packMethodMatching = item;
-            //         return;
-            //     }
-            // });
-
-            // if (packMethodMatching) {
-            //     itemDetailsObj.packMethod = packMethodMatching.str.replace(/Pack Method: /g, "");
-            // }
 
             itemTextEndIndex = rec.amountIndex
             itemVariantStartIndex = itemTextEndIndex + 1
@@ -345,7 +573,105 @@ export const extractDataFromPoPdf = async (pdf) => {
             }
             console.log(itemVarinatsTextArr, 'VVVVVVVv')
             const stringsWithLength13 = itemVarinatsTextArr.filter(value => /^\d{12}$/.test(value));
-            console.log("stringsWithLength13", stringsWithLength13);            
+            console.log("stringsWithLength13", stringsWithLength13);
+            const regexPattern = /\d+\.\d+\.\d+/;
+            const CompMaterialData = itemVarinatsTextArr.filter(value => regexPattern.test(value));
+            console.log("CompMaterialData", CompMaterialData);
+            const sizes = stringsWithLength13.length;
+            const count = itemVarinatsTextArr.length / sizes;
+            const itemVariantsArr: LevisPoItemVariant[] = []
+            const allSizesArray = [...new Set(itemVarinatsTextArr.filter(size => ['XXS', 'XS', 'S', 'M', 'L', 'XL', '2X', 'XXL', 'XXXL', 'LT', 'XLT', '2XLT', '3XLT', '4XLT', '5XLT', 'ST', 'XST', '2XST', '3XST', '4XST', '5XST', 'XS-Slim', 'S-Slim', 'M-Slim', 'L-Slim', 'XL-Slim', 'XXL-Slim', 'XS-Regular', 'S-Regular', 'M-Regular', 'L-Regular', 'XL-Regular', 'XXL-Regular', '3X', '4X', '5X', '6X', 'XL -', 'XS -', 'XXL -'].includes(size)))];
+
+            const lineConnectRegex = /\w+\d+-\d+/;
+            const lineRegex = /^\d{4,8}$/;
+            let lineIndex = itemVarinatsTextArr.findIndex(item => lineConnectRegex.test(item));
+            if (lineIndex === -1) {
+                console.log("No matching line found");
+            }
+
+            lineIndex++;
+
+            for (let i = 0; i < allSizesArray.length; i++) {
+                const size = allSizesArray[i];
+                const sizeWithoutHyphen = size.replace(/\s-/g, '');
+                const isSizeWithHyphen = size !== sizeWithoutHyphen;
+
+                let upc = null;
+                while (lineIndex < itemVarinatsTextArr.length) {
+                    if (lineRegex.test(itemVarinatsTextArr[lineIndex])) {
+                        upc = itemVarinatsTextArr[lineIndex];
+                        lineIndex++;
+                        break;
+                    }
+                    lineIndex++;
+                }
+
+                if (!upc) {
+                    break;
+                }
+
+                let product = null;
+                const regex = /\d+\.\d+\.\d+/g;
+                const productIndexingDataMatch = itemVarinatsTextArr.slice(lineIndex).join(' ');
+                const matches = productIndexingDataMatch.match(regex);
+                if (matches && matches.length > 0) {
+                    const lastIndex = matches.length - 1;
+                    product = matches[lastIndex];
+                }
+
+
+                const itemVariantsObj = new LevisPoItemVariant();
+                itemVariantsObj.size = isSizeWithHyphen ? sizeWithoutHyphen : size;
+                itemVariantsObj.upc = upc;
+                itemVariantsObj.product = product;
+                // itemVariantsObj.unitPrice = unitPrice;
+
+                console.log(itemVariantsObj)
+                itemVariantsArr.push(itemVariantsObj)
+            }
+            itemDetailsObj.LevispoItemVariantDetails = itemVariantsArr
+            itemDetailsArr.push(itemDetailsObj)
+            // }
+        }
+    }
+
+    /* 1st format BR */
+    else if (ITEM_TEXT_END_TEXT === "TRANS MODE" && isSecondFormat1) {
+        for (const [index, rec] of filteredData.entries()) {
+            if (rec.str.match(ITEM_NO_EXP)) {
+                prevItemIndex = index
+            }
+            if (rec.str.includes(ITEM_VARIANT_START_TEXT)) {
+                itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
+            }
+
+        }
+        for (const rec of itemsArr) {
+            let shipToEndIndex = 0;
+            let itemTextEndIndex = 0;
+            let itemDetailsEndIndex = 0
+            let itemVariantStartIndex
+            const itemDetailsObj = new LevisPoItemDetails();
+            console.log(rec.itemIndex, "iiiiiiiiiiiiii")
+            itemDetailsObj.poLine = '-'
+            itemDetailsObj.material = '-'
+            itemDetailsObj.totalUnitPrice = '-'
+            itemDetailsObj.originalDate = '-'
+
+            itemTextEndIndex = rec.amountIndex
+            itemVariantStartIndex = itemTextEndIndex + 1
+
+            //------------------------------------------------------------------------- 
+            // item varinat details parsing starts here 
+            const itemVarinatsTextArr = []
+            let k = itemVariantStartIndex
+            while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
+                itemVarinatsTextArr.push(filteredData[k].str)
+                k++
+            }
+            console.log(itemVarinatsTextArr, 'VVVVVVVv')
+            const stringsWithLength13 = itemVarinatsTextArr.filter(value => /^\d{12}$/.test(value));
+            console.log("stringsWithLength13", stringsWithLength13);
             // const regexPattern = /[0-9]{2}[A-Z]{5}\w+-\d+/;
             // const CompMaterialData = itemVarinatsTextArr.filter(value => regexPattern.test(value));
             // console.log("CompMaterialData", CompMaterialData);
@@ -356,17 +682,27 @@ export const extractDataFromPoPdf = async (pdf) => {
                 const itemVariantsObj = new LevisPoItemVariant();
                 const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
                 itemVariantsObj.product = itemVarinatsTextArr[upcIndex + 1]
-                itemVariantsObj.upc =stringsWithLength13[l]
+                itemVariantsObj.upc = stringsWithLength13[l]
                 itemVariantsObj.size = itemVarinatsTextArr[upcIndex + 4]
-                itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5]
-                itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex - 3]
+                // itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5]
+                itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex - 3].replace(/,/g, "");
                 itemVariantsObj.unitPrice = itemVarinatsTextArr[upcIndex - 2]
                 // itemVariantsObj.exFactoryDate
-                const plannedExFactoryDate = new Date(itemVariantsObj.plannedExFactoryDate);
-                plannedExFactoryDate.setDate(plannedExFactoryDate.getDate() - 21);
-                itemVariantsObj.exFactoryDate = plannedExFactoryDate.toISOString().slice(0, 10);
-            
-                // const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
+                itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5];
+                // const plannedExFactoryDate = new Date(itemVariantsObj.plannedExFactoryDate);
+                // plannedExFactoryDate.setDate(plannedExFactoryDate.getDate() - 21);
+                // const year = plannedExFactoryDate.getFullYear();
+                // const month = String(plannedExFactoryDate.getMonth() + 1).padStart(2, '0');
+                // const day = String(plannedExFactoryDate.getDate()).padStart(2, '0');
+                // itemVariantsObj.exFactoryDate = `${year}.${month}.${day}`;
+                itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5];
+                const inputDate = new Date(itemVariantsObj.plannedExFactoryDate);
+                // Calculate the date 21 days before the plannedExFactoryDate
+                const twentyOneDaysBefore = new Date(inputDate);
+                twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
+                const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(twentyOneDaysBefore);
+                itemVariantsObj.exFactoryDate = moment(twentyOneDaysBefore).format("YYYY.MM.DD");
+                // // const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
                 // if (upcIndex !== -1 && upcIndex < itemVarinatsTextArr.length - 1) {
                 //     const nextIndexValue = itemVarinatsTextArr[upcIndex + 1];
 
@@ -410,193 +746,131 @@ export const extractDataFromPoPdf = async (pdf) => {
             }
             itemDetailsObj.LevispoItemVariantDetails = itemVariantsArr
             itemDetailsArr.push(itemDetailsObj)
-        // }
+            // }
+        }
     }
 
-    /* 1st format */
-    // else if (ITEM_TEXT_END_TEXT === "Total Eaches") {
-    //     for (const rec of itemsArr) {
-    //         let shipToEndIndex = 0;
-    //         let itemTextEndIndex = 0;
-    //         let itemDetailsEndIndex = 0
-    //         let itemVariantStartIndex
-    //         const itemDetailsObj = new LevisPoItemDetails();
-    //         console.log(rec.itemIndex, "iiiiiiiiiiiiii")
-    //         itemDetailsObj.poLine = filteredData[rec.itemIndex + 10].str
-    //         itemDetailsObj.material = filteredData[rec.itemIndex + 11].str.replace(/^\d{2}|-.*$/g, '')
-    //         itemDetailsObj.color = filteredData[rec.itemIndex + 12].str;
+    /* 3rd format MX */
+    else if (MX_FORMAT_KEY === "Variant Material") {
 
-    //         // let shortDescriptionIndex;
-    //         // for (let i = 0; i < filteredData.length; i++) {
-    //         //     if (filteredData[i].str.includes('Short Description')) {
-    //         //         shortDescriptionIndex = i;
-    //         //         break;
-    //         //     }
-    //         // }
-    //         // if (shortDescriptionIndex> 0) {
-    //         //     itemDetailsObj.totalQuantity = filteredData[shortDescriptionIndex - 1].str;
-    //         // }
+        for (const [index, rec] of filteredData.entries()) {
+            if (rec.str.match(ITEM_NO_EXP2)) {
+                prevItemIndex = index
+            }
+            if (rec.str.includes(ITEM_VARIANT_START_TEXT2)) {
+                itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
+            }
 
-    //         const poLineIndex = filteredData.findIndex((item, index) => index >= rec.itemIndex + 10);
-    //         if (poLineIndex !== -1) {
-    //             itemDetailsObj.currency = filteredData[poLineIndex - 1].str.replace(/Cost\(/g, '').replace(/\)/g, '');
-    //         }
+        }
 
-    //         for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
-    //             if (filteredData[i].str.includes("Mens")) {
-    //                 itemDetailsObj.color = itemDetailsObj.color.split("Mens")[0];
-    //                 break;
-    //             } else if (filteredData[i].str.includes("Womens")) {
-    //                 itemDetailsObj.color = itemDetailsObj.color.split("Womens")[0];
-    //                 break;
-    //             } else {
-    //                 itemDetailsObj.color += filteredData[i].str;
-    //             }
-    //         } let foundMens = false;
-    //         for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
-    //             const currentInfo = filteredData[i].str;
-    //             if (currentInfo.includes("Mens" || "Womens")) {
-    //                 itemDetailsObj.gender = currentInfo;
-    //                 foundMens = true;
-    //                 break;
-    //             }
-    //         }
-    //         if (!foundMens) {
-    //             for (let i = rec.itemIndex; i < filteredData.length; i++) {
-    //                 const currentInfo = filteredData[i].str;
+        for (const rec of itemsArr) {
+            let shipToEndIndex = 0;
+            let itemTextEndIndex = 0;
+            let itemDetailsEndIndex = 0
+            let itemVariantStartIndex
+            const itemDetailsObj = new LevisPoItemDetails();
+            console.log(rec.itemIndex, "iiiiiiiiiiiiii")
 
-    //                 if (currentInfo.includes("Mens" || "Womens")) {
-    //                     itemDetailsObj.gender = currentInfo;
-    //                     break;
-    //                 }
-    //             }
-    //         }
+            itemDetailsObj.poLine = filteredData[rec.itemIndex + 1].str
+            // itemDetailsObj.material = filteredData[rec.itemIndex + 2].str
+            let originalDateIndexPoLine = -1;
+            filteredData.forEach((item, index) => {
+                if (/Item Total Value/.test(item.str)) {
+                    originalDateIndexPoLine = index + 5;
+                    return;
+                }
+            });
 
-    //         let totalQuantityIndex;
-    //         for (let i = rec.itemIndex + 13; i < filteredData.length; i++) {
-    //             const currentInfo = filteredData[i].str;
+            if (originalDateIndexPoLine >= 0 && originalDateIndexPoLine < filteredData.length) {
+                itemDetailsObj.originalDate = filteredData[originalDateIndexPoLine].str;
+            }
+            // let originalDateIndexPoLine = -1;
 
-    //             if (currentInfo.includes("Mens") || currentInfo.includes("Womens")) {
-    //                 totalQuantityIndex = i + 3; 
-    //                 break;
-    //             }
-    //         }
-    //         if (totalQuantityIndex !== -1 && totalQuantityIndex < filteredData.length) {
-    //             itemDetailsObj.totalQuantity = filteredData[totalQuantityIndex].str;
-    //         }
+            // filteredData.forEach((item, index) => {
+            //     if (/Item Total Value/.test(item.str)) {
+            //         originalDateIndexPoLine = index + 5;
+            //         return;
+            //     }
+            // });
 
-    //         let shortDescriptionMatching;
-    //         let vendorBookingFlagMatching;
-    //         let packMethodMatching;
+            // if (originalDateIndexPoLine >= 0 && originalDateIndexPoLine < filteredData.length) {
+            //     const originalDateString = filteredData[originalDateIndexPoLine].str;
+            //     const [day, month, year] = originalDateString.split('.');
+            //     const originalDate = new Date(`${month}/${day}/${year}`);
+            //     originalDate.setDate(originalDate.getDate() - 21);
+            //     const formattedDate = `${originalDate.getDate()}.${originalDate.getMonth() + 1}.${originalDate.getFullYear()}`;
+            //     itemDetailsObj.originalDate = formattedDate;
+            // }
 
-    //         filteredData.forEach(item => {
-    //             if (/Short/.test(item.str)) {
-    //                 shortDescriptionMatching = item;
-    //                 return;
-    //             }
-    //         });
+            let materialIndex = -1;
+            filteredData.forEach((item, index) => {
+                if (/Item Total Value/.test(item.str)) {
+                    materialIndex = index + 2;
+                    return;
+                }
+            });
 
-    //         if (shortDescriptionMatching) {
-    //             itemDetailsObj.shortDescription = shortDescriptionMatching.str.replace(/Short Description: /g, "");
-    //         }
+            if (materialIndex >= 0 && materialIndex < filteredData.length) {
+                itemDetailsObj.material = filteredData[materialIndex].str;
+            }
 
-    //         // const totalCostIndex = filteredData.findIndex(item => /Total Eaches/.test(item.str));
-    //         // if (totalCostIndex) {
-    //         //     itemDetailsObj.totalQuantity = filteredData[totalCostIndex + 1].str;
-    //         // }
+            let unitPriceIndexPoLine = -1;
+            filteredData.forEach((item, index) => {
+                if (/Line Item/.test(item.str)) {
+                    unitPriceIndexPoLine = index - 4;
+                    return;
+                }
+            });
+
+            if (unitPriceIndexPoLine >= 0 && unitPriceIndexPoLine < filteredData.length) {
+                itemDetailsObj.totalUnitPrice = filteredData[unitPriceIndexPoLine].str;
+            }
 
 
-    //         // for (let i = 1; i < filteredData.length; i++) {
-    //         //     if (/Short/.test(filteredData[i].str)) {
-    //         //         shortDescriptionMatching = filteredData[i];
-    //         //         const totalQuantityIndex = i - 1;
-    //         //         if (totalQuantityIndex >= 0) {
-    //         //             itemDetailsObj.shortDescription = shortDescriptionMatching.str.replace(/Short Description: /g, "");
-    //         //             itemDetailsObj.totalQuantity = filteredData[totalQuantityIndex].str;
-    //         //             break;
-    //         //         }
-    //         //     }
-    //         // }
 
-    //         // let shortDescriptionIndex = -1;
-    //         // for (let i = 0; i < filteredData.length; i++) {
-    //         //     if (filteredData[i].str.includes('Short Description')) {
-    //         //         shortDescriptionIndex = i;
-    //         //         break;
-    //         //     }
-    //         // }
+            itemTextEndIndex = rec.amountIndex
+            itemVariantStartIndex = itemTextEndIndex + 1
 
-    //         // if (shortDescriptionIndex !== -1) {
-    //         //     const totalQuantityIndex = shortDescriptionIndex - 1;
-    //         //     if (totalQuantityIndex >= 0 && totalQuantityIndex < filteredData.length) {
-    //         //         itemDetailsObj.totalQuantity = filteredData[totalQuantityIndex].str;
-    //         //     }
-    //         // }
+            //------------------------------------------------------------------------- 
+            // item varinat details parsing starts here 
+            const itemVarinatsTextArr = []
+            let k = itemVariantStartIndex
+            while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT2)) {
+                itemVarinatsTextArr.push(filteredData[k].str)
+                k++
+            }
+            console.log(itemVarinatsTextArr, 'VVVVVVVv')
+            const stringsWithLength13 = itemVarinatsTextArr.filter(value => /[A-Za-z]{1}[0-9]{4}-[0-9]{4}[A-Za-z]{1}/.test(value));
+            console.log("stringsWithLength13", stringsWithLength13);
+            // const regexPattern = /[0-9]{2}[A-Z]{5}\w+-\d+/;
+            // const CompMaterialData = itemVarinatsTextArr.filter(value => regexPattern.test(value));
+            // console.log("CompMaterialData", CompMaterialData);
+            const sizes = stringsWithLength13.length;
+            const count = itemVarinatsTextArr.length / sizes;
+            const itemVariantsArr: LevisPoItemVariant[] = []
+            for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
+                const itemVariantsObj = new LevisPoItemVariant();
+                const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
+                // itemVariantsObj.product = itemVarinatsTextArr[upcIndex + 1] //Description
+                itemVariantsObj.upc = stringsWithLength13[l] //variant material
+                itemVariantsObj.size = itemVarinatsTextArr[upcIndex + 2] //size
+                itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 3] // quantity
+                itemVariantsObj.exFactoryDate = itemVarinatsTextArr[upcIndex - 1]  //item#
+                // itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5]
+                // itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex - 3].replace(/,/g, "");
+                // itemVariantsObj.unitPrice = itemVarinatsTextArr[upcIndex - 2]
+                // const plannedExFactoryDate = new Date(itemVariantsObj.plannedExFactoryDate);
+                // plannedExFactoryDate.setDate(plannedExFactoryDate.getDate() - 21);
+                // itemVariantsObj.exFactoryDate = plannedExFactoryDate.toISOString().slice(0, 10);
 
-    //         filteredData.forEach(item => {
-    //             if (/Vendor Booking Flag =/.test(item.str)) {
-    //                 vendorBookingFlagMatching = item;
-    //                 return;
-    //             }
-    //         });
-
-    //         if (vendorBookingFlagMatching) {
-    //             itemDetailsObj.vendorBookingFlag = vendorBookingFlagMatching.str.replace(/Vendor Booking Flag =/g, "");
-    //         }
-
-
-    //         filteredData.forEach(item => {
-    //             if (/Pack Method: /.test(item.str)) {
-    //                 packMethodMatching = item;
-    //                 return;
-    //             }
-    //         });
-
-    //         if (packMethodMatching) {
-    //             itemDetailsObj.packMethod = packMethodMatching.str.replace(/Pack Method: /g, "");
-    //         }
-
-    //         itemTextEndIndex = rec.amountIndex
-    //         itemVariantStartIndex = itemTextEndIndex + 1
-
-    //         //-------------------------------------------------------------------------
-    //         // item varinat details parsing starts here
-    //         const itemVarinatsTextArr = []
-    //         let k = itemVariantStartIndex
-    //         while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
-    //             itemVarinatsTextArr.push(filteredData[k].str)
-    //             k++
-    //         }
-    //         console.log(itemVarinatsTextArr, 'VVVVVVVv')
-    //         const stringsWithLength13 = itemVarinatsTextArr.filter(value => typeof value === 'string' && value.length === 13 || value.length === 12);
-    //         const sizes = stringsWithLength13.length;
-    //         const count = itemVarinatsTextArr.length / sizes;
-    //         const itemVariantsArr: LevisPoItemVariant[] = []
-    //         for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
-    //             const itemVariantsObj = new LevisPoItemVariant();
-    //             itemVariantsObj.size = itemVarinatsTextArr[(count * l) + 0]
-    //             itemVariantsObj.upc = itemVarinatsTextArr[(count * l) + 1]
-    //             const labelWithAlphabets = itemVarinatsTextArr[(count * l) + 2];
-    //             if (/[a-zA-Z]/.test(labelWithAlphabets)) {
-    //                 itemVariantsObj.label = labelWithAlphabets;
-    //             } else {
-    //                 itemVariantsObj.label = "-";
-    //             }
-    //             itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count - 8]
-    //             itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) + count - 6]
-    //             itemVariantsObj.exFactory = itemVarinatsTextArr[(count * l) + count - 4]
-    //             itemVariantsObj.exPort = itemVarinatsTextArr[(count * l) + count - 3]
-    //             itemVariantsObj.deliveryDate = itemVarinatsTextArr[(count * l) + count - 2]
-    //             itemVariantsObj.retialPrice = itemVarinatsTextArr[(count * l) + count - 1]
-
-    //             itemVariantsObj.amount = itemVarinatsTextArr[(count * l) + count - 1]
-    //             console.log(itemVariantsObj)
-    //             itemVariantsArr.push(itemVariantsObj)
-    //         }
-    //         itemDetailsObj.LevispoItemVariantDetails = itemVariantsArr
-    //         itemDetailsArr.push(itemDetailsObj)
-    //     }
-    // }
+                console.log(itemVariantsObj)
+                itemVariantsArr.push(itemVariantsObj)
+            }
+            itemDetailsObj.LevispoItemVariantDetails = itemVariantsArr
+            itemDetailsArr.push(itemDetailsObj)
+            // }
+        }
+    }
 
     poData.LevispoItemDetails = itemDetailsArr
     console.log(poData)
