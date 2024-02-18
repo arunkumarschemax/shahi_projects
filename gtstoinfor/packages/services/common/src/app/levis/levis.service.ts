@@ -6,10 +6,11 @@ import { LevisOrdersRepository } from "./repositories/levis-orders.repo";
 import { LevisPdfRepo } from "./repositories/levis-pdf.repo";
 import { LevisOrdersEntity } from "./entities/levis-orders.entity";
 import { LevisPdfInfoEntity } from "./entities/levis-pdf.entity";
-import { CommonResponseModel, LevisOrderFilter, LevisSizeWiseModel, StatusEnum, levisOrderDataModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, LevisCoLinereqModel, LevisColorModel, LevisDestinationModel, LevisOrderFilter, LevisSizeWiseModel, SizeModel, StatusEnum, levisOrderDataModel } from "@project-management-system/shared-models";
 import { LevisCOLineEntity } from "./entities/levis-co-line.entity";
 import { LevisCOLineRepository } from "./repositories/levis-co-line.repository";
 import { ItemNoDtos } from "../sanmar/dto/sanmar-item-no.dto";
+import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
 
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
@@ -338,5 +339,62 @@ export class LevisService {
     }
   }
   
+  async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
+    try {
+      const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber } })
+  
+      // po -> destination -> color -> sizes
+      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+      const poMap = new Map<string, LevisOrdersEntity>();
+      data.forEach(rec => {
+        poMap.set(`${rec.poNumber}`, rec)
+        // const destCountry = rec.shipToAdd.slice(-13).trim();
+        // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
+
+        const parts = rec.deliveryAddress.split(',')
+        const destAdd = parts[2].trim();
+        const dest = destAdd;
+
+        if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
+          destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
+        }
+        if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
+          destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
+        }
+        if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(rec.product)) {
+          destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(rec.product, []);
+        }
+        destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(rec.product).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+      });
+      const coData = []
+      destinationColSizesMap.forEach((destColorSize, poNumber) => {
+        const desArray = []
+        destColorSize.forEach((colorSizes, dest) => {
+          const ColArray = []
+          colorSizes.forEach((sizes, color) => {
+            const sizeArray = []
+            sizes.forEach((size) => {
+              const sizeObj = new SizeModel(size.size, size.quantity, size.price);
+              sizeArray.push(sizeObj)
+            })
+            const col = new LevisColorModel(color, sizeArray);
+            ColArray.push(col)
+          });
+          const des = new LevisDestinationModel(dest, ColArray);
+          desArray.push(des)
+        });
+        const poInfo = poMap.get(poNumber)
+        const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, poInfo.plannedExFactoryDate, desArray);
+        coData.push(co)
+      });
+      if (coData) {
+        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
+    } catch (err) {
+      throw err
+    }
+  }
 
 }
