@@ -21,8 +21,8 @@ export const PO_NUMBER_INDEXING='Product Description'
 export const TRANSMODE_INDEX='TRANS MODE'
 export const DELIVERY_ADDRESS='PO NUMBER'
 
-export const ITEM_TEXT_END_TEXT= 'Total Eaches' 
-export const ITEM_TEXT_END_TEXT2 = 'Merchandise Amount' 
+// export const ITEM_TEXT_END_TEXT= 'Total Eaches' 
+// export const ITEM_TEXT_END_TEXT2 = 'Merchandise Amount' 
 export const UNWANTED_TEXT_1 = 'Centric Fashion LLC.' 
 export const UNWANTED_TEXT_2 = "THE MERCHANDISE ORDERED HEREWITH IS SUBJECT TO THE VENDOR OBLIGATIONS SET FORTH IN THE RALPH LAUREN CORPORATION'S"
 export const UNWANTED_TEXT_3 = "VENDOR COMPLIANCE PACKET. BY ACCEPTING THIS ORDER YOU CONFER YOUR AGREEMENT TO COMPLY WITH ALL TERMS AND"
@@ -48,7 +48,7 @@ export const PO_DOC_DATE_INDEX = 1
 // export const CURR_INDEX = 4
 // export const INCOTERMS_INDEX = [5, 8]
 // export const FACTORYLOCATION_INDEX = 6
-export const PO_NUMBER_TEXT = 'PO NUMBER' 
+export const PO_NUMBER_TEXT = 'PO NUMBER'
 export const PO_NUMBER_INDEX = 1 
 // export const SELLER_ADDRESS_START_TEXT = "SELLER:"
 // export const SELLER_ADDRESS_END_TEXT = "BUYER:"
@@ -56,9 +56,46 @@ export const ITEM_VARIANT_START_TEXT = "Tarif Code"
 
 
  // Jaswanth Chnages 2nd format// 
-export const ITEM_TEXT_END_TEXT1= 'TRANS MODE' 
-export const FORMAT_SEPARATION_KEYWORD = 'Compt. Material' 
+export const ITEM_TEXT_END_TEXT= 'TRANS MODE' 
+export const FORMAT_SEPARATION_KEYWORD = 'Material Description' 
 export const TOTAL_QUANTITY='Total Cost'
+// export const FORMAT_SEPARATION_KEYWORD1= 'Product Description' 
+
+export const FORMAT1='Product Description'
+export const FORMAT2='Material Description'
+export const FORMAT3='Variant Material'
+export const FORMAT_SEPARATION_KEYWORD1 = 'Product Description'
+
+/* LSE format */
+export const PO_NUMBER_TEXT_LSE = 'COMPANY CODE'
+export const TRANSMODE_INDEX_LSE='Number'
+export const PO_NUMBER_INDEXING_LSE='PO CURRENCY'
+export const ITEM_TEXT_END_TEXT1= 'This Purchase Order is issued under,' 
+export const ITEM_NO_EXP1 = "Line Value"
+export const ITEM_NO_INDEX1= 0
+export const ITEM_MATERIAL_INDEX1 = 'Line Value'
+export const ITEM_VARIANT_START_TEXT1 = "BOM Summary" 
+export const LSE_FORMAT_KEY="Material Description"
+
+
+
+/* MX */
+export const MX_FORMAT_KEY='Variant Material'
+export const ITEM_TEXT_END_TEXT2='This Purchase Order is issued under,'
+export const PO_NUMBER_TEXT1 = 'Purchase Order'
+export const PO_NUMBER_INDEX1 = 1 
+export const CURRENCY_INDEX = 'Currency'
+export const ITEM_NO_EXP2 = "Line Item Text"
+export const ITEM_NO_INDEX2 = 0
+export const ITEM_MATERIAL_INDEX2 = 'Line Item Text'
+export const ITEM_VARIANT_START_TEXT2='IncoTerm'
+export const DELIVERY_ADDRESS_MX='Item Total Value'
+
+
+
+
+
+
 
 
 
