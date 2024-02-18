@@ -151,6 +151,23 @@ export class LevisController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }
     }
+    @Post('/updateStatusInOrder')
+    async updateStatusInOrder(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.updateStatusInOrder(req);
+        } catch (error) {
+            return error
+        }
+    }
+
+    @Post('/getPdfFileInfo')
+    async getPdfFileInfo(): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getPdfFileInfo();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
 
  
 }
