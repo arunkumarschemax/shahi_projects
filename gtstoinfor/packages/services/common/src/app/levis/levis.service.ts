@@ -11,6 +11,7 @@ import { LevisCOLineEntity } from "./entities/levis-co-line.entity";
 import { LevisCOLineRepository } from "./repositories/levis-co-line.repository";
 import { ItemNoDtos } from "../sanmar/dto/sanmar-item-no.dto";
 import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
+import { CompareModel } from "packages/libs/shared-models/src/common/levis/levis-comarision-report-model";
 
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
@@ -396,5 +397,53 @@ export class LevisService {
       throw err
     }
   }
+
+
+  // async getordercomparationData(req?: any): Promise<CommonResponseModel> {
+  //   try {
+  //     const Originaldata = await this.LevisOrdersRepo.getordercomparationData(req)
+  //     const compareModel: CompareModel[] = []
+
+  //     for (const rec of Originaldata) {
+  //       const childData = await this.eddieOrdersChildRepository.find({
+  //         where: {
+  //           poNumber: rec.po_number, poLine: rec.po_line, size: rec.size
+  //         }, order: { ordersChildId: 'DESC' }, take: 1, skip: 1
+  //       })
+  //       if (childData.length > 0) {
+  //         const oldData = childData[0];
+  //         // Check for changes in values
+  //         if (
+  //           oldData.unitCost !== rec.unit_cost ||
+  //           oldData.deliveryDate !== rec.delivery_date ||
+  //           oldData.quantity !== rec.quantity
+  //         ) 
+  //         {
+  //           // Only push if there are changes
+  //           compareModel.push(new
+  //             CompareModel(
+  //               rec.po_number,
+  //               rec.po_line,
+  //               rec.size,
+  //               oldData.unitCost,
+  //               rec.unit_cost,
+  //               oldData.deliveryDate,
+  //               rec.delivery_date,
+  //               oldData.quantity,
+  //               rec.quantity
+  //             ));
+  //         }
+  //       }
+  //     }
+  //     if (compareModel) {
+
+  //       return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', compareModel);
+  //     } else {
+  //       return new CommonResponseModel(false, 0, 'No data found');
+  //     }
+  //   } catch (err) {
+  //     throw err
+  //   }
+  // }
 
 }
