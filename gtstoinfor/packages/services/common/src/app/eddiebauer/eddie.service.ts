@@ -723,7 +723,20 @@ export class EddieService {
         if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(rec.color)) {
           destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(rec.color, []);
         }
-        destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitCost });
+        // destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitCost });
+        const sizesMap = destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(rec.color)
+
+        // Check if the color and size already exist
+        const existingSize = sizesMap.find((sizeObj) => sizeObj.size === rec.size);
+
+        if (existingSize) {
+          // If the color and size exist, update the quantity
+          existingSize.quantity = (parseInt(existingSize.quantity.replace(/,/g, '')) + parseInt(rec.quantity.replace(/,/g, ''))).toString();
+        } else {
+          // If the color exists but not the size, add a new size
+          sizesMap.push({ size: rec.size, quantity: rec.quantity, price: rec.unitCost });
+        }
+
       });
       const coData = []
       // let totalUnitPrice = 0;
@@ -1402,7 +1415,7 @@ export class EddieService {
         }
       }
       await driver.sleep(10000)
-      const element = await driver.findElement(By.id('OrderCreateID')).click();
+       const element = await driver.findElement(By.id('OrderCreateID')).click();
       await driver.wait(until.alertIsPresent(), 10000);
       // Switch to the alert and accept it (click "OK")
       const alert = await driver.switchTo().alert();
@@ -1422,6 +1435,7 @@ export class EddieService {
 
       } else {
         await driver.sleep(10000)
+        console.log("test..........")
         await driver.wait(until.elementLocated(By.xpath('//*[@id="orno"]')), 10000);
         const coNoElement = await driver.findElement(By.xpath('//*[@id="orno"]'));
         const coNo = await coNoElement.getAttribute('value');
@@ -1430,6 +1444,15 @@ export class EddieService {
         const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
         const year = currentDate.getFullYear().toString().slice(-2);
         const currentDateFormatted = `${day}-${month}-${year}`;
+        // await driver.wait(until.elementLocated(By.xpath('//*[@id="form2"]/table/tbody/tr[2]/td/div/table/thead/tr/th[7]')), 10000);
+        // const coNoElement = await driver.findElement(By.xpath(`//*[@id="form2"]/table/tbody/tr[2]/td/div/table/tbody/tr[last()]/td[7]`));
+        // const coNo = await coNoElement.getAttribute('innerText');
+        // const currentDate = new Date();
+        // const day = currentDate.getDate().toString().padStart(2, '0');
+        // const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(currentDate);
+        // const year = currentDate.getFullYear().toString().slice(-2);
+        // const currentDateFormatted = `${day}-${month}-${year}`;
+
         if (coNo) {
      
 
