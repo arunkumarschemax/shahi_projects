@@ -18,15 +18,18 @@ import { AddressService } from "../Entites@Shahi/address/address-service";
 import { ColorService } from "../Entites@Shahi/color/color-service";
 import { ColorRepository } from "../Entites@Shahi/color/color-repo";
 import { ColorEntity } from "../Entites@Shahi/color/color-entity";
+import { SizeService } from "../Entites@Shahi/size/size-service";
+import { SizeRepository } from "../Entites@Shahi/size/size-repo";
+import { SizeEntity } from "../Entites@Shahi/size/size-entity";
 
 
 @Module({
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-        EddieOrdersEntity,EddiePdfInfoEntity,EddieCOLineEntity,AddressEntity,EddieChildEntity,AddressEntity,ColorEntity
+        EddieOrdersEntity,EddiePdfInfoEntity,EddieCOLineEntity,AddressEntity,EddieChildEntity,AddressEntity,ColorEntity,SizeEntity
     ])],
   controllers: [EddieController],
-  providers: [EddieService,ApplicationExceptionHandler,EddieOrdersRepository,EddiePdfRepo,EddieCOLineRepository,AddressRepository,EddieOrdersChildRepository,AddressRepository,AddressService,ColorService,ColorRepository]
+  providers: [EddieService,ApplicationExceptionHandler,EddieOrdersRepository,EddiePdfRepo,EddieCOLineRepository,AddressRepository,EddieOrdersChildRepository,AddressRepository,AddressService,ColorService,ColorRepository,SizeService,SizeRepository]
 })
 export class EddieModule { }
