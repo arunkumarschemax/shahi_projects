@@ -7,6 +7,7 @@ import { LevisService } from "./levis.service";
 import { CommonResponseModel, LevisOrderFilter } from "@project-management-system/shared-models";
 import { LevisDto } from "./dto/levis-orders.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
+import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
 
 
 
@@ -164,6 +165,17 @@ export class LevisController {
     async getPdfFileInfo(): Promise<CommonResponseModel> {
         try {
             return this.Service.getPdfFileInfo();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+    
+    @Post('/getOrderdataForCOline')
+    @ApiBody({ type: OrderDetailsReq })
+    async getOrderdataForCOline(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.getOrderdataForCOline(req);
         } catch (err) {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
         }

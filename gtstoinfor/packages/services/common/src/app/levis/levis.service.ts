@@ -6,11 +6,13 @@ import { LevisOrdersRepository } from "./repositories/levis-orders.repo";
 import { LevisPdfRepo } from "./repositories/levis-pdf.repo";
 import { LevisOrdersEntity } from "./entities/levis-orders.entity";
 import { LevisPdfInfoEntity } from "./entities/levis-pdf.entity";
-import { CommonResponseModel, LevisCoLinereqModel, LevisColorModel, LevisDestinationModel, LevisOrderFilter, LevisSizeWiseModel, SizeModel, StatusEnum, levisOrderDataModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, LevisCoLinereqModel, LevisColorModel, LevisDestinationModel, LevisOrderFilter, LevisSizeModel, LevisSizeWiseModel, SizeModel, StatusEnum, levisOrderDataModel } from "@project-management-system/shared-models";
 import { LevisCOLineEntity } from "./entities/levis-co-line.entity";
 import { LevisCOLineRepository } from "./repositories/levis-co-line.repository";
 import { ItemNoDtos } from "../sanmar/dto/sanmar-item-no.dto";
 import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
+import { ColorRepository } from "../Entites@Shahi/color/color-repo";
+import { SizeRepository } from "../Entites@Shahi/size/size-repo";
 
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
@@ -27,6 +29,9 @@ export class LevisService {
     private LevisOrdersRepo: LevisOrdersRepository,
     private pdfRepo: LevisPdfRepo,
     private levisCoLineRepo:LevisCOLineRepository,
+    private colorRepo:ColorRepository,
+    private sizeRepo:SizeRepository
+
 
 
   ) { }
@@ -339,62 +344,166 @@ export class LevisService {
     }
   }
   
+  // async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
+  //   try {
+  //     const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber } })
+  
+  //     // po -> destination -> color -> sizes
+  //     const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+  //     const poMap = new Map<string, LevisOrdersEntity>();
+  //     data.forEach(rec => {
+  //       poMap.set(`${rec.poNumber}`, rec)
+  //       // const destCountry = rec.shipToAdd.slice(-13).trim();
+  //       // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
+
+  //       // const parts = rec.deliveryAddress.split(',')
+  //       // const destAdd = parts[2].trim();
+  //       // const dest = destAdd;
+  //       const dest = rec.deliveryAddress;
+
+
+  //       if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
+  //         destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
+  //       }
+  //       if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
+  //         destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
+  //       }
+
+  //       const check = await this.colorRepo.find({
+  //         where: {
+  //           colorCode: rec.product
+  //         }
+  //       });
+
+  //       if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(rec.product)) {
+  //         destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(rec.product, []);
+  //       }
+  //       destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(rec.product).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+  //     });
+  //     const coData = []
+  //     destinationColSizesMap.forEach((destColorSize, poNumber) => {
+  //       const desArray = []
+  //       destColorSize.forEach((colorSizes, dest) => {
+  //         const ColArray = []
+  //         colorSizes.forEach((sizes, color) => {
+  //           const sizeArray = []
+  //           sizes.forEach((size) => {
+  //             const sizeObj = new LevisSizeModel(size.size, size.quantity, size.price);
+  //             sizeArray.push(sizeObj)
+  //           })
+  //           const col = new LevisColorModel(color, sizeArray);
+  //           ColArray.push(col)
+  //         });
+  //         const des = new LevisDestinationModel(dest, ColArray);
+  //         desArray.push(des)
+  //       });
+  //       const poInfo = poMap.get(poNumber)
+  //       const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, poInfo.plannedExFactoryDate, desArray);
+  //       coData.push(co)
+  //     });
+  //     if (coData) {
+  //       return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
+  //     } else {
+  //       return new CommonResponseModel(false, 0, 'No data found');
+  //     }
+  //   } catch (err) {
+  //     throw err
+  //   }
+  // }
+
   async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
-      const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber } })
-  
-      // po -> destination -> color -> sizes
-      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
-      const poMap = new Map<string, LevisOrdersEntity>();
-      data.forEach(rec => {
-        poMap.set(`${rec.poNumber}`, rec)
-        // const destCountry = rec.shipToAdd.slice(-13).trim();
-        // console.log(destCountry,"hirrrrrrrrrrrrrrrrrr")
+        const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber } });
 
-        const parts = rec.deliveryAddress.split(',')
-        const destAdd = parts[2].trim();
-        const dest = destAdd;
+        const inputDate = new Date(data[0].exFactoryDate)
+        // Calculate the date 7 days before the GAC date
+        const FourteenDaysafter = new Date(inputDate);
+        FourteenDaysafter.setDate(inputDate.getDate() + 14);
+        const DeliveryDate = new Intl.DateTimeFormat('en-GB').format(FourteenDaysafter);
+        console.log(DeliveryDate,"dd")
 
-        if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
-          destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
-        }
-        if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
-          destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
-        }
-        if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(rec.product)) {
-          destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(rec.product, []);
-        }
-        destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(rec.product).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
-      });
-      const coData = []
-      destinationColSizesMap.forEach((destColorSize, poNumber) => {
-        const desArray = []
-        destColorSize.forEach((colorSizes, dest) => {
-          const ColArray = []
-          colorSizes.forEach((sizes, color) => {
-            const sizeArray = []
-            sizes.forEach((size) => {
-              const sizeObj = new SizeModel(size.size, size.quantity, size.price);
-              sizeArray.push(sizeObj)
-            })
-            const col = new LevisColorModel(color, sizeArray);
-            ColArray.push(col)
+
+        // po -> destination -> color -> sizes
+        const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+        const poMap = new Map<string, LevisOrdersEntity>();
+
+        for (const rec of data) {
+            poMap.set(`${rec.poNumber}`, rec);
+            // const dest = rec.deliveryAddress;
+              const parts = rec.deliveryAddress.split(',')
+           const destAdd = parts[0].trim();
+            const dest = destAdd;
+
+            
+            if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
+                destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
+            }
+            if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
+                destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
+            }
+            console.log(rec.product,"product")
+            const colorcheck = await this.colorRepo.findOne({
+                where: {
+                    colorCode: rec.product
+                }
+            });
+
+            console.log(colorcheck,"color")
+            if (colorcheck){
+              if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(colorcheck.colorName)) {
+                destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(colorcheck.colorName, []);
+            }
+
+            }
+
+            const sizecheck = await this.sizeRepo.findOne({
+              where: {
+                  poSize: rec.size
+              }
           });
-          const des = new LevisDestinationModel(dest, ColArray);
-          desArray.push(des)
+           
+          if (sizecheck){
+           
+            destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorcheck.colorName).push({ size: sizecheck.crmSize, quantity: rec.quantity, price: rec.unitPrice });
+
+          } else {
+
+            destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorcheck.colorName).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+          }     
+            
+        }
+
+        const coData = [];
+        destinationColSizesMap.forEach((destColorSize, poNumber) => {
+            const desArray = [];
+            destColorSize.forEach((colorSizes, dest) => {
+                const ColArray = [];
+                colorSizes.forEach((sizes, color) => {
+                    const sizeArray = [];
+                    sizes.forEach((size) => {
+                        const sizeObj = new LevisSizeModel(size.size, size.quantity, size.price);
+                        sizeArray.push(sizeObj);
+                    });
+                    const col = new LevisColorModel(color, sizeArray);
+                    ColArray.push(col);
+                });
+                const des = new LevisDestinationModel(dest, ColArray);
+                desArray.push(des);
+            });
+            const poInfo = poMap.get(poNumber);
+            const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, DeliveryDate,moment(poInfo.exFactoryDate).format("DD/MM/YYYY"),desArray);
+            coData.push(co);
         });
-        const poInfo = poMap.get(poNumber)
-        const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, poInfo.plannedExFactoryDate, desArray);
-        coData.push(co)
-      });
-      if (coData) {
-        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
-      } else {
-        return new CommonResponseModel(false, 0, 'No data found');
-      }
+
+        if (coData.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', coData);
+        } else {
+            return new CommonResponseModel(false, 0, 'No data found');
+        }
     } catch (err) {
-      throw err
+        throw err;
     }
-  }
+}
+
 
 }

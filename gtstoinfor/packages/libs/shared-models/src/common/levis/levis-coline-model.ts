@@ -3,13 +3,15 @@ export class LevisCoLinereqModel {
     salesPrice: string;
     currency: string;
     deliveryDate: any;
+    exfactoryDate:any
     destinations: LevisDestinationModel[]
 
-    constructor(poNumber: string, salesPrice: string, currency: string, deliveryDate: any, destinations: LevisDestinationModel[]) {
+    constructor(poNumber: string, salesPrice: string, currency: string, deliveryDate: any,exfactoryDate:any, destinations: LevisDestinationModel[]) {
         this.poNumber = poNumber
         this.salesPrice = salesPrice
         this.currency = currency
         this.deliveryDate = deliveryDate
+        this.exfactoryDate = exfactoryDate
         this.destinations = destinations
     }
 }
