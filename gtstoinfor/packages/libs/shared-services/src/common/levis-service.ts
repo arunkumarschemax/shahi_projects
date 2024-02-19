@@ -57,4 +57,7 @@ export class LevisService extends CommonAxiosService {
         return this.axiosPostCall(this.levisOrdersController + "/getPdfFileInfo")
     }
  
+    async getordercomparationData(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.levisOrdersController + "/getordercomparationData",req)
+    }
 }
