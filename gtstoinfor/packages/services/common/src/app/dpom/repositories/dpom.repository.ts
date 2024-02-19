@@ -214,6 +214,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             o.size_description,o.customer_order, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
             .where(` od.column_name='plant' `)
+            .groupBy(' o.po_and_line')
         return await query.getRawMany();
     }
 

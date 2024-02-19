@@ -816,7 +816,7 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Document Date',
-            dataIndex: 'documentDate',
+            dataIndex: 'document_date',
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
@@ -1255,7 +1255,7 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'GAC',
-            dataIndex: 'gac',
+            dataIndex: 'gac', width: 80,
             render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
@@ -1288,11 +1288,11 @@ const OrdersCompareGrid = () => {
         },
         {
             title: 'Change from Plant Code',
-            dataIndex: '', width: 90,
+            dataIndex: 'old_val', width: 90,
         },
         {
             title: 'Change to Plant Code',
-            dataIndex: '',
+            dataIndex: 'new_val', width: 90,
         },
     ];
 
