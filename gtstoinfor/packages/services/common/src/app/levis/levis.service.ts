@@ -11,7 +11,7 @@ import { LevisCOLineEntity } from "./entities/levis-co-line.entity";
 import { LevisCOLineRepository } from "./repositories/levis-co-line.repository";
 import { ItemNoDtos } from "../sanmar/dto/sanmar-item-no.dto";
 import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
-import { CompareModel } from "packages/libs/shared-models/src/common/levis/levis-comarision-report-model";
+import { LevisCompareModel} from "packages/libs/shared-models/src/common/levis/levis-comarision-report-model";
 
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');

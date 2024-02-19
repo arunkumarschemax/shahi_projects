@@ -1,4 +1,4 @@
-export class CompareModel {
+export class LevisCompareModel {
    
     poNumber: string;
     po_line:number;
