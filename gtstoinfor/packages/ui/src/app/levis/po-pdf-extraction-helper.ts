@@ -229,7 +229,12 @@ export const extractDataFromPoPdf = async (pdf) => {
 
                 }
                 poData.poNumber = firstPageContent[poNumberIndex - 20].str
-                poData.currency = firstPageContent[poNumberIndex - 7].str
+                // poData.currency = firstPageContent[poNumberIndex - 7].str
+                let currencyString = firstPageContent[poNumberIndex - 7].str;
+                if (currencyString === 'US$') {
+                    currencyString = 'USD';
+                }
+                poData.currency = currencyString;
                 poData.transMode = firstPageContent[transModeIndex + 2].str
                 poData.deliveryAddress =
                     firstPageContent[deliveryAddressIndex - 5].str + " " +
