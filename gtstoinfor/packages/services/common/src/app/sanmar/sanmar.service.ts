@@ -19,6 +19,7 @@ const moment = require('moment');
 
 import { SanmarOrderschildEntity } from "./entity/sanmar-orders-child";
 import { SanmarOrdersChildRepository } from "./repositories/sanmar-orders-child.repo";
+import { Cron } from "@nestjs/schedule";
 
 @Injectable()
 export class SanmarService {
@@ -328,15 +329,15 @@ export class SanmarService {
     }
   }
 
+  @Cron('1 * * * *')
   async sanmarBot() {
+    const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
     try {
-      const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
-
       const page = await browser.newPage();
       await page.setViewport({ width: 1580, height: 900 });
 
       setTimeout(async () => {
-        await page.goto('http://localhost:4200/', {
+        await page.goto('http://165.22.220.143/sanmar_app/', {
           timeout: 100000,
           waitUntil: 'networkidle0',
         })
@@ -352,14 +353,14 @@ export class SanmarService {
       await page.waitForNavigation();
 
       setTimeout(async () => {
-        await page.goto('http://localhost:4200/#/sanmar/sanmar-pdf-upload/', {
+        await page.goto('http://165.22.220.143/sanmar_app/#/sanmar/sanmar-pdf-upload/', {
           timeout: 100000,
           waitUntil: 'networkidle0'
         })
       }, 1000);
 
-      const directoryPath = 'D:/sanmar-unread/';
-      const destinationDirectory = 'D:/sanmar-read/';
+      const directoryPath = 'D:/Sanmar-POs/New POs/';
+      const destinationDirectory = 'D:/Sanmar-POs/Read POs/';
 
       const files = fs.readdirSync(directoryPath);
       if (files.length === 0) {
@@ -378,7 +379,7 @@ export class SanmarService {
         await page.waitForTimeout(10000)
 
         setTimeout(async () => {
-          await page.goto('http://localhost:4200/#/sanmar/sanmar-pdf-upload/', {
+          await page.goto('hhttp://165.22.220.143/sanmar_app/#/sanmar/sanmar-pdf-upload/', {
             timeout: 100000,
             waitUntil: 'networkidle0'
           })
@@ -395,6 +396,8 @@ export class SanmarService {
       }
     } catch (error) {
       return new CommonResponseModel(false, 0, error)
+    } finally {
+      browser.close()
     }
   }
 
@@ -635,6 +638,7 @@ export class SanmarService {
     }
   }
 
+  @Cron('*/5 * * * *')
   async createCOline(req: any): Promise<CommonResponseModel> {
     const poDetails = await this.sanmarCoLineRepo.getDataforCOLineCreation();
     if (!poDetails.length) {
@@ -850,10 +854,10 @@ export class SanmarService {
                       await inputField.sendKeys(size.price);
                     } else {
                       // update added for if sizes mismatch
-                      const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed', errorMsg: 'NO matching Size found', isActive:false });
-                      await this.updateCOLineStatus({buyerPo: poDetails[0].buyer_po, status: StatusEnum.FAILED})
+                      const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed', errorMsg: 'NO matching Size found', isActive: false });
+                      await this.updateCOLineStatus({ buyerPo: poDetails[0].buyer_po, status: StatusEnum.FAILED })
                       return new CommonResponseModel(false, 0, 'NO matching Size found')
-                      
+
                     }
                   }
                   const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
@@ -873,8 +877,8 @@ export class SanmarService {
         if (await this.isAlertPresent(driver)) {
           const alert = await driver.switchTo().alert();
           const alertText = await alert.getText();
-          const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed', errorMsg: alertText,isActive:false });
-          await this.updateCOLineStatus({buyerPo: po.buyerPo, status: StatusEnum.FAILED})
+          const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed', errorMsg: alertText, isActive: false });
+          await this.updateCOLineStatus({ buyerPo: po.buyerPo, status: StatusEnum.FAILED })
           await alert.accept();
           await driver.sleep(5000)
           await driver.navigate().refresh();
@@ -890,12 +894,12 @@ export class SanmarService {
           const currentDateFormatted = `${day}-${month}-${year}`;
           if (coNo) {
             const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted, errorMsg: "-" });
-            await this.updateCOLineStatus({buyerPo: po.buyer_po, status: StatusEnum.SUCCESS})
+            await this.updateCOLineStatus({ buyerPo: po.buyer_po, status: StatusEnum.SUCCESS })
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           } else {
-            const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed',isActive:false });
-            await this.updateCOLineStatus({buyerPo: po.buyer_po, status: StatusEnum.FAILED})
+            const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed', isActive: false });
+            await this.updateCOLineStatus({ buyerPo: po.buyer_po, status: StatusEnum.FAILED })
             // await driver.navigate().refresh();
             await driver.sleep(10000)
           }
@@ -905,8 +909,8 @@ export class SanmarService {
     } catch (error) {
       console.log(error, 'error');
       if (error.name === 'TimeoutError') {
-        const update = await this.sanmarCoLineRepo.update({ buyerPo: poDetails[0].buyer_po }, { status: 'Failed', errorMsg: 'NO matching Color found',isActive:false });
-        await this.updateCOLineStatus({buyerPo: poDetails[0].buyer_po, status: StatusEnum.FAILED})
+        const update = await this.sanmarCoLineRepo.update({ buyerPo: poDetails[0].buyer_po }, { status: 'Failed', errorMsg: 'NO matching Color found', isActive: false });
+        await this.updateCOLineStatus({ buyerPo: poDetails[0].buyer_po, status: StatusEnum.FAILED })
         driver.quit()
         return new CommonResponseModel(false, 0, 'Matching Color not found')
       } else {
@@ -978,8 +982,8 @@ export class SanmarService {
     console.log(req, "reqOpenStatus")
     try {
       const update = await this.SanOrdersRepo.update(
-        {buyerPo:req.buyerPo},
-        {status:req.status}
+        { buyerPo: req.buyerPo },
+        { status: req.status }
       );
       if (update) {
         return new CommonResponseModel(true, 1, "Updated Successfully");
