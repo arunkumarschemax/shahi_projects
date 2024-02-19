@@ -512,7 +512,10 @@ export class SanmarService {
       const poMap = new Map<string, SanmarOrdersEntity>();
       data.forEach(rec => {
         poMap.set(`${rec.buyerPo},${rec.poStyle}, ${rec.deliveryDate}`, rec)
-        const dest = rec.shipToAdd
+        const parts = rec.shipToAdd.split(',')
+        const destAdd = parts[1].trim();
+
+        const dest = destAdd
 
 
         if (!destinationColSizesMap.has(`${rec.buyerPo},${rec.poStyle}, ${rec.deliveryDate}`)) {
@@ -681,7 +684,7 @@ export class SanmarService {
           const request = coData.destinations[0]?.name;
           const address = await this.addressService.getAddressInfoByCountry({ country: request });
           const addressData = address.data[0];
-          console.log(addressData)
+          console.log(addressData,"addressData")
           buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 10;
           deliveryAddress = addressData?.deliveryCode ? addressData?.deliveryCode : 11
           buyerValue1 = "SAN-SANMAR CORPORATION"
