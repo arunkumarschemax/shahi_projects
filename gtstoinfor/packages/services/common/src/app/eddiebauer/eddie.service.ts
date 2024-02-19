@@ -1214,16 +1214,17 @@ export class EddieService {
         const addressData = address.data[0];
         console.log(addressData, "address")
           styleNo = coData.style
-        // buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 12;
-        // deliveryAddress = addressData?.deliveryCode
+        //  buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 12;
+        //  deliveryAddress = addressData?.deliveryCode
         // buyerValue1 = "FIN-FINISHED GOODS - KY"
         // buyerValue2 = "CEN00002-CENTRIC BRANDS LLC"
         // agent = "NA-DIRECT CUSTOMER"
         // pkgTerms = "BOX-BOXES"
         // paymentTerms = "081-TT  90 Days"
-
-          buyerAddress = 10;
-          deliveryAddress =  11
+          buyerAddress = addressData?.buyerCode 
+          deliveryAddress = addressData?.deliveryCode
+          // buyerAddress = 10;
+          // deliveryAddress =  11
           buyerValue1 = "SGC-SHAHI GROUP OF COMPANIES"
           buyerValue2 = "SEPLB200-Shahi Exports Pvt Ltd Unit 12"
           agent = "-NA"
@@ -1281,6 +1282,7 @@ export class EddieService {
         optionValues.push(value);
       }
       const number = optionValues.find(value => value.includes(buyerAddress)); // give the dynamic value here
+       console.log(buyerAddress,"buyerAddress")
       await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
 
       await driver.wait(until.elementLocated(By.xpath('//*[@id="cur"]')));
@@ -1328,6 +1330,7 @@ export class EddieService {
                     optionValues.push(value);
                   }
                   const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
+                  console.log(deliveryAddress,"deliveryAddress")
                   await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
                   // Find all the input fields in the first row.
                   const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
