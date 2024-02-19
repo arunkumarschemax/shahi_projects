@@ -297,9 +297,22 @@ export const extractDataFromPoPdf = async (pdf) => {
         // item varinat details parsing starts here
         const itemVarinatsTextArr = []
         let k = itemVariantStartIndex
-        while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT)) {
-            itemVarinatsTextArr.push(filteredData[k].str)
-            k++
+        // while (k < filteredData.length && !filteredData[k].str.match(/^\d{3}-\d{4}$/)) {
+        //     itemVarinatsTextArr.push(filteredData[k].str)
+        //     k++
+        // }
+        while (k < filteredData.length) {
+            if (filteredData[k].str.match(/^\d{3}-\d{4}$/)) {
+                break;
+            }
+            else if (filteredData[k].str.includes("-Eddie Bauer LLC")) {
+                break;
+            } else if (filteredData[k].str.includes("Lines Ordered")) {
+                break;
+            } else {
+                itemVarinatsTextArr.push(filteredData[k].str);
+                k++;
+            }
         }
         console.log(itemVarinatsTextArr, 'VVVVVVVv')
         const stringsWithLength13 = itemVarinatsTextArr.filter(value => typeof value === 'string' && value.length === 12);
@@ -318,7 +331,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemVariantsObj.quantityPerInnerPack = itemVarinatsTextArr[upcIndex + 3]; /* quantityPerInnerPack */
                 // itemVariantsObj.ratio = itemVarinatsTextArr[upcIndex - 1];
                 itemVariantsObj.retailPrice = itemVarinatsTextArr[upcIndex + 4] /* po retail price */
-                itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 6].replace(/,/g, "") /* item quantity */
+                itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 6] /* item quantity */
                 itemVariantsObj.unit = itemVarinatsTextArr[upcIndex + 7] /* unit */
                 itemVariantsObj.unitCost = itemVarinatsTextArr[upcIndex + 8] /* unit price */
                 itemVariantsObj.cost = itemVarinatsTextArr[upcIndex + 9] /* cost  */
