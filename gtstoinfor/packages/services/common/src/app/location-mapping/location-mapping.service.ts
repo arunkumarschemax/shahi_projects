@@ -368,16 +368,40 @@ export class LocationMappingService {
                             let allocateStock = await manager.getRepository(MaterialAllocationEntity).save(materialAllocationEntity);
                             console.log(allocateStock)
                             if(allocateStock.materialAllocationId > 0){
-                                const bomQuery = "select * from sampling_bom where sample_request_id = "+grnDetails[0].sampleOrderId+" and status != '"+BomStatusEnum.ALLOCATED+"'";
-                                let getBomStatus = await manager.query(bomQuery)
+                                
                                 // let getBomStatus = await manager.getRepository(SamplingbomEntity).find({where:{sampleRequestId:grnDetails[0].sampleOrderId,status: Not(BomStatusEnum.ALLOCATED)}});
                                 let updateBomStatus
                                 if(req.item_type === "Fabric"){
-                                    updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item,colourId:req.colorId},{receivedQuantity : () => `received_quantity + ${req.quantity}`,status: `${BomStatusEnum.ALLOCATED}`});
+                                    let getQty = await manager.getRepository(SamplingbomEntity).findOne({where:{sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item,colourId:req.colorId}});
+                                    console.log("fabric");
+                                    console.log(getQty);
+
+                                    
+                                    let requiredQty = getQty.requiredQuantity
+                                    let received_quantity = Number(getQty.receivedQuantity) + Number(req.quantity)
+                                    let status = BomStatusEnum.ALLOCATED
+                                    console.log(requiredQty + "**********" +received_quantity+ "************" + status);
+                                    if(Number(received_quantity) < Number(requiredQty)){
+                                        status = BomStatusEnum.IN_PROGRESS;
+                                    }
+                                    updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item,colourId:req.colorId},{receivedQuantity : () => `received_quantity + ${req.quantity}`,status: `${status}`});
                                 }
                                 else{
-                                    updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item},{receivedQuantity : () => `received_quantity + ${req.quantity}`,status: `${BomStatusEnum.ALLOCATED}`});
+                                    let getQty = await manager.getRepository(SamplingbomEntity).findOne({where:{sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item}});
+                                    console.log("fabric");
+                                    console.log(getQty);
+                                    let requiredQty = getQty.requiredQuantity
+                                    let received_quantity = Number(getQty.receivedQuantity) + Number(req.quantity)
+                                    let status = BomStatusEnum.ALLOCATED
+                                    console.log(requiredQty + "**********" +received_quantity+ "************" + status);
+
+                                    if(Number(received_quantity) < Number(requiredQty)){
+                                        status = BomStatusEnum.IN_PROGRESS;
+                                    }
+                                    updateBomStatus = await manager.getRepository(SamplingbomEntity).update({sampleRequestId:grnDetails[0].sampleOrderId,m3ItemId:req.m3_item},{receivedQuantity : () => `received_quantity + ${req.quantity}`,status: `${status}`});
                                 }
+                                const bomQuery = "select * from sampling_bom where sample_request_id = "+grnDetails[0].sampleOrderId+" and status != '"+BomStatusEnum.ALLOCATED+"'";
+                                let getBomStatus = await manager.query(bomQuery)
                                 
                                 if(updateBomStatus.affected > 0){
                                     

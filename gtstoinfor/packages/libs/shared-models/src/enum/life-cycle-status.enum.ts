@@ -24,7 +24,7 @@ export enum LifeCycleStatusEnum{
      { name:'GRN', displayVal:'GRN'},
      { name:'MATERIAL_ALLOCATED', displayVal:'MATERIAL ALLOCATED'},
      { name:'MATERIAL_ISSUED', displayVal:'MATERIAL ISSUED'},
-     { name:'MATERIAL_RECEIVED', displayVal:'MATERIAL ISSUED'},
+     { name:'MATERIAL_RECEIVED', displayVal:'MATERIAL RECEIVED'},
      { name:'READY_FOR_PRODUCTION', displayVal:'READY FOR PRODUCTION'},
      { name:'LAYING', displayVal:'LAYING'},
      { name:'CUTTING', displayVal:'CUTTING'},
