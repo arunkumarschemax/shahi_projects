@@ -2502,7 +2502,7 @@ export class DpomService {
             if (!sizeDateMap.has(rec.po_number)) {
                 sizeDateMap.set(
                     rec.po_number,
-                    new TotalQuantityChangeModel(rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.schedule_line_item_number, rec.created_at, rec.item, rec.factory, rec.styleNumber, rec.productCode, rec.color_desc, rec.OGAC, rec.GAC, rec.desCtry, rec.item_text, rec.total_item_qty, [])
+                    new TotalQuantityChangeModel(rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.schedule_line_item_number, rec.document_date, rec.created_at, rec.item, rec.factory, rec.styleNumber, rec.productCode, rec.color_desc, rec.OGAC, rec.GAC, rec.desCtry, rec.item_text, rec.total_item_qty, [])
                 )
             }
             const sizeWiseData = sizeDateMap.get(rec.po_number).sizeWiseData;

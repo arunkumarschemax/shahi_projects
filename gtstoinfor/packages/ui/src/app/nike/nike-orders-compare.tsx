@@ -1462,7 +1462,7 @@ const OrdersCompareGrid = () => {
             },
             {
                 title: 'Report Generate Date',
-                dataIndex: 'created_at',
+                dataIndex: 'createdAt',
                 render: (text) => moment(text).format('MM/DD/YYYY'),
             },
             {
@@ -1563,7 +1563,7 @@ const OrdersCompareGrid = () => {
             },
             {
                 title: 'Report Generate Date',
-                dataIndex: 'created_at', width: 70,
+                dataIndex: 'createdAt', width: 70,
                 render: (text) => moment(text).format('MM/DD/YYYY'),
             },
             {
