@@ -359,20 +359,20 @@ import {
   
       columns.push(
   
-        // {
-        //   title: "Total Quantity",
-        //   dataIndex: "",
-        //   align: "right",
-        //   width: 90,
-        //   render: (text, record) => {
-        //     let sum = 0;
-        //     record.sizeWiseData.forEach((r) => {
-        //       // Convert to number before summing
-        //       sum += parseFloat(r.quantity) || 0;
-        //     });
-        //     return sum;
-        //   },
-        // },
+        {
+          title: "Total Quantity",
+          dataIndex: "",
+          align: "right",
+          width: 90,
+          render: (text, record) => {
+            let sum = 0;
+            record.sizeWiseData.forEach((r) => {
+              // Convert to number before summing
+              sum += parseFloat(r.quantity) || 0;
+            });
+            return sum;
+          },
+        },
        
         {
           // title: "Address",
@@ -599,20 +599,20 @@ import {
             });
         })
         excelColumnsWH.push(
-          // {
-          //   title: "Total Quantity",
-          //   dataIndex: "",
-          //   align: "right",
-          //   width: 90,
-          //   render: (text, record) => {
-          //     let sum = 0;
-          //     record.sizeWiseData.forEach((r) => {
-          //       // Convert to number before summing
-          //       sum += parseFloat(r.quantity) || 0;
-          //     });
-          //     return sum;
-          //   },
-          // },
+          {
+            title: "Total Quantity",
+            dataIndex: "",
+            align: "right",
+            width: 90,
+            render: (text, record) => {
+              let sum = 0;
+              record.sizeWiseData.forEach((r) => {
+                // Convert to number before summing
+                sum += parseFloat(r.quantity) || 0;
+              });
+              return sum;
+            },
+          },
         
           {
             title: "Buyer Address",

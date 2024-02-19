@@ -420,7 +420,7 @@ import {
             //   }
             // },
             {
-              title: 'QUANTITY',
+              title: 'Quantity',
               dataIndex: '',
               key: '',
               width: 70,
@@ -447,7 +447,7 @@ import {
               }
             },
             {
-              title: 'UNIT PRICE',
+              title: 'Unit Price',
               dataIndex: '',
               key: '',
               width: 70,
@@ -493,6 +493,7 @@ import {
           render: (text, record) => {
             let sum = 0;
             record.sizeWiseData.forEach((r) => {
+              console.log(r.quantity,"hhhhhggghh")
               // Convert to number before summing
               sum += parseFloat(r.quantity) || 0;
             });
@@ -736,8 +737,9 @@ import {
                   md={{ span: 5 }}
                   lg={{ span: 5 }}
                   xl={{ span: 4 }}
+                  style={{marginTop:20,marginLeft:60}}
                 >
-                  <Form.Item style={{marginTop:20,marginLeft:60}}>
+                  <Form.Item >
                     <Button
                       htmlType="submit"
                       icon={<SearchOutlined />}
@@ -758,7 +760,7 @@ import {
                 >
                   <Form.Item style={{marginTop:20}}>
                     <Button
-                      style={{ marginLeft: 120 }}
+                      style={{ marginLeft: 70 }}
                       htmlType="submit"
                       type="primary"
                       onClick={onReset}
