@@ -876,7 +876,7 @@ export class SampleRequestService {
         // console.log(fabFlag.has(false) + "-" + trimFlag.has(false))
 
         if (fabFlag.has(true) && trimFlag.has(true)) {
-          let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({ SampleRequestId: save.SampleRequestId }, { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ALLOCATED })
+          let updateSampleRequestStatus = await manager.getRepository(SampleRequest).update({ SampleRequestId: save.SampleRequestId }, { lifeCycleStatus: LifeCycleStatusEnum.READY_FOR_PRODUCTION })
           console.log(updateSampleRequestStatus)
           if (updateSampleRequestStatus.affected === 0) {
             await manager.releaseTransaction();
@@ -1405,7 +1405,7 @@ export class SampleRequestService {
         // console.log(getBomStatus)
 
         if (getBomStatus.length - 1 < 1) {
-          updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({ SampleRequestId: req.sampleOrderId }, { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ALLOCATED });
+          updateSampleOrderStatus = await manager.getRepository(SampleRequest).update({ SampleRequestId: req.sampleOrderId }, { lifeCycleStatus: LifeCycleStatusEnum.READY_FOR_PRODUCTION });
           // console.log(updateSampleOrderStatus);
           // console.log(bomUpdateFlag);
           // console.log(updateStockFlag);
@@ -1817,6 +1817,9 @@ export class SampleRequestService {
     if (req.action == 'Approval') {
       checkStatus = LifeCycleStatusEnum.MATERIAL_ALLOCATED
     }
+    if (req.action == 'receive') {
+      checkStatus = LifeCycleStatusEnum.MATERIAL_ISSUED
+    }
     let fabricInfoQry = `SELECT sr.request_no as requestNo,sr.style_id as styleId,sr.brand_id as brandId,sr.buyer_id as buyerId,br.brand_name as brandName,b.buyer_name as buyerName,s.style,c.colour,mi.item_code as itemCode,sf.consumption
       ,sf.total_requirement as BOM ,sf.sample_request_id as sampleRequestFabricId , sf.fabric_info_id as sampleFabricId,'Fabric' as type
        FROM sample_request sr 
@@ -1911,13 +1914,18 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
         sampleUpdateStatus = LifeCycleStatusEnum.READY_FOR_PRODUCTION
         sampleMaterialStatus = MaterialStatusEnum.READY_FOR_PRODUCTION
       }
+      if (req.action == 'Receive') {
+        sampleUpdateStatus = LifeCycleStatusEnum.MATERIAL_RECEIVED
+        sampleMaterialStatus = MaterialStatusEnum.MATERIAL_RECEIVED
+      }
       const updateSamleReq = await manager.getRepository(SampleRequest).update({ SampleRequestId: req.sampleRequestId }, { lifeCycleStatus: sampleUpdateStatus })
       if (updateSamleReq.affected) {
         const updateAllocations = await manager.getRepository(MaterialAllocationEntity).update({ sampleOrderId: req.sampleRequestId }, { status: sampleMaterialStatus })
+        console.log(updateAllocations);
         if (updateAllocations.affected) {
           // console.log('yess')
           await manager.completeTransaction()
-          return new CommonResponseModel(true, 1, req.action == 'Issued' ? 'Succefully Issued' : 'Successfully Approved')
+          return new CommonResponseModel(true, 1, req.action == 'Issued' ? 'Successfully Issued' : req.action == 'Receive' ?  'Successfully Received' :'Successfully Approved')
         } else {
           await manager.releaseTransaction()
           return new CommonResponseModel(false, 0, 'something went wrong')
