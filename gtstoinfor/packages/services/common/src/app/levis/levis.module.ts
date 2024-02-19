@@ -19,6 +19,8 @@ import { ColorEntity } from "../Entites@Shahi/color/color-entity";
 import { SizeService } from "../Entites@Shahi/size/size-service";
 import { SizeRepository } from "../Entites@Shahi/size/size-repo";
 import { SizeEntity } from "../Entites@Shahi/size/size-entity";
+import { LevisOrdersChildRepository } from "./repositories/levis-orders-child.repo";
+import { LevisOrderschildEntity } from "./entities/levis-orders-child-entity";
 
 
 
@@ -26,9 +28,9 @@ import { SizeEntity } from "../Entites@Shahi/size/size-entity";
   imports: [
     ScheduleModule.forRoot(),
     TypeOrmModule.forFeature([
-        LevisOrdersEntity,LevisPdfInfoEntity,LevisCOLineEntity,AddressEntity,ColorEntity,SizeEntity
+        LevisOrdersEntity,LevisPdfInfoEntity,LevisCOLineEntity,AddressEntity,ColorEntity,SizeEntity,LevisOrderschildEntity
     ])],
   controllers: [LevisController],
-  providers: [LevisService,ApplicationExceptionHandler,LevisOrdersRepository,LevisPdfRepo,LevisCOLineRepository,AddressService,AddressRepository,ColorService,ColorRepository,SizeService,SizeRepository]
+  providers: [LevisService,ApplicationExceptionHandler,LevisOrdersRepository,LevisPdfRepo,LevisCOLineRepository,AddressService,AddressRepository,ColorService,ColorRepository,SizeService,SizeRepository,LevisOrdersChildRepository]
 })
 export class LevisModule { }

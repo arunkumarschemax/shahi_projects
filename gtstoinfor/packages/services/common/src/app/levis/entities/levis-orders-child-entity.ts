@@ -1,8 +1,8 @@
 import { StatusEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 
-@Entity('orders')
-export class LevisOrdersEntity {
+@Entity('orders_child')
+export class LevisOrderschildEntity {
     @PrimaryGeneratedColumn('increment', {
         name: "id",
     })
@@ -106,13 +106,12 @@ export class LevisOrdersEntity {
 
 
 
-
     @Column({
         type: 'enum',
         enum: StatusEnum,
         name: 'status',
-    })
-    status: StatusEnum;
+      })
+      status: StatusEnum;
 
 
     @CreateDateColumn({
@@ -150,5 +149,16 @@ export class LevisOrdersEntity {
     })
     isActive: boolean;
 
+    @Column("int", {
+        default: 1,
+        name: "po_version",
+    })
+    poVersion: number;
+
+    @Column("int", {
+        name: "order_id",
+    })
+    orderId: number;
+    
 
 }

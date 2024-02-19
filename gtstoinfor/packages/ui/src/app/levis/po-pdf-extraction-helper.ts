@@ -585,17 +585,35 @@ export const extractDataFromPoPdf = async (pdf) => {
             //     }
             // });
 
+
             // if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
             //     itemDetailsObj.plannedExFactoryDate = filteredData[plannedExFactoryDateIndex].str;
             // }
+            let plannedExFactoryDateIndex = -1;
+            filteredData.forEach((item, index) => {
+                if (/Line Value/.test(item.str)) {
+                    plannedExFactoryDateIndex = index + 9;
+                    if (!/\d+\.\d+\.\d+/.test(filteredData[plannedExFactoryDateIndex].str)) {
+                        plannedExFactoryDateIndex -= 2;
+                    }
+                    return;
+                }
+            });
+
+            if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
+                itemDetailsObj.plannedExFactoryDate = filteredData[plannedExFactoryDateIndex].str;
+            }
 
 
-            // const inputDate = new Date(itemDetailsObj.plannedExFactoryDate);
-            // // Calculate the date 21 days before the plannedExFactoryDate
-            // const twentyOneDaysBefore = new Date(inputDate);
-            // twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
-            // const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(twentyOneDaysBefore);
-            // itemDetailsObj.exFactoryDate = moment(twentyOneDaysBefore).format("DD.MM.YYYY");
+            if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
+                const plannedExFactoryDateString = filteredData[plannedExFactoryDateIndex].str;
+                const [day, month, year] = plannedExFactoryDateString.split('.').map(Number); 
+                const inputDate = new Date(year, month - 1, day); 
+                const twentyOneDaysBefore = new Date(inputDate);
+                twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
+                const exFactoryDate = twentyOneDaysBefore.toLocaleDateString('en-GB');
+                itemDetailsObj.exFactoryDate = exFactoryDate.replace(/\//g,".");
+            }
 
 
             itemTextEndIndex = rec.amountIndex
@@ -851,17 +869,17 @@ export const extractDataFromPoPdf = async (pdf) => {
 
             itemDetailsObj.poLine = filteredData[rec.itemIndex + 1].str
             // itemDetailsObj.material = filteredData[rec.itemIndex + 2].str
-            let originalDateIndexPoLine = -1;
-            filteredData.forEach((item, index) => {
-                if (/Item Total Value/.test(item.str)) {
-                    originalDateIndexPoLine = index + 5;
-                    return;
-                }
-            });
+            // let originalDateIndexPoLine = -1;
+            // filteredData.forEach((item, index) => {
+            //     if (/Item Total Value/.test(item.str)) {
+            //         originalDateIndexPoLine = index + 5;
+            //         return;
+            //     }
+            // });
 
-            if (originalDateIndexPoLine >= 0 && originalDateIndexPoLine < filteredData.length) {
-                itemDetailsObj.originalDate = filteredData[originalDateIndexPoLine].str;
-            }
+            // if (originalDateIndexPoLine >= 0 && originalDateIndexPoLine < filteredData.length) {
+            //     itemDetailsObj.originalDate = filteredData[originalDateIndexPoLine].str;
+            // }
 
             let tansModeIndex = -1;
             filteredData.forEach((item, index) => {
@@ -914,6 +932,29 @@ export const extractDataFromPoPdf = async (pdf) => {
             //     const formattedDate = `${originalDate.getDate()}.${originalDate.getMonth() + 1}.${originalDate.getFullYear()}`;
             //     itemDetailsObj.originalDate = formattedDate;
             // }
+
+            let plannedExFactoryDateIndex = -1;
+            filteredData.forEach((item, index) => {
+                if (/Item Total Value/.test(item.str)) {
+                    plannedExFactoryDateIndex = index + 5;
+                    return;
+                }
+            });
+
+            if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
+                itemDetailsObj.plannedExFactoryDate = filteredData[plannedExFactoryDateIndex].str;
+            }
+
+
+            if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
+                const plannedExFactoryDateString = filteredData[plannedExFactoryDateIndex].str;
+                const [day, month, year] = plannedExFactoryDateString.split('.').map(Number); 
+                const inputDate = new Date(year, month - 1, day); 
+                const twentyOneDaysBefore = new Date(inputDate);
+                twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
+                const exFactoryDate = twentyOneDaysBefore.toLocaleDateString('en-GB');
+                itemDetailsObj.exFactoryDate = exFactoryDate.replace(/\//g,".");
+            }
 
             let materialIndex = -1;
             filteredData.forEach((item, index) => {
@@ -968,7 +1009,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemVariantsObj.product = stringsWithLength13[l] //variant material
                 itemVariantsObj.size = itemVarinatsTextArr[upcIndex + 2] //size
                 itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 3] // quantity
-                itemVariantsObj.itemNo =itemVarinatsTextArr[upcIndex - 1]
+                itemVariantsObj.itemNo = itemVarinatsTextArr[upcIndex - 1]
                 itemVariantsObj.upc = '-'
                 // itemVariantsObj.exFactoryDate = itemVarinatsTextArr[upcIndex - 1]  //item#
                 // itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5]

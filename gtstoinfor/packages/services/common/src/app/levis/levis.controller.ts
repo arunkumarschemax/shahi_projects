@@ -49,12 +49,13 @@ export class LevisController {
             },
         }),
         fileFilter: (req, file, callback) => {
-            if (!file.originalname.match(/\.(pdf)$/)) {
-                return callback(new Error('Only pdf files are allowed!'), false);
+            if (!file.originalname.match(/\.(pdf)$/i)) {
+                return callback(new Error('Only PDF files are allowed!'), false);
             }
             callback(null, true);
         },
     }))
+    
 
     async fileUpload(@UploadedFile() file, @Body() req:any): Promise<CommonResponseModel> {
 

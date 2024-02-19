@@ -15,6 +15,7 @@ import { ColorRepository } from "../Entites@Shahi/color/color-repo";
 import { SizeRepository } from "../Entites@Shahi/size/size-repo";
 import { AddressRepository } from "../Entites@Shahi/address/address.repo";
 import { AddressService } from "../Entites@Shahi/address/address-service";
+import { LevisOrdersChildRepository } from "./repositories/levis-orders-child.repo";
 
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
@@ -34,7 +35,8 @@ export class LevisService {
     private colorRepo:ColorRepository,
     private sizeRepo:SizeRepository,
     private AddressRepo:AddressRepository,
-    private AddressService: AddressService
+    private AddressService: AddressService,
+    private LevisOrdersChildRepo:LevisOrdersChildRepository
 
 
 
@@ -65,8 +67,8 @@ export class LevisService {
 
           entity.poLine = item.poLine
           entity.material = item.material
-          entity.totalUnitPrice = item.totalUnitPrice
-          entity.originalDate = item.originalDate
+          // entity.totalUnitPrice = item.totalUnitPrice
+          // entity.originalDate = item.originalDate
           entity.transMode = item.transMode
           entity.plannedExFactoryDate = item.plannedExFactoryDate
           entity.exFactoryDate = item.exFactoryDate

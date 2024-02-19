@@ -20,11 +20,11 @@ export class LevisDto {
     @ApiProperty()
     material: string
 
-    @ApiProperty()
-    totalUnitPrice: string
+    // @ApiProperty()
+    // totalUnitPrice: string
 
-    @ApiProperty()
-    originalDate: string
+    // @ApiProperty()
+    // originalDate: string
 
     @ApiProperty()
     transMode: string
