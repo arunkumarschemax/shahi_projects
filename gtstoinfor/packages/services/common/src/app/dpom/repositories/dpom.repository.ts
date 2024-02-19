@@ -133,7 +133,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getFOBPriceChangeData(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
-            .select(`o.po_number, o.item, o.factory,o.document_date,o.style_number,o.product_code,o.color_desc,o.destination_country,o.ogac,o.gac,o.item_text,
+            .select(`Distinct o.po_number, o.item, o.factory,o.document_date,o.style_number,o.product_code,o.color_desc,o.destination_country,o.ogac,o.gac,o.item_text,
             o.size_description,o.customer_order, o.po_line_item_number,o.ne_inc_disc, o.schedule_line_item_number, o.total_item_qty,
              o.dpom_item_line_status, od.created_at, od.od_version, fm.shahi_confirmed_gross_price AS shahiOfferedPrice, 
              o.co_price AS crmCoPrice,o.co_price_currency AS coPriceCurrency,
@@ -156,6 +156,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .leftJoin(FobEntity, 'fm', `fm.style_number = o.style_number AND fm.color_code = SUBSTRING_INDEX(o.product_code, '-', -1) AND fm.size_description = o.size_description`)
             .where(` od.display_name IN ('grossPriceFOB','trCoNetIncludingDisc','trCoNetIncludingDiscCurrencyCode',
             'shahiOfferedPricefromMasterFile','shahicurrencyCodeMasterFile','legalPoPrice','legalPoCurrency')`)
+            .groupBy('o.po_number, o.item')
             .orderBy(' od.created_at', 'DESC')
         // if (req.poandLine !== undefined) {
         //     query.andWhere(`o.po_and_line ='${req.poandLine}'`)
