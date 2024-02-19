@@ -6,7 +6,7 @@ import { LevisOrdersRepository } from "./repositories/levis-orders.repo";
 import { LevisPdfRepo } from "./repositories/levis-pdf.repo";
 import { LevisOrdersEntity } from "./entities/levis-orders.entity";
 import { LevisPdfInfoEntity } from "./entities/levis-pdf.entity";
-import { CoLineRequest, CommonResponseModel, LevisCoLinereqModel, LevisColorModel, LevisDestinationModel, LevisOrderFilter, LevisSizeModel, LevisSizeWiseModel, SizeModel, StatusEnum, levisOrderDataModel } from "@project-management-system/shared-models";
+import { CoLineRequest, CommonResponseModel, LevisCoLinereqModel, LevisColorModel, LevisCompareModel, LevisDestinationModel, LevisOrderFilter, LevisSizeModel, LevisSizeWiseModel, SizeModel, StatusEnum, levisOrderDataModel } from "@project-management-system/shared-models";
 import { LevisCOLineEntity } from "./entities/levis-co-line.entity";
 import { LevisCOLineRepository } from "./repositories/levis-co-line.repository";
 import { ItemNoDtos } from "../sanmar/dto/sanmar-item-no.dto";
@@ -524,7 +524,7 @@ export class LevisService {
   //     const compareModel: LevisCompareModel[] = []
 
   //     for (const rec of Originaldata) {
-  //       const childData = await this.eddieOrdersChildRepository.find({
+  //       const childData = await this.LevisOrdersChildRepo.find({
   //         where: {
   //           poNumber: rec.po_number, poLine: rec.po_line, size: rec.size
   //         }, order: { ordersChildId: 'DESC' }, take: 1, skip: 1
