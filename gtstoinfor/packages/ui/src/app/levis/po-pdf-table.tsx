@@ -83,7 +83,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                             <th></th>
 
                             <th className='ta-b'>ITEM NO</th>
-                            <th className='ta-b'>PRODUCT</th>
+                            {/* <th className='ta-b'>PRODUCT</th> */}
                             <th className='ta-b'>SIZE</th>
                             {/* <th className='ta-b'>UPC</th> */}
                             {/* <th className='ta-b'>PLANNED EX FACTORY DATE</th> */}
@@ -99,7 +99,7 @@ export default function PoPdfTable(props: IPoPdfTableProps) {
                                     <td></td>
 
                                     <td className='ta-b'>{j.itemNo}</td>
-                                    <td className='ta-b'>{j.product}</td>
+                                    {/* <td className='ta-b'>{j.product}</td> */}
                                     <td className='ta-b'>{j.size}</td>
                                     {/* <td className='ta-b'>{j.upc}</td> */}
                                     {/* <td className='ta-b'>{j.plannedExFactoryDate}</td> */}

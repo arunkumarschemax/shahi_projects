@@ -607,12 +607,12 @@ export const extractDataFromPoPdf = async (pdf) => {
 
             if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
                 const plannedExFactoryDateString = filteredData[plannedExFactoryDateIndex].str;
-                const [day, month, year] = plannedExFactoryDateString.split('.').map(Number); 
-                const inputDate = new Date(year, month - 1, day); 
+                const [day, month, year] = plannedExFactoryDateString.split('.').map(Number);
+                const inputDate = new Date(year, month - 1, day);
                 const twentyOneDaysBefore = new Date(inputDate);
                 twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
                 const exFactoryDate = twentyOneDaysBefore.toLocaleDateString('en-GB');
-                itemDetailsObj.exFactoryDate = exFactoryDate.replace(/\//g,".");
+                itemDetailsObj.exFactoryDate = exFactoryDate.replace(/\//g, ".");
             }
 
 
@@ -621,26 +621,28 @@ export const extractDataFromPoPdf = async (pdf) => {
 
             //------------------------------------------------------------------------- 
             // item varinat details parsing starts here 
-            const itemVarinatsTextArr = []
-            let k = itemVariantStartIndex
+            const itemVarinatsTextArr = [];
+            let k = itemVariantStartIndex;
             while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT1)) {
-                itemVarinatsTextArr.push(filteredData[k].str)
-                k++
+                itemVarinatsTextArr.push(filteredData[k].str);
+                k++;
             }
-            console.log(itemVarinatsTextArr, 'VVVVVVVv')
-            const stringsWithLength13 = itemVarinatsTextArr.filter(value => /^\d{12}$/.test(value));
+            console.log(itemVarinatsTextArr, 'VVVVVVVv');
+            const removedHyphenFromItemVariantsTextArr = itemVarinatsTextArr.map(size => size.replace(/\s+\-/g, ''));
+            const stringsWithLength13 = removedHyphenFromItemVariantsTextArr.filter(value => /^\d{12}$/.test(value));
             console.log("stringsWithLength13", stringsWithLength13);
             const regexPattern = /\d+\.\d+\.\d+/;
-            const CompMaterialData = itemVarinatsTextArr.filter(value => regexPattern.test(value));
+            const CompMaterialData = removedHyphenFromItemVariantsTextArr.filter(value => regexPattern.test(value));
             console.log("CompMaterialData", CompMaterialData);
+
             const sizes = stringsWithLength13.length;
-            const count = itemVarinatsTextArr.length / sizes;
-            const itemVariantsArr: LevisPoItemVariant[] = []
-            const allSizesArray = [...new Set(itemVarinatsTextArr.filter(size => ['XXS', 'XS', 'S', 'M', 'L', 'XL', '2X', 'XXL', 'XXXL', 'LT', 'XLT', '2XLT', '3XLT', '4XLT', '5XLT', 'ST', 'XST', '2XST', '3XST', '4XST', '5XST', 'XS-Slim', 'S-Slim', 'M-Slim', 'L-Slim', 'XL-Slim', 'XXL-Slim', 'XS-Regular', 'S-Regular', 'M-Regular', 'L-Regular', 'XL-Regular', 'XXL-Regular', '3X', '4X', '5X', '6X', 'XL -', 'XS -', 'XXL -'].includes(size)))];
+            const count = removedHyphenFromItemVariantsTextArr.length / sizes;
+            const itemVariantsArr: LevisPoItemVariant[] = [];
+            const allSizesArray = [...new Set(removedHyphenFromItemVariantsTextArr.filter(size => ['XXS', 'XS', 'S', 'M', 'L', 'XL', '2X', 'XXL', 'XXXL', 'LT', 'XLT', '2XLT', '3XLT', '4XLT', '5XLT', 'ST', 'XST', '2XST', '3XST', '4XST', '5XST', 'XS-Slim', 'S-Slim', 'M-Slim', 'L-Slim', 'XL-Slim', 'XXL-Slim', 'XS-Regular', 'S-Regular', 'M-Regular', 'L-Regular', 'XL-Regular', 'XXL-Regular', '3X', '4X', '5X', '6X'].includes(size)))];
 
             const lineConnectRegex = /\w+\d+-\d+/;
             const lineRegex = /^\d{4,8}$/;
-            let lineIndex = itemVarinatsTextArr.findIndex(item => lineConnectRegex.test(item));
+            let lineIndex = removedHyphenFromItemVariantsTextArr.findIndex(item => lineConnectRegex.test(item));
             if (lineIndex === -1) {
                 console.log("No matching line found");
             }
@@ -649,13 +651,11 @@ export const extractDataFromPoPdf = async (pdf) => {
 
             for (let i = 0; i < allSizesArray.length; i++) {
                 const size = allSizesArray[i];
-                const sizeWithoutHyphen = size.replace(/\s-/g, '');
-                const isSizeWithHyphen = size !== sizeWithoutHyphen;
 
                 let itemNo = null;
-                while (lineIndex < itemVarinatsTextArr.length) {
-                    if (lineRegex.test(itemVarinatsTextArr[lineIndex])) {
-                        itemNo = itemVarinatsTextArr[lineIndex];
+                while (lineIndex < removedHyphenFromItemVariantsTextArr.length) {
+                    if (lineRegex.test(removedHyphenFromItemVariantsTextArr[lineIndex])) {
+                        itemNo = removedHyphenFromItemVariantsTextArr[lineIndex];
                         lineIndex++;
                         break;
                     }
@@ -667,7 +667,7 @@ export const extractDataFromPoPdf = async (pdf) => {
 
                 let scheduledDate = null;
                 const regex = /\d+\.\d+\.\d+/g;
-                const scheduledDateIndexingDataMatch = itemVarinatsTextArr.slice(lineIndex).join(' ');
+                const scheduledDateIndexingDataMatch = removedHyphenFromItemVariantsTextArr.slice(lineIndex).join(' ');
                 const matches = scheduledDateIndexingDataMatch.match(regex);
                 if (matches && matches.length > 0) {
                     const lastIndex = matches.length - 1;
@@ -676,16 +676,16 @@ export const extractDataFromPoPdf = async (pdf) => {
 
 
                 const itemVariantsObj = new LevisPoItemVariant();
-                itemVariantsObj.size = isSizeWithHyphen ? sizeWithoutHyphen : size;
+                itemVariantsObj.size = size;
                 itemVariantsObj.upc = '-';
                 itemVariantsObj.scheduledDate = scheduledDate;
                 itemVariantsObj.itemNo = itemNo;
                 itemVariantsObj.product = '-';
                 itemVariantsObj.unitPrice = itemDetailsObj.totalUnitPrice;
 
+                console.log(itemVariantsObj);
+                itemVariantsArr.push(itemVariantsObj);
 
-                console.log(itemVariantsObj)
-                itemVariantsArr.push(itemVariantsObj)
             }
             itemDetailsObj.LevispoItemVariantDetails = itemVariantsArr
             itemDetailsArr.push(itemDetailsObj)
@@ -712,7 +712,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             const itemDetailsObj = new LevisPoItemDetails();
             console.log(rec.itemIndex, "iiiiiiiiiiiiii")
             itemDetailsObj.poLine = '-'
-            itemDetailsObj.material = '-'
+            // itemDetailsObj.material = '-'
             itemDetailsObj.totalUnitPrice = '-'
             itemDetailsObj.originalDate = '-'
             let tansModeIndex = -1;
@@ -783,6 +783,8 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex - 3].replace(/,/g, "");
                 itemVariantsObj.unitPrice = itemVarinatsTextArr[upcIndex - 2]
                 itemVariantsObj.itemNo = '-';
+
+                itemDetailsObj.material = product;
                 // itemVariantsObj.exFactoryDate
                 // itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5];
                 // const plannedExFactoryDate = new Date(itemVariantsObj.plannedExFactoryDate);
@@ -948,12 +950,12 @@ export const extractDataFromPoPdf = async (pdf) => {
 
             if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
                 const plannedExFactoryDateString = filteredData[plannedExFactoryDateIndex].str;
-                const [day, month, year] = plannedExFactoryDateString.split('.').map(Number); 
-                const inputDate = new Date(year, month - 1, day); 
+                const [day, month, year] = plannedExFactoryDateString.split('.').map(Number);
+                const inputDate = new Date(year, month - 1, day);
                 const twentyOneDaysBefore = new Date(inputDate);
                 twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
                 const exFactoryDate = twentyOneDaysBefore.toLocaleDateString('en-GB');
-                itemDetailsObj.exFactoryDate = exFactoryDate.replace(/\//g,".");
+                itemDetailsObj.exFactoryDate = exFactoryDate.replace(/\//g, ".");
             }
 
             let materialIndex = -1;
