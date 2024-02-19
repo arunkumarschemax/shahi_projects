@@ -61,13 +61,13 @@ export class LevisCOLineRepository extends Repository<LevisCOLineEntity> {
     }
    
 
-    // async getDataforCOLineCreation(): Promise<any[]> {
-    //     const query = this.createQueryBuilder('co')
-    //         .select(`co.id, co.buyer_po, co.item_no, co.buyer`)
-    //         .where(` status != 'Success' AND status != 'Inprogress' AND is_active = true`)
-    //         .orderBy(` created_at`, 'ASC')
-    //     return await query.getRawMany();
-    // }
+    async getDataforCOLineCreation(): Promise<any[]> {
+        const query = this.createQueryBuilder('co')
+            .select(`co.id, co.po_number, co.item_no, co.buyer`)
+            .where(` status != 'Success' AND status != 'Inprogress' AND is_active = true`)
+            .orderBy(` created_at`, 'ASC')
+        return await query.getRawMany();
+    }
 
     
 }
