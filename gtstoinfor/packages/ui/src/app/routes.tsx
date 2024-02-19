@@ -87,6 +87,7 @@ import SizeUpload from "./masters/size/size-excel-upload"
 import SizeView from "./masters/size/size-view"
 import LevisPdFInfoGrid from "./levis/levis-pdf-grid"
 import LevisPdfInfoDetailView from "./levis/levis-pdf-info-detail-view"
+import { LevisComaparisionReport } from "./levis/levis-comaprision-report"
 
 
 export const AppRoutes = () => {
@@ -313,6 +314,7 @@ export const AppRoutes = () => {
                    <Route path='masters/size/size-view' key='/size/size-view' element={<SizeView/>} />
                    <Route path='pdf-info' element={<LevisPdFInfoGrid />} />
                    <Route path='pdf-info-detail-view' element={<LevisPdfInfoDetailView />} />
+                   <Route path="levis-comparision-report" element={<LevisComaparisionReport/>}/>
 
             
                 </Route>
