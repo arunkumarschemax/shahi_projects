@@ -402,7 +402,7 @@ export class LevisService {
   // async getordercomparationData(req?: any): Promise<CommonResponseModel> {
   //   try {
   //     const Originaldata = await this.LevisOrdersRepo.getordercomparationData(req)
-  //     const compareModel: CompareModel[] = []
+  //     const compareModel: LevisCompareModel[] = []
 
   //     for (const rec of Originaldata) {
   //       const childData = await this.eddieOrdersChildRepository.find({
@@ -421,7 +421,7 @@ export class LevisService {
   //         {
   //           // Only push if there are changes
   //           compareModel.push(new
-  //             CompareModel(
+  //             LevisCompareModel(
   //               rec.po_number,
   //               rec.po_line,
   //               rec.size,
