@@ -48,6 +48,8 @@ export const StockReceivedApproval = () => {
   const allocatedLocationInfo = (value,type) => {
     const req = new AllocatedLocationReq();
     req.sampleRequestItemId = value;
+    req.action = "Receive";
+    req.type = type;
     service.allocatedLocationInfo(req).then((res) => {
       if (res.status) {
         // setChildData(res.data)

@@ -1878,6 +1878,9 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
     if (req.action == 'Approval') {
       checkStatus = MaterialStatusEnum.MATERIAL_ALLOCATED
     }
+    if (req.action == 'Receive') {
+      checkStatus = MaterialStatusEnum.MATERIAL_ISSUED
+    }
 
     let data
     data = `SELECT ma.sample_item_id AS sampleItemId,rp.rack_position_name AS location,position_Id AS id,item_type AS itemType,mai.quantity
