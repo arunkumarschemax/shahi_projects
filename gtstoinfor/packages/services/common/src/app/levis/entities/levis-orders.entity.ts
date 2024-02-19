@@ -20,11 +20,6 @@ export class LevisOrdersEntity {
     deliveryAddress: string
 
     @Column("varchar", {
-        name: "transmode",
-    })
-    transMode: string
-
-    @Column("varchar", {
         name: "currency",
     })
     currency: string
@@ -51,9 +46,32 @@ export class LevisOrdersEntity {
     })
     originalDate: string
 
+    
+    @Column("varchar", {
+        name: "transmode",
+    })
+    transMode: string
+
+    @Column("varchar", {
+        name: "plannedExFactoryDate",
+    })
+    plannedExFactoryDate: string
+
+    
+    @Column("varchar", {
+        name: "ex_factory_date",
+    })
+    exFactoryDate: string
 
 
 
+
+
+    
+    @Column("varchar", {
+        name: "item_no",
+    })
+    itemNo: string
     
     @Column("varchar", {
         name: "product",
@@ -65,21 +83,10 @@ export class LevisOrdersEntity {
     })
     size: string
 
-    
     @Column("varchar", {
         name: "upc",
     })
     upc: string
-
-    @Column("varchar", {
-        name: "planned_ex_factory_date",
-    })
-    plannedExFactoryDate: string
-
-    @Column("varchar", {
-        name: "ex_factory_date",
-    })
-    exFactoryDate: string
 
     @Column("varchar", {
         name: "quantity",
@@ -91,6 +98,12 @@ export class LevisOrdersEntity {
         name: "unit_price",
     })
     unitPrice: string
+        
+    @Column("varchar", {
+        name: "schedule_date",
+    })
+    scheduledDate: string
+
 
 
 

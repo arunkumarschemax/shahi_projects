@@ -3,7 +3,7 @@ import { LevisPoItemDetails } from "./levis-po-item-details";
 export class LevisPoDetails {
     poNumber: string;
     deliveryAddress: string;
-    transMode: string;
+    // transMode: string;
     currency: string;
     // poDate: string;
     // shipment: string;

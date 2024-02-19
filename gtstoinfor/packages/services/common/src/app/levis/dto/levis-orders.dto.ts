@@ -12,9 +12,6 @@ export class LevisDto {
     deliveryAddress: string
     
     @ApiProperty()
-    transMode: string
-
-    @ApiProperty()
     currency: string
 
     @ApiProperty()
@@ -29,8 +26,22 @@ export class LevisDto {
     @ApiProperty()
     originalDate: string
 
+    @ApiProperty()
+    transMode: string
+
+    @ApiProperty()
+    plannedExFactoryDate: string
+
+    @ApiProperty()
+    exFactoryDate: string
 
 
+    
+    @ApiProperty()
+    itemNo: string
+
+    @ApiProperty()
+    product: string
 
     @ApiProperty()
     size: string
@@ -39,16 +50,15 @@ export class LevisDto {
     upc: string
 
     @ApiProperty()
-    plannedExFactoryDate: string
-
-    @ApiProperty()
-    exFactoryDate: string
-
-    @ApiProperty()
     quantity: string
 
     @ApiProperty()
     unitPrice: string
+
+    @ApiProperty()
+    scheduledDate: string
+g
+
 
     createdAt: string;
 

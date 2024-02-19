@@ -91,9 +91,9 @@ export const extractDataFromPoPdf = async (pdf) => {
                 }
                 poData.poNumber = firstPageContent[poNumberTextLseIndex - 1].str;
                 poData.currency = firstPageContent[currencyLseIndex + 1].str;
-                poData.transMode =
-                    (firstPageContent[transModeLseIndex + 2].str + " " +
-                        firstPageContent[transModeLseIndex + 3].str).replace(/\s+\w+/g, "").trim();
+                // poData.transMode =
+                //     (firstPageContent[transModeLseIndex + 2].str + " " +
+                //         firstPageContent[transModeLseIndex + 3].str).replace(/\s+\w+/g, "").trim();
 
 
                 // poData.deliveryAddress =
@@ -235,7 +235,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                     currencyString = 'USD';
                 }
                 poData.currency = currencyString;
-                poData.transMode = firstPageContent[transModeIndex + 2].str
+                // poData.transMode = firstPageContent[transModeIndex + 2].str
                 poData.deliveryAddress =
                     firstPageContent[deliveryAddressIndex - 5].str + " " +
                     firstPageContent[deliveryAddressIndex - 4].str + " " +
@@ -373,7 +373,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 }
                 poData.poNumber = firstPageContent[mxPoNumberTextIndex + 1].str.replace(/#/g, "").trim();
                 poData.currency = firstPageContent[currencyIndex + 1].str
-                poData.transMode = '-'
+                // poData.transMode = '-'
                 poData.deliveryAddress =
                     firstPageContent[deliveryAddressIndexMx + 8].str + " " +
                     firstPageContent[deliveryAddressIndexMx + 9].str + " " +
@@ -548,6 +548,7 @@ export const extractDataFromPoPdf = async (pdf) => {
 
             itemDetailsObj.poLine = filteredData[rec.itemIndex + 1].str
             itemDetailsObj.material = filteredData[rec.itemIndex + 2].str
+
             let unitPriceIndex = -1;
             let foundFirstTransMode = false;
             filteredData.forEach((item, index) => {
@@ -563,6 +564,38 @@ export const extractDataFromPoPdf = async (pdf) => {
             if (unitPriceIndex >= 0 && unitPriceIndex < filteredData.length) {
                 itemDetailsObj.totalUnitPrice = filteredData[unitPriceIndex].str;
             }
+
+            let transModeIndex = -1;
+            filteredData.forEach((item, index) => {
+                if (/Tracking/.test(item.str)) {
+                    transModeIndex = index + 3;
+                    let transModeIndex2 = index + 4;
+                    if (transModeIndex < filteredData.length && transModeIndex2 < filteredData.length) {
+                        itemDetailsObj.transMode = (filteredData[transModeIndex].str + " " + filteredData[transModeIndex2].str).replace(/\s+\w+/g, "");
+                    }
+                    return;
+                }
+            });
+
+            // let plannedExFactoryDateIndex = -1;
+            // filteredData.forEach((item, index) => {
+            //     if (/Line Value/.test(item.str)) {
+            //         plannedExFactoryDateIndex = index + 9;
+            //         return;
+            //     }
+            // });
+
+            // if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
+            //     itemDetailsObj.plannedExFactoryDate = filteredData[plannedExFactoryDateIndex].str;
+            // }
+
+
+            // const inputDate = new Date(itemDetailsObj.plannedExFactoryDate);
+            // // Calculate the date 21 days before the plannedExFactoryDate
+            // const twentyOneDaysBefore = new Date(inputDate);
+            // twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
+            // const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(twentyOneDaysBefore);
+            // itemDetailsObj.exFactoryDate = moment(twentyOneDaysBefore).format("DD.MM.YYYY");
 
 
             itemTextEndIndex = rec.amountIndex
@@ -601,35 +634,37 @@ export const extractDataFromPoPdf = async (pdf) => {
                 const sizeWithoutHyphen = size.replace(/\s-/g, '');
                 const isSizeWithHyphen = size !== sizeWithoutHyphen;
 
-                let upc = null;
+                let itemNo = null;
                 while (lineIndex < itemVarinatsTextArr.length) {
                     if (lineRegex.test(itemVarinatsTextArr[lineIndex])) {
-                        upc = itemVarinatsTextArr[lineIndex];
+                        itemNo = itemVarinatsTextArr[lineIndex];
                         lineIndex++;
                         break;
                     }
                     lineIndex++;
                 }
-
-                if (!upc) {
+                if (!itemNo) {
                     break;
                 }
 
-                let product = null;
+                let scheduledDate = null;
                 const regex = /\d+\.\d+\.\d+/g;
-                const productIndexingDataMatch = itemVarinatsTextArr.slice(lineIndex).join(' ');
-                const matches = productIndexingDataMatch.match(regex);
+                const scheduledDateIndexingDataMatch = itemVarinatsTextArr.slice(lineIndex).join(' ');
+                const matches = scheduledDateIndexingDataMatch.match(regex);
                 if (matches && matches.length > 0) {
                     const lastIndex = matches.length - 1;
-                    product = matches[lastIndex];
+                    scheduledDate = matches[lastIndex];
                 }
 
 
                 const itemVariantsObj = new LevisPoItemVariant();
                 itemVariantsObj.size = isSizeWithHyphen ? sizeWithoutHyphen : size;
-                itemVariantsObj.upc = upc;
-                itemVariantsObj.product = product;
-                // itemVariantsObj.unitPrice = unitPrice;
+                itemVariantsObj.upc = '-';
+                itemVariantsObj.scheduledDate = scheduledDate;
+                itemVariantsObj.itemNo = itemNo;
+                itemVariantsObj.product = '-';
+                itemVariantsObj.unitPrice = itemDetailsObj.totalUnitPrice;
+
 
                 console.log(itemVariantsObj)
                 itemVariantsArr.push(itemVariantsObj)
@@ -662,6 +697,37 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemDetailsObj.material = '-'
             itemDetailsObj.totalUnitPrice = '-'
             itemDetailsObj.originalDate = '-'
+            let tansModeIndex = -1;
+            filteredData.forEach((item, index) => {
+                if (/TRANS MODE/.test(item.str)) {
+                    tansModeIndex = index + 2;
+                    return;
+                }
+            });
+
+            if (tansModeIndex >= 0 && tansModeIndex < filteredData.length) {
+                itemDetailsObj.transMode = filteredData[tansModeIndex].str;
+            }
+
+            let plannedExFactoryDateIndex = -1;
+            filteredData.forEach((item, index) => {
+                if (/Tarif Code/.test(item.str)) {
+                    plannedExFactoryDateIndex = index + 10;
+                    return;
+                }
+            });
+
+            if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
+                itemDetailsObj.plannedExFactoryDate = filteredData[plannedExFactoryDateIndex].str;
+            }
+
+
+            const inputDate = new Date(itemDetailsObj.plannedExFactoryDate);
+            // Calculate the date 21 days before the plannedExFactoryDate
+            const twentyOneDaysBefore = new Date(inputDate);
+            twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
+            const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(twentyOneDaysBefore);
+            itemDetailsObj.exFactoryDate = moment(twentyOneDaysBefore).format("YYYY.MM.DD");
 
             itemTextEndIndex = rec.amountIndex
             itemVariantStartIndex = itemTextEndIndex + 1
@@ -686,27 +752,34 @@ export const extractDataFromPoPdf = async (pdf) => {
             for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
                 const itemVariantsObj = new LevisPoItemVariant();
                 const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
-                itemVariantsObj.product = itemVarinatsTextArr[upcIndex + 1]
+                // itemVariantsObj.product = itemVarinatsTextArr[upcIndex + 1]
+                let product = itemVarinatsTextArr[upcIndex + 1];
+                if (/[A-Z]\d{8}/.test(product)) {
+                    product = product.replace(/(.{5})/g, '$1-');
+                    product = product.replace(/-$/, '');
+                }
+                itemVariantsObj.product = product;
                 itemVariantsObj.upc = stringsWithLength13[l]
                 itemVariantsObj.size = itemVarinatsTextArr[upcIndex + 4]
                 // itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5]
                 itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex - 3].replace(/,/g, "");
                 itemVariantsObj.unitPrice = itemVarinatsTextArr[upcIndex - 2]
+                itemVariantsObj.itemNo = '-';
                 // itemVariantsObj.exFactoryDate
-                itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5];
+                // itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5];
                 // const plannedExFactoryDate = new Date(itemVariantsObj.plannedExFactoryDate);
                 // plannedExFactoryDate.setDate(plannedExFactoryDate.getDate() - 21);
                 // const year = plannedExFactoryDate.getFullYear();
                 // const month = String(plannedExFactoryDate.getMonth() + 1).padStart(2, '0');
                 // const day = String(plannedExFactoryDate.getDate()).padStart(2, '0');
                 // itemVariantsObj.exFactoryDate = `${year}.${month}.${day}`;
-                itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5];
-                const inputDate = new Date(itemVariantsObj.plannedExFactoryDate);
-                // Calculate the date 21 days before the plannedExFactoryDate
-                const twentyOneDaysBefore = new Date(inputDate);
-                twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
-                const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(twentyOneDaysBefore);
-                itemVariantsObj.exFactoryDate = moment(twentyOneDaysBefore).format("YYYY.MM.DD");
+                // itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5];
+                // const inputDate = new Date(itemVariantsObj.plannedExFactoryDate);
+                // // Calculate the date 21 days before the plannedExFactoryDate
+                // const twentyOneDaysBefore = new Date(inputDate);
+                // twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
+                // const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(twentyOneDaysBefore);
+                // itemVariantsObj.exFactoryDate = moment(twentyOneDaysBefore).format("YYYY.MM.DD");
                 // // const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
                 // if (upcIndex !== -1 && upcIndex < itemVarinatsTextArr.length - 1) {
                 //     const nextIndexValue = itemVarinatsTextArr[upcIndex + 1];
@@ -789,6 +862,41 @@ export const extractDataFromPoPdf = async (pdf) => {
             if (originalDateIndexPoLine >= 0 && originalDateIndexPoLine < filteredData.length) {
                 itemDetailsObj.originalDate = filteredData[originalDateIndexPoLine].str;
             }
+
+            let tansModeIndex = -1;
+            filteredData.forEach((item, index) => {
+                if (/IncoTerm/.test(item.str)) {
+                    tansModeIndex = index + 9;
+                    return;
+                }
+            });
+
+            if (tansModeIndex >= 0 && tansModeIndex < filteredData.length) {
+                itemDetailsObj.transMode = filteredData[tansModeIndex].str;
+            }
+
+
+            // let plannedExFactoryDateIndex = -1;
+            // filteredData.forEach((item, index) => {
+            //     if (/Item Total Value/.test(item.str)) {
+            //         plannedExFactoryDateIndex = index + 5;
+            //         return;
+            //     }
+            // });
+
+            // if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
+            //     itemDetailsObj.plannedExFactoryDate = filteredData[plannedExFactoryDateIndex].str;
+            // }
+
+
+            // const inputDate = new Date(itemDetailsObj.plannedExFactoryDate);
+            // // Calculate the date 21 days before the plannedExFactoryDate
+            // const twentyOneDaysBefore = new Date(inputDate);
+            // twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
+            // const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(twentyOneDaysBefore);
+            // itemDetailsObj.exFactoryDate = moment(twentyOneDaysBefore).format("DD.MM.YYYY");
+
+
             // let originalDateIndexPoLine = -1;
 
             // filteredData.forEach((item, index) => {
@@ -857,16 +965,19 @@ export const extractDataFromPoPdf = async (pdf) => {
                 const itemVariantsObj = new LevisPoItemVariant();
                 const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
                 // itemVariantsObj.product = itemVarinatsTextArr[upcIndex + 1] //Description
-                itemVariantsObj.upc = stringsWithLength13[l] //variant material
+                itemVariantsObj.product = stringsWithLength13[l] //variant material
                 itemVariantsObj.size = itemVarinatsTextArr[upcIndex + 2] //size
                 itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 3] // quantity
-                itemVariantsObj.exFactoryDate = itemVarinatsTextArr[upcIndex - 1]  //item#
+                itemVariantsObj.itemNo =itemVarinatsTextArr[upcIndex - 1]
+                itemVariantsObj.upc = '-'
+                // itemVariantsObj.exFactoryDate = itemVarinatsTextArr[upcIndex - 1]  //item#
                 // itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5]
                 // itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex - 3].replace(/,/g, "");
                 // itemVariantsObj.unitPrice = itemVarinatsTextArr[upcIndex - 2]
                 // const plannedExFactoryDate = new Date(itemVariantsObj.plannedExFactoryDate);
                 // plannedExFactoryDate.setDate(plannedExFactoryDate.getDate() - 21);
                 // itemVariantsObj.exFactoryDate = plannedExFactoryDate.toISOString().slice(0, 10);
+                itemVariantsObj.unitPrice = itemDetailsObj.totalUnitPrice;
 
                 console.log(itemVariantsObj)
                 itemVariantsArr.push(itemVariantsObj)

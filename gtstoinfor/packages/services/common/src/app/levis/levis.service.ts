@@ -52,21 +52,26 @@ export class LevisService {
           const entity = new LevisOrdersEntity();
           entity.poNumber = req.poNumber
           entity.deliveryAddress = req.deliveryAddress
-          entity.transMode = req.transMode
+          // entity.transMode = req.transMode
           entity.currency = req.currency
 
           entity.poLine = item.poLine
           entity.material = item.material
           entity.totalUnitPrice = item.totalUnitPrice
           entity.originalDate = item.originalDate
+          entity.transMode = item.transMode
+          entity.plannedExFactoryDate = item.plannedExFactoryDate
+          entity.exFactoryDate = item.exFactoryDate
 
+          entity.itemNo = variant.itemNo
           entity.product = variant.product
           entity.size = variant.size
           entity.upc = variant.upc
-          entity.plannedExFactoryDate = variant.plannedExFactoryDate
-          entity.exFactoryDate = variant.exFactoryDate
+          // entity.plannedExFactoryDate = variant.plannedExFactoryDate
+          // entity.exFactoryDate = variant.exFactoryDate
           entity.quantity = variant.quantity
           entity.unitPrice = variant.unitPrice
+          entity.scheduledDate = variant.scheduledDate
 
           if (orderData) {
             const update = await this.LevisOrdersRepo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {})

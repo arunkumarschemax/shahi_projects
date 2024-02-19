@@ -6,6 +6,9 @@ export class LevisPoItemDetails {
     material: string;
     totalUnitPrice:string
     originalDate:string
+    transMode: string;
+    plannedExFactoryDate:string;
+    exFactoryDate:string;
 
     // materialNo: string;
     // poItem: string;

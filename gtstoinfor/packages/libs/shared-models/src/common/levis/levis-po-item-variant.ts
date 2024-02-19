@@ -3,10 +3,13 @@ export class LevisPoItemVariant {
     product:string;
     size: string;
     upc: string;
-    plannedExFactoryDate:string;
-    exFactoryDate:string;
+    // plannedExFactoryDate:string;
+    // exFactoryDate:string;
     quantity: string;
     unitPrice: string;
+    scheduledDate: string;
+    itemNo:string;
+
     // label:string;
     // unitPrice: string;
     // quantity: string;
