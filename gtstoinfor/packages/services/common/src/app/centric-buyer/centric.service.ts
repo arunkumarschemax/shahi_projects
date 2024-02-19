@@ -827,7 +827,7 @@ export class CentricService {
       await page.setViewport({ width: 1580, height: 900 });
 
       setTimeout(async () => {
-        await page.goto('http://localhost:4200/', {
+        await page.goto('https://centric.shahiapps.in/', {
           timeout: 100000,
           waitUntil: 'networkidle0',
         })
@@ -843,7 +843,7 @@ export class CentricService {
       await page.waitForNavigation();
 
       setTimeout(async () => {
-        await page.goto('http://localhost:4200/#/centric/centric-pdf-upload/', {
+        await page.goto('https://centric.shahiapps.in/#/centric/centric-pdf-upload/', {
           timeout: 100000,
           waitUntil: 'networkidle0'
         })
