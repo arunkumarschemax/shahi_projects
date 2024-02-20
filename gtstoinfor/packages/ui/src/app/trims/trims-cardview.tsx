@@ -27,42 +27,42 @@ export const TrimList = ({ }) => {
         "Joker Tag": <JokerTagPrint info={bomInfo} />,
         "Hangtag": <HangTag info={bomInfo} />,
         "Wash Care Label": <WasCarelabel bomInfo={bomInfo} />,
-        "Country Sticker": <CountryStickerPrint info={bomInfo} />
+        "Country Sticker": <CountryStickerPrint info={state?.state?.info} />
 
     }
 
     useEffect(() => {
-        setBomInfo(state.state.info)
+        // setBomInfo(state.state.info)
 
         getAllTrims();
     }, [])
 
-const getBomInfoAgainstStyle = (styleNumber,trim)=>{
-    const req = new StyleNumberReq(styleNumber.styleNumber,trim)
-    service.getBomInfoAgainstStyle(req).then(res =>{
-        
-        if(res.status){
-            res.data.styleNumber = styleNumber.styleNumber;
-            res.data.poNumber = styleNumber.purchaseOrderNumber;
-            // res.data.destinationCountry = styleNumber.destinationCountry;
-            res.data.destinationCountryCode = styleNumber.destinationCountryCode;
-            res.data.genderAgeDesc = styleNumber.genderAgeDesc;
-            // res.data.geoCode = styleNumber.geoCode;
-            res.data.sizeWiseData=styleNumber.sizeWiseData;
-            res.data.item=styleNumber.item
-            // setBomInfo(res.data)
-        }
-    })
-}
+    const getBomInfoAgainstStyle = (styleNumber, trim) => {
+        const req = new StyleNumberReq(styleNumber.styleNumber, trim)
+        service.getBomInfoAgainstStyle(req).then(res => {
 
-// const getBomInfoAgainstItemStyle = (trim) => {
-//     const req = new BomPrintFilterReq(state.state.items,state.state.styleNumbers,trim)
-//     service.getBomPrintInfo(req).then(res => {
-//         if(res.status){
-//             setBomInfo(res.data)
-//         }
-//     })
-// }
+            if (res.status) {
+                res.data.styleNumber = styleNumber.styleNumber;
+                res.data.poNumber = styleNumber.purchaseOrderNumber;
+                // res.data.destinationCountry = styleNumber.destinationCountry;
+                res.data.destinationCountryCode = styleNumber.destinationCountryCode;
+                res.data.genderAgeDesc = styleNumber.genderAgeDesc;
+                // res.data.geoCode = styleNumber.geoCode;
+                res.data.sizeWiseData = styleNumber.sizeWiseData;
+                res.data.item = styleNumber.item
+                // setBomInfo(res.data)
+            }
+        })
+    }
+
+    // const getBomInfoAgainstItemStyle = (trim) => {
+    //     const req = new BomPrintFilterReq(state.state.items,state.state.styleNumbers,trim)
+    //     service.getBomPrintInfo(req).then(res => {
+    //         if(res.status){
+    //             setBomInfo(res.data)
+    //         }
+    //     })
+    // }
 
     const getBomInfoAgainstItemStyle = (trim) => {
         const req = new BomPrintFilterReq(state.state.items, state.state.styleNumbers, trim)
@@ -70,7 +70,7 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
             if (res.status) {
                 setBomInfo(res.data)
                 setModalOpen(true)
-                
+
             }
         })
     }
@@ -96,9 +96,10 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
     // }
 
     const cardOnclick = (val) => {
+        setBomInfo([])
         setTrimName(val.item)
-      
-        if(state.state){
+
+        if (state.state) {
             // getBomInfoAgainstStyle(state.state.info,val.item)
             getBomInfoAgainstItemStyle(val.item)
         }

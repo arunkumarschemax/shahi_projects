@@ -38,9 +38,9 @@ export const WasCarelabel = (props:washCareprops) =>{
         })
     }
 
-    useEffect(() =>{
-        sizeWiseDataForFormutpleOgac()
-    },[])
+    // useEffect(() =>{
+    //     sizeWiseDataForFormutpleOgac()
+    // },[])
 
     useEffect(() => {
         if(props.bomInfo){
@@ -118,18 +118,22 @@ export const WasCarelabel = (props:washCareprops) =>{
         }
     }
 
-    const vCodemap = (e) =>{
-    console.log(e)
-    if(e?.shipToAddress?.includes('Nike Trading')){
-        return '50'
-    }
-    if(e?.shipToAddress?.includes('Nike Golf')){
-        return '02'
-    }
-    if(e?.shipToAddress?.includes('RT Clothing')){
-        return '35'
-    }
-    return ''
+    const vCodemap = (eArray) =>{
+        for(const e of eArray){
+            if(e.bomInfo && e.bomInfo.length >0){
+                if(e?.shipToAddress?.includes('Nike Trading')){
+                    return '50'
+                }
+                if(e?.shipToAddress?.includes('Nike Golf')){
+                    return '02'
+                }
+                if(e?.shipToAddress?.includes('RT Clothing')){
+                    return '35'
+                }
+                return ''
+            }
+        }
+        return ''
     }
 
     const sizewisedatamap =(bomInfo) =>{
@@ -174,7 +178,7 @@ export const WasCarelabel = (props:washCareprops) =>{
         </>
     
     }
-
+   console.log(bomInfo)
 
     return (
         <div  id='print'>
@@ -182,13 +186,14 @@ export const WasCarelabel = (props:washCareprops) =>{
             extra={<span><Button onClick={handlePrint}>Print</Button></span>}
             >
                 <div>
-                <div style={{display:gender === true?'unset':'none'}}>
-                      <h2 style={{color:'red'}}>FIRE WARNING LABEL</h2>
-                <br></br>
-                </div>
                     {bomInfo.map((e,index) =>{   
-                        return index >0 ?
+                        {console.log(e)}
+                        return (  
                         <>
+                       {e?.bomInfo ?
+                        <>
+                        {e.bomInfo.length >0 ?
+                        <div>
                         <div style={{display: e.geoCode === 'AAO'?'unset':'none'}}>
                         {
                             <><h2>
@@ -198,11 +203,11 @@ export const WasCarelabel = (props:washCareprops) =>{
                              <h2>
                                 </h2></>
                         }
-                      <br></br>
+                        <br></br>
                         </div>
-                    <div>
+                        <div>
                     {e.destinationCountry === 'BRAZIL' ?
-                    <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'15%'}} border={1} cellSpacing="0" cellPadding='0' >
+                    <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'15%',border:'2px solid black'}} border={1} cellSpacing="0" cellPadding='0' >
                         <tr>
                             <th>DESTINATION</th>
                             <th>BRAZIL</th>
@@ -213,10 +218,13 @@ export const WasCarelabel = (props:washCareprops) =>{
                         </tr>
                     </table>:<></>
                         }   
-                <br></br>
-                </div>
-
-                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
+                    <br></br>
+                       </div>
+                            <div style={{display:gender === true?'unset':'none'}}>
+                            <h2 style={{color:'red'}}>FIRE WARNING LABEL</h2>
+                      <br></br>
+                      </div>
+                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1} cellSpacing="0" cellPadding='0'>
                         <tr>
                             <th style={{width:'1%'}}>ITEM#</th>
                             <th style={{width:'1%'}}>PO NO</th>
@@ -227,41 +235,49 @@ export const WasCarelabel = (props:washCareprops) =>{
                             <th style={{width:'1%'}}>WC</th>
                             <th style={{width:'1%'}}>DESTINATION</th>
                             <th style={{width:'1%'}}>TOTAL QTY</th>
-                        </tr>        
-                        <tr>
-                            <td style={{textAlign:'center'}} rowSpan={e?.bomInfo?.length}>{e.item}</td>
-                            <td style={{textAlign:'center'}}  rowSpan={e?.bomInfo?.length}>{e.poNumber}</td>
-                            <td style={{textAlign:'center'}}  rowSpan={e?.bomInfo?.length}>{e.season}</td>
-                            <td style={{textAlign:'center'}}  rowSpan={e?.bomInfo?.length}>{e.style}</td> 
-                            <td>{'bomInfo?.bomInfo[0]?.geoCode == "EMEA" ?"1009915" : bomInfo?.bomInfo[0].imCode'}                                </td>
-                            <td>{'bomInfo?.bomInfo[0]?.description'}</td>
-                            <td>{'bomInfo?.bomInfo[0]?.trimInfo'}</td>
-                            <td style={{textAlign:'center'}}  rowSpan={4}>{e.geoCode}</td>
-                            <td style={{textAlign:'center'}}  rowSpan={4}>0</td>
-                          </tr>
-                             {
-                                e?.bomInfo?.map((e,index)=>{
-                                        return index > 0 ? <tr>
-                                            <td>{bomInfo.geoCode == 'EMEA' ?'1009915' :e.imCode}</td>
-                                            <td>{e.description}</td>
-                                            <td>{e.trimInfo}</td>
-                                        </tr> : <></>;
-                                })
-                            } 
-                            
-                     </table>
-                     <br></br>
-                     <div style={{display:e.geoCode === 'APA' && e?.styleType === 'MENS TOP' ?'unset':'none'}} > 
-         <>
-        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
-        <tr>
+                        </tr>   
+                        {
+                            e.bomInfo ? (e?.bomInfo[0]?.map((rec,index) => {
+                                const len = e?.bomInfo[0]?.length
+                                return(
+                                    <tr>
+                                        {index == 0?(<>
+                                            <td style={{textAlign:'center'}} rowSpan={len}>{e.item}</td>
+                                            <td style={{textAlign:'center'}}  rowSpan={len}>{e.poNumber}</td>
+                                            <td style={{textAlign:'center'}}  rowSpan={len}>{e.season}</td>
+                                            <td style={{textAlign:'center'}}  rowSpan={len}>{e.style}</td> 
+                                        </>):(<></>)}
+                                        <td>{e?.geoCode == "EMEA" ?"1009915" : rec.imCode}</td>
+                                        <td>{ rec.description}</td>
+                                        <td>{ rec.trimInfo}</td>
+                                        {index == 0 ?
+                                        (
+                                            <>
+                                             <td style={{textAlign:'center'}}  rowSpan={len}>{e.geoCode}</td> 
+                                            <td style={{textAlign:'center'}}  rowSpan={len}>{0}</td> 
+                                            </>
+                                        ):(<></>)}
+                                    </tr>
+                                )
+                                  }
+                                ))
+                                :(<></>)
+                        }
+                        </table>
+                        <br></br>
+                     <div 
+                     style={{display:e.geoCode === 'APA' && e?.styleType === 'MENS TOP' ?'unset':'none'}}
+                      > 
+                    <>
+                    <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1} cellSpacing="0" cellPadding='0'>
+                    <tr>
                 <th>REGION</th>
                 <th>MANUFACTORY SHIP DATE</th>
                 <th>SIZE MATRIX TYPE</th>
                 <th>STYLE TYPE</th>
                 <th>SEASON</th>
                 {e?.sizeInfo?.map(e =>{
-                     grandTotal+= e.quantity
+                    //  grandTotal+= e.quantity
                      return(
                         <th>{e.size}</th>
                     )
@@ -277,6 +293,7 @@ export const WasCarelabel = (props:washCareprops) =>{
                 <td style={{textAlign:'center'}}>{e.season}</td>
                 {
                     e?.sizeInfo?.map(e => {
+                        grandTotal += Number(e.quantity)
                         return(
                             <td>{e.quantity}</td>
                         )
@@ -319,7 +336,7 @@ export const WasCarelabel = (props:washCareprops) =>{
             <tr>
                 <td style={{textAlign:'center'}}>{'OCT'}</td>
                 <td style={{textAlign:'center'}}>{'ID'}</td>
-                <td style={{textAlign:'center'}}>{'546789'}</td>
+                <td style={{textAlign:'center'}}>{e.style}</td>
                 <td style={{textAlign:'center'}}>{'AS MENS TOP'}</td>
                 <td style={{textAlign:'center'}}>{'XS'}</td>
                 <td style={{textAlign:'center'}}>{'MENS TOP'}</td>
@@ -444,10 +461,16 @@ export const WasCarelabel = (props:washCareprops) =>{
             </tr>
         </table>
         </>
-        </div>
+                     </div>
+                        </div>
+                        :<></>}
+                        </>
+                        :<></>
+                       }
+                      
+                   
                     </>
-                    :
-                    <></>
+                        )
                     })}
                 </div>
                 <br></br>   

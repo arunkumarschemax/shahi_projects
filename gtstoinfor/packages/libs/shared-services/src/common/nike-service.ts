@@ -400,5 +400,9 @@ export class NikeService extends CommonAxiosService {
     async deleteCoLine(payload?:ItemNoDto): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/deleteCoLine",payload)
     }
+
+    async updateDomItme(payload?:ItemNoDto[]): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/updateDomItme",payload)
+    }
 }
 
