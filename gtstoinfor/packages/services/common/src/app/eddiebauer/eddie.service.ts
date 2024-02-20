@@ -474,8 +474,9 @@ export class EddieService {
   }
 
   async EddieBot() {
+    const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
+
     try {
-      const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
 
       const page = await browser.newPage();
       await page.setViewport({ width: 1580, height: 900 });
@@ -539,6 +540,8 @@ export class EddieService {
       }
     } catch (error) {
       return new CommonResponseModel(false, 0, error)
+    } finally {
+      browser.close()
     }
   }
 
