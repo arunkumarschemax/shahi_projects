@@ -424,12 +424,14 @@ export class LevisService {
 
   async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
-        const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber } });
-        const exfacDate = data[0].exFactoryDate
+      // const poLineValues = req.poLine.split(',')
+      const poLineValues = req?.poLine
+        const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber,poLine:poLineValues } });
+        const exfacDate = data[0]?.exFactoryDate
         console.log(exfacDate,"exfacDate")
 
       
-        const [day, month, year] = exfacDate.split('.');
+        const [day, month, year] = exfacDate?.split('.');
         const inputDate = new Date(`${year}-${month}-${day}`);
         
        
@@ -508,7 +510,7 @@ export class LevisService {
             });
             const poInfo = poMap.get(poNumber);
 
-            const parsedDate = moment(poInfo.exFactoryDate, "DD.MM.YYYY");
+            const parsedDate = moment(poInfo?.exFactoryDate, "DD.MM.YYYY");
             const formattedExFactDate = parsedDate.format("DD/MM/YYYY");
       
 
@@ -800,7 +802,7 @@ export class LevisService {
                     await inputField.clear();
                     await inputField.sendKeys(size.price);
                   } else {
-                    // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
+                    const update = await this.levisCoLineRepo.update({ poNumber: po.po_number }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
                     // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
                     // return new CommonResponseModel(false, 0, 'NO matching Size found')
                   }
@@ -823,7 +825,7 @@ export class LevisService {
       if (await this.isAlertPresent(driver)) {
         const alert = await driver.switchTo().alert();
         const alertText = await alert.getText();
-        // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: alertText ,isActive:false });
+        const update = await this.levisCoLineRepo.update({ poNumber: po.po_number }, { status: 'Failed', errorMsg: alertText ,isActive:false });
     
         // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
 
@@ -846,7 +848,7 @@ export class LevisService {
         if (coNo) {
      
 
-          // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted,errorMsg:"-" });
+          const update = await this.levisCoLineRepo.update({ poNumber: po.po_number }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted,errorMsg:"-" });
           // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.SUCCESS})
 
        
@@ -855,7 +857,7 @@ export class LevisService {
         } else {
      
 
-          // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed',isActive:false });
+          const update = await this.levisCoLineRepo.update({ poNumber: po.po_number  }, { status: 'Failed',isActive:false });
           // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
 
           // await driver.navigate().refresh();
@@ -868,7 +870,7 @@ export class LevisService {
       
       console.log(error, 'error');
       if (error.name === 'TimeoutError') {
-        // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found', isActive:false });
+        const update = await this.levisCoLineRepo.update({ poNumber: po.po_number  }, { status: 'Failed', errorMsg: 'NO matching Color found', isActive:false });
         // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
         driver.quit()
         return new CommonResponseModel(false, 0, 'Matching Color not found')
