@@ -189,12 +189,12 @@ export class LevisService {
       };
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
       const records = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber} });
-      // const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
+      const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
       const empty = [];
 
       //console.log(rec,'reccccccccc')
       const entity = new LevisCOLineEntity()
-      // entity.poLine = uniquePoLines.join(',');
+       entity.poLine = uniquePoLines.join(',');
       entity.buyer = req.buyer
       entity.poNumber = req.poNumber;
       // entity.style = req.style;

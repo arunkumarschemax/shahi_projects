@@ -15,7 +15,7 @@ export class LevisCOLineRepository extends Repository<LevisCOLineEntity> {
 
     async getCoLineData(req: LevisOrderFilter): Promise<any[]> {
       const query = this.createQueryBuilder('co')
-        .select(`DISTINCT co.po_number,co.co_date, co.item_no, co.status, co.error_msg,
+        .select(`DISTINCT co.po_number,co.po_line,co.co_date, co.item_no, co.status, co.error_msg,
                  DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user, co.co_number,co.id`);
   
       if (req.poNumber !== undefined) {
