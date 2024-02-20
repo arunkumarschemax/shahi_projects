@@ -26,7 +26,7 @@ export const LoginComponent = () => {
             else {
                 // navigate("/nike-dashboard", { replace: true });
                 // navigate("/sanmar/sanmar-pdf-upload", { replace: true });
-                navigate("/eddiebauer/eddiebauer-pdf-upload", { replace: true });
+                navigate("/levis/levis-pdf-upload", { replace: true });
             }
             return true;
         } catch (error: any) {
