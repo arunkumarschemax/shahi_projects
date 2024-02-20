@@ -15,6 +15,7 @@ import {
   MenusAndScopesEnum,
   SampleFilterRequest,
   SampleIdRequest,
+  SampleItemIdRequest,
   allocateMaterialItems,
   lifeCycleStatusReq
 } from "@project-management-system/shared-models";
@@ -358,7 +359,7 @@ export const SampleDevNewView = () => {
           <>
             <span style={{ paddingRight: 20 }}  >
               <Tooltip title='Download Fabric'>
-                <DownloadOutlined onClick={() => handleFabDownload(record.filePath)} style={{ fontSize: '15px', marginLeft: '-5px', color: 'blue' }} />
+                <DownloadOutlined onClick={() => handleFabDownload(record)} style={{ fontSize: '15px', marginLeft: '-5px', color: 'blue' }} />
               </Tooltip>
             </span>
             {Number(record.tobeProcured) > 0 && record.status != BomStatusEnum.ALLOCATED && Number(record.resltantavaliblequantity) > 0 ? <Tag style={{ backgroundColor: '#03a9f46b', color: "black" }}><b>Need to allocate</b></Tag> : (Number(record.resltantavaliblequantity) <= 0 && record.status != BomStatusEnum.ALLOCATED) ? <Tag style={{ backgroundColor: '#41f4036b', color: "black" }}><b>Need to Procure</b></Tag> : record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag> : ""}
@@ -452,7 +453,7 @@ export const SampleDevNewView = () => {
           <>
             <span style={{ paddingRight: 20 }}  >
               <Tooltip title='Download Trim'>
-                <DownloadOutlined onClick={() => handleFabDownload(record.filePath)} style={{ fontSize: '15px', marginLeft: '-5px', color: 'blue' }} />
+                <DownloadOutlined onClick={() => handleTrimDownload(record)} style={{ fontSize: '15px', marginLeft: '-5px', color: 'blue' }} />
               </Tooltip>
             </span>
             {Number(record.tobeProcured) > 0 && record.status != BomStatusEnum.ALLOCATED && Number(record.resltantavaliblequantity) > 0 ? <Tag style={{ backgroundColor: '#03a9f46b', color: "black" }}><b>Need to allocate</b></Tag> : (Number(record.resltantavaliblequantity) <= 0 && record.status != BomStatusEnum.ALLOCATED) ? <Tag style={{ backgroundColor: '#41f4036b', color: "black" }}><b>Need to Procure</b></Tag> : record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag> : ""}
@@ -776,32 +777,55 @@ export const SampleDevNewView = () => {
   }
 
 
-
-  const handleFabDownload = (file) => {
-    // console.log('0000000', 'ooooooooo');
-
-    // console.log(file, 'filepath');
-    // console.log(file.substr(12))  
-    if (file !== null) {
-      // console.log('0000000');
-
-      fetch(config.file_upload_path + `${file.substr(12)}`)
-        .then((response) => {
-          response.blob().then((blob) => {
-            var FileSaver = require('file-saver');
-
-            // Set the appropriate MIME type for your image file
-            var mimeType = response.headers.get('content-type') || 'image/png';
-
-            var newBlob = new Blob([blob], { type: mimeType });
-            FileSaver.saveAs(newBlob, `${file.substr(12)}`);
-          });
-        });
+  const createItemZipFile = async (filesData: any[], fileName: string, type:string) => {
+    const zip = new JSZip();
+    for (const file of filesData) {
+      await addFileToZip(zip, file.name, file.url);
     }
-    else {
-      // console.log('000000022222222222222');
-      AlertMessages.getErrorMessage("File Not uploaded ");
-    }
+    zip.generateAsync({ type: "blob" }).then(function (content) {
+      saveAs(content, `${fileName}"_"${type}.zip`);
+    });
+  }
+
+
+  const handleTrimDownload = (record) => {
+    console.log(record);
+    const req = new SampleItemIdRequest(record.trim_info_id);
+    service.getTrimPaths(req).then(res => {
+      if (res.status) {
+        createItemZipFile(res.data.map(file => {
+          return {
+            ['name']: "",
+            ['url']: `${config.file_upload_path}/${file.filePath.split('upload_files')[1]}`,
+          }
+        }), record.requestNo,"TRIM");
+      }
+      else {
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+      AlertMessages.getErrorMessage(err.message)
+    })
+  }
+
+  const handleFabDownload = (record) => {
+    console.log(record);
+    const req = new SampleItemIdRequest(record.fabric_info_id);
+    service.getFabricPaths(req).then(res => {
+      if (res.status) {
+        createItemZipFile(res.data.map(file => {
+          return {
+            ['name']: "",
+            ['url']: `${config.file_upload_path}/${file.filePath.split('upload_files')[1]}`,
+          }
+        }), record.requestNo,"FABRIC");
+      }
+      else {
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch(err => {
+      AlertMessages.getErrorMessage(err.message)
+    })
   }
 
   const HeaderRow = (props: any) => {

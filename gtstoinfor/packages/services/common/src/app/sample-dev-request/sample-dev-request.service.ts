@@ -44,6 +44,7 @@ import { SampleTrimRepo } from './repo/sample-dev-trim-repo';
 import { SampleInventoryLoqRepo } from './repo/sample-inventory-loe-repo';
 import { UploadFilesRepository } from './repo/upload-files-repository';
 import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
+import { SampleItemIdRequest } from './dto/sample-item-id-request';
 let moment = require('moment');
 
 
@@ -2683,5 +2684,21 @@ order by mi.trim_code`;
     catch (err) {
       throw err
     }
+  }
+
+  async getFabricPaths(req: SampleItemIdRequest): Promise<CommonResponseModel> {
+    const data = await this.fabricRepo.find({ where: { fabricInfoId: req.sampleItemId } });
+    if (data.length === 0) {
+      return new CommonResponseModel(false, 0, 'data not found', [])
+    }
+    return new CommonResponseModel(true, 123, '', data);
+  }
+
+  async getTrimPaths(req: SampleItemIdRequest): Promise<CommonResponseModel> {
+    const data = await this.sampletrimrepo.find({ where: { trimInfoId: req.sampleItemId } });
+    if (data.length === 0) {
+      return new CommonResponseModel(false, 0, 'data not found', [])
+    }
+    return new CommonResponseModel(true, 123, '', data);
   }
 }
