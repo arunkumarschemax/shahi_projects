@@ -309,7 +309,7 @@ const OrdersCompareGrid = () => {
             dataIndex: '',
         },
         {
-            title: 'change to Net including discounts currency',
+            title: 'Change to Net including discounts Currency',
             dataIndex: '',
         },
         {
@@ -558,7 +558,7 @@ const OrdersCompareGrid = () => {
                 (record.trCoNetIncludingDiscNew ? record.trCoNetIncludingDiscNew : '-')
         },
         {
-            title: 'change to Net including discounts currency',
+            title: 'Change to Net including discounts Currency',
             dataIndex: 'trCoNetIncludingDiscCurrencyCodeTo',
             render: (text, record) =>
                 (record.trCoNetIncludingDiscCurrencyCodeTo ? record.trCoNetIncludingDiscCurrencyCodeTo : '-')
@@ -914,7 +914,7 @@ const OrdersCompareGrid = () => {
                 (record.trCoNetIncludingDiscNew ? record.trCoNetIncludingDiscNew : '-')
         },
         {
-            title: 'change to Net including discounts currency',
+            title: 'Change to Net including discounts currency',
             dataIndex: 'trCoNetIncludingDiscCurrencyCodeTo', width: 70,
             render: (text, record) =>
                 (record.trCoNetIncludingDiscCurrencyCodeTo ? record.trCoNetIncludingDiscCurrencyCodeTo : '-')
