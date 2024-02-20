@@ -245,11 +245,9 @@ const GRNForm = () => {
     {
       title: <div style={{ textAlign: "center" }}>Accepted Qty</div>,
       dataIndex: 'acceptedQuantity',
-      // render: (value, rowData) => {
-      //   return (
-      //     value ? value : (rowData.poQuantity - rowData.grnQuantity)
-      //   )
-      // }
+      render: (text) => {
+        return(Number(text).toFixed(2))
+      }
 
     },
     {
@@ -257,7 +255,7 @@ const GRNForm = () => {
       dataIndex: 'rejectedQuantity',
       render: (value, rowData) => {
         return (
-          value ? value : 0
+          value ? Number(value).toFixed(2) : 0
         )
       }
     },
@@ -378,7 +376,7 @@ const GRNForm = () => {
             return {
               ...item,
               acceptedQuantity: e.target.value,
-              rejectedQuantity: (item.receivedQuantity - Number(e.target.value)).toFixed(2)
+              rejectedQuantity: (item.receivedQuantity - Number(e.target.value))
             };
           }
           return item;
