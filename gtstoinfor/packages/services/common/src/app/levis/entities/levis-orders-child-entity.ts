@@ -149,11 +149,11 @@ export class LevisOrderschildEntity {
     })
     isActive: boolean;
 
-    @Column("int", {
+    @Column("varchar", {
         default: 1,
         name: "po_version",
     })
-    poVersion: number;
+    poVersion: string;
 
     @Column("int", {
         name: "order_id",

@@ -16,6 +16,7 @@ import { SizeRepository } from "../Entites@Shahi/size/size-repo";
 import { AddressRepository } from "../Entites@Shahi/address/address.repo";
 import { AddressService } from "../Entites@Shahi/address/address-service";
 import { LevisOrdersChildRepository } from "./repositories/levis-orders-child.repo";
+import { LevisOrderschildEntity } from "./entities/levis-orders-child-entity";
 
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
@@ -58,7 +59,9 @@ export class LevisService {
         console.log(poLine, "poLine")
         for (const variant of item.LevispoItemVariantDetails) {
           const orderData = await this.LevisOrdersRepo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
+          const order = await this.LevisOrdersChildRepo.findOne({ where: { poNumber: req.PoNumber, poLine: poLine, size: variant.size }, order: { poVersion: 'DESC' } })
           console.log(orderData, "orderData")
+          console.log(order, "order")
           const entity = new LevisOrdersEntity();
           entity.poNumber = req.poNumber
           entity.deliveryAddress = req.deliveryAddress
@@ -84,12 +87,69 @@ export class LevisService {
           entity.scheduledDate = variant.scheduledDate
 
           if (orderData) {
-            const update = await this.LevisOrdersRepo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {})
+            const update = await this.LevisOrdersRepo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
+              deliveryAddress:req.deliveryAddress,currency:req.currency,material:item.material,transMode:item.transMode,
+              size:item.size,upc:variant.upc,quantity:variant.quantity,unitPrice:variant.unitPrice,scheduledDate:variant.scheduledDate
+            })
+            let po = parseInt(order?.poVersion) + 1
+            const entitys= new LevisOrderschildEntity();
+            entitys.poNumber = req.poNumber
+            entitys.deliveryAddress = req.deliveryAddress
+            // entitys.transMode = req.transMode
+            entitys.currency = req.currency
+  
+            entitys.poLine = item.poLine
+            entitys.material = item.material
+            // entitys.totalUnitPrice = item.totalUnitPrice
+            // entitys.originalDate = item.originalDate
+            entitys.transMode = item.transMode
+            entitys.plannedExFactoryDate = item.plannedExFactoryDate
+            entitys.exFactoryDate = item.exFactoryDate
+  
+            entitys.itemNo = variant.itemNo
+            // entitys.product = variant.product
+            entitys.size = variant.size
+            entitys.upc = variant.upc
+            // entitys.plannedExFactoryDate = variant.plannedExFactoryDate
+            // entitys.exFactoryDate = variant.exFactoryDate
+            entitys.quantity = variant.quantity
+            entitys.unitPrice = variant.unitPrice
+            entitys.scheduledDate = variant.scheduledDate
+            entitys.orderId=orderData.id
+
+            entitys.poVersion = po.toString()
+
+            const savedChild = await this.LevisOrdersChildRepo.save(entitys)
             if (!update.affected) {
               throw new Error('Update failed');
             }
           } else {
             saved = await this.LevisOrdersRepo.save(entity)
+            const entitys= new LevisOrderschildEntity();
+            entitys.poNumber = req.poNumber
+            entitys.deliveryAddress = req.deliveryAddress
+            // entitys.transMode = req.transMode
+            entitys.currency = req.currency
+  
+            entitys.poLine = item.poLine
+            entitys.material = item.material
+            // entitys.totalUnitPrice = item.totalUnitPrice
+            // entitys.originalDate = item.originalDate
+            entitys.transMode = item.transMode
+            entitys.plannedExFactoryDate = item.plannedExFactoryDate
+            entitys.exFactoryDate = item.exFactoryDate
+  
+            entitys.itemNo = variant.itemNo
+            // entitys.product = variant.product
+            entitys.size = variant.size
+            entitys.upc = variant.upc
+            // entitys.plannedExFactoryDate = variant.plannedExFactoryDate
+            // entitys.exFactoryDate = variant.exFactoryDate
+            entitys.quantity = variant.quantity
+            entitys.unitPrice = variant.unitPrice
+            entitys.scheduledDate = variant.scheduledDate
+            entitys.orderId=entity.id
+            const savedChild = await this.LevisOrdersChildRepo.save(entitys)
             // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
             if (!saved) {
               throw new Error('Save failed')
@@ -103,6 +163,285 @@ export class LevisService {
       return new CommonResponseModel(false, 0, 'Failed', err)
     }
   }
+
+  // async saveCentricOrder(req: any): Promise<CommonResponseModel> {
+  //   // const transactionManager = new GenericTransactionManager(this.dataSource)
+  //   try {
+  //     let saved
+  //     // await transactionManager.startTransaction()
+  //     for (const item of req.CentricpoItemDetails) {
+  //       const match = item.poLine.match(/\d+/);
+  //       // Check if a match is found and convert it to an integer
+  //       // const poLine = match ? parseInt(match[0], 10) : null;
+  //       const poLine = match
+
+
+  //       for (const variant of item.CentricpoItemVariantDetails) {
+  //         const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
+  //         const order = await this.childrepo.findOne({ where: { poNumber: req.PoNumber, poLine: poLine, size: variant.size }, order: { poVersion: 'DESC' } })
+  //         // console.log(order,'NNNNNNNNNN')
+  //         const entity = new CentricEntity();
+  //         entity.poNumber = req.poNumber
+  //         entity.shipment = req.shipment
+  //         entity.season = req.season
+  //         entity.portOfExport = req.portOfExport
+  //         entity.portOfEntry = req.portOfEntry
+  //         entity.Refrence = req.Refrence
+  //         entity.paymentTermDescription = req.paymentTermDescription
+  //         entity.specialInstructions = req.specialInstructions
+  //         entity.division = req.division
+  //         entity.incoterm = req.incoterm
+  //         entity.shipToAdd = req.shipToAdd
+  //         entity.manufacture = req.manufacture
+  //         entity.poDate = req.poDate
+  //         entity.buyerAddress = req.buyerAddress
+
+
+  //         entity.poLine = item.poLine
+  //         entity.material = item.material
+  //         entity.color = item.color
+  //         entity.gender = item.gender
+  //         entity.shortDescription = item.shortDescription
+  //         entity.packMethod = item.packMethod
+  //         entity.vendorBookingFlag = item.vendorBookingFlag
+  //         entity.ppkupc = item.ppkupc
+  //         entity.currency = item.currency
+  //         entity.totalQuantity = item.totalQuantity
+  //         entity.style = item.style
+  //         entity.poType = item.poType
+
+  //         entity.size = variant.size
+  //         entity.upc = variant.upc
+  //         entity.label = variant.label
+  //         entity.quantity = variant.quantity
+  //         entity.unitPrice = variant.unitPrice
+  //         entity.exFactory = variant.exFactory
+  //         entity.exPort = variant.exPort
+  //         entity.deliveryDate = variant.deliveryDate
+  //         entity.retialPrice = variant.retialPrice
+  //         entity.comptMaterial = variant.comptMaterial
+  //         entity.ratio = variant.ratio
+  //         entity.eachPerCarton = variant.eachPerCarton
+
+  //         const fileData = {
+  //           poNumber: entity.poNumber,
+  //           poDate: entity.poDate,
+  //           shipment: entity.shipment,
+  //           season: entity.season,
+  //           portOfExport: entity.portOfExport,
+  //           portOfEntry: entity.portOfEntry,
+  //           Refrence: entity.Refrence,
+  //           paymentTermDescription: entity.paymentTermDescription,
+  //           specialInstructions: entity.specialInstructions,
+  //           division: entity.division,
+  //           incoterm: entity.incoterm,
+  //           shipToAdd: entity.shipToAdd,
+  //           manufacture: entity.manufacture,
+  //           buyerAddress: entity.buyerAddress,
+
+  //           CentricpoItemDetails: [{
+  //             poLine: item.poLine,
+  //             material: item.material,
+  //             color: item.color,
+  //             gender: item.gender,
+  //             shortDescription: item.shortDescription,
+  //             packMethod: item.packMethod,
+  //             vendorBookingFlag: item.vendorBookingFlag,
+  //             currency: item.currency,
+  //             totalQuantity: item.totalQuantity,
+  //             CentricpoItemVariantDetails: item.CentricpoItemVariantDetails.map(variant => ({
+  //               size: variant.size,
+  //               upc: variant.upc,
+  //               label: variant.label,
+  //               unitPrice: variant.unitPrice,
+  //               quantity: variant.quantity,
+  //               exFactory: variant.exFactory,
+  //               exPort: variant.exPort,
+  //               deliveryDate: variant.deliveryDate,
+  //               retialPrice: variant.retialPrice,
+  //             }))
+  //           }]
+  //         };
+
+  //         // entity.fileData = JSON.stringify(fileData);
+
+  //         if (orderData) {
+  //           // console.log('mmmmmmmm',orderData)
+
+  //           const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
+
+  //             shipment: req.shipment,
+  //             season: req.season,
+  //             portOfExport: req.portOfExport,
+  //             portOfEntry: req.portOfEntry,
+  //             Refrence: req.Refrence,
+  //             paymentTermDescription: req.paymentTermDescription,
+  //             specialInstructions: req.specialInstructions,
+  //             division: req.division,
+  //             incoterm: req.incoterm,
+  //             shipToAdd: req.shipToAdd,
+  //             manufacture: req.manufacture,
+  //             poDate: req.poDate,
+  //             buyerAddress: req.buyerAddress,
+
+
+  //             material: item.material,
+  //             color: item.color,
+  //             gender: item.gender,
+  //             shortDescription: item.shortDescription,
+  //             packMethod: item.packMethod,
+  //             vendorBookingFlag: item.vendorBookingFlag,
+  //             ppkupc: item.ppkupc,
+  //             currency: item.currency,
+  //             totalQuantity: item.totalQuantity,
+  //             style: item.style,
+
+  //             upc: variant.upc,
+  //             label: variant.label,
+  //             quantity: variant.quantity,
+  //             unitPrice: variant.unitPrice,
+  //             exFactory: variant.exFactory,
+  //             exPort: variant.exPort,
+  //             deliveryDate: variant.deliveryDate,
+  //             retialPrice: variant.retialPrice,
+  //             comptMaterial: variant.comptMaterial,
+  //             ratio: variant.ratio,
+  //             eachPerCarton: variant.eachPerCarton,
+
+  //           })
+  //           let po = parseInt(order?.poVersion) + 1
+
+  //           // console.log(po,',,,,,,')
+  //           const entitys = new CentricChildEntity();
+  //           entitys.poNumber = req.poNumber
+  //           entitys.shipment = req.shipment
+  //           entitys.season = req.season
+  //           entitys.portOfExport = req.portOfExport
+  //           entitys.portOfEntry = req.portOfEntry
+  //           entitys.Refrence = req.Refrence
+  //           entitys.paymentTermDescription = req.paymentTermDescription
+  //           entitys.specialInstructions = req.specialInstructions
+  //           entitys.division = req.division
+  //           entitys.incoterm = req.incoterm
+  //           entitys.shipToAdd = req.shipToAdd
+  //           entitys.manufacture = req.manufacture
+  //           entitys.poDate = req.poDate
+  //           entitys.buyerAddress = req.buyerAddress
+
+
+  //           entitys.poLine = item.poLine
+  //           entitys.material = item.material
+  //           entitys.color = item.color
+  //           entitys.gender = item.gender
+  //           entitys.shortDescription = item.shortDescription
+  //           entitys.packMethod = item.packMethod
+  //           entitys.vendorBookingFlag = item.vendorBookingFlag
+  //           entitys.ppkupc = item.ppkupc
+  //           entitys.currency = item.currency
+  //           entitys.totalQuantity = item.totalQuantity
+  //           entitys.style = item.style
+  //           entitys.poType = item.poType
+
+  //           entitys.size = variant.size
+  //           entitys.upc = variant.upc
+  //           entitys.label = variant.label
+  //           entitys.quantity = variant.quantity
+  //           entitys.unitPrice = variant.unitPrice
+  //           entitys.exFactory = variant.exFactory
+  //           entitys.exPort = variant.exPort
+  //           entitys.deliveryDate = variant.deliveryDate
+  //           entitys.retialPrice = variant.retialPrice
+  //           entitys.comptMaterial = variant.comptMaterial
+  //           entitys.ratio = variant.ratio
+  //           entitys.eachPerCarton = variant.eachPerCarton
+  //           entitys.orderId = orderData.id
+
+  //           entitys.poVersion = po.toString()
+  //           const savedChild = await this.childrepo.save(entitys)
+
+  //           if (!update.affected) {
+  //             throw new Error('Update failed');
+  //           }
+  //         } else {
+  //           saved = await this.Repo.save(entity)
+  //           const entitys = new CentricChildEntity();
+  //           entitys.poNumber = req.poNumber
+  //           entitys.shipment = req.shipment
+  //           entitys.season = req.season
+  //           entitys.portOfExport = req.portOfExport
+  //           entitys.portOfEntry = req.portOfEntry
+  //           entitys.Refrence = req.Refrence
+  //           entitys.paymentTermDescription = req.paymentTermDescription
+  //           entitys.specialInstructions = req.specialInstructions
+  //           entitys.division = req.division
+  //           entitys.incoterm = req.incoterm
+  //           entitys.shipToAdd = req.shipToAdd
+  //           entitys.manufacture = req.manufacture
+  //           entitys.poDate = req.poDate
+  //           entitys.buyerAddress = req.buyerAddress
+
+
+  //           entitys.poLine = item.poLine
+  //           entitys.material = item.material
+  //           entitys.color = item.color
+  //           entitys.gender = item.gender
+  //           entitys.shortDescription = item.shortDescription
+  //           entitys.packMethod = item.packMethod
+  //           entitys.vendorBookingFlag = item.vendorBookingFlag
+  //           entitys.ppkupc = item.ppkupc
+  //           entitys.currency = item.currency
+  //           entitys.totalQuantity = item.totalQuantity
+  //           entitys.style = item.style
+  //           entitys.poType = item.poType
+
+  //           entitys.size = variant.size
+  //           entitys.upc = variant.upc
+  //           entitys.label = variant.label
+  //           entitys.quantity = variant.quantity
+  //           entitys.unitPrice = variant.unitPrice
+  //           entitys.exFactory = variant.exFactory
+  //           entitys.exPort = variant.exPort
+  //           entitys.deliveryDate = variant.deliveryDate
+  //           entitys.retialPrice = variant.retialPrice
+  //           entitys.comptMaterial = variant.comptMaterial
+  //           entitys.ratio = variant.ratio
+  //           entitys.eachPerCarton = variant.eachPerCarton
+  //           entitys.orderId = entity.id
+  //           const savedChild = await this.childrepo.save(entitys)
+
+
+  //           if (!saved) {
+  //             throw new Error('Save failed')
+  //           }
+  //         }
+  //       }
+  //     }
+  //     // await transactionManager.completeTransaction()
+  //     return new CommonResponseModel(true, 1, 'Data saved successfully', saved)
+  //   } catch (err) {
+  //     return new CommonResponseModel(false, 0, 'Failed', err)
+  //   }
+  // }
+
+  // async updatePath(req: any, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
+  //   // const poNumberFromFileName = filename.match(/[0-9]{10}/);
+  //   const entity = new CentricPdfFileUploadEntity();
+  //   // entity.poNumber = poNumberFromFileName ? poNumberFromFileName[0] : '';
+  //   entity.poNumber = poNumber;
+  //   entity.pdfFileName = filename;
+  //   entity.filePath = filePath;
+  //   entity.fileType = mimetype;
+  //   entity.fileData = req;
+
+  //   const save = await this.pdfRepo.save(entity);
+  //   if (save) {
+  //     return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
+  //   } else {
+  //     return new CommonResponseModel(false, 0, 'Uploaded failed');
+  //   }
+  // }
+
+
 
 
   async updatePath(req: any, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
