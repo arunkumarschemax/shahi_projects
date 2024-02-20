@@ -299,10 +299,12 @@ export class RLOrdersService {
 
       for (const rec of data) {
         poMap.set(rec.poNumber, rec);
-        const destCountry = rec.shipToAddress.slice(-2).trim();
-        const parts = rec.shipToAddress.split(',');
-        const destAdd = parts[0].trim();
-        const dest = destAdd + ',' + destCountry;
+        // const destCountry = rec.shipToAddress.slice(-2).trim();
+        // const parts = rec.shipToAddress.split(',');
+        // const destAdd = parts[0].trim();
+        // const dest = destAdd + ',' + destCountry;
+         const dest = rec.shipToAddress 
+
 
         if (!destinationColSizesMap.has(rec.poNumber)) {
           destinationColSizesMap.set(rec.poNumber, new Map<string, Map<string, { size: string, quantity: number, price: string }[]>>());
@@ -565,6 +567,7 @@ export class RLOrdersService {
           const parts = coData.destinations[0]?.name.split(',');
           const request = { country: parts[1].trim() }
           const address = await this.addressService.getAddressInfoByCountry(request);
+          console.log(address)
           const addressData = address.data[0];
           styleNo = coData.styleNo
           buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 25;
