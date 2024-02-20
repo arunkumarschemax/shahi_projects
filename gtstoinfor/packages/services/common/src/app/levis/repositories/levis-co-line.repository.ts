@@ -15,7 +15,7 @@ export class LevisCOLineRepository extends Repository<LevisCOLineEntity> {
 
     async getCoLineData(req: LevisOrderFilter): Promise<any[]> {
       const query = this.createQueryBuilder('co')
-        .select(`DISTINCT co.po_number,co.co_date, co.item_no, co.status, co.error_msg,
+        .select(`DISTINCT co.po_number,co.po_line,co.co_date, co.item_no, co.status, co.error_msg,
                  DATE_FORMAT(co.created_at, '%m/%d/%Y %H:%i') as raised_date, co.created_user, co.co_number,co.id`);
   
       if (req.poNumber !== undefined) {
@@ -63,7 +63,7 @@ export class LevisCOLineRepository extends Repository<LevisCOLineEntity> {
 
     async getDataforCOLineCreation(): Promise<any[]> {
         const query = this.createQueryBuilder('co')
-            .select(`co.id, co.po_number, co.item_no, co.buyer`)
+            .select(`co.id, co.po_number, co.item_no, co.buyer,co.po_line`)
             .where(` status != 'Success' AND status != 'Inprogress' AND is_active = true`)
             .orderBy(` created_at`, 'ASC')
         return await query.getRawMany();

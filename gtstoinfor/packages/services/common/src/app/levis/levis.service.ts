@@ -528,12 +528,12 @@ export class LevisService {
       };
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
       const records = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber} });
-      // const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
+      const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
       const empty = [];
 
       //console.log(rec,'reccccccccc')
       const entity = new LevisCOLineEntity()
-      // entity.poLine = uniquePoLines.join(',');
+       entity.poLine = uniquePoLines.join(',');
       entity.buyer = req.buyer
       entity.poNumber = req.poNumber;
       // entity.style = req.style;
@@ -763,14 +763,21 @@ export class LevisService {
 
   async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
-        const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber } });
+      // const poLineValues = req.poLine.split(',')
+      const poLineValues = req?.poLine
+        const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber,poLine:poLineValues } });
+        const exfacDate = data[0]?.exFactoryDate
+        console.log(exfacDate,"exfacDate")
 
-        const inputDate = new Date(data[0].exFactoryDate)
-        // Calculate the date 7 days before the GAC date
+      
+        const [day, month, year] = exfacDate?.split('.');
+        const inputDate = new Date(`${year}-${month}-${day}`);
+        
+       
         const FourteenDaysafter = new Date(inputDate);
         FourteenDaysafter.setDate(inputDate.getDate() + 14);
         const DeliveryDate = new Intl.DateTimeFormat('en-GB').format(FourteenDaysafter);
-        console.log(DeliveryDate,"dd")
+        console.log(DeliveryDate,"DeliveryDate")
 
 
         // po -> destination -> color -> sizes
@@ -841,7 +848,12 @@ export class LevisService {
                 desArray.push(des);
             });
             const poInfo = poMap.get(poNumber);
-            const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, DeliveryDate,moment(poInfo.exFactoryDate).format("DD/MM/YYYY"),desArray);
+
+            const parsedDate = moment(poInfo?.exFactoryDate, "DD.MM.YYYY");
+            const formattedExFactDate = parsedDate.format("DD/MM/YYYY");
+      
+
+            const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, DeliveryDate,formattedExFactDate,desArray);
             coData.push(co);
         });
 
@@ -960,7 +972,7 @@ export class LevisService {
         const addressData = address.data[0];
         console.log(addressData, "address")
         styleNo = coData.styleNo
-        buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 12;
+        buyerAddress = addressData?.buyerCode 
         deliveryAddress = addressData?.deliveryCode
         buyerValue1 = "LIV-LIVS"
         buyerValue2 = "LEV00002-LEVI STRAUSS GLOBAL TRADING CO LTD"
@@ -1129,9 +1141,9 @@ export class LevisService {
                     await inputField.clear();
                     await inputField.sendKeys(size.price);
                   } else {
-                    // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
-                    // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
-                    // return new CommonResponseModel(false, 0, 'NO matching Size found')
+                    const update = await this.levisCoLineRepo.update({ poNumber: po.po_number , poLine:po.po_line  }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
+                    await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+                    return new CommonResponseModel(false, 0, 'NO matching Size found')
                   }
                 }
                 const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
@@ -1152,9 +1164,9 @@ export class LevisService {
       if (await this.isAlertPresent(driver)) {
         const alert = await driver.switchTo().alert();
         const alertText = await alert.getText();
-        // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: alertText ,isActive:false });
+        const update = await this.levisCoLineRepo.update({ poNumber: po.po_number, poLine:po.po_line  }, { status: 'Failed', errorMsg: alertText ,isActive:false });
     
-        // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+        await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
 
         await alert.accept();
         await driver.sleep(5000)
@@ -1175,8 +1187,8 @@ export class LevisService {
         if (coNo) {
      
 
-          // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted,errorMsg:"-" });
-          // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.SUCCESS})
+          const update = await this.levisCoLineRepo.update({ poNumber: po.po_number, poLine:po.po_line }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted,errorMsg:"-" });
+          await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.SUCCESS})
 
        
           // await driver.navigate().refresh();
@@ -1184,8 +1196,8 @@ export class LevisService {
         } else {
      
 
-          // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed',isActive:false });
-          // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+          const update = await this.levisCoLineRepo.update({ poNumber: po.po_number , poLine:po.po_line   }, { status: 'Failed',isActive:false });
+          await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
 
           // await driver.navigate().refresh();
           await driver.sleep(10000)
@@ -1197,8 +1209,8 @@ export class LevisService {
       
       console.log(error, 'error');
       if (error.name === 'TimeoutError') {
-        // const update = await this.coLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found', isActive:false });
-        // await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+        const update = await this.levisCoLineRepo.update({ poNumber: po.po_number , poLine:po.po_line  }, { status: 'Failed', errorMsg: 'NO matching Color found', isActive:false });
+        await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
         driver.quit()
         return new CommonResponseModel(false, 0, 'Matching Color not found')
       } else {
@@ -1219,6 +1231,28 @@ export class LevisService {
       return false;
     }
   }
+
+
+  async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
+    console.log(req, "reqqqqqqqponumnbbb");
+    try {
+        const poLines = req.poLine.split(","); // Split poLine string into an array
+  
+        // Iterate over each poLine and update its status
+        for (const poLine of poLines) {
+            await this.LevisOrdersRepo.update(
+                { poNumber: req.poNumber, poLine: poLine.trim() }, // Trim to remove any extra spaces
+                { status: req.status }
+            );
+        }
+  
+        return new CommonResponseModel(true, 1, 'Success'); // Return success response with the number of lines updated
+    } catch (error) {
+        console.error("Error updating CO line status:", error);
+        return new CommonResponseModel(false, 0, 'Failed');
+    }
+  }
+  
 
 
 

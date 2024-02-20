@@ -5,6 +5,6 @@ export class LevisOrderAcceptanceRequest {
     itemNo: string;
     buyer: string;
     //  deliveryDate:string;
-    //  poLine:string
+      poLine:string
     
 }

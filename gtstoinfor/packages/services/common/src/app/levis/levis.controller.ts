@@ -191,5 +191,16 @@ export class LevisController {
     //     }
     // }
 
+    @Post('/updateCOLineStatus')
+    async updateCOLineStatus(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.updateCOLineStatus(req);
+        } catch (error) {
+            return error
+        }
+    }
+   
+   
+
  
 }

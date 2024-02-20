@@ -22,10 +22,10 @@ export class LevisCOLineEntity {
     })
     poNumber: string;
 
-    // @Column('varchar', {
-    //     name: "po_line",
-    // })
-    // poLine: string;
+    @Column('varchar', {
+        name: "po_line",
+    })
+    poLine: string;
     
     // @Column('varchar', {
     //     name: "delivery_date"
