@@ -1225,8 +1225,8 @@ export class EddieService {
           deliveryAddress = addressData?.deliveryCode
           // buyerAddress = 10;
           // deliveryAddress =  11
-          buyerValue1 = "SGC-SHAHI GROUP OF COMPANIES"
-          buyerValue2 = "SEPLB200-Shahi Exports Pvt Ltd Unit 12"
+          buyerValue1 = "EB-EDDIE BAUER"
+          buyerValue2 = "EDDIE001-EDDIE BAUER LLC"
           agent = "-NA"
           pkgTerms = "FP1-WITHOUT HANGER"
           paymentTerms = "031-Trde Card45 Day"
