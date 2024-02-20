@@ -425,13 +425,18 @@ export class LevisService {
   async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
         const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber } });
+        const exfacDate = data[0].exFactoryDate
+        console.log(exfacDate,"exfacDate")
 
-        const inputDate = new Date(data[0].exFactoryDate)
-        // Calculate the date 7 days before the GAC date
+      
+        const [day, month, year] = exfacDate.split('.');
+        const inputDate = new Date(`${year}-${month}-${day}`);
+        
+       
         const FourteenDaysafter = new Date(inputDate);
         FourteenDaysafter.setDate(inputDate.getDate() + 14);
         const DeliveryDate = new Intl.DateTimeFormat('en-GB').format(FourteenDaysafter);
-        console.log(DeliveryDate,"dd")
+        console.log(DeliveryDate,"DeliveryDate")
 
 
         // po -> destination -> color -> sizes
@@ -502,7 +507,12 @@ export class LevisService {
                 desArray.push(des);
             });
             const poInfo = poMap.get(poNumber);
-            const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, DeliveryDate,moment(poInfo.exFactoryDate).format("DD/MM/YYYY"),desArray);
+
+            const parsedDate = moment(poInfo.exFactoryDate, "DD.MM.YYYY");
+            const formattedExFactDate = parsedDate.format("DD/MM/YYYY");
+      
+
+            const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, DeliveryDate,formattedExFactDate,desArray);
             coData.push(co);
         });
 
