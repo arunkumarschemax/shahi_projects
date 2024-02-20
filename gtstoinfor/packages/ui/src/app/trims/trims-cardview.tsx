@@ -69,6 +69,8 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
         service.getBomPrintInfo(req).then(res => {
             if (res.status) {
                 setBomInfo(res.data)
+                setModalOpen(true)
+                
             }
         })
     }
@@ -95,7 +97,7 @@ const getBomInfoAgainstStyle = (styleNumber,trim)=>{
 
     const cardOnclick = (val) => {
         setTrimName(val.item)
-        setModalOpen(true)
+      
         if(state.state){
             // getBomInfoAgainstStyle(state.state.info,val.item)
             getBomInfoAgainstItemStyle(val.item)
