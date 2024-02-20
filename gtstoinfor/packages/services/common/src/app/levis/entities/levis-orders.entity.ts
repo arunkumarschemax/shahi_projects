@@ -73,10 +73,10 @@ export class LevisOrdersEntity {
     })
     itemNo: string
     
-    @Column("varchar", {
-        name: "product",
-    })
-    product: string
+    // @Column("varchar", {
+    //     name: "product",
+    // })
+    // product: string
 
     @Column("varchar", {
         name: "size",

@@ -74,7 +74,7 @@ export class LevisService {
           entity.exFactoryDate = item.exFactoryDate
 
           entity.itemNo = variant.itemNo
-          entity.product = variant.product
+          // entity.product = variant.product
           entity.size = variant.size
           entity.upc = variant.upc
           // entity.plannedExFactoryDate = variant.plannedExFactoryDate
@@ -452,10 +452,10 @@ export class LevisService {
             if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
                 destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
             }
-            console.log(rec.product,"product")
+            console.log(rec.material,"material")
             const colorcheck = await this.colorRepo.findOne({
                 where: {
-                    colorCode: rec.product
+                    colorCode: rec.material
                 }
             });
 

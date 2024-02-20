@@ -40,8 +40,8 @@ export class LevisDto {
     @ApiProperty()
     itemNo: string
 
-    @ApiProperty()
-    product: string
+    // @ApiProperty()
+    // product: string
 
     @ApiProperty()
     size: string

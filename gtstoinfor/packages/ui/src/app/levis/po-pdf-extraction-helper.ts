@@ -745,7 +745,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             const twentyOneDaysBefore = new Date(inputDate);
             twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
             const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(twentyOneDaysBefore);
-            itemDetailsObj.exFactoryDate = moment(twentyOneDaysBefore).format("YYYY.MM.DD");
+            itemDetailsObj.exFactoryDate = moment(twentyOneDaysBefore).format("DD.MM.YYYY");
 
             itemTextEndIndex = rec.amountIndex
             itemVariantStartIndex = itemTextEndIndex + 1
@@ -954,10 +954,15 @@ export const extractDataFromPoPdf = async (pdf) => {
                 const inputDate = new Date(year, month - 1, day);
                 const twentyOneDaysBefore = new Date(inputDate);
                 twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
-                const exFactoryDate = twentyOneDaysBefore.toLocaleDateString('en-GB');
-                itemDetailsObj.exFactoryDate = exFactoryDate.replace(/\//g, ".");
+            
+                // Format the date as DD.MM.YYYY
+                const formattedDay = twentyOneDaysBefore.getDate().toString().padStart(2, '0');
+                const formattedMonth = (twentyOneDaysBefore.getMonth() + 1).toString().padStart(2, '0');
+                const formattedYear = twentyOneDaysBefore.getFullYear();
+            
+                const exFactoryDate = `${formattedDay}.${formattedMonth}.${formattedYear}`;
+                itemDetailsObj.exFactoryDate = exFactoryDate;
             }
-
             let materialIndex = -1;
             filteredData.forEach((item, index) => {
                 if (/Item Total Value/.test(item.str)) {
