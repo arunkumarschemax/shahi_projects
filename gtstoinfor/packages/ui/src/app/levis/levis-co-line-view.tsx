@@ -118,12 +118,12 @@ const LevisColineView = () => {
                     return (record.po_line ? (record.po_line) : '-')
                 }
             },
-            // {
-            //     title: 'Style',
-            //     dataIndex: 'style', render: (text, record) => {
-            //         return (record.style ? (record.style) : '-')
-            //     }
-            // },
+            {
+                title: 'Style',
+                dataIndex: 'material', render: (text, record) => {
+                    return (record.material ? (record.material) : '-')
+                }
+            },
             // {
             //     title: 'Delivery Date',
             //     dataIndex: 'delivery_date',
@@ -267,14 +267,14 @@ const LevisColineView = () => {
           ),
   
         },
-        // {
-        //     title: 'Style',
-        //     dataIndex: 'style', render: (text, record) => {
-        //         return (record.style ? (record.style) : '-')
-        //     },
-        //     sorter: (a, b) => a.style.localeCompare(b.style),
-        //     sortDirections: ["ascend", "descend"],
-        // },
+        {
+            title: 'Style',
+            dataIndex: 'material', render: (text, record) => {
+                return (record.material ? (record.material) : '-')
+            },
+            sorter: (a, b) => a.material.localeCompare(b.material),
+            sortDirections: ["ascend", "descend"],
+        },
         // {
         //     title: 'Delivery Date',
         //     dataIndex: 'delivery_date',

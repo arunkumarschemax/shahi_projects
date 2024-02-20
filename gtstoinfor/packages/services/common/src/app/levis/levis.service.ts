@@ -536,7 +536,7 @@ export class LevisService {
        entity.poLine = uniquePoLines.join(',');
       entity.buyer = req.buyer
       entity.poNumber = req.poNumber;
-      // entity.style = req.style;
+      entity.material = req.material;
       entity.itemNo = req?.itemNo;
       entity.status = 'Open';
       // entity.deliveryDate = req.deliveryDate;

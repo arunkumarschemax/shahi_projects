@@ -33,11 +33,11 @@ export class LevisCOLineEntity {
     // deliveryDate: string
 
 
-    // @Column('varchar', {
-    //     nullable: true,
-    //     name: "style",
-    // })
-    // style: string;
+    @Column('varchar', {
+        nullable: true,
+        name: "material",
+    })
+    material: string;
 
     @Column('varchar', {
         nullable: true,
