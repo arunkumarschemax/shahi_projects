@@ -86,7 +86,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         const query = this.createQueryBuilder('dpom')
             .select(`dpom.po_number,dpom.item,dpom.factory,dpom.document_date,dpom.product_code AS productCode,dpom.ogac AS OGAC,dpom.style_number AS styleNumber,dpom.destination_country AS desCtry,dpom.color_desc,dpom.size_description,dpom.gac AS GAC,dpom.total_item_qty AS totalItemQty,dpom.item_text,dpom.po_and_line ,dpom.po_line_item_number, dpom.schedule_line_item_number, dpom.total_item_qty, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
-            .where(` od.column_name='size_qty' `)
+            .where(` od.column_name='size_qty' AND DATE(od.created_at) = CURDATE() `)
             .orderBy(` od.created_at`, 'DESC')
         if (req && req.poandLine !== undefined) {
             query.andWhere(`dpom.po_and_line ='${req.poandLine}'`)
@@ -145,7 +145,7 @@ export class DpomRepository extends Repository<DpomEntity> {
        (CASE WHEN od.display_name = 'shahiOfferedPricefromMasterFile' THEN od.new_val ELSE NULL END) AS shahiOfferedPricefromMasterFileTo,
        (CASE WHEN od.display_name = 'shahicurrencyCodeMasterFile' THEN od.old_val ELSE NULL END) AS shahicurrencyCodeMasterFileFrom,
        (CASE WHEN od.display_name = 'shahicurrencyCodeMasterFile' THEN od.new_val ELSE NULL END) AS shahicurrencyCodeMasterFileTo,
-       (CASE WHEN od.display_name = 'trCoNetIncludingDisc' THEN od.old_val ELSE NULL END) AS trCoNetIncludingDiscFrom,
+       (CASE WHEN od.display_name = 'trCoNetIncludingDisc' THEN od.new_val ELSE NULL END) AS trCoNetIncludingDiscFrom,
      (CASE WHEN od.display_name = 'trCoNetIncludingDisc' THEN od.new_val ELSE NULL END) AS trCoNetIncludingDiscNew,
      (CASE WHEN od.display_name = 'trCoNetIncludingDiscCurrencyCode ' THEN od.old_val ELSE NULL END) AS trCoNetIncludingDiscCurrencyCodeFrom,
        (CASE WHEN od.display_name = 'trCoNetIncludingDiscCurrencyCode ' THEN od.new_val ELSE NULL END) AS trCoNetIncludingDiscCurrencyCodeTo,
@@ -155,7 +155,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             od.schedule_line_item_number = o.schedule_line_item_number `)
             .leftJoin(FobEntity, 'fm', `fm.style_number = o.style_number AND fm.color_code = SUBSTRING_INDEX(o.product_code, '-', -1) AND fm.size_description = o.size_description`)
             .where(` od.display_name IN ('grossPriceFOB','trCoNetIncludingDisc','trCoNetIncludingDiscCurrencyCode',
-            'shahiOfferedPricefromMasterFile','shahicurrencyCodeMasterFile','legalPoPrice','legalPoCurrency')`)
+            'shahiOfferedPricefromMasterFile','shahicurrencyCodeMasterFile','legalPoPrice','legalPoCurrency') AND DATE(od.created_at) = CURDATE()`)
             .groupBy('o.po_number, o.item')
             .orderBy(' od.created_at', 'DESC')
         // if (req.poandLine !== undefined) {
