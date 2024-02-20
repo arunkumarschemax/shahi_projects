@@ -497,114 +497,114 @@ import {
                 }
               }
             },
-            {
-              title: 'UPC',
-              dataIndex: '',
-              key: '',
-              width: 130,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
+            // {
+            //   title: 'UPC',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 130,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
   
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
-            {
-              title: 'SKU',
-              dataIndex: '',
-              key: '',
-              width: 130,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.sku) ? (sizeData?.sku) : "-"
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
+            // {
+            //   title: 'SKU',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 130,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.sku) ? (sizeData?.sku) : "-"
   
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
-            {
-              title: 'Quantity Per Inner Pack',
-              dataIndex: '',
-              key: '',
-              width: 70,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.quantityPerInnerPack) ? (sizeData?.quantityPerInnerPack) : "-"
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
+            // {
+            //   title: 'Quantity Per Inner Pack',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 70,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.quantityPerInnerPack) ? (sizeData?.quantityPerInnerPack) : "-"
   
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
-            {
-              title: 'Retail Price',
-              dataIndex: '',
-              key: '',
-              width: 70,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) : "-"
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
+            // {
+            //   title: 'Retail Price',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 70,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.retailPrice) ? (sizeData?.retailPrice) : "-"
   
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
             {
               title: 'Quantity',
               dataIndex: '',
@@ -659,33 +659,33 @@ import {
                 }
               }
             },
-            {
-              title: 'Cost',
-              dataIndex: '',
-              key: '',
-              width: 70,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.cost) ? (sizeData?.cost) : "-"
-                    // const formattedQty = (sizeData?.amount)
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            // {
+            //   title: 'Cost',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 70,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.cost) ? (sizeData?.cost) : "-"
+            //         // const formattedQty = (sizeData?.amount)
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
           ]
         });
       })
