@@ -145,7 +145,7 @@ export class DpomRepository extends Repository<DpomEntity> {
        (CASE WHEN od.display_name = 'shahiOfferedPricefromMasterFile' THEN od.new_val ELSE NULL END) AS shahiOfferedPricefromMasterFileTo,
        (CASE WHEN od.display_name = 'shahicurrencyCodeMasterFile' THEN od.old_val ELSE NULL END) AS shahicurrencyCodeMasterFileFrom,
        (CASE WHEN od.display_name = 'shahicurrencyCodeMasterFile' THEN od.new_val ELSE NULL END) AS shahicurrencyCodeMasterFileTo,
-       (CASE WHEN od.display_name = 'trCoNetIncludingDisc' THEN od.new_val ELSE NULL END) AS trCoNetIncludingDiscFrom,
+       (CASE WHEN od.display_name = 'trCoNetIncludingDisc' THEN od.old_val ELSE NULL END) AS trCoNetIncludingDiscFrom,
      (CASE WHEN od.display_name = 'trCoNetIncludingDisc' THEN od.new_val ELSE NULL END) AS trCoNetIncludingDiscNew,
      (CASE WHEN od.display_name = 'trCoNetIncludingDiscCurrencyCode ' THEN od.old_val ELSE NULL END) AS trCoNetIncludingDiscCurrencyCodeFrom,
        (CASE WHEN od.display_name = 'trCoNetIncludingDiscCurrencyCode ' THEN od.new_val ELSE NULL END) AS trCoNetIncludingDiscCurrencyCodeTo,
