@@ -300,7 +300,7 @@ export function OperationsGrid(
 
   return (
     <Card title='Operations'  headStyle={{ backgroundColor: '#69c0ff', border: 0 }}
-    // extra={<span><Button onClick={() => navigate('/masters/operations/operation-form')} type={'primary'}>New</Button></span>}
+    extra={<span><Button onClick={() => navigate('/masters/operations/operation-form')} type={'primary'}>New</Button></span>}
     >
 
      
