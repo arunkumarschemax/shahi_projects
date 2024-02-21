@@ -392,7 +392,7 @@ import {
   
         },
         {
-          title: "Material",
+          title: "Style",
           dataIndex: "material",
           width: 90,
           // sorter: (a, b) => a.material.localeCompare(b.material),

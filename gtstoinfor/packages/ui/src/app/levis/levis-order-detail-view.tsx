@@ -177,7 +177,7 @@ console.log(location?.state?.data)
          <Descriptions.Item label='PO Line' labelStyle={{ color: 'black', fontWeight: 'bold'}} >{location?.state?.data?. poLine ? location?.state?.data?. poLine : "--"}</Descriptions.Item> 
         <Descriptions.Item label='Transport Mode' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.transMode ? location?.state?.data?.transMode :"--"}</Descriptions.Item>
         <Descriptions.Item label='Currency' labelStyle={{ color: 'black', fontWeight: 'bold'}} >{location?.state?.data?.currency ? location?.state?.data?.currency :"--"}</Descriptions.Item>
-        <Descriptions.Item label= 'Material' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.material ? location?.state?.data?.material :"--"}</Descriptions.Item>
+        <Descriptions.Item label= 'Style' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.material ? location?.state?.data?.material :"--"}</Descriptions.Item>
          <Descriptions.Item label='Total Unit Price' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.totalUnitPrice ? location?.state?.data?.totalUnitPrice :"--"}</Descriptions.Item> 
          <Descriptions.Item label='Original Date' labelStyle={{ color: 'black', fontWeight: 'bold'}} >{location?.state?.data?.originalDate ? location?.state?.data?.originalDate :"--"}</Descriptions.Item> 
         <Descriptions.Item label='Delivery Address' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.buyerAddress ? location?.state?.data?.buyerAddress :"--"}</Descriptions.Item>

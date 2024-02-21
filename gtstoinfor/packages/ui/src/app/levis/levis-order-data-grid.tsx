@@ -290,7 +290,7 @@ import {
   
         },
         {
-          title: "Material",
+          title: "Style",
           dataIndex: "material",
           width: 110,
           sorter: (a, b) => a.material.localeCompare(b.material),
@@ -720,7 +720,7 @@ import {
         
               },
               {
-                title: "Material",
+                title: "Style",
                 dataIndex: "material",
                 width: 110,
                 render: (text) => text ? text : "-",
