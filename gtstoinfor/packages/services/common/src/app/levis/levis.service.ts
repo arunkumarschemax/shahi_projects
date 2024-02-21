@@ -887,7 +887,8 @@ export class LevisService {
             oldData.unitPrice !== rec.unit_price ||
             oldData.exFactoryDate !== rec.ex_factory_date ||
             oldData.quantity !== rec.quantity||
-            oldData.transMode!==rec.transmode
+            oldData.transMode!==rec.transmode||
+            oldData.deliveryAddress!==rec.delivery_address
           ) 
           {
             // Only push if there are changes
@@ -903,7 +904,9 @@ export class LevisService {
                 oldData.quantity,
                 rec.quantity,
                 oldData.transMode,
-                rec.transmode
+                rec.transmode,
+                oldData.deliveryAddress,
+                rec.delivery_address,
               ));
           }
         }

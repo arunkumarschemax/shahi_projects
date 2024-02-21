@@ -354,7 +354,40 @@ export const LevisComaparisionReport = () => {
   ]
       },
      
-     
+      {
+        title: "Destination",
+        dataIndex: "",
+        width: 90,
+        // sorter: (a, b) => a.size.localeCompare(b.size),
+        // sortDirections: ["ascend", "descend"],
+        children: [
+          {
+            title: 'Old Value',
+            dataIndex: 'olddeliveryAddress',
+            key: '',
+            width: 130,
+            className: "center",
+            render: (text) => (
+              <Tooltip title={text || "-"}>
+                {text ? `${text.substring(0, 25)}...` : "-"}
+              </Tooltip>
+            ),
+           
+          },
+          {
+            title: 'New Value',
+            dataIndex: 'newdeliveryAddress',
+            key: '',
+            width: 130,
+            className: "center",
+            render: (text) => (
+              <Tooltip title={text || "-"}>
+                {text ? `${text.substring(0, 25)}...` : "-"}
+              </Tooltip>
+            ),
+          },
+  ]
+      },
 
     ];
 
@@ -659,7 +692,14 @@ export const LevisComaparisionReport = () => {
             dataIndex: 'oldexFactoryDate',
             key: '',
             width: 100,
-            render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
+            render: (text) => {
+              try {
+                return text ? moment(text, 'DD.MM.YYYY').format('DD/MM/YYYY') : "-";
+              } catch (error) {
+                console.error("Error converting date:", text, error);
+                return "-";
+              }
+            }
            
           },
           {
@@ -667,7 +707,14 @@ export const LevisComaparisionReport = () => {
             dataIndex: 'newexFactoryDate',
             key: '',
             width: 100,
-            render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
+            render: (text) => {
+              try {
+                return text ? moment(text, 'DD.MM.YYYY').format('DD/MM/YYYY') : "-";
+              } catch (error) {
+                console.error("Error converting date:", text, error);
+                return "-";
+              }
+            }
     
           },
   ]
@@ -690,6 +737,30 @@ export const LevisComaparisionReport = () => {
           {
             title: 'New Value',
             dataIndex: 'newtransMode',
+            key: '',
+            width: 100,
+            render: (text) => text ? text : "-"
+    
+          },
+  ]
+      },
+
+      {
+        title: "Destination",
+        dataIndex: "",
+        width: 90,
+        children: [
+          {
+            title: 'Old Value',
+            dataIndex: 'olddeliveryAddress',
+            key: '',
+            width: 100,
+            render: (text) => text ? text : "-"
+           
+          },
+          {
+            title: 'New Value',
+            dataIndex: 'newdeliveryAddress',
             key: '',
             width: 100,
             render: (text) => text ? text : "-"
