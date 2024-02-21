@@ -182,13 +182,13 @@ export function OperationsGrid(
       responsive: ['sm'],
       render: (text, object, index) => (page-1) * 10 +(index+1)
       },
-      {
-        title: "Group Name",
-        dataIndex: "operationGroupName",
-        sorter: (a, b) => a.operationCode.localeCompare(b.operationCode),
-        sortDirections: ["ascend", "descend"],
-        ...getColumnSearchProps("operationCode"),
-      },
+      // {
+      //   title: "Group Name",
+      //   dataIndex: "operationGroupName",
+      //   sorter: (a, b) => a.operationCode.localeCompare(b.operationCode),
+      //   sortDirections: ["ascend", "descend"],
+      //   ...getColumnSearchProps("operationCode"),
+      // },
       {
         title: "Operation Name",
         dataIndex: "operationName",
@@ -203,13 +203,13 @@ export function OperationsGrid(
         sortDirections: ["ascend", "descend"],
         ...getColumnSearchProps("operationCode"),
       },
-      {
-        title: "M3 Operation Code",
-        dataIndex: "m3OperationCode",
-        sorter: (a, b) => a.m3OperationCode.localeCompare(b.m3OperationCode),
-        sortDirections: ["ascend", "descend"],
-        ...getColumnSearchProps("m3OperationCode"),
-      },
+      // {
+      //   title: "M3 Operation Code",
+      //   dataIndex: "m3OperationCode",
+      //   sorter: (a, b) => a.m3OperationCode.localeCompare(b.m3OperationCode),
+      //   sortDirections: ["ascend", "descend"],
+      //   ...getColumnSearchProps("m3OperationCode"),
+      // },
       {
         title:<div style={{textAlign:'center'}}>Status</div>,
         dataIndex: 'isActive',

@@ -42,6 +42,7 @@ export function OperationsForm(
       setDisable(false)
       if(res.status){
         AlertMessages.getSuccessMessage('Operation Created Successfully');
+        navigate('/masters/operations/operation-view')
         // location.push("/operations-view");
         onReset();
       } else {
@@ -102,8 +103,15 @@ export function OperationsForm(
         <Input hidden />
       </Form.Item>
       <Form.Item name="operationGroupId" style={{ display: "none" }} >
-        <Input hidden />
+        <Input hidden defaultValue={1}/>
       </Form.Item>
+      <Form.Item
+            name="m3OperationCode"
+            label="M3 Operation Code"
+            style={{display:'none'}}
+          >
+            <Input placeholder="Enter M3 Operation Code" hidden defaultValue={'INTERNAL'}/> 
+          </Form.Item>
       <Row gutter={24}>
         <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}}>
           <Form.Item
@@ -146,23 +154,8 @@ export function OperationsForm(
             <Input placeholder="Enter Operation Name"/>
           </Form.Item>
         </Col>
-        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}}> 
-            <Form.Item
-            name="m3OperationCode"
-            label="M3 Operation Code"
-            rules={[
-              {
-                required: true,
-                message:'Operation Code Is Required'
-              },
-              // {
-              //   pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
-              //   message: `Should contain only alphabets.`
-              // }
-            ]}
-          >
-            <Input placeholder="Enter M3 Operation Code"/>
-          </Form.Item>
+        <Col xs={{span:24}} sm={{span:24}} md={{span:8}} lg={{span:8}} xl={{span:6}} > 
+          
           </Col>
 
         {/* <Col xs={{span:24}} sm={{span:24}} md={{span:6}} lg={{span:6}} xl={{span:6}} >
