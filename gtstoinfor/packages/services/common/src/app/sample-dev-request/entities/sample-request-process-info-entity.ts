@@ -12,6 +12,13 @@ export class SampleRequestProcessInfoEntity{
         nullable:false
     })
     operation:number
+    
+    @Column('varchar', {
+        name: 'remarks',
+        nullable: true
+    })
+    remarks: string
+
     @Column('int',{
         name:'sequence',
         nullable:false

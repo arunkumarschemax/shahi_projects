@@ -623,8 +623,9 @@ export class SampleRequestService {
         const processEntity = new SampleRequestProcessInfoEntity()
         processEntity.operation = processObj.operation
         processEntity.sequence = processObj.sequence
+        processEntity.remarks = processObj.remarks
         sampleProcessInfo.push(processEntity);
-        const processInfoReq = new SampleProcessInfoReq(processEntity.operation,processEntity.sequence)
+        const processInfoReq = new SampleProcessInfoReq(processEntity.operation,processEntity.sequence,processEntity.remarks)
         indentProcessInfo.push(processInfoReq);
       }
       sampleReqEntity.sampleProcessInfo = sampleProcessInfo;
