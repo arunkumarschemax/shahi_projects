@@ -91,7 +91,7 @@ export class LevisOrderschildEntity {
     @Column("varchar", {
         name: "quantity",
     })
-    quantity: string
+    quantity: number
 
     
     @Column("varchar", {

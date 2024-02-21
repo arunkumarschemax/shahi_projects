@@ -274,7 +274,7 @@ export const LevisComaparisionReport = () => {
           },
           {
             title: 'New Value',
-            dataIndex: 'oldQuantity',
+            dataIndex: 'newQuantity',
             key: '',
             width: 100,
             className: "center",
@@ -292,25 +292,66 @@ export const LevisComaparisionReport = () => {
         children: [
           {
             title: 'Old Value',
-            dataIndex: 'oldDeliveryDate',
+            dataIndex: 'oldexFactoryDate',
             key: '',
             width: 100,
             className: "center",
-            render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
+            render: (text) => {
+              try {
+                return text ? moment(text, 'DD.MM.YYYY').format('DD/MM/YYYY') : "-";
+              } catch (error) {
+                console.error("Error converting date:", text, error);
+                return "-";
+              }
+            }
            
           },
           {
             title: 'New Value ',
-            dataIndex: 'newDelieveryDate',
+            dataIndex: 'newexFactoryDate',
             key: '',
             width: 100,
             className: "center",
-            render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
+            render: (text) => {
+              try {
+                return text ? moment(text, 'DD.MM.YYYY').format('DD/MM/YYYY') : "-";
+              } catch (error) {
+                console.error("Error converting date:", text, error);
+                return "-";
+              }
+            }
             // (moment(rec.last_modified_date).format('MM/DD/YYYY')
     
           },
   ]
         
+      },
+      {
+        title: "Trans Mode",
+        dataIndex: "",
+        width: 90,
+        // sorter: (a, b) => a.size.localeCompare(b.size),
+        // sortDirections: ["ascend", "descend"],
+        children: [
+          {
+            title: 'Old Value',
+            dataIndex: 'oldtransMode',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text) => text ? text : "-"
+           
+          },
+          {
+            title: 'New Value',
+            dataIndex: 'newtransMode',
+            key: '',
+            width: 100,
+            className: "center",
+            render: (text) => text ? text : "-"
+    
+          },
+  ]
       },
      
      
@@ -600,7 +641,7 @@ export const LevisComaparisionReport = () => {
           },
           {
             title: 'New Value',
-            dataIndex: 'oldQuantity',
+            dataIndex: 'newQuantity',
             key: '',
             width: 100,
             render: (text) => text ? text : "-"
@@ -615,7 +656,7 @@ export const LevisComaparisionReport = () => {
         children: [
           {
             title: 'Old Value',
-            dataIndex: 'oldDeliveryDate',
+            dataIndex: 'oldexFactoryDate',
             key: '',
             width: 100,
             render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
@@ -623,7 +664,7 @@ export const LevisComaparisionReport = () => {
           },
           {
             title: 'New Value ',
-            dataIndex: 'newDelieveryDate',
+            dataIndex: 'newexFactoryDate',
             key: '',
             width: 100,
             render: (text) => text ? (moment(text).format('DD/MM/YYYY')) : "-"
@@ -631,6 +672,30 @@ export const LevisComaparisionReport = () => {
           },
   ]
         
+      },
+
+      {
+        title: "Trans Mode",
+        dataIndex: "",
+        width: 90,
+        children: [
+          {
+            title: 'Old Value',
+            dataIndex: 'oldtransMode',
+            key: '',
+            width: 100,
+            render: (text) => text ? text : "-"
+           
+          },
+          {
+            title: 'New Value',
+            dataIndex: 'newtransMode',
+            key: '',
+            width: 100,
+            render: (text) => text ? text : "-"
+    
+          },
+  ]
       },
     
 
