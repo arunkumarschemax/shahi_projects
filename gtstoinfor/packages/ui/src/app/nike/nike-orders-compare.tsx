@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, Card, Col, DatePicker, Form, Input, Modal, Row, Select, Table, Tabs, TabsProps, Tag, Tooltip, Typography } from 'antd';
+import { Button, Card, Col, DatePicker, Empty, Form, Input, Modal, Row, Select, Table, Tabs, TabsProps, Tag, Tooltip, Typography } from 'antd';
 import { NikeService } from '@project-management-system/shared-services';
 import { DownOutlined, FileExcelFilled, SearchOutlined, UpOutlined } from '@ant-design/icons';
 import moment from 'moment';
@@ -1827,7 +1827,7 @@ const OrdersCompareGrid = () => {
         )
         return (
             <>
-                {filterData.length > 0 ? (
+                {filterData?.length > 0 ? (
                     <Table
                         columns={columns}
                         dataSource={filterData}
@@ -1951,9 +1951,9 @@ const OrdersCompareGrid = () => {
                     </Col>
                 </Row>
             </Form> */}
-            {filteredQtyData || unitChangeData || itemChangeData ? <>
+            {filteredQtyData || unitChangeData || itemChangeData || priceChaneData ? <>
                 <Tabs type='card' items={items} />
-            </> : <></>}
+            </> : <><div> <Empty /></div></>}
             <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
                 <Card>
                     <p>{itemText}</p>
