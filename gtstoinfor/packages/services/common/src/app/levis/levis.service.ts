@@ -853,7 +853,7 @@ export class LevisService {
             const formattedExFactDate = parsedDate.format("DD/MM/YYYY");
       
 
-            const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, DeliveryDate,formattedExFactDate,desArray);
+            const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, DeliveryDate,formattedExFactDate,poInfo.material,desArray);
             coData.push(co);
         });
 
@@ -947,21 +947,21 @@ export class LevisService {
       let paymentTerms;
       let styleNo;
       if (po.buyer === 'LEVIS') {
-        const response = await this.getOrderdataForCOline({ poNumber: po.po_number })
-        console.log(response.data[0])
+        const response = await this.getOrderdataForCOline({ poNumber: po.po_number,poLine:po.po_line })
+        // console.log(response.data[0],"response")
         const coData = response.data[0];
-        coLine.buyerPo = coData.buyerPo;
-        const inputDate = new Date(coData.deliveryDate)
+        coLine.buyerPo = coData.poNumber
+        // const inputDate = new Date(coData.deliveryDate)
         // Calculate the date 7 days before the GAC date
         // const sevenDaysBefore = new Date(inputDate);
         // sevenDaysBefore.setDate(inputDate.getDate() - 7);
         // const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBefore);
-        coLine.deliveryDate = moment(coData.deliveryDate).format("DD/MM/YYYY")
-        // coLine.exFactoryDate = exFactoryDate
+
+        coLine.deliveryDate = coData.deliveryDate
         coLine.salesPrice = coData.salesPrice
         coLine.currency = coData.currency
         coLine.destinations = coData.destinations
-        coLine.exFactoryDate = moment(coData.exfactoryDate).format("DD/MM/YYYY")
+        coLine.exFactoryDate = coData.exfactoryDate
 
         console.log(coLine.exFactoryDate,"exFactoryDate")
         console.log(coLine.deliveryDate,"deliveryDate")
@@ -971,14 +971,14 @@ export class LevisService {
         const address = await this.AddressService.getAddressInfoByCountry({ country: request });
         const addressData = address.data[0];
         console.log(addressData, "address")
-        styleNo = coData.styleNo
-        buyerAddress = addressData?.buyerCode 
-        deliveryAddress = addressData?.deliveryCode
-        buyerValue1 = "LIV-LIVS"
+        styleNo = coData.style
+        buyerAddress = addressData?.buyerAddressCode
+        deliveryAddress = addressData?.deliveryAddressCode
+        buyerValue1 = "LIV-LIVIS"
         buyerValue2 = "LEV00002-LEVI STRAUSS GLOBAL TRADING CO LTD"
         agent = "-NA"
         pkgTerms = "STD-STD PACK"
-        paymentTerms = "063-TT  70 Days"
+        paymentTerms = "063-TT  75 Days"
       }
       const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
       const allApps = await apps.findElements(By.tagName('span'));
@@ -1097,7 +1097,7 @@ export class LevisService {
                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
               }
             }
-          } else if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
+          } else if ((await tab.getAttribute('innerText')) == 'ASORTED') {
             await driver.executeScript('arguments[0].click();', tab);
             for (let [colorIndex, color] of dest.colors.entries()) {
               for (let [sizeIndex, size] of color.sizes.entries()) {
@@ -1111,9 +1111,9 @@ export class LevisService {
                     ele.length > 0 ? fileteredElements.push(labelElement) : '';
                   }
                   let tabIndex = 1; // Default to 1 if no match
-                  if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
-                    tabIndex = 2
-                  }
+                  // if ((await tab.getAttribute('innerText')) == 'ASORTED') {
+                  //   tabIndex = 2
+                  // }
                   const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
                   const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
                   await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
@@ -1146,7 +1146,7 @@ export class LevisService {
                     return new CommonResponseModel(false, 0, 'NO matching Size found')
                   }
                 }
-                const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
+                const inputId = `${size.name}:${color.name}:ASORTED`.replace(/\*/g, '');
                 console.log(inputId,"ppppp")
                 const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
