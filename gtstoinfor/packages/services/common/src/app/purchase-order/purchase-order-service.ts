@@ -660,6 +660,7 @@ export class PurchaseOrderService {
         IF(p.po_against = 'Sample Order',s.request_no,i.request_no) AS request_no,
         IF(p.po_material_type ='FABRIC',mi.item_code,mt.description) AS item_code
         FROM purchase_order p
+        LEFT JOIN buyers b ON p.buyer_id = b.buyer_id
         LEFT JOIN purchae_order_items poi ON poi.purchase_order_id = p.purchase_order_id 
         LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id = poi.sample_item_id
         LEFT JOIN sample_request s ON s.sample_request_id = srf.sample_request_id
@@ -672,7 +673,9 @@ export class PurchaseOrderService {
         LEFT JOIN indent_trims ii ON ii.itrims_id = poi.indent_item_id 
         LEFT JOIN indent i ON i.indent_id = ii.indent_id 
         LEFT JOIN m3_items mi ON mi.m3_items_Id = poi.m3_item_id  AND  p.po_material_type ='FABRIC' where 1 =1`
-        
+        if(req.extRefNo){
+            PoType += ` AND b.external_ref_number ='${req.extRefNo}'`
+        }
         if (req.PoFromDate) {
             PoType += ` AND DATE(p.purchase_order_date) between '${req.PoFromDate}'  and '${req.PoToDate}'`;
         }
