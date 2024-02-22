@@ -76,7 +76,7 @@ export const ITEM_NO_INDEX1= 0
 export const ITEM_MATERIAL_INDEX1 = 'Line Value'
 export const ITEM_VARIANT_START_TEXT1 = "BOM Summary" 
 export const LSE_FORMAT_KEY="Material Description"
-
+export const LSE_KEY_PO_LINE='BOM Summary'
 
 
 /* MX */

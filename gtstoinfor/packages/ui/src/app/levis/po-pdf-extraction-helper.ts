@@ -532,12 +532,21 @@ export const extractDataFromPoPdf = async (pdf) => {
     let prevColorIndex = 0;
     let isSecondFormat = false;
     let isSecondFormat1 = false;
+    let isFirstBomSummary = true;
+    let isSecondBomSummary = false;
     for (const [index, rec] of filteredData.entries()) {
         if (rec.str.match(ITEM_NO_EXP1)) {
             prevItemIndex = index
         }
-        if (rec.str.includes(ITEM_VARIANT_START_TEXT1)) {
+        if (rec.str.includes(ITEM_VARIANT_START_TEXT1) && isFirstBomSummary) {
             itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
+            if (isFirstBomSummary) {
+                isFirstBomSummary = false;
+            }
+            else if(isSecondBomSummary){
+                isSecondBomSummary = true;
+            }
+          
         }
         if (rec.str.includes(FORMAT_SEPARATION_KEYWORD)) {
             isSecondFormat = true;
@@ -595,30 +604,30 @@ export const extractDataFromPoPdf = async (pdf) => {
             // }
             const first6Characters = poData.deliveryAddress.slice(0, 8);
             itemDetailsObj.plannedExFactoryDate = first6Characters;
-            
+
             let first6CharactersIndex = filteredData.findIndex(item => item && item.str && item.str.startsWith(first6Characters));
-            
+
             while (first6CharactersIndex !== -1) {
                 const plannedExFactoryDateString = filteredData[first6CharactersIndex - 3]?.str;
                 if (plannedExFactoryDateString) {
                     const [day, month, year] = plannedExFactoryDateString.split('.').map(Number);
                     const inputDate = new Date(year, month - 1, day);
-                
+
                     const twentyOneDaysBefore = new Date(inputDate);
                     twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
-                
+
                     const formattedDay = twentyOneDaysBefore.getDate().toString().padStart(2, '0');
                     const formattedMonth = (twentyOneDaysBefore.getMonth() + 1).toString().padStart(2, '0');
                     const formattedYear = twentyOneDaysBefore.getFullYear();
-                
+
                     const exFactoryDate = `${formattedDay}.${formattedMonth}.${formattedYear}`;
                     itemDetailsObj.exFactoryDate = exFactoryDate;
-                    break; 
+                    break;
                 } else {
                     first6CharactersIndex = filteredData.findIndex((item, index) => index > first6CharactersIndex && item && item.str && item.str.startsWith(first6Characters));
                 }
             }
-            
+
 
 
             let transModeIndex = -1;
