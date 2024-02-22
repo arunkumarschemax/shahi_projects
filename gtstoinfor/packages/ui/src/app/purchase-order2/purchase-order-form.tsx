@@ -163,14 +163,17 @@ export const PurchaseOrderForm = () => {
 
     useEffect(()=>{
         if(fabricData.length){
-            poForm.setFieldsValue({totalAmount : fabricData[0]?.subjectiveAmount})
+            const totalSum = fabricData.reduce((sum, item) => sum +Number (item.subjectiveAmount || 0), 0);
+
+            poForm.setFieldsValue({totalAmount : totalSum})
         }
-        console.log(fabricData[0]?.subjectiveAmount,'.,,,,,,,,<<<<>>>>>>>')
     },[fabricData]);
 
     useEffect(()=>{
         if(trimData){
-            poForm.setFieldsValue({totalAmount : trimData[0]?.subjectiveAmount})
+            const totalSum = trimData.reduce((sum, item) => sum +Number (item.subjectiveAmount || 0), 0);
+
+            poForm.setFieldsValue({totalAmount : totalSum})
         }
     },[trimData]);
 

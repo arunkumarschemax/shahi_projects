@@ -24,6 +24,7 @@ export class Operations {
 
   @Column("varchar",{
     nullable:true,
+    default:"INTERNAL",
     length:100,
     name:"m3_operation_code"
     })
