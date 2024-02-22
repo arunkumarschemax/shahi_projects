@@ -192,7 +192,7 @@ import {
       const roleWiseMapData = new Map<string, LevisOrderAcceptanceRequest[]>();
   
       tableData.forEach(rec => {
-        const key = `${rec.poNumber}_${rec.itemNo}_${rec.transMode} `;
+        const key = `${rec.poNumber}_${rec.itemNo} `;
   
         if (!roleWiseMapData.has(key)) {
           roleWiseMapData.set(key, [rec]);
