@@ -766,18 +766,18 @@ export class LevisService {
       // const poLineValues = req.poLine.split(',')
       const poLineValues = req?.poLine
         const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber,poLine:poLineValues } });
-        const exfacDate = data[0]?.exFactoryDate
-        console.log(exfacDate,"exfacDate")
+        // const exfacDate = data[0]?.exFactoryDate
+        // console.log(exfacDate,"exfacDate")
 
       
-        const [day, month, year] = exfacDate?.split('.');
-        const inputDate = new Date(`${year}-${month}-${day}`);
+        // const [day, month, year] = exfacDate?.split('.');
+        // const inputDate = new Date(`${year}-${month}-${day}`);
         
        
-        const FourteenDaysafter = new Date(inputDate);
-        FourteenDaysafter.setDate(inputDate.getDate() + 14);
-        const DeliveryDate = new Intl.DateTimeFormat('en-GB').format(FourteenDaysafter);
-        console.log(DeliveryDate,"DeliveryDate")
+        // const FourteenDaysafter = new Date(inputDate);
+        // FourteenDaysafter.setDate(inputDate.getDate() + 14);
+        // const DeliveryDate = new Intl.DateTimeFormat('en-GB').format(FourteenDaysafter);
+        // console.log(DeliveryDate,"DeliveryDate")
 
 
         // po -> destination -> color -> sizes
@@ -853,7 +853,7 @@ export class LevisService {
             const formattedExFactDate = parsedDate.format("DD/MM/YYYY");
       
 
-            const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, DeliveryDate,formattedExFactDate,poInfo.material,desArray);
+            const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, formattedExFactDate,formattedExFactDate,poInfo.material,desArray);
             coData.push(co);
         });
 
