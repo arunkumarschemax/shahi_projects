@@ -82,6 +82,7 @@ export const LSE_FORMAT_KEY="Material Description"
 /* MX */
 export const MX_FORMAT_KEY='Variant Material'
 export const ITEM_TEXT_END_TEXT2='This Purchase Order is issued under,'
+export const ITEM_TEXT_END_TEXT22 = "P u r c h a s e"
 export const PO_NUMBER_TEXT1 = 'Purchase Order'
 export const PO_NUMBER_INDEX1 = 1 
 export const CURRENCY_INDEX = 'Currency'

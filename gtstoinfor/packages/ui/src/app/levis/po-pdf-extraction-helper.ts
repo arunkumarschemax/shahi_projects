@@ -1,5 +1,5 @@
 import { LevisPoDetails, LevisPoItemDetails, LevisPoItemVariant } from "@project-management-system/shared-models";
-import { CURRENCY_INDEX, DELIVERY_ADDRESS, DELIVERY_ADDRESS_MX, EMP_STR_EXP, FORMAT1, FORMAT2, FORMAT3, FORMAT_SEPARATION_KEYWORD, FORMAT_SEPARATION_KEYWORD1, ITEM_NO_EXP, ITEM_NO_EXP1, ITEM_NO_EXP2, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_TEXT_END_TEXT2, ITEM_VARIANT_START_TEXT, ITEM_VARIANT_START_TEXT1, ITEM_VARIANT_START_TEXT2, LSE_FORMAT_KEY, MX_FORMAT_KEY, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_INDEXING, PO_NUMBER_INDEXING_LSE, PO_NUMBER_TEXT, PO_NUMBER_TEXT1, PO_NUMBER_TEXT_LSE, TRANSMODE_INDEX, TRANSMODE_INDEX_LSE, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./popdf-regex-expressions";
+import { CURRENCY_INDEX, DELIVERY_ADDRESS, DELIVERY_ADDRESS_MX, EMP_STR_EXP, FORMAT1, FORMAT2, FORMAT3, FORMAT_SEPARATION_KEYWORD, FORMAT_SEPARATION_KEYWORD1, ITEM_NO_EXP, ITEM_NO_EXP1, ITEM_NO_EXP2, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_TEXT_END_TEXT2, ITEM_TEXT_END_TEXT22, ITEM_VARIANT_START_TEXT, ITEM_VARIANT_START_TEXT1, ITEM_VARIANT_START_TEXT2, LSE_FORMAT_KEY, MX_FORMAT_KEY, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_INDEXING, PO_NUMBER_INDEXING_LSE, PO_NUMBER_TEXT, PO_NUMBER_TEXT1, PO_NUMBER_TEXT_LSE, TRANSMODE_INDEX, TRANSMODE_INDEX_LSE, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_11, UNWANTED_TEXT_12, UNWANTED_TEXT_13, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./popdf-regex-expressions";
 import moment from "moment";
 
 
@@ -374,11 +374,18 @@ export const extractDataFromPoPdf = async (pdf) => {
                 poData.poNumber = firstPageContent[mxPoNumberTextIndex + 1].str.replace(/#/g, "").trim();
                 poData.currency = firstPageContent[currencyIndex + 1].str
                 // poData.transMode = '-'
-                poData.deliveryAddress =
-                    firstPageContent[deliveryAddressIndexMx + 8].str + " " +
-                    firstPageContent[deliveryAddressIndexMx + 9].str + " " +
-                    firstPageContent[deliveryAddressIndexMx + 10].str + " " +
-                    firstPageContent[deliveryAddressIndexMx + 11].str;
+
+
+                let i = deliveryAddressIndexMx + 8;
+                let deliveryAddress = "";
+                const regex = /EA/;
+                while (i < firstPageContent.length && !regex.test(firstPageContent[i].str)) {
+                    deliveryAddress += firstPageContent[i].str + " ";
+                    i++;
+                }
+                deliveryAddress = deliveryAddress.trim().replace(/(\d+|\d.\d+|,|\d+.)$/, '');
+                poData.deliveryAddress = deliveryAddress.trim();
+
 
                 // poData.poDate = firstPageContent[poNumberTextIndex + PO_NUMBER_INDEX + 1].str
                 // poData.shipment = firstPageContent[frieghtPayMethodIndex - 1].str
@@ -680,8 +687,8 @@ export const extractDataFromPoPdf = async (pdf) => {
                         console.log(`End date not found for size`);
                     } else {
                         quantity = itemVarinatsTextArr.slice(lastSizeIndexWithHyphen + 1, dateIndexAsDate)
-                            .map(qty => parseFloat(qty))
-                            .filter(qty => !isNaN(qty));
+                        .map(qty => parseFloat(qty.replace(/,/g, '')))
+                        .filter(qty => !isNaN(qty));
                     }
                 }
 
@@ -693,7 +700,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemVariantsObj.quantity = '';
                 if (quantity !== null) {
                     if (currentIndex < quantity.length) {
-                        itemVariantsObj.quantity = `${quantity[currentIndex]}`.trim(); 
+                        itemVariantsObj.quantity = `${quantity[currentIndex]}`.trim();
                         currentIndex++;
                     }
                 }
@@ -1012,12 +1019,12 @@ export const extractDataFromPoPdf = async (pdf) => {
             // item varinat details parsing starts here 
             const itemVarinatsTextArr = []
             let k = itemVariantStartIndex
-            while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT2)) {
-                itemVarinatsTextArr.push(filteredData[k].str)
-                k++
+            while (!filteredData[k].str.includes(ITEM_TEXT_END_TEXT22) && !filteredData[k].str.includes(ITEM_TEXT_END_TEXT2)) {
+                itemVarinatsTextArr.push(filteredData[k].str);
+                k++;
             }
             console.log(itemVarinatsTextArr, 'VVVVVVVv')
-            const stringsWithLength13 = itemVarinatsTextArr.filter(value => /[A-Za-z]{1}[0-9]{4}-[0-9]{4}[A-Za-z]{1}/.test(value));
+            const stringsWithLength13 = itemVarinatsTextArr.filter(value => /([A-Za-z]{1}[0-9]{4}-[0-9]{4}[A-Za-z]{1})|[0-9]{5}-[0-9]{4}[A-Z]+/.test(value));
             console.log("stringsWithLength13", stringsWithLength13);
             // const regexPattern = /[0-9]{2}[A-Z]{5}\w+-\d+/;
             // const CompMaterialData = itemVarinatsTextArr.filter(value => regexPattern.test(value));
@@ -1031,7 +1038,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 // itemVariantsObj.product = itemVarinatsTextArr[upcIndex + 1] //Description
                 itemVariantsObj.product = stringsWithLength13[l] //variant material
                 itemVariantsObj.size = itemVarinatsTextArr[upcIndex + 2] //size
-                itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 3] // quantity
+                itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 3].replace(/,/g, "") // quantity
                 itemVariantsObj.itemNo = itemVarinatsTextArr[upcIndex - 1]
                 itemVariantsObj.upc = '-'
                 // itemVariantsObj.exFactoryDate = itemVarinatsTextArr[upcIndex - 1]  //item#
