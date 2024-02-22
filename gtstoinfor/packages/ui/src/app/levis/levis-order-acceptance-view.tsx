@@ -13,6 +13,7 @@ import {
   } from "antd";
   import { useEffect, useRef, useState } from "react";
   import {
+    ColorService,
     EddieService,
     HbService, LevisService, SanmarService,
   } from "@project-management-system/shared-services";
@@ -31,6 +32,7 @@ import {
   
   export function LevisOrderAcceptanceGrid() {
     const service = new LevisService();
+   // const services = new ColorService();
     const navigate = useNavigate();
     const searchInput = useRef(null);
     const [orderData, setOrderData] = useState<any>([]);
@@ -48,11 +50,15 @@ import {
     const [itemNoValues, setItemNoValues] = useState({});
     const { RangePicker } = DatePicker;
     const [poNumber, setPoNumber] = useState([]);
+    const [colorData, setColorData] = useState([]);
   
     useEffect(() => {
       getorderacceptanceData();
       getPoNumber()
+      //getColorInfo()
     }, []);
+
+   
   
   
     const getorderacceptanceData = () => {
@@ -101,7 +107,19 @@ import {
         }
       });
     };
-  
+
+    // const getColorInfo = () => {
+    //   services.getColorInfo().then((res) => {
+    //     if (res.status) {
+    //       setColorData(res.data);
+    //     }
+    //   });
+    // };
+    
+    // const getColorName = (material) => {
+    //   const matchedColor = colorData.find((color) => color.colorCode === material);
+    //   return matchedColor ? matchedColor.colorName : '-';
+    // };
   
     const handleItemNoChange = (value, record, index) => {
       const formValues = form.getFieldsValue();
@@ -174,7 +192,7 @@ import {
       const roleWiseMapData = new Map<string, LevisOrderAcceptanceRequest[]>();
   
       tableData.forEach(rec => {
-        const key = `${rec.poNumber}_${rec.itemNo}`;
+        const key = `${rec.poNumber}_${rec.itemNo}_${rec.transMode} `;
   
         if (!roleWiseMapData.has(key)) {
           roleWiseMapData.set(key, [rec]);
@@ -401,6 +419,12 @@ import {
          
   
         },
+        // {
+        //   title: 'Color',
+        //   dataIndex: 'colorCode', // Assuming colorCode is available in your data
+        //   width: 90,
+        //   render: (text, record) => getColorName(record.material),
+        // },
         {
           title: "Total Unit Price",
           dataIndex: "totalUnitPrice",
