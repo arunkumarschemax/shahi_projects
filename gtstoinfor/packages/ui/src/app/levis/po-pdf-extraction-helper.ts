@@ -56,7 +56,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 let shipToAddStartIndex;
                 let currencyLseIndex;
                 let transModeLseIndex;
-                let deliveryAddressIndex;
+                let deliveryAddressIndexLse;
                 for (const [ind, ele] of firstPageContent.entries()) {
                     if (ele.str == PO_NUMBER_TEXT_LSE) {
                         poNumberTextLseIndex = ind
@@ -85,12 +85,20 @@ export const extractDataFromPoPdf = async (pdf) => {
                         transModeLseIndex = ind
                     }
                     if (ele.str == DELIVERY_ADDRESS) {
-                        deliveryAddressIndex = ind
+                        deliveryAddressIndexLse = ind
                     }
 
                 }
                 poData.poNumber = firstPageContent[poNumberTextLseIndex - 1].str;
                 poData.currency = firstPageContent[currencyLseIndex + 1].str;
+                let i = deliveryAddressIndexLse - 1;
+                let deliveryAddress = "";
+                const regex = /\d+\.\d+\.\d+/;
+                while (i >= 0 && !regex.test(firstPageContent[i].str)) {
+                    deliveryAddress = firstPageContent[i].str + " " + deliveryAddress;
+                    i--;
+                }
+                poData.deliveryAddress = deliveryAddress.trim().replace(/^\d+\s*|\s*\d+$/g, "").replace(/\d+,/g, "");
                 // poData.transMode =
                 //     (firstPageContent[transModeLseIndex + 2].str + " " +
                 //         firstPageContent[transModeLseIndex + 3].str).replace(/\s+\w+/g, "").trim();
@@ -585,6 +593,32 @@ export const extractDataFromPoPdf = async (pdf) => {
             // if (transModeIndex >= 0 && transModeIndex < filteredData.length) {
             //     itemDetailsObj.transMode = filteredData[transModeIndex].str;
             // }
+            const first6Characters = poData.deliveryAddress.slice(0, 8);
+            itemDetailsObj.plannedExFactoryDate = first6Characters;
+            
+            let first6CharactersIndex = filteredData.findIndex(item => item && item.str && item.str.startsWith(first6Characters));
+            
+            while (first6CharactersIndex !== -1) {
+                const plannedExFactoryDateString = filteredData[first6CharactersIndex - 3]?.str;
+                if (plannedExFactoryDateString) {
+                    const [day, month, year] = plannedExFactoryDateString.split('.').map(Number);
+                    const inputDate = new Date(year, month - 1, day);
+                
+                    const twentyOneDaysBefore = new Date(inputDate);
+                    twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
+                
+                    const formattedDay = twentyOneDaysBefore.getDate().toString().padStart(2, '0');
+                    const formattedMonth = (twentyOneDaysBefore.getMonth() + 1).toString().padStart(2, '0');
+                    const formattedYear = twentyOneDaysBefore.getFullYear();
+                
+                    const exFactoryDate = `${formattedDay}.${formattedMonth}.${formattedYear}`;
+                    itemDetailsObj.exFactoryDate = exFactoryDate;
+                    break; 
+                } else {
+                    first6CharactersIndex = filteredData.findIndex((item, index) => index > first6CharactersIndex && item && item.str && item.str.startsWith(first6Characters));
+                }
+            }
+            
 
 
             let transModeIndex = -1;
@@ -687,8 +721,8 @@ export const extractDataFromPoPdf = async (pdf) => {
                         console.log(`End date not found for size`);
                     } else {
                         quantity = itemVarinatsTextArr.slice(lastSizeIndexWithHyphen + 1, dateIndexAsDate)
-                        .map(qty => parseFloat(qty.replace(/,/g, '')))
-                        .filter(qty => !isNaN(qty));
+                            .map(qty => parseFloat(qty.replace(/,/g, '')))
+                            .filter(qty => !isNaN(qty));
                     }
                 }
 
