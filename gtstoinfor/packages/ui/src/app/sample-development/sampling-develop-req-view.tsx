@@ -357,11 +357,14 @@ export const SampleDevNewView = () => {
 
         return (
           <>
-            <span style={{ paddingRight: 20 }}  >
+          <span style={{ paddingRight: 20 }}  >
+            {
+              record.filePath != null ?
               <Tooltip title='Download Fabric'>
-                <DownloadOutlined onClick={() => handleFabDownload(record)} style={{ fontSize: '15px', marginLeft: '-5px', color: 'blue' }} />
-              </Tooltip>
-            </span>
+              <DownloadOutlined onClick={() => handleFabDownload(record)} style={{ fontSize: '15px', marginLeft: '-5px', color: 'blue' }} />
+            </Tooltip> : "No file"
+            }
+          </span>
             {Number(record.tobeProcured) > 0 && record.status != BomStatusEnum.ALLOCATED && Number(record.resltantavaliblequantity) > 0 ? <Tag style={{ backgroundColor: '#03a9f46b', color: "black" }}><b>Need to allocate</b></Tag> : (Number(record.resltantavaliblequantity) <= 0 && record.status != BomStatusEnum.ALLOCATED) ? <Tag style={{ backgroundColor: '#41f4036b', color: "black" }}><b>Need to Procure</b></Tag> : record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag> : ""}
           </>
         );
@@ -451,11 +454,15 @@ export const SampleDevNewView = () => {
       render: (text, record) => {
         return (
           <>
-            <span style={{ paddingRight: 20 }}  >
-              <Tooltip title='Download Trim'>
-                <DownloadOutlined onClick={() => handleTrimDownload(record)} style={{ fontSize: '15px', marginLeft: '-5px', color: 'blue' }} />
-              </Tooltip>
-            </span>
+          {
+            record.filePath != null ?
+              <span style={{ paddingRight: 20 }}  >
+                <Tooltip title='Download Trim'>
+                  <DownloadOutlined onClick={() => handleTrimDownload(record)} style={{ fontSize: '15px', marginLeft: '-5px', color: 'blue' }} />
+                </Tooltip>
+              </span>
+            : "No file"
+          }
             {Number(record.tobeProcured) > 0 && record.status != BomStatusEnum.ALLOCATED && Number(record.resltantavaliblequantity) > 0 ? <Tag style={{ backgroundColor: '#03a9f46b', color: "black" }}><b>Need to allocate</b></Tag> : (Number(record.resltantavaliblequantity) <= 0 && record.status != BomStatusEnum.ALLOCATED) ? <Tag style={{ backgroundColor: '#41f4036b', color: "black" }}><b>Need to Procure</b></Tag> : record.status === BomStatusEnum.ALLOCATED ? <Tag>Allocated</Tag> : ""}
           </>
         );
