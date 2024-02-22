@@ -8,6 +8,7 @@ import Highlighter from 'react-highlight-words';
 import { CheckCircleOutlined, CloseCircleOutlined, FileExcelOutlined, SearchOutlined } from '@ant-design/icons';
 import { RolePermission } from '../role-permissions';
 import { Excel } from 'antd-table-saveas-excel';
+import { useIAMClientState } from '../common/iam-client-react';
 
  const GrnReport =() =>{
     const [form] =Form.useForm();
@@ -22,6 +23,8 @@ import { Excel } from 'antd-table-saveas-excel';
     const {Option} = Select
     const grnService = new GRNService()
     const poService = new PurchaseOrderservice()
+    const { IAMClientAuthContext } = useIAMClientState();
+
     // const [selectedKeys, setSelectedKeys] = useState<any>('');
     // let selectedKeys = '';
     useEffect(() =>{
@@ -62,6 +65,8 @@ import { Excel } from 'antd-table-saveas-excel';
       if(checkAccess(MenusAndScopesEnum.Scopes.fabricTab) && checkAccess(MenusAndScopesEnum.Scopes.trimTab)){
         req.tab = undefined
           }
+          req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+
        
         grnService.getGrnReportData(req).then(res =>{
           console.log(req,'pppppppppppp');

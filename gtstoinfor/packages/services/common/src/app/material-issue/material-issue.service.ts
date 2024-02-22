@@ -420,6 +420,9 @@ export class MaterialIssueService {
             if(req.rackPosition){
                 query += ` AND rp.rack_position_name = '${req.rackPosition}'`
             }
+            if(req.extRefNo){
+                query += ` AND b.external_ref_number ='${req.extRefNo}'`
+            }
             query += ` GROUP BY ma.sample_order_id,ma.item_type`
 
             const data = await this.dataSource.query(query)

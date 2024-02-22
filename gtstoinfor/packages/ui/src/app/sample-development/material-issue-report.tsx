@@ -10,6 +10,7 @@ import { FilterConfirmProps } from 'antd/es/table/interface';
 import Highlighter from 'react-highlight-words';
 import { ColumnType } from 'typeorm';
 import FormItem from 'antd/es/form/FormItem';
+import { useIAMClientState } from '../common/iam-client-react';
 
 
 const { Option } = Select;
@@ -23,6 +24,7 @@ const MaterialIssueReport = () => {
   const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef<any>(null);
   const [page,setPage] = useState<number>(1);
+  const { IAMClientAuthContext } = useIAMClientState();
 
   useEffect(() => {
     getAllMaterial();
@@ -32,6 +34,8 @@ const MaterialIssueReport = () => {
 
   const getAllMaterial = () => {
     const req = new AllocationReportReq()
+    req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+    
     if (form.getFieldValue('requestNo') !== undefined) {
       req.requestNo = form.getFieldValue('requestNo')
     }
