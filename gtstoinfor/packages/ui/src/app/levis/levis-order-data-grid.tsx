@@ -57,6 +57,7 @@ import {
     const [filterData, setFilterData] = useState([]);
     const { IAMClientAuthContext, dispatch } = useIAMClientState();
     const { RangePicker } = DatePicker;
+    const [colorData, setColorData] = useState([]);
   
     useEffect(() => {
       getorderData();
@@ -108,6 +109,19 @@ import {
           }
         });
       };
+
+      // const getColorInfo = () => {
+    //   services.getColorInfo().then((res) => {
+    //     if (res.status) {
+    //       setColorData(res.data);
+    //     }
+    //   });
+    // };
+    
+    // const getColorName = (material) => {
+    //   const matchedColor = colorData.find((color) => color.colorCode === material);
+    //   return matchedColor ? matchedColor.colorName : '-';
+    // };
     const onReset = () => {
       form.resetFields();
       getorderData();
@@ -301,6 +315,12 @@ import {
          
   
         },
+          // {
+        //   title: 'Color',
+        //   dataIndex: 'colorCode', // Assuming colorCode is available in your data
+        //   width: 90,
+        //   render: (text, record) => getColorName(record.material),
+        // },
         {
           title: "Total Unit Price",
           dataIndex: "totalUnitPrice",
@@ -727,6 +747,13 @@ import {
                
         
               },
+              // {
+              //   title: "Color",
+              //   dataIndex: "colorCode",
+              //   width: 110,
+              //   render: (text, record) => getColorName(record.material),
+        
+              // },
               {
                 title: "Total Unit Price",
                 dataIndex: "totalUnitPrice",

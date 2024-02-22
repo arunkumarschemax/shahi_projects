@@ -565,14 +565,30 @@ export const extractDataFromPoPdf = async (pdf) => {
                 itemDetailsObj.totalUnitPrice = filteredData[unitPriceIndex].str;
             }
 
+            // let transModeIndex = -1;
+            // filteredData.forEach((item, index) => {
+            //     if (/([A-Z]{1}[0-9]{1}|[A-Z]+):[A-Z]+/.test(item.str)) {
+            //         if (transModeIndex) {
+            //             transModeIndex = index +0;
+            //             return;
+            //         }
+            //     }
+            // });
+
+            // if (transModeIndex >= 0 && transModeIndex < filteredData.length) {
+            //     itemDetailsObj.transMode = filteredData[transModeIndex].str;
+            // }
+
+
             let transModeIndex = -1;
             filteredData.forEach((item, index) => {
-                if (/Tracking/.test(item.str)) {
-                    transModeIndex = index + 3;
-                    let transModeIndex2 = index + 4;
+                if (/([A-Z]{1}[0-9]{1}|[A-Z]+):[A-Z]+/.test(item.str)) {
+                    transModeIndex = index + 0;
+                    const transModeIndex2 = index + 1;
                     if (transModeIndex < filteredData.length && transModeIndex2 < filteredData.length) {
                         itemDetailsObj.transMode = (filteredData[transModeIndex].str + " " + filteredData[transModeIndex2].str).replace(/\s+\w+/g, "");
                     }
+                    // console.log(transModeIndex2,"transModeIndex2")
                     return;
                 }
             });
@@ -589,31 +605,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             // if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
             //     itemDetailsObj.plannedExFactoryDate = filteredData[plannedExFactoryDateIndex].str;
             // }
-            let plannedExFactoryDateIndex = -1;
-            filteredData.forEach((item, index) => {
-                if (/Line Value/.test(item.str)) {
-                    plannedExFactoryDateIndex = index + 9;
-                    if (!/\d+\.\d+\.\d+/.test(filteredData[plannedExFactoryDateIndex].str)) {
-                        plannedExFactoryDateIndex -= 2;
-                    }
-                    return;
-                }
-            });
 
-            if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
-                itemDetailsObj.plannedExFactoryDate = filteredData[plannedExFactoryDateIndex].str;
-            }
-
-
-            if (plannedExFactoryDateIndex >= 0 && plannedExFactoryDateIndex < filteredData.length) {
-                const plannedExFactoryDateString = filteredData[plannedExFactoryDateIndex].str;
-                const [day, month, year] = plannedExFactoryDateString.split('.').map(Number);
-                const inputDate = new Date(year, month - 1, day);
-                const twentyOneDaysBefore = new Date(inputDate);
-                twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
-                const exFactoryDate = twentyOneDaysBefore.toLocaleDateString('en-GB');
-                itemDetailsObj.exFactoryDate = exFactoryDate.replace(/\//g, ".");
-            }
 
 
             itemTextEndIndex = rec.amountIndex
@@ -634,6 +626,9 @@ export const extractDataFromPoPdf = async (pdf) => {
             const regexPattern = /\d+\.\d+\.\d+/;
             const CompMaterialData = removedHyphenFromItemVariantsTextArr.filter(value => regexPattern.test(value));
             console.log("CompMaterialData", CompMaterialData);
+            const regexPatternXs = /XS -/;
+            const xsHyphen = itemVarinatsTextArr.filter(value => regexPatternXs.test(value));
+            console.log("xsHyphen", xsHyphen);
 
             const sizes = stringsWithLength13.length;
             const count = removedHyphenFromItemVariantsTextArr.length / sizes;
@@ -649,6 +644,7 @@ export const extractDataFromPoPdf = async (pdf) => {
 
             lineIndex++;
 
+            let currentIndex = 0;
             for (let i = 0; i < allSizesArray.length; i++) {
                 const size = allSizesArray[i];
 
@@ -674,15 +670,35 @@ export const extractDataFromPoPdf = async (pdf) => {
                     scheduledDate = matches[lastIndex];
                 }
 
+                let quantity = null;
+                const lastSizeIndexWithHyphen = itemVarinatsTextArr.findIndex(item => new RegExp(/[A-Z]+\s+-/).test(item));
+                if (lastSizeIndexWithHyphen === -1) {
+                    console.log(`Size not found`);
+                } else {
+                    const dateIndexAsDate = itemVarinatsTextArr.findIndex((item, index) => index > lastSizeIndexWithHyphen && /\d+\.\d+\.\d+/.test(item));
+                    if (dateIndexAsDate === -1) {
+                        console.log(`End date not found for size`);
+                    } else {
+                        quantity = itemVarinatsTextArr.slice(lastSizeIndexWithHyphen + 1, dateIndexAsDate)
+                            .map(qty => parseFloat(qty))
+                            .filter(qty => !isNaN(qty));
+                    }
+                }
 
                 const itemVariantsObj = new LevisPoItemVariant();
                 itemVariantsObj.size = size;
                 itemVariantsObj.upc = '-';
                 itemVariantsObj.scheduledDate = scheduledDate;
                 itemVariantsObj.itemNo = itemNo;
+                itemVariantsObj.quantity = '';
+                if (quantity !== null) {
+                    if (currentIndex < quantity.length) {
+                        itemVariantsObj.quantity = `${quantity[currentIndex]}`.trim(); 
+                        currentIndex++;
+                    }
+                }
                 itemVariantsObj.product = '-';
                 itemVariantsObj.unitPrice = itemDetailsObj.totalUnitPrice;
-
                 console.log(itemVariantsObj);
                 itemVariantsArr.push(itemVariantsObj);
 
@@ -954,12 +970,12 @@ export const extractDataFromPoPdf = async (pdf) => {
                 const inputDate = new Date(year, month - 1, day);
                 const twentyOneDaysBefore = new Date(inputDate);
                 twentyOneDaysBefore.setDate(inputDate.getDate() - 21);
-            
+
                 // Format the date as DD.MM.YYYY
                 const formattedDay = twentyOneDaysBefore.getDate().toString().padStart(2, '0');
                 const formattedMonth = (twentyOneDaysBefore.getMonth() + 1).toString().padStart(2, '0');
                 const formattedYear = twentyOneDaysBefore.getFullYear();
-            
+
                 const exFactoryDate = `${formattedDay}.${formattedMonth}.${formattedYear}`;
                 itemDetailsObj.exFactoryDate = exFactoryDate;
             }
