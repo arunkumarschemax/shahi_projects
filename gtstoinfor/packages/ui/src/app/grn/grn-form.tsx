@@ -70,7 +70,7 @@ const GRNForm = () => {
     form.validateFields().then(() => {
 
       const values = form.getFieldsValue()
-      console.log(values,'rrrr')
+      // console.log(values,'rrrr')
       const req = new GrnDto(values.vendorId, values.purchaseOrderId, form.getFieldValue('grnDate').format('YYYY-MM-DD'), PurchaseOrderStatus.OPEN, values.remarks, undefined, undefined, '', undefined, '', 0, 0, poData?.poMaterialType, poItemData, 0, '',values.grnType, values.invoiceNo, ((poData?.poMaterialType).toUpperCase() === "FABRIC"?(poData?.poMaterialType).toUpperCase():"Trim"), values.grnAmount,form.getFieldValue('invoiceDate').format('YYYY-MM-DD'));
       console.log(req);
       grnService.createGrn(req).then((res) => {
@@ -245,11 +245,9 @@ const GRNForm = () => {
     {
       title: <div style={{ textAlign: "center" }}>Accepted Qty</div>,
       dataIndex: 'acceptedQuantity',
-      // render: (value, rowData) => {
-      //   return (
-      //     value ? value : (rowData.poQuantity - rowData.grnQuantity)
-      //   )
-      // }
+      render: (text) => {
+        return(Number(text).toFixed(2))
+      }
 
     },
     {
@@ -257,7 +255,7 @@ const GRNForm = () => {
       dataIndex: 'rejectedQuantity',
       render: (value, rowData) => {
         return (
-          value ? value : 0
+          value ? Number(value).toFixed(2) : 0
         )
       }
     },
@@ -368,7 +366,7 @@ const GRNForm = () => {
     const recQty = itemsForm.getFieldValue('receivedQuantity')
     console.log(e)
     if(Number(acceptedQty) > Number(recQty)){
-      AlertMessages.getErrorMessage('Accepted Qunatity should not exceed Received')
+      AlertMessages.getErrorMessage('Accepted Quantity should not exceed Received')
       itemsForm.setFieldsValue({acceptedQuantity:null})
     }else{
       
@@ -378,7 +376,7 @@ const GRNForm = () => {
             return {
               ...item,
               acceptedQuantity: e.target.value,
-              rejectedQuantity: (item.receivedQuantity - Number(e.target.value)).toFixed(2)
+              rejectedQuantity: (item.receivedQuantity - Number(e.target.value))
             };
           }
           return item;

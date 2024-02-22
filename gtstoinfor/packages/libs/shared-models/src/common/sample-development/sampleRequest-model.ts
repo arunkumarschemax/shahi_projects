@@ -27,6 +27,7 @@ export class SampleRequestInfoModel{
     // sizeinfo?:SampleSizeInfoModel[]
     fabInfo?:any[]
     trimInfo?:any[]
+    processInfo?:any[]
     location?:string
     sampleType?:string
         sampleSubType?:string
@@ -60,6 +61,7 @@ export class SampleRequestInfoModel{
         // sizeinfo?:SampleSizeInfoModel[],
         fabInfo?:any[],
         trimInfo?:any[],
+    processInfo?:any[],
         location?:string,
         sampleType?:string,
         sampleSubType?:string,
@@ -76,6 +78,7 @@ export class SampleRequestInfoModel{
     //    this.sizeinfo = sizeinfo
        this.style = style
        this.trimInfo = trimInfo
+       this.processInfo = processInfo
        this.fabInfo = fabInfo
        this.sampleRequestNo = sampleRequestNo
        this.contact =contact

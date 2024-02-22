@@ -17,6 +17,7 @@ import { SampleInventoryLog } from './dto/sample-inventory-log-dto';
 import { SampleOrderIdRequest } from './dto/sample-req-id';
 import { MaterialallitemsReq } from './dto/sample-req-size-req';
 import { SampleRequestService } from './sample-dev-request.service';
+import { SampleItemIdRequest } from "./dto/sample-item-id-request";
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -764,4 +765,24 @@ export class SampleDevReqController {
     }
   }
 
+  @Post('/getFabricPaths')
+  @ApiBody({ type: SampleItemIdRequest })
+  async getFabricPaths(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getFabricPaths(req);
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+  @Post('/getTrimPaths')
+  @ApiBody({ type: SampleItemIdRequest })
+  async getTrimPaths(@Body() req: any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getTrimPaths(req);
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
 }

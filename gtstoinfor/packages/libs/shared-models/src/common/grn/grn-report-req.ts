@@ -6,13 +6,15 @@ export class grnReportReq{
     sampleOrderId?:number
     indentId?:number
     tab?:string
+    extRefNo?:string;
     constructor(
         poStatus?:string,
         poId?:number,
         grnDate?:any,
         sampleOrderId?:number,
         indentId?:number,
-        tab?:string
+        tab?:string,
+        extRefNo?:string
     ){
         this.poStatus=poStatus
         this.poId=poId
@@ -20,5 +22,6 @@ export class grnReportReq{
         this.sampleOrderId=sampleOrderId
         this.indentId=indentId
         this.tab = tab
+        this.extRefNo = extRefNo
     }
 }

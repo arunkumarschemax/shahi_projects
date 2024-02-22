@@ -29,6 +29,7 @@ export const TrimReqCodeView = () => {
   const paramsService = new TrimParamsMappingService()
   const service = new M3TrimsService()
   const trimReqCodeService = new FabricRequestCodeService()
+  const [page1, setPage1] = React.useState(1);
 
   const [structureData, setStructureData] = useState<any[]>([]);
   const [categoryData, setCategoryData] = useState<any[]>([]);
@@ -715,6 +716,289 @@ export const TrimReqCodeView = () => {
   ];
   const actionColumns: ColumnProps<any>[] = [
     {
+      title: "S No",
+      key: "sno",
+      responsive: ["sm"],
+      render: (text, object, index) => (page1 - 1) * 10 + (index + 1),
+      fixed:'left'
+    },
+    {
+      title: <div style={{ textAlign: "center" }}>Buyer</div>,
+      dataIndex: "buyerName",
+      fixed:'left',
+      ...getColumnSearchProps("buyerName"),
+      sorter: (a, b) => a.buyerName?.localeCompare(b.buyerName),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+          {record.buyerName ? record.buyerName : '-'}
+        </span>
+      ),    
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Trim Type</div>,
+      dataIndex: "trimType",
+      fixed:'left',
+      sorter: (a, b) => a.trimType?.localeCompare(b.trimType),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : text;
+      },
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Trim Category</div>,
+      dataIndex: "trimCategory",
+      ...getColumnSearchProps("trimCategory"),
+      fixed:'left',
+      sorter: (a, b) => a.trimCategory?.localeCompare(b.trimCategory),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.trimCategory ? record.trimCategory : '-'}
+        </span>
+    ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Structure</div>,
+      dataIndex: "structure",
+      ...getColumnSearchProps("structure"),
+      sorter: (a, b) => a.structure?.localeCompare(b.structure),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.structure ? record.structure : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Category</div>,
+      dataIndex: "category",
+      ...getColumnSearchProps("category"),
+      sorter: (a, b) => a.category?.localeCompare(b.category),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.category ? record.category : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Content</div>,
+      dataIndex: "content",
+      ...getColumnSearchProps("content"),
+      sorter: (a, b) => a.content?.localeCompare(b.content),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.content ? record.content : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Type</div>,
+      dataIndex: "type",
+      ...getColumnSearchProps("type"),
+      sorter: (a, b) => (a.type || '').localeCompare(b.type || ''),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => {
+        const EnumObj = ItemTypeEnumDisplay?.find((item) => item.name === text);
+        return EnumObj ? EnumObj.displayVal : (text || '-');
+      },
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Finish</div>,
+      dataIndex: "finish",
+      ...getColumnSearchProps("finish"),
+      sorter: (a, b) => a.finish?.localeCompare(b.finish),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.finish ? record.finish : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Hole</div>,
+      dataIndex: "hole",
+      ...getColumnSearchProps("hole"),
+      sorter: (a, b) => a.hole?.localeCompare(b.hole),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.hole ? record.hole : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Quality</div>,
+      dataIndex: "qualityName",
+      ...getColumnSearchProps("qualityName"),
+      sorter: (a, b) => a.qualityName?.localeCompare(b.qualityName),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.qualityName ? record.qualityName : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Thickness</div>,
+      dataIndex: "thickness",
+      ...getColumnSearchProps("thickness"),
+      sorter: (a, b) => a.thickness?.localeCompare(b.thickness),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.thickness ? record.thickness : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Variety</div>,
+      dataIndex: "variety",
+      ...getColumnSearchProps("variety"),
+      sorter: (a, b) => a.variety?.localeCompare(b.variety),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.variety ? record.variety : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>UOM</div>,
+      dataIndex: "uom",
+      ...getColumnSearchProps("uom"),
+      sorter: (a, b) => a.uom?.localeCompare(b.uom),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.uom ? record.uom : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Color</div>,
+      dataIndex: "color",
+      ...getColumnSearchProps("color"),
+      sorter: (a, b) => a.color?.localeCompare(b.color),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.color ? record.color : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Logo</div>,
+      dataIndex: "logo",
+      ...getColumnSearchProps("logo"),
+      sorter: (a, b) => a.logo?.localeCompare(b.logo),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.logo ? record.logo : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Part</div>,
+      dataIndex: "part",
+      ...getColumnSearchProps("part"),
+      sorter: (a, b) => a.part?.localeCompare(b.part),
+      sortDirections: ["descend", "ascend"],
+      render: (text, record) => (
+        <span>
+            {record.part ? record.part : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Buyer</div>,
+      dataIndex: "trimBuyer",
+      ...getColumnSearchProps("trimBuyer"),
+      sorter: (a, b) => a.trimBuyer?.localeCompare(b.trimBuyer),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Length</div>,
+      dataIndex: "length",
+      ...getColumnSearchProps("length"),
+      sorter: (a, b) => a.length?.localeCompare(b.length),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Line</div>,
+      dataIndex: "line",
+      ...getColumnSearchProps("line"),
+      sorter: (a, b) => a.line?.localeCompare(b.line),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Parts</div>,
+      dataIndex: "parts",
+      ...getColumnSearchProps("parts"),
+      sorter: (a, b) => a.parts?.localeCompare(b.parts),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Ply</div>,
+      dataIndex: "ply",
+      ...getColumnSearchProps("ply"),
+      sorter: (a, b) => a.ply?.localeCompare(b.ply),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Shape</div>,
+      dataIndex: "shape",
+      ...getColumnSearchProps("shape"),
+      sorter: (a, b) => a.shape?.localeCompare(b.shape),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Slider</div>,
+      dataIndex: "slider",
+      ...getColumnSearchProps("slider"),
+      sorter: (a, b) => a.slider?.localeCompare(b.slider),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>Size</div>,
+      dataIndex: "trimSize",
+      ...getColumnSearchProps("trimSize"),
+      sorter: (a, b) => a.trimSize?.localeCompare(b.trimSize),
+      sortDirections: ["descend", "ascend"],
+      render: (text) => (text ? text : ' - '),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>M3 Code</div>,
+      dataIndex: "m3Code",
+      ...getColumnSearchProps("m3Code"),
+      render: (text, record) => (
+        <span>
+            {record.m3Code ? record.m3Code : '-'}
+        </span>
+        ),
+    },
+    {
+      title: <div style={{textAlign:"center"}}>HSN Code</div>,
+      dataIndex: "hsnCode",
+      ...getColumnSearchProps("hsnCode"),
+      render: (text, record) => (
+        <span>
+            {record.hsnCode ? record.hsnCode : '-'}
+        </span>
+        ),
+    },
+    {
       title:`Action`,
       dataIndex: 'action',
       render: (text, rowData) => {
@@ -736,7 +1020,7 @@ export const TrimReqCodeView = () => {
     }
   ]
   if(key === "1") {
-    return [...columnsSkelton, ...actionColumns];
+    return [...actionColumns];
   }else{
     return [...columnsSkelton];
   }
@@ -1130,6 +1414,11 @@ export const TrimReqCodeView = () => {
               columns={tableColumns("1")}
               size="small"
               scroll={{x:'max-content'}}
+              pagination={{
+                onChange(current) {
+                  setPage1(current);
+                }
+              }}
             />
         </TabPane>
         <TabPane tab="Completed" key="COMPLETED">
@@ -1138,6 +1427,11 @@ export const TrimReqCodeView = () => {
               dataSource={data}
               columns={tableColumns("2")}
               size="small"
+              pagination={{
+                onChange(current) {
+                  setPage(current);
+                }
+              }}
               scroll={{x:'max-content'}}
             />
         </TabPane>

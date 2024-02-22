@@ -47,6 +47,8 @@ const PurchaseOrderReport = () => {
     const getData = () => {
 
       const req= new PoReq()
+      req.extRefNo = IAMClientAuthContext.user?.externalRefNo ? IAMClientAuthContext.user?.externalRefNo :null
+
       if(form.getFieldValue('po_number') !== undefined){
         req.poId=form.getFieldValue('po_number')
   

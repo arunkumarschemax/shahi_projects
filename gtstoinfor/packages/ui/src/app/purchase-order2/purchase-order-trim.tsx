@@ -38,7 +38,7 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
     const taxService = new TaxesService();
     const [taxPer, setTaxPer] = useState(0);
     const sizeService = new SizeService()
-const [sizeData, setSizeData]=useState<any[]>([])
+    const [sizeData, setSizeData]=useState<any[]>([])
     useEffect(() =>{
         getColor()
         getM3TrimCodes()
@@ -420,6 +420,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
         {
             title: "Action",
             dataIndex: 'action',
+            fixed:'right',
             render: (text: any, rowData: any, index: any) => (
                 <span>
                     <Tooltip placement="top" title='Edit'>
@@ -837,7 +838,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
                 <Table 
                 bordered={true}
                 size="small"
-                scroll={{x:true}}
+                scroll={{x:'max-content'}}
                 columns={tableColumns} 
                 dataSource={trimTableData}
                  pagination={{

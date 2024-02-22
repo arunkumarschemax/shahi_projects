@@ -2,9 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Table, Button, Input, Select, Tooltip, Form, FormInstance } from 'antd';
 import { DeleteOutlined } from '@ant-design/icons';
 import TextArea from 'antd/es/input/TextArea';
-import { OperationGroupsService } from '@project-management-system/shared-services';
+import { OperationGroupsService, OperationsService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
 import InputNumber from 'rc-input-number';
+import Operation from 'antd/es/transfer/operation';
 const {Option}=Select
 
 export interface ProcessFormProps {
@@ -18,14 +19,14 @@ const ProcessForm = (props:ProcessFormProps) => {
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
   const [operationData, setOperationsData] = useState<any[]>([]);
-  const service = new OperationGroupsService();
+  const service = new OperationsService();
 
   useEffect(() => {
     getOperationsData()
   }, [])
 
   const getOperationsData = () => {
-    service.getAllActiveOperationGroups().then((res) => {
+    service.getAllActiveOperations().then((res) => {
       if(res.status){
         setOperationsData(res.data);
         // AlertMessages.getSuccessMessage(res.internalMessage)
@@ -160,8 +161,8 @@ const ProcessForm = (props:ProcessFormProps) => {
           >
             {operationData.map((e) => {
               return (
-                <Option name={`operation${record.key}`} key={e.operationGroupId} value={e.operationGroupId}>
-                  {e.operationGroupName}
+                <Option name={`operation${record.key}`} key={e.operationId} value={e.operationId}>
+                  {e.operationCode}
                 </Option>
               );
             })}
@@ -181,6 +182,20 @@ const ProcessForm = (props:ProcessFormProps) => {
         onChange={(e) => handleInputChange(e, record.key, 'sequence')}
         />
         </Form.Item>
+      ),
+    },
+    {
+      title: 'Remarks',
+      dataIndex: 'remarks',
+      width:"50%",
+      render: (_, record) => (
+      <Form.Item name={`remarks${record.key}`}>
+        <TextArea placeholder='Remarks'
+        value={record.remarks}
+        onChange={(e) => handleInputChange(e.target.value, record.key, 'remarks',)}
+        rows={1}
+        />
+      </Form.Item>
       ),
     },
     {

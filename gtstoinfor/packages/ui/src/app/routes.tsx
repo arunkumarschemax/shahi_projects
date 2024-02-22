@@ -227,6 +227,7 @@ import TrimParamsMapping from "./trim-master/m3-trim-items/trims-mapping-form"
 import TrimsParamsMappingView from "./trim-master/m3-trim-items/trim-mapping-view"
 import PatternForm from "./masters/pattern/pattern-form"
 import PatternView from "./masters/pattern/pattern-view"
+import StockReceivedApproval from "./sample-development/stock-received-approval"
 
 
 
@@ -837,6 +838,8 @@ export const AppRoutes = () => {
                     <Route path="store-issues-detail-view" element={<SourceIssuesDetailView MaterialIssueID={0} />} />
                     {/* <Route path="material-issue-view" element={<MaterialIssueView />} /> */}
                     <Route path="material-issue-view" element={<AllocatedStockApproval screen={"Issued"} />} />
+                    <Route path="stock-receive-approval" element={<StockReceivedApproval/>} />
+
 
                 </Route>
 

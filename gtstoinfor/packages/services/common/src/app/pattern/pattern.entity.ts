@@ -23,11 +23,11 @@ export class PatternEntity{
     })
     email: string
 
-    @Column('int',{
-        name:'factory_location_id',
-        nullable:false
-    })
-    factoryLocationId: number
+    // @Column('int',{
+    //     name:'factory_location_id',
+    //     nullable:false
+    // })
+    // factoryLocationId: number
 
     @Column('boolean',{
         name:'is_active',
@@ -68,4 +68,8 @@ export class PatternEntity{
         name:'version_flag'
     })
     versionFlag: number
+
+    @ManyToOne(()=>FactoriesEntity, factory => factory.patternInfo, {nullable:false})
+    @JoinColumn({name:'factory_location_id'})
+    factoryInfo : FactoriesEntity
 }

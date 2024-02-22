@@ -30,13 +30,13 @@ export class PatternService{
     
     async getAllPatterns():Promise<CommonResponseModel>{
         try{
-            let query = `SELECT p.*,f.name
-            FROM pattern p
-            LEFT JOIN factory f ON f.id = p.factory_location_id
-            ORDER BY p.pattern_name`
-            const data = await this.dataSource.query(query)
+            // let query = `SELECT p.*,f.name
+            // FROM pattern p
+            // LEFT JOIN factory f ON f.id = p.factory_location_id
+            // ORDER BY p.pattern_name`
+            // const data = await this.dataSource.query(query)
 
-            // const data = await this.repo.find({order:{patternName:'ASC'}})
+            const data = await this.repo.find({order:{patternName:'ASC'}, relations:['factoryInfo']})
             if(data.length > 0){
                 return new CommonResponseModel(true, 1, 'Data retrieved successfully',data)
             }else{
@@ -61,8 +61,9 @@ export class PatternService{
             entityData.patternName = dto.patternName
             entityData.email = dto.email
             entityData.isActive = dto.isActive === undefined || dto.isActive === null ? true : dto.isActive;
-            entityData.factoryLocationId = dto.factoryLocationId
-
+            const factoryData = new FactoriesEntity()
+            factoryData.id = dto.factoryLocationId
+            entityData.factoryInfo = factoryData
             if (isUpdate) {
                 entityData.patternId = dto.patternId;
                 entityData.updatedUser = dto.updatedUser;

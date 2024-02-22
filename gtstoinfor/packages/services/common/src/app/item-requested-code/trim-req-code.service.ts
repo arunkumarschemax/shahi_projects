@@ -159,14 +159,14 @@ export class TrimReqCodeService {
         m3t.type_id AS typeId, t.type,
         m3t.finish_id AS finishId,f.finish,
         m3t.hole_id AS holeId, h.hole,
-        trc.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName,\
+        trc.buyer_id AS buyerId,CONCAT(b.buyer_code,'-',b.buyer_name) AS buyerName,
         m3t.trim_buyer_id AS trimBuyerId,tb.trim_buyer AS trimBuyer,
         m3t.length_id AS lengthId,l.length,
         m3t.line_id AS lineId,line.line,
         m3t.parts_id AS partsId,p.parts,
         m3t.ply_id AS plyId,ply.ply,
         m3t.shape_id AS shapeId,sh.shape,
-        m3t.slider_id AS sliderId,sl.slider,
+        m3t.slider_id AS sliderId,sl.slider,m3t.structure_id as structureId,s.structure,
         m3t.trim_size_id AS trimSizeId,ts.trim_size AS trimSize  
         FROM trim_request_code trc
         LEFT JOIN m3_trims m3t ON m3t.m3_trim_id = trc.m3_trim_id

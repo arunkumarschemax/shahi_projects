@@ -138,6 +138,8 @@ export class OperationTrackingService {
           console.log(dto,'-------------------------------------------------------------')
           const inventoryEntity = new OperationInventory()
           inventoryEntity.styleId = dto.styleId
+          inventoryEntity.colourId = dto.colorId
+          inventoryEntity.sizeId = dto.sizeId
           inventoryEntity.operationSequenceId = dto.operationSequenceId
           inventoryEntity.operation = dto.operation
           inventoryEntity.physicalQuantity = dto.physicalQuantity
@@ -145,6 +147,10 @@ export class OperationTrackingService {
           inventoryEntity.issuedQuantity = dto.issuedQuantity
           inventoryEntity.issuedUomId = dto.issuedUomId
           inventoryEntity.nextOperation = dto.nextOperation
+          inventoryEntity.sampleReqId = dto.sampleRequestId
+          inventoryEntity.reporterId = 0
+          inventoryEntity.supervisorId =0
+
           // inventoryEntity.materialIssueId = dto.materialIssueId
           await manager.startTransaction();
           const save = await manager.getRepository(OperationInventory).save(inventoryEntity)
@@ -185,6 +191,10 @@ export class OperationTrackingService {
           trackingEntity.issuedUomId = dto.issuedUomId
           trackingEntity.sampleReqId = dto.sampleRequestId
           trackingEntity.status = TrackingEnum.YES
+          trackingEntity.colourId = dto.colorId
+          trackingEntity.sizeId = dto.sizeId
+          trackingEntity.reporterId = 0
+          trackingEntity.supervisorId = 0
           const createLog = await manager.getRepository(OperationTracking).save(trackingEntity)
           // console.log(dto.fabricCode,'*************')
           // const materialFabric = await this.materialFabricRepo.update({fabricCode: dto.fabricCode},{reportedStatus: MaterialFabricEnum.COMPLETED})
@@ -421,8 +431,8 @@ export class OperationTrackingService {
         }
   }
 
-  async getOperationCodes():Promise<CommonResponseModel>{
-    const opCodesQry = `select operation_id,operation_code,sequence from operations order by sequence`;
+  async getOperationCodes(req:SampleIdRequest):Promise<CommonResponseModel>{
+    const opCodesQry = `select op.operation_id,op.operation_code,op.sequence from sample_request_process_info sp left join operations op on op.operation_id = sp.operation where sp.sample_request_id = `+req.sampleRequestId+` order by op.sequence`;
     const operationCodeRes = await this.dataSource.query(opCodesQry)
     if(operationCodeRes.length > 0){
       return new CommonResponseModel(true,1,'data retreived',operationCodeRes)

@@ -153,19 +153,29 @@ export const SampleOperationReporting = () => {
 
 
     const getSegmentLabel = (val) => {
-        const req = new StyleRequest(val)
-        operationSequenceService.getOperationSequenceInfoByStyleCode(req).then(res => {
-            if(res.status){
-                setOperations(res.data[0].operatrionsInfo)
-                setSelectedOperationSequenceId(res.data[0].operationSequenceId)
-            }
-        })
+        const req = new SampleIdRequest(val)
+        // operationSequenceService.getOperationSequenceInfoByStyleCode(req).then(res => {
+        //     if(res.status){
+        //         setOperations(res.data[0].operatrionsInfo)
+        //         setSelectedOperationSequenceId(res.data[0].operationSequenceId)
+        //     }
+        // })
         // opGroupservice.getAllActiveOperationGroups().then(res => {
         //     if(res.status){
         //         setOperations(res.data)
         //     }
         // })
         // setOperations([{operationName:'Cutting',sequence:1},{operationName:'sewing in',sequence:2}, {operationName:'sewing out',sequence:3}, {operationName:'Trimming',sequence:4}, {operationName:'washing',sequence:5}, {operationName:'finishing',sequence:6},{operationName:'Quality check',sequence:7}, {operationName:'Packing',sequence:8}, {operationName:'Shippment',sequence:9}])
+        sampleDevelopmentService.getProcessAgainstSampleOrder(req).then(res => {
+            if(res.status){
+                setOperations(res.data)
+                setSelectedOperationSequenceId(res.data[0]?.operationGroupId)
+            }
+            else{
+                setOperations([])
+                setSelectedOperationSequenceId([])
+            }
+        })
     }
 
     const getItemCodes = () =>{
@@ -211,6 +221,7 @@ export const SampleOperationReporting = () => {
     
 
     const onJobCompleted = (record) => {
+        console.log(record)
         const nextOperationName = getNextOperationName();
         const req = new OperationTrackingDto(
             record.fabricCode,
@@ -225,7 +236,7 @@ export const SampleOperationReporting = () => {
             reportedUom,
             0,
             null,
-            record.status,0,'',undefined,'',undefined,'',0,0,'',0,saveId)
+            record.status,0,'',undefined,'',undefined,'',0,0,'',0,saveId,record.colorId,record.sizeId,IAMClientAuthContext.user.userName)
         service.reportOperation(req).then(res => {
             if(res.status){
                 AlertMessages.getSuccessMessage(res.internalMessage)
@@ -346,8 +357,11 @@ export const SampleOperationReporting = () => {
 
 
     const onStyleChange = (val,record) => {
+        console.log(record);
+        console.log(val);
+
         if(val){
-            getSegmentLabel(record.styleId)
+            getSegmentLabel(record.value)
             setSaveId(val)
             setSelStyleId(record.styleId)
             getSampleDevelopmentData('Cutting',1)
