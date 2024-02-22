@@ -443,13 +443,13 @@ return(
              
         </Descriptions>
         {colourData.length > 0 && (
-        <Table columns={columns} dataSource={colourData} size="small"rowKey={record => record.colour}/>)}
+        <Table title={()=>{return (<span style={{color:'blue',fontWeight:'bold'}}>Size Details</span>)}}  columns={columns} dataSource={colourData} size="small"rowKey={record => record.colour}/>)}
         {fabData.length > 0 && (
-        <Table columns={fabricColumns} dataSource={fabData} size="small"/>)}
+        <Table title={()=>{return (<span style={{color:'blue',fontWeight:'bold'}}>Fabric Details</span>)}} columns={fabricColumns} dataSource={fabData} size="small"/>)}
         {trimData.length > 0 && (
-        <Table columns={trimColumns} dataSource={trimData} size="small"/>)}
+        <Table title={()=>{return (<span style={{color:'blue',fontWeight:'bold'}}>Trim Details</span>)}} columns={trimColumns} dataSource={trimData} size="small"/>)}
          {processData.length > 0 && (
-        <Table columns={processColumns} dataSource={processData} size="small"/>)}
+        <Table title={()=>{return (<span style={{color:'blue',fontWeight:'bold'}}>Process Info</span>)}} columns={processColumns} dataSource={processData} size="small"/>)}
         <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
                 <Card>
                     <p>{remarks}</p>
