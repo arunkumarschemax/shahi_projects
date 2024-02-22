@@ -12,7 +12,7 @@ async function bootstrap() {
   }));
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  const port = Number(9008);
+  const port = Number(9009);
 
   const options = new DocumentBuilder()
     .setTitle('Migration System')
