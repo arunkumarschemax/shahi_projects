@@ -253,6 +253,14 @@ export const SampleReqDetailView = () =>{
                   title: <div style={{ textAlign: 'center' }}>Trim Code</div>,
           dataIndex: "trimCode",
           align:'center',
+          render: (text, record) => {
+            return (
+              <>
+               {record.trimCode ? `${record.trimCode}` : "-"}
+              </>
+            );
+          },
+
 
         //   sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
         //   sortDirections: ["descend", "ascend"],
@@ -261,7 +269,14 @@ export const SampleReqDetailView = () =>{
         {
                   title: <div style={{ textAlign: 'center' }}>Trim Category</div>,
           dataIndex: "category",
-          
+          render: (text, record) => {
+            return (
+              <>
+               {record.category ? `${record.category}` : "-"}
+              </>
+            );
+          },
+
         }, 
 
         {
@@ -343,18 +358,31 @@ export const SampleReqDetailView = () =>{
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
         },
         {
-                  title: <div style={{ textAlign: 'center' }}>Operation</div>,
+          title: <div style={{ textAlign: 'center' }}>Operation</div>,
           dataIndex: "operation",
           align:'center',
+          render: (text, record) => {
+            return (
+              <>
+               {record.operation ? `${record.operation}` : "-"}
+              </>
+            );
+          },
 
         }, 
         {
-                  title: <div style={{ textAlign: 'center' }}>Sequence</div>,
+          title: <div style={{ textAlign: 'center' }}>Sequence</div>,
           dataIndex: "sequence",
           align:'center',
           sorter: (a, b) => a.sequence.localeCompare(b.sequence),
             sortDirections: ["descend", "ascend"],
-          
+            render: (text, record) => {
+              return (
+                <>
+                 {record.sequence ? `${record.sequence}` : "-"}
+                </>
+              );
+            },
         }, 
 
       
