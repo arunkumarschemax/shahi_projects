@@ -31,7 +31,7 @@ console.log(location?.state?.data)
             align:"center",
               width: 40,
             render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-            fixed: 'left'
+            // fixed: 'left'
         },
        
         {
@@ -100,7 +100,7 @@ console.log(location?.state?.data)
 
             dataIndex: 'unitPrice',
             width: 120,
-            align:"center",
+            // align:"center",
             sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
             sortDirections: ["ascend", "descend"],
             // render: (text) => text ? text : "-"
@@ -114,7 +114,7 @@ console.log(location?.state?.data)
 
             dataIndex: 'quantity',
             width: 120,
-            align:"center",
+            // align:"center",
             sorter: (a, b) => a.quantity.localeCompare(b.quantity),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-"
@@ -210,17 +210,16 @@ console.log(location?.state?.data)
                         <>
     
                                 <Table.Summary.Row className="tableFooter">
-                                    <Table.Summary.Cell index={0}>
-                                    <span style={{ textAlign: 'right', paddingRight:2 , marginLeft:10}}>
-                                        <b>Total Quantity :</b> 
+                                    <Table.Summary.Cell index={0} colSpan={7}>
+                                    <span style={{ textAlign: 'right', paddingRight: 5,marginLeft:250}}>
+                                        <b>Total Quantity :</b>
+                                    </span>
+                                    </Table.Summary.Cell>
+                                    <Table.Summary.Cell index={1} colSpan={1}>
+                                    <span style={{ textAlign: 'right', paddingRight: 5,marginLeft:"-30px"}}>
                                         <b>{totalQuantity}</b>
                                     </span>
                                     </Table.Summary.Cell>
-                                    {/* <Table.Summary.Cell index={1}>
-                                    <span  style={{ textAlign: 'right', paddingRight: 5,marginLeft:-70}}>
-                                        <b>{totalQuantity}</b>
-                                    </span>
-                                    </Table.Summary.Cell> */}
                             
                                     
                                 </Table.Summary.Row>
