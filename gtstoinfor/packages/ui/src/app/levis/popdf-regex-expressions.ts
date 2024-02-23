@@ -20,6 +20,7 @@ export const ITEM_MATERIAL_INDEX = 'Tarif Code'
 export const PO_NUMBER_INDEXING='Product Description'
 export const TRANSMODE_INDEX='TRANS MODE'
 export const DELIVERY_ADDRESS='EA'
+export const DELIVERY_ADDRESS_BR='Color'
 
 // export const ITEM_TEXT_END_TEXT= 'Total Eaches' 
 // export const ITEM_TEXT_END_TEXT2 = 'Merchandise Amount' 
