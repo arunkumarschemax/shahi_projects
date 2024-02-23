@@ -787,7 +787,7 @@ import {
         {
           title: "Total Quantity",
           dataIndex: "",
-          // align: "right",
+        align: "right",
           width: 90,
           render: (text, record) => {
             let sum = 0;

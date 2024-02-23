@@ -100,7 +100,7 @@ console.log(location?.state?.data)
 
             dataIndex: 'unitPrice',
             width: 120,
-            // align:"center",
+            align:"right",
             sorter: (a, b) => a.unitPrice.localeCompare(b.unitPrice),
             sortDirections: ["ascend", "descend"],
             // render: (text) => text ? text : "-"
@@ -114,7 +114,7 @@ console.log(location?.state?.data)
 
             dataIndex: 'quantity',
             width: 120,
-            // align:"center",
+            align:"right",
             sorter: (a, b) => a.quantity.localeCompare(b.quantity),
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-"
