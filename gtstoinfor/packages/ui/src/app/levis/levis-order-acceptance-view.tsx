@@ -935,9 +935,9 @@ import {
                 <Button
                   style={{ position: "relative", top: "-7.5px" }}
                   onClick={() => createCOLine(record, index)}
-                  disabled={record.status === 'INPROGRESS' ? true : !isEnabled}
+                  disabled={record.status === 'OPEN' ? !isEnabled : true}
                 >
-                  {record.status === 'INPROGRESS' ? "Accepted" : "Accept"}
+                  {record.status === 'OPEN' ? "Accept" : "Accepted"}
                 </Button>
               ),
               props: {
