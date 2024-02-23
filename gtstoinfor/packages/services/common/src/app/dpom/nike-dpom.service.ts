@@ -182,6 +182,10 @@ export class DpomService {
                     ],
                     "search": [
                         {
+                            "fieldName": "sizes.sizePo.filterInDPOM",
+                            "function": "NOT IS_DEFINED"
+                        },
+                        {
                             "fieldName": "poHeader.vendorCode",
                             "operator": "=",
                             "fieldValue": "SHK"
