@@ -7,6 +7,7 @@ export class LevisSizeWiseModel {
     exFactoryDate: string;
     quantity: string;
     unitPrice: string;
+    itemNo:string;
     
 
 
@@ -19,6 +20,7 @@ export class LevisSizeWiseModel {
         exFactoryDate: string,
         quantity: string,
         unitPrice: string,
+        itemNo:string,
 
 
 
@@ -32,6 +34,7 @@ export class LevisSizeWiseModel {
         this.upc = upc
         this.quantity = quantity
         this.unitPrice = unitPrice
+        this.itemNo=itemNo
 
     };
 }

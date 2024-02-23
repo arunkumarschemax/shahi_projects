@@ -390,7 +390,7 @@ import {
         {
           title: "Transport Mode",
           dataIndex: "transMode",
-          width:90,
+          width:120,
           // fixed: "left",
   
           // sorter: (a, b) => a.transMode.localeCompare(b.transMode),
@@ -425,26 +425,26 @@ import {
         //   width: 90,
         //   render: (text, record) => getColorName(record.material),
         // },
-        {
-          title: "Total Unit Price",
-          dataIndex: "totalUnitPrice",
-          width: 90,
-          // sorter: (a, b) => a.totalUnitPrice.localeCompare(b.totalUnitPrice),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
+        // {
+        //   title: "Total Unit Price",
+        //   dataIndex: "totalUnitPrice",
+        //   width: 90,
+        //   // sorter: (a, b) => a.totalUnitPrice.localeCompare(b.totalUnitPrice),
+        //   // sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
          
   
-        },
-        {
-          title: "Original Date",
-          dataIndex: "originalDate",
-          width: 90,
-          // sorter: (a, b) => a.originalDate.localeCompare(b.originalDate),
-          // sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
+        // },
+        // {
+        //   title: "Original Date",
+        //   dataIndex: "originalDate",
+        //   width: 90,
+        //   // sorter: (a, b) => a.originalDate.localeCompare(b.originalDate),
+        //   // sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
          
   
-        },
+        // },
         // {
         //   title: "Manufacture",
         //   dataIndex: "manufacture",
@@ -491,9 +491,8 @@ import {
           width: 70,
           align: 'center',
           children: [
-            
             {
-              title: 'Product',
+              title: 'Item No',
               dataIndex: '',
               key: '',
               width: 70,
@@ -503,8 +502,8 @@ import {
                 console.log()
                 if (sizeData) {
                   if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.product) ? (sizeData?.product) : "-"
-  
+                    const formattedQty = (sizeData?.itemNo) ? (sizeData?.itemNo) : "-"
+                    // const formattedQty = (sizeData?.amount)
                     return (
                       formattedQty
                     );
@@ -519,60 +518,88 @@ import {
                 }
               }
             },
-            {
-              title: 'UPC',
-              dataIndex: '',
-              key: '',
-              width: 130,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
+            
+            // {
+            //   title: 'Product',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 70,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.product) ? (sizeData?.product) : "-"
   
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
-            {
-              title: 'Planned Ex Factory Date',
-              dataIndex: '',
-              key: '',
-              width: 130,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.plannedExFactoryDate) ? (sizeData?.plannedExFactoryDate) : "-"
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
+            // {
+            //   title: 'UPC',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 130,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
   
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
+            // {
+            //   title: 'Planned Ex Factory Date',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 130,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.plannedExFactoryDate) ? (sizeData?.plannedExFactoryDate) : "-"
+  
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
+  
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
             {
               title: 'Ex Factory Date',
               dataIndex: '',
@@ -794,7 +821,7 @@ import {
           title: <div style={{textAlign:"center"}}>Delivery Address</div>,
   
           dataIndex: "deliveryAddress",
-          width: 130,
+          width: 150,
          sorter: (a, b) => a.deliveryAddress.localeCompare(b.deliveryAddress),
          sortDirections: ["ascend", "descend"],
          ...getColumnSearchProps('deliveryAddress'),
