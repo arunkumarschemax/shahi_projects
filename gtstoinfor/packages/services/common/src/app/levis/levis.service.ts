@@ -21,6 +21,9 @@ import { LevisOrderschildEntity } from "./entities/levis-orders-child-entity";
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 const moment = require('moment');
+import * as puppeteer from 'puppeteer';
+import { Cron} from "@nestjs/schedule";
+
 
 
 
@@ -1259,6 +1262,74 @@ export class LevisService {
     }
   }
   
+  @Cron('1 * * * *')
+  async levisBot() {
+    try {
+      const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
+
+      const page = await browser.newPage();
+      await page.setViewport({ width: 1580, height: 900 });
+
+      setTimeout(async () => {
+        await page.goto('http://localhost:4200/', {
+          timeout: 100000,
+          waitUntil: 'networkidle0',
+        })
+      }, 1000);
+
+      await page.waitForSelector('#login-form_username');
+      await page.type('#login-form_username', 'levis@gmail.com');
+
+      await page.waitForSelector('#login-form_password');
+      await page.type('#login-form_password', 'levis');
+
+      await page.click('button.ant-btn-primary');
+      await page.waitForNavigation();
+
+      setTimeout(async () => {
+        await page.goto('http://localhost:4200/#/levis/levis-pdf-upload/', {
+          timeout: 100000,
+          waitUntil: 'networkidle0'
+        })
+      }, 1000);
+
+      // const directoryPath = 'F:/centric-buyers-unread-files/';
+      // const destinationDirectory = 'F:/centric-buyers-read-files/';
+
+      //live directory paths:
+      const directoryPath = 'D:/levis-unread/';
+      const destinationDirectory = 'D:/levis-read/';
+
+      const files = fs.readdirSync(directoryPath);
+      // if (files.length === 0) {
+      //   page.close()
+      //   return new CommonResponseModel(false, 0, "No Files Found")
+      // }
+      for (const file of files) {
+        await page.waitForSelector('input[type="file"]');
+        const fileInput = await page.$('input[type="file"]');
+        const filePath = path.join(directoryPath, file);
+        await fileInput.uploadFile(filePath);
+        await page.waitForTimeout(5000);
+
+        await page.waitForSelector('button.ant-btn-primary')
+        await page.click('button.ant-btn-primary');
+        await page.waitForTimeout(10000)
+
+        const sourceFilePath = path.join(directoryPath, file);
+        const destinationFilePath = path.join(destinationDirectory, file);
+        fs.rename(sourceFilePath, destinationFilePath, async (err) => {
+          if (err) {
+            return new CommonResponseModel(false, 0, '');
+          }
+        })
+      }
+    } catch (error) {
+      return new CommonResponseModel(false, 0, error)
+    }
+  }
+
+
 
 
 

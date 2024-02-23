@@ -208,6 +208,17 @@ export class LevisController {
             return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
         }
     }
+
+    @Post('/levisBot')
+    async levisBot(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.Service.levisBot();
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
+
    
    
 
