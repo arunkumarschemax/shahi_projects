@@ -205,7 +205,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.item, o.factory,o.document_date,o.style_number,o.product_code,o.color_desc,o.destination_country,o.ogac,o.gac,o.item_text,
             o.size_description,o.customer_order, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = o.po_number AND od.po_line_item_number = o.po_line_item_number AND od.schedule_line_item_number = o.schedule_line_item_number')
-            .where(` od.column_name='unit' `)
+            .where(` od.column_name='unit' AND DATE(od.created_at) = CURDATE() `)
         return await query.getRawMany();
     }
 
