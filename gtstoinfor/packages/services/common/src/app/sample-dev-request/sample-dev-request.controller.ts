@@ -731,7 +731,7 @@ export class SampleDevReqController {
   //   }
 
   // }
-  @Cron('26 10 * * *')
+  @Cron('30 8 * * *')
   @Post('/getUsageWhtsAppMsg')
   @ApiBody({ type: Date })
   async getUsageWhtsAppMsg(@Body() req?: any): Promise<CommonResponseModel> {
