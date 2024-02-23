@@ -432,7 +432,7 @@ export class OperationTrackingService {
   }
 
   async getOperationCodes(req:SampleIdRequest):Promise<CommonResponseModel>{
-    const opCodesQry = `select op.operation_id,op.operation_code,op.sequence from sample_request_process_info sp left join operations op on op.operation_id = sp.operation where sp.sample_request_id = `+req.sampleRequestId+` order by op.sequence`;
+    const opCodesQry = `select op.operation_id,op.operation_code,sp.sequence AS sequence from sample_request_process_info sp left join operations op on op.operation_id = sp.operation where sp.sample_request_id = `+req.sampleRequestId+` order by sp.sequence`;
     const operationCodeRes = await this.dataSource.query(opCodesQry)
     if(operationCodeRes.length > 0){
       return new CommonResponseModel(true,1,'data retreived',operationCodeRes)
