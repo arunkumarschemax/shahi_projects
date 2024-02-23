@@ -311,7 +311,14 @@ import {
           sortDirections: ["ascend", "descend"],
           render: (text) => text ? text : "-",
           ...getColumnSearchProps('material')
-
+        },
+        {
+          title: "Ex Factory Date",
+          dataIndex: "exFactoryDate",
+          width: 120,
+          // sorter: (a, b) => a.material.localeCompare(b.material),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
          
   
         },
@@ -321,27 +328,27 @@ import {
         //   width: 90,
         //   render: (text, record) => getColorName(record.material),
         // },
-        {
-          title: "Total Unit Price",
-          dataIndex: "totalUnitPrice",
-          width: 90,
-          sorter: (a, b) => a.totalUnitPrice.localeCompare(b.totalUnitPrice),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
+        // {
+        //   title: "Total Unit Price",
+        //   dataIndex: "totalUnitPrice",
+        //   width: 90,
+        //   sorter: (a, b) => a.totalUnitPrice.localeCompare(b.totalUnitPrice),
+        //   sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
          
   
-        },
+        // },
 
-        {
-          title: "Original Date",
-          dataIndex: "originalDate",
-          width: 90,
-          sorter: (a, b) => a.originalDate.localeCompare(b.originalDate),
-          sortDirections: ["ascend", "descend"],
-          render: (text) => text ? text : "-",
+        // {
+        //   title: "Original Date",
+        //   dataIndex: "originalDate",
+        //   width: 90,
+        //   sorter: (a, b) => a.originalDate.localeCompare(b.originalDate),
+        //   sortDirections: ["ascend", "descend"],
+        //   render: (text) => text ? text : "-",
          
   
-        },
+        // },
        
   
       ];
@@ -354,114 +361,114 @@ import {
           width: 70,
           align: 'center',
           children: [
-            {
-              title: 'Product',
-              dataIndex: '',
-              key: '',
-              width: 70,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.product) ? (sizeData?.product) : "-"
+            // {
+            //   title: 'Product',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 70,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.product) ? (sizeData?.product) : "-"
   
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
-            {
-              title: 'UPC',
-              dataIndex: '',
-              key: '',
-              width: 130,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
+            // {
+            //   title: 'UPC',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 130,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
   
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
-            {
-              title: 'Planned Ex Factory Date',
-              dataIndex: '',
-              key: '',
-              width: 130,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.plannedExFactoryDate) ? (sizeData?.plannedExFactoryDate) : "-"
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
+            // {
+            //   title: 'Planned Ex Factory Date',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 130,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.plannedExFactoryDate) ? (sizeData?.plannedExFactoryDate) : "-"
   
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
-            {
-              title: 'Ex Factory Date',
-              dataIndex: '',
-              key: '',
-              width: 70,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.exFactoryDate) ? (sizeData?.exFactoryDate) : "-"
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
+            // {
+            //   title: 'Ex Factory Date',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 70,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.exFactoryDate) ? (sizeData?.exFactoryDate) : "-"
   
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
             {
               title: 'Quantity',
               dataIndex: '',
@@ -747,6 +754,14 @@ import {
                
         
               },
+              {
+                title: "Ex Factory Date",
+                dataIndex: "exFactoryDate",
+                width: 110,
+                render: (text) => text ? text : "-",
+               
+        
+              },
               // {
               //   title: "Color",
               //   dataIndex: "colorCode",
@@ -754,22 +769,22 @@ import {
               //   render: (text, record) => getColorName(record.material),
         
               // },
-              {
-                title: "Total Unit Price",
-                dataIndex: "totalUnitPrice",
-                width: 90,
-                render: (text) => text ? text : "-",
+              // {
+              //   title: "Total Unit Price",
+              //   dataIndex: "totalUnitPrice",
+              //   width: 90,
+              //   render: (text) => text ? text : "-",
                
         
-              },
-              {
-                title: "Original Date",
-                dataIndex: "originalDate",
-                width: 90,
-                render: (text) => text ? text : "-",
+              // },
+              // {
+              //   title: "Original Date",
+              //   dataIndex: "originalDate",
+              //   width: 90,
+              //   render: (text) => text ? text : "-",
                
         
-              },
+              // },
               
               
             );
@@ -790,114 +805,114 @@ import {
               align: 'center',
               children: [
     
-                {
-                  title: 'Product',
-                  dataIndex: '',
-                  key: '',
-                  width: 70,
-                  className: "center",
-                  render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                      if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.product) ? (sizeData?.product) : "-"
+                // {
+                //   title: 'Product',
+                //   dataIndex: '',
+                //   key: '',
+                //   width: 70,
+                //   className: "center",
+                //   render: (text, record) => {
+                //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+                //     console.log()
+                //     if (sizeData) {
+                //       if (sizeData.size !== null) {
+                //         const formattedQty = (sizeData?.product) ? (sizeData?.product) : "-"
       
-                        return (
-                          formattedQty
-                        );
-                      } else {
+                //         return (
+                //           formattedQty
+                //         );
+                //       } else {
       
-                        return (
-                          '-'
-                        );
-                      }
-                    } else {
-                      return '-';
-                    }
-                  }
-                },
-                {
-                  title: 'UPC',
-                  dataIndex: '',
-                  key: '',
-                  width: 130,
-                  className: "center",
-                  render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                      if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
+                //         return (
+                //           '-'
+                //         );
+                //       }
+                //     } else {
+                //       return '-';
+                //     }
+                //   }
+                // },
+                // {
+                //   title: 'UPC',
+                //   dataIndex: '',
+                //   key: '',
+                //   width: 130,
+                //   className: "center",
+                //   render: (text, record) => {
+                //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+                //     console.log()
+                //     if (sizeData) {
+                //       if (sizeData.size !== null) {
+                //         const formattedQty = (sizeData?.upc) ? (sizeData?.upc) : "-"
       
-                        return (
-                          formattedQty
-                        );
-                      } else {
+                //         return (
+                //           formattedQty
+                //         );
+                //       } else {
       
-                        return (
-                          '-'
-                        );
-                      }
-                    } else {
-                      return '-';
-                    }
-                  }
-                },
-                {
-                  title: '	Planned Ex Factory Date',
-                  dataIndex: '',
-                  key: '',
-                  width: 130,
-                  className: "center",
-                  render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                      if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.plannedExFactoryDate) ? (sizeData?.plannedExFactoryDate) : "-"
+                //         return (
+                //           '-'
+                //         );
+                //       }
+                //     } else {
+                //       return '-';
+                //     }
+                //   }
+                // },
+                // {
+                //   title: '	Planned Ex Factory Date',
+                //   dataIndex: '',
+                //   key: '',
+                //   width: 130,
+                //   className: "center",
+                //   render: (text, record) => {
+                //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+                //     console.log()
+                //     if (sizeData) {
+                //       if (sizeData.size !== null) {
+                //         const formattedQty = (sizeData?.plannedExFactoryDate) ? (sizeData?.plannedExFactoryDate) : "-"
       
-                        return (
-                          formattedQty
-                        );
-                      } else {
+                //         return (
+                //           formattedQty
+                //         );
+                //       } else {
       
-                        return (
-                          '-'
-                        );
-                      }
-                    } else {
-                      return '-';
-                    }
-                  }
-                },
-                {
-                  title: 'Ex Factory Date',
-                  dataIndex: '',
-                  key: '',
-                  width: 70,
-                  className: "center",
-                  render: (text, record) => {
-                    const sizeData = record.sizeWiseData.find(item => item.size === version);
-                    console.log()
-                    if (sizeData) {
-                      if (sizeData.size !== null) {
-                        const formattedQty = (sizeData?.exFactoryDate) ? (sizeData?.exFactoryDate) : "-"
+                //         return (
+                //           '-'
+                //         );
+                //       }
+                //     } else {
+                //       return '-';
+                //     }
+                //   }
+                // },
+                // {
+                //   title: 'Ex Factory Date',
+                //   dataIndex: '',
+                //   key: '',
+                //   width: 70,
+                //   className: "center",
+                //   render: (text, record) => {
+                //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+                //     console.log()
+                //     if (sizeData) {
+                //       if (sizeData.size !== null) {
+                //         const formattedQty = (sizeData?.exFactoryDate) ? (sizeData?.exFactoryDate) : "-"
       
-                        return (
-                          formattedQty
-                        );
-                      } else {
+                //         return (
+                //           formattedQty
+                //         );
+                //       } else {
       
-                        return (
-                          '-'
-                        );
-                      }
-                    } else {
-                      return '-';
-                    }
-                  }
-                },
+                //         return (
+                //           '-'
+                //         );
+                //       }
+                //     } else {
+                //       return '-';
+                //     }
+                //   }
+                // },
                 {
                   title: 'Quantity',
                   dataIndex: '',

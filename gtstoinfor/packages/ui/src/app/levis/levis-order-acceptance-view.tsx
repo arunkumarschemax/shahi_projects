@@ -419,6 +419,16 @@ import {
          
   
         },
+        {
+          title: "Ex Factory Date",
+          dataIndex: "exFactoryDate",
+          width: 120,
+          // sorter: (a, b) => a.material.localeCompare(b.material),
+          // sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+         
+  
+        },
         // {
         //   title: 'Color',
         //   dataIndex: 'colorCode', // Assuming colorCode is available in your data
@@ -491,33 +501,33 @@ import {
           width: 70,
           align: 'center',
           children: [
-            {
-              title: 'Item No',
-              dataIndex: '',
-              key: '',
-              width: 70,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.itemNo) ? (sizeData?.itemNo) : "-"
-                    // const formattedQty = (sizeData?.amount)
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            // {
+            //   title: 'Item No',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 70,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.itemNo) ? (sizeData?.itemNo) : "-"
+            //         // const formattedQty = (sizeData?.amount)
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
             
             // {
             //   title: 'Product',
@@ -600,33 +610,33 @@ import {
             //     }
             //   }
             // },
-            {
-              title: 'Ex Factory Date',
-              dataIndex: '',
-              key: '',
-              width: 130,
-              className: "center",
-              render: (text, record) => {
-                const sizeData = record.sizeWiseData.find(item => item.size === version);
-                console.log()
-                if (sizeData) {
-                  if (sizeData.size !== null) {
-                    const formattedQty = (sizeData?.exFactoryDate) ? (sizeData?.exFactoryDate) : "-"
+            // {
+            //   title: 'Ex Factory Date',
+            //   dataIndex: '',
+            //   key: '',
+            //   width: 130,
+            //   className: "center",
+            //   render: (text, record) => {
+            //     const sizeData = record.sizeWiseData.find(item => item.size === version);
+            //     console.log()
+            //     if (sizeData) {
+            //       if (sizeData.size !== null) {
+            //         const formattedQty = (sizeData?.exFactoryDate) ? (sizeData?.exFactoryDate) : "-"
   
-                    return (
-                      formattedQty
-                    );
-                  } else {
+            //         return (
+            //           formattedQty
+            //         );
+            //       } else {
   
-                    return (
-                      '-'
-                    );
-                  }
-                } else {
-                  return '-';
-                }
-              }
-            },
+            //         return (
+            //           '-'
+            //         );
+            //       }
+            //     } else {
+            //       return '-';
+            //     }
+            //   }
+            // },
             // {
             //   title: 'Quantity Per Inner Pack',
             //   dataIndex: '',

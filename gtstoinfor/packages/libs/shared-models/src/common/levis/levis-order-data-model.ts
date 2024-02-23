@@ -13,7 +13,8 @@ export class levisOrderDataModel {
     totalUnitPrice: string;
     originalDate: string;
     status:string;
-    sizeWiseData: LevisSizeWiseModel[]
+    sizeWiseData: LevisSizeWiseModel[];
+    exFactoryDate?:string;
 
 
     constructor(
@@ -28,6 +29,7 @@ export class levisOrderDataModel {
         originalDate: string,
         status:string,
         sizeWiseData: LevisSizeWiseModel[],
+        exFactoryDate?:string,
 
 
 
@@ -42,7 +44,9 @@ export class levisOrderDataModel {
         this.totalUnitPrice = totalUnitPrice
         this.originalDate = originalDate
         this.status=status
+        this.exFactoryDate=exFactoryDate
         this.sizeWiseData = sizeWiseData
+        this.exFactoryDate=exFactoryDate
 
 
 

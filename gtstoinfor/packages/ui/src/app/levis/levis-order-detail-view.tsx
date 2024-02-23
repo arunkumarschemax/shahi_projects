@@ -44,55 +44,55 @@ console.log(location?.state?.data)
             sortDirections: ["ascend", "descend"],
             render: (text) => text ? text : "-"
         },
-        {
+        // {
           
-            title: <div style={{textAlign:"center"}}>Product</div>,
+        //     title: <div style={{textAlign:"center"}}>Product</div>,
 
-            dataIndex: 'product',
-            width: 100,
-            align:"center",
-            sorter: (a, b) => a.product.localeCompare(b.product),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+        //     dataIndex: 'product',
+        //     width: 100,
+        //     align:"center",
+        //     sorter: (a, b) => a.product.localeCompare(b.product),
+        //     sortDirections: ["ascend", "descend"],
+        //     render: (text) => text ? text : "-"
            
-        },
-        {
+        // },
+        // {
            
-            title: <div style={{textAlign:"center"}}>UPC</div>,
+        //     title: <div style={{textAlign:"center"}}>UPC</div>,
 
-            dataIndex: 'upc',
-            width: 150,
-            align:"center",
-            sorter: (a, b) => a.upc.localeCompare(b.upc),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+        //     dataIndex: 'upc',
+        //     width: 150,
+        //     align:"center",
+        //     sorter: (a, b) => a.upc.localeCompare(b.upc),
+        //     sortDirections: ["ascend", "descend"],
+        //     render: (text) => text ? text : "-"
            
-        },
-        {
+        // },
+        // {
             
-            title: <div style={{textAlign:"center"}}>plannedExFactoryDate</div>,
+        //     title: <div style={{textAlign:"center"}}>plannedExFactoryDate</div>,
 
-            dataIndex: 'plannedExFactoryDate',
-            width: 130,
-            align:"center",
-            sorter: (a, b) => a.plannedExFactoryDate.localeCompare(b.plannedExFactoryDate),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+        //     dataIndex: 'plannedExFactoryDate',
+        //     width: 130,
+        //     align:"center",
+        //     sorter: (a, b) => a.plannedExFactoryDate.localeCompare(b.plannedExFactoryDate),
+        //     sortDirections: ["ascend", "descend"],
+        //     render: (text) => text ? text : "-"
            
-        },
+        // },
 
-        {
+        // {
           
-            title: <div style={{textAlign:"center"}}>Ex Factory Date</div>,
+        //     title: <div style={{textAlign:"center"}}>Ex Factory Date</div>,
 
-            dataIndex: 'exFactoryDate',
-            width: 120,
-            // align:"center",
-            sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
-            sortDirections: ["ascend", "descend"],
-            render: (text) => text ? text : "-"
+        //     dataIndex: 'exFactoryDate',
+        //     width: 120,
+        //     // align:"center",
+        //     sorter: (a, b) => a.exFactoryDate.localeCompare(b.exFactoryDate),
+        //     sortDirections: ["ascend", "descend"],
+        //     render: (text) => text ? text : "-"
            
-        },
+        // },
     
         {
             // title: 'Quantity',
@@ -178,9 +178,10 @@ console.log(location?.state?.data)
         <Descriptions.Item label='Transport Mode' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.transMode ? location?.state?.data?.transMode :"--"}</Descriptions.Item>
         <Descriptions.Item label='Currency' labelStyle={{ color: 'black', fontWeight: 'bold'}} >{location?.state?.data?.currency ? location?.state?.data?.currency :"--"}</Descriptions.Item>
         <Descriptions.Item label= 'Style' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.material ? location?.state?.data?.material :"--"}</Descriptions.Item>
-         <Descriptions.Item label='Total Unit Price' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.totalUnitPrice ? location?.state?.data?.totalUnitPrice :"--"}</Descriptions.Item> 
+        <Descriptions.Item label= 'Ex Factory Date' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.exFactoryDate ? location?.state?.data?.exFactoryDate :"--"}</Descriptions.Item>
+         {/* <Descriptions.Item label='Total Unit Price' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.totalUnitPrice ? location?.state?.data?.totalUnitPrice :"--"}</Descriptions.Item> 
          <Descriptions.Item label='Original Date' labelStyle={{ color: 'black', fontWeight: 'bold'}} >{location?.state?.data?.originalDate ? location?.state?.data?.originalDate :"--"}</Descriptions.Item> 
-        <Descriptions.Item label='Delivery Address' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.buyerAddress ? location?.state?.data?.buyerAddress :"--"}</Descriptions.Item>
+        <Descriptions.Item label='Delivery Address' labelStyle={{ color: 'black', fontWeight: 'bold' }} >{location?.state?.data?.buyerAddress ? location?.state?.data?.buyerAddress :"--"}</Descriptions.Item> */}
 
 
 
