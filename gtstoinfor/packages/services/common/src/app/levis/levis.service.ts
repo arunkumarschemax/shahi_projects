@@ -4,7 +4,6 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { LevisOrdersRepository } from "./repositories/levis-orders.repo";
 import { LevisPdfRepo } from "./repositories/levis-pdf.repo";
-import { LevisOrdersEntity } from "./entities/levis-orders.entity";
 import { LevisPdfInfoEntity } from "./entities/levis-pdf.entity";
 import { CoLineRequest, CommonResponseModel, LevisCoLinereqModel, LevisColorModel, LevisCompareModel, LevisDestinationModel, LevisOrderFilter, LevisSizeModel, LevisSizeWiseModel, SizeModel, StatusEnum, levisOrderDataModel } from "@project-management-system/shared-models";
 import { LevisCOLineEntity } from "./entities/levis-co-line.entity";
@@ -22,7 +21,9 @@ import { LevisOrderschildEntity } from "./entities/levis-orders-child-entity";
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 const moment = require('moment');
 import * as puppeteer from 'puppeteer';
-import { Cron} from "@nestjs/schedule";
+import { Cron } from "@nestjs/schedule";
+import { GenericTransactionManager } from "../../typeorm-transactions";
+import { LevisOrdersEntity } from "./entities/levis-orders.entity";
 
 
 
@@ -35,384 +36,125 @@ export class LevisService {
     private dataSource: DataSource,
     private LevisOrdersRepo: LevisOrdersRepository,
     private pdfRepo: LevisPdfRepo,
-    private levisCoLineRepo:LevisCOLineRepository,
-    private colorRepo:ColorRepository,
-    private sizeRepo:SizeRepository,
-    private AddressRepo:AddressRepository,
+    private levisCoLineRepo: LevisCOLineRepository,
+    private colorRepo: ColorRepository,
+    private sizeRepo: SizeRepository,
+    private AddressRepo: AddressRepository,
     private AddressService: AddressService,
-    private LevisOrdersChildRepo:LevisOrdersChildRepository
+    private LevisOrdersChildRepo: LevisOrdersChildRepository
 
 
 
   ) { }
 
-  async saveLevisOrder(req: any): Promise<CommonResponseModel> {
-    console.log(req, "reqqqqqqqqqqqqq")
-    // const transactionManager = new GenericTransactionManager(this.dataSource)
-    try {
-      let saved
-      // await transactionManager.startTransaction()
-      for (const item of req.LevispoItemDetails) {
-        const match = item.poLine.match(/\d+/);
-        console.log(match, "match");
-        // Check if a match is found and convert it to an integer
-        // const poLine = match ? parseInt(match[0], 10) : null;
-        const poLine = match
-
-        console.log(poLine, "poLine")
-        for (const variant of item.LevispoItemVariantDetails) {
-          const orderData = await this.LevisOrdersRepo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
-          const order = await this.LevisOrdersChildRepo.findOne({ where: { poNumber: req.PoNumber, poLine: poLine, size: variant.size }, order: { poVersion: 'DESC' } })
-          console.log(orderData, "orderData")
-          console.log(order, "order")
-          const entity = new LevisOrdersEntity();
-          entity.poNumber = req.poNumber
-          entity.deliveryAddress = req.deliveryAddress
-          // entity.transMode = req.transMode
-          entity.currency = req.currency
-
-          entity.poLine = item.poLine
-          entity.material = item.material
-          // entity.totalUnitPrice = item.totalUnitPrice
-          // entity.originalDate = item.originalDate
-          entity.transMode = item.transMode
-          entity.plannedExFactoryDate = item.plannedExFactoryDate
-          entity.exFactoryDate = item.exFactoryDate
-
-          entity.itemNo = variant.itemNo
-          // entity.product = variant.product
-          entity.size = variant.size
-          entity.upc = variant.upc
-          // entity.plannedExFactoryDate = variant.plannedExFactoryDate
-          // entity.exFactoryDate = variant.exFactoryDate
-          entity.quantity = variant.quantity
-          entity.unitPrice = variant.unitPrice
-          entity.scheduledDate = variant.scheduledDate
-
-          if (orderData) {
-            const update = await this.LevisOrdersRepo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
-              deliveryAddress:req.deliveryAddress,currency:req.currency,material:item.material,transMode:item.transMode,
-              size:item.size,upc:variant.upc,quantity:variant.quantity,unitPrice:variant.unitPrice,scheduledDate:variant.scheduledDate
-            })
-            let po = parseInt(order?.poVersion) + 1
-            const entitys= new LevisOrderschildEntity();
-            entitys.poNumber = req.poNumber
-            entitys.deliveryAddress = req.deliveryAddress
-            // entitys.transMode = req.transMode
-            entitys.currency = req.currency
-  
-            entitys.poLine = item.poLine
-            entitys.material = item.material
-            // entitys.totalUnitPrice = item.totalUnitPrice
-            // entitys.originalDate = item.originalDate
-            entitys.transMode = item.transMode
-            entitys.plannedExFactoryDate = item.plannedExFactoryDate
-            entitys.exFactoryDate = item.exFactoryDate
-  
-            entitys.itemNo = variant.itemNo
-            // entitys.product = variant.product
-            entitys.size = variant.size
-            entitys.upc = variant.upc
-            // entitys.plannedExFactoryDate = variant.plannedExFactoryDate
-            // entitys.exFactoryDate = variant.exFactoryDate
-            entitys.quantity = variant.quantity
-            entitys.unitPrice = variant.unitPrice
-            entitys.scheduledDate = variant.scheduledDate
-            entitys.orderId=orderData.id
-
-            entitys.poVersion = po.toString()
-
-            const savedChild = await this.LevisOrdersChildRepo.save(entitys)
-            if (!update.affected) {
-              throw new Error('Update failed');
-            }
-          } else {
-            saved = await this.LevisOrdersRepo.save(entity)
-            const entitys= new LevisOrderschildEntity();
-            entitys.poNumber = req.poNumber
-            entitys.deliveryAddress = req.deliveryAddress
-            // entitys.transMode = req.transMode
-            entitys.currency = req.currency
-  
-            entitys.poLine = item.poLine
-            entitys.material = item.material
-            // entitys.totalUnitPrice = item.totalUnitPrice
-            // entitys.originalDate = item.originalDate
-            entitys.transMode = item.transMode
-            entitys.plannedExFactoryDate = item.plannedExFactoryDate
-            entitys.exFactoryDate = item.exFactoryDate
-  
-            entitys.itemNo = variant.itemNo
-            // entitys.product = variant.product
-            entitys.size = variant.size
-            entitys.upc = variant.upc
-            // entitys.plannedExFactoryDate = variant.plannedExFactoryDate
-            // entitys.exFactoryDate = variant.exFactoryDate
-            entitys.quantity = variant.quantity
-            entitys.unitPrice = variant.unitPrice
-            entitys.scheduledDate = variant.scheduledDate
-            entitys.orderId=entity.id
-            const savedChild = await this.LevisOrdersChildRepo.save(entitys)
-            // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
-            if (!saved) {
-              throw new Error('Save failed')
-            }
-          }
-        }
-      }
-      // await transactionManager.completeTransaction()
-      return new CommonResponseModel(true, 1, 'Data saved successfully', saved)
-    } catch (err) {
-      return new CommonResponseModel(false, 0, 'Failed', err)
-    }
-  }
-
-  // async saveCentricOrder(req: any): Promise<CommonResponseModel> {
+  // async saveLevisOrder(req: any): Promise<CommonResponseModel> {
+  //   console.log(req, "reqqqqqqqqqqqqq")
   //   // const transactionManager = new GenericTransactionManager(this.dataSource)
   //   try {
   //     let saved
   //     // await transactionManager.startTransaction()
-  //     for (const item of req.CentricpoItemDetails) {
+  //     for (const item of req.LevispoItemDetails) {
   //       const match = item.poLine.match(/\d+/);
+  //       console.log(match, "match");
   //       // Check if a match is found and convert it to an integer
   //       // const poLine = match ? parseInt(match[0], 10) : null;
   //       const poLine = match
 
-
-  //       for (const variant of item.CentricpoItemVariantDetails) {
-  //         const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
-  //         const order = await this.childrepo.findOne({ where: { poNumber: req.PoNumber, poLine: poLine, size: variant.size }, order: { poVersion: 'DESC' } })
-  //         // console.log(order,'NNNNNNNNNN')
-  //         const entity = new CentricEntity();
+  //       console.log(poLine, "poLine")
+  //       for (const variant of item.LevispoItemVariantDetails) {
+  //         const orderData = await this.LevisOrdersRepo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
+  //         const order = await this.LevisOrdersChildRepo.findOne({ where: { poNumber: req.PoNumber, poLine: poLine, size: variant.size }, order: { poVersion: 'DESC' } })
+  //         console.log(orderData, "orderData")
+  //         console.log(order, "order")
+  //         const entity = new LevisOrdersEntity();
   //         entity.poNumber = req.poNumber
-  //         entity.shipment = req.shipment
-  //         entity.season = req.season
-  //         entity.portOfExport = req.portOfExport
-  //         entity.portOfEntry = req.portOfEntry
-  //         entity.Refrence = req.Refrence
-  //         entity.paymentTermDescription = req.paymentTermDescription
-  //         entity.specialInstructions = req.specialInstructions
-  //         entity.division = req.division
-  //         entity.incoterm = req.incoterm
-  //         entity.shipToAdd = req.shipToAdd
-  //         entity.manufacture = req.manufacture
-  //         entity.poDate = req.poDate
-  //         entity.buyerAddress = req.buyerAddress
-
+  //         entity.deliveryAddress = req.deliveryAddress
+  //         // entity.transMode = req.transMode
+  //         entity.currency = req.currency
 
   //         entity.poLine = item.poLine
   //         entity.material = item.material
-  //         entity.color = item.color
-  //         entity.gender = item.gender
-  //         entity.shortDescription = item.shortDescription
-  //         entity.packMethod = item.packMethod
-  //         entity.vendorBookingFlag = item.vendorBookingFlag
-  //         entity.ppkupc = item.ppkupc
-  //         entity.currency = item.currency
-  //         entity.totalQuantity = item.totalQuantity
-  //         entity.style = item.style
-  //         entity.poType = item.poType
+  //         // entity.totalUnitPrice = item.totalUnitPrice
+  //         // entity.originalDate = item.originalDate
+  //         entity.transMode = item.transMode
+  //         entity.plannedExFactoryDate = item.plannedExFactoryDate
+  //         entity.exFactoryDate = item.exFactoryDate
 
+  //         entity.itemNo = variant.itemNo
+  //         // entity.product = variant.product
   //         entity.size = variant.size
   //         entity.upc = variant.upc
-  //         entity.label = variant.label
+  //         // entity.plannedExFactoryDate = variant.plannedExFactoryDate
+  //         // entity.exFactoryDate = variant.exFactoryDate
   //         entity.quantity = variant.quantity
   //         entity.unitPrice = variant.unitPrice
-  //         entity.exFactory = variant.exFactory
-  //         entity.exPort = variant.exPort
-  //         entity.deliveryDate = variant.deliveryDate
-  //         entity.retialPrice = variant.retialPrice
-  //         entity.comptMaterial = variant.comptMaterial
-  //         entity.ratio = variant.ratio
-  //         entity.eachPerCarton = variant.eachPerCarton
-
-  //         const fileData = {
-  //           poNumber: entity.poNumber,
-  //           poDate: entity.poDate,
-  //           shipment: entity.shipment,
-  //           season: entity.season,
-  //           portOfExport: entity.portOfExport,
-  //           portOfEntry: entity.portOfEntry,
-  //           Refrence: entity.Refrence,
-  //           paymentTermDescription: entity.paymentTermDescription,
-  //           specialInstructions: entity.specialInstructions,
-  //           division: entity.division,
-  //           incoterm: entity.incoterm,
-  //           shipToAdd: entity.shipToAdd,
-  //           manufacture: entity.manufacture,
-  //           buyerAddress: entity.buyerAddress,
-
-  //           CentricpoItemDetails: [{
-  //             poLine: item.poLine,
-  //             material: item.material,
-  //             color: item.color,
-  //             gender: item.gender,
-  //             shortDescription: item.shortDescription,
-  //             packMethod: item.packMethod,
-  //             vendorBookingFlag: item.vendorBookingFlag,
-  //             currency: item.currency,
-  //             totalQuantity: item.totalQuantity,
-  //             CentricpoItemVariantDetails: item.CentricpoItemVariantDetails.map(variant => ({
-  //               size: variant.size,
-  //               upc: variant.upc,
-  //               label: variant.label,
-  //               unitPrice: variant.unitPrice,
-  //               quantity: variant.quantity,
-  //               exFactory: variant.exFactory,
-  //               exPort: variant.exPort,
-  //               deliveryDate: variant.deliveryDate,
-  //               retialPrice: variant.retialPrice,
-  //             }))
-  //           }]
-  //         };
-
-  //         // entity.fileData = JSON.stringify(fileData);
+  //         entity.scheduledDate = variant.scheduledDate
 
   //         if (orderData) {
-  //           // console.log('mmmmmmmm',orderData)
-
-  //           const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
-
-  //             shipment: req.shipment,
-  //             season: req.season,
-  //             portOfExport: req.portOfExport,
-  //             portOfEntry: req.portOfEntry,
-  //             Refrence: req.Refrence,
-  //             paymentTermDescription: req.paymentTermDescription,
-  //             specialInstructions: req.specialInstructions,
-  //             division: req.division,
-  //             incoterm: req.incoterm,
-  //             shipToAdd: req.shipToAdd,
-  //             manufacture: req.manufacture,
-  //             poDate: req.poDate,
-  //             buyerAddress: req.buyerAddress,
-
-
-  //             material: item.material,
-  //             color: item.color,
-  //             gender: item.gender,
-  //             shortDescription: item.shortDescription,
-  //             packMethod: item.packMethod,
-  //             vendorBookingFlag: item.vendorBookingFlag,
-  //             ppkupc: item.ppkupc,
-  //             currency: item.currency,
-  //             totalQuantity: item.totalQuantity,
-  //             style: item.style,
-
-  //             upc: variant.upc,
-  //             label: variant.label,
-  //             quantity: variant.quantity,
-  //             unitPrice: variant.unitPrice,
-  //             exFactory: variant.exFactory,
-  //             exPort: variant.exPort,
-  //             deliveryDate: variant.deliveryDate,
-  //             retialPrice: variant.retialPrice,
-  //             comptMaterial: variant.comptMaterial,
-  //             ratio: variant.ratio,
-  //             eachPerCarton: variant.eachPerCarton,
-
+  //           const update = await this.LevisOrdersRepo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
+  //             deliveryAddress:req.deliveryAddress,currency:req.currency,material:item.material,transMode:item.transMode,
+  //             size:item.size,upc:variant.upc,quantity:variant.quantity,unitPrice:variant.unitPrice,scheduledDate:variant.scheduledDate
   //           })
   //           let po = parseInt(order?.poVersion) + 1
-
-  //           // console.log(po,',,,,,,')
-  //           const entitys = new CentricChildEntity();
+  //           const entitys= new LevisOrderschildEntity();
   //           entitys.poNumber = req.poNumber
-  //           entitys.shipment = req.shipment
-  //           entitys.season = req.season
-  //           entitys.portOfExport = req.portOfExport
-  //           entitys.portOfEntry = req.portOfEntry
-  //           entitys.Refrence = req.Refrence
-  //           entitys.paymentTermDescription = req.paymentTermDescription
-  //           entitys.specialInstructions = req.specialInstructions
-  //           entitys.division = req.division
-  //           entitys.incoterm = req.incoterm
-  //           entitys.shipToAdd = req.shipToAdd
-  //           entitys.manufacture = req.manufacture
-  //           entitys.poDate = req.poDate
-  //           entitys.buyerAddress = req.buyerAddress
-
+  //           entitys.deliveryAddress = req.deliveryAddress
+  //           // entitys.transMode = req.transMode
+  //           entitys.currency = req.currency
 
   //           entitys.poLine = item.poLine
   //           entitys.material = item.material
-  //           entitys.color = item.color
-  //           entitys.gender = item.gender
-  //           entitys.shortDescription = item.shortDescription
-  //           entitys.packMethod = item.packMethod
-  //           entitys.vendorBookingFlag = item.vendorBookingFlag
-  //           entitys.ppkupc = item.ppkupc
-  //           entitys.currency = item.currency
-  //           entitys.totalQuantity = item.totalQuantity
-  //           entitys.style = item.style
-  //           entitys.poType = item.poType
+  //           // entitys.totalUnitPrice = item.totalUnitPrice
+  //           // entitys.originalDate = item.originalDate
+  //           entitys.transMode = item.transMode
+  //           entitys.plannedExFactoryDate = item.plannedExFactoryDate
+  //           entitys.exFactoryDate = item.exFactoryDate
 
+  //           entitys.itemNo = variant.itemNo
+  //           // entitys.product = variant.product
   //           entitys.size = variant.size
   //           entitys.upc = variant.upc
-  //           entitys.label = variant.label
+  //           // entitys.plannedExFactoryDate = variant.plannedExFactoryDate
+  //           // entitys.exFactoryDate = variant.exFactoryDate
   //           entitys.quantity = variant.quantity
   //           entitys.unitPrice = variant.unitPrice
-  //           entitys.exFactory = variant.exFactory
-  //           entitys.exPort = variant.exPort
-  //           entitys.deliveryDate = variant.deliveryDate
-  //           entitys.retialPrice = variant.retialPrice
-  //           entitys.comptMaterial = variant.comptMaterial
-  //           entitys.ratio = variant.ratio
-  //           entitys.eachPerCarton = variant.eachPerCarton
-  //           entitys.orderId = orderData.id
+  //           entitys.scheduledDate = variant.scheduledDate
+  //           entitys.orderId=orderData.id
 
   //           entitys.poVersion = po.toString()
-  //           const savedChild = await this.childrepo.save(entitys)
 
+  //           const savedChild = await this.LevisOrdersChildRepo.save(entitys)
   //           if (!update.affected) {
   //             throw new Error('Update failed');
   //           }
   //         } else {
-  //           saved = await this.Repo.save(entity)
-  //           const entitys = new CentricChildEntity();
+  //           saved = await this.LevisOrdersRepo.save(entity)
+  //           const entitys= new LevisOrderschildEntity();
   //           entitys.poNumber = req.poNumber
-  //           entitys.shipment = req.shipment
-  //           entitys.season = req.season
-  //           entitys.portOfExport = req.portOfExport
-  //           entitys.portOfEntry = req.portOfEntry
-  //           entitys.Refrence = req.Refrence
-  //           entitys.paymentTermDescription = req.paymentTermDescription
-  //           entitys.specialInstructions = req.specialInstructions
-  //           entitys.division = req.division
-  //           entitys.incoterm = req.incoterm
-  //           entitys.shipToAdd = req.shipToAdd
-  //           entitys.manufacture = req.manufacture
-  //           entitys.poDate = req.poDate
-  //           entitys.buyerAddress = req.buyerAddress
-
+  //           entitys.deliveryAddress = req.deliveryAddress
+  //           // entitys.transMode = req.transMode
+  //           entitys.currency = req.currency
 
   //           entitys.poLine = item.poLine
   //           entitys.material = item.material
-  //           entitys.color = item.color
-  //           entitys.gender = item.gender
-  //           entitys.shortDescription = item.shortDescription
-  //           entitys.packMethod = item.packMethod
-  //           entitys.vendorBookingFlag = item.vendorBookingFlag
-  //           entitys.ppkupc = item.ppkupc
-  //           entitys.currency = item.currency
-  //           entitys.totalQuantity = item.totalQuantity
-  //           entitys.style = item.style
-  //           entitys.poType = item.poType
+  //           // entitys.totalUnitPrice = item.totalUnitPrice
+  //           // entitys.originalDate = item.originalDate
+  //           entitys.transMode = item.transMode
+  //           entitys.plannedExFactoryDate = item.plannedExFactoryDate
+  //           entitys.exFactoryDate = item.exFactoryDate
 
+  //           entitys.itemNo = variant.itemNo
+  //           // entitys.product = variant.product
   //           entitys.size = variant.size
   //           entitys.upc = variant.upc
-  //           entitys.label = variant.label
+  //           // entitys.plannedExFactoryDate = variant.plannedExFactoryDate
+  //           // entitys.exFactoryDate = variant.exFactoryDate
   //           entitys.quantity = variant.quantity
   //           entitys.unitPrice = variant.unitPrice
-  //           entitys.exFactory = variant.exFactory
-  //           entitys.exPort = variant.exPort
-  //           entitys.deliveryDate = variant.deliveryDate
-  //           entitys.retialPrice = variant.retialPrice
-  //           entitys.comptMaterial = variant.comptMaterial
-  //           entitys.ratio = variant.ratio
-  //           entitys.eachPerCarton = variant.eachPerCarton
-  //           entitys.orderId = entity.id
-  //           const savedChild = await this.childrepo.save(entitys)
-
-
+  //           entitys.scheduledDate = variant.scheduledDate
+  //           entitys.orderId=entity.id
+  //           const savedChild = await this.LevisOrdersChildRepo.save(entitys)
+  //           // const savedChild = await transactionManager.getRepository(RLOrdersEntity).save(entity)
   //           if (!saved) {
   //             throw new Error('Save failed')
   //           }
@@ -426,24 +168,119 @@ export class LevisService {
   //   }
   // }
 
-  // async updatePath(req: any, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
-  //   // const poNumberFromFileName = filename.match(/[0-9]{10}/);
-  //   const entity = new CentricPdfFileUploadEntity();
-  //   // entity.poNumber = poNumberFromFileName ? poNumberFromFileName[0] : '';
-  //   entity.poNumber = poNumber;
-  //   entity.pdfFileName = filename;
-  //   entity.filePath = filePath;
-  //   entity.fileType = mimetype;
-  //   entity.fileData = req;
 
-  //   const save = await this.pdfRepo.save(entity);
-  //   if (save) {
-  //     return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
-  //   } else {
-  //     return new CommonResponseModel(false, 0, 'Uploaded failed');
-  //   }
-  // }
+  async saveLevisOrder(req: any): Promise<CommonResponseModel> {
+    const transactionManager = new GenericTransactionManager(this.dataSource);
 
+    try {
+      let saved;
+      const pdfData = [];
+
+      await transactionManager.startTransaction();
+
+      for (const item of req.LevispoItemDetails) {
+        for (const variant of item.LevispoItemVariantDetails) {
+          const orderData = await this.LevisOrdersRepo.findOne({ where: { poNumber: req.poNumber, poLine: item.poLine, size: variant.size } });
+          const order = await this.LevisOrdersChildRepo.findOne({ where: { poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, order: { poVersion: 'DESC' } })
+
+          const entity = new LevisOrdersEntity();
+          entity.poNumber = req.poNumber
+          entity.deliveryAddress = req.deliveryAddress
+          entity.currency = req.currency
+
+          entity.poLine = item.poLine
+          entity.material = item.material
+          entity.transMode = item.transMode
+          entity.plannedExFactoryDate = item.plannedExFactoryDate
+          entity.exFactoryDate = item.exFactoryDate
+
+          entity.itemNo = variant.itemNo
+          entity.size = variant.size
+          entity.upc = variant.upc
+          entity.quantity = variant.quantity
+          entity.unitPrice = variant.unitPrice
+          entity.scheduledDate = variant.scheduledDate
+          pdfData.push(entity);
+
+          if (orderData) {
+            // Check if any of the fields have changed
+            const fieldsChanged = Object.keys(entity).some(key => orderData[key] !== entity[key]);
+
+            if (fieldsChanged) {
+              const update = await transactionManager.getRepository(LevisOrdersEntity).update(
+                { poNumber: req.poNumber, poLine: item.poLine, size: variant.size },
+                { ...entity }
+              );
+
+              let po = parseInt(order?.poVersion) + 1
+              const entitys = new LevisOrderschildEntity()
+
+              entitys.poNumber = req.poNumber
+              entitys.deliveryAddress = req.deliveryAddress
+              entitys.currency = req.currency
+
+              entitys.poLine = item.poLine
+              entitys.material = item.material
+              entitys.transMode = item.transMode
+              entitys.plannedExFactoryDate = item.plannedExFactoryDate
+              entitys.exFactoryDate = item.exFactoryDate
+
+              entitys.itemNo = variant.itemNo
+              entitys.size = variant.size
+              entitys.upc = variant.upc
+              entitys.quantity = variant.quantity
+              entitys.unitPrice = variant.unitPrice
+              entitys.scheduledDate = variant.scheduledDate
+              entitys.poVersion = po.toString()
+              entitys.orderId = orderData.id
+
+              const savedChild = await transactionManager.getRepository(LevisOrderschildEntity).save(entitys)
+
+
+              if (!update.affected) {
+                throw new Error('Update failed');
+              }
+            }
+          } else {
+            // Only save if the record doesn't exist
+            saved = await transactionManager.getRepository(LevisOrdersEntity).save(entity);
+            const entitys = new LevisOrderschildEntity()
+
+            entitys.poNumber = req.poNumber
+            entitys.deliveryAddress = req.deliveryAddress
+            entitys.currency = req.currency
+
+            entitys.poLine = item.poLine
+            entitys.material = item.material
+            entitys.transMode = item.transMode
+            entitys.plannedExFactoryDate = item.plannedExFactoryDate
+            entitys.exFactoryDate = item.exFactoryDate
+
+            entitys.itemNo = variant.itemNo
+            entitys.size = variant.size
+            entitys.upc = variant.upc
+            entitys.quantity = variant.quantity
+            entitys.unitPrice = variant.unitPrice
+            entitys.scheduledDate = variant.scheduledDate
+            entitys.orderId = entity.id
+
+            const savedChild = await await transactionManager.getRepository(LevisOrderschildEntity).save(entitys)
+
+
+            if (!saved) {
+              throw new Error('Save failed');
+            }
+          }
+        }
+      }
+
+      await transactionManager.completeTransaction();
+      return new CommonResponseModel(true, 1, 'Data saved successfully', saved);
+    } catch (err) {
+      await transactionManager.releaseTransaction();
+      return new CommonResponseModel(false, 0, 'Failed', err.message || 'Unknown error');
+    }
+  }
 
 
 
@@ -486,14 +323,14 @@ export class LevisService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`,
-            new levisOrderDataModel(rec.id,rec.po_number,rec.delivery_address,rec.transmode,rec.currency,rec.po_line,rec.material,rec.total_unit_price,rec.original_date,rec.status,[])
+            new levisOrderDataModel(rec.id, rec.po_number, rec.delivery_address, rec.transmode, rec.currency, rec.po_line, rec.material, rec.total_unit_price, rec.original_date, rec.status, [])
           );
 
         }
         const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`).sizeWiseData;
         const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.unitPrice === rec.unit_price);
         if (!existingSizeData && rec.size !== null) {
-          sizeWiseData.push(new LevisSizeWiseModel(rec.product,rec.size,rec.upc,rec.planned_ex_factory_date,rec.ex_factory_date,rec.quantity,rec.unit_price,rec.item_no));
+          sizeWiseData.push(new LevisSizeWiseModel(rec.product, rec.size, rec.upc, rec.planned_ex_factory_date, rec.ex_factory_date, rec.quantity, rec.unit_price, rec.item_no));
         }
       }
       const dataModelArray: levisOrderDataModel[] = Array.from(sizeDateMap.values());
@@ -530,13 +367,13 @@ export class LevisService {
         return new CommonResponseModel(false, 0, 'Please enter Item No')
       };
       // const update= await this.Repo.update({ where:{ poNumber: req.poNumber ,status:StatusEnum.ACCEPTED}})
-      const records = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber} });
+      const records = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber } });
       const uniquePoLines = [...new Set(records.map((rec) => rec.poLine))];
       const empty = [];
 
       //console.log(rec,'reccccccccc')
       const entity = new LevisCOLineEntity()
-       entity.poLine = uniquePoLines.join(',');
+      entity.poLine = uniquePoLines.join(',');
       entity.buyer = req.buyer
       entity.poNumber = req.poNumber;
       entity.material = req.material;
@@ -553,7 +390,7 @@ export class LevisService {
 
       if (save) {
         const update = await this.LevisOrdersRepo.update(
-          { poNumber: req.poNumber}, // Conditions for updating
+          { poNumber: req.poNumber }, // Conditions for updating
           { status: StatusEnum.INPROGRESS }
         );
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
@@ -644,14 +481,14 @@ export class LevisService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`,
-            new levisOrderDataModel(rec.id,rec.po_number,rec.delivery_address,rec.transmode,rec.currency,rec.po_line,rec.material,rec.total_unit_price,rec.original_date,rec.status,[])
+            new levisOrderDataModel(rec.id, rec.po_number, rec.delivery_address, rec.transmode, rec.currency, rec.po_line, rec.material, rec.total_unit_price, rec.original_date, rec.status, [])
           );
 
         }
         const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`).sizeWiseData;
         const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.unitPrice === rec.unit_price);
         if (!existingSizeData && rec.size !== null) {
-          sizeWiseData.push(new LevisSizeWiseModel(rec.product,rec.size,rec.upc,rec.planned_ex_factory_date,rec.ex_factory_date,rec.quantity,rec.unit_price,rec.item_no));
+          sizeWiseData.push(new LevisSizeWiseModel(rec.product, rec.size, rec.upc, rec.planned_ex_factory_date, rec.ex_factory_date, rec.quantity, rec.unit_price, rec.item_no));
         }
       }
       const dataModelArray: levisOrderDataModel[] = Array.from(sizeDateMap.values());
@@ -668,11 +505,11 @@ export class LevisService {
 
 
   async updateStatusInOrder(req: any): Promise<CommonResponseModel> {
-    console.log(req,"reqOpenStatus")
+    console.log(req, "reqOpenStatus")
     try {
       const update = await this.LevisOrdersRepo.update(
-        { poNumber:req.poNumber},
-        { status:StatusEnum.OPEN }
+        { poNumber: req.poNumber },
+        { status: StatusEnum.OPEN }
       );
       if (update) {
         return new CommonResponseModel(true, 1, "Updated Successfully");
@@ -696,11 +533,11 @@ export class LevisService {
       throw err
     }
   }
-  
+
   // async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
   //   try {
   //     const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber } })
-  
+
   //     // po -> destination -> color -> sizes
   //     const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
   //     const poMap = new Map<string, LevisOrdersEntity>();
@@ -768,107 +605,107 @@ export class LevisService {
     try {
       // const poLineValues = req.poLine.split(',')
       const poLineValues = req?.poLine
-        const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber,poLine:poLineValues } });
-        // const exfacDate = data[0]?.exFactoryDate
-        // console.log(exfacDate,"exfacDate")
-
-      
-        // const [day, month, year] = exfacDate?.split('.');
-        // const inputDate = new Date(`${year}-${month}-${day}`);
-        
-       
-        // const FourteenDaysafter = new Date(inputDate);
-        // FourteenDaysafter.setDate(inputDate.getDate() + 14);
-        // const DeliveryDate = new Intl.DateTimeFormat('en-GB').format(FourteenDaysafter);
-        // console.log(DeliveryDate,"DeliveryDate")
+      const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber, poLine: poLineValues } });
+      // const exfacDate = data[0]?.exFactoryDate
+      // console.log(exfacDate,"exfacDate")
 
 
-        // po -> destination -> color -> sizes
-        const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
-        const poMap = new Map<string, LevisOrdersEntity>();
+      // const [day, month, year] = exfacDate?.split('.');
+      // const inputDate = new Date(`${year}-${month}-${day}`);
 
-        for (const rec of data) {
-            poMap.set(`${rec.poNumber}`, rec);
-            // const dest = rec.deliveryAddress;
-              const parts = rec.deliveryAddress.split(',')
-           const destAdd = parts[0].trim();
-            const dest = destAdd;
 
-            
-            if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
-                destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
-            }
-            if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
-                destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
-            }
-            console.log(rec.material,"material")
-            const colorcheck = await this.colorRepo.findOne({
-                where: {
-                    colorCode: rec.material
-                }
-            });
+      // const FourteenDaysafter = new Date(inputDate);
+      // FourteenDaysafter.setDate(inputDate.getDate() + 14);
+      // const DeliveryDate = new Intl.DateTimeFormat('en-GB').format(FourteenDaysafter);
+      // console.log(DeliveryDate,"DeliveryDate")
 
-            console.log(colorcheck,"color")
-            if (colorcheck){
-              if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(colorcheck.colorName)) {
-                destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(colorcheck.colorName, []);
-            }
 
-            } 
+      // po -> destination -> color -> sizes
+      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+      const poMap = new Map<string, LevisOrdersEntity>();
 
-            const sizecheck = await this.sizeRepo.findOne({
-              where: {
-                  poSize: rec.size
-              }
-          });
-           
-          if (sizecheck){
-           
-            destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorcheck.colorName).push({ size: sizecheck.crmSize, quantity: rec.quantity, price: rec.unitPrice });
+      for (const rec of data) {
+        poMap.set(`${rec.poNumber}`, rec);
+        // const dest = rec.deliveryAddress;
+        const parts = rec.deliveryAddress.split(',')
+        const destAdd = parts[0].trim();
+        const dest = destAdd;
 
-          } else {
 
-            destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorcheck.colorName).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
-          }     
-            
+        if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
+          destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
         }
-
-        const coData = [];
-        destinationColSizesMap.forEach((destColorSize, poNumber) => {
-            const desArray = [];
-            destColorSize.forEach((colorSizes, dest) => {
-                const ColArray = [];
-                colorSizes.forEach((sizes, color) => {
-                    const sizeArray = [];
-                    sizes.forEach((size) => {
-                        const sizeObj = new LevisSizeModel(size.size, size.quantity, size.price);
-                        sizeArray.push(sizeObj);
-                    });
-                    const col = new LevisColorModel(color, sizeArray);
-                    ColArray.push(col);
-                });
-                const des = new LevisDestinationModel(dest, ColArray);
-                desArray.push(des);
-            });
-            const poInfo = poMap.get(poNumber);
-
-            const parsedDate = moment(poInfo?.exFactoryDate, "DD.MM.YYYY");
-            const formattedExFactDate = parsedDate.format("DD/MM/YYYY");
-      
-
-            const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, formattedExFactDate,formattedExFactDate,poInfo.material,desArray);
-            coData.push(co);
+        if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
+          destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
+        }
+        console.log(rec.material, "material")
+        const colorcheck = await this.colorRepo.findOne({
+          where: {
+            colorCode: rec.material
+          }
         });
 
-        if (coData.length > 0) {
-            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', coData);
-        } else {
-            return new CommonResponseModel(false, 0, 'No data found');
+        console.log(colorcheck, "color")
+        if (colorcheck) {
+          if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(colorcheck.colorName)) {
+            destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(colorcheck.colorName, []);
+          }
+
         }
+
+        const sizecheck = await this.sizeRepo.findOne({
+          where: {
+            poSize: rec.size
+          }
+        });
+
+        if (sizecheck) {
+
+          destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorcheck.colorName).push({ size: sizecheck.crmSize, quantity: rec.quantity, price: rec.unitPrice });
+
+        } else {
+
+          destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorcheck.colorName).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+        }
+
+      }
+
+      const coData = [];
+      destinationColSizesMap.forEach((destColorSize, poNumber) => {
+        const desArray = [];
+        destColorSize.forEach((colorSizes, dest) => {
+          const ColArray = [];
+          colorSizes.forEach((sizes, color) => {
+            const sizeArray = [];
+            sizes.forEach((size) => {
+              const sizeObj = new LevisSizeModel(size.size, size.quantity, size.price);
+              sizeArray.push(sizeObj);
+            });
+            const col = new LevisColorModel(color, sizeArray);
+            ColArray.push(col);
+          });
+          const des = new LevisDestinationModel(dest, ColArray);
+          desArray.push(des);
+        });
+        const poInfo = poMap.get(poNumber);
+
+        const parsedDate = moment(poInfo?.exFactoryDate, "DD.MM.YYYY");
+        const formattedExFactDate = parsedDate.format("DD/MM/YYYY");
+
+
+        const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, formattedExFactDate, formattedExFactDate, poInfo.material, desArray);
+        coData.push(co);
+      });
+
+      if (coData.length > 0) {
+        return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', coData);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
     } catch (err) {
-        throw err;
+      throw err;
     }
-}
+  }
 
 
 
@@ -889,11 +726,10 @@ export class LevisService {
           if (
             oldData.unitPrice !== rec.unit_price ||
             oldData.exFactoryDate !== rec.ex_factory_date ||
-            oldData.quantity !== rec.quantity||
-            oldData.transMode!==rec.transmode||
-            oldData.deliveryAddress!==rec.delivery_address
-          ) 
-          {
+            oldData.quantity !== rec.quantity ||
+            oldData.transMode !== rec.transmode ||
+            oldData.deliveryAddress !== rec.delivery_address
+          ) {
             // Only push if there are changes
             compareModel.push(new
               LevisCompareModel(
@@ -956,7 +792,7 @@ export class LevisService {
       let paymentTerms;
       let styleNo;
       if (po.buyer === 'LEVIS') {
-        const response = await this.getOrderdataForCOline({ poNumber: po.po_number,poLine:po.po_line })
+        const response = await this.getOrderdataForCOline({ poNumber: po.po_number, poLine: po.po_line })
         // console.log(response.data[0],"response")
         const coData = response.data[0];
         coLine.buyerPo = coData.poNumber
@@ -972,8 +808,8 @@ export class LevisService {
         coLine.destinations = coData.destinations
         coLine.exFactoryDate = coData.exfactoryDate
 
-        console.log(coLine.exFactoryDate,"exFactoryDate")
-        console.log(coLine.deliveryDate,"deliveryDate")
+        console.log(coLine.exFactoryDate, "exFactoryDate")
+        console.log(coLine.deliveryDate, "deliveryDate")
 
         const request = coData.destinations[0]?.name;
         console.log(request, "request")
@@ -1150,13 +986,13 @@ export class LevisService {
                     await inputField.clear();
                     await inputField.sendKeys(size.price);
                   } else {
-                    const update = await this.levisCoLineRepo.update({ poNumber: po.po_number , poLine:po.po_line  }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
-                    await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+                    const update = await this.levisCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Size found', isActive: false });
+                    await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED })
                     return new CommonResponseModel(false, 0, 'NO matching Size found')
                   }
                 }
                 const inputId = `${size.name}:${color.name}:ASORTED`.replace(/\*/g, '');
-                console.log(inputId,"ppppp")
+                console.log(inputId, "ppppp")
                 const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
               }
@@ -1173,9 +1009,9 @@ export class LevisService {
       if (await this.isAlertPresent(driver)) {
         const alert = await driver.switchTo().alert();
         const alertText = await alert.getText();
-        const update = await this.levisCoLineRepo.update({ poNumber: po.po_number, poLine:po.po_line  }, { status: 'Failed', errorMsg: alertText ,isActive:false });
-    
-        await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+        const update = await this.levisCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: alertText, isActive: false });
+
+        await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED })
 
         await alert.accept();
         await driver.sleep(5000)
@@ -1194,19 +1030,19 @@ export class LevisService {
         const year = currentDate.getFullYear().toString().slice(-2);
         const currentDateFormatted = `${day}-${month}-${year}`;
         if (coNo) {
-     
 
-          const update = await this.levisCoLineRepo.update({ poNumber: po.po_number, poLine:po.po_line }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted,errorMsg:"-" });
-          await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.SUCCESS})
 
-       
+          const update = await this.levisCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted, errorMsg: "-" });
+          await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.SUCCESS })
+
+
           // await driver.navigate().refresh();
           await driver.sleep(10000)
         } else {
-     
 
-          const update = await this.levisCoLineRepo.update({ poNumber: po.po_number , poLine:po.po_line   }, { status: 'Failed',isActive:false });
-          await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+
+          const update = await this.levisCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', isActive: false });
+          await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED })
 
           // await driver.navigate().refresh();
           await driver.sleep(10000)
@@ -1215,11 +1051,11 @@ export class LevisService {
       // }
       return new CommonResponseModel(true, 1, `COline created successfully`)
     } catch (error) {
-      
+
       console.log(error, 'error');
       if (error.name === 'TimeoutError') {
-        const update = await this.levisCoLineRepo.update({ poNumber: po.po_number , poLine:po.po_line  }, { status: 'Failed', errorMsg: 'NO matching Color found', isActive:false });
-        await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
+        const update = await this.levisCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found', isActive: false });
+        await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED })
         driver.quit()
         return new CommonResponseModel(false, 0, 'Matching Color not found')
       } else {
@@ -1245,23 +1081,23 @@ export class LevisService {
   async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
     console.log(req, "reqqqqqqqponumnbbb");
     try {
-        const poLines = req.poLine.split(","); // Split poLine string into an array
-  
-        // Iterate over each poLine and update its status
-        for (const poLine of poLines) {
-            await this.LevisOrdersRepo.update(
-                { poNumber: req.poNumber, poLine: poLine.trim() }, // Trim to remove any extra spaces
-                { status: req.status }
-            );
-        }
-  
-        return new CommonResponseModel(true, 1, 'Success'); // Return success response with the number of lines updated
+      const poLines = req.poLine.split(","); // Split poLine string into an array
+
+      // Iterate over each poLine and update its status
+      for (const poLine of poLines) {
+        await this.LevisOrdersRepo.update(
+          { poNumber: req.poNumber, poLine: poLine.trim() }, // Trim to remove any extra spaces
+          { status: req.status }
+        );
+      }
+
+      return new CommonResponseModel(true, 1, 'Success'); // Return success response with the number of lines updated
     } catch (error) {
-        console.error("Error updating CO line status:", error);
-        return new CommonResponseModel(false, 0, 'Failed');
+      console.error("Error updating CO line status:", error);
+      return new CommonResponseModel(false, 0, 'Failed');
     }
   }
-  
+
   @Cron('1 * * * *')
   async levisBot() {
     try {
