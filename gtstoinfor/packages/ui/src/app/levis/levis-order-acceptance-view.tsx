@@ -890,6 +890,14 @@ import {
               text: 'INPROGRESS',
               value: 'INPROGRESS',
             },
+            {
+              text: 'FAILED',
+              value: 'FAILED',
+            },
+            {
+              text: 'SUCCESS',
+              value: 'SUCCESS',
+            },
           ],
           onFilter: (value, record) => record.status.toLowerCase() === value.toLowerCase(),
         },
@@ -910,7 +918,7 @@ import {
                     style={{ width: '95px' }}
                     placeholder="Enter Item No"
                     onChange={(e) => handleItemNoChange(e.target.value, record, index)}
-                    disabled={record.status == 'INPROGRESS' ? true : false}
+                    disabled={record.status == 'OPEN' ? false : true}
                   />
                 </Form.Item>
   
