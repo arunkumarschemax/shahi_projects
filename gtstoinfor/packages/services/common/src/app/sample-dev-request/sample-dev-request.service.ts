@@ -2489,7 +2489,7 @@ order by mi.trim_code`;
       const manager = this.dataSource;
       const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,si.size_id,s.extension,s.cost_ref,s.description,s.dmm_id,s.user,lt.liscence_type AS product,m.country_name as made_in,s.remarks,s.file_name,srt.remarks AS trim_remarks,srf.remarks AS fab_remarks ,s.sam_value,
       st.style,pch.profit_control_head,mi.item_code as fabCode,mt.description as trimCode,e.first_name,s.contact,s.status,srs.quantity,srf.total_requirement as fabtotal_requirement,srf.wastage as fabwastage,srf.consumption as fabconsumption,uf.uom as fabuom,srt.total_requirement as trimtotal_requirement,srt.wastage as trimwastage,srt.consumption as trimconsumption,ut.uom as trimuom,fc.colour AS fabColour ,cf.colour as garmentcolour,ca.category,ed.first_name as dmmFirst,ed.last_name as dmmLast,sty.sample_type,sst.sample_sub_type,s.category as sampleCategory,
-      s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date,rp.rack_position_name ,s.location_id as location,t.trim_category,op.operation_name,srp.sequence FROM sample_request s
+      s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date,rp.rack_position_name ,s.location_id as location,t.trim_category,op.operation_name,srp.sequence, st.style_file_name AS styleUrl FROM sample_request s
       LEFT JOIN brands b ON b.brand_id = s.brand_id
       LEFT JOIN buyers bu ON bu.buyer_id = s.buyer_id
       LEFT JOIN style st ON st.style_id = s.style_id
@@ -2529,7 +2529,7 @@ order by mi.trim_code`;
         for (const rec of info) {
           console.log(rec);
           if (!MapData.has(rec.requestNo)) {
-            MapData.set(rec.requestNo, new SampleRequestInfoModel(rec.request_no, rec.sample_request_id, rec.style, rec.brand_name, rec.buyer_name, rec.first_name, rec.status, rec.lifeCycleStatus, rec.contact, rec.profit_control_head, rec.expected_delivery_date, rec.extension, rec.conversion, rec.dmmFirst, rec.product, rec.user, rec.description, rec.cost_ref, rec.type, rec.made_in, rec.remarks, rec.file_name, rec.sam_value, [], [],[], rec.location, rec.sample_type, rec.sample_sub_type, rec.sampleCategory, rec.dmmLast))
+            MapData.set(rec.requestNo, new SampleRequestInfoModel(rec.request_no, rec.sample_request_id, rec.style, rec.brand_name, rec.buyer_name, rec.first_name, rec.status, rec.lifeCycleStatus, rec.contact, rec.profit_control_head, rec.expected_delivery_date, rec.extension, rec.conversion, rec.dmmFirst, rec.product, rec.user, rec.description, rec.cost_ref, rec.type, rec.made_in, rec.remarks, rec.file_name, rec.sam_value, [], [],[], rec.location, rec.sample_type, rec.sample_sub_type, rec.sampleCategory, rec.dmmLast, rec.styleUrl))
           }
 
           const existingTrim = MapData.get(rec.requestNo).trimInfo.find(
