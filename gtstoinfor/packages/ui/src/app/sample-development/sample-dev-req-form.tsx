@@ -1075,7 +1075,7 @@ export const SampleDevForm = () => {
           <Col span={4} >
             <Form.Item
               name="type"
-              label="Sub Type"
+              label="Sampling Type"
               rules={[{ required: false, message: "SubType is required" }]}
             >
               <Select
@@ -1095,7 +1095,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col span={4} >
+          {/* <Col span={4} >
             <Form.Item
               name="subType"
               label="Type"
@@ -1116,7 +1116,7 @@ export const SampleDevForm = () => {
                 })}
               </Select>
             </Form.Item>
-          </Col>
+          </Col> */}
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="category"
