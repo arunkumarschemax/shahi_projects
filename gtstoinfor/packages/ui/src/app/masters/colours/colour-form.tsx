@@ -90,7 +90,7 @@ onFinish={saveData}>
               message:' Color Is Required'
             },
             {
-              pattern: /^[^-\s\\0-9\[\]()*!@#$^&_\-+/%=`~{}:";'<>,.?|][a-zA-Z ]*$/,
+              pattern: /^[a-zA-Z0-9\s]*$/,
               message: `Color Should contain only alphabets.`
             }
           ]}
