@@ -1499,7 +1499,7 @@ export class EddieService {
   //   }
   // }
 
-  // @Cron('*/2 * * * *')
+  //  @Cron('*/5 * * * *')
   async createCOline(req: any): Promise<CommonResponseModel> {
     const [po] = await this.eddieCoLineRepo.getDataforCOLineCreation();
     if (!po) {
