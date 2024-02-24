@@ -1698,34 +1698,38 @@ export class EddieService {
             console.log(dest.colors, "color")
             console.log(dest.colors[0].sizes[0], "sizes")
 
+            await driver.executeScript('arguments[0].click();', tab);
             // get the div and increASE THE Width
-            await driver.wait(until.elementLocated(By.xpath("//div[@id='359QZD001']/div[1]")));
+            // await driver.wait(until.elementLocated(By.xpath("//div[@id='359QZD001']/div[1]")));
             // const fixedDiv = await driver.findElements(By.xpath("//div[@id='359QZD001']/div[1]"));
             // await driver.executeScript(`arguments[0].setAttribute('style', 'background: yellow')`, fixedDiv);
-            await driver.executeScript('document.getElementById("359QZD001").style.width = "3000px" ');
+            // await driver.executeScript('document.getElementById("359QZD001").style.width = "3000px" ');
             // await driver.executeScript('document.getElementById("359QZD001").getElementsByTagName("div")[1].style.color = "red" ');
-            await driver.executeScript('document.getElementById("359QZD001").getElementsByTagName("div")[1].style.width = "2400px" ');
+            // await driver.executeScript('document.getElementById("359QZD001").getElementsByTagName("div")[1].style.width = "2400px" ');
             // await driver.sleep(5000);
-            await driver.executeScript('arguments[0].click();', tab);
             
             // await driver.sleep(5000);
+
+            const sizesDivElementId = `nameDiv1${po.item_no}ZD001`;
+            const colorsDivElementId = `nameDiv3${po.item_no}ZD001`;
 
 
             // parent div ids
             /**
              * to read sizes : nameDiv1359QZD001
-             * to read colors : nameDiv3359QZD001
+             * to read colors : nameDiv3359QZD001   nameDiv3744QZD001
              * to read input fields: percentageDiv1359QZD001
              * 
              */
             const allSizes = [];
             console.log('---------------------------------------------------------------');
-            await driver.wait(until.elementLocated(By.xpath("//div[@id='nameDiv1359QZD001']/table/tbody/tr[2]/td/div")));
+            await driver.wait(until.elementLocated(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td/div`)));
             console.log("Read");
+
 
             // -----------------------   SIZES Reading from UI logic start ---------------
             // read all the sizes from the DOM
-            let labelElements: any[] = await driver.findElements(By.xpath("//div[@id='nameDiv1359QZD001']/table/tbody/tr[2]/td/div"));
+            let labelElements: any[] = await driver.findElements(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td/div`));
             const totalElements = labelElements?.length;
             console.log('Total elements : ' + totalElements);
             labelElements.forEach(async r => {
@@ -1737,12 +1741,12 @@ export class EddieService {
             while(i<=10) {
               // Try to jump to right hand side of the div by 8 units. (Dont try more than that. Test and change this value if needed)
               const toJump = Math.min(i*8, totalElements);
-              const rightEle = driver.findElement(By.xpath("//div[@id='nameDiv1359QZD001']/table/tbody/tr[2]/td["+toJump+"]"));
+              const rightEle = driver.findElement(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td[${toJump}]`));
               // scroll the pointer to right side
               driver.executeScript("arguments[0].scrollIntoView()", rightEle);
               driver.sleep(1000);
               // read all the visible sizes from the DOM
-              let currentUserVisbileElements: any[] = await driver.findElements(By.xpath("//div[@id='nameDiv1359QZD001']/table/tbody/tr[2]/td/div"));
+              let currentUserVisbileElements: any[] = await driver.findElements(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td/div`));
               // At some nth iteration, we can set all the sizes to the array once it is visible on the scope of selenium reader
               // console.log("Iteration " + i + " : " + toJump + " --- " + currentUserVisbileElements.length);
               currentUserVisbileElements.forEach(async (r, index) => {
@@ -1767,17 +1771,17 @@ export class EddieService {
             const colorsInTable = [];
             const colorsToDisplayRowColumnIndex = [];
             // get the total colors for the current PO from the UI
-            const totalColorElements: any[] = await driver.findElements(By.xpath("//div[@id='nameDiv3359QZD001']/table/tbody/tr"));
+            const totalColorElements: any[] = await driver.findElements(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr`));
             console.log('total colors : ' + totalColorElements.length);
             let cc=0;
             for(const r of totalColorElements){
               // scroll to the specific location in the screen to read the color 
-              const bottomEle = await driver.findElement(By.xpath(`//div[@id='nameDiv3359QZD001']/table/tbody/tr[${cc+1}]`));
+              const bottomEle = await driver.findElement(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr[${cc+1}]`));
               // execute the scroll command
               await driver.executeScript("arguments[0].scrollIntoView()", bottomEle);
               await driver.sleep(500);
               // now after scrolling, read the element from the DOM again. This time the selenium can read the value present in the DOM
-              const sepcificRowColorEle = await driver.findElements(By.xpath(`//div[@id='nameDiv3359QZD001']/table/tbody/tr[${cc+1}]/td`));
+              const sepcificRowColorEle = await driver.findElements(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr[${cc+1}]/td`));
               // console.log(sepcificRowColorEle);
               const displayingColor = (await sepcificRowColorEle[0]?.getText());
               // push the color to an array
@@ -1797,7 +1801,10 @@ export class EddieService {
             for (let [colorIndex, color] of dest.colors.entries()) {
               // for this specific color, scroll the window to the specific row where the color is visible
               const exactColorRowScrollLocation = colorsToDisplayRowColumnIndex[color.name] + 1;
-              const bottomEle = await driver.findElement(By.xpath(`//div[@id='nameDiv3359QZD001']/table/tbody/tr[${exactColorRowScrollLocation}]`));
+              if(!colorsToDisplayRowColumnIndex[color.name]) {
+                break;
+              }
+              const bottomEle = await driver.findElement(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr[${exactColorRowScrollLocation}]`));
               driver.executeScript("arguments[0].scrollIntoView()", bottomEle);
               driver.sleep(500);
               for (let [sizeIndex, size] of color.sizes.entries()) {
@@ -1805,7 +1812,7 @@ export class EddieService {
                   // console.log(`size: ${size.name} and ${exactSizeColumnScrollLocation}`);
 
                   // Now for this specific size, scroll to the exact location in the interface where the size is visible
-                  const rightEle = await driver.findElement(By.xpath(`//div[@id='nameDiv1359QZD001']/table/tbody/tr[2]/td[${exactSizeColumnScrollLocation}]`));
+                  const rightEle = await driver.findElement(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td[${exactSizeColumnScrollLocation}]`));
                   driver.executeScript("arguments[0].scrollIntoView()", rightEle);
                   driver.sleep(300);
 
