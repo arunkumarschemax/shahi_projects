@@ -472,7 +472,7 @@ return(
         </Descriptions>
         <Descriptions>
           <DescriptionsItem>
-            <Card style={{ maxHeight: '100px' }}>
+            <Card style={{ maxHeight: '200px' }}>
                 <img
                   src={config.file_upload_path +'/'+ data?.[0]?.styleUrl}
                   alt="Preview"
