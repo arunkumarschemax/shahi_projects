@@ -174,9 +174,9 @@ const M3Items = ({props}) => {
     });
   };
 
-  const getWeaveData = (value) => {
-    const req =new FabricTypeIdReq(value)
-    weaveService.getWeaveByTypeId(req).then((res) => {
+  const getWeaveData = () => {
+    // const req =new FabricTypeIdReq(value)
+    weaveService.getAllActiveFabricWeave().then((res) => {
         if (res.status) {
           setWeave(res.data);
         } else {
@@ -190,7 +190,7 @@ const M3Items = ({props}) => {
 
   const onFabricTpe = (val) =>{
     generateItemCode()
-    getWeaveData(val)
+    // getWeaveData(val)
   }
 
   useEffect(() => {
@@ -304,6 +304,7 @@ const M3Items = ({props}) => {
     getAllContents()
     getWeightUom()
     getYarnUom()
+    getWeaveData()
   }, []);
 
   const getUom = () => {
@@ -579,8 +580,8 @@ const handleYarnUnitChange = (index, value) => {
               onChange={generateItemCode} disabled={weaveDisable} 
               >
                 {weave.map((option) => (
-                <Option key={option.weaveId} value={option.weaveId}>
-                  {option.weaveName}
+                <Option key={option.fabricWeaveId} value={option.fabricWeaveId}>
+                  {option.fabricWeaveName}
                 </Option>
                 ))}
               </Select>
