@@ -604,7 +604,7 @@ const handleYarnUnitChange = (index, value) => {
             </Space.Compact>
             </Form.Item>
           </Col>
-            <Col xs={24} sm={12} md={6}>
+            <Col xs={24} sm={12} md={6} style={{display:'none'}}>
               <Form.Item label="Width" htmlFor="widthValue" name={"widthValue"}>
                 <Space.Compact>
                   <Form.Item name="width" id="width" rules={[{ required: true, message: "Width is required" }]}>
@@ -833,6 +833,7 @@ const handleYarnUnitChange = (index, value) => {
                                     </Option>
                                   ))}
                                 </Select>
+                                
                               <Input
                                 placeholder="Enter %"
                                 allowClear

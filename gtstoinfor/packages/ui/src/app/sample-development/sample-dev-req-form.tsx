@@ -1166,7 +1166,7 @@ export const SampleDevForm = () => {
  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > 
 <Form.Item
             name="patternId"
-            label="Pattern"
+            label="Pattern Master"
             // rules={[{ required: false, message: "" }]} 
           >
              <Select
