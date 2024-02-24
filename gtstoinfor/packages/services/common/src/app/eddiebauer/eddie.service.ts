@@ -790,7 +790,7 @@ export class EddieService {
         // const averageUnitPrice = totalSizeCount > 0 ? totalUnitPrice / totalSizeCount : 0;  // calculation of Avg unit price
         // console.log(averageUnitPrice,"avg price")
 
-        const co = new EddieCoLinereqModels(poInfo.poNumber, poInfo.poLine, poInfo.unitCost, poInfo.deliveryDate, poInfo.currency, poInfo.buyerStyle,desArray);
+        const co = new EddieCoLinereqModels(poInfo.poNumber, poInfo.poLine, poInfo.unitCost, poInfo.deliveryDate,poInfo.exFactoryDate, poInfo.currency, poInfo.buyerStyle,desArray);
         coData.push(co)
       });
       if (coData) {
@@ -1536,11 +1536,11 @@ export class EddieService {
         console.log(response.data[0])
         const coData = response.data[0];
         coLine.buyerPo = coData.poNumber;
-        const inputDate = new Date(coData.deliveryDate)
+        // const inputDate = new Date(coData.deliveryDate)
         // Calculate the date 7 days before the GAC date
-        const sevenDaysBefore = new Date(inputDate);
-        sevenDaysBefore.setDate(inputDate.getDate() - 7);
-        const exFactoryDate = new Intl.DateTimeFormat('en-GB').format(sevenDaysBefore);
+        // const sevenDaysBefore = new Date(inputDate);
+        // sevenDaysBefore.setDate(inputDate.getDate() - 7);
+        const exFactoryDate = moment(coData.exfactoryDate).format("DD/MM/YYYY")
         coLine.deliveryDate = moment(coData.deliveryDate).format("DD/MM/YYYY")
         coLine.exFactoryDate = exFactoryDate
         coLine.salesPrice = coData.salesPrice
@@ -1552,17 +1552,10 @@ export class EddieService {
         const addressData = address.data[0];
         console.log(addressData, "address")
         styleNo = coData.style
-        //  buyerAddress = addressData?.buyerCode ? addressData?.buyerCode : 12;
-        //  deliveryAddress = addressData?.deliveryCode
-        // buyerValue1 = "FIN-FINISHED GOODS - KY"
-        // buyerValue2 = "CEN00002-CENTRIC BRANDS LLC"
-        // agent = "NA-DIRECT CUSTOMER"
-        // pkgTerms = "BOX-BOXES"
-        // paymentTerms = "081-TT  90 Days"
+    
         buyerAddress = addressData?.buyerCode
         deliveryAddress = addressData?.deliveryCode
-        // buyerAddress = 10;
-        // deliveryAddress =  11
+   
         buyerValue1 = "EB-EDDIE BAUER"
         buyerValue2 = "EDDIE001-EDDIE BAUER LLC"
         agent = "-NA"
