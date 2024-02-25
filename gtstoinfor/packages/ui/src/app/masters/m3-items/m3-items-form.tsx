@@ -834,7 +834,7 @@ const handleYarnUnitChange = (index, value) => {
                                     </Option>
                                   ))}
                                 </Select>
-                                
+                                <Typography.Text style={{ margin: '0 7px' }}></Typography.Text>
                               <Input
                                 placeholder="Enter %"
                                 allowClear
