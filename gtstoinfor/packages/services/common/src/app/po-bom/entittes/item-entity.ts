@@ -95,4 +95,7 @@ export class ItemEntity {
 
 
 
+    @OneToMany(type =>BomEntity, style =>style.itemEntity, {cascade: true})
+    bomEntity:BomEntity[]
+    
 }

@@ -3,6 +3,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, Pri
 import { StyleEntity } from "./style-entity";
 import { StyleComboEntity } from "./style-combo-entity";
 import { PoBomEntity } from "./po-bom.entity";
+import { ItemEntity } from "./item-entity";
 
 @Entity('bom')
 export class BomEntity {
@@ -17,6 +18,12 @@ export class BomEntity {
         nullable:false    
     })
     itemName:ItemtypeEnum
+
+    @Column('int',{
+        name:'item_id',
+        nullable:false
+    })
+    itemId:number
 
     @Column('varchar',{
         name:'description',
@@ -89,4 +96,7 @@ export class BomEntity {
     @OneToMany(type => PoBomEntity,poBom =>poBom.bom)
     poBom:PoBomEntity[]
 
+    @ManyToOne(type=> ItemEntity, item =>item.bomEntity)
+    @JoinColumn({ name: 'item_id' })
+    itemEntity:ItemEntity
 }
