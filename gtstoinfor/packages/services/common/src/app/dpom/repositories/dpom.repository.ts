@@ -5,7 +5,7 @@ import { DpomEntity } from "../entites/dpom.entity";
 import { DpomDifferenceEntity } from "../entites/dpom-difference.entity";
 import { FileIdReq } from "../../orders/models/file-id.req";
 import { DpomChildEntity } from "../entites/dpom-child.entity";
-import { BomPrintFilterReq, FobPriceDiffRequest, ItemInfoFilterReq, PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomPrintFilterReq, FobPriceDiffRequest, ItemInfoFilterReq, PoDataForBomGenerationModel, PpmDateFilterRequest, nikeFilterRequest } from "@project-management-system/shared-models";
 import { FobEntity } from "../../fob-price-list/fob.entity";
 import { FabricContent } from "../../fabric-content/fabric-content.entity";
 import { StyleEntity } from "../../po-bom/entittes/style-entity";
@@ -960,27 +960,38 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
-    async getPoLineData(): Promise<any[]> {
+    async getPoLineData(req: PpmDateFilterRequest): Promise<any[]> {
+        console.log(req.item)
         const query = this.createQueryBuilder('d')
             .select(`id , po_number , po_line_item_number , style_number , planning_season_code  , planning_season_year , size_description ,size_qty , geo_code , po_and_line , destination_country_code, gender_age_desc,
-            destination_country`)
-            // .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED'`)
-            //  .groupBy(`po_and_line`)
+            destination_country,item,plant`)
+            .where(`d.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED'`)
+        if (req?.styleNumber !== undefined) {
+            query.andWhere(`d.style_number ='${req.styleNumber}'`)
+        }
+        if (req?.geoCode !== undefined) {
+            query.andWhere(`d.geo_code ='${req.geoCode}'`)
+        }
+        if (req?.item !== undefined) {
+            // const items = req.item.split(',').map(item => item.trim());
+            query.andWhere(`d.item IN (:...items)`, { items: req.item });
+        }
+        //  .groupBy(`po_and_line`)
         return await query.getRawMany();
     }
 
-    async getBomInfoAgainstItemStyle(req:BomPrintFilterReq):Promise<any[]>{
+    async getBomInfoAgainstItemStyle(req: BomPrintFilterReq): Promise<any[]> {
         // const items = (req.item).JOIN()
         const itemsParam = req.item.map(item => `'${item}'`).join(',');
         // const styleParam = req.style.map(style => `'${style}'`).join(',');
         const query = this.createQueryBuilder('dpom')
-        .select(`style_number,geo_code,destination_country_code,destination_country,po_number,po_line_item_number,LEFT(item,4) AS item,id,size_description,SUM(size_qty) as size_qty`)
-        .where(`LEFT(dpom.item,4) IN (${itemsParam})`) 
-        .groupBy(`LEFT(item,4),style_number,geo_code,size_description`)
-        .orderBy(`LEFT(item,4)`)
+            .select(`style_number,geo_code,destination_country_code,destination_country,po_number,po_line_item_number,LEFT(item,4) AS item,id,size_description,SUM(size_qty) as size_qty`)
+            .where(`LEFT(dpom.item,4) IN (${itemsParam})`)
+            .groupBy(`LEFT(item,4),style_number,geo_code,size_description`)
+            .orderBy(`LEFT(item,4)`)
         return await query.getRawMany()
     }
-    async getPoLineDataForCihinaInserttag(req:ItemInfoFilterReq): Promise<any[]> {
+    async getPoLineDataForCihinaInserttag(req: ItemInfoFilterReq): Promise<any[]> {
         const query = this.createQueryBuilder('d')
             .select(`ogac,LEFT(item,4) AS item,id , po_number , po_line_item_number ,
             style_number , planning_season_code  , planning_season_year , size_description ,sum(size_qty) , 
@@ -988,8 +999,111 @@ export class DpomRepository extends Repository<DpomEntity> {
                        destination_country`)
             .where(`created_at BETWEEN '${req.fromDate}' AND '${req.toDate}' AND item IS NOT NULL AND LEFT(item,4) = '${req.item}' AND geo_code = '${req.region}'`)
             .groupBy(`LEFT(item,4),style_number,geo_code,ogac`)
-           return await query.getRawMany();
+        return await query.getRawMany();
     }
+
+    async getBomCreationData(req: BomCreationFiltersReq): Promise<any[]> {
+        console.log(req)
+        const pageNumber = 0; // Assuming you start from the first page (0-indexed)
+        const pageSize = 10;
+        const distinctSizesQuery = await this
+            .createQueryBuilder('dpom')
+            .select('DISTINCT dpom.size_description', 'size')
+            .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED'`)
+            .andWhere(`dpom.size_qty > 0`)
+        if (req?.style !== undefined) {
+            distinctSizesQuery.andWhere(`dpom.style_number IN (:...style)`, { style: req.style })
+        }
+        if (req?.geoCode !== undefined) {
+            console.log(req.geoCode, 'geo code')
+            distinctSizesQuery.andWhere(`dpom.geo_code IN (:...geoCode)`, { geoCode: req.geoCode })
+        }
+        if (req?.item !== undefined) {
+            // const items = req.item.split(',').map(item => item.trim());
+            distinctSizesQuery.andWhere(`dpom.item IN (:...items)`, { items: req.item });
+        }
+        if (req.fromDate !== undefined) {
+            distinctSizesQuery.andWhere(`dpom.created_at BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
+        }
+        if (req.poLine !== undefined) {
+            distinctSizesQuery.andWhere(`dpom.po_and_line IN (:...poLine)`, { poLine: req.poLine })
+        }
+
+        const distinctSizes = await distinctSizesQuery.getRawMany();
+
+
+        // Generate conditional aggregations for each distinct size
+        const columnsQuery = distinctSizes
+            .map(size => {
+                const sizeColumnName = size.size.replace(/`/g, '``');
+                return `SUM(CASE WHEN d.size_description = '${size.size}' THEN d.size_qty ELSE 0 END) AS '${sizeColumnName}'`;
+            })
+            .join(', ');
+
+        const query = this.createQueryBuilder('d')
+            .select(`po_number as poNumber , po_line_item_number as poLineItemNumber ,po_and_line as poLine,item, style_number as styleNumber , planning_season_code as planningSeasonCode , planning_season_year as planningSeasonYear, geo_code as geoCode , destination_country_code as destinationCountryCode, gender_age_desc as genderAgeDesc,
+            destination_country as destinationCountry,plant,${columnsQuery}`)
+            .where(`d.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED'`)
+        if (req?.style !== undefined) {
+            query.andWhere(`d.style_number IN (:...style)`, { style: req.style })
+        }
+        if (req?.geoCode !== undefined) {
+            query.andWhere(`d.geo_code IN (:...geoCode)`, { geoCode: req.geoCode })
+        }
+        if (req?.item !== undefined) {
+            // const items = req.item.split(',').map(item => item.trim());
+            query.andWhere(`d.item IN (:...items)`, { items: req.item });
+        }
+        if (req.fromDate !== undefined) {
+            query.andWhere(`d.created_at BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
+        }
+        if (req.poLine !== undefined) {
+            query.andWhere(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })
+        }
+        //  .groupBy(`po_and_line`)
+        query.groupBy('d.po_number,d.po_line_item_number',)
+        query.orderBy('d.po_number,d.po_line_item_number')
+        // query.skip(pageNumber * pageSize)
+        // query.take(pageSize)
+        return await query.getRawMany();
+    }
+
+
+    async getPoDataForBomGeneration(req: { poLine: string[] }) :Promise<PoDataForBomGenerationModel[]>{
+        const query = await this.createQueryBuilder('d')
+            .select(`id,po_number as poNumber,po_line_item_number as poLineNo,schedule_line_item_number as scheduleLineItemNo,style_number as styleNumber,color_desc as color,destination_country as destination,geo_code as geoCode,plant,planning_season_code as season,planning_season_year as year,size_qty as qty,size_description as size`)
+            .where(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })
+        const data = await query.getRawMany()
+        const mappedResult: PoDataForBomGenerationModel[] = data.map(item => ({
+            id: item.id,
+            poNumber: item.poNumber,
+            poLineNo: item.poLineNo,
+            scheduleLineItemNo: item.scheduleLineItemNo,
+            styleNumber: item.styleNumber,
+            color: item.color,
+            destination: item.destination,
+            geoCode: item.geoCode,
+            plant: item.plant,
+            season: item.season,
+            year: item.year,
+            qty: item.qty,
+            size: item.size
+        }));
+
+        return mappedResult
+
+    }
+
+    async getDistinctStylesForPoLine(req: { poLine: string[] }) {
+        const query = await this.createQueryBuilder('d')
+            .select(`style_number`)
+            .distinct(true)
+            .where(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine });
+        return await query.getRawMany()
+
+    }
+
+
 
 
 

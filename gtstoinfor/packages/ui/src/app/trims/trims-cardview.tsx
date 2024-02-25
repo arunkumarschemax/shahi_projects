@@ -1,6 +1,6 @@
-import { Button, Card, Checkbox, Col, DatePicker, Descriptions, Divider, Form, Input, Modal, Popconfirm, Row, Segmented, Select, Space, Table, Tabs, Tag, Tooltip, message } from "antd";
+import { Button, Card, Checkbox, Col, DatePicker, Descriptions, Divider, Form, Input, InputNumber, Modal, Popconfirm, Row, Segmented, Select, Space, Table, Tabs, Tag, Tooltip, message } from "antd";
 import { CloseOutlined, CreditCardOutlined, EditOutlined, EyeOutlined, HomeOutlined, PlusCircleOutlined, SearchOutlined, UndoOutlined, } from "@ant-design/icons";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BomService, trimService } from "@project-management-system/shared-services";
 import { useLocale } from "antd/es/locale";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -22,12 +22,14 @@ export const TrimList = ({ }) => {
     const [bomInfo, setBomInfo] = useState<any>([]);
     const [modalOpen, setModalOpen] = useState<boolean>(false)
     const [trimName, setTrimName] = useState<string>('')
+    const [pageSize, setPageSize] = useState<number>(null);
+    const [page, setPage] = React.useState(1);
 
     const componentsMapping = {
         "Joker Tag": <JokerTagPrint info={bomInfo} />,
         "Hangtag": <HangTag info={bomInfo} />,
         "Wash Care Label": <WasCarelabel bomInfo={bomInfo} />,
-        "Country Sticker": <CountryStickerPrint info={state?.state?.info} />
+        // "Country Sticker": <CountryStickerPrint info={state?.state?.info} />
 
     }
 
@@ -74,8 +76,7 @@ export const TrimList = ({ }) => {
             }
         })
     }
-    console.log(state.state.info, "infodata..");
-
+    
     const getAllTrims = () => {
         service.getAllTrimInfo().then(res => {
             if (res.status) {
@@ -114,10 +115,38 @@ export const TrimList = ({ }) => {
         return allowedCountries.includes(country);
     };
 
+    const columns:any = [
+        {
+            title: "S.No",
+            width: 120,
+            render: (_text: any, record: any, index: number) => {
+                const continuousIndex = (page - 1) * pageSize + index + 1;
+                return <span>{continuousIndex}</span>;
+            },
+        },
+        {
+            title: 'Trim',
+            dataIndex: 'item'
+        },
+        {
+            title: 'Consumption',
+            render: (v, r) => <InputNumber disabled={!r.consumptionRequired} key={r.id} />
+        },
+        {
+            title: 'Action',
+            align:'center',
+            render: (v, r) => <Button type="dashed" onClick={() => onGenerateBom(r)}>Generate BOM </Button>
+        }
+    ]
+
+    function onGenerateBom(value) {
+
+    }
+
     return (
         <>
             <PageContainer title="Trims">
-                <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+                {/* <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}>
                     {trim.length > 0 && trim.map((e, index) => (
                         <Card key={index} hoverable style={{
                             width: "20%",
@@ -138,7 +167,15 @@ export const TrimList = ({ }) => {
                             </div>
                         </Card>
                     ))}
-                </div>
+                </div> */}
+                <Table className="custom-table-wrapper"
+                    size='small'
+                    //  pagination={false}
+                    pagination={false}
+                    scroll={{ x: 'max-content', y: 450 }}
+                    bordered
+                    columns={columns}
+                     dataSource={trim} />
             </PageContainer>
             <Modal open={modalOpen} onCancel={onCancel} onOk={() => setModalOpen(false)} footer={[]} width={'85%'}>
                 {componentsMapping[trimName]}

@@ -9,7 +9,6 @@ export class BomPoItemDetails {
     shortDescription:string;
     packMethod:string;
     vendorBookingFlag:string;
-    
     ppkupc:string;
     currency:string;
     totalQuantity:string

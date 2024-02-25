@@ -1,4 +1,4 @@
-import { BomPrintFilterReq, BomPrintInfoModel, CommonResponseModel, DestinationreqModel, ItemInfoFilterReq, StyleIdReq, StyleNumberReq } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomGenerationReq, BomPrintFilterReq, BomPrintInfoModel, CommonResponseModel, DestinationreqModel, ItemInfoFilterReq, PpmDateFilterRequest, StyleIdReq, StyleNumberReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -13,8 +13,8 @@ export class BomService extends CommonAxiosService {
     async getAllStylesData(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllStylesData")
     }
-    async getPpmPoLineData(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL + "/getPpmPoLineData")
+    async getPpmPoLineData(req: PpmDateFilterRequest): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getPpmPoLineData",req)
     }
     async getAllTrimInfo(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getAllTrimInfo")
@@ -48,6 +48,14 @@ export class BomService extends CommonAxiosService {
     }
     async getBomDataForStyle(req:StyleIdReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getBomDataForStyle",req)
+    }
+
+    async getBomCreationData(req: BomCreationFiltersReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getBomCreationData",req)
+    }
+
+    async generateBom(req: BomGenerationReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/generateBom",req)
     }
     
 }

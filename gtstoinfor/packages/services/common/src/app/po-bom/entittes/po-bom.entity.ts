@@ -2,45 +2,40 @@ import { ItemtypeEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { StyleEntity } from "./style-entity";
 import { StyleComboEntity } from "./style-combo-entity";
-import { PoBomEntity } from "./po-bom.entity";
+import { DpomEntity } from "../../dpom/entites/dpom.entity";
+import { BomEntity } from "./bom-entity";
 
-@Entity('bom')
-export class BomEntity {
+@Entity('po-bom')
+export class PoBomEntity {
     @PrimaryGeneratedColumn('increment', {
         name: 'id'
     })
     id: number;
 
-    @Column('enum',{
-        name:'item_name',
-        enum:ItemtypeEnum,
-        nullable:false    
+    @Column('int', {
+        name: 'po_qty'
     })
-    itemName:ItemtypeEnum
+    poQty: number;
 
-    @Column('varchar',{
-        name:'description',
-        nullable:false
+    @Column('int', {
+        name: 'bom_qty'
     })
-    description:string
+    bomQty: number;
 
-    @Column('varchar',{
-        name:'im_code',
-        nullable:false
+    @Column('int', {
+        name: 'consumption'
     })
-    imCode:string
+    consumption: number;
 
-    @Column('varchar',{
-        name:'item_type',
-        nullable:false
+    @Column('int', {
+        name: 'wastage'
     })
-    itemType:string
+    wastage: number;
 
-    @Column('varchar',{
-        name:'use',
-        nullable:false
+    @Column('int', {
+        name: 'moq'
     })
-    use:string
+    moq: number;
 
     @CreateDateColumn({
         name: 'created_at'
@@ -79,14 +74,16 @@ export class BomEntity {
     })
     isActive: boolean;
 
-    @ManyToOne(type=> StyleEntity, style =>style.bomEntity)
-    @JoinColumn({ name: 'style_id' })
-    styleEnityy:StyleEntity
-    
-    @OneToMany(type => StyleComboEntity,styleCombo =>styleCombo.bomEntity,{cascade:true})
-    styleComboEntity:StyleComboEntity[]
+    // @ManyToOne(type => StyleEntity, style => style.bomEntity)
+    // @JoinColumn({ name: 'style_id' })
+    // styleEntityy: StyleEntity
 
-    @OneToMany(type => PoBomEntity,poBom =>poBom.bom)
-    poBom:PoBomEntity[]
+    @ManyToOne(type => DpomEntity, dpom => dpom.poBom)
+    @JoinColumn({ name: 'dpom_id' })
+    dpom: DpomEntity
+
+    @ManyToOne(type => BomEntity, dpom => dpom.poBom)
+    @JoinColumn({ name: 'bom_id' })
+    bom: BomEntity
 
 }

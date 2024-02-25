@@ -1,7 +1,7 @@
 import { Body, Controller, Post } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 import { BomService } from "./bom-service";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleDto } from "./dto/style-dto";
 import { TrimService } from "./trim-service";
@@ -45,9 +45,9 @@ export class BomController {
     }
 
     @Post('/getPpmPoLineData')
-    async getPpmPoLineData(): Promise<CommonResponseModel> {
+    async getPpmPoLineData(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.bomService.getPpmPoLineData()
+            return this.bomService.getPpmPoLineData(req)
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
@@ -131,6 +131,24 @@ export class BomController {
     async getBomDataForStyle(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.bomService.getBomDataForStyle(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+
+    @Post('/getBomCreationData')
+    async getBomCreationData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.getBomCreationData(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+
+    @Post('/generateBom')
+    async generateBom(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.generateBom(req)
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
