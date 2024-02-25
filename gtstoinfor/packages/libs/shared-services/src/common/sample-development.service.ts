@@ -217,4 +217,8 @@ export class SampleDevelopmentService extends CommonAxiosService {
     return this.axiosPostCall(this.URL + "/getTrimPaths", req)
   }
 
+  async getAllActiveSampleOrders(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllActiveSampleOrders")
+  }
+
 }

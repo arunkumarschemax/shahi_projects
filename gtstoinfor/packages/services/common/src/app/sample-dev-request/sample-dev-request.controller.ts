@@ -785,4 +785,15 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  @Post('/getAllActiveSampleOrders')
+  async getAllActiveSampleOrders(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAllActiveSampleOrders();
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
 }

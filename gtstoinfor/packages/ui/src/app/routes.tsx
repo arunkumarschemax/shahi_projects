@@ -228,6 +228,7 @@ import TrimsParamsMappingView from "./trim-master/m3-trim-items/trim-mapping-vie
 import PatternForm from "./masters/pattern/pattern-form"
 import PatternView from "./masters/pattern/pattern-view"
 import StockReceivedApproval from "./sample-development/stock-received-approval"
+import ReceiveSampleOrders from "./sample-development/receive-sample-orders"
 
 
 
@@ -1186,6 +1187,7 @@ export const AppRoutes = () => {
                 <Route path='/grn-view' element={<GRNView />} />
                 <Route path='/grn-detail-view' element={<GRNDetailView />} />
                 <Route path='/sample-req-detail-view' element={<SampleReqDetailView/>} />
+                <Route path='/receive-sample-orders' element={<ReceiveSampleOrders/>} />
                 <Route path='/excel-import'>
                     <Route path='excel-import' element={<ExcelImport />} />
                     <Route path='changes-view' element={<ChangesGrid />} />
