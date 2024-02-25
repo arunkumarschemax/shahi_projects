@@ -60,6 +60,7 @@ import ItemInfo from "./trims/item-info"
 import ProLayout from "@ant-design/pro-layout"
 import LayoutTwo from "./layout/basic-layout/pro-layout"
 import PoItemNoUpdate from "./nike/components/po-update"
+import BomExcelUpload from "./bom-automation/bom-details-upload/bom-excel-upload"
 
 // import BasicLayout  from '@ant-design/pro-layout';
 export const AppRoutes = () => {
@@ -188,7 +189,9 @@ export const AppRoutes = () => {
                     <Route path='hang-tag' element={<HangTag info={[]}/>} />
                     <Route path='item-info' element={<ItemInfo />} />
                     <Route path='country-sticker' element={<CountryStickerPrint info={[]}/>} />
+                    <Route path='bom-excel-upload' element={<BomExcelUpload />} />
 
+                    
                 </Route>
 
                 <Route path='/reports'>

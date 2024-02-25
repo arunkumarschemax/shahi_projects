@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
-import { DataSource, Repository } from "typeorm";
+import { DataSource, Repository, getManager } from "typeorm";
 import { BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel } from "@project-management-system/shared-models";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
@@ -13,6 +13,11 @@ import { BomDto } from "./dto/bom-dto";
 import { StyleComboDto } from "./dto/style-combo-dto";
 import { DpomRepository } from "../dpom/repositories/dpom.repository";
 import { StyleIdReq } from "./dto/api-requests";
+import { GenericTransactionManager } from "../../typeorm-transactions";
+import { FileUploadEntity } from "./entittes/file-upload-entity";
+import * as XLSX from 'xlsx';
+import { log } from "winston";
+
 
 @Injectable()
 export class BomService {
@@ -299,7 +304,104 @@ async getAll(): Promise<CommonResponseModel> {
 
     }
 
+    async saveExcelData(val): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource)
+        try {
+            await transactionManager.startTransaction()
+           
+            const jsonData: any[] = await this.convertExcelToJson(val);
+            const headerRow = jsonData[0];
 
+            if (!jsonData.length) {
+                return new CommonResponseModel(true, 1110, 'No data found in excel');
+            }            
+            const data = await this.updatePath(val.path, val.filename, transactionManager);
+            const jsonArray: any = jsonData.map((row, arrInd) => {
+                const obj: any = {};
+                headerRow.forEach((header: any, index: any) => {
+                    let headerWithoutSpace = header
+                        .replace(/[^a-zA-Z0-9]/g, ' ')
+                        .split(' ')
+                        .map((word, index) =>
+                            index === 0
+                                ? word.toLowerCase()
+                                : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+                        )
+                        .join('');
+            
+                    obj[headerWithoutSpace] = row[index];
+                });
+                return obj;
+            });
+
+            for (const record of jsonArray) {
+                 const entity = new StyleEntity()
+                 entity.style = record.styleNbr
+                 entity.styleName= record.styleNm
+                 entity.season = record.seasonCd + record.seasonYr.slice(-2);
+                 entity.expNo= record
+                 entity.msc =  record.mscLevel1 + record.mscLevel2 + record.mscLevel3
+                 entity.gender = record.mscLevel1
+                 entity.factoryLo = record.factory
+                 entity.status = record.status
+                 entity.fileData = record
+                   
+                 await getManager().save(entity);       
+            }
+            await transactionManager.completeTransaction()
+            return new CommonResponseModel(true,1111,'Data saved sucessfully', );
+        } catch (err) {
+            console.log(err)
+            await transactionManager.releaseTransaction()
+            throw ("Error Occured")
+        }
+    }
+
+
+
+
+
+    async convertExcelToJson(file): Promise<any[]> {
+        return new Promise((resolve, reject) => {
+            try {
+                const workbook = XLSX.readFile(file.path);
+                const sheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[sheetName];
+                const jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                    header: 1,
+                    defval: '',
+                    raw: false,
+                    // dateNF: 'DD/MM/YYYY HH:mm'
+                });
+                resolve(jsonData);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    async updatePath(filePath: string, filename: string, transactionManager: GenericTransactionManager): Promise<any> {
+        try {
+            const entity = new FileUploadEntity();
+            entity.fileName = filename;
+            entity.filePath = filePath;
+            const filePathUpdate = await transactionManager.getRepository(FileUploadEntity).save(entity);
+            if (filePathUpdate) {
+                return new CommonResponseModel(
+                    true,
+                    11,
+                    'uploaded successfully',
+                    filePathUpdate
+                );
+            } else {
+                return new CommonResponseModel(false, 11, 'uploaded failed');
+            }
+        } catch (error) {
+            await transactionManager.releaseTransaction()
+        }
+    }
 }
+
+
 
 

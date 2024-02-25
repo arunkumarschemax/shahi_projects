@@ -68,5 +68,7 @@ export class ItemEntity {
     })
     isActive: boolean;
 
+    @OneToMany(type =>BomEntity, style =>style.itemEntity, {cascade: true})
+    bomEntity:BomEntity[]
     
 }

@@ -49,5 +49,11 @@ export class BomService extends CommonAxiosService {
     async getBomDataForStyle(req:StyleIdReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getBomDataForStyle",req)
     }
+
+
+      async saveExcelData(req: any): Promise<CommonResponseModel> {
+        console.log(req,"req")
+        return this.axiosPostCall(this.URL + '/saveExcelData', req);
+    }
     
 }

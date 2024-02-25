@@ -2,6 +2,7 @@ import { ItemtypeEnum } from "@project-management-system/shared-models";
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { StyleEntity } from "./style-entity";
 import { StyleComboEntity } from "./style-combo-entity";
+import { ItemEntity } from "./item-entity";
 
 @Entity('bom')
 export class BomEntity {
@@ -16,6 +17,12 @@ export class BomEntity {
         nullable:false    
     })
     itemName:ItemtypeEnum
+
+    @Column('int',{
+        name:'item_id',
+        nullable:false
+    })
+    itemId:number
 
     @Column('varchar',{
         name:'description',
@@ -85,4 +92,7 @@ export class BomEntity {
     @OneToMany(type => StyleComboEntity,styleCombo =>styleCombo.bomEntity,{cascade:true})
     styleComboEntity:StyleComboEntity[]
 
+    @ManyToOne(type=> ItemEntity, item =>item.bomEntity)
+    @JoinColumn({ name: 'item_id' })
+    itemEntity:ItemEntity
 }

@@ -13,13 +13,14 @@ import { ItemEntity } from "./entittes/item-entity";
 import { DpomRepository } from "../dpom/repositories/dpom.repository";
 import { DpomEntity } from "../dpom/entites/dpom.entity";
 import { TrimService } from "./trim-service";
+import { FileUploadEntity } from "./entittes/file-upload-entity";
 
 @Module({
     imports:[
         TypeOrmModule.forFeature([
             StyleEntity, 
             BomEntity,
-            StyleComboEntity,ItemEntity,DpomEntity
+            StyleComboEntity,ItemEntity,DpomEntity,FileUploadEntity
         ])],
     controllers:[BomController],
     providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository,TrimService]

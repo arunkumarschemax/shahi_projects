@@ -1,5 +1,5 @@
-import { Body, Controller, Post } from "@nestjs/common";
-import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { Body, Controller, Post ,    UploadedFile,UseInterceptors,} from "@nestjs/common";
+import { ApiBody, ApiTags,ApiConsumes } from "@nestjs/swagger";
 import { BomService } from "./bom-service";
 import { CommonResponseModel } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
@@ -7,6 +7,9 @@ import { StyleDto } from "./dto/style-dto";
 import { TrimService } from "./trim-service";
 import { StyleNumberDto } from "./dto/style-number-dto";
 import { StyleIdReq } from "./dto/api-requests";
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+
 
 @ApiTags('bom')
 @Controller('bom')
@@ -134,6 +137,28 @@ export class BomController {
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
+    }
+
+    @Post('/saveExcelData')
+    @UseInterceptors(
+      FileInterceptor('file', {
+        limits: { files: 1 },
+        storage: diskStorage({
+          destination: './upload-files',
+          filename: (req, filea, callback) => {
+            const name = filea.originalname;
+            callback(null, `${name}`);
+          },
+        }),
+      })
+    )
+    @ApiConsumes('multipart/form-data')
+    async saveExcelData(@UploadedFile() file): Promise<any> {
+      try {
+        return this.bomService.saveExcelData(file);
+      } catch (err) {
+        console.log(err);
+      }
     }
 
 }
