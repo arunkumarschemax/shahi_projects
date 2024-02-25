@@ -1,5 +1,5 @@
 import { LegalPoDetails, PoItemDetailsDto, PoItemVariantDto } from "@project-management-system/shared-models";
-import { CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_INDEX, ITEM_SHIP_TO_INDEXES, ITEM_SHIP_TO_TEXT, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT2, ITEM_TEXT_INDEX, ITEM_TEXT_START_INDEX, PO_DOC_DATE_INDEX, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, SELLER_ADDRESS_END_TEXT, SELLER_ADDRESS_START_TEXT, UNWANTED_TEXT_1, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5 } from "./popdf-regex-expressions";
+import { CURR_INDEX, DIVISIONBUYGROUP_INDEX, EMP_STR_EXP, FACTORYLOCATION_INDEX, INCOTERMS_INDEX, ITEM_ACCEPTANCEDATE_INDEX, ITEM_DELIVERYDATE_INDEX, ITEM_DESCRIPTION_INDEX, ITEM_MATERIAL_INDEX, ITEM_MODE_INDEX, ITEM_NO_EXP, ITEM_NO_INDEX, ITEM_SHIP_TO_INDEX, ITEM_SHIP_TO_INDEXES, ITEM_SHIP_TO_TEXT, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT2, ITEM_TEXT_INDEX, ITEM_TEXT_START_INDEX, PO_DOC_DATE_INDEX, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, SEASONYEAR_INDEX, SELLER_ADDRESS_END_TEXT, SELLER_ADDRESS_START_TEXT, UNWANTED_TEXT_1, UNWANTED_TEXT_10, UNWANTED_TEXT_2, UNWANTED_TEXT_3, UNWANTED_TEXT_4, UNWANTED_TEXT_5, UNWANTED_TEXT_6, UNWANTED_TEXT_7, UNWANTED_TEXT_8, UNWANTED_TEXT_9 } from "./popdf-regex-expressions";
 
 
 /**
@@ -58,6 +58,7 @@ export const extractDataFromPoPdf = async (pdf) => {
                 }
                 if (ele.str === "SHIP TO:") {
                     if (shipToCount === 0) {
+                        console.log(ind,'IiIiIiIi')
                         // Found the first "ship to"
                         shipToAddStartIndex = ind;
                         buyerAddEndIndex = ind
@@ -74,6 +75,12 @@ export const extractDataFromPoPdf = async (pdf) => {
                 if (ele.str.includes(UNWANTED_TEXT_1)) {
                     shipToAddEndIndex = ind
                 }
+                if(shipToAddEndIndex< shipToAddStartIndex){
+                    if (ele.str.includes("BUYER:")) {
+                        shipToAddEndIndex = ind
+                    }  
+                }
+                console.log(shipToAddEndIndex,'EEEEEEEEEEEEE')
             }
             let poNumber;
             poData.poDocDate = firstPageContent[poDocDateIndex + PO_DOC_DATE_INDEX].str
@@ -102,10 +109,12 @@ export const extractDataFromPoPdf = async (pdf) => {
                 buyerAddress += firstPageContent[b].str + ','
             }
             poData.buyerAddress = buyerAddress;
+            console.log(shipToAddStartIndex,'SHHHHHHHHHH')
             let shipToAddress = ''
             for (let c = shipToAddStartIndex + 1; c < shipToAddEndIndex; c++) {
                 shipToAddress += firstPageContent[c].str + ','
             }
+            console.log(shipToAddress,'SSSSSSSSSSSSSSSS')
             poData.shipToAddress = shipToAddress;
 
         }
@@ -134,6 +143,11 @@ export const extractDataFromPoPdf = async (pdf) => {
                 || val.str.includes(UNWANTED_TEXT_3)
                 || val.str.includes(UNWANTED_TEXT_4)
                 || val.str.includes(UNWANTED_TEXT_5)
+                || val.str.includes(UNWANTED_TEXT_6)
+                || val.str.includes(UNWANTED_TEXT_7)
+                || val.str.includes(UNWANTED_TEXT_8)
+                || val.str.includes(UNWANTED_TEXT_9)
+                || val.str.includes(UNWANTED_TEXT_10)
                 || startFlag
             )
         })
@@ -167,6 +181,13 @@ export const extractDataFromPoPdf = async (pdf) => {
 
         const deliveryDate = itemDetailsObj.deliveryDate;
         if (deliveryDate === '00.00.0000') {
+            continue; 
+        }
+        
+        // const itemVariantsObj = new PoItemDetailsDto();
+        const itemVariantsObj = new PoItemVariantDto();
+        const unitPrice = itemVariantsObj.unitPrice;
+        if (unitPrice === 'Each Still to be delivered') {
             continue; 
         }
         //-------------------------------------------------------------
@@ -333,6 +354,21 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemVariantsObj.uom = itemVarinatsTextArr[(6 * l) + 0];
         
             const unitPriceWithCurrency = itemVarinatsTextArr[(6 * l) + 1] + ' ' + itemVarinatsTextArr[(6 * l) + 2];
+
+            //Each still to be delivery starts here ----
+        
+            if (unitPriceWithCurrency.includes("Each Still to be delivered")) {
+                itemDetailsObj.itemNo = null;
+                itemDetailsObj.matrial=null;
+                itemDetailsObj.description = null;
+                itemDetailsObj.deliveryDate = null;
+                itemDetailsObj.mode = null;
+                itemDetailsObj.acceptanceDate = null;
+                break;
+            }
+
+            ////// to this -------
+    
             const usdIndex = unitPriceWithCurrency.indexOf('USD');
         
             if (usdIndex !== -1) {
@@ -376,6 +412,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemVariantsObj.qunatity = numberWithoutComma;
             itemVariantsObj.amount = itemVarinatsTextArr[(6 * l) + 5];
             console.log(itemVariantsObj);
+            
             itemVariantsArr.push(itemVariantsObj);
         }
         

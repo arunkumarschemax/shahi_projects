@@ -59,6 +59,18 @@ export class NikeService extends CommonAxiosService {
         return this.axiosPostCall(this.dpomController + "/getDivertReportData")
     }
 
+    async updateDivertDataValues(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/updateDivertDataValues", req)
+    }
+
+    async getDivertReportDataFromDivertTable(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getDivertReportDataFromDivertTable")
+    }
+
+    async updateDivertData(req: any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/updateDivertData", req)
+    }
+
     async getCountForDivertReport(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/getCountForDivertReport")
     }
@@ -393,12 +405,12 @@ export class NikeService extends CommonAxiosService {
         return this.axiosGetCall(this.dpomController + "/downloadPPMReportExcel")
     }
 
-    async updateItemNo(payload?:ItemNoDto): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/updateItemNo",payload)
+    async updateItemNo(payload?: ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/updateItemNo", payload)
     }
 
-    async deleteCoLine(payload?:ItemNoDto): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.dpomController + "/deleteCoLine",payload)
+    async deleteCoLine(payload?: ItemNoDto): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/deleteCoLine", payload)
     }
 
     async updateDomItme(payload?:ItemNoDto[]): Promise<CommonResponseModel> {

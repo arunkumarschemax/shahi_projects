@@ -156,7 +156,6 @@ export class FobService {
     const transactionManager = new GenericTransactionManager(this.dataSource)
     try {
       await transactionManager.startTransaction()
-      const flag = new Set()
       const updatedArray = formData.map((obj) => {
         const updatedObj = {};
         for (const key in obj) {
@@ -189,6 +188,8 @@ export class FobService {
           return new CommonResponseModel(false, 0, 'Something went wrong in deleting existing data')
         }
       }
+      const entitiesToInsert: FobEntity[] = [];
+
       for (const data of convertedData) {
         // let dtoData = new FobPriceExcelDto(data.Planning_Season_Code,data.Planning_Season_Year,data.Style_Number,data.Color_Code__Last_3_Degits_from_Product_Code,data.Size_Description,data.Shahi_Confirmed_Gross_Price,data.Shahi_Confirmed_Gross_Price_currency_code)
         if (data.Planning_Season_Code !== null) {
@@ -197,24 +198,16 @@ export class FobService {
           dtoData.planningSeasonCode = data.Planning_Season_Code
           dtoData.planningSeasonYear = data.Planning_Season_Year
           dtoData.styleNumber = data.Style_Number
-          dtoData.colorCode = data.Color_Code__Last_3_Degits_from_Product_Code
+          dtoData.colorCode = data.Color_Code
           dtoData.sizeDescription = data.Size_Description
           dtoData.shahiConfirmedGrossPrice = data.Shahi_Confirmed_Gross_Price
           dtoData.shahiConfirmedGrossPriceCurrencyCode = data.Shahi_Confirmed_Gross_Price_currency_code
           const dtoConversion = this.adaptor.convertDtoToEntity(dtoData)
-          const save = await transactionManager.getRepository(FobEntity).save(dtoConversion)
-          if (!save) {
-            flag.add(false)
-            await transactionManager.releaseTransaction();
-            break;
-          } else {
-            flag.add(true)
-          }
-        } else {
-          break
+          entitiesToInsert.push(dtoConversion);
         }
       }
-      if (!(flag.has(false))) {
+      const save = await transactionManager.getRepository(FobEntity).save(entitiesToInsert)
+      if (save) {
         await transactionManager.completeTransaction()
         return new CommonResponseModel(true, 1, 'Data saved sucessfully')
       } else {

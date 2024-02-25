@@ -699,7 +699,7 @@ const FactoryPPMReport = () => {
                 title: 'Item',
                 dataIndex: 'item', align: 'center', width: 70,
                 render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         const firstFourDigits = text.substring(0, 4);
@@ -713,7 +713,7 @@ const FactoryPPMReport = () => {
                 align: 'center',
                 width: 70,
                 render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -727,7 +727,7 @@ const FactoryPPMReport = () => {
                 width: 70,
                 align: 'center',
                 render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -783,7 +783,7 @@ const FactoryPPMReport = () => {
                 title: 'Colour Description',
                 dataIndex: 'colorDesc', width: 70,
                 render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -794,7 +794,7 @@ const FactoryPPMReport = () => {
                 title: 'CO', width: 70,
                 dataIndex: 'customerOrder',
                 render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -813,7 +813,7 @@ const FactoryPPMReport = () => {
                 title: 'Plan No',
                 dataIndex: 'planNo', width: 70,
                 render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -887,7 +887,7 @@ const FactoryPPMReport = () => {
                 title: 'Trading Co PO Number',
                 dataIndex: 'tradingCoPoNumber', width: 70,
                 render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -910,7 +910,7 @@ const FactoryPPMReport = () => {
                 title: 'Customer PO',
                 dataIndex: 'customerPO', width: 70,
                 render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -922,7 +922,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'shipToCustomerNumber', width: 70,
                 align: 'center',
                 render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -934,7 +934,7 @@ const FactoryPPMReport = () => {
                 dataIndex: 'shipToCustomerName', width: 70,
                 align: 'center',
                 render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -975,7 +975,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Truck Out Date', dataIndex: 'truckOutDate', width: 70, className: "right-column", render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -984,7 +984,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Origin Receipt Date', dataIndex: 'originReceiptDate', width: 70, className: "right-column", render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -993,7 +993,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'Factory Delivery Actual Date', dataIndex: 'factoryDeliveryActDate', width: 70, className: "right-column", render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -1002,7 +1002,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'GAC Reason Code', dataIndex: 'GACReasonCode', align: 'right', width: 70, render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -1011,7 +1011,7 @@ const FactoryPPMReport = () => {
             },
             {
                 title: 'GAC Reason Description', dataIndex: 'GACReasonDesc', width: 75, render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -1031,7 +1031,7 @@ const FactoryPPMReport = () => {
             { title: 'Planning Priority Description', dataIndex: 'planningPriorityDesc', width: 75 },
             {
                 title: 'Launch Code', dataIndex: 'launchCode', width: 70, render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -1133,31 +1133,16 @@ const FactoryPPMReport = () => {
                 dataIndex: 'displayName', width: 70,
                 align: 'center',
                 render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
                     }
                 },
-            },
-            {
-                title: 'Actual Shipped Qty', dataIndex: 'actualShippedQty', width: 70, render: (text, record) => {
-                    if (!text || text.trim() === '') {
-                        return '-';
-                    } else {
-                        return text;
-                    }
-                },
-            },
-            {
-                title: 'Actual Ship %',
-                dataIndex: '', width: 70,
-                align: 'center',
-
             },
             {
                 title: 'VAS-Size', dataIndex: 'VASSize', width: 70, render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -1165,21 +1150,23 @@ const FactoryPPMReport = () => {
                 },
             },
             {
-                title: 'Item Vas Text', dataIndex: 'itemVasText', width: 70,
-                align: 'center', render: (text, record) => {
-                    if (!text || text.trim() === '') {
-                        return '-';
-                    } else {
-                        return text;
-                    }
-                },
-
-            },
-            {
-                title: 'Item Text', dataIndex: 'itemText', width: 220, render: (text, record) => {
+                title: 'Item Vas Text', dataIndex: 'itemVasText', width: 220,
+                render: (text, record) => {
                     return (
                         <>
-                            {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
+                            {record.itemVasText?.length > 30 ? (<><Tooltip title='Cilck to open full item Vas Text'><p><span onClick={() => handleTextClick(record.itemVasText)} style={{ cursor: 'pointer' }}>
+                                {record.itemVasText.length > 30 ? `${record.itemVasText?.substring(0, 30)}....` : record.itemVasText}
+                            </span></p></Tooltip></>) : (<>{record.itemVasText}</>)}
+                        </>
+                    )
+                }
+            },
+            {
+                title: 'Item Text', dataIndex: 'itemText', width: 220,
+                render: (text, record) => {
+                    return (
+                        <>
+                            {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full item Text'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
                                 {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
                             </span></p></Tooltip></>) : (<>{record.itemText}</>)}
                         </>
@@ -1189,7 +1176,7 @@ const FactoryPPMReport = () => {
             {
                 title: 'Hanger Po', width: 70,
                 dataIndex: 'hanger', render: (text, record) => {
-                    if (!text || text.trim() === '') {
+                    if (!text || text?.trim() === '') {
                         return '-';
                     } else {
                         return text;
@@ -1340,7 +1327,7 @@ const FactoryPPMReport = () => {
                                 </Select>
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
                             <Form.Item name='docType' label='Doc Type' >
                                 <Select
                                     showSearch
@@ -1362,6 +1349,7 @@ const FactoryPPMReport = () => {
                                     placeholder="Select Item"
                                     optionFilterProp="children"
                                     allowClear
+                                    mode='multiple'
                                 >
                                     {item?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
@@ -1388,17 +1376,16 @@ const FactoryPPMReport = () => {
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
                             <Form.Item label="Document Date" name="documentDate">
                                 <RangePicker />
-
                             </Form.Item>
                         </Col>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 3 }} >
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }} >
                             <Form.Item name='poNumber' label='Purchase Order Number' >
                                 <Select
                                     showSearch
                                     placeholder="Select Po Number"
                                     optionFilterProp="children"
                                     allowClear
-
+                                    mode='multiple'
                                 >
                                     {poNumber?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
@@ -1414,6 +1401,7 @@ const FactoryPPMReport = () => {
                                     placeholder="Select poLineItemNumber"
                                     optionFilterProp="children"
                                     allowClear
+                                    mode='multiple'
                                 >
                                     {poLineItemNumber?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.po_line_item_number}>{inc.po_line_item_number}</Option>
