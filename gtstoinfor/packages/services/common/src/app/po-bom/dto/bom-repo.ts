@@ -30,7 +30,7 @@ export class BomRepo extends Repository<BomEntity> {
     async getBomDataForStyleAndSeason(req : {style : string,season : string,year:string}):Promise<BomDataForStyleAndSeasonModel[]>{
         const concatenatedSeason = req.season + req.year.slice(2);
         const query= this.createQueryBuilder('s')
-        .select(`s.style_id as styleId,s.id AS bomId,s.item_name AS itemName,s.description,s.im_code AS imCode,s.item_type AS itemType,sc.id AS styleComboId,sc.combination,sc.primary_color AS primaryColor,sc.secondary_color AS secondaryColor,sc.logo_color AS logoColor,sc.color`)
+        .select(`s.style_id as styleId,s.id AS bomId,s.item_name AS itemName,s.description,s.im_code AS imCode,s.item_type AS itemType,sc.id AS styleComboId,sc.combination,sc.primary_color AS primaryColor,sc.secondary_color AS secondaryColor,sc.logo_color AS logoColor,sc.color,s.item_id as itemId`)
         .leftJoin(StyleComboEntity,'sc','sc.bom_id=s.id')
         .where(`s.style=${req.style} and s.season=${concatenatedSeason}`)
         const data = await query.getRawMany()
@@ -47,7 +47,8 @@ export class BomRepo extends Repository<BomEntity> {
             primaryColor: item.primaryColor,
             secondaryColor: item.secondaryColor,
             logoColor: item.logoColor,
-            color: item.color
+            color: item.color,
+            itemId : item.itemId
         }));
     
         return mappedResult;

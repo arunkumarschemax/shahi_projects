@@ -18,6 +18,7 @@ import { GenericTransactionManager } from "../../typeorm-transactions";
 import { FileUploadEntity } from "./entittes/file-upload-entity";
 import * as XLSX from 'xlsx';
 import { log } from "winston";
+import { DpomEntity } from "../dpom/entites/dpom.entity";
 
 
 @Injectable()
@@ -310,40 +311,87 @@ export class BomService {
     }
 
     async generateBom(req: BomGenerationReq): Promise<CommonResponseModel> {
-        const { poLine } = req
-        const poData = await this.dpomRepo.getPoDataForBomGeneration({ poLine })
-        const styleDataMap = new Map<string, BomDataForStyleAndSeasonModel[]>()
+        const transactionManager = new GenericTransactionManager(this.dataSource)
+        try {
 
-        for (const po of poData) {
-            async function getStyleData(): Promise<BomDataForStyleAndSeasonModel[]> {
-                if (!styleDataMap.has(po.styleNumber)) {
-                    const styleData = await this.bomRepo.getBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year })
-                    styleDataMap.set(po.styleNumber, styleData)
-                    return styleData
+            const { poLine,updatedSizes } = req
+            const poData = await this.dpomRepo.getPoDataForBomGeneration({ poLine })
+            const styleDataMap = new Map<string, BomDataForStyleAndSeasonModel[]>()
+
+            function calculateBomQty(poQty: number, moq: number, consumption: number, wastage: number) {
+                const bomQty = (poQty * consumption) * wastage / 100
+                if (bomQty < moq) {
+                    return moq
                 }
-                return styleDataMap.get(po.styleNumber)
+                return bomQty
             }
 
-            const styleData = await getStyleData()
-            for (const styleBom of styleData) {
+            function getUpdatedQty(poLine :string,poQty){
+                if(updatedSizes.length){
+                   const updatedSize = updatedSizes.find((u) => u.poLine == poLine)
+                   if(updatedSize){
+                        return updatedSize.qty
+                   }
+                }
+                return poQty
             }
 
+            const poBomEntities: PoBomEntity[] = []
+            for (const po of poData) {
 
+                async function getStyleData(): Promise<BomDataForStyleAndSeasonModel[]> {
+                    if (!styleDataMap.has(po.styleNumber)) {
+                        const styleData = await this.bomRepo.getBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year })
+                        styleDataMap.set(po.styleNumber, styleData)
+                        return styleData
+                    }
+                    return styleDataMap.get(po.styleNumber)
+                }
+
+                const styleData = await getStyleData()
+                for (const styleBom of styleData) {
+                    const consumptions = await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) ? await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) : { itemId: 0, wastage: 3, moq: 100, cosumption: 1 }
+                    const { cosumption, moq, wastage } = consumptions
+                    const updatedQty = getUpdatedQty(po.poLineNo,po.qty)
+                    const bomQty = calculateBomQty(updatedQty, moq, cosumption, wastage)
+                    const poBomEntity = new PoBomEntity()
+                    const bom = new BomEntity()
+                    bom.id = styleBom.bomId
+                    poBomEntity.bom = bom
+                    poBomEntity.consumption = cosumption
+                    poBomEntity.moq = moq
+                    poBomEntity.wastage = wastage
+                    poBomEntity.bomQty = bomQty
+                    const dpom = new DpomEntity()
+                    dpom.id = po.id
+                    poBomEntity.dpom = dpom
+                    poBomEntities.push(poBomEntity)
+                }
+                await transactionManager.startTransaction()
+                await transactionManager.getRepository(PoBomEntity).insert(poBomEntities)
+                for (const poLine of req.poLine) {
+                    await transactionManager.getRepository(DpomEntity).update({ poAndLine: poLine }, { isBomGenerated: true })
+                }
+            }
+            await transactionManager.completeTransaction()
+            return new CommonResponseModel(true, 11111, "Data retreived sucessfully")
+
+        } catch (err) {
+            await transactionManager.releaseTransaction()
         }
-        return new CommonResponseModel(true, 11111, "Data retreived sucessfully")
     }
 
     async saveExcelData(val): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
             await transactionManager.startTransaction()
-           
+
             const jsonData: any[] = await this.convertExcelToJson(val);
             const headerRow = jsonData[0];
 
             if (!jsonData.length) {
                 return new CommonResponseModel(true, 1110, 'No data found in excel');
-            }            
+            }
             const data = await this.updatePath(val.path, val.filename, transactionManager);
             const jsonArray: any = jsonData.map((row, arrInd) => {
                 const obj: any = {};
@@ -357,28 +405,28 @@ export class BomService {
                                 : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                         )
                         .join('');
-            
+
                     obj[headerWithoutSpace] = row[index];
                 });
                 return obj;
             });
 
             for (const record of jsonArray) {
-                 const entity = new StyleEntity()
-                 entity.style = record.styleNbr
-                 entity.styleName= record.styleNm
-                 entity.season = record.seasonCd + record.seasonYr.slice(-2);
-                 entity.expNo= record
-                 entity.msc =  record.mscLevel1 + record.mscLevel2 + record.mscLevel3
-                 entity.gender = record.mscLevel1
-                 entity.factoryLo = record.factory
-                 entity.status = record.status
-                 entity.fileData = record
-                   
-                 await getManager().save(entity);       
+                const entity = new StyleEntity()
+                entity.style = record.styleNbr
+                entity.styleName = record.styleNm
+                entity.season = record.seasonCd + record.seasonYr.slice(-2);
+                entity.expNo = record
+                entity.msc = record.mscLevel1 + record.mscLevel2 + record.mscLevel3
+                entity.gender = record.mscLevel1
+                entity.factoryLo = record.factory
+                entity.status = record.status
+                entity.fileData = record
+
+                await getManager().save(entity);
             }
             await transactionManager.completeTransaction()
-            return new CommonResponseModel(true,1111,'Data saved sucessfully', );
+            return new CommonResponseModel(true, 1111, 'Data saved sucessfully',);
         } catch (err) {
             console.log(err)
             await transactionManager.releaseTransaction()

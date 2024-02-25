@@ -39,7 +39,7 @@ export class PoDataForBomGenerationModel {
     plant: string;
     season: string;
     year: string;
-    qty: string;
+    qty: number;
     size: string;
 }
 
@@ -56,4 +56,5 @@ export class BomDataForStyleAndSeasonModel {
     secondaryColor: string;
     logoColor: string;
     color: string;
+    itemId : number
 }

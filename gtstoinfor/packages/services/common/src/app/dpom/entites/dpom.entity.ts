@@ -734,6 +734,12 @@ export class DpomEntity {
     })
     coLineStatus: string;
 
+    @Column({
+        name: "is_bom_generated",
+        default: 0
+    })
+    isBomGenerated: boolean;
+
     @OneToMany(() => DpomChildEntity, (dpomChild) => { dpomChild.dpom }, { cascade: true })
     dpomChild: DpomChildEntity;
 
