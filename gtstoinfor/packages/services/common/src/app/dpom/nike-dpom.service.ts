@@ -2600,11 +2600,11 @@ export class DpomService {
                     waitUntil: 'networkidle0', // Wait until there are no more network connections
                 }).then(async () => {
                     // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
-                    const directoryPath = 'C:/Users/saipr/Downloads/PO-PDF NOT READ';
+                    const directoryPath = 'D:/Nike PDF/NIKE-PDF PO';
                     console.log(directoryPath)
                     // Specify the source and destination directories
-                    const sourceDirectory = 'C:/Users/saipr/Downloads/PO-PDF NOT READ';
-                    const destinationDirectory = 'C:/Users/saipr/Downloads/PO-PDF READ';
+                    const sourceDirectory = 'D:/Nike PDF/NIKE-PDF PO';
+                    const destinationDirectory = 'D:/Nike PDF/PO PDF-READ';
                     const files = fs.readdirSync(directoryPath)
                     for (const file of files) {
                         await page.waitForSelector('input[type="file"]');
