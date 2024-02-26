@@ -969,7 +969,11 @@ export class LevisService {
                     const value = await option.getAttribute('value');
                     optionValues.push(value);
                   }
-                  const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
+                  const number = optionValues.find(value => {
+                    return Number(value.split('-')[0].trim()) == Number(deliveryAddress)
+                });
+                console.log(number,"nummmm")
+                  // const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
                   await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
                   // Find all the input fields in the first row.
                   const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
@@ -1031,7 +1035,7 @@ export class LevisService {
         const currentDateFormatted = `${day}-${month}-${year}`;
         if (coNo) {
 
-
+ 
           const update = await this.levisCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted, errorMsg: "-" });
           await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.SUCCESS })
 
@@ -1076,7 +1080,7 @@ export class LevisService {
       return false;
     }
   }
-
+  
 
   async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
     console.log(req, "reqqqqqqqponumnbbb");
@@ -1098,7 +1102,7 @@ export class LevisService {
     }
   }
 
-  @Cron('1 * * * *')
+  // @Cron('1 * * * *')
   async levisBot() {
     try {
       const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
@@ -1129,8 +1133,7 @@ export class LevisService {
         })
       }, 1000);
 
-      // const directoryPath = 'F:/centric-buyers-unread-files/';
-      // const destinationDirectory = 'F:/centric-buyers-read-files/';
+    
 
       //live directory paths:
       const directoryPath = 'D:/levis-unread/';
