@@ -343,8 +343,28 @@ const LevisColineView = () => {
             title: 'Status',
             dataIndex: 'status',
             render: (text, record) => {
-                return (record.status ? (record.status) : '-')
-            }
+                return {
+                  children: <div style={{ position: "relative", top: "-7px" }}>{text}</div>,
+                  props: {
+                    rowSpan: record.rowSpan,
+                  },
+                };
+              },
+            filters: [
+                {
+                  text: 'OPEN',
+                  value: 'Open',
+                },
+                {
+                  text: 'FAILED',
+                  value: 'Failed',
+                },
+                {
+                  text: 'SUCCESS',
+                  value: 'Success',
+                },
+              ],
+            onFilter: (value, record) => record.status === value,
         },
         {
             title: 'Message',
