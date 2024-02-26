@@ -17,7 +17,7 @@ export class UpdatedConsumptions{
     itemId : number;
     wastage : number;
     moq : number;
-    cosumption : number
+    consumption : number
 }
 
 export class BomGenerationReq {
@@ -50,11 +50,5 @@ export class BomDataForStyleAndSeasonModel {
     description: string;
     imCode: string;
     itemType: string;
-    styleComboId: number;
-    combination: string;
-    primaryColor: string;
-    secondaryColor: string;
-    logoColor: string;
-    color: string;
     itemId : number
 }

@@ -60,14 +60,11 @@ export class StyleEntity {
     })
     status:string
     
-    @Column("text", {
-        nullable: false,
-        name: "file_data",
-    })
-    fileData: string;
+  
 
     @CreateDateColumn({
-        name: 'created_at'
+        name: 'created_at',
+        nullable:true
     })
     createdAt: string;
 
@@ -79,7 +76,8 @@ export class StyleEntity {
     createdUser: string | null;
 
     @UpdateDateColumn({
-        name: 'updated_at'
+        name: 'updated_at',
+        nullable:true
     })
     updatedAt: string;
 

@@ -90,10 +90,8 @@ export class ItemEntity {
     })
     isActive: boolean;
 
-    @OneToMany(type => ZFactorsEntity,zFactor =>zFactor.itemEntity)
-    zFactorEntity:ZFactorsEntity[]
-
-
+    // @OneToMany(type => ZFactorsEntity,zFactor =>zFactor.itemEntity)
+    // zFactorEntity:ZFactorsEntity
 
     @OneToMany(type =>BomEntity, style =>style.itemEntity, {cascade: true})
     bomEntity:BomEntity[]

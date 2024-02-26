@@ -7,6 +7,7 @@ import { BomEntity } from "../entittes/bom-entity";
 import { StyleComboEntity } from "../entittes/style-combo-entity";
 import { StyleNumberDto } from "./style-number-dto";
 import { DpomEntity } from "../../dpom/entites/dpom.entity";
+import { BomDataForStyleAndSeasonModel } from "@project-management-system/shared-models";
 
 
 @Injectable()
@@ -35,4 +36,33 @@ export class StyleRepo extends Repository<StyleEntity> {
         return await query.getRawMany()
 
     }
+
+    async getBomDataForStyleAndSeason(req : {style : string,season : string,year:string}):Promise<BomDataForStyleAndSeasonModel[]>{
+        const concatenatedSeason = req.season + req.year.slice(2);
+        const query= this.createQueryBuilder('s')
+        .select(`b.style_id as styleId,b.id AS bomId,b.item_name AS itemName,b.description,b.im_code AS imCode,b.item_type AS itemType,sc.id AS styleComboId,sc.combination,sc.primary_color AS primaryColor,sc.secondary_color AS secondaryColor,sc.logo_color AS logoColor,sc.color,b.item_id as itemId,s.style`)
+        .leftJoin(BomEntity,'b','b.style_id = b.id')
+        .leftJoin(StyleComboEntity,'sc','sc.bom_id=b.id')
+        .where(`s.style='${req.style}' and s.season='${concatenatedSeason}'`)
+        const data = await query.getRawMany()
+
+        const mappedResult: BomDataForStyleAndSeasonModel[] = data.map(item => ({
+            styleId: item.styleId,
+            bomId: item.bomId,
+            itemName: item.itemName,
+            description: item.description,
+            imCode: item.imCode,
+            itemType: item.itemType,
+            styleComboId: item.styleComboId,
+            combination: item.combination,
+            primaryColor: item.primaryColor,
+            secondaryColor: item.secondaryColor,
+            logoColor: item.logoColor,
+            color: item.color,
+            itemId : item.itemId
+        }));
+    
+        return mappedResult;
+    }
+
 }

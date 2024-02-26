@@ -179,4 +179,13 @@ export class BomController {
         }
     }
 
+    @Post('/migrateData')
+    async migrateData(): Promise<any> {
+        try {
+            return this.bomService.migrateData()
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+
 }

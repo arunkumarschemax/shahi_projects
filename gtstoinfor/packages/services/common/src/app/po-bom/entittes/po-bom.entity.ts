@@ -5,7 +5,7 @@ import { StyleComboEntity } from "./style-combo-entity";
 import { DpomEntity } from "../../dpom/entites/dpom.entity";
 import { BomEntity } from "./bom-entity";
 
-@Entity('po-bom')
+@Entity('po_bom')
 export class PoBomEntity {
     @PrimaryGeneratedColumn('increment', {
         name: 'id'

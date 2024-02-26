@@ -19,6 +19,7 @@ import { FileUploadEntity } from "./entittes/file-upload-entity";
 import * as XLSX from 'xlsx';
 import { log } from "winston";
 import { DpomEntity } from "../dpom/entites/dpom.entity";
+import { AppDataSource, AppDataSource2 } from "../app-datasource";
 
 
 @Injectable()
@@ -42,7 +43,6 @@ export class BomService {
             entity.msc = req.msc
             entity.factoryLo = req.factoryLo
             entity.status = req.status
-            entity.fileData = req.fileData
 
             let bomEntityArray = []
             for (const bom of req.bomdto) {
@@ -309,75 +309,78 @@ export class BomService {
         const data = await this.dpomRepo.getBomCreationData(req)
         return new CommonResponseModel(true, 11111, "Data retreived sucessfully", data)
     }
-
+    
     async generateBom(req: BomGenerationReq): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
+        await transactionManager.startTransaction()
         try {
 
-            const { poLine,updatedSizes } = req
+            const { poLine, updatedSizes } = req
             const poData = await this.dpomRepo.getPoDataForBomGeneration({ poLine })
             const styleDataMap = new Map<string, BomDataForStyleAndSeasonModel[]>()
 
-            function calculateBomQty(poQty: number, moq: number, consumption: number, wastage: number) {
-                const bomQty = (poQty * consumption) * wastage / 100
-                if (bomQty < moq) {
-                    return moq
-                }
+            function calculateBomQty(poQty:number, moq:number, consumption:number, wastage:number) {
+                const wastageQty  =  (poQty * consumption) * (wastage / 100)
+                const bomQty = (poQty * consumption)  + wastageQty
                 return bomQty
             }
 
-            function getUpdatedQty(poLine :string,poQty){
-                if(updatedSizes.length){
-                   const updatedSize = updatedSizes.find((u) => u.poLine == poLine)
-                   if(updatedSize){
+           
+            function getUpdatedQty(poLine: string, poQty) {
+                if (updatedSizes.length) {
+                    const updatedSize = updatedSizes.find((u) => u.poLine == poLine)
+                    if (updatedSize) {
                         return updatedSize.qty
-                   }
+                    }
                 }
                 return poQty
             }
 
             const poBomEntities: PoBomEntity[] = []
+            console.log(poData.length,' po data size')
             for (const po of poData) {
-
-                async function getStyleData(): Promise<BomDataForStyleAndSeasonModel[]> {
-                    if (!styleDataMap.has(po.styleNumber)) {
-                        const styleData = await this.bomRepo.getBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year })
-                        styleDataMap.set(po.styleNumber, styleData)
-                        return styleData
-                    }
-                    return styleDataMap.get(po.styleNumber)
+                let styleData = []
+                if (!styleDataMap.has(po.styleNumber)) {
+                    styleData = await this.bomRepo.getBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year })
+                    styleDataMap.set(po.styleNumber, styleData)
+                } else {
+                    styleData = styleDataMap.get(po.styleNumber)
                 }
-
-                const styleData = await getStyleData()
+                // console.log(po.styleNumber,styleData.length,' style size')
                 for (const styleBom of styleData) {
-                    const consumptions = await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) ? await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) : { itemId: 0, wastage: 3, moq: 100, cosumption: 1 }
-                    const { cosumption, moq, wastage } = consumptions
-                    const updatedQty = getUpdatedQty(po.poLineNo,po.qty)
-                    const bomQty = calculateBomQty(updatedQty, moq, cosumption, wastage)
+                    
+                    const consumptions = await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) ? await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) : { itemId: 0, wastage: 3, moq: 100, consumption: 1 }
+                    // console.log(consumptions,styleBom.itemId)
+                    const { consumption, moq, wastage } = consumptions
+                    const updatedQty = getUpdatedQty(po.poLineNo, po.qty)
+                    const bomQty = calculateBomQty(updatedQty, moq, consumption, wastage)
                     const poBomEntity = new PoBomEntity()
                     const bom = new BomEntity()
                     bom.id = styleBom.bomId
                     poBomEntity.bom = bom
-                    poBomEntity.consumption = cosumption
-                    poBomEntity.moq = moq
-                    poBomEntity.wastage = wastage
-                    poBomEntity.bomQty = bomQty
+                    poBomEntity.consumption = consumption ? consumption : 0
+                    poBomEntity.moq = moq ? moq : 0
+                    poBomEntity.wastage = wastage ? wastage : 0
+                    poBomEntity.bomQty = isNaN(bomQty) ? 0 : bomQty
+                    poBomEntity.poQty = po.qty
+                    
                     const dpom = new DpomEntity()
                     dpom.id = po.id
                     poBomEntity.dpom = dpom
                     poBomEntities.push(poBomEntity)
-                }
-                await transactionManager.startTransaction()
-                await transactionManager.getRepository(PoBomEntity).insert(poBomEntities)
-                for (const poLine of req.poLine) {
-                    await transactionManager.getRepository(DpomEntity).update({ poAndLine: poLine }, { isBomGenerated: true })
+                    await transactionManager.getRepository(PoBomEntity).insert(poBomEntity)
                 }
             }
+            for (const poLine of req.poLine) {
+                await transactionManager.getRepository(DpomEntity).update({ poAndLine: poLine }, { isBomGenerated: true })
+            }
+            
             await transactionManager.completeTransaction()
             return new CommonResponseModel(true, 11111, "Data retreived sucessfully")
 
         } catch (err) {
             await transactionManager.releaseTransaction()
+            throw err
         }
     }
 
@@ -421,8 +424,6 @@ export class BomService {
                 entity.gender = record.mscLevel1
                 entity.factoryLo = record.factory
                 entity.status = record.status
-                entity.fileData = record
-
                 await getManager().save(entity);
             }
             await transactionManager.completeTransaction()
@@ -476,6 +477,22 @@ export class BomService {
         } catch (error) {
             await transactionManager.releaseTransaction()
         }
+    }
+
+    async migrateData() {
+        await AppDataSource2.initialize()
+        const data = await AppDataSource2.getRepository(StyleComboEntity).find({ relations: ['styleEntity', 'bomEntity',] })
+        for (const rec of data) {
+            rec.createdAt = "2024-01-25 09:51:07.522162"
+            rec.updatedAt = "2024-01-25 09:51:07.522162"
+            await this.styleComboRepo.insert(rec)
+        }
+
+    }
+
+    async generateProposal(req: BomGenerationReq) : Promise<CommonResponseModel>{
+        
+        return new CommonResponseModel(true, 11, '');
     }
 }
 
