@@ -94,7 +94,9 @@ export const SampleDevForm = () => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
     const loginUser = userData?.user?.userName
+    const contactNo = userData?.user?.contactNo
     form.setFieldsValue({ "user": loginUser })
+    form.setFieldsValue({ "contact": contactNo })
     getAllLocations()
     getLocations();
     getPCHData();
@@ -956,7 +958,7 @@ export const SampleDevForm = () => {
                 },
               ]}
             >
-              <Input placeholder="Enter Contact" />
+              <Input placeholder="Enter Contact" disabled/>
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>

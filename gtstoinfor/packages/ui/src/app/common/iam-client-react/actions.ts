@@ -18,6 +18,7 @@ export const loginUser = async (dispatch: React.Dispatch<IAMClientAuthActions>, 
         });
         const res = response.data;//await service.login(loginPayload);
         if (res.status) {
+            console.log(res.data);
             const aaa: any = res.data;
             localStorage.setItem('token', aaa.accessToken);
             const menuData: UserPermissionsDto = aaa.accessMenuObj;
@@ -25,7 +26,9 @@ export const loginUser = async (dispatch: React.Dispatch<IAMClientAuthActions>, 
                 loading: false,
                 isAuthenticated: true,
                 user: {
+                    userId: menuData.userId,
                     userName: menuData.userName,
+                    contactNo: aaa.accessMenuObj.contactNo,
                     profilePicPath: aaa?.['filesData']?.[0]?.filePath?.slice(7) ? fileUploadPath + '/' + aaa?.['filesData']?.[0]?.filePath?.slice(7) : null,
                     roles: menuData.roleName.join(','),
                     externalRefNo: menuData.externalRefNo
