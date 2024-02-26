@@ -23,7 +23,7 @@ const BomExcelUpload = () => {
    
 
     const handleUpload = async () => {
-        AlertMessages.getCustomIconMessage("excelupload", "Excel is uploading", <LoadingOutlined style={{ color: '#22C55E' }} />);
+        // AlertMessages.getCustomIconMessage("excelupload", "Excel is uploading", <LoadingOutlined style={{ color: '#22C55E' }} />);
         if (fileList.length) {
             const formData = new FormData();
             formData.append('file', fileList[0]);

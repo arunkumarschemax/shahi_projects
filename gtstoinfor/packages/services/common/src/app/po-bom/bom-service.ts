@@ -385,18 +385,25 @@ export class BomService {
     }
 
     async saveExcelData(val): Promise<CommonResponseModel> {
-        const transactionManager = new GenericTransactionManager(this.dataSource)
+        const transactionManager = new GenericTransactionManager(this.dataSource);
+    
         try {
-            await transactionManager.startTransaction()
-
+            await transactionManager.startTransaction();
+    
             const jsonData: any[] = await this.convertExcelToJson(val);
             const headerRow = jsonData[0];
-
+    
             if (!jsonData.length) {
                 return new CommonResponseModel(true, 1110, 'No data found in excel');
             }
+    
             const data = await this.updatePath(val.path, val.filename, transactionManager);
-            const jsonArray: any = jsonData.map((row, arrInd) => {
+    
+            const styleRepository = transactionManager.getRepository(StyleEntity);
+            const bomRepository = transactionManager.getRepository(BomEntity);
+            const styleComboRepository = transactionManager.getRepository(StyleComboEntity);
+    
+            const jsonArray: any[] = jsonData.slice(1).map((row, arrInd) => {
                 const obj: any = {};
                 headerRow.forEach((header: any, index: any) => {
                     let headerWithoutSpace = header
@@ -408,37 +415,65 @@ export class BomService {
                                 : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                         )
                         .join('');
-
+    
                     obj[headerWithoutSpace] = row[index];
                 });
                 return obj;
             });
-
+    
             for (const record of jsonArray) {
-                const entity = new StyleEntity()
-                entity.style = record.styleNbr
-                entity.styleName = record.styleNm
-                entity.season = record.seasonCd + record.seasonYr.slice(-2);
-                entity.expNo = record
-                entity.msc = record.mscLevel1 + record.mscLevel2 + record.mscLevel3
-                entity.gender = record.mscLevel1
-                entity.factoryLo = record.factory
-                entity.status = record.status
-                await getManager().save(entity);
+                if (record.status !== 'K') {
+                    const styleEntity = styleRepository.create({
+                        style: record.styleNbr,
+                        styleName: record.styleNm,
+                        season: record.seasonCd + record.seasonYr.slice(-2),
+                        expNo: record.expNo,
+                        msc: record.mscLevel1 + record.mscLevel2 + record.mscLevel3,
+                        gender: record.mscLevel1,
+                        factoryLo: record.factory,
+                        status: record.status,
+                        bomEntity: [],
+                        styleComboEntity: [] 
+                    });
+    
+                    const bomEntity = bomRepository.create({
+                        itemName: record.itemType1,
+                        description: record.description,
+                        itemId:record,
+                        imCode:record,
+                        itemType:record.itemType2,
+                        use: record.use,
+                        
+                    });
+                    bomEntity.styleEnityy = styleEntity; 
+                    styleEntity.bomEntity.push(bomEntity); 
+                    // Create StyleComboEntity
+                    const styleComboEntity = styleComboRepository.create({
+                        // bom_id:record.bomId,
+                        combination: record.combination,
+                        primaryColor: record.prmry,
+                        secondaryColor: record.scndy,
+                        logoColor: record.logo,
+                    });
+                    styleComboEntity.styleEntity = styleEntity; 
+                    styleEntity.styleComboEntity.push(styleComboEntity); 
+    
+                    // Save everything
+                    await styleRepository.save(styleEntity);
+                }
             }
-            await transactionManager.completeTransaction()
-            return new CommonResponseModel(true, 1111, 'Data saved sucessfully',);
+    
+            await transactionManager.completeTransaction();
+            return new CommonResponseModel(true, 1111, 'Data saved successfully');
         } catch (err) {
-            console.log(err)
-            await transactionManager.releaseTransaction()
-            throw ("Error Occured")
+            console.error(err);
+            await transactionManager.rollbackTransaction();
+            return new CommonResponseModel(false, 1112, 'Error occurred while saving data');
+        } finally {
+            await transactionManager.releaseTransaction();
         }
     }
-
-
-
-
-
+ 
     async convertExcelToJson(file): Promise<any[]> {
         return new Promise((resolve, reject) => {
             try {
@@ -478,6 +513,7 @@ export class BomService {
             await transactionManager.releaseTransaction()
         }
     }
+
 
     async migrateData() {
         await AppDataSource2.initialize()
