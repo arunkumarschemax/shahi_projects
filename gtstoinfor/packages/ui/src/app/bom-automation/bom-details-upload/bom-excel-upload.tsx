@@ -66,7 +66,7 @@ const BomExcelUpload = () => {
 
     return (
         <>
-        <Card title="Bom Excel Upload" headStyle={{ color: 'black', fontWeight: 'bold' }}>
+        <Card title="Bom Excel Upload" headStyle={{ fontWeight: 'bold' }}>
             <Form>
             <Row gutter={24}>
                     <Col span={24}>
