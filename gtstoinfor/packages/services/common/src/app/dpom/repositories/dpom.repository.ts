@@ -343,9 +343,9 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getFactoryForfactory(): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(` dpom.factory,dpom.id`)
+            .select(` DISTINCT COALESCE(actual_unit, factory) AS factory`)
             .where(`dpom.doc_type_code <> 'ZP26' AND dpom_item_line_status <> 'CANCELLED'AND dpom.factory <> ' '`)
-            .groupBy(`dpom.factory`)
+        // .groupBy(`dpom.factory`)
         return await query.getRawMany();
     }
 
@@ -525,7 +525,7 @@ export class DpomRepository extends Repository<DpomEntity> {
             query.andWhere(` LEFT(dpom.item, 4) IN (:...items)`, { items: req.item })
         }
         if (req.factory !== undefined) {
-            query.andWhere(`dpom.factory ='${req.factory}'`)
+            query.andWhere(`dpom.factory ='${req.factory}' OR dpom.actual_unit = '${req.factory}'`)
         }
         if (req.gacStartDate !== undefined) {
             query.andWhere(`Date(dpom.gac) BETWEEN '${req.gacStartDate}' AND '${req.gacEndDate}'`)

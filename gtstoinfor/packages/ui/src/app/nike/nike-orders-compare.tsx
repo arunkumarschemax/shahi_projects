@@ -1844,7 +1844,8 @@ const OrdersCompareGrid = () => {
                         className="custom-table-wrapper"
                         bordered
                     />
-                ) : (<Table size='large' />
+                ) : (<Table size='large' columns={columns} className="custom-table-wrapper"
+                    bordered />
                 )}
             </>
         );
@@ -1951,9 +1952,9 @@ const OrdersCompareGrid = () => {
                     </Col>
                 </Row>
             </Form> */}
-            {filteredQtyData || unitChangeData || itemChangeData || priceChaneData ? <>
+            <>
                 <Tabs type='card' items={items} />
-            </> : <><div> <Empty /></div></>}
+            </>
             <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
                 <Card>
                     <p>{itemText}</p>

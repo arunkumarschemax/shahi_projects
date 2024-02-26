@@ -245,7 +245,6 @@ const FactoryPPMReport = () => {
     const getcategoryDesc = () => {
         service.getPpmCategoryDescForFactory().then(res => {
             setCategoryDesc(res.data)
-
         })
     }
     const getcountrydestination = () => {
@@ -257,7 +256,6 @@ const FactoryPPMReport = () => {
         service.getPpmPlantForFactory().then(res => {
             setPlantCode(res.data)
         })
-
     }
     const getItem = () => {
         service.getPpmItemForFactory().then(res => {
@@ -1367,7 +1365,7 @@ const FactoryPPMReport = () => {
                                     allowClear
                                 >
                                     {factory?.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
+                                        return <Option key={inc.factory} value={inc.factory}>{inc.factory}</Option>
                                     })
                                     }
                                 </Select>

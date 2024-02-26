@@ -78,7 +78,7 @@ export class DpomService {
     });
 
     async getOctaToken() {
-        const payload = { 'grant_type': 'password', 'scope': 'iam.okta.factoryaffiliations.read iam.okta.factorygroups.read openid legacy_username email', 'username': 'prakash.iyengar@shahi.co.in', 'password': 'January@123' }
+        const payload = { 'grant_type': 'password', 'scope': 'iam.okta.factoryaffiliations.read iam.okta.factorygroups.read openid legacy_username email', 'username': 'prakash.iyengar@shahi.co.in', 'password': 'March@123' }
         const headers = {
             'Authorization': 'Basic TklLRS5HU00uREgtQVBJOnVyNjNiZjR1cEIya1FKdUkxaEV6bEdYa3Z5Rjg1WHNFVE0zR0lZY3ROSDVYeVM1YU9KVDJpNVNkaWNyTUk1Nk0=', 'Cookie': 'JSESSIONID=09FD9CE633210E9561E3E8583203D2CD', 'Cache-Control': 'no-cache', 'Content-Type': 'application/x-www-form-urlencoded', 'Accept': '*/*', 'Connection': 'keep-alive', 'Accept-Encoding': 'gzip, deflate, br'
         }
@@ -2575,9 +2575,10 @@ export class DpomService {
             return new CommonResponseModel(false, 0, 'No data found');
     }
 
+    @Cron('0 23 * * *')
     async legalPOPdfBot() {
+        const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
         try {
-            const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
             const page = await browser.newPage();
             // Set screen size
             await page.setViewport({ width: 1580, height: 1024 });
@@ -2599,11 +2600,11 @@ export class DpomService {
                     waitUntil: 'networkidle0', // Wait until there are no more network connections
                 }).then(async () => {
                     // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
-                    const directoryPath = 'D:/Nike PDF/NIKE-PDF PO';
+                    const directoryPath = 'C:/Users/saipr/Downloads/PO-PDF NOT READ';
                     console.log(directoryPath)
                     // Specify the source and destination directories
-                    const sourceDirectory = 'D:/Nike PDF/NIKE-PDF PO';
-                    const destinationDirectory = 'D:/Nike PDF/PO PDF-READ';
+                    const sourceDirectory = 'C:/Users/saipr/Downloads/PO-PDF NOT READ';
+                    const destinationDirectory = 'C:/Users/saipr/Downloads/PO-PDF READ';
                     const files = fs.readdirSync(directoryPath)
                     for (const file of files) {
                         await page.waitForSelector('input[type="file"]');
@@ -2636,12 +2637,15 @@ export class DpomService {
             return new CommonResponseModel(true, 1, 'All PDFs submittedd successfully')
         } catch (error) {
             return new CommonResponseModel(false, 0, error)
+        } finally {
+            browser.close()
         }
     }
 
+    @Cron('0 21 * * *')
     async diaPdfBot() {
+        const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
         try {
-            const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
             const page = await browser.newPage();
             // Set screen size
             await page.setViewport({ width: 1580, height: 1024 });
@@ -2699,6 +2703,8 @@ export class DpomService {
             return new CommonResponseModel(true, 1, 'All PDFs submittedd successfully')
         } catch (error) {
             return new CommonResponseModel(false, 0, error)
+        } finally {
+            browser.close()
         }
     }
 
