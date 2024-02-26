@@ -2,6 +2,7 @@ import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, Up
 import { BomEntity } from "./bom-entity";
 import { StyleComboEntity } from "./style-combo-entity";
 import { ItemTypeEnum } from "@project-management-system/shared-models";
+import { ZFactorsEntity } from "./z-factors.entity";
 
 @Entity('items')
 export class ItemEntity {
@@ -10,17 +11,38 @@ export class ItemEntity {
     })
     itemId: number;
 
-    @Column('varchar',{
-        name:'item',
-        length:50,
+    @Column('varchar', {
+        name: 'item',
+        length: 50,
     })
-    item:string
+    item: string
 
     // @Column('varchar',{
     //     name:'item_type',
     //     nullable:false
     // })
     // itemType:string
+
+    @Column('boolean', {
+        name: 'consumption_required',
+
+    })
+    consumptionRequired: boolean
+
+    @Column('int', {
+        name: 'consumption',
+    })
+    consumption: number
+
+    @Column('int', {
+        name: 'wastage',
+    })
+    wastage: number
+
+    @Column('int', {
+        name: 'moq',
+    })
+    moq: number
 
     @Column({
         type: 'enum',
@@ -29,7 +51,7 @@ export class ItemEntity {
         name: "item_type"
     })
     itemType: ItemTypeEnum;
-    
+
 
     @CreateDateColumn({
         name: 'created_at'
@@ -67,6 +89,11 @@ export class ItemEntity {
         default: true
     })
     isActive: boolean;
+
+    @OneToMany(type => ZFactorsEntity,zFactor =>zFactor.itemEntity)
+    zFactorEntity:ZFactorsEntity[]
+
+
 
     @OneToMany(type =>BomEntity, style =>style.itemEntity, {cascade: true})
     bomEntity:BomEntity[]

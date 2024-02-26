@@ -19,8 +19,7 @@ const BomCreation = () => {
   const searchInput = useRef(null);
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
-  const [gridData, setGridData] = useState<any[]>([]);
-  const [filteredData, setFilteredData] = useState<any[]>([]);
+
   const service = new NikeService();
   const [filterData, setFilterData] = useState<any>([])
   const [pageSize, setPageSize] = useState<number>(null);
@@ -29,50 +28,85 @@ const BomCreation = () => {
   const { RangePicker } = DatePicker;
   const { Option } = Select;
   const navigate = useNavigate()
- 
-  const [hideChildren, setHideChildren] = useState(true);
-  const [csvData, setcsvData] = useState([]);
+  const [styleNumber, setStyleNumber] = useState<any>([]);
+  const [item, setItem] = useState<any>([]);
+  const [geoCode, setGeoCode] = useState<any>([]);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+
+
+
   const [tableLoading, setTableLoading] = useState<boolean>(false)
   const customOrder = ["2XS", "XS", "S", "M", "L", "XL", "2XL", "3XL", "4XL", "5XL", "XS-S", "S-S", "M-S", "L-S", "XL-S", "2XL-S", "3XL-S", "4XL-S", "XS-T", "S-T", "M-T", "L-T", "XS-T", "S-T", "M-T", "L-T", "XL-T", "2XL-T", "3XL-T", "4XL-T", "5XL-T", "STT", "MTT", "LTT", "XLTT", "2XLTT", "3XLTT", "S+", "M+", "L+", "Custm"];
   const sizeColumns = [
     {
       title: 'Quantity', dataIndex: 'sizeQty'
     },
-    
+
   ]
   const [selectedSizeColumns, setSelectedSizeColumns] = useState<any[]>(sizeColumns)
-const bomservice = new BomService();
+  const bomservice = new BomService();
   useEffect(() => {
-
-      getData();
-    
-
+    getData();
+    getStyleNumber();
+    getItem();
+    getGeoCode();
   }, [])
 
 
+  const onSelectChange = (newSelectedRowKeys: any) => {
+    const len = newSelectedRowKeys.length
+    setSelectedRowKeys(newSelectedRowKeys);
+
+  };
+
+  const rowSelection = {
+    selectedRowKeys,
+    onChange: onSelectChange,
+  };
 
   const getData = () => {
-    
+    const req = new PpmDateFilterRequest();
+    if (form.getFieldValue('item') !== undefined) {
+      req.item = form.getFieldValue('item');
+    }
+    if (form.getFieldValue('styleNumber') !== undefined) {
+      req.styleNumber = form.getFieldValue('styleNumber');
+    }
+    if (form.getFieldValue('geoCode') !== undefined) {
+      req.geoCode = form.getFieldValue('geoCode');
+    }
     setTableLoading(true)
-    bomservice.getPpmPoLineData().then(res => {
-        if (res.status) {
-          setGridData(res.data);
-          setFilterData(res.data);
-          setFilteredData(res.data);         
-        } else {
-          setGridData([]);
-          setFilterData([]);
-          setFilteredData([]);
-        }
-      })
+    bomservice.getPpmPoLineData(req).then(res => {
+      if (res.status) {
+        setFilterData(res.data);
+      } else {
+        setFilterData([]);
+      }
+    })
       .catch(_err => {
       }).finally(() => {
         setTableLoading(false)
       });
   };
 
+  const getStyleNumber = () => {
+    service.getPpmStyleNumberFactory().then(res => {
+      setStyleNumber(res.data)
+    })
+  }
 
-  
+
+  const getItem = () => {
+    service.getPpmItemForFactory().then(res => {
+      setItem(res.data)
+    })
+  }
+
+  const getGeoCode = () => {
+    service.getPpmdesGeoCodeFactory().then(res => {
+      setGeoCode(res.data)
+    })
+  }
 
 
   // const getData = () => {
@@ -162,7 +196,6 @@ const bomservice = new BomService();
   //     });
   // };
 
-  console.log(csvData);
 
   // const handleExport = (e: any) => {
   //   e.preventDefault();
@@ -180,7 +213,7 @@ const bomservice = new BomService();
   //   excel.saveAs(`ppm-report-${currentDate}.xlsx`);
   // }
 
-  
+
   const totalItemQty = filterData?.map(i => i.totalItemQty)
   const count = totalItemQty.reduce((acc, val) => acc + Number(val), 0);
 
@@ -193,15 +226,9 @@ const bomservice = new BomService();
   const onReset = () => {
     form.resetFields()
     setSelectedSizeColumns(sizeColumns);
-    setGridData([])
     setFilterData([])
-    setFilteredData([])
   }
 
-  const toggleHideChildren = () => {
-    setHideChildren(!hideChildren);
-    // getData()
-  };
 
   const getColumnSearchProps = (dataIndex: string) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -259,20 +286,13 @@ const bomservice = new BomService();
     confirm();
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
-    window.location.reload();
+    // window.location.reload();
 
   };
 
   function handleReset(clearFilters) {
     clearFilters();
     setSearchText('');
-  };
-
-  const getFactoryCellStyle = (text) => {
-    if (!text || text.trim() === '') {
-      return { backgroundColor: '' };
-    }
-    return {};
   };
 
   const getSizeWiseHeaders = (data: BomReportModel[]) => {
@@ -286,34 +306,13 @@ const bomservice = new BomService();
     return sizeHeadersArr;
   };
 
-  const getMap = (data: BomReportModel[]) => {
-    const sizeWiseMap = new Map<string, Map<string, BomReportSizeModel>>();
-    // po => size => obj
-    data?.forEach(rec => {
-      if (!sizeWiseMap.has(rec.poAndLine)) {
-        sizeWiseMap.set(rec.poAndLine, new Map<string, BomReportSizeModel>());
-      }
-      rec.sizeWiseData?.forEach(size => {
-        sizeWiseMap.get(rec.poAndLine).set(size.sizeDescription, size);
-      })
-    });
-    return sizeWiseMap;
-  }
+
   let isOdd = false;
 
 
-
-  // function generateClassName(index) {
-  //   isOdd = !isOdd; 
-  //   return isOdd ? 'odd-version' version';
-  // }
-
   const renderReport = (data: BomReportModel[]) => {
     const sizeHeaders = getSizeWiseHeaders(data);
-    const sizeWiseMap = getMap(data);
-    function renderSizeWiseColumns(_record, _version) {
 
-    }
     const columns: any = [
       {
         title: "S.No",
@@ -325,11 +324,11 @@ const bomservice = new BomService();
       },
       {
         title: 'Purchase Order Number',
-        dataIndex: 'purchaseOrderNumber', width:120,
-        ...getColumnSearchProps('purchaseOrderNumber')
+        dataIndex: 'poAndLine', width: 120,
+        ...getColumnSearchProps('poAndLine')
       },
-     
-     
+      { title: 'Item', dataIndex: 'itemNo', width: 120, align: 'center' },
+      { title: 'Plant code', dataIndex: 'plantCode', width: 120, align: 'center' },
       {
         title: 'Style Number',
         dataIndex: 'styleNumber', width: 120,
@@ -339,7 +338,7 @@ const bomservice = new BomService();
         dataIndex: 'destinationCountry', width: 120,
       },
       { title: 'Geo Code', dataIndex: 'geoCode', width: 120, align: 'center' },
-  
+
       // {
       //   title: 'Total Item Qty',
       //   dataIndex: 'totalItemQty', width: 80,
@@ -352,119 +351,71 @@ const bomservice = new BomService();
       //     }
       //   },
       // },
-   
+
 
     ]
-
     sizeHeaders?.forEach(version => {
       isOdd = !isOdd;
       const sizeClass = isOdd ? 'odd-version' : 'even-version';
-      if (hideChildren) {
-        columns.push({
-          title: (
-            <div
-              style={{
-                backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                height: 40, justifyContent: 'center', padding: '1px', color: 'white',
-              }}
-            >
-              {version}
-            </div>
-          ),
-          dataIndex: version,
-          key: version,
-          // width: 130,
-          align: 'center',
-          className: sizeClass,
-          children: selectedSizeColumns.map((sc) => {
-            return {
-              title: <div
+
+      columns.push({
+        title: (
+          <div
+            style={{
+              backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
+              height: 40, justifyContent: 'center', padding: '1px', color: 'white',
+            }}
+          >
+            {version}
+          </div>
+        ),
+        dataIndex: version,
+        key: version,
+        // width: 130,
+        align: 'center',
+        className: sizeClass,
+        children: [
+          {
+            title: (
+              <div
                 style={{
                   background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                  height: 50, justifyContent: 'center', color: 'Black',
+                  height: 130, justifyContent: 'center', color: 'Black',
                 }}
-              >{sc.title}</div>,
-              dataIndex: sc.dataIndex,
-              key: '',
-              width: 100,
-              align: 'right',
-              // render: (_text, record) => {
-              //   const sizeData = sizeWiseMap?.get(record.purchaseOrderNumber)?.get(version);
+              >Quantity</div>
+            ),
+            dataIndex: '',
+            key: '',
+            width: 60,
+            align: 'right',
+            // render: (_text, record) => {
+            //   const sizeData = sizeWiseMap?.get(record.purchaseOrderNumber)?.get(version)?.sizeQty
+            //   // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+            //   return sizeData ? sizeData : '-';
+            // }
+            render: (_text, record) => {
+              const sizeData = record.sizeWiseData?.find((size) => size.sizeDescription === version);
 
-              //   return sizeData ? sizeData[`${sc.dataIndex}`] : '-'
-              // }
-              render: (_text, record) => {
-                const sizeData = record.sizeWiseData?.find((size) => size.sizeDescription === version);
-            
-                return sizeData ? sizeData.sizeQty : '-';
+              return sizeData ? sizeData.sizeQty : '-';
             }
-            }
-          })
-        })
-      } else {
-        columns.push({
-          title: (
-            <div
-              style={{
-                backgroundColor: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                height: 40, justifyContent: 'center', padding: '1px', color: 'white',
-              }}
-            >
-              {version}
-            </div>
-          ),
-          dataIndex: version,
-          key: version,
-          // width: 130,
-          align: 'center',
-          className: sizeClass,
-          children: [
-            {
-              title: (
-                <div
-                  style={{
-                    background: sizeClass === 'odd-version' ? '#4ECCEB' : '#01A3FA  ', borderRadius: '2px', display: 'flex', alignItems: 'center',
-                    height: 130, justifyContent: 'center', color: 'Black',
-                  }}
-                >Quantity</div>
-              ),
-              dataIndex: '',
-              key: '',
-              width: 60,
-              align: 'right',
-              // render: (_text, record) => {
-              //   const sizeData = sizeWiseMap?.get(record.purchaseOrderNumber)?.get(version)?.sizeQty
-              //   // const formattedQty = Number(sizeData).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-              //   return sizeData ? sizeData : '-';
-              // }
-              render: (_text, record) => {
-                const sizeData = record.sizeWiseData?.find((size) => size.sizeDescription === version);
-            
-                return sizeData ? sizeData.sizeQty : '-';
-            }
-            },
-            
-          ],
-        });
-      }
+          },
+
+        ],
+      });
+
     });
-    columns.push({
-      title: 'Action', dataIndex: 'action', width: 120, align: 'center',fixed:'right',
-      render:(text,record)=>{
-        return(
-          <Button onClick={() => onGenerateBom(record)}>Generate BOM</Button>
-        )
-      }
-  
-    })
+    // columns.push({
+    //   title: 'Action', dataIndex: 'action', width: 120, align: 'center', fixed: 'right',
+    //   render: (text, record) => {
+    //     return (
+    //       <Button onClick={() => onGenerateBom(record)}>Generate BOM</Button>
+    //     )
+    //   }
+
+    // })
 
     const onGenerateBom = (record) => {
-      navigate('/bom/trim-List',{state:{info:record}})
-      // const req = new StyleNumberReq(record.styleNumber)
-      // bomservice.getBomInfoAgainstStyle(req).then(res =>{
-      //   if(res.status){
-      //   }
-      // })
+      navigate('/bom/trim-List', { state: { info: record } })
     }
 
     return (
@@ -485,7 +436,9 @@ const bomservice = new BomService();
             }}
             scroll={{ x: 'max-content', y: 450 }}
             bordered
-            // rowClassName={getRowClassName}
+            rowKey={record => record.id}
+            rowSelection={rowSelection}
+          // rowClassName={getRowClassName}
           />
         ) : (<Table size='large' />
         )}
@@ -494,284 +447,76 @@ const bomservice = new BomService();
 
   }
 
+  const onGenerate = () => {
+    navigate('/bom/trim-List',{state:{info:selectedRowKeys}})
+}
 
   return (
     <>
-      <Card title="Bom Creation" headStyle={{ color: 'black', fontWeight: 'bold' }}>
-        {/* <Form
-          onFinish={getData}
+      <Card title="Bom Creation" headStyle={{ fontWeight: 'bold' }}>
+        <Form onFinish={getData}
           form={form}
-          layout='vertical'>
-          <Card>
-            <Row gutter={24}>
-              <Col span={6}>
-                <Popconfirm onConfirm={_e => { toggleHideChildren() }}
-                  title={
-                    hideChildren
-                      ? 'Unhide Columns?'
-                      : 'Hide Columns?'
+          layout='vertical'
+        >
+          <Row gutter={24}>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
+              <Form.Item name='item' label='Item' >
+                <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear mode='multiple'>
+                  {item?.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+              <Form.Item name='styleNumber' label='Style Number' >
+                <Select
+                  showSearch
+                  placeholder="Select Style Number"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {styleNumber?.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
+                  })
                   }
-                > Hide/Unhide Columns
-                  <Switch size="default"
-                    className={hideChildren ? 'toggle-activated' : 'toggle-deactivated'}
-                    checkedChildren={<RightSquareOutlined type="check" />}
-                    unCheckedChildren={<RightSquareOutlined type="close" />}
-                    checked={hideChildren}
-                  />
-                </Popconfirm>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
-                <Form.Item label="Size columns" name="sizeColumns">
-                  <Select style={{ width: '100%' }} allowClear showSearch placeholder='select isze columns' optionFilterProp="children"
-                    mode='multiple' onChange={(_s, opt) => { handleHideSizeColuomns(opt) }}>
-                    {
-                      sizeColumns.map((s) => {
-                        return <Option key={s.dataIndex} value={s.dataIndex}>{s.title}</Option>
-                      })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              {filteredData.length > 0 ? (
-                <Col span={1}>
-                  <Button
-                    type="default"
-                    style={{ color: 'green' }}
-                    icon={<FileExcelFilled />}><CSVLink className="downloadbtn" filename="marketing-ppm-report.csv" data={csvData}>
-                      Export to CSV
-                    </CSVLink></Button>
-                </Col>
-              ) : null}
-            </Row>
-            <Row gutter={24} style={{ paddingTop: '10px' }}>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
-                <Form.Item label="Last Modified Date" name="lastModifiedDate">
-                  <RangePicker />
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3.5 }} >
-                <Form.Item name="DPOMLineItemStatus" label="Line Item Status">
-                  <Select
-                    showSearch
-                    placeholder="Select Line Status"
-                    optionFilterProp="children"
-                    allowClear mode='multiple'>
-                    <Option value="Accepted">ACCEPTED</Option>
-                    <Option value="Unaccepted">UNACCEPTED</Option>
-                    <Option value="Cancelled">CANCELLED</Option>
-                    <Option value="Closed">CLOSED</Option>
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-                <Form.Item name='docType' label='Doc Type' >
-                  <Select
-                    showSearch
-                    placeholder="Select Doc Type"
-                    optionFilterProp="children"
-                    allowClear
-                    mode='multiple'
-                  >
-                    {docType?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.doc_type_code}>{inc.doc_type_code}</Option>
-                    })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+              <Form.Item name='geoCode' label='Geo Code' >
+                <Select
+                  showSearch
+                  placeholder="Select Geo Code"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {geoCode?.map((inc: any) => {
+                    return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
+                  })
+                  }
+                </Select>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 6 }} style={{ padding: '15px' }}>
+              <Form.Item>
+                <Button htmlType="submit"
+                  icon={<SearchOutlined />}
+                  type="primary">Submit</Button>
+                <Button
+                  htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }}
+                >
+                  RESET
+                </Button>
+              </Form.Item>
+            </Col>
+            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} style={{ padding: '25px' }}>
+              <Button onClick={onGenerate} disabled={selectedRowKeys.length > 0 ? false : true} type='primary'>Generate</Button>
+            </Col>
+          </Row>
 
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
-                <Form.Item name='item' label='Item' >
-                  <Select showSearch placeholder="Select Item" optionFilterProp="children" allowClear mode='multiple'>
-                    {item?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
-                    })}
-                  </Select>
-                </Form.Item>
-              </Col>
-
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
-                <Form.Item name='factory' label='Factory' >
-                  <Select
-                    showSearch
-                    placeholder="Select Factory"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {factory?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.factory}>{inc.factory}</Option>
-                    })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
-                <Form.Item label="Document Date" name="documentDate">
-                  <RangePicker />
-
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                <Form.Item name='poNumber' label='Purchase Order Number' >
-                  <Select
-                    showSearch
-                    placeholder="Select Po Number"
-                    optionFilterProp="children"
-                    allowClear
-                    mode='multiple'
-                  >
-                    {poNumber?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.po_number}>{inc.po_number}</Option>
-                    })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-                <Form.Item name='poLineItemNumber' label='Po Line Item Number' >
-                  <Select
-                    showSearch
-                    placeholder="Select poLineItemNumber"
-                    optionFilterProp="children"
-                    allowClear
-                    mode='multiple'
-                  >
-                    {poLineItemNumber?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.po_line_item_number}>{inc.po_line_item_number}</Option>
-                    })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-                <Form.Item name='styleNumber' label='Style Number' >
-                  <Select
-                    showSearch
-                    placeholder="Select Style Number"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {styleNumber?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.style_number}>{inc.style_number}</Option>
-                    })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-                <Form.Item name='productCode' label='Product Code' >
-                  <Select
-                    showSearch
-                    placeholder="Select Product Code"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {productCode?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.product_code}>{inc.product_code}</Option>
-                    })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
-                <Form.Item name='planningSeasonCode' label='Planning Season Code' >
-                  <Select
-                    showSearch
-                    placeholder="Select Planning Season Code"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {planSesCode?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.planning_season_code}>{inc.planning_season_code}</Option>
-                    })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
-                <Form.Item name='planningSeasonYear' label='Planning Season Year' >
-                  <Select
-                    showSearch
-                    placeholder="Select Planning Season Year"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {planSesYear?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.planning_season_year}>{inc.planning_season_year}</Option>
-                    })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 4 }} >
-                <Form.Item name='destinationCountry' label='Destination Country' >
-                  <Select
-                    showSearch
-                    placeholder="Select Destination Country"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {countryDestination?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.destination_country}>{inc.destination_country}</Option>
-                    })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
-                <Form.Item name='geoCode' label='Geo Code' >
-                  <Select
-                    showSearch
-                    placeholder="Select Geo Code"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {geoCode?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
-                    })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
-                <Form.Item name='plant' label='Plant Code' >
-                  <Select
-                    showSearch
-                    placeholder="Select Plant Code"
-                    optionFilterProp="children"
-                    allowClear
-                  >
-                    {plantCode?.map((inc: any) => {
-                      return <Option key={inc.id} value={inc.plant}>{inc.plant}</Option>
-                    })
-                    }
-                  </Select>
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 4 }}  >
-                <Form.Item label="GAC" name="gac">
-                  <RangePicker />
-                </Form.Item>
-              </Col>
-              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 6 }} lg={{ span: 6 }} xl={{ span: 10 }} style={{ padding: '15px' }}>
-                <Form.Item>
-                  <Button htmlType="submit"
-                    icon={<SearchOutlined />}
-                    type="primary">GET REPORT</Button>
-                  <Button
-                    htmlType='button' icon={<UndoOutlined />} style={{ margin: 10, backgroundColor: "#162A6D", color: "white", position: "relative" }} onClick={onReset}
-                  >
-                    RESET
-                  </Button>
-                </Form.Item>
-              </Col>
-            </Row>
-          </Card>
-        </Form> */}
-      
+        </Form>
         {renderReport(filterData)}
-    
-     
       </Card>
     </>
   )

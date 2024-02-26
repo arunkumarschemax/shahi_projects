@@ -1,7 +1,7 @@
-import { Body, Controller, Post ,    UploadedFile,UseInterceptors,} from "@nestjs/common";
-import { ApiBody, ApiTags,ApiConsumes } from "@nestjs/swagger";
+import { Body, Controller, Post, UploadedFile, UseInterceptors, } from "@nestjs/common";
+import { ApiBody, ApiTags, ApiConsumes } from "@nestjs/swagger";
 import { BomService } from "./bom-service";
-import { CommonResponseModel } from "@project-management-system/shared-models";
+import { CommonResponseModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleDto } from "./dto/style-dto";
 import { TrimService } from "./trim-service";
@@ -48,9 +48,9 @@ export class BomController {
     }
 
     @Post('/getPpmPoLineData')
-    async getPpmPoLineData(): Promise<CommonResponseModel> {
+    async getPpmPoLineData(@Body() req: any): Promise<CommonResponseModel> {
         try {
-            return this.bomService.getPpmPoLineData()
+            return this.bomService.getPpmPoLineData(req)
         } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
@@ -112,19 +112,19 @@ export class BomController {
         }
     }
     @Post('/getPoLineDataForCihinaInserttag')
-    async getPoLineDataForCihinaInserttag(@Body() req:any):Promise<CommonResponseModel>{
-        try{
+    async getPoLineDataForCihinaInserttag(@Body() req: any): Promise<CommonResponseModel> {
+        try {
             return this.bomService.getPoLineDataForCihinaInserttag(req)
-        }catch(err){
+        } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
 
     @Post('/getBomPrintInfo')
-    async getBomPrintInfo(@Body() req:any):Promise<CommonResponseModel>{
-        try{
+    async getBomPrintInfo(@Body() req: any): Promise<CommonResponseModel> {
+        try {
             return this.trimService.getBomPrintInfo(req)
-        }catch(err){
+        } catch (err) {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
@@ -139,26 +139,44 @@ export class BomController {
         }
     }
 
+    @Post('/getBomCreationData')
+    async getBomCreationData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.getBomCreationData(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+
+    @Post('/generateBom')
+    async generateBom(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.generateBom(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+    
     @Post('/saveExcelData')
     @UseInterceptors(
-      FileInterceptor('file', {
-        limits: { files: 1 },
-        storage: diskStorage({
-          destination: './upload-files',
-          filename: (req, filea, callback) => {
-            const name = filea.originalname;
-            callback(null, `${name}`);
-          },
-        }),
-      })
+        FileInterceptor('file', {
+            limits: { files: 1 },
+            storage: diskStorage({
+                destination: './upload-files',
+                filename: (req, filea, callback) => {
+                    const name = filea.originalname;
+                    callback(null, `${name}`);
+                },
+            }),
+        })
     )
     @ApiConsumes('multipart/form-data')
     async saveExcelData(@UploadedFile() file): Promise<any> {
-      try {
-        return this.bomService.saveExcelData(file);
-      } catch (err) {
-        console.log(err);
-      }
+        try {
+            return this.bomService.saveExcelData(file);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn, OneToMany } from "typeorm";
 import { DpomChildEntity } from "./dpom-child.entity";
+import { PoBomEntity } from "../../po-bom/entittes/po-bom.entity";
 
 @Entity('dpom')
 export class DpomEntity {
@@ -733,7 +734,16 @@ export class DpomEntity {
     })
     coLineStatus: string;
 
+    @Column({
+        name: "is_bom_generated",
+        default: 0
+    })
+    isBomGenerated: boolean;
+
     @OneToMany(() => DpomChildEntity, (dpomChild) => { dpomChild.dpom }, { cascade: true })
     dpomChild: DpomChildEntity;
+
+    @OneToMany(type => PoBomEntity,poBom =>poBom.dpom)
+    poBom:PoBomEntity[]
 
 }

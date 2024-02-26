@@ -41,4 +41,5 @@ export * from './style-number.req';
 export * from './item-info-filter-req';
 export * from './bom-print-filter-info-req';
 export * from './bom-print-info-model';
-export * from './item-info-view-model'
+export * from './item-info-view-model';
+export * from './bom-creation-filters-model';

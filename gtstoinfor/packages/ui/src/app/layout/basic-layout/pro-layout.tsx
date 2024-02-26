@@ -73,7 +73,6 @@ export default function LayoutTwo() {
 
 
 
-    console.log(menuObj)
     function handleLogout() {
 
     }

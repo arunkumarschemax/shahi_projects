@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomGenerationReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { DataSource, Repository, getManager } from "typeorm";
-import { BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel } from "@project-management-system/shared-models";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
 import { StyleComboEntity } from "./entittes/style-combo-entity";
@@ -13,10 +13,12 @@ import { BomDto } from "./dto/bom-dto";
 import { StyleComboDto } from "./dto/style-combo-dto";
 import { DpomRepository } from "../dpom/repositories/dpom.repository";
 import { StyleIdReq } from "./dto/api-requests";
+import { PoBomEntity } from "./entittes/po-bom.entity";
 import { GenericTransactionManager } from "../../typeorm-transactions";
 import { FileUploadEntity } from "./entittes/file-upload-entity";
 import * as XLSX from 'xlsx';
 import { log } from "winston";
+import { DpomEntity } from "../dpom/entites/dpom.entity";
 
 
 @Injectable()
@@ -112,7 +114,7 @@ export class BomService {
 
 
 
-async getAll(): Promise<CommonResponseModel> {
+    async getAll(): Promise<CommonResponseModel> {
         try {
             const query = 'SELECT b.use,s.id as styeleId,s.style, s.style_name AS styleName,s.season,s.exp_no AS expNo,b.id AS bomId,b.style_id as bstyleId,b.item_name AS itemName,b.DESCRIPTION,b.im_code AS imCode,b.item_type AS itemType ,sc.id AS styleComboId,sc.bom_id AS sbomId,sc.style_id AS sstyleId,sc.combination,sc.primary_color AS primaryColor,sc.secondary_color AS secondaryColor,sc.logo_color AS logoColor FROM styles s  LEFT JOIN bom b ON b.style_id=s.id LEFT JOIN style_combos sc ON sc.bom_id=b.id'
             const result = await this.dataSource.query(query)
@@ -141,7 +143,7 @@ async getAll(): Promise<CommonResponseModel> {
             throw err
         }
     }
-  
+
     // async getPpmPoLineData(): Promise<CommonResponseModel> {
     //     const details = await this.dpomRepo.getPoLineData();
     //     if (details.length < 0) {
@@ -181,8 +183,9 @@ async getAll(): Promise<CommonResponseModel> {
     // }
     //created  for sample purpose for 100 records
 
-    async getPpmPoLineData(): Promise<CommonResponseModel> {
-        const details = await this.dpomRepo.getPoLineData();
+    async getPpmPoLineData(req: PpmDateFilterRequest): Promise<CommonResponseModel> {
+        console.log(req)
+        const details = await this.dpomRepo.getPoLineData(req);
         if (details.length < 0) {
             return new CommonResponseModel(false, 0, 'data not found');
         }
@@ -191,12 +194,12 @@ async getAll(): Promise<CommonResponseModel> {
 
         for (const rec of details) {
             let sizeData = sizeDateMap.get(rec.po_and_line);
-
             if (!sizeData) {
                 sizeData = new BomReportModel(
+                    rec.id,
                     rec.po_number,
                     rec.po_and_line,
-                    rec.DPOMLineItemStatus, // Assuming this property exists in your data
+                    // rec.DPOMLineItemStatus, // Assuming this property exists in your data
                     rec.style_number,
                     rec.destination_country_code,
                     rec.destination_country,
@@ -205,26 +208,24 @@ async getAll(): Promise<CommonResponseModel> {
                     rec.geo_code,
                     rec.total_item_qty, // Assuming this property exists in your data
                     [],
-                    rec.gender_age_desc
+                    rec.gender_age_desc,
+                    '',
+                    rec.item,
+                    rec.plant
                 );
-
                 sizeDateMap.set(rec.po_and_line, sizeData);
             }
-
             if (!sizeData.sizeWiseData) {
                 sizeData.sizeWiseData = [];
             }
-
             sizeData.sizeWiseData.push(new BomReportSizeModel(rec.size_description, rec.size_qty));
         }
-
         const dataModelArray: BomReportModel[] = [];
         sizeDateMap.forEach(sizeData => dataModelArray.push(sizeData));
-
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
-    
-    async getPoLineDataForCihinaInserttag(req:ItemInfoFilterReq): Promise<CommonResponseModel> {
+
+    async getPoLineDataForCihinaInserttag(req: ItemInfoFilterReq): Promise<CommonResponseModel> {
         const details = await this.dpomRepo.getPoLineDataForCihinaInserttag(req);
         if (details.length < 0) {
             return new CommonResponseModel(false, 0, 'data not found');
@@ -232,7 +233,7 @@ async getAll(): Promise<CommonResponseModel> {
         const sizeDateMap = new Map<string, BomReportModel>();
         for (const rec of details) {
             let sizeData = sizeDateMap.get(rec.po_and_line);
-            console.log(rec,'RECCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC')
+            console.log(rec, 'RECCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC')
             if (!sizeData) {
                 sizeData = new BomReportModel(
                     rec.po_number,
@@ -251,17 +252,17 @@ async getAll(): Promise<CommonResponseModel> {
                 );
                 sizeDateMap.set(rec.po_and_line, sizeData);
             }
-    
+
             if (!sizeData.sizeWiseData) {
                 sizeData.sizeWiseData = [];
             }
-    
+
             sizeData.sizeWiseData.push(new BomReportSizeModel(rec.size_description, rec.size_qty));
         }
-    
+
         const dataModelArray: BomReportModel[] = [];
         sizeDateMap.forEach(sizeData => dataModelArray.push(sizeData));
-    
+
         return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
     }
 
@@ -275,7 +276,7 @@ async getAll(): Promise<CommonResponseModel> {
             return new CommonResponseModel(false, 1110, "No data found")
         }
     }
-  
+
     async getBomDataForStyle(req: StyleIdReq): Promise<CommonResponseModel> {
         // const bomData = await this.bomRepo.getBomData(req.styleId)
         // const bomdetailsArray: BomDto[] = []
@@ -290,31 +291,107 @@ async getAll(): Promise<CommonResponseModel> {
         const bomData = await this.bomRepo.getAllBomData(req.styleId)
 
         const bomMap = new Map<number, BomDto>()
-        for(const rec of bomData){
-            if(!bomMap.has(rec.bomId)){
-                bomMap.set(rec.bomId,new BomDto(rec.itemName, rec.description, rec.imCode, rec.itemType, rec.use, [], rec.bomId, rec.styleId))  
+        for (const rec of bomData) {
+            if (!bomMap.has(rec.bomId)) {
+                bomMap.set(rec.bomId, new BomDto(rec.itemName, rec.description, rec.imCode, rec.itemType, rec.use, [], rec.bomId, rec.styleId))
             }
-            bomMap.get(rec.bomId).styleCombo.push(new StyleComboDto(rec.combination, rec.primaryColor, rec.secondaryColor, rec.logoColor,rec.color))
+            bomMap.get(rec.bomId).styleCombo.push(new StyleComboDto(rec.combination, rec.primaryColor, rec.secondaryColor, rec.logoColor, rec.color))
         }
         const bomInfo: BomDto[] = []
-        bomMap.forEach(rec =>{
+        bomMap.forEach(rec => {
             bomInfo.push(rec)
         })
         return new CommonResponseModel(true, 11111, "Data retreived sucessfully", bomInfo)
 
     }
 
+    async getBomCreationData(req: BomCreationFiltersReq): Promise<CommonResponseModel> {
+        const data = await this.dpomRepo.getBomCreationData(req)
+        return new CommonResponseModel(true, 11111, "Data retreived sucessfully", data)
+    }
+
+    async generateBom(req: BomGenerationReq): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource)
+        try {
+
+            const { poLine,updatedSizes } = req
+            const poData = await this.dpomRepo.getPoDataForBomGeneration({ poLine })
+            const styleDataMap = new Map<string, BomDataForStyleAndSeasonModel[]>()
+
+            function calculateBomQty(poQty: number, moq: number, consumption: number, wastage: number) {
+                const bomQty = (poQty * consumption) * wastage / 100
+                if (bomQty < moq) {
+                    return moq
+                }
+                return bomQty
+            }
+
+            function getUpdatedQty(poLine :string,poQty){
+                if(updatedSizes.length){
+                   const updatedSize = updatedSizes.find((u) => u.poLine == poLine)
+                   if(updatedSize){
+                        return updatedSize.qty
+                   }
+                }
+                return poQty
+            }
+
+            const poBomEntities: PoBomEntity[] = []
+            for (const po of poData) {
+
+                async function getStyleData(): Promise<BomDataForStyleAndSeasonModel[]> {
+                    if (!styleDataMap.has(po.styleNumber)) {
+                        const styleData = await this.bomRepo.getBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year })
+                        styleDataMap.set(po.styleNumber, styleData)
+                        return styleData
+                    }
+                    return styleDataMap.get(po.styleNumber)
+                }
+
+                const styleData = await getStyleData()
+                for (const styleBom of styleData) {
+                    const consumptions = await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) ? await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) : { itemId: 0, wastage: 3, moq: 100, cosumption: 1 }
+                    const { cosumption, moq, wastage } = consumptions
+                    const updatedQty = getUpdatedQty(po.poLineNo,po.qty)
+                    const bomQty = calculateBomQty(updatedQty, moq, cosumption, wastage)
+                    const poBomEntity = new PoBomEntity()
+                    const bom = new BomEntity()
+                    bom.id = styleBom.bomId
+                    poBomEntity.bom = bom
+                    poBomEntity.consumption = cosumption
+                    poBomEntity.moq = moq
+                    poBomEntity.wastage = wastage
+                    poBomEntity.bomQty = bomQty
+                    const dpom = new DpomEntity()
+                    dpom.id = po.id
+                    poBomEntity.dpom = dpom
+                    poBomEntities.push(poBomEntity)
+                }
+                await transactionManager.startTransaction()
+                await transactionManager.getRepository(PoBomEntity).insert(poBomEntities)
+                for (const poLine of req.poLine) {
+                    await transactionManager.getRepository(DpomEntity).update({ poAndLine: poLine }, { isBomGenerated: true })
+                }
+            }
+            await transactionManager.completeTransaction()
+            return new CommonResponseModel(true, 11111, "Data retreived sucessfully")
+
+        } catch (err) {
+            await transactionManager.releaseTransaction()
+        }
+    }
+
     async saveExcelData(val): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
             await transactionManager.startTransaction()
-           
+
             const jsonData: any[] = await this.convertExcelToJson(val);
             const headerRow = jsonData[0];
 
             if (!jsonData.length) {
                 return new CommonResponseModel(true, 1110, 'No data found in excel');
-            }            
+            }
             const data = await this.updatePath(val.path, val.filename, transactionManager);
             const jsonArray: any = jsonData.map((row, arrInd) => {
                 const obj: any = {};
@@ -328,28 +405,28 @@ async getAll(): Promise<CommonResponseModel> {
                                 : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                         )
                         .join('');
-            
+
                     obj[headerWithoutSpace] = row[index];
                 });
                 return obj;
             });
 
             for (const record of jsonArray) {
-                 const entity = new StyleEntity()
-                 entity.style = record.styleNbr
-                 entity.styleName= record.styleNm
-                 entity.season = record.seasonCd + record.seasonYr.slice(-2);
-                 entity.expNo= record
-                 entity.msc =  record.mscLevel1 + record.mscLevel2 + record.mscLevel3
-                 entity.gender = record.mscLevel1
-                 entity.factoryLo = record.factory
-                 entity.status = record.status
-                 entity.fileData = record
-                   
-                 await getManager().save(entity);       
+                const entity = new StyleEntity()
+                entity.style = record.styleNbr
+                entity.styleName = record.styleNm
+                entity.season = record.seasonCd + record.seasonYr.slice(-2);
+                entity.expNo = record
+                entity.msc = record.mscLevel1 + record.mscLevel2 + record.mscLevel3
+                entity.gender = record.mscLevel1
+                entity.factoryLo = record.factory
+                entity.status = record.status
+                entity.fileData = record
+
+                await getManager().save(entity);
             }
             await transactionManager.completeTransaction()
-            return new CommonResponseModel(true,1111,'Data saved sucessfully', );
+            return new CommonResponseModel(true, 1111, 'Data saved sucessfully',);
         } catch (err) {
             console.log(err)
             await transactionManager.releaseTransaction()

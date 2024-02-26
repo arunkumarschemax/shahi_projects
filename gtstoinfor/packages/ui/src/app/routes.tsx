@@ -54,12 +54,15 @@ import BomCreation from "./trims/bom-creation"
 import TrimList from "./trims/trims-cardview"
 import JokerTagPrint from "./trims/trim-prints/joker-tag"
 import WasCarelabel from "./trims/trim-prints/wash-care-label"
-import  { HangTag } from "./trims/trim-prints/hang-tag"
+import { HangTag } from "./trims/trim-prints/hang-tag"
 import { CountryStickerPrint } from "./trims/trim-prints/country-sticker"
 import ItemInfo from "./trims/item-info"
 import ProLayout from "@ant-design/pro-layout"
 import LayoutTwo from "./layout/basic-layout/pro-layout"
 import PoItemNoUpdate from "./nike/components/po-update"
+import PPMReportUpload from "./bom-automation/ppm-report-upload/ppm-report-upload"
+import BomGeneration from "./bom-automation/bom-generation/bom-generation"
+import BomGenerationSteps from "./bom-automation/bom-generation/bom-generation-steps"
 import BomExcelUpload from "./bom-automation/bom-details-upload/bom-excel-upload"
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -125,7 +128,7 @@ export const AppRoutes = () => {
     return (
 
         <Routes>
-            <Route path='/' element={ <LayoutTwo /> } >
+            <Route path='/' element={<LayoutTwo />} >
                 <Route path="/user-management/users-from" element={<Suspense fallback={<div>Loading...</div>}><UserCreationForm /></Suspense>} />
                 <Route path='/user-management/users-view' element={<UsersView />} />
                 <Route path='/masters'>
@@ -154,8 +157,8 @@ export const AppRoutes = () => {
                             throw new Error("Function not implemented.")
                         }} />} /> */}
 
-                        <Route path='address-upload' element={<AddressUpload />} />
-                        <Route path ='address-view' element={<AddressView />} />
+                    <Route path='address-upload' element={<AddressUpload />} />
+                    <Route path='address-view' element={<AddressView />} />
 
                 </Route>
                 <Route path='/nike'>
@@ -169,26 +172,27 @@ export const AppRoutes = () => {
                     <Route path='po-pdf-table' element={<PoPdfTable data={undefined} />} />
                     <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
                     <Route path='co-line-view' element={<ColineView />} />
-                    <Route path='backing-paper' element={<BackingPaper/>} />
+                    <Route path='backing-paper' element={<BackingPaper />} />
                     {/* <Route path='trim-grid' element={<TrimsGrid/>} /> */}
-                    <Route path='trim-columns' element={<TrimColumns/>} />
+                    <Route path='trim-columns' element={<TrimColumns />} />
                     {/* <Route path='hang-tag' element={<HangTag />} /> */}
 
 
                 </Route>
-                
+
                 <Route path='/bom'>
                     <Route path='bom-pdf-upload' key='bom-pdf-upload' element={<BomPdfUpload />} />
                     <Route path='bom-view' key={'bom-view'} element={<BomView />} />
                     <Route path='bom-pdf-info-detail-view/:styleId' key={'bom-pdf-info-detail-view'} element={<BomPdfInfoDetailView />} />
-                    <Route path='bom-creation' key='/bom-creation' element={<BomCreation />} />
-                    <Route path='joker-tag' key='/joker-tag' element={<JokerTagPrint info={[]}/>}/>
-                    <Route path='trim-grid' element={<TrimsGrid/>} />
-                    <Route path='trim-List' element={<TrimList/>} />
-                    <Route path='washcare-label' element={<WasCarelabel bomInfo={[]} />}/>
-                    <Route path='hang-tag' element={<HangTag info={[]}/>} />
+                    <Route path='bom-creation' key='/bom-creation' element={<BomGenerationSteps />} />
+                    <Route path='joker-tag' key='/joker-tag' element={<JokerTagPrint info={[]} />} />
+                    <Route path='trim-grid' element={<TrimsGrid />} />
+                    <Route path='trim-List' element={<TrimList />} />
+                    <Route path='washcare-label' element={<WasCarelabel bomInfo={[]} />} />
+                    <Route path='hang-tag' element={<HangTag info={[]} />} />
                     <Route path='item-info' element={<ItemInfo />} />
-                    <Route path='country-sticker' element={<CountryStickerPrint info={[]}/>} />
+                    <Route path='country-sticker' element={<CountryStickerPrint info={[]} />} />
+                    <Route path='ppm-report-upload' element={<PPMReportUpload />} />
                     <Route path='bom-excel-upload' element={<BomExcelUpload />} />
 
                     
@@ -200,7 +204,7 @@ export const AppRoutes = () => {
                     <Route path='vas-compare' key='/vas-compare' element={<VASChangesCompareGrid />} />
                     <Route path='compare-orders' key='/compare-orders' element={<OrdersCompareGrid />} />
                     <Route path='divert-report' element={<DivertReport />} />
-                    <Route path='factory-report'   element={<Suspense fallback={<div>Loading...</div>} ><FactoryPPMReport /></Suspense>} />
+                    <Route path='factory-report' element={<Suspense fallback={<div>Loading...</div>} ><FactoryPPMReport /></Suspense>} />
                     <Route path='ppm-report' element={<Suspense fallback={<div>Loading...</div>} ><PPMReport /></Suspense>} />
                     <Route path='fabrick-tracker-report' element={<FabricTrackerReport />} />
                     <Route path='fabrick-tracker-report1' element={<FabricTrackerReport1 />} />
@@ -212,12 +216,12 @@ export const AppRoutes = () => {
                 </Route>
                 <Route path='nike-dashboard' element={<NikeDashboard />} />
                 <Route path='/403' element={<ExceptionComponent statusCode={403} statusMessage='Sorry, you are not authorized to access this page.' />} />
-            <Route path="/print">
-            <Route path='button1' element={<Button1Print />} />
-            <Route path='button2' element={<Button2Print />} />
-            <Route path='button3' element={<Button3Print />} />
-            <Route path='backing-paper' element={<BackingPaper/>} />
-            </Route>
+                <Route path="/print">
+                    <Route path='button1' element={<Button1Print />} />
+                    <Route path='button2' element={<Button2Print />} />
+                    <Route path='button3' element={<Button3Print />} />
+                    <Route path='backing-paper' element={<BackingPaper />} />
+                </Route>
             </Route>
             <Route path="/login" element={<Login />} />
         </Routes>

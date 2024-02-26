@@ -33,11 +33,11 @@ const ShipmentChangesCompareGrid = () => {
 
     useEffect(() => {
         getGACChangeData()
-        getPlantCodeChangeData()
+        // getPlantCodeChangeData()
 
-        getMRGACChangeData()
+        // getMRGACChangeData()
         getModeOfTransportChangeData()
-        getPoLine()
+        // getPoLine()
     }, [])
     const getPoLine = () => {
         service.getPpmPoLineForNikeOrder().then(res => {

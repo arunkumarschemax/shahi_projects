@@ -38,6 +38,8 @@ import { DestinationReq } from '../address/destination-req.dto';
 import * as Excel from 'exceljs';
 import { diff_match_patch } from 'diff-match-patch'
 import { ItemNoDtos } from './dto/co-item-no.dto';
+import { DivertEntity } from './entites/divert.entity';
+import { DivertRepository } from './repositories/divert.repository';
 
 
 @Injectable()
@@ -51,6 +53,7 @@ export class DpomService {
         private dpomChildAdapter: DpomChildAdapter,
         private fileUploadRepo: NikeFileUploadRepository,
         private coLineRepository: COLineRepository,
+        private divertRepository: DivertRepository,
         private addressService: AddressService,
         @InjectDataSource()
         private dataSource: DataSource,
@@ -178,6 +181,10 @@ export class DpomService {
                         "sizes.sizePo.inventorySegmentCode"
                     ],
                     "search": [
+                        {
+                            "fieldName": "sizes.sizePo.filterInDPOM",
+                            "function": "NOT IS_DEFINED"
+                        },
                         {
                             "fieldName": "poHeader.vendorCode",
                             "operator": "=",
@@ -422,7 +429,7 @@ export class DpomService {
             const dropdown1 = await driver.wait(until.elementIsVisible(dropdownElement1)).then(element => new Select(element))
             await dropdown1.selectByValue(buyerValue1)
             // // await driver.executeScript(`arguments[0].value = '${buyerValue1}';`, buyerDropDown1)
-            await driver.sleep(10000)
+            await driver.sleep(5000)
             await driver.wait(until.elementLocated(By.id('byr')));
             const dropdownElement2 = await driver.findElement(By.id('byr'));
             const dropdown2 = await driver.wait(until.elementIsVisible(dropdownElement2)).then(element => new Select(element))
@@ -434,6 +441,9 @@ export class DpomService {
             await driver.wait(until.elementLocated(By.id('bpo')))
             await driver.findElement(By.id('bpo')).clear();
             await driver.findElement(By.id('bpo')).sendKeys(coLine.buyerPo);
+            await driver.wait(until.elementLocated(By.id('bus')))
+            await driver.findElement(By.id('bus')).clear();
+            await driver.findElement(By.id('bus')).sendKeys(styleNo);
             await driver.wait(until.elementLocated(By.id('agnt')));
             const agentDropDown = await driver.findElement(By.id('agnt'));
             await driver.executeScript(`arguments[0].value = '${agent}';`, agentDropDown)
@@ -588,7 +598,12 @@ export class DpomService {
                                     }
                                 }
                                 const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
-                                await driver.wait(until.elementLocated(By.id(inputId)))
+                                console.log(inputId)
+                                const input = await driver.wait(until.elementLocated(By.id(inputId)))
+                                if (!input) {
+                                    const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: 'NO matching Size/Color found' });
+                                    return new CommonResponseModel(false, 0, 'NO matching Size/Color found')
+                                }
                                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                             }
                         }
@@ -604,11 +619,9 @@ export class DpomService {
             if (await this.isAlertPresent(driver)) {
                 const alert = await driver.switchTo().alert();
                 const alertText = await alert.getText();
-                const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText });
-                await alert.accept();
-                await driver.sleep(5000)
-                await driver.navigate().refresh();
-                await driver.quit();
+                const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: alertText, isActive: false });
+                await this.updateCOLineStatus({ poNumber: po.buyer_po, poLineItemNumber: po.line_item_no, status: 'Failed' })
+                return new CommonResponseModel(false, 0, alertText)
             } else {
                 if (po.buyer == 'Uniqlo-U12') {
                     await driver.sleep(10000)
@@ -694,11 +707,10 @@ export class DpomService {
 
             }
         });
-        console.log(sendMail, '---------------sendmail')
         return sendMail
     }
 
-    // @Cron('0 4 * * *')
+    @Cron('0 4 * * *')
     async saveDPOMApiDataToDataBase(): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
         try {
@@ -748,13 +760,22 @@ export class DpomService {
                 const itemText = orderDetail.poLine.itemTextDetail ? orderDetail.poLine.itemTextDetail[0]?.textDetails.join(',') : null;
                 const search = 'diverted to'
                 const present = itemText?.includes(search)
+                const present2 = itemText?.includes('moved to Line')
                 const matches = [];
+                let match;
                 if (present) {
                     const pattern = /diverted to.*?Purchase Order (\d+ \/ \d+)/g;
-                    let match;
                     if (itemText !== null) {
                         while ((match = pattern.exec(itemText)) !== null) {
                             matches.push(match[1]);
+                        }
+                    }
+                } else if (present2) {
+                    const pattern = /moved to Line (\d+)/g;
+                    if (itemText !== null) {
+                        while ((match = pattern.exec(itemText)) !== null) {
+                            const poAndLine = orderDetail.poHeader.poNumber + ' / ' + match[1]
+                            matches.push(poAndLine);
                         }
                     }
                 }
@@ -788,7 +809,7 @@ export class DpomService {
                             scheduleLineItemNumber: dtoData.scheduleLineItemNumber,
                         },
                         {
-                            documentDate: dtoData.documentDate, categoryCode: dtoData.categoryCode, categoryDesc: dtoData.categoryDesc, vendorCode: dtoData.vendorCode, gccFocusCode: dtoData.gccFocusCode, gccFocusDesc: dtoData.gccFocusDesc, genderAgeCode: dtoData.genderAgeCode, genderAgeDesc: dtoData.genderAgeDesc, styleNumber: dtoData.styleNumber, productCode: dtoData.productCode, productName: dtoData.productName, colorDesc: dtoData.colorDesc, destinationCountryCode: dtoData.destinationCountryCode, destinationCountry: dtoData.destinationCountry, plant: dtoData.plant, plantName: dtoData.plantName, tradingCoPoNumber: dtoData.tradingCoPoNumber, UPC: dtoData.UPC, directShipSONumber: dtoData.directShipSONumber, directShipSOItemNumber: dtoData.directShipSOItemNumber, customerPO: dtoData.customerPO, shipToCustomerNumber: dtoData.shipToCustomerNumber, shipToCustomerName: dtoData.shipToCustomerName, planningSeasonCode: dtoData.planningSeasonCode, planningSeasonYear: dtoData.planningSeasonYear, docTypeCode: dtoData.docTypeCode, docTypeDesc: dtoData.docTypeDesc, MRGAC: dtoData.MRGAC, OGAC: dtoData.OGAC, GAC: dtoData.GAC, originReceiptDate: dtoData.originReceiptDate, factoryDeliveryActDate: dtoData.factoryDeliveryActDate, GACReasonCode: dtoData.GACReasonCode, GACReasonDesc: dtoData.GACReasonDesc, shippingType: dtoData.shippingType, planningPriorityCode: dtoData.planningPriorityCode, planningPriorityDesc: dtoData.planningPriorityDesc, launchCode: dtoData.launchCode, geoCode: dtoData.geoCode, DPOMLineItemStatus: dtoData.DPOMLineItemStatus, modeOfTransportationCode: dtoData.modeOfTransportationCode, inCoTerms: dtoData.inCoTerms, inventorySegmentCode: dtoData.inventorySegmentCode, purchaseGroupCode: dtoData.purchaseGroupCode, purchaseGroupName: dtoData.purchaseGroupName, totalItemQty: dtoData.totalItemQty, originReceiptQty: dtoData.originReceiptQty, VASSize: dtoData.VASSize, itemVasText: dtoData.itemVasText, itemText: dtoData.itemText, grossPriceFOB: dtoData.grossPriceFOB, FOBCurrencyCode: dtoData.FOBCurrencyCode, netIncludingDisc: dtoData.netIncludingDisc, netIncludingDiscCurrencyCode: dtoData.netIncludingDiscCurrencyCode, trCoNetIncludingDisc: dtoData.trCoNetIncludingDisc, trCoNetIncludingDiscCurrencyCode: dtoData.trCoNetIncludingDiscCurrencyCode, lastModifiedDate: dtoData.lastModifiedDate, hanger: dtoData.hanger, sizeQuantity: dtoData.sizeQuantity, sizeDescription: dtoData.sizeDescription, odVersion: dtoData.odVersion, divertedToPos: dtoData.divertedToPos?.join(',')
+                            documentDate: dtoData.documentDate, categoryCode: dtoData.categoryCode, categoryDesc: dtoData.categoryDesc, vendorCode: dtoData.vendorCode, gccFocusCode: dtoData.gccFocusCode, gccFocusDesc: dtoData.gccFocusDesc, genderAgeCode: dtoData.genderAgeCode, genderAgeDesc: dtoData.genderAgeDesc, styleNumber: dtoData.styleNumber, productCode: dtoData.productCode, productName: dtoData.productName, colorDesc: dtoData.colorDesc, destinationCountryCode: dtoData.destinationCountryCode, destinationCountry: dtoData.destinationCountry, plant: dtoData.plant, plantName: dtoData.plantName, tradingCoPoNumber: dtoData.tradingCoPoNumber, UPC: dtoData.UPC, directShipSONumber: dtoData.directShipSONumber, directShipSOItemNumber: dtoData.directShipSOItemNumber, customerPO: dtoData.customerPO, shipToCustomerNumber: dtoData.shipToCustomerNumber, shipToCustomerName: dtoData.shipToCustomerName, planningSeasonCode: dtoData.planningSeasonCode, planningSeasonYear: dtoData.planningSeasonYear, docTypeCode: dtoData.docTypeCode, docTypeDesc: dtoData.docTypeDesc, MRGAC: dtoData.MRGAC, OGAC: dtoData.OGAC, GAC: dtoData.GAC, originReceiptDate: dtoData.originReceiptDate, factoryDeliveryActDate: dtoData.factoryDeliveryActDate, GACReasonCode: dtoData.GACReasonCode, GACReasonDesc: dtoData.GACReasonDesc, shippingType: dtoData.shippingType, planningPriorityCode: dtoData.planningPriorityCode, planningPriorityDesc: dtoData.planningPriorityDesc, launchCode: dtoData.launchCode, geoCode: dtoData.geoCode, DPOMLineItemStatus: dtoData.DPOMLineItemStatus, modeOfTransportationCode: dtoData.modeOfTransportationCode, inCoTerms: dtoData.inCoTerms, inventorySegmentCode: dtoData.inventorySegmentCode, purchaseGroupCode: dtoData.purchaseGroupCode, purchaseGroupName: dtoData.purchaseGroupName, totalItemQty: dtoData.DPOMLineItemStatus == 'Cancelled' ? dtoData.totalItemQty ? dtoData.totalItemQty : '0' : dtoData.totalItemQty, originReceiptQty: dtoData.originReceiptQty, VASSize: dtoData.VASSize, itemVasText: dtoData.itemVasText, itemText: dtoData.itemText, grossPriceFOB: dtoData.grossPriceFOB, FOBCurrencyCode: dtoData.FOBCurrencyCode, netIncludingDisc: dtoData.netIncludingDisc, netIncludingDiscCurrencyCode: dtoData.netIncludingDiscCurrencyCode, trCoNetIncludingDisc: dtoData.trCoNetIncludingDisc, trCoNetIncludingDiscCurrencyCode: dtoData.trCoNetIncludingDiscCurrencyCode, lastModifiedDate: dtoData.lastModifiedDate, hanger: dtoData.hanger, sizeQuantity: dtoData.sizeQuantity, sizeDescription: dtoData.sizeDescription, odVersion: dtoData.odVersion, divertedToPos: dtoData.divertedToPos?.join(',')
                         },
                     );
                     const convertedExcelEntity: Partial<DpomChildEntity> = this.dpomChildAdapter.convertDtoToEntity(dtoData, details.id);
@@ -840,7 +861,7 @@ export class DpomService {
         }
     }
 
-    @Cron('00 7 * * *')
+    @Cron('0 7 * * *')
     async syncCRMData(): Promise<CommonResponseModel> {
         // const transactionManager = new GenericTransactionManager(this.dataSource)
         const getBuyerPOs = await this.dpomRepository.getBuyerPOs()
@@ -1568,10 +1589,27 @@ export class DpomService {
             }
             const sizeDateMap = new Map<string, FactoryReportModel>();
             for (const rec of details) {
+                let itemVasText;
+                let hanger;
+                const instructions = rec.item_vas_text;
+                const searchString = 'SPECIAL VAS PACKING INSTRUCTIONS';
+                const search2 = 'HANGING IS REQUIRED'
+                const isPresent = instructions?.includes(searchString);
+                const isPresent2 = instructions?.includes(search2);
+                if (isPresent) {
+                    itemVasText = instructions?.replace(/"/g, '')
+                } else {
+                    itemVasText = instructions
+                }
+                if (isPresent2) {
+                    hanger = 'YES'
+                } else {
+                    hanger = 'NO'
+                }
                 if (!sizeDateMap.has(rec.po_and_line)) {
                     sizeDateMap.set(
                         rec.po_and_line,
-                        new FactoryReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, rec.item_vas_text, rec.item_text, rec.legal_po_price, rec.co_price, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.gross_price_fob, rec.ne_inc_disc, rec.trading_net_inc_disc, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.fobCurrCode, rec.netIncDisCurrency, rec.tradingNetCurrencyCode, rec.hanger, rec.quantity, rec.geo_code, [])
+                        new FactoryReportModel(rec.last_modified_date, rec.item, rec.factory, rec.document_date, rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.color_desc, rec.customer_order, rec.po_final_approval_date, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac, rec.ogac, rec.gac, rec.truck_out_date, rec.origin_receipt_date, rec.factory_delivery_date, rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, itemVasText, rec.item_text, rec.legal_po_price, rec.co_price, rec.pcd, rec.ship_to_address_legal_po, rec.ship_to_address_dia, rec.cab_code, rec.gross_price_fob, rec.ne_inc_disc, rec.trading_net_inc_disc, rec.displayName, rec.actual_unit, rec.allocated_quantity, rec.pcd, rec.fobCurrCode, rec.netIncDisCurrency, rec.tradingNetCurrencyCode, hanger, rec.quantity, rec.geo_code, [])
                     );
                 }
                 const sizeWiseData = sizeDateMap.get(rec.po_and_line).sizeWiseData;
@@ -1651,12 +1689,15 @@ export class DpomService {
                 formattedPCD = `${mm}/${dd}/${yyyy}`;
             }
             let itemVasText;
+            let itemVasPDF;
             let hanger;
             const instructions = rec.item_vas_text;
+            const instructions2 = rec.item_vas_pdf;
             const searchString = 'SPECIAL VAS PACKING INSTRUCTIONS';
             const search2 = 'HANGING IS REQUIRED'
             const isPresent = instructions?.includes(searchString);
-            const isPresent2 = instructions?.includes(search2)
+            const isPresent2 = instructions?.includes(search2);
+            const isPresent3 = instructions2?.includes(searchString)
             if (isPresent) {
                 itemVasText = instructions?.replace(/"/g, '')
             } else {
@@ -1666,6 +1707,11 @@ export class DpomService {
                 hanger = 'YES'
             } else {
                 hanger = 'NO'
+            }
+            if (isPresent3) {
+                itemVasPDF = instructions2?.replace(/"/g, '')
+            } else {
+                itemVasPDF = instructions2
             }
             let diffOfShipToAdd
             if (rec.ship_to_address_legal_po && rec.ship_to_address_dia) {
@@ -1677,7 +1723,7 @@ export class DpomService {
             }
             if (!sizeDateMap.has(rec.po_and_line)) {
                 sizeDateMap.set(
-                    rec.po_and_line, new MarketingReportModel(rec.last_modified_date ? moment(rec.last_modified_date).format('MM/DD/YYYY') : '-', rec.item ? (rec.item).substring(0, 4) : null, rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.product_name, rec.color_desc, rec.customer_order, coFinalAppDate, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac, 'YYYY-MM-DD').format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, itemVasText, rec.item_vas_pdf, rec.item_text, formattedPCD, rec.ship_to_address_legal_po?.replace(/"/g, ''), rec.ship_to_address_dia?.replace(/"/g, ''), diffOfShipToAdd, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, hanger, rec.fabric_content, rec.final_destination, [])
+                    rec.po_and_line, new MarketingReportModel(rec.last_modified_date ? moment(rec.last_modified_date).format('MM/DD/YYYY') : '-', rec.item ? (rec.item).substring(0, 4) : null, rec.factory, moment(rec.document_date).format('MM/DD/YYYY'), rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.dpom_item_line_status, rec.style_number, rec.product_code, rec.product_name, rec.color_desc, rec.customer_order, coFinalAppDate, rec.plan_no, rec.lead_time, rec.category_code, rec.category_desc, rec.vendor_code, rec.gcc_focus_code, rec.gcc_focus_desc, rec.gender_age_code, rec.gender_age_desc, rec.destination_country_code, rec.destination_country, rec.plant, rec.plant_name, rec.trading_co_po_no, rec.upc, rec.direct_ship_so_no, rec.direct_ship_so_item_no, rec.customer_po, rec.ship_to_customer_no, rec.ship_to_customer_name, rec.planning_season_code, rec.planning_season_year, rec.doc_type_code, rec.doc_type_desc, rec.mrgac ? moment(rec.mrgac, 'YYYY-MM-DD').format('MM/DD/YYYY') : '-', rec.ogac ? moment(rec.ogac).format('MM/DD/YYYY') : '-', rec.gac ? moment(rec.gac).format('MM/DD/YYYY') : '-', rec.truck_out_date ? moment(rec.truck_out_date).format('MM/DD/YYYY') : '-', rec.origin_receipt_date ? moment(rec.origin_receipt_date).format('MM/DD/YYYY') : '-', rec.factory_delivery_date ? moment(rec.factory_delivery_date).format('MM/DD/YYYY') : '-', rec.gac_reason_code, rec.gac_reason_desc, rec.shipping_type, rec.planning_priority_code, rec.planning_priority_desc, rec.launch_code, rec.geo_code, rec.mode_of_transport_code, rec.inco_terms, rec.inventory_segment_code, rec.purchase_group_code, rec.purchase_group_name, rec.total_item_qty, rec.actual_shipped_qty, rec.vas_size, itemVasText, itemVasPDF, rec.item_text, formattedPCD, rec.ship_to_address_legal_po?.replace(/"/g, ''), rec.ship_to_address_dia?.replace(/"/g, ''), diffOfShipToAdd, rec.cab_code, rec.displayName, rec.actual_unit, rec.allocated_quantity, hanger, rec.fabric_content, rec.final_destination, [])
                 )
             }
             let fobPriceDiff;
@@ -1861,33 +1907,247 @@ export class DpomService {
         }
     }
 
+    async saveDivertData(req: any): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource);
+        try {
+            await transactionManager.startTransaction();
+            const divertArr: DivertEntity[] = []
+            for (const data of req) {
+                const divertData = await this.divertRepository.findOne({ where: { oPurchaseOrderNumber: data.oldPo[0].poNumber, oPoLineItemNumber: data.oldPo[0].poLine, nPurchaseOrderNumber: data.newpo[0].npoNumber, nPoLineItemNumber: data.newpo[0].npoLine } })
+                if (divertData) {
+                    continue;
+                } else {
+                    const entity = new DivertEntity()
+                    entity.orequestDate = data.newpo[0].orequestDate != '-' ? moment(data.newpo[0].orequestDate, 'MM/DD/YYYY').format('YYYY-MM-DD') : null
+                    entity.oItem = data.oldPo[0].item
+                    entity.oFactory = data.oldPo[0].factory
+                    entity.oPlant = data.oldPo[0].Plant
+                    entity.oProductCode = data.oldPo[0].productCode
+                    entity.oLineItemStatus = data.oldPo[0].LineStatus
+                    entity.oDocumentDate = moment(data.oldPo[0].DocumentDate).format('YYYY-MM-DD')
+                    entity.oPurchaseOrderNumber = data.oldPo[0].poNumber
+                    entity.oPoLineItemNumber = data.oldPo[0].poLine
+                    entity.oldVal = data.oldPo[0].oldVal
+                    entity.oTotalItemQty = data.oldPo[0].Quantity
+                    entity.oDestination = data.oldPo[0].destination
+                    entity.oShipmentType = data.oldPo[0].shipmentType
+                    entity.oOGAC = data.oldPo[0].ogac
+                    entity.oGAC = data.oldPo[0].gac
+                    entity.oInventorySegmentCode = data.oldPo[0].inventorySegmentCode
+                    entity.oItemVasText = data.oldPo[0].itemVasText
+                    entity.oFOBPrice = data.oldPo[0].gross_price_fob
+                    entity.oTradingCoNetIncDis = data.oldPo[0].trading_net_inc_disc
+                    entity.nOGAC = data.newpo[0].nogac
+                    entity.nGAC = data.newpo[0].ngac
+                    entity.nItem = data.newpo[0].item
+                    entity.nFactory = data.newpo[0].factory
+                    entity.nPlant = data.newpo[0].nPlant
+                    entity.nProductCode = data.newpo[0].nproductCode
+                    entity.nLineItemStatus = data.newpo[0].nLineStatus
+                    entity.nDocumentDate = moment(data.newpo[0].nDocumentDate).format('YYYY-MM-DD')
+                    entity.nPurchaseOrderNumber = data.newpo[0].npoNumber
+                    entity.nPoLineItemNumber = data.newpo[0].npoLine
+                    entity.nTotalItemQty = data.newpo[0].nQuantity
+                    entity.nDestination = data.newpo[0].ndestination
+                    entity.nInventorySegmentCode = data.newpo[0].ninventorySegmentCode
+                    entity.nItemVasText = data.newpo[0].nitemVasText
+                    entity.nShipmentType = data.newpo[0].nshipmentType
+                    entity.nFOBPrice = data.newpo[0].gross_price_fob
+                    entity.nTradingCoNetIncDis = data.newpo[0].trading_net_inc_disc
+                    divertArr.push(entity)
+                }
+            }
+            const save = await transactionManager.getRepository(DivertEntity).save(divertArr);
+            if (save) {
+                await transactionManager.completeTransaction();
+                return new CommonResponseModel(true, 1, 'Data retrieved and saved successfully');
+            } else {
+                await transactionManager.releaseTransaction();
+                return new CommonResponseModel(false, 0, 'Something went wrong');
+            }
+        } catch (error) {
+            await transactionManager.releaseTransaction();
+            return new CommonResponseModel(false, 0, error.message || 'Something went wrong');
+        }
+    }
+
+    async updateDivertData(req: any): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource);
+        try {
+            await transactionManager.startTransaction();
+            const divertData = await this.divertRepository.findOne({ where: { oPurchaseOrderNumber: req.oldPoNumber, oPoLineItemNumber: req.oldPoLineItemNo, nPurchaseOrderNumber: req.newPoNumber, nPoLineItemNumber: req.newPoLineItemNo } })
+            if (divertData) {
+                const update = await this.divertRepository.update({ oPurchaseOrderNumber: req.oldPoNumber, oPoLineItemNumber: req.oldPoLineItemNo, nPurchaseOrderNumber: req.newPoNumber, nPoLineItemNumber: req.newPoLineItemNo }, {
+                    orequestDate: req.requestDate, oldVal: req.oldQty, oTotalItemQty: req.totalQty
+                })
+                if (update.affected) {
+                    await transactionManager.completeTransaction();
+                    return new CommonResponseModel(true, 1, 'Data updated successfully');
+                } else {
+                    await transactionManager.releaseTransaction();
+                    return new CommonResponseModel(false, 0, 'Something went wrong');
+                }
+            } else {
+                const oldData = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: req.oldPoNumber, poLineItemNumber: req.oldPoLineItemNo } })
+                const newData = await this.dpomRepository.findOne({ where: { purchaseOrderNumber: req.newPoNumber, poLineItemNumber: req.newPoLineItemNo } })
+                const entity = new DivertEntity()
+                entity.orequestDate = moment(req.requestDate).format('MM/DD/YYYY')
+                entity.oItem = oldData.item ? oldData.item : '-'
+                entity.oFactory = oldData.factory ? oldData.factory : '-'
+                entity.oPlant = oldData.plant
+                entity.oProductCode = oldData.productCode
+                entity.oLineItemStatus = oldData.DPOMLineItemStatus
+                entity.oDocumentDate = moment(oldData.documentDate).format('YYYY-MM-DD')
+                entity.oPurchaseOrderNumber = req.oldPoNumber
+                entity.oPoLineItemNumber = req.oldPoLineItemNo
+                entity.oldVal = req.oldQty
+                entity.oTotalItemQty = req.balQty
+                entity.oDestination = oldData.destinationCountry
+                entity.oShipmentType = oldData.shippingType
+                entity.oOGAC = oldData.OGAC
+                entity.oGAC = oldData.GAC
+                entity.oInventorySegmentCode = oldData.inventorySegmentCode
+                entity.oItemVasText = oldData.itemVasText
+                entity.oFOBPrice = oldData.grossPriceFOB
+                entity.oTradingCoNetIncDis = oldData.trCoNetIncludingDisc
+                entity.nOGAC = newData.OGAC
+                entity.nGAC = newData.GAC
+                entity.nItem = newData.item ? newData.item : '-'
+                entity.nFactory = newData.factory ? newData.factory : '-'
+                entity.nPlant = newData.plant
+                entity.nProductCode = newData.productCode
+                entity.nLineItemStatus = newData.DPOMLineItemStatus
+                entity.nDocumentDate = moment(newData.documentDate).format('YYYY-MM-DD')
+                entity.nPurchaseOrderNumber = req.newPoNumber
+                entity.nPoLineItemNumber = req.newPoLineItemNo
+                entity.nTotalItemQty = newData.totalItemQty
+                entity.nDestination = newData.destinationCountry
+                entity.nInventorySegmentCode = newData.inventorySegmentCode
+                entity.nItemVasText = newData.itemVasText
+                entity.nShipmentType = newData.shippingType
+                entity.nFOBPrice = newData.grossPriceFOB
+                entity.nTradingCoNetIncDis = newData.trCoNetIncludingDisc
+                const save = await transactionManager.getRepository(DivertEntity).save(entity);
+                if (save) {
+                    await transactionManager.completeTransaction();
+                    return new CommonResponseModel(true, 1, 'Data retrieved and saved successfully');
+                } else {
+                    await transactionManager.releaseTransaction();
+                    return new CommonResponseModel(false, 0, 'Something went wrong');
+                }
+            }
+        } catch (error) {
+            await transactionManager.releaseTransaction();
+            return new CommonResponseModel(false, 0, error.message || 'Something went wrong');
+        }
+    }
+
+    async updateDivertDataValues(req: any): Promise<CommonResponseModel> {
+        const transactionManager = new GenericTransactionManager(this.dataSource);
+        try {
+            await transactionManager.startTransaction();
+            const divertData = await this.divertRepository.findOne({ where: { id: req.id } })
+            if (divertData) {
+                const update = await this.divertRepository.update({ id: req.id }, {
+                    trimsChange: req.trimsChange, surcharge: req.surcharge
+                })
+                if (update.affected) {
+                    await transactionManager.completeTransaction();
+                    return new CommonResponseModel(true, 1, 'Data updated successfully');
+                } else {
+                    await transactionManager.releaseTransaction();
+                    return new CommonResponseModel(false, 0, 'Something went wrong');
+                }
+            } else {
+                await transactionManager.releaseTransaction();
+                return new CommonResponseModel(false, 0, 'Record not found');
+            }
+        } catch (error) {
+            await transactionManager.releaseTransaction();
+            return new CommonResponseModel(false, 0, error.message || 'Something went wrong');
+        }
+    }
+
     async getDivertReportData(): Promise<CommonResponseModel> {
-        const reports = await this.dpomRepository.getDivertReport();
-        const divertModelData: DivertModel[] = [];
-        const processedPoLineSet = new Set<string>();
-        for (const report of reports) {
-            const divertedPos = report.diverted_to_pos.split(',');
-            if (report.diverted_to_pos) {
-                for (const PoLine of divertedPos) {
-                    const [po, line] = PoLine.split('/');
-                    if (!processedPoLineSet.has(PoLine)) {
+        try {
+            const reports = await this.dpomRepository.getDivertReport();
+            const divertModelData: DivertModel[] = [];
+            const processedPoLineSet = new Set<string>();
+            for (const report of reports) {
+                const divertedPos = report.diverted_to_pos.split(',');
+                if (report.diverted_to_pos) {
+                    for (const PoLine of divertedPos) {
+                        const [po, line] = PoLine.split('/');
+                        const po1 = po.replace(/\s/g, '')
+                        const line1 = line.replace(/\s/g, '')
                         {/* Check if this Po/line combination has already been processed*/ }
-                        const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po, line]);
-                        for (const newpoDivert of newPoData) {
-                            const model = new DivertModel(report, newpoDivert);
-                            divertModelData.push(model);
+                        const newPoData = await this.dpomRepository.getDivertWithNewDataReport([po1, line1]);
+                        const model = new DivertModel([report], newPoData);
+                        const inputText = report.itemText
+                        const regex1 = new RegExp(`${PoLine} at (\\d{2}/\\d{2}/\\d{4})`, 'g');
+                        const regex2 = /Divert to PO# (\d+-\d+).+?(\d{1,2}\/\d{1,2}\/\d{2,4})/g;
+                        const regex3 = /Quantity (\d+) moved to Line (\d+) on (\d{2}\/\d{2}\/\d{4})/;
+
+                        let match;
+                        let dateAfterPattern
+                        // Check regex1
+                        while ((match = regex1.exec(inputText)) !== null) {
+                            if (match[1]) {
+                                dateAfterPattern = match[1];
+                                break;  // Break out of the loop if a match is found
+                            }
                         }
+                        // Check regex2 if not found by regex1
+                        if (!dateAfterPattern) {
+                            while ((match = regex2.exec(inputText)) !== null) {
+                                if (match[2]) {
+                                    dateAfterPattern = match[2];
+                                    break;  // Break out of the loop if a match is found
+                                }
+                            }
+                        }
+                        // Check regex3 if not found by regex1 or regex2
+                        if (!dateAfterPattern) {
+                            while ((match = regex3.exec(inputText)) !== null) {
+                                if (match[3]) {
+                                    dateAfterPattern = match[3];
+                                    break;  // Break out of the loop if a match is found
+                                }
+                            }
+                        }
+                        model.newpo[0].orequestDate = dateAfterPattern ? moment(dateAfterPattern, ['MM/DD/YYYY', 'DD.MM.YYYY', 'M/DD/YY']).format('MM/DD/YYYY') : "-"
+                        divertModelData.push(model);
                         // Mark this Po/line combination as processed
                         processedPoLineSet.add(PoLine);
                     }
                 }
             }
+            if (divertModelData.length > 0) {
+                const save = await this.saveDivertData(divertModelData)
+                if (save.status) {
+                    return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
+                } else {
+                    return new CommonResponseModel(false, 0, 'Failed to save');
+                }
+            } else {
+                return new CommonResponseModel(false, 0, 'No Data Found', []);
+            }
+        } catch (error) {
+            console.error('Error in getDivertReportData:', error);
+            return new CommonResponseModel(false, 0, 'Error retrieving data', []);
         }
-        if (divertModelData.length > 0) {
-            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', divertModelData);
-        } else {
-            return new CommonResponseModel(false, 0, 'No Data Found', []);
-        }
+    }
+
+    async getDivertReportDataFromDivertTable(): Promise<CommonResponseModel> {
+        const data = await this.divertRepository.find({
+            order: {
+                orequestDate: 'ASC',
+            },
+        })
+        if (data.length > 0)
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        else
+            return new CommonResponseModel(false, 0, 'No data found');
     }
 
     ///////////////////--------------------------------------------------------------------------------factory
@@ -2246,7 +2506,7 @@ export class DpomService {
             if (!sizeDateMap.has(rec.po_number)) {
                 sizeDateMap.set(
                     rec.po_number,
-                    new TotalQuantityChangeModel(rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.schedule_line_item_number, rec.created_at, rec.item, rec.factory, rec.styleNumber, rec.productCode, rec.color_desc, rec.OGAC, rec.GAC, rec.desCtry, rec.item_text, rec.total_item_qty, [])
+                    new TotalQuantityChangeModel(rec.po_number, rec.po_line_item_number, rec.po_and_line, rec.schedule_line_item_number, rec.document_date, rec.created_at, rec.item, rec.factory, rec.styleNumber, rec.productCode, rec.color_desc, rec.OGAC, rec.GAC, rec.desCtry, rec.item_text, rec.total_item_qty, [])
                 )
             }
             const sizeWiseData = sizeDateMap.get(rec.po_number).sizeWiseData;
@@ -2339,11 +2599,11 @@ export class DpomService {
                     waitUntil: 'networkidle0', // Wait until there are no more network connections
                 }).then(async () => {
                     // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
-                    const directoryPath = 'C:/Users/saipr/Downloads/PO-PDF';
+                    const directoryPath = 'D:/Nike PDF/NIKE-PDF PO';
                     console.log(directoryPath)
                     // Specify the source and destination directories
-                    const sourceDirectory = 'C:/Users/saipr/Downloads/PO-PDF';
-                    const destinationDirectory = 'C:/Users/saipr/Downloads/PO-PDF READ';
+                    const sourceDirectory = 'D:/Nike PDF/NIKE-PDF PO';
+                    const destinationDirectory = 'D:/Nike PDF/PO PDF-READ';
                     const files = fs.readdirSync(directoryPath)
                     for (const file of files) {
                         await page.waitForSelector('input[type="file"]');
