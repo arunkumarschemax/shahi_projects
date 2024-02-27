@@ -2211,7 +2211,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
 
   async getRequestNo(req?: RequestNoReq): Promise<CommonResponseModel> {
 
-    const records = await this.sampleRepo.find({ where: { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ISSUED } });
+    const records = await this.sampleRepo.find({ where: { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ISSUED, samplingUser: Not (null) } });
     if (records.length)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
     else
