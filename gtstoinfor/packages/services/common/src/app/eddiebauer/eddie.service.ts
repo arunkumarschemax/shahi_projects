@@ -34,7 +34,7 @@ export class EddieService {
     private pdfRepo: EddiePdfRepo,
     private eddieCoLineRepo: EddieCOLineRepository,
     private eddieOrdersChildRepository: EddieOrdersChildRepository,
-    private addressRepo:AddressRepository,
+    private addressRepo: AddressRepository,
     private addressService: AddressService,
 
 
@@ -75,7 +75,7 @@ export class EddieService {
 
           entity.poLine = item.poLine
           entity.buyerItem = item.buyerItem
-          // entity.shortDescription = item.shortDescription
+          entity.shortDescription = item.shortDescription
           entity.color = item.color
           entity.buyerStyle = item.buyerStyle
           // entity.currency = item.currency
@@ -94,8 +94,15 @@ export class EddieService {
 
           if (orderData) {
             const update = await this.EddieOrdersRepo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
-              deliveryDate: req.deliveryDate, exFactoryDate: req.exFactoryDate, buyerAddress: req.buyerAddress, deliveryAddress: req.deliveryAddress,
-              currency: req.currency, buyerItem: item.buyerItem, color: item.color,buyerStyle:item.buyerStyle,
+              deliveryDate: req.deliveryDate, 
+              exFactoryDate: req.exFactoryDate,
+               buyerAddress: req.buyerAddress, 
+               deliveryAddress: req.deliveryAddress,
+              currency: req.currency,
+              buyerItem: item.buyerItem,
+              color: item.color,
+              shortDescription: item.shortDescription,
+              buyerStyle: item.buyerStyle,
               sizeCode: variant.sizeCode,
               upc: variant.upc,
               sku: variant.sku,
@@ -120,7 +127,8 @@ export class EddieService {
             entitys.poLine = item.poLine
             entitys.buyerItem = item.buyerItem
             entitys.color = item.color
-            entitys.buyerStyle = item.buyerStyle
+            entitys.buyerStyle = item.buyerStyle,
+            entitys.shortDescription = item.shortDescription
 
             entitys.sizeCode = variant.sizeCode
             entitys.size = variant.size
@@ -155,6 +163,7 @@ export class EddieService {
             entitys.buyerItem = item.buyerItem
             entitys.color = item.color
             entitys.buyerStyle = item.buyerStyle
+            entitys.shortDescription = item.shortDescription
 
             entitys.sizeCode = variant.sizeCode
             entitys.size = variant.size
@@ -183,224 +192,6 @@ export class EddieService {
       return new CommonResponseModel(false, 0, 'Failed', err)
     }
   }
-
-
-  // async saveCentricOrder(req: any): Promise<CommonResponseModel> {
-  //   // const transactionManager = new GenericTransactionManager(this.dataSource)
-  //   try {
-  //     let saved
-  //     // await transactionManager.startTransaction()
-  //     for (const item of req.CentricpoItemDetails) {
-  //       const match = item.poLine.match(/\d+/);
-  //       // Check if a match is found and convert it to an integer
-  //       // const poLine = match ? parseInt(match[0], 10) : null;
-  //       const poLine = match
-
-
-  //       for (const variant of item.CentricpoItemVariantDetails) {
-  //         const orderData = await this.Repo.findOne({ where: { poNumber: req.poNumber, poLine: poLine, size: variant.size } })
-  //         const order = await this.childrepo.findOne({ where: { poNumber: req.PoNumber, poLine: poLine, size: variant.size }, order: { poVersion: 'DESC' } })
-  //         // console.log(order,'NNNNNNNNNN')
-  //         const entity = new CentricEntity();
-  //         entity.poNumber = req.poNumber
-  //         entity.shipment = req.shipment
-  //         entity.season = req.season
-  //         entity.portOfExport = req.portOfExport
-  //         entity.portOfEntry = req.portOfEntry
-  //         entity.Refrence = req.Refrence
-  //         entity.paymentTermDescription = req.paymentTermDescription
-  //         entity.specialInstructions = req.specialInstructions
-  //         entity.division = req.division
-  //         entity.incoterm = req.incoterm
-  //         entity.shipToAdd = req.shipToAdd
-  //         entity.manufacture = req.manufacture
-  //         entity.poDate = req.poDate
-  //         entity.buyerAddress = req.buyerAddress
-
-
-  //         entity.poLine = item.poLine
-  //         entity.material = item.material
-  //         entity.color = item.color
-  //         entity.gender = item.gender
-  //         entity.shortDescription = item.shortDescription
-  //         entity.packMethod = item.packMethod
-  //         entity.vendorBookingFlag = item.vendorBookingFlag
-  //         entity.ppkupc = item.ppkupc
-  //         entity.currency = item.currency
-  //         entity.totalQuantity = item.totalQuantity
-  //         entity.style = item.style
-  //         entity.poType = item.poType
-
-  //         entity.size = variant.size
-  //         entity.upc = variant.upc
-  //         entity.label = variant.label
-  //         entity.quantity = variant.quantity
-  //         entity.unitPrice = variant.unitPrice
-  //         entity.exFactory = variant.exFactory
-  //         entity.exPort = variant.exPort
-  //         entity.deliveryDate = variant.deliveryDate
-  //         entity.retialPrice = variant.retialPrice
-  //         entity.comptMaterial = variant.comptMaterial
-  //         entity.ratio = variant.ratio
-  //         entity.eachPerCarton = variant.eachPerCarton
-
-
-  //         if (orderData) {
-
-  //           const update = await this.Repo.update({ poNumber: req.poNumber, poLine: item.poLine, size: variant.size }, {
-
-  //             shipment: req.shipment,
-  //             season: req.season,
-  //             portOfExport: req.portOfExport,
-  //             portOfEntry: req.portOfEntry,
-  //             Refrence: req.Refrence,
-  //             paymentTermDescription: req.paymentTermDescription,
-  //             specialInstructions: req.specialInstructions,
-  //             division: req.division,
-  //             incoterm: req.incoterm,
-  //             shipToAdd: req.shipToAdd,
-  //             manufacture: req.manufacture,
-  //             poDate: req.poDate,
-  //             buyerAddress: req.buyerAddress,
-
-
-  //             material: item.material,
-  //             color: item.color,
-  //             gender: item.gender,
-  //             shortDescription: item.shortDescription,
-  //             packMethod: item.packMethod,
-  //             vendorBookingFlag: item.vendorBookingFlag,
-  //             ppkupc: item.ppkupc,
-  //             currency: item.currency,
-  //             totalQuantity: item.totalQuantity,
-  //             style: item.style,
-
-  //             upc: variant.upc,
-  //             label: variant.label,
-  //             quantity: variant.quantity,
-  //             unitPrice: variant.unitPrice,
-  //             exFactory: variant.exFactory,
-  //             exPort: variant.exPort,
-  //             deliveryDate: variant.deliveryDate,
-  //             retialPrice: variant.retialPrice,
-  //             comptMaterial: variant.comptMaterial,
-  //             ratio: variant.ratio,
-  //             eachPerCarton: variant.eachPerCarton,
-
-  //           })
-  //           let po = parseInt(order?.poVersion) + 1
-
-  //           // console.log(po,',,,,,,')
-  //           const entitys = new CentricChildEntity();
-  //           entitys.poNumber = req.poNumber
-  //           entitys.shipment = req.shipment
-  //           entitys.season = req.season
-  //           entitys.portOfExport = req.portOfExport
-  //           entitys.portOfEntry = req.portOfEntry
-  //           entitys.Refrence = req.Refrence
-  //           entitys.paymentTermDescription = req.paymentTermDescription
-  //           entitys.specialInstructions = req.specialInstructions
-  //           entitys.division = req.division
-  //           entitys.incoterm = req.incoterm
-  //           entitys.shipToAdd = req.shipToAdd
-  //           entitys.manufacture = req.manufacture
-  //           entitys.poDate = req.poDate
-  //           entitys.buyerAddress = req.buyerAddress
-
-
-  //           entitys.poLine = item.poLine
-  //           entitys.material = item.material
-  //           entitys.color = item.color
-  //           entitys.gender = item.gender
-  //           entitys.shortDescription = item.shortDescription
-  //           entitys.packMethod = item.packMethod
-  //           entitys.vendorBookingFlag = item.vendorBookingFlag
-  //           entitys.ppkupc = item.ppkupc
-  //           entitys.currency = item.currency
-  //           entitys.totalQuantity = item.totalQuantity
-  //           entitys.style = item.style
-  //           entitys.poType = item.poType
-
-  //           entitys.size = variant.size
-  //           entitys.upc = variant.upc
-  //           entitys.label = variant.label
-  //           entitys.quantity = variant.quantity
-  //           entitys.unitPrice = variant.unitPrice
-  //           entitys.exFactory = variant.exFactory
-  //           entitys.exPort = variant.exPort
-  //           entitys.deliveryDate = variant.deliveryDate
-  //           entitys.retialPrice = variant.retialPrice
-  //           entitys.comptMaterial = variant.comptMaterial
-  //           entitys.ratio = variant.ratio
-  //           entitys.eachPerCarton = variant.eachPerCarton
-  //           entitys.orderId = orderData.id
-
-  //           entitys.poVersion = po.toString()
-  //           const savedChild = await this.childrepo.save(entitys)
-
-  //           if (!update.affected) {
-  //             throw new Error('Update failed');
-  //           }
-  //         } else {
-  //           saved = await this.Repo.save(entity)
-  //           const entitys = new CentricChildEntity();
-  //           entitys.poNumber = req.poNumber
-  //           entitys.shipment = req.shipment
-  //           entitys.season = req.season
-  //           entitys.portOfExport = req.portOfExport
-  //           entitys.portOfEntry = req.portOfEntry
-  //           entitys.Refrence = req.Refrence
-  //           entitys.paymentTermDescription = req.paymentTermDescription
-  //           entitys.specialInstructions = req.specialInstructions
-  //           entitys.division = req.division
-  //           entitys.incoterm = req.incoterm
-  //           entitys.shipToAdd = req.shipToAdd
-  //           entitys.manufacture = req.manufacture
-  //           entitys.poDate = req.poDate
-  //           entitys.buyerAddress = req.buyerAddress
-
-
-  //           entitys.poLine = item.poLine
-  //           entitys.material = item.material
-  //           entitys.color = item.color
-  //           entitys.gender = item.gender
-  //           entitys.shortDescription = item.shortDescription
-  //           entitys.packMethod = item.packMethod
-  //           entitys.vendorBookingFlag = item.vendorBookingFlag
-  //           entitys.ppkupc = item.ppkupc
-  //           entitys.currency = item.currency
-  //           entitys.totalQuantity = item.totalQuantity
-  //           entitys.style = item.style
-  //           entitys.poType = item.poType
-
-  //           entitys.size = variant.size
-  //           entitys.upc = variant.upc
-  //           entitys.label = variant.label
-  //           entitys.quantity = variant.quantity
-  //           entitys.unitPrice = variant.unitPrice
-  //           entitys.exFactory = variant.exFactory
-  //           entitys.exPort = variant.exPort
-  //           entitys.deliveryDate = variant.deliveryDate
-  //           entitys.retialPrice = variant.retialPrice
-  //           entitys.comptMaterial = variant.comptMaterial
-  //           entitys.ratio = variant.ratio
-  //           entitys.eachPerCarton = variant.eachPerCarton
-  //           entitys.orderId = entity.id
-  //           const savedChild = await this.childrepo.save(entitys)
-
-
-  //           if (!saved) {
-  //             throw new Error('Save failed')
-  //           }
-  //         }
-  //       }
-  //     }
-  //     // await transactionManager.completeTransaction()
-  //     return new CommonResponseModel(true, 1, 'Data saved successfully', saved)
-  //   } catch (err) {
-  //     return new CommonResponseModel(false, 0, 'Failed', err)
-  //   }
-  // }
 
   async updatePath(req: any, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
     console.log(poNumber, "pppppioooooo");
@@ -439,7 +230,7 @@ export class EddieService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`,
-            new eddieOrderDataModel(rec.id, rec.po_number, rec.incoterm, rec.color, rec.delivery_date, rec.delivery_address, rec.buyer_address, rec.manufacture, rec.shipment_mode, rec.payment_terms, rec.po_line, rec.buyer_item, rec.short_description, rec.currency, rec.retail_price, rec.status, rec.ex_factory_date, [],rec.buyer_style)
+            new eddieOrderDataModel(rec.id, rec.po_number, rec.incoterm, rec.color, rec.delivery_date, rec.delivery_address, rec.buyer_address, rec.manufacture, rec.shipment_mode, rec.payment_terms, rec.po_line, rec.buyer_item, rec.short_description, rec.currency, rec.retail_price, rec.status, rec.ex_factory_date, [], rec.buyer_style)
           );
 
         }
@@ -711,7 +502,7 @@ export class EddieService {
       const poMap = new Map<string, EddieOrdersEntity>();
       data.forEach(rec => {
         poMap.set(`${rec.poNumber}`, rec)
-    
+
 
         const parts = rec.deliveryAddress.split(',')
         const destAdd = parts[2].trim();
@@ -790,7 +581,7 @@ export class EddieService {
         // const averageUnitPrice = totalSizeCount > 0 ? totalUnitPrice / totalSizeCount : 0;  // calculation of Avg unit price
         // console.log(averageUnitPrice,"avg price")
 
-        const co = new EddieCoLinereqModels(poInfo.poNumber, poInfo.poLine, poInfo.unitCost, poInfo.deliveryDate,poInfo.exFactoryDate, poInfo.currency, poInfo.buyerStyle,desArray);
+        const co = new EddieCoLinereqModels(poInfo.poNumber, poInfo.poLine, poInfo.unitCost, poInfo.deliveryDate, poInfo.exFactoryDate, poInfo.currency, poInfo.buyerStyle, desArray);
         coData.push(co)
       });
       if (coData) {
@@ -821,8 +612,7 @@ export class EddieService {
             oldData.unitCost !== rec.unit_cost ||
             oldData.deliveryDate !== rec.delivery_date ||
             oldData.quantity !== rec.quantity
-          ) 
-          {
+          ) {
             // Only push if there are changes
             compareModel.push(new
               CompareModel(
@@ -855,8 +645,8 @@ export class EddieService {
     console.log(req, "reqq");
     try {
       const update = await this.EddieOrdersRepo.update(
-        { poNumber:req.poNumber},
-        { status:StatusEnum.OPEN}
+        { poNumber: req.poNumber },
+        { status: StatusEnum.OPEN }
       );
 
       if (update) {
@@ -926,7 +716,7 @@ export class EddieService {
   //         agent = "-NA"
   //         pkgTerms = "FP1-WITHOUT HANGER"
   //         paymentTerms = "031-Trde Card45 Day"
-      
+
 
   //       }
   //       const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
@@ -962,7 +752,7 @@ export class EddieService {
   //       await driver.wait(until.elementLocated(By.name('dojo.EXFACTORYDATE')));
   //       await driver.findElement(By.name('dojo.EXFACTORYDATE')).clear();
   //       console.log(coLine.exFactoryDate,"ex faccccccccccccc")
-         
+
   //       await driver.findElement(By.name('dojo.EXFACTORYDATE')).sendKeys(coLine.exFactoryDate);
   //       await driver.wait(until.elementLocated(By.name('dojo.delydt')));
   //       await driver.findElement(By.name('dojo.delydt')).clear();
@@ -1431,7 +1221,7 @@ export class EddieService {
   //       const alert = await driver.switchTo().alert();
   //       const alertText = await alert.getText();
   //       const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: alertText , isActive:false });
-    
+
   //       await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
 
   //       await alert.accept();
@@ -1461,16 +1251,16 @@ export class EddieService {
   //       // const currentDateFormatted = `${day}-${month}-${year}`;
 
   //       if (coNo) {
-     
+
 
   //         const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted,errorMsg:"-" });
   //         await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.SUCCESS})
 
-       
+
   //         // await driver.navigate().refresh();
   //         await driver.sleep(10000)
   //       } else {
-     
+
 
   //         const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed',isActive:false });
   //         await this.updateCOLineStatus({poNumber: po.po_number, poLine: po.po_line , status: StatusEnum.FAILED})
@@ -1482,7 +1272,7 @@ export class EddieService {
   //     // }
   //     return new CommonResponseModel(true, 1, `COline created successfully`)
   //   } catch (error) {
-      
+
   //     console.log(error, 'error');
   //     if (error.name === 'TimeoutError') {
   //       const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Color found',isActive:false });
@@ -1552,10 +1342,10 @@ export class EddieService {
         const addressData = address.data[0];
         console.log(addressData, "address")
         styleNo = coData.style
-    
+
         buyerAddress = addressData?.buyerCode
         deliveryAddress = addressData?.deliveryCode
-   
+
         buyerValue1 = "EB-EDDIE BAUER"
         buyerValue2 = "EDDIE001-EDDIE BAUER LLC"
         agent = "-NA"
@@ -1725,7 +1515,7 @@ export class EddieService {
             // await driver.executeScript('document.getElementById("359QZD001").getElementsByTagName("div")[1].style.color = "red" ');
             // await driver.executeScript('document.getElementById("359QZD001").getElementsByTagName("div")[1].style.width = "2400px" ');
             // await driver.sleep(5000);
-            
+
             // await driver.sleep(5000);
 
             const sizesDivElementId = `nameDiv1${po.item_no}ZD001`;
@@ -1755,10 +1545,10 @@ export class EddieService {
               allSizes.push(label);
             });
             // Now iterate a random iteration of 10 loops to cover all sizes in the UI by doing a horizontal scroll
-            let i=1;
-            while(i<=10) {
+            let i = 1;
+            while (i <= 10) {
               // Try to jump to right hand side of the div by 8 units. (Dont try more than that. Test and change this value if needed)
-              const toJump = Math.min(i*8, totalElements);
+              const toJump = Math.min(i * 8, totalElements);
               const rightEle = driver.findElement(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td[${toJump}]`));
               // scroll the pointer to right side
               driver.executeScript("arguments[0].scrollIntoView()", rightEle);
@@ -1768,7 +1558,7 @@ export class EddieService {
               // At some nth iteration, we can set all the sizes to the array once it is visible on the scope of selenium reader
               // console.log("Iteration " + i + " : " + toJump + " --- " + currentUserVisbileElements.length);
               currentUserVisbileElements.forEach(async (r, index) => {
-                if(allSizes[index] == '') {
+                if (allSizes[index] == '') {
                   // console.log(index,"index");
                   const label = (await r.getText()).trim().toUpperCase().toString();
                   allSizes[index] = label;
@@ -1791,15 +1581,15 @@ export class EddieService {
             // get the total colors for the current PO from the UI
             const totalColorElements: any[] = await driver.findElements(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr`));
             console.log('total colors : ' + totalColorElements.length);
-            let cc=0;
-            for(const r of totalColorElements){
+            let cc = 0;
+            for (const r of totalColorElements) {
               // scroll to the specific location in the screen to read the color 
-              const bottomEle = await driver.findElement(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr[${cc+1}]`));
+              const bottomEle = await driver.findElement(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr[${cc + 1}]`));
               // execute the scroll command
               await driver.executeScript("arguments[0].scrollIntoView()", bottomEle);
               await driver.sleep(500);
               // now after scrolling, read the element from the DOM again. This time the selenium can read the value present in the DOM
-              const sepcificRowColorEle = await driver.findElements(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr[${cc+1}]/td`));
+              const sepcificRowColorEle = await driver.findElements(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr[${cc + 1}]/td`));
               // console.log(sepcificRowColorEle);
               const displayingColor = (await sepcificRowColorEle[0]?.getText());
               // push the color to an array
@@ -1808,7 +1598,7 @@ export class EddieService {
             }
 
             // now reverse map the color -> exact row index in the DOM
-            colorsInTable.forEach((color,index) => {
+            colorsInTable.forEach((color, index) => {
               colorsToDisplayRowColumnIndex[color] = index;
             });
             // ---------------------- COLOR GETTING LOGIC END -------------------------
@@ -1819,62 +1609,62 @@ export class EddieService {
             for (let [colorIndex, color] of dest.colors.entries()) {
               // for this specific color, scroll the window to the specific row where the color is visible
               const exactColorRowScrollLocation = colorsToDisplayRowColumnIndex[color.name] + 1;
-              if(!colorsToDisplayRowColumnIndex[color.name]) {
+              if (!colorsToDisplayRowColumnIndex[color.name]) {
                 break;
               }
               const bottomEle = await driver.findElement(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr[${exactColorRowScrollLocation}]`));
               driver.executeScript("arguments[0].scrollIntoView()", bottomEle);
               driver.sleep(500);
               for (let [sizeIndex, size] of color.sizes.entries()) {
-                  const exactSizeColumnScrollLocation = sizeToDisplayRowColumnIndex[size.name]+1;
-                  // console.log(`size: ${size.name} and ${exactSizeColumnScrollLocation}`);
+                const exactSizeColumnScrollLocation = sizeToDisplayRowColumnIndex[size.name] + 1;
+                // console.log(`size: ${size.name} and ${exactSizeColumnScrollLocation}`);
 
-                  // Now for this specific size, scroll to the exact location in the interface where the size is visible
-                  const rightEle = await driver.findElement(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td[${exactSizeColumnScrollLocation}]`));
-                  driver.executeScript("arguments[0].scrollIntoView()", rightEle);
-                  driver.sleep(300);
+                // Now for this specific size, scroll to the exact location in the interface where the size is visible
+                const rightEle = await driver.findElement(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td[${exactSizeColumnScrollLocation}]`));
+                driver.executeScript("arguments[0].scrollIntoView()", rightEle);
+                driver.sleep(300);
 
-                  let tabIndex = 1; // Default to 1 if no match
-                  
-                  // const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[${currentWorkingRow}]/td/div/table/tbody/tr[${currentWorkingRow}]/td/div/input[@name='salespsizes']`;
-                  const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
-                  
+                let tabIndex = 1; // Default to 1 if no match
 
-
-                  const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
-                  await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
-                  const dropdown = await driver.findElement(By.id(`bydline/${string}`));
-                  const options = await dropdown.findElements(By.tagName('option'));
-                  const optionValues = [];
-                  for (const option of options) {
-                    const value = await option.getAttribute('value');
-                    optionValues.push(value);
-                  }
-                  const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
-                  await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
-                  // Find all the input fields in the first row.
-                  const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
-                  // Create a map of size labels to input fields.
-                  const sizeToInputMap = {};
-                  allSizes.forEach((s, index) => {
-                    sizeToInputMap[s] = inputElements[index];
-                  });
-                  // console.log('----------------------Size map done --------------------------');
-                  const inputField = await sizeToInputMap[size.name.trim().toUpperCase().toString()];
-                  // console.log(inputField);
+                // const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[${currentWorkingRow}]/td/div/table/tbody/tr[${currentWorkingRow}]/td/div/input[@name='salespsizes']`;
+                const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
 
 
-                  if (inputField) {
-                    // Clear the existing value (if any) and fill it with the new price.
-                    await inputField.clear();
-                    await inputField.sendKeys(size.price);
-                  } else {
-                    const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Size found', isActive: false });
-                    await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED })
 
-                    return new CommonResponseModel(false, 0, 'NO matching Size found')
-                  }
-                  
+                const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
+                await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
+                const dropdown = await driver.findElement(By.id(`bydline/${string}`));
+                const options = await dropdown.findElements(By.tagName('option'));
+                const optionValues = [];
+                for (const option of options) {
+                  const value = await option.getAttribute('value');
+                  optionValues.push(value);
+                }
+                const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
+                await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
+                // Find all the input fields in the first row.
+                const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
+                // Create a map of size labels to input fields.
+                const sizeToInputMap = {};
+                allSizes.forEach((s, index) => {
+                  sizeToInputMap[s] = inputElements[index];
+                });
+                // console.log('----------------------Size map done --------------------------');
+                const inputField = await sizeToInputMap[size.name.trim().toUpperCase().toString()];
+                // console.log(inputField);
+
+
+                if (inputField) {
+                  // Clear the existing value (if any) and fill it with the new price.
+                  await inputField.clear();
+                  await inputField.sendKeys(size.price);
+                } else {
+                  const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Size found', isActive: false });
+                  await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED })
+
+                  return new CommonResponseModel(false, 0, 'NO matching Size found')
+                }
+
                 const inputId = `${size.name}:${color.name}:ASSORTED`.replace(/\*/g, '');
                 const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
                 await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
@@ -1972,25 +1762,25 @@ export class EddieService {
 
 
 
-async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
-  console.log(req, "reqqqqqqqponumnbbb");
-  try {
+  async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
+    console.log(req, "reqqqqqqqponumnbbb");
+    try {
       const poLines = req.poLine.split(","); // Split poLine string into an array
 
       // Iterate over each poLine and update its status
       for (const poLine of poLines) {
-          await this.EddieOrdersRepo.update(
-              { poNumber: req.poNumber, poLine: poLine.trim() }, // Trim to remove any extra spaces
-              { status: req.status }
-          );
+        await this.EddieOrdersRepo.update(
+          { poNumber: req.poNumber, poLine: poLine.trim() }, // Trim to remove any extra spaces
+          { status: req.status }
+        );
       }
 
       return new CommonResponseModel(true, 1, 'Success'); // Return success response with the number of lines updated
-  } catch (error) {
+    } catch (error) {
       console.error("Error updating CO line status:", error);
       return new CommonResponseModel(false, 0, 'Failed');
+    }
   }
-}
 
 
 

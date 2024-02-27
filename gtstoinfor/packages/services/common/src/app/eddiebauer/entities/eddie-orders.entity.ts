@@ -86,11 +86,12 @@ export class EddieOrdersEntity {
     buyerItem: string
 
 
-    // @Column('varchar', {
-    //     name: "short_description",
+    @Column('varchar', {
+        name: "short_description",
 
-    // })
-    // shortDescription: string
+    })
+    shortDescription: string
+    
     @Column('varchar', {
         name: "color",
 

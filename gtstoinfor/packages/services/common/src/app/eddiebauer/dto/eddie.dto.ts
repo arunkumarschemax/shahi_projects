@@ -45,8 +45,8 @@ export class EddieDto {
     @ApiProperty()
     buyerItem: string
 
-    // @ApiProperty()
-    // shortDescription: string
+    @ApiProperty()
+    shortDescription: string
 
     @ApiProperty()
     color: string
