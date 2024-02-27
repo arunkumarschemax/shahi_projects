@@ -690,7 +690,12 @@ export class LevisService {
         const poInfo = poMap.get(poNumber);
 
         const parsedDate = moment(poInfo?.exFactoryDate, "DD.MM.YYYY");
-        const formattedExFactDate = parsedDate.format("DD/MM/YYYY");
+        let formattedExFactDate = parsedDate.format("DD/MM/YYYY");
+
+        if (parsedDate.isSameOrBefore(moment(), 'day')) {
+          formattedExFactDate = '';
+        }
+  
 
 
         const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, formattedExFactDate, formattedExFactDate, poInfo.material, desArray);
@@ -706,7 +711,7 @@ export class LevisService {
       throw err;
     }
   }
-
+  
 
 
   async getordercomparationData(req?: any): Promise<CommonResponseModel> {
@@ -793,7 +798,7 @@ export class LevisService {
       let styleNo;
       if (po.buyer === 'LEVIS') {
         const response = await this.getOrderdataForCOline({ poNumber: po.po_number, poLine: po.po_line })
-        // console.log(response.data[0],"response")
+        console.log(response.data[0],"response")
         const coData = response.data[0];
         coLine.buyerPo = coData.poNumber
         // const inputDate = new Date(coData.deliveryDate)
