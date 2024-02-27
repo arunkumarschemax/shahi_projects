@@ -254,11 +254,23 @@ export const extractDataFromPoPdf = async (pdf) => {
         console.log(rec.itemIndex, "iiiiiiiiiiiiii");
 
         const regex = /^\d{3}-\d{4}$/;
+        const shortDescStartIndex = /^\d{3}-\d{4}$/;
+        const shortDescEndIndex = /(\d+(,|.|\d+)\d+\s+EACH)|\d+\s+EACH/
         const colorRegex = /\d+\s+\w+/
         const matchIndex = filteredData.findIndex((data, index) => index >= rec.itemIndex && regex.test(data.str));
         if (matchIndex !== -1 && matchIndex < filteredData.length - 1) {
             itemDetailsObj.poLine = filteredData[matchIndex - 1].str;
             itemDetailsObj.buyerItem = filteredData[matchIndex].str;
+            const ifWeFindShortDescription = filteredData.findIndex((data, index) => index >= matchIndex && shortDescStartIndex.test(data.str));
+            if (ifWeFindShortDescription !== -1) {
+                let shortDesc = '';
+                let currentIndex = ifWeFindShortDescription + 1;
+                while (currentIndex < filteredData.length && !shortDescEndIndex.test(filteredData[currentIndex].str)) {
+                    shortDesc += filteredData[currentIndex].str + ' ';
+                    currentIndex++;
+                }
+                itemDetailsObj.shortDescription = shortDesc.trim();
+            }
             let currentIndex = matchIndex + 1;
             while (currentIndex < filteredData.length && !colorRegex.test(filteredData[currentIndex].str)) {
                 const parts = filteredData[currentIndex].str.split('-');
@@ -326,12 +338,18 @@ export const extractDataFromPoPdf = async (pdf) => {
             const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
             if (upcIndex !== -1 && upcIndex < itemVarinatsTextArr.length - 1) {
                 itemVariantsObj.sizeCode = itemVarinatsTextArr[upcIndex - 2] /* size code */
-                itemVariantsObj.size = itemVarinatsTextArr[upcIndex - 1]; /* size */
+                // itemVariantsObj.size = itemVarinatsTextArr[upcIndex - 1]; /* size */
+                // itemVariantsObj.size = (itemVarinatsTextArr[upcIndex - 1]+(itemDetailsObj.shortDescription.slice(1,4)));
+                if (itemDetailsObj.shortDescription.includes("P")) {
+                    itemVariantsObj.size = (itemDetailsObj.shortDescription.slice(1, 4).includes("P") ? "P" : "") + itemVarinatsTextArr[upcIndex - 1]
+                } else {
+                    itemVariantsObj.size = itemVarinatsTextArr[upcIndex - 1] + (itemDetailsObj.shortDescription.slice(1, 4).includes("T") ? "T" : "");
+                }
                 itemVariantsObj.sku = itemVarinatsTextArr[upcIndex + 1]; /* sku */
                 itemVariantsObj.quantityPerInnerPack = itemVarinatsTextArr[upcIndex + 3]; /* quantityPerInnerPack */
                 // itemVariantsObj.ratio = itemVarinatsTextArr[upcIndex - 1];
                 itemVariantsObj.retailPrice = itemVarinatsTextArr[upcIndex + 4] /* po retail price */
-                itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 6].replace(/,/g,"") /* item quantity */
+                itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 6].replace(/,/g, "") /* item quantity */
                 itemVariantsObj.unit = itemVarinatsTextArr[upcIndex + 7] /* unit */
                 itemVariantsObj.unitCost = itemVarinatsTextArr[upcIndex + 8] /* unit price */
                 itemVariantsObj.cost = itemVarinatsTextArr[upcIndex + 9] /* cost  */
