@@ -12,6 +12,7 @@ import { FactoryUpdate } from './dto/factory-update.req';
 import { ChangeComparision } from './dto/change-comparision.req';
 import { Response } from 'express';
 import * as fs from 'fs'; // Import fs module
+import { error } from 'console';
 
 
 @Controller('/nike-dpom')
@@ -1047,6 +1048,17 @@ export class DpomController {
             return await this.dpomService.updateDomItme(req);
         } catch (error) {
             return error;
+        }
+    }
+
+
+    @Post('/getdpomDataForBom')
+    async getdpomDataForBom() :Promise<CommonResponseModel>{
+        try{
+            return await this.dpomService.getdpomDataForBom()
+        }
+        catch(err){
+            return err
         }
     }
 }
