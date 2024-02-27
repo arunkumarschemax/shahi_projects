@@ -168,6 +168,12 @@ export class SampleRequest {
 
   @Column("int", {
     nullable: true,
+    name: "sampling_user"
+  })
+  samplingUser: number;
+
+  @Column("int", {
+    nullable: true,
     name: "facility_id"
   })
   facilityId: number;

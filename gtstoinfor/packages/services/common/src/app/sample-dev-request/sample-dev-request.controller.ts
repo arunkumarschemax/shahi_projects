@@ -796,4 +796,14 @@ export class SampleDevReqController {
     }
   }
 
+  @Post('/updateSamplingperson')
+  async updateSamplingperson(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.updateSamplingperson(req);
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
 }

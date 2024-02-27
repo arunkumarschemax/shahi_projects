@@ -90,6 +90,20 @@ import {
     }
     const handleAcceptOrder = (record) =>{
         console.log(record);
+        const userData = JSON.parse(localStorage.getItem('currentUser'))
+        const loginUser = userData?.user?.userId
+        service.updateSamplingperson({sampleRequestId:record.sampleReqId,userId:loginUser}).then((res)=>{
+          if(res.status){
+            AlertMessages.getSuccessMessage("Successfully updated sampling user. ")
+            getData();
+          }
+          else{
+            AlertMessages.getErrorMessage("Something went wrong. ")
+          }
+        }).catch(err => {
+          AlertMessages.getErrorMessage(err.message);
+          setData([]);
+        })
     }
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
         confirm();

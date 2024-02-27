@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AllSampleDevReqResponseModel, BomStatusEnum, BuyerRefNoRequest, CommonResponseModel, FabricInfoReq, GlobalVariables, ItemTypeEnum, LifeCycleStatusEnum, MaterialStatusEnum, MessageParameters, ProductGroupReq, RackPositionStatusEnum, RequestNoReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleIdRequest, SampleProcessInfoReq, SampleRequestInfoModel, SampleSizeInfoModel, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, WhatsAppLogDto, buyerReq, buyerandM3ItemIdReq, lifeCycleStatusReq, requestNoReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, BomStatusEnum, BuyerRefNoRequest, CommonResponseModel, FabricInfoReq, GlobalVariables, ItemTypeEnum, LifeCycleStatusEnum, MaterialStatusEnum, MessageParameters, ProductGroupReq, RackPositionStatusEnum, RequestNoReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleIdRequest, SampleProcessInfoReq, SampleRequestInfoModel, SampleSizeInfoModel, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, UserIdRequest, WhatsAppLogDto, buyerReq, buyerandM3ItemIdReq, lifeCycleStatusReq, requestNoReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
 import { IndentService, WhatsAppInfo, WhatsAppNotificationService } from '@project-management-system/shared-services';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { DataSource, Not, Repository } from 'typeorm';
@@ -2706,7 +2706,7 @@ order by mi.trim_code`;
   async getAllActiveSampleOrders(): Promise<CommonResponseModel> {
     try{
       const manager = this.dataSource;
-      let query ="select sr.sample_request_id AS sampleReqId,sr.request_no AS requestNo, sr.location_id AS location, s.style, ph.profit_control_head AS pch,b.buyer_name AS buyer,bd.brand_name AS brand, sr.status from sample_request sr left join style s on s.style_id = sr.style_id left join profit_control_head ph on ph.profit_control_head_id = sr.profit_control_head_id left join brands bd on bd.brand_id = sr.brand_id left join buyers b on b.buyer_id = sr.buyer_id where sr.life_cycle_status='"+LifeCycleStatusEnum.OPEN+"'";
+      let query ="select sr.sample_request_id AS sampleReqId,sr.request_no AS requestNo, sr.location_id AS location, s.style, ph.profit_control_head AS pch,b.buyer_name AS buyer,bd.brand_name AS brand, sr.status from sample_request sr left join style s on s.style_id = sr.style_id left join profit_control_head ph on ph.profit_control_head_id = sr.profit_control_head_id left join brands bd on bd.brand_id = sr.brand_id left join buyers b on b.buyer_id = sr.buyer_id where sr.life_cycle_status='"+LifeCycleStatusEnum.OPEN+"' and sampling_user IS NULL";
       const queryResult = await manager.query(query);
       console.log("**************queryResult*******************")
       console.log(queryResult)
@@ -2715,6 +2715,21 @@ order by mi.trim_code`;
       }
       else{
         return new CommonResponseModel(false,1010,"No data found. ",[])
+      }
+    }
+    catch (err) {
+      throw err
+    }
+  }
+
+  async updateSamplingperson(req:UserIdRequest): Promise<CommonResponseModel> {
+    try{
+      const updateSamplinguser = await this.sampleRepo.update({SampleRequestId:req.sampleRequestId},{samplingUser:req.userId})
+      if(updateSamplinguser.affected > 0){
+        return new CommonResponseModel(true,1001,"Successfully updated Sampling User. ",)
+      }
+      else{
+        return new CommonResponseModel(false,1010,"something went wrong. ",[])
       }
     }
     catch (err) {
