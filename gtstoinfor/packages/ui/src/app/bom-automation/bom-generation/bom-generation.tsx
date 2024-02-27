@@ -120,9 +120,7 @@ export default function BomGeneration(props: Props) {
                     fixed: key == 'poLine',
                     ...getColumnSearchProps(key),
                     render: (value, row, index) => {
-                        if (bomGenerationColumnsMapping[key] == 'Item') {
-                            return <Input onChange={(v) => onSizeChange(key, row, v)} key={row.poAndLine + key + index} defaultValue={value} />
-                        } else if (bomGenerationColumnsMapping[key]) {
+                         if (bomGenerationColumnsMapping[key]) {
                             return value
                         } else {
                             return <InputNumber type='number' onChange={(v) => onSizeChange(key, row, v)} key={row.poAndLine + key + index} defaultValue={value} formatter={formatInput} parser={parseInput} />
@@ -322,10 +320,6 @@ export default function BomGeneration(props: Props) {
 
             </Form>
             <Row gutter={[24, 4]}>
-                <div style={{ marginBottom: 16 }}>
-                    <Checkbox onChange={onSelectAllChange}>Select All</Checkbox>
-                </div>
-
                 <Table
                     loading={tableLoading}
                     size='small'

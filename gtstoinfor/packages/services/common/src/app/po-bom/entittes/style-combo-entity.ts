@@ -40,6 +40,12 @@ export class StyleComboEntity {
     })
     logoColor:string
 
+    @Column('varchar',{
+        name:'item_color',
+        nullable:false
+    })
+    itemColor:string
+
     @CreateDateColumn({
         name: 'created_at'
     })

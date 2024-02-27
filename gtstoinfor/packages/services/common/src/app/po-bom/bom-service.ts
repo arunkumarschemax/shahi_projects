@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
-import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomGenerationReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomGenerationReq, BomProposalDataModel, BomProposalModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { DataSource, Repository, getManager } from "typeorm";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
@@ -20,6 +20,8 @@ import * as XLSX from 'xlsx';
 import { log } from "winston";
 import { DpomEntity } from "../dpom/entites/dpom.entity";
 import { AppDataSource, AppDataSource2 } from "../app-datasource";
+import { PoBomRepo } from "./repo/po-bom-repo";
+import { ZFactorsRepo } from "./repo/z-factors-repo";
 
 
 @Injectable()
@@ -31,6 +33,8 @@ export class BomService {
         private styleComboRepo: StyleComboRepo,
         private dataSource: DataSource,
         private dpomRepo: DpomRepository,
+        private poBomRepo: PoBomRepo,
+        private zFactorsRepo: ZFactorsRepo
 
     ) { }
     async createBom(req: StyleDto): Promise<CommonResponseModel> {
@@ -309,7 +313,7 @@ export class BomService {
         const data = await this.dpomRepo.getBomCreationData(req)
         return new CommonResponseModel(true, 11111, "Data retreived sucessfully", data)
     }
-    
+
     async generateBom(req: BomGenerationReq): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         await transactionManager.startTransaction()
@@ -318,14 +322,14 @@ export class BomService {
             const { poLine, updatedSizes } = req
             const poData = await this.dpomRepo.getPoDataForBomGeneration({ poLine })
             const styleDataMap = new Map<string, BomDataForStyleAndSeasonModel[]>()
-
-            function calculateBomQty(poQty:number, moq:number, consumption:number, wastage:number) {
-                const wastageQty  =  (poQty * consumption) * (wastage / 100)
-                const bomQty = (poQty * consumption)  + wastageQty
+            const zFactorsMap = new Map<string, any[]>()
+            function calculateBomQty(poQty: number, moq: number, consumption: number, wastage: number) {
+                const wastageQty = (poQty * consumption) * (wastage / 100)
+                const bomQty = (poQty * consumption) + wastageQty
                 return bomQty
             }
 
-           
+
             function getUpdatedQty(poLine: string, poQty) {
                 if (updatedSizes.length) {
                     const updatedSize = updatedSizes.find((u) => u.poLine == poLine)
@@ -337,9 +341,8 @@ export class BomService {
             }
 
             const poBomEntities: PoBomEntity[] = []
-            console.log(poData.length,' po data size')
             for (const po of poData) {
-                let styleData = []
+                let styleData: BomDataForStyleAndSeasonModel[] = []
                 if (!styleDataMap.has(po.styleNumber)) {
                     styleData = await this.bomRepo.getBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year })
                     styleDataMap.set(po.styleNumber, styleData)
@@ -348,7 +351,7 @@ export class BomService {
                 }
                 // console.log(po.styleNumber,styleData.length,' style size')
                 for (const styleBom of styleData) {
-                    
+
                     const consumptions = await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) ? await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) : { itemId: 0, wastage: 3, moq: 100, consumption: 1 }
                     // console.log(consumptions,styleBom.itemId)
                     const { consumption, moq, wastage } = consumptions
@@ -363,18 +366,27 @@ export class BomService {
                     poBomEntity.wastage = wastage ? wastage : 0
                     poBomEntity.bomQty = isNaN(bomQty) ? 0 : bomQty
                     poBomEntity.poQty = po.qty
-                    
+
                     const dpom = new DpomEntity()
                     dpom.id = po.id
                     poBomEntity.dpom = dpom
                     poBomEntities.push(poBomEntity)
                     await transactionManager.getRepository(PoBomEntity).insert(poBomEntity)
+
+                    //substitue bom generation using z factors table
+
+
+
+
                 }
             }
+
             for (const poLine of req.poLine) {
                 await transactionManager.getRepository(DpomEntity).update({ poAndLine: poLine }, { isBomGenerated: true })
             }
-            
+
+
+
             await transactionManager.completeTransaction()
             return new CommonResponseModel(true, 11111, "Data retreived sucessfully")
 
@@ -385,9 +397,9 @@ export class BomService {
     }
 
     async saveExcelData(val): Promise<CommonResponseModel> {
-        const transactionManager = new GenericTransactionManager(this.dataSource)
+        // const transactionManager = new GenericTransactionManager(this.dataSource)
         try {
-            await transactionManager.startTransaction()
+            // await transactionManager.startTransaction()
 
             const jsonData: any[] = await this.convertExcelToJson(val);
             const headerRow = jsonData[0];
@@ -395,7 +407,8 @@ export class BomService {
             if (!jsonData.length) {
                 return new CommonResponseModel(true, 1110, 'No data found in excel');
             }
-            const data = await this.updatePath(val.path, val.filename, transactionManager);
+            // console.log(jsonData)
+            // const data = await this.updatePath(val.path, val.filename, transactionManager);
             const jsonArray: any = jsonData.map((row, arrInd) => {
                 const obj: any = {};
                 headerRow.forEach((header: any, index: any) => {
@@ -408,29 +421,48 @@ export class BomService {
                                 : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                         )
                         .join('');
-
-                    obj[headerWithoutSpace] = row[index];
+                    if (arrInd > 0) {
+                        obj[headerWithoutSpace] = row[index];
+                    }
                 });
                 return obj;
             });
 
-            for (const record of jsonArray) {
-                const entity = new StyleEntity()
-                entity.style = record.styleNbr
-                entity.styleName = record.styleNm
-                entity.season = record.seasonCd + record.seasonYr.slice(-2);
-                entity.expNo = record
-                entity.msc = record.mscLevel1 + record.mscLevel2 + record.mscLevel3
-                entity.gender = record.mscLevel1
-                entity.factoryLo = record.factory
-                entity.status = record.status
-                await getManager().save(entity);
+            const styleArr: StyleEntity[] = []
+            for (const rec of jsonData) {
+                let style = styleArr.find(style => style.styleName === rec.styleName);
+                if (!style) {
+                    style = new StyleEntity();
+                    style.styleName = rec.styleName;
+
+
+                    const styleComboEntityObj = new StyleComboEntity()
+                    styleComboEntityObj.combination = rec.styleCwCd
+                    styleComboEntityObj.logoColor = rec.logo
+                    styleComboEntityObj.primaryColor = rec.prmry
+                    styleComboEntityObj.secondaryColor = rec.scndy
+                    styleComboEntityObj.itemColor = rec?.itemColorCd + " " + rec.itemColorNm
+                }
             }
-            await transactionManager.completeTransaction()
-            return new CommonResponseModel(true, 1111, 'Data saved sucessfully',);
+
+            // for (const record of jsonArray) {
+            //     const entity = new StyleEntity()
+            //     entity.style = record.styleNbr
+            //     entity.styleName = record.styleNm
+            //     entity.season = record.seasonCd + record.seasonYr.slice(-2);
+            //     entity.expNo = record
+            //     entity.msc = record.mscLevel1 + record.mscLevel2 + record.mscLevel3
+            //     entity.gender = record.mscLevel1
+            //     entity.factoryLo = record.factory
+            //     entity.status = record.status
+            //     await getManager().save(entity);
+            // }
+            // console.log(jsonArray)
+            // await transactionManager.completeTransaction()
+            return new CommonResponseModel(true, 1111, 'Data saved sucessfully', jsonArray[1]);
         } catch (err) {
             console.log(err)
-            await transactionManager.releaseTransaction()
+            // await transactionManager.releaseTransaction()
             throw ("Error Occured")
         }
     }
@@ -490,9 +522,100 @@ export class BomService {
 
     }
 
-    async generateProposal(req: BomGenerationReq) : Promise<CommonResponseModel>{
-        
-        return new CommonResponseModel(true, 11, '');
+    async generateProposal(req: BomProposalReq): Promise<CommonResponseModel> {
+        const poBomData = await this.poBomRepo.getProposalsData(req)
+
+
+        const regionWiseIms = {
+            "EMEA": "1009915",
+            "APLA": "445607",
+            "GC": "445595",
+            "NA": "445591"
+
+        }
+        const groupedData: any = poBomData.reduce((result, currentItem) => {
+            const { geoCode, styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination } = currentItem;
+            const key = `${geoCode}-${styleNumber}-${imCode}-${itemNo}`;
+            let imcode
+            if (itemId == 1) {
+                imcode = regionWiseIms[geoCode]
+                if (destination === "China") {
+                    const chinaKey = `${geoCode}-${styleNumber}-${imCode}-China`; // Custom key for China
+                    if (!result[chinaKey]) {
+                        result[chinaKey] = {
+                            geoCode,
+                            styleNumber,
+                            description: "CHINA INSERT TAG",
+                            use: "Custom Use for China",
+                            imCode: "110044",
+                            itemNo,
+                            bomQty: 0,
+                            destination,
+                            itemId
+                        };
+                    }
+
+                    result[chinaKey].bomQty += bomQty; // Adjusting bomQty for China
+                }
+                if (destination === "Indonesia") {
+                    const indonesia = `${geoCode}-${styleNumber}-${imCode}-Indonesia`; // Custom key for China
+                    if (!result[indonesia]) {
+                        result[indonesia] = {
+                            geoCode,
+                            styleNumber,
+                            description: "INDONESIA STICKER",
+                            use: "Custom Use for INDONESIA",
+                            imCode: "574080",
+                            itemNo,
+                            bomQty: 0,
+                            destination,
+                            itemId
+                        };
+                    }
+
+                    result[indonesia].bomQty += bomQty; // Adjusting bomQty for China
+                }
+            }
+            if (!result[key]) {
+                result[key] = {
+                    geoCode,
+                    styleNumber,
+                    description,
+                    use,
+                    imcode,
+                    itemNo,
+                    bomQty: 0,
+                    destination,
+                    itemId
+                };
+            }
+
+
+            result[key].bomQty += bomQty;
+            return result;
+        }, {});
+        const groupedArray: any[] = Object.values(groupedData);
+
+        groupedArray.push()
+
+        // wash care temporary logic
+
+
+        // const clubData = new Map<string, BomProposalModel>()
+        // const construtedProposalData = []
+        // for (const rec of poBomData) {
+
+        // }
+        // const res = []
+        // const ws = XLSX.utils.json_to_sheet(res);
+
+        // // Create a workbook
+        // const wb = XLSX.utils.book_new();
+        // XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
+
+        // // Save the workbook to a buffer
+        // const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+        return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
     }
 }
 

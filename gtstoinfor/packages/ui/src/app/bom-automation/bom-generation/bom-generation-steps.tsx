@@ -6,15 +6,16 @@ import TrimList from '../../trims/trims-cardview';
 import ConsumptionUpdate from './consumption-update';
 import { BomService } from '@project-management-system/shared-services';
 import { BomGenerationReq, UpdatedConsumptions, UpdatedSizes } from '@project-management-system/shared-models';
+import GenerateProposal from './generate-proposal';
 
 
 export default function BomGenerationSteps() {
     const { token } = theme.useToken();
     const [current, setCurrent] = useState(0);
-    const [selectedPoLines,setSelectedPoLines] = useState<any>([])
+    const [selectedPoLines, setSelectedPoLines] = useState<any>([])
     const [selectedData, setSelectedData] = useState<any>([])
     const [updatedData, setUpdatedData] = useState<UpdatedSizes[]>([])
-    const [trimsConsumptions,setTrimsConsumptions] = useState<UpdatedConsumptions[]>([])
+    const [trimsConsumptions, setTrimsConsumptions] = useState<UpdatedConsumptions[]>([])
     const contentStyle: React.CSSProperties = {
         // lineHeight: '260px',
         textAlign: 'center',
@@ -25,16 +26,22 @@ export default function BomGenerationSteps() {
         marginTop: 16,
         padding: 20
     };
-    const bomService  = new BomService()
+    const bomService = new BomService()
 
     const generateBom = () => {
         const req = new BomGenerationReq()
         req.poLine = selectedPoLines
         req.updatedConsumptions = trimsConsumptions
         req.updatedSizes = updatedData
-        bomService.generateBom(req)
+        bomService.generateBom(req).then((res) => {
+            if (res.status) {
+                message.success('Bom generated sucessfully', 3)
+                setCurrent(current + 1);
+            }
+        })
     }
 
+    console.log(selectedData)
     const steps = [
         {
             title: 'Update Quantites',
@@ -46,20 +53,20 @@ export default function BomGenerationSteps() {
         },
         {
             title: 'Update Consumption',
-            content: <ConsumptionUpdate setTrims={setTrimsConsumptions}  />,
+            content: <ConsumptionUpdate setTrims={setTrimsConsumptions} />,
         },
         {
             title: 'Generate proposal',
-            content: 'Last-content',
+            content: <GenerateProposal poLine={selectedPoLines} />,
         },
     ];
 
 
     const next = () => {
         console.log(current)
-        if(current == 2){
+        if (current == 2) {
             generateBom()
-        }else{
+        } else {
             setCurrent(current + 1);
         }
 
@@ -81,7 +88,7 @@ export default function BomGenerationSteps() {
             <div style={{ marginTop: 24 }}>
                 {current < steps.length - 1 && (
                     <Button type="primary" onClick={() => next()}>
-                       {steps[current +1].title + ">>"}
+                        {steps[current + 1].title + ">>"}
                     </Button>
                 )}
                 {current === steps.length - 1 && (

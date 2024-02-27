@@ -25,6 +25,7 @@ export const AppDataSource = new DataSource({
   extra: {
     connectionLimit: 20
   },
+  entities:[ZFactorsEntity]
 })
 
 export const AppDataSource2 = new DataSource({
@@ -39,7 +40,6 @@ export const AppDataSource2 = new DataSource({
   extra: {
     connectionLimit: 20
   },
-  entities:[StyleEntity,BomEntity,StyleComboEntity,ItemEntity,PoBomEntity,DpomEntity,DpomChildEntity,DpomDifferenceEntity,FileUploadEntity]
 })
 
 // export const AppDataSource1 = new DataSource({

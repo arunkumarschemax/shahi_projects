@@ -28,7 +28,8 @@ const BomExcelUpload = () => {
             const formData = new FormData();
             formData.append('file', fileList[0]);
             service.saveExcelData(formData).then((res) => {
-                if (res.data.status === true) {
+                console.log(res)
+                if (res) {
                     AlertMessages.getCustomIconMessage("excelupload", "Excel Uploaded Successfully", <CheckCircleOutlined style={{ color: '#22C55E' }} />, 2);
                 } else {
                     AlertMessages.getInfoMessage("excelupload");

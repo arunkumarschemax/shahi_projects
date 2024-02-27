@@ -16,6 +16,8 @@ import { TrimService } from "./trim-service";
 import { FileUploadEntity } from "./entittes/file-upload-entity";
 import { PoBomEntity } from "./entittes/po-bom.entity";
 import { ZFactorsEntity } from "./entittes/z-factors.entity";
+import { PoBomRepo } from "./repo/po-bom-repo";
+import { ZFactorsRepo } from "./repo/z-factors-repo";
 
 @Module({
     imports:[
@@ -25,6 +27,6 @@ import { ZFactorsEntity } from "./entittes/z-factors.entity";
             StyleComboEntity,ItemEntity,DpomEntity,FileUploadEntity,PoBomEntity,ZFactorsEntity
         ])],
     controllers:[BomController],
-    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository,TrimService]
+    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository,TrimService,PoBomRepo,ZFactorsRepo]
 })
 export class bomModule{ }
