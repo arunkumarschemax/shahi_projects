@@ -1562,6 +1562,31 @@ export class EddieService {
         pkgTerms = "FP1-WITHOUT HANGER"
         paymentTerms = "031-Trde Card45 Day"
       }
+      console.log(coLine.exFactoryDate,"exFactoryDate")
+
+      console.log("----------------start----------------")
+      const today = new Date();
+      const exFactoryDateParts = coLine.exFactoryDate.split('/'); // Split the date string by '/'
+      const exFactoryDay = parseInt(exFactoryDateParts[0], 10); // Convert day to number
+      const exFactoryMonth = parseInt(exFactoryDateParts[1], 10) - 1; // Convert month to number and subtract 1
+      const exFactoryYear = parseInt(exFactoryDateParts[2], 10); // Convert year to number
+      const exFactoryDate = new Date(exFactoryYear, exFactoryMonth, exFactoryDay); // Create a new Date object
+      
+      const isExFactoryDatePastToday = exFactoryDate <= today;
+      
+      console.log(isExFactoryDatePastToday, "kkkk");
+
+          if (isExFactoryDatePastToday) {
+          const update = await this.eddieCoLineRepo.update(
+            { poNumber: po.po_number, poLine: po.po_line },
+            { status: "Failed", errorMsg: "Date Before Exfactory Found", isActive: false }
+          );
+          await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED });
+          return new CommonResponseModel(false, 0, "Date Before Exfactory found");
+          } 
+
+      console.log("----------------end----------------") 
+
       const apps = await driver.wait(until.elementLocated(By.xpath('//*[@id="mainContainer"]/div[1]')));
       const allApps = await apps.findElements(By.tagName('span'));
       for (const app of allApps) {
