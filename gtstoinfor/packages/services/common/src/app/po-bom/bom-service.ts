@@ -427,6 +427,7 @@ export class BomService {
                         style: record.styleNbr,
                         styleName: record.styleNm,
                         season: record.seasonCd + record.seasonYr.slice(-2),
+                        // now need to show seacon code  , seasonyear seperately 
                         expNo: record.expNo,
                         msc: record.mscLevel1 + record.mscLevel2 + record.mscLevel3,
                         gender: record.mscLevel1,
