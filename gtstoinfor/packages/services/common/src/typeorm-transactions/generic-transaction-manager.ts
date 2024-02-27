@@ -4,6 +4,9 @@ import { IsolationLevel } from 'typeorm/driver/types/IsolationLevel';
 
 
 export class GenericTransactionManager implements ITransactionHelper {
+  rollbackTransaction() {
+      throw new Error("Method not implemented.");
+  }
   constructor(private dataSource: DataSource) { }
   private queryRunner: QueryRunner;
   private transactionManager: EntityManager;

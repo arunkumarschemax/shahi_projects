@@ -467,10 +467,6 @@ export class BomService {
         }
     }
 
-
-
-
-
     async convertExcelToJson(file): Promise<any[]> {
         return new Promise((resolve, reject) => {
             try {
@@ -510,6 +506,7 @@ export class BomService {
             await transactionManager.releaseTransaction()
         }
     }
+
 
     async migrateData() {
         await AppDataSource2.initialize()
