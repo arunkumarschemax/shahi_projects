@@ -280,11 +280,16 @@ export class OperationTrackingService {
   async OperationReport(req:operationReportRequest):Promise<CommonResponseModel>{
     const manager = new GenericTransactionManager(this.dataSource)
     try{
+        const getStartTime = `select out_time AS startTime from operation_tracking where sample_req_id = ${req.sampleRequestId} and next_operation = '`+req.operationCode+`' order by operation_tracking_id desc`;
+        const startTime = await this.dataSource.query(getStartTime)
+
         const styleInfo = `select style_id as styleId from sample_request where sample_request_id = ${req.sampleRequestId}`
         const styleIdres = await this.dataSource.query(styleInfo)
         const styleId = styleIdres[0].styleId
         const nextSeq = Number(req.sequence+1)
-        const nextOpData = `select operation_code as opCode,operation_name as opName from operations where sequence = ${nextSeq}`
+        // const nextOpData = `select operation_code as opCode,operation_name as opName from operations where sequence = ${nextSeq}`
+        const nextOpData = `select operation as opCode,operation as opName from sample_request_process_info where sequence = ${nextSeq} and sample_request_id = ${req.sampleRequestId}`
+
         const res = await this.dataSource.query(nextOpData)
         let nextOperation
         if(res.length > 0){
@@ -337,7 +342,7 @@ export class OperationTrackingService {
         while (refNo.length < 4) refNo = "0" + refNo;
     
         const operationJobNo = `${req.operationCode}` + (fromDate.toString().substr(-2)) + "-" + (toDate.toString().substr(-2)) + "/" + refNo;
-        
+        let inTime = startTime[0].startTime != undefined ? startTime[0].startTime:null
         const trackingEntity = new OperationTracking()
         trackingEntity.jobNumber = operationJobNo
         trackingEntity.styleId = styleId
@@ -345,6 +350,8 @@ export class OperationTrackingService {
         trackingEntity.sizeId = req.sizeId
         trackingEntity.reporterId = req.reporterId
         trackingEntity.supervisorId = req.supervisorId
+        trackingEntity.inTime = inTime;
+        trackingEntity.outTime = req.reportingTime;
         // trackingEntity.operationSequenceId = dto.operationSequenceId
         trackingEntity.operationInventoryId = save.operationInventoryId
         // trackingEntity.rejectedQuantity = dto.rejectedQuantity
