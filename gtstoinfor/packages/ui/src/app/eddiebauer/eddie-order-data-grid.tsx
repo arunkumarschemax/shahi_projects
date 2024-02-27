@@ -275,6 +275,18 @@ import {
          
   
         },
+
+        {
+          title: "Short Description",
+          dataIndex: "shortDescription",
+          width: 150,
+           sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
+          sortDirections: ["ascend", "descend"],
+          render: (text) => text ? text : "-",
+          ...getColumnSearchProps('shortDescription')
+         
+  
+        },
     
         {
           title: "Delivery Date",
@@ -695,7 +707,17 @@ import {
                
         
               },
-          
+
+           {
+                title: "Short Description",
+                dataIndex: "shortDescription",
+                width: 90,
+                 sorter: (a, b) => a.shortDescription.localeCompare(b.shortDescription),
+                sortDirections: ["ascend", "descend"],
+                render: (text) => text ? text : "-",
+               
+        
+              },
               {
                 title: "Delivery Date",
                 dataIndex: "deliveryDate",
