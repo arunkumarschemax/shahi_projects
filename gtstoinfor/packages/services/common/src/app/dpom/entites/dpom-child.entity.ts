@@ -345,16 +345,14 @@ export class DpomChildEntity {
     })
     VASSize: string;
 
-    @Column("varchar", {
+    @Column("text", {
         name: "item_vas_text",
-        length: 100,
         nullable: true
     })
     itemVasText: string;
 
-    @Column("varchar", {
+    @Column("text", {
         name: "item_text",
-        length: 100,
         nullable: true
     })
     itemText: string;
@@ -471,23 +469,22 @@ export class DpomChildEntity {
     })
     legalPoCurrency: string;
 
-    @Column('varchar', {
+    @Column('text', {
         name: "item_vas_pdf",
-        length: 10,
         nullable: true
     })
     itemVasPDF: string;
 
     @Column('varchar', {
         name: "ship_to_address_dia",
-        length: 10,
+        length: 225,
         nullable: true
     })
     shipToAddressDIA: string;
 
     @Column('varchar', {
         name: "cab_code",
-        length: 10,
+        length: 50,
         nullable: true
     })
     CABCode: string;
@@ -502,7 +499,7 @@ export class DpomChildEntity {
 
     @Column('varchar', {
         name: "factory",
-        length: 20,
+        length: 5,
         nullable: true
     })
     factory: string;
@@ -562,7 +559,7 @@ export class DpomChildEntity {
 
     @Column('varchar', {
         name: "ship_to_address",
-        length: 20,
+        length: 220,
         nullable: true
     })
     shipToAddress: string;
@@ -612,7 +609,7 @@ export class DpomChildEntity {
     //Auto Populate
     @Column("varchar", {
         name: "hanger",
-        length: 50,
+        length: 5,
         nullable: true
     })
     hanger: string;
@@ -691,7 +688,7 @@ export class DpomChildEntity {
     })
     fileId: number;
 
-    @Column('varchar', {
+    @Column('text', {
         nullable: true,
         name: 'diverted_to_pos',
     })

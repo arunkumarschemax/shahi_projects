@@ -2663,7 +2663,7 @@ export class DpomService {
             // Wait for a while to see the result (you can adjust the wait time)
             setTimeout(async () => {
                 await page.goto('http://localhost:4200/#/nike/pdf-upload/', {
-                    timeout: 10000,
+                    timeout: 15000,
                     waitUntil: 'networkidle0', // Wait until there are no more network connections
                 }).then(async () => {
                     // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';

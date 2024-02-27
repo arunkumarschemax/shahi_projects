@@ -352,16 +352,14 @@ export class DpomEntity {
     })
     VASSize: string;
 
-    @Column("varchar", {
+    @Column("text", {
         name: "item_vas_text",
-        length: 100,
         nullable: true
     })
     itemVasText: string;
 
-    @Column("varchar", {
+    @Column("text", {
         name: "item_text",
-        length: 100,
         nullable: true
     })
     itemText: string;
@@ -416,7 +414,7 @@ export class DpomEntity {
 
     @Column("varchar", {
         name: "size_description",
-        length: 10,
+        length: 5,
         nullable: true
     })
     sizeDescription: string;
@@ -452,7 +450,7 @@ export class DpomEntity {
     //PDF Data
     @Column('varchar', {
         name: "ship_to_address_legal_po",
-        length: 10,
+        length: 225,
         nullable: true
     })
     shipToAddressLegalPO: string;
@@ -478,23 +476,22 @@ export class DpomEntity {
     })
     legalPoCurrency: string;
 
-    @Column('varchar', {
+    @Column('text', {
         name: "item_vas_pdf",
-        length: 10,
         nullable: true
     })
     itemVasPDF: string;
 
     @Column('varchar', {
         name: "ship_to_address_dia",
-        length: 10,
+        length: 225,
         nullable: true
     })
     shipToAddressDIA: string;
 
     @Column('varchar', {
         name: "cab_code",
-        length: 10,
+        length: 50,
         nullable: true
     })
     CABCode: string;
@@ -509,7 +506,7 @@ export class DpomEntity {
 
     @Column('varchar', {
         name: "factory",
-        length: 20,
+        length: 5,
         nullable: true
     })
     factory: string;
@@ -564,13 +561,14 @@ export class DpomEntity {
 
     @Column('varchar', {
         name: "co_price_currency",
+        length: 10,
         nullable: true,
     })
     coPriceCurrency: string;
 
     @Column('varchar', {
         name: "ship_to_address",
-        length: 20,
+        length: 225,
         nullable: true
     })
     shipToAddress: string;
@@ -620,7 +618,7 @@ export class DpomEntity {
     //Auto Populate
     @Column("varchar", {
         name: "hanger",
-        length: 50,
+        length: 10,
         nullable: true
     })
     hanger: string;
@@ -699,7 +697,7 @@ export class DpomEntity {
     })
     fileId: number;
 
-    @Column('varchar', {
+    @Column('text', {
         nullable: true,
         name: 'diverted_to_pos',
     })
@@ -707,21 +705,21 @@ export class DpomEntity {
 
     @Column('varchar', {
         name: "actual_unit",
-        length: 20,
+        length: 5,
         nullable: true
     })
     actualUnit: string;
 
     @Column('varchar', {
         name: "allocated_quantity",
-        length: 20,
+        length: 10,
         nullable: true
     })
     allocatedQuantity: string;
 
     @Column('varchar', {
         name: "co_line_status",
-        length: 0,
+        length: 10,
         nullable: true
     })
     coLineStatus: string;
