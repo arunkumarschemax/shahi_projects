@@ -62,5 +62,10 @@ export class BomService extends CommonAxiosService {
         console.log(req, "req")
         return this.axiosPostCall(this.URL + '/saveExcelData', req);
     }
-
+    async getbomExcel(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getbomexcel")
+    }
+    async getbom(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getbom")
+    }
 }

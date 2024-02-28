@@ -531,8 +531,15 @@ export class BomService {
         
         return new CommonResponseModel(true, 11, '');
     }
+
+    async getBomExcel(req: BomCreationFiltersReq): Promise<CommonResponseModel> {
+       let query=` SELECT pb.dpom_id, dp.style_number AS style, dp.item AS item, dp.geo_code AS geo_code
+          FROM po_bom pb
+            JOIN dpom dp ON dp.id = pb.dpom_id
+           GROUP BY pb.dpom_id`
+        const records = await this.bomRepo.query(query);
+       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
+      
+      }
+     
 }
-
-
-
-
