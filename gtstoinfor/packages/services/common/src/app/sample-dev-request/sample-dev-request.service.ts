@@ -2446,13 +2446,17 @@ order by mi.trim_code`;
     const sampleOrderDataQry = `select sample_req_size_id as SampleOrderInfoId,quantity from sample_request_size_info where sample_request_id = ${req.sampleRequestId} and colour_id = ${req.colourId} and size_id = ${req.sizeId}`
     const sampleOrderData = await this.dataSource.query(sampleOrderDataQry)
     if (sampleOrderData.length == 1) {
-      const checkOperationQry = `select operation,next_operation as nextOperation from operation_tracking where colour_id = ${req.colourId} and size_id = ${req.sizeId} and sample_req_id = ${req.sampleRequestId} ORDER BY operation_tracking_id DESC LIMIT 1`
+      const checkOperationQry = `select sp.sequence, sp.operation AS operationId,ot.next_operation as nextOperation from operation_tracking ot left join operations op on op.operation_name = ot.next_operation left join sample_request_process_info sp on sp.sample_request_id = sample_req_id and sp.operation = op.operation_id where colour_id = ${req.colourId} and size_id = ${req.sizeId} and sample_req_id = ${req.sampleRequestId} ORDER BY operation_tracking_id DESC LIMIT 1`
       const nextOperationInfo = await this.dataSource.query(checkOperationQry)
       let nextOperation
+      let operationId
+      let sequence
       if (nextOperationInfo.length > 0) {
         nextOperation = nextOperationInfo[0].nextOperation
+        operationId = nextOperationInfo[0].operationId
+        sequence = nextOperationInfo[0].sequence
       }
-      const resData = { nextOperation: nextOperation, sampledata: sampleOrderData }
+      const resData = { nextOperation: nextOperation,operationId:operationId,sequence:sequence,operationname:nextOperation, sampledata: sampleOrderData }
       return new CommonResponseModel(true, 1, 'data retreived', resData)
     }
     if (sampleOrderData.length > 1) {
