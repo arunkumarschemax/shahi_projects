@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { BomEntity } from "../entittes/bom-entity";
 import { StyleComboEntity } from "../entittes/style-combo-entity";
-import { BomDataForStyleAndSeasonModel } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel } from "@project-management-system/shared-models";
 import { StyleEntity } from "../entittes/style-entity";
 import { DpomEntity } from "../../dpom/entites/dpom.entity";
 
@@ -57,5 +57,7 @@ export class BomRepo extends Repository<BomEntity> {
         .leftJoin(BomEntity,'b')
 
     }
+   
+    
 
 }
