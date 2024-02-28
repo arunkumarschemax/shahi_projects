@@ -20,6 +20,7 @@ import * as XLSX from 'xlsx';
 import { log } from "winston";
 import { DpomEntity } from "../dpom/entites/dpom.entity";
 import { AppDataSource, AppDataSource2 } from "../app-datasource";
+import { object } from "prop-types";
 
 
 @Injectable()
@@ -386,7 +387,10 @@ export class BomService {
 
     async saveExcelData(val): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
-    
+        const detailedArray:StyleDto[]=[]
+        const map = new Map<string, Map<string, StyleComboDto[]>>()
+        const styleMap = new Map<string,StyleDto>()
+        const bommap = new Map<string,Map<string,BomDto>>()
         try {
             await transactionManager.startTransaction();
     
@@ -420,49 +424,91 @@ export class BomService {
                 });
                 return obj;
             });
-    
-            for (const record of jsonArray) {
-                if (record.status !== 'K') {
-                    const styleEntity = styleRepository.create({
-                        style: record.styleNbr,
-                        styleName: record.styleNm,
-                        season: record.seasonCd + record.seasonYr.slice(-2),
-                        // now need to show seacon code  , seasonyear seperately 
-                        expNo: record.expNo,
-                        msc: record.mscLevel1 + record.mscLevel2 + record.mscLevel3,
-                        gender: record.mscLevel1,
-                        factoryLo: record.factory,
-                        status: record.status,
-                        bomEntity: [],
-                        styleComboEntity: [] 
-                    });
-    
-                    const bomEntity = bomRepository.create({
-                        itemName: record.itemType1,
-                        description: record.description,
-                        itemId:record,
-                        imCode:record,
-                        itemType:record.itemType2,
-                        use: record.use,
-                        
-                    });
-                    bomEntity.styleEnityy = styleEntity; 
-                    styleEntity.bomEntity.push(bomEntity); 
-                    // Create StyleComboEntity
-                    const styleComboEntity = styleComboRepository.create({
-                        // bom_id:record.bomId,
-                        combination: record.combination,
-                        primaryColor: record.prmry,
-                        secondaryColor: record.scndy,
-                        logoColor: record.logo,
-                    });
-                    styleComboEntity.styleEntity = styleEntity; 
-                    styleEntity.styleComboEntity.push(styleComboEntity); 
-    
-                    // Save everything
-                    await styleRepository.save(styleEntity);
+
+            console.log(jsonArray,'@@@@@@@@@@@@@@@@@@@@@@@@@')
+
+            for(const rec of jsonArray){
+                if(!styleMap.has(rec.styleNbr)){
+                    // styleMap.set(rec.styleNbr, new StyleDto('','','','','','',''))
                 }
+                if(!bommap.has(rec.styleNbr)){
+                    bommap.set(rec.styNbr,new Map())
+                    if(!bommap.get(rec.styleNbr).has(rec.itemNbr)){
+                        // bommap.get(rec.styleNbr).set(rec.itemNbr,new BomDto())
+                    }
+                }
+                if(!map.has(rec.styleNbr)){
+                    map.set(rec.styNbr,new Map())
+                    if(!map.get(rec.styleNbr).has(rec.itemNbr)){
+                        // map.get(rec.styleNbr).set(rec.itemNbr,[new StyleComboDto()])
+                    }else{
+                        // map.get(rec.styleNbr).get(rec.itemNbr).push(new StyleComboDto()))
+                        /// uncoment tand add parametesr to the dto
+                        
+                    }
+                }
+                
             }
+            const styleEnityies = []
+            for(const [styleNbr,styleObj] of styleMap.entries()){
+                const styleEntity = new StyleEntity()
+                /// style entity need to be created
+                for(const [boomItemNbr,bomObg] of bommap.get(styleNbr).entries() ){
+                    const bomEntity = new BomEntity()
+                    bomEntity.styleEnityy=styleEntity
+                    for(const [item, styleCombos] of map.get(styleNbr).entries()){
+                        for(const styleCombo of styleCombos){
+                            const styleComboentity = new StyleComboEntity()
+                            styleComboentity.bomEntity=bomEntity
+                        }
+
+                    }
+                }
+                styleEnityies.push(styleEntity)
+            }
+    
+            // for (const record of jsonArray) {
+            //     if (record.status !== 'K') {
+            //         const styleEntity = styleRepository.create({
+            //             style: record.styleNbr,
+            //             styleName: record.styleNm,
+            //             season: record.seasonCd + record.seasonYr.slice(-2),
+            //             // now need to show seacon code  , seasonyear seperately 
+            //             expNo: record.expNo,
+            //             msc: record.mscLevel1 + record.mscLevel2 + record.mscLevel3,
+            //             gender: record.mscLevel1,
+            //             factoryLo: record.factory,
+            //             status: record.status,
+            //             bomEntity: [],
+            //             styleComboEntity: [] 
+            //         });
+    
+            //         const bomEntity = bomRepository.create({
+            //             itemName: record.itemType1,
+            //             description: record.description,
+            //             itemId:record,
+            //             imCode:record,
+            //             itemType:record.itemType2,
+            //             use: record.use,
+                        
+            //         });
+            //         bomEntity.styleEnityy = styleEntity; 
+            //         styleEntity.bomEntity.push(bomEntity); 
+            //         // Create StyleComboEntity
+            //         const styleComboEntity = styleComboRepository.create({
+            //             // bom_id:record.bomId,
+            //             combination: record.combination,
+            //             primaryColor: record.prmry,
+            //             secondaryColor: record.scndy,
+            //             logoColor: record.logo,
+            //         });
+            //         styleComboEntity.styleEntity = styleEntity; 
+            //         styleEntity.styleComboEntity.push(styleComboEntity); 
+    
+            //         // Save everything
+            //         await styleRepository.save(styleEntity);
+            //     }
+            // }
     
             await transactionManager.completeTransaction();
             return new CommonResponseModel(true, 1111, 'Data saved successfully');
