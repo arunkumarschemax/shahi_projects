@@ -18,15 +18,22 @@ import { PoBomEntity } from "./entittes/po-bom.entity";
 import { ZFactorsEntity } from "./entittes/z-factors.entity";
 import { PoBomRepo } from "./repo/po-bom-repo";
 import { ZFactorsRepo } from "./repo/z-factors-repo";
+import { ItemsRepo } from "./repo/items-repo";
+import { ZFactorsBomEntity } from "./entittes/z-factors-bom.entity";
+import { DestinationEntity } from "./entittes/destination-entity";
+import { DestinationsRepo } from "./repo/destination-repo";
+import { ZFactorsBomRepo } from "./repo/z-factors-bom-repo";
+import { DpomModule } from "../dpom/nike-dpom.module";
 
 @Module({
     imports:[
         TypeOrmModule.forFeature([
             StyleEntity, 
             BomEntity,
-            StyleComboEntity,ItemEntity,DpomEntity,FileUploadEntity,PoBomEntity,ZFactorsEntity
-        ])],
+            StyleComboEntity,ItemEntity,DpomEntity,FileUploadEntity,PoBomEntity,ZFactorsEntity,ZFactorsBomEntity,DestinationEntity
+        ]),
+        DpomModule],
     controllers:[BomController],
-    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository,TrimService,PoBomRepo,ZFactorsRepo]
+    providers:[StyleRepo,BomRepo,StyleComboRepo,BomService,ApplicationExceptionHandler,DpomRepository,TrimService,PoBomRepo,ZFactorsRepo,ItemsRepo,DestinationsRepo,ZFactorsBomRepo]
 })
 export class bomModule{ }

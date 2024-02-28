@@ -55,7 +55,7 @@ export default function BomGeneration(props: Props) {
         setTableLoading(true)
         bomservice.getBomCreationData(req).then(res => {
             if (res.status) {
-                setFilterData(res.data);
+                setFilterData(prev => [...prev,...res.data]);
             } else {
                 setFilterData([]);
             }
@@ -247,7 +247,9 @@ export default function BomGeneration(props: Props) {
     ]
 
     function onReset() {
+        console.log('reset called')
         setFilterData([])
+        setSelectedData([])
         setChangedSizes([])
         setSelectedRowKeys([])
         form.resetFields()
@@ -312,7 +314,7 @@ export default function BomGeneration(props: Props) {
                             type="primary">Submit</Button>
                     </Col>
                     <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 2 }} lg={{ span: 2 }} xl={{ span: 2 }} style={{ paddingTop: '23px' }}>
-                        <Button htmlType='button' icon={<UndoOutlined />} onReset={onReset}>
+                        <Button htmlType='button' icon={<UndoOutlined />} onClick={() => onReset()}>
                             RESET
                         </Button>
                     </Col>

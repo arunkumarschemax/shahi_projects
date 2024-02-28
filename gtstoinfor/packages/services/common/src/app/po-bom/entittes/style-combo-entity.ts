@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { BomEntity } from "./bom-entity";
 import { StyleEntity } from "./style-entity";
+import { Exclude } from 'class-transformer';
 
 @Entity('style_combos')
 export class StyleComboEntity {
@@ -89,6 +90,7 @@ export class StyleComboEntity {
 
     @ManyToOne(type =>StyleEntity,style =>style.styleComboEntity)
     @JoinColumn({name:'style_id'})
+    @Exclude()
     styleEntity:StyleEntity
 
 }

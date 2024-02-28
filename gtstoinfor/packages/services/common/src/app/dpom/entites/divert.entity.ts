@@ -29,7 +29,7 @@ export class DivertEntity {
     oProductCode: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "o_factory",
         length: 5
     })
@@ -43,7 +43,7 @@ export class DivertEntity {
     oLineItemStatus: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "o_document_date",
         length: 15
     })
@@ -63,21 +63,21 @@ export class DivertEntity {
     oPoLineItemNumber: number;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "o_total_item_qty",
         length: 10
     })
     oTotalItemQty: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "o_destination",
         length: 50
     })
     oDestination: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "o_shipment_type",
         length: 50
     })
@@ -166,7 +166,7 @@ export class DivertEntity {
     nProductCode: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "n_factory",
         length: 5
     })
@@ -200,14 +200,14 @@ export class DivertEntity {
     nPoLineItemNumber: number;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "n_total_item_qty",
         length: 10
     })
     nTotalItemQty: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "n_shipment_type",
         length: 50
     })
@@ -228,7 +228,7 @@ export class DivertEntity {
     nGAC: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "n_inv_segment_code",
         length: 50
     })

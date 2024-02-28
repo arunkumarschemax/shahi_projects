@@ -37,11 +37,12 @@ export default function BomGenerationSteps() {
             if (res.status) {
                 message.success('Bom generated sucessfully', 3)
                 setCurrent(current + 1);
+            }else{
+                message.info(res.internalMessage)
             }
         })
     }
 
-    console.log(selectedData)
     const steps = [
         {
             title: 'Update Quantites',

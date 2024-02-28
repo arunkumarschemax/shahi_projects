@@ -16,9 +16,24 @@ export class ZFactorsRepo extends Repository<ZFactorsEntity> {
 
     async getZfactorsData(styleId, itemId) {
         const query = await this.createQueryBuilder('z')
-        .select('z.z_factor as zFactor,z_factor_value as zFactorValue,action,actual_im as actualIm,replaced_im as replacedIm')
-        .where(`z.style_id = ${styleId} and z.item_id = ${itemId}`)
+            .select('z.z_factor as zFactor,z_factor_value as zFactorValue,action,actual_im as actualIm,replaced_im as replacedIm')
+            .where(`z.style_id = ${styleId} and z.item_id = ${itemId}`)
         return await query.getRawMany()
+
+    }
+
+    async getZfactorsForItemAndIMCodeToAlter(itemId: number, imCode: string) {
+        const query = await this.createQueryBuilder('z')
+            .select('action,geo_code as geoCode,destination,size,style,')
+            .where(`item_id = ${itemId} and actual_im = ${imCode} and action = 'ALTER' `)
+    }
+
+    async getZfactorsForItemAndIMCodeToAdd(itemId: number) {
+        const query = await this.createQueryBuilder('z')
+            .select('action,geo_code as geoCode,destination,size,style')
+            .where(`item_id = ${itemId} and action = 'ADD' `)
+        const data = await query.getRawMany()
+
     }
 
 }

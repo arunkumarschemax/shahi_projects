@@ -11,6 +11,7 @@ import { StyleComboEntity } from "./po-bom/entittes/style-combo-entity"
 import { DpomChildEntity } from "./dpom/entites/dpom-child.entity"
 import { DpomDifferenceEntity } from "./dpom/entites/dpom-difference.entity"
 import { FileUploadEntity } from "./orders/entities/upload-file.entity"
+import { ZFactorsBomEntity } from "./po-bom/entittes/z-factors-bom.entity"
 
 export const AppDataSource = new DataSource({
   type: "mysql",
@@ -25,7 +26,7 @@ export const AppDataSource = new DataSource({
   extra: {
     connectionLimit: 20
   },
-  entities:[ZFactorsEntity]
+  entities:[StyleEntity,BomEntity,StyleComboEntity,ItemEntity,PoBomEntity,ZFactorsEntity,ZFactorsBomEntity]
 })
 
 export const AppDataSource2 = new DataSource({

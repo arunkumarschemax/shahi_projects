@@ -29,7 +29,7 @@ export class DpomDifferenceEntity {
     scheduleLineItemNumber: string;
 
     @Column('varchar', {
-        nullable: false,
+        nullable: true,
         name: "column_name",
         length: 30
     })
