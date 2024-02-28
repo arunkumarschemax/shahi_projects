@@ -341,9 +341,12 @@ export const extractDataFromPoPdf = async (pdf) => {
                 // itemVariantsObj.size = itemVarinatsTextArr[upcIndex - 1]; /* size */
                 // itemVariantsObj.size = (itemVarinatsTextArr[upcIndex - 1]+(itemDetailsObj.shortDescription.slice(1,4)));
                 if (itemDetailsObj.shortDescription.includes("P")) {
-                    itemVariantsObj.size = (itemDetailsObj.shortDescription.slice(1, 4).includes("P") ? "P" : "") + itemVarinatsTextArr[upcIndex - 1]
-                } else {
-                    itemVariantsObj.size = itemVarinatsTextArr[upcIndex - 1] + (itemDetailsObj.shortDescription.slice(1, 4).includes("T") ? "T" : "");
+                    itemVariantsObj.size = (itemDetailsObj.shortDescription.slice(1, 4).includes("P") ? "P" : "") + itemVarinatsTextArr[upcIndex - 1];
+                }
+                if (itemDetailsObj.shortDescription.includes("T")) {
+                    if (!itemVariantsObj.size || !itemVariantsObj.size.includes("P")) {
+                        itemVariantsObj.size = itemVarinatsTextArr[upcIndex - 1] + (itemDetailsObj.shortDescription.slice(1, 4).includes("T") ? "T" : "");
+                    }
                 }
                 itemVariantsObj.sku = itemVarinatsTextArr[upcIndex + 1]; /* sku */
                 itemVariantsObj.quantityPerInnerPack = itemVarinatsTextArr[upcIndex + 3]; /* quantityPerInnerPack */
