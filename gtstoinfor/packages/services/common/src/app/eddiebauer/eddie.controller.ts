@@ -1,13 +1,15 @@
 
-import { Body, Controller, Post, UploadedFile, UseInterceptors } from "@nestjs/common";
+import { Body, Controller, Post, UploadedFile, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { diskStorage } from 'multer'
-import { FileInterceptor } from "@nestjs/platform-express";
+import { FileInterceptor, FilesInterceptor } from "@nestjs/platform-express";
 import { EddieService } from "./eddie.service";
 import { CommonResponseModel, EddieOrderFilter } from "@project-management-system/shared-models";
 import { CentricDto } from "../centric-buyer/dto/centric.dto";
 import { EddieDetailsReq } from "./dto/eddie-order-details-req";
+import { extname, join } from "path";
+import * as fs from 'fs';
 
 
 
@@ -36,34 +38,91 @@ export class EddieController {
         }
     }
 
-    @Post('/fileUpload')
-    @ApiConsumes('multipart/form-data')
-    @UseInterceptors(FileInterceptor('file', {
-        limits: { files: 1 },
-        storage: diskStorage({
-            destination: './upload-files',
-            filename: (req, file, callback) => {
-                console.log(file.originalname);
-                const name = file.originalname;
-                callback(null, `${name}`);
-            },
-        }),
-        fileFilter: (req, file, callback) => {
-            if (!file.originalname.match(/\.(pdf)$/)) {
-                return callback(new Error('Only pdf files are allowed!'), false);
-            }
-            callback(null, true);
-        },
-    }))
+    // @Post('/fileUpload')
+    // @ApiConsumes('multipart/form-data')
+    // @UseInterceptors(FileInterceptor('file', {
+    //     limits: { files: 1 },
+    //     storage: diskStorage({
+    //         destination: './upload-files',
+    //         filename: (req, file, callback) => {
+    //             console.log(file.originalname);
+    //             const name = file.originalname;
+    //             callback(null, `${name}`);
+    //         },
+    //     }),
+    //     fileFilter: (req, file, callback) => {
+    //         if (!file.originalname.match(/\.(pdf)$/)) {
+    //             return callback(new Error('Only pdf files are allowed!'), false);
+    //         }
+    //         callback(null, true);
+    //     },
+    // }))
 
-    async fileUpload(@UploadedFile() file, @Body() req:any): Promise<CommonResponseModel> {
+    // async fileUpload(@UploadedFile() file, @Body() req:any): Promise<CommonResponseModel> {
+
+    //     try {
+    //         return await this.Service.updatePath(req.jsonData,req.poNumber, file.path, file.filename, file.mimetype)
+    //     } catch (error) {
+    //         return this.applicationExeptionhandler.returnException(CommonResponseModel, error);
+    //     }
+    // }
+
+    @Post('/fileUpload')
+  @UseInterceptors(FilesInterceptor('file', 10, {
+    storage: diskStorage({
+      destination: (req, file, callback) => {
+        // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        // console.log(req.body);
+
+        // console.log(file);
+        const destinationPath = join(__dirname, '../../../../',`upload_files`)
+        // console.log(destinationPath)
+        // const destinationPath = `upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")}`;
+        // const destinationPath = `https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber}`;
+
+        // const destinationPath = `${config.download_path}+/PO-${req.body.poNumber}`;
 
         try {
-            return await this.Service.updatePath(req.jsonData,req.poNumber, file.path, file.filename, file.mimetype)
+          // Attempt to create the directory if it doesn't exist
+          fs.mkdirSync(destinationPath, { recursive: true });
+          callback(null, destinationPath);
         } catch (error) {
-            return this.applicationExeptionhandler.returnException(CommonResponseModel, error);
+          // console.error('Error creating directory:', error);
+          callback(error, null);
         }
+      },
+      // destination: (req, file, callback) => {
+      //   callback(null, `./upload-files/PO-${req.body.customerPo}`);
+      // },
+      filename: (req, file, callback) => {
+        // console.log(req);
+        // console.log(file);
+        // console.log("************************************************************************************************");
+        const name = file.originalname.split('.')[0];
+        const fileExtName = extname(file.originalname);
+        const randomName = Array(4)
+          .fill(null)
+          .map(() => Math.round(Math.random() * 16).toString(16))
+          .join('');
+        callback(null, `${name}-${randomName}${fileExtName}`);
+      },
+    }),
+    fileFilter: (req, file, callback) => {
+      if (!file.originalname.match(/\.(xlsx|xls|pdf|jpg|png|jpeg|doc|PDF)$/)) {
+        return callback(new Error('Only xlsx,xls,pdf, jpg, png, doc, jpeg files are allowed!'), false);
+      }
+      callback(null, true);
+    },
+  }))
+  async updateStylePath(@UploadedFiles() file: File[], @Body() req: any): Promise<CommonResponseModel> {
+    // console.log(file, '-------file')
+    try {
+
+      return await this.Service.updatePath(file, req.jsonData,req.poNumber)
+    } catch (error) {
+      return this.applicationExeptionhandler.returnException(CommonResponseModel, error);
     }
+  }
 
 
     @Post('/getorderacceptanceData')
