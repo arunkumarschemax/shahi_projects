@@ -8,7 +8,7 @@ import { LogoutOutlined } from '@ant-design/icons'
 import { useIAMClientState } from '../../nike/iam-client-react'
 import Icon from '@ant-design/icons/lib/components/Icon'
 import * as antdIcons from '@ant-design/icons';
-import { Link, Outlet } from 'react-router-dom'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 
 
 export default function LayoutTwo() {
@@ -20,6 +20,8 @@ export default function LayoutTwo() {
         path: '/', routes: undefined
     })
     const { token: { colorPrimary, colorPrimaryActive, colorPrimaryBg, colorBgBase } } = theme.useToken()
+    const navigate = useNavigate();
+
 
     useEffect(() => {
         generateMenu();
@@ -74,7 +76,8 @@ export default function LayoutTwo() {
 
 
     function handleLogout() {
-
+        localStorage.clear()
+        navigate('/login')
     }
 
     function renderLayoutActions(props) {

@@ -156,7 +156,7 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
-    
+
     @Post('/saveExcelData')
     @UseInterceptors(
         FileInterceptor('file', {
@@ -187,5 +187,26 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
+   
+    @Post('/getbomexcel')
+    async getBomExcel(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.getBomExcel(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
 
+    @Post('/generateProposal')
+    async generateProposal(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.generateProposal(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+
+
+
+   
 }

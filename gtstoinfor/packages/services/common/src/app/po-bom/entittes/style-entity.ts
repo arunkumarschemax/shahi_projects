@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { BomEntity } from "./bom-entity";
 import { StyleComboEntity } from "./style-combo-entity";
+import { Exclude } from 'class-transformer';
 
 @Entity('styles')
 export class StyleEntity {
@@ -22,45 +23,45 @@ export class StyleEntity {
     styleName:string
 
     @Column('varchar',{
+        name:'msc_level_one',
+        nullable:false
+    })
+    mscLevelOne:string
+
+    
+    @Column('varchar',{
+        name:'msc_level_two',
+        nullable:false
+    })
+    mscLevelTwo:string
+
+    @Column('varchar',{
+        name:'msc_level_three',
+        nullable:false
+    })
+    mscLevelThree:string
+
+    @Column('varchar',{
         name:'season',
         nullable:false
     })
     season:string
+    
 
     @Column('varchar',{
-        name:'exp_no',
+        name:'year',
         nullable:false
     })
-    expNo:string
-
-    
-    @Column('varchar',{
-        name:'msc',
-        nullable:false
-    })
-    msc:string
-
-    @Column('varchar',{
-        name:'gender',
-        nullable:false
-    })
-    gender:string
-    
-    
-    @Column('varchar',{
-        name:'factory_lo',
-        nullable:false
-    })
-    factoryLo:string
+    year:string
 
     
     @Column('varchar',{
-        name:'status',
+        name:'msc_code',
         nullable:false
     })
-    status:string
+    mscCode:string
+
     
-  
 
     @CreateDateColumn({
         name: 'created_at',
@@ -104,6 +105,6 @@ export class StyleEntity {
     @OneToMany(type => BomEntity, bom => bom.styleEnityy, { cascade: true })
     bomEntity: BomEntity[];
 
-    @OneToMany(type =>StyleComboEntity, style =>style.styleEntity, {cascade: true})
+    @OneToMany(type =>StyleComboEntity, style =>style.styleEntity,{ cascade: true })
     styleComboEntity:StyleComboEntity[]
 }
