@@ -3,7 +3,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { Cron } from '@nestjs/schedule';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllSampleDevReqResponseModel, CommonResponseModel, RequestNoReq, SampleFilterRequest, UploadResponse, lifeCycleStatusReq, sampleReqIdReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, BuyerRefNoRequest, CommonResponseModel, RequestNoReq, SampleFilterRequest, UploadResponse, lifeCycleStatusReq, sampleReqIdReq } from '@project-management-system/shared-models';
 import * as fs from 'fs';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
@@ -57,6 +57,7 @@ export class SampleDevReqController {
   }
 
   @Post('/getIssuedSampleRequests')
+  @ApiBody({ type: BuyerRefNoRequest })
   async getIssuedSampleRequests(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getIssuedSampleRequests(req);

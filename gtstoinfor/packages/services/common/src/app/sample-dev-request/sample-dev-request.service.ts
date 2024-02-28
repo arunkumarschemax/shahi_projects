@@ -154,13 +154,12 @@ export class SampleRequestService {
   }
 
   async getIssuedSampleRequests(req?: BuyerRefNoRequest): Promise<CommonResponseModel> {
-    let buyerId = null
     if (req?.buyerRefNo) {
       const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
       const res = await this.dataSource.query(buyerdata)
-      buyerId = res[0].buyer_id
+      req.buyerId = res[0].buyer_id
     }
-    const details = await this.sampleRepo.getIssuedSampleRequests(buyerId);
+    const details = await this.sampleRepo.getIssuedSampleRequests(req);
     if (details.length > 0) {
       return new CommonResponseModel(true, 1, 'data retrieved', details)
     } else {
