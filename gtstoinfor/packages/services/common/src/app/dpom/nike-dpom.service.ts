@@ -5,7 +5,7 @@ import { DpomEntity } from './entites/dpom.entity';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { DpomAdapter } from './dto/dpom.adapter';
 import { DpomApproveReq } from './dto/dpom-approve.req';
-import { ChangePoandLineModel, CoLineRequest, Colors, CommonResponseModel, Destinations, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, ItemNoDto, MarketingReportModel, MarketingReportSizeModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, Sizes, TotalQuantityChangeModel, coLineRequest, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
+import { BomItemReq, ChangePoandLineModel, CoLineRequest, Colors, CommonResponseModel, Destinations, DivertModel, FactoryReportModel, FactoryReportSizeModel, FileStatusReq, FileTypeEnum, FobPriceDiffRequest, ItemNoDto, MarketingReportModel, MarketingReportSizeModel, OrderChangePoModel, PoChangeSizeModel, PoData, PoDataResDto, PpmDateFilterRequest, ReportType, Sizes, TotalQuantityChangeModel, coLineRequest, dpomOrderColumnsName, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomChildRepository } from './repositories/dpom-child.repository';
 import { GenericTransactionManager } from '../../typeorm-transactions';
 import { InjectDataSource } from '@nestjs/typeorm';
@@ -2877,6 +2877,31 @@ export class DpomService {
 
         }
     }
+
+    async updateBomItems(req: BomItemReq[]): Promise<CommonResponseModel> {
+        let totalAffected = 0;
+    
+        for (const rec of req) {
+            if (rec.itemNo === null || rec.itemNo === undefined) {
+                return new CommonResponseModel(false, 0, 'Please enter a value in the item box');
+            }
+    
+            const updateStatus = await this.dataSource.getRepository(DpomEntity).update(
+                { id: Number(rec.id) },
+                { bomItem: rec.itemNo }
+            );
+    
+            totalAffected += updateStatus.affected || 0;
+        }
+    
+        if (totalAffected > 0) {
+            return new CommonResponseModel(true, totalAffected, 'Items Updated');
+        } else {
+            return new CommonResponseModel(false, 0, 'No items were updated');
+        }
+    }
+    
+    
 
 }
 

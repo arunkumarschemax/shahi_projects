@@ -1,5 +1,5 @@
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons"
-import { DpomApproveRequest, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomItemReq, DpomApproveRequest, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
 import { Button, Card, Col, DatePicker, Descriptions, Divider, Form, Input, Modal, Row, Select, Table, message } from "antd"
 import { ColumnsType } from "antd/es/table"
@@ -35,10 +35,6 @@ const BomOrderAcceptance = () => {
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         setSelectedRowKeys(newSelectedRowKeys);
       };
-    //   console.log(selectedRowKeys,"selectedRowKeysselectedRowKeysselectedRowKeys");
-      
-
-    
     const rowSelection = {
         selectedRowKeys,
         onChange: onSelectChange,
@@ -263,31 +259,31 @@ const BomOrderAcceptance = () => {
                 );
             },
         },
-        {
-            title: "Action",
-            dataIndex: "action", width: 80,
-            render: (value, record) => {
-                const isEnabled = isActionButtonEnabled(record);
-                return (
-                    <Button onClick={() => approveDpomLineItemStatus(record)} disabled={record.coLineStatus == 'Open' ? true : !isEnabled}>Accept</Button>
-                );
-            },
-        },
+        
     ];
-    const approveDpomLineItemStatus = (record) => {
-        const req = new DpomApproveRequest();
-        req.poLineItemNumber = record.poLineItemNumber
-        req.purchaseOrderNumber = record.purchaseOrderNumber
-        req.itemNo = itemNoValues[record.key]
-        // service.coLineCreationReq(req).then((res) => {
-        //     if (res.status) {
-        //         getOrderAcceptanceData();
-        //         message.success(res.internalMessage)
-        //     } else (
-        //         message.error(res.internalMessage)
-        //     )
-        // })
-    }
+    
+        const handleBatchUpdate = () => {
+            const selectedRecords = data.filter(record => selectedRowKeys.includes(record));
+            const updateRequests = selectedRecords.map((record) => {
+                const req = new BomItemReq();
+                req.id = record.dpom_id;
+                req.itemNo = itemNoValues[record.key];
+                            return req;
+            });
+        
+            nikeService.updateBomItems(updateRequests).then((res) => {
+        
+                if (res.status) {
+                    getOrderAcceptanceData();
+                    message.success(res.internalMessage);
+                } else {
+                    message.error(res.internalMessage);
+                }
+            });
+        };
+ 
+    
+
   return (
     <Card title="Bom Item Register - Unaccepted Orders" headStyle={{ fontWeight: 'bold' }}>
           <Form
@@ -347,23 +343,16 @@ const BomOrderAcceptance = () => {
                                 <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
                             </Form.Item>
                         </Col>
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 20 }} >
+                            <Button onClick={handleBatchUpdate} style={{
+                         backgroundColor: selectedRowKeys.length > 0 ? "aqua" : "white",
+                         color: selectedRowKeys.length > 0 ? "black" : "black", }}
+                            disabled={selectedRowKeys.length === 0}>Update Bom Items</Button>
+                            </Col>
                     </Row>
                 </Form>
-   {/* {data.length > 0 ? ( <Table  columns={columns}
-         dataSource={data}
-     rowSelection={rowSelection}  
-      pagination={{
-        pageSize: 50,
-        onChange(current, pageSize) {
-            setPage(current);
-            setPageSize(pageSize);
-        }
-    }}
-    className="custom-table-wrapper"
-    scroll={{ x: 'max-content', y: 450 }}
-    bordered/>  ) : (<Table size='large' />
-    )} */}
-    {data.length > 0 ? (
+               
+{data.length > 0 ? (
   <Table
     columns={columns}
     rowKey={record => record}

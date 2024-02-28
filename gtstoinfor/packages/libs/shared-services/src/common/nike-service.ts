@@ -1,4 +1,4 @@
-import { CommonResponseModel, DiaPDFModel, DpomApproveRequest, ItemNoDto, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomItemReq, CommonResponseModel, DiaPDFModel, DpomApproveRequest, ItemNoDto, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -418,6 +418,10 @@ export class NikeService extends CommonAxiosService {
 
     async updateDomItme(payload?:ItemNoDto[]): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/updateDomItme",payload)
+    }
+    
+    async updateBomItems(payload?:BomItemReq[]): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/updateBomItems",payload)
     }
 }
 
