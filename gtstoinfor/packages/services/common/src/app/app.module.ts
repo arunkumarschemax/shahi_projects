@@ -14,6 +14,8 @@ import { LevisModule } from './levis/levis.module';
 import { AddressModule } from './Entites@Shahi/address/address-module';
 import { ColorModule } from './Entites@Shahi/color/color-module';
 import { SizeModule } from './Entites@Shahi/size/size-module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 
 @Module({
@@ -32,6 +34,16 @@ import { SizeModule } from './Entites@Shahi/size/size-module';
       logging: true,
       extra: {
         connectionLimit: 20
+      }
+    }),
+
+    ServeStaticModule.forRoot({
+      // rootPath: join(__dirname, '..', '..', '..', '..', 'dist','packages','services','common','upload_files'),
+      rootPath: join(__dirname, '../../../../', 'upload_files'),
+      serveRoot: '/static',
+      serveStaticOptions: {
+        redirect: false,
+        index: false
       }
     }),
     UsersModule,
