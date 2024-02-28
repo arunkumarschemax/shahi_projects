@@ -1053,9 +1053,9 @@ export class DpomController {
 
 
     @Post('/getdpomDataForBom')
-    async getdpomDataForBom() :Promise<CommonResponseModel>{
+    async getdpomDataForBom(@Body() req?:PpmDateFilterRequest) :Promise<CommonResponseModel>{
         try{
-            return await this.dpomService.getdpomDataForBom()
+            return await this.dpomService.getdpomDataForBom(req)
         }
         catch(err){
             return err
