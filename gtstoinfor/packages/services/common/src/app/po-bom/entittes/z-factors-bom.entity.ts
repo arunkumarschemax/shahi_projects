@@ -1,58 +1,53 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn, VersionColumn } from "typeorm";
 import { StyleEntity } from "./style-entity";
 import { ItemEntity } from "./item-entity";
-import { ZFactorsBomEntity } from "./z-factors-bom.entity";
+import { ZFactorsEntity } from "./z-factors.entity";
+import { PoBomEntity } from "./po-bom.entity";
 
-@Entity('z_factors')
-export class ZFactorsEntity {
+@Entity('z_factors_bom')
+export class ZFactorsBomEntity {
     @PrimaryGeneratedColumn('increment', {
         name: 'id'
     })
     id: number;
 
-    @Column('int', {
+    @Column('varchar', {
         nullable: true,
-        name: 'item_id',
+        name: 'im_code',
+        length: 50,
     })
-    itemId: string
+    imCode: string
 
     @Column('varchar', {
         nullable: true,
-        name: 'actual_im',
+        name: 'item_name',
         length: 50,
     })
-    actualIM: string
+    itemName: string
 
     @Column('varchar', {
-        nullable: true,
-        name: 'action',
-        length: 50,
-    })
-    action: string
-
-    @Column('boolean', {
         nullable: true,
         name: 'geo_code',
     })
-    geoCode: boolean
+    geoCode: string
 
-    @Column('boolean', {
+    @Column('varchar', {
         nullable: true,
         name: 'destination',
     })
-    destination: boolean
+    destination: string
 
-    @Column('boolean', {
+    @Column('varchar', {
         nullable: true,
         name: 'size',
     })
-    size: boolean
+    size: string
 
-    @Column('boolean', {
+    @Column('varchar', {
         nullable: true,
         name: 'style',
     })
-    style: boolean
+    style: string
 
     @CreateDateColumn({
         name: 'created_at',
@@ -94,9 +89,10 @@ export class ZFactorsEntity {
     isActive: boolean;
 
 
+    @OneToMany(type => PoBomEntity,poBom =>poBom.bom)
+    poBom:PoBomEntity
     
-    @OneToMany(type => ZFactorsBomEntity,zfactorBom =>zfactorBom.zFactors)
-    zFactorBom:ZFactorsBomEntity
-
-    
+    @ManyToOne(type => ZFactorsEntity, zfactor => zfactor.zFactorBom)
+    @JoinColumn({ name: 'zfactor_id' })
+    zFactors: ZFactorsEntity
 }

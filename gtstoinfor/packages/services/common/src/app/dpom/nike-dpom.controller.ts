@@ -1,6 +1,6 @@
 import { Body, Controller, Post, Param, UploadedFile, UseInterceptors, Req, Get, Res, Header } from '@nestjs/common';
 import { ApplicationExceptionHandler } from "packages/libs/backend-utils/src/"
-import { CommonResponseModel, FobPriceDiffRequest, ItemNoDto, PpmDateFilterRequest, coLineRequest, nikeFilterRequest } from '@project-management-system/shared-models';
+import { BomItemReq, CommonResponseModel, FobPriceDiffRequest, ItemNoDto, PpmDateFilterRequest, coLineRequest, nikeFilterRequest } from '@project-management-system/shared-models';
 import { DpomService } from './nike-dpom.service';
 import { DpomSaveDto } from './dto/dpom-save.dto';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
@@ -1059,6 +1059,16 @@ export class DpomController {
         }
         catch(err){
             return err
+        }
+    }
+
+    @Post('/updateBomItems')
+    @ApiBody({ type: BomItemReq})
+    async updateBomItems(@Body() req: any) {
+        try {
+            return await this.dpomService.updateBomItems(req)
+        } catch (error) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
         }
     }
 }

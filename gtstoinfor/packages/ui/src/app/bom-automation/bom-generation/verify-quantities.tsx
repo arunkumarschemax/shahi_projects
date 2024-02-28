@@ -49,6 +49,8 @@ export default function VerifyQuantities(props: Props) {
         setClubbedData(Object.values(clubbedData))
     }
 
+    console.log(clubbedData)
+
     function renderColumns(): any {
 
         if (clubbedData.length)

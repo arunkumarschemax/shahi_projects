@@ -64,6 +64,7 @@ import PPMReportUpload from "./bom-automation/ppm-report-upload/ppm-report-uploa
 import BomGeneration from "./bom-automation/bom-generation/bom-generation"
 import BomGenerationSteps from "./bom-automation/bom-generation/bom-generation-steps"
 import BomExcelUpload from "./bom-automation/bom-details-upload/bom-excel-upload"
+import { BomExcelDownload } from "./bom-automation/bom-excel-download/bom-excel-download"
 import BomOrderAcceptance from "./bom-automation/bom-details/bom-order-acceptance"
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -186,6 +187,7 @@ export const AppRoutes = () => {
                     <Route path='bom-view' key={'bom-view'} element={<BomView />} />
                     <Route path='bom-pdf-info-detail-view/:styleId' key={'bom-pdf-info-detail-view'} element={<BomPdfInfoDetailView />} />
                     <Route path='bom-creation' key='/bom-creation' element={<BomGenerationSteps />} />
+                    <Route path='bom-download' key='/bom-download' element={<BomExcelDownload />} />
                     <Route path='joker-tag' key='/joker-tag' element={<JokerTagPrint info={[]} />} />
                     <Route path='trim-grid' element={<TrimsGrid />} />
                     <Route path='trim-List' element={<TrimList />} />

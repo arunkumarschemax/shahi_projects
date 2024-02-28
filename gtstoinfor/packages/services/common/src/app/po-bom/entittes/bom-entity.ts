@@ -4,6 +4,7 @@ import { StyleEntity } from "./style-entity";
 import { StyleComboEntity } from "./style-combo-entity";
 import { PoBomEntity } from "./po-bom.entity";
 import { ItemEntity } from "./item-entity";
+import { Exclude } from 'class-transformer';
 
 @Entity('bom')
 export class BomEntity {
@@ -12,20 +13,7 @@ export class BomEntity {
     })
     id: number;
 
-    @Column('enum',{
-        name:'item_name',
-        enum:ItemtypeEnum,
-        nullable:false    
-    })
-    itemName:ItemtypeEnum
-
-    @Column('int',{
-        name:'item_id',
-        nullable:false
-    })
-    itemId:number
-
-    @Column('varchar',{
+    @Column('text',{
         name:'description',
         nullable:false
     })
@@ -37,6 +25,14 @@ export class BomEntity {
     })
     imCode:string
 
+    
+    @Column('varchar',{
+        name:'item_name',
+        nullable:false
+    })
+    itemName:string    
+
+
     @Column('varchar',{
         name:'item_type',
         nullable:false
@@ -44,10 +40,28 @@ export class BomEntity {
     itemType:string
 
     @Column('varchar',{
+        name:'item_type_one',
+        nullable:false
+    })
+    itemTypeOne:string
+
+    @Column('text',{
         name:'use',
         nullable:false
     })
     use:string
+
+    @Column('varchar',{
+        name:'uom',
+        nullable:false
+    })
+    uom:string
+    
+    @Column('varchar',{
+        name:'qty',
+        nullable:false
+    })
+    qty:string
 
     @CreateDateColumn({
         name: 'created_at'
@@ -94,7 +108,7 @@ export class BomEntity {
     styleComboEntity:StyleComboEntity[]
 
     @OneToMany(type => PoBomEntity,poBom =>poBom.bom)
-    poBom:PoBomEntity[]
+    poBom:PoBomEntity
 
     @ManyToOne(type=> ItemEntity, item =>item.bomEntity)
     @JoinColumn({ name: 'item_id' })

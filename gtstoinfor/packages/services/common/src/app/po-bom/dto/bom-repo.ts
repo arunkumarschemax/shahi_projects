@@ -3,7 +3,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { BomEntity } from "../entittes/bom-entity";
 import { StyleComboEntity } from "../entittes/style-combo-entity";
-import { BomDataForStyleAndSeasonModel } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel } from "@project-management-system/shared-models";
 import { StyleEntity } from "../entittes/style-entity";
 import { DpomEntity } from "../../dpom/entites/dpom.entity";
 
@@ -34,7 +34,7 @@ export class BomRepo extends Repository<BomEntity> {
         const query = this.createQueryBuilder('s')
             .select(`s.style_id as styleId,s.id AS bomId,s.item_name AS itemName,s.description,s.im_code AS imCode,s.item_type AS itemType,s.item_id as itemId`)
             .leftJoin(StyleEntity, `st`, `st.id = s.style_id`)
-            .where(`st.style='${req.style}' and st.season='${concatenatedSeason}'`)
+            .where(`st.style='${req.style}' and st.season='${req.season}' and st.year = '${req.year}'`)
         const data = await query.getRawMany()
 
         const mappedResult: BomDataForStyleAndSeasonModel[] = data.map(item => ({
@@ -57,5 +57,7 @@ export class BomRepo extends Repository<BomEntity> {
         .leftJoin(BomEntity,'b')
 
     }
+   
+    
 
 }
