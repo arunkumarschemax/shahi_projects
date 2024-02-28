@@ -65,6 +65,7 @@ import BomGeneration from "./bom-automation/bom-generation/bom-generation"
 import BomGenerationSteps from "./bom-automation/bom-generation/bom-generation-steps"
 import BomExcelUpload from "./bom-automation/bom-details-upload/bom-excel-upload"
 import { BomExcelDownload } from "./bom-automation/bom-excel-download/bom-excel-download"
+import BomOrderAcceptance from "./bom-automation/bom-details/bom-order-acceptance"
 
 // import BasicLayout  from '@ant-design/pro-layout';
 export const AppRoutes = () => {
@@ -196,6 +197,7 @@ export const AppRoutes = () => {
                     <Route path='country-sticker' element={<CountryStickerPrint info={[]} />} />
                     <Route path='ppm-report-upload' element={<PPMReportUpload />} />
                     <Route path='bom-excel-upload' element={<BomExcelUpload />} />
+                    <Route path='bom-order-acceptance' element={<BomOrderAcceptance />} />
 
                     
                 </Route>

@@ -1415,6 +1415,15 @@ export class DpomService {
         }
     }
 
+    async getdpomDataForBom(req?: PpmDateFilterRequest): Promise<CommonResponseModel> {
+        const data = await this.dpomRepository.getAllDpomDataForBom(req)
+        if(data.length >0){
+            return new CommonResponseModel(true,1,'Data Retrived Sucessfully',data)
+        }else{
+            return new CommonResponseModel(false,1,'No Data Found',[])
+        }
+    }
+
     async approveDpomLineItemStatus(req: DpomApproveReq): Promise<CommonResponseModel> {
         const purchaseOrderNumber = req.purchaseOrderNumber
         const poLineItemNumber = req.poLineItemNumber
