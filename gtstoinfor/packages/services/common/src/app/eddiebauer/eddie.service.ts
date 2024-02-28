@@ -1401,10 +1401,10 @@ export class EddieService {
           if (isExFactoryDatePastToday) {
           const update = await this.eddieCoLineRepo.update(
             { poNumber: po.po_number, poLine: po.po_line },
-            { status: "Failed", errorMsg: "Date Before Exfactory Found", isActive: false }
+            { status: "Failed", errorMsg: "Past Exfactory Date found", isActive: false }
           );
           await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED });
-          return new CommonResponseModel(false, 0, "Date Before Exfactory found");
+          return new CommonResponseModel(false, 0, "Past Exfactory Date found");
           } 
 
       console.log("----------------end----------------") 
