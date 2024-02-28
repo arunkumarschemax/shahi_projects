@@ -288,7 +288,7 @@ export class OperationTrackingService {
         const styleId = styleIdres[0].styleId
         const nextSeq = Number(req.sequence+1)
         // const nextOpData = `select operation_code as opCode,operation_name as opName from operations where sequence = ${nextSeq}`
-        const nextOpData = `select op.operation_name as opCode,operation as opName from sample_request_process_info sp left join operations op on op.operation_id = sp.operation where sequence = ${nextSeq} and sample_request_id = ${req.sampleRequestId}`
+        const nextOpData = `select op.operation_name as opCode,sp.operation as opName from sample_request_process_info sp left join operations op on op.operation_id = sp.operation where sp.sequence = ${nextSeq} and sp.sample_request_id = ${req.sampleRequestId}`
 
         const res = await this.dataSource.query(nextOpData)
         let nextOperation
