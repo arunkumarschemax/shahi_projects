@@ -251,8 +251,8 @@ export const extractDataFromPoPdf = async (pdf) => {
                     deliveryAddress = firstPageContent[i].str + " " + deliveryAddress;
                     i--;
                 }
-                poData.deliveryAddress = deliveryAddress.trim().replace(/SHAHI EXPORTS PVT LTD… /g,"")
-                
+                poData.deliveryAddress = deliveryAddress.trim().replace(/SHAHI EXPORTS PVT LTD… /g, "")
+
                 // poData.transMode = firstPageContent[transModeIndex + 2].str
                 // poData.deliveryAddress =
                 //     firstPageContent[deliveryAddressIndex - 5].str + " " +
@@ -553,10 +553,10 @@ export const extractDataFromPoPdf = async (pdf) => {
             if (isFirstBomSummary) {
                 isFirstBomSummary = false;
             }
-            else if(isSecondBomSummary){
+            else if (isSecondBomSummary) {
                 isSecondBomSummary = true;
             }
-          
+
         }
         if (rec.str.includes(FORMAT_SEPARATION_KEYWORD)) {
             isSecondFormat = true;
@@ -959,17 +959,20 @@ export const extractDataFromPoPdf = async (pdf) => {
             //     itemDetailsObj.originalDate = filteredData[originalDateIndexPoLine].str;
             // }
 
-            let tansModeIndex = -1;
-            filteredData.forEach((item, index) => {
-                if (/IncoTerm/.test(item.str)) {
-                    tansModeIndex = index + 9;
-                    return;
-                }
-            });
+            // let tansModeIndex = -1;
+            // filteredData.forEach((item, index) => {
+            //     if (/([A-Za-z]{1}[0-9]{4}-[0-9]{4}[A-Za-z]{1})|[0-9]{5}-[0-9]{4}[A-Z]+/.test(item.str)) {
+            //         tansModeIndex = index - 4;
+            //         return;
+            //     }
+            // });
 
-            if (tansModeIndex >= 0 && tansModeIndex < filteredData.length) {
-                itemDetailsObj.transMode = filteredData[tansModeIndex].str;
-            }
+            // if (tansModeIndex >= 0 && tansModeIndex < filteredData.length) {
+            //     itemDetailsObj.transMode = filteredData[tansModeIndex].str;
+            // }
+
+            // itemDetailsObj.transMode=label
+
 
 
             // let plannedExFactoryDateIndex = -1;
@@ -1088,12 +1091,27 @@ export const extractDataFromPoPdf = async (pdf) => {
             for (let l = 0; l < Math.floor(itemVarinatsTextArr.length / count); l++) {
                 const itemVariantsObj = new LevisPoItemVariant();
                 const upcIndex = itemVarinatsTextArr.indexOf(stringsWithLength13[l]);
-                // itemVariantsObj.product = itemVarinatsTextArr[upcIndex + 1] //Description
-                itemVariantsObj.product = stringsWithLength13[l] //variant material
-                itemVariantsObj.size = itemVarinatsTextArr[upcIndex + 2] //size
-                itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex + 3].replace(/,/g, "") // quantity
-                itemVariantsObj.itemNo = itemVarinatsTextArr[upcIndex - 1]
-                itemVariantsObj.upc = '-'
+                itemVariantsObj.product = stringsWithLength13[l]; // variant material
+                let sizeIndex = upcIndex + 2; // Start looking for size from index +2
+                let size = '';
+                let quantity = '';
+                let label = '';
+                while (sizeIndex < itemVarinatsTextArr.length) {
+                    size = itemVarinatsTextArr[sizeIndex];
+                    if (['XXS', 'XS', 'S', 'M', 'L', 'XL', '2X', 'XXL', 'XXXL', 'LT', 'XLT', '2XLT', '3XLT', '4XLT', '5XLT', 'ST', 'XST', '2XST', '3XST', '4XST', '5XST', 'XS-Slim', 'S-Slim', 'M-Slim', 'L-Slim', 'XL-Slim', 'XXL-Slim', 'XS-Regular', 'S-Regular', 'M-Regular', 'L-Regular', 'XL-Regular', 'XXL-Regular', '3X', '4X', '5X', '6X', 'G', 'CH', 'ECH', 'EG', 'EEG',].includes(size)) {
+                        quantity = itemVarinatsTextArr[sizeIndex + 1].replace(/,/g, '');
+                        label = itemVarinatsTextArr[sizeIndex + 2];
+                        break;
+                    }
+                    sizeIndex++;
+                }
+                itemVariantsObj.size = size;
+                itemVariantsObj.quantity = quantity;
+                itemVariantsObj.itemNo = itemVarinatsTextArr[upcIndex - 1];
+                itemVariantsObj.upc = '-';
+                itemVariantsObj.label = label;
+                itemDetailsObj.transMode = label;
+                // itemVariantsObj.label =  itemVarinatsTextArr[upcIndex + 4]; 
                 // itemVariantsObj.exFactoryDate = itemVarinatsTextArr[upcIndex - 1]  //item#
                 // itemVariantsObj.plannedExFactoryDate = itemVarinatsTextArr[upcIndex + 5]
                 // itemVariantsObj.quantity = itemVarinatsTextArr[upcIndex - 3].replace(/,/g, "");
