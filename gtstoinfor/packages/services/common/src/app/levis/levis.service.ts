@@ -634,117 +634,202 @@ export class LevisService {
   //   }
   // }
 
+  // async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
+  //   try {
+  //     // const poLineValues = req.poLine.split(',')
+  //     const poLineValues = req?.poLine
+  //     const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber, poLine: poLineValues } });
+  //     // const exfacDate = data[0]?.exFactoryDate
+  //     // console.log(exfacDate,"exfacDate")
+
+
+  //     // const [day, month, year] = exfacDate?.split('.');
+  //     // const inputDate = new Date(`${year}-${month}-${day}`);
+
+
+  //     // const FourteenDaysafter = new Date(inputDate);
+  //     // FourteenDaysafter.setDate(inputDate.getDate() + 14);
+  //     // const DeliveryDate = new Intl.DateTimeFormat('en-GB').format(FourteenDaysafter);
+  //     // console.log(DeliveryDate,"DeliveryDate")
+
+
+  //     // po -> destination -> color -> sizes
+  //     const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+  //     const poMap = new Map<string, LevisOrdersEntity>();
+
+  //     for (const rec of data) {
+  //       poMap.set(`${rec.poNumber}`, rec);
+  //       // const dest = rec.deliveryAddress;
+  //       const parts = rec.deliveryAddress.split(',')
+  //       const destAdd = parts[0].trim();
+  //       const dest = destAdd;
+
+
+  //       if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
+  //         destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
+  //       }
+  //       if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
+  //         destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
+  //       }
+  //       console.log(rec.material, "material")
+  //       const colorcheck = await this.colorRepo.findOne({
+  //         where: {
+  //           colorCode: rec.material
+  //         }
+  //       });
+
+  //       console.log(colorcheck, "color")
+  //       if (colorcheck) {
+  //         if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(colorcheck.colorName)) {
+  //           destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(colorcheck.colorName, []);
+  //         }
+
+  //       }
+
+  //       const sizecheck = await this.sizeRepo.findOne({
+  //         where: {
+  //           poSize: rec.size
+  //         }
+  //       });
+
+  //       if (sizecheck) {
+
+  //         destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorcheck.colorName).push({ size: sizecheck.crmSize, quantity: rec.quantity, price: rec.unitPrice });
+
+  //       } else {
+
+  //         destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorcheck.colorName).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+  //       }
+
+  //     }
+
+  //     const coData = [];
+  //     destinationColSizesMap.forEach((destColorSize, poNumber) => {
+  //       const desArray = [];
+  //       destColorSize.forEach((colorSizes, dest) => {
+  //         const ColArray = [];
+  //         colorSizes.forEach((sizes, color) => {
+  //           const sizeArray = [];
+  //           sizes.forEach((size) => {
+  //             const sizeObj = new LevisSizeModel(size.size, size.quantity, size.price);
+  //             sizeArray.push(sizeObj);
+  //           });
+  //           const col = new LevisColorModel(color, sizeArray);
+  //           ColArray.push(col);
+  //         });
+  //         const des = new LevisDestinationModel(dest, ColArray);
+  //         desArray.push(des);
+  //       });
+  //       const poInfo = poMap.get(poNumber);
+
+  //       const parsedDate = moment(poInfo?.exFactoryDate, "DD.MM.YYYY");
+  //       let formattedExFactDate = parsedDate.format("DD/MM/YYYY");
+
+  //       if (parsedDate.isSameOrBefore(moment(), 'day')) {
+  //         formattedExFactDate = '';
+  //       }
+  
+
+
+  //       const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, formattedExFactDate, formattedExFactDate, poInfo.material, desArray);
+  //       coData.push(co);
+  //     });
+
+  //     if (coData.length > 0) {
+  //       return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', coData);
+  //     } else {
+  //       return new CommonResponseModel(false, 0, 'No data found');
+  //     }
+  //   } catch (err) {
+  //     throw err;
+  //   }
+  // }
+
   async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
-      // const poLineValues = req.poLine.split(',')
-      const poLineValues = req?.poLine
-      const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber, poLine: poLineValues } });
-      // const exfacDate = data[0]?.exFactoryDate
-      // console.log(exfacDate,"exfacDate")
+        const poLineValues = req?.poLine;
+        const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber, poLine: poLineValues } });
 
+        const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+        const poMap = new Map<string, LevisOrdersEntity>();
 
-      // const [day, month, year] = exfacDate?.split('.');
-      // const inputDate = new Date(`${year}-${month}-${day}`);
+        for (const rec of data) {
+            poMap.set(`${rec.poNumber}`, rec);
+            const parts = rec.deliveryAddress.split(',');
+            const destAdd = parts[0].trim();
+            const dest = destAdd;
 
+            if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
+                destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
+            }
+            if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
+                destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
+            }
 
-      // const FourteenDaysafter = new Date(inputDate);
-      // FourteenDaysafter.setDate(inputDate.getDate() + 14);
-      // const DeliveryDate = new Intl.DateTimeFormat('en-GB').format(FourteenDaysafter);
-      // console.log(DeliveryDate,"DeliveryDate")
-
-
-      // po -> destination -> color -> sizes
-      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
-      const poMap = new Map<string, LevisOrdersEntity>();
-
-      for (const rec of data) {
-        poMap.set(`${rec.poNumber}`, rec);
-        // const dest = rec.deliveryAddress;
-        const parts = rec.deliveryAddress.split(',')
-        const destAdd = parts[0].trim();
-        const dest = destAdd;
-
-
-        if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
-          destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
-        }
-        if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
-          destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
-        }
-        console.log(rec.material, "material")
-        const colorcheck = await this.colorRepo.findOne({
-          where: {
-            colorCode: rec.material
-          }
-        });
-
-        console.log(colorcheck, "color")
-        if (colorcheck) {
-          if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(colorcheck.colorName)) {
-            destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(colorcheck.colorName, []);
-          }
-
-        }
-
-        const sizecheck = await this.sizeRepo.findOne({
-          where: {
-            poSize: rec.size
-          }
-        });
-
-        if (sizecheck) {
-
-          destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorcheck.colorName).push({ size: sizecheck.crmSize, quantity: rec.quantity, price: rec.unitPrice });
-
-        } else {
-
-          destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorcheck.colorName).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
-        }
-
-      }
-
-      const coData = [];
-      destinationColSizesMap.forEach((destColorSize, poNumber) => {
-        const desArray = [];
-        destColorSize.forEach((colorSizes, dest) => {
-          const ColArray = [];
-          colorSizes.forEach((sizes, color) => {
-            const sizeArray = [];
-            sizes.forEach((size) => {
-              const sizeObj = new LevisSizeModel(size.size, size.quantity, size.price);
-              sizeArray.push(sizeObj);
+            const colorcheck = await this.colorRepo.findOne({
+                where: {
+                    colorCode: rec.material
+                }
             });
-            const col = new LevisColorModel(color, sizeArray);
-            ColArray.push(col);
-          });
-          const des = new LevisDestinationModel(dest, ColArray);
-          desArray.push(des);
-        });
-        const poInfo = poMap.get(poNumber);
 
-        const parsedDate = moment(poInfo?.exFactoryDate, "DD.MM.YYYY");
-        let formattedExFactDate = parsedDate.format("DD/MM/YYYY");
+            const colorName = colorcheck ? colorcheck.colorName : '';
+            if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(colorName)) {
+                destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(colorName, []);
+            }
 
-        if (parsedDate.isSameOrBefore(moment(), 'day')) {
-          formattedExFactDate = '';
+            const sizecheck = await this.sizeRepo.findOne({
+                where: {
+                    poSize: rec.size
+                }
+            });
+
+            if (sizecheck) {
+                destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorName).push({ size: sizecheck.crmSize, quantity: rec.quantity, price: rec.unitPrice });
+            } else {
+                destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorName).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+            }
         }
-  
 
+        const coData = [];
+        destinationColSizesMap.forEach((destColorSize, poNumber) => {
+            const desArray = [];
+            destColorSize.forEach((colorSizes, dest) => {
+                const ColArray = [];
+                colorSizes.forEach((sizes, color) => {
+                    const sizeArray = [];
+                    sizes.forEach((size) => {
+                        const sizeObj = new LevisSizeModel(size.size, size.quantity, size.price);
+                        sizeArray.push(sizeObj);
+                    });
+                    const col = new LevisColorModel(color, sizeArray);
+                    ColArray.push(col);
+                });
+                const des = new LevisDestinationModel(dest, ColArray);
+                desArray.push(des);
+            });
+            const poInfo = poMap.get(poNumber);
 
-        const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, formattedExFactDate, formattedExFactDate, poInfo.material, desArray);
-        coData.push(co);
-      });
+            const parsedDate = moment(poInfo?.exFactoryDate, "DD.MM.YYYY");
+            let formattedExFactDate = parsedDate.format("DD/MM/YYYY");
 
-      if (coData.length > 0) {
-        return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', coData);
-      } else {
-        return new CommonResponseModel(false, 0, 'No data found');
-      }
+            if (parsedDate.isSameOrBefore(moment(), 'day')) {
+                formattedExFactDate = '';
+            }
+
+            const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, formattedExFactDate, formattedExFactDate, poInfo.material, desArray);
+            coData.push(co);
+        });
+
+        if (coData.length > 0) {
+            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', coData);
+        } else {
+            return new CommonResponseModel(false, 0, 'No data found');
+        }
     } catch (err) {
-      throw err;
+        throw err;
     }
-  }
-  
+}
+
 
 
   async getordercomparationData(req?: any): Promise<CommonResponseModel> {
@@ -853,6 +938,19 @@ export class LevisService {
         console.log(request, "request")
         const address = await this.AddressService.getAddressInfoByCountry({ country: request });
         const addressData = address.data[0];
+        console.log("----------------start----------------")
+
+        if (!addressData) {
+        const update = await this.levisCoLineRepo.update(
+          { poNumber: po.po_number, poLine: po.po_line },
+          { status: "Failed", errorMsg: "Address not matching", isActive: false }
+        );
+        await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED });
+        return new CommonResponseModel(false, 0, "Address not matching");
+        } 
+  
+       console.log("----------------end----------------") 
+
         console.log(addressData, "address")
         styleNo = coData.style
         buyerAddress = addressData?.buyerAddressCode
@@ -910,9 +1008,11 @@ export class LevisService {
         const value = await option.getAttribute('value');
         optionValues.push(value);
       }
-      const number = optionValues.find(value => value.includes(buyerAddress)); // give the dynamic value here
+      const number = optionValues.find(value => {
+        return Number(value.split('-')[0].trim()) == Number(buyerAddress)
+    });
+      // const number = optionValues.find(value => value.includes(buyerAddress)); // give the dynamic value here
       await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
-
       await driver.wait(until.elementLocated(By.xpath('//*[@id="cur"]')));
       const curDropdown = await driver.findElement(By.xpath('//*[@id="cur"]'));
       const cur = coLine.currency; // give the dynamic value here
@@ -956,7 +1056,7 @@ export class LevisService {
                   for (const option of options) {
                     const value = await option.getAttribute('value');
                     optionValues.push(value);
-                  }
+                  }    
                   const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
                   await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
                   // Find all the input fields in the first row.
