@@ -279,9 +279,13 @@ export class OperationTrackingService {
   //Mobile app API
   async OperationReport(req:operationReportRequest):Promise<CommonResponseModel>{
     const manager = new GenericTransactionManager(this.dataSource)
+    console.log("***************************************************************")
     try{
         const getStartTime = `select out_time AS startTime from operation_tracking where sample_req_id = ${req.sampleRequestId} and next_operation = '`+req.operationCode+`' order by operation_tracking_id desc`;
         const startTime = await this.dataSource.query(getStartTime)
+        console.log("startTime");
+        console.log(startTime);
+
 
         const styleInfo = `select style_id as styleId from sample_request where sample_request_id = ${req.sampleRequestId}`
         const styleIdres = await this.dataSource.query(styleInfo)
@@ -342,7 +346,7 @@ export class OperationTrackingService {
         while (refNo.length < 4) refNo = "0" + refNo;
     
         const operationJobNo = `${req.operationCode}` + (fromDate.toString().substr(-2)) + "-" + (toDate.toString().substr(-2)) + "/" + refNo;
-        let inTime = startTime[0].startTime != undefined ? startTime[0].startTime:null
+        let inTime = startTime.length>0 ? startTime[0].startTime:null
         const trackingEntity = new OperationTracking()
         trackingEntity.jobNumber = operationJobNo
         trackingEntity.styleId = styleId
@@ -365,7 +369,7 @@ export class OperationTrackingService {
         trackingEntity.sampleReqId = req.sampleRequestId
         trackingEntity.status = TrackingEnum.YES
         const createLog = await manager.getRepository(OperationTracking).save(trackingEntity)
-        // console.log(dto.fabricCode,'*************')
+        console.log(createLog);
         // const materialFabric = await this.materialFabricRepo.update({fabricCode: dto.fabricCode},{reportedStatus: MaterialFabricEnum.COMPLETED})
         // console.log(materialFabric,'))))))))))))))))))))))')
         const reportedQtyQry = `select sum(physical_quantity) as reportedQty from operation_inventory where sample_req_id = ${req.sampleRequestId} and operation = '${req.operationCode}'`
@@ -376,6 +380,9 @@ export class OperationTrackingService {
         if(reportedQtyRes[0].reportedQty > 0){
           totReportedQty = reportedQtyRes[0].reportedQty
         }
+        console.log(save);
+        console.log(createLog);
+
         if (save && createLog) {
           if((Number(totReportedQty) == Number(totalOrderedQty))){
 
@@ -421,6 +428,7 @@ export class OperationTrackingService {
                 await manager.completeTransaction();
                 return new OperationInventoryResponseModel(true, 1111, 'Quantity reported Successfully');
               }else{
+                console.log("iff 1");
                 await manager.releaseTransaction();
                 throw new ErrorResponse(9999, 'Failed To Update Sample Request');
               }
@@ -429,10 +437,13 @@ export class OperationTrackingService {
                 return new OperationInventoryResponseModel(true, 1111, 'Quantity reported Successfully');
           }
           } else {
+            console.log("iff 2");
+
             await manager.releaseTransaction();
             throw new ErrorResponse(9999, 'Failed To Update Operation');
           }
         } catch (error) {
+          console.log(error);
           await manager.releaseTransaction();
           return error;
         }
