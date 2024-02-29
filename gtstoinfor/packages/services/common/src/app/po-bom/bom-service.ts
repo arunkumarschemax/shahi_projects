@@ -623,10 +623,10 @@ export class BomService {
 
     async generateProposal(req: BomProposalReq): Promise<CommonResponseModel> {
         const poBomData = await this.poBomRepo.getProposalsData(req)
+        const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
+        let data =[...poBomData,...poBomZfactorData]
 
-
-
-        const groupedData: any = poBomData.reduce((result, currentItem) => {
+        const groupedData: any = data.reduce((result, currentItem) => {
             const { geoCode, styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination } = currentItem;
             const key = `${geoCode}-${styleNumber}-${imCode}-${itemNo}`;
             
