@@ -1,11 +1,11 @@
 import { DownloadOutlined, EyeOutlined } from '@ant-design/icons';
 import { BomProposalReq } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
-import { Button, Card, Checkbox, Col, Row } from 'antd'
+import { Button, Card, Checkbox, Col, Modal, Row } from 'antd'
 import { table } from 'console';
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
-
+import WasCarelabel from '../../trims/trim-prints/wash-care-label';
 type Props = {
   poLine: string[]
 }
@@ -18,6 +18,9 @@ export default function GenerateProposal(props: Props) {
   const [page, setPage] = React.useState(1);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [proposalData, setProposalData] = useState<any>([])
+  const [proposalInfo, setProposalInfo] = useState<any>([])
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const [trimName, setTrimName] = useState<string>('')
 
   useEffect(() => {
     getAllTrims();
@@ -30,6 +33,15 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
+  const componentsMapping = {
+    "Wash Care Label": <WasCarelabel bomInfo={proposalData} />,
+  }
+
+  const onCancel = () => {
+    setModalOpen(false)
+    setTrimName('')
+  }
+
   const handleCheckboxChange = (value, item) => {
     if (value.target.checked) {
       // Add the item to the selectedItems state if checked
@@ -80,7 +92,7 @@ export default function GenerateProposal(props: Props) {
     const worksheet = XLSX.utils.table_to_sheet(document.getElementById('excel-table'));
     const workbook = XLSX.utils.book_new();
     worksheet['!cols'] = [
-     
+
       { wch: 20 }, // Width for first column
       { wch: 20 },// Width for second column
       { wch: 30 }, // Width for third column
@@ -90,10 +102,10 @@ export default function GenerateProposal(props: Props) {
     ];
 
     worksheet['!merges'] = [
-      { s: { r: 1, c: 0 }, e: { r: proposalData.length , c: 0 } }, // Merge first two columns
-      { s: { r: 1, c: 1 }, e: { r: proposalData.length , c: 1 } },  // Merge last two columns
-      { s: { r: 1, c: 4 }, e: { r: proposalData.length , c: 4 } },
-      { s: { r: 1, c: 5 }, e: { r: proposalData.length , c: 5 } }
+      { s: { r: 1, c: 0 }, e: { r: proposalData.length, c: 0 } }, // Merge first two columns
+      { s: { r: 1, c: 1 }, e: { r: proposalData.length, c: 1 } },  // Merge last two columns
+      { s: { r: 1, c: 4 }, e: { r: proposalData.length, c: 4 } },
+      { s: { r: 1, c: 5 }, e: { r: proposalData.length, c: 5 } }
 
     ];
 
@@ -123,8 +135,8 @@ export default function GenerateProposal(props: Props) {
   function htmlTable(data) {
 
     return (
-      <table style={{display:'none'}} id='excel-table'>
-        
+      <table style={{ display: 'none' }} id='excel-table'>
+
 
         <tr>
           <th>Item</th>
@@ -147,7 +159,7 @@ export default function GenerateProposal(props: Props) {
             </tr>
           })
         }
-         {data[0]?.sizeWiseQty.length ? <>
+        {data[0]?.sizeWiseQty.length ? <>
           <tr></tr>
           <tr></tr>
           <tr>
@@ -234,6 +246,14 @@ export default function GenerateProposal(props: Props) {
       </table >
     )
   }
+  const onView = (val) => {
+    handleDownloadIndividualTrim(val.itemId)
+    setModalOpen(true)
+    setTrimName(val.item)
+  }
+
+
+
   return (
     <Card >
       <Row gutter={[24, 4]}>
@@ -241,8 +261,9 @@ export default function GenerateProposal(props: Props) {
           trims.length ? trims.map((v) => {
             return <Col span={6}>
               <Card hoverable title={false} actions={[
-                <DownloadOutlined size={30} onClick={() => handleDownloadIndividualTrim(v.itemId)} key="download" />,
-                <EyeOutlined key="view" />
+                <DownloadOutlined size={30} onClick={() => handleDownloadIndividualTrim(v.itemId
+                )} key="download" />,
+                <EyeOutlined key="view" onClick={() => { onView(v) }} />
               ]} >
                 <Checkbox
                   onChange={value => handleCheckboxChange(value, v.itemId)}
@@ -263,6 +284,9 @@ export default function GenerateProposal(props: Props) {
       {
         htmlTable(proposalData)
       }
+      <Modal open={modalOpen} onCancel={onCancel} onOk={() => setModalOpen(false)} footer={[]} width={'85%'}>
+        {componentsMapping[trimName]}
+      </Modal>
     </Card>
   )
 }
