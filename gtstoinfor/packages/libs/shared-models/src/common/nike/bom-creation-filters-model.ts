@@ -65,6 +65,30 @@ export class BomProposalModel{
     poNumber : string;
     style : string
 }
+export class BomProposalDataModel{
+    id: number;
+    poQty: number;
+    bomQty: number;
+    consumption: number;
+    wastage: number;
+    moq: number;
+    description: string;
+    imCode: string;
+    use: string;
+    styleNumber: string; // Add styleNumber property
+    color: string; // Add color property
+    destination: string; // Add destination property
+    geoCode: string; // Add geoCode property
+    plant: string; // Add plant property
+    season: string; // Add season property
+    year: number; // Add year property
+    size: string; // Add size property
+    itemNo : string
+    itemId : number
+    constructor(data?: Partial<BomProposalDataModel>) {
+        Object.assign(this, data);
+    }
+}
 
 export class BomExcelreq {
     style?: string;
@@ -75,4 +99,8 @@ export class BomExcelreq {
     itemType?: string;
     itemId?: number;
     pbId?:number
+}
+export class BomProposalReq {
+    poLine: string[]
+    itemId: number[]
 }
