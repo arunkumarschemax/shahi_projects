@@ -363,13 +363,13 @@ export class BomService {
                 if (!styleData.length) {
                     return new CommonResponseModel(false, 11111, "Style data not found")
                 }
-                
+
+                const updatedQty = getUpdatedQty(po.poLineNo, po.qty)
                 for (const styleBom of styleData) {
                     console.log(styleBom)
                     const consumptions = await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) ? await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) : { itemId: 0, wastage: 3, moq: 100, consumption: 1 }
                     // console.log(consumptions,styleBom.itemId)
                     const { consumption, moq, wastage } = consumptions
-                    const updatedQty = getUpdatedQty(po.poLineNo, po.qty)
                     const bomQty = calculateBomQty(updatedQty, moq, consumption, wastage)
                     const poBomEntity = new PoBomEntity()
                     const bom = new BomEntity()
@@ -378,8 +378,8 @@ export class BomService {
                     poBomEntity.consumption = consumption ? consumption : 0
                     poBomEntity.moq = moq ? moq : 0
                     poBomEntity.wastage = wastage ? wastage : 0
-                    poBomEntity.bomQty = isNaN(bomQty) ? 0 : bomQty
-                    poBomEntity.poQty = po.qty
+                    poBomEntity.bomQty = po.qty
+                    poBomEntity.poQty = updatedQty
                     const dpom = new DpomEntity()
                     dpom.id = po.id
                     poBomEntity.dpomId = po.id
@@ -388,9 +388,9 @@ export class BomService {
                     console.log(zfactors)
                     for (const zfactor of zfactors) {
                         if (styleBom.imCode == zfactor.actualIm && styleBom.itemId == zfactor.itemId) {
-                            const bomGeoCode = destinations.find((v) => v.destination == po.destination) 
-                            console.log(bomGeoCode ,'----geo code-----')
-                            console.log(po.destination,'destination')
+                            const bomGeoCode = destinations.find((v) => v.destination == po.destination)
+                            console.log(bomGeoCode, '----geo code-----')
+                            console.log(po.destination, 'destination')
                             if (bomGeoCode?.geoCode == zfactor.geoCode || po.destination == zfactor.destination) {
                                 const zfactorID = new ZFactorsBomEntity()
                                 zfactorID.id = zfactor.id
@@ -412,13 +412,14 @@ export class BomService {
                         poBomExtraITem.moq = 1
                         poBomExtraITem.wastage = 1
                         poBomExtraITem.bomQty = po.qty
-                        poBomExtraITem.poQty = po.qty
+                        poBomExtraITem.poQty = updatedQty
                         const dpom = new DpomEntity()
                         dpom.id = po.id
                         poBomExtraITem.dpomId = po.id
                         const zfactorID = new ZFactorsBomEntity()
                         zfactorID.id = ab.id
                         poBomExtraITem.zFactorBom = zfactorID
+                        poBomExtraITem.bom = null
                         await transactionManager.getRepository(PoBomEntity).insert(poBomExtraITem)
                     }
                 }
@@ -436,10 +437,10 @@ export class BomService {
 
     async saveExcelData(val): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
-        const detailedArray:StyleDto[]=[]
+        const detailedArray: StyleDto[] = []
         const map = new Map<string, Map<string, StyleComboDto[]>>()
-        const styleMap = new Map<string,StyleDto>()
-        const bommap = new Map<string,Map<string,BomDto>>()
+        const styleMap = new Map<string, StyleDto>()
+        const bommap = new Map<string, Map<string, BomDto>>()
         try {
             // await transactionManager.startTransaction()
             const itemsData = await this.itemsRepo.find({ select: ['itemId', 'item'] })
@@ -622,14 +623,18 @@ export class BomService {
     }
 
     async generateProposal(req: BomProposalReq): Promise<CommonResponseModel> {
+        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+
         const poBomData = await this.poBomRepo.getProposalsData(req)
         const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
-        let data =[...poBomData,...poBomZfactorData]
-
+        console.log(poBomZfactorData, '---po bom zfactord data')
+        let data = [...poBomData, ...poBomZfactorData]
         const groupedData: any = data.reduce((result, currentItem) => {
-            const { geoCode, styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination } = currentItem;
+            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size } = currentItem;
+            const bomGeoCode = destinations.find((v) => v.destination == destination)
+            const {geoCode} =  bomGeoCode 
             const key = `${geoCode}-${styleNumber}-${imCode}-${itemNo}`;
-            
+
             if (!result[key]) {
                 result[key] = {
                     geoCode,
@@ -640,9 +645,40 @@ export class BomService {
                     itemNo,
                     bomQty: 0,
                     destination,
-                    itemId
+                    itemId,
+                    sizeWiseQty: [],
+                    chinaSizes: [],
+                    indonesiaSize : []
                 };
             }
+            if (geoCode == 'APA') {
+                const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
+                if (sizeIndex >= 0) {
+                    result[key]['sizeWiseQty'][sizeIndex].qty += bomQty
+                } else {
+                    result[key].sizeWiseQty.push({ size, qty: bomQty });
+                }
+
+                if (destination == 'China') {
+                    const sizeIndex = result[key]['chinaSizes'].findIndex((v) => v.size === size)
+                    if (sizeIndex >= 0) {
+                        result[key]['chinaSizes'][sizeIndex].qty += bomQty
+                    } else {
+                        result[key].chinaSizes.push({ size, qty: bomQty });
+                    }
+                }
+
+                if(destination == 'Indonesia'){
+                    const sizeIndex = result[key]['indonesiaSize'].findIndex((v) => v.size === size)
+                    if (sizeIndex >= 0) {
+                        result[key]['indonesiaSize'][sizeIndex].qty += bomQty
+                    } else {
+                        result[key].indonesiaSize.push({ size, qty: bomQty });
+                    }
+                }
+            }
+
+
 
 
             result[key].bomQty += bomQty;
@@ -650,36 +686,19 @@ export class BomService {
         }, {});
         const groupedArray: any[] = Object.values(groupedData);
 
-        groupedArray.push()
-
-        // wash care temporary logic
 
 
-        // const clubData = new Map<string, BomProposalModel>()
-        // const construtedProposalData = []
-        // for (const rec of poBomData) {
-
-        // }
-        // const res = []
-        // const ws = XLSX.utils.json_to_sheet(res);
-
-        // // Create a workbook
-        // const wb = XLSX.utils.book_new();
-        // XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
-
-        // // Save the workbook to a buffer
-        // const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
         return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
     }
 
     async getBomExcel(req: BomCreationFiltersReq): Promise<CommonResponseModel> {
-       let query=` SELECT pb.dpom_id, dp.style_number AS style, dp.item AS item, dp.geo_code AS geo_code
+        let query = ` SELECT pb.dpom_id, dp.style_number AS style, dp.item AS item, dp.geo_code AS geo_code
           FROM po_bom pb
             JOIN dpom dp ON dp.id = pb.dpom_id
            GROUP BY pb.dpom_id`
         const records = await this.bomRepo.query(query);
-       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
-      
-      }
-     
+        return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
+
+    }
+
 }

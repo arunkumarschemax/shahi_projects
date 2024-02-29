@@ -2,6 +2,7 @@ import { DownloadOutlined, EyeOutlined } from '@ant-design/icons';
 import { BomProposalReq } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
 import { Button, Card, Checkbox, Col, Row } from 'antd'
+import { table } from 'console';
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 
@@ -16,6 +17,7 @@ export default function GenerateProposal(props: Props) {
   const [pageSize, setPageSize] = useState<number>(null);
   const [page, setPage] = React.useState(1);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const [proposalData, setProposalData] = useState<any>([])
 
   useEffect(() => {
     getAllTrims();
@@ -46,30 +48,191 @@ export default function GenerateProposal(props: Props) {
     bomProposalReq.poLine = props.poLine
     service.generateProposal(bomProposalReq).then((v) => {
       if (v.status) {
+        setProposalData(v.data)
         exportToExcel(v.data)
       }
     })
   }
+
+
   const exportToExcel = (jsonData) => {
-    const headerMapping = {
-      geoCode: 'Destination',
-      styleNumber: 'Style',
-      imcode: 'IM Code',
-      itemNo : 'Item',
-      description : 'Description',
-      bomQty : 'Total Qty'
-      // Add more mappings as needed
-    };
+    // const mergedData = mergeCells(jsonData)
+    // const headerMapping = {
+    //   geoCode: 'Destination',
+    //   styleNumber: 'Style',
+    //   imCode: 'IM Code',
+    //   itemNo: 'Item',
+    //   description: 'Description',
+    //   bomQty: 'Total Qty'
+    //   // Add more mappings as needed
+    // };
 
-    // Extracting keys from the mapping object
-    const keys = Object.keys(headerMapping);
+    // // // Extracting keys from the mapping object
+    // const keys = Object.keys(headerMapping);
 
-    // Creating an array of arrays where the first array contains the header names
-    const data = [keys.map(key => headerMapping[key]), ...jsonData.map(obj => keys.map(key => obj[key]))];
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
-    XLSX.writeFile(wb, "data.xlsx");
+    // // Creating an array of arrays where the first array contains the header names
+    // const data = [keys.map(key => headerMapping[key]), ...mergedData.map(obj => keys.map(key => obj[key]))];
+    // const ws = XLSX.utils.json_to_sheet(data);
+    // const wb = XLSX.utils.book_new();
+    // XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+    // XLSX.writeFile(wb, "data.xlsx");
+    console.log(document.getElementById('excel-table'))
+    const worksheet = XLSX.utils.table_to_sheet(document.getElementById('excel-table'));
+    const workbook = XLSX.utils.book_new();
+    worksheet['!cols'] = [
+     
+      { wch: 20 }, // Width for first column
+      { wch: 20 },// Width for second column
+      { wch: 30 }, // Width for third column
+      { wch: 50 }, // Width for fourth column
+      { wch: 30 }, // Width for fifth column
+      { wch: 20 },  // Width for sixth column
+    ];
+
+    worksheet['!merges'] = [
+      { s: { r: 1, c: 0 }, e: { r: proposalData.length , c: 0 } }, // Merge first two columns
+      { s: { r: 1, c: 1 }, e: { r: proposalData.length , c: 1 } },  // Merge last two columns
+      { s: { r: 1, c: 4 }, e: { r: proposalData.length , c: 4 } },
+      { s: { r: 1, c: 5 }, e: { r: proposalData.length , c: 5 } }
+
+    ];
+
+    const range = XLSX.utils.decode_range(worksheet['!ref']);
+    for (let R = range.s.r; R <= range.e.r; ++R) {
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const cell = worksheet[XLSX.utils.encode_cell({ r: R, c: C })];
+        if (!cell) continue;
+
+        // Add border style
+        const borderStyle = {
+          top: { style: 'thin' },
+          bottom: { style: 'thin' },
+          left: { style: 'thin' },
+          right: { style: 'thin' }
+        };
+        cell.s = { border: borderStyle, alignment: { horizontal: 'center', vertical: 'center' } };
+      }
+    }
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, '-excelSheet1');
+    XLSX.writeFile(workbook, 'table.xlsx');
+
+  }
+
+
+  function htmlTable(data) {
+
+    return (
+      <table style={{display:'none'}} id='excel-table'>
+        
+
+        <tr>
+          <th>Item</th>
+          <th>Style</th>
+          <th>IM Code</th>
+          <th>Description</th>
+          <th>Destination</th>
+          <th>Total Qty</th>
+        </tr>
+
+        {
+          data.map((row, index) => {
+            return <tr key={index}>
+              <td >{row.itemNo !== null ? row.itemNo : ''}</td>
+              <td >{row.styleNumber !== null ? row.styleNumber : ''}</td>
+              <td >{row.imCode !== null ? row.imCode : ''}</td>
+              <td >{row.description !== null ? row.description : ''}</td>
+              <td >{row.geoCode !== null ? row.geoCode : ''}</td>
+              <td>{row.bomQty !== null ? row.bomQty : ''}</td>
+            </tr>
+          })
+        }
+         {data[0]?.sizeWiseQty.length ? <>
+          <tr></tr>
+          <tr></tr>
+          <tr>
+            <th>REGION</th>
+            {
+
+              data[0].sizeWiseQty?.map((h) => {
+                return <th>{h.size}</th>
+              })
+            }
+          </tr>
+          <tr>
+            <td>APA</td>
+            {
+
+              data[0].sizeWiseQty.map((c) => {
+                return <td>{c.qty}</td>
+              })
+            }
+          </tr>
+          <tr></tr>
+          <tr></tr>
+        </>
+
+          : <></>
+        }
+
+        {data[0]?.chinaSizes.length ? <>
+          <tr></tr>
+          <tr></tr>
+          <tr>
+            <th>CHINA INSERT</th>
+            {
+
+              data[0].chinaSizes?.map((h) => {
+                return <th>{h.size}</th>
+              })
+            }
+          </tr>
+          <tr>
+            <td></td>
+            {
+
+              data[0].chinaSizes.map((c) => {
+                return <td>{c.qty}</td>
+              })
+            }
+          </tr>
+          <tr></tr>
+          <tr></tr>
+        </>
+
+          : <></>
+        }
+
+        {data[0]?.indonesiaSize.length ? <>
+          <tr></tr>
+          <tr></tr>
+          <tr>
+            <th>IM#</th>
+            {
+
+              data[0].indonesiaSize?.map((h) => {
+                return <th>{h.size}</th>
+              })
+            }
+          </tr>
+          <tr>
+            <td>574080</td>
+            {
+
+              data[0].indonesiaSize.map((c) => {
+                return <td>{c.qty}</td>
+              })
+            }
+          </tr>
+          <tr></tr>
+          <tr></tr>
+        </>
+
+          : <></>
+        }
+
+      </table >
+    )
   }
   return (
     <Card >
@@ -97,6 +260,9 @@ export default function GenerateProposal(props: Props) {
         </Col>
 
       </Row>
+      {
+        htmlTable(proposalData)
+      }
     </Card>
   )
 }
