@@ -22,6 +22,7 @@ import { AddressRepository } from '../address/address.repo';
 import { AddressEntity } from '../address/address.entity';
 import { DivertEntity } from './entites/divert.entity';
 import { DivertRepository } from './repositories/divert.repository';
+import { PoBomEntity } from '../po-bom/entittes/po-bom.entity';
 
 
 @Module({
@@ -35,7 +36,8 @@ import { DivertRepository } from './repositories/divert.repository';
       PDFFileInfoEntity,
       COLineEntity,
       AddressEntity,
-      DivertEntity
+      DivertEntity,
+      PoBomEntity
     ])],
   controllers: [DpomController],
   providers: [DpomService, AddressService, AddressRepository, ApplicationExceptionHandler, DpomRepository, DpomChildRepository, DpomAdapter, DpomChildAdapter, DpomDifferenceRepository, NikeFileUploadRepository, COLineRepository, DivertRepository]

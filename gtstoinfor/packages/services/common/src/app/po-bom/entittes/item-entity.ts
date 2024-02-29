@@ -44,13 +44,13 @@ export class ItemEntity {
     })
     moq: number
 
-    @Column({
-        type: 'enum',
-        nullable: false,
-        enum: ItemTypeEnum,
-        name: "item_type"
-    })
-    itemType: ItemTypeEnum;
+    // @Column({
+    //     type: 'enum',
+    //     nullable: false,
+    //     enum: ItemTypeEnum,
+    //     name: "item_type"
+    // })
+    // itemType: ItemTypeEnum;
 
 
     @CreateDateColumn({

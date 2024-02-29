@@ -1,4 +1,4 @@
-import { BomCreationFiltersReq, BomExcelreq, BomGenerationReq, BomPrintFilterReq, BomPrintInfoModel, CommonResponseModel, DestinationreqModel, ItemInfoFilterReq, PpmDateFilterRequest, StyleIdReq, StyleNumberReq } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomExcelreq, BomGenerationReq, BomPrintFilterReq, BomPrintInfoModel, BomProposalReq, CommonResponseModel, DestinationreqModel, ItemInfoFilterReq, PpmDateFilterRequest, StyleIdReq, StyleNumberReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 
@@ -59,9 +59,13 @@ export class BomService extends CommonAxiosService {
     }
 
     async saveExcelData(req: any): Promise<CommonResponseModel> {
-        console.log(req, "req")
         return this.axiosPostCall(this.URL + '/saveExcelData', req);
     }
+
+    async generateProposal(req: BomProposalReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/generateProposal", req)
+    }
+
     async getbomExcel(req:BomCreationFiltersReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getbomexcel",req)
     }

@@ -51,6 +51,19 @@ export class BomDataForStyleAndSeasonModel {
     imCode: string;
     itemType: string;
     itemId : number
+    constructor(data?: Partial<BomProposalDataModel>) {
+        Object.assign(this, data);
+    }
+}
+
+export class BomProposalModel{
+    imCode : string
+    item : string 
+    description : string
+    totalQty : number;
+    destination : string;
+    poNumber : string;
+    style : string
 }
 
 export class BomExcelreq {

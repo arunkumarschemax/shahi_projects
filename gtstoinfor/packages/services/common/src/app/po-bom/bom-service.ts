@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
-import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { DataSource, Repository, getManager } from "typeorm";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
@@ -20,17 +20,32 @@ import * as XLSX from 'xlsx';
 import { log } from "winston";
 import { DpomEntity } from "../dpom/entites/dpom.entity";
 import { AppDataSource, AppDataSource2 } from "../app-datasource";
+import { object } from "prop-types";
+import { PoBomRepo } from "./repo/po-bom-repo";
+import { ZFactorsRepo } from "./repo/z-factors-repo";
+import { ItemsRepo } from "./repo/items-repo";
+import { DestinationsRepo } from "./repo/destination-repo";
+import { ZFactorsBomRepo } from "./repo/z-factors-bom-repo";
+import { ZFactorsBomEntity } from "./entittes/z-factors-bom.entity";
+import { ItemEntity } from "./entittes/item-entity";
+
+
 
 
 @Injectable()
 export class BomService {
     constructor(
 
-        private StyleRepo: StyleRepo,
+        private styleRepo: StyleRepo,
         private bomRepo: BomRepo,
         private styleComboRepo: StyleComboRepo,
         private dataSource: DataSource,
         private dpomRepo: DpomRepository,
+        private poBomRepo: PoBomRepo,
+        private zFactorsRepo: ZFactorsRepo,
+        private itemsRepo: ItemsRepo,
+        private destinationsRepo: DestinationsRepo,
+        private zFactorsBomRepo: ZFactorsBomRepo
 
     ) { }
     async createBom(req: StyleDto): Promise<CommonResponseModel> {
@@ -38,16 +53,12 @@ export class BomService {
             const entity = new StyleEntity()
             entity.style = req.style
             entity.season = req.season
-            entity.expNo = req.expNo
             entity.styleName = req.styleName
-            entity.msc = req.msc
-            entity.factoryLo = req.factoryLo
-            entity.status = req.status
+            entity.mscCode = req.msc
 
             let bomEntityArray = []
             for (const bom of req.bomdto) {
                 const bomEntity = new BomEntity()
-                bomEntity.itemName = bom.itemName
                 bomEntity.description = bom.description
                 bomEntity.imCode = bom.imCode
                 bomEntity.itemType = bom.itemType
@@ -67,7 +78,7 @@ export class BomService {
             }
             entity.bomEntity = bomEntityArray
 
-            const save = await this.StyleRepo.save(entity)
+            const save = await this.styleRepo.save(entity)
             if (save) {
                 return new CommonResponseModel(true, 1, 'Created Sucessfully')
             } else {
@@ -83,7 +94,7 @@ export class BomService {
     async getAllStylesData(): Promise<CommonResponseModel> {
         try {
             let stylesArray = []
-            const style = await this.StyleRepo.getStyelsData()
+            const style = await this.styleRepo.getStyelsData()
             if (style.length > 0) {
                 for (const styleDetails of style) {
                     let bomdetailsArray = []
@@ -269,7 +280,7 @@ export class BomService {
 
 
     async getStylesData(): Promise<CommonResponseModel> {
-        const stylesData = await this.StyleRepo.getStyelsData()
+        const stylesData = await this.styleRepo.getStyelsData()
         if (stylesData.length) {
             return new CommonResponseModel(true, 1111, "Date retreived sucessfully", stylesData)
         } else {
@@ -309,23 +320,23 @@ export class BomService {
         const data = await this.dpomRepo.getBomCreationData(req)
         return new CommonResponseModel(true, 11111, "Data retreived sucessfully", data)
     }
-    
+
     async generateBom(req: BomGenerationReq): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource)
         await transactionManager.startTransaction()
         try {
-
             const { poLine, updatedSizes } = req
             const poData = await this.dpomRepo.getPoDataForBomGeneration({ poLine })
+            const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
             const styleDataMap = new Map<string, BomDataForStyleAndSeasonModel[]>()
 
-            function calculateBomQty(poQty:number, moq:number, consumption:number, wastage:number) {
-                const wastageQty  =  (poQty * consumption) * (wastage / 100)
-                const bomQty = (poQty * consumption)  + wastageQty
+            function calculateBomQty(poQty: number, moq: number, consumption: number, wastage: number) {
+                const wastageQty = (poQty * consumption) * (wastage / 100)
+                const bomQty = (poQty * consumption) + wastageQty
                 return bomQty
             }
 
-           
+
             function getUpdatedQty(poLine: string, poQty) {
                 if (updatedSizes.length) {
                     const updatedSize = updatedSizes.find((u) => u.poLine == poLine)
@@ -337,9 +348,10 @@ export class BomService {
             }
 
             const poBomEntities: PoBomEntity[] = []
-            console.log(poData.length,' po data size')
+            console.log(poData, '-------- po data -------------')
+            console.log(destinations)
             for (const po of poData) {
-                let styleData = []
+                let styleData: BomDataForStyleAndSeasonModel[] = []
                 if (!styleDataMap.has(po.styleNumber)) {
                     styleData = await this.bomRepo.getBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year })
                     styleDataMap.set(po.styleNumber, styleData)
@@ -347,8 +359,13 @@ export class BomService {
                     styleData = styleDataMap.get(po.styleNumber)
                 }
                 // console.log(po.styleNumber,styleData.length,' style size')
+                console.log(styleData.length, 'style data -----')
+                if (!styleData.length) {
+                    return new CommonResponseModel(false, 11111, "Style data not found")
+                }
+                
                 for (const styleBom of styleData) {
-                    
+                    console.log(styleBom)
                     const consumptions = await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) ? await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) : { itemId: 0, wastage: 3, moq: 100, consumption: 1 }
                     // console.log(consumptions,styleBom.itemId)
                     const { consumption, moq, wastage } = consumptions
@@ -363,18 +380,51 @@ export class BomService {
                     poBomEntity.wastage = wastage ? wastage : 0
                     poBomEntity.bomQty = isNaN(bomQty) ? 0 : bomQty
                     poBomEntity.poQty = po.qty
-                    
                     const dpom = new DpomEntity()
                     dpom.id = po.id
-                    poBomEntity.dpom = dpom
+                    poBomEntity.dpomId = po.id
                     poBomEntities.push(poBomEntity)
+                    const zfactors = await this.zFactorsBomRepo.getZfactorBomValues(styleBom.itemId)
+                    console.log(zfactors)
+                    for (const zfactor of zfactors) {
+                        if (styleBom.imCode == zfactor.actualIm && styleBom.itemId == zfactor.itemId) {
+                            const bomGeoCode = destinations.find((v) => v.destination == po.destination) 
+                            console.log(bomGeoCode ,'----geo code-----')
+                            console.log(po.destination,'destination')
+                            if (bomGeoCode?.geoCode == zfactor.geoCode || po.destination == zfactor.destination) {
+                                const zfactorID = new ZFactorsBomEntity()
+                                zfactorID.id = zfactor.id
+                                poBomEntity.zFactorBom = zfactor
+                                poBomEntity.bom = null
+                                console.log(poBomEntity)
+                            }
+                        }
+                    }
                     await transactionManager.getRepository(PoBomEntity).insert(poBomEntity)
+
+
                 }
+                const zfactorsToAdd = await this.zFactorsBomRepo.getZfactorBomValuesToAdd()
+                for (const ab of zfactorsToAdd) {
+                    if (po.destination == ab.destination) {
+                        const poBomExtraITem = new PoBomEntity()
+                        poBomExtraITem.consumption = 1
+                        poBomExtraITem.moq = 1
+                        poBomExtraITem.wastage = 1
+                        poBomExtraITem.bomQty = po.qty
+                        poBomExtraITem.poQty = po.qty
+                        const dpom = new DpomEntity()
+                        dpom.id = po.id
+                        poBomExtraITem.dpomId = po.id
+                        const zfactorID = new ZFactorsBomEntity()
+                        zfactorID.id = ab.id
+                        poBomExtraITem.zFactorBom = zfactorID
+                        await transactionManager.getRepository(PoBomEntity).insert(poBomExtraITem)
+                    }
+                }
+
             }
-            for (const poLine of req.poLine) {
-                await transactionManager.getRepository(DpomEntity).update({ poAndLine: poLine }, { isBomGenerated: true })
-            }
-            
+
             await transactionManager.completeTransaction()
             return new CommonResponseModel(true, 11111, "Data retreived sucessfully")
 
@@ -386,24 +436,22 @@ export class BomService {
 
     async saveExcelData(val): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
-    
+        const detailedArray:StyleDto[]=[]
+        const map = new Map<string, Map<string, StyleComboDto[]>>()
+        const styleMap = new Map<string,StyleDto>()
+        const bommap = new Map<string,Map<string,BomDto>>()
         try {
-            await transactionManager.startTransaction();
-    
+            // await transactionManager.startTransaction()
+            const itemsData = await this.itemsRepo.find({ select: ['itemId', 'item'] })
             const jsonData: any[] = await this.convertExcelToJson(val);
             const headerRow = jsonData[0];
-    
+
             if (!jsonData.length) {
                 return new CommonResponseModel(true, 1110, 'No data found in excel');
             }
-    
-            const data = await this.updatePath(val.path, val.filename, transactionManager);
-    
-            const styleRepository = transactionManager.getRepository(StyleEntity);
-            const bomRepository = transactionManager.getRepository(BomEntity);
-            const styleComboRepository = transactionManager.getRepository(StyleComboEntity);
-    
-            const jsonArray: any[] = jsonData.slice(1).map((row, arrInd) => {
+            // console.log(jsonData)
+            // const data = await this.updatePath(val.path, val.filename, transactionManager);
+            const jsonArray: any = jsonData.slice(1).map((row, arrInd) => {
                 const obj: any = {};
                 headerRow.forEach((header: any, index: any) => {
                     let headerWithoutSpace = header
@@ -415,66 +463,112 @@ export class BomService {
                                 : word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
                         )
                         .join('');
-    
+
                     obj[headerWithoutSpace] = row[index];
+
                 });
                 return obj;
             });
-    
-            for (const record of jsonArray) {
-                if (record.status !== 'K') {
-                    const styleEntity = styleRepository.create({
-                        style: record.styleNbr,
-                        styleName: record.styleNm,
-                        season: record.seasonCd + record.seasonYr.slice(-2),
-                        // now need to show seacon code  , seasonyear seperately 
-                        expNo: record.expNo,
-                        msc: record.mscLevel1 + record.mscLevel2 + record.mscLevel3,
-                        gender: record.mscLevel1,
-                        factoryLo: record.factory,
-                        status: record.status,
-                        bomEntity: [],
-                        styleComboEntity: [] 
-                    });
-    
-                    const bomEntity = bomRepository.create({
-                        itemName: record.itemType1,
-                        description: record.description,
-                        itemId:record,
-                        imCode:record,
-                        itemType:record.itemType2,
-                        use: record.use,
-                        
-                    });
-                    bomEntity.styleEnityy = styleEntity; 
-                    styleEntity.bomEntity.push(bomEntity); 
-                    // Create StyleComboEntity
-                    const styleComboEntity = styleComboRepository.create({
-                        // bom_id:record.bomId,
-                        combination: record.combination,
-                        primaryColor: record.prmry,
-                        secondaryColor: record.scndy,
-                        logoColor: record.logo,
-                    });
-                    styleComboEntity.styleEntity = styleEntity; 
-                    styleEntity.styleComboEntity.push(styleComboEntity); 
-    
-                    // Save everything
-                    await styleRepository.save(styleEntity);
+
+            const styleMap = new Map<string, StyleEntity>()
+            const bomMap = new Map<string, BomEntity>()
+            for (const rec of jsonArray) {
+                if (!styleMap.has(rec.styleNbr)) {
+                    const styleEntityObj = new StyleEntity()
+                    styleEntityObj.styleName = rec.styleNm;
+                    styleEntityObj.mscLevelOne = rec.mscLevel1
+                    styleEntityObj.mscLevelTwo = rec.mscLevel2
+                    styleEntityObj.mscLevelThree = rec.mscLevel3
+                    styleEntityObj.mscCode = rec.mscCode
+                    styleEntityObj.season = rec.seasonCd
+                    styleEntityObj.style = rec.styleNbr
+                    styleEntityObj.year = rec.seasonYr
+                    styleEntityObj.bomEntity = []
+                    styleMap.set(rec.styleNbr, styleEntityObj)
                 }
+
+                if (!bomMap.has(rec.styleNbr + rec.itemNbr)) {
+                    const bomEntityObj = new BomEntity()
+                    bomEntityObj.imCode = rec.itemNbr;
+                    bomEntityObj.itemType = rec.itemType1;
+                    bomEntityObj.use = rec.use;
+                    bomEntityObj.qty = rec.qty
+                    bomEntityObj.uom = rec.uom
+                    bomEntityObj.description = rec.description
+                    bomEntityObj.itemTypeOne = rec.itemType1
+                    let itemName = rec.itemType2
+                    if (rec.itemNbr == "445591") {
+                        itemName = 'Wash Care Label'
+                    }
+                    if (rec.description.includes("CONTENT INFORMATION") || rec.use.includes("CARE INSTRUCTIONS")) {
+                        itemName = "Wash Care Label"
+                    }
+                    if (rec.description.toLowerCase().includes("JOKERTAG")) {
+                        itemName = "JOKER TAG"
+                    }
+                    if (rec.itemNbr == "1188") {
+                        itemName = "EMB Threads"
+                    }
+                    if (rec.description.toLowerCase().includes("size strip")) {
+                        itemName = "Size Strip"
+                    }
+                    if (rec.itemNbr == "10877" || rec.itemNbr == "1029386") {
+                        itemName = "Twill Tape-shoulder"
+                    }
+                    if (rec.itemNbr == "itemNbr") {
+                        itemName = "Main Woven labels"
+                    }
+                    if (rec.description.includes("SWOOSH HT")) {
+                        itemName = "Swoosh HT label"
+                    }
+                    if (rec.use.includes("BACK NECK TAPE") || rec.use.includes("HERRINGBONE TAPE")) {
+                        itemName = "Neck Tape"
+                    }
+                    if (rec.description.includes("JOCKTAGE")) {
+                        itemName = "Jocktage Label"
+                    }
+                    if (rec.description.includes("1/4 FLAT RUBBER")) {
+                        itemName = "Mobilon Tape"
+                    } if (rec.description.includes("NIKE I.D. LABEL")) {
+                        itemName = "Poid Label"
+                    }
+                    if (rec.description.includes("SPARE BUTTON LABEL")) {
+                        itemName = "Spare button label"
+                    }
+
+                    bomEntityObj.itemName = itemName
+                    // bomEntityObj.styleEnityy = style
+                    const itemID = itemsData.find((i) => i.item == rec.itemType2) ? itemsData.find((i) => i.item == rec.itemType2).itemId : 29
+                    const item = new ItemEntity()
+                    item.itemId = itemID
+                    bomEntityObj.itemEntity = item
+                    bomEntityObj.styleComboEntity = []
+                    bomMap.set(rec.styleNbr + rec.itemNbr, bomEntityObj)
+                    // console.log(bomEntityObj)
+                }
+                const styleComboEntityObj = new StyleComboEntity()
+                styleComboEntityObj.combination = rec.styleCwCd
+                styleComboEntityObj.logoColor = rec.logo
+                styleComboEntityObj.primaryColor = rec.prmry
+                styleComboEntityObj.secondaryColor = rec.scndy
+                styleComboEntityObj.itemColor = rec?.itemColorCd + " " + rec.itemColorNm
+
+                // console.log(bomMap.get(rec.styleNm + rec.itemNbr))
+                bomMap.get(rec.styleNbr + rec.itemNbr).styleComboEntity.push(styleComboEntityObj)
+                styleMap.get(rec.styleNbr).bomEntity.push(bomMap.get(rec.styleNbr + rec.itemNbr))
             }
-    
-            await transactionManager.completeTransaction();
-            return new CommonResponseModel(true, 1111, 'Data saved successfully');
+            for (const obj of styleMap.values()) {
+                console.log(obj)
+                await this.styleRepo.save(obj)
+            }
+            return new CommonResponseModel(true, 1111, 'Data saved sucessfully', styleMap.keys());
         } catch (err) {
-            console.error(err);
-            await transactionManager.rollbackTransaction();
-            return new CommonResponseModel(false, 1112, 'Error occurred while saving data');
-        } finally {
-            await transactionManager.releaseTransaction();
+            console.log(err)
+            // await transactionManager.releaseTransaction()
+            throw ("Error Occured")
         }
     }
- 
+
     async convertExcelToJson(file): Promise<any[]> {
         return new Promise((resolve, reject) => {
             try {
@@ -527,9 +621,55 @@ export class BomService {
 
     }
 
-    async generateProposal(req: BomGenerationReq) : Promise<CommonResponseModel>{
-        
-        return new CommonResponseModel(true, 11, '');
+    async generateProposal(req: BomProposalReq): Promise<CommonResponseModel> {
+        const poBomData = await this.poBomRepo.getProposalsData(req)
+        const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
+        let data =[...poBomData,...poBomZfactorData]
+
+        const groupedData: any = data.reduce((result, currentItem) => {
+            const { geoCode, styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination } = currentItem;
+            const key = `${geoCode}-${styleNumber}-${imCode}-${itemNo}`;
+            
+            if (!result[key]) {
+                result[key] = {
+                    geoCode,
+                    styleNumber,
+                    description,
+                    use,
+                    imCode,
+                    itemNo,
+                    bomQty: 0,
+                    destination,
+                    itemId
+                };
+            }
+
+
+            result[key].bomQty += bomQty;
+            return result;
+        }, {});
+        const groupedArray: any[] = Object.values(groupedData);
+
+        groupedArray.push()
+
+        // wash care temporary logic
+
+
+        // const clubData = new Map<string, BomProposalModel>()
+        // const construtedProposalData = []
+        // for (const rec of poBomData) {
+
+        // }
+        // const res = []
+        // const ws = XLSX.utils.json_to_sheet(res);
+
+        // // Create a workbook
+        // const wb = XLSX.utils.book_new();
+        // XLSX.utils.book_append_sheet(wb, ws, 'Sheet 1');
+
+        // // Save the workbook to a buffer
+        // const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'buffer' });
+        return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
     }
 
     async getBomExcel(req: BomCreationFiltersReq): Promise<CommonResponseModel> {

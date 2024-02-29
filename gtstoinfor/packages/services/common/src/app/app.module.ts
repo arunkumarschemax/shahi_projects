@@ -17,6 +17,11 @@ import { FobModule } from './fob-price-list/fob.module';
 import { FabricContentModule } from './fabric-content/fabric-content.module';
 import { AddressModule } from './address/address.module';
 import { bomModule } from './po-bom/bom-module';
+import { StyleEntity } from './po-bom/entittes/style-entity';
+import { BomEntity } from './po-bom/entittes/bom-entity';
+import { StyleComboEntity } from './po-bom/entittes/style-combo-entity';
+import { ItemEntity } from './po-bom/entittes/item-entity';
+import { PoBomEntity } from './po-bom/entittes/po-bom.entity';
 
 
 @Module({
@@ -32,10 +37,11 @@ import { bomModule } from './po-bom/bom-module';
       database: appConfig.database.dbName,
       autoLoadEntities: true,
       synchronize: false,
-      logging: true,
+      logging: false,
       extra: {
         connectionLimit: 20
-      }
+      },
+      // entities:[StyleEntity,BomEntity,StyleComboEntity,ItemEntity,PoBomEntity]
     }),
     bomModule,
     FactoriesModule,

@@ -4,6 +4,7 @@ import { StyleEntity } from "./style-entity";
 import { StyleComboEntity } from "./style-combo-entity";
 import { DpomEntity } from "../../dpom/entites/dpom.entity";
 import { BomEntity } from "./bom-entity";
+import { ZFactorsBomEntity } from "./z-factors-bom.entity";
 
 @Entity('po_bom')
 export class PoBomEntity {
@@ -36,6 +37,11 @@ export class PoBomEntity {
         name: 'moq'
     })
     moq: number;
+
+    @Column('int', {
+        name: 'dpom_id'
+    })
+    dpomId: number;
 
     @CreateDateColumn({
         name: 'created_at'
@@ -78,12 +84,16 @@ export class PoBomEntity {
     // @JoinColumn({ name: 'style_id' })
     // styleEntityy: StyleEntity
 
-    @ManyToOne(type => DpomEntity, dpom => dpom.poBom)
-    @JoinColumn({ name: 'dpom_id' })
-    dpom: DpomEntity
+    // @ManyToOne(type => DpomEntity, dpom => dpom.poBom)
+    // @JoinColumn({ name: 'dpom_id' })
+    // dpom: DpomEntity
 
     @ManyToOne(type => BomEntity, dpom => dpom.poBom)
     @JoinColumn({ name: 'bom_id' })
     bom: BomEntity
+
+    @ManyToOne(type => ZFactorsBomEntity, zfactorBom => zfactorBom.poBom)
+    @JoinColumn({ name: 'zfactor_bom_id' })
+    zFactorBom: ZFactorsBomEntity
 
 }
