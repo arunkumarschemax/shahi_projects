@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
-import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomGenerationReq, BomProposalDataModel, BomProposalModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { DataSource, Repository, getManager } from "typeorm";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
@@ -20,13 +20,16 @@ import * as XLSX from 'xlsx';
 import { log } from "winston";
 import { DpomEntity } from "../dpom/entites/dpom.entity";
 import { AppDataSource, AppDataSource2 } from "../app-datasource";
+import { object } from "prop-types";
 import { PoBomRepo } from "./repo/po-bom-repo";
 import { ZFactorsRepo } from "./repo/z-factors-repo";
 import { ItemsRepo } from "./repo/items-repo";
-import { ItemEntity } from "./entittes/item-entity";
 import { DestinationsRepo } from "./repo/destination-repo";
 import { ZFactorsBomRepo } from "./repo/z-factors-bom-repo";
 import { ZFactorsBomEntity } from "./entittes/z-factors-bom.entity";
+import { ItemEntity } from "./entittes/item-entity";
+
+
 
 
 @Injectable()
@@ -432,7 +435,11 @@ export class BomService {
     }
 
     async saveExcelData(val): Promise<CommonResponseModel> {
-        // const transactionManager = new GenericTransactionManager(this.dataSource)
+        const transactionManager = new GenericTransactionManager(this.dataSource);
+        const detailedArray:StyleDto[]=[]
+        const map = new Map<string, Map<string, StyleComboDto[]>>()
+        const styleMap = new Map<string,StyleDto>()
+        const bommap = new Map<string,Map<string,BomDto>>()
         try {
             // await transactionManager.startTransaction()
             const itemsData = await this.itemsRepo.find({ select: ['itemId', 'item'] })
@@ -616,10 +623,10 @@ export class BomService {
 
     async generateProposal(req: BomProposalReq): Promise<CommonResponseModel> {
         const poBomData = await this.poBomRepo.getProposalsData(req)
+        const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
+        let data =[...poBomData,...poBomZfactorData]
 
-
-
-        const groupedData: any = poBomData.reduce((result, currentItem) => {
+        const groupedData: any = data.reduce((result, currentItem) => {
             const { geoCode, styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination } = currentItem;
             const key = `${geoCode}-${styleNumber}-${imCode}-${itemNo}`;
             
@@ -670,9 +677,30 @@ export class BomService {
           FROM po_bom pb
             JOIN dpom dp ON dp.id = pb.dpom_id
            GROUP BY pb.dpom_id`
+           if (req?.style) {
+            query += ` WHERE dp.style = '${req.style}' GROUP BY dp.style`
+        }
         const records = await this.bomRepo.query(query);
-       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
+       return new CommonResponseModel(true, 12345, "Data Retrieved Successfully", records)
       
       }
-     
+      async getBom(req?: BomExcelreq): Promise<CommonResponseModel> {
+        console.log(req,"req--------------------------")
+        let query = `SELECT pb.id ,pb.bom_qty,b.im_code FROM po_bom pb 
+        LEFT JOIN bom b ON b.id = pb.bom_id
+        LEFT JOIN dpom d ON d.id = pb.dpom_id `
+        if (req?.style) {
+            query += ` WHERE d.style_number = '${req.style}'`
+        }
+        const records = await this.bomRepo.query(query);
+      
+          return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
+      
+      }
 }
+
+
+
+
+
+

@@ -1,28 +1,28 @@
-export class BomCreationFiltersReq {
-    style: string[]
-    item: string[]
-    geoCode: string[]
-    fromDate: any
-    toDate: any
-    poLine: string[]
+export class BomCreationFiltersReq{
+    style : string[]
+    item : string[]
+    geoCode: string []
+    fromDate : any
+    toDate : any
+    poLine : string []
 }
 
 export class UpdatedSizes {
-    poLine: string;
-    size: string;
-    qty: number;
+    poLine : string;
+    size : string;
+    qty : number;
 }
 
-export class UpdatedConsumptions {
-    itemId: number;
-    wastage: number;
-    moq: number;
-    consumption: number
+export class UpdatedConsumptions{
+    itemId : number;
+    wastage : number;
+    moq : number;
+    consumption : number
 }
 
 export class BomGenerationReq {
-    poLine: string[]
-    updatedSizes: UpdatedSizes[]
+    poLine : string[]
+    updatedSizes : UpdatedSizes[]
     updatedConsumptions: UpdatedConsumptions[]
 
 }
@@ -50,14 +50,21 @@ export class BomDataForStyleAndSeasonModel {
     description: string;
     imCode: string;
     itemType: string;
-    itemId: number
+    itemId : number
+    constructor(data?: Partial<BomProposalDataModel>) {
+        Object.assign(this, data);
+    }
 }
 
-export class BomProposalReq {
-    poLine: string[]
-    itemId: number[]
+export class BomProposalModel{
+    imCode : string
+    item : string 
+    description : string
+    totalQty : number;
+    destination : string;
+    poNumber : string;
+    style : string
 }
-
 export class BomProposalDataModel{
     id: number;
     poQty: number;
@@ -83,12 +90,17 @@ export class BomProposalDataModel{
     }
 }
 
-export class BomProposalModel{
-    imCode : string
-    item : string 
-    description : string
-    totalQty : number;
-    destination : string;
-    poNumber : string;
-    style : string
+export class BomExcelreq {
+    style?: string;
+    bomId?: number;
+    itemName?: string;
+    description?: string;
+    imCode?: string;
+    itemType?: string;
+    itemId?: number;
+    pbId?:number
+}
+export class BomProposalReq {
+    poLine: string[]
+    itemId: number[]
 }
