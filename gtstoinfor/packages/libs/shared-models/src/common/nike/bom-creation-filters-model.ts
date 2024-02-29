@@ -52,3 +52,14 @@ export class BomDataForStyleAndSeasonModel {
     itemType: string;
     itemId : number
 }
+
+export class BomExcelreq {
+    style?: string;
+    bomId?: number;
+    itemName?: string;
+    description?: string;
+    imCode?: string;
+    itemType?: string;
+    itemId?: number;
+    pbId?:number
+}

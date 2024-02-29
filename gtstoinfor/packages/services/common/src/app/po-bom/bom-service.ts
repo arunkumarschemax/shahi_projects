@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
-import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomGenerationReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { DataSource, Repository, getManager } from "typeorm";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
@@ -537,9 +537,30 @@ export class BomService {
           FROM po_bom pb
             JOIN dpom dp ON dp.id = pb.dpom_id
            GROUP BY pb.dpom_id`
+           if (req?.style) {
+            query += ` WHERE dp.style = '${req.style}' GROUP BY dp.style`
+        }
         const records = await this.bomRepo.query(query);
-       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
+       return new CommonResponseModel(true, 12345, "Data Retrieved Successfully", records)
       
       }
-     
+      async getBom(req?: BomExcelreq): Promise<CommonResponseModel> {
+        console.log(req,"req--------------------------")
+        let query = `SELECT pb.id ,pb.bom_qty,b.im_code FROM po_bom pb 
+        LEFT JOIN bom b ON b.id = pb.bom_id
+        LEFT JOIN dpom d ON d.id = pb.dpom_id `
+        if (req?.style) {
+            query += ` WHERE d.style_number = '${req.style}'`
+        }
+        const records = await this.bomRepo.query(query);
+      
+          return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
+      
+      }
 }
+
+
+
+
+
+
