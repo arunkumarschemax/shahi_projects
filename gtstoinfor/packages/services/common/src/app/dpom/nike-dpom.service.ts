@@ -66,8 +66,7 @@ export class DpomService {
             },
         });
     }
-
-    //for email integration
+    
     private logger = winston.createLogger({
         level: 'info',
         format: winston.format.json(),
@@ -76,7 +75,7 @@ export class DpomService {
             new winston.transports.File({ filename: 'email-service.log' }),
         ],
     });
-
+  
     async getOctaToken() {
         const payload = { 'grant_type': 'password', 'scope': 'iam.okta.factoryaffiliations.read iam.okta.factorygroups.read openid legacy_username email', 'username': 'prakash.iyengar@shahi.co.in', 'password': 'January@123' }
         const headers = {
@@ -2878,30 +2877,31 @@ export class DpomService {
         }
     }
 
-    async updateBomItems(req: BomItemReq[]): Promise<CommonResponseModel> {
-        let totalAffected = 0;
-    
-        for (const rec of req) {
-            if (rec.itemNo === null || rec.itemNo === undefined) {
-                return new CommonResponseModel(false, 0, 'Please enter a value in the item box');
-            }
-    
-            const updateStatus = await this.dataSource.getRepository(DpomEntity).update(
-                { id: Number(rec.id) },
-                { bomItem: rec.itemNo }
-            );
-    
-            totalAffected += updateStatus.affected || 0;
+async updateBomItems(req: BomItemReq): Promise<CommonResponseModel> {
+    try {
+        if (req.itemNo === undefined) {
+            return new CommonResponseModel(false, 0, 'Invalid itemNo');
         }
-    
-        if (totalAffected > 0) {
-            return new CommonResponseModel(true, totalAffected, 'Items Updated');
+
+        const query = `
+            UPDATE dpom
+            SET bom_item = '${req.itemNo}'
+            WHERE id IN (${req.id});
+        `;
+        const result = await this.dpomRepository.query(query, [req.itemNo, req.id]);
+
+        const rowsAffected = result.affectedRows;
+
+        if (rowsAffected > 0) {
+            return new CommonResponseModel(true, rowsAffected, 'Data updated successfully');
         } else {
-            return new CommonResponseModel(false, 0, 'No items were updated');
+            return new CommonResponseModel(false, 0, 'No data found to update');
         }
+    } catch (error) {
+        console.error('Error updating BOM items:', error.message || error);
+        throw new CommonResponseModel(false, 0, 'Error updating BOM items');
     }
-    
-    
+}
 
 }
 
