@@ -199,6 +199,7 @@ export const BomExcelDownload = () => {
                             <Select
                                 showSearch
                                 placeholder="Select Style"
+                                allowClear
                             >
                                 {
                                     style?.map((inc: any) => {
@@ -214,6 +215,7 @@ export const BomExcelDownload = () => {
                             <Select
                                 showSearch
                                 placeholder="Select Geo Code"
+                                allowClear
                             >
                                 {
                                     geoCode?.map((inc: any) => {
@@ -248,6 +250,7 @@ export const BomExcelDownload = () => {
                 rowSelection={rowSelection}
                 rowKey={record => record.dpom_id}
                 columns={columns} dataSource={data} size='small'
+                bordered
                 pagination={{
                     pageSize: 100,
                     onChange(current, pageSize) {

@@ -696,8 +696,9 @@ export class BomService {
     
     async getStyle(): Promise<CommonResponseModel> {
         const query = ` 	
-        SELECT s.id as id, s.style AS style
-                  FROM styles s`;
+        SELECT dp.id, dp.style_number AS style
+          FROM dpom dp
+          GROUP BY dp.style_number;`;
 
         const data = await this.bomRepo.query(query)
         if (data.length) {
