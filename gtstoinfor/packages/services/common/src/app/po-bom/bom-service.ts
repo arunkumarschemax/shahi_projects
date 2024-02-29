@@ -683,8 +683,6 @@ export class BomService {
 
     }
 
-
-
     async getBom(req?: any): Promise<CommonResponseModel> {
         console.log(req, "req--------------------------")
         const query = `SELECT pb.bom_id ,pb.bom_qty,b.im_code FROM po_bom pb
@@ -693,6 +691,33 @@ export class BomService {
         const records = await this.bomRepo.query(query);
         return new CommonResponseModel(true ,65486,"Data Retrieved Successfully",records)
 
+    }
+
+    
+    async getStyle(): Promise<CommonResponseModel> {
+        const query = ` 	
+        SELECT s.id as id, s.style AS style
+                  FROM styles s`;
+
+        const data = await this.bomRepo.query(query)
+        if (data.length) {
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'error')
+        }
+    }
+
+    async getGeoCode(): Promise<CommonResponseModel> {
+        const query = ` SELECT dp.id AS id, dp.geo_code AS geoCode
+        FROM dpom dp
+        GROUP BY dp.geo_code`;
+
+        const data = await this.bomRepo.query(query)
+        if (data.length) {
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'error')
+        }
     }
 }
 

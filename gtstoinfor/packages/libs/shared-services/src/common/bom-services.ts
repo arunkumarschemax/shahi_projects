@@ -72,4 +72,12 @@ export class BomService extends CommonAxiosService {
     async getbom(req: number[]): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getbom", req)
     }
+
+    async getStyle(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getStyle")
+    }
+
+    async getGeoCode(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getGeoCode")
+    }
 }

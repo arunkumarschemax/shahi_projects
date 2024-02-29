@@ -1,20 +1,25 @@
-import { FileExcelFilled } from '@ant-design/icons';
+import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { BomCreationFiltersReq, BomExcelreq } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
-import { Alert, Button, Card, Row, Table } from 'antd';
+import { Alert, Button, Card, Form, Row, Select, Table } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AlertMessages } from './../../common/common-functions/alert-messages';
+import { Col } from 'antd/lib';
 
 export const BomExcelDownload = () => {
+    const [form] = Form.useForm()
+    const { Option } = Select;
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState<number>(10);
     const [data, setData] = useState<any[]>([]);
     const [excelData, setExcelData] = useState<any[]>([]);
     const Service = new BomService();
     const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
-
+    const [style, setStyle] = useState<any[]>([]); 
+    const [geoCode, setGeoCode] = useState<any[]>([]); 
+    
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         setSelectedRowKeys(newSelectedRowKeys);
     };
@@ -22,19 +27,49 @@ export const BomExcelDownload = () => {
 
     useEffect(() => {
         getBomExcel();
+        getGeoCode();
+        getStyle();
     }, []);
 
     const getBomExcel = (value?: any) => {
         const req = new BomCreationFiltersReq();
+        if (form.getFieldValue('style') != undefined) {
+            req.style = form.getFieldValue('style')
+        }
+        if (form.getFieldValue('geo_code') != undefined) {
+            req.geoCode = form.getFieldValue('geo_code')
+        }
         Service.getbomExcel(req).then(res => {
             if (res.status) {
                 setData(res.data);
+             
             } else {
-                setData([])
+                setData([]);
+                
+
             }
         }).catch(err => console.log(err.message));
     }
 
+
+
+    const getStyle = () => {
+        Service.getStyle().then(res => {
+            if (res.status) {
+                setStyle(res.data)
+            }
+        })
+    }
+
+    const getGeoCode = () => {
+        Service.getGeoCode().then(res => {
+            if (res.status) {
+                setGeoCode(res.data)
+            }
+        })
+    }
+
+    
     // const getBom = (selectedRowKeys)=>{
     //     const selectedRecords = data.filter(record => selectedRowKeys.includes(record));
     //         const updateRequests = selectedRecords.map((record) => {
@@ -96,6 +131,11 @@ export const BomExcelDownload = () => {
         }).catch(err => console.log(err.message))
     }
 
+    const onReset = () => {
+        form.resetFields();
+        getBomExcel()
+    }
+
     const columns: any[] = [
         {
             title: 'S No',
@@ -151,6 +191,49 @@ export const BomExcelDownload = () => {
         <Card title='Style BOM ' extra={
             <span style={{ color: 'white' }} > </span>
         }>
+            <Form form={form} layout='vertical'>
+                    <Row gutter={24}>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+                        <Col xs={{ span: 22 }} sm={{ span: 22 }} md={{ span: 11 }} lg={{ span: 6 }} xl={{ span: 5 }} >
+                            <Form.Item name='style' label='Style'>
+                            <Select
+                                showSearch
+                                placeholder="Select Style"
+                            >
+                                {
+                                    style?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.style}>{inc.style}</Option>
+                                    })
+                                }
+                            </Select>
+                            </Form.Item>
+                        </Col>
+                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
+                        <Col xs={{ span: 22 }} sm={{ span: 22 }} md={{ span: 11 }} lg={{ span: 6 }} xl={{ span: 5 }} >
+                            <Form.Item name='geo_code' label='Geo Code'>
+                            <Select
+                                showSearch
+                                placeholder="Select Geo Code"
+                            >
+                                {
+                                    geoCode?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
+                                    })
+                                }
+                            </Select>
+                            </Form.Item>
+                        </Col>
+                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
+                        <Col>
+                            <Button type='primary' onClick={getBomExcel} style={{ marginTop: '22px',backgroundColor:"green" }} icon={<SearchOutlined/>}>Search</Button>
+                        </Col>
+                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
+                        <Col >
+                            <Button onClick={onReset} type='primary' icon={<UndoOutlined />} style={{ marginTop: '22px',backgroundColor:"red" }}>Reset</Button>
+                        </Col>
+                    </Row>
+                </Form>
+            
             <Row justify={'end'}>
                 <Button type="default"
                     style={{ color: "green" }}

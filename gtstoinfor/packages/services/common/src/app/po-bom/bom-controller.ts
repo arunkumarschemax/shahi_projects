@@ -216,4 +216,22 @@ export class BomController {
         }
     }
 
+
+    @Post('/getStyle')
+    async getStyle(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.getStyle()
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }    
+
+    @Post('/getGeoCode')
+    async getGeoCode(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.getGeoCode()
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }   
 }
