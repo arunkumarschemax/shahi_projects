@@ -1,9 +1,12 @@
 import { BomInfo, ItemInfoFilterReq } from "@project-management-system/shared-models";
 import { BomService } from "@project-management-system/shared-services";
 import { Button, Card } from "antd"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import ReactHTMLTableToExcel from 'react-html-table-to-excel';
+import XLSX from 'xlsx';
 
 export const getCssFromComponent = (fromDoc, toDoc) => {
+    
     Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
       if (styleSheet.cssRules) {
         const newStyleElement = toDoc.createElement("style");
@@ -24,9 +27,56 @@ export const WasCarelabel = (props:washCareprops) =>{
     const [vCode, setVCode] = useState('')
     const [sizeData, setSizeData] = useState<any>([])
     const [gender, setGender] = useState<boolean>(false)
+    const [dataInfo, setDataInfo] = useState<any[]>([])
     const  bomService  = new BomService()
     let grandTotal = 0
     let chinaGgrandTotal =0
+    let existingItem:any =[]
+    const tableRef = useRef(null);
+
+
+    const htmlTableToExcel = () =>{
+        console.log('88888')
+        // tableToExcel('myTable', 'Sheet1');
+    }
+  
+    const  exportToExcel = () =>{
+        const table = document.getElementById('table-id'); // Get the table element
+        const ws = XLSX.utils.table_to_sheet(table); // Convert table to worksheet
+        const wb = XLSX.utils.book_new(); // Create a new workbook
+        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1'); // Add the worksheet to the workbook
+        XLSX.writeFile(wb, 'table.xlsx'); // Save the workbook as an Excel file
+      };
+
+
+
+    function restructureData(originalData) {
+        return originalData.reduce((acc, curr) => {
+            const existingItem = acc.find(item => item.styleNumber === curr.styleNumber);
+            if (existingItem) {
+                existingItem.bomData.push({
+                    description: curr.description,
+                    imCode: curr.imCode
+                });
+            } else {
+                acc.push({
+                    bomQty: curr.bomQty,
+                    styleNumber: curr.styleNumber,
+                    geoCode: curr.geoCode,
+                    itemNo: curr.itemNo,
+                    bomData: [{
+                        description: curr.description,
+                        imCode: curr.imCode
+                    }]
+                });
+            }
+            return acc;
+        }, []);
+    }
+ 
+
+    const data = restructureData(props.bomInfo);
+    console.log(data)
     
     const sizeWiseDataForFormutpleOgac =() =>{
         bomService.getPoLineDataForCihinaInserttag({fromDate:'2024-01-03',toDate:'2024-01-05',region:'EMEA',item:'009L'}).then(res =>{
@@ -180,12 +230,26 @@ export const WasCarelabel = (props:washCareprops) =>{
     }
    console.log(bomInfo)
 
+
+
+
+
+
     return (
         <div  id='print'>
             <Card title={'WashCare Label'} 
-            extra={<span><Button onClick={handlePrint}>Print</Button></span>}
+            extra={<><span><Button onClick={handlePrint}>Print</Button></span><span>
+             <ReactHTMLTableToExcel
+                id="test-table-xls-button"
+                className="download-table-xls-button"
+                table="table-to-xls"
+                filename="tablexls"
+                sheet="sheet 1"
+                buttonText="Excel"
+      />
+            </span></>}
             >
-                <div>
+                {/* <div>
                     {bomInfo.map((e,index) =>{   
                         {console.log(e)}
                         return (  
@@ -473,34 +537,65 @@ export const WasCarelabel = (props:washCareprops) =>{
                         )
                     })}
                 </div>
-                <br></br>   
-    
-        {/* <div style={{display:bomInfo.destinationCountry === 'CHINA' && bomInfo. plant != '1076' && bomInfo.plant != '1077'?'unset':'none'}}>
-        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'60%'}} border={1} cellSpacing="0" cellPadding='0'>
-            <tr>
-                <th style={{color:'red'}}>CHINA INSERT</th>
-                {bomInfo.sizeWiseData && Array.isArray(bomInfo.sizeWiseData) && bomInfo?.sizeWiseData?.map(e =>{
-                     chinaGgrandTotal+= e.sizeQty
-                     return(
-                        <th>{e.sizeDescription}</th>
+                <br></br>  */}
+
+                <div>
+                  {data.map((e,index) =>{
+                    return(
+                        <>
+                         <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1} cellSpacing="0" cellPadding='0'
+                        //   ref={tableRef}
+                        id="table-to-xls"
+                          >
+                            <thead>
+  <tr>
+                <th style={{width:'1%'}}>ITEM#</th>
+                <th style={{width:'1%'}}>PO NO</th>
+                <th style={{width:'1%'}}>SEASON</th>
+                <th style={{width:'1%'}}>STYLE</th>
+                <th style={{width:'1%'}}>IM#</th>
+                <th style={{width:'5%'}}>DESCRIPTION</th>
+                <th style={{width:'1%'}}>WC</th>
+                <th style={{width:'1%'}}>DESTINATION</th>
+                <th style={{width:'1%'}}>TOTAL QTY</th>
+            </tr>   
+                            </thead>
+
+          
+            {
+                e.bomData ? (e?.bomData?.map((rec,index) => {
+                    const len = e?.bomData?.length
+                    return(
+                        <tr>
+                            {index == 0?(<>
+                                <td style={{textAlign:'center'}} rowSpan={len}>{e.itemNo}</td>
+                                <td style={{textAlign:'center'}}  rowSpan={len}>{e.poNumber}</td>
+                                <td style={{textAlign:'center'}}  rowSpan={len}>{e.season}</td>
+                                <td style={{textAlign:'center'}}  rowSpan={len}>{e.styleNumber}</td> 
+                            </>):(<></>)}
+                            <td>{e?.geoCode == "EMEA" ?"1009915" : rec.imCode}</td>
+                            <td>{ rec.description}</td>
+                            <td>{ rec.trimInfo}</td>
+                            {index == 0 ?
+                            (
+                                <>
+                                <td style={{textAlign:'center'}}  rowSpan={len}>{e.geoCode}</td> 
+                                <td style={{textAlign:'center'}}  rowSpan={len}>{e.bomQty}</td> 
+                                </>
+                            ):(<></>)}
+                        </tr>
                     )
-                })  
-                }
-                <th>Total</th>
-            </tr>
-            <tr>
-                <th>#IM110044</th>
-                {
-                    bomInfo?.sizeWiseData?.map(e => {
-                        return(
-                            <td>{e.sizeQty}</td>
-                        )
-                    })
-                }
-                <th>{grandTotal}</th>
-            </tr>
-            </table>  
-        </div> */}
+                        }
+                    ))
+                    :(<></>)
+            }
+            </table>
+                        </>
+                    )
+           
+                  })           
+                  }
+                    </div>  
             </Card>
       
         </div>

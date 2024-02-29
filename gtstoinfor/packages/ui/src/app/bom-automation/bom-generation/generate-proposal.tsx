@@ -1,10 +1,10 @@
 import { DownloadOutlined, EyeOutlined } from '@ant-design/icons';
 import { BomProposalReq } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
-import { Button, Card, Checkbox, Col, Row } from 'antd'
+import { Button, Card, Checkbox, Col, Modal, Row } from 'antd'
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
-
+import WasCarelabel from '../../trims/trim-prints/wash-care-label';
 type Props = {
   poLine: string[]
 }
@@ -16,6 +16,9 @@ export default function GenerateProposal(props: Props) {
   const [pageSize, setPageSize] = useState<number>(null);
   const [page, setPage] = React.useState(1);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const [proposalInfo, setProposalInfo] = useState<any>([])
+  const [modalOpen, setModalOpen] = useState<boolean>(false)
+  const [trimName, setTrimName] = useState<string>('')
 
   useEffect(() => {
     getAllTrims();
@@ -28,6 +31,16 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
+console.log(proposalInfo)
+  const componentsMapping = {
+    "Wash Care Label": <WasCarelabel bomInfo={proposalInfo} />,
+  }
+
+  const onCancel = () => {
+    setModalOpen(false)
+    setTrimName('')
+}
+
   const handleCheckboxChange = (value, item) => {
     if (value.target.checked) {
       // Add the item to the selectedItems state if checked
@@ -40,13 +53,15 @@ export default function GenerateProposal(props: Props) {
     }
   };
 
-  function handleDownloadIndividualTrim(itemId) {
+  function handleDownloadIndividualTrim(itemId ) {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = props.poLine
     service.generateProposal(bomProposalReq).then((v) => {
       if (v.status) {
-        exportToExcel(v.data)
+          setProposalInfo(v.data)
+          exportToExcel(v.data)
+
       }
     })
   }
@@ -71,6 +86,16 @@ export default function GenerateProposal(props: Props) {
     XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
     XLSX.writeFile(wb, "data.xlsx");
   }
+  const onView  = (val) =>{
+  handleDownloadIndividualTrim(val.itemId)
+  console.log(val)
+  setModalOpen(true)
+  setTrimName(val.item)
+    }
+    console.log(proposalInfo)
+
+
+
   return (
     <Card >
       <Row gutter={[24, 4]}>
@@ -78,8 +103,9 @@ export default function GenerateProposal(props: Props) {
           trims.length ? trims.map((v) => {
             return <Col span={6}>
               <Card hoverable title={false} actions={[
-                <DownloadOutlined size={30} onClick={() => handleDownloadIndividualTrim(v.itemId)} key="download" />,
-                <EyeOutlined key="view" />
+                <DownloadOutlined size={30} onClick={() => handleDownloadIndividualTrim(v.itemId
+                  )} key="download" />,
+                <EyeOutlined key="view" onClick={() =>{onView(v)}}/>
               ]} >
                 <Checkbox
                   onChange={value => handleCheckboxChange(value, v.itemId)}
@@ -97,6 +123,9 @@ export default function GenerateProposal(props: Props) {
         </Col>
 
       </Row>
+      <Modal open={modalOpen} onCancel={onCancel} onOk={() => setModalOpen(false)} footer={[]} width={'85%'}>
+                {componentsMapping[trimName]}
+            </Modal>
     </Card>
   )
 }
