@@ -191,7 +191,7 @@ export const BomExcelDownload = () => {
         <Card title='Style BOM ' extra={
             <span style={{ color: 'white' }} > </span>
         }>
-            <Form form={form} layout='vertical'>
+            <Form onFinish={getBomExcel} form={form} layout='vertical'>
                     <Row gutter={24}>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
                         <Col xs={{ span: 22 }} sm={{ span: 22 }} md={{ span: 11 }} lg={{ span: 6 }} xl={{ span: 5 }} >
@@ -225,7 +225,7 @@ export const BomExcelDownload = () => {
                         </Col>
                         &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
                         <Col>
-                            <Button type='primary' onClick={getBomExcel} style={{ marginTop: '22px',backgroundColor:"green" }} icon={<SearchOutlined/>}>Search</Button>
+                            <Button type='primary' htmlType="submit" style={{ marginTop: '22px',backgroundColor:"green" }} icon={<SearchOutlined/>}>Search</Button>
                         </Col>
                         &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
                         <Col >
