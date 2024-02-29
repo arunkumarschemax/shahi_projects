@@ -36,8 +36,8 @@ export const BomExcelDownload = () => {
         if (form.getFieldValue('style') != undefined) {
             req.style = form.getFieldValue('style')
         }
-        if (form.getFieldValue('geo_code') != undefined) {
-            req.geoCode = form.getFieldValue('geo_code')
+        if (form.getFieldValue('geoCode') != undefined) {
+            req.geoCode = form.getFieldValue('geoCode')
         }
         Service.getbomExcel(req).then(res => {
             if (res.status) {
@@ -217,7 +217,7 @@ export const BomExcelDownload = () => {
                             >
                                 {
                                     geoCode?.map((inc: any) => {
-                                        return <Option key={inc.id} value={inc.geo_code}>{inc.geo_code}</Option>
+                                        return <Option key={inc.id} value={inc.geoCode}>{inc.geoCode}</Option>
                                     })
                                 }
                             </Select>
