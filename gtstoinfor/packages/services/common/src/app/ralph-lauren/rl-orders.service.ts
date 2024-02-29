@@ -24,6 +24,7 @@ import { ItemNoDtos } from "./dto/item-no.dto";
 import { ColorRepository } from "../Entites@Shahi/color/color.repo";
 const fs = require('fs');
 const path = require('path')
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class RLOrdersService {
@@ -446,13 +447,15 @@ export class RLOrdersService {
   // }
 
   async readPOPdfBot() {
+    const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
+
     try {
       const extractToPath = 'D:/extractPath';
-      const zipFilePath = 'D:/Ralph Lauren PO Report (PDF) (1).zip';
+      const zipFilePath = 'E:/Ralph Lauren PO Report (PDF) (5).zip/';
       const zip = new AdmZip(zipFilePath);
       zip.extractAllTo(extractToPath, true);
 
-      const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
+      fs.unlinkSync(zipFilePath);
 
       const page = await browser.newPage();
       await page.setViewport({ width: 1580, height: 900 });
@@ -478,9 +481,10 @@ export class RLOrdersService {
       const destinationDirectory = 'D:/rl-read-files';
 
       const files = fs.readdirSync(directoryPath);
-      if (files.length === 0) {
-        return new CommonResponseModel(false, 0, "No Files Found");
-      }
+      // if (files.length === 0) {
+      //   fs.unlinkSync(zipFilePath);
+      //   return new CommonResponseModel(false, 0, "No Files Found");
+      // }
 
       setTimeout(async () => {
         await page.goto('http://localhost:4200/#/ralph-lauren/pdf-upload/', {
@@ -509,6 +513,9 @@ export class RLOrdersService {
       }
     } catch (error) {
       return new CommonResponseModel(false, 0, error)
+    }
+    finally{
+      browser.close()
     }
   }
 
