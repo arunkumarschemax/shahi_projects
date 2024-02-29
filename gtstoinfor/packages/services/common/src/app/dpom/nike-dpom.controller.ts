@@ -1062,13 +1062,14 @@ export class DpomController {
         }
     }
 
+
     @Post('/updateBomItems')
-    @ApiBody({ type: BomItemReq})
+    @ApiBody({ type: BomItemReq }) 
     async updateBomItems(@Body() req: any) {
         try {
-            return await this.dpomService.updateBomItems(req)
+            return await this.dpomService.updateBomItems(req);
         } catch (error) {
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
         }
     }
 }

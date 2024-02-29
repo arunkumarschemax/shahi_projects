@@ -784,6 +784,7 @@ export class DpomRepository extends Repository<DpomEntity> {
          dpom.actual_unit,dpom.allocated_quantity
         ,dpom.size_description,dpom.size_qty,dpom.trading_co_po_no,dpom.hanger,dpom.legal_po_qty,dpom.geo_code, dpom.co_line_status`)
         .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Closed' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.customer_order IS NULL AND (dpom.co_line_status != 'Success' OR dpom.co_line_status IS NULL)`)
+        .groupBy(`dpom.po_number , dpom.po_line_item_number`)
         if (req.styleNumber !== undefined) {
             query.andWhere(`dpom.style_number ='${req.styleNumber}'`)
         }
@@ -1137,9 +1138,5 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany()
 
     }
-
-
-
-
 
 }
