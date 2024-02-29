@@ -363,7 +363,7 @@ export class BomService {
                 if (!styleData.length) {
                     return new CommonResponseModel(false, 11111, "Style data not found")
                 }
-                
+
                 for (const styleBom of styleData) {
                     console.log(styleBom)
                     const consumptions = await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) ? await req.updatedConsumptions.find((v) => v.itemId == styleBom.itemId) : { itemId: 0, wastage: 3, moq: 100, consumption: 1 }
@@ -388,10 +388,8 @@ export class BomService {
                     console.log(zfactors)
                     for (const zfactor of zfactors) {
                         if (styleBom.imCode == zfactor.actualIm && styleBom.itemId == zfactor.itemId) {
-                            const bomGeoCode = destinations.find((v) => v.destination == po.destination) 
-                            console.log(bomGeoCode ,'----geo code-----')
-                            console.log(po.destination,'destination')
-                            if (bomGeoCode?.geoCode == zfactor.geoCode || po.destination == zfactor.destination) {
+                            const bomGeoCode = destinations.find((v) => v.destination == po.destination)
+                               if (bomGeoCode?.geoCode == zfactor.geoCode || po.destination == zfactor.destination) {
                                 const zfactorID = new ZFactorsBomEntity()
                                 zfactorID.id = zfactor.id
                                 poBomEntity.zFactorBom = zfactor
@@ -436,10 +434,10 @@ export class BomService {
 
     async saveExcelData(val): Promise<CommonResponseModel> {
         const transactionManager = new GenericTransactionManager(this.dataSource);
-        const detailedArray:StyleDto[]=[]
+        const detailedArray: StyleDto[] = []
         const map = new Map<string, Map<string, StyleComboDto[]>>()
-        const styleMap = new Map<string,StyleDto>()
-        const bommap = new Map<string,Map<string,BomDto>>()
+        const styleMap = new Map<string, StyleDto>()
+        const bommap = new Map<string, Map<string, BomDto>>()
         try {
             // await transactionManager.startTransaction()
             const itemsData = await this.itemsRepo.find({ select: ['itemId', 'item'] })
@@ -624,12 +622,12 @@ export class BomService {
     async generateProposal(req: BomProposalReq): Promise<CommonResponseModel> {
         const poBomData = await this.poBomRepo.getProposalsData(req)
         const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
-        let data =[...poBomData,...poBomZfactorData]
+        let data = [...poBomData, ...poBomZfactorData]
 
         const groupedData: any = data.reduce((result, currentItem) => {
             const { geoCode, styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination } = currentItem;
             const key = `${geoCode}-${styleNumber}-${imCode}-${itemNo}`;
-            
+
             if (!result[key]) {
                 result[key] = {
                     geoCode,
@@ -673,30 +671,29 @@ export class BomService {
     }
 
     async getBomExcel(req: BomCreationFiltersReq): Promise<CommonResponseModel> {
-       let query=` SELECT pb.dpom_id, dp.style_number AS style, dp.item AS item, dp.geo_code AS geo_code
+        let query = ` SELECT pb.dpom_id, dp.style_number AS style, dp.item AS item, dp.geo_code AS geo_code,count(dp.style_number) as style_number_count
           FROM po_bom pb
             JOIN dpom dp ON dp.id = pb.dpom_id
            GROUP BY pb.dpom_id`
-           if (req?.style) {
+        if (req?.style) {
             query += ` WHERE dp.style = '${req.style}' GROUP BY dp.style`
         }
         const records = await this.bomRepo.query(query);
-       return new CommonResponseModel(true, 12345, "Data Retrieved Successfully", records)
-      
-      }
-      async getBom(req?: BomExcelreq): Promise<CommonResponseModel> {
-        console.log(req,"req--------------------------")
-        let query = `SELECT pb.id ,pb.bom_qty,b.im_code FROM po_bom pb 
-        LEFT JOIN bom b ON b.id = pb.bom_id
-        LEFT JOIN dpom d ON d.id = pb.dpom_id `
-        if (req?.style) {
-            query += ` WHERE d.style_number = '${req.style}'`
-        }
+        return new CommonResponseModel(true, 12345, "Data Retrieved Successfully", records)
+
+    }
+
+
+
+    async getBom(req?: any): Promise<CommonResponseModel> {
+        console.log(req, "req--------------------------")
+        const query = `SELECT pb.bom_id ,pb.bom_qty,b.im_code FROM po_bom pb
+        LEFT JOIN bom b ON b.id = pb.bom_id 
+        WHERE pb.dpom_id IN (${req})`
         const records = await this.bomRepo.query(query);
-      
-          return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
-      
-      }
+        return new CommonResponseModel(true ,65486,"Data Retrieved Successfully",records)
+
+    }
 }
 
 

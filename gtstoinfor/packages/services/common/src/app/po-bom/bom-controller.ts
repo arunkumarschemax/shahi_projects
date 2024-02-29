@@ -187,7 +187,7 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
-   
+
     @Post('/getbomexcel')
     async getBomExcel(@Body() req: any): Promise<CommonResponseModel> {
         try {
@@ -196,6 +196,8 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
+
+
     @Post('/generateProposal')
     async generateProposal(@Body() req: any): Promise<CommonResponseModel> {
         try {
@@ -205,7 +207,7 @@ export class BomController {
         }
     }
     @Post('/getbom')
-    @ApiBody({type:BomExcelreq})
+    @ApiBody({ type: BomExcelreq })
     async getBom(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.bomService.getBom(req)
@@ -213,5 +215,5 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
-   
+
 }
