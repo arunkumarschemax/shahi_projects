@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UploadedFile, UseInterceptors, } from "@nestjs/common";
 import { ApiBody, ApiTags, ApiConsumes } from "@nestjs/swagger";
 import { BomService } from "./bom-service";
-import { CommonResponseModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomExcelreq, CommonResponseModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleDto } from "./dto/style-dto";
 import { TrimService } from "./trim-service";
@@ -196,7 +196,6 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
-
     @Post('/generateProposal')
     async generateProposal(@Body() req: any): Promise<CommonResponseModel> {
         try {
@@ -205,8 +204,14 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
-
-
-
+    @Post('/getbom')
+    @ApiBody({type:BomExcelreq})
+    async getBom(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.getBom(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
    
 }
