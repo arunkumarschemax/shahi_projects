@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { StyleEntity } from "./entittes/style-entity";
-import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomCreationFiltersReq, BomDataForStyleAndSeasonModel, BomExcelreq, BomGenerationReq, BomProposalDataModel, BomProposalReq, BomReportModel, BomReportSizeModel, CommonResponseModel, ItemInfoFilterReq, MarketingReportModel, MarketingReportSizeModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { DataSource, Repository, getManager } from "typeorm";
 import { StyleDto } from "./dto/style-dto";
 import { BomEntity } from "./entittes/bom-entity";
@@ -629,8 +629,9 @@ export class BomService {
         const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
         console.log(poBomZfactorData, '---po bom zfactord data')
         let data = [...poBomData, ...poBomZfactorData]
-        const groupedData: any = data.reduce((result, currentItem) => {
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size } = currentItem;
+        const groupedData: any = data.reduce((result, currentItem:BomProposalDataModel) => {
+            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year} = currentItem;
+            console.log(season)
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
             const key = `${geoCode}-${styleNumber}-${imCode}-${itemNo}`;
@@ -646,6 +647,10 @@ export class BomService {
                     bomQty: 0,
                     destination,
                     itemId,
+                    poNumber,
+                    gender,
+                    season,
+                    year,
                     sizeWiseQty: [],
                     chinaSizes: [],
                     indonesiaSize: []

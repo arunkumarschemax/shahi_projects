@@ -61,7 +61,7 @@ export default function GenerateProposal(props: Props) {
     service.generateProposal(bomProposalReq).then((v) => {
       if (v.status) {
         setProposalData(v.data)
-        exportToExcel(v.data)
+        // exportToExcel(v.data)
       }
     })
   }
@@ -161,7 +161,7 @@ export default function GenerateProposal(props: Props) {
         }
         {data[0]?.sizeWiseQty.length ? <>
           <tr></tr>
-          <tr></tr>
+          <tr><td><b>FOR APA ORDER</b></td></tr>
           <tr>
             <th>REGION</th>
             {
@@ -200,7 +200,7 @@ export default function GenerateProposal(props: Props) {
             }
           </tr>
           <tr>
-            <td></td>
+            <td>110044</td>
             {
 
               data[0].chinaSizes.map((c) => {

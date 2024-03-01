@@ -37,7 +37,7 @@ export class BomRepo extends Repository<BomEntity> {
             .where(`st.style='${req.style}' and st.season='${req.season}' and st.year = '${req.year}'`)
         const data = await query.getRawMany()
 
-        const mappedResult: BomDataForStyleAndSeasonModel[] = data.map(item => ({
+        const mappedResult: any[] = data.map(item => ({
             styleId: item.styleId,
             bomId: item.bomId,
             itemName: item.itemName,
