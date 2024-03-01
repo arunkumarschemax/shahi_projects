@@ -673,18 +673,21 @@ export class BomService {
     async getBomExcel(req: BomCreationFiltersReq): Promise<CommonResponseModel> {
         let query = ` SELECT pb.dpom_id, dp.style_number AS style, dp.item AS item, dp.geo_code AS geo_code,count(dp.style_number) as style_number_count
           FROM po_bom pb
-            JOIN dpom dp ON dp.id = pb.dpom_id
-           GROUP BY pb.dpom_id`
+           LEFT JOIN dpom dp ON dp.id = pb.dpom_id
+            Where 1=1`
         if (req?.style) {
-            query += ` WHERE dp.style = '${req.style}' GROUP BY dp.style`
+            query += ` and dp.style_number = '${req.style}'`
         }
+        if (req?.geoCode) {
+            query += ` and dp.geo_code = '${req.geoCode}'`
+        }
+        query = query + ` GROUP BY pb.dpom_id`
         const records = await this.bomRepo.query(query);
         return new CommonResponseModel(true, 12345, "Data Retrieved Successfully", records)
 
     }
 
     async getBom(req?: any): Promise<CommonResponseModel> {
-        console.log(req, "req--------------------------")
         const query = `SELECT pb.bom_id ,pb.bom_qty,b.im_code FROM po_bom pb
         LEFT JOIN bom b ON b.id = pb.bom_id 
         WHERE pb.dpom_id IN (${req})`
@@ -694,12 +697,14 @@ export class BomService {
     }
 
     
-    async getStyle(): Promise<CommonResponseModel> {
-        const query = ` 	
-        SELECT s.id as id, s.style AS style
-                  FROM styles s`;
+    async getStyle(req?:any): Promise<CommonResponseModel> {
+        const query = `SELECT dp.style_number AS style
+        FROM po_bom pb
+        LEFT JOIN dpom dp ON dp.id = pb.dpom_id
+        GROUP BY dp.style_number`;
 
         const data = await this.bomRepo.query(query)
+        console.log(data,'ttttttttttttttttttv')
         if (data.length) {
             return new CommonResponseModel(true, 1, 'data retrived', data)
         } else {
@@ -708,7 +713,7 @@ export class BomService {
     }
 
     async getGeoCode(): Promise<CommonResponseModel> {
-        const query = ` SELECT dp.id AS id, dp.geo_code AS geoCode
+        const query = `SELECT dp.id AS id, dp.geo_code AS geoCode
         FROM dpom dp
         GROUP BY dp.geo_code`;
 

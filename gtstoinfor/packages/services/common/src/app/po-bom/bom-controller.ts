@@ -218,7 +218,7 @@ export class BomController {
 
 
     @Post('/getStyle')
-    async getStyle(@Body() req: any): Promise<CommonResponseModel> {
+    async getStyle(): Promise<CommonResponseModel> {
         try {
             return this.bomService.getStyle()
         } catch (err) {

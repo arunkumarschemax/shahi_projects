@@ -194,33 +194,35 @@ export const BomExcelDownload = () => {
             <Form onFinish={getBomExcel} form={form} layout='vertical'>
                     <Row gutter={24}>
                     &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-                        <Col xs={{ span: 22 }} sm={{ span: 22 }} md={{ span: 11 }} lg={{ span: 6 }} xl={{ span: 5 }} >
-                            <Form.Item name='style' label='Style'>
-                            <Select
-                                showSearch
-                                placeholder="Select Style"
-                            >
-                                {
-                                    style?.map((inc: any) => {
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                            <Form.Item name='style' label='Style Number' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Style Number"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {style?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.style}>{inc.style}</Option>
                                     })
-                                }
-                            </Select>
+                                    }
+                                </Select>
                             </Form.Item>
                         </Col>
                         &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
-                        <Col xs={{ span: 22 }} sm={{ span: 22 }} md={{ span: 11 }} lg={{ span: 6 }} xl={{ span: 5 }} >
-                            <Form.Item name='geo_code' label='Geo Code'>
-                            <Select
-                                showSearch
-                                placeholder="Select Geo Code"
-                            >
-                                {
-                                    geoCode?.map((inc: any) => {
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                            <Form.Item name='geoCode' label='Geo Code' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Geo Code"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {geoCode?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.geoCode}>{inc.geoCode}</Option>
                                     })
-                                }
-                            </Select>
+                                    }
+                                </Select>
                             </Form.Item>
                         </Col>
                         &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
