@@ -2600,37 +2600,46 @@ export class DpomService {
                 waitUntil: 'networkidle0', // Wait until there are no more network connections
             }).then(async () => {
                 // const filePath = 'C:/Users/saipr/Downloads/PDF PO & DIA/PDF PO & DIA/Nike-PDF PO/3503368108.pdf';
-                console.log('directoryPath')
                 const directoryPath = 'D:/Nike PDF/NIKE-PDF PO';
                 // Specify the source and destination directories
                 const sourceDirectory = 'D:/Nike PDF/NIKE-PDF PO';
                 const destinationDirectory = 'D:/Nike PDF/PO PDF-READ';
                 const files = fs.readdirSync(directoryPath)
-                for (const file of files) {
-                    await page.waitForSelector('input[type="file"]');
-                    const fileInput = await page.$('input[type="file"]');
-                    // Get the full path of the file
-                    const filePath = path.join(directoryPath, file);
-                    // Set the file path to be uploaded
-                    await fileInput.uploadFile(filePath);
-                    // await input.uploadFile(filePath);
-                    await page.waitForTimeout(5000)
-                    // Submit the form if needed
-                    await page.waitForSelector('button.ant-btn-primary')
-                    await page.click('button.ant-btn-primary');
-                    // Check the status after submission
-                    // const reset = await page.waitForSelector('//*[@id="root"]/section/section/main/div/div[2]/div/div[2]/div/div/div/button')
-                    // if (reset) {
-                    //     await page.click('//*[@id="root"]/section/section/main/div/div[2]/div/div[2]/div/div/div/button')
-                    // } else {
-                    const sourceFilePath = path.join(sourceDirectory, file);
-                    const destinationFilePath = path.join(destinationDirectory, file);
-                    fs.rename(sourceFilePath, destinationFilePath, (err) => {
-                        if (err) {
-                            return new CommonResponseModel(false, 0, '')
-                        }
-                    });
-                    // }
+                console.log(files)
+                if (files.length > 0) {
+                    for (const file of files) {
+                        await page.waitForSelector('input[type="file"]');
+                        const fileInput = await page.$('input[type="file"]');
+                        // Get the full path of the file
+                        const filePath = path.join(directoryPath, file);
+                        // Set the file path to be uploaded
+                        await fileInput.uploadFile(filePath);
+                        // await input.uploadFile(filePath);
+                        await page.waitForTimeout(5000)
+                        // Submit the form if needed
+                        await page.waitForSelector('button.ant-btn-primary')
+                        await page.click('button.ant-btn-primary');
+                        page.on('response', async response => {
+                            // console.log(`Response1: ${JSON.stringify(response)}`);
+                            const responseObject = JSON.parse(await response.text())
+                            if (responseObject.status) {
+                                const sourceFilePath = path.join(sourceDirectory, file);
+                                const destinationFilePath = path.join(destinationDirectory, file);
+                                fs.rename(sourceFilePath, destinationFilePath, (err) => {
+                                    if (err) {
+                                        return new CommonResponseModel(false, 0, '')
+                                    }
+                                });
+                            } else {
+                                await page.waitForSelector('button.ant-btn-dangerous')
+                                await page.click('button.ant-btn-dangerous');
+                                page.off('response')
+                            }
+                        });
+                    }
+                } else {
+                    browser.close()
+                    return new CommonResponseModel(false, 0, 'No PDF Files to upload')
                 }
             });
             // }, 10000);

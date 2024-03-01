@@ -165,14 +165,14 @@ const DivertReport = () => {
             dataIndex: 'oPoLineItemNumber',
         },
         {
-            title: 'Old Qantity', dataIndex: 'oTotalItemQty', render: (text, record) => {
-                const oldVal = Number(record.oTotalItemQty)
-                return record.oTotalItemQty ? oldVal : '-'
+            title: 'Old Qantity', dataIndex: 'oldVal', render: (text, record) => {
+                return record.oldVal ? record.oldVal : '-'
             }
         },
         {
-            title: 'Balance Qty', dataIndex: 'oldVal', render: (text, record) => {
-                return record.oldVal ? record.oldVal : '-'
+            title: 'Balance Qty', dataIndex: 'oTotalItemQty', render: (text, record) => {
+                const oldVal = Number(record.oTotalItemQty)
+                return record.oTotalItemQty ? oldVal : '-'
             }
         },
         { title: 'Destination', dataIndex: 'oDestination', render: (text, record) => { return record.oDestination ? record.oDestination : '-'; } },
@@ -421,18 +421,17 @@ const DivertReport = () => {
                 },
                 {
                     title: 'Old Qantity',
+                    dataIndex: 'oldVal',
+                    width: 70, align: 'right',
+                },
+                {
+                    title: 'Balance Qty',
                     dataIndex: 'oTotalItemQty',
                     width: 70, align: 'right',
                     // render: (text, record) => {
                     //     const oldVal = Number(record.oTotalItemQty)
                     //     return record.oLineItemStatus == 'Cancelled' ? record.oTotalItemQty : oldVal
                     // }
-                },
-                {
-                    title: 'Balance Qty',
-                    dataIndex: 'oldVal',
-                    width: 70, align: 'right',
-
                 },
                 {
                     title: 'Destination',
@@ -660,9 +659,10 @@ const DivertReport = () => {
                     align: 'right',
                     render: (text, record) => {
                         if (record.oTotalItemQty !== null) {
+                            const oldVal = record.oldVal
                             const oldQuantity = Number(record.oTotalItemQty);
                             const newQuantity = Number(record.nTotalItemQty);
-                            const QtyTally = oldQuantity - newQuantity;
+                            const QtyTally = oldVal - oldQuantity - newQuantity;
                             if (QtyTally === 0) {
                                 return <span style={{ color: 'green' }}>Matching</span>;
                             } else {

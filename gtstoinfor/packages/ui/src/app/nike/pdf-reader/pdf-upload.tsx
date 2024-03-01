@@ -219,7 +219,7 @@ const PdfUpload: React.FC<IPdfUploadProps> = (props) => {
                                 <Button onClick={savePdfFields} type={'primary'} >Submit</Button>
                             </Col>
                             <Col span={2}>
-                                <Button onClick={onReset} >Reset</Button>
+                                <Button onClick={onReset} danger>Reset</Button>
                             </Col>
                         </> : <>
                             <Col span={2}>
