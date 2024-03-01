@@ -10,7 +10,7 @@ export class LevisPoItemVariant {
     scheduledDate: string;
     itemNo:string;
 
-    // label:string;
+    label:string;
     // unitPrice: string;
     // quantity: string;
     // amount: string;
