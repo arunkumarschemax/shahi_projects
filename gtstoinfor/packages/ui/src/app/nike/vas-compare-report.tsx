@@ -7,6 +7,7 @@ import { Excel } from 'antd-table-saveas-excel';
 import Highlighter from 'react-highlight-words';
 import { IExcelColumn } from 'antd-table-saveas-excel/app';
 import { TotalQuantityChangeModel, nikeFilterRequest } from '@project-management-system/shared-models';
+import { diffChars } from 'diff';
 
 const VASChangesCompareGrid = () => {
 
@@ -81,6 +82,32 @@ const VASChangesCompareGrid = () => {
     let data1: IExcelColumn[] = []
     data1 = [
         {
+            title: 'Report Generate Date',
+            dataIndex: 'created_at',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        },
+        {
+            title: 'Item',
+            dataIndex: 'item',
+            render: (text, record) => {
+                if (!text || text.trim() === '') {
+                    return '-';
+                } else {
+                    const firstFourDigits = text.substring(0, 4);
+                    return firstFourDigits;
+                }
+            },
+        },
+        {
+            title: 'Factory',
+            dataIndex: 'factory',
+        },
+        {
+            title: 'Document Date',
+            dataIndex: 'documentDate',
+            render: (text) => moment(text).format('MM/DD/YYYY')
+        },
+        {
             title: 'PO Number',
             dataIndex: 'purchaseOrderNumber',
         },
@@ -89,87 +116,59 @@ const VASChangesCompareGrid = () => {
             dataIndex: 'poLineItemNumber',
         },
         {
-            title: 'Schedule Line Item No',
-            dataIndex: 'scheduleLineItemNumber',
-        },
-        {
-            title: 'Report Generate Date',
-            dataIndex: 'created_at',
-            render: (text) => moment(text).format('MM/DD/YYYY'),
-        },
-        {
-            title: 'Item',
-            dataIndex: 'item',
-        },
-        {
-            title: 'Factory',
-            dataIndex: 'factory',
-        },
-        {
-            title: 'Style Number',
-            dataIndex: 'styleNumber',
+            title: 'Total Item Quantity',
+            dataIndex: 'totalItemQty',
         },
         {
             title: 'Product Code',
             dataIndex: 'productCode',
         },
         {
-            title: 'Color Description',
-            dataIndex: 'colorDesc',
-        },
-        {
             title: 'OGAC',
             dataIndex: 'OGAC',
-            render: (text) => moment(text).format('MM/DD/YYYY')
+            render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
             title: 'GAC',
             dataIndex: 'GAC',
-            render: (text) => moment(text).format('MM/DD/YYYY')
+            render: (text) => moment(text).format('MM/DD/YYYY'),
         },
         {
-            title: 'Destination Country',
-            dataIndex: 'destinationCountry',
+            title: 'Change from Direct Ship Sales Order Number',
+            dataIndex: '',
         },
         {
-            title: 'Item Vas Text',
-            dataIndex: 'itemVasText',
-            // render:(text,record) => {
-            //     return(
-            //         <>
-            //         {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
-            //                     {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
-            //                 </span></p></Tooltip></>) : (<>{record.itemText}</>)}
-            //         </>
-            //     )
-            // }
+            title: 'Change from Direct Ship Sales Order Item',
+            dataIndex: '',
         },
-        // {
-        //     title: 'Difference',
-        //     dataIndex: 'Diff',
-        //     align: 'right',
-        //     render: (text, record) => (
-        //         < >
-        //             {Number(record.Diff) === 0 ? '-' : ''}
-        //             {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-        //             {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
-        //                 maximumFractionDigits: 0
-        //             })} </span> : ''}
-        //         </>
-        //     )
-        // }
-    ]
-
-    let exportingColumns: IExcelColumn[] = []
-    exportingColumns = [
-        { title: 'Item code', dataIndex: 'itemCode' },
-        { title: 'Item Name', dataIndex: 'itemName' },
-        { title: 'Production Plan Type Name', dataIndex: 'prodPlanTypeName' },
-        { title: 'Sum of Ord Qty last week', dataIndex: 'oldOrderQtyPcs' },
-        { title: 'Sum of Ord Qty this week', dataIndex: 'newOrderQtyPcs' },
-        { title: 'Difference Qty', dataIndex: 'difference' }
+        {
+            title: 'Change to Direct Ship Sales Order Number',
+            dataIndex: '',
+        },
+        {
+            title: 'Change to Direct Ship Sales Order Item',
+            dataIndex: '',
+        },
+        {
+            title: 'Change from Item Vas Text',
+            dataIndex: 'old_val'
+        },
+        {
+            title: 'Change to Item Vas Text',
+            dataIndex: 'new_val'
+        },
+        {
+            title: 'Item VAS -PDF PO',
+            dataIndex: 'item_vas_pdf'
+        },
+        {
+            title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to DPOM)',
+            dataIndex: '', width: 200,
+        },
+        {
+            title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to PDF PO) ',
+            dataIndex: '', width: 200,
+        }
     ]
 
     const [searchedColumn, setSearchedColumn] = useState('');
@@ -269,102 +268,7 @@ const VASChangesCompareGrid = () => {
     const renderReport = (data: TotalQuantityChangeModel[]) => {
         const sizeHeaders = getSizeWiseHeaders(data);
         const sizeWiseMap = getMap(data);
-        exportingColumns = [
-            {
-                title: 'PO Number',
-                dataIndex: 'purchaseOrderNumber',
-            },
-            {
-                title: 'PO Line Item No',
-                dataIndex: 'poLineItemNumber',
-            },
-            {
-                title: 'Schedule Line Item No',
-                dataIndex: 'scheduleLineItemNumber',
-            },
-            {
-                title: 'Report Generate Date',
-                dataIndex: 'created_at',
-                render: (text) => moment(text).format('MM/DD/YYYY'),
-            },
-            {
-                title: 'Item',
-                dataIndex: 'item',
-                render: (text, record) => {
-                    if (!text || text.trim() === '') {
-                        return '-';
-                    } else {
-                        return text;
-                    }
-                },
-            },
-            {
-                title: 'Factory',
-                dataIndex: 'factory',
-                render: (text, record) => {
-                    if (!text || text.trim() === '') {
-                        return '-';
-                    } else {
-                        return text;
-                    }
-                },
-            },
-            {
-                title: 'Style Number',
-                dataIndex: 'styleNumber',
-            },
-            {
-                title: 'Product Code',
-                dataIndex: 'productCode',
-            },
-            {
-                title: 'Color Description',
-                dataIndex: 'colorDesc',
-            },
-            {
-                title: 'OGAC',
-                dataIndex: 'OGAC',
-                render: (text) => moment(text).format('MM/DD/YYYY')
-            },
-            {
-                title: 'GAC',
-                dataIndex: 'GAC',
-                render: (text) => moment(text).format('MM/DD/YYYY')
-            },
-            {
-                title: 'Destination Country',
-                dataIndex: 'destinationCountry',
-            },
-            {
-                title: 'Item Vas Text',
-                dataIndex: 'itemVasText',
-                // render:(text,record) => {
-                //     return(
-                //         <>
-                //         {record.itemText?.length > 30 ? (<><Tooltip title='Cilck to open full itemText'><p><span onClick={() => handleTextClick(record.itemText)} style={{ cursor: 'pointer' }}>
-                //                     {record.itemText.length > 30 ? `${record.itemText?.substring(0, 30)}....` : record.itemText}
-                //                 </span></p></Tooltip></>) : (<>{record.itemText}</>)}
-                //         </>
-                //     )
-                // }
-            },
-            // {
-            //     title: 'Difference',
-            //     dataIndex: 'Diff',
-            //     align: 'right',
-            //     render: (text, record) => (
-            //         < >
-            //             {Number(record.Diff) === 0 ? '-' : ''}
-            //             {Number(record.Diff) < 0 ? <span style={{ color: 'red' }} > {Number(record.Diff).toLocaleString('en-IN', {
-            //                 maximumFractionDigits: 0
-            //             })} </span> : ''}
-            //             {Number(record.Diff) > 0 ? <span style={{ color: 'green' }} > {Number(record.Diff).toLocaleString('en-IN', {
-            //                 maximumFractionDigits: 0
-            //             })} </span> : ''}
-            //         </>
-            //     )
-            // }
-        ]
+
         const handleTextClick = (remarks) => {
             setRemarks(remarks)
             setRemarkModal(true)
@@ -372,23 +276,23 @@ const VASChangesCompareGrid = () => {
         const onRemarksModalOk = () => {
             setRemarkModal(false)
         }
+
         const columns: any = [
             {
                 title: 'S No',
                 key: 'sno',
-                width: '60px',
-                render: (text, object, index) => (page - 1) * pageSize + (index + 1),
-                // fixed: 'left'
+                width: 60,
+                render: (text, object, index) => (page - 1) * pageSize + (index + 1)
             },
             {
                 title: 'Report Generate Date',
-                dataIndex: 'created_at', width: 70,
+                dataIndex: 'created_at',
                 render: (text) => moment(text).format('MM/DD/YYYY'),
+                width: 80,
             },
             {
                 title: 'Item',
-                dataIndex: 'item',
-                width: 70,
+                dataIndex: 'item', width: 80,
                 render: (text, record) => {
                     if (!text || text.trim() === '') {
                         return '-';
@@ -400,241 +304,142 @@ const VASChangesCompareGrid = () => {
             },
             {
                 title: 'Factory',
-                dataIndex: 'factory', width: 70,
-                render: (text, record) => {
-                    if (!text || text.trim() === '') {
-                        return '-';
-                    } else {
-                        return text;
-                    }
-                },
+                dataIndex: 'factory', width: 80,
+            },
+            {
+                title: 'Document Date',
+                dataIndex: 'documentDate',
+                width: 80,
+                render: (text) => moment(text).format('MM/DD/YYYY')
             },
             {
                 title: 'PO Number',
                 dataIndex: 'purchaseOrderNumber',
-                width: 70,
+                width: 80,
             },
             {
-                title: 'PO Line Item No', width: 70,
-                dataIndex: 'poLineItemNumber', align: 'center'
+                title: 'PO Line Item No',
+                dataIndex: 'poLineItemNumber',
+                width: 80,
             },
             {
-                title: 'Document Date',
-                dataIndex: 'documentDate', width: 75,
-                align: 'center',
-                render: (text) => moment(text).format('MM/DD/YYYY'),
-            },
-            {
-                title: 'Style Number',
-                dataIndex: 'styleNumber', width: 70,
+                title: 'Total Item Quantity',
+                dataIndex: 'totalItemQty', width: 80,
             },
             {
                 title: 'Product Code',
-                dataIndex: 'productCode', width: 70,
-            },
-            {
-                title: 'Color Description',
-                dataIndex: 'colorDesc', width: 70,
+                dataIndex: 'productCode', width: 80,
             },
             {
                 title: 'OGAC',
-                dataIndex: 'OGAC', width: 70,
-                render: (text) => moment(text).format('MM/DD/YYYY')
+                dataIndex: 'OGAC', width: 80,
+                render: (text) => moment(text).format('MM/DD/YYYY'),
             },
             {
                 title: 'GAC',
-                dataIndex: 'GAC', width: 70,
-                render: (text) => moment(text).format('MM/DD/YYYY')
+                dataIndex: 'GAC', width: 80,
+                render: (text) => moment(text).format('MM/DD/YYYY'),
             },
             {
-                title: 'Destination Country',
-                dataIndex: 'destinationCountry', width: 80,
-                align: 'center',
-            }
-        ];
-
-        // sizeHeaders?.forEach(version => {
-        //     columns.push({
-        //         title: version,
-        //         dataIndex: version,
-        //         key: version,
-        //         width: 130,
-        //         align: 'center',
-        //         children: [
-        //             {
-        //                 title: 'Old Quantity',
-        //                 dataIndex: '',
-        //                 key: '', width: 70,
-        //                 align: 'right',
-        //                 render: (text, record) => {
-        //                     const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-        //                     if (sizeData) {
-        //                         if (sizeData.oldQuantity !== null) {
-        //                             const formattedQty = Number(sizeData.oldQuantity).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-
-        //                             return (
-        //                                 formattedQty
-        //                             );
-        //                         } else {
-        //                             return (
-        //                                 '-'
-        //                             );
-        //                         }
-        //                     } else {
-        //                         return '-';
-        //                     }
-        //                 }
-        //             },
-        //             {
-        //                 title: 'New Quantity',
-        //                 dataIndex: 'newQuantity',
-        //                 align: 'right', width: 70,
-
-        //                 render: (text, record) => {
-        //                     const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-        //                     if (sizeData) {
-        //                         if (sizeData.newQuantity !== null) {
-        //                             const formattedQty = Number(sizeData.newQuantity).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-
-        //                             return (
-        //                                 formattedQty
-        //                             );
-        //                         } else {
-        //                             return (
-        //                                 '-'
-        //                             );
-        //                         }
-        //                     } else {
-        //                         return '-';
-        //                     }
-        //                 }
-        //             },
-        //             {
-        //                 title: 'Difference',
-        //                 dataIndex: 'difference',
-        //                 align: 'right', width: 75,
-
-        //                 render: (text, record) => {
-        //                     const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-        //                     if (sizeData) {
-        //                         if (sizeData.difference !== null) {
-        //                             const difference = Number(sizeData.difference);
-        //                             const formattedQty = difference.toLocaleString('en-IN', { maximumFractionDigits: 0 });
-
-        //                             if (difference < 0) {
-        //                                 return <span style={{ color: 'red' }}>{formattedQty}</span>;
-        //                             } else {
-        //                                 return <span style={{ color: 'green' }}>{formattedQty}</span>;
-        //                             }
-        //                         } else {
-        //                             return '-';
-        //                         }
-        //                     } else {
-        //                         return '-';
-        //                     }
-        //                 }
-        //             }
-        //         ],
-        //         render: (text, record) => {
-        //             return record.sizeWiseData.find(item => item.sizeDescription === version);
-        //         }
-        //     });
-        //     exportingColumns.push({
-        //         title: version,
-        //         dataIndex: '',
-        //         children: [
-        //             {
-        //                 title: 'Old Quantity',
-        //                 dataIndex: '',
-        //                 align: 'right',
-        //                 render: (text, record) => {
-        //                     const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-        //                     if (sizeData) {
-        //                         if (sizeData.oldQuantity !== null) {
-        //                             const formattedQty = Number(sizeData.oldQuantity).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-
-        //                             return (
-        //                                 formattedQty
-        //                             );
-        //                         } else {
-        //                             return (
-        //                                 '-'
-        //                             );
-        //                         }
-        //                     } else {
-        //                         return '-';
-        //                     }
-        //                 }
-        //             },
-        //             {
-        //                 title: 'New Quantity',
-        //                 dataIndex: 'newQuantity',
-        //                 render: (text, record) => {
-        //                     const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-        //                     if (sizeData) {
-        //                         if (sizeData.newQuantity !== null) {
-        //                             const formattedQty = Number(sizeData.newQuantity).toLocaleString('en-IN', { maximumFractionDigits: 0 });
-
-        //                             return (
-        //                                 formattedQty
-        //                             );
-        //                         } else {
-        //                             return (
-        //                                 '-'
-        //                             );
-        //                         }
-        //                     } else {
-        //                         return '-';
-        //                     }
-        //                 }
-        //             },
-        //             {
-        //                 title: 'Difference',
-        //                 dataIndex: 'difference',
-        //                 render: (text, record) => {
-        //                     const sizeData = record.sizeWiseData.find(item => item.sizeDescription === version);
-        //                     if (sizeData) {
-        //                         if (sizeData.difference !== null) {
-        //                             const difference = Number(sizeData.difference);
-        //                             const formattedQty = difference.toLocaleString('en-IN', { maximumFractionDigits: 0 });
-
-        //                             if (difference < 0) {
-        //                                 return <span style={{ color: 'red' }}>{formattedQty}</span>;
-        //                             } else {
-        //                                 return <span style={{ color: 'green' }}>{formattedQty}</span>;
-        //                             }
-        //                         } else {
-        //                             return '-';
-        //                         }
-        //                     } else {
-        //                         return '-';
-        //                     }
-        //                 }
-        //             }
-        //         ],
-        //         render: (text, record) => {
-        //             return record.sizeWiseData.find(item => item.sizeDescription === version);
-        //         }
-        //     });
-        // });
-
-        columns.push(
+                title: 'Change from Direct Ship Sales Order Number',
+                dataIndex: '', width: 120,
+            },
             {
-                title: 'Item VAS Text',
-                dataIndex: 'itemVasText',
-                width: 220,
-                align: 'center',
+                title: 'Change from Direct Ship Sales Order Item',
+                dataIndex: '', width: 100,
+            },
+            {
+                title: 'Change to Direct Ship Sales Order Number',
+                dataIndex: '', width: 100,
+            },
+            {
+                title: 'Change to Direct Ship Sales Order Item',
+                dataIndex: '', width: 100,
+            },
+            {
+                title: 'Change from Item Vas Text',
+                dataIndex: 'old_val', width: 80,
                 render: (text, record) => {
                     return (
                         <>
-                            {record.itemVasText?.length > 30 ? (<><Tooltip title='Cilck to open full itemVasText'><p><span onClick={() => handleTextClick(record.itemVasText)} style={{ cursor: 'pointer' }}>
-                                {record.itemVasText.length > 30 ? `${record.itemVasText?.substring(0, 30)}....` : record.itemVasText}
-                            </span></p></Tooltip></>) : (<>{record.itemVasText}</>)}
+                            {record.old_val?.length > 30 ? (<><Tooltip title='Cilck to open full Item Vas Text'><p><span onClick={() => handleTextClick(record.old_val)} style={{ cursor: 'pointer' }}>
+                                {record.old_val.length > 30 ? `${record.old_val?.substring(0, 30)}....` : record.old_val}
+                            </span></p></Tooltip></>) : (<>{record.old_val}</>)}
                         </>
                     )
                 }
-            }
-        )
+            },
+            {
+                title: 'Change to Item Vas Text',
+                dataIndex: 'new_val', width: 80,
+                render: (text, record) => {
+                    return (
+                        <>
+                            {record.new_val?.length > 30 ? (<><Tooltip title='Cilck to open full Item Vas Text'><p><span onClick={() => handleTextClick(record.new_val)} style={{ cursor: 'pointer' }}>
+                                {record.new_val.length > 30 ? `${record.new_val?.substring(0, 30)}....` : record.new_val}
+                            </span></p></Tooltip></>) : (<>{record.new_val}</>)}
+                        </>
+                    )
+                }
+            },
+            {
+                title: 'Item VAS-PDF PO',
+                dataIndex: 'item_vas_pdf', width: 80,
+                render: (text, record) => {
+                    return (
+                        <>
+                            {record.item_vas_pdf?.length > 30 ? (<><Tooltip title='Cilck to open full Item Vas Text'><p><span onClick={() => handleTextClick(record.item_vas_pdf)} style={{ cursor: 'pointer' }}>
+                                {record.item_vas_pdf.length > 30 ? `${record.item_vas_pdf?.substring(0, 30)}....` : record.item_vas_pdf}
+                            </span></p></Tooltip></>) : (<>{record.item_vas_pdf}</>)}
+                        </>
+                    )
+                }
+            },
+            {
+                title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to DPOM)',
+                dataIndex: '', width: 200,
+                render: (text, record) => {
+                    if (record.old_val == null) {
+                        return record.new_val
+                    } else if (record.new_val == null) {
+                        return record.old_val
+                    } else {
+                        const charsDiff = diffChars(record.old_val, record.new_val);
+                        // Extract only the added and removed parts
+                        const addedText = charsDiff.filter((part) => part.added).map((part) => part.value).join('');
+                        const removedText = charsDiff.filter((part) => part.removed).map((part) => part.value).join('');
+                        return (
+                            <div>
+                                <p>{addedText}</p>
+                                <p>{removedText}</p>
+                            </div>
+                        );
+                    }
+                }
+            },
+            {
+                title: 'DIFFERENCE IN ITEM VAS TEXT ( between DPOM to PDF PO) ',
+                dataIndex: '', width: 200,
+                render: (text, record) => {
+                    if (record.item_vas_pdf == null) {
+                        return record.new_val
+                    } else if (record.new_val == null) {
+                        return record.item_vas_pdf
+                    } else {
+                        const charsDiff = diffChars(record.item_vas_pdf, record.new_val);
+                        // Extract only the added and removed parts
+                        const addedText = charsDiff.filter((part) => part.added).map((part) => part.value).join('');
+                        const removedText = charsDiff.filter((part) => part.removed).map((part) => part.value).join('');
+                        return (
+                            <div>
+                                <p>{addedText}</p>
+                                <p>{removedText}</p>
+                            </div>
+                        );
+                    }
+                }
+            },
+        ];
 
         return (
             <>
@@ -661,40 +466,6 @@ const VASChangesCompareGrid = () => {
         );
 
     }
-    const EstimatedETDDate = (value) => {
-        if (value) {
-            const fromDate = value[0];
-            const toDate = value[1];
-            setSelectedEstimatedFromDate(fromDate)
-            setSelectedEstimatedToDate(toDate)
-        }
-    }
-
-    const getFilterdData = () => {
-        let orderStatus = form.getFieldValue('orderStatus');
-        let startDate = selectedEstimatedFromDate;
-        let endDate = selectedEstimatedToDate;
-        let filteredItemChangeData = itemChangeData;
-        let filteredQtyData = qtyData
-        let filteredPOStatusData = poStatusData
-        if (orderStatus) {
-            filteredItemChangeData = itemChangeData.filter(record => record.order_status === orderStatus);
-            filteredQtyData = filteredQtyData.filter(record => record.order_status === orderStatus)
-            filteredPOStatusData = poStatusData.filter(record => record.order_status === orderStatus)
-            setItemChangeData(filteredItemChangeData);
-            setFilteredQtyData(filteredQtyData)
-            setFilteredPOStatusData(filteredPOStatusData)
-        }
-        if (startDate && endDate) {
-            console.log(filteredQtyData)
-            filteredItemChangeData = itemChangeData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate);
-            filteredQtyData = filteredQtyData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
-            filteredPOStatusData = poStatusData.filter(record => convertToYYYYMMDD(record.last_update_date) >= startDate && convertToYYYYMMDD(record.last_update_date) <= endDate)
-            setItemChangeData(filteredItemChangeData);
-            setFilteredQtyData(filteredQtyData)
-            setFilteredPOStatusData(filteredPOStatusData)
-        }
-    }
 
     const items: TabsProps['items'] = [
         {
@@ -704,64 +475,20 @@ const VASChangesCompareGrid = () => {
         }
     ];
 
-    const onReset = () => {
-        form.resetFields();
-        setSelectedEstimatedFromDate(undefined);
-        setSelectedEstimatedToDate(undefined);
-        // getContractDateChangeData()
-        getVasTextChangeData()
-        // getWharehouseDateChangeData()
-    }
-
     return (
         <Card title='Compare Orders' extra={(<Button
             type="default"
             style={{ color: 'green' }}
             onClick={exportExcel}
             icon={<FileExcelFilled />}>Download Excel</Button>)}>
-            {/* <Form form={form} layout={"vertical"} >
-                <Row gutter={24}>
-                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 4 }} >
-                  <Form.Item name='poandLine' label='Po+Line' >
-                <Select
-                  showSearch
-                  placeholder="Select Po+Line"
-                  optionFilterProp="children"
-                  allowClear
-                >
-                  {poLine.map((inc: any) => {
-                    return <Option key={inc.id} value={inc.po_and_line}>{inc.po_and_line}</Option>
-                  })
-                  }
-                   </Select>
-                 </Form.Item>
-                </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4  }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-                        <Button
-                            type="primary"
-                            icon={<SearchOutlined />}
-                            style={{ marginRight: 50, width: 100 }}
-                            htmlType="button"
-                            onClick={getFilterdData}>Search</Button>
-                    </Col>
-                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 3 }} lg={{ span: 3 }} xl={{ span: 4 }} style={{ marginTop: 20 }}>
-                        <Button
-                            type="primary"
-                            icon={<UndoOutlined />}
-                            htmlType="submit"
-                            onClick={onReset}>Reset</Button>
-                    </Col>
-                </Row>
-            </Form> */}
-            {filteredQtyData || unitChangeData || itemChangeData || poStatusData ? <>
+            <>
                 <Tabs type='card' items={items} />
-            </> : <></>}
+            </>
             <Modal open={remarkModal} onOk={onRemarksModalOk} onCancel={onRemarksModalOk} footer={[<Button onClick={onRemarksModalOk} type='primary'>Ok</Button>]}>
                 <Card>
                     <p>{itemText}</p>
                 </Card>
             </Modal>
-
         </Card>
     );
 };

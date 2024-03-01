@@ -122,6 +122,19 @@ export class DpomRepository extends Repository<DpomEntity> {
         return await query.getRawMany();
     }
 
+    async getItemTextChangeData(req: any): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(`dpom.po_number,dpom.item,dpom.factory,dpom.document_date,dpom.product_code AS productCode,dpom.ogac AS OGAC,dpom.style_number AS styleNumber,dpom.destination_country AS desCtry,dpom.color_desc,dpom.size_description,dpom.gac AS GAC,dpom.total_item_qty AS totalItemQty,dpom.item_text,dpom.po_and_line ,dpom.po_line_item_number, dpom.schedule_line_item_number, dpom.total_item_qty, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.odVersion`)
+            .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
+            .where(` od.display_name='itemText' AND DATE(od.created_at) = CURDATE() `)
+            .orderBy(` od.created_at`, 'DESC')
+        if (req && req.poandLine !== undefined) {
+            query.andWhere(`dpom.po_and_line ='${req.poandLine}'`)
+            return await query.getRawMany();
+        } else
+            return await query.getRawMany();
+    }
+
     async getUnitChangeData(): Promise<any[]> {
         const query = this.createQueryBuilder('o')
             .select(`o.po_number, o.po_line_item_number, o.schedule_line_item_number, o.total_item_qty, o.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
@@ -230,7 +243,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getVasTextChangeData(req: any): Promise<any[]> {
         const query = this.createQueryBuilder('dpom')
-            .select(`dpom.po_number AS purchaseOrderNumber,dpom.created_at,dpom.item,dpom.factory,dpom.product_code AS productCode,dpom.ogac AS OGAC,dpom.style_number AS styleNumber,dpom.destination_country AS destinationCountry,dpom.color_desc,dpom.size_description,dpom.gac AS GAC,dpom.total_item_qty AS totalItemQty,dpom.item_vas_text AS itemVasText,dpom.po_and_line ,dpom.po_line_item_number AS poLineItemNumber, dpom.schedule_line_item_number, dpom.total_item_qty, dpom.color_desc AS colorDesc, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, (od.new_val - od.old_val) AS Diff , od.odVersion`)
+            .select(`dpom.po_number AS purchaseOrderNumber,dpom.created_at,dpom.item,dpom.factory,dpom.product_code AS productCode,dpom.ogac AS OGAC,dpom.style_number AS styleNumber,dpom.destination_country AS destinationCountry,dpom.color_desc,dpom.size_description,dpom.gac AS GAC,dpom.total_item_qty AS totalItemQty,dpom.item_vas_text AS itemVasText,dpom.po_and_line ,dpom.po_line_item_number AS poLineItemNumber, dpom.schedule_line_item_number, dpom.color_desc AS colorDesc, dpom.item_vas_pdf, dpom.dpom_item_line_status, od.created_at, od.old_val, od.new_val, od.odVersion`)
             .leftJoin(DpomDifferenceEntity, 'od', 'od.po_number = dpom.po_number AND od.po_line_item_number = dpom.po_line_item_number AND od.schedule_line_item_number = dpom.schedule_line_item_number')
             .where(` od.column_name='item_vas_text' AND DATE(od.created_at) = CURDATE() AND (od.po_number, od.od_version) IN (
                 SELECT po_number, MAX(od_version) AS max_version FROM dpom_diff GROUP BY po_number)`)

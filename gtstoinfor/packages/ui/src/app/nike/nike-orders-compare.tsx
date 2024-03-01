@@ -1894,11 +1894,11 @@ const OrdersCompareGrid = () => {
         //     label: <b style={{ color: '#DEAD29' }}>Mode of transportation: {modeOTransportChaneData?.length}</b>,
         //     children: <Table className="custom-table-wrapper" bordered dataSource={modeOTransportChaneData} columns={columns3} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
         // },
-        {
-            key: '6',
-            label: <b style={{ color: '#DEAD29' }}>Item Text changed PO's : {itemTextChaneData?.length}</b>,
-            children: <Table className="custom-table-wrapper" bordered dataSource={itemTextChaneData} columns={columns5} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
-        }
+        // {
+        //     key: '6',
+        //     label: <b style={{ color: '#DEAD29' }}>Item Text changed PO's : {itemTextChaneData?.length}</b>,
+        //     children: <Table className="custom-table-wrapper" bordered dataSource={itemTextChaneData} columns={columns5} pagination={false} scroll={{ x: 'max-content', y: 500 }} />,
+        // }
     ];
 
     const onReset = () => {
