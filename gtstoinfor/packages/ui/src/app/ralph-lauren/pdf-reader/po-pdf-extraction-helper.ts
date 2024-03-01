@@ -259,7 +259,7 @@ export const extractDataFromPoPdf = async (pdf) => {
             itemVariantsObj.upc = itemVarinatsTextArr[(count * l) + 1]
             itemVariantsObj.unitPrice = itemVarinatsTextArr[(count * l) + count - 5]
             itemVariantsObj.currency = itemVarinatsTextArr[(count * l) + count - 4]
-            itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count - 3]
+            itemVariantsObj.quantity = itemVarinatsTextArr[(count * l) + count - 3].replace(/,/g,"")
             itemVariantsObj.amount = itemVarinatsTextArr[(count * l) + count - 1]
             console.log(itemVariantsObj)
             itemVariantsArr.push(itemVariantsObj)
