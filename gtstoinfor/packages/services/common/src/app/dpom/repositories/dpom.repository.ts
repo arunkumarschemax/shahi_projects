@@ -771,28 +771,28 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getAllDpomDataForBom(req?: PpmDateFilterRequest): Promise<any[]>{
         const query = await this.createQueryBuilder('dpom')
-        .select(`dpom.id AS dpom_id,dpom.po_and_line,dpom.last_modified_date,dpom.item,dpom.factory,
-        dpom.po_number,dpom.po_line_item_number,dpom.dpom_item_line_status,dpom.style_number,dpom.product_code,dpom.color_desc,
-        dpom.customer_order,dpom.plan_no,dpom.category_code,dpom.category_desc,
-        dpom.vendor_code,dpom.gcc_focus_code,dpom.gcc_focus_desc,dpom.gender_age_code,dpom.gender_age_desc,dpom.destination_country_code,
-        dpom.destination_country,dpom.plant,dpom.plant_name,dpom.direct_ship_so_item_no,
-        dpom.customer_po,dpom.planning_season_code,dpom.planning_season_year ,
-         dpom.pcd, dpom.mrgac,dpom.ogac,dpom.truck_out_date,
-         dpom.total_item_qty,dpom.actual_shipped_qty,
-         dpom.legal_po_price,dpom.co_price,dpom.pcd,dpom.ship_to_address_legal_po,
-         dpom.ship_to_address_dia,
-         dpom.actual_unit,dpom.allocated_quantity
-        ,dpom.size_description,dpom.size_qty,dpom.trading_co_po_no,dpom.hanger,dpom.legal_po_qty,dpom.geo_code, dpom.co_line_status`)
-        .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Closed' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.customer_order IS NULL AND (dpom.co_line_status != 'Success' OR dpom.co_line_status IS NULL)`)
-        .groupBy(`dpom.po_number , dpom.po_line_item_number`)
+        .select(`id AS dpom_id,po_and_line,last_modified_date,item,factory,
+        po_number,po_line_item_number,dpom_item_line_status,style_number,product_code,color_desc,
+        customer_order,plan_no,category_code,category_desc,
+        vendor_code,gcc_focus_code,gcc_focus_desc,gender_age_code,gender_age_desc,destination_country_code,
+        destination_country,plant,plant_name,direct_ship_so_item_no,
+        customer_po,planning_season_code,planning_season_year ,
+         pcd, mrgac,ogac,truck_out_date,
+         total_item_qty,actual_shipped_qty,
+         legal_po_price,co_price,pcd,ship_to_address_legal_po,
+         ship_to_address_dia,
+         actual_unit,allocated_quantity
+        ,size_description,size_qty,trading_co_po_no,hanger,legal_po_qty,geo_code, co_line_status`)
+        .where(`doc_type_code != 'ZP26' AND dpom_item_line_status != 'Closed' AND dpom_item_line_status != 'Cancelled' AND customer_order IS NULL AND (co_line_status != 'Success' OR co_line_status IS NULL)`)
+        .groupBy(`po_number , po_line_item_number`)
         if (req.styleNumber !== undefined) {
-            query.andWhere(`dpom.style_number ='${req.styleNumber}'`)
+            query.andWhere(`style_number ='${req.styleNumber}'`)
         }
         if (req.planningSeasonCode !== undefined) {
-            query.andWhere(`dpom.planning_season_code ='${req.planningSeasonCode}'`)
+            query.andWhere(`planning_season_code ='${req.planningSeasonCode}'`)
         }
         if (req.planningSeasonYear !== undefined) {
-            query.andWhere(`dpom.planning_season_year ='${req.planningSeasonYear}'`)
+            query.andWhere(`planning_season_year ='${req.planningSeasonYear}'`)
         }
         return await query.getRawMany();
     }
@@ -1137,6 +1137,13 @@ export class DpomRepository extends Repository<DpomEntity> {
             .where(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine });
         return await query.getRawMany()
 
+    }
+    async getStyleNumberForItemUpdate(): Promise<any[]> {
+        const query = this.createQueryBuilder('dpom')
+            .select(` dpom.style_number,dpom.id`)
+            .where(`dpom.doc_type_code != 'ZP26' AND dpom.dpom_item_line_status != 'Closed' AND dpom.dpom_item_line_status != 'Cancelled' AND dpom.customer_order IS NULL AND (dpom.co_line_status != 'Success' OR dpom.co_line_status IS NULL) AND dpom.style_number IS NOT NULL`)
+            .groupBy(`dpom.style_number`)
+        return await query.getRawMany();
     }
 
 }

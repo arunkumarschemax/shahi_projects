@@ -1,9 +1,7 @@
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons"
-import { BomItemReq, DpomApproveRequest, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomItemReq, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
-import { Button, Card, Col, DatePicker, Descriptions, Divider, Form, Input, Modal, Row, Select, Table, message } from "antd"
-import { ColumnsType } from "antd/es/table"
-import { TableRowSelection } from "antd/es/table/interface";
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, message } from "antd"
 import moment from "moment";
 import { useEffect, useRef, useState } from "react"
 import Highlighter from 'react-highlight-words';
@@ -63,7 +61,7 @@ const BomOrderAcceptance = () => {
     }
 
     const getStyleNumber = () => {
-        nikeService.getStyleNumberForOrderCreation().then(res => {
+        nikeService.getStyleNumberForItemUpdate().then(res => {
             setStyleNumber(res.data)
         })
     }
@@ -176,6 +174,10 @@ const BomOrderAcceptance = () => {
             fixed: 'left',
             width: 80,
             ...getColumnSearchProps('po_and_line')
+        },
+        {
+            title: 'Style Number',
+            dataIndex: 'style_number', width: 80,
         },
         {
             title: 'Item',

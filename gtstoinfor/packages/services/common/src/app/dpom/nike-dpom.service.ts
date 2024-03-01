@@ -2902,7 +2902,13 @@ async updateBomItems(req: BomItemReq): Promise<CommonResponseModel> {
         throw new CommonResponseModel(false, 0, 'Error updating BOM items');
     }
 }
-
+async getStyleNumberForItemUpdate(): Promise<CommonResponseModel> {
+    const data = await this.dpomRepository.getStyleNumberForItemUpdate()
+    if (data.length > 0)
+        return new CommonResponseModel(true, 1, 'data retrived', data)
+    else
+        return new CommonResponseModel(false, 0, 'No data found');
+}
 }
 
 
