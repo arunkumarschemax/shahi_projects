@@ -2713,7 +2713,7 @@ order by mi.trim_code`;
   async getAllActiveSampleOrders(): Promise<CommonResponseModel> {
     try{
       const manager = this.dataSource;
-      let query ="select sr.sample_request_id AS sampleReqId,sr.request_no AS requestNo, sr.location_id AS location, s.style, ph.profit_control_head AS pch,b.buyer_name AS buyer,bd.brand_name AS brand, sr.status from sample_request sr left join style s on s.style_id = sr.style_id left join profit_control_head ph on ph.profit_control_head_id = sr.profit_control_head_id left join brands bd on bd.brand_id = sr.brand_id left join buyers b on b.buyer_id = sr.buyer_id where sr.life_cycle_status='"+LifeCycleStatusEnum.OPEN+"' and sampling_user IS NULL";
+      let query ="select sr.sample_request_id AS sampleReqId,sr.request_no AS requestNo, sr.location_id AS location, s.style, ph.profit_control_head AS pch,b.buyer_name AS buyer,bd.brand_name AS brand, sr.status from sample_request sr left join style s on s.style_id = sr.style_id left join profit_control_head ph on ph.profit_control_head_id = sr.profit_control_head_id left join brands bd on bd.brand_id = sr.brand_id left join buyers b on b.buyer_id = sr.buyer_id where sampling_user IS NULL";
       const queryResult = await manager.query(query);
       console.log("**************queryResult*******************")
       console.log(queryResult)
