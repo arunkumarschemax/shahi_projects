@@ -55,6 +55,11 @@ export class StyleService{
             style.pch=req.pch
             style.description=req.description
             style.buyerId=req.buyerId
+            style.brandId=req.brandId
+            style.dmm=req.dmm
+            style.productId=req.productId
+
+
             if(isUpdate){
                 style.styleId=req.styleId
                 style.updatedUser=req.updatedUser

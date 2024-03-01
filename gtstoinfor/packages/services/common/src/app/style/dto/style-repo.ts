@@ -27,7 +27,7 @@ export class StyleRepository extends Repository<Style> {
 
     async getstyleaginstpch (req?:StyleIdReq):Promise<any>{
         const query = await this .createQueryBuilder('s')
-        .select('s.style_id as styleId,s.style,s.pch as pchId,pch.profit_control_head as pch,s.description')
+        .select('s.style_id as styleId,s.style,s.pch as pchId,pch.profit_control_head as pch,s.description,s.dmm,s.brand_id AS brandId,s.location_id AS warehouse,s.product_id AS productId')
         .leftJoin(ProfitControlHead,'pch','pch.profit_control_head_id = s.pch')
         .where(`s.style_id = ${req.styleId} `)
         .orderBy(`pch.profit_control_head`)

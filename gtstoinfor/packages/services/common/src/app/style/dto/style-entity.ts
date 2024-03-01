@@ -55,6 +55,19 @@ export class Style {
 })
 buyerId: number;
   
+@Column('int', {
+  name: 'brand_id',
+})
+brandId: number;
+@Column('int', {
+  name: 'dmm',
+})
+dmm: number;
+@Column('int', {
+  name: 'product_id',
+})
+productId: number;
+
   @Column("boolean",{
     nullable:false,
     default:true,

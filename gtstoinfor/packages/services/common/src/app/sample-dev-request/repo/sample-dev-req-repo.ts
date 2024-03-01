@@ -435,7 +435,7 @@ if(req){
     async getIssuedSampleRequests(req?:BuyerRefNoRequest): Promise<any> {
         const query = await this.createQueryBuilder()
             .select(`sample_request_id AS sampleRequestId, request_no AS reqNo,style_id as styleId`)
-            .where(`sampling_user = ${req.userId} and request_no is not null and life_cycle_status in('${LifeCycleStatusEnum.MATERIAL_ISSUED}','${LifeCycleStatusEnum.MATERIAL_RECEIVED}','${LifeCycleStatusEnum.CUTTING}','${LifeCycleStatusEnum.SEWING}','${LifeCycleStatusEnum.FINISHING}') `)
+            .where(`sampling_user = ${req.userId} and request_no is not null and life_cycle_status in('${LifeCycleStatusEnum.MATERIAL_RECEIVED}','${LifeCycleStatusEnum.CUTTING}','${LifeCycleStatusEnum.SEWING}','${LifeCycleStatusEnum.FINISHING}') `)
             if(req.buyerRefNo){
                 query.andWhere(`buyer_id = '${req.buyerId}'`)
             }

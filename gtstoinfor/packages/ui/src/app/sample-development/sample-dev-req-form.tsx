@@ -265,6 +265,10 @@ export const SampleDevForm = () => {
       if (res.status) {
         form.setFieldValue('pchId', res.data?.pchId)
         form.setFieldValue('description', res.data?.description)      }
+        form.setFieldsValue({ "brandId": res.data?.brandId })
+        form.setFieldsValue({ "dmmId": res.data?.dmm })
+        form.setFieldsValue({ "locationId": res.data?.warehouse })
+        form.setFieldsValue({'productId':res.data?.productId})
     })
   }
   const styleOnChange = (value, option) => {
@@ -664,6 +668,7 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Warehouse"
+                disabled
               >
                 <Option key={340} value={340}>{'340'}</Option>
                 {/* {locations.map((e) => {
@@ -838,6 +843,7 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Brand"
+                disabled
               >
                 {brands.map((e) => {
                   return (
@@ -999,6 +1005,7 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select DMM"
+                disabled
               >
                 {dmm.map((e) => {
                   return (
@@ -1041,6 +1048,7 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Product"
+                disabled
               >
                 {productData.map((e) => {
                   return (
