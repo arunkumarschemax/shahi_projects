@@ -3,7 +3,7 @@ import { InjectDataSource } from "@nestjs/typeorm";
 import { DataSource, Like } from "typeorm";
 import { ColorRepository } from "./color.repo";
 import { GenericTransactionManager } from "../../../typeorm-transactions";
-import {  ColorColumns, CommonResponseModel } from "@project-management-system/shared-models";
+import {  ColorColumns, CommonResponseModel, PoOrderFilter } from "@project-management-system/shared-models";
 import { ColorEntity } from "./color-entity";
 
 @Injectable()
@@ -89,9 +89,14 @@ export class ColorService {
         }
     }
 
-    async getColorInfo(): Promise<CommonResponseModel> {
+    async getColorInfo(req?: PoOrderFilter): Promise<CommonResponseModel> {
+        console.log(req,"connnn")
         try {
-            const info = await this.repo.find()
+            const info = await this.repo.find({
+                where:{
+                    poNumber: req.poNumber
+                }
+            })
             if (info) {
                 return new CommonResponseModel(true, 1, 'Data retrieved', info)
             } else {
@@ -101,6 +106,22 @@ export class ColorService {
             return new CommonResponseModel(false, 0, 'Something went wrong', err)
         }
     }
+
+
+    async getDistinctPoNumber(): Promise<CommonResponseModel> {
+        try {
+            const info = await this.repo.getDistinctPoNumbers()
+            if (info) {
+                return new CommonResponseModel(true, 1, 'Data retrieved', info)
+            } else {
+                return new CommonResponseModel(false, 0, 'No data found')
+            }
+        } catch (err) {
+            return new CommonResponseModel(false, 0, 'Something went wrong', err)
+        }
+    }
+
+
 
 
 }

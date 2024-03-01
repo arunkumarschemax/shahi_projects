@@ -1,6 +1,7 @@
-import { FileExcelFilled, SearchOutlined } from "@ant-design/icons";
+import { FileExcelFilled, SearchOutlined, UndoOutlined } from "@ant-design/icons";
+import { PoOrderFilter } from "@project-management-system/shared-models";
 import { ColorService } from "@project-management-system/shared-services";
-import { Button, Card, Input, Row, Table } from "antd"
+import { Button, Card, Col, Form, Input, Row, Select, Table } from "antd"
 import { Excel } from "antd-table-saveas-excel";
 import { ColumnProps } from "antd/es/table"
 import { useEffect, useRef, useState } from "react";
@@ -13,22 +14,43 @@ export const ColorView = () => {
     const [pageSize, setPageSize] = useState<number>(10);
     const service = new ColorService()
     const [data,setData] = useState<any[]>([])
+    const [poNumber,setPoNumber] = useState<any[]>([])
+
     const [searchText, setSearchText] = useState("");
     const [searchedColumn, setSearchedColumn] = useState("");
     const searchInput = useRef(null);
+    const [form] = Form.useForm();
+    const { Option } = Select;
+
 
 
     useEffect(() => {
         getInfo()
+        getDistinctPoNumber()
     },[])
 
     const getInfo = () => {
-        service.getColorInfo().then(res => {
+
+      const req = new PoOrderFilter();
+      if (form.getFieldValue("poNumber") !== undefined) {
+        req.poNumber = form.getFieldValue("poNumber");
+      }
+     
+        service.getColorInfo(req).then(res => {
             if(res.status){
                 setData(res.data)
             }
         })
     }
+
+    const getDistinctPoNumber = () => {
+      service.getDistinctPoNumber().then(res => {
+          if(res.status){
+            setPoNumber(res.data)
+          }
+      })
+  }
+
 
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({
@@ -112,6 +134,11 @@ export const ColorView = () => {
         clearFilters();
         setSearchText("");
       };
+
+      const onReset = () => {
+        form.resetFields();
+        getInfo();
+      }
     
   
 
@@ -131,7 +158,7 @@ export const ColorView = () => {
             dataIndex:'poNumber',
             sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
             sortDirections: ["ascend", "descend"],
-            ...getColumnSearchProps('poNumber')
+            // ...getColumnSearchProps('poNumber')
 
 
         },
@@ -204,7 +231,82 @@ export const ColorView = () => {
                 Download Excel
             </Button>
             </Row>
-            <br/>
+            <Form
+           onFinish={getInfo}
+          form={form}
+        // layout='vertical'
+        >
+          <Row gutter={24}>
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 4 }}
+              lg={{ span: 4 }}
+              xl={{ span: 6 }}
+            >
+              <Form.Item name="poNumber" label="PO Number">
+                <Select
+                  showSearch
+                  placeholder="Select PO number"
+                  optionFilterProp="children"
+                  allowClear
+                >
+                  {poNumber.map((inc: any) => {
+                    return (
+                      <Option key={inc.po_number} value={inc.po_number}>
+                        {inc.po_number}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </Form.Item>
+            </Col>
+
+            <Row>
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 8 }}
+              lg={{ span: 8 }}
+              xl={{ span: 4 }}
+              style={{ marginLeft: 20 }}
+
+            >
+              <Form.Item>
+                <Button
+                  htmlType="submit"
+                  icon={<SearchOutlined />}
+                  type="primary"
+                  // onClick={getorderData}
+                >
+                  Search
+                </Button>
+              </Form.Item>
+            </Col>
+
+            <Col
+              xs={{ span: 24 }}
+              sm={{ span: 24 }}
+              md={{ span: 5 }}
+              lg={{ span: 5 }}
+              xl={{ span: 4 }}
+              style={{ marginLeft: 70 }}
+
+            >
+              <Form.Item>
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  onClick={onReset}
+                  icon={<UndoOutlined />}
+                >
+                  Reset
+                </Button>
+              </Form.Item>
+            </Col>
+            </Row>
+          </Row>
+        </Form>
             <Table className="custom-table-wrapper" columns={columns} dataSource={data} size='small'
               scroll={{x:true}}
             //   pagination={{

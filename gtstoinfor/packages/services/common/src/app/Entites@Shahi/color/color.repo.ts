@@ -9,4 +9,13 @@ export class ColorRepository extends Repository<ColorEntity> {
     ) {
         super(userRepository.target, userRepository.manager, userRepository.queryRunner);
     }
+
+
+    async getDistinctPoNumbers(): Promise<any[]> {
+        const query = this.createQueryBuilder('o')
+            .select(`DISTINCT po_number`)
+
+        return await query.getRawMany()
+    }
+
 }

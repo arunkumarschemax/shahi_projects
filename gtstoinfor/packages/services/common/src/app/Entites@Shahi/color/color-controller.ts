@@ -1,7 +1,8 @@
 import { Body, Controller, Param, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
-import { CommonResponseModel } from '@project-management-system/shared-models';
+import { CommonResponseModel, PoOrderFilter } from '@project-management-system/shared-models';
 import { ColorService } from './color-service';
+import { ApiBody } from '@nestjs/swagger';
 
 
 @Controller('/color')
@@ -22,13 +23,24 @@ export class ColorController {
     }
 
     @Post('/getColorInfo')
-    async getColorInfo(): Promise<CommonResponseModel> {
+    @ApiBody({ type: PoOrderFilter }) 
+    async getColorInfo(@Body() req?: any): Promise<CommonResponseModel> {
         try {
-            return this.addressService.getColorInfo();
+            return this.addressService.getColorInfo(req);
         } catch (err) {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getDistinctPoNumber')
+    async getDistinctPoNumber(): Promise<CommonResponseModel> {
+        try {
+            return this.addressService.getDistinctPoNumber();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
 
     
 

@@ -10,7 +10,12 @@ export class ColorService extends CommonAxiosService {
         return this.axiosPostCall(this.URL + "/saveColorInfo", req)
     }
 
-    async getColorInfo(): Promise<CommonResponseModel> {
-        return this.axiosPostCall(this.URL + "/getColorInfo")
+    async getColorInfo(req:any): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getColorInfo",req)
+    }
+    
+    
+    async getDistinctPoNumber(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getDistinctPoNumber")
     }  
 }
