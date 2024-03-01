@@ -390,7 +390,8 @@ export class RLOrdersService {
       return new CommonResponseModel(false, 0, 'CO-Line request failed', err)
     }
   }
-
+  
+  // @Cron('0 8 * * *')
   async getTradeLinkPdf(): Promise<CommonResponseModel> {
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
@@ -446,6 +447,7 @@ export class RLOrdersService {
   //   }
   // }
 
+  // @Cron('1 * * * *') 
   async readPOPdfBot() {
     const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
 
