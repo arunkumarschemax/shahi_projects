@@ -817,6 +817,7 @@ const OrdersCompareGrid = () => {
         {
             title: 'Document Date',
             dataIndex: 'document_date',
+            width: 70,
             render: (text) => moment(text).format('MM/DD/YYYY')
         },
         {
@@ -924,8 +925,7 @@ const OrdersCompareGrid = () => {
             dataIndex: 'legalPoPrice', width: 70,
             render: (text, record) => (record.legalPoPrice ? record.legalPoPrice : '-'),
             align: 'right'
-        }
-        ,
+        },
         {
             title: 'Legal PDF PO Price Currency',
             dataIndex: 'legalPoCurrency', width: 70,
@@ -1882,7 +1882,7 @@ const OrdersCompareGrid = () => {
                     setPage(current);
                     setPageSize(pageSize);
                 }
-            }} columns={columns2} scroll={{ x: 'max-content', y: 500 }} />,
+            }} columns={columns2} scroll={{ x: 2000, y: 500 }} />,
         },
         {
             key: '5',

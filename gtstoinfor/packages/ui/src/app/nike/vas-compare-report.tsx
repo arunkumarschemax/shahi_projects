@@ -655,7 +655,7 @@ const VASChangesCompareGrid = () => {
                         className="custom-table-wrapper"
                         bordered
                     />
-                ) : (<Table size='large' />
+                ) : (<Table size='large' columns={columns} className="custom-table-wrapper" bordered />
                 )}
             </>
         );
