@@ -38,15 +38,8 @@ export const WasCarelabel = (props: washCareprops) => {
         console.log('88888')
         // tableToExcel('myTable', 'Sheet1');
     }
-
-    const exportToExcel = () => {
-        const table = document.getElementById('table-id'); // Get the table element
-        const ws = XLSX.utils.table_to_sheet(table); // Convert table to worksheet
-        const wb = XLSX.utils.book_new(); // Create a new workbook
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1'); // Add the worksheet to the workbook
-        XLSX.writeFile(wb, 'table.xlsx'); // Save the workbook as an Excel file
-    };
-
+  
+  
 
 
     function restructureData(originalData) {

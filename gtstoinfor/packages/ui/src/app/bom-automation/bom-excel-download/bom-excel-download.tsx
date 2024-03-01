@@ -1,38 +1,75 @@
-import { FileExcelFilled } from '@ant-design/icons';
+import { FileExcelFilled, SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { BomCreationFiltersReq, BomExcelreq } from '@project-management-system/shared-models';
 import { BomService } from '@project-management-system/shared-services';
-import { Alert, Button, Card, Row, Table } from 'antd';
+import { Alert, Button, Card, Form, Row, Select, Table } from 'antd';
 import { Excel } from 'antd-table-saveas-excel';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AlertMessages } from './../../common/common-functions/alert-messages';
+import { Col } from 'antd/lib';
 
 export const BomExcelDownload = () => {
+    const [form] = Form.useForm()
+    const { Option } = Select;
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState<number>(10);
     const [data, setData] = useState<any[]>([]);
-    const [excelData , setExcelData] = useState<any[]>([]);
+    const [excelData, setExcelData] = useState<any[]>([]);
     const Service = new BomService();
-    const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]); 
-
+    const [selectedRowKeys, setSelectedRowKeys] = useState<any[]>([]);
+    const [style, setStyle] = useState<any[]>([]); 
+    const [geoCode, setGeoCode] = useState<any[]>([]); 
+    
     const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
         setSelectedRowKeys(newSelectedRowKeys);
-      };
-   
+    };
+
 
     useEffect(() => {
         getBomExcel();
+        getGeoCode();
+        getStyle();
     }, []);
 
-    const getBomExcel = (value?:any) => {
+    const getBomExcel = (value?: any) => {
         const req = new BomCreationFiltersReq();
-          Service.getbomExcel(req).then(res => {
+        if (form.getFieldValue('style') != undefined) {
+            req.style = form.getFieldValue('style')
+        }
+        if (form.getFieldValue('geoCode') != undefined) {
+            req.geoCode = form.getFieldValue('geoCode')
+        }
+        Service.getbomExcel(req).then(res => {
             if (res.status) {
                 setData(res.data);
+             
+            } else {
+                setData([]);
+                
+
             }
-        });
+        }).catch(err => console.log(err.message));
     }
 
+
+
+    const getStyle = () => {
+        Service.getStyle().then(res => {
+            if (res.status) {
+                setStyle(res.data)
+            }
+        })
+    }
+
+    const getGeoCode = () => {
+        Service.getGeoCode().then(res => {
+            if (res.status) {
+                setGeoCode(res.data)
+            }
+        })
+    }
+
+    
     // const getBom = (selectedRowKeys)=>{
     //     const selectedRecords = data.filter(record => selectedRowKeys.includes(record));
     //         const updateRequests = selectedRecords.map((record) => {
@@ -40,7 +77,7 @@ export const BomExcelDownload = () => {
     //             req.style = record.style[record.key];
     //                         return req;
     //         });
-        
+
     //     console.log(updateRequests,"updateRequests")
 
     //     // Service.getbom(req).then(res => {
@@ -51,40 +88,54 @@ export const BomExcelDownload = () => {
     //     exportExcel()
 
     // }
-        const getBom = (selectedRowKeys) => {
-            console.log(selectedRowKeys,'ttttttttttttttttttttt')
-            const updateRequests = selectedRowKeys.map((record) => {
-                const req = new BomExcelreq();
-                req.style = record.style; 
-                return req;
-                
-            });
-            updateRequests.map(req => Service.getbom(req).then(res=>{
-                console.log(res);
-                if(res.status){
-                    
+    const getBoms = (selectedRowKeys) => {
+        console.log(selectedRowKeys, 'ttttttttttttttttttttt')
+        const updateRequests = selectedRowKeys.map((record) => {
+            const req = new BomExcelreq();
+            req.style = record.style;
+            return req;
+
+        });
+        updateRequests.map(req => Service.getbom(req).then(res => {
+            console.log(res);
+            if (res.status) {
+
                 // const excelData = res.map(res => res.status ? res.data : null);
-                    setExcelData(res.data);
-                    exportExcel(res.data);
-                }else{
-                    AlertMessages.getErrorMessage('not data found for excel download')
-                }
-            }))
-            // Promise.all(updateRequests.map(req => Service.getbom(req)))
-            //     .then(responses => {
-            //         console.log(responses,'uuuuuuuuuu');
-                    
-            //         const excelData = responses.map(res => res.status ? res.data : null);
-            //         setExcelData(excelData);
-            //         exportExcel();
-            //     })
-            //     .catch(error => {
-            //         // Handle error
-            //         console.error("Error fetching BOM data:", error);
-            //     });
-        };
-    
-    
+                setExcelData(res.data);
+                exportExcel(res.data);
+            } else {
+                AlertMessages.getErrorMessage('not data found for excel download')
+            }
+        }))
+        // Promise.all(updateRequests.map(req => Service.getbom(req)))
+        //     .then(responses => {
+        //         console.log(responses,'uuuuuuuuuu');
+
+        //         const excelData = responses.map(res => res.status ? res.data : null);
+        //         setExcelData(excelData);
+        //         exportExcel();
+        //     })
+        //     .catch(error => {
+        //         // Handle error
+        //         console.error("Error fetching BOM data:", error);
+        //     });
+    };
+
+
+    const getBom = () => {
+        Service.getbom(selectedRowKeys).then(res => {
+            if (res.status) {
+                console.log(res.data)
+                exportExcel(res.data)
+            }
+        }).catch(err => console.log(err.message))
+    }
+
+    const onReset = () => {
+        form.resetFields();
+        getBomExcel()
+    }
+
     const columns: any[] = [
         {
             title: 'S No',
@@ -105,10 +156,10 @@ export const BomExcelDownload = () => {
             title: 'Style',
             dataIndex: 'style',
         },
-        // {
-        //     title: 'Style Quantity',
-        //     dataIndex: '-',
-        // },
+        {
+            title: 'Style Quantity',
+            dataIndex: 'style_number_count',
+        },
     ];
 
     const rowSelection = {
@@ -116,34 +167,79 @@ export const BomExcelDownload = () => {
         onChange: onSelectChange,
     };
 
-    const exceldata = [
+    const excelColumns = [
         { title: 'S No', dataIndex: 'sNo', render: (text: any, object: any, index: any) => index + 1 },
-        { title: 'GEO Code', dataIndex: 'geo_code', render: (text: any, record: any) => record.geo_code ? record.geo_code : '-' },
-        { title: 'Item', dataIndex: 'item', render: (text: any, record: any) => record.item ? record.item : '-' },
-        { title: 'Style', dataIndex: 'style', render: (text: any, record: any) => record.style ? record.style : '-' },
+        { title: 'Bom Id', dataIndex: 'bom_id',  },
+        { title: 'Bom Qty', dataIndex: 'bom_qty',  },
+        { title: 'Item Code', dataIndex: 'im_code',   },
     ];
 
-    const exportExcel = (data:any) => {
+    const exportExcel = (data: any) => {
         console.log('yyyyyyyyyyyyyy');
-        
+
         const excel = new Excel();
         excel
             .addSheet('BOM Excel')
-            .addColumns(columns)
+            .addColumns(excelColumns)
             .addDataSource(data, { str2num: true })
             .saveAs('Bom.xlsx');
     }
 
-    
-    
+
+
     return (
-        <Card title='BOM EXCEL' extra={
-            <span style={{color:'white'}} > </span>
-       }>
+        <Card title='Style BOM ' extra={
+            <span style={{ color: 'white' }} > </span>
+        }>
+            <Form onFinish={getBomExcel} form={form} layout='vertical'>
+                    <Row gutter={24}>
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                            <Form.Item name='style' label='Style Number' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Style Number"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {style?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.style}>{inc.style}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
+                            <Form.Item name='geoCode' label='Geo Code' >
+                                <Select
+                                    showSearch
+                                    placeholder="Select Geo Code"
+                                    optionFilterProp="children"
+                                    allowClear
+                                >
+                                    {geoCode?.map((inc: any) => {
+                                        return <Option key={inc.id} value={inc.geoCode}>{inc.geoCode}</Option>
+                                    })
+                                    }
+                                </Select>
+                            </Form.Item>
+                        </Col>
+                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
+                        <Col>
+                            <Button type='primary' htmlType="submit" style={{ marginTop: '22px',backgroundColor:"green" }} icon={<SearchOutlined/>}>Search</Button>
+                        </Col>
+                        &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
+                        <Col >
+                            <Button onClick={onReset} type='primary' icon={<UndoOutlined />} style={{ marginTop: '22px',backgroundColor:"red" }}>Reset</Button>
+                        </Col>
+                    </Row>
+                </Form>
+            
             <Row justify={'end'}>
                 <Button type="default"
                     style={{ color: "green" }}
-                    onClick={()=>getBom(selectedRowKeys)}
+                    onClick={() => getBom()}
                     icon={<FileExcelFilled />}
                 >
                     Download Excel
@@ -152,8 +248,9 @@ export const BomExcelDownload = () => {
             <Table className="custom-table-wrapper"
                 // rowKey={(rowData) => rowData.dpom_id}
                 rowSelection={rowSelection}
-                rowKey={record => record}
+                rowKey={record => record.dpom_id}
                 columns={columns} dataSource={data} size='small'
+                bordered
                 pagination={{
                     pageSize: 100,
                     onChange(current, pageSize) {

@@ -4,9 +4,9 @@ import { PoBomEntity } from "../entittes/po-bom.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { DpomEntity } from "../../dpom/entites/dpom.entity";
 import { BomEntity } from "../entittes/bom-entity";
-import { BomProposalDataModel, BomProposalReq } from "@project-management-system/shared-models";
 import { ZFactorsBomEntity } from "../entittes/z-factors-bom.entity";
 import { ZFactorsEntity } from "../entittes/z-factors.entity";
+import { BomProposalDataModel, BomProposalReq } from "@project-management-system/shared-models";
 
 @Injectable()
 export class PoBomRepo extends Repository<PoBomEntity> {

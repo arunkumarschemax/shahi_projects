@@ -104,6 +104,7 @@ export class BomProposalModel{
     style : string
 }
 
+
 export class BomExcelreq {
     style?: string;
     bomId?: number;

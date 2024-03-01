@@ -1053,7 +1053,8 @@ export class DpomController {
 
 
     @Post('/getdpomDataForBom')
-    async getdpomDataForBom(@Body() req?:PpmDateFilterRequest) :Promise<CommonResponseModel>{
+    @ApiBody({type:PpmDateFilterRequest})
+    async getdpomDataForBom(@Body() req?:any) :Promise<CommonResponseModel>{
         try{
             return await this.dpomService.getdpomDataForBom(req)
         }
@@ -1062,13 +1063,22 @@ export class DpomController {
         }
     }
 
+
     @Post('/updateBomItems')
-    @ApiBody({ type: BomItemReq})
+    @ApiBody({ type: BomItemReq }) 
     async updateBomItems(@Body() req: any) {
         try {
-            return await this.dpomService.updateBomItems(req)
+            return await this.dpomService.updateBomItems(req);
         } catch (error) {
-            return this.applicationExceptionhandler.returnException(CommonResponseModel, error)
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, error);
+        }
+    }
+    @Post('/getStyleNumberForItemUpdate')
+    async getStyleNumberForItemUpdate(): Promise<CommonResponseModel> {
+        try {
+            return this.dpomService.getStyleNumberForItemUpdate();
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
 }

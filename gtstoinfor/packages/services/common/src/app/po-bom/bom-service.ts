@@ -389,8 +389,7 @@ export class BomService {
                     for (const zfactor of zfactors) {
                         if (styleBom.imCode == zfactor.actualIm && styleBom.itemId == zfactor.itemId) {
                             const bomGeoCode = destinations.find((v) => v.destination == po.destination)
-                            console.log(bomGeoCode, '----geo code-----')
-                            console.log(po.destination, 'destination')
+                          
                             if (bomGeoCode?.geoCode == zfactor.geoCode || po.destination == zfactor.destination) {
                                 const zfactorID = new ZFactorsBomEntity()
                                 zfactorID.id = zfactor.id
@@ -712,18 +711,61 @@ export class BomService {
 
 
 
-    async getBom(req?: BomExcelreq): Promise<CommonResponseModel> {
-        console.log(req, "req--------------------------")
-        let query = `SELECT pb.id ,pb.bom_qty,b.im_code FROM po_bom pb 
-        LEFT JOIN bom b ON b.id = pb.bom_id
-        LEFT JOIN dpom d ON d.id = pb.dpom_id `
-        if (req?.style) {
-            query += ` WHERE d.style_number = '${req.style}'`
-        }
+    // async getBom(req?: BomExcelreq): Promise<CommonResponseModel> {
+    //     console.log(req, "req--------------------------")
+
+    //     let query = ` SELECT pb.dpom_id, dp.style_number AS style, dp.item AS item, dp.geo_code AS geo_code,count(dp.style_number) as style_number_count
+    //       FROM po_bom pb
+    //        LEFT JOIN dpom dp ON dp.id = pb.dpom_id
+    //         Where 1=1`
+    //     if (req?.style) {
+    //         query += ` and dp.style_number = '${req.style}'`
+    //     }
+    //     if (req?.geoCode) {
+    //         query += ` and dp.geo_code = '${req.geoCode}'`
+    //     }
+    //     query = query + ` GROUP BY pb.dpom_id`
+    //     const records = await this.bomRepo.query(query);
+    //     return new CommonResponseModel(true, 12345, "Data Retrieved Successfully", records)
+
+    // }
+
+    async getBom(req?: any): Promise<CommonResponseModel> {
+        const query = `SELECT pb.bom_id ,pb.bom_qty,b.im_code FROM po_bom pb
+        LEFT JOIN bom b ON b.id = pb.bom_id 
+        WHERE pb.dpom_id IN (${req})`
         const records = await this.bomRepo.query(query);
+        return new CommonResponseModel(true ,65486,"Data Retrieved Successfully",records)
 
-        return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
+    }
 
+    
+    async getStyle(req?:any): Promise<CommonResponseModel> {
+        const query = `SELECT dp.style_number AS style
+        FROM po_bom pb
+        LEFT JOIN dpom dp ON dp.id = pb.dpom_id
+        GROUP BY dp.style_number`;
+
+        const data = await this.bomRepo.query(query)
+        console.log(data,'ttttttttttttttttttv')
+        if (data.length) {
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'error')
+        }
+    }
+
+    async getGeoCode(): Promise<CommonResponseModel> {
+        const query = `SELECT dp.id AS id, dp.geo_code AS geoCode
+        FROM dpom dp
+        GROUP BY dp.geo_code`;
+
+        const data = await this.bomRepo.query(query)
+        if (data.length) {
+            return new CommonResponseModel(true, 1, 'data retrived', data)
+        } else {
+            return new CommonResponseModel(false, 0, 'error')
+        }
     }
 }
 

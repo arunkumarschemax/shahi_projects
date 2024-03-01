@@ -1,9 +1,7 @@
 import { SearchOutlined, UndoOutlined } from "@ant-design/icons"
-import { BomItemReq, DpomApproveRequest, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomItemReq, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { NikeService } from "@project-management-system/shared-services";
-import { Button, Card, Col, DatePicker, Descriptions, Divider, Form, Input, Modal, Row, Select, Table, message } from "antd"
-import { ColumnsType } from "antd/es/table"
-import { TableRowSelection } from "antd/es/table/interface";
+import { Button, Card, Col, Form, Input, Modal, Row, Select, Table, message } from "antd"
 import moment from "moment";
 import { useEffect, useRef, useState } from "react"
 import Highlighter from 'react-highlight-words';
@@ -23,6 +21,8 @@ const BomOrderAcceptance = () => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [pageSize, setPageSize] = useState(1);
     const { Option } = Select;
+    const [showModal, setShowModal] = useState<boolean>(false)
+
     useEffect(() => {
     
         getOrderAcceptanceData()
@@ -61,7 +61,7 @@ const BomOrderAcceptance = () => {
     }
 
     const getStyleNumber = () => {
-        nikeService.getStyleNumberForOrderCreation().then(res => {
+        nikeService.getStyleNumberForItemUpdate().then(res => {
             setStyleNumber(res.data)
         })
     }
@@ -154,12 +154,6 @@ const BomOrderAcceptance = () => {
         setSearchText('');
     };
 
-    const handleItemNoChange = (value, record) => {
-        setItemNoValues((prevValues) => ({
-            ...prevValues,
-            [record.key]: value,
-        }));
-    };
 
     const isActionButtonEnabled = (record) => {
         return itemNoValues[record.key] && itemNoValues[record.key].trim() !== "";
@@ -174,18 +168,26 @@ const BomOrderAcceptance = () => {
             fixed: 'left'
         },
         {
-            title: 'PO Number',
-            dataIndex: 'po_number',
-            key: 'po_number', 
+            title: 'PO Number and Line',
+            dataIndex: 'po_and_line',
+            key: 'po_and_line', 
             fixed: 'left',
             width: 80,
-            ...getColumnSearchProps('po_number')
+            ...getColumnSearchProps('po_and_line')
         },
         {
-            title: 'PO Line Item No',
-            dataIndex: 'po_line_item_number', width: 80,
-            fixed: 'left', align: 'center'
+            title: 'Style Number',
+            dataIndex: 'style_number', width: 80,
         },
+        {
+            title: 'Item',
+            dataIndex: 'item', width: 80,
+        },
+        // {
+        //     title: 'PO Line Item No',
+        //     dataIndex: 'po_line_item_number', width: 80,
+        //     fixed: 'left', align: 'center'
+        // },
         {
             title: 'Document Date',
             dataIndex: 'documentDate', width: 80,
@@ -243,47 +245,59 @@ const BomOrderAcceptance = () => {
             align: 'right',
             render: (text) => <strong>{text}</strong>
         },
-        {
-            title: "Item No",
-            dataIndex: "itemNo", width: 100,
-            render: (text, record) => {
-                return (
-                    <Form>
-                        <Form.Item>
-                            <Input
-                                placeholder="Enter Item No"
-                                onChange={(e) => handleItemNoChange(e.target.value, record)}
-                            />
-                        </Form.Item>
-                    </Form>
-                );
-            },
-        },
+        // {
+        //     title: "Item No",
+        //     dataIndex: "itemNo", width: 100,
+        //     render: (text, record) => {
+        //         return (
+        //             <Form>
+        //                 <Form.Item>
+        //                     <Input
+        //                         placeholder="Enter Item No"
+        //                         onChange={(e) => handleItemNoChange(e.target.value, record)}
+        //                     />
+        //                 </Form.Item>
+        //             </Form>
+        //         );
+        //     },
+        // },
         
     ];
-    
-        const handleBatchUpdate = () => {
-            const selectedRecords = data.filter(record => selectedRowKeys.includes(record));
-            const updateRequests = selectedRecords.map((record) => {
-                const req = new BomItemReq();
-                req.id = record.dpom_id;
-                req.itemNo = itemNoValues[record.key];
-                            return req;
-            });
-        
-            nikeService.updateBomItems(updateRequests).then((res) => {
-        
-                if (res.status) {
-                    getOrderAcceptanceData();
-                    message.success(res.internalMessage);
-                } else {
-                    message.error(res.internalMessage);
-                }
-            });
-        };
- 
-    
+    const handleItemNoChange = (value, record) => {
+        setItemNoValues((prevValues) => ({
+            ...prevValues,
+            [record.key]: value,
+        }));
+    };
 
+    const openModeal =( )=>{
+        setShowModal(true)
+
+    }
+  
+   
+    const handleBatchUpdate = () => {
+        const selectedRecords = data.filter(record => selectedRowKeys.includes(record));
+    
+        const idsToUpdate = selectedRecords.map(record => record.dpom_id);
+        const itemNoValue = form.getFieldValue('itemNo');
+    
+        const payload: BomItemReq = {
+            id: idsToUpdate,
+            itemNo: itemNoValue,
+        };
+    
+        nikeService.updateBomItems(payload).then((res) => {
+            if (res.status) {
+                getOrderAcceptanceData();
+                message.success(res.internalMessage);
+                setShowModal(false);
+            } else {
+                message.error(res.internalMessage);
+            }
+        });
+    };
+    
   return (
     <Card title="Bom Item Register - Unaccepted Orders" headStyle={{ fontWeight: 'bold' }}>
           <Form
@@ -344,11 +358,12 @@ const BomOrderAcceptance = () => {
                             </Form.Item>
                         </Col>
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 20 }} >
-                            <Button onClick={handleBatchUpdate} style={{
+                            <Button onClick={openModeal} style={{
                          backgroundColor: selectedRowKeys.length > 0 ? "aqua" : "white",
                          color: selectedRowKeys.length > 0 ? "black" : "black", }}
                             disabled={selectedRowKeys.length === 0}>Update Bom Items</Button>
                             </Col>
+                        
                     </Row>
                 </Form>
                
@@ -373,6 +388,27 @@ const BomOrderAcceptance = () => {
   <Table size='large' />
 )}
 
+<Modal open={showModal} closable footer={false} onCancel={() => setShowModal(false)} >
+<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 12 }} style={{alignContent:'center'}} >
+            <Form  onFinish={handleBatchUpdate}
+                    form={form}
+                    layout='vertical'>
+                         <Form.Item  name='itemNo' label='Item No'>
+                             <Input
+                                 placeholder="Enter Item No"
+                                // onChange={(e) => handleItemNoChange(e.target.value, record)}
+                             /> 
+                         </Form.Item>
+                     </Form>
+                     </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }}
+                 xl={{ span: 4 }} style={{ marginTop: 20 }} >
+                            <Button onClick={handleBatchUpdate} style={{
+                         backgroundColor:  "aqua" 
+                          }}
+                            disabled={selectedRowKeys.length === 0}>Update</Button>
+                            </Col>
+            </Modal>
     </Card>
 
   )
