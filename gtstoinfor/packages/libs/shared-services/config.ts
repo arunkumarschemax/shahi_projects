@@ -4,7 +4,7 @@ export const config = {
     whatsapp_notification_url: 'http://206.189.138.212:3000',
     whatsapp_broadcast_url: 'http://206.189.138.212:3232/api',
 
-     APP_PROJECT_MANAGEMENT_URL: "http://165.22.220.143:9007/api",
+     APP_PROJECT_MANAGEMENT_URL: "https://eddie-backend.shahiapps.in/api",
     //  APP_PROJECT_MANAGEMENT_URL: "http://localhost:9007/api",
 
     APP_IAM_SERVER_URL: "https://ums-backend.shahiapps.in/",
