@@ -114,4 +114,6 @@ export class BomExcelreq {
     itemType?: string;
     itemId?: number;
     pbId?:number
+    geoCode: string []
+
 }

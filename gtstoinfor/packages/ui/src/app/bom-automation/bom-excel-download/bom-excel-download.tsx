@@ -89,7 +89,6 @@ export const BomExcelDownload = () => {
 
     // }
     const getBoms = (selectedRowKeys) => {
-        console.log(selectedRowKeys, 'ttttttttttttttttttttt')
         const updateRequests = selectedRowKeys.map((record) => {
             const req = new BomExcelreq();
             req.style = record.style;
@@ -210,15 +209,14 @@ export const BomExcelDownload = () => {
                             </Form.Item>
                         </Col>
                         &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
-                            <Form.Item name='geoCode' label='Geo Code' >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Geo Code"
-                                    optionFilterProp="children"
-                                    allowClear
-                                >
-                                    {geoCode?.map((inc: any) => {
+                        <Col xs={{ span: 22 }} sm={{ span: 22 }} md={{ span: 11 }} lg={{ span: 6 }} xl={{ span: 5 }} >
+                            <Form.Item name='geo_code' label='Geo Code'>
+                            <Select
+                                showSearch
+                                placeholder="Select Geo Code"
+                            >
+                                {
+                                    geoCode?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.geoCode}>{inc.geoCode}</Option>
                                     })
                                     }

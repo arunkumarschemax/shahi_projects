@@ -695,40 +695,39 @@ export class BomService {
         return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
     }
 
-    async getBomExcel(req: BomCreationFiltersReq): Promise<CommonResponseModel> {
-        let query = ` SELECT pb.dpom_id, dp.style_number AS style, dp.item AS item, dp.geo_code AS geo_code
-          FROM po_bom pb
-            JOIN dpom dp ON dp.id = pb.dpom_id
-           GROUP BY pb.dpom_id`
-        if (req?.style) {
-            query += ` WHERE dp.style = '${req.style}' GROUP BY dp.style`
-        }
-        const records = await this.bomRepo.query(query);
-        return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
-
-    }
-
-
-
-
-    // async getBom(req?: BomExcelreq): Promise<CommonResponseModel> {
-    //     console.log(req, "req--------------------------")
-
-    //     let query = ` SELECT pb.dpom_id, dp.style_number AS style, dp.item AS item, dp.geo_code AS geo_code,count(dp.style_number) as style_number_count
+    // async getBomExcel(req: BomCreationFiltersReq): Promise<CommonResponseModel> {
+    //     let query = ` SELECT pb.dpom_id, dp.style_number AS style, dp.item AS item, dp.geo_code AS geo_code
     //       FROM po_bom pb
-    //        LEFT JOIN dpom dp ON dp.id = pb.dpom_id
-    //         Where 1=1`
+    //         JOIN dpom dp ON dp.id = pb.dpom_id
+    //        GROUP BY pb.dpom_id`
     //     if (req?.style) {
-    //         query += ` and dp.style_number = '${req.style}'`
+    //         query += ` WHERE dp.style = '${req.style}' GROUP BY dp.style`
     //     }
-    //     if (req?.geoCode) {
-    //         query += ` and dp.geo_code = '${req.geoCode}'`
-    //     }
-    //     query = query + ` GROUP BY pb.dpom_id`
     //     const records = await this.bomRepo.query(query);
-    //     return new CommonResponseModel(true, 12345, "Data Retrieved Successfully", records)
+    //     return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
 
     // }
+
+
+
+
+    async getBomExcel(req?: BomExcelreq): Promise<CommonResponseModel> {
+
+        let query = ` SELECT pb.dpom_id, dp.style_number AS style, dp.item AS item, dp.geo_code AS geo_code,count(dp.style_number) as style_number_count
+          FROM po_bom pb
+           LEFT JOIN dpom dp ON dp.id = pb.dpom_id
+            Where 1=1`
+        if (req?.style) {
+            query += ` and dp.style_number = '${req.style}'`
+        }
+        if (req?.geoCode) {
+            query += ` and dp.geo_code = '${req.geoCode}'`
+        }
+        query = query + ` GROUP BY pb.dpom_id`
+        const records = await this.bomRepo.query(query);
+        return new CommonResponseModel(true, 12345, "Data Retrieved Successfully", records)
+
+    }
 
     async getBom(req?: any): Promise<CommonResponseModel> {
         const query = `SELECT pb.bom_id ,pb.bom_qty,b.im_code FROM po_bom pb
@@ -747,7 +746,6 @@ export class BomService {
         GROUP BY dp.style_number`;
 
         const data = await this.bomRepo.query(query)
-        console.log(data,'ttttttttttttttttttv')
         if (data.length) {
             return new CommonResponseModel(true, 1, 'data retrived', data)
         } else {
@@ -758,6 +756,7 @@ export class BomService {
     async getGeoCode(): Promise<CommonResponseModel> {
         const query = `SELECT dp.id AS id, dp.geo_code AS geoCode
         FROM dpom dp
+        WHERE dp.geo_code IS NOT NULL
         GROUP BY dp.geo_code`;
 
         const data = await this.bomRepo.query(query)
