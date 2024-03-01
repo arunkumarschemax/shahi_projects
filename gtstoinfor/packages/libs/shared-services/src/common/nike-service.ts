@@ -423,5 +423,9 @@ export class NikeService extends CommonAxiosService {
     async updateBomItems(payload?:BomItemReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.dpomController + "/updateBomItems",payload)
     }
+    
+    async getStyleNumberForItemUpdate(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.dpomController + "/getStyleNumberForItemUpdate")
+    }
 }
 
