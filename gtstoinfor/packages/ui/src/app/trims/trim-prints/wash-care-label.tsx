@@ -3,7 +3,7 @@ import { BomService } from "@project-management-system/shared-services";
 import { Button, Card } from "antd"
 import { useEffect, useRef, useState } from "react"
 import ReactHTMLTableToExcel from 'react-html-table-to-excel';
-import XLSX from 'xlsx';
+// import XLSX from 'xlsx';
 
 export const getCssFromComponent = (fromDoc, toDoc) => {
     
@@ -40,14 +40,7 @@ export const WasCarelabel = (props:washCareprops) =>{
         // tableToExcel('myTable', 'Sheet1');
     }
   
-    const  exportToExcel = () =>{
-        const table = document.getElementById('table-id'); // Get the table element
-        const ws = XLSX.utils.table_to_sheet(table); // Convert table to worksheet
-        const wb = XLSX.utils.book_new(); // Create a new workbook
-        XLSX.utils.book_append_sheet(wb, ws, 'Sheet1'); // Add the worksheet to the workbook
-        XLSX.writeFile(wb, 'table.xlsx'); // Save the workbook as an Excel file
-      };
-
+  
 
 
     function restructureData(originalData) {
