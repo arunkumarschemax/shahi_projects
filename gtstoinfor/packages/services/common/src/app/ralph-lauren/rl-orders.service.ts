@@ -705,59 +705,231 @@ export class RLOrdersService {
                   await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
               }
-            } else if ((await tab.getAttribute('innerText')) == 'US') {
-              await driver.executeScript('arguments[0].click();', tab);
-              for (let [colorIndex, color] of dest.colors.entries()) {
-                for (let [sizeIndex, size] of color.sizes.entries()) {
-                  if (colorIndex === 0) {
-                    // Find all the labels in the second row.
-                    await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
-                    let labelElements: any[] = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
-                    const fileteredElements: any[] = [];
-                    for (const labelElement of labelElements) {
-                      const ele = (await labelElement.getText())?.trim();
-                      ele.length > 0 ? fileteredElements.push(labelElement) : '';
-                    }
-                    let tabIndex = 1; // Default to 1 if no match
-                    const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
-                    const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
-                    await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
-                    const dropdown = await driver.findElement(By.id(`bydline/${string}`));
-                    const options = await dropdown.findElements(By.tagName('option'));
-                    const optionValues = [];
-                    for (const option of options) {
-                      const value = await option.getAttribute('value');
-                      optionValues.push(value);
-                    }
-                    const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
-                    await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
-                    // Find all the input fields in the first row.
-                    const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
-                    // Create a map of size labels to input fields.
-                    const sizeToInputMap = {};
-                    for (let i = 0; i < fileteredElements.length; i++) {
-                      const label = (await fileteredElements[i].getText()).trim().toUpperCase().toString(); // Remove leading/trailing spaces
-                      if (label.length)
-                        sizeToInputMap[label] = inputElements[i];
-                    }
-                    const inputField = await sizeToInputMap[size.name.trim().toUpperCase().toString()];
-                    if (inputField) {
-                      // Clear the existing value (if any) and fill it with the new price.
-                      await inputField.clear();
-                      await inputField.sendKeys(size.price);
-                    } else {
-                      const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
+            // } else if ((await tab.getAttribute('innerText')) == 'US') {
+            //   await driver.executeScript('arguments[0].click();', tab);
+            //   for (let [colorIndex, color] of dest.colors.entries()) {
+            //     for (let [sizeIndex, size] of color.sizes.entries()) {
+            //       if (colorIndex === 0) {
+            //         // Find all the labels in the second row.
+            //         await driver.wait(until.elementLocated(By.xpath("//tbody/tr[2]/td/div")))
+            //         let labelElements: any[] = await driver.findElements(By.xpath("//tbody/tr[2]/td/div"));
+            //         const fileteredElements: any[] = [];
+            //         for (const labelElement of labelElements) {
+            //           const ele = (await labelElement.getText())?.trim();
+            //           ele.length > 0 ? fileteredElements.push(labelElement) : '';
+            //         }
+            //         let tabIndex = 1; // Default to 1 if no match
+            //         const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
+            //         const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
+            //         await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
+            //         const dropdown = await driver.findElement(By.id(`bydline/${string}`));
+            //         const options = await dropdown.findElements(By.tagName('option'));
+            //         const optionValues = [];
+            //         for (const option of options) {
+            //           const value = await option.getAttribute('value');
+            //           optionValues.push(value);
+            //         }
+            //         const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
+            //         await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
+            //         // Find all the input fields in the first row.
+            //         const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
+            //         // Create a map of size labels to input fields.
+            //         const sizeToInputMap = {};
+            //         for (let i = 0; i < fileteredElements.length; i++) {
+            //           const label = (await fileteredElements[i].getText()).trim().toUpperCase().toString(); // Remove leading/trailing spaces
+            //           if (label.length)
+            //             sizeToInputMap[label] = inputElements[i];
+            //         }
+            //         const inputField = await sizeToInputMap[size.name.trim().toUpperCase().toString()];
+            //         if (inputField) {
+            //           // Clear the existing value (if any) and fill it with the new price.
+            //           await inputField.clear();
+            //           await inputField.sendKeys(size.price);
+            //         } else {
+            //           const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
+            //           await this.updateCOLineStatus({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no, itemStatus: ItemStatusEnum.FAILED })
+            //           return new CommonResponseModel(false, 0, 'NO matching Size found')
+            //         }
+            //       }
+            //       console.log(color.name)
+            //       const inputId = `${size.name}:${color.name}:US`.replace(/\*/g, '');
+            //       const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
+            //       await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
+            //     }
+            //   }
+            // }
+          } else if ((await tab.getAttribute('innerText')) == 'US') {
+            console.log(dest.colors, "color")
+            console.log(dest.colors[0].sizes[0], "sizes")
+
+            await driver.executeScript('arguments[0].click();', tab);
+
+            const sizesDivElementId = `nameDiv1${po.item_no}ZD001`;
+            const colorsDivElementId = `nameDiv3${po.item_no}ZD001`;
+
+
+            // parent div ids
+            /**
+             * to read sizes : nameDiv1359QZD001
+             * to read colors : nameDiv3359QZD001   nameDiv3744QZD001
+             * to read input fields: percentageDiv1359QZD001
+             * 
+             */
+            const allSizes = [];
+            console.log('---------------------------------------------------------------');
+            await driver.wait(until.elementLocated(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td/div`)));
+            console.log("Read");
+
+
+            // -----------------------   SIZES Reading from UI logic start ---------------
+            // read all the sizes from the DOM
+            let labelElements: any[] = await driver.findElements(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td/div`));
+            const totalElements = labelElements?.length;
+            console.log('Total elements : ' + totalElements);
+            labelElements.forEach(async r => {
+              const label = (await r.getText()).trim().toUpperCase().toString();
+              allSizes.push(label);
+            });
+            // Now iterate a random iteration of 10 loops to cover all sizes in the UI by doing a horizontal scroll
+            let i = 1;
+            while (i <= 10) {
+              // Try to jump to right hand side of the div by 8 units. (Dont try more than that. Test and change this value if needed)
+              const toJump = Math.min(i * 8, totalElements);
+              const rightEle = driver.findElement(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td[${toJump}]`));
+              // scroll the pointer to right side
+              driver.executeScript("arguments[0].scrollIntoView()", rightEle);
+              driver.sleep(1000);
+              // read all the visible sizes from the DOM
+              let currentUserVisbileElements: any[] = await driver.findElements(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td/div`));
+              // At some nth iteration, we can set all the sizes to the array once it is visible on the scope of selenium reader
+              console.log("Iteration " + i + " : " + toJump + " --- " + currentUserVisbileElements.length);
+              currentUserVisbileElements.forEach(async (r, index) => {
+                if (allSizes[index] == '') {
+                   console.log(index,"index");
+                  const label = (await r.getText()).trim().toUpperCase().toString();
+                  allSizes[index] = label;
+                }
+              });
+              console.log(allSizes);
+              i++;
+            }
+            // construct a reverse mapping of size => column location for easy scrolling during qty input
+            const sizeToDisplayRowColumnIndex = [];
+            allSizes.forEach((size, i) => {
+              sizeToDisplayRowColumnIndex[size] = i;
+            })
+            // -----------------------   SIZES Reading from UI logic END ---------------
+
+
+            // ---------------------- COLOR GETTING LOGIC START -------------------------
+            const colorsInTable = [];
+            const colorsToDisplayRowColumnIndex = [];
+            // get the total colors for the current PO from the UI
+            const totalColorElements: any[] = await driver.findElements(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr`));
+            console.log('total colors : ' + totalColorElements.length);
+            let cc = 0;
+            for (const r of totalColorElements) {
+              // console.log("plesessssssssssssssssss")
+              // scroll to the specific location in the screen to read the color 
+              const bottomEle = await driver.findElement(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr[${cc + 1}]`));
+              // execute the scroll command
+              await driver.executeScript("arguments[0].scrollIntoView()", bottomEle);
+              await driver.sleep(500);
+              // now after scrolling, read the element from the DOM again. This time the selenium can read the value present in the DOM
+              const sepcificRowColorEle = await driver.findElements(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr[${cc + 1}]/td`));
+               console.log(sepcificRowColorEle,"sepcificRowColorEle");
+              const displayingColor = (await sepcificRowColorEle[0]?.getText());
+              // push the color to an array
+              colorsInTable.push(displayingColor);
+              cc++;
+            }
+  
+            // now reverse map the color -> exact row index in the DOM
+            colorsInTable.forEach((color, index) => {
+              colorsToDisplayRowColumnIndex[color] = index;
+            });
+            // ---------------------- COLOR GETTING LOGIC END -------------------------
+
+            //  console.log("ppppppppppppppp")
+             
+            // after reading all sizes data and colors date, get the scroll bar to the left again
+            for (let [colorIndex, color] of dest.colors.entries()) {
+              // for this specific color, scroll the window to the specific row where the color is visible
+              const exactColorRowScrollLocation = colorsToDisplayRowColumnIndex[color.name] + 1;
+              if (!colorsToDisplayRowColumnIndex[color.name]) {
+                break;
+              }
+              // console.log("testtttttttttttttttttttttt")
+              const bottomEle = await driver.findElement(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr[${exactColorRowScrollLocation}]`));
+              driver.executeScript("arguments[0].scrollIntoView()", bottomEle);
+              driver.sleep(500);
+              for (let [sizeIndex, size] of color.sizes.entries()) {
+                const exactSizeColumnScrollLocation = sizeToDisplayRowColumnIndex[size.name] + 1;
+                if (!exactSizeColumnScrollLocation){
+                   
+                  // const str = `NO matching Size found for color : ${color.name} and size :  ${size.name} `;
+                  const str = `NO matching Size found`;
+
+                  const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: str ,isActive:false });
                       await this.updateCOLineStatus({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no, itemStatus: ItemStatusEnum.FAILED })
                       return new CommonResponseModel(false, 0, 'NO matching Size found')
-                    }
-                  }
-                  console.log(color.name)
-                  const inputId = `${size.name}:${color.name}:US`.replace(/\*/g, '');
-                  const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
-                  await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
                 }
+                console.log(`size: ${size.name} and ${exactSizeColumnScrollLocation}`);
+                console.log(sizesDivElementId,"sizesDivElementId")
+                // Now for this specific size, scroll to the exact location in the interface where the size is visible
+                const rightEle = await driver.findElement(By.xpath(`//div[@id='${sizesDivElementId}']/table/tbody/tr[2]/td[${exactSizeColumnScrollLocation}]`));
+                driver.executeScript("arguments[0].scrollIntoView()", rightEle);
+                driver.sleep(300);
+
+                let tabIndex = 1; // Default to 1 if no match
+
+                // const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[${currentWorkingRow}]/td/div/table/tbody/tr[${currentWorkingRow}]/td/div/input[@name='salespsizes']`;
+                const inputElementsXPath = `/html/body/div[2]/div[2]/table/tbody/tr/td/div[6]/form/table/tbody/tr/td/table/tbody/tr[5]/td/div/div[2]/div[${tabIndex}]/div/table/tbody/tr/td[2]/table/tbody/tr[1]/td/div/table/tbody/tr[1]/td/div/input[@name='salespsizes']`;
+
+
+
+                const string = `${po.item_no}ZD${tabIndex.toString().padStart(3, '0')}`
+                await driver.wait(until.elementLocated(By.id(`bydline/${string}`)));
+                const dropdown = await driver.findElement(By.id(`bydline/${string}`));
+                const options = await dropdown.findElements(By.tagName('option'));
+                const optionValues = [];
+                for (const option of options) {
+                  const value = await option.getAttribute('value');
+                  optionValues.push(value);
+                }
+                const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
+                await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
+                // Find all the input fields in the first row.
+                const inputElements = await driver.findElements(By.xpath(inputElementsXPath));
+                // Create a map of size labels to input fields.
+                const sizeToInputMap = {};
+                allSizes.forEach((s, index) => {
+                  sizeToInputMap[s] = inputElements[index];
+                });
+                // console.log('----------------------Size map done --------------------------');
+                const inputField = await sizeToInputMap[size.name.trim().toUpperCase().toString()];
+                 console.log(inputField,"input field");
+
+
+                if (inputField) {
+                  // Clear the existing value (if any) and fill it with the new price.
+                  await inputField.clear();
+                  await inputField.sendKeys(size.price);
+                } else {
+                  const update = await this.coLineRepo.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', errorMsg: 'NO matching Size found',isActive:false });
+                      await this.updateCOLineStatus({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no, itemStatus: ItemStatusEnum.FAILED })
+                      return new CommonResponseModel(false, 0, 'NO matching Size found')
+                }
+                
+                const inputId = `${size.name}:${color.name}:US`.replace(/\*/g, '');
+                console.log(inputId,"inputId")
+                const input = await driver.wait(until.elementLocated(By.id(inputId)), 10000)
+                console.log(input,"input")
+
+                await driver.findElement(By.id(inputId)).sendKeys(`${size.qty}`);
               }
             }
+          }
           }
         }
         await driver.sleep(10000)
@@ -811,7 +983,7 @@ export class RLOrdersService {
         return new CommonResponseModel(false, 0, err)
       }
     }
-    finally {
+     finally {
       driver.quit()
     }
   }
