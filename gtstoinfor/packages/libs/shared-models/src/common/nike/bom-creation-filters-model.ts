@@ -88,6 +88,11 @@ export class BomProposalDataModel {
     itemId : number
     gender : string
     poNumber : string
+    combination?:string
+    primaryColor?:string
+    secondaryColor?:string
+    itemColor?:string
+    productCode?:string
     constructor(data?: Partial<BomProposalDataModel>) {
         Object.assign(this, data);
     }

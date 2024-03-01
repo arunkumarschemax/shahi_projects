@@ -206,6 +206,16 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
+
+    @Post('/generateProposalForButton')
+    async generateProposalForButton(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.generateProposalForButton(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
+
     @Post('/getbom')
     @ApiBody({ type: BomExcelreq })
     async getBom(@Body() req: any): Promise<CommonResponseModel> {
