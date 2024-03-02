@@ -80,4 +80,7 @@ export class BomService extends CommonAxiosService {
     async getGeoCode(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getGeoCode")
     }
+    async generateProposalForButton(req: BomProposalReq): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/generateProposalForButton", req)
+    }
 }
