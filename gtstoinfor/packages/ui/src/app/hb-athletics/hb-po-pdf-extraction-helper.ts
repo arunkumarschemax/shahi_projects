@@ -1,5 +1,5 @@
 import { CentricPoDetails, CentricPoItemDetails, CentricPoItemVariant, HbPoDetails, HbPoItemDetails } from "@project-management-system/shared-models";
-import { EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, ITEM_NO_EXP, ITEM_NO_EXP1, ITEM_NO_EXP2, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, ITEM_VARIANT_START_TEXT1, ITEM_VARIANT_START_TEXT2, MANUFACTURE_1, MANUFACTURE_2, PAGE_DATE, PAGE_DATE_INDEX, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SPECIAL_INSTRUCTIONS } from "./hb-popdf-regex-expressions";
+import { EMP_STR_EXP, FORMAT_SEPARATION_KEYWORD, FRIEGHT_PAY_METHOD, ITEM_NO_EXP, ITEM_NO_EXP1, ITEM_NO_EXP2, ITEM_NO_EXP_3, ITEM_TEXT_END_TEXT, ITEM_TEXT_END_TEXT1, ITEM_VARIANT_START_TEXT, ITEM_VARIANT_START_TEXT1, ITEM_VARIANT_START_TEXT2, ITEM_VARIANT_START_TEXT3, MANUFACTURE_1, MANUFACTURE_2, PAGE_DATE, PAGE_DATE_INDEX, PAYMENT_TERM_DESCRIPTION, PO_DOC_DATE_TXT, PO_NUMBER_INDEX, PO_NUMBER_TEXT, REFRENCE, SPECIAL_INSTRUCTIONS } from "./hb-popdf-regex-expressions";
 
 
 /** 
@@ -204,10 +204,10 @@ export const extractDataFromPoPdf = async (pdf) => {
     let isSecondFormat = false;
     for (const [index, rec] of filteredData.entries()) {
 
-        if (rec.str.match(ITEM_NO_EXP) || rec.str.match(ITEM_NO_EXP1) || rec.str.match(ITEM_NO_EXP2)) {
+        if (rec.str.match(ITEM_NO_EXP) || rec.str.match(ITEM_NO_EXP1) || rec.str.match(ITEM_NO_EXP2) || rec.str.match(ITEM_NO_EXP_3)) {
             prevItemIndex = index
         }
-        if (rec.str.includes(ITEM_VARIANT_START_TEXT) || rec.str.includes(ITEM_VARIANT_START_TEXT1) || rec.str.includes(ITEM_VARIANT_START_TEXT2)) {
+        if (rec.str.includes(ITEM_VARIANT_START_TEXT) || rec.str.includes(ITEM_VARIANT_START_TEXT1) || rec.str.includes(ITEM_VARIANT_START_TEXT2)  || rec.str.includes(ITEM_VARIANT_START_TEXT3)) {
             itemsArr.push({ itemIndex: prevItemIndex, amountIndex: index })
         }
 
