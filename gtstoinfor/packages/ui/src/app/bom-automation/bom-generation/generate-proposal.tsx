@@ -8,6 +8,7 @@ import * as XLSX from 'xlsx';
 import WasCarelabel from '../../trims/trim-prints/wash-care-label';
 import Button3Print from '../../trims/trim-prints/button3-print';
 import NecKType from '../../trims/trim-prints/neck-type';
+import Interlining from '../../trims/trim-prints/interlining-prints';
 type Props = {
   poLine: string[]
 }
@@ -38,7 +39,8 @@ export default function GenerateProposal(props: Props) {
   const componentsMapping = {
     "Wash Care Label": <WasCarelabel bomInfo={proposalData} />,
     "BUTTON":<Button3Print bomInfo={buttonData}/>,
-    "Neck Tape":<NecKType bomInfo={proposalData} />
+    "Neck Tape":<NecKType bomInfo={proposalData} />,
+    "Interlining":<Interlining bomInfo={proposalData}/>
   }
 
   const onCancel = () => {
