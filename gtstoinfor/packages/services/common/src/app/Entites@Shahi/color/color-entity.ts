@@ -72,6 +72,6 @@ export class ColorEntity {
         name: "version_flag",
     })
     versionFlag: number;
+ 
 
-    
 }
