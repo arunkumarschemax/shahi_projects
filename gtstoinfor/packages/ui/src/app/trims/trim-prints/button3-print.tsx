@@ -4,13 +4,64 @@ import { useLocation } from "react-router-dom";
 import { Shahi } from "../SHAHI";
 import { HTTP } from "../http";
 import React from "react";
+export const getCssFromComponent = (fromDoc, toDoc) => {
 
-export function Button3Print() {
+    Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
+        if (styleSheet.cssRules) {
+            const newStyleElement = toDoc.createElement("style");
+            Array.from(styleSheet.cssRules).forEach((cssRule: any) => {
+                newStyleElement.appendChild(toDoc.createTextNode(cssRule.cssText));
+            });
+            toDoc.head.appendChild(newStyleElement);
+        }
+    });
+};
+export interface Button3PrintProps{
+bomInfo:any
+}
+export function Button3Print(props:Button3PrintProps) {
+console.log(props.bomInfo)
+const data = props.bomInfo
 
+ const handlePrint = () => {
+    const invoiceContent = document.getElementById("print");
+    if (invoiceContent) {
+        const devContent = invoiceContent.innerHTML;
+        const printWindow = window.open("", "PRINT", "height=900,width=1600");
+
+        printWindow.document.write(`
+            <html>
+                <head>
+                    <style>
+                        @page {
+                            size: legal;
+                            margin: 20;
+                        }
+                        body {
+                            margin: 0;
+                            transform: scale(1);
+                            transform-origin: top center;
+                            width:100%;
+                        }
+                        /* Additional styles for your content */
+                    </style>
+                </head>
+                <body>${devContent}</body>
+            </html>
+        `);
+
+            getCssFromComponent(document, printWindow.document);
+
+            printWindow.document.close();
+            setTimeout(function () {
+                printWindow.print();
+                printWindow.close();
+            }, 1000); // Add a delay to ensure all content is loaded
+        }
+   }
     return (
-        <Card>
-            <h3>BUTTON - A0726468</h3>
-
+        <div  id='print'>
+ <Card title={'BUTTON'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
             <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
                 <tr>
                     <th style={{ width: '3%' }}>ITEM#</th>
@@ -22,107 +73,28 @@ export function Button3Print() {
                     <th style={{ width: '3%' }}>GARMENT COLOR CODE</th>
                     <th style={{ width: '3%' }}>BUTTON COLOR</th>
                     <th style={{ width: '3%' }}>QTY IN PCS</th>
-
-                </tr>
-                <tr>
-                    <td style={{ textAlign: 'center' }} rowSpan={4}>773P</td>
-                    <td style={{ textAlign: 'center' }} rowSpan={4}>CJ4456</td>
-                    <td style={{ textAlign: 'center' }} rowSpan={4}>FA24
-                    </td>
-                    <td style={{ textAlign: 'center' }} rowSpan={13}>A0726468
-                    </td>
-                    <td style={{ textAlign: 'center' }} rowSpan={13}>FA21-MNSW-SWOOSH PACK-RECYCLED
-                        POLO BUTTON; BUTTON; FLAT; SHEET;
-                        BASE SM: 0; APPROVED;
-                        TRIM-HARDWARE; VENDOR #: 5446;
-                        PRIMARY SM: YES; 75% POLYESTER,
-                        25% POLYETHYLENE TEREPHTHALATE
-                        (PET) (MECHANICALLY RECYCLED); #
-                        OF HOLES: 4; # OF COLORS: 1; H (MM):
-                        0.00; W (MM): 11.00; THK (MM): 3.00;
-                        LIGNE: 18; CIRCLE; PIGMENT DYED;
-                        APPLICATION TECHNIQUE: SEW ON;
-                        VISUAL EFFECT: DULL-MATTE
-                    </td>
-                    <td style={{ textAlign: 'center' }} rowSpan={13}>18 L
-                    </td>
-                    <td style={{ textAlign: 'center' }}>BLACK/(WHITE)-010</td>
-                    <td style={{ textAlign: 'center' }}>00A BLACK</td>
-                    <td style={{ textAlign: 'center' }}>161</td>
-                </tr>
-                <tr>
-                    <td style={{ textAlign: 'center' }}>MIDNIGHT NAVY/(WHITE)-410</td>
-                    <td style={{ textAlign: 'center' }}>44B MNNAVY </td>
-                    <td style={{ textAlign: 'center' }}>100</td>
-                </tr>
-                <tr>
-                    <td style={{ textAlign: 'center' }}>MINERAL/(WHITE)-309</td>
-                    <td style={{ textAlign: 'center' }}>3DB MINERL</td>
-                    <td style={{ textAlign: 'center' }}>100</td>
-                </tr>
-                <tr>
-                    <td style={{ textAlign: 'center' }}>WHITE/(BLACK)-100</td>
-                    <td style={{ textAlign: 'center' }}>10A WHITE</td>
-                    <td style={{ textAlign: 'center' }}>132</td>
-                </tr>
-                <tr>
-                    <td colSpan={3}><br/></td>
-                    <td colSpan={3}><br/></td>
-                </tr>
-                <tr>
-                    <td style={{ textAlign: 'center' }} rowSpan={2}>584P</td>
-                    <td style={{ textAlign: 'center' }} rowSpan={2}>FN3895</td>
-                    <td style={{ textAlign: 'center' }} rowSpan={2}>SU24
-                    </td>
-                    <td style={{ textAlign: 'center' }}>BLACK/(WHITE)-010</td>
-                    <td style={{ textAlign: 'center' }}>00A BLACK</td>
-                    <td style={{ textAlign: 'center' }}>284</td>
-                </tr>
-                <tr>
-                    <td style={{ textAlign: 'center' }}>WHITE/(BLACK)-100</td>
-                    <td style={{ textAlign: 'center' }}>10A WHITE </td>
-                    <td style={{ textAlign: 'center' }}>88</td>
-                </tr>
-                <tr>
-                    <td colSpan={3}><br/></td>
-                    <td colSpan={3}><br/></td>
-                </tr>
-                <tr>
-                    <td style={{ textAlign: 'center' }} rowSpan={2}>587P</td>
-                    <td style={{ textAlign: 'center' }} rowSpan={2}>FN3894</td>
-                    <td style={{ textAlign: 'center' }} rowSpan={2}>FA24
-                    </td>
-                    <td style={{ textAlign: 'center' }}>BLACK/(WHITE)-010</td>
-                    <td style={{ textAlign: 'center' }}>00A BLACK</td>
-                    <td style={{ textAlign: 'center' }}>17</td>
-                </tr>
-                <tr>
-                    <td style={{ textAlign: 'center' }}>WHITE/(BLACK)-100</td>
-                    <td style={{ textAlign: 'center' }}>10A WHITE </td>
-                    <td style={{ textAlign: 'center' }}>19</td>
-                </tr>
-                <tr>
-                    <td colSpan={3}><br/></td>
-                    <td colSpan={3}><br/></td>
-                </tr>
-                <tr>
-                    <td style={{ textAlign: 'center' }} rowSpan={2}>769P</td>
-                    <td style={{ textAlign: 'center' }} rowSpan={2}>FN3894</td>
-                    <td style={{ textAlign: 'center' }} rowSpan={2}>SU24
-                    </td>
-                    <td style={{ textAlign: 'center' }}>BLACK/(WHITE)-010</td>
-                    <td style={{ textAlign: 'center' }}>00A BLACK</td>
-                    <td style={{ textAlign: 'center' }}>45</td>
-                </tr>
-                <tr>
-                    <td style={{ textAlign: 'center' }}>WHITE/(BLACK)-100</td>
-                    <td style={{ textAlign: 'center' }}>10A WHITE </td>
-                    <td style={{ textAlign: 'center' }}>50</td>
-                </tr>
+                    </tr>
+                    {data.map((rec,index) =>{
+                        return(
+                            <tr>
+                            <td style={{ textAlign: 'center' }} >{rec.itemNo !== null ? rec.itemNo:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.season !== null ? rec.season:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.imCode !== null ? rec.imCode:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.description !== null ? rec.description:''}</td>
+                            <td style={{ textAlign: 'center' }} >{'18L'}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.color !== null ? rec.color:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
+                         </tr>
+                        )
+                      
+                    })}
                
             </table>
         </Card>
-
+        </div>
+       
     )
 
 
