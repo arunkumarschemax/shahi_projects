@@ -12,37 +12,37 @@ export class CentricPdfFileUploadEntity {
         length: 50,
         name: "po_number",
     })
-    poNumber: string 
+    poNumber: string
 
-    
+
     @Column("varchar", {
         nullable: false,
         length: 50,
         name: "pdf_file_name",
     })
-    pdfFileName: string 
+    pdfFileName: string
 
-    
+
     @Column("varchar", {
         nullable: false,
         length: 25,
         name: "file_path",
     })
-    filePath: string 
+    filePath: string
 
-    
+
     @Column("varchar", {
         nullable: false,
         length: 50,
         name: "file_type",
     })
-    fileType: string 
+    fileType: string
 
     @Column("text", {
         nullable: false,
         name: "file_data",
     })
-    fileData: string 
+    fileData: string
 
 
 
@@ -69,5 +69,14 @@ export class CentricPdfFileUploadEntity {
         name: "updated_user",
     })
     updatedUser: string | null;
+
+
+    @Column("varchar", {
+
+        length: 40,
+        name: "upload_status",
+    })
+    uploadStatus: string;
+
 
 }

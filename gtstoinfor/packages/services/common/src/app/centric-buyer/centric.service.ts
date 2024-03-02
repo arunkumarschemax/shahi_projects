@@ -299,24 +299,55 @@ export class CentricService {
     }
   }
 
-  async updatePath(req: any, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
-    // const poNumberFromFileName = filename.match(/[0-9]{10}/);
-    const entity = new CentricPdfFileUploadEntity();
-    // entity.poNumber = poNumberFromFileName ? poNumberFromFileName[0] : '';
-    entity.poNumber = poNumber;
-    entity.pdfFileName = filename;
-    entity.filePath = filePath;
-    entity.fileType = mimetype;
-    entity.fileData = req;
+  // async updatePath(req: any, poNumber: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
+  //   // const poNumberFromFileName = filename.match(/[0-9]{10}/);
+  //   const entity = new CentricPdfFileUploadEntity();
+  //   // entity.poNumber = poNumberFromFileName ? poNumberFromFileName[0] : '';
+  //   entity.poNumber = poNumber;
+  //   entity.pdfFileName = filename;
+  //   entity.filePath = filePath;
+  //   entity.fileType = mimetype;
+  //   entity.fileData = req;
 
-    const save = await this.pdfRepo.save(entity);
-    if (save) {
-      return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
-    } else {
-      return new CommonResponseModel(false, 0, 'Uploaded failed');
+  //   const save = await this.pdfRepo.save(entity);
+  //   if (save) {
+  //     return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
+  //   } else {
+  //     return new CommonResponseModel(false, 0, 'Uploaded failed');
+  //   }
+  // }
+
+  async updatePath(req: any, jsonData: any,poNumber:any): Promise<CommonResponseModel> {
+    try {
+
+      let flag = true;
+      const entities=[]
+      for (const res of req) {
+        const entity = new CentricPdfFileUploadEntity();
+        entity.pdfFileName = res.filename
+        entity.filePath = res.path
+        entity.poNumber = poNumber
+        entity.fileData = jsonData
+        entity.fileType = res.mimetype
+        entity.createdUser = "admin"
+        entity.uploadStatus = "SUCCESS";
+        entities.push(entity);
+      }
+      const uploadDoc = await this.pdfRepo.save(entities);
+      if (!uploadDoc) {
+        flag = false;
+      }
+      if (flag) {
+        return new CommonResponseModel(true, 11, 'uploaded successfully', req);
+      }
+      else {
+        return new CommonResponseModel(false, 11, 'uploaded failed', req);
+      }
+    }
+    catch (error) {
+      console.log(error);
     }
   }
-
 
   // async updatePath(poNumber:string,filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
   //   console.log(poNumber,"pppppioooooo")

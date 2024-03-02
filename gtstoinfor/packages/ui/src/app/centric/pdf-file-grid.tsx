@@ -212,52 +212,96 @@ export function CentricPdFInfoGrid() {
 
         },
 
+        // {
+        //     title: "Action",
+        //     dataIndex: "action",
+        //     align: "center",
+        //     width: 120,
+        //     render: (value, record) => (
+        //         <>
+        //             <Button
+        //                 type="primary"
+        //                 onClick={() => setMoreData(record)}
+        //             >More Info</Button>
+        //             <Tooltip title="PDF download">
+        //                 <Button icon={<FilePdfOutlined onClick={() => download(record.file_path)} style={{ color: "red" }} />} >{value}</Button>
+        //             </Tooltip>
+        //         </>
+        //     ),
+        // }
+
         {
-            title: "Action",
-            dataIndex: "action",
-            align: "center",
-            width: 120,
-            render: (value, record) => (
-                <>
-                    <Button
-                        type="primary"
-                        onClick={() => setMoreData(record)}
-                    >More Info</Button>
-                    <Tooltip title="PDF download">
-                        <Button icon={<FilePdfOutlined onClick={() => download(record.file_path)} style={{ color: "red" }} />} >{value}</Button>
-                    </Tooltip>
-                </>
-            ),
-        }
+          title: "Action",
+          dataIndex: "action",
+          align: "center",
+          width: 120,
+          render: (value, record) => (
+              <>
+                  <Button
+                      type="primary"
+              onClick={() => setMoreData(record)}
+                  >More Info</Button>
+                  <Tooltip title="PDF download">
+                      <Button icon={<FilePdfOutlined onClick={() => download(record.pdf_file_name)}  style={{color:"red"}}/>} >{value}</Button>
+                  </Tooltip>
+              </>
+          ),
+      }
 
 
     ]
 
+    // const download = (filePath) => {
+    //     console.log(filePath);
+    //     // : FilenameDto[]
+
+    //     if (filePath) {
+    //         filePath = filePath.split(",");
+    //         for (const res of filePath) {
+    //             if (res) {
+    //                 console.log(res);
+    //                 setTimeout(() => {
+    //                     const response = {
+    //                         file: config.file_upload_path + '/' + `${res}`,
+    //                     };
+
+    //                     window.open(response.file);
+
+    //                 }, 100);
+    //             }
+    //         }
+    //     }
+    //     else {
+    //         AlertMessages.getErrorMessage("Please upload file. ");
+
+    //     }
+    // }
+
     const download = (filePath) => {
-        console.log(filePath);
-        // : FilenameDto[]
+      console.log(filePath);
+      // : FilenameDto[]
 
-        if (filePath) {
-            filePath = filePath.split(",");
-            for (const res of filePath) {
-                if (res) {
-                    console.log(res);
-                    setTimeout(() => {
-                        const response = {
-                            file: config.file_upload_path + '/' + `${res}`,
-                        };
+      if (filePath) {
+          filePath = filePath.split(",");
+          for (const res of filePath) {
+              if (res) {
+                  console.log(res);
+                  setTimeout(() => {
+                      const response = {
+                          file: config.file_upload_path + '/' + `${res}`,
+                      };
 
-                        window.open(response.file);
+                      window.open(response.file);
 
-                    }, 100);
-                }
-            }
-        }
-        else {
-            AlertMessages.getErrorMessage("Please upload file. ");
+                  }, 100);
+              }
+          }
+      }
+      else {
+          AlertMessages.getErrorMessage("Please upload file. ");
 
-        }
-    }
+      }
+  }
 
     return (
         <>
