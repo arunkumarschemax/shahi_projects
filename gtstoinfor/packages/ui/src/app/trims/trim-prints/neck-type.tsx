@@ -170,6 +170,12 @@ export const NecKType = (props: NeckTypeprops) => {
         return ''
     }
 
+    const tableCellStyle: React.CSSProperties = {
+        border: '1px solid #dddddd',
+        textAlign: 'left',
+        padding: '8px',
+      };
+
     const sizewisedatamap = (bomInfo) => {
         const data = bomInfo.some(item => item.geoCode == 'APA' && item?.styleType === 'MENS TOP')
         if (data) {
@@ -213,46 +219,78 @@ export const NecKType = (props: NeckTypeprops) => {
 
     }
 
-
-
-
+    const data1 = [
+        { ITEM: '220P', STYLE: 'DH0858', SEASON:'SU24',IM: 'A0467488',MATERIALDESCRIPTION:'ELASTIC; STANDARD; WOVEN; BASE SM: 0; APPROVED; TRIM-KNIT/WVN TAPE,BUNGE,DCORD; PRIMARY SM: YES; 86.49% POLYESTER (MECHANICALLY RECYCLED), 7% ELASTANE, 6.51% POLYESTER; L (MM): 0.00; W (MM): 9.00; EDGE TO EDGE; # OF GRIPPER ROWS: 0; PIECE DYED-SINGLE DYED DRAWCORD; W (MM): 0.00; AGLET; H (MM): 0.00; W (MM): 0.00; INTERNAL DIA (MM): 0.00',
+        GARMENTCOLOURCODE: 'BLACK/(WHITE)-010',GARMENTCOLOURCODE1:'GLACIER BLUE/(BLACK)-476',GARMENTCOLOURCODE2:'WHITE/(BLACK)-100',TAPECOLOUR: '00A BLACK ',TAPECOLOUR1:'43G G BLUE',TAPECOLOUR2:"10A WHITE",QTYINYDS:5960 ,QTYINYDS1:1920,QTYINYDS2:4505},
+      ];
 
 
     return (
         <div id='print'>
             <Card title={'Neck Tape'}
-                extra={<><span><Button onClick={handlePrint}>Print</Button></span><span>
-                
-                </span></>}
-            >
-
-                <div>
-           
-                    <br /><br />
-                    <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black', paddingTop: 30 }} border={1} cellSpacing="0" cellPadding='0'
-                        //   ref={tableRef}
-                        id="table-to-xls"
-                    >
-
-
-                        
-                    </table>
-                    <br /><br />
-                    <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='0'
-                        //   ref={tableRef}
-                        id="table-to-xls">
+                extra={<><span><Button onClick={handlePrint}>Print</Button></span><span> </span></>} >
+                    <table  style={{ borderCollapse: 'collapse', width: '100%' }}>
+                    <thead>
                         <tr>
-                            <th style={{ width: '10%' }} >ITEM</th>
-                            <th style={{ width: '10%' }} >STYLE</th>
-                            <th style={{ width: '10%' }} >SEASON</th>
-                            <th style={{ width: '10%' }} >IM#</th>
-                            <th style={{ width: '10%' }} >MATERIAL DESCRIPTION</th>
-                            <th style={{ width: '15%' }} >GARMENT COLOR CODE</th>
-                            <th style={{ width: '15%' }} >TAPE COLOR</th>
-                            <th style={{ width: '10%' }} >QTY IN YARDS</th>
+                            <th style={tableCellStyle} >ITEM</th>
+                            <th style={tableCellStyle} >STYLE</th>
+                            <th style={tableCellStyle} >SEASON</th>
+                            <th style={tableCellStyle} >IM#</th>
+                            <th style={tableCellStyle} >MATERIAL DESCRIPTION</th>
+                            <th style={tableCellStyle} >GARMENT COLOR CODE</th>
+                            <th style={tableCellStyle} >TAPE COLOR</th>
+                            <th style={tableCellStyle} >QTY IN YARDS</th>
                         </tr>
+                        </thead>
+                    <tbody>
+                              {data1.map((item, index) => (
+                                <tr key={index}>
+                                  <td style={tableCellStyle} >{item.ITEM}</td>
+                                  <td style={tableCellStyle}>{item.STYLE}</td>
+                                  <td style={tableCellStyle}>{item.SEASON}</td>
+                                  <td style={tableCellStyle}>{item.IM}</td>
+                                  <td style={tableCellStyle}>{item.MATERIALDESCRIPTION}</td>
+                    
+                                  <tr>
+                                    <td style={tableCellStyle} >{item.GARMENTCOLOURCODE}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style={tableCellStyle}>{item.GARMENTCOLOURCODE1}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style={tableCellStyle}>{item.GARMENTCOLOURCODE2}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style={tableCellStyle} >{item.TAPECOLOUR}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style={tableCellStyle} >{item.TAPECOLOUR1}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style={tableCellStyle} >{item.TAPECOLOUR2}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style={tableCellStyle} >{item.QTYINYDS}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style={tableCellStyle} >{item.QTYINYDS1}</td>
+                                  </tr>
+                                  <tr>
+                                    <td style={tableCellStyle}>{item.QTYINYDS2}</td>
+                                  </tr>
+                                </tr>
+                    
+                              ))}
+                            </tbody>
+                            <tfoot>
+                              <tr>
+                                <td style={tableCellStyle} colSpan={7} ></td>
+                                <td  style={tableCellStyle} >{data1.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1+item.QTYINYDS2), 0)}</td>
+                              </tr>
+                            </tfoot>
 
-                        {
+
+          {/* {
                             data.map((row, index) => {
                                 return <tr key={index}>
                                     <td >{row.itemNo !== null ? row.itemNo : ''}</td>
@@ -266,10 +304,9 @@ export const NecKType = (props: NeckTypeprops) => {
                                     <td>{row.bomQty !== null ? row.bomQty : ''}</td>
                                 </tr>
                             })
-                        }
+                        } */}
                         
                     </table >
-                </div>
             </Card>
 
         </div>

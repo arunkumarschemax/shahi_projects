@@ -9,6 +9,7 @@ import WasCarelabel from '../../trims/trim-prints/wash-care-label';
 import Button3Print from '../../trims/trim-prints/button3-print';
 import NecKType from '../../trims/trim-prints/neck-type';
 import Interlining from '../../trims/trim-prints/interlining-prints';
+import Drawcord from '../../trims/trim-prints/drawcord';
 type Props = {
   poLine: string[]
 }
@@ -42,6 +43,7 @@ export default function GenerateProposal(props: Props) {
     "BUTTON":<Button3Print bomInfo={buttonData}/>,
     // "Neck Tape":<NecKType bomInfo={proposalData} />,
     "Interlining":<Interlining bomInfo={proposalData}/>,
+    "Drawcord":<Drawcord bomInfo={proposalData}/>,
     "Neck Tape":<NecKType bomInfo={necktapeData} />
   }
 

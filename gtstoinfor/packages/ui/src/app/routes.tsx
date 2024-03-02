@@ -68,6 +68,7 @@ import { BomExcelDownload } from "./bom-automation/bom-excel-download/bom-excel-
 import BomOrderAcceptance from "./bom-automation/bom-details/bom-order-acceptance"
 import NecKType from "./trims/trim-prints/neck-type"
 import Interlining from "./trims/trim-prints/interlining-prints"
+import Drawcord from "./trims/trim-prints/drawcord"
 
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -204,6 +205,8 @@ export const AppRoutes = () => {
                     
                     <Route path='neck-type' element={<NecKType bomInfo={[]} />} />
                     <Route path='interlining' element={<Interlining bomInfo={[]} />} />
+                    <Route path='drawcord' element={<Drawcord bomInfo={[]} />} />
+
 
 
                     
