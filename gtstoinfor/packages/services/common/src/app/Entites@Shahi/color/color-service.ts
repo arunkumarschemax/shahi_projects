@@ -60,11 +60,11 @@ export class ColorService {
             for (const data of convertedData) {
                   console.log(data,"iiiiii")
                 if (data) {
-                    const addObj = new ColorEntity()
-                    addObj.poNumber = data.PONumber
-                    addObj.style = data.Style
-                    addObj.rlField= data.RLField
-                    addObj.crmField = data.CRMField
+                    const addObj = new ColorEntity()    
+                    // addObj.poNumber = data.PONumber
+                    // addObj.style = data.Style
+                    addObj.pdfColor = data.PDFColor
+                    addObj.crmColor = data.CRMColor
     
                     const addSave = await transactionManager.getRepository(ColorEntity).save(addObj)
                     if (addSave) {

@@ -18,6 +18,7 @@ import { EddieItemNoDtos } from "./dto/eddie-item-no.dto";
 import { AddressRepository } from "../Entites@Shahi/address/address.repo";
 import { AddressService } from "../Entites@Shahi/address/address-service";
 import { Cron } from "@nestjs/schedule";
+import { ColorRepository } from "../Entites@Shahi/color/color-repo";
 
 const { Builder, Browser, By, Select, until } = require('selenium-webdriver');
 const moment = require('moment');
@@ -36,6 +37,7 @@ export class EddieService {
     private eddieOrdersChildRepository: EddieOrdersChildRepository,
     private addressRepo: AddressRepository,
     private addressService: AddressService,
+    private colorRepo:ColorRepository
 
 
   ) { }
@@ -525,106 +527,197 @@ export class EddieService {
 
 
 
+  // async getOrderdataForCOline(req: EddieDetailsReq): Promise<CommonResponseModel> {
+  //   try {
+  //     const poLineValues = req.poLine.split(',')
+  //     const data = await this.EddieOrdersRepo.find({ where: { poNumber: req.poNumber, poLine: In(poLineValues) } })
+  //     // po -> destination -> color -> sizes
+  //     const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+  //     const poMap = new Map<string, EddieOrdersEntity>();
+  //     for (const rec of data) {
+  //       poMap.set(`${rec.poNumber}`, rec)
+
+
+  //       const parts = rec.deliveryAddress.split(',')
+  //       const destAdd = parts[2].trim();
+  //       // console.log(destAdd,"tetetete")
+  //       const dest = destAdd;
+
+  //       if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
+  //         destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
+  //       }
+  //       if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
+  //         destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());      
+  //       }
+          
+  //       console.log(rec.color,"color........")
+  //       const check = await this.colorRepo.findOne({
+  //         where: {
+  //           pdfColor: rec.color
+  //         }
+  //       });
+
+  //       console.log(check,"check color")
+  //       const Color= check.crmColor
+  //       if(!check ){
+  //         if (!destinationColSizesMap.get(rec.poNumber).get(dest).has(Color)) {
+  //           destinationColSizesMap.get(rec.poNumber).get(dest).set(Color, []);
+  //         } else {
+  //           if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(rec.color)) {
+  //             destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(rec.color, []);
+  //           }
+  //         }
+  //       }
+
+  //       // destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitCost });
+  //       const sizesMap = destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(rec.color)
+
+  //       // Check if the color and size already exist
+  //       const existingSize = sizesMap.find((sizeObj) => sizeObj.size === rec.size);
+
+  //       if (existingSize) {
+  //         // If the color and size exist, update the quantity
+  //         existingSize.quantity = (parseInt(existingSize.quantity.replace(/,/g, '')) + parseInt(rec.quantity.replace(/,/g, ''))).toString();
+  //       } else {
+  //         // If the color exists but not the size, add a new size
+  //         sizesMap.push({ size: rec.size, quantity: rec.quantity, price: rec.unitCost });
+  //       }
+
+  //     };
+  //     const coData = []
+  //     // let totalUnitPrice = 0;
+  //     // let totalSizeCount = 0;
+  //     // const sizeSet = new Set<string>();
+
+  //     destinationColSizesMap.forEach((destColorSize, poNumber) => {
+  //       const desArray = []
+  //       destColorSize.forEach((colorSizes, dest) => {
+  //         const ColArray = []
+  //         colorSizes.forEach((sizes, color) => {
+  //           const sizeArray = []
+  //           sizes.forEach((size) => {
+  //             const sizeObj = new EddieSizeModel(size.size, size.quantity, size.price);
+  //             sizeArray.push(sizeObj)
+  //           })
+
+  //           //
+  //           //  sizes.forEach((size) => {
+  //           //     const sizeKey = `${size.size}-${color}`; // Create a unique key based on size and color
+
+  //           //     // Check if the size is unique, then calculate totalUnitPrice
+  //           //     if (!sizeSet.has(sizeKey)) {
+  //           //       console.log(sizeKey, "pppoiiiii")
+
+  //           //       totalUnitPrice += parseFloat(size.price);
+  //           //       sizeSet.add(sizeKey); // Add the unique size to the set
+  //           //       totalSizeCount += 1;  // for total size count for Avg of unit price
+
+  //           //     }
+
+  //           //   });
+
+
+  //           const col = new EddieColorModel(color, sizeArray);
+  //           ColArray.push(col)
+  //           // sizeSet.clear();
+  //         });
+  //         const des = new EddieDestinationModel(dest, ColArray);
+  //         desArray.push(des)
+  //       });
+
+
+  //       const poInfo = poMap.get(poNumber)
+  //       // console.log(totalSizeCount, "count")
+  //       // console.log(totalUnitPrice, "totalUnitPrice")
+  //       // const averageUnitPrice = totalSizeCount > 0 ? totalUnitPrice / totalSizeCount : 0;  // calculation of Avg unit price
+  //       // console.log(averageUnitPrice,"avg price")
+
+  //       const co = new EddieCoLinereqModels(poInfo.poNumber, poInfo.poLine, poInfo.unitCost, poInfo.deliveryDate, poInfo.exFactoryDate, poInfo.currency, poInfo.buyerStyle, desArray);
+  //       coData.push(co)
+  //     });
+  //     if (coData) {
+  //       return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
+  //     } else {
+  //       return new CommonResponseModel(false, 0, 'No data found');
+  //     }
+  //   } catch (err) {
+  //     throw err
+  //   }
+  // }
   async getOrderdataForCOline(req: EddieDetailsReq): Promise<CommonResponseModel> {
     try {
-      const poLineValues = req.poLine.split(',')
-      const data = await this.EddieOrdersRepo.find({ where: { poNumber: req.poNumber, poLine: In(poLineValues) } })
-      // po -> destination -> color -> sizes
+      const poLineValues = req.poLine.split(',');
+      const ordersData = await this.EddieOrdersRepo.find({ where: { poNumber: req.poNumber, poLine: In(poLineValues) } });
+  
       const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
       const poMap = new Map<string, EddieOrdersEntity>();
-      data.forEach(rec => {
-        poMap.set(`${rec.poNumber}`, rec)
-
-
-        const parts = rec.deliveryAddress.split(',')
-        const destAdd = parts[2].trim();
-        // console.log(destAdd,"tetetete")
-        const dest = destAdd;
-
-        if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
-          destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
+  
+      for (const order of ordersData) {
+        poMap.set(`${order.poNumber}`, order);
+  
+        const parts = order.deliveryAddress.split(',');
+        const dest = parts[2].trim();
+  
+        if (!destinationColSizesMap.has(`${order.poNumber}`)) {
+          destinationColSizesMap.set(`${order.poNumber}`, new Map<string, Map<string, { size: string, quantity: string, price: string }[]>>());
         }
-        if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
-          destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
+  
+        if (!destinationColSizesMap.get(`${order.poNumber}`).has(dest)) {
+          destinationColSizesMap.get(`${order.poNumber}`).set(dest, new Map<string, { size: string, quantity: string, price: string }[]>());
         }
-        if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(rec.color)) {
-          destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(rec.color, []);
+  
+        const check = await this.colorRepo.findOne({ where: { pdfColor: order.color } });
+        const color = check ? check.crmColor : order.color;
+  
+        if (!destinationColSizesMap.get(order.poNumber).get(dest).has(color)) {
+          destinationColSizesMap.get(order.poNumber).get(dest).set(color, []);
         }
-        // destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(rec.color).push({ size: rec.size, quantity: rec.quantity, price: rec.unitCost });
-        const sizesMap = destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(rec.color)
-
-        // Check if the color and size already exist
-        const existingSize = sizesMap.find((sizeObj) => sizeObj.size === rec.size);
-
+  
+        const sizesMap = destinationColSizesMap.get(order.poNumber).get(dest).get(color);
+        const existingSize = sizesMap.find((sizeObj) => sizeObj.size === order.size);
+  
         if (existingSize) {
-          // If the color and size exist, update the quantity
-          existingSize.quantity = (parseInt(existingSize.quantity.replace(/,/g, '')) + parseInt(rec.quantity.replace(/,/g, ''))).toString();
+          existingSize.quantity = (parseInt(existingSize.quantity.replace(/,/g, '')) + parseInt(order.quantity.replace(/,/g, ''))).toString();
         } else {
-          // If the color exists but not the size, add a new size
-          sizesMap.push({ size: rec.size, quantity: rec.quantity, price: rec.unitCost });
+          sizesMap.push({ size: order.size, quantity: order.quantity, price: order.unitCost });
         }
-
-      });
-      const coData = []
-      // let totalUnitPrice = 0;
-      // let totalSizeCount = 0;
-      // const sizeSet = new Set<string>();
-
+      }
+  
+      const coData = [];
+  
       destinationColSizesMap.forEach((destColorSize, poNumber) => {
-        const desArray = []
+        const desArray = [];
+  
         destColorSize.forEach((colorSizes, dest) => {
-          const ColArray = []
+          const ColArray = [];
+  
           colorSizes.forEach((sizes, color) => {
-            const sizeArray = []
-            sizes.forEach((size) => {
-              const sizeObj = new EddieSizeModel(size.size, size.quantity, size.price);
-              sizeArray.push(sizeObj)
-            })
-
-            //
-            //  sizes.forEach((size) => {
-            //     const sizeKey = `${size.size}-${color}`; // Create a unique key based on size and color
-
-            //     // Check if the size is unique, then calculate totalUnitPrice
-            //     if (!sizeSet.has(sizeKey)) {
-            //       console.log(sizeKey, "pppoiiiii")
-
-            //       totalUnitPrice += parseFloat(size.price);
-            //       sizeSet.add(sizeKey); // Add the unique size to the set
-            //       totalSizeCount += 1;  // for total size count for Avg of unit price
-
-            //     }
-
-            //   });
-
-
+            const sizeArray = sizes.map(size => new EddieSizeModel(size.size, size.quantity, size.price));
             const col = new EddieColorModel(color, sizeArray);
-            ColArray.push(col)
-            // sizeSet.clear();
+            ColArray.push(col);
           });
+  
           const des = new EddieDestinationModel(dest, ColArray);
-          desArray.push(des)
+          desArray.push(des);
         });
-
-
-        const poInfo = poMap.get(poNumber)
-        // console.log(totalSizeCount, "count")
-        // console.log(totalUnitPrice, "totalUnitPrice")
-        // const averageUnitPrice = totalSizeCount > 0 ? totalUnitPrice / totalSizeCount : 0;  // calculation of Avg unit price
-        // console.log(averageUnitPrice,"avg price")
-
+  
+        const poInfo = poMap.get(poNumber);
         const co = new EddieCoLinereqModels(poInfo.poNumber, poInfo.poLine, poInfo.unitCost, poInfo.deliveryDate, poInfo.exFactoryDate, poInfo.currency, poInfo.buyerStyle, desArray);
-        coData.push(co)
+        coData.push(co);
       });
-      if (coData) {
-        return new CommonResponseModel(true, 1, 'Data Retrived Sucessfully', coData);
+  
+      if (coData.length > 0) {
+        return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', coData);
       } else {
         return new CommonResponseModel(false, 0, 'No data found');
       }
     } catch (err) {
-      throw err
+      // Handle error appropriately, maybe log it
+      console.error(err);
+      throw new Error('Error retrieving data');
     }
   }
+  
 
   async getordercomparationData(req?: any): Promise<CommonResponseModel> {
     try {

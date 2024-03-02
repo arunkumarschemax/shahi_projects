@@ -1,6 +1,7 @@
 export const ColorColumns = [
-    "CRMField",
-    "RLField",
+    "CRMColor",
+    "PDFColor",
     "PONumber",
-    "Style"
+    "Style",
+    "SNo"
   ]

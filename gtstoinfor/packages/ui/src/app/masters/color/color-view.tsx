@@ -120,50 +120,50 @@ export const ColorView = () => {
             title: 'S No',
             key: 'sno',
             align:"center",
-            width:"60px",
+            width:"10",
             responsive: ['sm'],
             render: (text, object, index) => (page - 1) * pageSize + (index + 1) + (pageSize * (page - 1))
         },
-        {
+        // {
            
-            title:<div style={{textAlign:"center"}}>PO Number</div>,
-            width:150,
-            dataIndex:'poNumber',
-            sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
-            sortDirections: ["ascend", "descend"],
-            ...getColumnSearchProps('poNumber')
+        //     title:<div style={{textAlign:"center"}}>PO Number</div>,
+        //     width:150,
+        //     dataIndex:'poNumber',
+        //     sorter: (a, b) => a.poNumber.localeCompare(b.poNumber),
+        //     sortDirections: ["ascend", "descend"],
+        //     ...getColumnSearchProps('poNumber')
 
 
-        },
-        {
-          title:<div style={{textAlign:"center"}}>Style</div>,
-            dataIndex:'style',
-            // align:"center",
-            width:150,
-            sorter: (a, b) => a.style.localeCompare(b.style),
-            sortDirections: ["ascend", "descend"],
-            ...getColumnSearchProps('style')
-        },
+        // },
+        // {
+        //   title:<div style={{textAlign:"center"}}>Style</div>,
+        //     dataIndex:'style',
+        //     // align:"center",
+        //     width:150,
+        //     sorter: (a, b) => a.style.localeCompare(b.style),
+        //     sortDirections: ["ascend", "descend"],
+        //     ...getColumnSearchProps('style')
+        // },
         {
           
-            title:<div style={{textAlign:"center"}}>RL Field</div>,
-            dataIndex:'rlField',
-            width:200,
-            sorter: (a, b) => a.rlField.localeCompare(b.rlField),
+            title:<div style={{textAlign:"center"}}>PDF Color</div>,
+            dataIndex:'pdfColor',
+            width:70,
+            sorter: (a, b) => a.pdfColor.localeCompare(b.pdfColor),
             sortDirections: ["ascend", "descend"],
-            ...getColumnSearchProps('rlField')
+            ...getColumnSearchProps('pdfColor')
           
         },
        
         {
            
-            title:<div style={{textAlign:"center"}}>CRM Field</div>,
-            dataIndex:'crmField',
-            width:200,
-            sorter: (a, b) => a.crmField.localeCompare(b.crmField),
+            title:<div style={{textAlign:"center"}}>CRM Color</div>,
+            dataIndex:'crmColor',
+            width:90,
+            sorter: (a, b) => a.crmColor.localeCompare(b.crmColor),
             sortDirections: ["ascend", "descend"],
             
-            ...getColumnSearchProps('crmField')
+            ...getColumnSearchProps('crmColor')
             
           
         },
@@ -172,12 +172,12 @@ export const ColorView = () => {
 
     let i = 1;
     const exceldata = [
-        // { title: 'S No', dataIndex: 'sNo', render: (text:any, object:any, index:any) => { return i++; } },
+        { title: 'S No', dataIndex: 'sNo', render: (text:any, object:any, index:any) => { return i++; } },
         
-        { title: 'PO Number', dataIndex: 'poNumber',width:120,render:(text:any,record:any) => {return record.poNumber ? record.poNumber : '-'} },
-        { title: 'Style', dataIndex: 'style',width:120,render:(text:any,record:any) => {return record.style ? record.style : '-'} },
-        { title: 'RL Field', dataIndex: 'rlField',width:200,render:(text:any,record:any) => {return record.rlField ? record.rlField : '-'} },
-        { title: 'CRM Field', dataIndex: 'crmField',width:200,render:(text:any,record:any) => {return record.crmField ? record.crmField : '-'} },
+        // { title: 'PO Number', dataIndex: 'poNumber',width:120,render:(text:any,record:any) => {return record.poNumber ? record.poNumber : '-'} },
+        // { title: 'Style', dataIndex: 'style',width:120,render:(text:any,record:any) => {return record.style ? record.style : '-'} },
+        { title: 'PDF Color', dataIndex: 'pdfColor',width:200,render:(text:any,record:any) => {return record.pdfColor ? record.pdfColor : '-'} },
+        { title: 'CRM Color', dataIndex: 'crmColor',width:200,render:(text:any,record:any) => {return record.crmColor ? record.crmColor : '-'} },
       
 
     ]

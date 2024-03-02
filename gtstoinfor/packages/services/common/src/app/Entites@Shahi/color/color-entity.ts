@@ -7,33 +7,33 @@ export class ColorEntity {
     })
     colorId: number
 
-    @Column("varchar",{
-        name:'po_number',
-        nullable:false,
+    // @Column("varchar",{
+    //     name:'po_number',
+    //     nullable:false,
         
-    })
-    poNumber: string
+    // })
+    // poNumber: string
 
     
-    @Column("varchar",{
-        name:'style',
-        nullable:false,
+    // @Column("varchar",{
+    //     name:'style',
+    //     nullable:false,
         
-    })
-    style: string
+    // })
+    // style: string
 
     @Column('varchar',{
-        name:'rl_field',
+        name:'pdf_color',
         nullable:false,
        
     })
-    rlField: string
+    pdfColor: string
 
     @Column('varchar',{
-        name:'crm_field',
+        name:'crm_color',
         nullable:false,
     })
-    crmField: string
+    crmColor: string
 
 
     @Column({
