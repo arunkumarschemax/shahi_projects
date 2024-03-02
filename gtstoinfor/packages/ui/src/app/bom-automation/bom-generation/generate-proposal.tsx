@@ -23,7 +23,8 @@ export default function GenerateProposal(props: Props) {
   const [proposalInfo, setProposalInfo] = useState<any>([])
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [trimName, setTrimName] = useState<string>('')
-  const [buttonData, setButtonData] = useState<any>([])
+  const [buttonData, setButtonData] = useState<any>([]);
+  const [necktapeData,setNeckTapeData]= useState<any>([]);
   useEffect(() => {
     getAllTrims();
   }, [])
@@ -38,7 +39,7 @@ export default function GenerateProposal(props: Props) {
   const componentsMapping = {
     "Wash Care Label": <WasCarelabel bomInfo={proposalData} />,
     "BUTTON":<Button3Print bomInfo={buttonData}/>,
-    "Neck Tape":<NecKType bomInfo={proposalData} />
+    "Neck Tape":<NecKType bomInfo={necktapeData} />
   }
 
   const onCancel = () => {
@@ -80,7 +81,16 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
-
+  function handleNeckTapeTrim(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
+      if (v.status) {
+        setNeckTapeData(v.data)
+      }
+    })
+  }
 
   const exportToExcel = (jsonData) => {
     // const mergedData = mergeCells(jsonData)
@@ -270,6 +280,10 @@ export default function GenerateProposal(props: Props) {
     console.log(val.item)
     if(val.item == 'BUTTON'){
       handleButtonTrim(val.itemId)
+    }
+    if(val.item == 'Neck Tape')
+    {
+      handleNeckTapeTrim(val.itemId)
     }
     setModalOpen(true)
   }

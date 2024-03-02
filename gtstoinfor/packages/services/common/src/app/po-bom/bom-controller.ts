@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UploadedFile, UseInterceptors, } from "@nestjs/common";
 import { ApiBody, ApiTags, ApiConsumes } from "@nestjs/swagger";
 import { BomService } from "./bom-service";
-import { BomExcelreq, CommonResponseModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
+import { BomExcelreq, BomProposalReq, CommonResponseModel, PpmDateFilterRequest } from "@project-management-system/shared-models";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { StyleDto } from "./dto/style-dto";
 import { TrimService } from "./trim-service";
@@ -208,6 +208,7 @@ export class BomController {
     }
 
     @Post('/generateProposalForButton')
+    @ApiBody({type:BomProposalReq})
     async generateProposalForButton(@Body() req: any): Promise<CommonResponseModel> {
         try {
             return this.bomService.generateProposalForButton(req)
@@ -244,4 +245,13 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }   
+    @Post('/generateProposalForNeckTape')
+    @ApiBody({type:BomProposalReq})
+    async generateProposalForNeckTape(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return this.bomService.generateProposalForNeckTape(req)
+        } catch (err) {
+            return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
+        }
+    }
 }
