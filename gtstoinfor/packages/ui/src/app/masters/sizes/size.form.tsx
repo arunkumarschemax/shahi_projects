@@ -1,17 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
 import { Link, useLocation } from "react-router-dom";
-import { SizeDto } from '@project-management-system/shared-models';
+import { BuyersDestinationDto, SizeDto } from '@project-management-system/shared-models';
 import AlertMessages from '../../common/common-functions/alert-messages';
-import { SizeService } from '@project-management-system/shared-services';
+import { BuyerDestinationService, BuyersService, SizeService } from '@project-management-system/shared-services';
 import { __values } from 'tslib';
 import FormItem from 'antd/es/form/FormItem';
+import { MappedData } from 'packages/libs/shared-models/src/common/Buyers Destination/mapped-data-model';
+import { MappedDetails } from 'packages/libs/shared-models/src/common/Buyers Destination/mapped-details-model';
 
 export interface SizeFormProps{
     sizeData: SizeDto;
     updateItem:(sizeData:SizeDto)=>void
         isUpdate:boolean;
         closeForm:()=>void;
+        closeModal:(val)=>void;
+        mapBuyerDest:boolean
     }
     
 
@@ -21,7 +25,8 @@ export interface SizeFormProps{
        
         const service = new SizeService();
         let history =useLocation();
-
+        const buyerService = new BuyersService();
+        const buyerDest = new BuyerDestinationService();
         let createdUser="";
         if(!props.isUpdate){
           createdUser= 'admin';
@@ -33,9 +38,45 @@ export interface SizeFormProps{
             service.createsize(sizeData).then((res) => {
               setDisable(false)
                 if (res.status) {
-                  AlertMessages.getSuccessMessage('Size Created Successfully');
-                //   location.push("/Currencies-view");
-                  onReset();
+                  if(props.mapBuyerDest){
+                    const userData = JSON.parse(localStorage.getItem('currentUser'))
+                    const externalRefNo = userData?.user?.externalRefNo;
+                    let buyer
+                    buyerService.getBuyerByExternalRefNo({buyerExternalRefNo:externalRefNo}).then((rees)=>{
+                      if(res.status){
+                        console.log(rees.data);
+                        buyer = rees.data.buyerId;
+                        const map = new MappedData(res.data[0].sizeId,res.data[0].size)
+                        const mapData = new MappedDetails("Size",[map])
+                        const destReq = new BuyersDestinationDto(0,buyer,true,"","",0,[mapData]);
+                        console.log(destReq);
+                        buyerDest.create(destReq).then((res)=>{
+                          if(res.status){
+                            onReset();
+                            AlertMessages.getSuccessMessage("Buyer Mapping done.");
+                            props.closeModal(false)
+                          }
+                          else{
+                            AlertMessages.getErrorMessage("Something went wrong. ");
+                          }
+                        }).catch((err) => {
+                          setDisable(false)
+                          AlertMessages.getErrorMessage(err.message);
+                        });
+                      }
+                      else{
+                        AlertMessages.getErrorMessage("Buyer Details not retrived. ")
+                      }
+                    }).catch((err) => {
+                      setDisable(false)
+                      AlertMessages.getErrorMessage(err.message);
+                    });
+                    
+                  } 
+                  else{
+                    AlertMessages.getWarningMessage('Size Created Successfully buyer mapping not done');
+                      onReset();
+                  }
                 } else {
                     AlertMessages.getErrorMessage(res.internalMessage);
                 }

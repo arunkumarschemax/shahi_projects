@@ -579,13 +579,13 @@ export const AppRoutes = () => {
 
                         isUpdate={false}
                         closeForm={() => { }}
-                        updateItem={(undefined) => { }} />} />
+                        updateItem={(undefined) => { }} closeModal={() => { }} mapBuyerDest={false} />} />
                     <Route path='colour/colour-view' element={<ColourGrid />} />
                     <Route path='colour/colour-form' key='colour/colour-form' element={<ColourForm colourData={undefined}
 
                         isUpdate={false}
                         closeForm={() => { }}
-                        updateItem={(undefined) => { }} />} />
+                        updateItem={(undefined) => { }} closeModal={() => { }} mapBuyerDest={false} /> } />
 
                     <Route path='department/department-view' element={<DepartmentGrid />} />
                     <Route path='department/department-form' key='department/department-form' element={<DepartmentForm DepartmentData={undefined}
@@ -934,13 +934,13 @@ export const AppRoutes = () => {
 
                     isUpdate={false}
                     closeForm={() => { }}
-                    updateItem={(undefined) => { }} />} />
+                    updateItem={(undefined) => { }} closeModal={() => { }} mapBuyerDest={false} />} />
                 <Route path='colour/colour-view' element={<ColourGrid />} />
                 <Route path='colour/colour-form' key='colour/colour-form' element={<ColourForm colourData={undefined}
 
                     isUpdate={false}
                     closeForm={() => { }}
-                    updateItem={(undefined) => { }} />} />
+                    updateItem={(undefined) => { }} closeModal={() => { }} mapBuyerDest={false}/>} />
 
                 <Route path='department/department-view' element={<DepartmentGrid />} />
                 <Route path='department/department-form' key='department/department-form' element={<DepartmentForm DepartmentData={undefined}

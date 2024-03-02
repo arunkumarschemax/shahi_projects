@@ -1,18 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Select, Card, Row, Col } from 'antd';
 import { Link, useLocation } from "react-router-dom";
-import { ColourDto } from '@project-management-system/shared-models';
-import { ColourService } from '@project-management-system/shared-services';
+import { BuyersDestinationDto, ColourDto } from '@project-management-system/shared-models';
+import { BuyerDestinationService, BuyersService, ColourService } from '@project-management-system/shared-services';
 import { __values } from 'tslib';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import FormItem from 'antd/es/form/FormItem';
+import { MappedDetails } from 'packages/libs/shared-models/src/common/Buyers Destination/mapped-details-model';
+import { MappedData } from 'packages/libs/shared-models/src/common/Buyers Destination/mapped-data-model';
 
 export interface ColourFromProps{
     colourData: ColourDto;
     updateItem: (colourData:ColourDto)=>void
         isUpdate:boolean;
         closeForm:()=>void;
-    
+        closeModal:(val) => void;
+        mapBuyerDest: boolean;
 }
 
 export const ColourForm=(props:ColourFromProps)=>{
@@ -20,6 +23,8 @@ export const ColourForm=(props:ColourFromProps)=>{
     const [disable, setDisable] = useState<boolean>(false)
 
     const service = new ColourService();
+    const buyerService = new BuyersService();
+    const buyerDest = new BuyerDestinationService();
     let history =useLocation();
 
     let createdUser="";
@@ -33,9 +38,48 @@ export const ColourForm=(props:ColourFromProps)=>{
         service.createColour(colourData).then((res) => {
           setDisable(false)
             if (res.status) {
-              AlertMessages.getSuccessMessage('Colour Created Successfully');
-            //   location.push("/Currencies-view");
-              onReset();
+              console.log(props.mapBuyerDest)
+              if(props.mapBuyerDest){
+                const userData = JSON.parse(localStorage.getItem('currentUser'))
+                const externalRefNo = userData?.user?.externalRefNo;
+                let buyer
+                buyerService.getBuyerByExternalRefNo({buyerExternalRefNo:externalRefNo}).then((rees)=>{
+                  if(res.status){
+                    console.log(rees.data);
+                    buyer = rees.data.buyerId;
+                    const map = new MappedData(res.data[0].colourId,res.data[0].colour)
+                    const mapData = new MappedDetails("Color",[map])
+                    const destReq = new BuyersDestinationDto(0,buyer,true,"","",0,[mapData]);
+                    console.log(destReq);
+                    buyerDest.create(destReq).then((res)=>{
+                      if(res.status){
+                        onReset();
+                        AlertMessages.getSuccessMessage("Buyer Mapping done.");
+                        props.closeModal(false)
+                      }
+                      else{
+                        AlertMessages.getErrorMessage("Something went wrong. ");
+                      }
+                    }).catch((err) => {
+                      setDisable(false)
+                      AlertMessages.getErrorMessage(err.message);
+                    });
+                  }
+                  else{
+                    AlertMessages.getErrorMessage("Buyer Details not retrived. ")
+                  }
+                }).catch((err) => {
+                  setDisable(false)
+                  AlertMessages.getErrorMessage(err.message);
+                });
+                
+              }
+              else{
+                AlertMessages.getWarningMessage('Colour Created Successfully buyer mapping not done');
+              //   location.push("/Currencies-view");
+                onReset();
+                props.closeModal(false)
+              }
             } else {
                 AlertMessages.getErrorMessage(res.internalMessage);
             }

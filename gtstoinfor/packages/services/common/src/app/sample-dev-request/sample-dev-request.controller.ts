@@ -564,7 +564,7 @@ export class SampleDevReqController {
   @Post('/getRequestno')
   async getRequestNo(@Body() req?: any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.getRequestNo()
+      return await this.sampleService.getRequestNo(req)
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);

@@ -85,7 +85,8 @@ export const StockReceivedApproval = () => {
 
   const getAllRequestNo = () => {
     setRequestNo([])
-    service.getRequestno({requestNo:1,action:""}).then((res) => {
+    const userData = JSON.parse(localStorage.getItem('currentUser'))
+    service.getRequestno({requestNo:1,action:"",sampreqId:0,userId:userData.user.userId}).then((res) => {
       if (res.status) {
         setRequestNo(res.data);
       }

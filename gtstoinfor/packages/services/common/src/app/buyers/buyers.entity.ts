@@ -168,6 +168,13 @@ export class Buyers {
   })
   privateNote:string;
 
+  @Column("varchar",{
+    nullable:true,
+    length:50,
+    name:"external_ref_number"
+})
+externalRefNumber:string;
+
   @Column("boolean",{
     nullable:false,
     default:true,

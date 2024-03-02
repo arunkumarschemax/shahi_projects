@@ -70,7 +70,7 @@ export class SizeService{
         if (savedSizeDto) {
           const presentValue = sizedto.size;
           //generating resposnse
-          const response =new SizeResponseModel(true,1,isUpdate? 'Size  Updated Successfully':'Size Successfully')
+          const response =new SizeResponseModel(true,1,isUpdate? 'Size  Updated Successfully':'Size Successfully',[savedSizeDto])
           const name=isUpdate?'updated':'created'
           const displayValue = isUpdate? 'Size Updated Successfully': 'Size Created Successfully'
           const userName = isUpdate? savedSizeDto.updatedUser :savedSizeDto.createdUser;

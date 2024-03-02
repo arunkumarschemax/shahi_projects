@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Input, Select, Tooltip, message, Form, FormInstance } from 'antd';
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { Table, Button, Input, Select, Tooltip, message, Form, FormInstance, Modal } from 'antd';
+import { DeleteOutlined, PlusCircleFilled, PlusOutlined } from '@ant-design/icons';
 import { BuyerDestinationService, ColourService } from '@project-management-system/shared-services';
 import AlertMessages from '../common/common-functions/alert-messages';
+import { ColourForm } from '../masters/colours/colour-form';
+import SizeForm from '../masters/sizes/size.form';
 
 export interface SizeDetailFormProps {
   data: any;
@@ -16,6 +18,9 @@ export interface SizeDetailFormProps {
   const [count, setCount] = useState(0);
   const [color, setColor] = useState<any[]>([])
   const [sizeData, setSizeData]=useState<any[]>([])
+  const [modelKey, setModelKey]=useState<string>(undefined)
+  const [visibleModel, setVisibleModel] = useState<boolean>(false);
+
   const colorService = new ColourService()
   const buyerDestinaytionService=new BuyerDestinationService()
   const { Option } = Select;
@@ -376,10 +381,35 @@ export interface SizeDetailFormProps {
   //   </Table.Summary.Row>
   // ) : null;
 
+  const handleAddColor = (key) => {
+    console.log(key);
+    setModelKey("color")
+    setVisibleModel(true)
+  }
+  const handleAddSize = (key) => {
+    console.log(key);
+    setModelKey("size")
+    setVisibleModel(true)
+  }
+
+  const handleCancel = () => {
+    console.log("jjjjjjjjjj")
+    setVisibleModel(false);
+  };
+  const handleColorModel = () =>{
+    setVisibleModel(false);
+    getColors()
+  }
+  const handleSizeModel = () =>{
+    setVisibleModel(false);
+    getAllSizesAgainstBuyer(props.buyerId)
+  }
   return (
     <div>
       <Form  form={props.form}>
       <Button onClick={handleAddRow} style={{margin:"10px"}}>Add Row</Button>
+      <Button onClick={handleAddColor} style={{margin:"10px"}}><PlusCircleFilled style={{ color: '#1890ff', fontSize: '14px' }} />Add Color</Button>
+      <Button onClick={handleAddSize} style={{margin:"10px"}}><PlusCircleFilled style={{ color: '#1890ff', fontSize: '14px' }} />Add Size</Button>
       <Table 
       dataSource={data} 
       scroll = {{x:'max-content',y:'max-content'}}
@@ -389,6 +419,31 @@ export interface SizeDetailFormProps {
       />
       {/* <Button>Confirm</Button> */}
       </Form>
+      <Modal
+          className='rm-'
+          // key={'modal' + Date.now()}
+          width={'70%'}
+          style={{ top: 30, alignContent: 'right' }}
+          visible={visibleModel}
+          title={<React.Fragment>
+          </React.Fragment>}
+          onCancel={handleCancel}
+          footer={[]}
+      >
+        {
+          modelKey === "color"?
+          <ColourForm colourData={undefined}
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateItem={(undefined) => { }}  closeModal={(val) => {handleColorModel()}} mapBuyerDest={true}/>
+          :modelKey === "size"?
+          <SizeForm sizeData={undefined}
+                        isUpdate={false}
+                        closeForm={() => { }}
+                        updateItem={(undefined) => { }} closeModal={(val) => {handleSizeModel()}}  mapBuyerDest={true} />
+          :""
+        }
+      </Modal>
     </div>
   );
 };

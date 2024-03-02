@@ -6,7 +6,7 @@ import { BuyersRequest } from './dto/buyers.request';
 import { BuyersAdapter } from './dto/buyers.adapter';
 import { BuyersDTO } from './dto/buyers.dto';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { AllBuyersResponseModel, BuyerIdReq, BuyersDto, BuyersResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerIdReq, BuyerRefNo, BuyersDto, BuyersResponseModel, CommonResponseModel } from '@project-management-system/shared-models';
 import { Address } from './address.entity';
 import { BuyerRepository } from './buyers.repository';
 import { AddressDto } from 'packages/libs/shared-models/src/common/buyers/address-dto';
@@ -310,6 +310,20 @@ export class BuyersService {
     async getAllAddress():Promise<CommonResponseModel>{
         try{
             const buyerAddress = await this.addressRepo.find({where:{isActive:true},relations:['countryInfo','buyerInfo']})
+            if(buyerAddress){
+                return new CommonResponseModel(true,1,'Data retrieved',buyerAddress)
+            }  else{
+                return new CommonResponseModel(false,1,'No buyers found',[])
+            }
+
+        }catch(err){
+            throw err
+        }
+    }
+
+    async getBuyerByExternalRefNo(req:BuyerRefNo):Promise<CommonResponseModel>{
+        try{
+            const buyerAddress = await this.buyersRepository.findOne({where:{externalRefNumber:req.buyerExternalRefNo}})
             if(buyerAddress){
                 return new CommonResponseModel(true,1,'Data retrieved',buyerAddress)
             }  else{

@@ -322,7 +322,10 @@ return (
             isUpdate={true}
             // saveItem={saveVariant}
             sizeData={selectedVariant}
-            closeForm={closeDrawer} />
+            closeForm={closeDrawer} 
+            closeModal={closeDrawer}
+            mapBuyerDest={false}
+            />
         </Card>
       </Drawer>
     </>
