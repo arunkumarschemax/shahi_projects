@@ -220,40 +220,17 @@ export const NecKType = (props: NeckTypeprops) => {
     }
 
     const data1 = [
-        { ITEM: '220P', STYLE: 'DH0858', SEASON:'SU24',IM: 'A0467488',MATERIALDESCRIPTION:'ELASTIC; STANDARD; WOVEN; BASE SM: 0; APPROVED; TRIM-KNIT/WVN TAPE,BUNGE,DCORD; PRIMARY SM: YES; 86.49% POLYESTER (MECHANICALLY RECYCLED), 7% ELASTANE, 6.51% POLYESTER; L (MM): 0.00; W (MM): 9.00; EDGE TO EDGE; # OF GRIPPER ROWS: 0; PIECE DYED-SINGLE DYED DRAWCORD; W (MM): 0.00; AGLET; H (MM): 0.00; W (MM): 0.00; INTERNAL DIA (MM): 0.00',
-        GARMENTCOLOURCODE: 'BLACK/(WHITE)-010',GARMENTCOLOURCODE1:'GLACIER BLUE/(BLACK)-476',GARMENTCOLOURCODE2:'WHITE/(BLACK)-100',TAPECOLOUR: '00A BLACK ',TAPECOLOUR1:'43G G BLUE',TAPECOLOUR2:"10A WHITE",QTYINYDS:5960 ,QTYINYDS1:1920,QTYINYDS2:4505},
+        { QTYINYDS:5960 ,QTYINYDS1:1920,QTYINYDS2:4505},
       ];
-
-      const combinedGarmentColorCodes = data1.map((item) => [
-        item.GARMENTCOLOURCODE,
-        item.GARMENTCOLOURCODE1,
-        item.GARMENTCOLOURCODE2,
-      ]);
-      const combinedTapecolor = data1.map((item) => [
-        item.TAPECOLOUR,
-        item.TAPECOLOUR1,
-        item.TAPECOLOUR2,
-      ]);
-
-      const combinedQtyinyds = data1.map((item) => [
-        item.QTYINYDS,
-        item.QTYINYDS1,
-        item.QTYINYDS2,
-      ]);
-      const updatedData1 = data1.map((item, index) => ({
-        ...item,
-        GARMENTCOLORCODES: combinedGarmentColorCodes[index],
-        TAPECOLOUR: combinedTapecolor[index],
-        QTYINYDS: combinedQtyinyds[index],
-
-      }));
+      const data2 = [
+        { QTYINYDS:730 ,QTYINYDS1:665}
+      ];
 
     return (
         <div id='print'>
             <Card title={'Neck Tape'}
-                extra={<><span><Button onClick={handlePrint}>Print</Button></span><span> </span></>} >
-                    <table  style={{ borderCollapse: 'collapse', width: '100%' }}>
-                    <thead>
+                extra={<Button onClick={handlePrint}>Print</Button>} >
+                    <table  style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
                         <tr>
                             <th style={tableCellStyle} >ITEM</th>
                             <th style={tableCellStyle} >STYLE</th>
@@ -264,50 +241,41 @@ export const NecKType = (props: NeckTypeprops) => {
                             <th style={tableCellStyle} >TAPE COLOR</th>
                             <th style={tableCellStyle} >QTY IN YARDS</th>
                         </tr>
-                        </thead>
-                    <tbody>
-                              {updatedData1.map((item, index) => (
-                                <tr key={index}>
-                                  <td style={tableCellStyle} >{item.ITEM}</td>
-                                  <td style={tableCellStyle}>{item.STYLE}</td>
-                                  <td style={tableCellStyle}>{item.SEASON}</td>
-                                  <td style={tableCellStyle}>{item.IM}</td>
-                                  <td style={tableCellStyle}>{item.MATERIALDESCRIPTION}</td>
-                    
-                                  <td style={tableCellStyle}>
-                                   {item.GARMENTCOLORCODES.map((code, idx) => (
-                                     <tr key={idx}>
-                                       <td style={tableCellStyle}>{code}</td>
-                                     </tr>
-                                   ))}
-                                 </td>
+                  
+                                <tr >
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >220P</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >DH0858</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >SU24</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >A0467488</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >
+                                  ELASTIC; STANDARD; WOVEN; BASE SM: 0; APPROVED; TRIM-KNIT/WVN TAPE,BUNGE,DCORD; PRIMARY SM: YES; 86.49% POLYESTER (MECHANICALLY RECYCLED), 7% ELASTANE, 6.51% POLYESTER; L (MM): 0.00; W (MM): 9.00; EDGE TO EDGE; # OF GRIPPER ROWS: 0; PIECE DYED-SINGLE DYED DRAWCORD; W (MM): 0.00; AGLET; H (MM): 0.00; W (MM): 0.00; INTERNAL DIA (MM): 0.00
+                                  </td>
+                                  
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>BLACK/(WHITE)-010</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>00A BLACK </td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>5690</td>
+                                  </tr>
 
-                                 <td style={tableCellStyle}>
-                                   {item.TAPECOLOUR.map((code, idx) => (
-                                     <tr key={idx}>
-                                       <td style={tableCellStyle}>{code}</td>
-                                     </tr>
-                                   ))}
-                                 </td>
-                                 
-                                 <td style={tableCellStyle}>
-                                   {item.QTYINYDS.map((code, idx) => (
-                                     <tr key={idx}>
-                                       <td style={tableCellStyle}>{code}</td>
-                                     </tr>
-                                   ))}
-                                 </td>
 
-                                </tr>
-                    
-                              ))}
-                            </tbody>
-                            <tfoot>
+                                  <tr>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >GLACIER BLUE/(BLACK)-476</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >43G G BLUE</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >1920</td>
+                                  </tr>
+
+
+                                  <tr>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >WHITE/(BLACK)-100</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >10A WHITE</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>4505</td>
+                                  </tr>
+
+                         <tfoot>
                               <tr>
                                 <td style={tableCellStyle} colSpan={7} ></td>
-                                <td  style={tableCellStyle} >{data1.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1+item.QTYINYDS2), 0)}</td>
+                                <td  style={{...tableCellStyle,fontWeight:"bolder"}}>{data1.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1+item.QTYINYDS2), 0)}</td>
                               </tr>
-                            </tfoot>
+                              </tfoot>
 
 
           {/* {
@@ -325,6 +293,47 @@ export const NecKType = (props: NeckTypeprops) => {
                                 </tr>
                             })
                         } */}
+                        
+                    </table >
+<br/>
+
+<table  style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+                        <tr>
+                            <th style={tableCellStyle} >ITEM</th>
+                            <th style={tableCellStyle} >STYLE</th>
+                            <th style={tableCellStyle} >SEASON</th>
+                            <th style={tableCellStyle} >IM#</th>
+                            <th style={tableCellStyle} >MATERIAL DESCRIPTION</th>
+                            <th style={tableCellStyle} >GARMENT COLOR CODE</th>
+                            <th style={tableCellStyle} >TAPE COLOR</th>
+                            <th style={tableCellStyle} >QTY IN YARDS</th>
+                        </tr>
+                  
+                                <tr >
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >221P</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >DH0857</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >SU24</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >A0467488</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >
+                                  ELASTIC; STANDARD; WOVEN; BASE SM: 0; APPROVED; TRIM-KNIT/WVN TAPE,BUNGE,DCORD; PRIMARY SM: YES; 86.49% POLYESTER (MECHANICALLY RECYCLED), 7% ELASTANE, 6.51% POLYESTER; L (MM): 0.00; W (MM): 9.00; EDGE TO EDGE; # OF GRIPPER ROWS: 0; PIECE DYED-SINGLE DYED DRAWCORD; W (MM): 0.00; AGLET; H (MM): 0.00; W (MM): 0.00; INTERNAL DIA (MM): 0.00
+                                  </td>
+                                  
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>BLACK/(WHITE)-010</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>00A BLACK </td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>730</td>
+                                  </tr>
+
+                                  <tr>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >RUST FACTOR/(WHITE)-811</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >83U RUSTFC</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >665</td>
+                                  </tr>
+                         <tfoot>
+                              <tr>
+                                <td style={tableCellStyle} colSpan={7} ></td>
+                                <td  style={{...tableCellStyle,fontWeight:"bolder"}}>{data2.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1), 0)}</td>
+                              </tr>
+                              </tfoot>
                         
                     </table >
             </Card>
