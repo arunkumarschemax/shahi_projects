@@ -10,6 +10,8 @@ import Button3Print from '../../trims/trim-prints/button3-print';
 import NecKType from '../../trims/trim-prints/neck-type';
 import Interlining from '../../trims/trim-prints/interlining-prints';
 import Drawcord from '../../trims/trim-prints/drawcord';
+import Jocktag from '../../trims/trim-prints/jocktag';
+import HeatTransefer from '../../trims/trim-prints/heat-transfer-trim';
 type Props = {
   poLine: string[]
 }
@@ -44,7 +46,9 @@ export default function GenerateProposal(props: Props) {
     // "Neck Tape":<NecKType bomInfo={proposalData} />,
     "Interlining":<Interlining bomInfo={proposalData}/>,
     "Drawcord":<Drawcord bomInfo={proposalData}/>,
-    "Neck Tape":<NecKType bomInfo={necktapeData} />
+    "Neck Tape":<NecKType bomInfo={necktapeData} />,
+    "Jocktage Label":<Jocktag />,
+    "Heat Transfer Label":<HeatTransefer />
   }
 
   const onCancel = () => {
