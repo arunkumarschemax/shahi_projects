@@ -220,6 +220,7 @@ export const BomExcelDownload = () => {
                             <Select
                                 showSearch
                                 placeholder="Select Geo Code"
+                                allowClear
                             >
                                 {
                                     geoCode?.map((inc: any) => {
