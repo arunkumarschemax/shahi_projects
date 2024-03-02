@@ -224,6 +224,29 @@ export const NecKType = (props: NeckTypeprops) => {
         GARMENTCOLOURCODE: 'BLACK/(WHITE)-010',GARMENTCOLOURCODE1:'GLACIER BLUE/(BLACK)-476',GARMENTCOLOURCODE2:'WHITE/(BLACK)-100',TAPECOLOUR: '00A BLACK ',TAPECOLOUR1:'43G G BLUE',TAPECOLOUR2:"10A WHITE",QTYINYDS:5960 ,QTYINYDS1:1920,QTYINYDS2:4505},
       ];
 
+      const combinedGarmentColorCodes = data1.map((item) => [
+        item.GARMENTCOLOURCODE,
+        item.GARMENTCOLOURCODE1,
+        item.GARMENTCOLOURCODE2,
+      ]);
+      const combinedTapecolor = data1.map((item) => [
+        item.TAPECOLOUR,
+        item.TAPECOLOUR1,
+        item.TAPECOLOUR2,
+      ]);
+
+      const combinedQtyinyds = data1.map((item) => [
+        item.QTYINYDS,
+        item.QTYINYDS1,
+        item.QTYINYDS2,
+      ]);
+      const updatedData1 = data1.map((item, index) => ({
+        ...item,
+        GARMENTCOLORCODES: combinedGarmentColorCodes[index],
+        TAPECOLOUR: combinedTapecolor[index],
+        QTYINYDS: combinedQtyinyds[index],
+
+      }));
 
     return (
         <div id='print'>
@@ -243,7 +266,7 @@ export const NecKType = (props: NeckTypeprops) => {
                         </tr>
                         </thead>
                     <tbody>
-                              {data1.map((item, index) => (
+                              {updatedData1.map((item, index) => (
                                 <tr key={index}>
                                   <td style={tableCellStyle} >{item.ITEM}</td>
                                   <td style={tableCellStyle}>{item.STYLE}</td>
@@ -251,33 +274,30 @@ export const NecKType = (props: NeckTypeprops) => {
                                   <td style={tableCellStyle}>{item.IM}</td>
                                   <td style={tableCellStyle}>{item.MATERIALDESCRIPTION}</td>
                     
-                                  <tr>
-                                    <td style={tableCellStyle} >{item.GARMENTCOLOURCODE}</td>
-                                  </tr>
-                                  <tr>
-                                    <td style={tableCellStyle}>{item.GARMENTCOLOURCODE1}</td>
-                                  </tr>
-                                  <tr>
-                                    <td style={tableCellStyle}>{item.GARMENTCOLOURCODE2}</td>
-                                  </tr>
-                                  <tr>
-                                    <td style={tableCellStyle} >{item.TAPECOLOUR}</td>
-                                  </tr>
-                                  <tr>
-                                    <td style={tableCellStyle} >{item.TAPECOLOUR1}</td>
-                                  </tr>
-                                  <tr>
-                                    <td style={tableCellStyle} >{item.TAPECOLOUR2}</td>
-                                  </tr>
-                                  <tr>
-                                    <td style={tableCellStyle} >{item.QTYINYDS}</td>
-                                  </tr>
-                                  <tr>
-                                    <td style={tableCellStyle} >{item.QTYINYDS1}</td>
-                                  </tr>
-                                  <tr>
-                                    <td style={tableCellStyle}>{item.QTYINYDS2}</td>
-                                  </tr>
+                                  <td style={tableCellStyle}>
+                                   {item.GARMENTCOLORCODES.map((code, idx) => (
+                                     <tr key={idx}>
+                                       <td style={tableCellStyle}>{code}</td>
+                                     </tr>
+                                   ))}
+                                 </td>
+
+                                 <td style={tableCellStyle}>
+                                   {item.TAPECOLOUR.map((code, idx) => (
+                                     <tr key={idx}>
+                                       <td style={tableCellStyle}>{code}</td>
+                                     </tr>
+                                   ))}
+                                 </td>
+                                 
+                                 <td style={tableCellStyle}>
+                                   {item.QTYINYDS.map((code, idx) => (
+                                     <tr key={idx}>
+                                       <td style={tableCellStyle}>{code}</td>
+                                     </tr>
+                                   ))}
+                                 </td>
+
                                 </tr>
                     
                               ))}

@@ -9,6 +9,27 @@ export const  Drawcord = (props: DrawcordProps) => {
     GARMENTCOLOURCODE: 'BLACK/(WHITE)-010',GARMENTCOLOURCODE1:'DK GREY HEATHER/(WHITE)-063', TAPECOLOUR: '00A BLACK ',TAPECOLOUR1:'04U BASEGY',QTYINYDS:5860 ,QTYINYDS1:3285},
   ];
 
+
+  const combinedGarmentColorCodes = data.map((item) => [
+    item.GARMENTCOLOURCODE,
+    item.GARMENTCOLOURCODE1,
+  ]);
+  const combinedTapecolor = data.map((item) => [
+    item.TAPECOLOUR,
+    item.TAPECOLOUR1,
+  ]);
+
+  const combinedQtyinyds = data.map((item) => [
+    item.QTYINYDS,
+    item.QTYINYDS1,
+  ]);
+  const updatedData1 = data.map((item, index) => ({
+    ...item,
+    GARMENTCOLORCODES: combinedGarmentColorCodes[index],
+    TAPECOLOUR: combinedTapecolor[index],
+    QTYINYDS: combinedQtyinyds[index],
+
+  }));
   return (
     <Card title={'DrawCord'}
                 extra={<><span><Button >Print</Button></span><span>
@@ -23,14 +44,14 @@ export const  Drawcord = (props: DrawcordProps) => {
             <th style={tableCellStyle}>SEASON</th>
             <th style={tableCellStyle}>IM#</th>
             <th style={tableCellStyle}>MATERIAL DESCRIPTION</th>
-            <th style={tableCellStyle}>GARMENT COLOUR + CODE </th>
+            <th style={tableCellStyle }>GARMENT COLOUR + CODE </th>
             <th style={tableCellStyle}>TAPE COLOUR </th>
             <th style={tableCellStyle}>QTY IN YDS</th>
           </tr>
         </thead>
         
         <tbody>
-          {data.map((item, index) => (
+          {updatedData1.map((item, index) => (
             <tr key={index}>
               <td style={tableCellStyle}>{item.ITEM}</td>
               <td style={tableCellStyle}>{item.STYLE}</td>
@@ -38,26 +59,29 @@ export const  Drawcord = (props: DrawcordProps) => {
               <td style={tableCellStyle}>{item.IM}</td>
               <td style={tableCellStyle}>{item.MATERIALDESCRIPTION}</td>
 
-              <tr>
-                <td style={tableCellStyle}>{item.GARMENTCOLOURCODE}</td>
-              </tr>
-              <tr>
-                <td style={tableCellStyle}>{item.GARMENTCOLOURCODE1}</td>
-              </tr>
+              <td style={tableCellStyle}>
+                   {item.GARMENTCOLORCODES.map((code, idx) => (
+                     <tr key={idx}>
+                       <td style={tableCellStyle}>{code}</td>
+                     </tr>
+                   ))}
+                 </td>
 
-              <tr>
-                <td  style={tableCellStyle}>{item.TAPECOLOUR}</td>
-              </tr>
-              <tr>
-                <td  style={tableCellStyle}>{item.TAPECOLOUR1}</td>
-              </tr>
+                <td style={tableCellStyle}>
+                  {item.TAPECOLOUR.map((code, idx) => (
+                    <tr key={idx}>
+                      <td style={tableCellStyle}>{code}</td>
+                    </tr>
+                  ))}
+                </td>
 
-              <tr>
-                <td  style={tableCellStyle}>{item.QTYINYDS}</td>
-              </tr>
-              <tr>
-                <td style={tableCellStyle}>{item.QTYINYDS1}</td>
-              </tr>
+             <td style={tableCellStyle}>
+               {item.QTYINYDS.map((code, idx) => (
+                 <tr key={idx}>
+                   <td style={tableCellStyle}>{code}</td>
+                 </tr>
+               ))}
+             </td>
 
             </tr>
 
