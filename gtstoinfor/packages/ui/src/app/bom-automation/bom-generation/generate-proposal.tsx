@@ -6,6 +6,7 @@ import { table } from 'console';
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import WasCarelabel from '../../trims/trim-prints/wash-care-label';
+import NecKType from '../../trims/trim-prints/neck-type';
 type Props = {
   poLine: string[]
 }
@@ -35,6 +36,7 @@ export default function GenerateProposal(props: Props) {
   }
   const componentsMapping = {
     "Wash Care Label": <WasCarelabel bomInfo={proposalData} />,
+    "Neck Tape":<NecKType bomInfo={proposalData} />
   }
 
   const onCancel = () => {
@@ -247,6 +249,7 @@ export default function GenerateProposal(props: Props) {
     )
   }
   const onView = (val) => {
+    console.log(val,"val onView")
     handleDownloadIndividualTrim(val.itemId)
     setModalOpen(true)
     setTrimName(val.item)
