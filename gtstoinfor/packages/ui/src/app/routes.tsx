@@ -227,7 +227,7 @@ export const AppRoutes = () => {
                 <Route path="/print">
                     <Route path='button1' element={<Button1Print />} />
                     <Route path='button2' element={<Button2Print />} />
-                    <Route path='button3' element={<Button3Print />} />
+                    <Route path='button3' element={<Button3Print bomInfo={''}/>} />
                     <Route path='backing-paper' element={<BackingPaper />} />
                 </Route>
             </Route>

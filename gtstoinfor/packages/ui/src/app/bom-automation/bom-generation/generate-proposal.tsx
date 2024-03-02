@@ -6,6 +6,7 @@ import { table } from 'console';
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import WasCarelabel from '../../trims/trim-prints/wash-care-label';
+import Button3Print from '../../trims/trim-prints/button3-print';
 import NecKType from '../../trims/trim-prints/neck-type';
 type Props = {
   poLine: string[]
@@ -22,7 +23,7 @@ export default function GenerateProposal(props: Props) {
   const [proposalInfo, setProposalInfo] = useState<any>([])
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [trimName, setTrimName] = useState<string>('')
-
+  const [buttonData, setButtonData] = useState<any>([])
   useEffect(() => {
     getAllTrims();
   }, [])
@@ -36,6 +37,7 @@ export default function GenerateProposal(props: Props) {
   }
   const componentsMapping = {
     "Wash Care Label": <WasCarelabel bomInfo={proposalData} />,
+    "BUTTON":<Button3Print bomInfo={buttonData}/>,
     "Neck Tape":<NecKType bomInfo={proposalData} />
   }
 
@@ -64,6 +66,17 @@ export default function GenerateProposal(props: Props) {
       if (v.status) {
         setProposalData(v.data)
         // exportToExcel(v.data)
+      }
+    })
+  }
+
+  function handleButtonTrim(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generateProposalForButton(bomProposalReq).then((v) => {
+      if (v.status) {
+        setButtonData(v.data)
       }
     })
   }
@@ -249,13 +262,19 @@ export default function GenerateProposal(props: Props) {
     )
   }
   const onView = (val) => {
-    console.log(val,"val onView")
-    handleDownloadIndividualTrim(val.itemId)
-    setModalOpen(true)
+    console.log(val)
+  //  const  itemIds = val.itemId.map(item => item.itemId);
+  //  console.log(itemIds)
     setTrimName(val.item)
+    handleDownloadIndividualTrim(val.itemId)
+    console.log(val.item)
+    if(val.item == 'BUTTON'){
+      handleButtonTrim(val.itemId)
+    }
+    setModalOpen(true)
   }
 
-
+console.log(trimName)
 
   return (
     <Card >
