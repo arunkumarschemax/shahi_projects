@@ -220,7 +220,7 @@ export const NecKType = (props: NeckTypeprops) => {
 
     return (
         <div id='print'>
-            <Card title={'Neck Type'}
+            <Card title={'Neck Tape'}
                 extra={<><span><Button onClick={handlePrint}>Print</Button></span><span>
                 
                 </span></>}
