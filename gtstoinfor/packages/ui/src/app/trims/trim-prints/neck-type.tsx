@@ -243,12 +243,12 @@ export const NecKType = (props: NeckTypeprops) => {
                         id="table-to-xls">
                         <tr>
                             <th style={{ width: '10%' }} >ITEM</th>
-                            <th style={{ width: '20%' }} >STYLE</th>
-                            <th style={{ width: '20%' }} >SEASON</th>
+                            <th style={{ width: '10%' }} >STYLE</th>
+                            <th style={{ width: '10%' }} >SEASON</th>
                             <th style={{ width: '10%' }} >IM#</th>
                             <th style={{ width: '10%' }} >MATERIAL DESCRIPTION</th>
-                            <th style={{ width: '30%' }} >GARMENT COLOR CODE</th>
-                            <th style={{ width: '10%' }} >TAPE COLOR</th>
+                            <th style={{ width: '15%' }} >GARMENT COLOR CODE</th>
+                            <th style={{ width: '15%' }} >TAPE COLOR</th>
                             <th style={{ width: '10%' }} >QTY IN YARDS</th>
                         </tr>
 
