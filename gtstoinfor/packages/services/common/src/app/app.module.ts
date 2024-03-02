@@ -15,6 +15,8 @@ import { AddressModule } from './Entites@Shahi/address/address-module';
 import { CentricModule } from './centric-buyer/centric.module';
 import { HbModule } from './hb-athletics/hb-athletic.module';
 import { ColorModule } from './Entites@Shahi/color/color-module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 
 @Module({
@@ -33,6 +35,15 @@ import { ColorModule } from './Entites@Shahi/color/color-module';
       logging: true,
       extra: {
         connectionLimit: 20
+      }
+    }),
+    ServeStaticModule.forRoot({
+      // rootPath: join(__dirname, '..', '..', '..', '..', 'dist','packages','services','common','upload_files'),
+      rootPath: join(__dirname, '../../../../', 'upload_files'),
+      serveRoot: '/static',
+      serveStaticOptions: {
+        redirect: false,
+        index: false
       }
     }),
     UsersModule,

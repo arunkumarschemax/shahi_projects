@@ -1,6 +1,6 @@
 
-import { Controller, Post, Body, UseInterceptors, UploadedFile, Get } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { Controller, Post, Body, UseInterceptors,UploadedFiles, UploadedFile, Get } from "@nestjs/common";
+import { FilesInterceptor} from "@nestjs/platform-express";
 import { ApiTags, ApiBody, ApiConsumes } from "@nestjs/swagger";
 import { HbDto } from "./dto/hb.dto";
 import { CommonResponseModel, HbPoOrderFilter } from "@project-management-system/shared-models";
@@ -8,6 +8,9 @@ import { HbService } from "./hb-athletic.service";
 import { ApplicationExceptionHandler } from "@project-management-system/backend-utils";
 import { diskStorage } from 'multer'
 import { OrderDetailsReq } from "../ralph-lauren/dto/order-details-req";
+import { extname, join } from "path";
+import * as fs from 'fs';
+
 
 
 @ApiTags("/hb-athletics")
@@ -33,37 +36,96 @@ export class HbController {
         }
     }
 
-    @Post('/fileUpload')
-    @ApiConsumes('multipart/form-data')
-    @UseInterceptors(FileInterceptor('file', {
-        limits: { files: 1 },
-        storage: diskStorage({
-            destination: './upload-files',
-            filename: (req, file, callback) => {
-                console.log(file.originalname);
-                const name = file.originalname;
-                callback(null, `${name}`);
-            },
-        }),
-        fileFilter: async (req, file, callback) => {
-            try {
-                if (!file || file.mimetype !== 'application/pdf') {
-                    return callback(new Error('Only PDF files are allowed!'), false);
-                }
-                callback(null, true);
-            } catch (error) {
-                callback(error, false);
-            }
-        },
-    }))
 
-    async fileUpload(@UploadedFile() file, @Body() req: any): Promise<CommonResponseModel> {
+    @Post('/fileUpload')
+  @UseInterceptors(FilesInterceptor('file', 10, {
+    storage: diskStorage({
+      destination: (req, file, callback) => {
+        // console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+        // console.log(req.body);
+
+        // console.log(file);
+        const destinationPath = join(__dirname, '../../../../',`upload_files`)
+        // console.log(destinationPath)
+        // const destinationPath = upload_files/SD-${(req.body.reqNo).replace(/\//g, "_")};
+        // const destinationPath = https://edoc7.shahi.co.in/upload_files/PO-${req.body.poNumber};
+
+        // const destinationPath = ${config.download_path}+/PO-${req.body.poNumber};
+
         try {
-            return await this.Service.updatePath(req.jsonData, req.custPo, file.path, file.filename, file.mimetype)
+          // Attempt to create the directory if it doesn't exist
+          fs.mkdirSync(destinationPath, { recursive: true });
+          callback(null, destinationPath);
         } catch (error) {
-            return this.applicationExeptionhandler.returnException(CommonResponseModel, error);
+          // console.error('Error creating directory:', error);
+          callback(error, null);
         }
-    }
+      },
+      // destination: (req, file, callback) => {
+      //   callback(null, ./upload-files/PO-${req.body.customerPo});
+      // },
+      filename: (req, file, callback) => {
+        // console.log(req);
+        // console.log(file);
+        // console.log("********************************");
+        const name = file.originalname.split('.')[0];
+        const fileExtName = extname(file.originalname);
+        const randomName = Array(4)
+          .fill(null)
+          .map(() => Math.round(Math.random() * 16).toString(16))
+          .join('');
+        callback(null, `${name}-${randomName}${fileExtName}`);
+      },
+    }),
+    fileFilter: (req, file, callback) => {
+      if (!file.originalname.match(/\.(xlsx|xls|pdf|jpg|png|jpeg|doc|PDF)$/)) {
+        return callback(new Error('Only xlsx,xls,pdf, jpg, png, doc, jpeg files are allowed!'), false);
+      }
+      callback(null, true);
+    },
+  }))
+
+    async updateStylePath(@UploadedFiles() file: File[], @Body() req: any): Promise<CommonResponseModel> {
+        // console.log(file, '-------file')
+        try {
+    
+          return await this.Service.updatePath(file, req.jsonData,req.custPo)
+        } catch (error) {
+          return this.applicationExeptionhandler.returnException(CommonResponseModel, error);
+        }
+      }
+
+    // @Post('/fileUpload')
+    // @ApiConsumes('multipart/form-data')
+    // @UseInterceptors(FileInterceptor('file', {
+    //     limits: { files: 1 },
+    //     storage: diskStorage({
+    //         destination: './upload-files',
+    //         filename: (req, file, callback) => {
+    //             console.log(file.originalname);
+    //             const name = file.originalname;
+    //             callback(null, `${name}`);
+    //         },
+    //     }),
+    //     fileFilter: async (req, file, callback) => {
+    //         try {
+    //             if (!file || file.mimetype !== 'application/pdf') {
+    //                 return callback(new Error('Only PDF files are allowed!'), false);
+    //             }
+    //             callback(null, true);
+    //         } catch (error) {
+    //             callback(error, false);
+    //         }
+    //     },
+    // }))
+
+    // async fileUpload(@UploadedFile() file, @Body() req: any): Promise<CommonResponseModel> {
+    //     try {
+    //         return await this.Service.updatePath(req.jsonData, req.custPo, file.path, file.filename, file.mimetype)
+    //     } catch (error) {
+    //         return this.applicationExeptionhandler.returnException(CommonResponseModel, error);
+    //     }
+    // }
 
     @Post('/getPdfFileInfo')
     async getPdfFileInfo(@Body() req: any): Promise<CommonResponseModel> {

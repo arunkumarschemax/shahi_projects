@@ -229,6 +229,23 @@ export function HbPdFInfoGrid() {
 
         },
 
+        // {
+        //     title: "Action",
+        //     dataIndex: "action",
+        //     align: "center",
+        //     width: 120,
+        //     render: (value, record) => (
+        //         <>
+        //             <Button
+        //                 type="primary"
+        //         onClick={() => setMoreData(record)}
+        //             >More Info</Button>
+        //             <Tooltip title="PDF download">
+        //                 <Button icon={<FilePdfOutlined onClick={() => download(record.file_path)}  style={{color:"red"}}/>} >{value}</Button>
+        //             </Tooltip>
+        //         </>
+        //     ),
+        // }
         {
             title: "Action",
             dataIndex: "action",
@@ -241,7 +258,7 @@ export function HbPdFInfoGrid() {
                 onClick={() => setMoreData(record)}
                     >More Info</Button>
                     <Tooltip title="PDF download">
-                        <Button icon={<FilePdfOutlined onClick={() => download(record.file_path)}  style={{color:"red"}}/>} >{value}</Button>
+                        <Button icon={<FilePdfOutlined onClick={() => download(record.pdf_file_name)}  style={{color:"red"}}/>} >{value}</Button>
                     </Tooltip>
                 </>
             ),

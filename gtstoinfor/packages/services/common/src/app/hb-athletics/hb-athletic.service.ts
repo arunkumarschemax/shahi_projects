@@ -155,27 +155,59 @@ export class HbService {
   //   }
   // }
 
-  async updatePath(req: any, custPo: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
-    const entity = new HbPdfFileInfoEntity();
-    entity.custPo = custPo;
-    entity.pdfFileName = filename;
-    entity.filePath = filePath;
-    entity.fileType = mimetype;
-    entity.fileData = req;
-    entity.status = "SUCCESS";
+  async updatePath(req: any, jsonData: any,custPo:any): Promise<CommonResponseModel> {
+    try {
 
-    // const file = await this.HbPdfRepo.findOne({ where: { pdfFileName: filePath } });
-    // if (file) {
-    //   return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
-    // } else {
-    const save = await this.HbPdfRepo.save(entity);
-    if (save) {
-      return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
-    } else {
-      return new CommonResponseModel(false, 0, 'Uploaded failed');
-      // }
+      let flag = true;
+      const entities=[]
+      for (const res of req) {
+        const entity = new HbPdfFileInfoEntity();
+        entity.pdfFileName = res.filename
+        entity.filePath = res.path
+        entity.custPo = custPo
+        entity.fileData = jsonData
+        entity.fileType = res.mimetype
+        entity.createdUser = "admin"
+        entity.status = "SUCCESS";
+        entities.push(entity);
+      }
+      const uploadDoc = await this.HbPdfRepo.save(entities);
+      if (!uploadDoc) {
+        flag = false;
+      }
+      if (flag) {
+        return new CommonResponseModel(true, 11, 'uploaded successfully', req);
+      }
+      else {
+        return new CommonResponseModel(false, 11, 'uploaded failed', req);
+      }
+    }
+    catch (error) {
+      console.log(error);
     }
   }
+
+  // async updatePath(req: any, custPo: string, filePath: string, filename: string, mimetype: string): Promise<CommonResponseModel> {
+  //   const entity = new HbPdfFileInfoEntity();
+  //   entity.custPo = custPo;
+  //   entity.pdfFileName = filename;
+  //   entity.filePath = filePath;
+  //   entity.fileType = mimetype;
+  //   entity.fileData = req;
+  //   entity.status = "SUCCESS";
+
+  //   // const file = await this.HbPdfRepo.findOne({ where: { pdfFileName: filePath } });
+  //   // if (file) {
+  //   //   return new CommonResponseModel(false, 0, 'File with the same name already uploaded');
+  //   // } else {
+  //   const save = await this.HbPdfRepo.save(entity);
+  //   if (save) {
+  //     return new CommonResponseModel(true, 1, 'Uploaded successfully', save);
+  //   } else {
+  //     return new CommonResponseModel(false, 0, 'Uploaded failed');
+  //     // }
+  //   }
+  // }
 
 
   async getPdfFileInfo(req: any): Promise<CommonResponseModel> {
