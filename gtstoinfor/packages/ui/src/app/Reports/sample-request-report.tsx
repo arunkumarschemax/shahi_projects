@@ -474,7 +474,8 @@ const SampleRequestReport = () => {
     // console.log(rowData);
 
     // console.log(selectedRowData);
-
+    let updatedIndentIds
+    let updated1
     if(e.target.checked){
       
       // let checkItemType:boolean = true;
@@ -489,6 +490,10 @@ const SampleRequestReport = () => {
         let rowsData = [...selectedRowData,rowData];
         setSelectedRowData(rowsData)
         setbtnEnable(true)
+        updatedIndentIds = selectedRowData.map(item => item.sampleRequestid);
+        console.log(updatedIndentIds)
+        updated1 = selectedRowData.map(item => item.sampleItemId);
+        setSelectItemIds(updated1);
       // }
       // console.log(data)
     }
@@ -498,13 +503,18 @@ const SampleRequestReport = () => {
       let itemsArray = [...selectedRowData];
       let index = itemsArray.findIndex((e) => e.samplingBomId === rowData.samplingBomId);
       itemsArray.splice(index, 1);
-      // console.log(itemsArray)
+      console.log(itemsArray)
       // let newArray = [...itemsArray]
       setSelectedRowData(itemsArray);
+      console.log(itemsArray.map(item => item.sampleRequestid))
       // console.log(selectedRowData)
       samplingPO.setFieldsValue({[`checkStatus${index}`]:false})
       // console.log(selectedRowData.length)
       selectedRowData.length - Number(1) > 0 ? setbtnEnable(true) : setbtnEnable(false)
+      updatedIndentIds = itemsArray.map(item => item.sampleRequestid);
+      console.log(updatedIndentIds)
+      updated1 = itemsArray.map(item => item.sampleItemId);
+      setSelectItemIds(updated1);
     }
     
     const checkboxValue = e.target.checked;
@@ -512,18 +522,19 @@ const SampleRequestReport = () => {
 
 
     setType(fabricType)
-    const updatedIndentIds = selectedIndentIds.push(sampleRequestid)
-    ? selectedIndentIds
-    : [...selectedIndentIds, sampleRequestid];
+    // const updatedIndentIds = selectedIndentIds.push(sampleRequestid)
+    // ? selectedIndentIds
+    // : [...selectedIndentIds, sampleRequestid];
+   
+
     setSelectedIndentIds(updatedIndentIds);
-    // console.log(selectedIndentIds)
     // setbtnEnable(true)
 
-    const updated1 = selectItemIds.push(rowData.sampleItemId)
-  ? selectItemIds
-  : [...selectItemIds, rowData.sampleItemId];
+  //   const updated1 = selectItemIds.push(rowData.sampleItemId)
+  // ? selectItemIds
+  // : [...selectItemIds, rowData.sampleItemId];
   // console.log(updated1);
-    setSelectItemIds(updated1);
+  
 
     // console.log(selectedRowData)
     let type
