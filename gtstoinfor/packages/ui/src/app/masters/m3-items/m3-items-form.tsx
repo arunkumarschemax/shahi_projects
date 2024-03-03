@@ -585,7 +585,10 @@ const handleYarnUnitChange = (index, value) => {
               </Form.Item>
               <Col xs={24} sm={12} md={6}>
                 <Form.Item label=" Fabric Type" id="fabricTypeId" name="fabricTypeId" rules={[{ required: true, message: "Fabric Type is required" }]}>
-                  <Select
+                  <Select 
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
                     placeholder=" Select Fabric Type"
                     onChange={onFabricTpe} disabled={fabricTypeDisable}
                   >
@@ -600,6 +603,9 @@ const handleYarnUnitChange = (index, value) => {
               <Col xs={24} sm={12} md={6}>
                 <Form.Item label=" Weave" name="weaveId" id="weaveId" rules={[{ required: true, message: "Weave is required" }]}>
                   <Select
+                    showSearch
+                    allowClear
+                    optionFilterProp="children"
                     placeholder=" Select Weave"
                     onChange={generateItemCode} disabled={weaveDisable}
                   >
@@ -618,7 +624,11 @@ const handleYarnUnitChange = (index, value) => {
                       <Input placeholder="Enter Weight" allowClear onChange={(e) => onWeightChange(e?.target?.value)} onBlur={generateItemCode} disabled={weightDisable} />
                     </Form.Item>
                     <Form.Item name='weightUomId' id='weightUomId'>
-                      <Select allowClear placeholder="Select Unit" onChange={onWeightUom} onBlur={generateItemCode} disabled={weightUOMDisable}>
+                      <Select 
+                      showSearch
+                      allowClear
+                      optionFilterProp="children"
+                      placeholder="Select Unit" onChange={onWeightUom} onBlur={generateItemCode} disabled={weightUOMDisable}>
                         {weightUomData.map((e) => (
                           <Option key={e.id} value={e.id} name={e.uom}>
                             {e.uom}
@@ -636,7 +646,11 @@ const handleYarnUnitChange = (index, value) => {
                       <Input placeholder="Enter Width" allowClear onChange={(e) => onWidthChange(e?.target?.value)} disabled={widthDisabled} />
                     </Form.Item>
                     <Form.Item name='widthUomId' id='widthUomId' rules={[{ required: true, message: "Width UOM is required" }]}>
-                      <Select allowClear placeholder="Select Unit" onChange={onWidthUomChange} disabled={widthUOMDisabled}>
+                      <Select 
+                      showSearch
+                      allowClear
+                      optionFilterProp="children"
+                      placeholder="Select Unit" onChange={onWidthUomChange} disabled={widthUOMDisabled}>
                         {uom.map((e) => {
                           return (
                             <Option key={e.uomId} value={e.uomId}>
@@ -676,7 +690,11 @@ const handleYarnUnitChange = (index, value) => {
                   { required: true, message: 'Finish is required' },
                 ]}
                 >
-                  <Select allowClear placeholder="Select Unit" disabled={finishDisabled}>
+                  <Select 
+                  showSearch
+                  allowClear
+                  optionFilterProp="children"
+                  placeholder="Select Unit" disabled={finishDisabled}>
                     {fabricFinish.map((e) => {
                       return (
                         <Option key={e.fabricFinishTypeId} value={e.fabricFinishTypeId}>
@@ -786,7 +804,9 @@ const handleYarnUnitChange = (index, value) => {
                                       onChange={(e) => handleYarnCountChange(index, e.target.value)}
                                       onBlur={generateItemCode} />
                                     <Select
+                                      showSearch
                                       allowClear
+                                      optionFilterProp="children"
                                       placeholder="Unit"
                                       onChange={(value) => handleYarnUnitChange(index, value)}
                                       onBlur={generateItemCode}
@@ -838,7 +858,9 @@ const handleYarnUnitChange = (index, value) => {
                               >
                                 <Space.Compact>
                                   <Select
+                                    showSearch
                                     allowClear
+                                    optionFilterProp="children"
                                     placeholder="Select Content"
                                     onChange={(value) => onContentChange(index, value)}
                                     onBlur={generateItemCode}
@@ -927,6 +949,9 @@ const handleYarnUnitChange = (index, value) => {
               <Col xs={24} sm={12} md={6}>
                   <Form.Item label="Fabric Type" id="knittedFabricTypeId" name="knittedFabricTypeId" rules={[{ required: true, message: "Fabric Type is required" }]}>
                     <Select
+                      showSearch
+                      allowClear
+                      optionFilterProp="children"
                       placeholder=" Select Fabric Type"
                       onChange={onFabricTpe} disabled={fabricTypeDisable}
                     >
@@ -941,6 +966,9 @@ const handleYarnUnitChange = (index, value) => {
                 <Col xs={24} sm={12} md={6}>
                   <Form.Item label=" Knit Type" id="knitType" name="knitType" rules={[{ required: true, message: "Knit Type is required" }]}>
                     <Select
+                      showSearch
+                      allowClear
+                      optionFilterProp="children"
                       placeholder=" Select Knit Type"
                     >
                       <Option key={"Circular"} value={"Circular"}>Circular</Option>
@@ -951,6 +979,9 @@ const handleYarnUnitChange = (index, value) => {
                 <Col xs={24} sm={12} md={6}>
                   <Form.Item label=" Weight" id="knitWeight" name="knitWeight" rules={[{ required: true, message: "Weight is required" }]}>
                     <Select
+                      showSearch
+                      allowClear
+                      optionFilterProp="children"
                       placeholder=" Select Weight"
                     >
                       <Option key={"GSM"} value={"GSM"}>GSM</Option>
@@ -1014,7 +1045,9 @@ const handleYarnUnitChange = (index, value) => {
                                 >
                                   <Space.Compact>
                                     <Select
+                                      showSearch
                                       allowClear
+                                      optionFilterProp="children"
                                       placeholder="Select Content"
                                       onChange={(value) => onContentChange(index, value)}
                                       onBlur={generateItemCode}
