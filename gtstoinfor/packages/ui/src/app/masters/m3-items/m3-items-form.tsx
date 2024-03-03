@@ -305,6 +305,7 @@ const M3Items = ({props}) => {
     getWeightUom()
     getYarnUom()
     getWeaveData()
+    getFabricTypedata("woven");
   }, []);
 
   const getUom = () => {
