@@ -2038,7 +2038,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
           LEFT JOIN stocks st ON st.id = mai.stock_id
           LEFT JOIN grn_items gi ON gi.grn_item_id = st.grn_item_id
           WHERE material_allocation_id IN
-          (SELECT material_allocation_id FROM material_allocation WHERE sample_order_id = ${req.sampleRequestId} and status = '${MaterialStatusEnum.READY_FOR_PRODUCTION}')`
+          (SELECT material_allocation_id FROM material_allocation WHERE sample_order_id = ${req.sampleRequestId} and status = '${MaterialStatusEnum.READY_FOR_PRODUCTION}') group by gi.grn_item_no`
     const res = await this.dataSource.query(grnInfoQry)
     if (grnInfoQry.length > 0) {
       return new CommonResponseModel(true, 1, 'data retreived', res)
