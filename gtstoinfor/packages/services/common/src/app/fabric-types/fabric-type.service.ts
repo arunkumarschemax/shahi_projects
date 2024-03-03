@@ -6,7 +6,7 @@ import { FabricTypeDto } from './dto/fabric-type.dto';
 import { FabricType } from './fabric-type.entity';
 import { FabricTypeRequest } from './dto/fabric-type.request';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
-import { AllFabricTypesResponse,CommonResponseModel,FabricTypeDropDownDto,FabricTypeResponse} from '@project-management-system/shared-models';
+import { AllFabricTypesResponse,CommonResponseModel,FabricCategory,FabricTypeDropDownDto,FabricTypeResponse} from '@project-management-system/shared-models';
 import { FabricTypeItemNameRequest } from './dto/fabric-type-name.request';
 @Injectable()
 export  class FabricTypeService {
@@ -196,5 +196,27 @@ export  class FabricTypeService {
                  return new CommonResponseModel(false,1110,"something went wrong. ");
             }
        }
+       async getFabricTypeByType(req:FabricCategory): Promise<AllFabricTypesResponse> {
+        try {
+            const fabricTypeDto: FabricTypeDto[] = [];
+            const fabricTypeEntities: FabricType[] = await this.fabricRepository.find({ where:{type:req.type},
+                order: { 'fabricTypeName': "ASC" },
+                // relations: ['fabricType']
+            });
+            if (fabricTypeEntities.length > 0) {
+                fabricTypeEntities.forEach(fabricTypeEntity => {
+                    const convertedFabricTypeDto: FabricTypeDto = this.fabricTypeAdapter.convertEntityToDto(fabricTypeEntity);
+                    fabricTypeDto.push(convertedFabricTypeDto);
+                });
+                console.log(fabricTypeDto);
+                const response = new AllFabricTypesResponse(true, 11208, "Fabric type retrieved successfully", fabricTypeDto);
+                return response;
+            } else {
+                throw new ErrorResponse(99998, 'No Records Found');
+            }
+        } catch (err) {
+            return err;
+        }
+    }
    
 }

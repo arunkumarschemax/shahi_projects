@@ -10,6 +10,7 @@ const {Option} = Select
 
 const M3Items = ({props}) => {
   const [form] = Form.useForm();
+  const [KnittedForm] = Form.useForm();
   const navigate = useNavigate();
   const [uom, setUom] = useState<any[]>([]);
   const [weightData, setWeightData] = useState<any[]>([]);
@@ -17,7 +18,7 @@ const M3Items = ({props}) => {
   const [widthData, setWidthData] = useState<any[]>([]);
   const [buyer, setBuyer] = useState<any[]>([]);
   const [weave, setWeave] = useState<any[]>([]);
-
+  const [value, setValue] = useState("woven");
   const [fabricType, setFabricType] = useState<any[]>([]);
   const [weight, setWeight] = useState<any[]>([])
   const [yarnRadio, setYarnRadio] = useState<Boolean>(false)
@@ -53,7 +54,7 @@ const M3Items = ({props}) => {
   const [yarnUom, setYarnUom]= useState<any[]>([])
   const [selectedContentValues, setSelectedContentValues] = useState([]);
   const [selectedContentValue, setSelectedContentValue] = useState(undefined);
-
+  const [fabricCodeType, setFabricCodeType] = useState<string>(undefined);
   const trimReqCodeService = new FabricRequestCodeService()
   const service = new M3ItemsService();
   const uomService = new UomService();
@@ -162,8 +163,8 @@ const M3Items = ({props}) => {
     });
   };
 
-  const getFabricTypedata = () => {
-    fabricService.getAllFabricType().then((res) => {
+  const getFabricTypedata = (val) => {
+    fabricService.getFabricTypeByType({type:val}).then((res) => {
       if (res.status) {
         setFabricType(res.data);
       } else {
@@ -297,7 +298,6 @@ const M3Items = ({props}) => {
 
   useEffect(() => {
     getUom();
-    getFabricTypedata();
     getBuyers();
     getAllWeights()
     getAllFinish()
@@ -350,6 +350,11 @@ const M3Items = ({props}) => {
     form.setFieldValue('buyerCode', option?.name)
   }
 
+  const onKniteFinish = (val) => {
+    console.log("val");
+    console.log(val);
+
+  }
   const onFinish = (val) => {
     // console.log("val");
     // console.log(val);
@@ -427,6 +432,11 @@ const M3Items = ({props}) => {
     setYarnType(val)
   }
 
+  const fabricCodeTypeSelect = (val) => {
+    setFabricCodeType(val);
+    setValue(val)
+    getFabricTypedata(val);
+  }
   const epiChange = (val)=>{
     // console.log(val,'epi change')
     setEPIData(val)
@@ -530,344 +540,349 @@ const handleYarnUnitChange = (index, value) => {
 
   return (
   <div>
-    <Card
-    title={<span>M3 Items</span>}
-    headStyle={{ backgroundColor: "#69c0ff", border: 0 }}
-    extra={<Button onClick={() => navigate("/m3-items-view")}type="primary">View</Button>}
+    <Card title={<span>M3 Items</span>} headStyle={{ backgroundColor: "#69c0ff", border: 0 }} extra={<Button onClick={() => navigate("/m3-items-view")}type="primary">View</Button>}
     >
-      <Form layout="vertical" form={form} onFinish={onFinish}>
-        <Row gutter={[16,2]}>
-          <Col xs={24} sm={12} md={6}>
-            <Form.Item id="buyerId" name="buyerId" label="Buyer" rules={[{ required: true, message: "Buyer is required" }]}>
-              <Select
-              allowClear
-              showSearch
-              optionFilterProp="children"
-              placeholder="Select Buyer"
-              onChange={onBuyerChange}
-              disabled={buyerDisable}
-              >
-                {buyer.map((e) => {
-                  return (<Option key={e.buyerId} value={e.buyerId} name={e.shortCode}>
-                    {`${e.buyerCode} - ${e.buyerName}`}
-                    </Option>
-                  )
-                })}
-              </Select>
-            </Form.Item>
-          </Col>
-            <Form.Item id="buyerCode" name="buyerCode" rules={[{ required: true, message: "BuyerCode is required" }]} hidden>
-              <Input />
-            </Form.Item>
-          <Col xs={24} sm={12} md={6}>
-            <Form.Item label=" Fabric Type" id="fabricTypeId" name="fabricTypeId" rules={[{ required: true, message: "Fabric Type is required" }]} >
-              <Select 
-              placeholder=" Select Fabric Type" 
-              onChange={onFabricTpe} disabled={fabricTypeDisable} 
-              >
-                {fabricType.map((option) => (
-                <Option key={option.fabricTypeId} value={option.fabricTypeId}>
-                  {option.fabricTypeName}
-                </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
-            <Form.Item label=" Weave" name="weaveId" id="weaveId" rules={[{ required: true, message: "Weave is required" }]}>
-              <Select 
-              placeholder=" Select Weave" 
-              onChange={generateItemCode} disabled={weaveDisable} 
-              >
-                {weave.map((option) => (
-                <Option key={option.fabricWeaveId} value={option.fabricWeaveId}>
-                  {option.fabricWeaveName}
-                </Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12} md={6}>
-            <Form.Item label="Weight" htmlFor="weightId" name={"weightId"} rules={[{ required: true, message: "Weight is required" }]}>
-            <Space.Compact>
-              <Form.Item name='weightValue' id='weightValue'>
-              <Input placeholder="Enter Weight" allowClear onChange={(e)=>onWeightChange(e?.target?.value)} onBlur={generateItemCode} disabled={weightDisable}/>
-              </Form.Item>
-              <Form.Item name='weightUomId' id='weightUomId'>
-                <Select allowClear placeholder="Select Unit" onChange={onWeightUom} onBlur={generateItemCode} disabled={weightUOMDisable}>
-                  {weightUomData.map((e) => (
-                    <Option key={e.id} value={e.id} name={e.uom}>
-                      {e.uom}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Space.Compact>
-            </Form.Item>
-          </Col>
-            <Col xs={24} sm={12} md={6} style={{display:'none'}}>
-              <Form.Item label="Width" htmlFor="widthValue" name={"widthValue"}>
-                <Space.Compact>
-                  <Form.Item name="width" id="width" rules={[{ required: true, message: "Width is required" }]}>
-                  <Input placeholder="Enter Width" allowClear onChange={(e)=>onWidthChange(e?.target?.value)} disabled={widthDisabled} />
-                  </Form.Item>
-                  <Form.Item name='widthUomId' id='widthUomId' rules={[{ required: true, message: "Width UOM is required" }]}>
-                  <Select  allowClear placeholder="Select Unit" onChange={onWidthUomChange} disabled={widthUOMDisabled}>
-                    {uom.map((e) => {
-                      return (
-                      <Option key={e.uomId} value={e.uomId}>
-                        {e.uom}
+      <Row gutter={[16,2]}>
+        {/* <Form.Item name='fabricCodeType' id='fabricCodeType' label="Fabric" rules={[{ required: true, message: "Fabric Type is required" }]}> */}
+          <span>Fabric</span>
+          <Radio.Group
+            name="fabricCodeType"
+            id="fabricCodeType"
+            style={{ marginTop: "25px" }}
+            onChange={(e) => fabricCodeTypeSelect(e?.target?.value)}  value={value}
+          >
+            <Radio value="Knitted">Knitted</Radio>
+            <Radio value="woven">Woven</Radio>
+          </Radio.Group>
+        {/* </Form.Item> */}
+      </Row>
+      {
+        fabricCodeType === "woven"?
+        <>
+        <Form layout="vertical" form={form} onFinish={onFinish}>
+          <Row gutter={[16, 2]}>
+              <Col xs={24} sm={12} md={6}>
+                <Form.Item id="buyerId" name="buyerId" label="Buyer" rules={[{ required: true, message: "Buyer is required" }]}>
+                  <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select Buyer"
+                    onChange={onBuyerChange}
+                    disabled={buyerDisable}
+                  >
+                    {buyer.map((e) => {
+                      return (<Option key={e.buyerId} value={e.buyerId} name={e.shortCode}>
+                        {`${e.buyerCode} - ${e.buyerName}`}
                       </Option>
-                    )})}
+                      );
+                    })}
                   </Select>
-                  </Form.Item>
-                </Space.Compact>
-              </Form.Item>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Form.Item label="Construction" htmlFor="construction"  rules={[{ required: true, message: "Construction is required" }]}>
-                <Space.Compact>
-                  <Form.Item name='epiConstruction' id='epiConstruction'>
-                  <Input placeholder="Enter EPI" allowClear onChange={(e) => epiChange(e?.target?.value)} disabled={epiDisabled} />
-                  </Form.Item>
-                  <Form.Item name='ppiConstruction' id='ppiConstruction'>
-                  <Input placeholder="Enter PPI" allowClear onChange={(e) => ppiChange(e?.target?.value)} disabled={ppiDisabled} />
-                  </Form.Item>
-                </Space.Compact>
-              </Form.Item>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-                <Form.Item name="m3Code" id="m3Code" label="M3 Code" >
-                    <Input placeholder="Enter M3 Code" disabled={m3CodeDisabled}/>
                 </Form.Item>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-                <Form.Item name="hsnCode" id="hsnCode" label="HSN Code" >
-                    <Input placeholder="Enter HSN Code" disabled={hsnDisabled}/>
+              </Col>
+              <Form.Item id="buyerCode" name="buyerCode" rules={[{ required: true, message: "BuyerCode is required" }]} hidden>
+                <Input />
+              </Form.Item>
+              <Col xs={24} sm={12} md={6}>
+                <Form.Item label=" Fabric Type" id="fabricTypeId" name="fabricTypeId" rules={[{ required: true, message: "Fabric Type is required" }]}>
+                  <Select
+                    placeholder=" Select Fabric Type"
+                    onChange={onFabricTpe} disabled={fabricTypeDisable}
+                  >
+                    {fabricType.map((option) => (
+                      <Option key={option.fabricTypeId} value={option.fabricTypeId}>
+                        {option.fabricTypeName}
+                      </Option>
+                    ))}
+                  </Select>
                 </Form.Item>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Form.Item label=" Finish" name="finishId" id="finishId" rules={[
+              </Col>
+              <Col xs={24} sm={12} md={6}>
+                <Form.Item label=" Weave" name="weaveId" id="weaveId" rules={[{ required: true, message: "Weave is required" }]}>
+                  <Select
+                    placeholder=" Select Weave"
+                    onChange={generateItemCode} disabled={weaveDisable}
+                  >
+                    {weave.map((option) => (
+                      <Option key={option.fabricWeaveId} value={option.fabricWeaveId}>
+                        {option.fabricWeaveName}
+                      </Option>
+                    ))}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={6}>
+                <Form.Item label="Weight" htmlFor="weightId" name={"weightId"} rules={[{ required: true, message: "Weight is required" }]}>
+                  <Space.Compact>
+                    <Form.Item name='weightValue' id='weightValue'>
+                      <Input placeholder="Enter Weight" allowClear onChange={(e) => onWeightChange(e?.target?.value)} onBlur={generateItemCode} disabled={weightDisable} />
+                    </Form.Item>
+                    <Form.Item name='weightUomId' id='weightUomId'>
+                      <Select allowClear placeholder="Select Unit" onChange={onWeightUom} onBlur={generateItemCode} disabled={weightUOMDisable}>
+                        {weightUomData.map((e) => (
+                          <Option key={e.id} value={e.id} name={e.uom}>
+                            {e.uom}
+                          </Option>
+                        ))}
+                      </Select>
+                    </Form.Item>
+                  </Space.Compact>
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={6} style={{ display: 'none' }}>
+                <Form.Item label="Width" htmlFor="widthValue" name={"widthValue"}>
+                  <Space.Compact>
+                    <Form.Item name="width" id="width" rules={[{ required: true, message: "Width is required" }]}>
+                      <Input placeholder="Enter Width" allowClear onChange={(e) => onWidthChange(e?.target?.value)} disabled={widthDisabled} />
+                    </Form.Item>
+                    <Form.Item name='widthUomId' id='widthUomId' rules={[{ required: true, message: "Width UOM is required" }]}>
+                      <Select allowClear placeholder="Select Unit" onChange={onWidthUomChange} disabled={widthUOMDisabled}>
+                        {uom.map((e) => {
+                          return (
+                            <Option key={e.uomId} value={e.uomId}>
+                              {e.uom}
+                            </Option>
+                          );
+                        })}
+                      </Select>
+                    </Form.Item>
+                  </Space.Compact>
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={6}>
+                <Form.Item label="Construction" htmlFor="construction" rules={[{ required: true, message: "Construction is required" }]}>
+                  <Space.Compact>
+                    <Form.Item name='epiConstruction' id='epiConstruction'>
+                      <Input placeholder="Enter EPI" allowClear onChange={(e) => epiChange(e?.target?.value)} disabled={epiDisabled} />
+                    </Form.Item>
+                    <Form.Item name='ppiConstruction' id='ppiConstruction'>
+                      <Input placeholder="Enter PPI" allowClear onChange={(e) => ppiChange(e?.target?.value)} disabled={ppiDisabled} />
+                    </Form.Item>
+                  </Space.Compact>
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={6}>
+                <Form.Item name="m3Code" id="m3Code" label="M3 Code">
+                  <Input placeholder="Enter M3 Code" disabled={m3CodeDisabled} />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={6}>
+                <Form.Item name="hsnCode" id="hsnCode" label="HSN Code">
+                  <Input placeholder="Enter HSN Code" disabled={hsnDisabled} />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={6}>
+                <Form.Item label=" Finish" name="finishId" id="finishId" rules={[
                   { required: true, message: 'Finish is required' },
                 ]}
-              >
-                <Select  allowClear placeholder="Select Unit" disabled={finishDisabled}>
+                >
+                  <Select allowClear placeholder="Select Unit" disabled={finishDisabled}>
                     {fabricFinish.map((e) => {
                       return (
-                      <Option key={e.fabricFinishTypeId} value={e.fabricFinishTypeId}>
-                        {e.fabricFinishType}
-                      </Option>
-                    )})}
+                        <Option key={e.fabricFinishTypeId} value={e.fabricFinishTypeId}>
+                          {e.fabricFinishType}
+                        </Option>
+                      );
+                    })}
                   </Select>
-              </Form.Item>
-            </Col>
-            <Col xs={24} sm={12} md={6}>
-              <Form.Item label=" Shrinkage" name="shrinkage" id="shrinkage"  >
-                <Input placeholder=" Enter  Shrinkage"  onBlur={generateItemCode} disabled={shrinkageDisabled}/>
-              </Form.Item>
-            </Col>
-            <Col span={6}>
-              <Form.Item name="description" id="description" label="Description" rules={[{required: true,message: 'Description is required'},
-              ]}
-            >
-              <TextArea rows={2}  disabled />
-            </Form.Item>
-          </Col>
-          <Col xs={24} sm={12} md={6} >
-            <Form.Item
-              name="remarks"
-              id="remarks"
-              label="Remarks"
-            >
-            <TextArea rows={2} placeholder="Enter Remarks"/>
-            </Form.Item>
-          </Col>
-          {
-            props?.yarnType === "Weft"?
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item name="yarnType" id="yarnType" rules={[{ required: false, message: "Yarn Type is required" }]}>
-                Yarn Type :
-                <Radio.Group
-                  name="yarnType"
-                  id="yarnType"
-                  style={{ marginTop: "25px" }}
-                  onChange={(e) => yarnSelect(e?.target?.value)}
-                  onBlur={generateItemCode} value={"Weft"} disabled={yarnDisabled}
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={6}>
+                <Form.Item label=" Shrinkage" name="shrinkage" id="shrinkage">
+                  <Input placeholder=" Enter  Shrinkage" onBlur={generateItemCode} disabled={shrinkageDisabled} />
+                </Form.Item>
+              </Col>
+              <Col span={6}>
+                <Form.Item name="description" id="description" label="Description" rules={[{ required: true, message: 'Description is required' },
+                ]}
                 >
-                  <Radio value="Warp">Warp</Radio>
-                  <Radio value="Weft">Weft</Radio>
-                </Radio.Group>
-              </Form.Item>
-            </Col>
-            :
-            props?.yarnType === "Warp"?
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-              <Form.Item name="yarnType" id="yarnType" rules={[{ required: false, message: "Yarn Type is required" }]}>
-                Yarn Type :
-                <Radio.Group
-                  name="yarnType"
-                  id="yarnType"
-                  style={{ marginTop: "25px" }}
-                  onChange={(e) => yarnSelect(e?.target?.value)}
-                  onBlur={generateItemCode} value={"Warp"} disabled={yarnDisabled}
+                  <TextArea rows={2} disabled />
+                </Form.Item>
+              </Col>
+              <Col xs={24} sm={12} md={6}>
+                <Form.Item
+                  name="remarks"
+                  id="remarks"
+                  label="Remarks"
                 >
-                  <Radio value="Warp">Warp</Radio>
-                  <Radio value="Weft">Weft</Radio>
-                </Radio.Group>
-              </Form.Item>
-            </Col>
-            :<Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }} xl={{ span: 6 }}>
-            <Form.Item name="yarnType" id="yarnType" rules={[{ required: false, message: "Yarn Type is required" }]}>
-              Yarn Type :
-              <Radio.Group
-                name="yarnType"
-                id="yarnType"
-                style={{ marginTop: "25px" }}
-                onChange={(e) => yarnSelect(e?.target?.value)}
-                onBlur={generateItemCode}
-              >
-                <Radio value="Warp">Warp</Radio>
-                <Radio value="Weft">Weft</Radio>
-              </Radio.Group>
-            </Form.Item>
-          </Col>
-          }
-          {/* </Row>
-          <Row gutter={16}> */}
-          {yarnRadio && (
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 9 }} xl={{ span: 9 }}>
-              <Card>
-                <Form.List name="yarnCount" initialValue={[{ countNum: '',countDenom: '', uomId: null }]}>
-                  {(fields, { add, remove }) => (
-                    <>
-                      {fields.map((field, index) => (
-                        <Row key={field.key} style={{ marginBottom: '16px' }} gutter={24}>
-                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 24 }} xl={{ span: 24 }}>
-                            <Form.Item
-                              {...field}
-                              name={[field.name, 'count']}
-                              fieldKey={[field.fieldKey, 'count']}
-                              rules={[{ required: false, message: 'Field is required' }]}
-                            >
-                              <Space.Compact>
-                                <Input
-                                placeholder="Yarn Count"
-                                allowClear
-                                onChange={(e) => handleCountNumChange(index, e.target.value)}
-                                onBlur={generateItemCode}
-                                // style={{width:'70px'}}
-                                />
-                                <Typography.Text style={{ margin: '0 7px' }}>/</Typography.Text>
-                                <Input
-                                  placeholder="Yarn Count"
-                                  allowClear
-                                  onChange={(e) => handleYarnCountChange(index, e.target.value)}
-                                  onBlur={generateItemCode}
-                                  // style={{width:'70px'}}
-                                />
-                                <Select
-                                  allowClear
-                                  placeholder="Unit"
-                                  onChange={(value) => handleYarnUnitChange(index, value)}
-                                  onBlur={generateItemCode}
-                                  // style={{width:'200px'}}
+                  <TextArea rows={2} placeholder="Enter Remarks" />
+                </Form.Item>
+              </Col>
+              {props?.yarnType === "Weft" ?
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                  <Form.Item name="yarnType" id="yarnType" rules={[{ required: false, message: "Yarn Type is required" }]}>
+                    Yarn Type :
+                    <Radio.Group
+                      name="yarnType"
+                      id="yarnType"
+                      style={{ marginTop: "25px" }}
+                      onChange={(e) => yarnSelect(e?.target?.value)}
+                      onBlur={generateItemCode} value={"Weft"} disabled={yarnDisabled}
+                    >
+                      <Radio value="Warp">Warp</Radio>
+                      <Radio value="Weft">Weft</Radio>
+                    </Radio.Group>
+                  </Form.Item>
+                </Col>
+                :
+                props?.yarnType === "Warp" ?
+                  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                    <Form.Item name="yarnType" id="yarnType" rules={[{ required: false, message: "Yarn Type is required" }]}>
+                      Yarn Type :
+                      <Radio.Group
+                        name="yarnType"
+                        id="yarnType"
+                        style={{ marginTop: "25px" }}
+                        onChange={(e) => yarnSelect(e?.target?.value)}
+                        onBlur={generateItemCode} value={"Warp"} disabled={yarnDisabled}
+                      >
+                        <Radio value="Warp">Warp</Radio>
+                        <Radio value="Weft">Weft</Radio>
+                      </Radio.Group>
+                    </Form.Item>
+                  </Col>
+                  : <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }} xl={{ span: 6 }}>
+                    <Form.Item name="yarnType" id="yarnType" rules={[{ required: false, message: "Yarn Type is required" }]}>
+                      Yarn Type :
+                      <Radio.Group
+                        name="yarnType"
+                        id="yarnType"
+                        style={{ marginTop: "25px" }}
+                        onChange={(e) => yarnSelect(e?.target?.value)}
+                        onBlur={generateItemCode}
+                      >
+                        <Radio value="Warp">Warp</Radio>
+                        <Radio value="Weft">Weft</Radio>
+                      </Radio.Group>
+                    </Form.Item>
+                  </Col>}
+              {/* </Row>
+    <Row gutter={16}> */}
+              {yarnRadio && (
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 9 }} xl={{ span: 9 }}>
+                  <Card>
+                    <Form.List name="yarnCount" initialValue={[{ countNum: '', countDenom: '', uomId: null }]}>
+                      {(fields, { add, remove }) => (
+                        <>
+                          {fields.map((field, index) => (
+                            <Row key={field.key} style={{ marginBottom: '16px' }} gutter={24}>
+                              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 24 }} xl={{ span: 24 }}>
+                                <Form.Item
+                                  {...field}
+                                  name={[field.name, 'count']}
+                                  fieldKey={[field.fieldKey, 'count']}
+                                  rules={[{ required: false, message: 'Field is required' }]}
                                 >
-                                  {yarnUom.map((e) => (
-                                    <Option key={e.id} value={e.id}>
-                                      {e.uom}
-                                    </Option>
-                                  ))}
-                                </Select>
-                                {fields.length > 1 && (
-                                  <MinusOutlined
-                                    style={{ fontSize: '16px', cursor: 'pointer', marginLeft: '8px' }}
-                                    onClick={() => onRemoveItem(index)}
-                                  />
-                                )}
-                              </Space.Compact>
-                            </Form.Item>
-                          </Col>
-                        </Row>
-                      ))}
-                      {fields.length < 3 && (
-                        <Row justify="center">
-                          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 14 }} lg={{ span: 12 }} xl={{ span: 10 }}>
-                            <Button type="dashed" onClick={() => add()} style={{ width: '60%', marginTop: '16px' }}>
-                              Add
-                            </Button>
-                          </Col>
-                        </Row>
+                                  <Space.Compact>
+                                    <Input
+                                      placeholder="Yarn Count"
+                                      allowClear
+                                      onChange={(e) => handleCountNumChange(index, e.target.value)}
+                                      onBlur={generateItemCode} />
+                                    <Typography.Text style={{ margin: '0 7px' }}>/</Typography.Text>
+                                    <Input
+                                      placeholder="Yarn Count"
+                                      allowClear
+                                      onChange={(e) => handleYarnCountChange(index, e.target.value)}
+                                      onBlur={generateItemCode} />
+                                    <Select
+                                      allowClear
+                                      placeholder="Unit"
+                                      onChange={(value) => handleYarnUnitChange(index, value)}
+                                      onBlur={generateItemCode}
+                                    >
+                                      {yarnUom.map((e) => (
+                                        <Option key={e.id} value={e.id}>
+                                          {e.uom}
+                                        </Option>
+                                      ))}
+                                    </Select>
+                                    {fields.length > 1 && (
+                                      <MinusOutlined
+                                        style={{ fontSize: '16px', cursor: 'pointer', marginLeft: '8px' }}
+                                        onClick={() => onRemoveItem(index)} />
+                                    )}
+                                  </Space.Compact>
+                                </Form.Item>
+                              </Col>
+                            </Row>
+                          ))}
+                          {fields.length < 3 && (
+                            <Row justify="center">
+                              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 14 }} lg={{ span: 12 }} xl={{ span: 10 }}>
+                                <Button type="dashed" onClick={() => add()} style={{ width: '60%', marginTop: '16px' }}>
+                                  Add
+                                </Button>
+                              </Col>
+                            </Row>
+                          )}
+                        </>
                       )}
-                    </>
-                  )}
-                </Form.List>
-              </Card>
-            </Col>
-          )}
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 9 }} xl={{ span: 9 }}>
-              <Card>
-              <Form.List name="content" initialValue={[{content: "", percentage: null}]}>
-                {(fields, { add, remove }) => (
-                  <>
-                    {fields.map((field, index) => (
-                      <Row key={field.key} style={{ marginBottom: '16px' }} gutter={24}>
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 24 }} xl={{ span: 24 }}>
-                          <Form.Item
-                            {...field}
-                            name={[field.name, 'content']}
-                            fieldKey={[field.fieldKey, 'content']}
-                            rules={[{ required: false, message: 'Field is required' }]}
-                          >
-                            <Space.Compact>
-                            <Select
-                                  allowClear
-                                  placeholder="Select Content"
-                                  onChange={(value) => onContentChange(index, value)}
-                                  onBlur={generateItemCode}
-                                  // style={{width: '290px'}}
-                                  value={props?.fabricContentInfo[0].content != null ? props?.fabricContentInfo[0].content:selectedContentValue}
-                                  disabled={props?.fabricContentInfo[0].content != null ? true : false}
-                                >
-                                  {contentData.map((e) => (
-                                    <Option key={e.contentId} value={e.contentId}>
-                                      {e.content}
-                                    </Option>
-                                  ))}
-                                </Select>
-                                <Typography.Text style={{ margin: '0 7px' }}></Typography.Text>
-                              <Input
-                                placeholder="Enter %"
-                                allowClear
-                                onChange={(e) => onPercentChange(index, e.target.value)}
-                                // style={{ width: '100px' }}
-                              />
-                              {fields.length > 1 && (
-                                <MinusOutlined
-                                  style={{ fontSize: '16px', cursor: 'pointer', marginLeft: '8px' }}
-                                  onClick={() => remove(field.name)}
-                                />
-                              )}
-                            </Space.Compact>
-                          </Form.Item>
-                        </Col>
-                      </Row>
-                    ))}
-                    {fields.length < 5 && (
-                      <Row justify="center">
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 14 }} lg={{ span: 12 }} xl={{ span: 10 }}>
-                          <Button type="dashed" onClick={() => add()} style={{ width: '70%', marginTop: '16px' }}>
-                            Add
-                          </Button>
-                        </Col>
-                      </Row>
+                    </Form.List>
+                  </Card>
+                </Col>
+              )}
+              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 9 }} xl={{ span: 9 }}>
+                <Card>
+                  <Form.List name="content" initialValue={[{ content: "", percentage: null }]}>
+                    {(fields, { add, remove }) => (
+                      <>
+                        {fields.map((field, index) => (
+                          <Row key={field.key} style={{ marginBottom: '16px' }} gutter={24}>
+                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 24 }} xl={{ span: 24 }}>
+                              <Form.Item
+                                {...field}
+                                name={[field.name, 'content']}
+                                fieldKey={[field.fieldKey, 'content']}
+                                rules={[{ required: false, message: 'Field is required' }]}
+                              >
+                                <Space.Compact>
+                                  <Select
+                                    allowClear
+                                    placeholder="Select Content"
+                                    onChange={(value) => onContentChange(index, value)}
+                                    onBlur={generateItemCode}
+                                    // style={{width: '290px'}}
+                                    value={props?.fabricContentInfo[0].content != null ? props?.fabricContentInfo[0].content : selectedContentValue}
+                                    disabled={props?.fabricContentInfo[0].content != null ? true : false}
+                                  >
+                                    {contentData.map((e) => (
+                                      <Option key={e.contentId} value={e.contentId}>
+                                        {e.content}
+                                      </Option>
+                                    ))}
+                                  </Select>
+                                  <Typography.Text style={{ margin: '0 7px' }}></Typography.Text>
+                                  <Input
+                                    placeholder="Enter %"
+                                    allowClear
+                                    onChange={(e) => onPercentChange(index, e.target.value)} />
+                                  {fields.length > 1 && (
+                                    <MinusOutlined
+                                      style={{ fontSize: '16px', cursor: 'pointer', marginLeft: '8px' }}
+                                      onClick={() => remove(field.name)} />
+                                  )}
+                                </Space.Compact>
+                              </Form.Item>
+                            </Col>
+                          </Row>
+                        ))}
+                        {fields.length < 5 && (
+                          <Row justify="center">
+                            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 14 }} lg={{ span: 12 }} xl={{ span: 10 }}>
+                              <Button type="dashed" onClick={() => add()} style={{ width: '70%', marginTop: '16px' }}>
+                                Add
+                              </Button>
+                            </Col>
+                          </Row>
+                        )}
+                      </>
                     )}
-                  </>
-                )}
-              </Form.List>
-              </Card>
-            </Col>
-            </Row>
-            <Row>
+                  </Form.List>
+                </Card>
+              </Col>
+          </Row>
+          <Row>
             <Col span={24} style={{ textAlign: "right" }}>
               <Button type="primary" htmlType="submit">
                 Submit
@@ -882,6 +897,184 @@ const handleYarnUnitChange = (index, value) => {
             </Col>
           </Row>
         </Form>
+        </>
+        :
+        <>
+          <Form layout="vertical" form={KnittedForm} onFinish={onKniteFinish}>
+            <Row gutter={[16, 2]}>
+              <Col xs={24} sm={12} md={6}>
+                <Form.Item id="knittedBuyerId" name="knittedBuyerId" label="Buyer" rules={[{ required: true, message: "Buyer is required" }]}>
+                  <Select
+                    allowClear
+                    showSearch
+                    optionFilterProp="children"
+                    placeholder="Select Buyer"
+                    onChange={onBuyerChange}
+                    disabled={buyerDisable}
+                  >
+                    {buyer.map((e) => {
+                      return (<Option key={e.buyerId} value={e.buyerId} name={e.shortCode}>
+                        {`${e.buyerCode} - ${e.buyerName}`}
+                      </Option>
+                      );
+                    })}
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Form.Item id="knittedBuyerCode" name="knittedBuyerCode" rules={[{ required: true, message: "BuyerCode is required" }]} hidden>
+                <Input />
+              </Form.Item>
+              <Col xs={24} sm={12} md={6}>
+                  <Form.Item label="Fabric Type" id="knittedFabricTypeId" name="knittedFabricTypeId" rules={[{ required: true, message: "Fabric Type is required" }]}>
+                    <Select
+                      placeholder=" Select Fabric Type"
+                      onChange={onFabricTpe} disabled={fabricTypeDisable}
+                    >
+                      {fabricType.map((option) => (
+                        <Option key={option.fabricTypeId} value={option.fabricTypeId}>
+                          {option.fabricTypeName}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12} md={6}>
+                  <Form.Item label=" Knit Type" id="knitType" name="knitType" rules={[{ required: true, message: "Knit Type is required" }]}>
+                    <Select
+                      placeholder=" Select Knit Type"
+                    >
+                      <Option key={"Circular"} value={"Circular"}>Circular</Option>
+                      <Option key={"Warp"} value={"Warp"}>Warp</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12} md={6}>
+                  <Form.Item label=" Weight" id="knitWeight" name="knitWeight" rules={[{ required: true, message: "Weight is required" }]}>
+                    <Select
+                      placeholder=" Select Weight"
+                    >
+                      <Option key={"GSM"} value={"GSM"}>GSM</Option>
+                      <Option key={"GLM"} value={"GLM"}>GLM</Option>
+                      <Option key={"Oz/sq yd"} value={"Oz/sq yd"}>Oz/sq yd</Option>
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12} md={6}>
+                  <Form.Item name="kniteM3Code" id="kniteM3Code" label="M3 Code">
+                    <Input placeholder="Enter M3 Code" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12} md={6}>
+                  <Form.Item name="kniteHsn" id="kniteHsn" label="HSN" rules={[{ required: true, message: "HSN is required" }]}>
+                    <Input placeholder="Enter HSN" />
+                  </Form.Item>
+                </Col>
+                
+                <Col xs={24} sm={12} md={6}>
+                  <Form.Item name="kniteYarnCount" id="kniteYarnCount" label="Yarn Count" rules={[{ required: true, message: "Yarn Count is required" }]}>
+                    <Input placeholder="Enter Yarn Count" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12} md={6}>
+                  <Form.Item name="kniteGauze" id="kniteGauze" label="Gauze" rules={[{ required: true, message: "Gauze is required" }]}>
+                    <Input placeholder="Enter Gauze" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12} md={6}>
+                  <Form.Item
+                    name="kniteRemarks"
+                    id="kniteRemarks"
+                    label="Remarks"
+                  >
+                    <TextArea rows={2} placeholder="Enter Remarks" />
+                  </Form.Item>
+                </Col>
+                <Col xs={24} sm={12} md={6}>
+                  <Form.Item
+                    name="kniteDescription"
+                    id="kniteDescription"
+                    label="Description"
+                  >
+                    <TextArea rows={2} placeholder="Enter Description" />
+                  </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 9 }} xl={{ span: 9 }}>
+                  <Card>
+                    <Form.List name="content" initialValue={[{ content: "", percentage: null }]}>
+                      {(fields, { add, remove }) => (
+                        <>
+                          {fields.map((field, index) => (
+                            <Row key={field.key} style={{ marginBottom: '16px' }} gutter={24}>
+                              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 24 }} xl={{ span: 24 }}>
+                                <Form.Item
+                                  {...field}
+                                  name={[field.name, 'content']}
+                                  fieldKey={[field.fieldKey, 'content']}
+                                  rules={[{ required: false, message: 'Field is required' }]}
+                                >
+                                  <Space.Compact>
+                                    <Select
+                                      allowClear
+                                      placeholder="Select Content"
+                                      onChange={(value) => onContentChange(index, value)}
+                                      onBlur={generateItemCode}
+                                      // style={{width: '290px'}}
+                                      value={props?.fabricContentInfo[0].content != null ? props?.fabricContentInfo[0].content : selectedContentValue}
+                                      disabled={props?.fabricContentInfo[0].content != null ? true : false}
+                                    >
+                                      {contentData.map((e) => (
+                                        <Option key={e.contentId} value={e.contentId}>
+                                          {e.content}
+                                        </Option>
+                                      ))}
+                                    </Select>
+                                    <Typography.Text style={{ margin: '0 7px' }}></Typography.Text>
+                                    <Input
+                                      placeholder="Enter %"
+                                      allowClear
+                                      onChange={(e) => onPercentChange(index, e.target.value)} />
+                                    {fields.length > 1 && (
+                                      <MinusOutlined
+                                        style={{ fontSize: '16px', cursor: 'pointer', marginLeft: '8px' }}
+                                        onClick={() => remove(field.name)} />
+                                    )}
+                                  </Space.Compact>
+                                </Form.Item>
+                              </Col>
+                            </Row>
+                          ))}
+                          {fields.length < 5 && (
+                            <Row justify="center">
+                              <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 14 }} lg={{ span: 12 }} xl={{ span: 10 }}>
+                                <Button type="dashed" onClick={() => add()} style={{ width: '70%', marginTop: '16px' }}>
+                                  Add
+                                </Button>
+                              </Col>
+                            </Row>
+                          )}
+                        </>
+                      )}
+                    </Form.List>
+                  </Card>
+                </Col>
+            </Row>
+            <Row>
+              <Col span={24} style={{ textAlign: "right" }}>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+                <Button
+                  htmlType="button"
+                  style={{ margin: "0 14px" }}
+                  onClick={clearData}
+                >
+                  Reset
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </>
+      }
       </Card>
     </div>
   );

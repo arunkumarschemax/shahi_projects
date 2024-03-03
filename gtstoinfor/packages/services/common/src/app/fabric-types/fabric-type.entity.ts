@@ -1,6 +1,7 @@
 import { BaseEntity, Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, RelationId, VersionColumn, UpdateDateColumn, CreateDateColumn } from "typeorm";
 import { FabricSubType } from "../fabric-sub-types/fabric-sub-type.entity";
 import { FabricWeave } from "../fabric weave/fabric-weave.entity";
+import { FabricCategoryEnum } from "@project-management-system/shared-models";
 
 @Entity('fabric_type')
 export class FabricType {
@@ -14,6 +15,11 @@ export class FabricType {
       })
       fabricTypeName: string;
 
+      @Column("enum", {
+        name: "type",
+        enum: FabricCategoryEnum
+      })
+      type: FabricCategoryEnum;
       @Column("boolean", {
         nullable: false,
         default: true,

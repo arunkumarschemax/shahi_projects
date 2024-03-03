@@ -1,7 +1,7 @@
 import axios from "axios";
 import { from } from "rxjs";
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { FabricTypesDto,FabricTypeResponse,AllFabricTypesResponse } from "@project-management-system/shared-models";
+import { FabricTypesDto,FabricTypeResponse,AllFabricTypesResponse, FabricCategory } from "@project-management-system/shared-models";
 
 
 export class FabricTypeService extends CommonAxiosService{
@@ -31,6 +31,7 @@ export class FabricTypeService extends CommonAxiosService{
         return this.axiosPostCall(this.URL + '/getTrimTypes')
 
     }
-    
-    
+    async getFabricTypeByType(req:FabricCategory): Promise<AllFabricTypesResponse> {
+        return this.axiosPostCall(this.URL + '/getFabricTypeByType',req)
+    }
 }
