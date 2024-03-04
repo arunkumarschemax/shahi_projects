@@ -855,6 +855,50 @@ export class BomService {
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
     }
+
+    async generateProposalForTrims(req:BomProposalReq):Promise<CommonResponseModel>{
+        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+        const poBomData = await this.poBomRepo.getProposalsData(req)
+
+        const groupedData: any=poBomData.reduce((result, currentItem:BomProposalDataModel) =>{
+            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode} = currentItem;
+            const bomGeoCode = destinations.find((v) => v.destination == destination)
+            const { geoCode } = bomGeoCode
+            let key = `${styleNumber}-${imCode}-${itemNo}`;
+            if(req.trimName === 'Interlining'){
+                key += `-${color}`;
+            }
+            else if(req.trimName === 'Jocktage Label' ){
+                key += `-${season}`;
+            }
+            if(!result[key]){
+                result[key] = {
+                    geoCode,
+                    styleNumber,
+                    description,
+                    use,
+                    imCode,
+                    itemNo,
+                    bomQty: 0,
+                    destination,
+                    itemId,
+                    poNumber,
+                    gender,
+                    season,
+                    year,
+                    color,
+                    itemColor,
+                    productCode,
+                };
+            }
+            result[key].bomQty += bomQty;
+
+
+            return result
+        },{})
+        const groupedArray: any[] = Object.values(groupedData);
+        return new CommonResponseModel(true,1,'Data Retrived',groupedArray)
+    }
 }
 
 

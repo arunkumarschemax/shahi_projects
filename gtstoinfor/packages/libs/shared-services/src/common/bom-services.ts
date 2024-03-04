@@ -86,4 +86,9 @@ export class BomService extends CommonAxiosService {
     async generateProposalForNeckTape(req: BomProposalReq): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/generateProposalForNeckTape", req)
     }
+    async generateProposalForTrims(req: BomProposalReq): Promise<CommonResponseModel> {
+        console.log(req)
+        return this.axiosPostCall(this.URL + "/generateProposalForTrims", req)
+    }
+    
 }

@@ -254,4 +254,13 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel, err)
         }
     }
+    @Post('/generateProposalForTrims')
+    async generateProposalForTrims(@Body() req:any): Promise<CommonResponseModel>{
+        try{
+            return this.bomService.generateProposalForTrims(req)
+        }
+        catch(error){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+        }
+    }
 }

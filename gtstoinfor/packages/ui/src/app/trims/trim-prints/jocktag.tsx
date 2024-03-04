@@ -13,10 +13,10 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
     });
 };
 export interface JocktagProps{
-
+bomInfo:any
 }
 export function Jocktag(props:JocktagProps){
-    const data=[
+    const datas=[
         {
             item:'468Q',
             style:'FD1322',
@@ -70,13 +70,15 @@ export function Jocktag(props:JocktagProps){
             }, 1000); // Add a delay to ensure all content is loaded
         }
     }
+    const data = props.bomInfo
 return(
-    <div>
-    <Card title={'JockTag'} extra={<span><Button onClick={handlePrint}></Button></span>}>
-    <table style={{ padding: '50px', borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='0'>
+    <div  id='print'>
+    <Card title={'JockTage Label'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
+    <table style={{width: '100%',  padding: '50px', borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='0'>
         <tr>
             <th>{'ITEM'}</th>
             <th>{'STYLE'}</th>
+            <th>{'IM'}</th>
             <th>{'TRIM DESCRIPTION'}</th>
             <th>{'SEASON'}</th>
             <th>{'QTY'}</th>
@@ -85,11 +87,12 @@ return(
         data.map((rec,index) =>{
             return(
                 <tr>
-                    <td>{rec.item}</td>
-                    <td>{rec.style}</td>
-                    <td>{rec.description}</td>
-                    <td>{rec.season}</td>
-                    <td>{rec.qty}</td>
+                    <td>{rec.itemNo !== null ? rec.itemNo:''}</td>
+                    <td>{rec.styleNumber !== null ? rec.styleNumber:''}</td>
+                    <td>{rec.imCode !== null ? rec.imCode:''}</td>
+                    <td style={{width:'50%'}}>{rec.description !== null ? rec.description:''}</td>
+                    <td>{rec.season !== null ? rec.season:''}</td>
+                    <td>{rec.bomQty !== null ? rec.bomQty :''}</td>
                 </tr>
             )
         })

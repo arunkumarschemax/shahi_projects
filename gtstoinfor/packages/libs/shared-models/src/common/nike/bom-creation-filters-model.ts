@@ -30,6 +30,7 @@ export class BomGenerationReq {
 export class BomProposalReq {
     poLine: string[]
     itemId: number[]
+    trimName?:string
 }
 
 

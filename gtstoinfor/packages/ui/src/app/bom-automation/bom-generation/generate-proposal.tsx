@@ -29,6 +29,7 @@ export default function GenerateProposal(props: Props) {
   const [trimName, setTrimName] = useState<string>('')
   const [buttonData, setButtonData] = useState<any>([]);
   const [necktapeData,setNeckTapeData]= useState<any>([]);
+  const [jocktageData, setJockTageData] = useState<any>([])
   useEffect(() => {
     getAllTrims();
   }, [])
@@ -47,7 +48,7 @@ export default function GenerateProposal(props: Props) {
     "Interlining":<Interlining bomInfo={proposalData}/>,
     "Drawcord":<Drawcord bomInfo={proposalData}/>,
     "Neck Tape":<NecKType bomInfo={necktapeData} />,
-    "Jocktage Label":<Jocktag />,
+    "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
     "Heat Transfer Label":<HeatTransefer />
   }
 
@@ -97,6 +98,19 @@ export default function GenerateProposal(props: Props) {
     service.generateProposalForNeckTape(bomProposalReq).then((v) => {
       if (v.status) {
         setNeckTapeData(v.data)
+      }
+    })
+  }
+
+  function handleJockTage(item){
+    // val.itemId
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [item.itemId]
+    bomProposalReq.poLine = props.poLine
+    bomProposalReq.trimName = item.item
+    service.generateProposalForTrims(bomProposalReq).then((res) =>{
+      if(res.status){
+        setJockTageData(res.data)
       }
     })
   }
@@ -281,23 +295,28 @@ export default function GenerateProposal(props: Props) {
     )
   }
   const onView = (val) => {
-    console.log(val)
-  //  const  itemIds = val.itemId.map(item => item.itemId);
-  //  console.log(itemIds)
-    setTrimName(val.item)
-    handleDownloadIndividualTrim(val.itemId)
     console.log(val.item)
-    if(val.item == 'BUTTON'){
-      handleButtonTrim(val.itemId)
+    setTrimName(val.item)
+    setModalOpen(true)
+    if(val.item === 'Jocktage Label'){
+        handleJockTage(val)
     }
-    if(val.item == 'Neck Tape')
+    if(val.item === 'BUTTON'){
+        handleButtonTrim(val.itemId)
+      }
+    if(val.item === 'Neck Tape')
     {
       handleNeckTapeTrim(val.itemId)
     }
-    setModalOpen(true)
+    if(val.item === 'Wash Care Label'){
+    handleDownloadIndividualTrim(val.itemId)
+    }
+    if(val.item === 'Interlining'){
+      handleJockTage(val)
+    }
+   
   }
 
-console.log(trimName)
 
   return (
     <Card >
