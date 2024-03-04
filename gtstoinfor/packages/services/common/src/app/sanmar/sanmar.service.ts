@@ -753,11 +753,6 @@ export class SanmarService {
         await driver.wait(until.elementLocated(By.id('CreateOrderID')))
         await driver.sleep(3000)
         await driver.findElement(By.id('CreateOrderID')).click();
-        if(await driver.findElement(By.id('CreateOrderID')).click() === null){
-          const update = await this.sanmarCoLineRepo.update({ buyerPo: po.buyer_po }, { status: 'Failed', errorMsg: 'Co Entry Will Be Allowed Only After OCD & PCD are Entered.', isActive: false });
-          await this.updateCOLineStatus({ buyerPo: poDetails[0].buyer_po, status: StatusEnum.FAILED })
-          return new CommonResponseModel(false, 0, 'Co Entry Will Be Allowed Only After OCD & PCD are Entered')
-        }
 
         await driver.wait(until.elementLocated(By.id('bpo')))
         await driver.findElement(By.id('bpo')).clear();

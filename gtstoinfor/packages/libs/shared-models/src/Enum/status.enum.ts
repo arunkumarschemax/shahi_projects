@@ -3,6 +3,6 @@ export enum StatusEnum {
     ACCEPTED = 'ACCEPTED',
     INPROGRESS='INPROGRESS',
     FAILED='FAILED',
-    SUCCESS='INPROGRESS',
+    SUCCESS ='SUCCESS',
     
   }
