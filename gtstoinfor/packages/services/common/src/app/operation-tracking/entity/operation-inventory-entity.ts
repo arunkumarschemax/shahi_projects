@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
 import { Style } from "../../style/dto/style-entity";
 import { SampleInventoryLogEntity } from "../../sample-dev-request/entities/sample-inventory-log-entity";
+import { OperationTracking } from "./operation-tracking-entity";
 
 @Entity('operation_inventory')
 export class OperationInventory {
@@ -160,9 +161,8 @@ supervisorId:number;
   })
   locationMapped: number;
 
-  
-
-
+  @OneToMany(Type =>OperationTracking,operation=>operation.tracking,{cascade: true})
+  operationTracking:OperationTracking
 
   @OneToMany(Type =>SampleInventoryLogEntity,operation=>operation.operation,{cascade: true})
   operationinventort:SampleInventoryLogEntity
