@@ -56,7 +56,7 @@ export class StyleService{
             style.description=req.description
             style.buyerId=req.buyerId
             style.brandId=req.brandId
-            style.dmm=req.dmm
+            style.dmm=req.dmmId
             style.productId=req.productId
 
 
