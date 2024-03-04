@@ -45,6 +45,7 @@ import { SampleInventoryLoqRepo } from './repo/sample-inventory-loe-repo';
 import { UploadFilesRepository } from './repo/upload-files-repository';
 import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
 import { SampleItemIdRequest } from './dto/sample-item-id-request';
+import { SampleOrderSizesRequest } from './dto/sample-order-sizes.request';
 let moment = require('moment');
 
 
@@ -2422,8 +2423,8 @@ order by mi.trim_code`;
 
   //Mobile App API for sizes dropdown for operation reporting for sample request
 
-  async getOrderedSizes(req: SampleOrderIdRequest): Promise<CommonResponseModel> {
-    const sizesDataQry = `select distinct(ss.size_id) as sizeId,s.sizes as size from sample_request_size_info ss left join size s on s.size_id = ss.size_id where sample_request_id = ${req.sampleRequestId}`;
+  async getOrderedSizes(req: SampleOrderSizesRequest): Promise<CommonResponseModel> {
+    const sizesDataQry = `select distinct(ss.size_id) as sizeId,s.sizes as size from sample_request_size_info ss left join size s on s.size_id = ss.size_id where sample_request_id = ${req.sampleRequestId} and ss.colour_id = ${req.colorId}`;
     const sizesData = await this.dataSource.query(sizesDataQry)
     if (sizesData.length > 0) {
       return new CommonResponseModel(true, 1, 'data retrieved', sizesData)
