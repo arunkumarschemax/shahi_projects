@@ -1448,7 +1448,7 @@ export class EddieService {
       let styleNo;
       if (po.buyer === 'Eddie Bauer LLC') {
         const response = await this.getOrderdataForCOline({ poNumber: po.po_number, poLine: po.po_line })
-        console.log(response.data[0])
+        console.log(response.data[0],"data.......")
         const coData = response.data[0];
         coLine.buyerPo = coData.poNumber;
         // const inputDate = new Date(coData.deliveryDate)
@@ -1630,7 +1630,7 @@ export class EddieService {
           } else if ((await tab.getAttribute('innerText')) == 'ASSORTED') {
             console.log(dest.colors, "color")
             console.log(dest.colors[0].sizes[0], "sizes")
-
+        
             await driver.executeScript('arguments[0].click();', tab);
             // get the div and increASE THE Width
             // await driver.wait(until.elementLocated(By.xpath("//div[@id='359QZD001']/div[1]")));
@@ -1729,12 +1729,12 @@ export class EddieService {
             // ---------------------- COLOR GETTING LOGIC END -------------------------
 
 
-
+       
             // after reading all sizes data and colors date, get the scroll bar to the left again
             for (let [colorIndex, color] of dest.colors.entries()) {
               // for this specific color, scroll the window to the specific row where the color is visible
               const exactColorRowScrollLocation = colorsToDisplayRowColumnIndex[color.name] + 1;
-              if (!colorsToDisplayRowColumnIndex[color.name]) {
+              if (colorsToDisplayRowColumnIndex[color.name] == undefined || colorsToDisplayRowColumnIndex[color.name] == null) {
                 break;
               }
               const bottomEle = await driver.findElement(By.xpath(`//div[@id='${colorsDivElementId}']/table/tbody/tr[${exactColorRowScrollLocation}]`));
