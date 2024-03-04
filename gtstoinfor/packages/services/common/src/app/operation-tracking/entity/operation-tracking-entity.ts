@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateCol
 import { OperationSequence } from "../../operation-sequence/operation-sequence.entity";
 import { Style } from "../../style/dto/style-entity";
 import { TrackingEnum } from "@project-management-system/shared-models";
+import { OperationInventory } from "./operation-inventory-entity";
 
 @Entity('operation_tracking')
 export class OperationTracking {
@@ -179,5 +180,7 @@ outTime: Date;
   })
   versionFlag: number;
   
-
+  @ManyToOne(Type =>OperationInventory,operation=>operation.operationTracking)
+  @JoinColumn({name:'operation_inventory_id'})
+  tracking:OperationInventory
 }
