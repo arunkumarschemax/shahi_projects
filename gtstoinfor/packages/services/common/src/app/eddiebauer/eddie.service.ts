@@ -1742,6 +1742,16 @@ export class EddieService {
               driver.sleep(500);
               for (let [sizeIndex, size] of color.sizes.entries()) {
                 const exactSizeColumnScrollLocation = sizeToDisplayRowColumnIndex[size.name] + 1;
+                if (!exactSizeColumnScrollLocation){
+                   
+                  // const str = `NO matching Size found for color : ${color.name} and size :  ${size.name} `;
+                  const str = `NO matching Size found`;
+
+                  const update = await this.eddieCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { status: 'Failed', errorMsg: 'NO matching Size found', isActive: false });
+                  await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED })
+
+                  return new CommonResponseModel(false, 0, 'NO matching Size found')
+                }
                 // console.log(`size: ${size.name} and ${exactSizeColumnScrollLocation}`);
 
                 // Now for this specific size, scroll to the exact location in the interface where the size is visible
