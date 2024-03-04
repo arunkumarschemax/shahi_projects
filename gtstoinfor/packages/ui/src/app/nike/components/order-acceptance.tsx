@@ -162,7 +162,12 @@ export function OrderAcceptance() {
     }
 
     const onReset = () => {
-        form.resetFields()
+        let resetObj = {};
+        data.forEach((record) => {
+            resetObj[`itemNo${`${record.purchaseOrderNumber}${record.poLineItemNumber}`}`] = ''
+        })
+        console.log(data.map((record) => { return { name: `itemNo${`${record.purchaseOrderNumber}${record.poLineItemNumber}`}`, value: '' } }))
+        form.setFieldsValue(resetObj);
         setItemNoValues({})
         getOrderAcceptanceData()
     }
@@ -212,6 +217,7 @@ export function OrderAcceptance() {
         service.coLineCreationReq(req).then((res) => {
             if (res.status) {
                 getOrderAcceptanceData();
+                form.resetFields([`itemNo${record.key}`])
                 message.success(res.internalMessage)
             } else (
                 message.error(res.internalMessage)
@@ -361,14 +367,12 @@ export function OrderAcceptance() {
                 dataIndex: "itemNo", width: 100,
                 render: (text, record) => {
                     return (
-                        <Form>
-                            <Form.Item>
-                                <Input
-                                    placeholder="Enter Item No"
-                                    onChange={(e) => handleItemNoChange(e.target.value, record)}
-                                />
-                            </Form.Item>
-                        </Form>
+                        <Form.Item name={`itemNo${record.purchaseOrderNumber}${record.poLineItemNumber}`}>
+                            <Input
+                                placeholder="Enter Item No"
+                                onChange={(e) => handleItemNoChange(e.target.value, record)}
+                            />
+                        </Form.Item>
                     );
                 },
             },
@@ -388,6 +392,7 @@ export function OrderAcceptance() {
             <>
                 {data.length > 0 ? (
                     <Table
+                        rowKey={(record) => `${record.purchaseOrderNumber}${record.poLineItemNumber}`}
                         columns={columns}
                         dataSource={filterData.length > 0 ? filterData : data}
                         size='small'
@@ -508,24 +513,24 @@ export function OrderAcceptance() {
                             </Form.Item>
                         </Col>
                     </Row>
+                    <Row gutter={24} justify={'space-evenly'}>
+                        <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }}  >
+                            <b> <Statistic loading={tableLoading} title="Total Order Qty:" style={{ color: 'white' }} value={count} formatter={formatter} /></b></Card>
+                        </Col>
+                        <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
+                            <b><Statistic loading={tableLoading} title="Total PO's:" value={data.length} formatter={formatter} />
+                            </b> </Card> </Col>
+                        <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#A5F5D7', height: 100, alignItems: 'center' }}>
+                            <b><Statistic loading={tableLoading} title="Accepted PO's:" value={data.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
+                            </b></Card></Col>
+                        <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
+                            <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={data.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
+                            </b></Card> </Col>
+                    </Row><br></br>
+                    <Card>
+                        {renderReport(filterData.length > 0 ? filterData : data)}
+                    </Card>
                 </Form>
-                <Row gutter={24} justify={'space-evenly'}>
-                    <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }}  >
-                        <b> <Statistic loading={tableLoading} title="Total Order Qty:" style={{ color: 'white' }} value={count} formatter={formatter} /></b></Card>
-                    </Col>
-                    <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
-                        <b><Statistic loading={tableLoading} title="Total PO's:" value={data.length} formatter={formatter} />
-                        </b> </Card> </Col>
-                    <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#A5F5D7', height: 100, alignItems: 'center' }}>
-                        <b><Statistic loading={tableLoading} title="Accepted PO's:" value={data.filter(el => el.DPOMLineItemStatus === "Accepted").length} formatter={formatter} />
-                        </b></Card></Col>
-                    <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
-                        <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={data.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
-                        </b></Card> </Col>
-                </Row><br></br>
-                <Card>
-                    {renderReport(filterData.length > 0 ? filterData : data)}
-                </Card>
             </Card>
         </>
     )
