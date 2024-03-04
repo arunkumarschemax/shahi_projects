@@ -51,7 +51,7 @@ export default function GenerateProposal(props: Props) {
     "Drawcord":<Drawcord bomInfo={proposalData}/>,
     "Neck Tape":<NecKType bomInfo={necktapeData} />,
     "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
-    "Heat Transfer Label":<HeatTransefer />,
+    "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
     "Swoosh HT label":<SwooshHtLable bomInfo={[]} />,
     "Elastic" : <Elastic bomInfo={[]}/>
   }
@@ -314,6 +314,10 @@ export default function GenerateProposal(props: Props) {
     }
     if(val.item === 'Wash Care Label'){
     handleDownloadIndividualTrim(val.itemId)
+    }
+    if(val.item === 'Heat Transfer Lbl'){
+      console.log('hiii')
+      handleButtonTrim(val.itemId)
     }
     if(val.item === 'Interlining'){
     }
