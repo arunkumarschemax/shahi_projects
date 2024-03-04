@@ -69,6 +69,8 @@ import BomOrderAcceptance from "./bom-automation/bom-details/bom-order-acceptanc
 import NecKType from "./trims/trim-prints/neck-type"
 import Interlining from "./trims/trim-prints/interlining-prints"
 import Drawcord from "./trims/trim-prints/drawcord"
+import SwooshHtLable from "./trims/trim-prints/swoosh-ht-label"
+import Elastic from "./trims/trim-prints/elastic-print"
 
 
 // import BasicLayout  from '@ant-design/pro-layout';
@@ -206,8 +208,8 @@ export const AppRoutes = () => {
                     <Route path='neck-type' element={<NecKType bomInfo={[]} />} />
                     <Route path='interlining' element={<Interlining bomInfo={[]} />} />
                     <Route path='drawcord' element={<Drawcord bomInfo={[]} />} />
-
-
+                    <Route path='SwooshHtLable' element={<SwooshHtLable bomInfo={[]} />} />
+                    <Route path='elastic' element={<Elastic bomInfo={[]} />} />
 
                     
                 </Route>
