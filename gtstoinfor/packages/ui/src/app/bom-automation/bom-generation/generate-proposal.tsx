@@ -316,7 +316,6 @@ export default function GenerateProposal(props: Props) {
     handleDownloadIndividualTrim(val.itemId)
     }
     if(val.item === 'Interlining'){
-      handleJockTage(val)
     }
    
   }
