@@ -20,7 +20,7 @@ export class StyleReq {
   @ApiProperty()
   brandId: number;
   @ApiProperty()
-  dmm: number;
+  dmmId: number;
   @ApiProperty()
   productId: number;
   @ApiProperty()
@@ -39,7 +39,7 @@ export class StyleReq {
     styleFilePath:string,
     buyerId: number,
     brandId: number,
-    dmm: number,
+    dmmId: number,
     productId: number,
     isActive:boolean,
     createdUser: string | null,
@@ -53,7 +53,7 @@ export class StyleReq {
     this.locationId=locationId
     this.buyerId=buyerId
     this.brandId=brandId
-    this.dmm=dmm
+    this.dmmId=dmmId
     this.isActive=isActive
     this.pch=pch
     this.productId=productId
