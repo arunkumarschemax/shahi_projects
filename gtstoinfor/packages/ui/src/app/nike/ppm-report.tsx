@@ -402,7 +402,6 @@ const PPMReport = () => {
               'Geo Code': item.geoCode,
               'Plant Code': item.plant,
               'Plant Name': item.plantName,
-              'UPC': Number(item.UPC),
               'Sales Order Number': '',
               'Sales Order Item Number': '',
               'Customer PO': item.customerPO,
@@ -431,6 +430,7 @@ const PPMReport = () => {
               'Purchase Group': item.purchaseGroupCode,
               'Purchase Group Name': item.purchaseGroupName,
               'Total Item Quantity': item.totalItemQty,
+              'Total CRM Quantity': item.totalCrmQty,
               '2XS (Quantity)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.sizeQty,
               '2XS (Gross FOB or Price)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.grossFobPrice,
               '2XS (Gross/FOB Currency)': item.sizeWiseData.find(i => i.sizeDescription === '2XS')?.grossFobCurrencyCode,
@@ -1312,6 +1312,8 @@ const PPMReport = () => {
     return acc + sum;
   }, 0);
 
+  const remainingShipQty = Number(count - overallSumOfActualShippedQty)
+
   const onReset = () => {
     form.resetFields()
     setSelectedSizeColumns(sizeColumns);
@@ -1403,7 +1405,6 @@ const PPMReport = () => {
       sizeHeaders.add('' + version.sizeDescription);
     }))
     const sizeHeadersArr = Array.from(sizeHeaders)
-
     sizeHeadersArr?.sort((a, b) => customOrder.indexOf(a) - customOrder.indexOf(b));
     return sizeHeadersArr;
   };
@@ -1460,6 +1461,7 @@ const PPMReport = () => {
       {
         title: 'Last Modified Date',
         dataIndex: 'lastModifiedDate',
+        width: 70
       },
       {
         title: 'Item',
@@ -1659,10 +1661,6 @@ const PPMReport = () => {
         dataIndex: 'plantName', width: 80,
       },
       {
-        title: 'UPC',
-        dataIndex: 'UPC', width: 80,
-      },
-      {
         title: 'Sales Order Number',
         dataIndex: '', width: 80,
       },
@@ -1753,6 +1751,18 @@ const PPMReport = () => {
         align: 'right',
         render: (text, _record) => {
           if (!text || text.trim() === '') {
+            return '-';
+          } else {
+            return <strong>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong>;
+          }
+        },
+      },
+      {
+        title: 'Total CRM Qty',
+        dataIndex: 'totalCrmQty', width: 80,
+        align: 'right',
+        render: (text, _record) => {
+          if (text == 0) {
             return '-';
           } else {
             return <strong>{Number(text).toLocaleString('en-IN', { maximumFractionDigits: 0 })}</strong>;
@@ -2625,7 +2635,7 @@ const PPMReport = () => {
             <b><Statistic loading={tableLoading} title="Total Shipped:" value={overallSumOfActualShippedQty} formatter={formatter} />
             </b></Card></Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#A1EBB5', height: 100, alignItems: 'center' }} >
-            <b><Statistic loading={tableLoading} title="Balance to ship:" value={count - overallSumOfActualShippedQty} formatter={formatter} />
+            <b><Statistic loading={tableLoading} title="Balance to ship:" value={remainingShipQty < 0 ? 0 : remainingShipQty} formatter={formatter} />
             </b></Card></Col>
           <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card bordered style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
             <b><Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />

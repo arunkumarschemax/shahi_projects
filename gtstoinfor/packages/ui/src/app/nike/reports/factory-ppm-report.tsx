@@ -382,7 +382,6 @@ const FactoryPPMReport = () => {
                             'Plant Code': item.plant,
                             'Plant Name': item.plantName,
                             'Trading Co PO Number': item.tradingCoPoNumber,
-                            'UPC': item.UPC,
                             'Sales Order Number': '',
                             'Sales Order Item Number': '',
                             'Customer PO': item.customerPO,
@@ -626,7 +625,6 @@ const FactoryPPMReport = () => {
         //     { title: 'Plant Name', dataIndex: 'plantName' },
 
         //     { title: 'Trading Co PO Number', dataIndex: 'tradingCoPoNumber' },
-        //     { title: 'UPC', dataIndex: 'UPC' },
         //     { title: 'Sales Order Number', dataIndex: ' ' },
         //     { title: 'Sales Order Item Number', dataIndex: ' ' },
         //     { title: 'Customer PO', dataIndex: 'customerPO' },
@@ -893,10 +891,6 @@ const FactoryPPMReport = () => {
                 },
             },
             {
-                title: 'UPC',
-                dataIndex: 'UPC', width: 70, align: 'center'
-            },
-            {
                 title: 'Sales Order Number',
                 dataIndex: '', width: 70,
             },
@@ -1045,7 +1039,6 @@ const FactoryPPMReport = () => {
                 className: 'centered-column',
             },
             { title: 'Purchase Group Name', dataIndex: 'purchaseGroupName', width: 70, },
-
             {
                 title: 'Total Item Qty',
                 dataIndex: 'totalItemQty', width: 70,
@@ -1570,12 +1563,12 @@ const FactoryPPMReport = () => {
                     <Col xs={24} sm={12} md={8} lg={6} xl={3}> <Card style={{ backgroundColor: 'aqua', height: 100, alignItems: 'center' }} >
                         <b> <Statistic loading={tableLoading} title="Total Order Qty:" style={{ fontSize: 'small' }} value={count} formatter={formatter} />
                         </b></Card></Col>
-                    <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#CBADF7', height: 100, alignItems: 'center' }}>
+                    {/* <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#CBADF7', height: 100, alignItems: 'center' }}>
                         <b><Statistic loading={tableLoading} title="Total Shipped:" value={0} formatter={formatter} />
                         </b></Card></Col>
                     <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#A1EBB5', height: 100, alignItems: 'center' }}>
                         <b><Statistic loading={tableLoading} title="Balance to ship:" value={0} formatter={formatter} />
-                        </b></Card> </Col>
+                        </b></Card> </Col> */}
                     <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card style={{ backgroundColor: '#E1F5A5', height: 100, alignItems: 'center' }}>
                         <b><Statistic loading={tableLoading} title="Total PO's:" value={gridData.length} formatter={formatter} />
                         </b> </Card> </Col>

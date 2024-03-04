@@ -76,9 +76,10 @@ export class MarketingReportModel {
     fabricContent: string;
     finalDestination: string;
     sizeWiseData: MarketingReportSizeModel[];
+    totalCrmQty: number
 
     constructor(lastModifiedDate: string, item: string, factory: string, documentDate: string, purchaseOrderNumber: string, poLineItemNumber: number, poAndLine: string, DPOMLineItemStatus: string, styleNumber: string, productCode: string, productName: string, colorDesc: string, customerOrder: string, coFinalApprovalDate: string, planNo: string, leadTime: string, categoryCode: string, categoryDesc: string, vendorCode: string, gccFocusCode: string, gccFocusDesc: string, genderAgeCode: string, genderAgeDesc: string, destinationCountryCode: string, destinationCountry: string, plant: string, plantName: string, tradingCoPoNumber: string, UPC: string, directShipSONumber: string, directShipSOItemNumber: string, customerPO: string, shipToCustomerNumber: string, shipToCustomerName: string, planningSeasonCode: string, planningSeasonYear: string, docTypeCode: string, docTypeDesc: string, MRGAC: string, OGAC: string, GAC: string, truckOutDate: string, originReceiptDate: string, factoryDeliveryActDate: string, GACReasonCode: string, GACReasonDesc: string, shippingType: string, planningPriorityCode: string, planningPriorityDesc: string, launchCode: string, geoCode: string, modeOfTransportationCode: string, inCoTerms: string, inventorySegmentCode: string, purchaseGroupCode: string, purchaseGroupName: string, totalItemQty: string, actualShippedQty: string, VASSize: string, itemVasText: string, itemVasTextPDF: string, itemText: string,
-        PCD: string, shipToAddressLegalPO: string, shipToAddressDIA: string, diffOfShipToAdd: string, CABCode: string, displayName: string, actualUnit: string, allocatedQuantity: string, hanger: string, fabricContent: string, finalDestination: string, sizeWiseData: MarketingReportSizeModel[]
+        PCD: string, shipToAddressLegalPO: string, shipToAddressDIA: string, diffOfShipToAdd: string, CABCode: string, displayName: string, actualUnit: string, allocatedQuantity: string, hanger: string, fabricContent: string, finalDestination: string, sizeWiseData: MarketingReportSizeModel[], totalCrmQty: number
     ) {
 
         this.lastModifiedDate = lastModifiedDate;
@@ -155,5 +156,6 @@ export class MarketingReportModel {
         this.hanger = hanger
         this.fabricContent = fabricContent
         this.finalDestination = finalDestination
+        this.totalCrmQty = totalCrmQty
     };
 }
