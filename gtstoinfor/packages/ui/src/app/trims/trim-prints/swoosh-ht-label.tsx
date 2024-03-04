@@ -17,11 +17,10 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
     });
 };
 
-export interface NeckTypeprops {
+export interface swooshHtLableprops {
     bomInfo: any[]
 }
-export const NecKType = (props: NeckTypeprops) => {
-    console.log(props.bomInfo,"props++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+export const SwooshHtLable = (props: swooshHtLableprops) => {
     const [bomInfo, setBomInfo] = useState<any>([])
     const [vCode, setVCode] = useState('')
     const [sizeData, setSizeData] = useState<any>([])
@@ -96,24 +95,7 @@ export const NecKType = (props: NeckTypeprops) => {
         }
     }
 
-    useEffect(() => {
-        console.log(bomInfo)
-        for (const rec of bomInfo) {
-            if (bomInfo.destinationCountry === 'ARGENTINA ') {
-                if (bomInfo.shipToAddress.includes('Nike Trading')) {
-                    setVCode('50')
-                }
-                if (bomInfo.shipToAddress.includes('Nike Golf')) {
-                    setVCode('02')
-                }
-                if (bomInfo.shipToAddress.includes('RT Clothing')) {
-                    setVCode('35')
-                }
-            }
-        }
-
-        bommap()
-    }, [bomInfo])
+  
 
     const handlePrint = () => {
         const invoiceContent = document.getElementById("print");
@@ -172,7 +154,7 @@ export const NecKType = (props: NeckTypeprops) => {
 
     const tableCellStyle: React.CSSProperties = {
         border: '1px solid #dddddd',
-        textAlign: 'left',
+        textAlign: 'center',
         padding: '8px',
       };
 
@@ -220,7 +202,7 @@ export const NecKType = (props: NeckTypeprops) => {
     }
 
     const data1 = [
-        { QTYINYDS:5960 ,QTYINYDS1:1920,QTYINYDS2:4505},
+        { QTYINYDS:5423 },
       ];
       const data2 = [
         { QTYINYDS:730 ,QTYINYDS1:665}
@@ -228,7 +210,7 @@ export const NecKType = (props: NeckTypeprops) => {
 
     return (
         <div id='print'>
-            <Card title={'Neck Tape'}
+            <Card title={'Swoosh HT Lable'}
                 extra={<Button onClick={handlePrint}>Print</Button>} >
                     <table  style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
                         <tr>
@@ -238,108 +220,78 @@ export const NecKType = (props: NeckTypeprops) => {
                             <th style={tableCellStyle} >IM#</th>
                             <th style={tableCellStyle} >MATERIAL DESCRIPTION</th>
                             <th style={tableCellStyle} >GARMENT COLOR CODE</th>
-                            <th style={tableCellStyle} >TAPE COLOR</th>
-                            <th style={tableCellStyle} >QTY IN YARDS</th>
+                            <th style={tableCellStyle} >GOLF
+#3 SWOOSH HT LABEL COLOUR</th>
+                            <th style={tableCellStyle} >Quantity in PCS</th>
                         </tr>
                   
                                 <tr >
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >220P</td>
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >DH0858</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >222P</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >DZ5366</td>
                                   <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >SU24</td>
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >A0467488</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >A1010271</td>
                                   <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >
-                                  ELASTIC; STANDARD; WOVEN; BASE SM: 0; APPROVED; TRIM-KNIT/WVN TAPE,BUNGE,DCORD; PRIMARY SM: YES; 86.49% POLYESTER (MECHANICALLY RECYCLED), 7% ELASTANE, 6.51% POLYESTER; L (MM): 0.00; W (MM): 9.00; EDGE TO EDGE; # OF GRIPPER ROWS: 0; PIECE DYED-SINGLE DYED DRAWCORD; W (MM): 0.00; AGLET; H (MM): 0.00; W (MM): 0.00; INTERNAL DIA (MM): 0.00
-                                  </td>
-                                  
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>BLACK/(WHITE)-010</td>
+                                  SP23-GOLF-#3 SWOOSH-HT
+LABEL-RECYCLED; LABEL; HEAT
+TRANSFER; FILM; HEAT SEAL BACKING;
+BASE SM: 0; APPROVED; TRIM-FLAT INK
+HT/DIRECT APPLIC; ADDTL RISKS:
+CONFIRM H/T APPLICATION METHOD W/
+VENDOR; SUGGESTED BODY FABRIC
+COLOR FASTNESS DEGREE: ≧LEVEL 4;
+VENDOR #: NFF049A1; PRIMARY SM:
+YES; 90% POLYESTER (MECHANICALLY
+RECYCLED), 10% SILICONE; # OF
+COLORS: 1; LASER CUT; PIECE CUT; H
+(MM): 18.90; W (MM): 53.50; EDGE TO
+EDGE; THK (MM): 0.30; SWOOSH; LOGO
+SIZE: 3; PIECE DYED-SINGLE DYED,
+PIGMENT DYED; ADHESIVE: FILM;
+APPLICATION TECHNIQUE: HEAT
+APPLIED; ART TECHNIQUE: FLATBED
+SCREEN PRINT; VISUAL EFFECT:
+DULL-MATTE; YARN: YARN 1; YARN
+LOCATION: WARP; 173308 - CONT -
+CONTRACTOR; YARN-FILAMENT; BASE
+SM: 0; APPROVED; 100% POLYESTER
+(MECHANICALLY RECYCLED); SIZE: 50;
+DENIER; MICROFIBER: YES; FILAMENT
+COUNT: 72; PLY COUNT: 1; LUSTER:
+FULL DULL; TEXTURE: TEXTURED;
+CROSS SECTION: ROUND; UNDYED;
+YARN 2; YARN LOCATION: FILL; 173308 -
+CONT - CONTRACTOR; YARN-FILAMENT;
+BASE SM: 0; APPROVED; 100%
+POLYESTER (MECHANICALLY
+RECYCLED); SIZE: 50; DENIER; MICROFIBER: YES; FILAMENT COUNT:
+72; PLY COUNT: 1; LUSTER: FULL DULL;
+TEXTURE: TEXTURED; CROSS SECTION:
+ROUND; UNDYED; COLOR EFFECT: 1ST
+COLOR; LABEL                                  </td>
+                                 
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>LT LEMONTWIST/(BLACK)-736</td>
                                     <td  style={{ ...tableCellStyle,textAlign: 'center' }}>00A BLACK </td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>5690</td>
-                                  </tr>
-
-
-                                  <tr>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >GLACIER BLUE/(BLACK)-476</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >43G G BLUE</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >1920</td>
-                                  </tr>
-
-
-                                  <tr>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >WHITE/(BLACK)-100</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >10A WHITE</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>4505</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>5423</td>
                                   </tr>
 
                          <tfoot>
                               <tr>
                                 <td style={tableCellStyle} colSpan={7} ></td>
-                                <td  style={{...tableCellStyle,fontWeight:"bolder"}}>{data1.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1+item.QTYINYDS2), 0)}</td>
+                                <td  style={{...tableCellStyle,fontWeight:"bolder"}}>{data1.reduce((total, item) => total + (item.QTYINYDS), 0)}</td>
                               </tr>
                               </tfoot>
 
 
-          {/* {
-                            data.map((row, index) => {
-                                return <tr key={index}>
-                                    <td >{row.itemNo !== null ? row.itemNo : ''}</td>
-                                    <td>{row.poNumber}</td>
-                                    <td>{row.season + "'" + row.year.substring(2)}</td>
-                                    <td >{row.styleNumber !== null ? row.styleNumber : ''}</td>
-                                    <td  >{row.imCode !== null ? row.imCode : ''}</td>
-                                    <td  style={{padding:'10px'}}>{row.description !== null ? row.description : ''}</td>
-                                    <td></td>
-                                    <td >{row.geoCode !== null ? row.geoCode : ''}</td>
-                                    <td>{row.bomQty !== null ? row.bomQty : ''}</td>
-                                </tr>
-                            })
-                        } */}
+       
                         
                     </table >
 <br/>
 
-<table  style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-                        <tr>
-                            <th style={tableCellStyle} >ITEM</th>
-                            <th style={tableCellStyle} >STYLE</th>
-                            <th style={tableCellStyle} >SEASON</th>
-                            <th style={tableCellStyle} >IM#</th>
-                            <th style={tableCellStyle} >MATERIAL DESCRIPTION</th>
-                            <th style={tableCellStyle} >GARMENT COLOR CODE</th>
-                            <th style={tableCellStyle} >TAPE COLOR</th>
-                            <th style={tableCellStyle} >QTY IN YARDS</th>
-                        </tr>
-                  
-                                <tr >
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >221P</td>
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >DH0857</td>
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >SU24</td>
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >A0467488</td>
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >
-                                  ELASTIC; STANDARD; WOVEN; BASE SM: 0; APPROVED; TRIM-KNIT/WVN TAPE,BUNGE,DCORD; PRIMARY SM: YES; 86.49% POLYESTER (MECHANICALLY RECYCLED), 7% ELASTANE, 6.51% POLYESTER; L (MM): 0.00; W (MM): 9.00; EDGE TO EDGE; # OF GRIPPER ROWS: 0; PIECE DYED-SINGLE DYED DRAWCORD; W (MM): 0.00; AGLET; H (MM): 0.00; W (MM): 0.00; INTERNAL DIA (MM): 0.00
-                                  </td>
-                                  
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>BLACK/(WHITE)-010</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>00A BLACK </td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>730</td>
-                                  </tr>
 
-                                  <tr>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >RUST FACTOR/(WHITE)-811</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >83U RUSTFC</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >665</td>
-                                  </tr>
-                         <tfoot>
-                              <tr>
-                                <td style={tableCellStyle} colSpan={7} ></td>
-                                <td  style={{...tableCellStyle,fontWeight:"bolder"}}>{data2.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1), 0)}</td>
-                              </tr>
-                              </tfoot>
-                        
-                    </table >
             </Card>
 
         </div>
     )
 
 }
-export default NecKType
+export default SwooshHtLable

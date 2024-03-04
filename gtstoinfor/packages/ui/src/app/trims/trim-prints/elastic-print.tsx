@@ -17,11 +17,10 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
     });
 };
 
-export interface NeckTypeprops {
+export interface Elasticprops {
     bomInfo: any[]
 }
-export const NecKType = (props: NeckTypeprops) => {
-    console.log(props.bomInfo,"props++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+export const Elastic = (props: Elasticprops) => {
     const [bomInfo, setBomInfo] = useState<any>([])
     const [vCode, setVCode] = useState('')
     const [sizeData, setSizeData] = useState<any>([])
@@ -176,104 +175,72 @@ export const NecKType = (props: NeckTypeprops) => {
         padding: '8px',
       };
 
-    const sizewisedatamap = (bomInfo) => {
-        const data = bomInfo.some(item => item.geoCode == 'APA' && item?.styleType === 'MENS TOP')
-        if (data) {
-            return (
-                <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-                    <tr>
-                        <th>REGION</th>
-                        <th>MANUFACTORY SHIP DATE</th>
-                        <th>SIZE MATRIX TYPE</th>
-                        <th>STYLE TYPE</th>
-                        <th>SEASON</th>
-                        {bomInfo?.sizeInfo?.map(e => {
-                            grandTotal += e.quantity
-                            return (
-                                <th>{e.size}</th>
-                            )
-                        })
-                        }
-                        <th>Total</th>
-                    </tr>
-                    <tr>
-                        <td style={{ textAlign: 'center' }}>{bomInfo.geoCode}</td>
-                        <td style={{ textAlign: 'center' }}>{ }</td>
-                        <td style={{ textAlign: 'center' }}>{'9687'}</td>
-                        <td style={{ textAlign: 'center' }}>{bomInfo.genderAgeDesc}</td>
-                        <td style={{ textAlign: 'center' }}>{bomInfo.season}</td>
-                        {
-                            sizeData?.sizeWiseData?.map(e => {
-                                return (
-                                    <td>{e.sizeQty}</td>
-                                )
-                            })
-                        }
-                        <th>{grandTotal}</th>
-                    </tr>
-                </table>
-            )
-        }
-        return <>
-        </>
-
-    }
+ 
 
     const data1 = [
-        { QTYINYDS:5960 ,QTYINYDS1:1920,QTYINYDS2:4505},
+        { QTYINYDS:2745 ,QTYINYDS1:1350},
       ];
       const data2 = [
-        { QTYINYDS:730 ,QTYINYDS1:665}
+        { QTYINYDS:2145 ,QTYINYDS1:1060}
       ];
 
     return (
         <div id='print'>
             <Card title={'Neck Tape'}
                 extra={<Button onClick={handlePrint}>Print</Button>} >
-                    <table  style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-                        <tr>
+                     <table  style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+            <tr>
                             <th style={tableCellStyle} >ITEM</th>
                             <th style={tableCellStyle} >STYLE</th>
                             <th style={tableCellStyle} >SEASON</th>
                             <th style={tableCellStyle} >IM#</th>
+                            <th style={tableCellStyle} >BALAJI SUPER SPANDEX REF#</th>
                             <th style={tableCellStyle} >MATERIAL DESCRIPTION</th>
-                            <th style={tableCellStyle} >GARMENT COLOR CODE</th>
-                            <th style={tableCellStyle} >TAPE COLOR</th>
-                            <th style={tableCellStyle} >QTY IN YARDS</th>
+                            <th style={tableCellStyle} >CONSUMPTION</th>
+                            <th style={tableCellStyle} >GARMENT COLORS</th>
+                            <th style={tableCellStyle} >GARMENT QTY</th>
+                            <th style={tableCellStyle} >ELASTIC COLOR</th>
+                            <th style={tableCellStyle} >REQ.IN MTRS</th>
                         </tr>
                   
                                 <tr >
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >220P</td>
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >DH0858</td>
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >SU24</td>
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >A0467488</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={5} >832L</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >BV2737</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >HO'23</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >A0001769</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >BSS/KSD/125 - NIKE-32 MM</td>
                                   <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >
-                                  ELASTIC; STANDARD; WOVEN; BASE SM: 0; APPROVED; TRIM-KNIT/WVN TAPE,BUNGE,DCORD; PRIMARY SM: YES; 86.49% POLYESTER (MECHANICALLY RECYCLED), 7% ELASTANE, 6.51% POLYESTER; L (MM): 0.00; W (MM): 9.00; EDGE TO EDGE; # OF GRIPPER ROWS: 0; PIECE DYED-SINGLE DYED DRAWCORD; W (MM): 0.00; AGLET; H (MM): 0.00; W (MM): 0.00; INTERNAL DIA (MM): 0.00
-                                  </td>
+                                  ELASTIC; STANDARD; KNIT; BASE SM: 0;
+APPROVED;
+TRIM-TAPE,ELAST,DCORD,SUNSWIM;
+VENDOR #: 1 1/4""; PRIMARY SM: YES;
+100% POLYESTER; L (MM): 0.00; W (MM):
+0.00; # OF GRIPPER ROWS: 0
+DRAWCORD; W (MM): 0.00; AGLET; H
+(MM): 0.00; W (MM): 0.00; INTERNAL DIA
+(MM): 0.00                             </td>
                                   
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>BLACK/(WHITE)-010</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>00A BLACK </td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>5690</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}  rowSpan={3}>0.68</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>BLACK/BLACK/(WHITE)-010, MIDNIGHT    NAVY/MNNAVY/(WHITE)-410 </td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>3054</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >00A BLACK</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >2145</td>
+
                                   </tr>
 
-
                                   <tr>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >GLACIER BLUE/(BLACK)-476</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >43G G BLUE</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >1920</td>
-                                  </tr>
-
-
-                                  <tr>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >WHITE/(BLACK)-100</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>DK GREY HEATHER/MSLVR/(WHITE)-063 </td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>1500</td>
                                     <td  style={{ ...tableCellStyle,textAlign: 'center' }} >10A WHITE</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>4505</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >1060</td>
+
+                              
                                   </tr>
 
                          <tfoot>
                               <tr>
-                                <td style={tableCellStyle} colSpan={7} ></td>
-                                <td  style={{...tableCellStyle,fontWeight:"bolder"}}>{data1.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1+item.QTYINYDS2), 0)}</td>
+                                <td style={tableCellStyle} colSpan={10} ></td>
+                                <td  style={{...tableCellStyle,fontWeight:"bolder"}}>{data2.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1), 0)}</td>
                               </tr>
                               </tfoot>
 
@@ -292,54 +259,70 @@ export const NecKType = (props: NeckTypeprops) => {
                                     <td>{row.bomQty !== null ? row.bomQty : ''}</td>
                                 </tr>
                             })
-                        } */}
+                        }  */}
                         
-                    </table >
+                    </table > 
 <br/>
 
-<table  style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+ <table  style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
                         <tr>
                             <th style={tableCellStyle} >ITEM</th>
                             <th style={tableCellStyle} >STYLE</th>
                             <th style={tableCellStyle} >SEASON</th>
                             <th style={tableCellStyle} >IM#</th>
+                            <th style={tableCellStyle} >BALAJI SUPER SPANDEX REF#</th>
                             <th style={tableCellStyle} >MATERIAL DESCRIPTION</th>
-                            <th style={tableCellStyle} >GARMENT COLOR CODE</th>
-                            <th style={tableCellStyle} >TAPE COLOR</th>
-                            <th style={tableCellStyle} >QTY IN YARDS</th>
+                            <th style={tableCellStyle} >CONSUMPTION</th>
+                            <th style={tableCellStyle} >GARMENT COLORS</th>
+                            <th style={tableCellStyle} >GARMENT QTY</th>
+                            <th style={tableCellStyle} >ELASTIC COLOR</th>
+                            <th style={tableCellStyle} >REQ.IN MTRS</th>
                         </tr>
                   
                                 <tr >
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >221P</td>
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >DH0857</td>
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >SU24</td>
-                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >A0467488</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={5} >832L</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >BV2737</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >HO'23</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >A0004976</td>
+                                  <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >BSS/KSD/125 - NIKE-44.5 MM</td>
                                   <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3} >
-                                  ELASTIC; STANDARD; WOVEN; BASE SM: 0; APPROVED; TRIM-KNIT/WVN TAPE,BUNGE,DCORD; PRIMARY SM: YES; 86.49% POLYESTER (MECHANICALLY RECYCLED), 7% ELASTANE, 6.51% POLYESTER; L (MM): 0.00; W (MM): 9.00; EDGE TO EDGE; # OF GRIPPER ROWS: 0; PIECE DYED-SINGLE DYED DRAWCORD; W (MM): 0.00; AGLET; H (MM): 0.00; W (MM): 0.00; INTERNAL DIA (MM): 0.00
-                                  </td>
+                                  ELASTIC; STANDARD; KNIT; BASE SM: 0;
+APPROVED;
+TRIM-TAPE,ELAST,DCORD,SUNSWIM;
+VENDOR #: 1 3/4""; PRIMARY SM: YES; L
+(MM): 0.00; W (MM): 0.00; # OF GRIPPER
+ROWS: 0 DRAWCORD; W (MM): 0.00;
+AGLET; H (MM): 0.00; W (MM): 0.00;
+INTERNAL DIA (MM): 0.00                                  </td>
                                   
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>BLACK/(WHITE)-010</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>00A BLACK </td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>730</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}  rowSpan={3}>0.87</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>BLACK/BLACK/(WHITE)-010, MIDNIGHT    NAVY/MNNAVY/(WHITE)-410 </td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>3054</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >00A BLACK</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >2745</td>
+
                                   </tr>
 
                                   <tr>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >RUST FACTOR/(WHITE)-811</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >83U RUSTFC</td>
-                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >665</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>DK GREY HEATHER/MSLVR/(WHITE)-063 </td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }}>1500</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >10A WHITE</td>
+                                    <td  style={{ ...tableCellStyle,textAlign: 'center' }} >1350</td>
+
+                              
                                   </tr>
                          <tfoot>
                               <tr>
-                                <td style={tableCellStyle} colSpan={7} ></td>
-                                <td  style={{...tableCellStyle,fontWeight:"bolder"}}>{data2.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1), 0)}</td>
+                                <td style={tableCellStyle} colSpan={10} ></td>
+                                <td  style={{...tableCellStyle,fontWeight:"bolder"}}>{data1.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1), 0)}</td>
                               </tr>
                               </tfoot>
                         
-                    </table >
+                    </table > 
             </Card>
 
         </div>
     )
 
 }
-export default NecKType
+export default Elastic

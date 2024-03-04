@@ -12,6 +12,8 @@ import Interlining from '../../trims/trim-prints/interlining-prints';
 import Drawcord from '../../trims/trim-prints/drawcord';
 import Jocktag from '../../trims/trim-prints/jocktag';
 import HeatTransefer from '../../trims/trim-prints/heat-transfer-trim';
+import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
+import Elastic from '../../trims/trim-prints/elastic-print';
 type Props = {
   poLine: string[]
 }
@@ -49,7 +51,9 @@ export default function GenerateProposal(props: Props) {
     "Drawcord":<Drawcord bomInfo={proposalData}/>,
     "Neck Tape":<NecKType bomInfo={necktapeData} />,
     "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
-    "Heat Transfer Label":<HeatTransefer />
+    "Heat Transfer Label":<HeatTransefer />,
+    "Swoosh HT label":<SwooshHtLable bomInfo={[]} />,
+    "Elastic" : <Elastic bomInfo={[]}/>
   }
 
   const onCancel = () => {
