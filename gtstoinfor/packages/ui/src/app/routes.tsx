@@ -228,6 +228,7 @@ import TrimsParamsMappingView from "./trim-master/m3-trim-items/trim-mapping-vie
 import PatternForm from "./masters/pattern/pattern-form"
 import PatternView from "./masters/pattern/pattern-view"
 import StockReceivedApproval from "./sample-development/stock-received-approval"
+import ReceiveSampleOrders from "./sample-development/receive-sample-orders"
 
 
 
@@ -578,13 +579,13 @@ export const AppRoutes = () => {
 
                         isUpdate={false}
                         closeForm={() => { }}
-                        updateItem={(undefined) => { }} />} />
+                        updateItem={(undefined) => { }} closeModal={() => { }} mapBuyerDest={false} />} />
                     <Route path='colour/colour-view' element={<ColourGrid />} />
                     <Route path='colour/colour-form' key='colour/colour-form' element={<ColourForm colourData={undefined}
 
                         isUpdate={false}
                         closeForm={() => { }}
-                        updateItem={(undefined) => { }} />} />
+                        updateItem={(undefined) => { }} closeModal={() => { }} mapBuyerDest={false} /> } />
 
                     <Route path='department/department-view' element={<DepartmentGrid />} />
                     <Route path='department/department-form' key='department/department-form' element={<DepartmentForm DepartmentData={undefined}
@@ -933,13 +934,13 @@ export const AppRoutes = () => {
 
                     isUpdate={false}
                     closeForm={() => { }}
-                    updateItem={(undefined) => { }} />} />
+                    updateItem={(undefined) => { }} closeModal={() => { }} mapBuyerDest={false} />} />
                 <Route path='colour/colour-view' element={<ColourGrid />} />
                 <Route path='colour/colour-form' key='colour/colour-form' element={<ColourForm colourData={undefined}
 
                     isUpdate={false}
                     closeForm={() => { }}
-                    updateItem={(undefined) => { }} />} />
+                    updateItem={(undefined) => { }} closeModal={() => { }} mapBuyerDest={false}/>} />
 
                 <Route path='department/department-view' element={<DepartmentGrid />} />
                 <Route path='department/department-form' key='department/department-form' element={<DepartmentForm DepartmentData={undefined}
@@ -1186,6 +1187,7 @@ export const AppRoutes = () => {
                 <Route path='/grn-view' element={<GRNView />} />
                 <Route path='/grn-detail-view' element={<GRNDetailView />} />
                 <Route path='/sample-req-detail-view' element={<SampleReqDetailView/>} />
+                <Route path='/receive-sample-orders' element={<ReceiveSampleOrders/>} />
                 <Route path='/excel-import'>
                     <Route path='excel-import' element={<ExcelImport />} />
                     <Route path='changes-view' element={<ChangesGrid />} />

@@ -307,7 +307,8 @@ function handleSearch(selectedKeys, confirm, dataIndex) {
                   isUpdate={true}
                   // saveItem={saveVariant}
                   colourData={selectedVariant}
-                  closeForm={closeDrawer} />
+                  closeForm={closeDrawer}
+                  closeModal={closeDrawer} mapBuyerDest={false} />
               </Card>
             </Drawer>
           </>

@@ -279,12 +279,21 @@ export class OperationTrackingService {
   //Mobile app API
   async OperationReport(req:operationReportRequest):Promise<CommonResponseModel>{
     const manager = new GenericTransactionManager(this.dataSource)
+    console.log("***************************************************************")
     try{
+        const getStartTime = `select out_time AS startTime from operation_tracking where sample_req_id = ${req.sampleRequestId} and next_operation = '`+req.operationCode+`' order by operation_tracking_id desc`;
+        const startTime = await this.dataSource.query(getStartTime)
+        console.log("startTime");
+        console.log(startTime);
+
+
         const styleInfo = `select style_id as styleId from sample_request where sample_request_id = ${req.sampleRequestId}`
         const styleIdres = await this.dataSource.query(styleInfo)
         const styleId = styleIdres[0].styleId
         const nextSeq = Number(req.sequence+1)
-        const nextOpData = `select operation_code as opCode,operation_name as opName from operations where sequence = ${nextSeq}`
+        // const nextOpData = `select operation_code as opCode,operation_name as opName from operations where sequence = ${nextSeq}`
+        const nextOpData = `select op.operation_name as opCode,sp.operation as opName from sample_request_process_info sp left join operations op on op.operation_id = sp.operation where sp.sequence = ${nextSeq} and sp.sample_request_id = ${req.sampleRequestId}`
+
         const res = await this.dataSource.query(nextOpData)
         let nextOperation
         if(res.length > 0){
@@ -337,7 +346,7 @@ export class OperationTrackingService {
         while (refNo.length < 4) refNo = "0" + refNo;
     
         const operationJobNo = `${req.operationCode}` + (fromDate.toString().substr(-2)) + "-" + (toDate.toString().substr(-2)) + "/" + refNo;
-        
+        let inTime = startTime.length>0 ? startTime[0].startTime:null
         const trackingEntity = new OperationTracking()
         trackingEntity.jobNumber = operationJobNo
         trackingEntity.styleId = styleId
@@ -345,6 +354,8 @@ export class OperationTrackingService {
         trackingEntity.sizeId = req.sizeId
         trackingEntity.reporterId = req.reporterId
         trackingEntity.supervisorId = req.supervisorId
+        trackingEntity.inTime = inTime;
+        trackingEntity.outTime = req.reportingTime;
         // trackingEntity.operationSequenceId = dto.operationSequenceId
         trackingEntity.operationInventoryId = save.operationInventoryId
         // trackingEntity.rejectedQuantity = dto.rejectedQuantity
@@ -358,7 +369,7 @@ export class OperationTrackingService {
         trackingEntity.sampleReqId = req.sampleRequestId
         trackingEntity.status = TrackingEnum.YES
         const createLog = await manager.getRepository(OperationTracking).save(trackingEntity)
-        // console.log(dto.fabricCode,'*************')
+        console.log(createLog);
         // const materialFabric = await this.materialFabricRepo.update({fabricCode: dto.fabricCode},{reportedStatus: MaterialFabricEnum.COMPLETED})
         // console.log(materialFabric,'))))))))))))))))))))))')
         const reportedQtyQry = `select sum(physical_quantity) as reportedQty from operation_inventory where sample_req_id = ${req.sampleRequestId} and operation = '${req.operationCode}'`
@@ -369,6 +380,9 @@ export class OperationTrackingService {
         if(reportedQtyRes[0].reportedQty > 0){
           totReportedQty = reportedQtyRes[0].reportedQty
         }
+        console.log(save);
+        console.log(createLog);
+
         if (save && createLog) {
           if((Number(totReportedQty) == Number(totalOrderedQty))){
 
@@ -414,6 +428,7 @@ export class OperationTrackingService {
                 await manager.completeTransaction();
                 return new OperationInventoryResponseModel(true, 1111, 'Quantity reported Successfully');
               }else{
+                console.log("iff 1");
                 await manager.releaseTransaction();
                 throw new ErrorResponse(9999, 'Failed To Update Sample Request');
               }
@@ -422,17 +437,20 @@ export class OperationTrackingService {
                 return new OperationInventoryResponseModel(true, 1111, 'Quantity reported Successfully');
           }
           } else {
+            console.log("iff 2");
+
             await manager.releaseTransaction();
             throw new ErrorResponse(9999, 'Failed To Update Operation');
           }
         } catch (error) {
+          console.log(error);
           await manager.releaseTransaction();
           return error;
         }
   }
 
   async getOperationCodes(req:SampleIdRequest):Promise<CommonResponseModel>{
-    const opCodesQry = `select op.operation_id,op.operation_code,op.sequence from sample_request_process_info sp left join operations op on op.operation_id = sp.operation where sp.sample_request_id = `+req.sampleRequestId+` order by op.sequence`;
+    const opCodesQry = `select op.operation_id,op.operation_code,sp.sequence AS sequence from sample_request_process_info sp left join operations op on op.operation_id = sp.operation where sp.sample_request_id = `+req.sampleRequestId+` order by sp.sequence`;
     const operationCodeRes = await this.dataSource.query(opCodesQry)
     if(operationCodeRes.length > 0){
       return new CommonResponseModel(true,1,'data retreived',operationCodeRes)

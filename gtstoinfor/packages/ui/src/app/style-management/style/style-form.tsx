@@ -10,8 +10,8 @@ import { LoadingOutlined,
     PlusOutlined } from '@ant-design/icons';
 // import { Link } from 'react-router-dom';
 // import TextArea from 'antd/lib/input/TextArea';
-import { BuyerRefNoRequest, StyleDto } from '@project-management-system/shared-models';
-import { BuyersService, ProfitControlHeadService, StyleService } from '@project-management-system/shared-services';
+import { BuyerRefNoRequest, DepartmentReq, StyleDto } from '@project-management-system/shared-models';
+import { BuyersService, EmployeeDetailsService, MasterBrandsService, ProductService, ProfitControlHeadService, StyleService } from '@project-management-system/shared-services';
 import { useNavigate } from 'react-router-dom';
 import AlertMessages from '../../common/common-functions/alert-messages';
 import { useIAMClientState } from '../../common/iam-client-react';
@@ -37,12 +37,16 @@ export function StyleForm(props: StyleFormProps) {
   const [pch, setPch] = useState<any[]>([]);
   const pchService = new ProfitControlHeadService();
   const { IAMClientAuthContext, dispatch } = useIAMClientState();
-
+  const [brands, setBrands] = useState<any[]>([]);
+  const [dmm, setDMM] = useState<any[]>([])
+  const brandService = new MasterBrandsService();
+  const employeeService = new EmployeeDetailsService();
+  const productService = new ProductService()
+  const [productData, setProductData] = useState<any[]>([])
   const [filelist, setfilelist] = useState<any>(props.isUpdate?[{
     name: props.styleData.styleFileName,
     status: 'done',
     url:props.styleData.styleFileName,
-
   }]:[]);
 
   useEffect(() => {
@@ -60,8 +64,35 @@ export function StyleForm(props: StyleFormProps) {
   //  }
    getBuyers()
    getPCHData()
+   getBrands()
+   getDMM()
+   getAllProducts()
   }, [])
 
+  const getBrands = () => {
+    brandService.getAllBrands().then((res) => {
+      if (res.status) {
+        setBrands(res.data);
+      }
+    });
+  };
+
+  const getDMM = () => {
+    const req = new DepartmentReq("DMM");
+    employeeService.getAllActiveEmploeesByDepartment(req).then((res) => {
+      if (res.status) {
+        setDMM(res.data);
+      }
+    });
+  };
+
+  const getAllProducts = () => {
+    productService.getAllActiveProducts().then((res) => {
+      if (res.status) {
+        setProductData(res.data)
+      }
+    })
+  }
 const service = new StyleService()
   const uploadButton = (
     <div>
@@ -194,7 +225,6 @@ const service = new StyleService()
           </Form.Item>
          <Row gutter={24}>
          <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 14 }}>
-            <Card>
             <Row gutter={24}>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
                   <Form.Item name='buyerId' label='Buyer'
@@ -222,7 +252,7 @@ const service = new StyleService()
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
-                        <Form.Item name='locationId' label='Location'
+                        <Form.Item name='locationId' label='Warehouse'
                           rules={[
                             {
                               required: true,
@@ -239,6 +269,73 @@ const service = new StyleService()
                             <Option key={340} value={340}>{'340'}</Option>
                           </Select>
                         </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span: 10 }} >
+            
+                  <Form.Item
+                    name="dmmId"
+                    label="DMM"
+                    rules={[{ required: true, message: "Please Select DMM" }]}
+                  >
+                    <Select
+                      allowClear
+                      showSearch
+                      optionFilterProp="children"
+                      placeholder="Select DMM"
+                    >
+                      {dmm.map((e) => {
+                        return (
+                          <Option key={e.employeeId} value={e.employeeId}>
+                            {`${e.employeeCode} - ${e.firstName}  ${e.lastName}`}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
+                  <Form.Item
+                    name="brandId"
+                    label="Brand"
+                    rules={[{ required: true, message: "Brand is required" }]}
+                  >
+                    <Select
+                      allowClear
+                      showSearch
+                      optionFilterProp="children"
+                      placeholder="Select Brand"
+                    >
+                      {brands.map((e) => {
+                        return (
+                          <Option key={e.brandId} value={e.brandId}>
+                            {e.brandName}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+                </Col>
+                <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
+                  <Form.Item
+                    name="productId"
+                    label="Product"
+                  rules={[{ required: true, message: "Please Select Product"}]}
+                  >
+                    <Select
+                      allowClear
+                      showSearch
+                      optionFilterProp="children"
+                      placeholder="Select Product"
+                    >
+                      {productData.map((e) => {
+                        return (
+                          <Option key={e.productId} value={e.productId}>
+                            {e.product}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 6 }} xl={{ span:10 }}>
                         <Form.Item name='pch' label='PCH'
@@ -313,7 +410,6 @@ const service = new StyleService()
           {/* } */}
           </Col>
         </Row>
-            </Card>  
          </Col>
          {imageUrl &&
          ( 

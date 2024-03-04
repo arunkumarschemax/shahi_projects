@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AllSampleDevReqResponseModel, BomStatusEnum, BuyerRefNoRequest, CommonResponseModel, FabricInfoReq, GlobalVariables, ItemTypeEnum, LifeCycleStatusEnum, MaterialStatusEnum, MessageParameters, ProductGroupReq, RackPositionStatusEnum, RequestNoReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleIdRequest, SampleProcessInfoReq, SampleRequestInfoModel, SampleSizeInfoModel, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, WhatsAppLogDto, buyerReq, buyerandM3ItemIdReq, lifeCycleStatusReq, requestNoReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, BomStatusEnum, BuyerRefNoRequest, CommonResponseModel, FabricInfoReq, GlobalVariables, ItemTypeEnum, LifeCycleStatusEnum, MaterialStatusEnum, MessageParameters, ProductGroupReq, RackPositionStatusEnum, RequestNoReq, SampleDevelopmentRequest, SampleDevelopmentStatusEnum, SampleFilterRequest, SampleIdRequest, SampleProcessInfoReq, SampleRequestInfoModel, SampleSizeInfoModel, SamplerawmaterialStausReq, SourcingRequisitionReq, TrimInfoReq, UploadResponse, UserIdRequest, WhatsAppLogDto, buyerReq, buyerandM3ItemIdReq, lifeCycleStatusReq, requestNoReq, sampleReqIdReq, statusReq } from '@project-management-system/shared-models';
 import { IndentService, WhatsAppInfo, WhatsAppNotificationService } from '@project-management-system/shared-services';
 import { ErrorResponse } from 'packages/libs/backend-utils/src/models/global-res-object';
 import { DataSource, Not, Repository } from 'typeorm';
@@ -45,6 +45,7 @@ import { SampleInventoryLoqRepo } from './repo/sample-inventory-loe-repo';
 import { UploadFilesRepository } from './repo/upload-files-repository';
 import { SampleRequestProcessInfoEntity } from './entities/sample-request-process-info-entity';
 import { SampleItemIdRequest } from './dto/sample-item-id-request';
+import { SampleOrderSizesRequest } from './dto/sample-order-sizes.request';
 let moment = require('moment');
 
 
@@ -154,13 +155,12 @@ export class SampleRequestService {
   }
 
   async getIssuedSampleRequests(req?: BuyerRefNoRequest): Promise<CommonResponseModel> {
-    let buyerId = null
     if (req?.buyerRefNo) {
       const buyerdata = `select buyer_id from buyers where external_ref_number = '${req.buyerRefNo}'`;
       const res = await this.dataSource.query(buyerdata)
-      buyerId = res[0].buyer_id
+      req.buyerId = res[0].buyer_id
     }
-    const details = await this.sampleRepo.getIssuedSampleRequests(buyerId);
+    const details = await this.sampleRepo.getIssuedSampleRequests(req);
     if (details.length > 0) {
       return new CommonResponseModel(true, 1, 'data retrieved', details)
     } else {
@@ -1956,8 +1956,12 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
       // console.log(grnRes)
       await manager.startTransaction()
       if (grnRes.length > 0) {
-        const grnItemInfo = `select sample_item_id as sampleItemId,indent_item_id as indentItemId,sample_req_id as sampleReqId,m3_item_code_id as m3ItemId from grn_items where grn_item_no = '${req.GRNItemNumber}'`;
+        let grnItemInfo = `select sample_item_id as sampleItemId,indent_item_id as indentItemId,sample_req_id as sampleReqId,m3_item_code_id as m3ItemId from grn_items where grn_item_no = '${req.GRNItemNumber}'`;
+        if(grnRes.grn_type === "SAMPLE_ORDER"){
+          grnItemInfo = grnItemInfo + ` and sample_req_id = ${req.sampleRequestId}`;
+        }
         const grnItemRes = await this.dataSource.query(grnItemInfo);
+
         // let sampleItemId
         // if(grnItemRes[0].sampleItemId > 0){
         //   sampleItemId = grnItemRes[0].sampleItemId
@@ -2035,7 +2039,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
           LEFT JOIN stocks st ON st.id = mai.stock_id
           LEFT JOIN grn_items gi ON gi.grn_item_id = st.grn_item_id
           WHERE material_allocation_id IN
-          (SELECT material_allocation_id FROM material_allocation WHERE sample_order_id = ${req.sampleRequestId})`
+          (SELECT material_allocation_id FROM material_allocation WHERE sample_order_id = ${req.sampleRequestId} and status = '${MaterialStatusEnum.READY_FOR_PRODUCTION}') group by gi.grn_item_no`
     const res = await this.dataSource.query(grnInfoQry)
     if (grnInfoQry.length > 0) {
       return new CommonResponseModel(true, 1, 'data retreived', res)
@@ -2211,7 +2215,7 @@ LEFT JOIN sample_request_trim_info st ON st.sample_request_id = sr.sample_reques
 
   async getRequestNo(req?: RequestNoReq): Promise<CommonResponseModel> {
 
-    const records = await this.sampleRepo.find({ where: { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ISSUED } });
+    const records = await this.sampleRepo.find({ where: { lifeCycleStatus: LifeCycleStatusEnum.MATERIAL_ISSUED, samplingUser: req.userId } });
     if (records.length)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", records)
     else
@@ -2419,8 +2423,8 @@ order by mi.trim_code`;
 
   //Mobile App API for sizes dropdown for operation reporting for sample request
 
-  async getOrderedSizes(req: SampleOrderIdRequest): Promise<CommonResponseModel> {
-    const sizesDataQry = `select distinct(ss.size_id) as sizeId,s.sizes as size from sample_request_size_info ss left join size s on s.size_id = ss.size_id where sample_request_id = ${req.sampleRequestId}`;
+  async getOrderedSizes(req: SampleOrderSizesRequest): Promise<CommonResponseModel> {
+    const sizesDataQry = `select distinct(ss.size_id) as sizeId,s.sizes as size from sample_request_size_info ss left join size s on s.size_id = ss.size_id where sample_request_id = ${req.sampleRequestId} and ss.colour_id = ${req.colorId}`;
     const sizesData = await this.dataSource.query(sizesDataQry)
     if (sizesData.length > 0) {
       return new CommonResponseModel(true, 1, 'data retrieved', sizesData)
@@ -2447,13 +2451,17 @@ order by mi.trim_code`;
     const sampleOrderDataQry = `select sample_req_size_id as SampleOrderInfoId,quantity from sample_request_size_info where sample_request_id = ${req.sampleRequestId} and colour_id = ${req.colourId} and size_id = ${req.sizeId}`
     const sampleOrderData = await this.dataSource.query(sampleOrderDataQry)
     if (sampleOrderData.length == 1) {
-      const checkOperationQry = `select operation,next_operation as nextOperation from operation_tracking where colour_id = ${req.colourId} and size_id = ${req.sizeId} and sample_req_id = ${req.sampleRequestId} ORDER BY operation_tracking_id DESC LIMIT 1`
+      const checkOperationQry = `select sp.sequence, sp.operation AS operationId,ot.next_operation as nextOperation from operation_tracking ot left join operations op on op.operation_name = ot.next_operation left join sample_request_process_info sp on sp.sample_request_id = sample_req_id and sp.operation = op.operation_id where colour_id = ${req.colourId} and size_id = ${req.sizeId} and sample_req_id = ${req.sampleRequestId} ORDER BY operation_tracking_id DESC LIMIT 1`
       const nextOperationInfo = await this.dataSource.query(checkOperationQry)
       let nextOperation
+      let operationId
+      let sequence
       if (nextOperationInfo.length > 0) {
         nextOperation = nextOperationInfo[0].nextOperation
+        operationId = nextOperationInfo[0].operationId
+        sequence = nextOperationInfo[0].sequence
       }
-      const resData = { nextOperation: nextOperation, sampledata: sampleOrderData }
+      const resData = { nextOperation: nextOperation,operationId:operationId,sequence:sequence,operationname:nextOperation, sampledata: sampleOrderData }
       return new CommonResponseModel(true, 1, 'data retreived', resData)
     }
     if (sampleOrderData.length > 1) {
@@ -2489,7 +2497,7 @@ order by mi.trim_code`;
       const manager = this.dataSource;
       const rawQuery = `SELECT s.request_no,s.life_cycle_status,bu.buyer_name,b.brand_name,srt.trim_type,srf.fabric_code,si.sizes,c.colour,si.size_id,s.extension,s.cost_ref,s.description,s.dmm_id,s.user,lt.liscence_type AS product,m.country_name as made_in,s.remarks,s.file_name,srt.remarks AS trim_remarks,srf.remarks AS fab_remarks ,s.sam_value,
       st.style,pch.profit_control_head,mi.item_code as fabCode,mt.description as trimCode,e.first_name,s.contact,s.status,srs.quantity,srf.total_requirement as fabtotal_requirement,srf.wastage as fabwastage,srf.consumption as fabconsumption,uf.uom as fabuom,srt.total_requirement as trimtotal_requirement,srt.wastage as trimwastage,srt.consumption as trimconsumption,ut.uom as trimuom,fc.colour AS fabColour ,cf.colour as garmentcolour,ca.category,ed.first_name as dmmFirst,ed.last_name as dmmLast,sty.sample_type,sst.sample_sub_type,s.category as sampleCategory,
-      s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date,rp.rack_position_name ,s.location_id as location,t.trim_category,op.operation_group_name,srp.sequence FROM sample_request s
+      s.life_cycle_status AS lifeCycleStatus, s.conversion,s.expected_delivery_date,rp.rack_position_name ,s.location_id as location,t.trim_category,op.operation_name,srp.sequence, st.style_file_name AS styleUrl FROM sample_request s
       LEFT JOIN brands b ON b.brand_id = s.brand_id
       LEFT JOIN buyers bu ON bu.buyer_id = s.buyer_id
       LEFT JOIN style st ON st.style_id = s.style_id
@@ -2498,7 +2506,7 @@ order by mi.trim_code`;
       LEFT JOIN sample_request_trim_info srt ON srt.sample_request_id = s.sample_request_id
       LEFT JOIN sample_request_size_info srs ON srs.sample_request_id = s.sample_request_id
       LEFT JOIN sample_request_process_info srp ON srp.sample_request_id = s.sample_request_id
-      LEFT JOIN operation_groups op ON op.operation_group_id = srp.operation
+      LEFT JOIN operations op ON op.operation_id = srp.operation
       LEFT JOIN size si ON si.size_id = srs.size_id
       LEFT JOIN colour c ON c.colour_id = srs.colour_id
       LEFT JOIN m3_items mi ON mi.m3_items_Id = srf.fabric_code
@@ -2529,7 +2537,7 @@ order by mi.trim_code`;
         for (const rec of info) {
           console.log(rec);
           if (!MapData.has(rec.requestNo)) {
-            MapData.set(rec.requestNo, new SampleRequestInfoModel(rec.request_no, rec.sample_request_id, rec.style, rec.brand_name, rec.buyer_name, rec.first_name, rec.status, rec.lifeCycleStatus, rec.contact, rec.profit_control_head, rec.expected_delivery_date, rec.extension, rec.conversion, rec.dmmFirst, rec.product, rec.user, rec.description, rec.cost_ref, rec.type, rec.made_in, rec.remarks, rec.file_name, rec.sam_value, [], [],[], rec.location, rec.sample_type, rec.sample_sub_type, rec.sampleCategory, rec.dmmLast))
+            MapData.set(rec.requestNo, new SampleRequestInfoModel(rec.request_no, rec.sample_request_id, rec.style, rec.brand_name, rec.buyer_name, rec.first_name, rec.status, rec.lifeCycleStatus, rec.contact, rec.profit_control_head, rec.expected_delivery_date, rec.extension, rec.conversion, rec.dmmFirst, rec.product, rec.user, rec.description, rec.cost_ref, rec.type, rec.made_in, rec.remarks, rec.file_name, rec.sam_value, [], [],[], rec.location, rec.sample_type, rec.sample_sub_type, rec.sampleCategory, rec.dmmLast, rec.styleUrl))
           }
 
           const existingTrim = MapData.get(rec.requestNo).trimInfo.find(
@@ -2549,12 +2557,12 @@ order by mi.trim_code`;
             });
           }
           const existingProcess = MapData.get(rec.requestNo).processInfo.find(
-            (p) => p.operation === rec.operation_group_name
+            (p) => p.operation === rec.operation_name
           );
 
           if (!existingProcess) {
             MapData.get(rec.requestNo).processInfo.push({
-              operation: rec.operation_group_name,
+              operation: rec.operation_name,
               sequence: rec.sequence,
               
             });
@@ -2702,4 +2710,40 @@ order by mi.trim_code`;
     }
     return new CommonResponseModel(true, 123, '', data);
   }
+
+  async getAllActiveSampleOrders(): Promise<CommonResponseModel> {
+    try{
+      const manager = this.dataSource;
+      let query ="select sr.sample_request_id AS sampleReqId,sr.request_no AS requestNo, sr.location_id AS location, s.style, ph.profit_control_head AS pch,b.buyer_name AS buyer,bd.brand_name AS brand, sr.status from sample_request sr left join style s on s.style_id = sr.style_id left join profit_control_head ph on ph.profit_control_head_id = sr.profit_control_head_id left join brands bd on bd.brand_id = sr.brand_id left join buyers b on b.buyer_id = sr.buyer_id where sampling_user IS NULL";
+      const queryResult = await manager.query(query);
+      console.log("**************queryResult*******************")
+      console.log(queryResult)
+      if(queryResult.length > 0){
+        return new CommonResponseModel(true,1001,"Data retrived successfully. ",queryResult)
+      }
+      else{
+        return new CommonResponseModel(false,1010,"No data found. ",[])
+      }
+    }
+    catch (err) {
+      throw err
+    }
+  }
+
+  async updateSamplingperson(req:UserIdRequest): Promise<CommonResponseModel> {
+    try{
+      const updateSamplinguser = await this.sampleRepo.update({SampleRequestId:req.sampleRequestId},{samplingUser:req.userId})
+      if(updateSamplinguser.affected > 0){
+        return new CommonResponseModel(true,1001,"Successfully updated Sampling User. ",)
+      }
+      else{
+        return new CommonResponseModel(false,1010,"something went wrong. ",[])
+      }
+    }
+    catch (err) {
+      throw err
+    }
+  }
+
+  
 }

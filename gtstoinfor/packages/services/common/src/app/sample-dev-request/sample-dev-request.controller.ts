@@ -3,7 +3,7 @@ import { FilesInterceptor } from '@nestjs/platform-express';
 import { Cron } from '@nestjs/schedule';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
-import { AllSampleDevReqResponseModel, CommonResponseModel, RequestNoReq, SampleFilterRequest, UploadResponse, lifeCycleStatusReq, sampleReqIdReq } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, BuyerRefNoRequest, CommonResponseModel, RequestNoReq, SampleFilterRequest, UploadResponse, lifeCycleStatusReq, sampleReqIdReq } from '@project-management-system/shared-models';
 import * as fs from 'fs';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
@@ -18,6 +18,7 @@ import { SampleOrderIdRequest } from './dto/sample-req-id';
 import { MaterialallitemsReq } from './dto/sample-req-size-req';
 import { SampleRequestService } from './sample-dev-request.service';
 import { SampleItemIdRequest } from "./dto/sample-item-id-request";
+import { SampleOrderSizesRequest } from "./dto/sample-order-sizes.request";
 
 @ApiTags('sample-request')
 @Controller('sample-request')
@@ -57,6 +58,7 @@ export class SampleDevReqController {
   }
 
   @Post('/getIssuedSampleRequests')
+  @ApiBody({ type: BuyerRefNoRequest })
   async getIssuedSampleRequests(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getIssuedSampleRequests(req);
@@ -563,7 +565,7 @@ export class SampleDevReqController {
   @Post('/getRequestno')
   async getRequestNo(@Body() req?: any): Promise<CommonResponseModel> {
     try {
-      return await this.sampleService.getRequestNo()
+      return await this.sampleService.getRequestNo(req)
     }
     catch (err) {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
@@ -637,7 +639,7 @@ export class SampleDevReqController {
   }
 
   @Post('/getOrderedSizes')
-  @ApiBody({ type: SampleOrderIdRequest })
+  @ApiBody({ type: SampleOrderSizesRequest })
   async getOrderedSizes(@Body() req?: any): Promise<CommonResponseModel> {
     try {
       return await this.sampleService.getOrderedSizes(req)
@@ -731,7 +733,7 @@ export class SampleDevReqController {
   //   }
 
   // }
-  @Cron('26 10 * * *')
+  @Cron('30 8 * * *')
   @Post('/getUsageWhtsAppMsg')
   @ApiBody({ type: Date })
   async getUsageWhtsAppMsg(@Body() req?: any): Promise<CommonResponseModel> {
@@ -785,4 +787,25 @@ export class SampleDevReqController {
       return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
     }
   }
+
+  @Post('/getAllActiveSampleOrders')
+  async getAllActiveSampleOrders(): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.getAllActiveSampleOrders();
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
+  @Post('/updateSamplingperson')
+  async updateSamplingperson(@Body() req:any): Promise<CommonResponseModel> {
+    try {
+      return await this.sampleService.updateSamplingperson(req);
+    }
+    catch (err) {
+      return this.applicationExceptionHandler.returnException(CommonResponseModel, err);
+    }
+  }
+
 }

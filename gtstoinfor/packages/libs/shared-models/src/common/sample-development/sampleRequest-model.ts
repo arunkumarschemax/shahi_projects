@@ -33,6 +33,7 @@ export class SampleRequestInfoModel{
         sampleSubType?:string
         category?:string
     dmmLast?:string
+    styleUrl?:number
     constructor(
         sampleRequestNo: string,
         sampleRequestId:number,
@@ -66,10 +67,8 @@ export class SampleRequestInfoModel{
         sampleType?:string,
         sampleSubType?:string,
         category?:string,
-        dmmLast?:string
-
-
-
+        dmmLast?:string,
+        styleUrl?:number
     ){
        this.brand = brand
        this.buyer = buyer
@@ -104,6 +103,7 @@ export class SampleRequestInfoModel{
        this.sampleSubType = sampleSubType
        this.category =category
        this.dmmLast =dmmLast
+       this.styleUrl =styleUrl
         }
 
 

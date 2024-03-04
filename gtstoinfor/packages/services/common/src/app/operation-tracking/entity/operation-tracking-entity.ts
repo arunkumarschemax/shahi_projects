@@ -135,6 +135,17 @@ reporterId:number;
 })
 supervisorId:number;
 
+@Column("datetime", {
+  nullable: true,
+  name: "in_time"
+})
+inTime: Date;
+@Column("datetime", {
+  nullable: true,
+  name: "out_time"
+})
+outTime: Date;
+
   @CreateDateColumn({
     name: "created_at",
     type:"datetime"

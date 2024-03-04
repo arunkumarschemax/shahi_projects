@@ -33,6 +33,7 @@ export class PurchaseOrderService {
 
 
     async cretePurchaseOrder(req: PurchaseOrderDto): Promise<CommonResponseModel> {
+        console.log(req);
         try {
 
             const today = new Date();
@@ -551,14 +552,14 @@ export class PurchaseOrderService {
         let joinString
         let columns
         console.log(poTypeRes[0].po_against,'kkkkkk')
-        if(poTypeRes[0].po_against == 'Sample Order'){
+        if(poTypeRes[0].po_against == 'Sample Order' && poTypeRes[0].po_material_type == 'Fabric'){
             joinString = `LEFT JOIN sample_request_fabric_info srf ON srf.fabric_info_id = poi.sample_item_id
             LEFT JOIN sample_request s ON s.sample_request_id = srf.sample_request_id`
             columns = `s.request_no as sample_req_no,s.expected_delivery_date as date ` 
-        }else {
+        }else if(poTypeRes[0].po_against == 'Sample Order' && poTypeRes[0].po_material_type == 'Trim'){
             joinString = `LEFT JOIN sample_request_trim_info srt ON srt.trim_info_id = poi.sample_item_id
             LEFT JOIN sample_request sr ON sr.sample_request_id = srt.sample_request_id`
-            columns = `i.request_no,i.indent_date`
+            columns = `i.request_no,i.indent_date, sr.request_no as sample_req_no`
         }
         // let poData = `select * from purchase_order po `
         if(poTypeRes[0].po_material_type == 'Fabric'){

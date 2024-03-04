@@ -18,6 +18,12 @@ export class StyleReq {
   @ApiProperty()
   buyerId: number;
   @ApiProperty()
+  brandId: number;
+  @ApiProperty()
+  dmm: number;
+  @ApiProperty()
+  productId: number;
+  @ApiProperty()
   isActive:boolean;
   @ApiProperty()
   createdUser: string | null;
@@ -32,6 +38,9 @@ export class StyleReq {
     styleFileName: string,
     styleFilePath:string,
     buyerId: number,
+    brandId: number,
+    dmm: number,
+    productId: number,
     isActive:boolean,
     createdUser: string | null,
     updatedUser: string | null,
@@ -43,11 +52,13 @@ export class StyleReq {
     this.styleFilePath=styleFilePath
     this.locationId=locationId
     this.buyerId=buyerId
+    this.brandId=brandId
+    this.dmm=dmm
     this.isActive=isActive
     this.pch=pch
+    this.productId=productId
     this.createdUser=createdUser
     this.updatedUser=updatedUser
-
   }
 
 

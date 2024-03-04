@@ -39,3 +39,8 @@ export enum ItemEnum {
   Fabric = 'Fabric',
   Trim = 'Trim',
 }
+
+export enum FabricCategoryEnum {
+  Woven = "Woven",
+  Knitted = "Knitted"
+}

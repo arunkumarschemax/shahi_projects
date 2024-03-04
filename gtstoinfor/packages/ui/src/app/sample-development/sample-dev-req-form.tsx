@@ -94,7 +94,9 @@ export const SampleDevForm = () => {
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem('currentUser'))
     const loginUser = userData?.user?.userName
+    const contactNo = userData?.user?.contactNo
     form.setFieldsValue({ "user": loginUser })
+    form.setFieldsValue({ "contact": contactNo })
     getAllLocations()
     getLocations();
     getPCHData();
@@ -263,6 +265,10 @@ export const SampleDevForm = () => {
       if (res.status) {
         form.setFieldValue('pchId', res.data?.pchId)
         form.setFieldValue('description', res.data?.description)      }
+        form.setFieldsValue({ "brandId": res.data?.brandId })
+        form.setFieldsValue({ "dmmId": res.data?.dmm })
+        form.setFieldsValue({ "locationId": res.data?.warehouse })
+        form.setFieldsValue({'productId':res.data?.productId})
     })
   }
   const styleOnChange = (value, option) => {
@@ -662,6 +668,7 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Warehouse"
+                disabled
               >
                 <Option key={340} value={340}>{'340'}</Option>
                 {/* {locations.map((e) => {
@@ -836,6 +843,7 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Brand"
+                disabled
               >
                 {brands.map((e) => {
                   return (
@@ -956,7 +964,7 @@ export const SampleDevForm = () => {
                 },
               ]}
             >
-              <Input placeholder="Enter Contact" />
+              <Input placeholder="Enter Contact" disabled/>
             </Form.Item>
           </Col>
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
@@ -997,6 +1005,7 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select DMM"
+                disabled
               >
                 {dmm.map((e) => {
                   return (
@@ -1039,6 +1048,7 @@ export const SampleDevForm = () => {
                 showSearch
                 optionFilterProp="children"
                 placeholder="Select Product"
+                disabled
               >
                 {productData.map((e) => {
                   return (
@@ -1075,7 +1085,7 @@ export const SampleDevForm = () => {
           <Col span={4} >
             <Form.Item
               name="type"
-              label="Sub Type"
+              label="Sampling Type"
               rules={[{ required: false, message: "SubType is required" }]}
             >
               <Select
@@ -1095,7 +1105,7 @@ export const SampleDevForm = () => {
               </Select>
             </Form.Item>
           </Col>
-          <Col span={4} >
+          {/* <Col span={4} >
             <Form.Item
               name="subType"
               label="Type"
@@ -1116,7 +1126,7 @@ export const SampleDevForm = () => {
                 })}
               </Select>
             </Form.Item>
-          </Col>
+          </Col> */}
           <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} >
             <Form.Item
               name="category"
@@ -1166,7 +1176,7 @@ export const SampleDevForm = () => {
  <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }} > 
 <Form.Item
             name="patternId"
-            label="Pattern"
+            label="Pattern Master"
             // rules={[{ required: false, message: "" }]} 
           >
              <Select

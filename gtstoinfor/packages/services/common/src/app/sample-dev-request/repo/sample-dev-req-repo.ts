@@ -227,7 +227,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { groupBy } from "rxjs";
 import { SampleRequest } from "../entities/sample-dev-request.entity";
-import { LifeCycleStatusEnum, MaterailViewDto, RequestNoReq, SampleFilterRequest, SampleRequestFilter, buyerandM3ItemIdReq } from "@project-management-system/shared-models";
+import { BuyerRefNoRequest, LifeCycleStatusEnum, MaterailViewDto, RequestNoReq, SampleFilterRequest, SampleRequestFilter, buyerandM3ItemIdReq } from "@project-management-system/shared-models";
 import { Location } from "../../locations/location.entity";
 import { Style } from "../../style/dto/style-entity";
 import { ProfitControlHead } from '../../profit-control-head/profit-control-head-entity';
@@ -432,12 +432,12 @@ if(req){
         return query.getRawMany()
     }
 
-    async getIssuedSampleRequests(buyerId?:number): Promise<any> {
+    async getIssuedSampleRequests(req?:BuyerRefNoRequest): Promise<any> {
         const query = await this.createQueryBuilder()
             .select(`sample_request_id AS sampleRequestId, request_no AS reqNo,style_id as styleId`)
-            .where(`request_no is not null and life_cycle_status in('${LifeCycleStatusEnum.MATERIAL_RECEIVED}','${LifeCycleStatusEnum.CUTTING}','${LifeCycleStatusEnum.SEWING}','${LifeCycleStatusEnum.FINISHING}') `)
-            if(buyerId){
-                query.andWhere(`buyer_id = ${buyerId}`)
+            .where(`sampling_user = ${req.userId} and request_no is not null and life_cycle_status in('${LifeCycleStatusEnum.MATERIAL_RECEIVED}','${LifeCycleStatusEnum.CUTTING}','${LifeCycleStatusEnum.SEWING}','${LifeCycleStatusEnum.FINISHING}') `)
+            if(req.buyerRefNo){
+                query.andWhere(`buyer_id = '${req.buyerId}'`)
             }
             query.orderBy(`request_no`)
         return query.getRawMany()

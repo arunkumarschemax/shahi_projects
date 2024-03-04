@@ -1,5 +1,9 @@
 export class BuyerRefNoRequest{
     buyerRefNo:number;
+    userId:number;
+    buyerId?:number;
+
+
     // constructor(buyerRefNo:number){
     //     this.buyerRefNo = buyerRefNo
     // }

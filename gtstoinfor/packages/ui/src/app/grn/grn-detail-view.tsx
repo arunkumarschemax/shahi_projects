@@ -85,6 +85,14 @@ import QRCode from "react-qr-code";
   
     const Columns: any = [
       {
+        title: <div style={{textAlign:"center"}}>GRN Item No</div>,
+        dataIndex: "grnItemNo",
+        align:"center",
+        render: (val,data) => {
+          return data.grnItemNo ? data.grnItemNo : "-";
+        }
+      },
+      {
         title: <div style={{textAlign:"center"}}>Buyer</div>,
         dataIndex: "buyerName",
         align:"center",

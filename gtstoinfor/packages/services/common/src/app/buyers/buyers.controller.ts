@@ -1,12 +1,12 @@
 import { Body, Controller, Post, Req } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { BuyersService } from './buyers.service';
 import { BuyersRequest } from './dto/buyers.request';
 import { BuyersDTO } from './dto/buyers.dto';
 import { ApplicationExceptionHandler } from '@project-management-system/backend-utils';
 import { BuyersResponseModel } from 'packages/libs/shared-models/src/common/buyers/buyers.response.model';
-import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel, CommonResponseModel, BuyersOrderAttributeResponseModel } from '@project-management-system/shared-models';
+import { AllBuyersResponseModel, BuyerRequest, BuyersGeneralAttributeResponseModel, CommonResponseModel, BuyersOrderAttributeResponseModel, BuyerRefNo } from '@project-management-system/shared-models';
 import { BuyersGeneralAttributeDto } from './dto/buyers-general-attributes.dto';
 import { BuyersGeneralAttributeService } from './buyers-general-attributes.service';
 import { BuyersOrderAttributeService } from './buyers-order-attributes.service';
@@ -187,4 +187,15 @@ export class BuyersController {
             return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
         }
     }
+
+    @Post('/getBuyerByExternalRefNo')
+    @ApiBody({ type: BuyerRefNo })
+    async getBuyerByExternalRefNo(@Body() req:any): Promise<CommonResponseModel> {
+        try {
+            return await this.buyersService.getBuyerByExternalRefNo(req);
+        } catch (err) {
+            return this.applicationExceptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
 }

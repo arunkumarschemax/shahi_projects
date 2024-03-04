@@ -93,6 +93,14 @@ export  class FabricTypeController {
                 throw err;
             }
         }
+        @Post('/getFabricTypeByType')
+       async getFabricTypeByType(@Body() req:any): Promise<AllFabricTypesResponse> {
+        try {
+            return await this.fabricService.getFabricTypeByType(req);
+        } catch (err) {
+            throw err;
+        }
+    }
 
         
 }

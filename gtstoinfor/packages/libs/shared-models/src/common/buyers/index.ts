@@ -17,3 +17,5 @@ export * from  './buyers-general-attribute-info.model'
 export * from './buyer-id.req'
 export * from './buyers-order-attribute-request'
 export * from './buyer-ref-req'
+export * from './buyer-ref-no'
+

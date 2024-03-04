@@ -289,7 +289,7 @@ export function VendorsForm(
               label="Bank Account Number"
             rules={[
               {
-                required: true,
+                required: false,
               },
               {
                 min:9,
@@ -313,7 +313,7 @@ export function VendorsForm(
               label="Bank IFSC"
             rules={[
               {
-                required: true,
+                required: false,
               },
               {
                 max:11,
@@ -336,7 +336,7 @@ export function VendorsForm(
               label="Bank Name"
             rules={[
               {
-                required: true,
+                required: false,
               },
               {
                 pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=~{}:;<>,.?|][a-zA-Z.'"`\s ]*$/,
@@ -355,7 +355,7 @@ export function VendorsForm(
               label="Bank Branch"
             rules={[
               {
-                required: true,
+                required: false,
               },
               {
                 pattern: /^[^-\s\\[\]()*!@#$^&_\-+/%=~{}:;<>,.?|][a-zA-Z.'"`\s ]*$/,
@@ -409,7 +409,7 @@ export function VendorsForm(
               label="City"
             rules={[
               {
-                required: true,
+                required: false,
               },
             ]}
             >
@@ -424,7 +424,7 @@ export function VendorsForm(
               label="Postal Code"
             rules={[
               {
-                required: true,
+                required: false,
               },
               {
                 pattern: /^[0-9.]*$/,

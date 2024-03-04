@@ -10,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom"
 import AlertMessages from "../common/common-functions/alert-messages"
 import { CategoryEnumDisplay, ItemTypeEnumDisplay, LifeCycleStatusDisplay, sampleReqIdReq } from "@project-management-system/shared-models"
 import moment from "moment"
+import { config } from "packages/libs/shared-services/config";
 
 export const SampleReqDetailView = () =>{
     const searchInput = useRef(null);
@@ -25,7 +26,6 @@ export const SampleReqDetailView = () =>{
     const [sizeData, setSizeData] = useState<any[]>([]);
     const [colourData, setColourData] = useState<any[]>([]);
     const [processData, setProcessData] = useState<any[]>([]);
-
     const location = useLocation()
     const [remarkModal,setRemarkModal] = useState<boolean>(false)
   const [remarks,setRemarks] = useState<string>('')
@@ -253,6 +253,14 @@ export const SampleReqDetailView = () =>{
                   title: <div style={{ textAlign: 'center' }}>Trim Code</div>,
           dataIndex: "trimCode",
           align:'center',
+          render: (text, record) => {
+            return (
+              <>
+               {record.trimCode ? `${record.trimCode}` : "-"}
+              </>
+            );
+          },
+
 
         //   sorter: (a, b) => a.requestNo.localeCompare(b.requestNo),
         //   sortDirections: ["descend", "ascend"],
@@ -261,7 +269,14 @@ export const SampleReqDetailView = () =>{
         {
                   title: <div style={{ textAlign: 'center' }}>Trim Category</div>,
           dataIndex: "category",
-          
+          render: (text, record) => {
+            return (
+              <>
+               {record.category ? `${record.category}` : "-"}
+              </>
+            );
+          },
+
         }, 
 
         {
@@ -343,18 +358,31 @@ export const SampleReqDetailView = () =>{
           render: (text, object, index) => (page - 1) * 10 + (index + 1),
         },
         {
-                  title: <div style={{ textAlign: 'center' }}>Operation</div>,
+          title: <div style={{ textAlign: 'center' }}>Operation</div>,
           dataIndex: "operation",
           align:'center',
+          render: (text, record) => {
+            return (
+              <>
+               {record.operation ? `${record.operation}` : "-"}
+              </>
+            );
+          },
 
         }, 
         {
-                  title: <div style={{ textAlign: 'center' }}>Sequence</div>,
+          title: <div style={{ textAlign: 'center' }}>Sequence</div>,
           dataIndex: "sequence",
           align:'center',
           sorter: (a, b) => a.sequence.localeCompare(b.sequence),
             sortDirections: ["descend", "ascend"],
-          
+            render: (text, record) => {
+              return (
+                <>
+                 {record.sequence ? `${record.sequence}` : "-"}
+                </>
+              );
+            },
         }, 
 
       
@@ -440,7 +468,19 @@ return(
                         {data?.[0]?.remarks.length > 30 ? `${data?.[0]?.remarks?.substring(0, 30)}....` : data?.[0]?.remarks}
                     </span></p></Tooltip></>) : (<>{data?.[0]?.remarks?data?.[0]?.remarks:'-'}</>)}
          </Descriptions.Item>                
-             
+          
+        </Descriptions>
+        <Descriptions>
+          <DescriptionsItem>
+            <Card style={{ maxHeight: '200px' }}>
+                <img
+                  src={config.file_upload_path +'/'+ data?.[0]?.styleUrl}
+                  alt="Preview"
+                  width={'500px'}
+                  style={{ width: '100%', objectFit: 'contain', height: '100%' }}
+                />
+            </Card>
+          </DescriptionsItem>
         </Descriptions>
         {colourData.length > 0 && (
         <Table title={()=>{return (<span style={{color:'blue',fontWeight:'bold'}}>Size Details</span>)}}  columns={columns} dataSource={colourData} size="small"rowKey={record => record.colour}/>)}

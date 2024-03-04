@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { DeliveryMethodDto, DeliveryMethodRequest } from 'packages/libs/shared-models/src/common/delivery-method';
 import { CommonAxiosService } from "../common-axios-service-prs";
-import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, MaterialAllocationitemsIdreq, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq, SampleIdRequest, AllocatedLocationReq, RequestNoReq, AllocationApprovalReq, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, LocationReq, requestNoReq, SampleItemIdRequest } from '@project-management-system/shared-models';
+import { AllSampleDevReqResponseModel, Allocatematerial, CommonResponseModel, MaterialAllocationitemsIdreq, ProductGroupReq, SampleDevelopmentRequest, SampleFilterRequest, SampleRequestFilter, SamplerawmaterialStausReq, SamplieMappingDto, UploadResponse, buyerReq, buyerandM3ItemIdReq, sampleReqIdReq, statusReq, SampleIdRequest, AllocatedLocationReq, RequestNoReq, AllocationApprovalReq, lifeCycleStatusReq, BuyerRefNoRequest, MaterailViewDto, LocationReq, requestNoReq, SampleItemIdRequest, UserIdRequest } from '@project-management-system/shared-models';
 import { create } from 'domain';
 
 
@@ -215,6 +215,14 @@ export class SampleDevelopmentService extends CommonAxiosService {
 
   async getTrimPaths(req: SampleItemIdRequest): Promise<CommonResponseModel> {
     return this.axiosPostCall(this.URL + "/getTrimPaths", req)
+  }
+
+  async getAllActiveSampleOrders(): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/getAllActiveSampleOrders")
+  }
+
+  async updateSamplingperson(req: UserIdRequest): Promise<CommonResponseModel> {
+    return this.axiosPostCall(this.URL + "/updateSamplingperson", req)
   }
 
 }

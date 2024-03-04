@@ -538,6 +538,7 @@ const [sizeData, setSizeData]=useState<any[]>([])
         setFabricTableData((prevData) => {
             const newData = [...prevData];
             newData.splice(index, 1);
+            props(newData)
             return newData;
         });
     };

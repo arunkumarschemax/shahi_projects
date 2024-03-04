@@ -20,4 +20,6 @@ export class operationReportRequest {
     reporterId: number;
     @ApiProperty()
     supervisorId: number;
+    @ApiProperty()
+    reportingTime: Date;
 }

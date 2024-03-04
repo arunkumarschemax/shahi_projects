@@ -69,6 +69,7 @@ export function M3TrimsReqFile(props:M3Trimprps) {
 
   const trimReqCodeService = new FabricRequestCodeService()
   useEffect(() =>{
+    clearData()
     if(props.trimCategoryId != undefined){
       getMappedTrims(props.trimCategoryId)
       form.setFieldsValue({trimCategoryId : props.trimCategoryId})

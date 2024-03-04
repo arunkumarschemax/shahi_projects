@@ -1,5 +1,5 @@
 import { EditOutlined, MinusCircleOutlined } from "@ant-design/icons";
-import { faDisplay } from "@fortawesome/free-solid-svg-icons";
+import { faDisplay, prefix } from "@fortawesome/free-solid-svg-icons";
 import { M3MastersCategoryReq, UomCategoryEnum } from "@project-management-system/shared-models";
 import { ColourService, IndentService, M3MastersService, M3TrimsService, SampleDevelopmentService, SizeService, TaxesService, UomService } from "@project-management-system/shared-services";
 import { Button, Card, Col, Divider, Form, Input, InputNumber, Popconfirm, Row, Select, Table, Tag, Tooltip } from "antd";
@@ -243,9 +243,15 @@ export const PurchaseOrderTrim = ({props,indentId,data,sampleReqId,itemData}) =>
     //     }
 
         const deleteData = (index: any) => {
+            console.log(index);
+            console.log(trimTableData);
+
             setTrimTableData((prevData) => {
+            console.log(prevData);
+
                 const newData = [...prevData];
                 newData.splice(index, 1);
+                props(newData)
                 return newData;
             });
         };

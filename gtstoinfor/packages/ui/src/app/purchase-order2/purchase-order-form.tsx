@@ -163,14 +163,17 @@ export const PurchaseOrderForm = () => {
 
     useEffect(()=>{
         if(fabricData.length){
-            poForm.setFieldsValue({totalAmount : fabricData[0]?.subjectiveAmount})
+            const totalSum = fabricData.reduce((sum, item) => sum +Number (item.subjectiveAmount || 0), 0);
+
+            poForm.setFieldsValue({totalAmount : totalSum})
         }
-        console.log(fabricData[0]?.subjectiveAmount,'.,,,,,,,,<<<<>>>>>>>')
     },[fabricData]);
 
     useEffect(()=>{
         if(trimData){
-            poForm.setFieldsValue({totalAmount : trimData[0]?.subjectiveAmount})
+            const totalSum = trimData.reduce((sum, item) => sum +Number (item.subjectiveAmount || 0), 0);
+
+            poForm.setFieldsValue({totalAmount : totalSum})
         }
     },[trimData]);
 
@@ -238,12 +241,14 @@ export const PurchaseOrderForm = () => {
         let poItemDetails :PoItemDetailsDto[]=[];
         if(fabricData.length != 0){
             for(const fabdata of fabricData){
+                console.log(fabdata);
                 const fab  = new PoItemDetailsDto(fabdata.colourId,fabdata.m3FabricCode,fabdata.poQuantity,fabdata.quantityUomId,undefined,fabdata.samplereFabId,fabdata.indentFabricId,fabdata.unitPrice,fabdata.discount,fabdata.tax,fabdata.transportation,fabdata.subjectiveAmount,fabdata.indentId,fabdata.sampleReqId,fabdata.styleId,fabdata.materialType,fabdata.sizeId,fabdata.hsnCode)
                 poItemDetails.push(fab)
             }
         }
         if(trimData.length != 0){
             for (const trimdata of trimData) {
+                console.log(trimdata);
                 const trim = new PoItemDetailsDto(null,trimdata.m3TrimCode,trimdata.poQuantity,trimdata.quantityUomId,undefined,trimdata.sampleTrimInfoId,trimdata.indentTrimId,trimdata.unitPrice,trimdata.discount,trimdata.tax,trimdata.transportation,trimdata.subjectiveAmount,trimdata.indentId,trimdata.sampleReqId,trimdata.styleId,trimdata.materialType,null,trimdata.hsnCode,trimdata.itemDescription)
                 poItemDetails.push(trim)
             }
@@ -253,7 +258,7 @@ export const PurchaseOrderForm = () => {
         if(poItemFilter.length === poItemDetails.length){
 
             const poDto = new PurchaseOrderDto('po11', poForm.getFieldValue('vendorId'), poForm.getFieldValue('expectedDeliveryDate').format("YYYY-MM-DD"), poForm.getFieldValue('purchaseOrderDate').format('YYYY-MM-DD'), poForm.getFieldValue('remarks'), poForm.getFieldValue('poMaterialType'),[poForm.getFieldValue('indentId')], poForm.getFieldValue('buyerId'), poItemDetails,poForm.getFieldValue('currencyId'),poForm.getFieldValue('exchangeRate'),poForm.getFieldValue('totalAmount'),poForm.getFieldValue('deliveryAddress'), poForm.getFieldValue('indentAgainst'))
-            // console.log(poDto)
+            console.log(poDto)
             if (poDto.poItemInfo.length > 0) {
                 purchaseOrderService.cretePurchaseOrder(poDto).then(res => {
                     if (res.status) {
