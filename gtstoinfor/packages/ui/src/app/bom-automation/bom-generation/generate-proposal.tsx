@@ -35,6 +35,8 @@ export default function GenerateProposal(props: Props) {
   const [interlining, setInterlining] = useState<any>([])
   const [drawcord, setDrawcord] = useState<any>([])
 
+  const [elasticData, setElasticData] = useState<any>([]);
+  const [swoosth,setSwoosthData]= useState<any>([])
 
   useEffect(() => {
     getAllTrims();
@@ -55,9 +57,9 @@ export default function GenerateProposal(props: Props) {
     "Drawcords":<Drawcord bomInfo={buttonData}/>,
     "Neck Tape":<NecKType bomInfo={necktapeData} />,
     "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
-    "Heat Transfer Label":<HeatTransefer />,
-    "Swoosh HT label":<SwooshHtLable bomInfo={[]} />,
-    "Elastic" : <Elastic bomInfo={[]}/>
+    "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
+    "Swoosh HT label":<SwooshHtLable bomInfo={swoosth} />,
+    "Elastic" : <Elastic bomInfo={elasticData}/>
   }
 
   const onCancel = () => {
@@ -119,6 +121,16 @@ export default function GenerateProposal(props: Props) {
     service.generateProposalForTrims(bomProposalReq).then((res) =>{
       if(res.status){
         setJockTageData(res.data)
+      }
+    })
+  }
+  function handleElasticTrim(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generateProposalForElasticTrim(bomProposalReq).then((v) => {
+      if (v.status) {
+        setElasticData(v.data)
       }
     })
   }
@@ -343,6 +355,9 @@ export default function GenerateProposal(props: Props) {
     if(val.item === 'Wash Care Label'){
     handleDownloadIndividualTrim(val.itemId)
     }
+    if(val.item === 'Heat Transfer Lbl'){
+      handleButtonTrim(val.itemId)
+    }
     if(val.item === 'Interlining'){
       handleInterlining(val)
     }
@@ -350,6 +365,10 @@ export default function GenerateProposal(props: Props) {
       handleDrawcord(val.itemId)
     }
     
+    if(val.item === 'Elastic'){
+      handleElasticTrim(val.itemId)
+    }
+   
   }
 
 

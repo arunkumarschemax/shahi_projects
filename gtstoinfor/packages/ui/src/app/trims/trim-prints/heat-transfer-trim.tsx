@@ -1,4 +1,5 @@
 import { Button, Card } from "antd"
+import { useEffect } from "react";
 export const getCssFromComponent = (fromDoc, toDoc) => {
 
     Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
@@ -12,10 +13,15 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
     });
 };
 export interface heatTransferProps{
-
+bomInfo:any
 }
 export function HeatTransefer(props:heatTransferProps){
-const data=[
+    let grandTotal = 0
+
+    useEffect(() =>{
+        console.log('6666666')
+    },[])
+const datas=[
     {
         item:'110Q',
         style:'DZ5366',
@@ -63,16 +69,18 @@ function handlePrint(){
         }, 1000); // Add a delay to ensure all content is loaded
     }
 }
+const data = props.bomInfo
+console.log(props.bomInfo)
     return(
         <div id='print'>
-            <Card title={'Heat Transfer Trim'} extra={<span><Button onClick={handlePrint}></Button></span>}>
-            <table style={{ padding: '50px', borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='0'>
+            <Card title={'Heat Transfer Label'} extra={<span><Button onClick={handlePrint}></Button></span>}>
+            <table style={{width:'100%', padding: '50px', borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='0'>
         <tr>
             <th>{'ITEM'}</th>
             <th>{'STYLE'}</th>
             <th>{'SEASON'}</th>
             <th>{'IM'}</th>
-            <th>{'MATERIAL DESCRIPTION'}</th>
+            <th style={{width:'50%'}}>{'MATERIAL DESCRIPTION'}</th>
             <th>{'GARMENT COLOR CODE'}</th>
             <th>{'GOLF SWOOSH LABEL COLOR'}</th>
             <th>{'QTY'}</th>
@@ -81,13 +89,14 @@ function handlePrint(){
         data.map((rec,index) =>{
             return(
                 <tr>
-                    <td>{rec.item}</td>
-                    <td>{rec.style}</td>
+                    <td>{rec.itemNo}</td>
+                    <td>{rec.styleNumber}</td>
                     <td>{rec.season}</td>
-                    <td>{rec.im}</td>
+                    <td>{rec.imCode}</td>
                     <td>{rec.description}</td>
+                    <td>{rec.color}</td>
                     <td>{rec.itemColor}</td>
-                    <td>{rec.qty}</td>
+                    <td>{rec.bomQty}</td>
                 </tr>
             )
         })
@@ -105,33 +114,35 @@ function handlePrint(){
             <th>{'FABRIC CODE'}</th>
             <th>{'FABRIC CONTENT'}</th>
             <th>{'HT LEBEL COLORS'}</th>
-            <th>{'S'}</th>
-            <th>{'M'}</th>
-            <th>{'L'}</th>
-            <th>{'XL'}</th>
-            <th>{'XXL'}</th>
-            <th>{'3XL'}</th>
-            <th>{'TOTAL'}</th>
+           {
+            data[0]?.sizeWiseQty?.length >0?
+            <>
+                {data[0].sizeWiseQty.map((e) =>{
+                    return(<th style={{ width: '50px' }}>{e.size}</th>)
+                })}
+            </>
+            :<></>
+           }
+           <th>{'TOTAL'}</th>
         </tr>
         <tr>
-            <td>{'779P'}</td>
-            <td>{'FJ2302'}</td>
-            <td>{'FJ2302'}</td>
-            <td>{'FJ2302'}</td>
-
-            <td>{'724864/A0009687'}</td>
+            <td>{data[0]?.itemNo?data[0].itemNo:''}</td>
+            <td>{data[0]?.styleNumber?data[0].styleNumber:''}</td>
+            <td>{data[0]?.season?data[0].season:''}</td>
+            <td>{'item size'}</td>
             <td>{'STANDARD'}</td>
-            <td>{'GMT CODE-010'}</td>
+            <td>{data[0]?.color?data[0].color:''}</td>
             <td>{'F0720487'}</td>
             <td>{'100% COTTON'}</td>
             <td>{'GCW#2 WHITE'}</td>
-            <td>{'10'}</td>
-            <td>{'30'}</td>
-            <td>{'40'}</td>
-            <td>{'10'}</td>
-            <td>{'20'}</td>
-            <td>{'50'}</td>
-            <td>{'160'}</td>
+                 {
+
+                    data[0]?.sizeWiseQty?.map((c) => {
+                        grandTotal += Number(c.qty)
+                        return <td>{c?.qty?c.qty:''}</td>
+                    })
+                }
+                <td>{grandTotal}</td>
         </tr>
        </table>
             </Card>
