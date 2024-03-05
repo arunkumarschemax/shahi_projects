@@ -88,6 +88,7 @@ import SizeView from "./masters/size/size-view"
 import LevisPdFInfoGrid from "./levis/levis-pdf-grid"
 import LevisPdfInfoDetailView from "./levis/levis-pdf-info-detail-view"
 import { LevisComaparisionReport } from "./levis/levis-comaprision-report"
+import LevisOrderReport from "./levis/levis-order-report"
 
 
 export const AppRoutes = () => {
@@ -315,6 +316,7 @@ export const AppRoutes = () => {
                    <Route path='pdf-info' element={<LevisPdFInfoGrid />} />
                    <Route path='pdf-info-detail-view' element={<LevisPdfInfoDetailView />} />
                    <Route path="levis-comparision-report" element={<LevisComaparisionReport/>}/>
+                   <Route path='levis-order-report' element={<LevisOrderReport />} />
 
             
                 </Route>

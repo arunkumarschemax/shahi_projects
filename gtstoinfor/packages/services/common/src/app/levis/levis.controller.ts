@@ -278,6 +278,17 @@ export class LevisController {
         }
     }
 
+    @Post('/getOrderReportData')
+    @ApiBody({ type: LevisOrderFilter })
+    async getOrderReportData(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            // console.log(req,"con")
+            return await this.Service.getOrderReportData(req);
+        } catch (err) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, err);
+        }
+    }
+
 
    
    
