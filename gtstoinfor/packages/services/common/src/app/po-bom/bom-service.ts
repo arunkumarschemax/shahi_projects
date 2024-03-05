@@ -792,7 +792,7 @@ export class BomService {
             // console.log(season)
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
-            const key = `${geoCode}-${styleNumber}-${imCode}-${itemNo}-${color}`;
+            const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
 
             if (!result[key]) {
                 result[key] = {
@@ -813,6 +813,7 @@ export class BomService {
                     itemColor,
                     productCode,
                     sizeWiseQty: [],
+                    // colorData: []
                 };
             }
             const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
