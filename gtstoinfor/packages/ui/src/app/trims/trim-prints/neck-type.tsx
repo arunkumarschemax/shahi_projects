@@ -243,12 +243,9 @@ const NeckType = (props) => {
   };
   const calculateTotalBomQty = (data) => {
     return data.reduce((total, item) => {
-      const itemTotal = item.colors.reduce((colorTotal, color) => {
-        const bomQty = Number(color?.bomQty);
-        return isNaN(bomQty) ? colorTotal : colorTotal + bomQty;
-      }, 0);
-  
-      return total + itemTotal;
+      const bomQtys = item?.colors.map(color => Number(color?.bomQty)) || [];
+      const validQtys = bomQtys.filter(bomQty => !isNaN(bomQty));
+      return total + validQtys.reduce((sum, qty) => sum + qty, 0);
     }, 0);
   };
   
