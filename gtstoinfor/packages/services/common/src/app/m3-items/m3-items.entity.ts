@@ -296,6 +296,83 @@ export class M3ItemsEntity {
   })
   hsnCode: string;
 
+
+  @Column("int", {
+    nullable: false,
+    name: "knitted_buyer_id"
+  })
+  knittedBuyerId: number;
+  
+  @Column("int", {
+    nullable: false,
+    name: "knitted_fabric_type_id"
+  })
+  knittedFabricTypeId: number;
+  
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'knit_type',
+  })
+  knitType: string;
+  
+
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'knit_weight',
+  })
+  knitWeight: string;
+
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'knit_m3_code',
+  })
+  kniteM3Code: string;
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'knit_hsn',
+  })
+  kniteHsn: string;
+
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'knit_yarn_count',
+  })
+  kniteYarnCount: string;
+
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'knit_gauze',
+  })
+  kniteGauze: string;
+
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'knite_remarks',
+  })
+  kniteRemarks: string;
+
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'knite_description',
+  })
+  kniteDescription: string;
+  
+  @Column("int", {
+    nullable: false,
+    name: "knite_content"
+  })
+  kniteContent: number;
+  
+  
+
   @ManyToOne(type=>Buyers, m3Items=>m3Items.M3ItemCodes,{  nullable:false, })
   @JoinColumn({ name:"buyer_id"})
   buyerInfo: Buyers;

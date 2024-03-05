@@ -1,4 +1,4 @@
-import { BuyerIdReq, CommonResponseModel, M3trimsDTO, RackPositionDTO, m3FabricFiltersReq } from "@project-management-system/shared-models";
+import { BuyerIdReq, CommonResponseModel, M3KnittedFabricsDTO, M3trimsDTO, RackPositionDTO, m3FabricFiltersReq } from "@project-management-system/shared-models";
 import { CommonAxiosService } from "../common-axios-service-prs";
 
 export class M3ItemsService extends CommonAxiosService {
@@ -34,5 +34,7 @@ export class M3ItemsService extends CommonAxiosService {
     async getFabricFinishes(): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/getFabricFinishes")
     }
-
+    async createKnittedFabric(req:M3KnittedFabricsDTO): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/createKnittedFabric",req)
+    }
 }

@@ -12,7 +12,7 @@ export class M3FabricsDTO {
     fabricTypeId: number;
     weaveId: number;
     weightId: number;
-    weightUnit: number;
+    weightUnit: string;
     epiConstruction: any;
     ppiConstruction: any;
     yarnType: any;
@@ -46,7 +46,7 @@ export class M3FabricsDTO {
         fabricTypeId: number,
         weaveId: number,
         weightId: number,
-        weightUnit: number,
+        weightUnit: string,
         epiConstruction: any,
         ppiConstruction: any,
         yarnType: any,

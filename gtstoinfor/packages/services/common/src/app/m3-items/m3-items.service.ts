@@ -9,6 +9,8 @@ import { M3ItemsDTO } from "./m3-items.dto";
 import { M3ItemsRepo } from "./m3-items.repository";
 import { M3TrimItemsDTO } from "./m3-trim-items.dto";
 import { M3TrimsAdapter } from "./m3-trims.adaptor";
+import { M3KnittedFabricsDTO } from "./m3-knitted-fabrics-dto";
+import { M3KnittedFabricAdapter } from "./m3-knitted-fabric.adaptor";
 import { M3FabricsDTO } from "./m3-fabrics-dto";
 
 
@@ -17,6 +19,7 @@ export class M3ItemsService {
 
   constructor(
     private adapter: M3ItemsAdapter,
+    private knittedAdapter: M3KnittedFabricAdapter,
     private trimAdapter:M3TrimsAdapter,
     @InjectRepository(M3ItemsEntity)
     private repository: M3ItemsRepo,
@@ -179,6 +182,18 @@ export class M3ItemsService {
     }
   }
 
+
+  async checkKnittedDuplicate(createDto: M3KnittedFabricsDTO): Promise<CommonResponseModel> {
+    let query = `Select * from m3_items m3 where fabric_type = ` + createDto.knittedFabricTypeId + ` and weight = "` + createDto.knitWeight+`"`;
+    const data = await this.datasource.query(query)
+    if (data.length > 0){
+      return new CommonResponseModel(true, 1001, "Data Retrieved Successfully", data)
+    }
+    else{
+      return new CommonResponseModel(false, 1001, "", )
+    }
+  }
+
   async createM3Trim(createDto: M3TrimItemsDTO): Promise<CommonResponseModel> {
     try {
       let checkData = await this.checkTrimDuplicate(createDto);
@@ -296,6 +311,27 @@ async getFabricFinishes(): Promise<CommonResponseModel>{
     }
   }catch(err){
     throw(err)
+  }
+}
+
+async createKnittedFabric(req:M3KnittedFabricsDTO): Promise<CommonResponseModel> {
+  try {
+    let checkData = await this.checkKnittedDuplicate(req);
+    if(checkData.status){
+      return new CommonResponseModel(false, 0, "Item already exist. ")
+    }
+    else{
+      const existingItemCount: number = await this.repository.count();
+
+      const nextItemCode: string = req.knitBuyerCode + "/" + `FAB${(existingItemCount + 1).toString().padStart(5, '0')}`;
+      const entity: M3ItemsEntity = this.knittedAdapter.convertDtoToEntity(req);
+      entity.itemCode = nextItemCode;
+      const count: M3ItemsEntity = await this.repository.save(entity);
+      const saveDto: M3KnittedFabricsDTO = this.knittedAdapter.convertEntityToDto(count);
+      return new CommonResponseModel(true, 1, 'Data saved successfully', saveDto);
+    }
+  } catch (error) {
+    return new CommonResponseModel(false, 0, error)
   }
 }
 
