@@ -47,6 +47,7 @@ export class PoDataForBomGenerationModel {
     year: string;
     qty: number;
     size: string;
+    gender : string
 }
 
 export class BomDataForStyleAndSeasonModel {
@@ -88,6 +89,8 @@ export class BomProposalDataModel {
     itemId : number
     gender : string
     poNumber : string
+    ogacDate : string
+    shipToNumber : string
     constructor(data?: Partial<BomProposalDataModel>) {
         Object.assign(this, data);
     }

@@ -1,16 +1,19 @@
 import { SearchOutlined, UndoOutlined } from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout'
-import { BomCreationFiltersReq, PpmDateFilterRequest, UpdatedSizes, bomGenerationColumnsMapping } from '@project-management-system/shared-models';
+import { BomCreationFiltersReq, ItemInfoFilterReq, PpmDateFilterRequest, UpdatedSizes, bomGenerationColumnsMapping } from '@project-management-system/shared-models';
 import { BomService, NikeService } from '@project-management-system/shared-services';
 import { Button, Card, Checkbox, Col, DatePicker, Form, Input, InputNumber, Row, Select, Table } from 'antd'
+import dayjs from 'dayjs';
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Highlighter from 'react-highlight-words';
 import { useNavigate } from 'react-router-dom';
+const { RangePicker } = DatePicker
+
 
 type Props = {
     sendSelectedData: (value: any[]) => void;
     sendUpdatedData: (value: any[]) => void;
-    sendSelectedKeys: (values : UpdatedSizes[])  => void
+    sendSelectedKeys: (values: UpdatedSizes[]) => void
 }
 
 export default function BomGeneration(props: Props) {
@@ -34,12 +37,29 @@ export default function BomGeneration(props: Props) {
     const [changedSizes, setChangedSizes] = useState<any>([])
     const [updatedData, setUpdatedData] = useState<any>([])
     const [selectedData, setSelectedData] = useState<any[]>()
+    const [itemDropdownData,setItemDropdownData] = useState<any[]>([])
+
+    const bomService = new BomService()
     useEffect(() => {
         // getData();
         // getStyleNumber();
         // getItem();
         // getGeoCode();
     }, [])
+
+    const createdDateHandler = (val) => {
+        const req = new ItemInfoFilterReq()
+        req.fromDate = dayjs(val[0]).format('YYYY-MM-DD')
+        req.toDate = dayjs(val[1]).format('YYYY-MM-DD')
+        bomService.getItemDropdownByCreatedAt(req).then(res => {
+            if (res.status) {
+                setItemDropdownData(res.data)
+            } else {
+                setItemDropdownData([])
+            }
+        })
+        
+    }
 
     const getData = () => {
         const req = new BomCreationFiltersReq();
@@ -55,7 +75,7 @@ export default function BomGeneration(props: Props) {
         setTableLoading(true)
         bomservice.getBomCreationData(req).then(res => {
             if (res.status) {
-                setFilterData(prev => [...prev,...res.data]);
+                setFilterData(prev => [...prev, ...res.data]);
             } else {
                 setFilterData([]);
             }
@@ -120,7 +140,7 @@ export default function BomGeneration(props: Props) {
                     fixed: key == 'poLine',
                     ...getColumnSearchProps(key),
                     render: (value, row, index) => {
-                         if (bomGenerationColumnsMapping[key]) {
+                        if (bomGenerationColumnsMapping[key]) {
                             return value
                         } else {
                             return <InputNumber type='number' onChange={(v) => onSizeChange(key, row, v)} key={row.poAndLine + key + index} defaultValue={value} formatter={formatInput} parser={parseInput} />
@@ -216,7 +236,7 @@ export default function BomGeneration(props: Props) {
         const checked = e.target.checked;
         const allRowKeys = filterData.map((v) => v.poLine)
         setSelectedRowKeys(checked ? allRowKeys : []);
-      };
+    };
 
     const rowSelection = {
         selectedRowKeys,
@@ -263,7 +283,7 @@ export default function BomGeneration(props: Props) {
                 layout='vertical'
             >
                 <Row gutter={[24, 4]}>
-                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 4 }} lg={{ span: 4 }} xl={{ span: 3 }} >
                         <Form.Item name='item' label='Item' >
                             <Select
                                 onDropdownVisibleChange={getItem}
@@ -271,6 +291,25 @@ export default function BomGeneration(props: Props) {
                                 {item?.map((inc: any) => {
                                     return <Option key={inc.id} value={inc.item}>{inc.item}</Option>
                                 })}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                    {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}  >
+                        <Form.Item name='createdAt' label='Created Date' rules={[{ required: true, message: 'Created Date is required' }]}>
+                            <RangePicker style={{ width: '100%' }} onChange={createdDateHandler} />
+                        </Form.Item>
+                    </Col>
+                    <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 6 }}>
+                        <Form.Item name='item' label='Item' >
+                            <Select placeholder='Select Item' showSearch >
+                                {
+                                    itemDropdownData.map(e => {
+                                        return (
+                                            <Option key={e.item} value={e.item}>{e.item}</Option>
+                                        )
+                                    })
+                                }
+
                             </Select>
                         </Form.Item>
                     </Col> */}
@@ -325,7 +364,7 @@ export default function BomGeneration(props: Props) {
                 <Table
                     loading={tableLoading}
                     size='small'
-                     pagination={false}
+                    pagination={false}
                     // pagination={{
                     //     pageSize: 10,
                     //     onChange(current, pageSize) {

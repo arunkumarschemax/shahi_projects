@@ -1056,7 +1056,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
         if (req?.item !== undefined) {
             // const items = req.item.split(',').map(item => item.trim());
-            distinctSizesQuery.andWhere(`dpom.item IN (:...items)`, { items: req.item });
+            distinctSizesQuery.andWhere(`LEFT(dpom.item, 4) IN (:...items)`, { items: req.item });
         }
         if (req.fromDate !== undefined) {
             distinctSizesQuery.andWhere(`dpom.created_at BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
@@ -1066,7 +1066,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
 
         const distinctSizes = await distinctSizesQuery.getRawMany();
-
+        console.log(distinctSizes,'------- distinct sizes ----------')
 
         // Generate conditional aggregations for each distinct size
         const columnsQuery = distinctSizes
@@ -1088,7 +1088,7 @@ export class DpomRepository extends Repository<DpomEntity> {
         }
         if (req?.item !== undefined) {
             // const items = req.item.split(',').map(item => item.trim());
-            query.andWhere(`d.item IN (:...items)`, { items: req.item });
+            query.andWhere(`LEFT(d.item, 4) IN (:...items)`, { items: req.item });
         }
         if (req.fromDate !== undefined) {
             query.andWhere(`d.created_at BETWEEN '${req.fromDate}' AND '${req.toDate}'`)
@@ -1107,7 +1107,7 @@ export class DpomRepository extends Repository<DpomEntity> {
 
     async getPoDataForBomGeneration(req: { poLine: string[] }) :Promise<PoDataForBomGenerationModel[]>{
         const query = await this.createQueryBuilder('d')
-            .select(`id,po_number as poNumber,po_line_item_number as poLineNo,schedule_line_item_number as scheduleLineItemNo,style_number as styleNumber,color_desc as color,destination_country as destination,geo_code as geoCode,plant,planning_season_code as season,planning_season_year as year,size_qty as qty,size_description as size`)
+            .select(`id,po_number as poNumber,po_line_item_number as poLineNo,schedule_line_item_number as scheduleLineItemNo,style_number as styleNumber,color_desc as color,destination_country as destination,geo_code as geoCode,plant,planning_season_code as season,planning_season_year as year,size_qty as qty,size_description as size,gender_age_desc as gender`)
             .where(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })
         const data = await query.getRawMany()
         const mappedResult: PoDataForBomGenerationModel[] = data.map(item => ({
@@ -1123,7 +1123,8 @@ export class DpomRepository extends Repository<DpomEntity> {
             season: item.season,
             year: item.year,
             qty: item.qty,
-            size: item.size
+            size: item.size,
+            gender : item.gender
         }));
 
         return mappedResult
