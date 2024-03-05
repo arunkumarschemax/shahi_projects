@@ -49,7 +49,7 @@ export class M3ItemsService {
   }
 
   async getKnittedFabric(): Promise<CommonResponseModel> {
-    const data = await this.repository.find({where:{fabricsType:"knitted"}, order:{buyerId:"ASC"}})
+    const data = await this.repository.find({relations:["buyerInfo"],where:{fabricsType:"knitted"}, order:{buyerId:"ASC"}})
     if(data)
       return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", data)
     else

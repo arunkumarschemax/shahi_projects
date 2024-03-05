@@ -596,8 +596,8 @@ const handleYarnUnitChange = (index, value) => {
     <Card title={<span>M3 Items</span>} headStyle={{ backgroundColor: "#69c0ff", border: 0 }} extra={<Button onClick={() => navigate("/m3-items-view")}type="primary">View</Button>}
     >
       <Row gutter={[16,2]}>
-        <Form.Item name='type' id='type' label="Fabric" rules={[{ required: true, message: "Fabric Type is required" }]}>
-          <span>Fabric</span>
+        <Form.Item name='type' id='type' rules={[{ required: true, message: "Fabric Type is required" }]}>
+          <span>Fabric  </span>
           <Radio.Group
             name="type"
             id="type"
@@ -610,7 +610,7 @@ const handleYarnUnitChange = (index, value) => {
         </Form.Item>
       </Row>
       {
-        fabricCodeType === "woven"?
+        value === "woven"?
         <>
         <Form layout="vertical" form={form} onFinish={onFinish}>
           <Row gutter={[16, 2]}>

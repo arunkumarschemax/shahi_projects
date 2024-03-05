@@ -269,7 +269,14 @@ const stockService = new StockService();
             title: "Buyer",
             dataIndex: "buyerName",
             ...getColumnSearchProps('buyerName'),
-            sorter: (a, b) => a.buyerName?.length - b.buyerName?.length,
+            render : (text,record) => {
+              return (
+                  <span>
+                      {record.buyerInfo.buyerName}
+                  </span>
+              )
+          },
+            sorter: (a, b) => a.buyerInfo.buyerName?.length - b.buyerInfo.buyerName?.length,
            sortDirections: ['descend', 'ascend'],
            fixed:'left'
         },
@@ -284,20 +291,19 @@ const stockService = new StockService();
         },
         {
           title: "M3 Code",
-          dataIndex: "m3Code",
-          ...getColumnSearchProps('m3Code'),
-          sorter: (a, b) => a.m3Code?.length - b.m3Code?.length,
+          dataIndex: "kniteM3Code",
+          ...getColumnSearchProps('kniteM3Code'),
+          sorter: (a, b) => a.kniteM3Code?.length - b.kniteM3Code?.length,
          sortDirections: ['descend', 'ascend'],
          render: (text) => text || "-",
 
       },
       {
         title: "HSN Code",
-        dataIndex: "hsnCode",
-        ...getColumnSearchProps('hsnCode'),
-        sorter: (a, b) => a.hsnCode?.length - b.hsnCode?.length,
+        dataIndex: "kniteHsn",
+        ...getColumnSearchProps('kniteHsn'),
+        sorter: (a, b) => a.kniteHsn?.length - b.kniteHsn?.length,
        sortDirections: ['descend', 'ascend'],
-       render: (text) => text || "-",
     },
         // {
         //     title: "Content",
@@ -315,85 +321,38 @@ const stockService = new StockService();
            ...getColumnSearchProps('fabricType')
         },
         {
-            title: "Weave",
-            dataIndex: "fabricWeave",
-            ...getColumnSearchProps('fabricWeave'),
-            sorter: (a, b) => a.fabricWeave?.length - b.fabricWeave?.length,
+            title: "Knit Type",
+            dataIndex: "knitType",
+            ...getColumnSearchProps('knitType'),
+            sorter: (a, b) => a.knitType?.length - b.knitType?.length,
            sortDirections: ['descend', 'ascend'],
         },
   
         {
           title: "Weight",
-          dataIndex: "weight",
-          render : (text,record) => {
-              return (
-                  <span>
-                      {record.weight ? `${record.weight}-${record.weightUom}`: '-'}
-                  </span>
-              )
-          },
-          sorter: (a, b) => a.weight - b.weight,
+          dataIndex: "knitWeight",
+          sorter: (a, b) => a.knitWeight - b.knitWeight,
           sortDirections: ['descend', 'ascend'],
       },
 
         {
-          title: "Width",
-          dataIndex: "width",
-          render : (text,record) => {
-              return (
-                  <span>
-                      {record.width ? `${record.width}${record.widthUom}`: '-'}
-                  </span>
-              )
-          },
-          sorter: (a, b) => a.width - b.width,
+          title: "YarnCount",
+          dataIndex: "kniteYarnCount",
+          sorter: (a, b) => a.kniteYarnCount - b.kniteYarnCount,
           sortDirections: ['descend', 'ascend'],
 
       },
         {
-            title: "Construction",
-            dataIndex: "construction",
-            children:[
-              {
-                title:'EPI',
-                dataIndex:'epiConstruction'
-              },
-              {
-                title:'PPI',
-                dataIndex:'ppiConstruction'
-              }
-            ]
-            // ...getColumnSearchProps('construction'),
-            // sorter: (a, b) => a.construction.length - b.construction.length,
-            // sortDirections: ['descend', 'ascend'],
-        },
-     
-      //   {
-      //     title: "Yarn Count",
-      //     dataIndex: "yarn_count-uom",
-      //     render : (text,record) => {
-      //         return (
-      //             <span>
-      //                 {record.yarn_count ? `${record.yarn_count}${record.yarnUnit}`: '-'}
-      //             </span>
-      //         )
-      //     },
-      //     sorter: (a, b) => a.yarn_count - b.yarn_count,
-      //     sortDirections: ['descend', 'ascend'],
-
-      // },
-        {
-            title: "Finish",
-            dataIndex: "fabricFinish",
-            sorter: (a, b) => a.fabricFinish?.length - b.fabricFinish?.length,
+            title: "Gauze",
+            dataIndex: "kniteGauze",
+            sorter: (a, b) => a.kniteGauze?.length - b.kniteGauze?.length,
             sortDirections: ['descend', 'ascend'],     
-            render: (text) => text || "-",
         },
         {
-            title: "Shrinkage",
-            dataIndex: "shrinkage",
-            ...getColumnSearchProps('shrinkage'),
-            sorter: (a, b) => a.shrinkage?.length - b.shrinkage?.length,
+            title: "Remarks",
+            dataIndex: "kniteRemarks",
+            ...getColumnSearchProps('kniteRemarks'),
+            sorter: (a, b) => a.kniteRemarks?.length - b.kniteRemarks?.length,
             sortDirections: ['descend', 'ascend'],
         },
         {
@@ -509,163 +468,7 @@ const stockService = new StockService();
                 </Select>
               </Form.Item>
             </Col>
-            <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-
-              <Form.Item
-                label=" Weave"
-                name="weave"
-                rules={[{ required: false, message: "Field is required" }]}
-                
-              >
-                <Select placeholder=" Select Weave"  allowClear  showSearch optionFilterProp="children"
-                >
-                  {weave.map((option) => (
-                    <Option
-                      key={option.weave}
-                      value={option.weave}
-                    >
-                      {option.fabricWeave}
-                    </Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-
-               <Form.Item
-                label="Weight"
-                name="weight"
-                rules={[{ required: false, message: "Field is required" }]}
-                // style={{marginTop:25}}
-              >
-                <Space.Compact>
-             <Input placeholder="Enter Weight" allowClear onChange={(e) => setWeightValue(e.target.value)}/>
-
-              <Select style={{width:80}} allowClear placeholder="Unit" onChange={(value) => setWeightUnitValue(value)}>
-              {weightData.map((e) => {
-                          return (
-                            <option key={e.uomId} value={e.uomId}>
-                              {e.uom}
-                            </option>
-                          );
-                        })}
-         </Select>
-          </Space.Compact>
-               </Form.Item> 
-
-         
-            </Col> */}
-            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 2 }} style={{ marginTop: "2%" }}>
-
-              <Form.Item name="weightUnit" 
-                rules={[{ required: false, message: "Field is required" }]}
-              >
-                <Select
-                  showSearch
-                  allowClear
-                  optionFilterProp="children"
-                  placeholder="Unit"
-                >
-                  {weightData.map((e) => {
-                    return (
-                      <option key={e.uomId} value={e.uomId}>
-                        {e.uom}
-                      </option>
-                    );
-                  })}
-                </Select>
-              </Form.Item>
-            </Col> */}
-            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-
-              <Form.Item
-                label="Width"
-                name="width"
-                rules={[{ required: false, message: "Field is required" }]}
-              >
-              <Space.Compact>
-             <Input placeholder="Enter Width" allowClear onChange={(e) => setWidthValue(e.target.value)}/>
-
-              <Select style={{width:80}} allowClear placeholder="Unit" onChange={(value) => setWidthUnitValue(value)}>
-              {widthData.map((e) => {
-                    return (
-                      <option key={e.uomId} value={e.uomId}>
-                        {e.uom}
-                      </option>
-                    );
-                  })}
-         </Select>
-          </Space.Compact>
-
-              </Form.Item>
-            </Col> */}
-            {/* <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 8 }} lg={{ span: 8 }} xl={{ span: 4 }}>
-
-              <Form.Item
-                label=" Construction"
-                name="construction"
-                 rules={[
-                  { required: false, message: 'Field is required' },
-                ]}
-              >
-                <Input placeholder=" Enter  Construction" allowClear/>
-              </Form.Item>
-            </Col> */}
-            {/* <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 4 }}
-            >
-              <Form.Item
-                label=" Yarn Count"
-                name="yarnCount"
-                 rules={[
-                  { required: false, message: 'Field is required' },
-                ]}
-              >
-                <Space.Compact>
-             <Input placeholder="EnterYarn Count" allowClear onChange={(e) => setCountValue(e.target.value)}/>
-
-              <Select style={{width:80}} allowClear placeholder="Unit" onChange={(value) => setCountUnitValue(value)}>
-              {yarnData.map((e) => {
-                    return (
-                      <option key={e.uomId} value={e.uomId}>
-                        {e.uom}
-                      </option>
-                    );
-                  })}
-         </Select>
-          </Space.Compact>
-              </Form.Item>
-            </Col> */}
-
-            <Col
-              xs={{ span: 12 }}
-              sm={{ span: 12 }}
-              md={{ span: 4 }}
-              lg={{ span: 8 }}
-              xl={{ span: 4 }}
-            >
-              <Form.Item
-                label=" Finish"
-                name="finish"
-                 rules={[
-                  { required: false, message: 'Field is required' },
-                ]}
-              >
-                <Select allowClear placeholder="Select Finish"  showSearch optionFilterProp="children"  >
-              {finishData.map((e) => {
-                    return (
-                      <Option key={e.finish} value={e.finish}>
-                        {e.fabricFinish}
-                      </Option>
-                    );
-                  })}
-         </Select>
-              </Form.Item>
-            </Col>
+            
             {/* <Col
               xs={{ span: 12 }}
               sm={{ span: 12 }}
