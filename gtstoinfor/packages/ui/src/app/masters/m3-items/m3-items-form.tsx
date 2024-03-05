@@ -2,7 +2,7 @@ import {BuyersService,ContentService,FabricFinishTypeService,FabricRequestCodeSe
 import { Button, Card, Col, Form, Input, Radio, Row, Select, Space, Tag, Typography, message } from "antd";
 import React, { useEffect, useState } from "react";
 import AlertMessages from "../../common/common-functions/alert-messages";
-import {FabricContentDto, FabricTypeIdReq,M3FabricsDTO,M3ItemsDTO,UomCategoryEnum,m3ItemsContentEnum} from "@project-management-system/shared-models";
+import {FabricContentDto, FabricTypeIdReq,M3FabricsDTO,M3ItemsDTO,M3KnittedFabricsDTO,UomCategoryEnum,m3ItemsContentEnum} from "@project-management-system/shared-models";
 import { useNavigate } from "react-router-dom";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 const { TextArea } = Input;
@@ -354,6 +354,21 @@ const M3Items = ({props}) => {
   const onKniteFinish = (val) => {
     console.log("val");
     console.log(val);
+    const req = new M3KnittedFabricsDTO(0,val.content,val.itemCode,val.fabricTypeId,val.weaveId,"","weightUom","","ppiData",(yarnType).replace(/""/g, '"'),0,form.getFieldValue('widthUomId'),val.finishId,val.shrinkage,val.description,val.buyerCode,val.m3Code)
+    service.createKnittedFabric(req).then((res) => {
+      if(res.status){
+        AlertMessages.getSuccessMessage(res.internalMessage);
+        setTimeout(() => {
+          message.success("Submitted successfully")
+          navigate('/m3-items-view')
+        }, 500)
+      }
+      else {
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch((err) => {
+        AlertMessages.getErrorMessage(err.message);
+      });
 
   }
   const onFinish = (val) => {
@@ -424,6 +439,10 @@ const M3Items = ({props}) => {
     form.setFieldsValue({description:undefined})
     setFormData(undefined)
     setYarn(undefined)
+  };
+
+  const clearKnittedData = () => {
+    KnittedForm.resetFields();
   };
 
   const yarnSelect = (val) =>{
@@ -1032,7 +1051,7 @@ const handleYarnUnitChange = (index, value) => {
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 9 }} xl={{ span: 9 }}>
                   <Card>
-                    <Form.List name="content" initialValue={[{ content: "", percentage: null }]}>
+                    <Form.List name="kniteContent" initialValue={[{ content: "", percentage: null }]}>
                       {(fields, { add, remove }) => (
                         <>
                           {fields.map((field, index) => (
@@ -1040,8 +1059,8 @@ const handleYarnUnitChange = (index, value) => {
                               <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 24 }} xl={{ span: 24 }}>
                                 <Form.Item
                                   {...field}
-                                  name={[field.name, 'content']}
-                                  fieldKey={[field.fieldKey, 'content']}
+                                  name={[field.name, 'kniteContent']}
+                                  fieldKey={[field.fieldKey, 'kniteContent']}
                                   rules={[{ required: false, message: 'Field is required' }]}
                                 >
                                   <Space.Compact>
@@ -1066,7 +1085,8 @@ const handleYarnUnitChange = (index, value) => {
                                     <Input
                                       placeholder="Enter %"
                                       allowClear
-                                      onChange={(e) => onPercentChange(index, e.target.value)} />
+                                      // onChange={(e) => onPercentChange(index, e.target.value)} 
+                                      />
                                     {fields.length > 1 && (
                                       <MinusOutlined
                                         style={{ fontSize: '16px', cursor: 'pointer', marginLeft: '8px' }}
@@ -1095,12 +1115,12 @@ const handleYarnUnitChange = (index, value) => {
             <Row>
               <Col span={24} style={{ textAlign: "right" }}>
                 <Button type="primary" htmlType="submit">
-                  Submit
+                  Submit1
                 </Button>
                 <Button
                   htmlType="button"
                   style={{ margin: "0 14px" }}
-                  onClick={clearData}
+                  onClick={clearKnittedData}
                 >
                   Reset
                 </Button>
