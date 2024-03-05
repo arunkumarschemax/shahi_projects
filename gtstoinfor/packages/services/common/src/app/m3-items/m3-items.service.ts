@@ -48,6 +48,14 @@ export class M3ItemsService {
     }
   }
 
+  async getKnittedFabric(): Promise<CommonResponseModel> {
+    const data = await this.repository.find({relations:["buyerInfo"],where:{fabricsType:"knitted"}, order:{buyerId:"ASC"}})
+    if(data)
+      return new CommonResponseModel(true, 65441, "Data Retrieved Successfully", data)
+    else
+      return new CommonResponseModel(false, 0, 'No data found')
+  }
+
   async getM3Items(req?:M3Itemsfilter): Promise<CommonResponseModel> {
     console.log(req,"req");
     
@@ -68,7 +76,7 @@ export class M3ItemsService {
     LEFT JOIN uom wi ON wi.id = m3i.width_unit
     LEFT JOIN fabric_finish_types fft ON fft.fabric_finish_type_id = m3i.finish_id
     LEFT JOIN buyers b ON b.buyer_id = m3i.buyer_id 
-     WHERE 1 = 1 `
+     WHERE fabrics_type = "woven" `
     let param :any={}
     if(req){
       if (req.buyerId!== undefined){

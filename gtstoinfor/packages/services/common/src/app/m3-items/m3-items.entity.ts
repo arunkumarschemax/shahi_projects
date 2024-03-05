@@ -296,13 +296,14 @@ export class M3ItemsEntity {
   })
   hsnCode: string;
 
-
-  @Column("int", {
-    nullable: false,
-    name: "knitted_buyer_id"
+  @Column('varchar', {
+    nullable: true,
+    length: 155,
+    name: 'fabrics_type',
   })
-  knittedBuyerId: number;
-  
+  fabricsType: string;
+
+
   @Column("int", {
     nullable: false,
     name: "knitted_fabric_type_id"
@@ -358,13 +359,6 @@ export class M3ItemsEntity {
   })
   kniteRemarks: string;
 
-  @Column('varchar', {
-    nullable: true,
-    length: 155,
-    name: 'knite_description',
-  })
-  kniteDescription: string;
-  
   @Column("int", {
     nullable: false,
     name: "knite_content"

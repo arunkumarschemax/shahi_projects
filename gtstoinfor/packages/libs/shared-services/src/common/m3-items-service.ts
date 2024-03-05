@@ -37,4 +37,7 @@ export class M3ItemsService extends CommonAxiosService {
     async createKnittedFabric(req:M3KnittedFabricsDTO): Promise<CommonResponseModel> {
         return this.axiosPostCall(this.URL + "/createKnittedFabric",req)
     }
+    async getKnittedFabric(): Promise<CommonResponseModel> {
+        return this.axiosPostCall(this.URL + "/getKnittedFabric")
+    }
 }
