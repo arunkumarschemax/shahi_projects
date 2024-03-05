@@ -66,6 +66,12 @@ import BomGenerationSteps from "./bom-automation/bom-generation/bom-generation-s
 import BomExcelUpload from "./bom-automation/bom-details-upload/bom-excel-upload"
 import { BomExcelDownload } from "./bom-automation/bom-excel-download/bom-excel-download"
 import BomOrderAcceptance from "./bom-automation/bom-details/bom-order-acceptance"
+import NecKType from "./trims/trim-prints/neck-type"
+import Interlining from "./trims/trim-prints/interlining-prints"
+import Drawcord from "./trims/trim-prints/drawcord"
+import SwooshHtLable from "./trims/trim-prints/swoosh-ht-label"
+import Elastic from "./trims/trim-prints/elastic-print"
+
 
 // import BasicLayout  from '@ant-design/pro-layout';
 export const AppRoutes = () => {
@@ -198,6 +204,12 @@ export const AppRoutes = () => {
                     <Route path='ppm-report-upload' element={<PPMReportUpload />} />
                     <Route path='bom-excel-upload' element={<BomExcelUpload />} />
                     <Route path='bom-order-acceptance' element={<BomOrderAcceptance />} />
+                    
+                    <Route path='neck-type' element={<NecKType bomInfo={[]} />} />
+                    <Route path='interlining' element={<Interlining bomInfo={[]} />} />
+                    <Route path='drawcord' element={<Drawcord bomInfo={[]} />} />
+                    <Route path='SwooshHtLable' element={<SwooshHtLable bomInfo={[]} />} />
+                    <Route path='elastic' element={<Elastic bomInfo={[]} />} />
 
                     
                 </Route>
@@ -223,7 +235,7 @@ export const AppRoutes = () => {
                 <Route path="/print">
                     <Route path='button1' element={<Button1Print />} />
                     <Route path='button2' element={<Button2Print />} />
-                    <Route path='button3' element={<Button3Print />} />
+                    <Route path='button3' element={<Button3Print bomInfo={''}/>} />
                     <Route path='backing-paper' element={<BackingPaper />} />
                 </Route>
             </Route>

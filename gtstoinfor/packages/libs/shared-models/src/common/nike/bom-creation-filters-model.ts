@@ -30,6 +30,7 @@ export class BomGenerationReq {
 export class BomProposalReq {
     poLine: string[]
     itemId: number[]
+    trimName?:string
 }
 
 
@@ -91,6 +92,11 @@ export class BomProposalDataModel {
     poNumber : string
     ogacDate : string
     shipToNumber : string
+    combination?:string
+    primaryColor?:string
+    secondaryColor?:string
+    itemColor?:string
+    productCode?:string
     constructor(data?: Partial<BomProposalDataModel>) {
         Object.assign(this, data);
     }
@@ -117,4 +123,6 @@ export class BomExcelreq {
     itemType?: string;
     itemId?: number;
     pbId?:number
+    geoCode: string []
+
 }

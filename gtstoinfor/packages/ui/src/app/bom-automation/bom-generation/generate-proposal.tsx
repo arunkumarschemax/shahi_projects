@@ -6,6 +6,14 @@ import { table } from 'console';
 import React, { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx';
 import WasCarelabel from '../../trims/trim-prints/wash-care-label';
+import Button3Print from '../../trims/trim-prints/button3-print';
+import NecKType from '../../trims/trim-prints/neck-type';
+import Interlining from '../../trims/trim-prints/interlining-prints';
+import Drawcord from '../../trims/trim-prints/drawcord';
+import Jocktag from '../../trims/trim-prints/jocktag';
+import HeatTransefer from '../../trims/trim-prints/heat-transfer-trim';
+import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
+import Elastic from '../../trims/trim-prints/elastic-print';
 type Props = {
   poLine: string[]
 }
@@ -21,6 +29,14 @@ export default function GenerateProposal(props: Props) {
   const [proposalInfo, setProposalInfo] = useState<any>([])
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [trimName, setTrimName] = useState<string>('')
+  const [buttonData, setButtonData] = useState<any>([]);
+  const [necktapeData,setNeckTapeData]= useState<any>([]);
+  const [jocktageData, setJockTageData] = useState<any>([])
+  const [interlining, setInterlining] = useState<any>([])
+  const [drawcord, setDrawcord] = useState<any>([])
+
+  const [elasticData, setElasticData] = useState<any>([]);
+  const [swoosth,setSwoosthData]= useState<any>([])
 
   useEffect(() => {
     getAllTrims();
@@ -35,6 +51,15 @@ export default function GenerateProposal(props: Props) {
   }
   const componentsMapping = {
     "Wash Care Label": <WasCarelabel bomInfo={proposalData} />,
+    "BUTTON":<Button3Print bomInfo={buttonData}/>,
+    // "Neck Tape":<NecKType bomInfo={proposalData} />,
+    "Interlining":<Interlining bomInfo={interlining}/>,
+    "Drawcords":<Drawcord bomInfo={buttonData}/>,
+    "Neck Tape":<NecKType bomInfo={necktapeData} />,
+    "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
+    "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
+    "Swoosh HT label":<SwooshHtLable bomInfo={swoosth} />,
+    "Elastic" : <Elastic bomInfo={elasticData}/>
   }
 
   const onCancel = () => {
@@ -66,6 +91,73 @@ export default function GenerateProposal(props: Props) {
     })
   }
 
+  function handleButtonTrim(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generateProposalForButton(bomProposalReq).then((v) => {
+      if (v.status) {
+        setButtonData(v.data)
+      }
+    })
+  }
+  function handleNeckTapeTrim(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
+      if (v.status) {
+        setNeckTapeData(v.data)
+      }
+    })
+  }
+
+  function handleJockTage(item){
+    // val.itemId
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [item.itemId]
+    bomProposalReq.poLine = props.poLine
+    bomProposalReq.trimName = item.item
+    service.generateProposalForTrims(bomProposalReq).then((res) =>{
+      if(res.status){
+        setJockTageData(res.data)
+      }
+    })
+  }
+  function handleElasticTrim(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generateProposalForElasticTrim(bomProposalReq).then((v) => {
+      if (v.status) {
+        setElasticData(v.data)
+      }
+    })
+  }
+
+  function handleInterlining(item){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [item.itemId]
+    bomProposalReq.poLine = props.poLine
+    // bomProposalReq.trimName = item.item
+    service.generateProposalForTrims(bomProposalReq).then((res) =>{
+      if(res.status){
+        setInterlining(res.data)
+      }
+    })
+  }
+  
+
+  function handleDrawcord(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generateProposalForButton(bomProposalReq).then((v) => {
+      if (v.status) {
+        setButtonData(v.data)
+      }
+    })
+  }
 
   const exportToExcel = (jsonData) => {
     // const mergedData = mergeCells(jsonData)
@@ -247,11 +339,37 @@ export default function GenerateProposal(props: Props) {
     )
   }
   const onView = (val) => {
-    handleDownloadIndividualTrim(val.itemId)
-    setModalOpen(true)
+    console.log(val.item)
     setTrimName(val.item)
+    setModalOpen(true)
+    if(val.item === 'Jocktage Label'){
+        handleJockTage(val)
+    }
+    if(val.item === 'BUTTON'){
+        handleButtonTrim(val.itemId)
+      }
+    if(val.item === 'Neck Tape')
+    {
+      handleNeckTapeTrim(val.itemId)
+    }
+    if(val.item === 'Wash Care Label'){
+    handleDownloadIndividualTrim(val.itemId)
+    }
+    if(val.item === 'Heat Transfer Lbl'){
+      handleButtonTrim(val.itemId)
+    }
+    if(val.item === 'Interlining'){
+      handleInterlining(val)
+    }
+    if(val.item === 'Drawcords'){
+      handleDrawcord(val.itemId)
+    }
+    
+    if(val.item === 'Elastic'){
+      handleElasticTrim(val.itemId)
+    }
+   
   }
-
 
 
   return (

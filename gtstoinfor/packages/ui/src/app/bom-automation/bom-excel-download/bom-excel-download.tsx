@@ -89,7 +89,6 @@ export const BomExcelDownload = () => {
 
     // }
     const getBoms = (selectedRowKeys) => {
-        console.log(selectedRowKeys, 'ttttttttttttttttttttt')
         const updateRequests = selectedRowKeys.map((record) => {
             const req = new BomExcelreq();
             req.style = record.style;
@@ -189,7 +188,13 @@ export const BomExcelDownload = () => {
 
     return (
         <Card title='Style BOM ' extra={
-            <span style={{ color: 'white' }} > </span>
+            <Button type="default"
+            style={{ color: "green" }}
+            onClick={() => getBom()}
+            icon={<FileExcelFilled />}
+        >
+            Download Excel
+        </Button>
         }>
             <Form onFinish={getBomExcel} form={form} layout='vertical'>
                     <Row gutter={24}>
@@ -210,15 +215,15 @@ export const BomExcelDownload = () => {
                             </Form.Item>
                         </Col>
                         &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp;  &nbsp; 
-                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 3 }} >
-                            <Form.Item name='geoCode' label='Geo Code' >
-                                <Select
-                                    showSearch
-                                    placeholder="Select Geo Code"
-                                    optionFilterProp="children"
-                                    allowClear
-                                >
-                                    {geoCode?.map((inc: any) => {
+                        <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} >
+                            <Form.Item name='geo_code' label='Geo Code'>
+                            <Select
+                                showSearch
+                                placeholder="Select Geo Code"
+                                allowClear
+                            >
+                                {
+                                    geoCode?.map((inc: any) => {
                                         return <Option key={inc.id} value={inc.geoCode}>{inc.geoCode}</Option>
                                     })
                                     }
@@ -236,7 +241,7 @@ export const BomExcelDownload = () => {
                     </Row>
                 </Form>
             
-            <Row justify={'end'}>
+            {/* <Row justify={'end'}>
                 <Button type="default"
                     style={{ color: "green" }}
                     onClick={() => getBom()}
@@ -244,7 +249,7 @@ export const BomExcelDownload = () => {
                 >
                     Download Excel
                 </Button>
-            </Row>
+            </Row> */}
             <Table className="custom-table-wrapper"
                 // rowKey={(rowData) => rowData.dpom_id}
                 rowSelection={rowSelection}
@@ -252,7 +257,7 @@ export const BomExcelDownload = () => {
                 columns={columns} dataSource={data} size='small'
                 bordered
                 pagination={{
-                    pageSize: 100,
+                    pageSize: 10,
                     onChange(current, pageSize) {
                         setPage(current);
                         setPageSize(pageSize);
