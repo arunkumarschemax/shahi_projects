@@ -88,4 +88,13 @@ export class M3ItemsController {
       return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
     }
   }
+
+  @Post('getKnittedFabric')
+  async getKnittedFabric(): Promise<CommonResponseModel> {
+    try {
+      return await this.Service.getKnittedFabric();
+    } catch (error) {
+      return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+    }
+  }
 }

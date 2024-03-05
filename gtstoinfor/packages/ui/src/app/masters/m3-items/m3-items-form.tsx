@@ -49,6 +49,7 @@ const M3Items = ({props}) => {
   const [onContent, setOnContent] = useState<any[]>([])
   const [onPercent, setOnPercent] = useState<any[]>([])
   const [formData, setFormData] = useState([{ content: '', percentage: null }]);
+  const [kniteFormData, setKniteFormData] = useState([{ kniteContent: '', knitePercentage: null }]);
   const [contentData, setContentData] = useState<any[]>([])
   const [weightUomData, setWeightUomData] = useState<any[]>([])
   const [yarnUom, setYarnUom]= useState<any[]>([])
@@ -192,6 +193,26 @@ const M3Items = ({props}) => {
   const onFabricTpe = (val) =>{
     generateItemCode()
     // getWeaveData(val)
+  }
+  const handleFormSubmit = () =>{
+    console.log("jjjjj")
+    console.log(KnittedForm.getFieldsValue())
+
+    const req = new M3KnittedFabricsDTO(0,KnittedForm.getFieldValue("kniteContent"),KnittedForm.getFieldValue("kniteDescription"),KnittedForm.getFieldValue("kniteRemarks"),KnittedForm.getFieldValue("kniteGauze"),KnittedForm.getFieldValue("kniteYarnCount"),KnittedForm.getFieldValue("kniteHsn"),KnittedForm.getFieldValue("kniteM3Code"),KnittedForm.getFieldValue("knitWeight"),KnittedForm.getFieldValue("knitType"),KnittedForm.getFieldValue("knittedFabricTypeId"),KnittedForm.getFieldValue("knittedBuyerId"),true,"","",0,KnittedForm.getFieldValue("knittedBuyerCode"))
+    service.createKnittedFabric(req).then((res) => {
+      if(res.status){
+        AlertMessages.getSuccessMessage(res.internalMessage);
+        setTimeout(() => {
+          message.success("Submitted successfully")
+          navigate('/m3-items-view')
+        }, 500)
+      }
+      else {
+        AlertMessages.getErrorMessage(res.internalMessage);
+      }
+    }).catch((err) => {
+        AlertMessages.getErrorMessage(err.message);
+      });
   }
 
   useEffect(() => {
@@ -512,6 +533,18 @@ const M3Items = ({props}) => {
     });
   };
 
+  const onKnitePercentChange = (index, value) => {
+    setKniteFormData((prevData) => {
+      const updatedFormData = [...prevData];
+      if (updatedFormData[index]) {
+        updatedFormData[index].knitePercentage = value !== '' ? Number(value) : null;
+      } else {
+        updatedFormData[index] = { kniteContent: null, knitePercentage: value !== '' ? Number(value) : null };
+      }
+      return updatedFormData;
+    });
+  };
+
   const onRemoveItem = (index) => {
     const updatedFormData = [...formData];
     updatedFormData.splice(index, 1); // Remove the item from the array
@@ -563,18 +596,18 @@ const handleYarnUnitChange = (index, value) => {
     <Card title={<span>M3 Items</span>} headStyle={{ backgroundColor: "#69c0ff", border: 0 }} extra={<Button onClick={() => navigate("/m3-items-view")}type="primary">View</Button>}
     >
       <Row gutter={[16,2]}>
-        {/* <Form.Item name='fabricCodeType' id='fabricCodeType' label="Fabric" rules={[{ required: true, message: "Fabric Type is required" }]}> */}
+        <Form.Item name='type' id='type' label="Fabric" rules={[{ required: true, message: "Fabric Type is required" }]}>
           <span>Fabric</span>
           <Radio.Group
-            name="fabricCodeType"
-            id="fabricCodeType"
+            name="type"
+            id="type"
             style={{ marginTop: "25px" }}
             onChange={(e) => fabricCodeTypeSelect(e?.target?.value)}  value={value}
           >
             <Radio value="Knitted">Knitted</Radio>
             <Radio value="woven">Woven</Radio>
           </Radio.Group>
-        {/* </Form.Item> */}
+        </Form.Item>
       </Row>
       {
         fabricCodeType === "woven"?
@@ -1044,14 +1077,14 @@ const handleYarnUnitChange = (index, value) => {
                   <Form.Item
                     name="kniteDescription"
                     id="kniteDescription"
-                    label="Description"
+                    label="Description"  rules={[{ required: true, message: "Description is required" }]}
                   >
                     <TextArea rows={2} placeholder="Enter Description" />
                   </Form.Item>
                 </Col>
                 <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 24 }} lg={{ span: 9 }} xl={{ span: 9 }}>
                   <Card>
-                    <Form.List name="kniteContent" initialValue={[{ content: "", percentage: null }]}>
+                    <Form.List name="kniteContent" initialValue={[{ kniteContent: "", knitePercentage: null }]}>
                       {(fields, { add, remove }) => (
                         <>
                           {fields.map((field, index) => (
@@ -1085,7 +1118,7 @@ const handleYarnUnitChange = (index, value) => {
                                     <Input
                                       placeholder="Enter %"
                                       allowClear
-                                      // onChange={(e) => onPercentChange(index, e.target.value)} 
+                                      onChange={(e) => onKnitePercentChange(index, e.target.value)} 
                                       />
                                     {fields.length > 1 && (
                                       <MinusOutlined
@@ -1114,7 +1147,7 @@ const handleYarnUnitChange = (index, value) => {
             </Row>
             <Row>
               <Col span={24} style={{ textAlign: "right" }}>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="button" onClick={handleFormSubmit}>
                   Submit1
                 </Button>
                 <Button

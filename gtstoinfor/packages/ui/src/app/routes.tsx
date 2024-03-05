@@ -16,7 +16,7 @@ import CurrenciesForm from "./masters/currencies/currency-form"
 import CurrenciesGrid from "./masters/currencies/currencies-grid"
 import CompanyForm from "./masters/company/company-form"
 import CompanyGrid from "./masters/company/company-grid"
-import { ColourDto, ContentDtos, CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, PurchaseViewDto, TrimDtos, TrimParamsMappingRequestDto, VarietyDtos } from "@project-management-system/shared-models"
+import { ColourDto, ContentDtos, CurrencyDto, FabricFinishTypesDTO, FabricStructuresDTO, FabricSubTypeDto, M3KnittedFabricsDTO, PurchaseViewDto, TrimDtos, TrimParamsMappingRequestDto, VarietyDtos } from "@project-management-system/shared-models"
 import MasterBrandsForm from "./masters/master-brands/master-brands-form"
 import MasterBrandsGrid from "./masters/master-brands/master.brands-gridt"
 import OperationsForm from "./masters/operations/operations-form"
@@ -229,6 +229,7 @@ import PatternForm from "./masters/pattern/pattern-form"
 import PatternView from "./masters/pattern/pattern-view"
 import StockReceivedApproval from "./sample-development/stock-received-approval"
 import ReceiveSampleOrders from "./sample-development/receive-sample-orders"
+import M3KnittedView from "./masters/m3-items/m3-knitted-view"
 
 
 
@@ -279,6 +280,8 @@ export const AppRoutes = () => {
 
                 <Route path='/m3-items' element={<M3Items props={undefined}/>} />
                 <Route path='/m3-items-view' element={<M3ItemsView />} />
+                <Route path='/m3-knitted-items-view' element={<M3KnittedView />} />
+
                 <Route path='/wh-dashboard' element={<WarehouseDashboard />} />
                 {/* <Route path='/masters'> */}
                 <Route path='quality-form' element={<QualityForm />} />
