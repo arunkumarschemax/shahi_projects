@@ -804,7 +804,14 @@ export class BomService {
                     color,
                     itemColor,
                     productCode,
+                    sizeWiseQty: [],
                 };
+            }
+            const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
+            if (sizeIndex >= 0) {
+                result[key]['sizeWiseQty'][sizeIndex].qty += bomQty
+            } else {
+                result[key].sizeWiseQty.push({ size, qty: bomQty });
             }
             result[key].bomQty += bomQty;
             return result;
