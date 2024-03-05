@@ -12,12 +12,13 @@ import { M3ItemView } from "./m3-items-view.entity";
 import { M3TrimsAdapter } from "./m3-trims.adaptor";
 import { M3FabricContentEntity } from "./m3-fabric-content-entity";
 import { M3FabricYarnEntity } from "./m3-fabric-yarn-entity";
+import { M3KnittedFabricAdapter } from "./m3-knitted-fabric.adaptor";
 
 
 @Module({
     imports: [TypeOrmModule.forFeature([M3ItemsEntity,ProductGroup,RmCreationEntity,M3ItemView,M3FabricContentEntity,M3FabricYarnEntity])],
     controllers: [M3ItemsController],
-    providers: [M3ItemsService, ApplicationExceptionHandler, M3ItemsAdapter,M3TrimsAdapter,M3ItemsRepo],
+    providers: [M3ItemsService, ApplicationExceptionHandler, M3ItemsAdapter,M3TrimsAdapter,M3ItemsRepo,M3KnittedFabricAdapter],
     exports: [TypeOrmModule, M3ItemsService]
 })
 
