@@ -856,12 +856,15 @@ export class BomService {
     async generateProposalForNeckTape(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] });
     
-        const poBomData = await this.poBomRepo.getProposalsDataForButton(req);
+        const poBomData = await this.poBomRepo.getProposalsDataForNeckTape(req);
+        // console.log(poBomData,"poBomData")
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+          
+            
             const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination === destination);
             const { geoCode } = bomGeoCode;
-            const key = itemNo;
+            const key = `${styleNumber}-${imCode}-${itemNo}-${color}`;
     
             if (!result[key]) {
                 result[key] = {
@@ -869,21 +872,19 @@ export class BomService {
                     styleNumber,
                     description,
                     use,
+                    season,
+                    year,
                     imCode,
                     itemNo,
                     colors: [], 
                 };
             }
-            const existingColor = result[key].colors.find((c) => c.color === color && c.itemColor === itemColor && c.bomQty === bomQty);
-
-            if (!existingColor) {
-                result[key].colors.push({
-                    color,
-                    itemColor,
-                    bomQty,
-                });
-            }
-    
+           
+            result[key].colors.push({
+                color,
+                itemColor,
+                bomQty,
+            });
             return result;
         }, {});
     
@@ -937,9 +938,7 @@ export class BomService {
     }
     async generateProposalForElasticTrim(req:BomProposalReq):Promise<CommonResponseModel>{
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
-        console.log(req,"req---------------")
         const poBomData = await this.poBomRepo.getProposalsDataForElastic(req)
-        console.log(poBomData,"poBomData//////////////////////////////////")
 
         const groupedData: any=poBomData.reduce((result, currentItem:BomProposalDataModel) =>{
             const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode} = currentItem;
