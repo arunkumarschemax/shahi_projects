@@ -2,6 +2,7 @@ import { BomInfo, ItemInfoFilterReq } from "@project-management-system/shared-mo
 import { BomService } from "@project-management-system/shared-services";
 import { Button, Card } from "antd"
 import { useEffect, useRef, useState } from "react"
+import './table-styles.css'
 // import ReactHTMLTableToExcel from 'react-html-table-to-excel';
 import * as XLSX from 'xlsx';
 export const getCssFromComponent = (fromDoc, toDoc) => {
@@ -33,55 +34,9 @@ export const WasCarelabel = (props: washCareprops) => {
     let existingItem: any = []
     const tableRef = useRef(null);
 
-
-    const htmlTableToExcel = () => {
-        console.log('88888')
-        // tableToExcel('myTable', 'Sheet1');
-    }
-  
-  
-
-
-    function restructureData(originalData) {
-        return originalData.reduce((acc, curr) => {
-            const existingItem = acc.find(item => item.styleNumber === curr.styleNumber);
-            if (existingItem) {
-                existingItem.bomData.push({
-                    description: curr.description,
-                    imCode: curr.imCode
-                });
-            } else {
-                acc.push({
-                    bomQty: curr.bomQty,
-                    styleNumber: curr.styleNumber,
-                    geoCode: curr.geoCode,
-                    itemNo: curr.itemNo,
-                    bomData: [{
-                        description: curr.description,
-                        imCode: curr.imCode
-                    }]
-                });
-            }
-            return acc;
-        }, []);
-    }
-
-
     const data = props.bomInfo;
 
-    const sizeWiseDataForFormutpleOgac = () => {
-        bomService.getPoLineDataForCihinaInserttag({ fromDate: '2024-01-03', toDate: '2024-01-05', region: 'EMEA', item: '009L' }).then(res => {
-            if (res.status) {
-                setSizeData(res.data)
-            } else {
-                setSizeData([])
-            }
-        })
-    }
 
-    // useEffect(() =>{
-    //     sizeWiseDataForFormutpleOgac()
-    // },[])
 
     useEffect(() => {
         if (props.bomInfo) {
@@ -221,6 +176,96 @@ export const WasCarelabel = (props: washCareprops) => {
     }
 
 
+    const itemWiseGroup = data.reduce((acc, row) => {
+        const { itemNo, geoCode, destination ,styleNumber} = row;
+        const key = `${itemNo}_${geoCode}_${styleNumber}`;
+
+        // If the destination is Brazil, include it in the key
+        if (destination === 'Brazil') {
+            const brazilKey = `${key}_Brazil`;
+
+            // If the key doesn't exist in the accumulator, create a new object with the key
+            if (!acc[brazilKey]) {
+                acc[brazilKey] = [row];
+            } else {
+                // If the key already exists, check if the itemNo, geoCode, or destination has changed
+                const lastRow = acc[brazilKey][acc[brazilKey].length - 1];
+                if (lastRow.itemNo !== itemNo || lastRow.geoCode !== geoCode || lastRow.destination !== destination) {
+                    // If either itemNo, geoCode, or destination has changed, create a new object with the key
+                    acc[brazilKey] = [row];
+                } else {
+                    // If itemNo, geoCode, and destination are the same, simply push the row to the existing array
+                    acc[brazilKey].push(row);
+                }
+            }
+        } else {
+            // For destinations other than Brazil, follow the previous logic
+            if (!acc[key]) {
+                acc[key] = [row];
+            } else {
+                const lastRow = acc[key][acc[key].length - 1];
+                if (lastRow.itemNo !== itemNo || lastRow.geoCode !== geoCode || lastRow.styleNumber !== styleNumber) {
+                    acc[key] = [row];
+                } else {
+                    acc[key].push(row);
+                }
+            }
+        }
+
+        return acc;
+    }, {});
+
+
+    // for APA region need to display OGAG date wise size quantities
+    function renderOgadDateWiseSizeQuantits(sizeWiseQty: any[]) {
+        const maxSizeObject = sizeWiseQty.reduce((maxObj, obj) => {
+            const sizeKeysCount = Object.keys(obj).filter(key => key !== 'ogacDate').length;
+            return sizeKeysCount > Object.keys(maxObj).filter(key => key !== 'ogacDate').length ? obj : maxObj;
+        }, {});
+
+        // Extract the size keys from the object with the maximum size keys
+        const sizes = Object.keys(maxSizeObject).filter(key => key !== 'ogacDate');
+
+        let total = 0
+
+        return (
+            <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', border: '1px solid black' }} border={1} cellSpacing="0" cellPadding='5'>
+                <tr>
+                    <th>REGION</th>
+                    <th>MANUFACTORYSHIP DATE</th>
+                    {
+                        sizes.map((s) => {
+                            return <th>{s}</th>
+
+                        })
+                    }
+                    <th>TOTAL</th>
+                </tr>
+                {
+                    sizeWiseQty.map((s) => {
+
+                        return <tr>
+                            <td>{"APA"}</td>
+                            <td>{s.ogacDate}</td>
+                            {
+                                sizes.map((size) => {
+                                    total += s[size] ? Number(s[size]) : 0
+                                    return <th>{s[size] ? s[size] : 0}</th>
+
+                                })
+                            }
+                            <td>{total}</td>
+                        </tr>
+                    })
+                }
+
+            </table>
+        );
+    };
+
+    function renderIndonesiaTable() {
+
+    }
 
 
 
@@ -239,334 +284,14 @@ export const WasCarelabel = (props: washCareprops) => {
       /> */}
                 </span></>}
             >
-                {/* <div>
-                    {bomInfo.map((e,index) =>{   
-                        {console.log(e)}
-                        return (  
-                        <>
-                       {e?.bomInfo ?
-                        <>
-                        {e.bomInfo.length >0 ?
-                        <div>
-                        <div style={{display: e.geoCode === 'AAO'?'unset':'none'}}>
-                        {
-                            <><h2>
-                                {e.destinationCountry === 'ARGENTINA' ? 'PLEASE MENTION V-CODE-V315' + vCodemap(e) + ' WHILE ORDERING' : ''}
-                              </h2>
-                              {e.destinationCountry != 'BRAZIL' && e.destinationCountry === 'ARGENTINA' ? 'NOT DESTINED TO BRAZIL':''}
-                             <h2>
-                                </h2></>
-                        }
-                        <br></br>
-                        </div>
-                        <div>
-                    {e.destinationCountry === 'BRAZIL' ?
-                    <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'15%',border:'2px solid black'}} border={1} cellSpacing="0" cellPadding='0' >
-                        <tr>
-                            <th>DESTINATION</th>
-                            <th>BRAZIL</th>
-                        </tr>
-                        <tr>
-                            <td style={{textAlign:'center'}}>SHIP TO NUMBER</td>
-                            <td style={{textAlign:'center'}}>4992098</td>
-                        </tr>
-                    </table>:<></>
-                        }   
-                    <br></br>
-                       </div>
-                            <div style={{display:gender === true?'unset':'none'}}>
-                            <h2 style={{color:'red'}}>FIRE WARNING LABEL</h2>
-                      <br></br>
-                      </div>
-                        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1} cellSpacing="0" cellPadding='0'>
-                        <tr>
-                            <th style={{width:'1%'}}>ITEM#</th>
-                            <th style={{width:'1%'}}>PO NO</th>
-                            <th style={{width:'1%'}}>SEASON</th>
-                            <th style={{width:'1%'}}>STYLE</th>
-                            <th style={{width:'1%'}}>IM#</th>
-                            <th style={{width:'5%'}}>DESCRIPTION</th>
-                            <th style={{width:'1%'}}>WC</th>
-                            <th style={{width:'1%'}}>DESTINATION</th>
-                            <th style={{width:'1%'}}>TOTAL QTY</th>
-                        </tr>   
-                        {
-                            e.bomInfo ? (e?.bomInfo[0]?.map((rec,index) => {
-                                const len = e?.bomInfo[0]?.length
-                                return(
-                                    <tr>
-                                        {index == 0?(<>
-                                            <td style={{textAlign:'center'}} rowSpan={len}>{e.item}</td>
-                                            <td style={{textAlign:'center'}}  rowSpan={len}>{e.poNumber}</td>
-                                            <td style={{textAlign:'center'}}  rowSpan={len}>{e.season}</td>
-                                            <td style={{textAlign:'center'}}  rowSpan={len}>{e.style}</td> 
-                                        </>):(<></>)}
-                                        <td>{e?.geoCode == "EMEA" ?"1009915" : rec.imCode}</td>
-                                        <td>{ rec.description}</td>
-                                        <td>{ rec.trimInfo}</td>
-                                        {index == 0 ?
-                                        (
-                                            <>
-                                             <td style={{textAlign:'center'}}  rowSpan={len}>{e.geoCode}</td> 
-                                            <td style={{textAlign:'center'}}  rowSpan={len}>{0}</td> 
-                                            </>
-                                        ):(<></>)}
-                                    </tr>
-                                )
-                                  }
-                                ))
-                                :(<></>)
-                        }
-                        </table>
-                        <br></br>
-                     <div 
-                     style={{display:e.geoCode === 'APA' && e?.styleType === 'MENS TOP' ?'unset':'none'}}
-                      > 
-                    <>
-                    <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%',border:'2px solid black'}} border={1} cellSpacing="0" cellPadding='0'>
-                    <tr>
-                <th>REGION</th>
-                <th>MANUFACTORY SHIP DATE</th>
-                <th>SIZE MATRIX TYPE</th>
-                <th>STYLE TYPE</th>
-                <th>SEASON</th>
-                {e?.sizeInfo?.map(e =>{
-                    //  grandTotal+= e.quantity
-                     return(
-                        <th>{e.size}</th>
-                    )
-                })  
-                }
-                <th>Total</th>
-            </tr>
-            <tr>
-                <td style={{textAlign:'center'}}>{e.geoCode}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'9687'}</td>
-                <td  style={{textAlign:'center'}}>{e.genderAgeDesc}</td>
-                <td style={{textAlign:'center'}}>{e.season}</td>
-                {
-                    e?.sizeInfo?.map(e => {
-                        grandTotal += Number(e.quantity)
-                        return(
-                            <td>{e.quantity}</td>
-                        )
-                    })
-                }
-                <th>{grandTotal}</th>
-            </tr>
-        </table>
-        <br></br>     
-        <table style={{borderCollapse:'collapse',borderBlockColor:'black',width:'100%'}} border={1} cellSpacing="0" cellPadding='0'>
-            <tr>
-                <td style={{textAlign:'center'}}>{'BUY'}</td>
-                <td style={{textAlign:'center'}}>{'FD'}</td>
-                <td style={{textAlign:'center'}}>{'STYLE'}</td>
-                <td style={{textAlign:'center'}}>{'STYLE'}</td>
-                <td style={{textAlign:'center'}}>{'USA'}</td>
-                <td style={{textAlign:'center'}}>{'CHINA SIZE'}</td>
-                <td style={{textAlign:'center'}}>{'CHIN'}</td>
-                <td style={{textAlign:'center'}}>{'CHIN TOP'}</td>
-                <td style={{textAlign:'center'}}>{'CHIN'}</td>
-                <td style={{textAlign:'center'}}>{'CHIN BOT'}</td>
-                <td style={{textAlign:'center'}}>{'KOREA SIZE'}</td>
-                <td style={{textAlign:'center'}}>{'KOREA TOP'}</td>
-                
-            </tr>
-            <tr>
-                <td style={{textAlign:'center'}}>{'MTH'}</td>
-                <td style={{textAlign:'center'}}>{'OF'}</td>
-                <td style={{textAlign:'center'}}>{'NUMBER'}</td>
-                <td style={{textAlign:'center'}}>{'TYPE'}</td>
-                <td style={{textAlign:'center'}}>{'SIZE'}</td>
-                <td style={{textAlign:'center'}}>{'MATRIX TYPE'}</td>
-                <td style={{textAlign:'center'}}>{'TOP SIZE'}</td>
-                <td style={{textAlign:'center'}}>{'BODY SIZE'}</td>
-                <td style={{textAlign:'center'}}>{'BOT SZE'}</td>
-                <td style={{textAlign:'center'}}>{'BODY SIZE'}</td>
-                <td style={{textAlign:'center'}}>{'MATRIX TYPE'}</td>
-                <td style={{textAlign:'center'}}>{'GENERIC'}</td>  
-            </tr>
-            <tr>
-                <td style={{textAlign:'center'}}>{'OCT'}</td>
-                <td style={{textAlign:'center'}}>{'ID'}</td>
-                <td style={{textAlign:'center'}}>{e.style}</td>
-                <td style={{textAlign:'center'}}>{'AS MENS TOP'}</td>
-                <td style={{textAlign:'center'}}>{'XS'}</td>
-                <td style={{textAlign:'center'}}>{'MENS TOP'}</td>
-                <td style={{textAlign:'center'}}>{'XS'}</td>
-                <td style={{textAlign:'center'}}>{'160/80A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{'AS MENS TOP'}</td>
-                <td style={{textAlign:'center'}}>{'85'}</td>  
-            </tr>
-            <tr>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'S'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'S'}</td>
-                <td style={{textAlign:'center'}}>{'160/84A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'90'}</td>  
-            </tr>
-            <tr>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'M'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'M'}</td>
-                <td style={{textAlign:'center'}}>{'170/88A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'95'}</td>  
-            </tr>
-            <tr>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'L'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'L'}</td>
-                <td style={{textAlign:'center'}}>{'175/92A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'100'}</td>  
-            </tr>
-            <tr>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'XL'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'XL'}</td>
-                <td style={{textAlign:'center'}}>{'180/96A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'105'}</td>  
-            </tr>
-            <tr>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'2XL'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'2XL'}</td>
-                <td style={{textAlign:'center'}}>{'185/100A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'110'}</td>  
-            </tr>
-            <tr>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'3XL'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'3XL'}</td>
-                <td style={{textAlign:'center'}}>{'190/104A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'115'}</td>  
-            </tr>
-            <tr>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'4XL'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'4XL'}</td>
-                <td style={{textAlign:'center'}}>{'195/108A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'120'}</td>  
-            </tr>
-            <tr>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'5XL'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'5XL'}</td>
-                <td style={{textAlign:'center'}}>{'200/112A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{'N/A'}</td>
-                <td style={{textAlign:'center'}}>{}</td>
-                <td style={{textAlign:'center'}}>{'125'}</td>  
-            </tr>
-        </table>
-        </>
-                     </div>
-                        </div>
-                        :<></>}
-                        </>
-                        :<></>
-                       }
-                      
-                   
-                    </>
-                        )
-                    })}
-                </div>
-                <br></br>  */}
+
 
                 <div>
-                    <table style={{ padding: '50px', borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='0'
-                        //   ref={tableRef}
-                        id="table-to-xls"
-                    >
-                        {
-                            data[0]?.gender == "UNISEX" ? <tr><td style={{color : 'red'}}><b>FIRE WARNING LABEL</b></td></tr> : <></>
-                        }
-                        {data[0]?.sizeWiseQty?.length ? <>
-                            <tr></tr>
-                            <tr><td colSpan={data[0].sizeWiseQty.length + 1}><b>FOR APA ORDER</b></td></tr>
-                            <tr>
-                                <th style={{ width: '50px' }}>REGION</th>
-                                {
 
-                                    data[0].sizeWiseQty?.map((h) => {
-                                        return <th style={{ width: '50px' }}>{h.size}</th>
-                                    })
-                                }
-                            </tr>
-                            <tr>
-                                <td>APA</td>
-                                {
+                    {data[0]?.sizeWiseQty?.length ? renderOgadDateWiseSizeQuantits(data[0]?.sizeWiseQty) : <></>}
 
-                                    data[0].sizeWiseQty.map((c) => {
-                                        return <td>{c.qty}</td>
-                                    })
-                                }
-                            </tr>
-                            <tr></tr>
-                            <tr></tr>
-                        </>
-
-                            : <></>
-                        }
-                    </table>
                     <br /><br />
-                    <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black', paddingTop: 30 }} border={1} cellSpacing="0" cellPadding='0'
+                    <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black', paddingTop: 30 }} border={1} cellSpacing="1" cellPadding='5'
                         //   ref={tableRef}
                         id="table-to-xls"
                     >
@@ -578,7 +303,6 @@ export const WasCarelabel = (props: washCareprops) => {
                             <tr>
                                 <th style={{ width: '50px' }}>CHINA INSERT</th>
                                 {
-
                                     data[0].chinaSizes?.map((h) => {
                                         return <th style={{ width: '50px' }}>{h.size}</th>
                                     })
@@ -629,85 +353,63 @@ export const WasCarelabel = (props: washCareprops) => {
                         }
                     </table>
                     <br /><br />
-                    <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='0'
-                        //   ref={tableRef}
-                        id="table-to-xls">
-                        <tr>
-                            <th style={{ width: '10%' }} >Item</th>
-                            <th style={{ width: '20%' }} >PO NO</th>
-                            <th style={{ width: '20%' }} >SEASON</th>
-                            <th style={{ width: '10%' }} >Style</th>
-                            <th style={{ width: '10%' }} >IM Code</th>
-                            <th style={{ width: '30%' }} >Description</th>
-                            <th style={{ width: '10%' }} >WC</th>
-                            <th style={{ width: '10%' }} >Destination</th>
-                            <th style={{ width: '10%' }} >Total Qty</th>
-                        </tr>
+                    {Object.keys(itemWiseGroup).map((itemNo, index) => (
+                        <div key={index}>
+                            {itemWiseGroup[itemNo][0].geoCode === 'AAO' && itemWiseGroup[itemNo][0].destination !== 'Brazil' && (
+                                <div> <h2 style={{ color: 'red' }}>
+                                    Note: Please select "Not destined to brazil" while uploading the below order in Trimco portal
+                                </h2>
+                                </div>
+                            )}
+                            {itemWiseGroup[itemNo][0].destination === 'Brazil' && (
+                                <div> <h2 style={{ color: 'red' }}>
+                                    NOTE: Please select below Ship to in the Trimco portal while placing the below order.
+                                </h2>
+                                    <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='5'>
+                                        <tr>
+                                            <th>DESTINATION</th>
+                                            <th>{itemWiseGroup[itemNo][0].destination}</th>
+                                        </tr>
+                                        <tr>
+                                            <td>SHIP TO NUMBER</td>
+                                            <td style={{ color: 'red' }}><b>{itemWiseGroup[itemNo][0].shipToNumber}</b></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            )}
+                            <div key={index} style={{ paddingTop: '10px' }}>
+                                <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%', border: '2px solid black' }} border={1} cellSpacing="0" cellPadding='5'>
+                                    <thead>
+                                        <tr className="col-styles">
+                                            <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >ITEM </th>
+                                            <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >PO NO</th>
+                                            <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >SEASON</th>
+                                            <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >STYLE#</th>
+                                            <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >IM#</th>
+                                            <th className="col-styles" style={{ width: '30%', textAlign: 'center' }} >DESCRIPTION</th>
+                                            <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >DESTINATION</th>
+                                            <th className="col-styles" style={{ width: '10%', textAlign: 'center' }} >Total Qty</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {itemWiseGroup[itemNo].map((row, index) => (
+                                            <tr key={index}>
+                                                <td style={{ textAlign: 'center' }}>{row.itemNo}</td>
+                                                <td style={{ textAlign: 'center' }}>{row.poNumber}</td>
+                                                <td style={{ textAlign: 'center' }}>{row.season + "'" + row.year.substring(2)}</td>
+                                                <td style={{ textAlign: 'center' }}>{row.styleNumber}</td>
+                                                <td style={{ textAlign: 'center' }}>{row.imCode}</td>
+                                                <td style={{ padding: '10px', textAlign: 'center' }}>{row.description}</td>
+                                                <td style={{ textAlign: 'center' }}>{row.geoCode}</td>
+                                                <td style={{ textAlign: 'center' }}>{row.bomQty}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    ))}
 
-                        {
-                            data.map((row, index) => {
-                                return <tr key={index}>
-                                    <td >{row.itemNo !== null ? row.itemNo : ''}</td>
-                                    <td>{row.poNumber}</td>
-                                    <td>{row.season + "'" + row.year.substring(2)}</td>
-                                    <td >{row.styleNumber !== null ? row.styleNumber : ''}</td>
-                                    <td  >{row.imCode !== null ? row.imCode : ''}</td>
-                                    <td  style={{padding:'10px'}}>{row.description !== null ? row.description : ''}</td>
-                                    <td></td>
-                                    <td >{row.geoCode !== null ? row.geoCode : ''}</td>
-                                    <td>{row.bomQty !== null ? row.bomQty : ''}</td>
-                                </tr>
-                            })
-                        }
-                        {/* <tr>
-                            <th style={{ width: '1%' }}>ITEM#</th>
-                            <th style={{ width: '1%' }}>PO NO</th>
-                            <th style={{ width: '1%' }}>SEASON</th>
-                            <th style={{ width: '1%' }}>STYLE</th>
-                            <th style={{ width: '1%' }}>IM#</th>
-                            <th style={{ width: '5%' }}>DESCRIPTION</th>
-                            <th style={{ width: '1%' }}>WC</th>
-                            <th style={{ width: '1%' }}>DESTINATION</th>
-                            <th style={{ width: '1%' }}>TOTAL QTY</th>
-                        </tr>
-
-                        {data.map((e, index) => {
-                            return (
-                                <>
-                                    {
-                                        e.bomData ? (e?.bomData?.map((rec, index) => {
-                                            const len = e?.bomData?.length
-                                            return (
-                                                <tr>
-                                                    {index == 0 ? (<>
-                                                        <td style={{ textAlign: 'center' }} rowSpan={len}>{e.itemNo}</td>
-                                                        <td style={{ textAlign: 'center' }} rowSpan={len}>{e.poNumber}</td>
-                                                        <td style={{ textAlign: 'center' }} rowSpan={len}>{e.season}</td>
-                                                        <td style={{ textAlign: 'center' }} rowSpan={len}>{e.styleNumber}</td>
-                                                    </>) : (<></>)}
-                                                    <td>{rec.imCode}</td>
-                                                    <td>{rec.description}</td>
-                                                    <td>{rec.trimInfo}</td>
-                                                    {index == 0 ?
-                                                        (
-                                                            <>
-                                                                <td style={{ textAlign: 'center' }} rowSpan={len}>{e.geoCode}</td>
-                                                                <td style={{ textAlign: 'center' }} rowSpan={len}>{e.bomQty}</td>
-                                                            </>
-                                                        ) : (<></>)}
-                                                </tr>
-                                            )
-                                        }
-                                        ))
-                                            : (<></>)
-                                    }
-
-                                </>
-                            )
-
-                        })
-                        } */}
-                    </table >
                 </div>
             </Card>
 
