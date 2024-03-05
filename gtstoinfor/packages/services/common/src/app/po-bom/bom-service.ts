@@ -862,7 +862,7 @@ export class BomService {
                     use,
                     imCode,
                     itemNo,
-                    colors: [], // Array to store color information
+                    colors: [], 
                 };
             }
             const existingColor = result[key].colors.find((c) => c.color === color && c.itemColor === itemColor && c.bomQty === bomQty);
@@ -928,6 +928,7 @@ export class BomService {
     }
     async generateProposalForElasticTrim(req:BomProposalReq):Promise<CommonResponseModel>{
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+        console.log(req,"req---------------")
         const poBomData = await this.poBomRepo.getProposalsDataForElastic(req)
         console.log(poBomData,"poBomData//////////////////////////////////")
 
