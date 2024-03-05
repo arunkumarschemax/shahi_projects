@@ -490,9 +490,9 @@ const SampleRequestReport = () => {
         let rowsData = [...selectedRowData,rowData];
         setSelectedRowData(rowsData)
         setbtnEnable(true)
-        updatedIndentIds = selectedRowData.map(item => item.sampleRequestid);
+        updatedIndentIds = rowsData.map(item => item.sampleRequestid);
         console.log(updatedIndentIds)
-        updated1 = selectedRowData.map(item => item.sampleItemId);
+        updated1 = rowsData.map(item => item.sampleItemId);
         setSelectItemIds(updated1);
       // }
       // console.log(data)
@@ -546,7 +546,7 @@ const SampleRequestReport = () => {
     }
     
     const resultArray = [{materialType:type}, { sampleReqIds: updatedIndentIds },{m3itemid:updated1}, {buyerId: rowData.buyerId}];
-    // console.log(resultArray)
+    console.log(resultArray)
     setSelectedItems(resultArray)
 
   };

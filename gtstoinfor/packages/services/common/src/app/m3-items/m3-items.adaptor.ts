@@ -1,13 +1,9 @@
 import { Injectable } from "@nestjs/common";
 import { M3ItemsDTO } from "./m3-items.dto";
 import { M3ItemsEntity } from "./m3-items.entity";
-import { M3FabricsDTO } from "./m3-fabrics-dto";
 import { M3FabricYarnEntity } from "./m3-fabric-yarn-entity";
 import { M3FabricContentEntity } from "./m3-fabric-content-entity";
-
-
-
-
+import { M3FabricsDTO } from "./m3-fabrics-dto";
 
 
 @Injectable()
