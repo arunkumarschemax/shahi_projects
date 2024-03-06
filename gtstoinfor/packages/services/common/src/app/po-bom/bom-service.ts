@@ -348,7 +348,7 @@ export class BomService {
             }
 
             const poBomEntities: PoBomEntity[] = []
-        
+
             for (const po of poData) {
                 let styleData: BomDataForStyleAndSeasonModel[] = []
                 if (!styleDataMap.has(po.styleNumber)) {
@@ -357,7 +357,7 @@ export class BomService {
                 } else {
 
                     styleData = styleDataMap.get(po.styleNumber)
-                    console.log(styleData,'@@@@@@@@@@@@@@@@@@@@@')
+                    console.log(styleData, '@@@@@@@@@@@@@@@@@@@@@')
 
                 }
                 // console.log(po.styleNumber,styleData.length,' style size')
@@ -406,7 +406,7 @@ export class BomService {
                 }
                 const zfactorsToAdd = await this.zFactorsBomRepo.getZfactorBomValuesToAdd()
                 for (const ab of zfactorsToAdd) {
-                    if (po.destination == ab.destination && po.plant != ab.platCode  ) {
+                    if (po.destination == ab.destination && po.plant != ab.platCode) {
                         const poBomExtraITem = new PoBomEntity()
                         poBomExtraITem.consumption = 1
                         poBomExtraITem.moq = 1
@@ -656,6 +656,7 @@ export class BomService {
                     season,
                     year,
                     shipToNumber,
+                    displayInMainReq: true,
                     sizeWiseQty: [],
                     chinaSizes: [],
                     indonesiaSize: [],
@@ -676,6 +677,7 @@ export class BomService {
                 }
 
                 if (destination == 'China') {
+                    result[key].displayInMainReq = false
                     const sizeIndex = result[key]['chinaSizes'].findIndex((v) => v.size === size)
                     if (sizeIndex >= 0) {
                         result[key]['chinaSizes'][sizeIndex].qty += bomQty
@@ -685,6 +687,8 @@ export class BomService {
                 }
 
                 if (destination == 'Indonesia') {
+
+                    result[key].displayInMainReq = false
                     const sizeIndex = result[key]['indonesiaSize'].findIndex((v) => v.size === size)
                     if (sizeIndex >= 0) {
                         result[key]['indonesiaSize'][sizeIndex].qty += bomQty
@@ -701,9 +705,6 @@ export class BomService {
             return result;
         }, {});
         const groupedArray: any[] = Object.values(groupedData);
-
-
-
         return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
     }
 
@@ -787,8 +788,8 @@ export class BomService {
         // const poBomZfactorData = await this.poBomRepo.getZfactorsData(req)
         // console.log(poBomZfactorData, '---po bom zfactord data')
         let data = [...poBomData]
-        const groupedData: any = poBomData.reduce((result, currentItem:BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode} = currentItem;
+        const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             // console.log(season)
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
@@ -833,7 +834,7 @@ export class BomService {
     //     const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
 
     //     const poBomData = await this.poBomRepo.getProposalsDataForButton(req)
-       
+
     //     let data = [...poBomData]
     //     const groupedData: any = poBomData.reduce((result, currentItem:BomProposalDataModel) => {
     //         const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode} = currentItem;
@@ -854,23 +855,23 @@ export class BomService {
     // }
     async generateProposalForNeckTape(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] });
-    
+
         const poBomData = await this.poBomRepo.getProposalsDataForNeckTape(req);
         // console.log(poBomData,"poBomData")
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-          
-            
+
+
             const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination === destination);
             const { geoCode } = bomGeoCode;
             const key = `${styleNumber}-${imCode}-${itemNo}-${color}`;
-    
+
             if (!result[key]) {
                 result[key] = {
-                    geoCode,styleNumber,description,use,season,year,imCode,itemNo,colors: [], itemColor
+                    geoCode, styleNumber, description, use, season, year, imCode, itemNo, colors: [], itemColor
                 };
             }
-           
+
             result[key].colors.push({
                 color,
                 itemColor,
@@ -878,28 +879,28 @@ export class BomService {
             });
             return result;
         }, {});
-    
+
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true, 11, 'Data retrieved', groupedArray);
     }
-    
 
-    async generateProposalForTrims(req:BomProposalReq):Promise<CommonResponseModel>{
+
+    async generateProposalForTrims(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
         const poBomData = await this.poBomRepo.getProposalsData(req)
 
-        const groupedData: any=poBomData.reduce((result, currentItem:BomProposalDataModel) =>{
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode} = currentItem;
+        const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
             let key = `${styleNumber}-${imCode}-${itemNo}`;
-            if(req.trimName === 'Interlining'){
+            if (req.trimName === 'Interlining') {
                 key += `-${color}`;
             }
-            else if(req.trimName === 'Jocktage Label' ){
+            else if (req.trimName === 'Jocktage Label') {
                 key += `-${season}`;
             }
-            if(!result[key]){
+            if (!result[key]) {
                 result[key] = {
                     geoCode,
                     styleNumber,
@@ -923,37 +924,37 @@ export class BomService {
 
 
             return result
-        },{})
+        }, {})
         const groupedArray: any[] = Object.values(groupedData);
-        return new CommonResponseModel(true,1,'Data Retrived',groupedArray)
+        return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
     }
-  async generateProposalForElasticTrim(req: BomProposalReq): Promise<CommonResponseModel> {
-    const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
-    const poBomData = await this.poBomRepo.getProposalsDataForElastic(req)
-    const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-        const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, totalGarmentQty, poNumber, gender, season, year, color, itemColor, productCode, consumption } = currentItem;
-        const key = `${styleNumber}-${imCode}-${itemNo}-${color}`;
+    async generateProposalForElasticTrim(req: BomProposalReq): Promise<CommonResponseModel> {
+        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+        const poBomData = await this.poBomRepo.getProposalsDataForElastic(req)
+        const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, totalGarmentQty, poNumber, gender, season, year, color, itemColor, productCode, consumption } = currentItem;
+            const key = `${styleNumber}-${imCode}-${itemNo}-${color}`;
 
-        if (!result[key]) {
-            result[key] = {
-                styleNumber, description, use, imCode, itemNo, bomQty: 0,
-                itemId, poNumber, gender, season, year, color, itemColor, productCode, consumption, colors: [],
-            };
-        }
+            if (!result[key]) {
+                result[key] = {
+                    styleNumber, description, use, imCode, itemNo, bomQty: 0,
+                    itemId, poNumber, gender, season, year, color, itemColor, productCode, consumption, colors: [],
+                };
+            }
 
-        const reqqty = totalGarmentQty * consumption; // Move this line outside the loop
+            const reqqty = totalGarmentQty * consumption; // Move this line outside the loop
 
-        result[key].colors.push({
-            color,
-            itemColor,
-            reqqty,
-            totalGarmentQty
-        });
-        return result;
-    }, {})
-    const groupedArray: any[] = Object.values(groupedData);
-    return new CommonResponseModel(true, 1, 'Data Retrieved', groupedArray)
-}
+            result[key].colors.push({
+                color,
+                itemColor,
+                reqqty,
+                totalGarmentQty
+            });
+            return result;
+        }, {})
+        const groupedArray: any[] = Object.values(groupedData);
+        return new CommonResponseModel(true, 1, 'Data Retrieved', groupedArray)
+    }
 
 }
 
