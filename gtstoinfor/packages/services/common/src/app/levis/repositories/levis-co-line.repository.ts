@@ -69,5 +69,15 @@ export class LevisCOLineRepository extends Repository<LevisCOLineEntity> {
         return await query.getRawMany();
     }
 
+    async getDataforCOLineEdit(): Promise<any[]> {
+      const query = this.createQueryBuilder('co')
+          .select(`co.id, co.po_number, co.item_no, co.buyer,co.po_line,co.co_number`)
+          .where(` status != 'Open' AND status != 'Failed' AND is_active = true`)
+          .orderBy(` created_at`, 'ASC')
+      return await query.getRawMany();
+  }
+
+
+
     
 }
