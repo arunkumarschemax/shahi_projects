@@ -861,7 +861,7 @@ export class RLOrdersService {
             for (let [colorIndex, color] of dest.colors.entries()) {
               // for this specific color, scroll the window to the specific row where the color is visible
               const exactColorRowScrollLocation = colorsToDisplayRowColumnIndex[color.name] + 1;
-              if (!colorsToDisplayRowColumnIndex[color.name]) {
+              if (colorsToDisplayRowColumnIndex[color.name] == undefined || colorsToDisplayRowColumnIndex[color.name] == null) {
                 break;
               }
               // console.log("testtttttttttttttttttttttt")
