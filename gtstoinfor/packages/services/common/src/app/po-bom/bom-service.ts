@@ -925,7 +925,8 @@ export class BomService {
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true,1,'Data Retrived',groupedArray)
     }
-  async generateProposalForElasticTrim(req: BomProposalReq): Promise<CommonResponseModel> {
+
+async generateProposalForElasticTrim(req: BomProposalReq): Promise<CommonResponseModel> {
     const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
     const poBomData = await this.poBomRepo.getProposalsDataForElastic(req)
     const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
@@ -939,14 +940,18 @@ export class BomService {
             };
         }
 
-        const reqqty = totalGarmentQty * consumption; // Move this line outside the loop
+        const reqqty = totalGarmentQty * consumption;
+        const key2 = `${color}-${itemColor}-${totalGarmentQty}`; 
+        if (!result[key].colors.find((c: any) => c.key === key2)) {
+            result[key].colors.push({
+                key: key2,
+                color,
+                itemColor,
+                reqqty,
+                totalGarmentQty
+            });
+        }
 
-        result[key].colors.push({
-            color,
-            itemColor,
-            reqqty,
-            totalGarmentQty
-        });
         return result;
     }, {})
     const groupedArray: any[] = Object.values(groupedData);
