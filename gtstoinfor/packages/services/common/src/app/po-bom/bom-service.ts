@@ -355,10 +355,7 @@ export class BomService {
                     styleData = await this.bomRepo.getBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year })
                     styleDataMap.set(po.styleNumber, styleData)
                 } else {
-
                     styleData = styleDataMap.get(po.styleNumber)
-                    console.log(styleData, '@@@@@@@@@@@@@@@@@@@@@')
-
                 }
                 // console.log(po.styleNumber,styleData.length,' style size')
                 // console.log(styleData.length, 'style data -----')
@@ -793,7 +790,7 @@ export class BomService {
             // console.log(season)
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
-            const key = `${geoCode}-${styleNumber}-${imCode}-${itemNo}-${color}`;
+            const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
 
             if (!result[key]) {
                 result[key] = {
@@ -814,6 +811,7 @@ export class BomService {
                     itemColor,
                     productCode,
                     sizeWiseQty: [],
+                    // colorData: []
                 };
             }
             const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
@@ -864,20 +862,31 @@ export class BomService {
             const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination === destination);
             const { geoCode } = bomGeoCode;
-            const key = `${styleNumber}-${imCode}-${itemNo}-${color}`;
+            const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
 
             if (!result[key]) {
                 result[key] = {
-                    geoCode, styleNumber, description, use, season, year, imCode, itemNo, colors: [], itemColor
+                    geoCode, styleNumber, description, use, season, year, imCode, itemNo, colors: []
                 };
             }
 
-            result[key].colors.push({
-                color,
-                itemColor,
-                bomQty,
-            });
+            // result[key].colors.push({
+            //     color,
+            //     itemColor,
+            //     bomQty,
+            // });
+
+            const key2 = `${color}-${itemColor}`;
+            if (!result[key].colors.find((c: any) => c.key === key2)) {
+                result[key].colors.push({
+                    key: key2,
+                    color,
+                    itemColor, bomQty
+
+                });
+            }
             return result;
+
         }, {});
 
         const groupedArray: any[] = Object.values(groupedData);
@@ -905,11 +914,7 @@ export class BomService {
                     geoCode,
                     styleNumber,
                     description,
-                    use,
-                    imCode,
-                    itemNo,
-                    bomQty: 0,
-                    destination,
+                    use, imCode, itemNo, bomQty: 0, destination,
                     itemId,
                     poNumber,
                     gender,
@@ -928,6 +933,7 @@ export class BomService {
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
     }
+
     async generateProposalForElasticTrim(req: BomProposalReq): Promise<CommonResponseModel> {
         const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
         const poBomData = await this.poBomRepo.getProposalsDataForElastic(req)
@@ -942,14 +948,18 @@ export class BomService {
                 };
             }
 
-            const reqqty = totalGarmentQty * consumption; // Move this line outside the loop
+            const reqqty = totalGarmentQty * consumption;
+            const key2 = `${color}-${itemColor}-${totalGarmentQty}`;
+            if (!result[key].colors.find((c: any) => c.key === key2)) {
+                result[key].colors.push({
+                    key: key2,
+                    color,
+                    itemColor,
+                    reqqty,
+                    totalGarmentQty
+                });
+            }
 
-            result[key].colors.push({
-                color,
-                itemColor,
-                reqqty,
-                totalGarmentQty
-            });
             return result;
         }, {})
         const groupedArray: any[] = Object.values(groupedData);
