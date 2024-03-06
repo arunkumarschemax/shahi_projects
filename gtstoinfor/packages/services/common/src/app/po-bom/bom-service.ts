@@ -355,10 +355,7 @@ export class BomService {
                     styleData = await this.bomRepo.getBomDataForStyleAndSeason({ style: po.styleNumber, season: po.season, year: po.year })
                     styleDataMap.set(po.styleNumber, styleData)
                 } else {
-
                     styleData = styleDataMap.get(po.styleNumber)
-                    console.log(styleData,'@@@@@@@@@@@@@@@@@@@@@')
-
                 }
                 // console.log(po.styleNumber,styleData.length,' style size')
                 // console.log(styleData.length, 'style data -----')
