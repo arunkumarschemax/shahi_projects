@@ -368,7 +368,9 @@ export default function GenerateProposal(props: Props) {
     if(val.item === 'Elastic'){
       handleElasticTrim(val.itemId)
     }
-   
+    if(val.item === 'Swoosh HT label'){
+      handleButtonTrim(val.itemId)
+    }
   }
 
 

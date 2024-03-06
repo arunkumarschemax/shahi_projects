@@ -869,12 +869,23 @@ export class BomService {
                 };
             }
            
+            // result[key].colors.push({
+            //     color,
+            //     itemColor,
+            //     bomQty,
+            // });
+            
+        const key2 = `${color}-${itemColor}`; 
+        if (!result[key].colors.find((c: any) => c.key === key2)) {
             result[key].colors.push({
+                key: key2,
                 color,
-                itemColor,
-                bomQty,
+                itemColor,bomQty
+               
             });
+        }
             return result;
+           
         }, {});
     
         const groupedArray: any[] = Object.values(groupedData);
@@ -902,11 +913,7 @@ export class BomService {
                     geoCode,
                     styleNumber,
                     description,
-                    use,
-                    imCode,
-                    itemNo,
-                    bomQty: 0,
-                    destination,
+                    use,imCode,itemNo,bomQty: 0,destination,
                     itemId,
                     poNumber,
                     gender,
