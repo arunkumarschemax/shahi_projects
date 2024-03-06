@@ -283,24 +283,26 @@ export class DpomService {
     }
 
     async coLineCreationReq(req: any): Promise<CommonResponseModel> {
-        // const data = this.coLineRepository.findOne({ where: { buyerPo: req.purchaseOrderNumber, lineItemNo: req.poLineItemNumber } })
-        // if (data) {
-        //     return new CommonResponseModel(false, 1, 'CO-Line request created already')
-        // }
-        if (req.itemNo == undefined || null) {
-            return new CommonResponseModel(false, 1, 'Please enter Item No')
+        let entities: any[] = []
+        for (const rec of req.coReqDetails) {
+            if (rec.itemNo == undefined || null) {
+                return new CommonResponseModel(false, 1, 'Please enter Item No')
+            }
+            const entity = new COLineEntity()
+            entity.buyer = 'Nike-U12'
+            entity.buyerPo = rec.purchaseOrderNumber;
+            entity.lineItemNo = rec.poLineItemNumber;
+            entity.itemNo = rec.itemNo
+            entity.status = 'Open';
+            entity.createdUser = 'Admin';
+            entities.push(entity)
         }
-        const entity = new COLineEntity()
-        entity.buyer = req.buyer ? req.buyer : 'Nike-U12'
-        entity.buyerPo = req.purchaseOrderNumber;
-        entity.lineItemNo = req.poLineItemNumber;
-        entity.itemNo = req.itemNo
-        entity.status = 'Open';
-        entity.createdUser = 'Admin';
-        const save = await this.coLineRepository.save(entity);
+        const save = await this.coLineRepository.save(entities);
         if (save) {
-            await this.updateCOLineStatus({ poNumber: req.purchaseOrderNumber, poLineItemNumber: req.poLineItemNumber, status: 'Open' })
-            return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
+            for (const saved of save) {
+                await this.updateCOLineStatus({ poNumber: saved.buyerPo, poLineItemNumber: req.lineItemNo, status: 'Open' })
+            }
+            return new CommonResponseModel(true, 1, 'CO-Line request created successfully')
         } else {
             return new CommonResponseModel(false, 1, 'CO-Line request failed')
         }
@@ -676,6 +678,7 @@ export class DpomService {
         } catch (err) {
             console.log(err, 'error');
             const update = await this.coLineRepository.update({ buyerPo: po.buyer_po, lineItemNo: po.line_item_no }, { status: 'Failed', isActive: false });
+            await this.updateCOLineStatus({ poNumber: po.buyer_po, poLineItemNumber: po.line_item_no, status: 'Failed' })
             return new CommonResponseModel(false, 0, err)
         }
         finally {
@@ -934,6 +937,8 @@ export class DpomService {
                 }
             }
             // await transactionManager.completeTransaction()
+            // const today = new Date();
+            // await this.fileUploadRepo.update({createdAt:today},{crmStatus:'Success'})
             return new CommonResponseModel(true, 1, 'CRM data sync success')
         } catch (error) {
             // await transactionManager.releaseTransaction()

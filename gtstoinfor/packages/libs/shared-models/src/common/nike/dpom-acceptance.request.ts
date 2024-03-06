@@ -1,6 +1,8 @@
 export class DpomApproveRequest {
-    purchaseOrderNumber: string;
-    poLineItemNumber: number;
-    itemNo: string;
+    coReqDetails: {
+        purchaseOrderNumber: string,
+        poLineItemNumber: number,
+        itemNo: string
+    }[]
 
 }

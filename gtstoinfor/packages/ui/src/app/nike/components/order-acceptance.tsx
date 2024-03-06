@@ -21,11 +21,13 @@ export function OrderAcceptance() {
     const { RangePicker } = DatePicker;
     const [productCode, setProductCode] = useState<any>([]);
     const [poLine, setPoLine] = useState<any>([]);
-    const [itemNoValues, setItemNoValues] = useState({});
+    const [itemNoValue, setItemNoValue] = useState<any>('');
     const [styleNumber, setStyleNumber] = useState<any>([]);
     const [planSesCode, setPlanSesCode] = useState<any>([]);
     const [planSesYear, setPlanSesYear] = useState<any>([]);
     const [tableLoading, setTableLoading] = useState<boolean>(false)
+    const [selectedRowKeys, setSelectedRowKeys] = useState<string[]>([]);
+    const [selectedRows, setSelectedRows] = useState<any[]>([]);
     const formatter = (value: number) => <CountUp end={value} separator="," />;
 
     const handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -38,21 +40,6 @@ export function OrderAcceptance() {
         setSearchText('');
     };
     const service = new NikeService();
-
-    const Finish = (values: any) => {
-        // if (values.DPOMLineItemStatus !== undefined) {
-        //     // getFactoryStatus(values)
-        // }/
-
-        // if (!values.DPOMLineItemStatus || values.DPOMLineItemStatus.length === 0) {
-        //     setFilterData(data);
-        // } else {
-        //     const filteredData = data.filter(item =>
-        //         values.DPOMLineItemStatus.includes(item.DPOMLineItemStatus)
-        //     );
-        //     setFilterData(filteredData);
-        // }
-    }
 
     const getColumnSearchProps = (dataIndex: string) => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -111,17 +98,6 @@ export function OrderAcceptance() {
                 : null
     })
 
-    const handleItemNoChange = (value, record) => {
-        setItemNoValues((prevValues) => ({
-            ...prevValues,
-            [record.key]: value,
-        }));
-    };
-
-    const isActionButtonEnabled = (record) => {
-        return itemNoValues[record.key] && itemNoValues[record.key].trim() !== "";
-    };
-
     useEffect(() => {
         getOrderAcceptanceData()
         getProductCode()
@@ -162,15 +138,23 @@ export function OrderAcceptance() {
     }
 
     const onReset = () => {
-        let resetObj = {};
-        data.forEach((record) => {
-            resetObj[`itemNo${`${record.purchaseOrderNumber}${record.poLineItemNumber}`}`] = ''
-        })
-        console.log(data.map((record) => { return { name: `itemNo${`${record.purchaseOrderNumber}${record.poLineItemNumber}`}`, value: '' } }))
-        form.setFieldsValue(resetObj);
-        setItemNoValues({})
+        form.resetFields()
+        setItemNoValue('')
         getOrderAcceptanceData()
     }
+
+    const onSelectChange = (selectedKeys, selectedRows) => {
+        setSelectedRowKeys(selectedKeys);
+        setSelectedRows(selectedRows)
+    };
+
+    const rowSelection = {
+        selectedRowKeys,
+        onChange: onSelectChange,
+        getCheckboxProps: (record) => ({
+            disabled: record.coLineStatus === 'Open',
+        }),
+    };
 
     const getOrderAcceptanceData = () => {
         const req = new PpmDateFilterRequest();
@@ -209,15 +193,14 @@ export function OrderAcceptance() {
         })
     }
 
-    const approveDpomLineItemStatus = (record) => {
+    const approveDpomLineItemStatus = () => {
+        const otDetails = selectedRows.map((rec) => { return { poLineItemNumber: rec.poLineItemNumber, purchaseOrderNumber: rec.purchaseOrderNumber, itemNo: itemNoValue } })
         const req = new DpomApproveRequest();
-        req.poLineItemNumber = record.poLineItemNumber
-        req.purchaseOrderNumber = record.purchaseOrderNumber
-        req.itemNo = itemNoValues[record.key]
+        req.coReqDetails = otDetails
         service.coLineCreationReq(req).then((res) => {
             if (res.status) {
-                getOrderAcceptanceData();
-                form.resetFields([`itemNo${record.key}`])
+                onReset()
+                onReset1()
                 message.success(res.internalMessage)
             } else (
                 message.error(res.internalMessage)
@@ -239,14 +222,19 @@ export function OrderAcceptance() {
     const getMap = (data: FactoryReportModel[]) => {
         const sizeWiseMap = new Map<string, Map<string, number>>();
         data?.forEach(rec => {
-            if (!sizeWiseMap.has(rec.purchaseOrderNumber)) {
-                sizeWiseMap.set(rec.purchaseOrderNumber, new Map<string, number>());
+            if (!sizeWiseMap.has(rec.poAndLine)) {
+                sizeWiseMap.set(rec.poAndLine, new Map<string, number>());
             }
             rec.sizeWiseData?.forEach(size => {
-                sizeWiseMap.get(rec.purchaseOrderNumber).set(size.sizeDescription, size.sizeQty);
+                sizeWiseMap.get(rec.poAndLine).set(size.sizeDescription, size.sizeQty);
             })
         });
         return sizeWiseMap;
+    }
+
+    const onReset1 = () => {
+        setSelectedRowKeys([]);
+        setSelectedRows([]);
     }
 
     const renderReport = (data: FactoryReportModel[]) => {
@@ -257,7 +245,6 @@ export function OrderAcceptance() {
             {
                 title: "S.No",
                 key: "sno", width: 50,
-                responsive: ["sm"],
                 render: (text, object, index) => (page - 1) * pageSize + (index + 1),
                 fixed: 'left'
             },
@@ -271,7 +258,8 @@ export function OrderAcceptance() {
             {
                 title: 'PO Line Item No',
                 dataIndex: 'poLineItemNumber', width: 80,
-                fixed: 'left', align: 'center'
+                fixed: 'left',
+                align: 'center'
             },
             {
                 title: 'Document Date',
@@ -347,7 +335,7 @@ export function OrderAcceptance() {
                 width: 70,
                 align: 'center',
                 render: (text, record) => {
-                    const sizeData = sizeWiseMap?.get(record.purchaseOrderNumber)?.get(size)
+                    const sizeData = sizeWiseMap?.get(record.poAndLine)?.get(size)
                     return sizeData ? sizeData : '-'
                 }
             });
@@ -361,42 +349,37 @@ export function OrderAcceptance() {
             {
                 title: 'CO Line Status',
                 dataIndex: 'coLineStatus', width: 80,
-            },
-            {
-                title: "Item No",
-                dataIndex: "itemNo", width: 100,
-                render: (text, record) => {
-                    return (
-                        <Form.Item name={`itemNo${record.purchaseOrderNumber}${record.poLineItemNumber}`}>
-                            <Input
-                                placeholder="Enter Item No"
-                                onChange={(e) => handleItemNoChange(e.target.value, record)}
-                            />
-                        </Form.Item>
-                    );
-                },
-            },
-            {
-                title: "Action",
-                dataIndex: "action", width: 80,
-                render: (value, record) => {
-                    const isEnabled = isActionButtonEnabled(record);
-                    return (
-                        <Button onClick={() => approveDpomLineItemStatus(record)} disabled={record.coLineStatus == 'Open' ? true : !isEnabled}>Accept</Button>
-                    );
-                },
-            },
-        )
+            }
+            // {
+            //     title: "Item No",
+            //     dataIndex: "itemNo", width: 100,
+            //     render: (text, record, index) => {
+            //         return (
+            //             <Form form={form}>
+            //                 <Form.Item name='itemNo'>
+            //                     <Input
+            //                         placeholder="Enter Item No"
+            //                         disabled={record.coLineStatus == 'Open' ? true : false}
+            //                         onChange={(value) => { record.itemNo = value }}
+            //                         defaultValue={record.itemNo}
+            //                     />
+            //                 </Form.Item>
+            //             </Form>
+            //         );
+            //     },
+            // }
+        );
 
         return (
             <>
                 {data.length > 0 ? (
                     <Table
-                        rowKey={(record) => `${record.purchaseOrderNumber}${record.poLineItemNumber}`}
+                        key={Date.now()}
+                        rowKey={(record) => record.poAndLine}
                         columns={columns}
                         dataSource={filterData.length > 0 ? filterData : data}
                         size='small'
-                        // pagination={false}
+                        rowSelection={{ ...rowSelection }}
                         pagination={{
                             pageSize: 50,
                             onChange(current, pageSize) {
@@ -509,7 +492,7 @@ export function OrderAcceptance() {
                         <Col xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 5 }} lg={{ span: 5 }} xl={{ span: 4 }} style={{ marginTop: 20 }} >
                             <Form.Item>
                                 <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>SEARCH</Button>
-                                <Button style={{ marginLeft: 8 }} htmlType="submit" type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
+                                <Button style={{ marginLeft: 8 }} type="primary" onClick={onReset} icon={<UndoOutlined />}>RESET</Button>
                             </Form.Item>
                         </Col>
                     </Row>
@@ -526,10 +509,45 @@ export function OrderAcceptance() {
                         <Col xs={24} sm={12} md={8} lg={6} xl={3}><Card bordered style={{ backgroundColor: '#F5BCB1', height: 100, alignItems: 'center' }}>
                             <b><Statistic loading={tableLoading} title="Unaccepted PO's:" value={data.filter(el => el.DPOMLineItemStatus === "Unaccepted").length} formatter={formatter} />
                             </b></Card> </Col>
-                    </Row><br></br>
-                    <Card>
+                    </Row><br /><br />
+                    {selectedRowKeys.length > 0 && (
+                        <Row >
+                            <Col span={1}></Col>
+                            <Col span={1}>
+                                Item No :
+                            </Col>
+                            <Col span={3}>
+                                <Form.Item
+                                    rules={[
+                                        {
+                                            required: true,
+                                            message: "Please enter Item No"
+                                        },
+                                        {
+                                            pattern: /^\d{3}[A-Za-z]$/,
+                                            message: `Please enter exactly 3 digits followed by one alphabet (e.g., 123A)`
+                                        }
+                                    ]}>
+                                    <Input
+                                        type="text"
+                                        placeholder="Enter Item No"
+                                        onChange={(e) => { setItemNoValue(e.target.value) }}
+                                    />
+                                </Form.Item>
+                            </Col>
+                            <Col span={1}></Col>
+                            <Col span={2}>
+                                <Button type="primary" htmlType="submit" onClick={approveDpomLineItemStatus} disabled={itemNoValue.length > 3 ? false : true}>Accept</Button>
+                            </Col>
+                            <Col span={2}>
+                                <Button htmlType="button" type='primary' danger style={{ margin: '0 14px' }} onClick={onReset1}>Reset</Button>
+                            </Col>
+                        </Row>)
+                    }
+                    <br />
+                    <Row>
                         {renderReport(filterData.length > 0 ? filterData : data)}
-                    </Card>
+                    </Row>
                 </Form>
             </Card>
         </>
