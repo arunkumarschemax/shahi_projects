@@ -14,6 +14,7 @@ import Jocktag from '../../trims/trim-prints/jocktag';
 import HeatTransefer from '../../trims/trim-prints/heat-transfer-trim';
 import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
+import { BackingPaper } from '../../trims/trim-prints';
 type Props = {
   poLine: string[]
 }
@@ -53,7 +54,8 @@ export default function GenerateProposal(props: Props) {
     "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
     "Swoosh HT label":<SwooshHtLable bomInfo={[]} />,
-    "Elastic" : <Elastic bomInfo={[]}/>
+    "Elastic" : <Elastic bomInfo={[]}/>,
+    "Backing Paper": <BackingPaper bomInfo={buttonData}/>
   }
 
   const onCancel = () => {
@@ -89,9 +91,13 @@ export default function GenerateProposal(props: Props) {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = props.poLine
+    console.log(bomProposalReq,"requesttttttttt");
+    
     service.generateProposalForButton(bomProposalReq).then((v) => {
       if (v.status) {
+        
         setButtonData(v.data)
+        console.log(v.data,"ppppppppppppppppp");
       }
     })
   }
@@ -300,6 +306,8 @@ export default function GenerateProposal(props: Props) {
   }
   const onView = (val) => {
     console.log(val.item)
+    console.log(val.itemId)
+
     setTrimName(val.item)
     setModalOpen(true)
     if(val.item === 'Jocktage Label'){
@@ -316,12 +324,13 @@ export default function GenerateProposal(props: Props) {
     handleDownloadIndividualTrim(val.itemId)
     }
     if(val.item === 'Heat Transfer Lbl'){
-      console.log('hiii')
       handleButtonTrim(val.itemId)
     }
     if(val.item === 'Interlining'){
     }
-   
+    if(val.item === 'Backing Paper'){
+      handleButtonTrim(val.itemId)
+    }
   }
 
 
