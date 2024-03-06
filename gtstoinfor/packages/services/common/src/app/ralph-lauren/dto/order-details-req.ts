@@ -5,5 +5,8 @@ export class OrderDetailsReq {
     @ApiProperty()
     poNumber: string;
 
+    @ApiProperty()
+    poLine?: number;
+
 
 }

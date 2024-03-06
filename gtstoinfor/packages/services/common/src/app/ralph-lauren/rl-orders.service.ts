@@ -292,7 +292,7 @@ export class RLOrdersService {
 
   async getOrderDetails(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
-      const data = await this.rlOrdersRepo.find({ where: { poNumber: req.poNumber } });
+      const data = await this.rlOrdersRepo.find({ where: { poNumber: req.poNumber,poItem: req.poLine} });
 
       // po -> destination -> color -> sizes
       const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: number, price: string }[]>>>();
@@ -366,6 +366,7 @@ export class RLOrdersService {
 
 
   async coLineCreationReq(req: any): Promise<CommonResponseModel> {
+    console.log(req,"8888888")
     try {
       if (req.itemNo == undefined || null) {
         return new CommonResponseModel(false, 0, 'Please enter Item No')
@@ -380,7 +381,10 @@ export class RLOrdersService {
       const save = await this.coLineRepo.save(entity);
       if (save) {
         const update = await this.rlOrdersRepo.update({
-          poNumber: req.purchaseOrderNumber
+          poNumber: req.purchaseOrderNumber,
+          poItem:req.poLineItemNumber
+          
+
         }, { itemStatus: ItemStatusEnum.INPROGRESS })
         return new CommonResponseModel(true, 1, 'CO-Line request created successfully', save)
       } else {
@@ -557,7 +561,7 @@ export class RLOrdersService {
         let paymentTerms;
         let styleNo;
         if (po.buyer === 'RL-U12') {
-          const response = await this.getOrderDetails({ poNumber: po.buyer_po })
+          const response = await this.getOrderDetails({ poNumber: po.buyer_po, poLine:po.line_item_no})
           const coData = response.data[0];
           console.log(coData)
           coLine.buyerPo = coData.buyerPo;
