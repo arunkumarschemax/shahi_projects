@@ -1,192 +1,97 @@
 import { Button, Card, Table } from 'antd';
-import React from 'react';
+import React, { useState } from 'react';
+
+
+export const getCssFromComponent = (fromDoc, toDoc) => {
+
+  Array.from(fromDoc.styleSheets).forEach((styleSheet: any) => {
+      if (styleSheet.cssRules) {
+          const newStyleElement = toDoc.createElement("style");
+          Array.from(styleSheet.cssRules).forEach((cssRule: any) => {
+              newStyleElement.appendChild(toDoc.createTextNode(cssRule.cssText));
+          });
+          toDoc.head.appendChild(newStyleElement);
+      }
+  });
+};
 export interface DrawcordProps {
-    bomInfo: any[]
+    bomInfo: any
 }
 export const  Drawcord = (props: DrawcordProps) => {
-  const data = [
-    { QTYINYDS:5860 ,QTYINYDS1:3285},
-  ];
+console.log(props.bomInfo)
+ const data=props.bomInfo
+ const [drawcord, setDrawcord] = useState<any>([])
 
-  const data1 = [
-    { QTYINYDS:2865 ,QTYINYDS1:3320},
-  ];
 
-  const data2 = [
-    { QTYINYDS:1500 ,QTYINYDS1:285,QTYINYDS2:65 ,QTYINYDS3:1590 ,QTYINYDS4:4560 ,QTYINYDS5:7740 ,QTYINYDS6:6235 },
-  ];
+ const handlePrint = () => {
+  const invoiceContent = document.getElementById("print");
+  if (invoiceContent) {
+      const devContent = invoiceContent.innerHTML;
+      const printWindow = window.open("", "PRINT", "height=900,width=1600");
 
-  const tableCellStyle: React.CSSProperties = {
-    border: '1px solid #dddddd',
-    textAlign: 'left',
-    padding: '8px',
-  };
+      printWindow.document.write(`
+          <html>
+              <head>
+                  <style>
+                      @page {
+                          size: legal;
+                          margin: 20;
+                      }
+                      body {
+                          margin: 0;
+                          transform: scale(1);
+                          transform-origin: top center;
+                          width:100%;
+                      }
+                      /* Additional styles for your content */
+                  </style>
+              </head>
+              <body>${devContent}</body>
+          </html>
+      `);
+
+          getCssFromComponent(document, printWindow.document);
+
+          printWindow.document.close();
+          setTimeout(function () {
+              printWindow.print();
+              printWindow.close();
+          }, 1000); // Add a delay to ensure all content is loaded
+      }
+ }
+
   return (
     <Card title={'DrawCord'}
-                extra={<Button >Print</Button>}>
-      <table  style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-          <tr>
-            <th style={tableCellStyle}>ITEM</th>
-            <th style={tableCellStyle}>STYLE</th>
-            <th style={tableCellStyle}>SEASON</th>
-            <th style={tableCellStyle}>IM#</th>
-            <th style={tableCellStyle}>MATERIAL DESCRIPTION</th>
-            <th style={tableCellStyle}>GARMENT COLOUR + CODE </th>
-            <th style={tableCellStyle}>TAPE COLOUR </th>
-            <th style={tableCellStyle}>QTY IN YDS</th>
-          </tr>
-        
-            <tr >
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3}  >116Q</td>
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3}>DQ5191</td>
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3}>SU24</td>
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3}>A1008825</td>
-
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3}>CALI# 598265__ PM#598264__ BRAIDEDDRAWCORD__ 100.0% POLYESTER(100.0% RECYCLED)__ 100.0%POLYESTER (100.0% RECYCLED) 20/1COTTON COUNT, RING SPUN, COMBED,YARN DYE__ HOT CUT__ REACTIVEDYED YARN DYED__ FLAT__ NO FILL__H:0.0000MM__ W:9.0000MM__ EDGE TOEDGE__ MECHANICALLY RECYCLED POLYESTER
-              </td>
-              </tr>
-              <tr>
-              
-              <td  style={{ ...tableCellStyle,textAlign: 'center' }}  >BLACK/(WHITE)-010</td>
-              <td   style={{ ...tableCellStyle,textAlign: 'center' }}>04U BASEGY</td>
-              <td   style={{ ...tableCellStyle,textAlign: 'center' }}>5860</td>
-              </tr>
-
-              <tr>
-              <td  style={{ ...tableCellStyle,textAlign: 'center' }} >DK GREY HEATHER/(WHITE)-063</td>
-                <td   style={{ ...tableCellStyle,textAlign: 'center' }}>00A BLACK</td>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }}>3285</td>
-
-            </tr>
-
-       
-        <tfoot>
-          <tr>
-            <td colSpan={7} style={tableCellStyle}></td>
-            <td style={{...tableCellStyle,fontWeight:"bolder"}} >{data.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1), 0)}</td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <br/>
-
-      <table  style={{ borderCollapse: 'collapse', borderBlockColor: 'black' }} border={1} cellSpacing="0" cellPadding='0'>
-          <tr>
-            <th style={tableCellStyle}>ITEM</th>
-            <th style={tableCellStyle}>STYLE</th>
-            <th style={tableCellStyle}>SEASON</th>
-            <th style={tableCellStyle}>IM#</th>
-            <th style={tableCellStyle}>MATERIAL DESCRIPTION</th>
-            <th style={tableCellStyle}>GARMENT COLOUR + CODE </th>
-            <th style={tableCellStyle}>TAPE COLOUR </th>
-            <th style={tableCellStyle}>QTY IN YDS</th>
-          </tr>
-        
-            <tr >
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={7}  >118Q</td>
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={7}>BV2737</td>
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={7}>FA24</td>
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={7}>A0598265</td>
-
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={7}>CALI# 598265__ PM#598264__ BRAIDED DRAWCORD__ 100.0% POLYESTER (100.0% RECYCLED)__ 100.0% POLYESTER (100.0% RECYCLED) 20/1 COTTON COUNT, RING SPUN, COMBED, YARN DYE__ HOT CUT__ REACTIVE DYED YARN DYED__ FLAT__ NO FILL__ H:0.0000MM__ W:9.0000MM__ EDGE TO EDGE__ MECHANICALLY RECYCLED POLYESTER__
-              </td>
-             
-              <td  style={{ ...tableCellStyle,textAlign: 'center' }}  >BLACK/BLACK/(WHITE)-010</td>
-              <td   style={{ ...tableCellStyle,textAlign: 'center' }}>00A BLACK</td>
-              <td   style={{ ...tableCellStyle,textAlign: 'center' }}>1500</td>
-
-            </tr>
-
-              <tr>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }} >CHARCOAL HEATHR/ANTHRA/(WHITE)-071 </td>
-                <td   style={{ ...tableCellStyle,textAlign: 'center' }}>06F ANTHRA</td>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }}> 285</td>
-              </tr>
-
-              <tr>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }} >DK GREY HEATHER/MSLVR/(WHITE)-063</td>
-                <td   style={{ ...tableCellStyle,textAlign: 'center' }}>01Q MSLVR </td>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }}> 65</td>
-              </tr>
- 
-             <tr>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }} >FLAX/FLAX/(WHITE)-224</td>
-                <td   style={{ ...tableCellStyle,textAlign: 'center' }}>20M FLAX </td>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }}> 1590</td>
-              </tr>
-
-              <tr>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }} >KHAKI/KHAKI/(WHITE)-247 </td>
-                <td   style={{ ...tableCellStyle,textAlign: 'center' }}>26B KHAKI</td>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }}> 4560</td>
-              </tr>
-
-              <tr>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }} >LIFE LIME/LIFE LIME/(WHITE)-751 </td>
-                <td   style={{ ...tableCellStyle,textAlign: 'center' }}>75L LFLIME</td>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }}> 7740</td>
-              </tr>
-
-              <tr>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }} >PINK FOAM/PINK FOAM/(WHITE)-663 </td>
-                <td   style={{ ...tableCellStyle,textAlign: 'center' }}>6JB PNKFOM </td>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }}> 6235</td>
-              </tr>
-       
-        <tfoot>
-          <tr>
-            <td colSpan={7} style={tableCellStyle}></td>
-            <td style={{...tableCellStyle,fontWeight:"bolder"}} >
-            {data2.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1+item.QTYINYDS2+item.QTYINYDS3+item.QTYINYDS4+item.QTYINYDS5+item.QTYINYDS6), 0)}</td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <br/>
-      
-      <table  style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-          <tr>
-            <th style={tableCellStyle}>ITEM</th>
-            <th style={tableCellStyle}>STYLE</th>
-            <th style={tableCellStyle}>SEASON</th>
-            <th style={tableCellStyle}>IM#</th>
-            <th style={tableCellStyle}>MATERIAL DESCRIPTION</th>
-            <th style={tableCellStyle}>GARMENT COLOUR + CODE </th>
-            <th style={tableCellStyle}>TAPE COLOUR </th>
-            <th style={tableCellStyle}>QTY IN YDS</th>
-          </tr>
-        
-            <tr >
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3}  >117Q</td>
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3}>BV2671</td>
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3}>FA24</td>
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3}>A0598265</td>
-
-              <td style={{...tableCellStyle, textAlign: 'center' }} rowSpan={3}>CALI# 598265__ PM#598264__ BRAIDED DRAWCORD__ 100.0% POLYESTER (100.0% RECYCLED)__ 100.0% POLYESTER (100.0% RECYCLED) 20/1 COTTON COUNT, RING SPUN, COMBED, YARN DYE__ HOT CUT__ REACTIVE DYED YARN DYED__ FLAT__ NO FILL__ H:0.0000MM__ W:9.0000MM__ EDGE TO EDGE__ MECHANICALLY RECYCLED POLYESTER__
-              </td>
-              </tr>
-              <tr>
-              
-              <td  style={{ ...tableCellStyle,textAlign: 'center' }}  >BLACK/BLACK/(WHITE)-010</td>
-              <td   style={{ ...tableCellStyle,textAlign: 'center' }}>00A BLACK</td>
-              <td   style={{ ...tableCellStyle,textAlign: 'center' }}>2865</td>
-              </tr>
-
-              <tr>
-              <td  style={{ ...tableCellStyle,textAlign: 'center' }} >DK GREY HEATHER/MSLVR/(WHITE)-063 </td>
-                <td   style={{ ...tableCellStyle,textAlign: 'center' }}>01Q MSLVR </td>
-                <td  style={{ ...tableCellStyle,textAlign: 'center' }}> 3320</td>
-
-            </tr>
-
-       
-        <tfoot>
-          <tr>
-            <td colSpan={7} style={tableCellStyle}></td>
-            <td style={{...tableCellStyle,fontWeight:"bolder"}} >{data1.reduce((total, item) => total + (item.QTYINYDS+item.QTYINYDS1), 0)}</td>
-          </tr>
-        </tfoot>
-      </table>
+                extra={<Button onClick={handlePrint}>Print</Button>}>
+     <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
+                <tr>
+                    <th style={{ width: '3%' }}>ITEM</th>
+                    <th style={{ width: '3%' }}>STYLE</th>
+                    <th style={{ width: '3%' }}>SEASON</th>
+                    <th style={{ width: '3%' }}>IM#</th>
+                    <th style={{ width: '3%' }}>MATERIAL DESCRIPTION</th>
+                    <th style={{ width: '3%' }}>GARMENT COLOUR + CODE</th>
+                    <th style={{ width: '3%' }}>TAPE COLOUR</th>
+                    <th style={{ width: '3%' }}>QTY IN YDS</th>
+                  
+                    </tr>
+                    {data.map((rec,index) =>{
+                        return(
+                            <tr>
+                            <td style={{ textAlign: 'center' }} >{rec.itemNo !== null ? rec.itemNo:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.season !== null ? rec.season:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.imCode !== null ? rec.imCode:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.description !== null ? rec.description:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.color !== null ? rec.color:''}</td>
+                            <td style={{ textAlign: 'center' }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
+                         </tr>
+                        )
+                      
+                    })}
+               
+            </table>
 
       
     </Card>

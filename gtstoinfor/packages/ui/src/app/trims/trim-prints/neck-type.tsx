@@ -1,14 +1,14 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Card } from 'antd';
 
-export const NecKType = (props) => {
-  const [bomInfo, setBomInfo] = useState<any>([]);
+const NeckType = (props) => {
+  const [bomInfo, setBomInfo] = useState([]);
 
-  console.log(bomInfo, "bomInfo+++++++++++++++++++++++++++++");
   const tableCellStyle = {
-    border: '1px solid #dddddd',
+    // border: '1px solid #dddddd',
     // textAlign: 'left',
-    padding: '8px',
+     padding: '8px',
   };
 
   const tableRef = useRef(null);
@@ -25,7 +25,7 @@ export const NecKType = (props) => {
     if (invoiceContent) {
       const devContent = invoiceContent.innerHTML;
       const printWindow = window.open('', 'PRINT', 'height=900,width=1600');
-
+  
       printWindow.document.write(`
         <html>
           <head>
@@ -38,24 +38,44 @@ export const NecKType = (props) => {
                 margin: 0;
                 transform: scale(1);
                 transform-origin: top center;
-                width:100%;
+                width: 100%;
               }
               /* Additional styles for your content */
+  
+              /* Add a counter to track the page number */
+              @page {
+                counter-increment: page;
+              }
+  
+              /* Apply styles only to the last page */
+              body:after {
+                content: counter(page);
+                position: absolute;
+                top: 0;
+                right: 0;
+                padding: 10px;
+                background-color: white;
+                color: black;
+              }
+  
+              body:last-of-type:after {
+                content: 'Last Page';
+                /* Additional styles for the last page marker */
+              }
             </style>
           </head>
           <body>${devContent}</body>
         </html>
       `);
-
-      //    getCssFromComponent(document, printWindow.document);
-
+  
       printWindow.document.close();
       setTimeout(function () {
         printWindow.print();
         printWindow.close();
-      }, 1000); // Add a delay to ensure all content is loaded
+      }, 1000);
     }
   };
+  
 
   const groupDataByItemNo = () => {
     if (bomInfo && bomInfo.length > 0) {
@@ -70,12 +90,12 @@ export const NecKType = (props) => {
     }
     return null;
   };
-
   const generateTables = () => {
     const groupedData = groupDataByItemNo();
     if (groupedData) {
+      
       return Object.keys(groupedData).map((itemNo, index) => (
-        <div key={index} style={{ marginBottom: '20px' }}>
+        <div key={index} style={{ marginBottom: '20%'}}>
           <h3>Item No: {itemNo}</h3>
           <table
             style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
@@ -96,28 +116,82 @@ export const NecKType = (props) => {
               </tr>
             </thead>
             <tbody>{generateRows(groupedData[itemNo])}</tbody>
+            <tfoot>
+              <tr>
+              <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'}}>Total</td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }}>
+                  {calculateTotalBomQty(groupedData[itemNo])}
+                </td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       ));
     }
     return null;
   };
-
+  const calculateTotalBomQty = (data) => {
+    return data.reduce((total, item) => {
+      const bomQtys = item?.colors.map(color => Number(color?.bomQty)) || [];
+      const validQtys = bomQtys.filter(bomQty => !isNaN(bomQty));
+      return total + validQtys.reduce((sum, qty) => sum + qty, 0);
+    }, 0);
+  };
+  
+  
+  
   const generateRows = (data) => {
+    
     return data.map((item, index) => (
-      <tr key={index}>
-        <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.itemNo}</td>
-        <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
-        <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.season}</td>
-        <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
-        <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.description}</td>
-        <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.color}</td>
-        <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.itemColor}</td>
-        <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.bomQty}</td>
-      </tr>
+      <React.Fragment key={index}>
+        {index === 0 && (
+          <tr>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+              {item.itemNo}
+            </td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+              {item.styleNumber}
+            </td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+  {`${item.season}${item.year.slice(2)}`}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+              {item.imCode}
+            </td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+              {item.description}
+            </td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors.color}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors?.itemColor}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors?.bomQty}</td>
+     
+          </tr>
+        )}
+     
+        {item.colors.slice(1).map((color, colorIndex) => (
+          // <tr key={`${index}-${colorIndex}`}>
+          <tr key={`${index}`}>
+
+            {index !== 0 && colorIndex === 0 && (
+              <>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} colSpan={5}>
+                  {item.itemNo}
+                </td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.styleNumber}</td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.season}</td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.imCode}</td>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.description}</td>
+              </>
+            )}
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{color.color}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{color.itemColor}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{color.bomQty}</td>
+          </tr>
+        ))}
+      </React.Fragment>
     ));
   };
-
+  
+ 
   return (
     <div id="print">
       {bomInfo && bomInfo.length > 0 ? (
@@ -131,4 +205,4 @@ export const NecKType = (props) => {
   );
 };
 
-export default NecKType;
+export default NeckType;
