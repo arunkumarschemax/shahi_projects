@@ -867,15 +867,7 @@ export class BomService {
     
             if (!result[key]) {
                 result[key] = {
-                    geoCode,
-                    styleNumber,
-                    description,
-                    use,
-                    season,
-                    year,
-                    imCode,
-                    itemNo,
-                    colors: [], 
+                    geoCode,styleNumber,description,use,season,year,imCode,itemNo,colors: [], itemColor
                 };
             }
            
@@ -935,44 +927,34 @@ export class BomService {
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true,1,'Data Retrived',groupedArray)
     }
-    async generateProposalForElasticTrim(req:BomProposalReq):Promise<CommonResponseModel>{
-        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
-        const poBomData = await this.poBomRepo.getProposalsDataForElastic(req)
+  async generateProposalForElasticTrim(req: BomProposalReq): Promise<CommonResponseModel> {
+    const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+    const poBomData = await this.poBomRepo.getProposalsDataForElastic(req)
+    const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+        const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, totalGarmentQty, poNumber, gender, season, year, color, itemColor, productCode, consumption } = currentItem;
+        const key = `${styleNumber}-${imCode}-${itemNo}-${color}`;
 
-        const groupedData: any=poBomData.reduce((result, currentItem:BomProposalDataModel) =>{
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode} = currentItem;
-            const bomGeoCode = destinations.find((v) => v.destination == destination)
-            const { geoCode } = bomGeoCode
-            let key = `${styleNumber}-${imCode}-${itemNo}`;
-           
-            if(!result[key]){
-                result[key] = {
-                    geoCode,
-                    styleNumber,
-                    description,
-                    use,
-                    imCode,
-                    itemNo,
-                    bomQty: 0,
-                    destination,
-                    itemId,
-                    poNumber,
-                    gender,
-                    season,
-                    year,
-                    color,
-                    itemColor,
-                    productCode,
-                };
-            }
-            result[key].bomQty += bomQty;
+        if (!result[key]) {
+            result[key] = {
+                styleNumber, description, use, imCode, itemNo, bomQty: 0,
+                itemId, poNumber, gender, season, year, color, itemColor, productCode, consumption, colors: [],
+            };
+        }
 
+        const reqqty = totalGarmentQty * consumption; // Move this line outside the loop
 
-            return result
-        },{})
-        const groupedArray: any[] = Object.values(groupedData);
-        return new CommonResponseModel(true,1,'Data Retrived',groupedArray)
-    }
+        result[key].colors.push({
+            color,
+            itemColor,
+            reqqty,
+            totalGarmentQty
+        });
+        return result;
+    }, {})
+    const groupedArray: any[] = Object.values(groupedData);
+    return new CommonResponseModel(true, 1, 'Data Retrieved', groupedArray)
+}
+
 }
 
 

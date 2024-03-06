@@ -152,7 +152,7 @@ export class PoBomRepo extends Repository<PoBomEntity> {
     async getProposalsDataForElastic(req: BomProposalReq): Promise<BomProposalDataModel[]> {
         const query = this.createQueryBuilder('pb')
             .select(`pb.id,pb.po_qty as poQty,pb.bom_qty as bomQty,pb.consumption,pb.wastage,pb.moq,b.description,b.im_code as imCode,b.use,
-            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,b.id AS bomId, st.id AS stcomboId `)
+            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,b.id AS bomId, st.id AS stcomboId ,size_qty AS totalGarmentQty`)
             .leftJoin(DpomEntity, 'd', 'd.id = pb.dpom_id')
             .leftJoin(BomEntity, 'b', 'b.id = pb.bom_id and pb.bom_id is not null')
             .leftJoin(StyleComboEntity, 'st', 'st.bom_id = b.id AND (st.item_color = d.color_desc OR (st.item_color IS NULL AND d.color_desc IS NULL))')
@@ -162,7 +162,6 @@ export class PoBomRepo extends Repository<PoBomEntity> {
             .groupBy(`st.id`)
         const rawData = await query.getRawMany()
         const mappedData: BomProposalDataModel[] = rawData.map(item => {
-            console.log(item,"item----")
             return new BomProposalDataModel({
                 id: item.id,
                 poQty: item.poQty,
@@ -192,6 +191,7 @@ export class PoBomRepo extends Repository<PoBomEntity> {
                 productCode:item.productCode,
                 styleCombo: item.stcomboId,
                 bomId: item.bomId,
+                totalGarmentQty:item.totalGarmentQty
             });
         });
         return mappedData;
@@ -206,11 +206,10 @@ export class PoBomRepo extends Repository<PoBomEntity> {
             .where(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })
             .andWhere(`b.item_id IN (:...itemId)`, { itemId: req.itemId })
             .andWhere(`pb.bom_id is not null`)
-            .groupBy(`st.id`);
+           // .groupBy(`st.id`);
     
         const rawData = await query.getRawMany();
         const mappedData: BomProposalDataModel[] = rawData.map((item) => {
-    console.log(item,"item**********************")
             return new BomProposalDataModel({
                 id: item.id,
                 poQty: item.poQty,
