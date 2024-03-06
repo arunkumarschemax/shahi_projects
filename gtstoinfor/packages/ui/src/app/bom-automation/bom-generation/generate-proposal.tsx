@@ -58,7 +58,7 @@ export default function GenerateProposal(props: Props) {
     "Neck Tape":<NecKType bomInfo={necktapeData} />,
     "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
-    "Swoosh HT label":<SwooshHtLable bomInfo={swoosth} />,
+    "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>
   }
 

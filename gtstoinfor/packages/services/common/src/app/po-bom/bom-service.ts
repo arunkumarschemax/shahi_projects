@@ -863,11 +863,11 @@ export class BomService {
             const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
             const bomGeoCode = destinations.find((v) => v.destination === destination);
             const { geoCode } = bomGeoCode;
-            const key = `${styleNumber}-${imCode}-${itemNo}-${color}`;
+            const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
     
             if (!result[key]) {
                 result[key] = {
-                    geoCode,styleNumber,description,use,season,year,imCode,itemNo,colors: [], itemColor
+                    geoCode,styleNumber,description,use,season,year,imCode,itemNo,colors: []
                 };
             }
            
