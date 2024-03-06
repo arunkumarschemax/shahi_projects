@@ -180,7 +180,7 @@ export const AppRoutes = () => {
                     <Route path='po-pdf-table' element={<PoPdfTable data={undefined} />} />
                     <Route path='pdf-upload-change-compare' element={<ChangeComparision data={undefined} />} />
                     <Route path='co-line-view' element={<ColineView />} />
-                    <Route path='backing-paper' element={<BackingPaper />} />
+                    <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} />
                     {/* <Route path='trim-grid' element={<TrimsGrid/>} /> */}
                     <Route path='trim-columns' element={<TrimColumns />} />
                     {/* <Route path='hang-tag' element={<HangTag />} /> */}
@@ -236,7 +236,9 @@ export const AppRoutes = () => {
                     <Route path='button1' element={<Button1Print />} />
                     <Route path='button2' element={<Button2Print />} />
                     <Route path='button3' element={<Button3Print bomInfo={''}/>} />
-                    <Route path='backing-paper' element={<BackingPaper />} />
+                    <Route path='backing-paper' element={<BackingPaper bomInfo={undefined} />} />
+                    {/* <Route path='snap-button' element={<SnapButton bomInfo={undefined} />} /> */}
+
                 </Route>
             </Route>
             <Route path="/login" element={<Login />} />

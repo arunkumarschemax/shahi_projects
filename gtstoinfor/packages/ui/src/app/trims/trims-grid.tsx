@@ -160,7 +160,7 @@ const TrimsGrid = () => {
 
           ]}
         >
-          {selectedPrintId === 1 && <BackingPaper />}
+          {selectedPrintId === 1 && <BackingPaper bomInfo={undefined} />}
           {selectedPrintId === 2 && <Button1Print />}
           {selectedPrintId === 3 && <Button2Print />}
           {selectedPrintId === 4 && <Button3Print bomInfo={''}/>}
