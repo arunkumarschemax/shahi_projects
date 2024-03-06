@@ -5,7 +5,7 @@ import * as path from 'path';
 import { LevisOrdersRepository } from "./repositories/levis-orders.repo";
 import { LevisPdfRepo } from "./repositories/levis-pdf.repo";
 import { LevisPdfInfoEntity } from "./entities/levis-pdf.entity";
-import { CoLineRequest, CommonResponseModel, LevisCoLinereqModel, LevisColorModel, LevisCompareModel, LevisDestinationModel, LevisOrderFilter, LevisSizeModel, LevisSizeWiseModel, SizeModel, StatusEnum, levisOrderDataModel } from "@project-management-system/shared-models";
+import { CoLineRequest, CommonResponseModel, LevisCoLinereqModel, LevisColorModel, LevisCompareModel, LevisDestinationModel, LevisOrderFilter, LevisSizeModel, LevisSizeWiseModel, LevisSizeWiseReportModel, SizeModel, StatusEnum, levisOrderDataModel, levisOrderReportDataModel } from "@project-management-system/shared-models";
 import { LevisCOLineEntity } from "./entities/levis-co-line.entity";
 import { LevisCOLineRepository } from "./repositories/levis-co-line.repository";
 import { ItemNoDtos } from "../sanmar/dto/sanmar-item-no.dto";
@@ -307,11 +307,11 @@ export class LevisService {
   //   }
   // }
 
-  async updatePath(req: any, jsonData: any,poNumber:any): Promise<CommonResponseModel> {
+  async updatePath(req: any, jsonData: any, poNumber: any): Promise<CommonResponseModel> {
     try {
 
       let flag = true;
-      const entities=[]
+      const entities = []
       for (const res of req) {
         const entity = new LevisPdfInfoEntity();
         entity.pdfFileName = res.filename
@@ -356,7 +356,7 @@ export class LevisService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`,
-            new levisOrderDataModel(rec.id,rec.po_number,rec.delivery_address,rec.transmode,rec.currency,rec.po_line,rec.material,rec.total_unit_price,rec.original_date,rec.status,[],rec.ex_factory_date)
+            new levisOrderDataModel(rec.id, rec.po_number, rec.delivery_address, rec.transmode, rec.currency, rec.po_line, rec.material, rec.total_unit_price, rec.original_date, rec.status, [], rec.ex_factory_date)
           );
 
         }
@@ -514,7 +514,7 @@ export class LevisService {
         if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`)) {
           sizeDateMap.set(
             `${rec.po_line},${rec.po_number},${rec.delivery_date},${rec.color}`,
-            new levisOrderDataModel(rec.id,rec.po_number,rec.delivery_address,rec.transmode,rec.currency,rec.po_line,rec.material,rec.total_unit_price,rec.original_date,rec.status,[],rec.ex_factory_date)
+            new levisOrderDataModel(rec.id, rec.po_number, rec.delivery_address, rec.transmode, rec.currency, rec.po_line, rec.material, rec.total_unit_price, rec.original_date, rec.status, [], rec.ex_factory_date)
           );
 
         }
@@ -728,7 +728,7 @@ export class LevisService {
   //       if (parsedDate.isSameOrBefore(moment(), 'day')) {
   //         formattedExFactDate = '';
   //       }
-  
+
 
 
   //       const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, formattedExFactDate, formattedExFactDate, poInfo.material, desArray);
@@ -747,88 +747,88 @@ export class LevisService {
 
   async getOrderdataForCOline(req: OrderDetailsReq): Promise<CommonResponseModel> {
     try {
-        const poLineValues = req?.poLine;
-        const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber, poLine: poLineValues } });
+      const poLineValues = req?.poLine;
+      const data = await this.LevisOrdersRepo.find({ where: { poNumber: req.poNumber, poLine: poLineValues } });
 
-        const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
-        const poMap = new Map<string, LevisOrdersEntity>();
+      const destinationColSizesMap = new Map<string, Map<string, Map<string, { size: string, quantity: string, price: string }[]>>>();
+      const poMap = new Map<string, LevisOrdersEntity>();
 
-        for (const rec of data) {
-            poMap.set(`${rec.poNumber}`, rec);
-            const parts = rec.deliveryAddress.split(',');
-            const destAdd = parts[0].trim();
-            const dest = destAdd;
+      for (const rec of data) {
+        poMap.set(`${rec.poNumber}`, rec);
+        const parts = rec.deliveryAddress.split(',');
+        const destAdd = parts[0].trim();
+        const dest = destAdd;
 
-            if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
-                destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
-            }
-            if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
-                destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
-            }
-
-            const colorcheck = await this.colorRepo.findOne({
-                where: {
-                    colorCode: rec.material
-                }
-            });
-
-            const colorName = colorcheck ? colorcheck.colorName : '';
-            if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(colorName)) {
-                destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(colorName, []);
-            }
-
-            const sizecheck = await this.sizeRepo.findOne({
-                where: {
-                    poSize: rec.size
-                }
-            });
-
-            if (sizecheck) {
-                destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorName).push({ size: sizecheck.crmSize, quantity: rec.quantity, price: rec.unitPrice });
-            } else {
-                destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorName).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
-            }
+        if (!destinationColSizesMap.has(`${rec.poNumber}`)) {
+          destinationColSizesMap.set(`${rec.poNumber}`, new Map<string, Map<string, []>>());
+        }
+        if (!destinationColSizesMap.get(`${rec.poNumber}`).has(dest)) {
+          destinationColSizesMap.get(`${rec.poNumber}`).set(dest, new Map<string, []>());
         }
 
-        const coData = [];
-        destinationColSizesMap.forEach((destColorSize, poNumber) => {
-            const desArray = [];
-            destColorSize.forEach((colorSizes, dest) => {
-                const ColArray = [];
-                colorSizes.forEach((sizes, color) => {
-                    const sizeArray = [];
-                    sizes.forEach((size) => {
-                        const sizeObj = new LevisSizeModel(size.size, size.quantity, size.price);
-                        sizeArray.push(sizeObj);
-                    });
-                    const col = new LevisColorModel(color, sizeArray);
-                    ColArray.push(col);
-                });
-                const des = new LevisDestinationModel(dest, ColArray);
-                desArray.push(des);
-            });
-            const poInfo = poMap.get(poNumber);
-
-            const parsedDate = moment(poInfo?.exFactoryDate, "DD.MM.YYYY");
-            let formattedExFactDate = parsedDate.format("DD/MM/YYYY");
-
-            if (parsedDate.isSameOrBefore(moment(), 'day')) {
-                formattedExFactDate = '';
-            }
-
-            const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, formattedExFactDate, formattedExFactDate, poInfo.material, desArray);
-            coData.push(co);
+        const colorcheck = await this.colorRepo.findOne({
+          where: {
+            colorCode: rec.material
+          }
         });
 
-        if (coData.length > 0) {
-            return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', coData);
-        } else {
-            return new CommonResponseModel(false, 0, 'No data found');
+        const colorName = colorcheck ? colorcheck.colorName : '';
+        if (!destinationColSizesMap.get(`${rec.poNumber}`).get(dest).has(colorName)) {
+          destinationColSizesMap.get(`${rec.poNumber}`).get(dest).set(colorName, []);
         }
+
+        const sizecheck = await this.sizeRepo.findOne({
+          where: {
+            poSize: rec.size
+          }
+        });
+
+        if (sizecheck) {
+          destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorName).push({ size: sizecheck.crmSize, quantity: rec.quantity, price: rec.unitPrice });
+        } else {
+          destinationColSizesMap.get(`${rec.poNumber}`).get(dest).get(colorName).push({ size: rec.size, quantity: rec.quantity, price: rec.unitPrice });
+        }
+      }
+
+      const coData = [];
+      destinationColSizesMap.forEach((destColorSize, poNumber) => {
+        const desArray = [];
+        destColorSize.forEach((colorSizes, dest) => {
+          const ColArray = [];
+          colorSizes.forEach((sizes, color) => {
+            const sizeArray = [];
+            sizes.forEach((size) => {
+              const sizeObj = new LevisSizeModel(size.size, size.quantity, size.price);
+              sizeArray.push(sizeObj);
+            });
+            const col = new LevisColorModel(color, sizeArray);
+            ColArray.push(col);
+          });
+          const des = new LevisDestinationModel(dest, ColArray);
+          desArray.push(des);
+        });
+        const poInfo = poMap.get(poNumber);
+
+        const parsedDate = moment(poInfo?.exFactoryDate, "DD.MM.YYYY");
+        let formattedExFactDate = parsedDate.format("DD/MM/YYYY");
+
+        if (parsedDate.isSameOrBefore(moment(), 'day')) {
+          formattedExFactDate = '';
+        }
+
+        const co = new LevisCoLinereqModel(poInfo.poNumber, poInfo.unitPrice, poInfo.currency, formattedExFactDate, formattedExFactDate, poInfo.material, desArray);
+        coData.push(co);
+      });
+
+      if (coData.length > 0) {
+        return new CommonResponseModel(true, 1, 'Data Retrieved Successfully', coData);
+      } else {
+        return new CommonResponseModel(false, 0, 'No data found');
+      }
     } catch (err) {
-        throw err;
+      throw err;
     }
-}
+  }
 
 
 
@@ -916,7 +916,7 @@ export class LevisService {
       let styleNo;
       if (po.buyer === 'LEVIS') {
         const response = await this.getOrderdataForCOline({ poNumber: po.po_number, poLine: po.po_line })
-        console.log(response.data[0],"response")
+        console.log(response.data[0], "response")
         const coData = response.data[0];
         coLine.buyerPo = coData.poNumber
         // const inputDate = new Date(coData.deliveryDate)
@@ -941,15 +941,15 @@ export class LevisService {
         console.log("----------------start----------------")
 
         if (!addressData) {
-        const update = await this.levisCoLineRepo.update(
-          { poNumber: po.po_number, poLine: po.po_line },
-          { status: "Failed", errorMsg: "Address not matching", isActive: false }
-        );
-        await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED });
-        return new CommonResponseModel(false, 0, "Address not matching");
-        } 
-  
-       console.log("----------------end----------------") 
+          const update = await this.levisCoLineRepo.update(
+            { poNumber: po.po_number, poLine: po.po_line },
+            { status: "Failed", errorMsg: "Address not matching", isActive: false }
+          );
+          await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.FAILED });
+          return new CommonResponseModel(false, 0, "Address not matching");
+        }
+
+        console.log("----------------end----------------")
 
         console.log(addressData, "address")
         styleNo = coData.style
@@ -1010,7 +1010,7 @@ export class LevisService {
       }
       const number = optionValues.find(value => {
         return Number(value.split('-')[0].trim()) == Number(buyerAddress)
-    });
+      });
       // const number = optionValues.find(value => value.includes(buyerAddress)); // give the dynamic value here
       await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
       await driver.wait(until.elementLocated(By.xpath('//*[@id="cur"]')));
@@ -1056,7 +1056,7 @@ export class LevisService {
                   for (const option of options) {
                     const value = await option.getAttribute('value');
                     optionValues.push(value);
-                  }    
+                  }
                   const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
                   await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
                   // Find all the input fields in the first row.
@@ -1109,8 +1109,8 @@ export class LevisService {
                   }
                   const number = optionValues.find(value => {
                     return Number(value.split('-')[0].trim()) == Number(deliveryAddress)
-                });
-                console.log(number,"nummmm")
+                  });
+                  console.log(number, "nummmm")
                   // const number = optionValues.find(value => value.includes(deliveryAddress)); // give the dynamic value here
                   await driver.executeScript(`arguments[0].value = '${number}';`, dropdown);
                   // Find all the input fields in the first row.
@@ -1173,7 +1173,7 @@ export class LevisService {
         const currentDateFormatted = `${day}-${month}-${year}`;
         if (coNo) {
 
- 
+
           const update = await this.levisCoLineRepo.update({ poNumber: po.po_number, poLine: po.po_line }, { coNumber: coNo, status: 'Success', coDate: currentDateFormatted, errorMsg: "-" });
           await this.updateCOLineStatus({ poNumber: po.po_number, poLine: po.po_line, status: StatusEnum.SUCCESS })
 
@@ -1218,7 +1218,7 @@ export class LevisService {
       return false;
     }
   }
-  
+
 
   async updateCOLineStatus(req: any): Promise<CommonResponseModel> {
     console.log(req, "reqqqqqqqponumnbbb");
@@ -1271,7 +1271,7 @@ export class LevisService {
         })
       }, 1000);
 
-    
+
 
       //live directory paths:
       const directoryPath = 'D:/levis-unread/';
@@ -1704,6 +1704,95 @@ export class LevisService {
   }
 
    
+
+
+
+
+
+  // async getOrderReportData(req?: LevisOrderFilter): Promise<CommonResponseModel> {
+  //   console.log(req, "servvv")
+  //   try {
+  //     const details = await this.LevisOrdersRepo.getOrderReportData(req);
+  //     if (details.length === 0) {
+  //       return new CommonResponseModel(false, 0, 'No data Found');
+  //     }
+  //     const sizeDateMap = new Map<string, levisOrderReport>();
+  //     for (const rec of details) {
+  //       if (!sizeDateMap.has(`${rec.po_number}`)) {
+  //         sizeDateMap.set(
+  //           `${rec.po_number}`,
+  //           new levisOrderReport(rec.id,rec.brand,rec.seasonCode,rec.division,rec.merchant,rec.itemNo,rec.factory,rec.region,rec.destinationCode,
+  //             rec.destination,rec.styleNo,rec.po_number,rec.unitPrice,rec.fabric,rec.description,rec.process,rec.color,rec.pcd,rec.ftyDiscussion,
+  //             rec.originalFty,rec.gtnWeeks,rec.factoryDeliveryDate,rec.shipMode,rec.improvementDeferment,rec.plannedFty,rec.fOneDate,
+  //             rec.shippedQuantity,rec.truckDate,rec.cartsClosedDate,rec.shortageExcess,rec.extraShort,rec.shippedQtyValue,
+  //             rec.poHeader,rec.remarks,rec.deliveryAddress,rec.quantity,rec.status,[])
+  //         );
+
+  //       }
+  //       const sizeWiseData = sizeDateMap.get(`${rec.po_number}`).sizeWiseData;
+  //       const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity && item.unitPrice === rec.unitPrice);
+  //       if (!existingSizeData && rec.size !== null) {
+  //         sizeWiseData.push(new LevisSizeWiseReportModel(rec.size,rec.quantity,rec.unitPrice));
+  //       }
+  //     }
+  //     const dataModelArray: levisOrderReport[] = Array.from(sizeDateMap.values());
+
+  //     return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+
+
+
+  //   } catch (e) {
+  //     console.log(e, "errrrrrrrrr")
+  //     return new CommonResponseModel(false, 0, 'failed', e);
+  //   }
+  // }
+
+
+
+  async getOrderReportData(req?: LevisOrderFilter): Promise<CommonResponseModel> {
+    console.log(req, "servvv")
+ 
+    try {
+      const details = await this.LevisOrdersRepo.getOrderReportData(req);
+      if (details.length === 0) {
+        return new CommonResponseModel(false, 0, 'No data Found');
+      }
+      const sizeDateMap = new Map<string, levisOrderReportDataModel>();
+      for (const rec of details) {
+        const colorcheck = await this.colorRepo.findOne({
+          where: {
+            colorCode: rec.material
+          }
+        });
+    
+        const color = colorcheck?.colorName 
+      
+        if (!sizeDateMap.has(`${rec.po_line},${rec.po_number},${rec.delivery_date},${color}`)) {
+          sizeDateMap.set(
+            `${rec.po_line},${rec.po_number},${rec.delivery_date},${color}`,
+            new levisOrderReportDataModel(rec.id, rec.po_number, rec.unit_price, rec.delivery_address, rec.transmode, rec.currency, rec.po_line, rec.material, rec.total_unit_price, rec.original_date, rec.status, [], rec.ex_factory_date,color)
+          );
+
+
+        }
+        const sizeWiseData = sizeDateMap.get(`${rec.po_line},${rec.po_number},${rec.delivery_date},${color}`).sizeWiseData;
+        const existingSizeData = sizeWiseData.find(item => item.size === rec.size && item.quantity === rec.quantity);
+        if (!existingSizeData && rec.size !== null) {
+          sizeWiseData.push(new LevisSizeWiseModel(rec.product, rec.size, rec.upc, rec.planned_ex_factory_date, rec.ex_factory_date, rec.quantity, rec.item_no));
+        }
+      }
+      const dataModelArray: levisOrderReportDataModel[] = Array.from(sizeDateMap.values());
+
+      return new CommonResponseModel(true, 1, 'data retrieved', dataModelArray);
+
+
+
+    } catch (e) {
+      console.log(e, "errrrrrrrrr")
+      return new CommonResponseModel(false, 0, 'failed', e);
+    }
+  }
+
 
 
 
