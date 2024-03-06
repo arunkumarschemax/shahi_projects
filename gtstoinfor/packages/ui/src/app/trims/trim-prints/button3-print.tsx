@@ -16,20 +16,20 @@ export const getCssFromComponent = (fromDoc, toDoc) => {
         }
     });
 };
-export interface Button3PrintProps{
-bomInfo:any
+export interface Button3PrintProps {
+    bomInfo: any
 }
-export function Button3Print(props:Button3PrintProps) {
-console.log(props.bomInfo)
-const data = props.bomInfo
+export function Button3Print(props: Button3PrintProps) {
+    console.log(props.bomInfo)
+    const data = props.bomInfo
 
- const handlePrint = () => {
-    const invoiceContent = document.getElementById("print");
-    if (invoiceContent) {
-        const devContent = invoiceContent.innerHTML;
-        const printWindow = window.open("", "PRINT", "height=900,width=1600");
+    const handlePrint = () => {
+        const invoiceContent = document.getElementById("print");
+        if (invoiceContent) {
+            const devContent = invoiceContent.innerHTML;
+            const printWindow = window.open("", "PRINT", "height=900,width=1600");
 
-        printWindow.document.write(`
+            printWindow.document.write(`
             <html>
                 <head>
                     <style>
@@ -58,216 +58,58 @@ const data = props.bomInfo
                 printWindow.close();
             }, 1000); // Add a delay to ensure all content is loaded
         }
-   }
+    }
 
-  const dataoObject= [
-    {
-    bomQty:   3372,
-    color:"AEGE: FINISH LOCATION: BACK; FINISH LOCATION: NONE",
-    destination:"Australia",
-    gender    :     "YOUTH UNISEX",
-    geoCode    :     "APA",
-    imCode    :     "729388",
-    itemColor    :     "00A BLACK",
-    itemId    :     22,
-    itemNo    :     "778P",
-    poNumber    :     "3503493152",
-    productCode    :     "FD3006-429",
-    season    :     "FA",
-    sizeWiseQty    :     [{size: "L", qty: 774}, {size: "M", qty: 876}, {size: "S", qty: 648}, {size: "XL", qty: 672}]
-,    styleNumber    :     "FD3006",
-    use    :     "BODY/\r\n- SLEEVE\r\n\r\n**SOLID \r\n",
-    year    :     "2024"
-},
-  {
-    bomQty:   3372,
-    color:"AEGE: FINISH LOCATION: BACK; FINISH LOCATION: NONE",
-    destination:"Australia",
-    gender    :     "YOUTH UNISEX",
-    geoCode    :     "APA",
-    imCode    :     "729388",
-    itemColor    :     "00A BLACK",
-    itemId    :     22,
-    itemNo    :     "778P",
-    poNumber    :     "3503493152",
-    productCode    :     "FD3006-429",
-    season    :     "FA",
-    sizeWiseQty    :     [{size: "L", qty: 774}, {size: "M", qty: 876}, {size: "S", qty: 648}, {size: "XL", qty: 672}],
-    styleNumber    :     "FD3007",
-    use    :     "BODY/\r\n- SLEEVE\r\n\r\n**SOLID \r\n",
-    year    :     "2024"
-},
- {
-    bomQty:   3372,
-    color:"AEGE: FINISH LOCATION: BACK; FINISH LOCATION: NONE",
-    destination:"Australia",
-    gender    :     "YOUTH UNISEX",
-    geoCode    :     "APA",
-    imCode    :     "729389",
-    itemColor    :     "00A BLACK",
-    itemId    :     22,
-    itemNo    :     "778P",
-    poNumber    :     "3503493152",
-    productCode    :     "FD3006-429",
-    season    :     "FA",
-    sizeWiseQty    :     [{size: "L", qty: 774}, {size: "M", qty: 876}, {size: "S", qty: 648}, {size: "XL", qty: 672}],
-    styleNumber    :     "FD3006",
-    use    :     "BODY/\r\n- SLEEVE\r\n\r\n**SOLID \r\n",
-    year    :     "2024"
-},
- {
-    bomQty:   3372,
-    color:"AEGE: FINISH LOCATION: BACK; FINISH LOCATION: NONE",
-    destination:"Australia",
-    gender    :     "YOUTH UNISEX",
-    geoCode    :     "APA",
-    imCode    :     "729388",
-    itemColor    :     "00A BLACK",
-    itemId    :     22,
-    itemNo    :     "778P",
-    poNumber    :     "3503493152",
-    productCode    :     "FD3006-429",
-    season    :     "FA",
-    sizeWiseQty    :     [{size: "L", qty: 774}, {size: "M", qty: 876}, {size: "S", qty: 648}, {size: "XL", qty: 672}],
-    styleNumber    :     "FD3006",
-    use    :     "BODY/\r\n- SLEEVE\r\n\r\n**SOLID \r\n",
-    year    :     "2024"
-},
-{
-    bomQty:   3372,
-    color:"AEGE: FINISH LOCATION: BACK; FINISH LOCATION: NONE",
-    destination:"Australia",
-    gender    :     "YOUTH UNISEX",
-    geoCode    :     "APA",
-    imCode    :     "729389",
-    itemColor    :     "00A BLACK",
-    itemId    :     22,
-    itemNo    :     "778P",
-    poNumber    :     "3503493152",
-    productCode    :     "FD3006-429",
-    season    :     "FA",
-    sizeWiseQty    :     [{size: "L", qty: 774}, {size: "M", qty: 876}, {size: "S", qty: 648}, {size: "XL", qty: 672}],
-    styleNumber    :     "FD3006",
-    use    :     "BODY/\r\n- SLEEVE\r\n\r\n**SOLID \r\n",
-    year    :     "2024"
-},
-
-]
-
-function convertData(originalData) {
-    const convertedData = [];
-    originalData.forEach(item => {
-        const existingItem = convertedData.find(data => data.imcode === item.imCode);
-        if (existingItem) {
-            const existingStyle = existingItem.styleData.find(style => style.styleNumber === item.styleNumber);
-            if (existingStyle) {
-                existingStyle.colorsData.push({
-                    color: item.color,
-                    itemColor: item.itemColor,
-                    bomQty: item.bomQty
-                });
-            } else {
-                existingItem.styleData.push({
-                    styleNumber: item.styleNumber,
-                    season: item.season,
-                    itemNo: item.itemNo,
-                    colorsData: [{
-                        color: item.color,
-                        itemColor: item.itemColor,
-                        bomQty: item.bomQty
-                    }]
-                });
-            }
-        } else {
-            convertedData.push({
-                imcode: item.imCode,
-                description: item.color,
-                styleData: [{
-                    styleNumber: item.styleNumber,
-                    season: item.season,
-                    itemNo: item.itemNo,
-                    colorsData: [{
-                        color: item.color,
-                        itemColor: item.itemColor,
-                        bomQty: item.bomQty
-                    }]
-                }]
-            });
-        }
-    });
-
-    return convertedData;
-}
-
-const convertedData = convertData(dataoObject);
-console.log(convertedData);
-
-
+    const countColumnOccurrences = (columnKey) => {
+        const counts = {};
+        data.forEach((rec) => {
+          const value = rec[columnKey];
+          counts[value] = (counts[value] || 0) + 1;
+        });
+        return counts;
+      };
+    
+      // Determine if a cell should be merged
+      const shouldMergeCell = (columnKey, value) => {
+        const counts = countColumnOccurrences(columnKey);
+        return counts[value] > 1;
+      };
     return (
-        <div  id='print'>
- <Card title={'BUTTON'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
-            <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-                <tr>
-                    <th style={{ width: '3%' }}>ITEM#</th>
-                    <th style={{ width: '3%' }}>STYLE#</th>
-                    <th style={{ width: '3%' }}>SEASON</th>
-                    <th style={{ width: '3%' }}>IM#</th>
-                    <th style={{ width: '5%' }}>MATERIAL DESCRIPTION</th>
-                    <th style={{ width: '3%' }}>BUTTON SIZE</th>
-                    <th style={{ width: '3%' }}>GARMENT COLOR CODE</th>
-                    <th style={{ width: '3%' }}>BUTTON COLOR</th>
-                    <th style={{ width: '3%' }}>QTY IN PCS</th>
+        <div id='print'>
+            <Card title={'BUTTON'} extra={<span><Button onClick={handlePrint}>Print</Button></span>}>
+                <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='5'>
+                    <tr>
+                        <th style={{ width: '3%' }}>ITEM#</th>
+                        <th style={{ width: '5%' }}>STYLE#</th>
+                        <th style={{ width: '3%' }}>SEASON</th>
+                        <th style={{ width: '5%' }}>IM#</th>
+                        <th style={{ width: '44%' }}>MATERIAL DESCRIPTION</th>
+                        <th style={{ width: '5%' }}>BUTTON SIZE</th>
+                        <th style={{ width: '5%' }}>GARMENT COLOR CODE</th>
+                        <th style={{ width: '5%' }}>BUTTON COLOR</th>
+                        <th style={{ width: '5%' }}>QTY IN PCS</th>
                     </tr>
-                    {data.map((rec,index) =>{
-                        return(
+                    {data.map((rec, index) => {
+                        return (
                             <tr>
-                            <td style={{ textAlign: 'center' }} >{rec.itemNo !== null ? rec.itemNo:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.styleNumber !== null ? rec.styleNumber:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.season !== null ? rec.season:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.imCode !== null ? rec.imCode:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.description !== null ? rec.description:''}</td>
-                            <td style={{ textAlign: 'center' }} >{'18L'}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.color !== null ? rec.color:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.bomQty !== null ? rec.bomQty:''}</td>
-                         </tr>
+                                <td style={{ textAlign: 'center', width: '3%' }} >{rec.itemNo !== null ? rec.itemNo : ''}</td>
+                                <td style={{ textAlign: 'center', width: '5%' }} >{rec.styleNumber !== null ? rec.styleNumber : ''}</td>
+                                <td style={{ textAlign: 'center', width: '3%' }} >{rec.season !== null ? rec.season : ''}</td>
+                                <td style={{ textAlign: 'center', width: '5%' }} >{rec.imCode !== null ? rec.imCode : ''}</td>
+                                <td style={{ textAlign: 'center', width: '44%' }} >{rec.description !== null ? rec.description : ''}</td>
+                                <td style={{ textAlign: 'center', width: '5%' }} >{'18L'}</td>
+                                <td style={{ textAlign: 'center', width: '5%' }} >{rec.color !== null ? rec.color : ''}</td>
+                                <td style={{ textAlign: 'center', width: '5%' }} >{rec.itemColor !== null ? rec.itemColor : ''}</td>
+                                <td style={{ textAlign: 'center', width: '5%' }} >{rec.bomQty !== null ? rec.bomQty : ''}</td>
+                            </tr>
                         )
-                      
-                    })}
-            </table>
-            {/* {
-                convertedData.map((rec,index) =>{
-                    return(
-                        <table style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }} border={1} cellSpacing="0" cellPadding='0'>
-                    <tr>
-                    <th style={{ width: '3%' }}>ITEM#</th>
-                    <th style={{ width: '3%' }}>STYLE#</th>
-                    <th style={{ width: '3%' }}>SEASON</th>
-                    <th style={{ width: '3%' }}>IM#</th>
-                    <th style={{ width: '5%' }}>MATERIAL DESCRIPTION</th>
-                    <th style={{ width: '3%' }}>BUTTON SIZE</th>
-                    <th style={{ width: '3%' }}>GARMENT COLOR CODE</th>
-                    <th style={{ width: '3%' }}>BUTTON COLOR</th>
-                    <th style={{ width: '3%' }}>QTY IN PCS</th>
-                    </tr>
-                    <tr>
-                        <td>{}</td>
-                        <td>{}</td>
-                        <td>{}</td>
-                        <td style={{ textAlign: 'center' }} >{rec.imCode !== null ? rec.imCode:''}</td>
-                        <td style={{ textAlign: 'center' }} >{rec.description !== null ? rec.description:''}</td>
-                        <td style={{ textAlign: 'center' }} >{'18L'}</td>
-                        <td>{}</td>
-                        <td>{}</td>
 
-                    </tr>
-                      </table>
-                    )
-                })
-            } */}
-        </Card>
+                    })}
+
+                </table>
+            </Card>
         </div>
-       
+
     )
 
 

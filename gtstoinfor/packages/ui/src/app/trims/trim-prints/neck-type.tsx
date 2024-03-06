@@ -8,7 +8,7 @@ const NeckType = (props) => {
   const tableCellStyle = {
     // border: '1px solid #dddddd',
     // textAlign: 'left',
-    padding: '8px',
+     padding: '8px',
   };
 
   const tableRef = useRef(null);
@@ -93,8 +93,9 @@ const NeckType = (props) => {
   const generateTables = () => {
     const groupedData = groupDataByItemNo();
     if (groupedData) {
+      
       return Object.keys(groupedData).map((itemNo, index) => (
-        <div key={index} style={{ marginBottom: '20px' }}>
+        <div key={index} style={{ marginBottom: '20%'}}>
           <h3>Item No: {itemNo}</h3>
           <table
             style={{ borderCollapse: 'collapse', borderBlockColor: 'black', width: '100%' }}
@@ -140,6 +141,7 @@ const NeckType = (props) => {
   
   
   const generateRows = (data) => {
+    
     return data.map((item, index) => (
       <React.Fragment key={index}>
         {index === 0 && (
@@ -158,13 +160,17 @@ const NeckType = (props) => {
             <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
               {item.description}
             </td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.color}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.itemColor}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0]?.bomQty}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors.color}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors?.itemColor}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors?.bomQty}</td>
+     
           </tr>
         )}
+     
         {item.colors.slice(1).map((color, colorIndex) => (
-          <tr key={`${index}-${colorIndex}`}>
+          // <tr key={`${index}-${colorIndex}`}>
+          <tr key={`${index}`}>
+
             {index !== 0 && colorIndex === 0 && (
               <>
                 <td style={{ ...tableCellStyle, textAlign: 'center' }} colSpan={5}>
