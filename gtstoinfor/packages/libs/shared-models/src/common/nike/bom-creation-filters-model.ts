@@ -96,7 +96,10 @@ export class BomProposalDataModel {
     primaryColor?:string
     secondaryColor?:string
     itemColor?:string
-    productCode?:string
+    productCode?:string;
+    bomId ?: number;
+    styleCombo?:number;
+    totalGarmentQty ?:number;
     constructor(data?: Partial<BomProposalDataModel>) {
         Object.assign(this, data);
     }
