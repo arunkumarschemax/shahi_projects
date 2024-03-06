@@ -391,7 +391,7 @@ export class RLOrdersService {
     }
   }
   
-  // @Cron('0 8 * * *')
+   @Cron('0 8 * * *')
   async getTradeLinkPdf(): Promise<CommonResponseModel> {
     let driver = await new Builder().forBrowser(Browser.CHROME).build();
     try {
@@ -447,13 +447,13 @@ export class RLOrdersService {
   //   }
   // }
 
-  // @Cron('1 * * * *') 
+  @Cron('1 * * * *') 
   async readPOPdfBot() {
     const browser = await puppeteer.launch({ headless: false, args: ['--start-maximized'] });
 
     try {
-      const extractToPath = 'D:/extractPath';
-      const zipFilePath = 'E:/Ralph Lauren PO Report (PDF) (5).zip/';
+      const extractToPath = 'D:/RL-POs/RL-POs NEW/';
+      const zipFilePath = 'C:/Users/Standby.it/Downloads/Ralph Lauren PO Report (PDF).zip/';
       const zip = new AdmZip(zipFilePath);
       zip.extractAllTo(extractToPath, true);
 
@@ -467,7 +467,7 @@ export class RLOrdersService {
           timeout: 100000,
           waitUntil: 'networkidle0',
         })
-      }, 1000);
+      }, 10000);
 
       await page.waitForSelector('#login-form_username');
       await page.type('#login-form_username', 'RLadmin@gmail.com');
@@ -478,9 +478,9 @@ export class RLOrdersService {
       await page.click('button.ant-btn-primary');
       await page.waitForNavigation();
 
-      const directoryPath = 'D:/extractPath';
+      const directoryPath = 'D:/RL-POs/RL-POs NEW';
       const sourceDirectory = 'D:/extractPath';
-      const destinationDirectory = 'D:/rl-read-files';
+      const destinationDirectory = 'D:/RL-POs/RL-POs READ';
 
       const files = fs.readdirSync(directoryPath);
       // if (files.length === 0) {
@@ -495,16 +495,19 @@ export class RLOrdersService {
         })
       })
       for (const file of files) {
+        // console.log(file)
+        // console.log('----------start-----------')
         await page.waitForSelector('input[type="file"]');
         const fileInput = await page.$('input[type="file"]');
         const filePath = path.join(directoryPath, file);
         await fileInput.uploadFile(filePath);
         await page.waitForTimeout(5000);
+        // console.log('----------upload-----------')
 
         await page.waitForSelector('button.ant-btn-primary')
         await page.click('button.ant-btn-primary');
         await page.waitForTimeout(9000)
-
+        // console.log('----------end-----------')
         const sourceFilePath = path.join(directoryPath, file);
         const destinationFilePath = path.join(destinationDirectory, file);
         fs.rename(sourceFilePath, destinationFilePath, async (err) => {
@@ -512,8 +515,10 @@ export class RLOrdersService {
             return new CommonResponseModel(false, 0, '');
           }
         })
+        // console.log('----------the end-----------')
       }
     } catch (error) {
+      // console.log(error)
       return new CommonResponseModel(false, 0, error)
     }
     finally{
@@ -521,7 +526,7 @@ export class RLOrdersService {
     }
   }
 
-  // @Cron('*/5 * * * *')
+   @Cron('*/5 * * * *')
   async createCOline(req: any): Promise<CommonResponseModel> {
     const poDetails = await this.coLineRepo.getDataforCOLineCreation();
     if (!poDetails.length) {
