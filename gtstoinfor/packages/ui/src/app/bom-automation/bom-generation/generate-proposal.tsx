@@ -55,7 +55,7 @@ export default function GenerateProposal(props: Props) {
     "BUTTON":<Button3Print bomInfo={buttonData}/>,
     // "Neck Tape":<NecKType bomInfo={proposalData} />,
     "Interlining":<Interlining bomInfo={interlining}/>,
-    "Drawcords":<Drawcord bomInfo={buttonData}/>,
+    "Drawcords":<Drawcord bomInfo={necktapeData}/>,
     "Neck Tape":<NecKType bomInfo={necktapeData} />,
     "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
@@ -158,12 +158,23 @@ export default function GenerateProposal(props: Props) {
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
     bomProposalReq.poLine = props.poLine
-    service.generateProposalForButton(bomProposalReq).then((v) => {
+    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
       if (v.status) {
-        setButtonData(v.data)
+        setNeckTapeData(v.data)
       }
     })
   }
+
+  // function handleDrawcord(itemId){
+  //   const bomProposalReq = new BomProposalReq()
+  //   bomProposalReq.itemId = [itemId]
+  //   bomProposalReq.poLine = props.poLine
+  //   service.generateProposalForButton(bomProposalReq).then((v) => {
+  //     if (v.status) {
+  //       setButtonData(v.data)
+  //     }
+  //   })
+  // }
 
   const exportToExcel = (jsonData) => {
     // const mergedData = mergeCells(jsonData)
