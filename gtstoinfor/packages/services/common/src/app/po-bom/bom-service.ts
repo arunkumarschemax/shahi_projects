@@ -896,12 +896,12 @@ export class BomService {
     
 async generatePropsalForHtLabel(req: BomProposalReq): Promise<CommonResponseModel> {
     const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
-
     const poBomData = await this.poBomRepo.getProposalsDataForButton(req)
     const groupedData: any = poBomData.reduce((result, currentItem:BomProposalDataModel) => {
         const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode,combination} = currentItem;
         const bomGeoCode = destinations.find((v) => v.destination == destination)
         const { geoCode } = bomGeoCode
+        
         const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
 
         if (!result[key]) {
@@ -929,7 +929,6 @@ async generatePropsalForHtLabel(req: BomProposalReq): Promise<CommonResponseMode
         }
         const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
         if(size.includes('-')){
-            console.log('size inclueeedsssssssssssssssssssssssss')
             if (sizeIndex >= 0) {
                 result[key]['extraSizeWiseQty'][sizeIndex].qty += bomQty
             } else {
@@ -947,7 +946,6 @@ async generatePropsalForHtLabel(req: BomProposalReq): Promise<CommonResponseMode
         result[key].bomQty += bomQty;
         return result;
     }, {});
-    console.log(groupedData,'@@@@@@@@@@@@@@@')
     const groupedArray: any[] = Object.values(groupedData);
     return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
 }
