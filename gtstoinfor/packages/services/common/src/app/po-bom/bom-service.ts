@@ -786,12 +786,11 @@ export class BomService {
         // console.log(poBomZfactorData, '---po bom zfactord data')
         let data = [...poBomData]
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
+            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, attribute,attributeValue,productCode,bQty,poQty } = currentItem;
             // console.log(season)
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
             const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
-
             if (!result[key]) {
                 result[key] = {
                     geoCode,
@@ -810,6 +809,10 @@ export class BomService {
                     color,
                     itemColor,
                     productCode,
+                    bQty,
+                    poQty,
+                    attribute,
+                    attributeValue,
                     sizeWiseQty: [],
                     // colorData: []
                 };
@@ -892,79 +895,137 @@ export class BomService {
         const groupedArray: any[] = Object.values(groupedData);
         return new CommonResponseModel(true, 11, 'Data retrieved', groupedArray);
     }
+    
+async generatePropsalForHtLabel(req: BomProposalReq): Promise<CommonResponseModel> {
+    const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
 
+    const poBomData = await this.poBomRepo.getProposalsDataForButton(req)
+    const groupedData: any = poBomData.reduce((result, currentItem:BomProposalDataModel) => {
+        const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size ,poNumber,gender,season,year,color,itemColor,productCode,combination} = currentItem;
+        const bomGeoCode = destinations.find((v) => v.destination == destination)
+        const { geoCode } = bomGeoCode
+        const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
 
-    async generateProposalForTrims(req: BomProposalReq): Promise<CommonResponseModel> {
-        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
-        const poBomData = await this.poBomRepo.getProposalsData(req)
-
-        const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
-            const bomGeoCode = destinations.find((v) => v.destination == destination)
-            const { geoCode } = bomGeoCode
-            let key = `${styleNumber}-${imCode}-${itemNo}`;
-            if (req.trimName === 'Interlining') {
-                key += `-${color}`;
+        if (!result[key]) {
+            result[key] = {
+                geoCode,
+                styleNumber,
+                description,
+                use,
+                imCode,
+                itemNo,
+                bomQty: 0,
+                destination,
+                itemId,
+                poNumber,
+                gender,
+                season,
+                year,
+                color,
+                itemColor,
+                productCode,
+                combination,
+                sizeWiseQty: [],
+                extraSizeWiseQty: []
+            };
+        }
+        const sizeIndex = result[key]['sizeWiseQty'].findIndex((v) => v.size === size)
+        if(size.includes('-')){
+            console.log('size inclueeedsssssssssssssssssssssssss')
+            if (sizeIndex >= 0) {
+                result[key]['extraSizeWiseQty'][sizeIndex].qty += bomQty
+            } else {
+                result[key].extraSizeWiseQty.push({ size, qty: bomQty });
             }
-            else if (req.trimName === 'Jocktage Label') {
-                key += `-${season}`;
+        }
+        else{
+            if (sizeIndex >= 0) {
+                result[key]['sizeWiseQty'][sizeIndex].qty += bomQty
+            } else {
+                result[key].sizeWiseQty.push({ size, qty: bomQty });
             }
-            if (!result[key]) {
-                result[key] = {
-                    geoCode,
-                    styleNumber,
-                    description,
-                    use, imCode, itemNo, bomQty: 0, destination,
-                    itemId,
-                    poNumber,
-                    gender,
-                    season,
-                    year,
-                    color,
-                    itemColor,
-                    productCode,
-                };
-            }
-            result[key].bomQty += bomQty;
+        }
+      
+        result[key].bomQty += bomQty;
+        return result;
+    }, {});
+    console.log(groupedData,'@@@@@@@@@@@@@@@')
+    const groupedArray: any[] = Object.values(groupedData);
+    return new CommonResponseModel(true, 11, 'Data retreived', groupedArray);
+}
+async generateProposalForTrims(req: BomProposalReq): Promise<CommonResponseModel> {
+    const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+    const poBomData = await this.poBomRepo.getProposalsData(req)
+
+    const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+        const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
+        const bomGeoCode = destinations.find((v) => v.destination == destination)
+        const { geoCode } = bomGeoCode
+        let key = `${styleNumber}-${imCode}-${itemNo}`;
+        if (req.trimName === 'Interlining') {
+            key += `-${color}`;
+        }
+        else if (req.trimName === 'Jocktage Label') {
+            key += `-${season}`;
+        }
+        if (!result[key]) {
+            result[key] = {
+                geoCode,
+                styleNumber,
+                description,
+                use, imCode, itemNo, bomQty: 0, destination,
+                itemId,
+                poNumber,
+                gender,
+                season,
+                year,
+                color,
+                itemColor,
+                productCode,
+            };
+        }
+        result[key].bomQty += bomQty;
 
 
-            return result
-        }, {})
-        const groupedArray: any[] = Object.values(groupedData);
-        return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
-    }
+        return result
+    }, {})
+    const groupedArray: any[] = Object.values(groupedData);
+    return new CommonResponseModel(true, 1, 'Data Retrived', groupedArray)
+}
 
-    async generateProposalForElasticTrim(req: BomProposalReq): Promise<CommonResponseModel> {
-        const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
-        const poBomData = await this.poBomRepo.getProposalsDataForElastic(req)
-        const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, totalGarmentQty, poNumber, gender, season, year, color, itemColor, productCode, consumption } = currentItem;
-            const key = `${styleNumber}-${imCode}-${itemNo}-${color}`;
 
-            if (!result[key]) {
-                result[key] = {
-                    styleNumber, description, use, imCode, itemNo, bomQty: 0,
-                    itemId, poNumber, gender, season, year, color, itemColor, productCode, consumption, colors: [],
-                };
-            }
+async generateProposalForElasticTrim(req: BomProposalReq): Promise<CommonResponseModel> {
+    const destinations = await this.destinationsRepo.find({ select: ['destination', 'geoCode'] })
+    const poBomData = await this.poBomRepo.getProposalsDataForElastic(req)
+    const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
+        const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, totalGarmentQty, poNumber, gender, season, year, color, itemColor, productCode, consumption } = currentItem;
+        const key = `${styleNumber}-${imCode}-${itemNo}-${color}`;
 
-            const reqqty = totalGarmentQty * consumption;
-            const key2 = `${color}-${itemColor}-${totalGarmentQty}`;
-            if (!result[key].colors.find((c: any) => c.key === key2)) {
-                result[key].colors.push({
-                    key: key2,
-                    color,
-                    itemColor,
-                    reqqty,
-                    totalGarmentQty
-                });
-            }
+        if (!result[key]) {
+            result[key] = {
+                styleNumber, description, use, imCode, itemNo, bomQty: 0,
+                itemId, poNumber, gender, season, year, color, itemColor, productCode, consumption, colors: [],
+            };
+        }
 
-            return result;
-        }, {})
-        const groupedArray: any[] = Object.values(groupedData);
-        return new CommonResponseModel(true, 1, 'Data Retrieved', groupedArray)
-    }
+        const reqqty = totalGarmentQty * consumption;
+        const key2 = `${color}-${itemColor}-${totalGarmentQty}`;
+        if (!result[key].colors.find((c: any) => c.key === key2)) {
+            result[key].colors.push({
+                key: key2,
+                color,
+                itemColor,
+                reqqty,
+                totalGarmentQty
+            });
+        }
+
+        return result;
+    }, {})
+    const groupedArray: any[] = Object.values(groupedData);
+    return new CommonResponseModel(true, 1, 'Data Retrieved', groupedArray)
+}
+
 
 }
 

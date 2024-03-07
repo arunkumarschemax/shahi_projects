@@ -14,8 +14,11 @@ import Jocktag from '../../trims/trim-prints/jocktag';
 import HeatTransefer from '../../trims/trim-prints/heat-transfer-trim';
 import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
+import SizehtLabel from '../../trims/trim-prints/size-ht-label';
 import { BackingPaper } from '../../trims/trim-prints';
 import { CountryStickerPrint } from '../../trims/trim-prints/country-sticker';
+import Mobilontape from '../../trims/trim-prints/mobilon-tape';
+import SnapButton from '../../trims/trim-prints/snap-button';
 type Props = {
   poLine: string[]
 }
@@ -36,9 +39,13 @@ export default function GenerateProposal(props: Props) {
   const [jocktageData, setJockTageData] = useState<any>([])
   const [interlining, setInterlining] = useState<any>([])
   const [drawcord, setDrawcord] = useState<any>([])
+  const [mobilontape, setMobilontape] = useState<any>([])
+
 
   const [elasticData, setElasticData] = useState<any>([]);
   const [countrySticker,setCountrySticker]= useState<any>([])
+  const [swoosth,setSwoosthData]= useState<any>([])
+  const [htLabel, setHtlabel] = useState<any>([])
 
   useEffect(() => {
     getAllTrims();
@@ -63,8 +70,13 @@ export default function GenerateProposal(props: Props) {
     "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
     "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
-    "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>
+    "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>,
+    "Mobilon Tape":<Mobilontape bomInfo={necktapeData} />,
+    "Snap Button": <SnapButton bomInfo={buttonData}/>,
+    "Size Ht label":<SizehtLabel bomInfo={htLabel}/>
+
   }
+
 
   const onCancel = () => {
     setModalOpen(false)
@@ -177,6 +189,29 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
+
+  function handleSizeHtLabel(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generatePropsalForHtLabel(bomProposalReq).then((v) =>{
+      setHtlabel(v.data)
+    })
+  }
+
+
+  function handleMobilontape(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
+      if (v.status) {
+        setNeckTapeData(v.data)
+      }
+    })
+  }
+
+
   // function handleDrawcord(itemId){
   //   const bomProposalReq = new BomProposalReq()
   //   bomProposalReq.itemId = [itemId]
@@ -398,14 +433,25 @@ export default function GenerateProposal(props: Props) {
     if(val.item === 'Elastic'){
       handleElasticTrim(val.itemId)
     }
+    if(val.item == 'Size Ht label'){
+      handleSizeHtLabel(val.itemId)
+    }
+   
     if(val.item === 'Swoosh HT label'){
       handleButtonTrim(val.itemId)
     } 
+
+    if(val.item === 'Mobilon Tape'){
+      handleMobilontape(val.itemId)
+    } 
+    
+     if(val.item === 'Snap Button'){
+      handleButtonTrim(val.itemId)
+    }
     if(val.item === 'Country Sticker'){
       handleCountrySticker(val.itemId)
     } 
-    
-   }
+  }
 
 
   return (
