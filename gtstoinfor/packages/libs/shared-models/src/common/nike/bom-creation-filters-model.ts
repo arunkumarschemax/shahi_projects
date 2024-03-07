@@ -103,7 +103,6 @@ export class BomProposalDataModel {
     attribute?:string
     attributeValue?:string
     bQty?:number
-    bBomQty?:number;
     constructor(data?: Partial<BomProposalDataModel>) {
         Object.assign(this, data);
     }

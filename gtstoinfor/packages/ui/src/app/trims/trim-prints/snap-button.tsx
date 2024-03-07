@@ -23,8 +23,7 @@ export function SnapButton(props:SnapButtonProps) {
 console.log(props.bomInfo,"********************************")
 const data = props.bomInfo
 console.log(props.bomInfo.map((e)=> e.itemId));
-
-
+const supplier = "supplier";
  const handlePrint = () => {
     const invoiceContent = document.getElementById("print");
     if (invoiceContent) {
@@ -72,7 +71,7 @@ console.log(props.bomInfo.map((e)=> e.itemId));
                     <th style={{ width: '3%' }}>MATERIAL</th>
                     <th style={{ width: '3%' }}>MATERIAL DESCRIPTION</th>
                     <th style={{ width: '3%' }}>IM#</th>
-                    <th style={{ width: '5%' }}>SANP SIZE</th>
+                    <th style={{ width: '5%' }}>SNAP SIZE</th>
                     <th style={{ width: '3%' }}>SNAP COLOUR</th>
                     <th style={{ width: '3%' }}>REQUIREMENT IN GROSS(With set)</th>
                     <th style={{ width: '3%' }}>SUPPLIER</th>
@@ -88,14 +87,13 @@ console.log(props.bomInfo.map((e)=> e.itemId));
                             <td style={{ textAlign: 'center' }} >{rec.trim !== null ? rec.trim:''}</td>
                             <td style={{ textAlign: 'center' }} >{rec.description !== null ? rec.description:''}</td>
                             <td style={{ textAlign: 'center' }} >{rec.imCode !== null ? rec.imCode:''}</td>
-                            <td style={{ textAlign: 'center' }} >{'20L'}</td>
-                            <td style={{ textAlign: 'center' }} >{rec.itemColor !== null ? rec.itemColor:''}</td>
-                            <td style={{ textAlign: 'center' }}>
-                                                    {rec.bBomQty !== null && rec.poQty !== null && rec.bBomQty !== null ?
-                                                        (rec.bBomQty * rec.poQty * rec.bBomQty) : ''}
-                                                    </td>
-                            <td style={{ textAlign: 'center' }} >{}</td>
+                            <td style={{ textAlign: 'center' }}>  {`${rec.attributeValue}${rec.attribute}`}</td>
+                            {/* <td style={{ textAlign: 'center' }}>YKKZLT</td> */}
 
+                            <td style={{ textAlign: 'center' }}>{rec.itemColor !== null ? rec.itemColor : '-'}</td>
+                            <td style={{ textAlign: 'center' }}> {rec.bQty !== null && rec.poQty !== null && rec.bQty !== null ?
+                                                        (rec.bQty * rec.poQty * rec.bQty) : ''}</td>
+                        <td style={{ textAlign: 'center' }}>supplier</td>
                          </tr>
                         )
                       
