@@ -118,7 +118,7 @@ const NeckType = (props) => {
             <tfoot>
               <tr>
               <td colSpan={7} style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold', fontFamily: 'Arial, sans-serif'}}>Total</td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }}>
+                <td style={{ ...tableCellStyle, textAlign: 'center', fontWeight: 'bold' }}>
                   {calculateTotalBomQty(groupedData[itemNo])}
                 </td>
               </tr>
@@ -140,37 +140,49 @@ const NeckType = (props) => {
 
   
   const generateRows = (data) => {
-    return data.map((item, index) => (
-      <React.Fragment key={index}>
-        {item.colors.map((color, colorIndex) => (
-          <tr key={`${index}-${colorIndex}`}>
-            {colorIndex === 0 && (
+    const groupedData = {};
+  
+    data.forEach((item) => {
+      const key = `${item.itemNo}-${item.styleNumber}-${item.season}-${item.imCode}-${item.description}`;
+      if (!groupedData[key]) {
+        groupedData[key] = [];
+      }
+      groupedData[key].push(item);
+    });
+  
+    // Generate rows based on grouped data
+    return (Object.values(groupedData) as Array<Array<any>>).map((group, groupIndex) => (
+      <React.Fragment key={groupIndex}>
+        {group.map((item, index) => (
+          <tr key={`${groupIndex}-${index}`}>
+            {index === 0 && (
               <>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
                   {item.itemNo}
                 </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
                   {item.styleNumber}
                 </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
                   {`${item.season}${item.year.slice(2)}`}
                 </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
                   {item.imCode}
                 </td>
-                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={item.colors.length}>
+                <td style={{ ...tableCellStyle, textAlign: 'center' }} rowSpan={group.length}>
                   {item.description}
                 </td>
               </>
             )}
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{color.color}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{color.itemColor}</td>
-            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{color.bomQty}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].color}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].itemColor}</td>
+            <td style={{ ...tableCellStyle, textAlign: 'center' }}>{item.colors[0].bomQty}</td>
           </tr>
         ))}
       </React.Fragment>
     ));
   };
+  
   
   
   // const generateRows = (data) => {
