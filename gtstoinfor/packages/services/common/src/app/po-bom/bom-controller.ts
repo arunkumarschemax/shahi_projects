@@ -272,5 +272,14 @@ export class BomController {
             return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
         }
     }
+    @Post('/generatePropsalForHtLabel')
+    async generatePropsalForHtLabel(@Body() req:any): Promise<CommonResponseModel>{
+        try{
+            return this.bomService.generatePropsalForHtLabel(req)
+        }
+        catch(error){
+            return this.applicationExceptionHandler.returnException(CommonResponseModel,error)
+        }
+    }
     
 }

@@ -14,6 +14,7 @@ import Jocktag from '../../trims/trim-prints/jocktag';
 import HeatTransefer from '../../trims/trim-prints/heat-transfer-trim';
 import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
+import SizehtLabel from '../../trims/trim-prints/size-ht-label';
 type Props = {
   poLine: string[]
 }
@@ -37,6 +38,7 @@ export default function GenerateProposal(props: Props) {
 
   const [elasticData, setElasticData] = useState<any>([]);
   const [swoosth,setSwoosthData]= useState<any>([])
+  const [htLabel, setHtlabel] = useState<any>([])
 
   useEffect(() => {
     getAllTrims();
@@ -59,7 +61,8 @@ export default function GenerateProposal(props: Props) {
     "Jocktage Label":<Jocktag bomInfo={jocktageData}/>,
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
     "Swoosh HT label":<SwooshHtLable bomInfo={swoosth} />,
-    "Elastic" : <Elastic bomInfo={elasticData}/>
+    "Elastic" : <Elastic bomInfo={elasticData}/>,
+    "Size Ht label":<SizehtLabel bomInfo={htLabel}/>
   }
 
   const onCancel = () => {
@@ -156,6 +159,15 @@ export default function GenerateProposal(props: Props) {
       if (v.status) {
         setButtonData(v.data)
       }
+    })
+  }
+
+  function handleSizeHtLabel(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generatePropsalForHtLabel(bomProposalReq).then((v) =>{
+      setHtlabel(v.data)
     })
   }
 
@@ -367,6 +379,9 @@ export default function GenerateProposal(props: Props) {
     
     if(val.item === 'Elastic'){
       handleElasticTrim(val.itemId)
+    }
+    if(val.item == 'Size Ht label'){
+      handleSizeHtLabel(val.itemId)
     }
    
   }

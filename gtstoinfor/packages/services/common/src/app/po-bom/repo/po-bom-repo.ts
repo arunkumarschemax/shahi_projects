@@ -9,6 +9,7 @@ import { ZFactorsEntity } from "../entittes/z-factors.entity";
 import { BomProposalDataModel, BomProposalReq } from "@project-management-system/shared-models";
 import { StyleComboEntity } from "../entittes/style-combo-entity";
 import { groupBy } from "rxjs";
+import { ItemAttributesEntity } from "../entittes/item-attributes.entity";
 
 @Injectable()
 export class PoBomRepo extends Repository<PoBomEntity> {
@@ -20,9 +21,10 @@ export class PoBomRepo extends Repository<PoBomEntity> {
     async getProposalsData(req: BomProposalReq): Promise<BomProposalDataModel[]> {
         const query = this.createQueryBuilder('pb')
             .select(`pb.id,pb.po_qty as poQty,pb.bom_qty as bomQty,pb.consumption,pb.wastage,pb.moq,b.description,b.im_code as imCode,b.use,
-            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender, SUBSTRING(d.ogac, 1, 7) as ogacDate,TRIM(LEADING '0' FROM d.ship_to_customer_no) as shipToNumber`)
+            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender, SUBSTRING(d.ogac, 1, 7) as ogacDate,TRIM(LEADING '0' FROM d.ship_to_customer_no) as shipToNumber,ia.attribute,ia.attribute_value as attributeValue`)
             .leftJoin(DpomEntity, 'd', 'd.id = pb.dpom_id')
             .leftJoin(BomEntity, 'b', 'b.id = pb.bom_id and pb.bom_id is not null')
+            .leftJoin(ItemAttributesEntity,'ia','ia.item_id=b.item_id')
             .where(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })
             .andWhere(`b.item_id IN (:...itemId)`, { itemId: req.itemId })
             .andWhere(`pb.bom_id is not null`)
@@ -52,7 +54,9 @@ export class PoBomRepo extends Repository<PoBomEntity> {
                 gender: item.gender,
                 poNumber: item.poNumber,
                 ogacDate : item.ogacDate,
-                shipToNumber : item.shipToNumber
+                shipToNumber : item.shipToNumber,
+                attribute:item.attribute,
+                attributeValue:item.attributeValue,
             });
         });
 
@@ -108,10 +112,11 @@ export class PoBomRepo extends Repository<PoBomEntity> {
     async getProposalsDataForButton(req: BomProposalReq): Promise<BomProposalDataModel[]> {
         const query = this.createQueryBuilder('pb')
             .select(`pb.id,pb.po_qty as poQty,pb.bom_qty as bomQty,pb.consumption,pb.wastage,pb.moq,b.description,b.im_code as imCode,b.use,
-            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode`)
+            d.style_number as styleNumber,d.color_desc as color,d.destination_country as destination,d.geo_code as geoCode,d.plant,d.planning_season_code as season,d.planning_season_year as year,d.size_description as size,SUBSTRING(d.item, 1, 4) as itemNo,b.item_id as itemId,d.po_number as poNumber,d.gender_age_desc as gender,st.combination,st.primary_color as primaryColor,st.secondary_color as secondaryColor,st.item_color as itemColor,product_code as productCode,ia.attribute,ia.attribute_value as attributeValue,st.combination,b.qty as bBomQty`)
             .leftJoin(DpomEntity, 'd', 'd.id = pb.dpom_id')
             .leftJoin(BomEntity, 'b', 'b.id = pb.bom_id and pb.bom_id is not null')
             .leftJoin(StyleComboEntity,'st','st.bom_id = b.id')
+            .leftJoin(ItemAttributesEntity,'ia','ia.item_id=b.item_id')
             .where(`d.po_and_line IN (:...poLine)`, { poLine: req.poLine })
             .andWhere(`b.item_id IN (:...itemId)`, { itemId: req.itemId })
             .andWhere(`pb.bom_id is not null`)
@@ -144,7 +149,10 @@ export class PoBomRepo extends Repository<PoBomEntity> {
                 primaryColor:item.primaryColor,
                 secondaryColor:item.secondaryColor,
                 itemColor:item.itemColor,
-                productCode:item.productCode
+                productCode:item.productCode,
+                attribute:item.attribute,
+                attributeValue:item.attributeValue,
+                bQty:item.bBomQty
             });
         });
         return mappedData;
