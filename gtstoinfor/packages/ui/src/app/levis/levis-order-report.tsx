@@ -724,7 +724,7 @@ export function LevisOrderReport() {
       {
         title: "Total",
         dataIndex: "",
-        // align: "right",
+        align: "right",
         width: 90,
         render: (text, record) => {
           let sum = 0;
@@ -1421,7 +1421,7 @@ export function LevisOrderReport() {
       {
         title: "Total",
         dataIndex: "",
-        // align: "right",
+        align: "right",
         width: 90,
         render: (text, record) => {
           let sum = 0;
@@ -1629,7 +1629,7 @@ export function LevisOrderReport() {
 
 
     excel
-      .addSheet(`Order Info (${formattedDate})`)
+      .addSheet(`Order Report (${formattedDate})`)
       .addColumns(excelColumnsWH)
       .addDataSource(filterData, { str2num: false });
 
