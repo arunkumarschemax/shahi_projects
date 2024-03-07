@@ -15,6 +15,7 @@ import HeatTransefer from '../../trims/trim-prints/heat-transfer-trim';
 import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
 import { BackingPaper } from '../../trims/trim-prints';
+import Mobilontape from '../../trims/trim-prints/mobilon-tape';
 type Props = {
   poLine: string[]
 }
@@ -35,6 +36,8 @@ export default function GenerateProposal(props: Props) {
   const [jocktageData, setJockTageData] = useState<any>([])
   const [interlining, setInterlining] = useState<any>([])
   const [drawcord, setDrawcord] = useState<any>([])
+  const [mobilontape, setMobilontape] = useState<any>([])
+
 
   const [elasticData, setElasticData] = useState<any>([]);
   const [swoosth,setSwoosthData]= useState<any>([])
@@ -61,8 +64,11 @@ export default function GenerateProposal(props: Props) {
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
     "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
-    "Backing Paper": <BackingPaper bomInfo={buttonData}/>
+    "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
+    "Mobilon Tape":<Mobilontape bomInfo={necktapeData} />,
+
   }
+
 
   const onCancel = () => {
     setModalOpen(false)
@@ -164,6 +170,19 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
+
+
+  function handleMobilontape(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+    service.generateProposalForNeckTape(bomProposalReq).then((v) => {
+      if (v.status) {
+        setNeckTapeData(v.data)
+      }
+    })
+  }
+
 
   // function handleDrawcord(itemId){
   //   const bomProposalReq = new BomProposalReq()
@@ -389,7 +408,14 @@ export default function GenerateProposal(props: Props) {
     }
     if(val.item === 'Swoosh HT label'){
       handleButtonTrim(val.itemId)
-    }  }
+    } 
+
+    if(val.item === 'Mobilon Tape'){
+      handleMobilontape(val.itemId)
+    } 
+    
+  
+  }
 
 
   return (
