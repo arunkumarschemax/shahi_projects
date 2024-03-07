@@ -289,7 +289,14 @@ export class LevisController {
         }
     }
 
-
+    @Post('/editCOline')
+    async editCOline(@Body() req: any): Promise<CommonResponseModel> {
+        try {
+            return await this.Service.editCOline(req)
+        } catch (error) {
+            return this.applicationExeptionhandler.returnException(CommonResponseModel, error)
+        }
+    }
    
    
 
