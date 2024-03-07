@@ -16,6 +16,7 @@ import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
 import { BackingPaper } from '../../trims/trim-prints';
 import Mobilontape from '../../trims/trim-prints/mobilon-tape';
+import SnapButton from '../../trims/trim-prints/snap-button';
 type Props = {
   poLine: string[]
 }
@@ -66,6 +67,7 @@ export default function GenerateProposal(props: Props) {
     "Elastic" : <Elastic bomInfo={elasticData}/>,
     "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
     "Mobilon Tape":<Mobilontape bomInfo={necktapeData} />,
+    "Snap Button": <SnapButton bomInfo={buttonData}/>
 
   }
 
@@ -414,7 +416,9 @@ export default function GenerateProposal(props: Props) {
       handleMobilontape(val.itemId)
     } 
     
-  
+     if(val.item === 'Snap Button'){
+      handleButtonTrim(val.itemId)
+    }
   }
 
 

@@ -786,12 +786,11 @@ export class BomService {
         // console.log(poBomZfactorData, '---po bom zfactord data')
         let data = [...poBomData]
         const groupedData: any = poBomData.reduce((result, currentItem: BomProposalDataModel) => {
-            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode } = currentItem;
+            const { styleNumber, imCode, bomQty, description, use, itemNo, itemId, destination, size, poNumber, gender, season, year, color, itemColor, productCode,bBomQty,poQty } = currentItem;
             // console.log(season)
             const bomGeoCode = destinations.find((v) => v.destination == destination)
             const { geoCode } = bomGeoCode
             const key = `${styleNumber}-${imCode}-${itemNo}-${color}-${itemColor}`;
-
             if (!result[key]) {
                 result[key] = {
                     geoCode,
@@ -810,6 +809,8 @@ export class BomService {
                     color,
                     itemColor,
                     productCode,
+                    bBomQty,
+                    poQty,
                     sizeWiseQty: [],
                     // colorData: []
                 };
