@@ -15,6 +15,7 @@ import HeatTransefer from '../../trims/trim-prints/heat-transfer-trim';
 import SwooshHtLable from '../../trims/trim-prints/swoosh-ht-label';
 import Elastic from '../../trims/trim-prints/elastic-print';
 import { BackingPaper } from '../../trims/trim-prints';
+import { CountryStickerPrint } from '../../trims/trim-prints/country-sticker';
 type Props = {
   poLine: string[]
 }
@@ -37,7 +38,7 @@ export default function GenerateProposal(props: Props) {
   const [drawcord, setDrawcord] = useState<any>([])
 
   const [elasticData, setElasticData] = useState<any>([]);
-  const [swoosth,setSwoosthData]= useState<any>([])
+  const [countrySticker,setCountrySticker]= useState<any>([])
 
   useEffect(() => {
     getAllTrims();
@@ -61,7 +62,8 @@ export default function GenerateProposal(props: Props) {
     "Heat Transfer Lbl":<HeatTransefer bomInfo={buttonData}/>,
     "Swoosh HT label":<SwooshHtLable bomInfo={buttonData} />,
     "Elastic" : <Elastic bomInfo={elasticData}/>,
-    "Backing Paper": <BackingPaper bomInfo={buttonData}/>
+    "Backing Paper": <BackingPaper bomInfo={buttonData}/>,
+    "Country Sticker" : <CountryStickerPrint bomInfo={countrySticker}/>
   }
 
   const onCancel = () => {
@@ -153,7 +155,7 @@ export default function GenerateProposal(props: Props) {
     })
   }
   
-
+ 
   function handleDrawcord(itemId){
     const bomProposalReq = new BomProposalReq()
     bomProposalReq.itemId = [itemId]
@@ -164,7 +166,17 @@ export default function GenerateProposal(props: Props) {
       }
     })
   }
-
+  function handleCountrySticker(itemId){
+    const bomProposalReq = new BomProposalReq()
+    bomProposalReq.itemId = [itemId]
+    bomProposalReq.poLine = props.poLine
+   
+    service.generateProposalForTrims(bomProposalReq).then((res) =>{
+      if(res.status){
+        setCountrySticker(res.data)
+      }
+    })
+  }
   // function handleDrawcord(itemId){
   //   const bomProposalReq = new BomProposalReq()
   //   bomProposalReq.itemId = [itemId]
@@ -357,7 +369,6 @@ export default function GenerateProposal(props: Props) {
   }
   const onView = (val) => {
     console.log(val.item)
-    console.log(val.itemId)
 
     setTrimName(val.item)
     setModalOpen(true)
@@ -389,7 +400,12 @@ export default function GenerateProposal(props: Props) {
     }
     if(val.item === 'Swoosh HT label'){
       handleButtonTrim(val.itemId)
-    }  }
+    } 
+    if(val.item === 'Country Sticker'){
+      handleCountrySticker(val.itemId)
+    } 
+    
+   }
 
 
   return (
